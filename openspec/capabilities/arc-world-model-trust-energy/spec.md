@@ -24117,3 +24117,118 @@ and makes no solve claim, no level-credit claim, and no registry update.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6218 | `python/carnot/experiment_6218_arc_admissible_lever_portfolio_heldout.py`. | `tests/python/test_experiment_6218_arc_admissible_lever_portfolio_heldout.py`. |
+
+### REQ-ARC-WMTE-6232: ARC Admissible Depth Portfolio Eligibility Ledger
+
+Experiment 6232 SHALL build a new immutable eligibility ledger from the
+current V539 ARC evidence. It SHALL hash every upstream artifact, its terminal
+classification, the determination trail, the solve registry, current defaults,
+and the canonical live E3 entrypoint before any model admission decision. It
+SHALL not edit `python/carnot/terminal_artifacts.py`. It SHALL not edit
+historical corrigenda or historical artifacts to force eligibility.
+
+The current default stack SHALL keep object-relative trajectory transfer and
+budget-aware search enabled. Those defaults SHALL be recorded as held-fixed
+baseline behavior. They SHALL not be counted again as new portfolio levers.
+
+A V539 depth lever is eligible only when all checks pass:
+
+- The artifact exists and terminal classification is `complete`, `ready`, or
+  `positive`.
+- The artifact has no unresolved critical flag, `flagged_adversarial=true`, or
+  substantive pending corrigendum.
+- The treatment is active and fires on its declared support floor.
+- The measurement is an independent A/B or matched readiness result.
+- The primary effect is depth-relevant or admission-relevant.
+- The lever is not a duplicate variant of another counted mechanism.
+- The artifact preserves every loss, failure, default, registry hash, and
+  forbidden-access count.
+
+If fewer than two independent, unflagged, treatment-active levers qualify, the
+experiment SHALL write a terminal skip artifact and SHALL set `model_loaded` to
+bare `false`. It SHALL not load the requested GGUF model before eligibility
+reaches two. If at least two levers qualify, the experiment SHALL freeze the
+selected combination before execution and run A/A, current default stack, and
+portfolio arms through the canonical live policy with matched games, seeds,
+resources, defaults, and registry hashes.
+
+Experiment 6232 SHALL write
+`results/experiment_6232_arc_admissible_depth_portfolio.json` with these bare
+top-level fields:
+
+- `status`
+- `upstream_paths_hashes_and_terminal_classes`
+- `determination_preservation_receipts`
+- `eligibility_rules`
+- `lever_eligibility_ledger`
+- `eligible_lever_count`
+- `selected_levers`
+- `exact_skip_reason`
+- `model_loaded`
+- `registry_precheck_and_hash_before_after`
+- `solve_provenance`
+- `preregistered_portfolio_game_seed_matrix`
+- `model_specs`
+- `supervised_runtime_receipts`
+- `matched_arm_configuration`
+- `per_lever_and_combination_fire_counts`
+- `raw_prompt_output_engine_replay_hashes`
+- `admission_and_level_depth_by_arm_game`
+- `actions_tokens_wall_and_failure_costs`
+- `paired_clustered_intervals`
+- `interaction_effects`
+- `harmful_regression_count_and_games`
+- `aa_control`
+- `source_bfs_adapter_hidden_state_registry_access_counts`
+- `registry_update_count`
+- `portfolio_promotion_ready_score`
+- `protected_files_unchanged`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_provenance`
+- `field_principles`
+- `test_commands`
+- `test_exit_codes`
+- `duration_s`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+The artifact SHALL set `solve_provenance` to `live_agent_self_discovery`. It
+SHALL set `registry_update_count` to bare `0`. Each source, BFS, adapter,
+hidden-state, and registry-access counter SHALL be bare `0`. The verifier SHALL
+not be treated as an oracle.
+
+#### SCENARIO-ARC-WMTE-6232-PRECONDITION-LEDGER
+
+Given the current V539 artifact set, the experiment hashes all upstream
+artifacts, terminal classes, determination trails, registry, defaults, and live
+entrypoint receipts before model admission. Missing and blocked artifacts stay
+in the ledger with explicit reasons.
+
+#### SCENARIO-ARC-WMTE-6232-TERMINAL-SKIP
+
+Given fewer than two eligible independent depth levers, the experiment writes a
+terminal skip artifact. It leaves the portfolio matrix unopened, records the
+exact skip reason, sets `model_loaded=false`, and records no registry update or
+forbidden access.
+
+#### SCENARIO-ARC-WMTE-6232-PORTFOLIO-RUN
+
+Given at least two eligible independent depth levers, the experiment freezes the
+selected combination and then runs A/A, current default stack, and portfolio
+arms through the canonical live policy with matched resources. It reports
+per-game depth, admission, losses, costs, fire counts, interactions, and harms.
+
+#### SCENARIO-ARC-WMTE-6232-ARTIFACT-GUARDS
+
+The artifact validates every required field, preserves protected files and the
+registry hash, records `solve_provenance=live_agent_self_discovery`, keeps
+forbidden-access counts and `registry_update_count` as bare zeros, and uses a
+terminal `honest_verdict` prefix.
+
+## Implementation Status (REQ-ARC-WMTE-6232)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6232 | Pending. | Pending. |

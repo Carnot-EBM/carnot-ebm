@@ -1,0 +1,2557 @@
+{
+  "aa_control": {
+    "exp6215_object_relative_trajectory_transfer": {
+      "ok": true,
+      "per_game": {
+        "cn04": {
+          "llm_call_delta": 0,
+          "plan_identical": true,
+          "score_delta": 0.0
+        },
+        "ls20": {
+          "llm_call_delta": 0,
+          "plan_identical": true,
+          "score_delta": 0.0
+        },
+        "s5i5": {
+          "llm_call_delta": 0,
+          "plan_identical": true,
+          "score_delta": 0.0
+        },
+        "tu93": {
+          "llm_call_delta": 0,
+          "plan_identical": true,
+          "score_delta": 0.0
+        }
+      }
+    },
+    "exp6216_budget_aware_search": {
+      "ok": true,
+      "per_game": {
+        "bp35": {
+          "consumer_call_delta": 0,
+          "score_delta": 0.0,
+          "selected_node_identical": true
+        },
+        "g50t": {
+          "consumer_call_delta": 0,
+          "score_delta": 0.0,
+          "selected_node_identical": true
+        },
+        "ka59": {
+          "consumer_call_delta": 0,
+          "score_delta": 0.0,
+          "selected_node_identical": true
+        },
+        "r11l": {
+          "consumer_call_delta": 0,
+          "score_delta": 0.0,
+          "selected_node_identical": true
+        },
+        "s5i5": {
+          "consumer_call_delta": 0,
+          "score_delta": 0.0,
+          "selected_node_identical": true
+        },
+        "sc25": {
+          "consumer_call_delta": 0,
+          "score_delta": 0.0,
+          "selected_node_identical": true
+        }
+      }
+    },
+    "exp6229_bounded_reinduction": "not_recorded",
+    "exp6230_prompt_enrichment": "not_recorded",
+    "exp6231_depth_lever": "not_recorded"
+  },
+  "actions_tokens_wall_and_failure_costs": {
+    "exp6215_object_relative_trajectory_transfer": {
+      "losses": [],
+      "mean_action_delta": 0.0,
+      "mean_token_delta": 0.0,
+      "mean_wall_delta_s": -0.24959275,
+      "terminal_failures": [
+        "no_depth_or_admission_relevant_effect",
+        "already_default_on_not_counted"
+      ]
+    },
+    "exp6216_budget_aware_search": {
+      "losses": [],
+      "mean_action_delta": -7.0,
+      "mean_token_delta": 0.0,
+      "mean_wall_delta_s": -0.01379133,
+      "terminal_failures": [
+        "terminal_class_flagged_not_admissible",
+        "substantive_corrigendum_pending",
+        "unresolved_critical_corrigendum_present",
+        "already_default_on_not_counted"
+      ]
+    },
+    "exp6229_bounded_reinduction": {
+      "losses": [],
+      "mean_action_delta": 0.0,
+      "mean_token_delta": 0.0,
+      "mean_wall_delta_s": 0.0,
+      "terminal_failures": [
+        "terminal_class_skipped_not_admissible",
+        "treatment_did_not_fire",
+        "quality_gate_failed",
+        "no_depth_or_admission_relevant_effect",
+        "zero_registry_gate_failed"
+      ]
+    },
+    "exp6230_prompt_enrichment": {
+      "losses": [],
+      "mean_action_delta": 0.0,
+      "mean_token_delta": 0.0,
+      "mean_wall_delta_s": 0.0,
+      "terminal_failures": [
+        "terminal_class_skipped_not_admissible",
+        "treatment_did_not_fire",
+        "quality_gate_failed",
+        "no_depth_or_admission_relevant_effect",
+        "zero_registry_gate_failed"
+      ]
+    },
+    "exp6231_depth_lever": {
+      "losses": [],
+      "mean_action_delta": 0.0,
+      "mean_token_delta": 0.0,
+      "mean_wall_delta_s": 0.0,
+      "terminal_failures": [
+        "artifact_missing",
+        "terminal_class_missing_not_admissible",
+        "treatment_did_not_fire",
+        "quality_gate_failed",
+        "no_depth_or_admission_relevant_effect",
+        "zero_registry_gate_failed"
+      ]
+    }
+  },
+  "admission_and_level_depth_by_arm_game": {
+    "exp6215_object_relative_trajectory_transfer": {
+      "cn04": {
+        "control": {
+          "actions": 3,
+          "engine_source": "exp6212_matched_fallback",
+          "llm_induction_calls": 1,
+          "plan_length": 3,
+          "planned": true,
+          "score": 1.0,
+          "verifier_acceptance": false,
+          "wall_s": 0.250032
+        },
+        "loss_reported": false,
+        "treatment": {
+          "actions": 3,
+          "engine_source": "object_relative_trajectory_transfer",
+          "llm_induction_calls": 0,
+          "plan_length": 3,
+          "planned": true,
+          "score": 1.0,
+          "verifier_acceptance": true,
+          "wall_s": 0.000524
+        },
+        "treatment_minus_control_actions": 0,
+        "treatment_minus_control_score": 0.0,
+        "treatment_minus_control_wall_s": -0.249508
+      },
+      "ls20": {
+        "control": {
+          "actions": 3,
+          "engine_source": "exp6212_matched_fallback",
+          "llm_induction_calls": 1,
+          "plan_length": 3,
+          "planned": true,
+          "score": 1.0,
+          "verifier_acceptance": false,
+          "wall_s": 0.250032
+        },
+        "loss_reported": false,
+        "treatment": {
+          "actions": 3,
+          "engine_source": "object_relative_trajectory_transfer",
+          "llm_induction_calls": 0,
+          "plan_length": 3,
+          "planned": true,
+          "score": 1.0,
+          "verifier_acceptance": true,
+          "wall_s": 0.00042
+        },
+        "treatment_minus_control_actions": 0,
+        "treatment_minus_control_score": 0.0,
+        "treatment_minus_control_wall_s": -0.249612
+      },
+      "s5i5": {
+        "control": {
+          "actions": 3,
+          "engine_source": "exp6212_matched_fallback",
+          "llm_induction_calls": 1,
+          "plan_length": 3,
+          "planned": true,
+          "score": 1.0,
+          "verifier_acceptance": false,
+          "wall_s": 0.25003
+        },
+        "loss_reported": false,
+        "treatment": {
+          "actions": 3,
+          "engine_source": "object_relative_trajectory_transfer",
+          "llm_induction_calls": 0,
+          "plan_length": 3,
+          "planned": true,
+          "score": 1.0,
+          "verifier_acceptance": true,
+          "wall_s": 0.0004
+        },
+        "treatment_minus_control_actions": 0,
+        "treatment_minus_control_score": 0.0,
+        "treatment_minus_control_wall_s": -0.24963
+      },
+      "tu93": {
+        "control": {
+          "actions": 3,
+          "engine_source": "exp6212_matched_fallback",
+          "llm_induction_calls": 1,
+          "plan_length": 3,
+          "planned": true,
+          "score": 1.0,
+          "verifier_acceptance": false,
+          "wall_s": 0.250033
+        },
+        "loss_reported": false,
+        "treatment": {
+          "actions": 3,
+          "engine_source": "object_relative_trajectory_transfer",
+          "llm_induction_calls": 0,
+          "plan_length": 3,
+          "planned": true,
+          "score": 1.0,
+          "verifier_acceptance": true,
+          "wall_s": 0.000412
+        },
+        "treatment_minus_control_actions": 0,
+        "treatment_minus_control_score": 0.0,
+        "treatment_minus_control_wall_s": -0.249621
+      }
+    },
+    "exp6216_budget_aware_search": {
+      "bp35": {
+        "control": {
+          "actions": 10,
+          "deadline_miss": true,
+          "frontier_weights": {
+            "risky_long_path": {
+              "depth": 10,
+              "depth_cost": 10.0,
+              "frontier_key_first": -10.0,
+              "value": -20.0
+            },
+            "safe_short_path": {
+              "depth": 3,
+              "depth_cost": 3.0,
+              "frontier_key_first": 3.0,
+              "value": 0.0
+            }
+          },
+          "navigation_actions": 10,
+          "path_cost": 10.0,
+          "score": 0.0,
+          "selected_node": "risky_long_path",
+          "states_expanded": 2,
+          "wall_s": 0.02002
+        },
+        "treatment": {
+          "actions": 3,
+          "deadline_miss": false,
+          "frontier_weights": {
+            "risky_long_path": {
+              "depth": 10,
+              "depth_cost": 310.0,
+              "frontier_key_first": 290.0,
+              "value": -20.0
+            },
+            "safe_short_path": {
+              "depth": 3,
+              "depth_cost": 3.0,
+              "frontier_key_first": 3.0,
+              "value": 0.0
+            }
+          },
+          "navigation_actions": 3,
+          "path_cost": 3.0,
+          "score": 1.0,
+          "selected_node": "safe_short_path",
+          "states_expanded": 2,
+          "wall_s": 0.006229
+        },
+        "treatment_minus_control_actions": -7,
+        "treatment_minus_control_score": 1.0,
+        "treatment_minus_control_states_expanded": 0,
+        "treatment_minus_control_wall_s": -0.013791
+      },
+      "g50t": {
+        "control": {
+          "actions": 10,
+          "deadline_miss": true,
+          "frontier_weights": {
+            "risky_long_path": {
+              "depth": 10,
+              "depth_cost": 10.0,
+              "frontier_key_first": -10.0,
+              "value": -20.0
+            },
+            "safe_short_path": {
+              "depth": 3,
+              "depth_cost": 3.0,
+              "frontier_key_first": 3.0,
+              "value": 0.0
+            }
+          },
+          "navigation_actions": 10,
+          "path_cost": 10.0,
+          "score": 0.0,
+          "selected_node": "risky_long_path",
+          "states_expanded": 2,
+          "wall_s": 0.020015
+        },
+        "treatment": {
+          "actions": 3,
+          "deadline_miss": false,
+          "frontier_weights": {
+            "risky_long_path": {
+              "depth": 10,
+              "depth_cost": 310.0,
+              "frontier_key_first": 290.0,
+              "value": -20.0
+            },
+            "safe_short_path": {
+              "depth": 3,
+              "depth_cost": 3.0,
+              "frontier_key_first": 3.0,
+              "value": 0.0
+            }
+          },
+          "navigation_actions": 3,
+          "path_cost": 3.0,
+          "score": 1.0,
+          "selected_node": "safe_short_path",
+          "states_expanded": 2,
+          "wall_s": 0.006222
+        },
+        "treatment_minus_control_actions": -7,
+        "treatment_minus_control_score": 1.0,
+        "treatment_minus_control_states_expanded": 0,
+        "treatment_minus_control_wall_s": -0.013793
+      },
+      "ka59": {
+        "control": {
+          "actions": 10,
+          "deadline_miss": true,
+          "frontier_weights": {
+            "risky_long_path": {
+              "depth": 10,
+              "depth_cost": 10.0,
+              "frontier_key_first": -10.0,
+              "value": -20.0
+            },
+            "safe_short_path": {
+              "depth": 3,
+              "depth_cost": 3.0,
+              "frontier_key_first": 3.0,
+              "value": 0.0
+            }
+          },
+          "navigation_actions": 10,
+          "path_cost": 10.0,
+          "score": 0.0,
+          "selected_node": "risky_long_path",
+          "states_expanded": 2,
+          "wall_s": 0.020015
+        },
+        "treatment": {
+          "actions": 3,
+          "deadline_miss": false,
+          "frontier_weights": {
+            "risky_long_path": {
+              "depth": 10,
+              "depth_cost": 310.0,
+              "frontier_key_first": 290.0,
+              "value": -20.0
+            },
+            "safe_short_path": {
+              "depth": 3,
+              "depth_cost": 3.0,
+              "frontier_key_first": 3.0,
+              "value": 0.0
+            }
+          },
+          "navigation_actions": 3,
+          "path_cost": 3.0,
+          "score": 1.0,
+          "selected_node": "safe_short_path",
+          "states_expanded": 2,
+          "wall_s": 0.006226
+        },
+        "treatment_minus_control_actions": -7,
+        "treatment_minus_control_score": 1.0,
+        "treatment_minus_control_states_expanded": 0,
+        "treatment_minus_control_wall_s": -0.013789
+      },
+      "r11l": {
+        "control": {
+          "actions": 10,
+          "deadline_miss": true,
+          "frontier_weights": {
+            "risky_long_path": {
+              "depth": 10,
+              "depth_cost": 10.0,
+              "frontier_key_first": -10.0,
+              "value": -20.0
+            },
+            "safe_short_path": {
+              "depth": 3,
+              "depth_cost": 3.0,
+              "frontier_key_first": 3.0,
+              "value": 0.0
+            }
+          },
+          "navigation_actions": 10,
+          "path_cost": 10.0,
+          "score": 0.0,
+          "selected_node": "risky_long_path",
+          "states_expanded": 2,
+          "wall_s": 0.020013
+        },
+        "treatment": {
+          "actions": 3,
+          "deadline_miss": false,
+          "frontier_weights": {
+            "risky_long_path": {
+              "depth": 10,
+              "depth_cost": 310.0,
+              "frontier_key_first": 290.0,
+              "value": -20.0
+            },
+            "safe_short_path": {
+              "depth": 3,
+              "depth_cost": 3.0,
+              "frontier_key_first": 3.0,
+              "value": 0.0
+            }
+          },
+          "navigation_actions": 3,
+          "path_cost": 3.0,
+          "score": 1.0,
+          "selected_node": "safe_short_path",
+          "states_expanded": 2,
+          "wall_s": 0.006224
+        },
+        "treatment_minus_control_actions": -7,
+        "treatment_minus_control_score": 1.0,
+        "treatment_minus_control_states_expanded": 0,
+        "treatment_minus_control_wall_s": -0.013789
+      },
+      "s5i5": {
+        "control": {
+          "actions": 10,
+          "deadline_miss": true,
+          "frontier_weights": {
+            "risky_long_path": {
+              "depth": 10,
+              "depth_cost": 10.0,
+              "frontier_key_first": -10.0,
+              "value": -20.0
+            },
+            "safe_short_path": {
+              "depth": 3,
+              "depth_cost": 3.0,
+              "frontier_key_first": 3.0,
+              "value": 0.0
+            }
+          },
+          "navigation_actions": 10,
+          "path_cost": 10.0,
+          "score": 0.0,
+          "selected_node": "risky_long_path",
+          "states_expanded": 2,
+          "wall_s": 0.020012
+        },
+        "treatment": {
+          "actions": 3,
+          "deadline_miss": false,
+          "frontier_weights": {
+            "risky_long_path": {
+              "depth": 10,
+              "depth_cost": 310.0,
+              "frontier_key_first": 290.0,
+              "value": -20.0
+            },
+            "safe_short_path": {
+              "depth": 3,
+              "depth_cost": 3.0,
+              "frontier_key_first": 3.0,
+              "value": 0.0
+            }
+          },
+          "navigation_actions": 3,
+          "path_cost": 3.0,
+          "score": 1.0,
+          "selected_node": "safe_short_path",
+          "states_expanded": 2,
+          "wall_s": 0.006219
+        },
+        "treatment_minus_control_actions": -7,
+        "treatment_minus_control_score": 1.0,
+        "treatment_minus_control_states_expanded": 0,
+        "treatment_minus_control_wall_s": -0.013793
+      },
+      "sc25": {
+        "control": {
+          "actions": 10,
+          "deadline_miss": true,
+          "frontier_weights": {
+            "risky_long_path": {
+              "depth": 10,
+              "depth_cost": 10.0,
+              "frontier_key_first": -10.0,
+              "value": -20.0
+            },
+            "safe_short_path": {
+              "depth": 3,
+              "depth_cost": 3.0,
+              "frontier_key_first": 3.0,
+              "value": 0.0
+            }
+          },
+          "navigation_actions": 10,
+          "path_cost": 10.0,
+          "score": 0.0,
+          "selected_node": "risky_long_path",
+          "states_expanded": 2,
+          "wall_s": 0.020016
+        },
+        "treatment": {
+          "actions": 3,
+          "deadline_miss": false,
+          "frontier_weights": {
+            "risky_long_path": {
+              "depth": 10,
+              "depth_cost": 310.0,
+              "frontier_key_first": 290.0,
+              "value": -20.0
+            },
+            "safe_short_path": {
+              "depth": 3,
+              "depth_cost": 3.0,
+              "frontier_key_first": 3.0,
+              "value": 0.0
+            }
+          },
+          "navigation_actions": 3,
+          "path_cost": 3.0,
+          "score": 1.0,
+          "selected_node": "safe_short_path",
+          "states_expanded": 2,
+          "wall_s": 0.006223
+        },
+        "treatment_minus_control_actions": -7,
+        "treatment_minus_control_score": 1.0,
+        "treatment_minus_control_states_expanded": 0,
+        "treatment_minus_control_wall_s": -0.013793
+      }
+    },
+    "exp6229_bounded_reinduction": {},
+    "exp6230_prompt_enrichment": {},
+    "exp6231_depth_lever": {}
+  },
+  "determination_preservation_receipts": {
+    "determination_preservation_lint_py": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/determination_preservation_lint.py",
+      "sha256": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
+      "size_bytes": 65178
+    },
+    "protected_files": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "ops/changelog.md": "sha256:a0ee68eef41e131aa9df3bf1d6e53a9726b9f8e3e9af5990ace2ebf21801ac02",
+      "ops/status.md": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+      "python/carnot/terminal_artifacts.py": "sha256:a51f656116f7999b5d318b176919be274f214210e087ae548b61a5b7ce2fde10",
+      "scripts/determination_preservation_lint.py": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "terminal_artifacts_py": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/terminal_artifacts.py",
+      "sha256": "sha256:a51f656116f7999b5d318b176919be274f214210e087ae548b61a5b7ce2fde10",
+      "size_bytes": 13437
+    }
+  },
+  "duration_s": 0.02581,
+  "eligibility_rules": {
+    "default_stack_components_not_counted": [
+      "object_relative_trajectory_transfer",
+      "budget_aware_search"
+    ],
+    "eligible_minimum": 2,
+    "no_model_load_before_two": true,
+    "rejects_missing_blocked_skipped_flagged_or_corrigendum_pending": true,
+    "requires_depth_or_admission_relevant_effect": true,
+    "requires_independent_mechanism": true,
+    "requires_treatment_fire_on_support_floor": true,
+    "terminal_classes": [
+      "complete",
+      "ready",
+      "positive"
+    ]
+  },
+  "eligible_lever_count": 0,
+  "exact_skip_reason": "fewer_than_two_independent_unflagged_treatment_active_depth_levers:0<2",
+  "field_principles": {
+    "aa_control": "A/A controls protect against instrumentation drift.",
+    "actions_tokens_wall_and_failure_costs": "Cost and failure data stay visible.",
+    "admission_and_level_depth_by_arm_game": "Depth and admission outcomes stay per-game.",
+    "determination_preservation_receipts": "The classifier and guard trail stay visible.",
+    "duration_s": "Measured wall time is recorded without padding.",
+    "eligibility_rules": "The gate is data-driven, not prose-driven.",
+    "eligible_lever_count": "The model gate opens only at two independent levers.",
+    "exact_skip_reason": "A skip names the exact failed precondition.",
+    "field_principles": "Each field states the audit risk it controls.",
+    "field_provenance": "Each field traces back to this module and requirement.",
+    "harmful_regression_count_and_games": "Every loss or regression remains visible.",
+    "honest_verdict": "The verdict uses a terminal prefix.",
+    "inference_substrate": "The artifact declares aggregation, not live inference.",
+    "interaction_effects": "The pair effect is separate from main effects.",
+    "lever_eligibility_ledger": "Every lever receives a reasoned verdict.",
+    "matched_arm_configuration": "A/A, default, and portfolio arms hold resources fixed.",
+    "model_loaded": "The GGUF must not load before the two-lever gate passes.",
+    "model_specs": "The only admitted inducer is the requested Gemma4-31B Q4_K_M model.",
+    "paired_clustered_intervals": "Intervals use game as the paired cluster.",
+    "per_lever_and_combination_fire_counts": "Non-firing levers cannot be promoted.",
+    "portfolio_promotion_ready_score": "Readiness is capped by eligible lever count.",
+    "preconditions_checked": "Admission inputs are recorded before model admission.",
+    "preregistered_portfolio_game_seed_matrix": "Game and seed cells freeze before execution.",
+    "protected_files_unchanged": "Protected files stay byte-identical.",
+    "raw_prompt_output_engine_replay_hashes": "Raw prompts, engines, and replays stay auditable.",
+    "registry_precheck_and_hash_before_after": "The solve registry is immutable here.",
+    "registry_update_count": "Bare zero proves no solve registry mutation.",
+    "reproducibility_checksum": "A stable checksum catches silent drift.",
+    "selected_levers": "The selected pair is frozen before any portfolio run.",
+    "solve_provenance": "ARC credit is only for live self-discovery.",
+    "source_bfs_adapter_hidden_state_registry_access_counts": "Forbidden reads are bare zeros.",
+    "status": "The terminal state distinguishes a skip from a frozen pair.",
+    "supervised_runtime_receipts": "Exp6228 supervision is preserved when model use is possible.",
+    "test_commands": "Verification commands are recorded.",
+    "test_exit_codes": "Exit codes prevent unchecked test claims.",
+    "upstream_paths_hashes_and_terminal_classes": "Every upstream input is hash-bound.",
+    "verifier_is_oracle": "The verifier is not an ARC oracle."
+  },
+  "field_provenance": {
+    "aa_control": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "actions_tokens_wall_and_failure_costs": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "admission_and_level_depth_by_arm_game": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "determination_preservation_receipts": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "duration_s": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "eligibility_rules": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "eligible_lever_count": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "exact_skip_reason": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "field_principles": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "field_provenance": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "harmful_regression_count_and_games": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "honest_verdict": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "inference_substrate": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "interaction_effects": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "lever_eligibility_ledger": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "matched_arm_configuration": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "model_loaded": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "model_specs": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "paired_clustered_intervals": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "per_lever_and_combination_fire_counts": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "portfolio_promotion_ready_score": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "preconditions_checked": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "preregistered_portfolio_game_seed_matrix": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "protected_files_unchanged": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "raw_prompt_output_engine_replay_hashes": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "registry_precheck_and_hash_before_after": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "registry_update_count": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "reproducibility_checksum": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "selected_levers": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "solve_provenance": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "source_bfs_adapter_hidden_state_registry_access_counts": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "status": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "supervised_runtime_receipts": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "test_commands": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "test_exit_codes": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "upstream_paths_hashes_and_terminal_classes": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    },
+    "verifier_is_oracle": {
+      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
+      "spec_ref": "REQ-ARC-WMTE-6232"
+    }
+  },
+  "harmful_regression_count_and_games": {
+    "by_lever": {
+      "exp6215_object_relative_trajectory_transfer": {
+        "harmful_games": [],
+        "harmful_regression_count": 0,
+        "losing_games_reported_not_hidden": [],
+        "raw": {
+          "count": 0,
+          "games": [],
+          "losing_games_reported_not_hidden": []
+        },
+        "safety_passed": true
+      },
+      "exp6216_budget_aware_search": {
+        "harmful_games": [],
+        "harmful_regression_count": 0,
+        "losing_games_reported_not_hidden": [],
+        "raw": {
+          "count": 0,
+          "games": [],
+          "losing_games_reported_not_hidden": []
+        },
+        "safety_passed": true
+      },
+      "exp6229_bounded_reinduction": {
+        "harmful_games": [],
+        "harmful_regression_count": 0,
+        "losing_games_reported_not_hidden": [],
+        "raw": {},
+        "safety_passed": true
+      },
+      "exp6230_prompt_enrichment": {
+        "harmful_games": [],
+        "harmful_regression_count": 0,
+        "losing_games_reported_not_hidden": [],
+        "raw": {},
+        "safety_passed": true
+      },
+      "exp6231_depth_lever": {
+        "harmful_games": [],
+        "harmful_regression_count": 0,
+        "losing_games_reported_not_hidden": [],
+        "raw": {},
+        "safety_passed": true
+      }
+    },
+    "count": 0,
+    "games": []
+  },
+  "honest_verdict": "complete: skipped_fewer_than_two_eligible_depth_levers_no_model_load",
+  "inference_substrate": {
+    "model_load_attempted": false,
+    "model_loaded": false,
+    "value": "aggregation_from_upstream_artifacts"
+  },
+  "interaction_effects": {
+    "estimated": false,
+    "interaction_effect": null,
+    "reason": "terminal_skip_before_model_load",
+    "selected_pair": []
+  },
+  "lever_eligibility_ledger": [
+    {
+      "aa_control": {
+        "ok": true,
+        "per_game": {
+          "cn04": {
+            "llm_call_delta": 0,
+            "plan_identical": true,
+            "score_delta": 0.0
+          },
+          "ls20": {
+            "llm_call_delta": 0,
+            "plan_identical": true,
+            "score_delta": 0.0
+          },
+          "s5i5": {
+            "llm_call_delta": 0,
+            "plan_identical": true,
+            "score_delta": 0.0
+          },
+          "tu93": {
+            "llm_call_delta": 0,
+            "plan_identical": true,
+            "score_delta": 0.0
+          }
+        }
+      },
+      "activation_gate": {
+        "activation_passed": true,
+        "field": "treatment_fire_and_reason_counts",
+        "mutation_proven": true,
+        "raw": {
+          "accepted": 4,
+          "mutation_proven": true,
+          "mutation_receipts": [
+            {
+              "killed": true,
+              "name": "transfer_fire_counter_removed"
+            },
+            {
+              "killed": true,
+              "name": "fallback_avoidance_counter_removed"
+            },
+            {
+              "killed": true,
+              "name": "forbidden_access_guard_removed"
+            }
+          ],
+          "per_game": {
+            "cn04": 1,
+            "ls20": 1,
+            "s5i5": 1,
+            "tu93": 1
+          },
+          "reason_counts": {
+            "accepted_confident_transfer": 4
+          },
+          "rejected": 0,
+          "support_count": 4,
+          "support_floor": 3,
+          "total": 4
+        },
+        "support_count": 4,
+        "support_floor": 3,
+        "total": 4
+      },
+      "artifact": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
+        "sha256": "sha256:aa6338dd00818f392184e17be3467a2196c37e9563f7170594f0f7204e073106",
+        "size_bytes": 35903
+      },
+      "default_stack_component": true,
+      "effect_gate": {
+        "by_game": {
+          "cn04": {
+            "control": {
+              "actions": 3,
+              "engine_source": "exp6212_matched_fallback",
+              "llm_induction_calls": 1,
+              "plan_length": 3,
+              "planned": true,
+              "score": 1.0,
+              "verifier_acceptance": false,
+              "wall_s": 0.250032
+            },
+            "loss_reported": false,
+            "treatment": {
+              "actions": 3,
+              "engine_source": "object_relative_trajectory_transfer",
+              "llm_induction_calls": 0,
+              "plan_length": 3,
+              "planned": true,
+              "score": 1.0,
+              "verifier_acceptance": true,
+              "wall_s": 0.000524
+            },
+            "treatment_minus_control_actions": 0,
+            "treatment_minus_control_score": 0.0,
+            "treatment_minus_control_wall_s": -0.249508
+          },
+          "ls20": {
+            "control": {
+              "actions": 3,
+              "engine_source": "exp6212_matched_fallback",
+              "llm_induction_calls": 1,
+              "plan_length": 3,
+              "planned": true,
+              "score": 1.0,
+              "verifier_acceptance": false,
+              "wall_s": 0.250032
+            },
+            "loss_reported": false,
+            "treatment": {
+              "actions": 3,
+              "engine_source": "object_relative_trajectory_transfer",
+              "llm_induction_calls": 0,
+              "plan_length": 3,
+              "planned": true,
+              "score": 1.0,
+              "verifier_acceptance": true,
+              "wall_s": 0.00042
+            },
+            "treatment_minus_control_actions": 0,
+            "treatment_minus_control_score": 0.0,
+            "treatment_minus_control_wall_s": -0.249612
+          },
+          "s5i5": {
+            "control": {
+              "actions": 3,
+              "engine_source": "exp6212_matched_fallback",
+              "llm_induction_calls": 1,
+              "plan_length": 3,
+              "planned": true,
+              "score": 1.0,
+              "verifier_acceptance": false,
+              "wall_s": 0.25003
+            },
+            "loss_reported": false,
+            "treatment": {
+              "actions": 3,
+              "engine_source": "object_relative_trajectory_transfer",
+              "llm_induction_calls": 0,
+              "plan_length": 3,
+              "planned": true,
+              "score": 1.0,
+              "verifier_acceptance": true,
+              "wall_s": 0.0004
+            },
+            "treatment_minus_control_actions": 0,
+            "treatment_minus_control_score": 0.0,
+            "treatment_minus_control_wall_s": -0.24963
+          },
+          "tu93": {
+            "control": {
+              "actions": 3,
+              "engine_source": "exp6212_matched_fallback",
+              "llm_induction_calls": 1,
+              "plan_length": 3,
+              "planned": true,
+              "score": 1.0,
+              "verifier_acceptance": false,
+              "wall_s": 0.250033
+            },
+            "loss_reported": false,
+            "treatment": {
+              "actions": 3,
+              "engine_source": "object_relative_trajectory_transfer",
+              "llm_induction_calls": 0,
+              "plan_length": 3,
+              "planned": true,
+              "score": 1.0,
+              "verifier_acceptance": true,
+              "wall_s": 0.000412
+            },
+            "treatment_minus_control_actions": 0,
+            "treatment_minus_control_score": 0.0,
+            "treatment_minus_control_wall_s": -0.249621
+          }
+        },
+        "depth_or_admission_relevant": false,
+        "losing_games": [],
+        "mean_action_delta": 0.0,
+        "mean_token_delta": 0.0,
+        "mean_wall_delta_s": -0.24959275,
+        "metric_field": "engine_fidelity_score_actions_and_wall_time_by_arm_game",
+        "primary_effect": 0.0
+      },
+      "eligible": false,
+      "experiment": 6215,
+      "ineligible_reasons": [
+        "no_depth_or_admission_relevant_effect",
+        "already_default_on_not_counted"
+      ],
+      "lever_id": "exp6215_object_relative_trajectory_transfer",
+      "mechanism": "object_relative_trajectory_transfer",
+      "pending_corrigendum": {
+        "critical_count": 0,
+        "resolved_rows": [],
+        "rows": [],
+        "substantive": false
+      },
+      "quality_gate": {
+        "field": "trajectory_transfer_promotion_ready_score",
+        "quality_passed": true,
+        "score": 1.0
+      },
+      "raw_prompt_output_engine_replay_hashes": {
+        "raw_count": 16,
+        "raw_sha256": "sha256:4a67a6e9bc28116d53e20822624746e7ff2c2b7f64d622dcba04137f37e93e52",
+        "rows": [
+          {
+            "exists": true,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/aa_control_a/event.json",
+            "sha256": "sha256:412a0e5d75c55ca7651a1998722343fb59659bab60a467a8ac4e7d533504ca03",
+            "size_bytes": 2503
+          },
+          {
+            "exists": true,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/aa_control_b/event.json",
+            "sha256": "sha256:901ed6d690f503f4c23491c5040ca94e32d2b953f0cbc4411d032712a3a688d3",
+            "size_bytes": 2503
+          },
+          {
+            "exists": true,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/control/event.json",
+            "sha256": "sha256:e3b0d986881a7cf106f3c58daddf8dffdc3853e78fd4d55558444607c4e10652",
+            "size_bytes": 2498
+          },
+          {
+            "exists": true,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/treatment/event.json",
+            "sha256": "sha256:8e8c47c46bd5ddb390a96ea087c1351cfe5364a7272de6a03b8aa00c244aa79b",
+            "size_bytes": 2464
+          },
+          {
+            "exists": true,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/aa_control_a/event.json",
+            "sha256": "sha256:ce49b11d8261e91332ac6a765b2d34b780d9f65d697ba782fcc952d57354083b",
+            "size_bytes": 2500
+          },
+          {
+            "exists": true,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/aa_control_b/event.json",
+            "sha256": "sha256:823120db9e561c9ec69e13d2db24ce1e34b799ff992a2ac98644b80bfa143a1b",
+            "size_bytes": 2503
+          },
+          {
+            "exists": true,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/control/event.json",
+            "sha256": "sha256:8e211e427ba6f8436e34dc9106af94261931be4f3ab65972f29b0df12db150e1",
+            "size_bytes": 2495
+          },
+          {
+            "exists": true,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/treatment/event.json",
+            "sha256": "sha256:2a8ea60abe20ccbb81f42aeb6cc68495dc61a33351775687dbc0246353f46d41",
+            "size_bytes": 2462
+          },
+          {
+            "exists": true,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/aa_control_a/event.json",
+            "sha256": "sha256:b4058fcb98bc215ac992042c9c9d92e25dd957b71d6ec77a85e6a71865caf8be",
+            "size_bytes": 2485
+          },
+          {
+            "exists": true,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/aa_control_b/event.json",
+            "sha256": "sha256:51f0118deb2e7dd5da82f69de4f7801f824b731cd6931f61829f18dd51471634",
+            "size_bytes": 2485
+          },
+          {
+            "exists": true,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/control/event.json",
+            "sha256": "sha256:0ebb5407002eac9116ef89627d00b700e16b7ed9bb52ed34473f6da04651d1e9",
+            "size_bytes": 2480
+          },
+          {
+            "exists": true,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/treatment/event.json",
+            "sha256": "sha256:e58c48cdaf3b5ba6427755bb57dcdfc118214bb370c4200500ee42307e6c4820",
+            "size_bytes": 2430
+          },
+          {
+            "exists": true,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/aa_control_a/event.json",
+            "sha256": "sha256:4c2c4953a0d0cbd64eaaf553f78f497ff03da3ef3714f683ecb8facba77e0aba",
+            "size_bytes": 2503
+          },
+          {
+            "exists": true,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/aa_control_b/event.json",
+            "sha256": "sha256:a54d1357b47366f8d43c039e44d0903124b705cb7a5a911f487e6f58316ef5c8",
+            "size_bytes": 2503
+          },
+          {
+            "exists": true,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/control/event.json",
+            "sha256": "sha256:a901c0e811a5e17dcdfa75af288c7943be3314e8d0b36fd83660371e802e1153",
+            "size_bytes": 2498
+          },
+          {
+            "exists": true,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/treatment/event.json",
+            "sha256": "sha256:ca57fd5f18ac10d45581c14a6ffbb52bf69a74d0d44b16148f49d427f76aaf42",
+            "size_bytes": 2466
+          }
+        ]
+      },
+      "requirement": "REQ-ARC-WMTE-6215",
+      "safety_gate": {
+        "harmful_games": [],
+        "harmful_regression_count": 0,
+        "losing_games_reported_not_hidden": [],
+        "raw": {
+          "count": 0,
+          "games": [],
+          "losing_games_reported_not_hidden": []
+        },
+        "safety_passed": true
+      },
+      "selection_utility": 0.01,
+      "terminal_classifier": {
+        "classification": "ready",
+        "conductor_receipt_status": null,
+        "honest_verdict_prefix": "complete",
+        "honest_verdict_raw": "complete: trajectory_transfer_ab_complete_no_solve_credit",
+        "loadable": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
+        "present": true,
+        "reason": "status=ready verdict=complete",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "sha256": "sha256:aa6338dd00818f392184e17be3467a2196c37e9563f7170594f0f7204e073106",
+        "status_class": "ready",
+        "status_prefix": "complete_ready",
+        "status_raw": "complete_ready",
+        "terminal": true,
+        "verdict_class": "complete"
+      },
+      "zero_registry_gate": {
+        "level_credit_delta": 0,
+        "passed": true,
+        "registry_update_count": 0,
+        "solve_claimed": false
+      }
+    },
+    {
+      "aa_control": {
+        "ok": true,
+        "per_game": {
+          "bp35": {
+            "consumer_call_delta": 0,
+            "score_delta": 0.0,
+            "selected_node_identical": true
+          },
+          "g50t": {
+            "consumer_call_delta": 0,
+            "score_delta": 0.0,
+            "selected_node_identical": true
+          },
+          "ka59": {
+            "consumer_call_delta": 0,
+            "score_delta": 0.0,
+            "selected_node_identical": true
+          },
+          "r11l": {
+            "consumer_call_delta": 0,
+            "score_delta": 0.0,
+            "selected_node_identical": true
+          },
+          "s5i5": {
+            "consumer_call_delta": 0,
+            "score_delta": 0.0,
+            "selected_node_identical": true
+          },
+          "sc25": {
+            "consumer_call_delta": 0,
+            "score_delta": 0.0,
+            "selected_node_identical": true
+          }
+        }
+      },
+      "activation_gate": {
+        "activation_passed": true,
+        "field": "consumer_fire_counts",
+        "mutation_proven": true,
+        "raw": {
+          "aa_total": 0,
+          "control_total": 0,
+          "mutation_proven": true,
+          "mutation_receipts": [
+            {
+              "killed": true,
+              "name": "consumer_fire_counter_removed"
+            },
+            {
+              "killed": true,
+              "name": "estimator_calibration_guard_removed"
+            },
+            {
+              "killed": true,
+              "name": "forbidden_access_guard_removed"
+            }
+          ],
+          "per_game": {
+            "bp35": {
+              "aa_control_a": 0,
+              "aa_control_b": 0,
+              "control": 0,
+              "treatment": 2
+            },
+            "g50t": {
+              "aa_control_a": 0,
+              "aa_control_b": 0,
+              "control": 0,
+              "treatment": 2
+            },
+            "ka59": {
+              "aa_control_a": 0,
+              "aa_control_b": 0,
+              "control": 0,
+              "treatment": 2
+            },
+            "r11l": {
+              "aa_control_a": 0,
+              "aa_control_b": 0,
+              "control": 0,
+              "treatment": 2
+            },
+            "s5i5": {
+              "aa_control_a": 0,
+              "aa_control_b": 0,
+              "control": 0,
+              "treatment": 2
+            },
+            "sc25": {
+              "aa_control_a": 0,
+              "aa_control_b": 0,
+              "control": 0,
+              "treatment": 2
+            }
+          },
+          "support_count": 6,
+          "support_floor": 3,
+          "treatment_total": 12
+        },
+        "support_count": 6,
+        "support_floor": 3,
+        "total": 12
+      },
+      "artifact": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6216_arc_budget_aware_search_ab.json",
+        "sha256": "sha256:23aab373f15e89bc33e2ef43a383c6acf9f27822465ae4a47186c03efc0bb5b6",
+        "size_bytes": 49301
+      },
+      "default_stack_component": true,
+      "effect_gate": {
+        "by_game": {
+          "bp35": {
+            "control": {
+              "actions": 10,
+              "deadline_miss": true,
+              "frontier_weights": {
+                "risky_long_path": {
+                  "depth": 10,
+                  "depth_cost": 10.0,
+                  "frontier_key_first": -10.0,
+                  "value": -20.0
+                },
+                "safe_short_path": {
+                  "depth": 3,
+                  "depth_cost": 3.0,
+                  "frontier_key_first": 3.0,
+                  "value": 0.0
+                }
+              },
+              "navigation_actions": 10,
+              "path_cost": 10.0,
+              "score": 0.0,
+              "selected_node": "risky_long_path",
+              "states_expanded": 2,
+              "wall_s": 0.02002
+            },
+            "treatment": {
+              "actions": 3,
+              "deadline_miss": false,
+              "frontier_weights": {
+                "risky_long_path": {
+                  "depth": 10,
+                  "depth_cost": 310.0,
+                  "frontier_key_first": 290.0,
+                  "value": -20.0
+                },
+                "safe_short_path": {
+                  "depth": 3,
+                  "depth_cost": 3.0,
+                  "frontier_key_first": 3.0,
+                  "value": 0.0
+                }
+              },
+              "navigation_actions": 3,
+              "path_cost": 3.0,
+              "score": 1.0,
+              "selected_node": "safe_short_path",
+              "states_expanded": 2,
+              "wall_s": 0.006229
+            },
+            "treatment_minus_control_actions": -7,
+            "treatment_minus_control_score": 1.0,
+            "treatment_minus_control_states_expanded": 0,
+            "treatment_minus_control_wall_s": -0.013791
+          },
+          "g50t": {
+            "control": {
+              "actions": 10,
+              "deadline_miss": true,
+              "frontier_weights": {
+                "risky_long_path": {
+                  "depth": 10,
+                  "depth_cost": 10.0,
+                  "frontier_key_first": -10.0,
+                  "value": -20.0
+                },
+                "safe_short_path": {
+                  "depth": 3,
+                  "depth_cost": 3.0,
+                  "frontier_key_first": 3.0,
+                  "value": 0.0
+                }
+              },
+              "navigation_actions": 10,
+              "path_cost": 10.0,
+              "score": 0.0,
+              "selected_node": "risky_long_path",
+              "states_expanded": 2,
+              "wall_s": 0.020015
+            },
+            "treatment": {
+              "actions": 3,
+              "deadline_miss": false,
+              "frontier_weights": {
+                "risky_long_path": {
+                  "depth": 10,
+                  "depth_cost": 310.0,
+                  "frontier_key_first": 290.0,
+                  "value": -20.0
+                },
+                "safe_short_path": {
+                  "depth": 3,
+                  "depth_cost": 3.0,
+                  "frontier_key_first": 3.0,
+                  "value": 0.0
+                }
+              },
+              "navigation_actions": 3,
+              "path_cost": 3.0,
+              "score": 1.0,
+              "selected_node": "safe_short_path",
+              "states_expanded": 2,
+              "wall_s": 0.006222
+            },
+            "treatment_minus_control_actions": -7,
+            "treatment_minus_control_score": 1.0,
+            "treatment_minus_control_states_expanded": 0,
+            "treatment_minus_control_wall_s": -0.013793
+          },
+          "ka59": {
+            "control": {
+              "actions": 10,
+              "deadline_miss": true,
+              "frontier_weights": {
+                "risky_long_path": {
+                  "depth": 10,
+                  "depth_cost": 10.0,
+                  "frontier_key_first": -10.0,
+                  "value": -20.0
+                },
+                "safe_short_path": {
+                  "depth": 3,
+                  "depth_cost": 3.0,
+                  "frontier_key_first": 3.0,
+                  "value": 0.0
+                }
+              },
+              "navigation_actions": 10,
+              "path_cost": 10.0,
+              "score": 0.0,
+              "selected_node": "risky_long_path",
+              "states_expanded": 2,
+              "wall_s": 0.020015
+            },
+            "treatment": {
+              "actions": 3,
+              "deadline_miss": false,
+              "frontier_weights": {
+                "risky_long_path": {
+                  "depth": 10,
+                  "depth_cost": 310.0,
+                  "frontier_key_first": 290.0,
+                  "value": -20.0
+                },
+                "safe_short_path": {
+                  "depth": 3,
+                  "depth_cost": 3.0,
+                  "frontier_key_first": 3.0,
+                  "value": 0.0
+                }
+              },
+              "navigation_actions": 3,
+              "path_cost": 3.0,
+              "score": 1.0,
+              "selected_node": "safe_short_path",
+              "states_expanded": 2,
+              "wall_s": 0.006226
+            },
+            "treatment_minus_control_actions": -7,
+            "treatment_minus_control_score": 1.0,
+            "treatment_minus_control_states_expanded": 0,
+            "treatment_minus_control_wall_s": -0.013789
+          },
+          "r11l": {
+            "control": {
+              "actions": 10,
+              "deadline_miss": true,
+              "frontier_weights": {
+                "risky_long_path": {
+                  "depth": 10,
+                  "depth_cost": 10.0,
+                  "frontier_key_first": -10.0,
+                  "value": -20.0
+                },
+                "safe_short_path": {
+                  "depth": 3,
+                  "depth_cost": 3.0,
+                  "frontier_key_first": 3.0,
+                  "value": 0.0
+                }
+              },
+              "navigation_actions": 10,
+              "path_cost": 10.0,
+              "score": 0.0,
+              "selected_node": "risky_long_path",
+              "states_expanded": 2,
+              "wall_s": 0.020013
+            },
+            "treatment": {
+              "actions": 3,
+              "deadline_miss": false,
+              "frontier_weights": {
+                "risky_long_path": {
+                  "depth": 10,
+                  "depth_cost": 310.0,
+                  "frontier_key_first": 290.0,
+                  "value": -20.0
+                },
+                "safe_short_path": {
+                  "depth": 3,
+                  "depth_cost": 3.0,
+                  "frontier_key_first": 3.0,
+                  "value": 0.0
+                }
+              },
+              "navigation_actions": 3,
+              "path_cost": 3.0,
+              "score": 1.0,
+              "selected_node": "safe_short_path",
+              "states_expanded": 2,
+              "wall_s": 0.006224
+            },
+            "treatment_minus_control_actions": -7,
+            "treatment_minus_control_score": 1.0,
+            "treatment_minus_control_states_expanded": 0,
+            "treatment_minus_control_wall_s": -0.013789
+          },
+          "s5i5": {
+            "control": {
+              "actions": 10,
+              "deadline_miss": true,
+              "frontier_weights": {
+                "risky_long_path": {
+                  "depth": 10,
+                  "depth_cost": 10.0,
+                  "frontier_key_first": -10.0,
+                  "value": -20.0
+                },
+                "safe_short_path": {
+                  "depth": 3,
+                  "depth_cost": 3.0,
+                  "frontier_key_first": 3.0,
+                  "value": 0.0
+                }
+              },
+              "navigation_actions": 10,
+              "path_cost": 10.0,
+              "score": 0.0,
+              "selected_node": "risky_long_path",
+              "states_expanded": 2,
+              "wall_s": 0.020012
+            },
+            "treatment": {
+              "actions": 3,
+              "deadline_miss": false,
+              "frontier_weights": {
+                "risky_long_path": {
+                  "depth": 10,
+                  "depth_cost": 310.0,
+                  "frontier_key_first": 290.0,
+                  "value": -20.0
+                },
+                "safe_short_path": {
+                  "depth": 3,
+                  "depth_cost": 3.0,
+                  "frontier_key_first": 3.0,
+                  "value": 0.0
+                }
+              },
+              "navigation_actions": 3,
+              "path_cost": 3.0,
+              "score": 1.0,
+              "selected_node": "safe_short_path",
+              "states_expanded": 2,
+              "wall_s": 0.006219
+            },
+            "treatment_minus_control_actions": -7,
+            "treatment_minus_control_score": 1.0,
+            "treatment_minus_control_states_expanded": 0,
+            "treatment_minus_control_wall_s": -0.013793
+          },
+          "sc25": {
+            "control": {
+              "actions": 10,
+              "deadline_miss": true,
+              "frontier_weights": {
+                "risky_long_path": {
+                  "depth": 10,
+                  "depth_cost": 10.0,
+                  "frontier_key_first": -10.0,
+                  "value": -20.0
+                },
+                "safe_short_path": {
+                  "depth": 3,
+                  "depth_cost": 3.0,
+                  "frontier_key_first": 3.0,
+                  "value": 0.0
+                }
+              },
+              "navigation_actions": 10,
+              "path_cost": 10.0,
+              "score": 0.0,
+              "selected_node": "risky_long_path",
+              "states_expanded": 2,
+              "wall_s": 0.020016
+            },
+            "treatment": {
+              "actions": 3,
+              "deadline_miss": false,
+              "frontier_weights": {
+                "risky_long_path": {
+                  "depth": 10,
+                  "depth_cost": 310.0,
+                  "frontier_key_first": 290.0,
+                  "value": -20.0
+                },
+                "safe_short_path": {
+                  "depth": 3,
+                  "depth_cost": 3.0,
+                  "frontier_key_first": 3.0,
+                  "value": 0.0
+                }
+              },
+              "navigation_actions": 3,
+              "path_cost": 3.0,
+              "score": 1.0,
+              "selected_node": "safe_short_path",
+              "states_expanded": 2,
+              "wall_s": 0.006223
+            },
+            "treatment_minus_control_actions": -7,
+            "treatment_minus_control_score": 1.0,
+            "treatment_minus_control_states_expanded": 0,
+            "treatment_minus_control_wall_s": -0.013793
+          }
+        },
+        "depth_or_admission_relevant": true,
+        "losing_games": [],
+        "mean_action_delta": -7.0,
+        "mean_token_delta": 0.0,
+        "mean_wall_delta_s": -0.01379133,
+        "metric_field": "path_cost_states_expanded_navigation_actions_score_and_wall_time_by_arm_game",
+        "primary_effect": 1.0
+      },
+      "eligible": false,
+      "experiment": 6216,
+      "ineligible_reasons": [
+        "terminal_class_flagged_not_admissible",
+        "substantive_corrigendum_pending",
+        "unresolved_critical_corrigendum_present",
+        "already_default_on_not_counted"
+      ],
+      "lever_id": "exp6216_budget_aware_search",
+      "mechanism": "budget_aware_search",
+      "pending_corrigendum": {
+        "critical_count": 1,
+        "resolved_rows": [
+          "IMPLAUSIBLE_PERFECT (level_credit_delta=0.0 (exactly zero). Confirm this is not a stub default.) NOT a fabrication: level_credit_delta==0 is a hard contract requirement of this script's own validate_artifact() -- this is an efficiency-only A/B with solve_claimed=False by design, not a stub default. Still INFO-level after the substrate fix (see live re-check via scripts/summarize_artifact.py); left visible, not moved to resolved, since it is not something that WAS wrong and got fixed -- it never needed fixing.",
+          "DURATION_TOO_SHORT (duration_s=1.317263 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.) resolved 2026-08-08: caused by a non-canonical inference_substrate string that fell through to the generic 60s live-model floor; corrected to offline_arcade_live_agent_runtime_self_discovery_no_llm (floor 0.01s, cleared by 3+ orders of magnitude). See inference_substrate_correction_note.",
+          "METHODOLOGY_MISSING (Compute-bound artifact missing: random_seed. Methodology unverifiable.) resolved 2026-08-08: random_seed added (the real seed already used internally to generate this run's per-cell fixtures, now surfaced at the artifact top level).",
+          "RE-VERIFIED 2026-08-09 (ARC live-agent improvement plan Phase 1c): the script was re-run FRESH (not just metadata-patched) via `python -m carnot.experiment_6216_arc_budget_aware_search_ab --date 20260809`, now that the source script itself emits the canonical inference_substrate value from the start. The fresh run reproduces the identical deadline-miss-elimination result (6 -> 0 across 6 games) and clears adversarial_verify.py with 0 CRITICAL / 0 WARN / 1 INFO (the same IMPLAUSIBLE_PERFECT-on-level_credit_delta=0.0 read, contractually required, not a stub default). This corrigendum history is restored here because build_artifact() constructs a fresh dict with no memory of prior review annotations -- determination_preservation_lint.py correctly refused the first commit attempt that omitted this restoration."
+        ],
+        "rows": [
+          {
+            "detail": "level_credit_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+            "kind": "IMPLAUSIBLE_PERFECT",
+            "severity": "info"
+          },
+          {
+            "detail": "duration_s=1.317263 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "substantive": true
+      },
+      "quality_gate": {
+        "field": "budget_aware_promotion_ready_score",
+        "quality_passed": true,
+        "score": 1.0
+      },
+      "raw_prompt_output_engine_replay_hashes": {
+        "raw_count": 0,
+        "raw_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "rows": []
+      },
+      "requirement": "REQ-ARC-WMTE-6216",
+      "safety_gate": {
+        "harmful_games": [],
+        "harmful_regression_count": 0,
+        "losing_games_reported_not_hidden": [],
+        "raw": {
+          "count": 0,
+          "games": [],
+          "losing_games_reported_not_hidden": []
+        },
+        "safety_passed": true
+      },
+      "selection_utility": 1.01,
+      "terminal_classifier": {
+        "classification": "flagged",
+        "conductor_receipt_status": null,
+        "honest_verdict_prefix": "complete",
+        "honest_verdict_raw": "complete: budget_aware_search_ab_complete_no_solve_credit",
+        "loadable": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6216_arc_budget_aware_search_ab.json",
+        "present": true,
+        "reason": "artifact carries flagged_adversarial or corrigendum_pending",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "sha256": "sha256:23aab373f15e89bc33e2ef43a383c6acf9f27822465ae4a47186c03efc0bb5b6",
+        "status_class": "ready",
+        "status_prefix": "complete_ready",
+        "status_raw": "complete_ready",
+        "terminal": true,
+        "verdict_class": "complete"
+      },
+      "zero_registry_gate": {
+        "level_credit_delta": 0,
+        "passed": true,
+        "registry_update_count": 0,
+        "solve_claimed": false
+      }
+    },
+    {
+      "aa_control": "not_recorded",
+      "activation_gate": {
+        "activation_passed": false,
+        "field": "treatment_fire_counts",
+        "mutation_proven": false,
+        "raw": {},
+        "support_count": 0,
+        "support_floor": 1,
+        "total": 0
+      },
+      "artifact": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6229_arc_gemma31_think_determination.json",
+        "sha256": "sha256:29e26f524b98ab9c97239d1b787c311b969c217421f33df498d7e6912e9aac34",
+        "size_bytes": 893
+      },
+      "default_stack_component": false,
+      "effect_gate": {
+        "by_game": {},
+        "depth_or_admission_relevant": false,
+        "losing_games": [],
+        "mean_action_delta": 0.0,
+        "mean_token_delta": 0.0,
+        "mean_wall_delta_s": 0.0,
+        "metric_field": null,
+        "primary_effect": 0.0
+      },
+      "eligible": false,
+      "experiment": 6229,
+      "ineligible_reasons": [
+        "terminal_class_skipped_not_admissible",
+        "treatment_did_not_fire",
+        "quality_gate_failed",
+        "no_depth_or_admission_relevant_effect",
+        "zero_registry_gate_failed"
+      ],
+      "lever_id": "exp6229_bounded_reinduction",
+      "mechanism": "bounded_reinduction",
+      "pending_corrigendum": {
+        "critical_count": 0,
+        "resolved_rows": [],
+        "rows": [],
+        "substantive": false
+      },
+      "quality_gate": {
+        "field": null,
+        "quality_passed": false,
+        "score": 0.0
+      },
+      "raw_prompt_output_engine_replay_hashes": {
+        "raw_count": 0,
+        "raw_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "rows": []
+      },
+      "requirement": "REQ-ARC-WMTE-6229",
+      "safety_gate": {
+        "harmful_games": [],
+        "harmful_regression_count": 0,
+        "losing_games_reported_not_hidden": [],
+        "raw": {},
+        "safety_passed": true
+      },
+      "selection_utility": 0.0,
+      "terminal_classifier": {
+        "classification": "skipped",
+        "conductor_receipt_status": null,
+        "honest_verdict_prefix": "blocked_gate_check_failed",
+        "honest_verdict_raw": "blocked_gate_check_failed",
+        "loadable": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6229_arc_gemma31_think_determination.json",
+        "present": true,
+        "reason": "blocked artifact records a gate skip",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "sha256": "sha256:29e26f524b98ab9c97239d1b787c311b969c217421f33df498d7e6912e9aac34",
+        "status_class": "blocked",
+        "status_prefix": "blocked",
+        "status_raw": "blocked",
+        "terminal": true,
+        "verdict_class": "blocked"
+      },
+      "zero_registry_gate": {
+        "level_credit_delta": null,
+        "passed": false,
+        "registry_update_count": null,
+        "solve_claimed": null
+      }
+    },
+    {
+      "aa_control": "not_recorded",
+      "activation_gate": {
+        "activation_passed": false,
+        "field": "treatment_fire_counts",
+        "mutation_proven": false,
+        "raw": {},
+        "support_count": 0,
+        "support_floor": 1,
+        "total": 0
+      },
+      "artifact": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6230_arc_induce_prompt_enrichment_heldout_ab.json",
+        "sha256": "sha256:f7759aa09e6f56f4ba7c21826ca3bb5f15acbf8b9c856532d59c351330ff2c50",
+        "size_bytes": 891
+      },
+      "default_stack_component": false,
+      "effect_gate": {
+        "by_game": {},
+        "depth_or_admission_relevant": false,
+        "losing_games": [],
+        "mean_action_delta": 0.0,
+        "mean_token_delta": 0.0,
+        "mean_wall_delta_s": 0.0,
+        "metric_field": null,
+        "primary_effect": 0.0
+      },
+      "eligible": false,
+      "experiment": 6230,
+      "ineligible_reasons": [
+        "terminal_class_skipped_not_admissible",
+        "treatment_did_not_fire",
+        "quality_gate_failed",
+        "no_depth_or_admission_relevant_effect",
+        "zero_registry_gate_failed"
+      ],
+      "lever_id": "exp6230_prompt_enrichment",
+      "mechanism": "induce_prompt_enrichment",
+      "pending_corrigendum": {
+        "critical_count": 0,
+        "resolved_rows": [],
+        "rows": [],
+        "substantive": false
+      },
+      "quality_gate": {
+        "field": null,
+        "quality_passed": false,
+        "score": 0.0
+      },
+      "raw_prompt_output_engine_replay_hashes": {
+        "raw_count": 0,
+        "raw_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "rows": []
+      },
+      "requirement": "REQ-ARC-WMTE-6230",
+      "safety_gate": {
+        "harmful_games": [],
+        "harmful_regression_count": 0,
+        "losing_games_reported_not_hidden": [],
+        "raw": {},
+        "safety_passed": true
+      },
+      "selection_utility": 0.0,
+      "terminal_classifier": {
+        "classification": "skipped",
+        "conductor_receipt_status": null,
+        "honest_verdict_prefix": "blocked_gate_check_failed",
+        "honest_verdict_raw": "blocked_gate_check_failed",
+        "loadable": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6230_arc_induce_prompt_enrichment_heldout_ab.json",
+        "present": true,
+        "reason": "blocked artifact records a gate skip",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "sha256": "sha256:f7759aa09e6f56f4ba7c21826ca3bb5f15acbf8b9c856532d59c351330ff2c50",
+        "status_class": "blocked",
+        "status_prefix": "blocked",
+        "status_raw": "blocked",
+        "terminal": true,
+        "verdict_class": "blocked"
+      },
+      "zero_registry_gate": {
+        "level_credit_delta": null,
+        "passed": false,
+        "registry_update_count": null,
+        "solve_claimed": null
+      }
+    },
+    {
+      "aa_control": "not_recorded",
+      "activation_gate": {
+        "activation_passed": false,
+        "field": "treatment_fire_counts",
+        "mutation_proven": false,
+        "raw": {},
+        "support_count": 0,
+        "support_floor": 1,
+        "total": 0
+      },
+      "artifact": {
+        "exists": false,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6231_arc_depth_lever_heldout_ab.json",
+        "sha256": null,
+        "size_bytes": null
+      },
+      "default_stack_component": false,
+      "effect_gate": {
+        "by_game": {},
+        "depth_or_admission_relevant": false,
+        "losing_games": [],
+        "mean_action_delta": 0.0,
+        "mean_token_delta": 0.0,
+        "mean_wall_delta_s": 0.0,
+        "metric_field": null,
+        "primary_effect": 0.0
+      },
+      "eligible": false,
+      "experiment": 6231,
+      "ineligible_reasons": [
+        "artifact_missing",
+        "terminal_class_missing_not_admissible",
+        "treatment_did_not_fire",
+        "quality_gate_failed",
+        "no_depth_or_admission_relevant_effect",
+        "zero_registry_gate_failed"
+      ],
+      "lever_id": "exp6231_depth_lever",
+      "mechanism": "graded_goal_bias",
+      "pending_corrigendum": {
+        "critical_count": 0,
+        "resolved_rows": [],
+        "rows": [],
+        "substantive": false
+      },
+      "quality_gate": {
+        "field": null,
+        "quality_passed": false,
+        "score": 0.0
+      },
+      "raw_prompt_output_engine_replay_hashes": {
+        "raw_count": 0,
+        "raw_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "rows": []
+      },
+      "requirement": "REQ-ARC-WMTE-6231",
+      "safety_gate": {
+        "harmful_games": [],
+        "harmful_regression_count": 0,
+        "losing_games_reported_not_hidden": [],
+        "raw": {},
+        "safety_passed": true
+      },
+      "selection_utility": 0.0,
+      "terminal_classifier": {
+        "classification": "missing",
+        "conductor_receipt_status": null,
+        "honest_verdict_prefix": null,
+        "honest_verdict_raw": null,
+        "loadable": false,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6231_arc_depth_lever_heldout_ab.json",
+        "present": false,
+        "reason": "artifact path is missing",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "sha256": null,
+        "status_class": "unknown",
+        "status_prefix": null,
+        "status_raw": null,
+        "terminal": false,
+        "verdict_class": "unknown"
+      },
+      "zero_registry_gate": {
+        "level_credit_delta": null,
+        "passed": false,
+        "registry_update_count": null,
+        "solve_claimed": null
+      }
+    }
+  ],
+  "matched_arm_configuration": {
+    "aa_control": {},
+    "built": false,
+    "current_default_stack": {
+      "budget_aware_search": true,
+      "prompt_enrichment": false,
+      "source_hashes": {
+        "python/carnot/agentic/arc_competition_agent.py": "sha256:83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
+        "python/carnot/agentic/arc_executable_world_model.py": "sha256:9a3f292788576f7b71723abf458a5cd9cbf991d7dd5da6ee70c88f5a504b1774",
+        "python/carnot/agentic/arc_solver_kit.py": "sha256:e6494a286edea4b97480556b0db72d97a470393a3007e1688fbc0d72fb043c26"
+      },
+      "think_arm_fallback": false,
+      "think_default": "\"1\"",
+      "trajectory_transfer": true
+    },
+    "default_stack_arm": {},
+    "portfolio_arm": {},
+    "reason": "fewer_than_two_eligible_depth_levers"
+  },
+  "model_loaded": false,
+  "model_specs": {
+    "family": "gemma4_31b_dense",
+    "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+    "load_policy": "forbidden_until_eligible_lever_count_at_least_two",
+    "preferred_quant": "Q4_K_M",
+    "role": "portfolio ARC inducer when eligibility passes"
+  },
+  "paired_clustered_intervals": {
+    "portfolio_interval": null,
+    "upstream_effects": {
+      "exp6215_object_relative_trajectory_transfer": 0.0,
+      "exp6216_budget_aware_search": 1.0,
+      "exp6229_bounded_reinduction": 0.0,
+      "exp6230_prompt_enrichment": 0.0,
+      "exp6231_depth_lever": 0.0
+    }
+  },
+  "per_lever_and_combination_fire_counts": {
+    "by_lever": {
+      "exp6215_object_relative_trajectory_transfer": {
+        "activation_passed": true,
+        "field": "treatment_fire_and_reason_counts",
+        "mutation_proven": true,
+        "raw": {
+          "accepted": 4,
+          "mutation_proven": true,
+          "mutation_receipts": [
+            {
+              "killed": true,
+              "name": "transfer_fire_counter_removed"
+            },
+            {
+              "killed": true,
+              "name": "fallback_avoidance_counter_removed"
+            },
+            {
+              "killed": true,
+              "name": "forbidden_access_guard_removed"
+            }
+          ],
+          "per_game": {
+            "cn04": 1,
+            "ls20": 1,
+            "s5i5": 1,
+            "tu93": 1
+          },
+          "reason_counts": {
+            "accepted_confident_transfer": 4
+          },
+          "rejected": 0,
+          "support_count": 4,
+          "support_floor": 3,
+          "total": 4
+        },
+        "support_count": 4,
+        "support_floor": 3,
+        "total": 4
+      },
+      "exp6216_budget_aware_search": {
+        "activation_passed": true,
+        "field": "consumer_fire_counts",
+        "mutation_proven": true,
+        "raw": {
+          "aa_total": 0,
+          "control_total": 0,
+          "mutation_proven": true,
+          "mutation_receipts": [
+            {
+              "killed": true,
+              "name": "consumer_fire_counter_removed"
+            },
+            {
+              "killed": true,
+              "name": "estimator_calibration_guard_removed"
+            },
+            {
+              "killed": true,
+              "name": "forbidden_access_guard_removed"
+            }
+          ],
+          "per_game": {
+            "bp35": {
+              "aa_control_a": 0,
+              "aa_control_b": 0,
+              "control": 0,
+              "treatment": 2
+            },
+            "g50t": {
+              "aa_control_a": 0,
+              "aa_control_b": 0,
+              "control": 0,
+              "treatment": 2
+            },
+            "ka59": {
+              "aa_control_a": 0,
+              "aa_control_b": 0,
+              "control": 0,
+              "treatment": 2
+            },
+            "r11l": {
+              "aa_control_a": 0,
+              "aa_control_b": 0,
+              "control": 0,
+              "treatment": 2
+            },
+            "s5i5": {
+              "aa_control_a": 0,
+              "aa_control_b": 0,
+              "control": 0,
+              "treatment": 2
+            },
+            "sc25": {
+              "aa_control_a": 0,
+              "aa_control_b": 0,
+              "control": 0,
+              "treatment": 2
+            }
+          },
+          "support_count": 6,
+          "support_floor": 3,
+          "treatment_total": 12
+        },
+        "support_count": 6,
+        "support_floor": 3,
+        "total": 12
+      },
+      "exp6229_bounded_reinduction": {
+        "activation_passed": false,
+        "field": "treatment_fire_counts",
+        "mutation_proven": false,
+        "raw": {},
+        "support_count": 0,
+        "support_floor": 1,
+        "total": 0
+      },
+      "exp6230_prompt_enrichment": {
+        "activation_passed": false,
+        "field": "treatment_fire_counts",
+        "mutation_proven": false,
+        "raw": {},
+        "support_count": 0,
+        "support_floor": 1,
+        "total": 0
+      },
+      "exp6231_depth_lever": {
+        "activation_passed": false,
+        "field": "treatment_fire_counts",
+        "mutation_proven": false,
+        "raw": {},
+        "support_count": 0,
+        "support_floor": 1,
+        "total": 0
+      }
+    },
+    "combination_fire_count": 0,
+    "selected_combination": []
+  },
+  "portfolio_promotion_ready_score": 0.0,
+  "preconditions_checked": {
+    "date": "20260809",
+    "defaults_checked": {
+      "budget_aware_search": true,
+      "prompt_enrichment": false,
+      "source_hashes": {
+        "python/carnot/agentic/arc_competition_agent.py": "sha256:83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
+        "python/carnot/agentic/arc_executable_world_model.py": "sha256:9a3f292788576f7b71723abf458a5cd9cbf991d7dd5da6ee70c88f5a504b1774",
+        "python/carnot/agentic/arc_solver_kit.py": "sha256:e6494a286edea4b97480556b0db72d97a470393a3007e1688fbc0d72fb043c26"
+      },
+      "think_arm_fallback": false,
+      "think_default": "\"1\"",
+      "trajectory_transfer": true
+    },
+    "eligibility_inputs_written_before_model_admission": true,
+    "model_admission_eligible_count": 0,
+    "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6232_arc_admissible_depth_portfolio.json",
+    "registry_checked": true
+  },
+  "preregistered_portfolio_game_seed_matrix": {
+    "cells": [],
+    "games": [],
+    "not_opened_reason": "fewer_than_two_eligible_depth_levers",
+    "opened": false,
+    "seeds": [],
+    "written_before_arm_execution": false
+  },
+  "protected_files_unchanged": {
+    "changed_paths": [],
+    "hash_after": "sha256:4e39da8b4abf769aed85ed4105d9f8720b6deaf2ed1d8e82477fb50b392aca81",
+    "hash_before": "sha256:4e39da8b4abf769aed85ed4105d9f8720b6deaf2ed1d8e82477fb50b392aca81",
+    "unchanged": true
+  },
+  "raw_prompt_output_engine_replay_hashes": {
+    "exp6215_object_relative_trajectory_transfer": {
+      "raw_count": 16,
+      "raw_sha256": "sha256:4a67a6e9bc28116d53e20822624746e7ff2c2b7f64d622dcba04137f37e93e52",
+      "rows": [
+        {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/aa_control_a/event.json",
+          "sha256": "sha256:412a0e5d75c55ca7651a1998722343fb59659bab60a467a8ac4e7d533504ca03",
+          "size_bytes": 2503
+        },
+        {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/aa_control_b/event.json",
+          "sha256": "sha256:901ed6d690f503f4c23491c5040ca94e32d2b953f0cbc4411d032712a3a688d3",
+          "size_bytes": 2503
+        },
+        {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/control/event.json",
+          "sha256": "sha256:e3b0d986881a7cf106f3c58daddf8dffdc3853e78fd4d55558444607c4e10652",
+          "size_bytes": 2498
+        },
+        {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/treatment/event.json",
+          "sha256": "sha256:8e8c47c46bd5ddb390a96ea087c1351cfe5364a7272de6a03b8aa00c244aa79b",
+          "size_bytes": 2464
+        },
+        {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/aa_control_a/event.json",
+          "sha256": "sha256:ce49b11d8261e91332ac6a765b2d34b780d9f65d697ba782fcc952d57354083b",
+          "size_bytes": 2500
+        },
+        {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/aa_control_b/event.json",
+          "sha256": "sha256:823120db9e561c9ec69e13d2db24ce1e34b799ff992a2ac98644b80bfa143a1b",
+          "size_bytes": 2503
+        },
+        {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/control/event.json",
+          "sha256": "sha256:8e211e427ba6f8436e34dc9106af94261931be4f3ab65972f29b0df12db150e1",
+          "size_bytes": 2495
+        },
+        {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/treatment/event.json",
+          "sha256": "sha256:2a8ea60abe20ccbb81f42aeb6cc68495dc61a33351775687dbc0246353f46d41",
+          "size_bytes": 2462
+        },
+        {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/aa_control_a/event.json",
+          "sha256": "sha256:b4058fcb98bc215ac992042c9c9d92e25dd957b71d6ec77a85e6a71865caf8be",
+          "size_bytes": 2485
+        },
+        {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/aa_control_b/event.json",
+          "sha256": "sha256:51f0118deb2e7dd5da82f69de4f7801f824b731cd6931f61829f18dd51471634",
+          "size_bytes": 2485
+        },
+        {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/control/event.json",
+          "sha256": "sha256:0ebb5407002eac9116ef89627d00b700e16b7ed9bb52ed34473f6da04651d1e9",
+          "size_bytes": 2480
+        },
+        {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/treatment/event.json",
+          "sha256": "sha256:e58c48cdaf3b5ba6427755bb57dcdfc118214bb370c4200500ee42307e6c4820",
+          "size_bytes": 2430
+        },
+        {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/aa_control_a/event.json",
+          "sha256": "sha256:4c2c4953a0d0cbd64eaaf553f78f497ff03da3ef3714f683ecb8facba77e0aba",
+          "size_bytes": 2503
+        },
+        {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/aa_control_b/event.json",
+          "sha256": "sha256:a54d1357b47366f8d43c039e44d0903124b705cb7a5a911f487e6f58316ef5c8",
+          "size_bytes": 2503
+        },
+        {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/control/event.json",
+          "sha256": "sha256:a901c0e811a5e17dcdfa75af288c7943be3314e8d0b36fd83660371e802e1153",
+          "size_bytes": 2498
+        },
+        {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/treatment/event.json",
+          "sha256": "sha256:ca57fd5f18ac10d45581c14a6ffbb52bf69a74d0d44b16148f49d427f76aaf42",
+          "size_bytes": 2466
+        }
+      ]
+    },
+    "exp6216_budget_aware_search": {
+      "raw_count": 0,
+      "raw_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "rows": []
+    },
+    "exp6229_bounded_reinduction": {
+      "raw_count": 0,
+      "raw_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "rows": []
+    },
+    "exp6230_prompt_enrichment": {
+      "raw_count": 0,
+      "raw_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "rows": []
+    },
+    "exp6231_depth_lever": {
+      "raw_count": 0,
+      "raw_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "rows": []
+    }
+  },
+  "registry_precheck_and_hash_before_after": {
+    "checked_before_model_admission": true,
+    "path": "ops/arc_solve_registry.yaml",
+    "portfolio_matrix_opened_after_precheck": false,
+    "registry_hash_after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "registry_hash_before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "unchanged": true
+  },
+  "registry_update_count": 0,
+  "reproducibility_checksum": "sha256:1da1c672f9b96f65b865ea08ae2015dbef0ab33edd15fa4ba938482d24469ccf",
+  "selected_levers": [],
+  "solve_provenance": "live_agent_self_discovery",
+  "source_bfs_adapter_hidden_state_registry_access_counts": {
+    "adapter_reads": 0,
+    "bfs_reads": 0,
+    "hidden_state_reads": 0,
+    "registry_hidden_state_reads": 0,
+    "registry_trajectory_reads": 0,
+    "source_reads": 0
+  },
+  "status": "skipped_less_than_two_eligible_depth_levers",
+  "supervised_runtime_receipts": {
+    "gemma_4_31b_runtime_ready_score": null,
+    "source_artifact": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6228_supervised_three_family_runtime_endurance.json",
+      "sha256": "sha256:f288a69693b8ee1cd461e1ee9436cb6743949a5d6e3685b97ee8449d38b4a773",
+      "size_bytes": 3743
+    },
+    "status": "preconditions_recorded",
+    "supervisor_contract_and_paths_hashes": null,
+    "token_receipts": [
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.0.token",
+        "sha256": "sha256:ec7d56a01607001e6401366417c5e2eb00ffa0df17ca1a9a831e0b32c8f11bf7",
+        "size_bytes": 4
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.1.token",
+        "sha256": "sha256:ec7d56a01607001e6401366417c5e2eb00ffa0df17ca1a9a831e0b32c8f11bf7",
+        "size_bytes": 4
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.2.token",
+        "sha256": "sha256:ec7d56a01607001e6401366417c5e2eb00ffa0df17ca1a9a831e0b32c8f11bf7",
+        "size_bytes": 4
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.recovery.token",
+        "sha256": "sha256:ec7d56a01607001e6401366417c5e2eb00ffa0df17ca1a9a831e0b32c8f11bf7",
+        "size_bytes": 4
+      }
+    ]
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6232_arc_admissible_depth_portfolio.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6232_arc_admissible_depth_portfolio.py -m pytest tests/python/test_experiment_6232_arc_admissible_depth_portfolio.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6232_arc_admissible_depth_portfolio.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6232_arc_admissible_depth_portfolio.py",
+    ".venv/bin/python scripts/determination_preservation_lint.py HEAD --all-files",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6232_arc_admissible_depth_portfolio.json",
+    ".venv/bin/python -m carnot.experiment_6232_arc_admissible_depth_portfolio --date 20260809"
+  ],
+  "test_exit_codes": {},
+  "upstream_paths_hashes_and_terminal_classes": {
+    "terminal_classifier": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/terminal_artifacts.py",
+      "sha256": "sha256:a51f656116f7999b5d318b176919be274f214210e087ae548b61a5b7ce2fde10",
+      "size_bytes": 13437
+    },
+    "upstreams": [
+      {
+        "artifact": {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
+          "sha256": "sha256:aa6338dd00818f392184e17be3467a2196c37e9563f7170594f0f7204e073106",
+          "size_bytes": 35903
+        },
+        "lever_id": "exp6215_object_relative_trajectory_transfer",
+        "terminal_classifier": {
+          "classification": "ready",
+          "conductor_receipt_status": null,
+          "honest_verdict_prefix": "complete",
+          "honest_verdict_raw": "complete: trajectory_transfer_ab_complete_no_solve_credit",
+          "loadable": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
+          "present": true,
+          "reason": "status=ready verdict=complete",
+          "receipt_override_attempted": false,
+          "receipt_overrode": false,
+          "sha256": "sha256:aa6338dd00818f392184e17be3467a2196c37e9563f7170594f0f7204e073106",
+          "status_class": "ready",
+          "status_prefix": "complete_ready",
+          "status_raw": "complete_ready",
+          "terminal": true,
+          "verdict_class": "complete"
+        }
+      },
+      {
+        "artifact": {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6216_arc_budget_aware_search_ab.json",
+          "sha256": "sha256:23aab373f15e89bc33e2ef43a383c6acf9f27822465ae4a47186c03efc0bb5b6",
+          "size_bytes": 49301
+        },
+        "lever_id": "exp6216_budget_aware_search",
+        "terminal_classifier": {
+          "classification": "flagged",
+          "conductor_receipt_status": null,
+          "honest_verdict_prefix": "complete",
+          "honest_verdict_raw": "complete: budget_aware_search_ab_complete_no_solve_credit",
+          "loadable": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6216_arc_budget_aware_search_ab.json",
+          "present": true,
+          "reason": "artifact carries flagged_adversarial or corrigendum_pending",
+          "receipt_override_attempted": false,
+          "receipt_overrode": false,
+          "sha256": "sha256:23aab373f15e89bc33e2ef43a383c6acf9f27822465ae4a47186c03efc0bb5b6",
+          "status_class": "ready",
+          "status_prefix": "complete_ready",
+          "status_raw": "complete_ready",
+          "terminal": true,
+          "verdict_class": "complete"
+        }
+      },
+      {
+        "artifact": {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6229_arc_gemma31_think_determination.json",
+          "sha256": "sha256:29e26f524b98ab9c97239d1b787c311b969c217421f33df498d7e6912e9aac34",
+          "size_bytes": 893
+        },
+        "lever_id": "exp6229_bounded_reinduction",
+        "terminal_classifier": {
+          "classification": "skipped",
+          "conductor_receipt_status": null,
+          "honest_verdict_prefix": "blocked_gate_check_failed",
+          "honest_verdict_raw": "blocked_gate_check_failed",
+          "loadable": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6229_arc_gemma31_think_determination.json",
+          "present": true,
+          "reason": "blocked artifact records a gate skip",
+          "receipt_override_attempted": false,
+          "receipt_overrode": false,
+          "sha256": "sha256:29e26f524b98ab9c97239d1b787c311b969c217421f33df498d7e6912e9aac34",
+          "status_class": "blocked",
+          "status_prefix": "blocked",
+          "status_raw": "blocked",
+          "terminal": true,
+          "verdict_class": "blocked"
+        }
+      },
+      {
+        "artifact": {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6230_arc_induce_prompt_enrichment_heldout_ab.json",
+          "sha256": "sha256:f7759aa09e6f56f4ba7c21826ca3bb5f15acbf8b9c856532d59c351330ff2c50",
+          "size_bytes": 891
+        },
+        "lever_id": "exp6230_prompt_enrichment",
+        "terminal_classifier": {
+          "classification": "skipped",
+          "conductor_receipt_status": null,
+          "honest_verdict_prefix": "blocked_gate_check_failed",
+          "honest_verdict_raw": "blocked_gate_check_failed",
+          "loadable": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6230_arc_induce_prompt_enrichment_heldout_ab.json",
+          "present": true,
+          "reason": "blocked artifact records a gate skip",
+          "receipt_override_attempted": false,
+          "receipt_overrode": false,
+          "sha256": "sha256:f7759aa09e6f56f4ba7c21826ca3bb5f15acbf8b9c856532d59c351330ff2c50",
+          "status_class": "blocked",
+          "status_prefix": "blocked",
+          "status_raw": "blocked",
+          "terminal": true,
+          "verdict_class": "blocked"
+        }
+      },
+      {
+        "artifact": {
+          "exists": false,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6231_arc_depth_lever_heldout_ab.json",
+          "sha256": null,
+          "size_bytes": null
+        },
+        "lever_id": "exp6231_depth_lever",
+        "terminal_classifier": {
+          "classification": "missing",
+          "conductor_receipt_status": null,
+          "honest_verdict_prefix": null,
+          "honest_verdict_raw": null,
+          "loadable": false,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6231_arc_depth_lever_heldout_ab.json",
+          "present": false,
+          "reason": "artifact path is missing",
+          "receipt_override_attempted": false,
+          "receipt_overrode": false,
+          "sha256": null,
+          "status_class": "unknown",
+          "status_prefix": null,
+          "status_raw": null,
+          "terminal": false,
+          "verdict_class": "unknown"
+        }
+      }
+    ]
+  },
+  "verifier_is_oracle": false
+}
