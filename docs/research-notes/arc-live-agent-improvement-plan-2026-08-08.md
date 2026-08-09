@@ -200,6 +200,17 @@ pass.
 After 0a's repair, one unflagged re-run under the same pre-registration. If deadline-miss
 elimination (6 -> 0) reproduces, flip `BUDGET_AWARE_SEARCH_ENABLED` (`arc_solver_kit.py:5177`).
 *Gate: same as its own prereg; unflagged artifact.*
+**DONE (2026-08-09, REQ-ARC-WMTE-6235):** re-ran fresh (not metadata-patched) now that the
+source script emits the canonical substrate directly. Reproduced identically: deadline misses
+6 -> 0 across 6 games, 0 harmful regressions, mutation-proven. Flipped
+`BUDGET_AWARE_SEARCH_ENABLED` to `True`. The fresh re-run's `build_artifact()` call silently
+dropped the artifact's prior corrigendum record (no memory of past review across a full
+rebuild) -- `determination_preservation_lint.py` caught it before any commit; fixed by restoring
+the five determination fields from git history plus a new re-verification note, and recomputing
+the checksum. Tests updated in two files (bare-default pin flip, one promotion-score expectation
+recalculated to `5/6` since one of its own checks is now permanently unsatisfiable
+post-promotion by design); a third file's tests needed no changes once the corrigendum was
+restored. 181-test collateral sweep passes.
 
 ### Phase 2 — the think shot (one to two GPU nights; the biggest single bet)
 

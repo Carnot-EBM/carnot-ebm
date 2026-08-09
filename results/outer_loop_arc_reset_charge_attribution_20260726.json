@@ -17027,6 +17027,14 @@
         "acknowledged_on": "2026-08-08",
         "reason": "Phase 1b promotion (2026-08-08): SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED flipped False->True (REQ-ARC-WMTE-6234). This artifact predates the lever entirely -- the trajectory-transfer cascade stage (arc_competition_agent.py lines ~6780-6810, added 2026-08-07 per its own \"LEVER #2 (2026-08-07...)\" comment) did not exist in the codebase when this artifact was measured (dated 2026-07-26/27), so its default value now cannot change what was measured then.",
         "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to the SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED constant, its comment block, and the SUBMITTED_AGENT_CONFIG dict entry that mirrors it -- no other line changed."
+      },
+      {
+        "path": "python/carnot/agentic/arc_solver_kit.py",
+        "sha256_was": "553a407ff3ae8fff60a0f4da8674e46bcaf3167e17e720877c4d39bf44a5811e",
+        "sha256_now": "e6494a286edea4b97480556b0db72d97a470393a3007e1688fbc0d72fb043c26",
+        "acknowledged_on": "2026-08-09",
+        "reason": "Phase 1c promotion (2026-08-09): BUDGET_AWARE_SEARCH_ENABLED flipped False->True (REQ-ARC-WMTE-6235, arc_solver_kit.py). This artifact predates the lever's live-cascade wiring entirely -- REQ-ARC-WMTE-6180-WIRING states the estimator/consumer were wired into StepwiseExplorer on 2026-08-07, and this artifact is dated 2026-07-26, so its default value now cannot change what was measured then.",
+        "evidence": "git diff -U0 on arc_solver_kit.py for this commit is confined to the BUDGET_AWARE_SEARCH_ENABLED constant and its comment block -- no other line changed."
       }
     ]
   },

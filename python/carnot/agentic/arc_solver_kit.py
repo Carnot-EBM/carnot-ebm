@@ -5171,10 +5171,15 @@ def standing_path_cost_weight(path_cost_weight: Optional[float]) -> float:
     return float(path_cost_weight)
 
 
-# Default-OFF, like every other opt-in live-agent lever in this codebase (e.g.
-# SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED, AUTO_HUD_MASK). See arc_hud_bar_detector.py's
-# Stage 3 docstring: the estimator earns trust before it earns a place in the live cascade.
-BUDGET_AWARE_SEARCH_ENABLED = False
+# PROMOTED TO DEFAULT ON 2026-08-08 (REQ-ARC-WMTE-6235, Phase 1c of the ARC live-agent
+# improvement plan). exp6216's live-path A/B (results/experiment_6216_arc_budget_aware_search_
+# ab.json, promotion_ready_score=1.0), re-run fresh and unflagged after Phase 0a's substrate
+# correction, reproduced cleanly: deadline misses 6 -> 0 across 6 games, 0 harmful regressions,
+# mutation-proven (3/3 tamper checks killed), run through the canonical live entrypoint
+# (make_carnot_agent -> E3AgentPolicy -> StepwiseExplorer._frontier). The estimator earned its
+# place in the live cascade. CARNOT_ARC_BUDGET_AWARE_SEARCH=0 reverts to the pre-promotion
+# (disabled) behavior.
+BUDGET_AWARE_SEARCH_ENABLED = True
 
 # Below this many estimated-actions-remaining, a candidate plan whose own length would
 # exceed the estimate is penalised rather than pruned outright -- pruning risks discarding
