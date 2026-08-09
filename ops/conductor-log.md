@@ -15560,3 +15560,5 @@ Still active  |
 | 2026-08-09 13:30 UTC | Gated on Exp6228 two-family readiness: fresh exact | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |
 | 2026-08-09 13:32 UTC | Gated on Exp6228 two-family readiness: fresh exact | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |
 | 2026-08-09 13:34 UTC | Gated on Exp6234 stream readiness: prospective two | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6234-fresh-flagship-constraint-event-stre |
+| 2026-08-09 13:34 UTC | Gated on Exp6235 promotion: default-off online con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6235-prospective-two-timescale-live-csl |
+| 2026-08-09 13:36 UTC | Gated on Exp6234 stream readiness: prospective two | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6234-fresh-flagship-constraint-event-stre |
