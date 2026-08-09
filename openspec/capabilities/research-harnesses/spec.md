@@ -1518,6 +1518,117 @@ unchanged, the checksum matches, and GGUF mutation count is the bare integer
 |---|---|---|
 | REQ-INFRA-6228 | `python/carnot/inference/llama_server_supervisor.py`; `python/carnot/experiment_6228_supervised_three_family_runtime_endurance.py`; terminal artifact `results/experiment_6228_supervised_three_family_runtime_endurance.json`. | `tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py`; `tests/python/test_llama_server_supervisor.py`. |
 
+## REQ-INFRA-6238: V539 Exact-Path Capstone SHALL Preserve Terminal States And Reject Unsupported Claims
+
+Carnot SHALL build Exp6238 as the V539 branch-independent capstone. The
+capstone SHALL load the active V539 roadmap, derive the exact task id to
+declared deliverable matrix for Exp6225 through Exp6238, and SHALL NOT
+substitute same-number sidecars, conductor receipts, or corrected historical
+artifacts for a missing exact path.
+
+Exp6238 SHALL classify every exact deliverable with the shared terminal
+artifact classifier. The classifier result SHALL outrank conductor receipts.
+Missing, malformed, bootstrap-only, unknown, partial, blocked, skipped,
+flagged, null, retired, and ready outcomes SHALL remain distinct in the
+artifact. A skipped branch SHALL be terminal operational evidence and SHALL
+contribute no scientific success.
+
+Exp6238 SHALL read every present upstream artifact through
+`scripts/summarize_artifact.py`, SHALL run current `scripts/adversarial_verify.py`
+logic, and SHALL record a `scripts/determination_preservation_lint.py --all`
+receipt. A live critical adversarial flag, a stamped flag, a failed structured
+gate, a missing required upstream field, a missing exact artifact, or an
+inactive treatment SHALL exclude the affected branch from any positive claim.
+
+Exp6238 SHALL recompute every structured roadmap gate from the exact upstream
+artifact field. Gate evaluation SHALL record upstream task, field, operator,
+expected value, actual value, pass/fail state, conductor receipt comparison,
+and a principle. A missing upstream artifact or missing upstream field SHALL
+fail closed.
+
+Exp6238 SHALL reconcile runtime durability, ARC depth, executable-code
+format/content, fresh-event continuous learning, shadow reachability, sampler
+activation/equivalence/default state, and hardware status independently. It
+SHALL keep runtime canaries separate from durable runtime readiness, ARC
+registry depth separate from live depth promotion, parse recovery separate from
+hidden-test content margin, deterministic memory replay separate from fresh CSL,
+shadow reachability separate from CSL promotion, and treatment activation
+separate from a null sampler result. Hardware claim count SHALL be the bare
+integer `0` unless a new independently admissible hardware receipt exists in
+the declared V539 task set.
+
+The Exp6238 artifact SHALL be written atomically to
+`results/experiment_6238_v539_adversarial_capstone.json` with
+`inference_substrate=aggregation_from_upstream_artifacts` and
+`verifier_is_oracle=false`. The artifact SHALL include these required fields:
+`status`, `roadmap_path_hash_and_task_ids`, `exact_task_artifact_matrix`,
+`conductor_receipt_matrix`, `terminal_classifier_results`,
+`adversarial_results_by_task`, `determination_preservation_results`,
+`gate_cascade_receipts`,
+`missing_blocked_skipped_partial_null_flagged_retired_and_ready_counts`,
+`prior_failure_retirement_actions`, `runtime_final_status_and_family_scores`,
+`arc_provenance_registry_hash_level_depth_and_promotion_summary`,
+`code_parse_recovery_and_content_margin_summary`,
+`fresh_stream_and_continuous_learning_summary`, `shadow_consumer_summary`,
+`sampler_activation_quality_equivalence_and_default_summary`,
+`hardware_boundary_and_claim_count`, `protected_files_unchanged`,
+`spec_traceability_status_changelog_known_issues_updates`,
+`research_complete_reconciliation`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INFRA-6238-1: Exact Declared Paths Refuse Substitutes
+GIVEN the V539 roadmap declares Exp6225 through Exp6238 deliverable paths
+WHEN Exp6238 builds its artifact matrix
+THEN every task row records the exact declared path, hash, existence state,
+terminal class, and ignored same-number aliases. Missing exact paths stay
+missing.
+
+### SCENARIO-INFRA-6238-2: Current Adversarial And Preservation Checks Gate Claims
+GIVEN present V539 artifacts
+WHEN Exp6238 runs `summarize_artifact.py`, `adversarial_verify.py`, and
+`determination_preservation_lint.py --all`
+THEN live critical flags and stamped flags are recorded per task, and no flagged
+artifact contributes to branch success or a hardware claim.
+
+### SCENARIO-INFRA-6238-3: Structured Gates Fail Closed From Exact Fields
+GIVEN roadmap tasks with `gated_on` entries
+WHEN the upstream artifact is missing or the upstream field is absent, null, or
+not equal to the expected value
+THEN the gate row fails, records the exact actual value, and preserves any
+downstream gate-block as terminal operational evidence only.
+
+### SCENARIO-INFRA-6238-4: Branch Summaries Stay Independent
+GIVEN runtime, ARC, code, CSL, shadow, sampler, and hardware branches
+WHEN Exp6238 reconciles V539
+THEN each branch reports only its own admissible upstream fields. Runtime
+readiness does not promote ARC, parse recovery does not become content gain,
+fresh-stream absence blocks CSL, sampler activation is separate from its
+equivalence/null decision, and hardware claim count remains the bare integer
+`0` without a new receipt.
+
+### SCENARIO-INFRA-6238-5: Retire-If-Same-Verdict Is Recorded Without Guessing
+GIVEN a V539 task carries `prior_failures` with `retire_if_same_verdict=true`
+WHEN the exact current artifact does not reproduce the same failed verdict
+scope, or the exact artifact is missing
+THEN Exp6238 records no exclusion-manifest update. It records a candidate only
+when the exact same failed verdict recurs.
+
+### SCENARIO-INFRA-6238-6: Artifact Schema Is Principle Annotated
+GIVEN the capstone report
+WHEN Exp6238 validates the payload before writing
+THEN every required field has provenance and a field-principle entry, count and
+gate records carry principles, `verifier_is_oracle=false`, hardware claim count
+is the bare integer `0`, the checksum matches the normalized payload, and
+`honest_verdict` starts with a terminal prefix.
+
+## Implementation Status (REQ-INFRA-6238)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6238 | `python/carnot/experiment_6238_v539_adversarial_capstone.py`; terminal artifact `results/experiment_6238_v539_adversarial_capstone.json`. | `tests/python/test_experiment_6238_v539_adversarial_capstone.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
