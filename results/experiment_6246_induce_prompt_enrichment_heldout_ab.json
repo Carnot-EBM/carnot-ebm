@@ -1,0 +1,157 @@
+{
+  "experiment": "experiment_6246_induce_prompt_enrichment_heldout_ab",
+  "title": "Phase 3a gate: leave-one-game-out held-out change-fidelity A/B for CARNOT_ARC_INDUCE_PROMPT_ENRICHMENT",
+  "run_date": "2026-08-09T15:00:05Z",
+  "roster": [
+    "m0r0",
+    "ft09",
+    "tr87",
+    "cn04",
+    "ar25"
+  ],
+  "per_game_results": [
+    {
+      "game": "m0r0",
+      "arm": "off",
+      "induce_s": 291.8,
+      "induction_ok": true,
+      "change_fidelity": 1.0,
+      "accuracy": 0.8,
+      "cell_recall": 1.0,
+      "hud_mask_status": "applied"
+    },
+    {
+      "game": "m0r0",
+      "arm": "on",
+      "induce_s": 1575.0,
+      "induction_ok": false,
+      "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: TimeoutError('timed out')"
+    },
+    {
+      "game": "ft09",
+      "arm": "off",
+      "induce_s": 362.9,
+      "induction_ok": true,
+      "change_fidelity": 0.0,
+      "accuracy": 1.0,
+      "cell_recall": 0.0,
+      "hud_mask_status": "refused_swallow_check_unmeasurable"
+    },
+    {
+      "game": "ft09",
+      "arm": "on",
+      "induce_s": 147.8,
+      "induction_ok": true,
+      "change_fidelity": 0.0,
+      "accuracy": 1.0,
+      "cell_recall": 0.0,
+      "hud_mask_status": "refused_swallow_check_unmeasurable"
+    },
+    {
+      "game": "tr87",
+      "arm": "off",
+      "induce_s": 275.9,
+      "induction_ok": true,
+      "change_fidelity": 0.0619,
+      "accuracy": 0.0,
+      "cell_recall": 1.0,
+      "hud_mask_status": "applied"
+    },
+    {
+      "game": "tr87",
+      "arm": "on",
+      "induce_s": 269.9,
+      "induction_ok": true,
+      "change_fidelity": 0.3942,
+      "accuracy": 0.0,
+      "cell_recall": 0.95,
+      "hud_mask_status": "applied"
+    },
+    {
+      "game": "cn04",
+      "arm": "off",
+      "induce_s": 233.2,
+      "induction_ok": true,
+      "change_fidelity": 0.5845,
+      "accuracy": 0.2,
+      "cell_recall": 0.8273,
+      "hud_mask_status": "unresolved"
+    },
+    {
+      "game": "cn04",
+      "arm": "on",
+      "induce_s": 234.8,
+      "induction_ok": true,
+      "change_fidelity": 0.597,
+      "accuracy": 0.2,
+      "cell_recall": 0.7329,
+      "hud_mask_status": "unresolved"
+    },
+    {
+      "game": "ar25",
+      "arm": "off",
+      "induce_s": 249.4,
+      "induction_ok": true,
+      "change_fidelity": 0.7931,
+      "accuracy": 0.2,
+      "cell_recall": 0.9679,
+      "hud_mask_status": "applied"
+    },
+    {
+      "game": "ar25",
+      "arm": "on",
+      "induce_s": 491.9,
+      "induction_ok": true,
+      "change_fidelity": 0.1257,
+      "accuracy": 0.0,
+      "cell_recall": 0.7798,
+      "hud_mask_status": "applied"
+    }
+  ],
+  "game_deltas": [
+    {
+      "game": "ft09",
+      "off": 0.0,
+      "on": 0.0,
+      "delta": 0.0
+    },
+    {
+      "game": "tr87",
+      "off": 0.0619,
+      "on": 0.3942,
+      "delta": 0.3323
+    },
+    {
+      "game": "cn04",
+      "off": 0.5845,
+      "on": 0.597,
+      "delta": 0.0125
+    },
+    {
+      "game": "ar25",
+      "off": 0.7931,
+      "on": 0.1257,
+      "delta": -0.6674
+    }
+  ],
+  "n_games_comparable": 4,
+  "n_games_improved": 2,
+  "gate_condition": ">=4 of 5 held-out games improve change_fidelity (off->on)",
+  "gate_met": false,
+  "solve_provenance": "development_proxy",
+  "arc_solve_claim": false,
+  "verifier_is_oracle": true,
+  "verifier_is_oracle_principle": "change_fidelity is scored against the offline game's own real next_grid; this measures whether the enrichment lever moves the induction-quality metric, not an oracle-distinct capability claim.",
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_principle": "both arms invoke the real gemma-4-31B-it-qat server on a 3090; 60s duration floor applies to the whole run.",
+  "model_specs": [
+    {
+      "name": "gemma-4-31B-it-qat",
+      "role": "induction proposer, both arms"
+    }
+  ],
+  "random_seed": 6246,
+  "honest_verdict": "complete_prompt_enrichment_ab_2_of_4_games_improved_gate_not_met",
+  "duration_s": 4146.281,
+  "reproducibility_checksum": "828c06527bfd33ff92711189f6ddb692de6c2333c229a4e9b6bc93a067120bad"
+}
