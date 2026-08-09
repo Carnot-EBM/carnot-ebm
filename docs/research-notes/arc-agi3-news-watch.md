@@ -118,3 +118,13 @@ CHECK_TIMED_OUT
 
 - Kaggle analyzed 500 failed submissions: about one-third had no traceable visible error, nearly 20% omitted required GPU configuration, and smaller categories included missing datasets/dependencies, CUDA OOM, obsolete endpoints, and writes to read-only `/kaggle/input`. Host Greg Kamradt added that organizers cannot inspect notebooks until teams open-source them. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
 
+## 2026-08-09 13:15 UTC -- NEW
+
+- The public leaderboard is now led by **YUTO KOJIMA** with a **1.86** score from an August 9 submission, ahead of Andy liu at 1.69. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- Greg Kamradt clarified that final-selected notebooks are **not rerun**: private scores are retained from the original submission run. Each run evaluates both leaderboard halves, while only the public half is revealed. ARC-AGI-3’s runtime limit is **9 hours**. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/729985)
+
+- Kaggle execution limits were officially clarified: logs stop being captured after 10 MB without terminating the notebook; `/kaggle/working` has a 20 GB quota and exceeding it terminates the kernel; CPU notebooks have 30 GB RAM enforced through cgroups; native crash details remain hidden although exit code 139 identifies SIGSEGV. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/724841)
+
+- On August 3, ARC Prize merged a correction to the official Agents repository replacing the obsolete `three.arcprize.org` defaults and API-key documentation with `arcprize.org`. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/732419), [merged PR](https://github.com/arcprize/ARC-AGI-3-Agents/pull/74)
+
