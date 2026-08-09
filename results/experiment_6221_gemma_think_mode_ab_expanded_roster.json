@@ -435,29 +435,80 @@
       "goal_predicate_accuracy": 0.8,
       "n_real_levelups": 1,
       "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "sk48",
+      "arm": "think",
+      "induce_s": 219.7,
+      "induction_ok": true,
+      "reason_engaged": true,
+      "max_raw_completion_len": 19037,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.1251,
+      "goal_predicate_accuracy": 1.0,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 1.0,
+      "rerun_of_infra_crash": true,
+      "rerun_timestamp": "2026-08-09T09:50:11Z",
+      "rerun_attempts_used": 1
+    },
+    {
+      "game": "ls20",
+      "arm": "think",
+      "induce_s": 208.2,
+      "induction_ok": true,
+      "reason_engaged": true,
+      "max_raw_completion_len": 16440,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.9438,
+      "goal_predicate_accuracy": 0.9167,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0,
+      "rerun_of_infra_crash": true,
+      "rerun_timestamp": "2026-08-09T09:53:40Z",
+      "rerun_attempts_used": 1
+    },
+    {
+      "game": "cd82",
+      "arm": "think",
+      "induce_s": 212.8,
+      "induction_ok": true,
+      "reason_engaged": true,
+      "max_raw_completion_len": 20217,
+      "n_generate_calls": 1,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.1046,
+      "goal_predicate_accuracy": 1.0,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 1.0,
+      "rerun_of_infra_crash": true,
+      "rerun_timestamp": "2026-08-09T09:57:13Z",
+      "rerun_attempts_used": 1
     }
   ],
   "comparison_summary": {
-    "n_games_both_induced": 9,
+    "n_games_both_induced": 12,
     "no_think_induction_success": 12,
-    "think_induction_success": 10,
+    "think_induction_success": 13,
     "no_think_reason_engaged_frac": 0.0,
     "think_reason_engaged_frac": 1.0,
     "mean_heldout_no_think": 0.0833,
-    "mean_heldout_think": 0.2545,
+    "mean_heldout_think": 0.1958,
     "mean_goal_predicate_no_think": 0.618,
-    "mean_goal_predicate_think": 0.855,
+    "mean_goal_predicate_think": 0.8821,
     "mean_levelup_recall_no_think": 0.3333,
-    "mean_levelup_recall_think": 0.3,
+    "mean_levelup_recall_think": 0.3846,
     "per_game_headtohead_think_tie_nothink": {
       "goal_predicate_accuracy": [
-        4,
+        7,
         2,
         3
       ],
       "levelup_positive_recall": [
-        2,
-        4,
+        3,
+        6,
         3
       ]
     }
@@ -473,5 +524,6 @@
     "cuda_server_up_or_gpu1_headroom": true,
     "ok": true
   },
-  "reproducibility_checksum": "86ae64b945a068c7315f3e67c11bd4f0e49663c7375f9a9ada426a09b654c10b"
+  "reproducibility_checksum": "1bc061f6f3f0772e248543a9ea6f6c857d275f0630aeb4eecd866bf21bbbb83a",
+  "corrigendum_note": "2026-08-09 (REQ-ARC-WMTE-6242/6243 correction): the original per_game_results rows for sk48/ls20/cd82's 'think' arm (induction_ok=False, induction_failure_detail citing RemoteDisconnected) were llama-server crashes -- the server's own stderr log shows two SIGINTs back-to-back mid-generation, zero OOM/CUDA-error/abort, steady ~29.6 tok/s decode right up to death. That is this project's pre-existing, long-standing 'reaper' issue (ops/known-issues.md), NOT a think-mode capability signal -- NOT deleted or overwritten (Test-Run Record Integrity Discipline), preserved in place. Three NEW rows for the SAME (game, 'think') pairs were appended below (rerun_of_infra_crash=true,rerun_timestamp set), collected 2026-08-09 with carnot-conductor.service and carnot-orphan-cleanup.timer both STOPPED as an isolation test (see ops/known-issues.md for the isolation-test finding: 3/3 clean vs 4/4 crashed while those units were running, small-n, not fully conclusive). All three succeeded on the FIRST attempt with real reasoning engaged and real completions (16-20k chars), landing at heldout_accuracy=0.0 -- a genuine floor TIE with no_think on all three games, not the 'think fails outright' asymmetry the crash-corrupted reads implied. comparison_summary was recomputed via _summarize_pair() over the corrected row set (it naturally prefers the successful new rows: the filter is induction_ok truthy, and the original crashed rows have induction_ok=False, so they never entered the by-arm dicts to begin with -- no manual de-duplication needed). The admission-rate SIGN TEST result itself (scripts/analyze_exp6221_admission_rate.py) is UNCHANGED by this correction: 0.0 does not cross the 1.0 admission bar either way, so these three games were already correctly classified as ties for that specific metric; what changes is that they are now a CONFIRMED tie rather than an unmeasured crash. REQ-ARC-WMTE-6243's motivating 'mirror failure' claim (think fails outright on cd82/ls20/sk48, mirroring sp80's no_think failure) is RETRACTED -- sp80 remains the only genuine total-induction-failure case in this corpus."
 }

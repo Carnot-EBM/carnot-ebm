@@ -16261,3 +16261,59 @@ genuine think win across both runs -- the one concrete lead left standing.
 
 See openspec/capabilities/arc-world-model-trust-energy/spec.md REQ-ARC-WMTE-6242 for full
 writeup. results/analysis_exp6221_admission_rate_20260809.json is the artifact.
+
+## 2026-08-09 llama-server reaper: isolation test rules out orphan-cleanup by code, correlates with conductor by timing (inconclusive, small-n)
+
+Operator asked (1) whether the think-arm crashes were context exhaustion / VRAM, and (2) to stop
+the conductor + orphan-cleanup timer and retry, to test whether either is the sender of the
+SIGINTs that keep killing llama-server mid-think-generation (see the two prior reaper-recurrence
+entries above, same day).
+
+**Not context exhaustion, not VRAM.** Read the crashed server's own stderr log directly
+(`/tmp/carnot_llama_server_logs/llama_server_p8940_*.log`). KV cache is already q8_0
+(`--cache-type-k q8_0 --cache-type-v q8_0` in the launch args). Zero OOM / CUDA-error / ggml_abort
+/ assert anywhere. Decode throughput was flat at ~29.6 tok/s right up to the last log line:
+
+```
+1.18.968.064 I slot print_timing: id  3 | task 0 | n_decoded = 1439, tg = 29.59 t/s
+1.20.474.436 I srv    operator(): operator(): cleaning up before exit...
+Received second interrupt, terminating immediately.
+```
+
+Two SIGINTs, back-to-back, mid-healthy-generation. External signal, not a self-detected resource
+fault -- matches the pre-existing "SIGINT signature, zero OOM/abort, sender unidentified" finding
+already on record in ops/status.md.
+
+**orphan-cleanup.sh ruled out on code-reading grounds, not just by re-running.** Read
+`/home/ianblenke/.carnot/orphan-cleanup.sh` directly: its kill loop only matches processes whose
+`comm` is exactly `python3` or `pytest` (`case "$comm" in python3|pytest) ;; *) continue ;; esac`),
+and it uses `kill -9` (SIGKILL), not SIGINT. `llama-server` matches neither the process-name filter
+nor the signal type. Even indirectly (killing the PYTHON DRIVER that owns the llama-server child)
+doesn't fit: this session's driver runs were always under the script's 120-minute threshold, and a
+killed parent doesn't itself deliver a signal to an already-forked, session-detached child.
+
+**Isolation test result: 3/3 clean with both units stopped, vs 4/4 crashed while they were
+running.** `systemctl --user stop carnot-conductor.service carnot-orphan-cleanup.timer` (confirmed
+inactive, conductor PID 2311437 confirmed gone, GPUs at 2 MiB before relaunch), then reran the
+same 3 previously-crashed cells (sk48/ls20/cd82 think-arm induction, 200-900s each). All three
+succeeded on the FIRST attempt this time -- no crash, real generation, real completions.
+
+**Read this honestly, not as proof.** n=4 crashes (all while the conductor was running) vs n=3
+clean (all while it was stopped) is a real correlation worth recording, but it is not statistical
+proof at this sample size, and NO mechanism has been found for how `research_conductor.py` (a
+separate process, on GPU 0, with no code path that touches GPU 1's llama-server) would send SIGINT
+to an unrelated process on a different GPU. orphan-cleanup.sh is ruled out on code grounds
+regardless of this correlation. Two live possibilities this leaves open: (a) the conductor process
+itself, through some mechanism not yet identified in `research_conductor.py` (needs a code-level
+investigation, not assumed from correlation alone), or (b) a confound unrelated to either unit that
+happened to coincide with the stop (e.g., system load, another process, plain non-determinism in
+the crash's true trigger). Both units were restarted after the test per the operator's own framing
+("for the time being") -- this was a diagnostic pause, not a permanent stop. If the crash recurs
+with the conductor running again, that would meaningfully strengthen the correlation; if it also
+recurs occasionally with the conductor stopped in a future session, that would weaken it. Do not
+treat this entry as "solved" -- it narrows the hypothesis space, it does not close it.
+
+**Corrected data recovered from this test:** the 3 re-run cells all measure a genuine
+`heldout_accuracy=0.0` (real floor tie with no_think, not a crash) -- see the
+REQ-ARC-WMTE-6242/6243 corrections in `openspec/capabilities/arc-world-model-trust-energy/spec.md`
+and the matching correction in `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md`.

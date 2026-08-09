@@ -263,6 +263,20 @@ the sequential single-retry design pays no teardown cost on this model already, 
 dual-preload idea that prompted asking about it is better scoped as a SEPARATE, not-yet-built
 lever (concurrent arm racing to cut wall-clock, not to avoid setup cost).
 
+**CORRECTION (2026-08-09, same day, later).** The "cd82/ls20/sk48 mirror shape" claim above is
+retracted. Operator asked whether the think crashes were context exhaustion; reading the server's
+own stderr log showed zero tokens generated and two back-to-back SIGINTs mid-generation (this
+project's pre-existing "reaper" issue, not context exhaustion, not VRAM — KV cache is already
+q8_0, no OOM/CUDA-error anywhere in the log). Reran all three cleanly after stopping
+`carnot-conductor.service` + `carnot-orphan-cleanup.timer` as an isolation test (3/3 succeeded on
+the first attempt, vs 4/4 crashes while those units were running — suggestive, small-n, see
+known-issues.md). All three now measure a genuine `heldout_accuracy=0.0` floor tie with no_think.
+sp80 is the ONLY real total-induction-failure case in this corpus; the lever's design is
+unaffected, but its evidence base narrows from "two complementary failure shapes" to one clean
+example. The admission-rate sign test result itself is unchanged (still 1/0/12, p=1.0, gate not
+met) — `0.0` was never going to cross the `1.0` bar regardless of which side crashed. Full detail
+in REQ-ARC-WMTE-6242/6243's own corrections in spec.md.
+
 **2b. (Conditional on 2a or 1a moving the distribution) Best-of-N engine sampling.**
 NOT UNLOCKED — 2a's gate was not met (see above).
 Selection is measured NOT to be our bottleneck, and the held-out gate is an oracle-distinct
