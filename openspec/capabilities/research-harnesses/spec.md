@@ -1309,6 +1309,107 @@ unrelated existing suite failure.
 |---|---|---|
 | REQ-INFRA-6226 | `python/carnot/experiment_6226_v539_post_marker_source_scope_freeze.py`; terminal artifact `results/experiment_6226_v539_post_marker_source_scope_freeze.json`. | `tests/python/test_experiment_6226_v539_post_marker_source_scope_freeze.py`. |
 
+## REQ-INFRA-6227: Llama-Server Signal Sender Diagnostic SHALL Be Bounded, Owned, And Honest
+
+Carnot SHALL build Exp6227 as a runtime diagnostic for the Gemma-4-31B native
+`llama-server` reaper recurrence and caller-hang failure mode. The diagnostic
+SHALL resolve the exact cached
+`unsloth/gemma-4-31B-it-GGUF` `Q4_K_M` GGUF using the local resolver, SHALL use
+the GGUF-embedded chat template, and SHALL run the native llama.cpp server. No
+legacy model, Hugging Face tokenizer side channel, or substitute GGUF may be
+used.
+
+Exp6227 SHALL reconstruct the two persisted long-run incidents from available
+logs before launching a new server. The reconstruction SHALL separate server
+death evidence, connection failure evidence, retry evidence, and caller wait or
+hang evidence. Absence of privileged sender evidence SHALL be recorded as an
+honest unlocalized taxonomy rather than inferred.
+
+Exp6227 SHALL run one short server lifecycle under a task-owned process with a
+hard outer deadline. Before launch, during health/token calls, and after
+cleanup it SHALL capture GPU owners, process ancestry, process identity,
+session, process group, cgroup, stderr, exit status, health and token timing,
+caller wait state, signal-tool availability, and sender evidence when the host
+exposes it. It SHALL use auditd, eBPF, bpftrace, strace, or equivalent tracing
+only when already available and permitted without privilege escalation, and
+SHALL record unavailable or denied tools explicitly.
+
+Exp6227 SHALL specify and test a finite wait, retry, and owned-process cleanup
+contract. Cleanup SHALL target only the recorded PID/start-time identity, SHALL
+refuse PID reuse and unrelated owners, and SHALL never kill unrelated
+processes. The contract SHALL classify connection refusal, dead-server retry,
+deadline expiry, timeout, externally signaled exits, and unknown sender cases
+exactly. A controlled owned-child death test SHALL prove bounded wait and
+owned-only cleanup. The diagnostic SHALL NOT add speculative checkpointing and
+SHALL NOT mutate GGUF files.
+
+The Exp6227 artifact SHALL be written to
+`results/experiment_6227_llama_server_signal_sender_diagnostic.json` and SHALL
+include these required fields: `status`,
+`prior_incident_paths_hashes_and_timeline`, `preconditions_checked`,
+`gpu_owner_receipts_before_during_after`, `model_specs`,
+`exact_gguf_and_llama_cpp_receipts`, `owned_process_tree_snapshots`,
+`launch_command_session_and_cgroup_receipts`, `health_and_token_timeline`,
+`signal_trace_tool_availability`, `signal_events_and_sender_receipts`,
+`server_exit_and_stderr_receipts`,
+`caller_thread_and_wait_state_receipts`, `bounded_reproduction_deadline`,
+`root_cause_taxonomy`, `sender_identified_score`, `unlocalized_reason`,
+`finite_wait_retry_cleanup_contract`, `controlled_owned_child_death_test`,
+`unrelated_process_kill_count`, `gguf_mutation_count`,
+`runtime_diagnostic_ready_score`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`. The
+`unrelated_process_kill_count` and `gguf_mutation_count` fields SHALL be bare
+integer zeroes. `sender_identified_score=0` MAY still yield
+`runtime_diagnostic_ready_score=1` when unlocalized evidence and the finite
+contract are complete.
+
+### SCENARIO-INFRA-6227-1: Prior Incidents Are Reconstructed Without Collapsing Failure Phases
+GIVEN persisted Exp6212, expanded-roster run logs, and server logs
+WHEN Exp6227 builds the prior-incident timeline
+THEN it records path hashes and separates server death, connection failure,
+retry, caller wait or hang, and timeout evidence instead of reporting a single
+ambiguous crash bucket.
+
+### SCENARIO-INFRA-6227-2: Owned Gemma Server Lifecycle Captures Runtime Evidence
+GIVEN no disallowed GPU owner and the exact cached Gemma-4-31B Q4_K_M GGUF
+WHEN Exp6227 launches one native llama.cpp server under its own process
+identity
+THEN it records preconditions, exact GGUF and llama.cpp receipts, process tree,
+session, process group, cgroup, GPU owners, health, token, stderr, exit status,
+caller wait state, and every bounded timeout.
+
+### SCENARIO-INFRA-6227-3: Sender Evidence Is Honest When Privileges Are Insufficient
+GIVEN signal tracing tools are absent, denied, or do not expose sender PID
+WHEN a server exits from a signal or prior logs show interrupt handling
+THEN Exp6227 records tool availability and denial receipts, sets
+`sender_identified_score=0`, and explains the unlocalized reason without
+guessing the sender.
+
+### SCENARIO-INFRA-6227-4: Finite Retry And Cleanup Refuse Unowned Or Reused Processes
+GIVEN connection refusal, dead server retry, deadline expiry, PID reuse, and
+unrelated-owner cases
+WHEN Exp6227 applies the recovery contract
+THEN every wait is bounded, retries are finite, cleanup targets only the
+recorded PID/start-time identity, and unrelated-process kill count remains the
+bare integer `0`.
+
+### SCENARIO-INFRA-6227-5: Artifact Schema Is Principle Annotated And Mutates No GGUF
+GIVEN the runtime diagnostic artifact
+WHEN Exp6227 validates it
+THEN every required field is present, every required field has provenance and a
+principle, `verifier_is_oracle=false`, the inference substrate is exactly
+`native_llama_cpp_owned_signal_sender_diagnostic`, the checksum matches the
+normalized payload, protected files are unchanged, and `gguf_mutation_count` is
+the bare integer `0`.
+
+## Implementation Status (REQ-INFRA-6227)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6227 | `python/carnot/experiment_6227_llama_server_signal_sender_diagnostic.py`; terminal artifact `results/experiment_6227_llama_server_signal_sender_diagnostic.json`. | `tests/python/test_experiment_6227_llama_server_signal_sender_diagnostic.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
