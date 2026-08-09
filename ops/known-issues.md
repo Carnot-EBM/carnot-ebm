@@ -72,6 +72,43 @@ convention) and its corrigendum-emptying rule (no escape hatch, by design) —
 `results/experiment_6218_arc_admissible_lever_portfolio_heldout.json` (rerun, honest result
 unchanged).
 
+### NEW 2026-08-08 (Phase 0d of the ARC live-agent improvement plan): decision — the standing budget favors depth over efficiency, by roughly an order of magnitude
+
+**What was measured.** Reimplemented the real Kaggle scoring rule
+(`arc_agi.scorecard.EnvironmentScoreCalculator`, read from the vendored ARC-AGI reference
+checkout, not guessed) against our own 25-game level-count structure
+(`ops/arc_solve_registry.yaml`). A level scores 0 if not completed, otherwise
+`min((baseline_actions/agent_actions)^2*100, 115)`; a game's score is a weighted average over
+attempted levels, weighted by level index, with a hard completion ceiling that no amount of
+efficiency can exceed.
+
+**Result.** The full efficiency range (worst plausible pace to the formula's own maximum bonus)
+moves a game's score by under 1.7x. Going from "reach level 1 only" to "reach level 1 and level 2"
+at the same first-win rate roughly triples the score. Depth dominates efficiency by 5-50x
+depending on the comparison tested.
+
+**Decision.** Budget work toward reaching one more level (depth) ahead of reaching the same level
+in fewer actions (efficiency), by roughly an order of magnitude in expected score impact. This
+endorses continuing Phase 1's 1a/1b items (the world-model closure re-derivation and trajectory
+transfer promotion) as the correct next targets. A task whose only benefit is fewer actions on an
+already-completed level should lose priority to any task that plausibly unlocks one more level.
+
+**Honest caveat, not resolved.** This model, even at a 100% first-win rate with zero deepening,
+tops out at 0.0352 on our own game-count structure — it cannot fully reproduce the observed 0.08
+hidden score without most games reaching level 2 and some level 3, deeper than our documented
+"live multi-level rate ~0" belief (2026-06-24 entry, below). Three explanations are consistent and
+undistinguished by data on hand: the true hidden roster is shallower than our public 25-game
+proxy, our multi-level-rate figure is stale for the current scored config, or both plus small-N
+sampling noise. This does not change the decision above — closing the gap requires MORE depth than
+modeled here, not less — but it is an open question, not a settled one.
+
+**Cross-references:** full note
+`docs/research-notes/arc-completion-cap-vs-efficiency-2026-08-08.md` —
+`docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 0d — 2026-06-19 ref
+53862349 (the 0.08 first scored hidden submission) — `first_win_rate_integrated = 0.04` (A4
+retarget entry, the held-out proxy closer to hidden-game conditions) — 2026-06-24 entry below
+("live first-win rate is ~0.59 but the live multi-level rate is ~0").
+
 ### NEW 2026-08-08 (OUTER-LOOP FOLLOW-UP — user directive "let's add a follow-up for that"): LIVE-AGENT WHOLE-PROCESS-CRASH RECOVERY — UNKNOWN, NEEDS A CHECK
 
 Context: this session root-caused three unexplained kills of a dev script's background process
