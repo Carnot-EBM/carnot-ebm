@@ -1629,6 +1629,95 @@ is the bare integer `0`, the checksum matches the normalized payload, and
 |---|---|---|
 | REQ-INFRA-6238 | `python/carnot/experiment_6238_v539_adversarial_capstone.py`; terminal artifact `results/experiment_6238_v539_adversarial_capstone.json`. | `tests/python/test_experiment_6238_v539_adversarial_capstone.py`. |
 
+## REQ-INFRA-6260: V540 Terminal Transition SHALL Preserve V539 Exact-Path States
+
+Carnot SHALL build Exp6260 as the V539-to-V540 handoff. It SHALL classify each
+V539 task from the exact declared deliverable path recorded by the V539
+capstone. It SHALL NOT promote a task from conductor status, same-number
+aliases, sidecars, or roadmap presence.
+
+Exp6260 SHALL use `python/carnot/terminal_artifacts.py` for all artifact
+classification. Missing, malformed, bootstrap-only, running, partial, and
+unknown artifacts SHALL stay nonterminal. Exp6228 SHALL remain nonterminal when
+its exact artifact contains only preconditions, `status=preconditions_recorded`,
+null readiness fields, and no terminal `honest_verdict`.
+
+Exp6260 SHALL validate the V540 roadmap without activating a next roadmap or
+editing the active roadmap. The task set SHALL contain exactly Exp6260 through
+Exp6271 in order. Every task SHALL declare a `results/*.json` deliverable,
+valid dependencies, valid structured gates, complete `prior_failures`, and
+`agent_type=codex` with `model=gpt-5.5`. Gates SHALL reference fields named in
+the upstream prompt's `REQUIRED ARTIFACT FIELDS` block. Retired dependencies
+SHALL be rejected.
+
+Exp6260 SHALL scan tracked and untracked experiment paths before writing its
+artifact. The scan SHALL prove that concurrent Exp6240 and Exp6244 through
+Exp6246 files do not collide with the reserved Exp6260 through Exp6271 task
+range. It SHALL record protected-file hashes before and after the artifact
+write.
+
+The Exp6260 artifact SHALL be written atomically to
+`results/experiment_6260_v540_terminal_transition.json` with
+`inference_substrate=deterministic_v539_v540_terminal_transition_audit` and
+`verifier_is_oracle=false`. The artifact SHALL include these required fields:
+`status`, `v539_milestone_roadmap_and_hash`, `v539_task_terminal_matrix`,
+`exp6228_nonterminal_classification`, `v539_capstone_path_hash_and_summary`,
+`operational_retro_path_hash_and_summary`,
+`missing_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts`,
+`concurrent_exp6240_6244_6245_6246_collision_receipts`,
+`v540_roadmap_path_and_hash`, `v540_task_ids_and_deliverables`, `task_count`,
+`phase_counts`, `dependency_validation`, `gated_on_validation`,
+`prior_failure_validation`, `retired_dependency_count`, `id_collision_count`,
+`model_policy_validation`, `prompt_contract_validation`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `reproducibility_checksum`, and
+`honest_verdict`. The `task_count` SHALL be 12. The
+`retired_dependency_count` and `id_collision_count` SHALL be bare integer `0`.
+
+### SCENARIO-INFRA-6260-1: Exact Declared Path Outranks Aliases
+GIVEN a V539 task declares one result artifact path
+WHEN another same-number artifact exists
+THEN Exp6260 classifies only the declared path and records ignored aliases.
+
+### SCENARIO-INFRA-6260-2: Preconditions-Only Artifacts Stay Nonterminal
+GIVEN Exp6228 has `status=preconditions_recorded` and no terminal
+`honest_verdict`
+WHEN Exp6260 classifies the exact Exp6228 artifact
+THEN the classification is nonterminal and no conductor receipt can promote it.
+
+### SCENARIO-INFRA-6260-3: Reserved Id Collision Scan Is Fail-Closed
+GIVEN files may exist for concurrent Exp6240 and Exp6244 through Exp6246 work
+WHEN Exp6260 scans tracked and untracked experiment paths
+THEN those concurrent ids are recorded separately and any unexpected Exp6260
+through Exp6271 pre-existing path is a collision.
+
+### SCENARIO-INFRA-6260-4: V540 Roadmap Contracts Are Mechanical
+GIVEN the V540 roadmap tasks
+WHEN Exp6260 validates task ids, deliverables, dependencies, gates, priors,
+agent routing, model routing, and prompt endings
+THEN exactly 12 tasks in Exp6260 through Exp6271 order pass, with no retired
+dependency and no duplicate id.
+
+### SCENARIO-INFRA-6260-5: Protected Hashes Prove Non-Mutation
+GIVEN protected files are hashed before artifact generation
+WHEN Exp6260 writes its result
+THEN each protected path records before and after hashes and the result fails
+closed if any protected file changed.
+
+### SCENARIO-INFRA-6260-6: Artifact Schema Is Principle Annotated
+GIVEN the transition report is built
+WHEN Exp6260 validates it before writing
+THEN every required field has provenance and a field-principle entry,
+`verifier_is_oracle=false`, the checksum matches, and `honest_verdict` starts
+with a terminal prefix.
+
+## Implementation Status (REQ-INFRA-6260)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6260 | `python/carnot/experiment_6260_v540_terminal_transition.py`; terminal artifact `results/experiment_6260_v540_terminal_transition.json`. | `tests/python/test_experiment_6260_v540_terminal_transition.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
