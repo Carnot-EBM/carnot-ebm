@@ -8353,3 +8353,32 @@ All work this session is committed and pushed to both remotes (gitea + github), 
 filed, tests passing, freshness/determination-preservation/adversarial-verify lints all clean at
 each commit. No corrigenda dropped. Two git-add-A races with the concurrently-running conductor
 (commits `4627821cea`, `b87becbde8`, `64c1a6420d`) verified content-complete, none rewritten.
+
+## 2026-08-09 (later) outer-loop session: Phase 4 started, two premises redirected
+
+Continuing the 2026-08-09 ARC live-agent improvement plan session (see the earlier entry above
+for Phases 0-2). Phase 4 work:
+
+- **4a: REDIRECTED before building anything (REQ-ARC-WMTE-6244).** The plan's own premise
+  ("retrain the CNN dynamics prior, trust() blocks it") was checked against the codebase and found
+  stale: the trust gate already passes in production (sp80, cell-recall 0.98-1.0), and a much
+  deeper pre-existing investigation (REQ-ARC-FCP-5699-14 through -20) had already root-caused the
+  real bottleneck as the PLANNER (zero-gradient goal-energy for never-completed levels), not
+  prediction quality. Redirected to the admission-bottleneck note's own named next step instead:
+  characterizing Mode A's error class. Finding: four distinct root causes across ar25/ka59/re86/
+  cd82 (a code-generation bug, coordinate memorization, a wrong action-modality assumption, and an
+  incomplete implementation) — none of them fixable by a better model. CPU-only, no code shipped.
+- **4b: one negative result, real build still open (REQ-ARC-WMTE-6245).** Tried hardening the
+  shipped nav-confidence gate to reject cd82's newly-found false positive. Built it, tested against
+  the known true positive FIRST, found it also fails (HUD/step-counter contamination, the same
+  issue this project's own code already documents elsewhere) under both metrics tried. Reverted
+  before committing; recorded as a negative result so a future attempt does not repeat it.
+  **Building an actual new mechanic-class detector (push-block for ka59, or toggle/move for re86)
+  remains open and unstarted** — the diagnosis narrows WHAT to build, but nothing new has shipped
+  yet for Phase 4b's stated goal.
+- **4c: already done (prior turn), negative.** 4d/4e: not started.
+
+All work this turn committed and pushed. Freshness/determination-preservation/adversarial-verify
+lints clean at each commit. Two premises checked before building (4a's trust-gate claim, 4b's
+internal-heldout-check hypothesis) and both found not to hold — consistent with this session's
+running theme of verifying plan-doc premises against current code before spending build effort.
