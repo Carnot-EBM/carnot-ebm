@@ -22615,6 +22615,103 @@ a code-review-time inference).
 |---|---|---|
 | REQ-ARC-WMTE-6242 | `scripts/analyze_exp6221_admission_rate.py` (analysis-only; no production default flipped). | `results/analysis_exp6221_admission_rate_20260809.json` (the artifact IS the check — exact sign test, reproducibility_checksum pinned, cites `results/experiment_6221_gemma_think_mode_ab_expanded_roster.json` by hash). Cross-run confound confirmation verified by direct read of `results/experiment_6199_gemma_think_mode_ab.json`'s vc33 row (no new test file — a one-shot historical comparison, not a regression to guard going forward). |
 
+### REQ-ARC-WMTE-6243: Conditional Think-Arm Fallback On Total Induction Failure (Default OFF, Awaiting Live-Path A/B)
+
+**Origin:** operator directive, 2026-08-09, reading REQ-ARC-WMTE-6242's per-game breakdown:
+"as sp80 was a think win, should we try think if nothink made no progress? nothink is stopping
+us from using both other than the efficiency loss and increased wall clock." A genuinely new
+lever REQ-6242 surfaced but did not itself build: not "always run both arms" (Phase 2b, which
+stays locked — its own precondition, the admission-rate gate, was not met) and not "prefer think
+over no_think generally" (the sign test found no such general edge), but a narrower, cheaper,
+asymmetric-safe design the per-game data specifically supports.
+
+**THE SIGNAL THIS TARGETS.** REQ-6242's 13-game breakdown has two failure shapes that a single
+binary "think vs no_think" comparison collapses together: (1) both arms produce an engine that
+scores 0.0 — retrying with the other arm cannot help, both already tried and both hit the same
+wall (11 of 13 games); (2) one arm fails to produce ANY parseable engine at all
+(`heldout_accuracy=None`, e.g. sp80's no_think: `"local model code unusable after 3 tries"`)
+while the OTHER arm succeeds outright (sp80's think: `heldout_accuracy=1.0`). cd82/ls20/sk48 show
+the mirror shape (think fails outright, no_think at least scores something, even if floor). Case
+(2) is a genuine complementary-failure pattern retrying can fix; case (1) is not. The lever fires
+ONLY on case (2).
+
+**THE LIVE DEFAULT, CHECKED BEFORE BUILDING (load-bearing correction caught mid-session).**
+`ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT` is **already `"1"`** (operator directive 2026-08-08, on
+exp6199's ORIGINAL 10-game evidence: think never lost on raw accuracy, 4/10 strictly better, 2 of
+those crossing the admission bar from 0.0). So the live agent's PRIMARY arm today is think, not
+no_think — a fallback hardcoded "no_think first, escalate to think" would be a live no-op (the
+live path never tries no_think first at all). The design instead reads the primary arm from
+`e3.induce_think_on()` AT CALL TIME and falls back to whichever arm is NOT currently primary —
+correct regardless of which way the default is set, and correct again if a future A/B flips it.
+
+**THE BUILD.** `E3AgentPolicy._execute_bounded_llm_reinduction_with_arm_fallback` wraps the
+module-level `execute_bounded_llm_reinduction` (imported top-level, unchanged): call once with
+whatever `CARNOT_ARC_INDUCE_THINK` currently resolves to; if `outcome.heldout_accuracy is None`
+(the strict "no engine at all" signal — narrower than `outcome.planned is False`, which also
+fires when a GOOD engine simply has no winning plan, a failure no arm-retry can fix) AND the flag
+is on, retry once with `CARNOT_ARC_INDUCE_THINK` flipped, then restore the prior env state in a
+`finally` block regardless of outcome (this session's own earlier no_think-confound incident,
+REQ-ARC-WMTE-6242's bonus finding, is the exact hazard a leaked env override reproduces). Wired
+at BOTH call sites in `_induce_and_plan` (`level_up_reinduction` and the stall-path
+`CARNOT_ARC_STALL_REFACTOR_LOOP` branch) — both feed the identical `execute_bounded_llm_
+reinduction` signature via `**kwargs` passthrough, so one wrapper covers both without
+duplicating the retry logic. `attempt["think_arm_fallback"]` records fired-or-not-and-why on
+every call (the trajectory-transfer fire-counter discipline), so a zero-fire cell is auditable
+rather than indistinguishable from "the lever does not exist."
+
+**NO SERVER TEARDOWN/RESETUP COST TO AVOID (operator's stated motivation partially resolved by
+reading the code, not by building infra).** The operator's framing ("increased wall clock" from
+switching arms implied a setup/teardown cost worth avoiding via preloading both arms
+simultaneously on the Kaggle L4x4's multiple GPUs). Checked before building: for gemma-4, the
+think/no_think distinction is NOT a model-load or server-config difference at all —
+`ARC_LIVE_GENERATOR_NO_THINK_PREFIX = ""` (the Qwen3 `/no_think` token is inert on gemma-4), and
+`induce_think_on()` instead toggles which PROMPT CONFIGURATION is sent to the SAME already-loaded
+llama-server (native reasoning-channel-engaged chat template vs the reasoning-suppressed
+raw+codeonly directive). The wall-clock cost the operator named is real but is GENERATION time
+(more output tokens under think — the plan doc's own "110s -> 715s" figure), not restart time —
+so the sequential single-retry design already pays zero teardown cost on this model; no
+dual-server-preload infrastructure is needed for THIS lever. A genuinely useful, DISTINCT
+follow-up the L4x4 hardware does enable: racing both arms CONCURRENTLY (two parallel requests to
+two llama-server instances, taking whichever returns a scoreable engine first) to cut WALL-CLOCK
+rather than avoid setup cost — noted as a candidate future lever, not built here, since it is a
+different mechanism (parallel dispatch, not sequential fallback) with its own resource-contention
+questions (two 18GB+ model loads on a 4x-GPU box) that deserve their own scoping.
+
+**STATUS.** Default OFF (`SUBMITTED_THINK_ARM_FALLBACK_ENABLED = False`,
+`CARNOT_ARC_THINK_ARM_FALLBACK=1` opt-in), pending a live-path A/B per this project's standing
+convention that no lever flips its shipped default without one. 8 unit tests cover: default-off
+never retries; primary-succeeds never retries (the floor-tie case); total-failure retries and
+succeeds in both arm directions (no_think-primary and think-primary); env correctly toggled
+during the retry and restored after; both-arms-fail returns the original outcome rather than
+fabricating a difference; the bare default matches the constant; the status-diagnostics dict
+reports the lever. 59-test collateral sweep (trajectory-transfer, budget-aware-search,
+prompt-enrichment, think-mode-selector suites) passes unchanged — the wrapper is a strict
+byte-identical no-op when the flag is off, which every existing call-site test exercises by
+construction (none of them sets `CARNOT_ARC_THINK_ARM_FALLBACK`).
+
+#### SCENARIO-ARC-WMTE-6243-TOTAL-FAILURE-TRIGGERS-RETRY
+
+Given the primary arm's `execute_bounded_llm_reinduction` call returns `heldout_accuracy=None`
+and the fallback flag is enabled, the wrapper retries once with `CARNOT_ARC_INDUCE_THINK` set to
+the logical negation of the primary arm's resolved value, and restores the prior environment
+state afterward regardless of the retry's outcome.
+
+#### SCENARIO-ARC-WMTE-6243-FLOOR-SCORE-DOES-NOT-RETRY
+
+Given the primary arm's call returns any non-`None` `heldout_accuracy` (including `0.0`), the
+wrapper does not retry — a scored-but-failing engine is not the failure mode this lever targets.
+
+#### SCENARIO-ARC-WMTE-6243-DEFAULT-OFF-IS-A-NO-OP
+
+Given the fallback flag is not enabled, the wrapper calls `execute_bounded_llm_reinduction`
+exactly once and returns its outcome unmodified, regardless of what that outcome is.
+
+## Implementation Status (REQ-ARC-WMTE-6243)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6243 | `python/carnot/agentic/arc_competition_agent.py:SUBMITTED_THINK_ARM_FALLBACK_ENABLED`, `E3AgentPolicy._execute_bounded_llm_reinduction_with_arm_fallback`, wired at both `_induce_and_plan` call sites (level_up_reinduction and stall-path). | `tests/python/test_arc_think_arm_fallback_20260809.py` (8 tests). |
+
 ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
 
 **Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`

@@ -3500,6 +3500,22 @@
         "acknowledged_on": "2026-08-08",
         "reason": "Phase 1b freshness self-fix (2026-08-08), fourth occurrence of the same cascade: this artifact cites the two paths below by content hash. Acknowledging the Phase 1b trajectory-transfer promotion INSIDE those two artifacts changed their hashes, which cascades here. Not caused by a change to this artifact's own analyser script or numbers.",
         "evidence": "Diff of both cited artifacts shows only an appended provenance.freshness_acknowledgements list entry -- no change to any row/score/metric field either file reports."
+      },
+      {
+        "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
+        "sha256_was": "c9898e502ba1492a589f3b62eaf17a8d20b59ef1d0af7a4f4c8ed1d953e5594a",
+        "sha256_now": "20d364b791f844a31654b429a2ca888dd00502f5a19c3787f336501fa0e3adff",
+        "acknowledged_on": "2026-08-09",
+        "reason": "Second-order cascade from REQ-ARC-WMTE-6243 (2026-08-09): acknowledging the (verified-inert) arc_competition_agent.py drift in results/outer_loop_arc_gateway_rescore_20260726.json and results/arc_per_level_reset_attribution_20260726.json changed THEIR content hashes, which this artifact cites by hash. Neither upstream artifact's own NUMBERS changed -- only their provenance.freshness_acknowledgements sections grew -- so this artifact's cited figures are unaffected. Same recurring second-order-cascade shape documented earlier this session (REQ-ARC-WMTE-6233/6234/6235/6241/6242's own freshness passes).",
+        "evidence": "Diff of both upstream files for this commit is confined to a new provenance.freshness_acknowledgements entry each; no other top-level field (including any numeric result field) changed."
+      },
+      {
+        "path": "results/arc_per_level_reset_attribution_20260726.json",
+        "sha256_was": "a8ba07c8157e71960dc2f50aaf8a8b64d09d1d185bd4b7bab9ff6452c180d3b9",
+        "sha256_now": "f2be8bda4da91a37aea4c09340b7f51a5c12fc4ac6c79e3e89876587425724b0",
+        "acknowledged_on": "2026-08-09",
+        "reason": "Second-order cascade from REQ-ARC-WMTE-6243 (2026-08-09): acknowledging the (verified-inert) arc_competition_agent.py drift in results/outer_loop_arc_gateway_rescore_20260726.json and results/arc_per_level_reset_attribution_20260726.json changed THEIR content hashes, which this artifact cites by hash. Neither upstream artifact's own NUMBERS changed -- only their provenance.freshness_acknowledgements sections grew -- so this artifact's cited figures are unaffected. Same recurring second-order-cascade shape documented earlier this session (REQ-ARC-WMTE-6233/6234/6235/6241/6242's own freshness passes).",
+        "evidence": "Diff of both upstream files for this commit is confined to a new provenance.freshness_acknowledgements entry each; no other top-level field (including any numeric result field) changed."
       }
     ]
   },

@@ -17035,6 +17035,14 @@
         "acknowledged_on": "2026-08-09",
         "reason": "Phase 1c promotion (2026-08-09): BUDGET_AWARE_SEARCH_ENABLED flipped False->True (REQ-ARC-WMTE-6235, arc_solver_kit.py). This artifact predates the lever's live-cascade wiring entirely -- REQ-ARC-WMTE-6180-WIRING states the estimator/consumer were wired into StepwiseExplorer on 2026-08-07, and this artifact is dated 2026-07-26, so its default value now cannot change what was measured then.",
         "evidence": "git diff -U0 on arc_solver_kit.py for this commit is confined to the BUDGET_AWARE_SEARCH_ENABLED constant and its comment block -- no other line changed."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
+        "sha256_now": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
+        "acknowledged_on": "2026-08-09",
+        "reason": "REQ-ARC-WMTE-6243 (2026-08-09): added SUBMITTED_THINK_ARM_FALLBACK_ENABLED (default False), the resolver `self.think_arm_fallback_enabled` in E3AgentPolicy.__init__, and a new wrapper method `_execute_bounded_llm_reinduction_with_arm_fallback` used at both _induce_and_plan call sites. This artifact's own generating script never sets CARNOT_ARC_THINK_ARM_FALLBACK (grep-verified), so the new flag resolves to its default-off value, under which the wrapper calls execute_bounded_llm_reinduction exactly once and returns its outcome unmodified -- byte-identical to the pre-change call sites for every code path this artifact exercises.",
+        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to: one new module constant + its env-override block in __init__ (near the sibling trajectory_transfer_enabled resolver), one new method inserted before _induce_and_plan, two call sites changed from `execute_bounded_llm_reinduction(...)` to `self._execute_bounded_llm_reinduction_with_arm_fallback(attempt, ...)` with identical kwargs, and two new entries in the SUBMITTED_AGENT_CONFIG status dict. No existing function body was modified."
       }
     ]
   },
