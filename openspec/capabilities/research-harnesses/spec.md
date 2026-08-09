@@ -1718,6 +1718,93 @@ with a terminal prefix.
 |---|---|---|
 | REQ-INFRA-6260 | `python/carnot/experiment_6260_v540_terminal_transition.py`; terminal artifact `results/experiment_6260_v540_terminal_transition.json`. | `tests/python/test_experiment_6260_v540_terminal_transition.py`. |
 
+## REQ-INFRA-6261: V540 Post-Marker Source Scope Freeze SHALL Be Strictly Later, Null-Safe, And Contract-Complete
+
+Carnot SHALL build Exp6261 as a deterministic V540 post-marker source sweep
+and scope freeze. The sweep SHALL hash the exact
+`<!-- V540-PLANNER-REFRESH-20260809-END -->` marker and SHALL accept only
+stable, reproducible evidence dated strictly after the marker commit time.
+Evidence dated at the marker time, before the marker time, or with only a bare
+same-day date SHALL be rejected before any reference append.
+
+Exp6261 SHALL record receipts for arXiv, OpenReview, Extropic, Semantic
+Scholar EBT and ARM-EBM citation routes, Hugging Face Papers, targeted GitHub,
+and Logical Intelligence. It SHALL deduplicate candidates against
+`research-references.md` and prior candidate identifiers before append. If the
+accepted count is zero, `research-references.md` SHALL remain byte-identical,
+`accepted_count` SHALL be the bare integer `0`, and `honest_verdict` SHALL
+start with `complete_null:`.
+
+Exp6261 SHALL freeze machine-readable contracts for terminal artifacts, clean
+cached-SOTA replay, energy familiarity, chronological continuous self-learning,
+mode-jump generality, model provenance, and the hardware boundary. The frozen
+contracts SHALL state that cached replay is not on-policy proof. They SHALL
+also state that no current board or Extropic TSU route supports Carnot
+execution, speed, power, or availability claims.
+
+The Exp6261 artifact SHALL be written atomically to
+`results/experiment_6261_v540_post_marker_source_scope_freeze.json` with
+`inference_substrate=post_marker_source_ingestion_and_v540_scope_freeze` and
+`verifier_is_oracle=false`. It SHALL audit the V540 roadmap without editing
+`research-roadmap.yaml`.
+
+The Exp6261 artifact SHALL include these required fields: `status`,
+`planner_marker_and_hash`, `query_window`, `source_channel_receipts`,
+`discovered_candidates`, `accepted_findings`,
+`rejected_duplicate_or_watch_only_findings`, `accepted_count`,
+`references_append_receipt`, `frozen_terminal_artifact_contract`,
+`frozen_cached_sota_replay_contract`, `frozen_energy_familiarity_contract`,
+`frozen_chronological_csl_contract`, `frozen_sampler_generality_contract`,
+`frozen_model_provenance_contract`, `frozen_hardware_boundary`,
+`roadmap_path_and_hash`, `roadmap_schema_result`,
+`exclusion_manifest_lint_result`, `prior_failure_contract_result`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INFRA-6261-1: Marker Bound Is Exclusive
+GIVEN the sealed V540 planner refresh marker in `research-references.md`
+WHEN Exp6261 classifies a candidate at or before the marker commit time
+THEN the candidate is rejected, and a bare same-day date is rejected unless a
+strictly later timestamp is present.
+
+### SCENARIO-INFRA-6261-2: Null Search Preserves References
+GIVEN every source channel returns no strictly later stable evidence, duplicate
+evidence, pre-marker evidence, or watch-only evidence
+WHEN Exp6261 writes its artifact
+THEN `accepted_count` is the bare integer `0`, `accepted_findings` is empty,
+`research-references.md` is byte-identical, and `honest_verdict` starts with
+`complete_null:`.
+
+### SCENARIO-INFRA-6261-3: Stable URLs And Duplicates Fail Closed
+GIVEN a candidate has no stable URL, repeats an earlier source id, repeats an
+existing reference block, or lacks a scope-changing reproducible dependency
+WHEN Exp6261 deduplicates the candidate ledger
+THEN the row is recorded only in
+`rejected_duplicate_or_watch_only_findings`.
+
+### SCENARIO-INFRA-6261-4: Frozen Contracts Preserve V540 Boundaries
+GIVEN the V540 roadmap narrows onto terminal artifacts, cached replay, energy
+familiarity, chronological CSL, and sampler generality
+WHEN Exp6261 serializes the frozen contracts
+THEN each contract has a stable version, required boundary fields, and explicit
+claim limits for cached replay, model provenance, and hardware execution.
+
+### SCENARIO-INFRA-6261-5: Artifact Schema Is Principle Annotated
+GIVEN source receipts, roadmap receipts, protected hashes, field principles,
+and command receipts
+WHEN Exp6261 validates the report before writing
+THEN every required field is present, every field has provenance and a
+principle, `verifier_is_oracle=false`, the checksum matches the normalized
+payload, and the honest verdict has a terminal prefix.
+
+## Implementation Status (REQ-INFRA-6261)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6261 | Implemented by `python/carnot/experiment_6261_v540_post_marker_source_scope_freeze.py`; terminal artifact `results/experiment_6261_v540_post_marker_source_scope_freeze.json`. | Covered by `tests/python/test_experiment_6261_v540_post_marker_source_scope_freeze.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone

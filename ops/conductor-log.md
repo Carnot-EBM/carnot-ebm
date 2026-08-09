@@ -15572,3 +15572,4 @@ Still active  |
 | 2026-08-09 16:41 UTC | Exact terminal-boundary handoff from V539 into V54 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6260_v540_te |
 | 2026-08-09 17:07 UTC | Exact terminal-boundary handoff from V539 into V54 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6260_v540_te |
 | 2026-08-09 17:27 UTC | Exact terminal-boundary handoff from V539 into V54 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6260_v540_te |
+| 2026-08-09 18:50 UTC | Post-V540-marker source delta and experimental-sco | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: nels["source_c |
