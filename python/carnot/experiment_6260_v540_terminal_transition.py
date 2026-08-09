@@ -759,14 +759,15 @@ def build_report(
 ) -> JsonDict:
     started = time.perf_counter() if started_at is None else started_at
     v540_data, v540_identity = load_v540_roadmap(root)
-    before = dict(before_hashes or protected_hashes(root))
-    status_before = list(git_status_before or git_status_lines(root))
+    before = dict(protected_hashes(root) if before_hashes is None else before_hashes)
+    status_before = list(git_status_lines(root) if git_status_before is None else git_status_before)
     allowed = _allowed_reserved_paths(v540_data)
     collision_before = dict(
-        collision_receipt_before
-        or scan_reserved_id_collisions(root, allowed_reserved_paths=allowed)
+        scan_reserved_id_collisions(root, allowed_reserved_paths=allowed)
+        if collision_receipt_before is None
+        else collision_receipt_before
     )
-    inputs_before = dict(input_hashes_before or input_hashes(root))
+    inputs_before = dict(input_hashes(root) if input_hashes_before is None else input_hashes_before)
     capstone_payload, capstone_meta = read_json_mapping(root / V539_CAPSTONE_RELATIVE_PATH)
     retro_payload, retro_meta = read_json_mapping(root / OPERATIONAL_RETRO_RELATIVE_PATH)
     capstone_matrix = capstone_payload.get("exact_task_artifact_matrix")

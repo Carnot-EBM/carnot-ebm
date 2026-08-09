@@ -228,6 +228,18 @@ def test_report_builder_records_v539_to_v540_handoff() -> None:
     assert report["protected_files_unchanged"]["unchanged"] is True
     assert report["preconditions_checked"]["git_status_after_tests"] == ["M after-test-fixture"]
 
+    clean_status_report = exp6260.build_report(
+        REPO,
+        date="20260809",
+        command_receipts=[{"command": "focused", "exit_code": 0}],
+        before_hashes=before,
+        git_status_before=[],
+        git_status_after_tests=[],
+        started_at=0.0,
+    )
+    assert clean_status_report["preconditions_checked"]["git_status_before"] == []
+    assert clean_status_report["preconditions_checked"]["git_status_after_tests"] == []
+
     blocked = exp6260.build_report(
         REPO,
         date="20260809",
