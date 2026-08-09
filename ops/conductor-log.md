@@ -15569,3 +15569,4 @@ Still active  |
 | 2026-08-09 14:23 UTC | V539 exact-path adversarial capstone and evidence  | OK | 90 passed, 1 warning in 18.52s |
 | 2026-08-09 15:20 UTC | Plan milestone 2026.08.540 | OK | 12 tasks proposed |
 | 2026-08-09 15:23 UTC | Milestone 2026.08.540 activated | OK | 12 tasks queued |
+| 2026-08-09 16:41 UTC | Exact terminal-boundary handoff from V539 into V54 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6260_v540_te |
