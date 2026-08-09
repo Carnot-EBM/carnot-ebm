@@ -163,6 +163,20 @@ thresholds 1.0 down to 0.6 admit the identical 9 rounds); it is repairing metric
 itself documents as contaminated (recall-only + HUD-dominated), then re-deriving the baseline
 the closure rests on. *Gate: the corrected wall number, published either way. A null hardens the
 closure; a positive quantifies how much induction capability was being mis-scored.*
+**DONE (2026-08-08, `results/arc_wall_rederivation_20260808.json`, REQ-ARC-WMTE-6233; no code
+change, no new compute):** the taxonomy's own recovery script for its 296-unit corpus was never
+committed and cannot be re-derived byte-for-byte, so this reused an already-executed,
+comparable-scope measurement instead: `experiment_6011_world_model_change_gate_four_arm.json`'s
+four-arm matrix already re-scored 75 real on-disk engines (`results/arc_e3_origin_fixtures`, 25
+games x 3 seeds) with `mask=1|gate=1` — HUD masking ON plus the symmetric `change_gate_decision`
+call, the identical function REQ-ARC-WMTE-6013 wires into the hidden-state branch. Of 69 eligible
+(n_changing>=3) engines: **0 pass under the corrected reading, identical to 0 under the naive
+(unmasked, gate-disabled) reading.** HUD masking measurably narrows near-miss cases (best
+change_fidelity 0.062 -> 0.145, matching the independent 2026-08-01 finding that masking is real
+but small) without flipping a single verdict. **The closure hardens** — corrected metrics do not
+reopen the axis on this corpus. Honest caveat: this corpus is one of the taxonomy's own
+provenance-unproven families (frozen, but induction-time purity unconfirmed); per the taxonomy's
+own reasoning, contamination can only inflate a score, so a zero here is not weakened by that gap.
 
 **1b. Promote trajectory transfer (exp6215).**
 The one lever that passed BOTH quality and safety in the portfolio audit (fired 4/4 games,

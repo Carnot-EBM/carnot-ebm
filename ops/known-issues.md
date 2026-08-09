@@ -109,6 +109,40 @@ modeled here, not less — but it is an open question, not a settled one.
 retarget entry, the held-out proxy closer to hidden-game conditions) — 2026-06-24 entry below
 ("live first-win rate is ~0.59 but the live multi-level rate is ~0").
 
+### NEW 2026-08-08 (Phase 1a of the ARC live-agent improvement plan, REQ-ARC-WMTE-6233): the 0/296 world-model wall re-derived under the corrected metric — closure hardens
+
+**What was asked.** Finding 2 of `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md`:
+the recorded "0 of 296 clean engine-units reach held-out `change_accuracy >= 0.5`" wall may be
+partly a measurement artifact, since `arc_executable_world_model.py:923` documents the metric is
+dominated by HUD/counter cells. Three built-but-OFF repairs (HUD masking, a symmetric
+change-fidelity gate, the REQ-ARC-WMTE-6013 hidden-state branch fix) were never applied to a real
+corpus together. Re-derive the wall with them ON.
+
+**What was measured.** The original 296-unit corpus's recovery script no longer exists on disk or
+in git history, so an exact replay is not possible. `scripts/analyze_arc_wall_rederivation_20260808.py`
+instead aggregates `results/experiment_6011_world_model_change_gate_four_arm.json`'s already-run
+four-arm matrix (75 real on-disk engines, `results/arc_e3_origin_fixtures`, 25 games x 3 seeds),
+whose `mask=1|gate=1` arm already applies HUD masking plus `change_gate_decision` — the identical
+function the hidden-state-branch fix wires in, so its verdict is exactly what that branch would
+decide. No new compute; a pure re-reading of already-persisted fields.
+
+**Result.** Of 69 eligible (n_changing>=3) engines: 0 pass under the corrected reading, identical
+to 0 under the naive reading. HUD masking measurably narrows near-miss cases (best
+`change_fidelity` 0.062 -> 0.145) without flipping a single verdict — consistent with the
+independent 2026-08-01 finding that masking is real but small
+(`results/arc_hud_masked_rescore_20260801/`). **The closure hardens.**
+
+**Honest caveat.** This corpus (`arc_e3_origin_fixtures`) is one of the original taxonomy's own
+provenance-unproven families, and its overlap with the original 296 units is unknown. Per the
+taxonomy's own reasoning, contamination can only inflate a score, so a zero result here is not
+weakened by the caveat.
+
+**Cross-references:** `results/arc_wall_rederivation_20260808.json` — full REQ write-up
+`openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-6233 —
+`docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 1a —
+`results/experiment_6011_world_model_change_gate_four_arm.json` (the source data) —
+`results/outer_loop_arc_induced_engine_taxonomy_20260802.json` (the original 0/296 finding).
+
 ### NEW 2026-08-08 (OUTER-LOOP FOLLOW-UP — user directive "let's add a follow-up for that"): LIVE-AGENT WHOLE-PROCESS-CRASH RECOVERY — UNKNOWN, NEEDS A CHECK
 
 Context: this session root-caused three unexplained kills of a dev script's background process
