@@ -16346,3 +16346,38 @@ than the shorter calls (~200-900s) that showed the mid-generation-kill signature
 this the same reaper with a longer window to strike, just observed for the first time on a call
 this long? Full context: `openspec/capabilities/arc-world-model-trust-energy/spec.md`
 REQ-ARC-WMTE-6247.
+
+## 2026-08-09 the goal-energy zero-gradient wall is not tier-1-CNN-specific -- it likely blocks the nav template too
+
+Follow-up to Phase 4's redirect (REQ-ARC-WMTE-6244) and the nav-gate negative result
+(REQ-ARC-WMTE-6245). Investigated whether ka59 (a Mode A game) could be served by the ALREADY-
+SHIPPED, ALREADY-VALIDATED `InducedNavWorldModel` template (`CARNOT_ARC_STRUCTURED_NAV`) instead
+of needing a brand-new mechanic-class detector, since ka59's real transitions show a clean,
+consistent, single 3x3-sprite rigid-avatar move (displacement `{1:(-3,0), 2:(3,0), 3:(0,-3),
+4:(0,3)}`, avatar color 14, stable across 4/5 random seeds) -- exactly the nav template's target
+shape. `is_confident_nav` reads True on most seeds. Held-out exact-match reads 0/N regardless,
+but per the project's own `structured_nav_heldout` precedent this is expected (ka59's own
+docstring: "hidden bottom-row StepCounter HUD" contaminates exact-match the same way tu93's
+step-counter did) and not itself disqualifying.
+
+CPU-only check: fit the nav model, call `plan_in_model` with `goal_energy=nav.goal_energy`
+(the same best-first search the live nav branch uses). Result:
+`initial_goal_energy=23.5, min_goal_energy_observed=23.5` -- FLAT, zero gradient, across 5010
+expanded nodes, `termination_reason=max_nodes_reached`. This is the IDENTICAL signature
+REQ-ARC-FCP-5699-18 diagnosed for tu93 (goal-energy unconditionally binary/zero-gradient for any
+never-yet-completed level), which REQ-ARC-FCP-5699-19/20 already showed is NOT fixed by more node
+budget or a novelty-energy fallback.
+
+**What this narrows.** The zero-gradient wall is not a property of the CNN-dynamics-prior tier
+specifically -- it is a property of `plan_in_model`'s goal-energy search generically, applying to
+ANY induced model (CNN, nav, or a hypothetical new push-block class) whose goal state has never
+been observed. This means building a NEW mechanic-class detector for ka59/re86 (Phase 4b's
+literal remaining goal) would likely hit the SAME wall once its model reaches the planning step,
+not a fresh, unblocked path. Not chased further this session -- the wall itself (novelty-energy's
+limits, or a genuinely different search strategy for first-contact goals) is the higher-leverage,
+but substantially larger, open problem REQ-ARC-FCP-5699-19's own "novelty goal-energy fallback for
+first-contact levels" work already started addressing. No code changed; diagnostic-only, CPU-only,
+no LLM/reaper exposure.
+
+Cross-references: REQ-ARC-WMTE-6244 (Mode A diagnosis), REQ-ARC-WMTE-6245 (nav-gate negative),
+REQ-ARC-FCP-5699-14 through -20 (the original zero-gradient investigation on tu93).
