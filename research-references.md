@@ -33238,3 +33238,88 @@ Carnot reproduces them locally.
   new authenticated or physical-state receipt arrives before activation.
 
 <!-- V539-PLANNER-REFRESH-20260809-END -->
+
+## V540 Planner Refresh (2026-08-09, after milestone 2026.08.539)
+
+This refresh was completed before drafting milestone `2026.08.540`. It
+searched 2025-2026 arXiv work across energy-based reasoning, neural constraint
+solving, Ising sampling, hallucination mitigation, KANs, constrained decoding,
+probabilistic hardware, and continual learning. It also refreshed OpenReview,
+Hugging Face Papers, Semantic Scholar citation trails for EBT (`2507.02092`)
+and ARM-EBM (`2512.15605`), Extropic and Logical Intelligence first-party
+pages, and targeted GitHub discovery. Source claims remain hypotheses until
+Carnot reproduces them locally.
+
+### Promoted: energy-gated transfer for constraint memory
+
+- **Energy-Based Transfer for Reinforcement Learning** - OpenReview ICLR 2026
+  submission, https://openreview.net/forum?id=yx00QWzKEF. The method treats a
+  teacher EBM's energy as a proxy for state familiarity and issues advice only
+  in likely in-distribution states. This avoids negative transfer from blind
+  advice. The paper also states an important limit: its density argument is
+  tied to on-policy visitation and weakens off policy. Carnot hook: compare no
+  memory, unconditional memory, global-threshold memory, and task-conditional
+  energy-familiarity gates on a sealed chronological stream of existing exact
+  local-SOTA constraint events. Keep model weights frozen. Require retention,
+  negative-transfer, quarantine, rollback, and read-only decision snapshots.
+  Do not treat an offline replay result as an on-policy guarantee.
+
+### New sampling comparators, not immediate execution dependencies
+
+- **MetaDNS: Enhancing Exploration in Discrete Neural Samplers via
+  Metadynamics** - ICML 2026 OpenReview,
+  https://openreview.net/forum?id=OY7Qe2ZSx9. MetaDNS adds a
+  history-dependent bias along low-dimensional coordinates to make learned
+  discrete samplers leave visited basins. It reports Ising, Potts, and alloy
+  results. Carnot disposition: use visitation-bias and barrier-crossing
+  accounting as diagnostics for the promoted activated mode-jump sampler. Do
+  not add a learned neural sampler in V540; that would add a new training
+  substrate before the current exact sampler has shown workload-level value.
+- **"Noisier" Noise Contrastive Estimation is (Almost) Maximum Likelihood** -
+  ICLR 2026 poster, https://openreview.net/forum?id=qR59RrG7Om. The paper scales
+  virtual noise magnitude so NCE gradients better approximate maximum
+  likelihood and reports shorter image-model samplers. Carnot disposition:
+  keep as a future EBM-training control. V540 evaluates a fixed exact sampler
+  and does not reopen neural energy training.
+- **Scalable Power Sampling: Unlocking Efficient, Training-Free Reasoning for
+  LLMs via Distribution Sharpening** - ICML 2026 OpenReview,
+  https://openreview.net/forum?id=SVyjXhZlDe. The method approximates a global
+  power distribution with token-level scaled low-temperature sampling and
+  reports much lower latency than MCMC-based power sampling. Carnot
+  disposition: watch only until the local GGUF stack has durable token-logit
+  and owned-lifecycle receipts. Verifier-free distribution sharpening is a
+  decoding baseline, not evidence of constraint verification.
+
+### Source checks with no new executable promotion
+
+- **arXiv, Hugging Face Papers, and Semantic Scholar:** the newest useful
+  verifier, drift, EBT, ARM-EBM, fixed-point, KAN, and distributional-energy
+  items were already indexed. Citation counts remain discovery receipts, not
+  quality evidence.
+- **cDLS:** the OpenReview workshop line was already indexed and executed
+  through exact-kernel correction, replica exchange, Rust/Python parity, and a
+  terminal no-crossover result. V540 must not rename cDLS as a new method.
+- **Extropic and hardware:** the August Z1 announcement remains product-roadmap
+  evidence. Carnot has no authenticated TSU route or new physical board
+  receipt, so V540 may make no hardware speed, power, or availability claim.
+- **Kona and GitHub:** no public Kona weights, reproducible local API, or new
+  repository superseded Carnot's exact validators, live agent, local GGUF
+  runtime, or sampler ABI.
+
+### V540 planning impact
+
+- Treat `.539` as an execution-integrity failure first: the runtime-endurance
+  artifact stopped at preconditions while downstream gates correctly skipped.
+  Establish terminal-artifact and gate-readiness contracts before more live
+  model work.
+- Move continuous self-learning onto the existing immutable local-SOTA event
+  corpus instead of regenerating the retired fresh-stream chain. Test
+  task-conditional energy familiarity against unconditional advice and retain
+  fail-closed rollback.
+- Generalize the activated mode-jump result beyond its one six-state fixture.
+  Use exact multimodal Ising, Potts, and typed-factor fixtures, barrier-crossing
+  diagnostics, and equivalence-aware reporting. Do not reopen cDLS timing.
+- Keep ARC level attempts, live GGUF generation, and hardware execution out of
+  V540 unless a new admissible mechanism or receipt exists before activation.
+
+<!-- V540-PLANNER-REFRESH-20260809-END -->

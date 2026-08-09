@@ -1,0 +1,663 @@
+milestone: "2026.08.540"
+milestone_title: "Evidence-Ready Continuous Constraint Learning"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp6260-v540-terminal-transition
+    milestone: "2026.08.540"
+    deliverable: results/experiment_6260_v540_terminal_transition.json
+    title: "Exact terminal-boundary handoff from V539 into V540"
+    priority: critical
+    track: infrastructure
+    requires_gpu: false
+    max_turns: 30
+    estimated_wall_time_min: 45
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp6225-v539-terminal-transition
+        verdict: "complete but current-rule CRITICAL: duration and methodology checks misclassified a deterministic transition that mentioned compute evidence"
+        addressed_by: "The V540 transition uses the shared exact-path classifier, declares aggregation-only substrate, separates referenced compute artifacts from work performed, and reserves a collision-free range above concurrent Exp6240-Exp6246 work."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Milestone 2026.08.539 is terminal. Exp6227 completed a bounded runtime diagnostic, Exp6228 stopped after preconditions without a terminal verdict, seven downstream gates failed closed, Exp6237 proved activated one-fixture mode-jump equivalence, and Exp6238 promoted no scientific branch. Concurrent outer-loop files use Exp6240 and Exp6244-Exp6246, so V540 reserves Exp6260-Exp6271.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/research-roadmap.yaml and {project_root}/research-roadmap-next.yaml
+      - {project_root}/results/experiment_6238_v539_adversarial_capstone.json
+      - {project_root}/results/operational_retro_2026_08_539.json
+      - {project_root}/results/experiment_6227_llama_server_signal_sender_diagnostic.json
+      - {project_root}/results/experiment_6228_supervised_three_family_runtime_endurance.json
+      - {project_root}/results/experiment_6237_activated_mode_jump_sampler_ab.json
+      - {project_root}/python/carnot/terminal_artifacts.py
+      - {project_root}/research-complete.yaml, {project_root}/ops/conductor-log.md, and {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/scripts/roadmap_schema.py, {project_root}/scripts/audit_roadmap_gates.py, and {project_root}/scripts/exclusion_manifest_lint.py
+
+      TASK
+      Create an exact V539-to-V540 handoff. Classify every V539 task from its declared artifact, not from conductor status. Preserve Exp6228 as nonterminal. Verify the staged task IDs, deliverables, dependencies, gates, prior-failure blocks, Codex model policy, prompt contracts, and protected-file rules. Do not activate the staged roadmap or edit the active roadmap.
+
+      Required deliverable: {project_root}/results/experiment_6260_v540_terminal_transition.json.
+      REQUIRED ARTIFACT FIELDS: status, v539_milestone_roadmap_and_hash, v539_task_terminal_matrix, exp6228_nonterminal_classification, v539_capstone_path_hash_and_summary, operational_retro_path_hash_and_summary, missing_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts, concurrent_exp6240_6244_6245_6246_collision_receipts, v540_roadmap_path_and_hash, v540_task_ids_and_deliverables, task_count, phase_counts, dependency_validation, gated_on_validation, prior_failure_validation, retired_dependency_count, id_collision_count, model_policy_validation, prompt_contract_validation, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, reproducibility_checksum, honest_verdict. task_count must be 12. retired_dependency_count and id_collision_count must be bare 0.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record git status, exact input hashes, staged roadmap identity, reserved-ID scan, and protected-file hashes before changes.
+      1. Add REQ-INFRA-6260 and scenarios to openspec/capabilities/research-harnesses/spec.md before implementation and update _bmad/traceability.md.
+      2. Use python/carnot/terminal_artifacts.py to classify all V539 declared deliverables. A conductor OK receipt cannot override missing, bootstrap, partial, or unknown state.
+      3. Verify exactly 12 V540 tasks in Exp6260-Exp6271 order and prove no collision with tracked or untracked experiment files.
+      4. Validate every structured gate against the upstream REQUIRED ARTIFACT FIELDS block. Reject retired dependencies and incomplete prior_failures entries.
+      5. Verify all tasks use agent_type codex and model gpt-5.5. Confirm no task schedules fresh LLM, ARC solve, or hardware execution.
+      6. Add focused tests for exact-path precedence, preconditions-only classification, collision detection, and protected hashes.
+      7. Run schema, gate, exclusion, prompt-ending, root-clutter, and applicable non-mutating e2e checks. Record git status after tests and adversarial-verify the artifact.
+
+      Run command: .venv/bin/python -m carnot.experiment_6260_v540_terminal_transition --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6261-v540-post-marker-source-scope-freeze
+    milestone: "2026.08.540"
+    deliverable: results/experiment_6261_v540_post_marker_source_scope_freeze.json
+    title: "Post-V540-marker source delta and experimental-scope freeze"
+    priority: high
+    track: infrastructure
+    requires_gpu: false
+    max_turns: 20
+    estimated_wall_time_min: 45
+    agent_type: codex
+    model: gpt-5.5
+    requires:
+      - exp6260-v540-terminal-transition
+    prior_failures:
+      - experiment_id: exp6226-v539-post-marker-source-scope-freeze
+        verdict: "complete_null with historical adversarial flag: no reproducible post-marker finding was accepted; current-rule recheck is clean"
+        addressed_by: "This task uses the new V540 marker and a strictly later evidence window, declares source-ingestion substrate, and freezes the narrower cached-event, energy-familiarity, and multi-family sampler contracts."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Planning research is sealed at <!-- V540-PLANNER-REFRESH-20260809-END --> in research-references.md. The accepted planning delta is Energy-Based Transfer as an OOD familiarity control for constraint memory. MetaDNS, Noisier NCE, and Scalable Power Sampling are watch-only. This task may ingest only reproducible evidence later than the marker.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/research-references.md around the V540 marker
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/results/experiment_6260_v540_terminal_transition.json
+      - {project_root}/ops/exclusion_manifest.yaml and {project_root}/ops/known-issues.md
+      - {project_root}/scripts/sweep_clusters.py and {project_root}/scripts/sweep_semscholar.py
+
+      TASK
+      Search required arXiv and secondary channels only for evidence dated after the V540 marker. Append only non-duplicate findings with stable sources. Freeze machine-readable contracts for terminal artifacts, clean cached-SOTA replay, energy familiarity, chronological continuous learning, mode-jump generality, model provenance, and the no-hardware-claim boundary. A null search is a valid terminal outcome.
+
+      Required deliverable: {project_root}/results/experiment_6261_v540_post_marker_source_scope_freeze.json.
+      REQUIRED ARTIFACT FIELDS: status, planner_marker_and_hash, query_window, source_channel_receipts, discovered_candidates, accepted_findings, rejected_duplicate_or_watch_only_findings, accepted_count, references_append_receipt, frozen_terminal_artifact_contract, frozen_cached_sota_replay_contract, frozen_energy_familiarity_contract, frozen_chronological_csl_contract, frozen_sampler_generality_contract, frozen_model_provenance_contract, frozen_hardware_boundary, roadmap_path_and_hash, roadmap_schema_result, exclusion_manifest_lint_result, prior_failure_contract_result, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, reproducibility_checksum, honest_verdict. accepted_count may be 0 and must be a bare integer.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: hash the V540 marker, staged roadmap, source inputs, and protected files. Record the exclusive lower time bound.
+      1. Add REQ-INFRA-6261 and scenarios before implementation and update traceability.
+      2. Search arXiv, OpenReview, Extropic, Semantic Scholar EBT and ARM-EBM citations, Hugging Face Papers, targeted GitHub, and Logical Intelligence for strictly later evidence.
+      3. Deduplicate against all earlier reference blocks. Append only a finding that changes a V540 contract or adds a reproducible future dependency.
+      4. Encode the seven frozen contracts. State that cached replay is not on-policy proof and that no current board or TSU route supports execution.
+      5. Re-run roadmap schema, gate, exclusion, model, prompt-ending, and collision checks without editing research-roadmap.yaml.
+      6. Add focused tests for marker exclusivity, null results, duplicates, stable URLs, and contract serialization.
+      7. Run applicable non-mutating e2e checks, record git status after tests, and adversarial-verify the artifact.
+
+      Run command: .venv/bin/python -m carnot.experiment_6261_v540_post_marker_source_scope_freeze --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6262-terminal-artifact-readiness-contract
+    milestone: "2026.08.540"
+    deliverable: results/experiment_6262_terminal_artifact_readiness_contract.json
+    title: "Terminal-artifact completeness and downstream-readiness contract"
+    priority: critical
+    track: infrastructure
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 90
+    agent_type: codex
+    model: gpt-5.5
+    requires:
+      - exp6261-v540-post-marker-source-scope-freeze
+    prior_failures:
+      - experiment_id: exp6228-supervised-three-family-runtime-endurance
+        verdict: "nonterminal: status=preconditions_recorded, honest_verdict absent, readiness fields absent, scientific body not executed"
+        addressed_by: "This task does not rerun endurance. It wires the already-shipped exact terminal classifier into adversarial verification and gate-readiness tests so a preconditions-only artifact becomes mechanically CRITICAL and cannot support a downstream claim."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6228 wrote a valid JSON precondition receipt but never wrote a terminal verdict or readiness fields. The shared classifier already labels absent or unknown markers nonterminal, yet the adversarial artifact boundary did not surface that state as a critical task failure. Fix the evidence boundary without changing the conductor or rerunning a model.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md artifact rules
+      - {project_root}/results/experiment_6228_supervised_three_family_runtime_endurance.json
+      - {project_root}/tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py
+      - {project_root}/python/carnot/terminal_artifacts.py and its tests
+      - {project_root}/scripts/adversarial_verify.py and focused tests
+      - {project_root}/scripts/conductor_gates.py
+      - {project_root}/scripts/determination_preservation_lint.py
+      - {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Add a fail-closed terminal-artifact readiness contract outside scripts/research_conductor.py. A declared artifact that is missing, malformed, running, bootstrap-only, partial, contradictory, or unknown must receive a CRITICAL adversarial finding. Conductor receipts cannot override exact-path state. A gate field is eligible only from a terminal artifact and only when the exact bare field exists. Preserve honest blocked and gate-skipped terminal artifacts.
+
+      Required deliverable: {project_root}/results/experiment_6262_terminal_artifact_readiness_contract.json.
+      REQUIRED ARTIFACT FIELDS: status, exp6228_path_hash_and_exact_classification, classifier_source_hash_before_after, adversarial_verifier_source_hash_before_after, supported_terminal_classes, rejected_nonterminal_classes, exact_path_over_receipt_precedence, gate_field_eligibility_contract, exp6228_regression_flag_code_and_severity, honest_blocked_control_result, gate_skip_control_result, receipt_override_negative_control, readiness_missing_negative_control, false_positive_fixture_results, focused_test_results, qa_layer_audit_results, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, terminal_artifact_contract_ready_score, duration_s, reproducibility_checksum, honest_verdict. terminal_artifact_contract_ready_score must be bare 1 only when every required control passes.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: record git status, exact source and fixture hashes, Exp6228 classification, and protected-file hashes.
+      1. Add REQ-INFRA-6262 and scenarios to openspec/capabilities/research-harnesses/spec.md before implementation and trace the tests.
+      2. Reuse python/carnot/terminal_artifacts.py. Do not create a second verdict vocabulary or trust conductor text.
+      3. Add one named CRITICAL adversarial finding for declared nonterminal experiment artifacts. Keep missing and malformed details distinct.
+      4. Add a reusable gate-field eligibility helper or test boundary that requires terminal=true and an exact bare field. Do not edit conductor code.
+      5. Reproduce Exp6228, running, bootstrap, partial, contradictory, and missing cases. Add clean complete, null, blocked, and gate-skip controls.
+      6. Run focused tests, verifier-authenticity and determination-preservation checks, and the applicable e2e artifact checks. Tests must not mutate tracked evidence.
+      7. Record git status after tests, classify every nonzero result, update traceability/status/changelog, and adversarial-verify the new artifact.
+
+      Run command: .venv/bin/python -m carnot.experiment_6262_terminal_artifact_readiness_contract --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6263-clean-sota-event-replay-bridge
+    milestone: "2026.08.540"
+    deliverable: results/experiment_6263_clean_sota_event_replay_bridge.json
+    title: "Clean immutable local-SOTA event corpus to chronological replay bridge"
+    priority: critical
+    track: continuous_learning
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 75
+    agent_type: codex
+    model: gpt-5.5
+    requires:
+      - exp6262-terminal-artifact-readiness-contract
+    prior_failures:
+      - experiment_id: exp6234-fresh-flagship-constraint-event-stream
+        verdict: "blocked_gate_check_failed: Exp6228 two_family_runtime_ready_score was absent"
+        addressed_by: "This task does not regenerate the retired fresh stream. It builds a new immutable replay bridge from current-rule-clean Exp6160 and Exp6162 evidence, segregates warned Exp6146 rows, and needs no runtime gate."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      V539's fresh flagship stream never ran because runtime readiness was absent. Clean immutable local-SOTA evidence already exists in Exp6160 and the current-rule-clean Exp6162 replication. Exp6146 contains useful Gemma-31B provenance but has a current warning for missing random_seed, so its rows must remain quarantine-only.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md model and self-learning rules
+      - {project_root}/results/experiment_6160_sota_decision_calibration_corpus.json
+      - {project_root}/results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl
+      - {project_root}/results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl
+      - {project_root}/results/experiment_6162_prospective_admission_replication.json
+      - {project_root}/results/experiment_6146_sota_constraint_event_corpus.json and its row files
+      - {project_root}/python/carnot/experiment_6160_sota_decision_calibration_corpus.py
+      - {project_root}/python/carnot/experiment_6162_prospective_admission_replication.py
+      - {project_root}/results/experiment_6262_terminal_artifact_readiness_contract.json
+      - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md
+
+      TASK
+      Build a sealed chronological replay bridge over current-rule-clean local-SOTA events. Preserve source hashes, row order, model/task/family identities, prompt and parser provenance, exact labels, and decision partitions. Keep warned or flagged sources in a separate quarantine manifest. Fail on duplicates, time reversal, train-held overlap, mutable inputs, or row-count mismatch. Do not load an LLM.
+
+      MODEL_SPECS (PROVENANCE ONLY; DO NOT LOAD A MODEL):
+      - hf_id: unsloth/Qwen3.6-35B-A3B-GGUF; role: clean Exp6160 event provenance
+      - hf_id: unsloth/gemma-4-26B-A4B-it-GGUF; role: clean Exp6160 event provenance
+      - hf_id: unsloth/gemma-4-31B-it-GGUF; role: Exp6146 quarantine-only provenance
+
+      Required deliverable: {project_root}/results/experiment_6263_clean_sota_event_replay_bridge.json.
+      REQUIRED ARTIFACT FIELDS: status, source_artifact_paths_hashes_and_terminal_classes, model_specs, no_model_load_receipt, clean_source_ids, quarantined_source_ids_and_reasons, immutable_row_manifest_path_and_hash, chronological_order_receipts, row_count_by_model_task_family_and_partition, exact_label_and_parser_provenance, duplicate_count, time_reversal_count, train_validation_test_overlap_count, malformed_or_parser_failure_count_by_disposition, source_mutation_count, replay_positive_control, replay_negative_controls, event_replay_bridge_ready_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, reproducibility_checksum, honest_verdict. duplicate_count, time_reversal_count, overlap count, and source_mutation_count must be bare 0 for readiness.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: hash every candidate artifact and row file, classify it with the Exp6262 contract, and record git status before materialization.
+      1. Add REQ-LEARN-6263 to openspec/capabilities/self-learning/spec.md before implementation and trace focused tests.
+      2. Admit only current-rule-clean Exp6160 and Exp6162 evidence. Preserve Exp6146 as quarantine-only unless its original immutable artifact gains a separate authorized corrigendum.
+      3. Materialize the bridge under results/ with deterministic ordering and content-addressed row identities. Never rewrite source artifacts.
+      4. Freeze chronological train, validation, and test partitions by event time and source manifest. No label or family alias may cross partitions.
+      5. Add tests for duplicates, reorder, alias collision, row loss, parser-failure disposition, source mutation, and byte-identical replay.
+      6. Declare inference_substrate as aggregation_from_upstream_artifacts and record the zero-model-load receipt.
+      7. Run focused tests and applicable non-mutating e2e checks, record git status after tests, and adversarial-verify the artifact.
+
+      Run command: .venv/bin/python -m carnot.experiment_6263_clean_sota_event_replay_bridge --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6264-energy-familiarity-memory-gate
+    milestone: "2026.08.540"
+    deliverable: results/experiment_6264_energy_familiarity_memory_gate.json
+    title: "Gated on Exp6263 clean replay: task-conditional energy-familiarity memory admission"
+    priority: critical
+    track: continuous_learning
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 90
+    agent_type: codex
+    model: gpt-5.5
+    requires:
+      - exp6263-clean-sota-event-replay-bridge
+    gated_on:
+      - upstream: exp6263-clean-sota-event-replay-bridge
+        artifact_field: event_replay_bridge_ready_score
+        op: '=='
+        value: 1
+    prior_failures:
+      - experiment_id: exp6206-live-strategy-seed-v2
+        verdict: "blocked_gate_check_failed: the live strategy seed depended on retired generated-answer transport readiness"
+        addressed_by: "The new mechanism uses exact cached events and task-conditional energy familiarity to gate advice; it does not generate strategy text or depend on the retired answer-transport chain."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Energy-Based Transfer for Reinforcement Learning uses EBM energy as a familiarity proxy and withholds advice in likely OOD states. Carnot needs the analogous control for constraint memory: remembered advice may help familiar tasks and harm shifted ones. Exp6263 provides a sealed offline stream, so this experiment measures the mechanism without claiming on-policy density.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/research-references.md V540 Energy-Based Transfer entry
+      - {project_root}/results/experiment_6263_clean_sota_event_replay_bridge.json
+      - {project_root}/python/carnot/experiment_6219_two_timescale_constraint_csl.py
+      - {project_root}/python/carnot/learn/constraint_memory.py
+      - {project_root}/python/carnot/pipeline/verifier_memory.py
+      - {project_root}/openspec/capabilities/self-learning/spec.md
+
+      TASK
+      Implement and evaluate task-conditional energy-familiarity admission on the sealed chronological prefix. Compare no memory, unconditional advice, a single global threshold, and task-conditional thresholds. Tune only on training data. Measure familiar coverage, shifted-family unsafe advice, calibration, abstention, utility, and negative transfer on held partitions. Include an inactive-gate control and an OOD positive control. Do not load an LLM or mutate weights.
+
+      Required deliverable: {project_root}/results/experiment_6264_energy_familiarity_memory_gate.json.
+      REQUIRED ARTIFACT FIELDS: status, upstream_bridge_path_and_hash, source_model_provenance, chronological_split_hashes, energy_definition_and_direction, no_memory_unconditional_global_and_task_conditional_arm_configs, threshold_fit_partition_and_receipts, treatment_fire_counts, known_family_coverage_by_arm, shifted_family_unsafe_advice_by_arm, abstention_by_arm, calibration_by_arm, exact_utility_by_arm, negative_transfer_by_arm, paired_intervals_and_sample_sizes, inactive_gate_control, ood_positive_control, off_policy_limitation, source_mutation_count, weight_mutation_count, familiarity_gate_ready_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, reproducibility_checksum, honest_verdict. source_mutation_count and weight_mutation_count must be bare 0. familiarity_gate_ready_score must require nondegenerate treatment fire and lower unsafe shifted-family advice than unconditional memory without a preregistered known-family regression.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: verify the exact bridge hash, partition non-overlap, sample sizes, energy direction, and protected hashes.
+      1. Add REQ-LEARN-6264 and scenarios before implementation and update traceability.
+      2. Implement a small reusable familiarity gate over existing exact energy fields. Do not add a learned LLM judge or refit held partitions.
+      3. Freeze thresholds from the training prefix. Evaluate known, shifted, and quarantined strata separately; quarantined rows cannot enter headline metrics.
+      4. Run the four matched arms with identical event order and decision snapshots. Prove each treatment fires where expected.
+      5. Compute paired intervals with reported n, unsafe-advice counts, calibration, abstention, and negative transfer. State the offline and off-policy limits.
+      6. Add tests for energy-sign reversal, empty task strata, unseen tasks, inactive thresholds, poisoned events, and deterministic replay.
+      7. Run focused tests and applicable e2e checks, record git status after tests, update spec/ops evidence, and adversarial-verify the artifact.
+
+      Run command: .venv/bin/python -m carnot.experiment_6264_energy_familiarity_memory_gate --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6265-chronological-two-timescale-csl-ab
+    milestone: "2026.08.540"
+    deliverable: results/experiment_6265_chronological_two_timescale_csl_ab.json
+    title: "Gated on Exp6264 familiarity: chronological two-timescale continuous self-learning A/B"
+    priority: critical
+    track: continuous_learning
+    continuous_self_learning_task: true
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 120
+    agent_type: codex
+    model: gpt-5.5
+    requires:
+      - exp6264-energy-familiarity-memory-gate
+    gated_on:
+      - upstream: exp6264-energy-familiarity-memory-gate
+        artifact_field: familiarity_gate_ready_score
+        op: '=='
+        value: 1
+    prior_failures:
+      - experiment_id: exp6235-prospective-two-timescale-live-csl
+        verdict: "missing: exact deliverable absent because the fresh flagship stream prerequisite did not become ready"
+        addressed_by: "This run uses the clean Exp6263 immutable SOTA replay bridge, the active Exp6264 familiarity gate, and the already-shipped Exp6219 transactional two-timescale mechanism; it has no fresh-generation prerequisite."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6219 proved safe immediate post-outcome and slow block-end constraint memory on a deterministic exact stream. V539 never extended it to flagship events. Exp6263 now supplies clean immutable SOTA rows, and Exp6264 supplies an active task-conditional familiarity gate. This is the milestone's required continuous self-learning experiment.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md continuous-learning rules
+      - {project_root}/research-program.md Continuous Self-Learning section
+      - {project_root}/results/experiment_6219_two_timescale_constraint_csl.json
+      - {project_root}/python/carnot/experiment_6219_two_timescale_constraint_csl.py and tests
+      - {project_root}/results/experiment_6263_clean_sota_event_replay_bridge.json
+      - {project_root}/results/experiment_6264_energy_familiarity_memory_gate.json
+      - {project_root}/python/carnot/learn/constraint_memory.py
+      - {project_root}/openspec/capabilities/self-learning/spec.md
+
+      TASK
+      Run a chronological matched A/B with no memory, time-shuffled memory, unconditional two-timescale memory, and energy-familiarity-gated two-timescale memory. Every decision reads an immutable snapshot. Immediate memory commits only after an exact outcome; slow memory commits only at a block boundary. Keep model weights frozen. Test poison quarantine and atomic rollback. Report forward transfer, retention, forgetting, negative transfer, unsafe admissions, and memory cost by model family and task.
+
+      Required deliverable: {project_root}/results/experiment_6265_chronological_two_timescale_csl_ab.json.
+      REQUIRED ARTIFACT FIELDS: status, continuous_self_learning_task, upstream_bridge_and_gate_paths_hashes, source_model_provenance, chronological_block_manifest, no_memory_shuffled_unconditional_and_familiarity_gated_arm_configs, immutable_decision_snapshot_receipts, immediate_post_outcome_commit_receipts, slow_block_end_commit_receipts, treatment_fire_counts, exact_outcome_gate_counts, forward_transfer_by_arm_family_and_task, retention_and_forgetting_by_arm_family_and_task, negative_transfer_and_unsafe_admissions, paired_intervals_and_sample_sizes, memory_size_and_update_costs, poison_quarantine_receipts, atomic_rollback_receipts, restart_identity_receipts, source_mutation_count, weight_mutation_count, decision_time_write_count, continuous_learning_promotion_ready_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, reproducibility_checksum, honest_verdict. continuous_self_learning_task must be bare true. The three mutation/write counts must be bare 0. Promotion requires positive held forward transfer, no preregistered retention regression, zero unsafe admission, exact rollback, and nondegenerate treatment fire.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: freeze the bridge, gate, chronological blocks, arms, seeds, sample sizes, promotion margins, and protected hashes.
+      1. Add REQ-LEARN-6265 and scenarios before implementation and trace each safety invariant.
+      2. Reuse Exp6219 transactional components. Extend schemas only where the SOTA event bridge requires it; do not fork a second memory implementation.
+      3. Run all arms on identical chronological events. The shuffled arm is an anti-causal control and cannot train on held outcomes.
+      4. Persist per-decision snapshot, advice, exact outcome, immediate commit, and slow commit receipts. Updates occur only after outcomes.
+      5. Inject malformed, duplicate, poisoned, reordered, and stale events. Prove quarantine, fail-closed behavior, and byte-identical rollback/restart.
+      6. Compute per-family/task and pooled paired evidence with sample sizes. Report underpowered strata and every harmful regression.
+      7. Run focused tests and applicable non-mutating e2e checks, record git status after tests, update spec/traceability/status/changelog, and adversarial-verify the artifact.
+
+      Run command: .venv/bin/python -m carnot.experiment_6265_chronological_two_timescale_csl_ab --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6266-family-task-holdout-csl-audit
+    milestone: "2026.08.540"
+    deliverable: results/experiment_6266_family_task_holdout_csl_audit.json
+    title: "Gated on Exp6265 promotion: leave-family-and-task-out continuous-learning audit"
+    priority: critical
+    track: continuous_learning
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 90
+    agent_type: codex
+    model: gpt-5.5
+    requires:
+      - exp6265-chronological-two-timescale-csl-ab
+    gated_on:
+      - upstream: exp6265-chronological-two-timescale-csl-ab
+        artifact_field: continuous_learning_promotion_ready_score
+        op: '=='
+        value: 1
+    prior_failures:
+      - experiment_id: exp5788-constraint-skill-transfer-audit
+        verdict: "missing: exact transfer-audit deliverable absent, so its downstream shadow adapter remained blocked"
+        addressed_by: "Exp6266 has a concrete promoted learner, an immutable two-family event manifest, and preregistered leave-model-family-out plus leave-task-class-out folds with no held-fold refit."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      A pooled continuous-learning gain can hide family-specific harm. Earlier constraint-skill transfer audits failed to produce their declared artifacts, which correctly blocked shadow integration. Exp6265 may proceed only to a new consumer after an independent family/task holdout audit.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6265_chronological_two_timescale_csl_ab.json
+      - {project_root}/results/experiment_6263_clean_sota_event_replay_bridge.json
+      - {project_root}/python/carnot/experiment_6219_two_timescale_constraint_csl.py
+      - {project_root}/python/carnot/learn/constraint_memory.py
+      - {project_root}/ops/exclusion_manifest.yaml entries for Exp5774, Exp5775, Exp5788, and Exp5789
+      - {project_root}/openspec/capabilities/self-learning/spec.md
+
+      TASK
+      Audit the exact Exp6265 promoted state with leave-one-model-family-out and leave-one-task-class-out folds. Do not refit thresholds, rules, or memory on held folds. Compare the frozen familiarity-gated learner with no memory and unconditional memory. Report per-fold safety, transfer, retention, forgetting, abstention, and poison containment. Missing or underpowered folds fail closed.
+
+      Required deliverable: {project_root}/results/experiment_6266_family_task_holdout_csl_audit.json.
+      REQUIRED ARTIFACT FIELDS: status, upstream_learner_path_hash_and_terminal_class, frozen_policy_state_path_and_hash, source_model_provenance, leave_model_family_out_fold_manifest, leave_task_class_out_fold_manifest, no_refit_receipts, fold_sample_sizes, treatment_fire_by_fold, forward_transfer_by_fold, retention_and_forgetting_by_fold, negative_transfer_unsafe_admission_and_abstention_by_fold, pooled_paired_intervals, underpowered_or_missing_folds, poison_containment_receipts, rollback_and_restart_replay, held_fold_leak_count, source_mutation_count, weight_mutation_count, family_task_transfer_ready_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, reproducibility_checksum, honest_verdict. Leak and mutation counts must be bare 0. Readiness requires every supported fold safe and the pooled held transfer gate positive; an absent model family blocks readiness.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: hash the promoted state, bridge, folds, thresholds, and protected files. Freeze no-refit assertions.
+      1. Add REQ-LEARN-6266 and scenarios before implementation and update traceability.
+      2. Build folds only from Exp6263 identities. Do not use quarantined Exp6146 rows to fill a missing clean family.
+      3. Replay the frozen policy on each held fold. Prove thresholds and memory bytes are unchanged before and after held evaluation.
+      4. Report family and task folds separately before any pooled statistic. Include n and every harmful row.
+      5. Run poison, duplicate, family-alias, task-alias, and held-label-leak controls. Reproduce rollback and restart.
+      6. Fail closed when a fold is missing, underpowered, unsafe, or non-reproducible. Do not average it away.
+      7. Run focused tests and applicable e2e checks, record git status after tests, update spec/ops evidence, and adversarial-verify the artifact.
+
+      Run command: .venv/bin/python -m carnot.experiment_6266_family_task_holdout_csl_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6267-constraint-memory-shadow-consumer-v2
+    milestone: "2026.08.540"
+    deliverable: results/experiment_6267_constraint_memory_shadow_consumer_v2.json
+    title: "Gated on Exp6266 transfer: default-off energy-familiarity constraint-memory shadow consumer"
+    priority: critical
+    track: continuous_learning
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 90
+    agent_type: codex
+    model: gpt-5.5
+    requires:
+      - exp6266-family-task-holdout-csl-audit
+    gated_on:
+      - upstream: exp6266-family-task-holdout-csl-audit
+        artifact_field: family_task_transfer_ready_score
+        op: '=='
+        value: 1
+    prior_failures:
+      - experiment_id: exp6236-online-constraint-memory-shadow-consumer
+        verdict: "blocked_gate_check_failed: Exp6235 artifact was absent and continuous_learning_promotion_ready_score could not be read"
+        addressed_by: "The v2 consumer is gated on a concrete Exp6266 held-family/task audit, uses the active energy-familiarity policy, stays default-off, and proves byte-identical control decisions before any future influence."
+        retire_if_same_verdict: true
+      - experiment_id: exp5789-constraint-skill-shadow-adapter
+        verdict: "blocked_gate_check_failed: the required transfer-audit artifact was absent"
+        addressed_by: "The new chain supplies exact transfer, rollback, and no-refit receipts before integration and does not reuse the missing Exp5788 dependency."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6236 and earlier shadow adapters never ran because their transfer evidence was absent. Exp6266 supplies the changed prerequisite: a current exact family/task holdout audit of the energy-familiarity learner. The first integration must remain shadow-only and must not change the live decision.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6266_family_task_holdout_csl_audit.json
+      - {project_root}/results/experiment_6265_chronological_two_timescale_csl_ab.json
+      - {project_root}/results/experiment_6236_online_constraint_memory_shadow_consumer.json
+      - {project_root}/python/carnot/learn/constraint_memory.py
+      - {project_root}/python/carnot/pipeline/verifier_memory.py
+      - {project_root}/python/carnot/pipeline/ and canonical constraint-decision entrypoints
+      - {project_root}/openspec/capabilities/self-learning/spec.md and {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+      TASK
+      Wire a default-off shadow consumer into the canonical constraint decision path. For each replayed decision, keep the control output byte-identical, read an immutable memory snapshot, compute a counterfactual energy-gated advice decision, and emit a receipt. Permit learning-state writes only after the exact outcome boundary. Prove process restart and atomic rollback. Do not flip a default or load an LLM.
+
+      Required deliverable: {project_root}/results/experiment_6267_constraint_memory_shadow_consumer_v2.json.
+      REQUIRED ARTIFACT FIELDS: status, upstream_transfer_audit_path_hash_and_terminal_class, integration_source_paths_hashes, default_flag_name_value_and_receipt, canonical_entrypoint_receipt, source_model_provenance, replay_manifest_and_hash, control_decision_hashes, shadow_counterfactual_decision_and_energy_receipts, familiarity_gate_fire_counts, control_shadow_byte_identity, decision_time_snapshot_receipts, post_outcome_write_receipts, decision_time_write_count, source_mutation_count, weight_mutation_count, live_decision_influence_count, restart_identity_receipts, atomic_rollback_receipts, fail_closed_controls, shadow_consumer_ready_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, reproducibility_checksum, honest_verdict. The four write, mutation, and live-influence counts must be bare 0. Ready requires active shadow treatment, byte identity, delayed writes, restart, rollback, and fail-closed controls.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: hash the exact audited policy, integration entrypoint, default state, replay manifest, and protected files.
+      1. Add REQ-LEARN-6267 and integration scenarios before implementation and update traceability.
+      2. Add the smallest adapter around the existing memory and decision interfaces. Do not build a parallel constraint engine.
+      3. Prove flag-off behavior is byte-identical before collecting shadow receipts. The default remains false in source and configuration.
+      4. Replay supported family/task events. Record immutable snapshot, control decision, shadow decision, energy, familiarity, and exact outcome identities.
+      5. Inject stale state, corrupt snapshot, missing task gate, restart, rollback, and concurrent-read controls. Fail closed without live influence.
+      6. Verify no decision-time write, source mutation, GGUF mutation, or model-weight mutation occurred.
+      7. Run focused tests and applicable non-mutating e2e checks, record git status after tests, update specs/ops evidence, and adversarial-verify the artifact.
+
+      Run command: .venv/bin/python -m carnot.experiment_6267_constraint_memory_shadow_consumer_v2 --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6268-multimodal-sampler-fixture-suite
+    milestone: "2026.08.540"
+    deliverable: results/experiment_6268_multimodal_sampler_fixture_suite.json
+    title: "Exact multimodal Ising, Potts, and typed-factor sampler fixture suite"
+    priority: high
+    track: sampler
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 90
+    agent_type: codex
+    model: gpt-5.5
+    requires:
+      - exp6262-terminal-artifact-readiness-contract
+    prior_failures:
+      - experiment_id: exp6220-mode-jump-runtime-ab
+        verdict: "blocked: runtime A/B had unsupported fixture arms, a failed quality gate, and a task-owned interrupted broad suite"
+        addressed_by: "This task does not compare samplers. It first builds a bounded exact-enumeration suite with explicit support, target distributions, basin labels, barriers, and focused tests, using the working Exp6237 backend as a positive control."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6237 proved that the Rust/PyO3 mode-jump treatment fires and preserves the target on one six-state fixture. That fixture cannot establish general value. Before another A/B, Carnot needs a frozen exact suite across binary Ising, multistate Potts, and typed-factor targets, with controls for modality and treatment support.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md sampler and hardware rules
+      - {project_root}/results/experiment_6237_activated_mode_jump_sampler_ab.json
+      - {project_root}/python/carnot/experiment_6237_activated_mode_jump_sampler_ab.py and tests
+      - {project_root}/python/carnot/experiment_6166_mode_jumping_factor_thermalization.py
+      - {project_root}/python/carnot/samplers/potts_sampler.py
+      - {project_root}/python/carnot/experiment_6152_typed_stochastic_constraint_ir.py
+      - {project_root}/crates/carnot-samplers/src/mode_jump.rs and tests
+      - {project_root}/openspec/capabilities/samplers/spec.md and {project_root}/openspec/capabilities/potts-sampler/spec.md
+
+      TASK
+      Build a frozen bounded exact sampler suite. Include the original six-state positive control, at least two multimodal Ising targets, at least two Potts targets, and at least two Carnot typed-factor targets. Add unimodal, inactive-treatment, and unsupported-shape controls. Exact-enumerate normalized target probabilities and record basin and barrier metadata. Do not run a headline sampler comparison or make timing claims.
+
+      Required deliverable: {project_root}/results/experiment_6268_multimodal_sampler_fixture_suite.json.
+      REQUIRED ARTIFACT FIELDS: status, fixture_manifest_path_and_hash, fixture_family_counts, source_paths_and_hashes, state_space_sizes, exact_enumeration_receipts, normalized_target_probability_hashes, energy_and_factor_definitions, basin_labels_and_barrier_metadata, mode_jump_support_by_fixture, original_six_state_positive_control, unimodal_control, inactive_treatment_control, unsupported_shape_control, random_seeds_and_schedule_defaults, duplicate_fixture_count, exact_probability_normalization_error_by_fixture, source_mutation_count, sampler_fixture_suite_ready_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, reproducibility_checksum, honest_verdict. duplicate_fixture_count and source_mutation_count must be bare 0. Readiness requires all preregistered families, exact normalization within tolerance, and valid controls.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: freeze fixture families, size bounds, exact tolerance, seeds, source hashes, and protected files.
+      1. Add REQ-SAMPLER-6268 and scenarios before implementation and update traceability.
+      2. Reuse existing energy and factor representations. Add fixtures under tests or results as appropriate; do not create root-level probes.
+      3. Enumerate every bounded state space independently from the sampler. Store normalized probabilities, energies, modes, basins, and barriers.
+      4. Prove the original Exp6237 treatment-positive fixture reproduces. Add unimodal, inactive, and unsupported controls.
+      5. Add tests for normalization, label permutation, Potts cardinality, typed-factor arity, duplicate fixtures, and energy-sign errors.
+      6. Keep cDLS, CUDA, FPGA, and timing claims outside this task. Declare local_cpu_exact_fixture_construction substrate.
+      7. Run focused Python and Rust tests plus applicable e2e checks, record git status after tests, update spec/ops evidence, and adversarial-verify the artifact.
+
+      Run command: .venv/bin/python -m carnot.experiment_6268_multimodal_sampler_fixture_suite --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6269-mode-jump-multifamily-ab
+    milestone: "2026.08.540"
+    deliverable: results/experiment_6269_mode_jump_multifamily_ab.json
+    title: "Gated on Exp6268 exact suite: activated mode-jump multi-family A/B"
+    priority: critical
+    track: sampler
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 150
+    agent_type: codex
+    model: gpt-5.5
+    requires:
+      - exp6268-multimodal-sampler-fixture-suite
+    gated_on:
+      - upstream: exp6268-multimodal-sampler-fixture-suite
+        artifact_field: sampler_fixture_suite_ready_score
+        op: '=='
+        value: 1
+    prior_failures:
+      - experiment_id: exp6220-mode-jump-runtime-ab
+        verdict: "blocked: all fixture arms were not supported, quality gate failed, and no timing claim was allowed"
+        addressed_by: "Exp6268 supplies exact supported targets and controls, while Exp6237 supplies an activated Rust/PyO3 treatment. The new A/B tests generality and distributional quality across three workload families, not the failed unsupported runtime fixture."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      The activated Exp6237 treatment is exact on one toy target. Exp6268 supplies independent exact distributions for Ising, Potts, and typed-factor families. The scientific question is whether mode jumping adds mixing value on non-toy multimodal targets without changing the target distribution.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6268_multimodal_sampler_fixture_suite.json
+      - {project_root}/results/experiment_6237_activated_mode_jump_sampler_ab.json
+      - {project_root}/python/carnot/experiment_6237_activated_mode_jump_sampler_ab.py
+      - {project_root}/python/carnot/samplers/mode_jump_rust_backend.py
+      - {project_root}/crates/carnot-samplers/src/mode_jump.rs
+      - {project_root}/crates/carnot-python/src/mode_jump.rs
+      - {project_root}/openspec/capabilities/samplers/spec.md
+
+      TASK
+      Run a matched fallback-versus-mode-jump A/B across every supported Exp6268 fixture. Hold target, initial states, seeds, burn-in, retained samples, proposal budget, and schedule fixed. Prove treatment activation before comparing outcomes. Report exact distribution error, energy error, basin occupancy, barrier crossings, autocorrelation, ESS, acceptance, and descriptive wall time. Use paired and equivalence-aware intervals. Do not reopen cDLS or make hardware claims.
+
+      Required deliverable: {project_root}/results/experiment_6269_mode_jump_multifamily_ab.json.
+      REQUIRED ARTIFACT FIELDS: status, upstream_fixture_path_and_hash, preregistered_fixture_seed_arm_matrix, matched_arm_configuration, rust_pyo3_backend_receipts, treatment_attempt_accept_and_fire_counts_by_fixture, positive_and_inactive_control_results, chain_sample_hashes, exact_distribution_error_by_arm_fixture, energy_error_by_arm_fixture, basin_occupancy_and_barrier_crossings_by_arm_fixture, autocorrelation_ess_and_acceptance_by_arm_fixture, paired_intervals_equivalence_margins_and_sample_sizes, harmful_regressions, descriptive_wall_time_by_arm_fixture, unsupported_or_failed_cells, source_mutation_count, hardware_claim_count, timing_speedup_claimed, mode_jump_safety_ready_score, mode_jump_workload_value_ready_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, reproducibility_checksum, honest_verdict. Source mutation and hardware claim counts must be bare 0; timing_speedup_claimed must be false. Workload value requires safety plus a preregistered positive mixing improvement on at least two non-toy families with no exactness regression.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: validate the exact suite, freeze the matrix, budgets, equivalence margins, value gate, seeds, and protected hashes.
+      1. Add REQ-SAMPLER-6269 and scenarios before implementation and update traceability.
+      2. Use the existing Rust/PyO3 backend. Prove treatment attempts and accepts are nonzero on the positive controls before outcome comparison.
+      3. Run every matched cell with independent chain receipts. Preserve unsupported and failed cells; do not replace them with fallback output.
+      4. Compare empirical distributions with exact targets. Report family and fixture results before pooled summaries.
+      5. Compute paired intervals and equivalence tests with n. Separate distribution safety from mixing value and descriptive cost.
+      6. Add tests for inactive treatment, unsupported shape, seed mismatch, sample-count mismatch, acceptance accounting, and exactness regression.
+      7. Run focused Python and Rust tests plus applicable e2e checks, record git status after tests, update spec/ops evidence, and adversarial-verify the artifact.
+
+      Run command: .venv/bin/python -m carnot.experiment_6269_mode_jump_multifamily_ab --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6270-mode-jump-descriptor-router
+    milestone: "2026.08.540"
+    deliverable: results/experiment_6270_mode_jump_descriptor_router.json
+    title: "Gated on Exp6269 workload value: descriptor-only default-off sampler router"
+    priority: high
+    track: sampler
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 90
+    agent_type: codex
+    model: gpt-5.5
+    requires:
+      - exp6269-mode-jump-multifamily-ab
+    gated_on:
+      - upstream: exp6269-mode-jump-multifamily-ab
+        artifact_field: mode_jump_workload_value_ready_score
+        op: '=='
+        value: 1
+    prior_failures:
+      - experiment_id: exp6220-mode-jump-runtime-ab
+        verdict: "blocked: unsupported arms and failed quality gate left no basis for runtime selection"
+        addressed_by: "The router runs only after Exp6269 proves exact workload value, uses pre-run descriptors with leave-one-family-out evaluation, and stays default-off; it cannot route from outcome leakage or timing-only evidence."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      A mode-jump default is justified only if the treatment helps identifiable workload classes. Exp6269 must first show positive value on at least two non-toy families. This task asks whether simple pre-run target descriptors can select the safer sampler without seeing outcomes.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6269_mode_jump_multifamily_ab.json
+      - {project_root}/results/experiment_6268_multimodal_sampler_fixture_suite.json
+      - {project_root}/python/carnot/inference/samplers.py
+      - {project_root}/python/carnot/samplers/backend.py
+      - {project_root}/python/carnot/samplers/mode_jump_rust_backend.py
+      - {project_root}/openspec/capabilities/samplers/spec.md
+
+      TASK
+      Fit the smallest auditable router from descriptors available before sampling: state-space size, variable cardinality, factor arity, modality count, and exact or estimated barrier summaries. Never use arm outcomes, wall time, acceptance, or held labels as input features. Evaluate leave-one-fixture-family-out selection regret, distribution safety, and treatment fire. Keep the router default off and make no hardware or speed claim.
+
+      Required deliverable: {project_root}/results/experiment_6270_mode_jump_descriptor_router.json.
+      REQUIRED ARTIFACT FIELDS: status, upstream_ab_path_hash_and_terminal_class, fixture_descriptor_manifest_and_hash, allowed_and_forbidden_feature_lists, router_definition_and_source_hash, train_validation_and_leave_family_out_folds, no_outcome_feature_leak_receipts, selection_by_fold, oracle_arm_by_fold_for_evaluation_only, selection_regret_by_fold, exact_distribution_safety_by_fold, treatment_fire_by_fold, baseline_always_fallback_and_always_mode_jump_results, paired_intervals_and_sample_sizes, harmful_regressions, default_flag_name_value_and_receipt, source_mutation_count, hardware_claim_count, timing_speedup_claimed, sampler_router_ready_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, reproducibility_checksum, honest_verdict. Mutation and hardware counts must be bare 0; timing_speedup_claimed must be false. Readiness requires zero outcome leakage, lower held selection regret than both fixed policies, and no exactness regression.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: verify the Exp6269 value gate, freeze descriptors, forbidden features, folds, baselines, margins, and protected hashes.
+      1. Add REQ-SAMPLER-6270 and scenarios before implementation and update traceability.
+      2. Implement a simple rule, shallow tree, or calibrated linear router. Prefer the smallest method that expresses the preregistered descriptors.
+      3. Build leave-one-family-out folds before fitting. Keep oracle best-arm labels evaluation-only and prove they are absent from router inputs.
+      4. Compare router, always-fallback, and always-mode-jump policies on held folds. Report selection regret and exact quality separately.
+      5. Prove the selected treatment fires when chosen and the default remains off in source and configuration.
+      6. Add tests for forbidden feature leakage, unseen cardinality, missing barrier descriptors, tie handling, unsafe selection, and deterministic replay.
+      7. Run focused tests and applicable non-mutating e2e checks, record git status after tests, update spec/ops evidence, and adversarial-verify the artifact.
+
+      Run command: .venv/bin/python -m carnot.experiment_6270_mode_jump_descriptor_router --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6271-v540-adversarial-capstone
+    milestone: "2026.08.540"
+    deliverable: results/experiment_6271_v540_adversarial_capstone.json
+    title: "V540 exact-path adversarial capstone and PRD-gap reconciliation"
+    priority: critical
+    track: synthesis
+    requires_gpu: false
+    max_turns: 20
+    estimated_wall_time_min: 45
+    agent_type: codex
+    model: gpt-5.5
+    requires:
+      - exp6261-v540-post-marker-source-scope-freeze
+      - exp6262-terminal-artifact-readiness-contract
+      - exp6263-clean-sota-event-replay-bridge
+      - exp6264-energy-familiarity-memory-gate
+      - exp6265-chronological-two-timescale-csl-ab
+      - exp6266-family-task-holdout-csl-audit
+      - exp6267-constraint-memory-shadow-consumer-v2
+      - exp6268-multimodal-sampler-fixture-suite
+      - exp6269-mode-jump-multifamily-ab
+      - exp6270-mode-jump-descriptor-router
+    prior_failures:
+      - experiment_id: exp6238-v539-adversarial-capstone
+        verdict: "complete: V539 preserved missing, blocked, skipped, flagged, and not-ready states; no runtime, ARC, code, CSL, or hardware claim was promoted"
+        addressed_by: "The V540 capstone reconciles a narrower graph with a new terminal-artifact guard, clean cached-SOTA learning chain, and exact multi-family sampler chain; it remains branch-independent and does not require a positive result."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      V540 has two independent scientific branches after its evidence-boundary work: energy-familiarity-gated continuous constraint learning and exact multi-family mode-jump sampling. Structured gates may skip any downstream task. The capstone must classify exact paths, preserve every skip and nonterminal state, and prevent one branch from laundering the other.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/research-roadmap.yaml and the activated V540 milestone document
+      - {project_root}/results/experiment_6260_v540_terminal_transition.json through {project_root}/results/experiment_6270_mode_jump_descriptor_router.json by exact declared paths
+      - {project_root}/python/carnot/terminal_artifacts.py
+      - {project_root}/scripts/adversarial_verify.py and {project_root}/scripts/summarize_artifact.py
+      - {project_root}/openspec/capabilities/research-harnesses/spec.md
+      - {project_root}/openspec/capabilities/self-learning/spec.md
+      - {project_root}/openspec/capabilities/samplers/spec.md
+      - {project_root}/_bmad/traceability.md, {project_root}/ops/status.md, {project_root}/ops/changelog.md, and {project_root}/ops/exclusion_manifest.yaml
+
+      TASK
+      Build an ungated branch-independent V540 capstone. Read each exact deliverable and any conductor gate receipt. Classify terminal, nonterminal, blocked, skipped, null, flagged, retired, and ready states with the shared classifier and current adversarial rules. Reconcile specs, traceability, status, and changelog only to evidence that exists. Report the terminal-artifact, CSL, and sampler branches separately. Make no live-LLM, runtime, ARC solve, hardware, speed, power, or model-weight claim.
+
+      Required deliverable: {project_root}/results/experiment_6271_v540_adversarial_capstone.json.
+      REQUIRED ARTIFACT FIELDS: status, milestone_roadmap_path_and_hash, exact_declared_deliverable_matrix, conductor_receipt_matrix, exact_path_over_receipt_precedence, current_rule_adversarial_results_by_task, terminal_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts, gate_cascade_receipts, terminal_artifact_contract_state, clean_sota_replay_state, familiarity_gate_state, continuous_learning_state, family_task_transfer_state, shadow_consumer_state, sampler_fixture_state, mode_jump_safety_and_value_state, sampler_router_state, branch_independent_promotion_ledger, prior_failure_retirement_actions, source_mutation_count, weight_mutation_count, live_llm_call_count, arc_solve_claim_count, registry_update_count, hardware_claim_count, speed_or_power_claim_count, protected_files_unchanged, spec_traceability_status_changelog_reconciliation, prd_gap_table, next_milestone_recommendations, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, reproducibility_checksum, honest_verdict. All mutation, call, solve, registry, hardware, speed, and power counts must be bare 0. Missing and nonterminal artifacts can never be promoted.
+
+      CONCRETE STEPS
+      0. PRECONDITIONS: freeze the activated roadmap hash, declared paths, conductor receipts, current adversarial rules, and protected hashes.
+      1. Add REQ-INFRA-6271 and scenarios before implementation and update traceability.
+      2. Classify every task by exact path. A conductor OK cannot override a nonterminal artifact; a gate tombstone remains skipped.
+      3. Re-run current adversarial verification on every present artifact. Preserve stamped and current-rule flags separately.
+      4. Recompute every structured gate from exact bare fields. Record missing upstream artifacts and fields without synthesizing defaults.
+      5. Build independent promotion ledgers for terminal-artifact integrity, continuous learning, and sampling. Apply retire_if_same_verdict actions exactly.
+      6. Reconcile OpenSpec implementation status, _bmad/traceability.md, ops/status.md, and ops/changelog.md. Do not edit operator-curated public docs.
+      7. Run focused capstone tests, roadmap/gate/exclusion checks, applicable non-mutating e2e checks, and root-clutter checks. Record git status after tests and adversarial-verify the capstone.
+
+      Run command: .venv/bin/python -m carnot.experiment_6271_v540_adversarial_capstone --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
