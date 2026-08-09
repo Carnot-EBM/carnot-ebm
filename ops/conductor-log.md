@@ -15546,3 +15546,4 @@ Still active  |
 | 2026-08-09 12:53 UTC | Gated on Exp6228 dense readiness: de-confounded Ge | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |
 | 2026-08-09 12:55 UTC | Gated on Exp6228 dense readiness: de-confounded Ge | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |
 | 2026-08-09 12:57 UTC | Gated on Exp6228 dense readiness: de-confounded Ge | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |
+| 2026-08-09 12:59 UTC | Gated on Exp6228 dense readiness: induce-prompt en | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |
