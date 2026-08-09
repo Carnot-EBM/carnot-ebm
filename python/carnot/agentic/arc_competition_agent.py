@@ -5346,15 +5346,33 @@ class E3AgentPolicy:
             return []
         events: list[dict[str, Any]] = []
         start = int(self._start_level or 0)
+        # GRADED-GOAL EXEMPLAR FIX (2026-08-08, adversarial review finding). `latest` is the
+        # frame RETURNED BY the winning action itself -- for these games that frame already
+        # shows the NEXT level's opening board, not the just-completed level's win state. Using
+        # grid_of(latest) as the "win-state exemplar" therefore captured the wrong board: the
+        # graded goal bias (CARNOT_ARC_GRADED_GOAL_BIAS=1) descended toward the state the agent
+        # had ALREADY reached at level-up, an inverted gradient pulling search back toward the
+        # start instead of toward the goal. The last-admitted transition's PRE-action grid
+        # (`.grid`, not `.next_grid`) is the true last-observed board of the level just won.
+        # Fall back to the old (known-wrong but non-crashing) capture only if no transition has
+        # been recorded yet -- keeps this function total rather than raising on an edge case.
         completed_grid = None
         try:
-            from carnot.agentic.arc_agi3_world_model import grid_of
-            from carnot.agentic.arc_executable_world_model import detect_cell, to_logical
+            import numpy as np
 
-            cell = detect_cell(grid_of(latest))
-            completed_grid = to_logical(grid_of(latest), cell)
+            if self.transitions:
+                completed_grid = np.asarray(self.transitions[-1].grid).copy()
         except Exception:
             completed_grid = None
+        if completed_grid is None:
+            try:
+                from carnot.agentic.arc_agi3_world_model import grid_of
+                from carnot.agentic.arc_executable_world_model import detect_cell, to_logical
+
+                cell = detect_cell(grid_of(latest))
+                completed_grid = to_logical(grid_of(latest), cell)
+            except Exception:
+                completed_grid = None
         for new_level in range(self._observed_level + 1, level + 1):
             relative = new_level - start
             if relative >= self.target_levels:
@@ -6428,7 +6446,13 @@ class E3AgentPolicy:
             self._level_reinduction_pending = False
             self.phase = "execute" if self.plan else "explore"
             self._prev = None
-            if self.plan:
+            # BOUNDS GUARD (2026-08-08, adversarial review finding, defense-in-depth alongside
+            # the plan/pi reset at `_induce_and_plan` entry): `_next_plan_move` indexes
+            # `self.plan[self.pi]` with no bounds check of its own. The reset above should already
+            # guarantee `self.pi == 0 < len(self.plan)` whenever `self.plan` is truthy here, but
+            # this mirrors the `execute`-phase branch's own `self.pi < len(self.plan)` guard below
+            # rather than relying solely on that invariant holding across every future edit.
+            if self.plan and self.pi < len(self.plan):
                 if self._execute_plan_from_current:
                     mv = self._next_plan_move()
                     self._remember_active_probe_origin(mv, latest)
@@ -6496,6 +6520,19 @@ class E3AgentPolicy:
         import os
 
         from carnot.agentic import arc_executable_world_model as e3
+
+        # PLAN/PI RESET (2026-08-08, adversarial review finding). This is the single call site
+        # that ever assigns `self.phase = "execute" if self.plan else "explore"` right after this
+        # function returns, so whatever `self.plan`/`self.pi` were BEFORE this call are about to
+        # be superseded either way. Under CARNOT_ARC_ACTIVE_PROBE=1 this function can be entered
+        # a second time with `self.pi` stale at 1 from a just-consumed one-step probe plan (see
+        # the comment on `_execute_plan_from_current` below) -- if the branch that fires below
+        # installs a fresh `self.plan` without also resetting `self.pi`, the policy either skips
+        # the new plan's first step (stale pi=1, len(plan)>=2) or raises IndexError on a second
+        # one-step plan (stale pi=1, len(plan)==1). Clearing both here, before any branch or early
+        # return, makes every branch below start from a clean pi=0 for whatever plan it installs.
+        self.plan = []
+        self.pi = 0
 
         active_transitions = self._active_transitions()
         attempt = {

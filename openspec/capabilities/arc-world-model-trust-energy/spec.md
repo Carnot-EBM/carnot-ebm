@@ -22254,6 +22254,62 @@ THINK`, `ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT`) is flipped by this result alo
 |---|---|---|
 | REQ-ARC-WMTE-6198 | `python/carnot/agentic/arc_executable_world_model.py:induce_think_on`, wired in `LocalGGUFProposer.generate`/`induce`; `python/carnot/agentic/arc_competition_agent.py:SUBMITTED_AGENT_CONFIG["frozen_generator"]["think_mode"]`. | `tests/python/test_arc_induce_think_mode_20260807.py`. |
 
+### REQ-ARC-WMTE-6231: Graded-Goal-Bias Win-State Exemplar Uses The Pre-Action Grid
+
+**Origin:** 2026-08-08 adversarial live-agent review
+(`docs/research-notes/live-agent-adversarial-review-2026-08-08.md`, Correctness/Minor). The review
+found that `_observe_level_boundary` captured the `CARNOT_ARC_GRADED_GOAL_BIAS` "win-state
+exemplar" (the grid the graded search bias treats as the goal to move toward) from
+`grid_of(latest)`. `latest` is the frame the game env returns FOR the action that won the level. In
+these games that frame already shows the NEXT level's opening board, not the board the agent just
+won on. So the exemplar was the wrong target: the graded bias built a distance-to-exemplar energy
+that pulled the search back toward a board the agent had already left, an inverted gradient instead
+of a path toward the goal.
+
+**THE FIX.** `_observe_level_boundary` now reads the last-admitted `Transition.grid` (the grid
+BEFORE the winning action, not `.next_grid`, the grid after it) as the exemplar, when a transition
+has been recorded. This is the true last-observed board of the level the agent just won. If no
+transition has been recorded yet (an edge case: a level-up detected on the very first observed
+frame), the function falls back to the old `grid_of(latest)` capture rather than leaving the
+exemplar unset.
+
+**SCOPE.** `CARNOT_ARC_GRADED_GOAL_BIAS` is default OFF, so this fix changes nothing on the scored
+path today. It matters for any future A/B of the lever: before this fix, such an A/B would have
+measured an anti-gradient and likely retired the lever for the wrong reason.
+
+### REQ-ARC-WMTE-6232: Induce-And-Plan Resets Stale Plan/Pi State At Entry
+
+**Origin:** 2026-08-08 adversarial live-agent review (same source as REQ-ARC-WMTE-6231).
+`self.pi` is the index into `self.plan` of the next plan step to execute. Under
+`CARNOT_ARC_ACTIVE_PROBE=1`, a one-step probe plan is installed and then consumed, leaving
+`self.pi` at 1. A subsequent reinduction can re-enter `_induce_and_plan` directly (bypassing the
+normal level-boundary reset that would otherwise clear `self.pi` to 0), and every branch inside
+`_induce_and_plan` that installs a fresh plan overwrites `self.plan` without touching `self.pi`.
+Two failure shapes followed: a new plan of length 2 or more silently skipped its own first step
+(execution resumed at the stale index 1), and a new one-step plan raised an uncaught `IndexError`
+(`self.plan[1]` on a length-1 list).
+
+**THE FIX.** `_induce_and_plan` now resets both `self.plan` to `[]` and `self.pi` to `0`
+unconditionally at entry, before any branch or early return runs. Every branch inside the function
+only ever WRITES `self.plan`/`self.pi` afterward — none of them reads the incoming value — so the
+reset cannot change what any branch decides; it only clears the stale carry-over from a prior
+call. As defense in depth, the induce branch in `next_move` (the one call site that can execute a
+freshly-installed plan's first step immediately, before returning to the normal
+`self.pi < len(self.plan)`-guarded execute phase) now also checks `self.pi < len(self.plan)`
+before calling `_next_plan_move()`, matching the guard the execute-phase branch already had.
+
+**SCOPE.** `CARNOT_ARC_ACTIVE_PROBE` is default OFF, so this fix changes nothing on the scored path
+today. Every branch inside `_induce_and_plan` starts each call with `self.plan == []` in the
+non-probe case regardless (the level boundary already resets it), so resetting `[]` to `[]` and `0`
+to `0` there is a no-op; the fix only changes behavior for the active-probe reinduction path.
+
+## Implementation Status (REQ-ARC-WMTE-6231, REQ-ARC-WMTE-6232)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6231 | `python/carnot/agentic/arc_competition_agent.py:_observe_level_boundary`. | `tests/python/test_arc_live_agent_review_fixes_20260808.py::test_win_state_exemplar_prefers_pre_action_transition_grid_over_post_transition_frame`, `::test_win_state_exemplar_falls_back_to_latest_frame_when_no_transition_recorded`. |
+| REQ-ARC-WMTE-6232 | `python/carnot/agentic/arc_competition_agent.py:_induce_and_plan`, induce branch in `next_move`. | `tests/python/test_arc_live_agent_review_fixes_20260808.py::test_induce_and_plan_resets_stale_plan_and_pi_even_on_early_return`, `::test_next_move_induce_branch_survives_stale_pi_if_induce_and_plan_ever_regresses`. |
+
 ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
 
 **Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`
