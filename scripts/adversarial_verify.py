@@ -249,6 +249,7 @@ DETERMINISTIC_VERIFIER_SUBSTRATES = (
     "deterministic_exact_verifier_and_versioned_external_state_no_llm",
     "artifact_provenance_audit",
     "post_marker_source_ingestion_and_roadmap_scope_audit",
+    "post_marker_source_ingestion_and_v539_scope_freeze",
     "cached_sota_event_energy_calibration",
     "cached_authentic_sota_rows_cpu_analysis",
     "sealed_cached_event_evaluation",
