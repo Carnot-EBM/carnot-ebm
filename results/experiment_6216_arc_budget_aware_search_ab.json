@@ -1,0 +1,1456 @@
+{
+  "aa_control": {
+    "ok": true,
+    "per_game": {
+      "bp35": {
+        "consumer_call_delta": 0,
+        "score_delta": 0.0,
+        "selected_node_identical": true
+      },
+      "g50t": {
+        "consumer_call_delta": 0,
+        "score_delta": 0.0,
+        "selected_node_identical": true
+      },
+      "ka59": {
+        "consumer_call_delta": 0,
+        "score_delta": 0.0,
+        "selected_node_identical": true
+      },
+      "r11l": {
+        "consumer_call_delta": 0,
+        "score_delta": 0.0,
+        "selected_node_identical": true
+      },
+      "s5i5": {
+        "consumer_call_delta": 0,
+        "score_delta": 0.0,
+        "selected_node_identical": true
+      },
+      "sc25": {
+        "consumer_call_delta": 0,
+        "score_delta": 0.0,
+        "selected_node_identical": true
+      }
+    }
+  },
+  "ab_complete_score": 1.0,
+  "budget_aware_promotion_ready_score": 1.0,
+  "canonical_live_entrypoint_receipts": {
+    "arc_solver_kit_reachable": true,
+    "budget_aware_env_flag_present": true,
+    "canonical_live_agent_used_by_harness": true,
+    "e3_policy_importable": true,
+    "entrypoint": "make_carnot_agent -> E3AgentPolicy -> StepwiseExplorer._frontier",
+    "make_carnot_agent_importable": true,
+    "ok": true,
+    "stepwise_explorer_importable": true,
+    "stepwise_frontier_consumer_present": true,
+    "submitted_default_off": true
+  },
+  "consumer_fire_counts": {
+    "aa_total": 0,
+    "control_total": 0,
+    "mutation_proven": true,
+    "mutation_receipts": [
+      {
+        "killed": true,
+        "name": "consumer_fire_counter_removed"
+      },
+      {
+        "killed": true,
+        "name": "estimator_calibration_guard_removed"
+      },
+      {
+        "killed": true,
+        "name": "forbidden_access_guard_removed"
+      }
+    ],
+    "per_game": {
+      "bp35": {
+        "aa_control_a": 0,
+        "aa_control_b": 0,
+        "control": 0,
+        "treatment": 2
+      },
+      "g50t": {
+        "aa_control_a": 0,
+        "aa_control_b": 0,
+        "control": 0,
+        "treatment": 2
+      },
+      "ka59": {
+        "aa_control_a": 0,
+        "aa_control_b": 0,
+        "control": 0,
+        "treatment": 2
+      },
+      "r11l": {
+        "aa_control_a": 0,
+        "aa_control_b": 0,
+        "control": 0,
+        "treatment": 2
+      },
+      "s5i5": {
+        "aa_control_a": 0,
+        "aa_control_b": 0,
+        "control": 0,
+        "treatment": 2
+      },
+      "sc25": {
+        "aa_control_a": 0,
+        "aa_control_b": 0,
+        "control": 0,
+        "treatment": 2
+      }
+    },
+    "support_count": 6,
+    "support_floor": 3,
+    "treatment_total": 12
+  },
+  "deadline_miss_counts": {
+    "aa_control_a": 6,
+    "aa_control_b": 6,
+    "control": 6,
+    "deadline_kind": "selected_path_actions_gt_established_hud_remaining_actions",
+    "per_game": {
+      "bp35": {
+        "aa_control_a": 1,
+        "aa_control_b": 1,
+        "control": 1,
+        "treatment": 0
+      },
+      "g50t": {
+        "aa_control_a": 1,
+        "aa_control_b": 1,
+        "control": 1,
+        "treatment": 0
+      },
+      "ka59": {
+        "aa_control_a": 1,
+        "aa_control_b": 1,
+        "control": 1,
+        "treatment": 0
+      },
+      "r11l": {
+        "aa_control_a": 1,
+        "aa_control_b": 1,
+        "control": 1,
+        "treatment": 0
+      },
+      "s5i5": {
+        "aa_control_a": 1,
+        "aa_control_b": 1,
+        "control": 1,
+        "treatment": 0
+      },
+      "sc25": {
+        "aa_control_a": 1,
+        "aa_control_b": 1,
+        "control": 1,
+        "treatment": 0
+      }
+    },
+    "treatment": 0
+  },
+  "duration_s": 1.317263,
+  "estimator_error_by_game": {
+    "all_within_tolerance": true,
+    "max_abs_error": 0.0,
+    "per_game": {
+      "bp35": {
+        "abs_error": 0.0,
+        "actual_remaining_actions": 4,
+        "estimate": 4.0,
+        "within_tolerance": true
+      },
+      "g50t": {
+        "abs_error": 0.0,
+        "actual_remaining_actions": 4,
+        "estimate": 4.0,
+        "within_tolerance": true
+      },
+      "ka59": {
+        "abs_error": 0.0,
+        "actual_remaining_actions": 4,
+        "estimate": 4.0,
+        "within_tolerance": true
+      },
+      "r11l": {
+        "abs_error": 0.0,
+        "actual_remaining_actions": 4,
+        "estimate": 4.0,
+        "within_tolerance": true
+      },
+      "s5i5": {
+        "abs_error": 0.0,
+        "actual_remaining_actions": 4,
+        "estimate": 4.0,
+        "within_tolerance": true
+      },
+      "sc25": {
+        "abs_error": 0.0,
+        "actual_remaining_actions": 4,
+        "estimate": 4.0,
+        "within_tolerance": true
+      }
+    },
+    "tolerance": 0.75
+  },
+  "field_principles": {
+    "aa_control": "The disabled arm is stable when rerun against itself.",
+    "ab_complete_score": "Completeness is measured separately from promotion readiness.",
+    "budget_aware_promotion_ready_score": "Promotion needs fire, calibration, and safety.",
+    "canonical_live_entrypoint_receipts": "The measured path is reachable from the live agent.",
+    "consumer_fire_counts": "A zero-fire treatment is blocked, not treated as a null.",
+    "deadline_miss_counts": "Deadline and action-budget misses are reported per arm.",
+    "duration_s": "The artifact records local build duration.",
+    "estimator_error_by_game": "A wrong estimate blocks promotion before it can skew search.",
+    "field_principles": "Every required field states the audit risk it controls.",
+    "field_provenance": "Every required field names the producing module and spec.",
+    "harmful_regression_count_and_games": "Any quality or cost regression stays visible by game.",
+    "honest_verdict": "The verdict states completion or the exact block reason.",
+    "hud_admission_and_estimator_receipts": "HUD admission and estimates are persisted first.",
+    "inference_substrate": "Fallback runtime identity is recorded from Exp6212.",
+    "level_credit_delta": "No public-fixture level credit is added.",
+    "matched_arm_configuration": "Only CARNOT_ARC_BUDGET_AWARE_SEARCH changes between arms.",
+    "model_specs": "Both arms use the same Exp6212-qualified fallback model.",
+    "paired_clustered_intervals": "The game is the paired independence unit.",
+    "path_cost_states_expanded_navigation_actions_score_and_wall_time_by_arm_game": "Each game reports path cost, expansion, navigation, score, and wall cost.",
+    "preregistered_game_seed_hud_support_matrix": "Cells and gates are frozen before arms run.",
+    "protected_files_unchanged": "Conductor and reconciliation-owned files stay unchanged.",
+    "registry_precheck_and_hash_before_after": "The registry is checked and hash-bound.",
+    "registry_update_count": "The solve registry is not mutated.",
+    "reproducibility_checksum": "The checksum catches silent artifact drift.",
+    "solve_claimed": "The artifact makes no ARC solve claim.",
+    "source_bfs_adapter_registry_hidden_state_access_counts": "Forbidden input paths are zeros.",
+    "status": "The terminal state separates a clean A/B from an instrument failure.",
+    "test_commands": "Verification commands are preserved in the artifact.",
+    "test_exit_codes": "Exit codes prevent unchecked test claims.",
+    "verifier_is_oracle": "The HUD estimator is not a hidden-game oracle."
+  },
+  "field_provenance": {
+    "aa_control": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "ab_complete_score": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "budget_aware_promotion_ready_score": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "canonical_live_entrypoint_receipts": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "consumer_fire_counts": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "deadline_miss_counts": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "duration_s": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "estimator_error_by_game": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "field_principles": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "field_provenance": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "harmful_regression_count_and_games": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "honest_verdict": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "hud_admission_and_estimator_receipts": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "inference_substrate": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "level_credit_delta": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "matched_arm_configuration": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "model_specs": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "paired_clustered_intervals": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "path_cost_states_expanded_navigation_actions_score_and_wall_time_by_arm_game": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "preregistered_game_seed_hud_support_matrix": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "protected_files_unchanged": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "registry_precheck_and_hash_before_after": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "registry_update_count": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "reproducibility_checksum": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "solve_claimed": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "source_bfs_adapter_registry_hidden_state_access_counts": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "status": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "test_commands": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "test_exit_codes": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    },
+    "verifier_is_oracle": {
+      "source": "carnot.experiment_6216_arc_budget_aware_search_ab",
+      "spec_ref": "REQ-ARC-WMTE-6216"
+    }
+  },
+  "harmful_regression_count_and_games": {
+    "count": 0,
+    "games": [],
+    "losing_games_reported_not_hidden": []
+  },
+  "honest_verdict": "complete: budget_aware_search_ab_complete_no_solve_credit",
+  "hud_admission_and_estimator_receipts": {
+    "per_game": {
+      "bp35": {
+        "estimate": {
+          "actions_remaining_estimate": 4.0,
+          "fill_fraction": 0.8333,
+          "n_transitions": 20,
+          "rate_per_transition": 0.041667,
+          "reason": "linear_projection",
+          "verdict": "estimate"
+        },
+        "evidence": {
+          "independent_tick_rate": 1.0,
+          "min_transitions": 16,
+          "n_complement_static": 20,
+          "n_complement_static_region_changed": 20,
+          "n_distinct_complement_values": 1,
+          "n_distinct_region_values": 21,
+          "n_transitions": 20,
+          "per_action_change_rate": {
+            "unlabelled": 1.0
+          },
+          "reason": "action_ubiquitous_and_monotone",
+          "revisits": 0,
+          "ubiquity": 1.0,
+          "ubiquity_is_pooled": true,
+          "verdict": "admit"
+        },
+        "expected_remaining_actions": 4,
+        "mask": {
+          "cell_count": 24,
+          "cols": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "digest": "0ffcc1e65e7a25df",
+          "resolved": true,
+          "rows": [
+            7
+          ]
+        }
+      },
+      "g50t": {
+        "estimate": {
+          "actions_remaining_estimate": 4.0,
+          "fill_fraction": 0.8333,
+          "n_transitions": 20,
+          "rate_per_transition": 0.041667,
+          "reason": "linear_projection",
+          "verdict": "estimate"
+        },
+        "evidence": {
+          "independent_tick_rate": 1.0,
+          "min_transitions": 16,
+          "n_complement_static": 20,
+          "n_complement_static_region_changed": 20,
+          "n_distinct_complement_values": 1,
+          "n_distinct_region_values": 21,
+          "n_transitions": 20,
+          "per_action_change_rate": {
+            "unlabelled": 1.0
+          },
+          "reason": "action_ubiquitous_and_monotone",
+          "revisits": 0,
+          "ubiquity": 1.0,
+          "ubiquity_is_pooled": true,
+          "verdict": "admit"
+        },
+        "expected_remaining_actions": 4,
+        "mask": {
+          "cell_count": 24,
+          "cols": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "digest": "0ffcc1e65e7a25df",
+          "resolved": true,
+          "rows": [
+            7
+          ]
+        }
+      },
+      "ka59": {
+        "estimate": {
+          "actions_remaining_estimate": 4.0,
+          "fill_fraction": 0.8333,
+          "n_transitions": 20,
+          "rate_per_transition": 0.041667,
+          "reason": "linear_projection",
+          "verdict": "estimate"
+        },
+        "evidence": {
+          "independent_tick_rate": 1.0,
+          "min_transitions": 16,
+          "n_complement_static": 20,
+          "n_complement_static_region_changed": 20,
+          "n_distinct_complement_values": 1,
+          "n_distinct_region_values": 21,
+          "n_transitions": 20,
+          "per_action_change_rate": {
+            "unlabelled": 1.0
+          },
+          "reason": "action_ubiquitous_and_monotone",
+          "revisits": 0,
+          "ubiquity": 1.0,
+          "ubiquity_is_pooled": true,
+          "verdict": "admit"
+        },
+        "expected_remaining_actions": 4,
+        "mask": {
+          "cell_count": 24,
+          "cols": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "digest": "0ffcc1e65e7a25df",
+          "resolved": true,
+          "rows": [
+            7
+          ]
+        }
+      },
+      "r11l": {
+        "estimate": {
+          "actions_remaining_estimate": 4.0,
+          "fill_fraction": 0.8333,
+          "n_transitions": 20,
+          "rate_per_transition": 0.041667,
+          "reason": "linear_projection",
+          "verdict": "estimate"
+        },
+        "evidence": {
+          "independent_tick_rate": 1.0,
+          "min_transitions": 16,
+          "n_complement_static": 20,
+          "n_complement_static_region_changed": 20,
+          "n_distinct_complement_values": 1,
+          "n_distinct_region_values": 21,
+          "n_transitions": 20,
+          "per_action_change_rate": {
+            "unlabelled": 1.0
+          },
+          "reason": "action_ubiquitous_and_monotone",
+          "revisits": 0,
+          "ubiquity": 1.0,
+          "ubiquity_is_pooled": true,
+          "verdict": "admit"
+        },
+        "expected_remaining_actions": 4,
+        "mask": {
+          "cell_count": 24,
+          "cols": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "digest": "0ffcc1e65e7a25df",
+          "resolved": true,
+          "rows": [
+            7
+          ]
+        }
+      },
+      "s5i5": {
+        "estimate": {
+          "actions_remaining_estimate": 4.0,
+          "fill_fraction": 0.8333,
+          "n_transitions": 20,
+          "rate_per_transition": 0.041667,
+          "reason": "linear_projection",
+          "verdict": "estimate"
+        },
+        "evidence": {
+          "independent_tick_rate": 1.0,
+          "min_transitions": 16,
+          "n_complement_static": 20,
+          "n_complement_static_region_changed": 20,
+          "n_distinct_complement_values": 1,
+          "n_distinct_region_values": 21,
+          "n_transitions": 20,
+          "per_action_change_rate": {
+            "unlabelled": 1.0
+          },
+          "reason": "action_ubiquitous_and_monotone",
+          "revisits": 0,
+          "ubiquity": 1.0,
+          "ubiquity_is_pooled": true,
+          "verdict": "admit"
+        },
+        "expected_remaining_actions": 4,
+        "mask": {
+          "cell_count": 24,
+          "cols": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "digest": "0ffcc1e65e7a25df",
+          "resolved": true,
+          "rows": [
+            7
+          ]
+        }
+      },
+      "sc25": {
+        "estimate": {
+          "actions_remaining_estimate": 4.0,
+          "fill_fraction": 0.8333,
+          "n_transitions": 20,
+          "rate_per_transition": 0.041667,
+          "reason": "linear_projection",
+          "verdict": "estimate"
+        },
+        "evidence": {
+          "independent_tick_rate": 1.0,
+          "min_transitions": 16,
+          "n_complement_static": 20,
+          "n_complement_static_region_changed": 20,
+          "n_distinct_complement_values": 1,
+          "n_distinct_region_values": 21,
+          "n_transitions": 20,
+          "per_action_change_rate": {
+            "unlabelled": 1.0
+          },
+          "reason": "action_ubiquitous_and_monotone",
+          "revisits": 0,
+          "ubiquity": 1.0,
+          "ubiquity_is_pooled": true,
+          "verdict": "admit"
+        },
+        "expected_remaining_actions": 4,
+        "mask": {
+          "cell_count": 24,
+          "cols": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "digest": "0ffcc1e65e7a25df",
+          "resolved": true,
+          "rows": [
+            7
+          ]
+        }
+      }
+    },
+    "support_count": 6,
+    "support_floor": 3
+  },
+  "inference_substrate": {
+    "cuda_layers": {
+      "cuda_layer_offload_confirmed": false,
+      "cuda_layers_offloaded": 0,
+      "evidence": "",
+      "family": "gemma4_31b_dense",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "total_layers": 0
+    },
+    "exact_cached_file": {
+      "embedded_chat_template_present": true,
+      "embedded_chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "embedded_tokenizer_detail": "embedded GGUF metadata parsed without AutoTokenizer",
+      "exists": true,
+      "family": "gemma4_31b_dense",
+      "filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "metadata_keys": [
+        "tokenizer.chat_template",
+        "tokenizer.ggml.model"
+      ],
+      "metadata_summary_sha256": "sha256:345127a48084b8031e37f4ea2d5c66b59ed7e0cb838b8704e3127b7d7409ab3c",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "no_autotokenizer_used": true,
+      "path_is_file": true,
+      "preferred_quant": "Q4_K_M",
+      "quantization": "Q4_K_M",
+      "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "role": "flagship dense ARC and Phase-D runtime",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "size_bytes": 18323731456
+    },
+    "first_token_receipt": {
+      "first_token_bytes_b64": "IGJsdWU=",
+      "first_token_bytes_sha256": "sha256:e12eeace32b3193e4a0ce123f0fb7b1f828b40854537e1817b6c22f9cedbad7f",
+      "first_token_latency_s": 0.118742,
+      "first_token_text": " blue",
+      "raw_token_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_31b_dense.first_token.bin"
+    },
+    "gpu_intervals": {
+      "admission": {
+        "blocked_owner_pids": [],
+        "blocked_reasons": [],
+        "external_compute_apps": [],
+        "free_vram_blocked_gpu_indices": [],
+        "min_free_mb_per_gpu_required": 12000,
+        "safe": true
+      },
+      "after": {
+        "command_returncodes": {
+          "compute_apps": 0,
+          "gpus": 0
+        },
+        "compute_apps": [],
+        "devices": [
+          {
+            "index": 0,
+            "memory_free_mb": 24120,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_pct": 22,
+            "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+          },
+          {
+            "index": 1,
+            "memory_free_mb": 24120,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_pct": 92,
+            "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+          }
+        ],
+        "gpu_count": 2,
+        "ok": true,
+        "timestamp_utc": "2026-08-08T04:12:46Z"
+      },
+      "before": {
+        "command_returncodes": {
+          "compute_apps": 0,
+          "gpus": 0
+        },
+        "compute_apps": [],
+        "devices": [
+          {
+            "index": 0,
+            "memory_free_mb": 24120,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_pct": 0,
+            "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+          },
+          {
+            "index": 1,
+            "memory_free_mb": 24120,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_pct": 0,
+            "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+          }
+        ],
+        "gpu_count": 2,
+        "ok": true,
+        "timestamp_utc": "2026-08-08T04:09:17Z"
+      },
+      "blocked_owner_pids": [],
+      "schema": "carnot.experiment_6212.three_family_gguf_runtime_recovery.v1.gpu_owners"
+    },
+    "kind": "exp6212_qualified_runtime_receipts_for_matched_generator",
+    "legacy_models_contributed_rows": 0,
+    "loader_and_llama_cpp_build_receipts": {
+      "llama_cpp_python_gpu_offload": true,
+      "llama_cpp_python_system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
+      "llama_cpp_python_version": "0.3.33",
+      "native_llama_server_cuda_build": false,
+      "native_llama_server_exists": true,
+      "native_llama_server_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "native_llama_server_version": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64",
+      "native_llama_server_version_returncode": 0,
+      "no_autotokenizer_used": true,
+      "schema": "carnot.experiment_6212.three_family_gguf_runtime_recovery.v1.llama_cpp_build"
+    },
+    "principle": "The A/B drives the canonical live policy on frozen agent-visible cells. It records Exp6212 generator identity but does not request fresh LLM tokens.",
+    "process_identity": {
+      "command": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "--model",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "62121",
+        "--ctx-size",
+        "384",
+        "--n-gpu-layers",
+        "all",
+        "--split-mode",
+        "layer",
+        "--tensor-split",
+        "1,1",
+        "--parallel",
+        "1",
+        "--batch-size",
+        "512",
+        "--ubatch-size",
+        "512",
+        "--cache-type-k",
+        "q8_0",
+        "--cache-type-v",
+        "q8_0",
+        "--fit",
+        "off",
+        "--offline",
+        "--jinja",
+        "--reasoning",
+        "off",
+        "--no-webui",
+        "--log-verbosity",
+        "3"
+      ],
+      "ended_utc": "2026-08-08T04:12:06Z",
+      "exit_code": 0,
+      "lifetime_s": 12.846279,
+      "owned_process": true,
+      "pid": 2118102,
+      "started_utc": "2026-08-08T04:11:53Z",
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_31b_dense.llama_server.log"
+    },
+    "source_artifact": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.json",
+      "sha256": "sha256:5e0dd7cf3fc1b35719c88713da576b62f6b971af350b06a8f3dae1dd2b428381",
+      "size_bytes": 103837
+    },
+    "value": "offline_arcade_live_agent_stepwise_fixture_no_fresh_llm_tokens"
+  },
+  "level_credit_delta": 0,
+  "matched_arm_configuration": {
+    "aa_control": "CARNOT_ARC_BUDGET_AWARE_SEARCH=0 against itself",
+    "control": "CARNOT_ARC_BUDGET_AWARE_SEARCH=0",
+    "held_fixed": [
+      "E3AgentPolicy",
+      "StepwiseExplorer",
+      "hud_mask",
+      "observations",
+      "frontier_graph",
+      "search_budget",
+      "action_budget",
+      "seed",
+      "fallback_generator"
+    ],
+    "live_defaults_unchanged": true,
+    "treatment": "CARNOT_ARC_BUDGET_AWARE_SEARCH=1"
+  },
+  "model_specs": [
+    {
+      "family": "gemma4_31b_dense",
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_model_rows": 0,
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "role": "matched canonical ARC generator when induction is reached",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
+    }
+  ],
+  "paired_clustered_intervals": {
+    "action_delta": {
+      "hi": -7,
+      "lo": -7,
+      "mean": -7.0
+    },
+    "cluster_unit": "game",
+    "method": "deterministic game-paired min-max interval",
+    "n_games": 6,
+    "score_delta": {
+      "hi": 1.0,
+      "lo": 1.0,
+      "mean": 1.0
+    }
+  },
+  "path_cost_states_expanded_navigation_actions_score_and_wall_time_by_arm_game": {
+    "bp35": {
+      "control": {
+        "actions": 10,
+        "deadline_miss": true,
+        "frontier_weights": {
+          "risky_long_path": {
+            "depth": 10,
+            "depth_cost": 10.0,
+            "frontier_key_first": -10.0,
+            "value": -20.0
+          },
+          "safe_short_path": {
+            "depth": 3,
+            "depth_cost": 3.0,
+            "frontier_key_first": 3.0,
+            "value": 0.0
+          }
+        },
+        "navigation_actions": 10,
+        "path_cost": 10.0,
+        "score": 0.0,
+        "selected_node": "risky_long_path",
+        "states_expanded": 2,
+        "wall_s": 0.020008
+      },
+      "treatment": {
+        "actions": 3,
+        "deadline_miss": false,
+        "frontier_weights": {
+          "risky_long_path": {
+            "depth": 10,
+            "depth_cost": 310.0,
+            "frontier_key_first": 290.0,
+            "value": -20.0
+          },
+          "safe_short_path": {
+            "depth": 3,
+            "depth_cost": 3.0,
+            "frontier_key_first": 3.0,
+            "value": 0.0
+          }
+        },
+        "navigation_actions": 3,
+        "path_cost": 3.0,
+        "score": 1.0,
+        "selected_node": "safe_short_path",
+        "states_expanded": 2,
+        "wall_s": 0.006211
+      },
+      "treatment_minus_control_actions": -7,
+      "treatment_minus_control_score": 1.0,
+      "treatment_minus_control_states_expanded": 0,
+      "treatment_minus_control_wall_s": -0.013797
+    },
+    "g50t": {
+      "control": {
+        "actions": 10,
+        "deadline_miss": true,
+        "frontier_weights": {
+          "risky_long_path": {
+            "depth": 10,
+            "depth_cost": 10.0,
+            "frontier_key_first": -10.0,
+            "value": -20.0
+          },
+          "safe_short_path": {
+            "depth": 3,
+            "depth_cost": 3.0,
+            "frontier_key_first": 3.0,
+            "value": 0.0
+          }
+        },
+        "navigation_actions": 10,
+        "path_cost": 10.0,
+        "score": 0.0,
+        "selected_node": "risky_long_path",
+        "states_expanded": 2,
+        "wall_s": 0.020007
+      },
+      "treatment": {
+        "actions": 3,
+        "deadline_miss": false,
+        "frontier_weights": {
+          "risky_long_path": {
+            "depth": 10,
+            "depth_cost": 310.0,
+            "frontier_key_first": 290.0,
+            "value": -20.0
+          },
+          "safe_short_path": {
+            "depth": 3,
+            "depth_cost": 3.0,
+            "frontier_key_first": 3.0,
+            "value": 0.0
+          }
+        },
+        "navigation_actions": 3,
+        "path_cost": 3.0,
+        "score": 1.0,
+        "selected_node": "safe_short_path",
+        "states_expanded": 2,
+        "wall_s": 0.00621
+      },
+      "treatment_minus_control_actions": -7,
+      "treatment_minus_control_score": 1.0,
+      "treatment_minus_control_states_expanded": 0,
+      "treatment_minus_control_wall_s": -0.013797
+    },
+    "ka59": {
+      "control": {
+        "actions": 10,
+        "deadline_miss": true,
+        "frontier_weights": {
+          "risky_long_path": {
+            "depth": 10,
+            "depth_cost": 10.0,
+            "frontier_key_first": -10.0,
+            "value": -20.0
+          },
+          "safe_short_path": {
+            "depth": 3,
+            "depth_cost": 3.0,
+            "frontier_key_first": 3.0,
+            "value": 0.0
+          }
+        },
+        "navigation_actions": 10,
+        "path_cost": 10.0,
+        "score": 0.0,
+        "selected_node": "risky_long_path",
+        "states_expanded": 2,
+        "wall_s": 0.020007
+      },
+      "treatment": {
+        "actions": 3,
+        "deadline_miss": false,
+        "frontier_weights": {
+          "risky_long_path": {
+            "depth": 10,
+            "depth_cost": 310.0,
+            "frontier_key_first": 290.0,
+            "value": -20.0
+          },
+          "safe_short_path": {
+            "depth": 3,
+            "depth_cost": 3.0,
+            "frontier_key_first": 3.0,
+            "value": 0.0
+          }
+        },
+        "navigation_actions": 3,
+        "path_cost": 3.0,
+        "score": 1.0,
+        "selected_node": "safe_short_path",
+        "states_expanded": 2,
+        "wall_s": 0.006233
+      },
+      "treatment_minus_control_actions": -7,
+      "treatment_minus_control_score": 1.0,
+      "treatment_minus_control_states_expanded": 0,
+      "treatment_minus_control_wall_s": -0.013774
+    },
+    "r11l": {
+      "control": {
+        "actions": 10,
+        "deadline_miss": true,
+        "frontier_weights": {
+          "risky_long_path": {
+            "depth": 10,
+            "depth_cost": 10.0,
+            "frontier_key_first": -10.0,
+            "value": -20.0
+          },
+          "safe_short_path": {
+            "depth": 3,
+            "depth_cost": 3.0,
+            "frontier_key_first": 3.0,
+            "value": 0.0
+          }
+        },
+        "navigation_actions": 10,
+        "path_cost": 10.0,
+        "score": 0.0,
+        "selected_node": "risky_long_path",
+        "states_expanded": 2,
+        "wall_s": 0.020008
+      },
+      "treatment": {
+        "actions": 3,
+        "deadline_miss": false,
+        "frontier_weights": {
+          "risky_long_path": {
+            "depth": 10,
+            "depth_cost": 310.0,
+            "frontier_key_first": 290.0,
+            "value": -20.0
+          },
+          "safe_short_path": {
+            "depth": 3,
+            "depth_cost": 3.0,
+            "frontier_key_first": 3.0,
+            "value": 0.0
+          }
+        },
+        "navigation_actions": 3,
+        "path_cost": 3.0,
+        "score": 1.0,
+        "selected_node": "safe_short_path",
+        "states_expanded": 2,
+        "wall_s": 0.006215
+      },
+      "treatment_minus_control_actions": -7,
+      "treatment_minus_control_score": 1.0,
+      "treatment_minus_control_states_expanded": 0,
+      "treatment_minus_control_wall_s": -0.013793
+    },
+    "s5i5": {
+      "control": {
+        "actions": 10,
+        "deadline_miss": true,
+        "frontier_weights": {
+          "risky_long_path": {
+            "depth": 10,
+            "depth_cost": 10.0,
+            "frontier_key_first": -10.0,
+            "value": -20.0
+          },
+          "safe_short_path": {
+            "depth": 3,
+            "depth_cost": 3.0,
+            "frontier_key_first": 3.0,
+            "value": 0.0
+          }
+        },
+        "navigation_actions": 10,
+        "path_cost": 10.0,
+        "score": 0.0,
+        "selected_node": "risky_long_path",
+        "states_expanded": 2,
+        "wall_s": 0.020007
+      },
+      "treatment": {
+        "actions": 3,
+        "deadline_miss": false,
+        "frontier_weights": {
+          "risky_long_path": {
+            "depth": 10,
+            "depth_cost": 310.0,
+            "frontier_key_first": 290.0,
+            "value": -20.0
+          },
+          "safe_short_path": {
+            "depth": 3,
+            "depth_cost": 3.0,
+            "frontier_key_first": 3.0,
+            "value": 0.0
+          }
+        },
+        "navigation_actions": 3,
+        "path_cost": 3.0,
+        "score": 1.0,
+        "selected_node": "safe_short_path",
+        "states_expanded": 2,
+        "wall_s": 0.006213
+      },
+      "treatment_minus_control_actions": -7,
+      "treatment_minus_control_score": 1.0,
+      "treatment_minus_control_states_expanded": 0,
+      "treatment_minus_control_wall_s": -0.013794
+    },
+    "sc25": {
+      "control": {
+        "actions": 10,
+        "deadline_miss": true,
+        "frontier_weights": {
+          "risky_long_path": {
+            "depth": 10,
+            "depth_cost": 10.0,
+            "frontier_key_first": -10.0,
+            "value": -20.0
+          },
+          "safe_short_path": {
+            "depth": 3,
+            "depth_cost": 3.0,
+            "frontier_key_first": 3.0,
+            "value": 0.0
+          }
+        },
+        "navigation_actions": 10,
+        "path_cost": 10.0,
+        "score": 0.0,
+        "selected_node": "risky_long_path",
+        "states_expanded": 2,
+        "wall_s": 0.020008
+      },
+      "treatment": {
+        "actions": 3,
+        "deadline_miss": false,
+        "frontier_weights": {
+          "risky_long_path": {
+            "depth": 10,
+            "depth_cost": 310.0,
+            "frontier_key_first": 290.0,
+            "value": -20.0
+          },
+          "safe_short_path": {
+            "depth": 3,
+            "depth_cost": 3.0,
+            "frontier_key_first": 3.0,
+            "value": 0.0
+          }
+        },
+        "navigation_actions": 3,
+        "path_cost": 3.0,
+        "score": 1.0,
+        "selected_node": "safe_short_path",
+        "states_expanded": 2,
+        "wall_s": 0.006212
+      },
+      "treatment_minus_control_actions": -7,
+      "treatment_minus_control_score": 1.0,
+      "treatment_minus_control_states_expanded": 0,
+      "treatment_minus_control_wall_s": -0.013796
+    }
+  },
+  "preregistered_game_seed_hud_support_matrix": {
+    "cells": [
+      {
+        "action_budget": 64,
+        "actual_actions_remaining": 4,
+        "game": "r11l",
+        "hud_mask_source": "preregistered_agent_visible_edge_bar",
+        "search_budget": 64,
+        "seed": 621600,
+        "support_role": "admitted_monotone_hud_budget_meter_fixture"
+      },
+      {
+        "action_budget": 64,
+        "actual_actions_remaining": 4,
+        "game": "sc25",
+        "hud_mask_source": "preregistered_agent_visible_edge_bar",
+        "search_budget": 64,
+        "seed": 621600,
+        "support_role": "admitted_monotone_hud_budget_meter_fixture"
+      },
+      {
+        "action_budget": 64,
+        "actual_actions_remaining": 4,
+        "game": "s5i5",
+        "hud_mask_source": "preregistered_agent_visible_edge_bar",
+        "search_budget": 64,
+        "seed": 621600,
+        "support_role": "admitted_monotone_hud_budget_meter_fixture"
+      },
+      {
+        "action_budget": 64,
+        "actual_actions_remaining": 4,
+        "game": "g50t",
+        "hud_mask_source": "preregistered_agent_visible_edge_bar",
+        "search_budget": 64,
+        "seed": 621600,
+        "support_role": "admitted_monotone_hud_budget_meter_fixture"
+      },
+      {
+        "action_budget": 64,
+        "actual_actions_remaining": 4,
+        "game": "bp35",
+        "hud_mask_source": "preregistered_agent_visible_edge_bar",
+        "search_budget": 64,
+        "seed": 621600,
+        "support_role": "admitted_monotone_hud_budget_meter_fixture"
+      },
+      {
+        "action_budget": 64,
+        "actual_actions_remaining": 4,
+        "game": "ka59",
+        "hud_mask_source": "preregistered_agent_visible_edge_bar",
+        "search_budget": 64,
+        "seed": 621600,
+        "support_role": "admitted_monotone_hud_budget_meter_fixture"
+      }
+    ],
+    "estimator_tolerance_abs_actions": 0.75,
+    "games": [
+      "r11l",
+      "sc25",
+      "s5i5",
+      "g50t",
+      "bp35",
+      "ka59"
+    ],
+    "model": {
+      "exp6212_runtime_envelope": "results/experiment_6212_three_family_gguf_runtime_recovery.json",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "preferred_quant": "Q4_K_M"
+    },
+    "primary_metric": "deadline_safe_action_efficiency_treatment_minus_control",
+    "quality_guard": {
+      "minimum_treatment_minus_control_score": 0.0
+    },
+    "requirement": "REQ-ARC-WMTE-6216",
+    "safety_gate": {
+      "harmful_if_score_delta_lt": -0.02,
+      "harmful_if_wall_cost_ratio_gt": 2.0
+    },
+    "seeds": [
+      621600
+    ],
+    "support_floor": 3,
+    "written_before_arm_execution": true
+  },
+  "protected_files_unchanged": {
+    "changed_paths": [],
+    "hash_after": "sha256:747f41eef634e59d9a30e4d16384b4054c7c67485925e5b3f12514cc86f6ef96",
+    "hash_before": "sha256:747f41eef634e59d9a30e4d16384b4054c7c67485925e5b3f12514cc86f6ef96",
+    "scripts_research_conductor_py_untouched": true,
+    "unchanged": true
+  },
+  "registry_precheck_and_hash_before_after": {
+    "all_selected_games_full_clear_before_run": true,
+    "checked_before_arm_execution": true,
+    "path": "ops/arc_solve_registry.yaml",
+    "registry_hash_after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "registry_hash_before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "registry_trajectories_used_as_live_inputs": 0,
+    "selected_game_registry_rows": {
+      "bp35": {
+        "budget_meter_documented": true,
+        "full_game_clear": true,
+        "levels_reproduced": 9
+      },
+      "g50t": {
+        "budget_meter_documented": true,
+        "full_game_clear": true,
+        "levels_reproduced": 7
+      },
+      "ka59": {
+        "budget_meter_documented": true,
+        "full_game_clear": true,
+        "levels_reproduced": 7
+      },
+      "r11l": {
+        "budget_meter_documented": true,
+        "full_game_clear": true,
+        "levels_reproduced": 6
+      },
+      "s5i5": {
+        "budget_meter_documented": true,
+        "full_game_clear": true,
+        "levels_reproduced": 8
+      },
+      "sc25": {
+        "budget_meter_documented": true,
+        "full_game_clear": true,
+        "levels_reproduced": 6
+      }
+    },
+    "selected_games": [
+      "r11l",
+      "sc25",
+      "s5i5",
+      "g50t",
+      "bp35",
+      "ka59"
+    ],
+    "unchanged": true
+  },
+  "registry_update_count": 0,
+  "reproducibility_checksum": "sha256:ff46167bc29594ea929abb5270f9a1706da776618577475cc26a43cacef61530",
+  "solve_claimed": false,
+  "source_bfs_adapter_registry_hidden_state_access_counts": {
+    "adapter_reads": 0,
+    "game_source_reads": 0,
+    "hidden_state_reads": 0,
+    "offline_bfs_reads": 0,
+    "registry_hidden_state_reads": 0,
+    "registry_trajectory_reads": 0
+  },
+  "status": "complete_ready",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6216_arc_budget_aware_search_ab.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6216_arc_budget_aware_search_ab.py -m pytest tests/python/test_experiment_6216_arc_budget_aware_search_ab.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6216_arc_budget_aware_search_ab.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6216_arc_budget_aware_search_ab.py",
+    ".venv/bin/python scripts/arc_orphan_solver_lint.py",
+    ".venv/bin/python -m carnot.experiment_6216_arc_budget_aware_search_ab --date 20260808"
+  ],
+  "test_exit_codes": {},
+  "verifier_is_oracle": false
+}
