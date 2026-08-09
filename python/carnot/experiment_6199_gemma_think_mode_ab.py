@@ -321,14 +321,24 @@ def build_levelup_window(game: str, k: int = WINDOW_K) -> Optional[tuple[list, i
 # --------------------------------------------------------------------------------------
 def _configure_arm(prop, arm: str) -> None:
     """Set env + proposer config for an arm. Two arms, not four -- see module docstring for why
-    gemma's real think toggle does not need the Qwen-era template's codeonly-on/off split."""
+    gemma's real think toggle does not need the Qwen-era template's codeonly-on/off split.
+
+    BUG FIXED 2026-08-09 (found while smoke-testing the Phase 2a roster expansion): the
+    no_think branch used to `os.environ.pop("CARNOT_ARC_INDUCE_THINK", None)` -- correct only
+    while `induce_think_on()`'s fallback (`ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT`) was still
+    "0". That constant was flipped to "1" on 2026-08-08 (REQ-ARC-WMTE-6198, commit 21e44408ab),
+    so popping the override silently let BOTH arms resolve to think-ON -- confirmed directly: a
+    smoke-test no_think row showed `reason_engaged=True` with a genuine `<think>` tag in its raw
+    completion. Setting the override to the explicit string "0" (not unsetting it) makes
+    `induce_think_on()` return False regardless of what the scored default is now or becomes
+    later, which is what an A/B control arm requires."""
     prop.no_think_prefix = ""  # gemma live pin; /no_think is inert text on gemma either way
     prop.max_tokens = SHARED_MAX_TOKENS
     if arm == "think":
         os.environ["CARNOT_ARC_INDUCE_THINK"] = "1"
         prop.tries = 1  # a think overrun is the honest finding, not a retry bug (exp5714 precedent)
     else:
-        os.environ.pop("CARNOT_ARC_INDUCE_THINK", None)
+        os.environ["CARNOT_ARC_INDUCE_THINK"] = "0"
         prop.tries = 3
 
 
