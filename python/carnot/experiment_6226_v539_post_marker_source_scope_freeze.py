@@ -198,13 +198,13 @@ RECORDED_TEST_RECEIPTS: Mapping[str, JsonDict] = {
     TEST_COMMANDS[0]: {
         "exit_code": 0,
         "classification": "passed",
-        "stdout_tail": "9 passed in 35.02s",
+        "stdout_tail": "9 passed in 29.30s",
         "stderr_tail": "",
     },
     TEST_COMMANDS[1]: {
         "exit_code": 0,
         "classification": "passed",
-        "stdout_tail": "9 passed in 46.99s",
+        "stdout_tail": "9 passed in 42.06s",
         "stderr_tail": "",
     },
     TEST_COMMANDS[2]: {
@@ -251,8 +251,8 @@ RECORDED_TEST_RECEIPTS: Mapping[str, JsonDict] = {
     },
     TEST_COMMANDS[9]: {
         "exit_code": 2,
-        "classification": "interrupted_after_existing_broad_suite_failures_and_worker_crashes",
-        "stdout_tail": "Interrupted at 33% after 1462.92s: 351 failed, 17657 passed, 31 skipped, 189 warnings, 14 errors. Existing worker crashes occurred in Z3, JAX Consformer compile, and Qwen tokenizer prewarm paths before interruption.",
+        "classification": "interrupted_after_existing_broad_suite_failures_worker_abort_and_stall",
+        "stdout_tail": "Interrupted at 20% after 640.97s: 134 failed, 11232 passed, 7 skipped, 132 warnings, 14 errors. A worker aborted in scripts/experiment_294_gpu_baseline_apple.py Qwen tokenizer prewarm, pytest replaced the worker, then the run stopped after a silent interval.",
         "stderr_tail": "",
     },
     TEST_COMMANDS[10]: {
