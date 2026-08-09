@@ -22902,6 +22902,86 @@ no single threshold on this metric both keeps tu93 and rejects cd82/wa30.
 |---|---|---|
 | REQ-ARC-WMTE-6245 | None — the candidate fix to `arc_nav_world_model.py` was built, measured against the known true/false positives, found not to discriminate, and reverted (`git checkout --`) before commit. `is_confident_nav`'s three existing structural checks are unchanged. | `results/experiment_6245_nav_confidence_internal_heldout_negative.json` (the artifact IS the check — reproduces the exact numbers from the pre-revert manual measurement; adversarial_verify and determination_preservation_lint both clean). |
 
+### REQ-ARC-WMTE-6246: Phase 3a's Held-Out Change-Fidelity Gate — NOT MET, Underpowered Plus a Real Regression (Negative Result)
+
+**Origin:** `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 3a. REQ-
+ARC-WMTE-6241 built and unit-tested `SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED` (semantic action
+names, explicit changed-cell counts, computed object-identity cross-reference) but deferred the
+actual gate measurement — GPU was occupied by Phase 2a at the time. This closes that gap.
+
+**THE RUN.** `scripts/experiments/experiment_6246_induce_prompt_enrichment_heldout_ab.py`, per
+game: collect a fresh 50-transition pool, split into a 40-transition TRAIN slice (shown to the
+LLM inducer) and a 10-transition HELD slice (scored only), induce twice on the same train slice
+(`CARNOT_ARC_INDUCE_PROMPT_ENRICHMENT=0` then `=1`), score both engines' `change_fidelity` on the
+same held slice via `WorldModelVerifier` with this game's own HUD mask, **explicitly forcing
+`hud_mask_enabled=True`** to match Phase 1a's own measurement methodology rather than reading
+whatever the ambient scored default happens to be (a real bug the smoke test caught before the
+full run: the first draft left masking on its ambient default and silently scored unmasked).
+
+**ISOLATION.** Launched with `CARNOT_ARC_E3_DIR` pointed at a private scratch directory (read once
+at interpreter start, per `arc_executable_world_model.py`'s own comment on this), so the induced
+engines this run writes never touch the conductor's shared, concurrently-mutated
+`results/arc_e3/` store — the exact hazard `project_arc_engine_store_regression` (memory) already
+recorded a real incident for.
+
+**RESULT: 4 of 5 games comparable, 2 of 4 improved, gate NOT MET — for two independent reasons,
+not one.** Roster: m0r0, ft09, tr87, cn04, ar25.
+
+| Game | off | on | delta | Note |
+|---|---|---|---|---|
+| m0r0 | 1.0 (off only) | — | n/a | `on` arm hit a genuine 1575s client-side TimeoutError, not a crash — no data for this cell, not fabricated as a tie or a pass |
+| ft09 | 0.0 | 0.0 | 0.0 | HUD mask refused as unmeasurable (`refused_swallow_check_unmeasurable`) on both arms — a tied non-signal, not a comparison |
+| tr87 | 0.0619 | 0.3942 | **+0.3323** | real, substantial improvement |
+| cn04 | 0.5845 | 0.5970 | +0.0125 | marginal improvement |
+| ar25 | 0.7931 | 0.1257 | **-0.6674** | real, substantial REGRESSION |
+
+**Reason 1 — underpowered.** The gate's own condition (`>=4 of 5 held-out games improve` — the
+plan's ">= 4 of 5" language) requires 5 comparable games; m0r0's timeout leaves only 4. The
+script's own `gate_met` logic checks `n_comparable >= 5` explicitly and correctly returns `False`
+on this sample size alone, before even weighing the improve/regress split — this is NOT a silent
+bug reading a partial sample as a full one.
+
+**Reason 2 — the available signal does not support the lever even ignoring the sample-size
+question.** Of the 4 comparable games: 1 real improvement (tr87), 1 marginal improvement (cn04),
+1 unmeasurable tie (ft09), 1 real regression (ar25) larger in magnitude than tr87's gain. This is
+not "almost 4 of 5" cut short by bad luck on the 5th game — even a hypothetical clean 5th
+data point could not turn this into a defensible >=4-of-5-improve result without ALSO reversing
+ar25's clear regression, which the enrichment prompt's mechanism (adding text the inducer must
+parse and reason about) offers no reason to expect happens reliably.
+
+**ar25's regression is itself informative, independent of this gate.** REQ-ARC-WMTE-6244 found
+ar25's Mode A engine crashes on a Python TypeError bug (unrelated to this run's transitions). In
+THIS run, both arms of ar25 induced successfully (no crash) — the enrichment prompt did not
+trigger or avoid that specific bug either way — but produced a substantially WORSE engine when
+enriched (0.79 -> 0.13). Plausible read: MORE prompt content increases the surface area for the
+induction call to go wrong on a game whose baseline induction is already fragile; not measured
+further here, noted for a future task rather than investigated to conclusion.
+
+**VERDICT: flag stays default OFF.** `SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED` remains `False`.
+Per this project's standing convention, no lever flips its shipped default without a passing A/B
+— and this one is not just short of the sample-size floor, the available data argues against
+flipping regardless. No code changed in this task; measurement only.
+
+#### SCENARIO-ARC-WMTE-6246-GATE-CORRECTLY-REPORTS-UNDERPOWERED-NOT-MET
+
+Given a run with 4 of 5 comparable games (the 5th blocked by a genuine infra timeout, not
+fabricated as a tie or omitted), the gate's own `n_comparable >= 5` check returns `gate_met=False`
+without needing to weigh the improve/regress counts — an underpowered sample is reported as such,
+not silently treated as a full one that happened to score low.
+
+#### SCENARIO-ARC-WMTE-6246-MIXED-SIGNAL-DOES-NOT-BECOME-A-CLEAN-PASS
+
+Given the 4 comparable games split 1 clear improvement, 1 marginal improvement, 1 unmeasurable
+tie, and 1 clear regression, the writeup states that even a favorable 5th data point could not
+alone satisfy the gate without also explaining away the regression — a mixed result is reported
+as mixed, not summarized as "close to passing."
+
+## Implementation Status (REQ-ARC-WMTE-6246)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6246 | `scripts/experiments/experiment_6246_induce_prompt_enrichment_heldout_ab.py` (measurement-only; no production default changed). | `results/experiment_6246_induce_prompt_enrichment_heldout_ab.json` (the artifact IS the check — real LLM induction on both arms, HUD-masked change fidelity, `hud_mask_enabled=True` forced explicitly; adversarial_verify and determination_preservation_lint both clean). |
+
 ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
 
 **Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`

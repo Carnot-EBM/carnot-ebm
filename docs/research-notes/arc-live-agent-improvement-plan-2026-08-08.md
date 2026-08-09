@@ -321,6 +321,21 @@ off, correct content when on, action 7 deliberately left unnamed). GPU 1 was occ
 at implementation time, so the actual leave-one-game-out A/B this item's gate requires is deferred
 to a follow-up task, not skipped or fabricated.
 
+**DONE, NEGATIVE (2026-08-09, later, REQ-ARC-WMTE-6246) — gate NOT MET; flag stays default OFF.**
+5-game A/B (m0r0, ft09, tr87, cn04, ar25), HUD-masked held-out change fidelity per 1a's own
+methodology (`hud_mask_enabled=True` forced explicitly — a real bug the smoke test caught before
+the full run, since the ambient default silently scores unmasked). Only 4 of 5 comparable (m0r0's
+`on` arm hit a genuine 1575s timeout, not a crash, not fabricated as a tie). Of the 4: tr87
+improved substantially (+0.33), cn04 marginally (+0.01), ft09 tied (unmeasurable — HUD mask
+refused as swallowing), **ar25 regressed substantially (-0.67)** — a real, larger-magnitude
+regression than tr87's gain. Gate fails for two independent reasons: the sample is short of the
+gate's own >=5 floor, AND the available signal is mixed-to-negative regardless (a hypothetical
+clean 5th data point could not alone satisfy ">=4 of 5 improve" without also explaining away
+ar25's regression). Ran isolated from the conductor's shared engine store
+(`CARNOT_ARC_E3_DIR` pointed at a private scratch dir) to avoid the known
+`project_arc_engine_store_regression` overwrite hazard. `SUBMITTED_INDUCE_PROMPT_ENRICHMENT_
+ENABLED` stays `False`. Full breakdown in REQ-ARC-WMTE-6246.
+
 **3b. (Optional arm inside 3a's A/B) Withhold the raw numeric grid.**
 The Duck deliberately refuses to expose the raw grid, forcing object-level reasoning, keeping a
 small-crop ASCII escape hatch. Near-zero cost as a third arm in 3a's A/B.
