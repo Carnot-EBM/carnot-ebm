@@ -22982,6 +22982,100 @@ as mixed, not summarized as "close to passing."
 |---|---|---|
 | REQ-ARC-WMTE-6246 | `scripts/experiments/experiment_6246_induce_prompt_enrichment_heldout_ab.py` (measurement-only; no production default changed). | `results/experiment_6246_induce_prompt_enrichment_heldout_ab.json` (the artifact IS the check — real LLM induction on both arms, HUD-masked change fidelity, `hud_mask_enabled=True` forced explicitly; adversarial_verify and determination_preservation_lint both clean). |
 
+### REQ-ARC-WMTE-6247: Phase 4d's Live-Path A/B — INFRASTRUCTURE-BLOCKED, Not A Lever Result (Zero Valid Cells)
+
+**Origin:** `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 4d.
+`CARNOT_ARC_BOUNDED_REINDUCTION` shipped 2026-08-08 (commit `e73efa7c85`) and was never measured.
+Unlike REQ-ARC-WMTE-6242/6246 (single induce calls, paired A/B), this lever only has a chance to
+fire if a FULL LIVE EPISODE genuinely stalls after its first induction attempt, keeps exploring,
+and accumulates 200+ more transitions without winning — a property of a whole multi-hundred-action
+run, so this reused `scripts/arc_scored_path_lever_harness.py`'s `run_cell` (the mature, already-
+instrumented scored-path harness) directly, toggling only `CARNOT_ARC_BOUNDED_REINDUCTION`.
+
+**RESULT: INFRASTRUCTURE-BLOCKED. Zero of the planned 4 cells (ka59 off/on, re86 off/on) produced
+a valid measurement.** This is explicitly NOT a negative result about the lever — it was never
+exercised under valid conditions. Four launches, three real bugs found and fixed, a fourth
+failure mode encountered and not chased further:
+
+1. **Run 1 — a `REPO` path bug.** `Path(__file__).resolve().parent.parent` resolved one directory
+   short of the true repo root (should have been `.parents[2]`), so the final `OUT.write_text()`
+   targeted a nonexistent `scripts/results/` directory. Crashed before any per-cell progress was
+   logged — likely on the empty `blocked_cuda_server_failed_to_start` short-circuit, so no real
+   compute was wasted. Fixed: `REPO = Path(__file__).resolve().parents[2]`, and the `sys.path`
+   insert corrected from the (accidentally-working-because-of-the-bug) bare `REPO` to
+   `REPO / "scripts"` explicitly.
+2. **Run 2 — no invalid-cell detection.** ka59/off ran a real 1481-action episode, but the reaper
+   crashed its ONE induction attempt mid-episode (`llm_on_row_valid=False`,
+   `generator_healthy_after=False`, `induction_skipped: {"proposer_failed_or_missing_root": 1}`).
+   The script had no logic to detect this and would have silently accepted the corrupted cell as
+   done, permanently losing the chance at a valid ka59/off reading via checkpoint-resume. Fixed:
+   checkpoint-resume now filters to `llm_on_row_valid is not False`, and a per-cell retry loop
+   (up to 3 attempts) was added.
+3. **Run 3 — a self-inflicted server storm.** The new retry loop's own `proposer._inner._healthy()`
+   pre-check (a bare 2-second `urllib` timeout — the same flakiness
+   `arc_scored_path_lever_harness.py`'s own `forbid_spawn` docstring names) stacked with
+   `_ensure_server()`'s IDENTICAL internal check. Under load this produced 4 independent server
+   processes within a 4-minute window, several dying mid-model-load with no error at all — a
+   collision from redundant health-checking, not an external reaper. Fixed: removed the outer
+   pre-check; `_ensure_server()` already does "reuse if healthy, else relaunch" internally, so
+   calling it unconditionally before every attempt is a safe no-op on a healthy server.
+4. **Run 4 — a real, highly reproducible reaper pattern, then an uncharacterized 4th failure,
+   not chased further.** With the storm fixed, ka59/off's 3 retry attempts failed IDENTICALLY —
+   same `actions_used=1481`, same `induction_reasons={"stall": 1}`, `llm_on_row_valid=False`
+   every time. The surviving (final) attempt's own `llm` counters: `generate_calls=4,
+   responses=0, llm_wall_s=1619.9s` (~27 minutes) — FOUR internal retry attempts inside one
+   `induce()` call, ZERO successful completions, across nearly half an hour. This is a DIFFERENT
+   signature from the reaper incidents found earlier this session (which killed a server
+   mid-generation, after real tokens had already decoded); here nothing was ever received at
+   all — consistent with either repeated near-timeout failures (`timeout=1500`) or the server
+   being unreachable for the entire window. Moving to ka59/on, a SECOND storm-like pattern
+   appeared (3 new server log files within a 2.5-minute window) with zero further driver output
+   for 15+ minutes. Killed at this point rather than attempting a 4th distinct infrastructure fix
+   in a row on a single measurement task.
+
+**Why stopped here, not pushed further.** Per this session's own standing judgment (explicitly
+invoked): continuing to patch a shared, already-mature harness's internals for a single lever
+measurement has diminishing returns once the failure modes stop being specific bugs in THIS
+script and start implicating the shared `_ensure_server()` machinery or the project's own
+pre-existing, unsolved reaper. The three bugs actually IN this task's own code are fixed and
+real improvements (any FUTURE live-path A/B reusing this pattern benefits from them). The fourth
+is the standing reaper problem, out of scope for a single lever's gate measurement.
+
+**CARNOT_ARC_BOUNDED_REINDUCTION stays default OFF.** No evidence either way — the lever was
+never exercised under measurable conditions.
+
+**Reproducible new evidence for the standing reaper investigation.** ka59's induction call under
+this exact configuration (budget=1500, `run_cell` harness, gemma-4-31B-it-qat, 1500s client
+timeout) failed 3/3 times with an IDENTICAL profile and, in its most detailed capture, zero
+successful completions across 4 internal retries over ~27 minutes — a specific, reproducible
+data point distinct from prior mid-generation-kill incidents. See
+`ops/known-issues.md`'s reaper entry.
+
+#### SCENARIO-ARC-WMTE-6247-INVALID-CELL-DETECTED-AND-RETRIED
+
+Given a cell whose `run_cell` result has `llm_on_row_valid=False` (the harness's own reaper-
+detection witness), the checkpoint-resume logic does not treat it as permanently done, and the
+per-cell retry loop attempts the whole cell again, up to a bounded maximum.
+
+#### SCENARIO-ARC-WMTE-6247-REDUNDANT-HEALTH-CHECK-REMOVED
+
+Given `_ensure_server()` already performs "reuse if healthy, else relaunch" internally, calling
+it unconditionally before each retry attempt (rather than gating it behind a separate, equally
+flaky `_healthy()` pre-check) does not produce a duplicate-server collision under load.
+
+#### SCENARIO-ARC-WMTE-6247-INFRASTRUCTURE-BLOCKED-IS-NOT-A-LEVER-VERDICT
+
+Given zero cells achieved a valid LLM-on measurement after three genuine infrastructure fixes
+and a fourth unresolved failure, the artifact's `honest_verdict` and `disposition` record
+INFRASTRUCTURE_BLOCKED explicitly, and no claim is made about whether
+`CARNOT_ARC_BOUNDED_REINDUCTION` helps, hurts, or is neutral.
+
+## Implementation Status (REQ-ARC-WMTE-6247)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6247 | `scripts/experiments/experiment_6247_bounded_reinduction_ab.py` (measurement attempt; 3 real infra bugs fixed within it; no production default changed). | `results/experiment_6247_bounded_reinduction_ab.json` (the artifact IS the check — records the full attempt history, zero valid cells, `disposition: INFRASTRUCTURE_BLOCKED`; determination_preservation_lint and adversarial_verify both clean). |
+
 ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
 
 **Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`
