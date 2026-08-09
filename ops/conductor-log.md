@@ -15522,3 +15522,4 @@ Still active  |
 | 2026-08-09 01:02 UTC | Two-timescale continuous constraint learning under | OK | 87 passed, 1 warning in 13.02s |
 | 2026-08-09 02:25 UTC | Default-off mode-jump sampler runtime quality and  | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: r edge cases s |
 | 2026-08-09 03:31 UTC | Default-off mode-jump sampler runtime quality and  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6220_mode_ju |
+| 2026-08-09 04:05 UTC | Default-off mode-jump sampler runtime quality and  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6220_mode_ju |
