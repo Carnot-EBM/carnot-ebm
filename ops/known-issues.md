@@ -16224,3 +16224,18 @@ if the pattern recurs with enough detail to actually pin down a cause.
   rebuild. 4 rebuilt in place and deep-diffed (77,000 leaf values, zero research numbers moved); the
   3 with no rebuild command carry a pinned, reason-and-evidence-bearing acknowledgement
   (REQ-HARNESS-6051). Yesterday's stated obstacles did not materialise. `lint: OK`.
+
+## 2026-08-09 llama-server reaper recurrence #2 (Phase 2a expanded-roster A/B)
+
+Second occurrence this session. Driver hung on `sigsuspend` waiting on a
+DEFUNCT `llama-server` child (PID 2670982) after cd82 completed, during ft09
+induction. GPU 1 dropped to 4 MiB (dead-server signature). Checkpoint had
+already preserved cd82 (9 rows total, both arms), so no data lost.
+
+Mitigation: killed driver + zombie server, relaunched fresh under the same
+`setsid nohup timeout 3600 ... & disown -a` pattern, run3 log at
+`/home/ianblenke/.claude/jobs/ad0c053d/tmp/exp6221_run3.log`. Root cause
+still unknown -- consistent with the standing unsolved reaper entry above
+(host-OS causes already ruled out). Not re-investigating root cause this
+pass; operational kill-and-resume is the accepted mitigation per prior
+session guidance (checkpoint makes this cheap).
