@@ -6108,3 +6108,10 @@ The critical path for milestone .250:
 - theme: terminal handoff latency dominated a short synthesis-heavy closeout while compute work lacked GPU engagement
 - key result: the supplied state classifies the two compute-bound experiments as GPU-idle, but no data available this milestone establishes concurrent model loading or a missed DualGPURunner dispatch
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.541
+
+- exp_range: exp6274-exp6280 (visible gate-reference bounds only; the complete milestone range is not available)
+- theme: a semantic-parity-gated flagship benchmark concentrated the short compute-bound operational tail
+- key result: the longest compute entry dominated the recorded timing, but the data cannot explain its phases, grade task-time GPU efficiency, or establish a concurrent-model runner miss
+- acceptance: no data available this milestone
