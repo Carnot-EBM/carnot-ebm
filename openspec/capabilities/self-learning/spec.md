@@ -284,6 +284,137 @@ baseline hashes.
 
 ---
 
+## REQ-LEARN-6264: Energy-Familiarity Gate for Constraint Memory Advice
+
+**Given** the sealed Exp6263 chronological bridge over clean local-SOTA
+constraint events
+**When** Exp6264 evaluates memory advice admission
+**Then** it SHALL tune global and task-conditional energy thresholds only on
+the training prefix
+**And** it SHALL write
+`results/experiment_6264_energy_familiarity_memory_gate.json`.
+
+### REQ-LEARN-6264 Sub-requirements
+
+- REQ-LEARN-6264-1: Exp6264 SHALL verify the exact Exp6263 bridge hash,
+  partition non-overlap, held sample sizes, energy direction, and protected
+  upstream hashes before held evaluation.
+- REQ-LEARN-6264-2: The compared arms SHALL be `no_memory`,
+  `unconditional_advice`, `global_threshold`, and
+  `task_conditional_thresholds`. The arms SHALL share the same held event
+  order, labels, utility table, and decision snapshots.
+- REQ-LEARN-6264-3: Thresholds SHALL be fit from the train partition only.
+  Future-known, shifted-family, and quarantined rows SHALL NOT change a
+  threshold.
+- REQ-LEARN-6264-4: The familiarity gate SHALL use existing exact
+  decision-energy fields. Lower energy means more familiar. Reversed energy
+  direction SHALL be retained as a negative control.
+- REQ-LEARN-6264-5: Empty task strata, unseen tasks, inactive thresholds, and
+  poisoned events SHALL fail closed. An explicitly inactive gate SHALL be
+  reported only as a control.
+- REQ-LEARN-6264-6: Known-family coverage, shifted-family unsafe advice,
+  abstention, calibration, exact utility, negative transfer, and paired
+  intervals SHALL be reported on held partitions. Quarantined rows SHALL be
+  excluded from headline metrics.
+- REQ-LEARN-6264-7: `source_mutation_count` and `weight_mutation_count` SHALL
+  be bare `0`. The ready score SHALL require nondegenerate treatment fire and
+  lower shifted-family unsafe advice than unconditional memory without a
+  preregistered known-family regression.
+- REQ-LEARN-6264-8: The artifact SHALL declare the offline limit. It SHALL NOT
+  claim on-policy density, load an LLM, or mutate model weights.
+
+### Required Artifact Fields and Principles
+
+- `status`: Terminal state follows bridge integrity, held evaluation, controls,
+  protected-file checks, and test receipts.
+- `upstream_bridge_path_and_hash`: Records the sealed Exp6263 bridge path and
+  exact hash so this replay cannot silently switch sources.
+- `source_model_provenance`: Shows which upstream model rows supplied cached
+  decisions and confirms no model load was allowed.
+- `chronological_split_hashes`: Hashes train, future-known, shifted, and
+  quarantine splits and proves non-overlap.
+- `energy_definition_and_direction`: Defines the reused exact score and proves
+  lower energy is the admitted familiarity direction.
+- `no_memory_unconditional_global_and_task_conditional_arm_configs`: Freezes
+  the four matched arm configs.
+- `threshold_fit_partition_and_receipts`: Shows thresholds were fit only on
+  train rows and records task-threshold support.
+- `treatment_fire_counts`: Proves each treatment fires or abstains where its
+  gate says it should.
+- `known_family_coverage_by_arm`: Measures future-known family advice coverage.
+- `shifted_family_unsafe_advice_by_arm`: Measures unsafe advice on shifted
+  families.
+- `abstention_by_arm`: Counts withheld advice by arm and partition.
+- `calibration_by_arm`: Reports Brier and ECE for advice validity.
+- `exact_utility_by_arm`: Applies the frozen exact utility table to advice,
+  abstention, and unsafe advice.
+- `negative_transfer_by_arm`: Reports shifted-family utility deltas against
+  no-memory abstention.
+- `paired_intervals_and_sample_sizes`: Gives paired intervals and n for primary
+  contrasts.
+- `inactive_gate_control`: Proves disabled thresholds reproduce unconditional
+  advice and are not a treatment.
+- `ood_positive_control`: Proves unseen tasks abstain under task-conditional
+  thresholds.
+- `off_policy_limitation`: States that the offline stream is not an on-policy
+  density guarantee.
+- `source_mutation_count`: Bare zero proves source artifacts stayed immutable.
+- `weight_mutation_count`: Bare zero proves no model weights changed.
+- `familiarity_gate_ready_score`: Conjunctive gate for nondegenerate fire,
+  shifted unsafe-advice reduction, no known regression, controls, and tests.
+- `protected_files_unchanged`: Proves conductor, ops, traceability, and upstream
+  evidence stayed byte-identical during materialization.
+- `preconditions_checked`: Records the hash, split, sample, energy, and no-LLM
+  checks performed before evaluation.
+- `inference_substrate`: Declares aggregation over cached artifacts with no LLM
+  or model execution.
+- `verifier_is_oracle`: States that exact labels are evaluation-only and the
+  gate itself is not an oracle.
+- `field_provenance`: Maps each required field to bridge, threshold, arm,
+  control, or test evidence.
+- `field_principles`: Echoes these field principles into the artifact.
+- `test_commands`: Lists focused, coverage, full-suite, command-line, spec, and
+  adversarial checks.
+- `test_exit_codes`: Records exit codes so failed checks cannot be reported as
+  success.
+- `duration_s`: Records deterministic replay wall time.
+- `reproducibility_checksum`: Hashes the artifact with this field normalized.
+- `honest_verdict`: Starts with `complete:`, `complete_null:`, or `blocked:`
+  and states the offline result.
+
+## SCENARIO-LEARN-6264-THRESHOLDS: Thresholds Freeze on Train
+
+**Given** train, future-known, and shifted bridge partitions
+**When** Exp6264 fits global and task thresholds
+**Then** all fit receipts SHALL name only the train partition
+**And** future-known and shifted labels SHALL be used only after threshold
+freeze.
+
+## SCENARIO-LEARN-6264-GATES: Unsafe Shifted Advice Is Withheld
+
+**Given** the four matched memory arms
+**When** held partitions are evaluated in identical event order
+**Then** the task-conditional arm SHALL fire on known-family rows
+**And** it SHALL issue less unsafe shifted-family advice than unconditional
+memory.
+
+## SCENARIO-LEARN-6264-CONTROLS: Edge Cases Fail Closed
+
+**Given** reversed energy signs, empty task strata, unseen tasks, inactive
+thresholds, poisoned rows, and deterministic replay
+**When** the reusable familiarity gate evaluates them
+**Then** reversed direction is recorded as a negative control, missing task
+thresholds abstain, inactive thresholds are control-only, poisoned rows do not
+enter advice, and repeated replay is byte-stable.
+
+## Implementation Status (REQ-LEARN-6264)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6264 | Planned | tests/python/test_experiment_6264_energy_familiarity_memory_gate.py |
+
+---
+
 ## REQ-PSV-005: PSV Question Pool Must Contain >= 100 Questions and Sample Randomly Per Iteration
 
 **Given** a PSV self-play loop running for multiple iterations
