@@ -4304,3 +4304,138 @@ mixing improvement on at least two non-toy fixture families.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-6269 | Planned (`python/carnot/experiment_6269_mode_jump_multifamily_ab.py`, `results/experiment_6269_mode_jump_multifamily_ab.json`) | Planned (`tests/python/test_experiment_6269_mode_jump_multifamily_ab.py`) |
+
+### REQ-SAMPLER-6280: Variable-Cardinality Mode-Jump Backend ABI
+
+Carnot MUST replace the fixed six-state-only mode-jump runtime contract with an
+explicit typed state metadata contract while preserving the original six-state
+behavior. The backend SHALL support the Exp6268 binary Ising, multistate
+Potts, original six-state categorical, typed multimodal factor, and bounded
+typed access-control fixtures through one metadata schema. The work SHALL NOT
+run the Exp6269 scientific A/B and SHALL NOT make sampler-value, timing, CUDA,
+cDLS, FPGA, TSU, power, or speedup claims.
+
+Sub-requirements:
+- REQ-SAMPLER-6280-SPEC-FIRST: The metadata schema SHALL declare rank-1 state
+  shape, per-variable cardinality, encoding, labels or categories, valid
+  proposal domain, and round-trip rules before implementation evidence is
+  interpreted.
+- REQ-SAMPLER-6280-METADATA: The Python adapter, Rust core, and PyO3 binding
+  SHALL reject ambiguous, inconsistent, duplicate-label, out-of-domain,
+  mismatched-cardinality, unsupported-rank, or non-square proposal metadata
+  before sampling.
+- REQ-SAMPLER-6280-COMPATIBILITY: The original Exp6194/Exp6208 six-label call
+  SHALL still run through the compatibility path with the same samples, decision
+  log, checkpoint state, and treatment counts for fixed seeds.
+- REQ-SAMPLER-6280-PARITY: Rust/PyO3 and exact Python fallback SHALL match
+  encode-decode round trips, proposal probabilities, one-step decisions,
+  retained samples, decision logs, checkpoint states, and deterministic replay
+  for every supported Exp6268 fixture.
+- REQ-SAMPLER-6280-ACTIVATION: Each positive-control fixture SHALL record
+  nonzero treatment attempts, accepted jumps, and fires before any backend
+  readiness score can equal `1.0`.
+- REQ-SAMPLER-6280-CONTROLS: Malformed cardinality, malformed shape,
+  out-of-domain proposal, and label-permutation controls SHALL fail closed.
+  Unsupported non-rank-1 shapes SHALL remain explicit errors and SHALL NOT be
+  replaced with fallback samples.
+- REQ-SAMPLER-6280-ARTIFACT: Exp6280 SHALL write
+  `results/experiment_6280_variable_cardinality_mode_jump_backend.json` after
+  focused Rust/Python parity tests, deterministic replay checks, activation
+  checks, fail-closed controls, and adversarial verification of the artifact.
+
+The terminal artifact SHALL include these top-level fields: `status`,
+`exp6268_fixture_path_hash_and_terminal_class`,
+`exp6269_failure_path_hash_and_root_cause`,
+`rust_and_python_source_paths_hashes_before_after`,
+`typed_state_metadata_schema`, `supported_fixture_families_and_shapes`,
+`unsupported_shapes_and_fail_closed_behavior`,
+`original_six_state_regression_receipt`,
+`rust_python_encode_decode_roundtrip_by_fixture`,
+`rust_python_proposal_parity_by_fixture`,
+`deterministic_seed_replay_by_fixture`,
+`treatment_attempt_accept_and_fire_counts_by_fixture`,
+`malformed_cardinality_controls`, `malformed_shape_controls`,
+`out_of_domain_proposal_controls`, `label_permutation_controls`,
+`focused_python_test_results`, `focused_rust_test_results`,
+`source_mutation_count`, `variable_cardinality_backend_ready_score`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`, `random_seed`,
+`reproducibility_checksum`, and `honest_verdict`.
+`source_mutation_count` SHALL be the bare integer `0`.
+`variable_cardinality_backend_ready_score` SHALL equal exactly `1.0` only when
+all preregistered fixture families are supported, Rust/Python round trips and
+proposals are exact, deterministic seed replay holds, treatment fires on
+positive controls, malformed controls fail closed, protected files are
+unchanged, and focused command exits are clean. `inference_substrate` SHALL
+equal `local_cpu_rust_python_variable_cardinality_sampler_abi`.
+
+Required field principles:
+
+- `status`: Separates ready ABI evidence from blocked metadata, parity, or control states.
+- `exp6268_fixture_path_hash_and_terminal_class`: Pins the exact fixture suite and its terminal class before support claims are trusted.
+- `exp6269_failure_path_hash_and_root_cause`: Pins the prior failure and names the fixed ABI root cause instead of rerunning the A/B.
+- `rust_and_python_source_paths_hashes_before_after`: Shows which backend and binding files changed, by hash.
+- `typed_state_metadata_schema`: Defines shape, cardinality, encoding, proposal domain, and round-trip rules in one place.
+- `supported_fixture_families_and_shapes`: Lists the Exp6268 families and rank-1 shapes accepted by the new ABI.
+- `unsupported_shapes_and_fail_closed_behavior`: Records unsupported ranks or malformed surfaces as errors, not fallback samples.
+- `original_six_state_regression_receipt`: Proves the fixed six-state compatibility path still replays.
+- `rust_python_encode_decode_roundtrip_by_fixture`: Proves both languages map state labels to indices and back exactly.
+- `rust_python_proposal_parity_by_fixture`: Proves both languages read the same proposal domain and probability table.
+- `deterministic_seed_replay_by_fixture`: Proves fixed seeds replay identical traces and checkpoints.
+- `treatment_attempt_accept_and_fire_counts_by_fixture`: Proves treatment activation before readiness.
+- `malformed_cardinality_controls`: Shows bad cardinality metadata fails closed.
+- `malformed_shape_controls`: Shows rank and shape mismatches fail closed.
+- `out_of_domain_proposal_controls`: Shows proposal labels or indices outside the metadata domain fail closed.
+- `label_permutation_controls`: Shows label order drift is detected instead of silently relabeling states.
+- `focused_python_test_results`: Records focused Python test and coverage results for the changed code.
+- `focused_rust_test_results`: Records focused Rust test results for the changed core.
+- `source_mutation_count`: Bare zero proves no protected or preregistered source drift occurred during verification.
+- `variable_cardinality_backend_ready_score`: Equals one only when support, parity, replay, activation, controls, and commands all pass.
+- `protected_files_unchanged`: Confirms conductor-owned and reconciler-owned files stayed byte-identical.
+- `preconditions_checked`: Records git status, source hashes, fixture hashes, tool versions, ABI hashes, supported shapes, seed, and protected hashes before edits.
+- `inference_substrate`: Declares local CPU Rust/Python variable-cardinality ABI verification, not timing, LLM, GPU, cDLS, or hardware work.
+- `verifier_is_oracle`: States that exact finite metadata, proposal tables, and deterministic replay are the verifier.
+- `field_provenance`: Maps every required field to prompt, spec, source, upstream artifact, command, or computed ABI evidence.
+- `field_principles`: Explains why each required field exists before a reviewer trusts the JSON shape.
+- `test_commands`: Lists focused Python, coverage, Rust, E2E, experiment, adversarial, and suite commands.
+- `test_exit_codes`: Stores command exit codes so failed checks cannot become readiness evidence.
+- `duration_s`: Reports real wall time without timing interpretation.
+- `random_seed`: Records the replay seed used for deterministic controls.
+- `reproducibility_checksum`: Content-addresses the artifact after blanking volatile duration and checksum fields.
+- `honest_verdict`: Uses a terminal prefix and states ABI readiness without claiming sampler value.
+
+### SCENARIO-SAMPLER-6280-METADATA-ROUNDTRIP: Typed Metadata Encodes Every Fixture
+
+**Given** the frozen Exp6268 exact fixture suite and the typed state metadata
+schema
+**When** the Python adapter and Rust/PyO3 core encode and decode each supported
+fixture state
+**Then** binary Ising, q-state Potts, original categorical, and typed-factor
+states round-trip exactly
+**And** malformed cardinality, malformed shape, duplicate labels, label
+permutations, and out-of-domain proposal controls raise explicit errors.
+
+### SCENARIO-SAMPLER-6280-PROPOSAL-PARITY: Rust And Python Proposals Match
+
+**Given** typed metadata, target probabilities, proposal tables, fixed seeds,
+and initial states for every supported Exp6268 fixture
+**When** the Rust/PyO3 path and exact Python fallback each advance chains
+**Then** proposal probabilities, decision logs, retained sample labels,
+checkpoints, accepted counts, attempted counts, and treatment fire counts match
+exactly for every supported fixture.
+
+### SCENARIO-SAMPLER-6280-NO-AB-VALUE-CLAIM: ABI Readiness Does Not Rerun A/B
+
+**Given** Exp6269 failed before a scientific comparison because only shape
+`(6,)` was accepted
+**When** Exp6280 writes its terminal artifact
+**Then** it records the fixed root cause, declares the variable-cardinality ABI
+ready only under the parity and fail-closed gates, and does not run or claim
+the scientific A/B value result.
+
+## Implementation Status (REQ-SAMPLER-6280)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-6280 | Planned (`python/carnot/samplers/mode_jump_rust_backend.py`, `crates/carnot-samplers/src/mode_jump.rs`, `crates/carnot-python/src/mode_jump.rs`, `python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py`, `results/experiment_6280_variable_cardinality_mode_jump_backend.json`) | Planned (`tests/python/samplers/test_mode_jump_rust_backend.py`, `tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py`, `crates/carnot-samplers/tests/mode_jump.rs`) |

@@ -4,7 +4,9 @@
 //! SCENARIO-SAMPLE-6194-DISTRIBUTION-QUALITY-PARITY,
 //! SCENARIO-SAMPLE-6194-SERIALIZATION-ERROR-PRESERVATION.
 
-use carnot_samplers::mode_jump::{ModeJumpConfig, ModeJumpCore, ModeJumpState};
+use carnot_samplers::mode_jump::{
+    ModeJumpConfig, ModeJumpCore, ModeJumpState, ModeJumpStateMetadata,
+};
 
 fn frozen_config() -> ModeJumpConfig {
     ModeJumpConfig::new(
@@ -182,4 +184,128 @@ fn req_sample_6208_runtime_controls_reject_malformed_fixed_config() {
     let mut bad_row = config.proposal_probabilities.clone();
     bad_row[0] = vec![1.0];
     assert!(ModeJumpConfig::new(config.labels, config.target_probabilities, bad_row).is_err());
+}
+
+fn complete_no_self_proposal(n: usize) -> Vec<Vec<f64>> {
+    let off_diagonal = 1.0 / (n - 1) as f64;
+    (0..n)
+        .map(|i| {
+            (0..n)
+                .map(|j| if i == j { 0.0 } else { off_diagonal })
+                .collect()
+        })
+        .collect()
+}
+
+#[test]
+fn req_sampler_6280_variable_cardinality_metadata_roundtrips_and_runs() {
+    // REQ-SAMPLER-6280-METADATA and REQ-SAMPLER-6280-PARITY:
+    // typed rank-1 metadata validates before the generic MH kernel runs.
+    let labels = vec![
+        "-1,0".to_string(),
+        "-1,1".to_string(),
+        "-1,2".to_string(),
+        "+1,0".to_string(),
+        "+1,1".to_string(),
+        "+1,2".to_string(),
+    ];
+    let state_values = vec![
+        vec![0, 0],
+        vec![0, 1],
+        vec![0, 2],
+        vec![1, 0],
+        vec![1, 1],
+        vec![1, 2],
+    ];
+    let metadata = ModeJumpStateMetadata::new(
+        "carnot.mode_jump.typed_state_metadata.v1".to_string(),
+        vec![2],
+        vec![2, 3],
+        "mixed_radix_rank1".to_string(),
+        labels.clone(),
+        state_values.clone(),
+        "explicit_support_complete_no_self".to_string(),
+        6,
+    )
+    .unwrap();
+
+    assert_eq!(metadata.encode_label("-1,2").unwrap(), 2);
+    assert_eq!(metadata.decode_index(4).unwrap(), " +1,1".trim());
+    assert_eq!(metadata.state_value("+1,2").unwrap(), vec![1, 2]);
+    assert!(metadata.decode_index(6).is_err());
+
+    let config = ModeJumpConfig::new_with_metadata(
+        labels.clone(),
+        vec![0.10, 0.15, 0.20, 0.25, 0.12, 0.18],
+        complete_no_self_proposal(labels.len()),
+        metadata,
+    )
+    .unwrap();
+    let core = ModeJumpCore::new(config);
+    let state = ModeJumpState::new("-1,0".to_string(), 6280, 0, 0).unwrap();
+    let first = core.step_trace(&state).unwrap();
+    let replay = core.step_trace(&state).unwrap();
+
+    assert_eq!(first, replay);
+    assert_eq!(first.state.step, 1);
+    assert!(labels.contains(&first.proposed_label));
+    assert!(core.run(&state, 16, 2).is_ok());
+}
+
+#[test]
+fn req_sampler_6280_metadata_controls_fail_closed() {
+    // REQ-SAMPLER-6280-CONTROLS: inconsistent metadata and proposal domains
+    // are rejected before any state can be interpreted under the wrong labels.
+    let labels = vec!["0".to_string(), "1".to_string(), "2".to_string()];
+    let good_metadata = ModeJumpStateMetadata::new(
+        "carnot.mode_jump.typed_state_metadata.v1".to_string(),
+        vec![1],
+        vec![3],
+        "zero_based_rank1".to_string(),
+        labels.clone(),
+        vec![vec![0], vec![1], vec![2]],
+        "explicit_support_complete_no_self".to_string(),
+        3,
+    )
+    .unwrap();
+
+    let mut permuted = labels.clone();
+    permuted.reverse();
+    assert!(ModeJumpConfig::new_with_metadata(
+        permuted,
+        vec![0.2, 0.3, 0.5],
+        complete_no_self_proposal(labels.len()),
+        good_metadata.clone(),
+    )
+    .is_err());
+
+    assert!(ModeJumpStateMetadata::new(
+        "carnot.mode_jump.typed_state_metadata.v1".to_string(),
+        vec![1, 1],
+        vec![3],
+        "zero_based_rank1".to_string(),
+        labels.clone(),
+        vec![vec![0], vec![1], vec![2]],
+        "explicit_support_complete_no_self".to_string(),
+        3,
+    )
+    .is_err());
+    assert!(ModeJumpStateMetadata::new(
+        "carnot.mode_jump.typed_state_metadata.v1".to_string(),
+        vec![1],
+        vec![3],
+        "zero_based_rank1".to_string(),
+        labels.clone(),
+        vec![vec![0], vec![1], vec![3]],
+        "explicit_support_complete_no_self".to_string(),
+        3,
+    )
+    .is_err());
+    assert!(ModeJumpConfig::new_with_metadata(
+        labels,
+        vec![0.2, 0.3, 0.5],
+        vec![vec![0.0, 1.0]],
+        good_metadata,
+    )
+    .is_err());
 }
