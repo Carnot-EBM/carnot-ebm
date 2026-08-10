@@ -87,16 +87,18 @@ def test_scenario_infra_6262_nonterminal_declared_artifacts_get_critical_flags(
     }
 
     for name, (payload, expected_class) in cases.items():
-        report = av.verify_artifact(_write_json(_declared_path(tmp_path, name), payload))
+        path = _write_json(_declared_path(tmp_path, name), payload)
+        declared = True if name == "non_object" else None
+        report = av.verify_artifact(path, declared=declared)
         flags = _readiness_flags(report)
         assert len(flags) == 1, name
         assert flags[0]["severity"] == "critical", name
         assert f"classification={expected_class}" in flags[0]["detail"], name
 
-    missing_report = av.verify_artifact(_declared_path(tmp_path, "missing"))
+    missing_report = av.verify_artifact(_declared_path(tmp_path, "missing"), declared=True)
     malformed = _declared_path(tmp_path, "malformed")
     malformed.write_text("{not json", encoding="utf-8")
-    malformed_report = av.verify_artifact(malformed)
+    malformed_report = av.verify_artifact(malformed, declared=True)
 
     missing_detail = _readiness_flags(missing_report)[0]["detail"]
     malformed_detail = _readiness_flags(malformed_report)[0]["detail"]
@@ -189,3 +191,16 @@ def test_scenario_infra_6262_honest_terminal_controls_stay_clean(tmp_path: Path)
         report = av.verify_artifact(_write_json(_declared_path(tmp_path, name), payload))
         assert _readiness_flags(report) == [], name
 
+
+def test_scenario_infra_6262_legacy_verdict_only_is_not_auto_declared(tmp_path: Path) -> None:
+    """SCENARIO-INFRA-6262-5: legacy verdict-only artifacts are not auto-enrolled."""
+
+    path = _write_json(
+        _declared_path(tmp_path, "legacy_verdict_only"),
+        {"honest_verdict": "complete: legacy clean fixture"},
+    )
+
+    assert _readiness_flags(av.verify_artifact(path)) == []
+    flags = _readiness_flags(av.verify_artifact(path, declared=True))
+    assert len(flags) == 1
+    assert "classification=unknown" in flags[0]["detail"]

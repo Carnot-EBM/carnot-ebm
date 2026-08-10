@@ -489,6 +489,23 @@ def _declared_experiment_artifact_path(path: Path) -> bool:
     return bool(DECLARED_EXPERIMENT_ARTIFACT_RE.match(path.name))
 
 
+def _declares_terminal_artifact_readiness(payload: Any) -> bool:
+    return isinstance(payload, dict) and "status" in payload
+
+
+def _should_check_terminal_artifact_readiness(
+    path: Path,
+    payload: Any = None,
+    *,
+    declared: bool | None = None,
+) -> bool:
+    if not _declared_experiment_artifact_path(path):
+        return False
+    if declared is not None:
+        return declared
+    return _declares_terminal_artifact_readiness(payload)
+
+
 def check_terminal_artifact_readiness(
     classification: TerminalClassification,
     flags: list[Flag],
@@ -2190,12 +2207,12 @@ def _is_arc_live_agent_no_llm(d: dict[str, Any]) -> bool:
     schema-prefix fallback -- this class was introduced 2026-06-30, so there is no pre-discipline
     history to backfill). See ARC_LIVE_AGENT_NO_LLM_SUBSTRATE for the exemplar incident (exp5054).
     """
-    return _inference_substrate_matches(
-        d, ARC_LIVE_AGENT_NO_LLM_SUBSTRATE
-    ) or _inference_substrate_matches(
-        d, ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE
-    ) or _inference_substrate_matches(
-        d, ARC_SUBMITTED_KERNEL_OFFLINE_FROZEN_POLICY_REPLAY_SUBSTRATE
+    return (
+        _inference_substrate_matches(d, ARC_LIVE_AGENT_NO_LLM_SUBSTRATE)
+        or _inference_substrate_matches(d, ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE)
+        or _inference_substrate_matches(
+            d, ARC_SUBMITTED_KERNEL_OFFLINE_FROZEN_POLICY_REPLAY_SUBSTRATE
+        )
     )
 
 
@@ -6006,15 +6023,16 @@ def check_arc_outer_loop_solve(d: dict[str, Any], flags: list[Flag]) -> None:
             )
 
 
-def verify_artifact(path: Path) -> dict[str, Any]:
+def verify_artifact(path: Path, *, declared: bool | None = None) -> dict[str, Any]:
     """Run all checks on a single artifact. Return a report dict."""
+    path = Path(path)
     flags: list[Flag] = []
-    declared = _declared_experiment_artifact_path(path)
+    declared_readiness = _should_check_terminal_artifact_readiness(path, declared=declared)
     try:
         with open(path) as f:
             d_raw = json.load(f)
     except Exception as e:
-        if declared:
+        if declared_readiness:
             check_terminal_artifact_readiness(classify_artifact_path(path), flags)
         return {
             "artifact": str(path),
@@ -6026,7 +6044,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     # Skip non-dict top-level artifacts (some experiments emit a list
     # at top level — those aren't standard results files).
     if not isinstance(d_raw, dict):
-        if declared:
+        if declared_readiness:
             classification = classify_artifact_payload(
                 d_raw,
                 path=path,
@@ -6040,7 +6058,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
             **_flag_summary(flags),
         }
 
-    if declared:
+    if _should_check_terminal_artifact_readiness(path, d_raw, declared=declared):
         classification = classify_artifact_payload(
             d_raw,
             path=path,
