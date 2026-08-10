@@ -4439,3 +4439,142 @@ the scientific A/B value result.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-6280 | Planned (`python/carnot/samplers/mode_jump_rust_backend.py`, `crates/carnot-samplers/src/mode_jump.rs`, `crates/carnot-python/src/mode_jump.rs`, `python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py`, `results/experiment_6280_variable_cardinality_mode_jump_backend.json`) | Planned (`tests/python/samplers/test_mode_jump_rust_backend.py`, `tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py`, `crates/carnot-samplers/tests/mode_jump.rs`) |
+
+### REQ-SAMPLER-6281: Typed Mode-Jump Multifamily A/B Rerun
+
+Carnot MUST provide Exp6281 at
+`python/carnot/experiment_6281_mode_jump_multifamily_rerun.py` and write
+`results/experiment_6281_mode_jump_multifamily_rerun.json` without modifying
+`scripts/research_conductor.py`. The experiment SHALL rerun the matched
+fallback-versus-mode-jump A/B on the frozen Exp6268 fixture suite only after
+the Exp6280 variable-cardinality backend is ready. The rerun SHALL hold target
+hashes, initial states, seeds, burn-in, retained samples, proposal budgets, and
+schedules fixed between arms. It SHALL prove treatment activation before any
+outcome comparison. No cDLS, hardware, speedup, power, or efficiency claim is
+in scope.
+
+Sub-requirements:
+- REQ-SAMPLER-6281-PRECONDITIONS: Exp6281 SHALL validate the Exp6280 backend
+  readiness artifact, the exact Exp6268 fixture hash, the Exp6269 failure root
+  cause, the fixture/seed/arm matrix, budgets, margins, protected hashes, and
+  source hashes before sampler outcomes are compared.
+- REQ-SAMPLER-6281-MATCHED-CELLS: Every Exp6268 fixture supported by the
+  Exp6280 typed backend SHALL run matched seeded-fallback and Rust/PyO3
+  mode-jump arms for each preregistered seed. Failed cells SHALL be preserved
+  as failed cells and SHALL NOT be replaced with fallback output.
+- REQ-SAMPLER-6281-ACTIVATION: Treatment activation SHALL be proven before
+  outcome comparison. Positive controls SHALL require Rust/PyO3 selection,
+  nonzero treatment attempts, nonzero accepts, and nonzero fires. Inactive and
+  unimodal controls SHALL stay separate from value evidence.
+- REQ-SAMPLER-6281-EXACTNESS: For each fixture and arm, Exp6281 SHALL compare
+  empirical samples with the exact Exp6268 target and report distribution
+  error, energy error, basin occupancy, barrier crossings, autocorrelation,
+  ESS, and acceptance before pooling.
+- REQ-SAMPLER-6281-INTERVALS: Exp6281 SHALL compute paired and
+  equivalence-aware intervals with sample sizes. It SHALL separate distribution
+  safety, family-level mixing value, and descriptive wall time.
+- REQ-SAMPLER-6281-RETIREMENT: If full typed support still yields a blocked or
+  null workload-value conclusion, Exp6281 SHALL recommend permanent retirement
+  of this mode-jump lane.
+- REQ-SAMPLER-6281-NEGATIVE-TESTS: Focused tests SHALL cover backend
+  preconditions, treatment inactivity, matched seed mismatch, sample-count
+  mismatch, acceptance accounting, exactness regression, forbidden claims, and
+  retirement recommendation logic.
+
+The terminal artifact SHALL include these top-level fields:
+`status`, `upstream_backend_path_hash_and_terminal_class`,
+`frozen_fixture_path_and_hash`, `preregistered_fixture_seed_arm_matrix`,
+`matched_arm_configuration`, `rust_pyo3_backend_receipts`,
+`treatment_attempt_accept_and_fire_counts_by_fixture`,
+`positive_inactive_and_unimodal_control_results`, `chain_sample_hashes`,
+`exact_distribution_error_by_arm_fixture`, `energy_error_by_arm_fixture`,
+`basin_occupancy_and_barrier_crossings_by_arm_fixture`,
+`autocorrelation_ess_and_acceptance_by_arm_fixture`,
+`paired_intervals_equivalence_margins_and_sample_sizes`,
+`family_level_safety_results`, `family_level_mixing_value_results`,
+`harmful_regressions`, `descriptive_wall_time_by_arm_fixture`,
+`unsupported_or_failed_cells`, `source_mutation_count`,
+`hardware_claim_count`, `timing_speedup_claimed`,
+`mode_jump_safety_ready_score`, `mode_jump_workload_value_ready_score`,
+`retire_mechanism_recommendation`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`, `test_exit_codes`,
+`duration_s`, `random_seed`, `reproducibility_checksum`, and
+`honest_verdict`. `source_mutation_count` and `hardware_claim_count` SHALL be
+the bare integer `0`. `timing_speedup_claimed` SHALL be the bare boolean
+`false`. `inference_substrate` SHALL equal
+`local_cpu_exact_typed_multifamily_mode_jump_ab`.
+
+Required field principles:
+
+- `status`: Separates safety, value, blocker, and retirement states.
+- `upstream_backend_path_hash_and_terminal_class`: Pins Exp6280 before the rerun trusts typed backend support.
+- `frozen_fixture_path_and_hash`: Pins the Exp6268 exact suite consumed by the rerun.
+- `preregistered_fixture_seed_arm_matrix`: Freezes fixtures, seeds, arms, budgets, margins, and gates before sampling.
+- `matched_arm_configuration`: Proves compared arms share targets, seeds, initial states, burn-in, samples, budgets, and schedules.
+- `rust_pyo3_backend_receipts`: Authenticates backend selection, descriptors, inputs, states, and transition budgets per chain.
+- `treatment_attempt_accept_and_fire_counts_by_fixture`: Proves treatment activity before outcome comparison.
+- `positive_inactive_and_unimodal_control_results`: Keeps activation-positive, inactive-treatment, and unimodal controls separate.
+- `chain_sample_hashes`: Content-addresses retained chains without storing raw arrays as gate inputs.
+- `exact_distribution_error_by_arm_fixture`: Reports empirical-versus-exact distribution error per fixture and arm.
+- `energy_error_by_arm_fixture`: Reports empirical-versus-exact energy error per fixture and arm.
+- `basin_occupancy_and_barrier_crossings_by_arm_fixture`: Reports basin mass and cross-basin movement per fixture and arm.
+- `autocorrelation_ess_and_acceptance_by_arm_fixture`: Reports autocorrelation, ESS, and acceptance per fixture and arm.
+- `paired_intervals_equivalence_margins_and_sample_sizes`: Stores paired intervals, margins, and n before value decisions.
+- `family_level_safety_results`: Reports distribution safety by family before any pooled conclusion.
+- `family_level_mixing_value_results`: Reports family-level mixing value without converting cost into speedup.
+- `harmful_regressions`: Lists exactness or mixing regressions that block safety.
+- `descriptive_wall_time_by_arm_fixture`: Records wall time as descriptive cost only.
+- `unsupported_or_failed_cells`: Preserves failed or unsupported cells without fallback substitution.
+- `source_mutation_count`: Bare zero proves no preregistered source drift during compute.
+- `hardware_claim_count`: Bare zero prevents software evidence from becoming hardware evidence.
+- `timing_speedup_claimed`: Bare false prevents descriptive time from becoming a speedup claim.
+- `mode_jump_safety_ready_score`: Equals one only when exactness, activation, controls, commands, and protection pass.
+- `mode_jump_workload_value_ready_score`: Equals one only when safety and family-level mixing value pass.
+- `retire_mechanism_recommendation`: States whether this lane should be permanently retired after the rerun.
+- `protected_files_unchanged`: Confirms conductor and ops-owned files stayed byte-identical.
+- `preconditions_checked`: Records backend readiness, fixture hash, budgets, margins, seeds, and protected hashes.
+- `inference_substrate`: Declares local CPU exact typed mode-jump sampling, not hardware, cDLS, LLM, or speedup work.
+- `verifier_is_oracle`: States that Exp6268 exact finite distributions are the oracle.
+- `field_provenance`: Maps every field to prompt, spec, source, upstream, command, or chain evidence.
+- `field_principles`: Explains why each artifact field exists before a reviewer trusts the JSON shape.
+- `test_commands`: Records focused Python, coverage, Rust, E2E, full suite, experiment, and adversarial commands.
+- `test_exit_codes`: Stores command exit codes so failed checks cannot become readiness evidence.
+- `duration_s`: Reports real wall time without padding.
+- `random_seed`: Records the root seed for deterministic matrix construction.
+- `reproducibility_checksum`: Content-addresses the artifact after blanking volatile duration and checksum fields.
+- `honest_verdict`: Uses a terminal prefix and states safety, value, retirement, and forbidden-claim counts.
+
+### SCENARIO-SAMPLER-6281-TYPED-MATCHED-CELLS: Typed Fixtures Get Matched Chain Receipts
+
+**Given** Exp6280 is complete-ready and the Exp6268 suite hash matches the
+frozen precondition
+**When** Exp6281 runs
+**Then** each Exp6268 typed-backend-supported fixture has matched fallback and
+mode-jump cells
+**And** each successful chain records backend receipts, treatment counts,
+sample hashes, distribution error, energy error, basin occupancy, barrier
+crossings, autocorrelation, ESS, acceptance, and descriptive wall time.
+
+### SCENARIO-SAMPLER-6281-CONTROLS-SEPARATE-VALUE: Controls Gate Interpretation
+
+**Given** activation-positive, inactive-treatment, and unimodal controls
+**When** Exp6281 computes treatment evidence
+**Then** treatment activation is proven before outcome comparison
+**And** inactive or unimodal evidence cannot by itself support a workload-value
+claim.
+
+### SCENARIO-SAMPLER-6281-RETIREMENT-DECISION: Null Or Blocked Value Retires The Lane
+
+**Given** paired intervals, family-level safety, family-level mixing value,
+and forbidden-claim counts
+**When** Exp6281 computes terminal fields
+**Then** safety and workload value remain separate
+**And** a blocked or null workload-value conclusion recommends permanent
+retirement of this mode-jump lane.
+
+## Implementation Status (REQ-SAMPLER-6281)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-6281 | Planned (`python/carnot/experiment_6281_mode_jump_multifamily_rerun.py`, `results/experiment_6281_mode_jump_multifamily_rerun.json`) | Planned (`tests/python/test_experiment_6281_mode_jump_multifamily_rerun.py`) |
