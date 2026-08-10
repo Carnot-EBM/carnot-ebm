@@ -15598,3 +15598,5 @@ Still active  |
 | 2026-08-10 11:32 UTC | Gated on Exp6269 workload value: descriptor-only d | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6269-mode-jump-multifamily-ab.mode_jump |
 | 2026-08-10 11:34 UTC | Gated on Exp6269 workload value: descriptor-only d | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6269-mode-jump-multifamily-ab.mode_jump |
 | 2026-08-10 11:52 UTC | V540 exact-path adversarial capstone and PRD-gap r | OK | 89 passed, 1 warning in 9.59s |
+| 2026-08-10 12:50 UTC | Plan milestone 2026.08.541 | OK | 12 tasks proposed |
+| 2026-08-10 12:52 UTC | Milestone 2026.08.541 activated | OK | 12 tasks queued |
