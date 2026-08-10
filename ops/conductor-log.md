@@ -15597,3 +15597,4 @@ Still active  |
 | 2026-08-10 11:30 UTC | Gated on Exp6269 workload value: descriptor-only d | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6269-mode-jump-multifamily-ab.mode_jump |
 | 2026-08-10 11:32 UTC | Gated on Exp6269 workload value: descriptor-only d | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6269-mode-jump-multifamily-ab.mode_jump |
 | 2026-08-10 11:34 UTC | Gated on Exp6269 workload value: descriptor-only d | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6269-mode-jump-multifamily-ab.mode_jump |
+| 2026-08-10 11:52 UTC | V540 exact-path adversarial capstone and PRD-gap r | OK | 89 passed, 1 warning in 9.59s |
