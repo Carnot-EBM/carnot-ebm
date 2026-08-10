@@ -1,0 +1,2350 @@
+{
+  "schema": "carnot.experiment_6284.v542_terminal_transition.v1",
+  "experiment_id": "exp6284-v542-terminal-transition",
+  "run_date": "20260810",
+  "status": "complete",
+  "v541_milestone_roadmap_and_hash": {
+    "milestone": "2026.08.541",
+    "capstone_path": "results/experiment_6283_v541_adversarial_capstone.json",
+    "capstone_sha256": "sha256:735b298d2b2ed600dde934d72ad3fa4cb6f54ad1360976d968e29e014da56744",
+    "recorded_roadmap_path": "research-roadmap.yaml",
+    "recorded_roadmap_sha256": "sha256:6fdc2b479e236570684f130d95d8b0a78d51c2d76e580382da7bb8b298377501",
+    "recorded_task_ids": [
+      "exp6272-v541-terminal-transition",
+      "exp6273-v541-post-marker-source-scope-freeze",
+      "exp6274-asp-energy-semantic-compiler",
+      "exp6275-flagship-asp-constraint-verification-benchmark",
+      "exp6276-certified-dual-cache-admission",
+      "exp6277-chronological-certified-csl-ab",
+      "exp6278-model-family-task-holdout-csl-audit",
+      "exp6279-certified-memory-shadow-consumer",
+      "exp6280-variable-cardinality-mode-jump-backend",
+      "exp6281-mode-jump-multifamily-rerun",
+      "exp6282-arc-mechanic-class-live-router",
+      "exp6283-v541-adversarial-capstone"
+    ],
+    "expected_task_ids": [
+      "exp6272-v541-terminal-transition",
+      "exp6273-v541-post-marker-source-scope-freeze",
+      "exp6274-asp-energy-semantic-compiler",
+      "exp6275-flagship-asp-constraint-verification-benchmark",
+      "exp6276-certified-dual-cache-admission",
+      "exp6277-chronological-certified-csl-ab",
+      "exp6278-model-family-task-holdout-csl-audit",
+      "exp6279-certified-memory-shadow-consumer",
+      "exp6280-variable-cardinality-mode-jump-backend",
+      "exp6281-mode-jump-multifamily-rerun",
+      "exp6282-arc-mechanic-class-live-router",
+      "exp6283-v541-adversarial-capstone"
+    ],
+    "recorded_task_count": 12,
+    "research_complete_path": "research-complete.yaml",
+    "research_complete_sha256": "sha256:a36483dfd67b35ae8fcdbbdc715275b98cb6ef77de7735263d5d6bf95266cbce"
+  },
+  "v541_task_terminal_matrix": {
+    "exp6272-v541-terminal-transition": {
+      "task_id": "exp6272-v541-terminal-transition",
+      "title": "Exact terminal-boundary handoff from V540 into V541",
+      "track": "infrastructure",
+      "declared_deliverable": "results/experiment_6272_v541_terminal_transition.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:4fe05425739ba4018d0112baf91894c808d8236f1e932e621430aa0edabd2e56",
+      "terminal_class": "complete",
+      "terminal": true,
+      "reason": "status=complete verdict=complete",
+      "status_raw": "complete",
+      "honest_verdict_raw": "complete: V540 exact states and V541 roadmap contracts validated; broad-suite outcomes are recorded separately from focused checks",
+      "capstone_terminal_class": "complete",
+      "capstone_terminal": true,
+      "receipt_status": "OK",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6273-v541-post-marker-source-scope-freeze": {
+      "task_id": "exp6273-v541-post-marker-source-scope-freeze",
+      "title": "Post-V541-marker source delta and experimental-scope freeze",
+      "track": "infrastructure",
+      "declared_deliverable": "results/experiment_6273_v541_post_marker_source_scope_freeze.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:3c115d011a9931afdc0fd300a114d1d483a446042ef73d5303f0c01fc9e1a9dc",
+      "terminal_class": "flagged",
+      "terminal": true,
+      "reason": "artifact carries flagged_adversarial or corrigendum_pending",
+      "status_raw": "complete",
+      "honest_verdict_raw": "complete_null: accepted_count=0; no reproducible post-V541-marker findings; references unchanged; V541 contracts frozen",
+      "capstone_terminal_class": "flagged",
+      "capstone_terminal": true,
+      "receipt_status": "FLAGGED",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": true,
+      "corrigendum_pending_stamped": true,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6274-asp-energy-semantic-compiler": {
+      "task_id": "exp6274-asp-energy-semantic-compiler",
+      "title": "Bounded ASP-to-energy semantic compiler with independent exact parity",
+      "track": "constraint_semantics",
+      "declared_deliverable": "results/experiment_6274_asp_energy_semantic_compiler.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:b02c88963c4815aa0e26d451ffd60fdd9f1014d32e76f638592ac114c611e96b",
+      "terminal_class": "complete",
+      "terminal": true,
+      "reason": "status=complete verdict=complete",
+      "status_raw": "complete",
+      "honest_verdict_raw": "complete: bounded ASP energy compiler matches clingo oracle on trusted fixtures",
+      "capstone_terminal_class": "complete",
+      "capstone_terminal": true,
+      "receipt_status": "OK",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [
+        "results/experiment_6274_asp_energy_fixture_manifest.json"
+      ]
+    },
+    "exp6275-flagship-asp-constraint-verification-benchmark": {
+      "task_id": "exp6275-flagship-asp-constraint-verification-benchmark",
+      "title": "Gated on Exp6274 semantic parity: three-family flagship ASP constraint benchmark",
+      "track": "live_verification",
+      "declared_deliverable": "results/experiment_6275_flagship_asp_constraint_verification_benchmark.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:d9de1e4d154ef481c4784d749eb219333983a0bb756ad3241e912e277d6a4a60",
+      "terminal_class": "flagged",
+      "terminal": true,
+      "reason": "artifact carries flagged_adversarial or corrigendum_pending",
+      "status_raw": "complete_ready",
+      "honest_verdict_raw": "complete_partial: test_exit_codes",
+      "capstone_terminal_class": "flagged",
+      "capstone_terminal": true,
+      "receipt_status": "FLAGGED",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": true,
+      "corrigendum_pending_stamped": true,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [
+        "results/experiment_6275_flagship_asp_constraint_verification_benchmark.formal_sidecar.json",
+        "results/experiment_6275_flagship_asp_constraint_verification_benchmark.sealed_manifest.json"
+      ]
+    },
+    "exp6276-certified-dual-cache-admission": {
+      "task_id": "exp6276-certified-dual-cache-admission",
+      "title": "Certified positive-negative energy cache admission under shift",
+      "track": "continuous_learning",
+      "declared_deliverable": "results/experiment_6276_certified_dual_cache_admission.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:901704ad563ac7c4f115cea7e81d0264028870f70685efc7209b9233ce876d17",
+      "terminal_class": "null",
+      "terminal": true,
+      "reason": "status=null verdict=null",
+      "status_raw": "complete_null",
+      "honest_verdict_raw": "complete_null: certified dual-cache mechanics ran, but a recorded test command failed so readiness stayed closed",
+      "capstone_terminal_class": "null",
+      "capstone_terminal": true,
+      "receipt_status": "GATE_BLOCK",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [
+        "results/experiment_6276_certified_dual_cache_admission.json.frozen_reserve.json"
+      ]
+    },
+    "exp6277-chronological-certified-csl-ab": {
+      "task_id": "exp6277-chronological-certified-csl-ab",
+      "title": "Gated on Exp6276 certificate: chronological continuous self-learning A/B",
+      "track": "continuous_learning",
+      "declared_deliverable": "results/experiment_6277_chronological_certified_csl_ab.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:966b251c191403c0a0c8a3ba86d2d5e7427ae456215605979b684a67edc73d65",
+      "terminal_class": "skipped",
+      "terminal": true,
+      "reason": "blocked artifact records a gate skip",
+      "status_raw": "blocked",
+      "honest_verdict_raw": "blocked_gate_check_failed",
+      "capstone_terminal_class": "skipped",
+      "capstone_terminal": true,
+      "receipt_status": "GATE_BLOCK",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6278-model-family-task-holdout-csl-audit": {
+      "task_id": "exp6278-model-family-task-holdout-csl-audit",
+      "title": "Gated on Exp6277 promotion: model-family and task-family self-learning audit",
+      "track": "continuous_learning",
+      "declared_deliverable": "results/experiment_6278_model_family_task_holdout_csl_audit.json",
+      "present": false,
+      "loadable": false,
+      "sha256": null,
+      "terminal_class": "missing",
+      "terminal": false,
+      "reason": "artifact path is missing",
+      "status_raw": null,
+      "honest_verdict_raw": null,
+      "capstone_terminal_class": "missing",
+      "capstone_terminal": false,
+      "receipt_status": "GATE_BLOCK",
+      "receipt_override_attempted": true,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6279-certified-memory-shadow-consumer": {
+      "task_id": "exp6279-certified-memory-shadow-consumer",
+      "title": "Gated on Exp6278 transfer: default-off certified-memory shadow consumer",
+      "track": "continuous_learning",
+      "declared_deliverable": "results/experiment_6279_certified_memory_shadow_consumer.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:500d8a580a8ab1f4881c265b82cefc59441297267121bd420756636fcd7d777a",
+      "terminal_class": "skipped",
+      "terminal": true,
+      "reason": "blocked artifact records a gate skip",
+      "status_raw": "blocked",
+      "honest_verdict_raw": "blocked_gate_check_failed",
+      "capstone_terminal_class": "skipped",
+      "capstone_terminal": true,
+      "receipt_status": "GATE_BLOCK",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6280-variable-cardinality-mode-jump-backend": {
+      "task_id": "exp6280-variable-cardinality-mode-jump-backend",
+      "title": "Typed variable-cardinality Rust/PyO3 mode-jump backend",
+      "track": "sampler",
+      "declared_deliverable": "results/experiment_6280_variable_cardinality_mode_jump_backend.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:e40ebd316844e21bccf47c84946aebd6a8c4965affb74abcca4dafeacc545598",
+      "terminal_class": "ready",
+      "terminal": true,
+      "reason": "status=ready verdict=ready",
+      "status_raw": "complete_ready",
+      "honest_verdict_raw": "complete_ready: variable-cardinality mode-jump ABI supports Exp6268 families with exact Rust/Python parity; no scientific A/B value claim",
+      "capstone_terminal_class": "ready",
+      "capstone_terminal": true,
+      "receipt_status": "OK",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6281-mode-jump-multifamily-rerun": {
+      "task_id": "exp6281-mode-jump-multifamily-rerun",
+      "title": "Gated on Exp6280 backend parity: exact multi-family mode-jump A/B",
+      "track": "sampler",
+      "declared_deliverable": "results/experiment_6281_mode_jump_multifamily_rerun.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:fff24fa125bb3929020492da26ad051f70a0aa2cf2b4093d06ac6b87102a5ee1",
+      "terminal_class": "blocked",
+      "terminal": true,
+      "reason": "status=blocked verdict=blocked",
+      "status_raw": "blocked_safety",
+      "honest_verdict_raw": "blocked_safety: safety=0.0; workload_value=0.0; supported_fixtures=8; unsupported_or_failed_cells=0; non_toy_positive_mixing_families=0; retirement=blocked_no_retirement_recommendation; hardware_claim_count=0; timing_speedup_claimed=False",
+      "capstone_terminal_class": "blocked",
+      "capstone_terminal": true,
+      "receipt_status": "OK",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6282-arc-mechanic-class-live-router": {
+      "task_id": "exp6282-arc-mechanic-class-live-router",
+      "title": "ARC live-path push-block and toggle-move mechanic-class router",
+      "track": "arc_live_agent",
+      "declared_deliverable": "results/experiment_6282_arc_mechanic_class_live_router.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:7eec96fec9d112abad56375dcdfbd5a35f4aa0ad2adbe7e936303ab7019c2c22",
+      "terminal_class": "flagged",
+      "terminal": true,
+      "reason": "artifact carries flagged_adversarial or corrigendum_pending",
+      "status_raw": "complete",
+      "honest_verdict_raw": "complete: mechanic_class_router_canary_no_solve_claim",
+      "capstone_terminal_class": "flagged",
+      "capstone_terminal": true,
+      "receipt_status": "FLAGGED",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": true,
+      "corrigendum_pending_stamped": true,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [
+        "results/experiment_6282_arc_mechanic_class_fixture_manifest.json"
+      ]
+    },
+    "exp6283-v541-adversarial-capstone": {
+      "task_id": "exp6283-v541-adversarial-capstone",
+      "title": "V541 exact-path adversarial capstone and PRD-gap reconciliation",
+      "track": "synthesis",
+      "declared_deliverable": "results/experiment_6283_v541_adversarial_capstone.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:735b298d2b2ed600dde934d72ad3fa4cb6f54ad1360976d968e29e014da56744",
+      "terminal_class": "complete",
+      "terminal": true,
+      "reason": "status=complete verdict=complete",
+      "status_raw": "complete",
+      "honest_verdict_raw": "complete: V541 capstone preserved exact branch evidence without promoting flagged, missing, skipped, null, or blocked artifacts",
+      "capstone_terminal_class": "complete",
+      "capstone_terminal": true,
+      "receipt_status": null,
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    }
+  },
+  "v541_capstone_path_hash_and_summary": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6283_v541_adversarial_capstone.json",
+    "present": true,
+    "loadable": true,
+    "sha256": "sha256:735b298d2b2ed600dde934d72ad3fa4cb6f54ad1360976d968e29e014da56744",
+    "error": null,
+    "summary": {
+      "status": "complete",
+      "honest_verdict": "complete: V541 capstone preserved exact branch evidence without promoting flagged, missing, skipped, null, or blocked artifacts",
+      "counts": {
+        "terminal": 11,
+        "nonterminal": 1,
+        "missing": 1,
+        "malformed": 0,
+        "running": 0,
+        "running_bootstrap": 0,
+        "bootstrap_only": 0,
+        "partial": 0,
+        "contradictory": 0,
+        "unknown": 0,
+        "blocked": 1,
+        "skipped": 2,
+        "null": 1,
+        "flagged": 3,
+        "retired": 0,
+        "ready": 1,
+        "complete": 3,
+        "positive": 0,
+        "terminal_class_counts": {
+          "blocked": 1,
+          "complete": 3,
+          "flagged": 3,
+          "missing": 1,
+          "null": 1,
+          "ready": 1,
+          "skipped": 2
+        },
+        "count_principles": {
+          "terminal": "Terminal artifacts may close but still can fail promotion.",
+          "nonterminal": "Nonterminal exact artifacts cannot feed claims.",
+          "missing": "Missing exact paths cannot be replaced by aliases.",
+          "malformed": "Malformed JSON fails closed.",
+          "running": "Running artifacts are not terminal evidence.",
+          "running_bootstrap": "Bootstrap-running artifacts are not evidence.",
+          "bootstrap_only": "Bootstrap-only artifacts cannot support gates.",
+          "partial": "Partial artifacts cannot promote branches.",
+          "contradictory": "Conflicting status markers fail closed.",
+          "unknown": "Unknown markers fail closed.",
+          "blocked": "Blocked artifacts are terminal blockers.",
+          "skipped": "Gate tombstones stay skipped.",
+          "null": "Null evidence is separate from positive evidence.",
+          "flagged": "Stamped or current flags quarantine promotion.",
+          "retired": "Retired scopes stay retired.",
+          "ready": "Ready evidence is counted apart from complete evidence.",
+          "complete": "Complete evidence still needs branch gates.",
+          "positive": "Positive evidence is never inferred from another branch."
+        }
+      },
+      "promotion_ledger": {
+        "asp_verification": {
+          "promotion_allowed": false,
+          "blocking_reasons": [
+            "exp6275-flagship-asp-constraint-verification-benchmark_flagged_or_current_critical",
+            "flagship_asp_benchmark_closed"
+          ],
+          "task_ids": [
+            "exp6274-asp-energy-semantic-compiler",
+            "exp6275-flagship-asp-constraint-verification-benchmark"
+          ]
+        },
+        "continuous_self_learning": {
+          "promotion_allowed": false,
+          "blocking_reasons": [
+            "certified_admission_closed",
+            "chronological_csl_closed",
+            "heldout_transfer_missing",
+            "shadow_consumer_closed"
+          ],
+          "task_ids": [
+            "exp6276-certified-dual-cache-admission",
+            "exp6277-chronological-certified-csl-ab",
+            "exp6278-model-family-task-holdout-csl-audit",
+            "exp6279-certified-memory-shadow-consumer"
+          ]
+        },
+        "sampler": {
+          "promotion_allowed": false,
+          "blocking_reasons": [
+            "mode_jump_value_closed"
+          ],
+          "task_ids": [
+            "exp6280-variable-cardinality-mode-jump-backend",
+            "exp6281-mode-jump-multifamily-rerun"
+          ]
+        },
+        "arc": {
+          "promotion_allowed": false,
+          "blocking_reasons": [
+            "arc_mechanic_router_closed",
+            "exp6282-arc-mechanic-class-live-router_flagged_or_current_critical"
+          ],
+          "task_ids": [
+            "exp6282-arc-mechanic-class-live-router"
+          ]
+        },
+        "principle": "One branch cannot launder another branch."
+      }
+    }
+  },
+  "operational_retro_path_hash_and_summary": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/operational_retro_2026_08_541.json",
+    "present": true,
+    "loadable": true,
+    "sha256": "sha256:521e41cbd5b1f64be887ea638258359df1b548287f64baadd5979d4b54fc8ab7",
+    "error": null,
+    "summary": {
+      "milestone": "2026.08.541",
+      "retro_type": "operational_full",
+      "summary": "Eleven experiments completed in 4.2 minutes, including five compute-bound tasks. The longest listed compute-bound entries were the 3.27-minute semantic-parity-gated flagship ASP benchmark, the 0.73-minute ARC mechanic-class router, and the 0.12-minute post-marker source freeze. The timing data does not isolate why they took those durations.",
+      "experiments_completed": 11,
+      "timing_integrity_mismatch": false
+    }
+  },
+  "focused_and_broad_validation_receipts_by_task": {
+    "exp6272-v541-terminal-transition": {
+      "task_id": "exp6272-v541-terminal-transition",
+      "artifact_path": "results/experiment_6272_v541_terminal_transition.json",
+      "artifact_sha256": "sha256:4fe05425739ba4018d0112baf91894c808d8236f1e932e621430aa0edabd2e56",
+      "artifact_classification": "complete",
+      "receipt_state": "commands_recorded",
+      "focused": {
+        "command_count": 13,
+        "failed_count": 0,
+        "commands": [
+          {
+            "command": ".venv/bin/pytest tests/python/test_experiment_6272_v541_terminal_transition.py -q --no-cov -n 0",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6272_v541_terminal_transition.py -m pytest tests/python/test_experiment_6272_v541_terminal_transition.py -q --no-cov -n 0",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6272_v541_terminal_transition.py --fail-under=100 --show-missing",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/ruff check python/carnot/experiment_6272_v541_terminal_transition.py tests/python/test_experiment_6272_v541_terminal_transition.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/ruff format --check python/carnot/experiment_6272_v541_terminal_transition.py tests/python/test_experiment_6272_v541_terminal_transition.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6272_v541_terminal_transition.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python -m carnot.experiment_6272_v541_terminal_transition --check-roadmap-only",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/root_clutter_sweep.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": "sed -n 1,220p ops/e2e-test-plan.md",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6272_v541_terminal_transition.json",
+            "exit_code": 0,
+            "classification": "passed"
+          }
+        ]
+      },
+      "broad": {
+        "command_count": 1,
+        "failed_count": 0,
+        "commands": [
+          {
+            "command": ".venv/bin/pytest tests/python -q",
+            "exit_code": 0,
+            "classification": "passed"
+          }
+        ]
+      }
+    },
+    "exp6273-v541-post-marker-source-scope-freeze": {
+      "task_id": "exp6273-v541-post-marker-source-scope-freeze",
+      "artifact_path": "results/experiment_6273_v541_post_marker_source_scope_freeze.json",
+      "artifact_sha256": "sha256:3c115d011a9931afdc0fd300a114d1d483a446042ef73d5303f0c01fc9e1a9dc",
+      "artifact_classification": "flagged",
+      "receipt_state": "commands_recorded",
+      "focused": {
+        "command_count": 13,
+        "failed_count": 0,
+        "commands": [
+          {
+            "command": ".venv/bin/pytest tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py -q --no-cov -n 0",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6273_v541_post_marker_source_scope_freeze.py -m pytest tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py -q --no-cov -n 0",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6273_v541_post_marker_source_scope_freeze.py --fail-under=100 --show-missing",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/ruff check python/carnot/experiment_6273_v541_post_marker_source_scope_freeze.py tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/ruff format --check python/carnot/experiment_6273_v541_post_marker_source_scope_freeze.py tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python -m carnot.experiment_6273_v541_post_marker_source_scope_freeze --check-roadmap-only",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/root_clutter_sweep.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": "sed -n 1,220p ops/e2e-test-plan.md",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6273_v541_post_marker_source_scope_freeze.json",
+            "exit_code": 0,
+            "classification": "passed"
+          }
+        ]
+      },
+      "broad": {
+        "command_count": 1,
+        "failed_count": 1,
+        "commands": [
+          {
+            "command": ".venv/bin/pytest tests/python -q",
+            "exit_code": 2,
+            "classification": "nonzero_exit_2"
+          }
+        ]
+      }
+    },
+    "exp6274-asp-energy-semantic-compiler": {
+      "task_id": "exp6274-asp-energy-semantic-compiler",
+      "artifact_path": "results/experiment_6274_asp_energy_semantic_compiler.json",
+      "artifact_sha256": "sha256:b02c88963c4815aa0e26d451ffd60fdd9f1014d32e76f638592ac114c611e96b",
+      "artifact_classification": "complete",
+      "receipt_state": "commands_recorded",
+      "focused": {
+        "command_count": 3,
+        "failed_count": 0,
+        "commands": [
+          {
+            "command": ".venv/bin/python -m carnot.experiment_6274_asp_energy_semantic_compiler --date 20260810",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/pytest tests/python/test_asp_energy_semantic_compiler_6274.py -q",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/check_spec_coverage.py",
+            "exit_code": 0,
+            "classification": "passed"
+          }
+        ]
+      },
+      "broad": {
+        "command_count": 1,
+        "failed_count": 0,
+        "commands": [
+          {
+            "command": ".venv/bin/pytest tests/python -q",
+            "exit_code": 0,
+            "classification": "passed"
+          }
+        ]
+      }
+    },
+    "exp6275-flagship-asp-constraint-verification-benchmark": {
+      "task_id": "exp6275-flagship-asp-constraint-verification-benchmark",
+      "artifact_path": "results/experiment_6275_flagship_asp_constraint_verification_benchmark.json",
+      "artifact_sha256": "sha256:d9de1e4d154ef481c4784d749eb219333983a0bb756ad3241e912e277d6a4a60",
+      "artifact_classification": "flagged",
+      "receipt_state": "commands_recorded",
+      "focused": {
+        "command_count": 5,
+        "failed_count": 0,
+        "commands": [
+          {
+            "command": ".venv/bin/python -m carnot.experiment_6275_flagship_asp_constraint_verification_benchmark --date 20260810",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/pytest tests/python/test_experiment_6275_flagship_asp_constraint_verification_benchmark.py -q --no-cov -n 0",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py -m pytest tests/python/test_experiment_6275_flagship_asp_constraint_verification_benchmark.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py --fail-under=100",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6275_flagship_asp_constraint_verification_benchmark.json",
+            "exit_code": 0,
+            "classification": "passed"
+          }
+        ]
+      },
+      "broad": {
+        "command_count": 1,
+        "failed_count": 0,
+        "commands": [
+          {
+            "command": ".venv/bin/pytest tests/python -q",
+            "exit_code": 0,
+            "classification": "passed"
+          }
+        ]
+      }
+    },
+    "exp6276-certified-dual-cache-admission": {
+      "task_id": "exp6276-certified-dual-cache-admission",
+      "artifact_path": "results/experiment_6276_certified_dual_cache_admission.json",
+      "artifact_sha256": "sha256:901704ad563ac7c4f115cea7e81d0264028870f70685efc7209b9233ce876d17",
+      "artifact_classification": "null",
+      "receipt_state": "commands_recorded",
+      "focused": {
+        "command_count": 6,
+        "failed_count": 0,
+        "commands": [
+          {
+            "command": ".venv/bin/pytest tests/python/test_experiment_6276_certified_dual_cache_admission.py -q --no-cov -n 0",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6276_certified_dual_cache_admission.py -m pytest tests/python/test_experiment_6276_certified_dual_cache_admission.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6276_certified_dual_cache_admission.py --fail-under=100",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python -m carnot.experiment_6276_certified_dual_cache_admission --date 20260810",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python -m carnot.experiment_6276_certified_dual_cache_admission --date 20260810 --validate",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6276_certified_dual_cache_admission.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6276_certified_dual_cache_admission.json",
+            "exit_code": 0,
+            "classification": "passed"
+          }
+        ]
+      },
+      "broad": {
+        "command_count": 1,
+        "failed_count": 1,
+        "commands": [
+          {
+            "command": ".venv/bin/pytest tests/python -q",
+            "exit_code": 2,
+            "classification": "nonzero_exit_2"
+          }
+        ]
+      }
+    },
+    "exp6277-chronological-certified-csl-ab": {
+      "task_id": "exp6277-chronological-certified-csl-ab",
+      "artifact_path": "results/experiment_6277_chronological_certified_csl_ab.json",
+      "artifact_sha256": "sha256:966b251c191403c0a0c8a3ba86d2d5e7427ae456215605979b684a67edc73d65",
+      "artifact_classification": "skipped",
+      "receipt_state": "no_command_receipts",
+      "focused": {
+        "command_count": 0,
+        "failed_count": 0,
+        "commands": []
+      },
+      "broad": {
+        "command_count": 0,
+        "failed_count": 0,
+        "commands": []
+      }
+    },
+    "exp6278-model-family-task-holdout-csl-audit": {
+      "task_id": "exp6278-model-family-task-holdout-csl-audit",
+      "artifact_path": "results/experiment_6278_model_family_task_holdout_csl_audit.json",
+      "artifact_sha256": null,
+      "artifact_classification": "missing",
+      "receipt_state": "missing_artifact",
+      "focused": {
+        "command_count": 0,
+        "failed_count": 0,
+        "commands": []
+      },
+      "broad": {
+        "command_count": 0,
+        "failed_count": 0,
+        "commands": []
+      }
+    },
+    "exp6279-certified-memory-shadow-consumer": {
+      "task_id": "exp6279-certified-memory-shadow-consumer",
+      "artifact_path": "results/experiment_6279_certified_memory_shadow_consumer.json",
+      "artifact_sha256": "sha256:500d8a580a8ab1f4881c265b82cefc59441297267121bd420756636fcd7d777a",
+      "artifact_classification": "skipped",
+      "receipt_state": "no_command_receipts",
+      "focused": {
+        "command_count": 0,
+        "failed_count": 0,
+        "commands": []
+      },
+      "broad": {
+        "command_count": 0,
+        "failed_count": 0,
+        "commands": []
+      }
+    },
+    "exp6280-variable-cardinality-mode-jump-backend": {
+      "task_id": "exp6280-variable-cardinality-mode-jump-backend",
+      "artifact_path": "results/experiment_6280_variable_cardinality_mode_jump_backend.json",
+      "artifact_sha256": "sha256:e40ebd316844e21bccf47c84946aebd6a8c4965affb74abcca4dafeacc545598",
+      "artifact_classification": "ready",
+      "receipt_state": "commands_recorded",
+      "focused": {
+        "command_count": 9,
+        "failed_count": 0,
+        "commands": [
+          {
+            "command": ".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py -q -o addopts=",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py -m pytest tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py -q --no-cov -o addopts=",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py --fail-under=100",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": "cargo test -p carnot-samplers --test mode_jump --quiet",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/pytest tests/python/test_e2e_serialization.py tests/python/test_pyo3_integration.py -q -o addopts=",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/ruff check python/carnot/samplers/mode_jump_rust_backend.py python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py crates/carnot-samplers/tests/mode_jump.rs",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python -m carnot.experiment_6280_variable_cardinality_mode_jump_backend --date 20260810",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6280_variable_cardinality_mode_jump_backend.json",
+            "exit_code": 0,
+            "classification": "passed"
+          }
+        ]
+      },
+      "broad": {
+        "command_count": 0,
+        "failed_count": 0,
+        "commands": []
+      }
+    },
+    "exp6281-mode-jump-multifamily-rerun": {
+      "task_id": "exp6281-mode-jump-multifamily-rerun",
+      "artifact_path": "results/experiment_6281_mode_jump_multifamily_rerun.json",
+      "artifact_sha256": "sha256:fff24fa125bb3929020492da26ad051f70a0aa2cf2b4093d06ac6b87102a5ee1",
+      "artifact_classification": "blocked",
+      "receipt_state": "commands_recorded",
+      "focused": {
+        "command_count": 9,
+        "failed_count": 1,
+        "commands": [
+          {
+            "command": ".venv/bin/pytest tests/python/test_experiment_6281_mode_jump_multifamily_rerun.py -q -o addopts=",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6281_mode_jump_multifamily_rerun.py -m pytest tests/python/test_experiment_6281_mode_jump_multifamily_rerun.py -q --no-cov -o addopts=",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6281_mode_jump_multifamily_rerun.py --fail-under=100",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": "cargo test -p carnot-samplers --test mode_jump --quiet",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/pytest tests/python/test_e2e_serialization.py tests/python/test_pyo3_integration.py -q -o addopts=",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/ruff check python/carnot/experiment_6281_mode_jump_multifamily_rerun.py tests/python/test_experiment_6281_mode_jump_multifamily_rerun.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6281_mode_jump_multifamily_rerun.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python -m carnot.experiment_6281_mode_jump_multifamily_rerun --date 20260810",
+            "exit_code": 1,
+            "classification": "nonzero_exit_1"
+          },
+          {
+            "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6281_mode_jump_multifamily_rerun.json",
+            "exit_code": 0,
+            "classification": "passed"
+          }
+        ]
+      },
+      "broad": {
+        "command_count": 1,
+        "failed_count": 1,
+        "commands": [
+          {
+            "command": ".venv/bin/pytest tests/python -q",
+            "exit_code": 2,
+            "classification": "nonzero_exit_2"
+          }
+        ]
+      }
+    },
+    "exp6282-arc-mechanic-class-live-router": {
+      "task_id": "exp6282-arc-mechanic-class-live-router",
+      "artifact_path": "results/experiment_6282_arc_mechanic_class_live_router.json",
+      "artifact_sha256": "sha256:7eec96fec9d112abad56375dcdfbd5a35f4aa0ad2adbe7e936303ab7019c2c22",
+      "artifact_classification": "flagged",
+      "receipt_state": "commands_recorded",
+      "focused": {
+        "command_count": 5,
+        "failed_count": 2,
+        "commands": [
+          {
+            "command": ".venv/bin/python -m carnot.experiment_6282_arc_mechanic_class_live_router --date 20260810",
+            "exit_code": 1,
+            "classification": "nonzero_exit_1"
+          },
+          {
+            "command": ".venv/bin/pytest tests/python/test_experiment_6282_arc_mechanic_class_live_router.py -q --no-cov -n 0",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/agentic/arc_mechanic_class_detector.py,python/carnot/experiment_6282_arc_mechanic_class_live_router.py -m pytest tests/python/test_experiment_6282_arc_mechanic_class_live_router.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/agentic/arc_mechanic_class_detector.py,python/carnot/experiment_6282_arc_mechanic_class_live_router.py --fail-under=100 --show-missing",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6282_arc_mechanic_class_live_router.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6282_arc_mechanic_class_live_router.json",
+            "exit_code": 1,
+            "classification": "nonzero_exit_1"
+          }
+        ]
+      },
+      "broad": {
+        "command_count": 1,
+        "failed_count": 1,
+        "commands": [
+          {
+            "command": ".venv/bin/pytest tests/python -q",
+            "exit_code": 2,
+            "classification": "nonzero_exit_2"
+          }
+        ]
+      }
+    },
+    "exp6283-v541-adversarial-capstone": {
+      "task_id": "exp6283-v541-adversarial-capstone",
+      "artifact_path": "results/experiment_6283_v541_adversarial_capstone.json",
+      "artifact_sha256": "sha256:735b298d2b2ed600dde934d72ad3fa4cb6f54ad1360976d968e29e014da56744",
+      "artifact_classification": "complete",
+      "receipt_state": "commands_recorded",
+      "focused": {
+        "command_count": 12,
+        "failed_count": 0,
+        "commands": [
+          {
+            "command": ".venv/bin/pytest tests/python/test_experiment_6283_v541_adversarial_capstone.py -q --no-cov -n 0",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6283_v541_adversarial_capstone.py -m pytest tests/python/test_experiment_6283_v541_adversarial_capstone.py -q --no-cov -n 0",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6283_v541_adversarial_capstone.py --fail-under=100 --show-missing",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/ruff check python/carnot/experiment_6283_v541_adversarial_capstone.py tests/python/test_experiment_6283_v541_adversarial_capstone.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/ruff format --check python/carnot/experiment_6283_v541_adversarial_capstone.py tests/python/test_experiment_6283_v541_adversarial_capstone.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6283_v541_adversarial_capstone.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/root_clutter_sweep.py",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/publication_gate.py --json",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": "sed -n 1,220p ops/e2e-test-plan.md",
+            "exit_code": 0,
+            "classification": "passed"
+          },
+          {
+            "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6283_v541_adversarial_capstone.json",
+            "exit_code": 0,
+            "classification": "passed"
+          }
+        ]
+      },
+      "broad": {
+        "command_count": 1,
+        "failed_count": 0,
+        "commands": [
+          {
+            "command": ".venv/bin/pytest tests/python -q",
+            "exit_code": 0,
+            "classification": "passed"
+          }
+        ]
+      }
+    }
+  },
+  "missing_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts": {
+    "missing": 1,
+    "nonterminal": 1,
+    "blocked": 1,
+    "skipped": 2,
+    "null": 1,
+    "flagged": 3,
+    "retired": 0,
+    "ready": 1,
+    "complete": 3,
+    "unknown": 0,
+    "classification_counts": {
+      "blocked": 1,
+      "complete": 3,
+      "flagged": 3,
+      "missing": 1,
+      "null": 1,
+      "ready": 1,
+      "skipped": 2
+    }
+  },
+  "v542_roadmap_path_and_hash": {
+    "path": "research-roadmap.yaml",
+    "sha256": "sha256:cc261d9eaaeeca47473137b26f76fe8a818c4e4a378c7ee809c27575576b74ca",
+    "milestone": "2026.08.542",
+    "requested_next_path": "research-roadmap-next.yaml",
+    "research_roadmap_next_present": false,
+    "active_roadmap_milestone": "2026.08.542",
+    "selection_note": "active research-roadmap.yaml already contains V542; no activation performed"
+  },
+  "v542_task_ids_and_deliverables": [
+    {
+      "task_id": "exp6284-v542-terminal-transition",
+      "deliverable": "results/experiment_6284_v542_terminal_transition.json",
+      "track": "infrastructure",
+      "requires": [],
+      "gated_on": [],
+      "agent_type": "codex",
+      "model": "gpt-5.5",
+      "requires_gpu": false,
+      "model_specs_named_in_prompt": []
+    },
+    {
+      "task_id": "exp6285-v542-post-marker-source-scope-freeze",
+      "deliverable": "results/experiment_6285_v542_post_marker_source_scope_freeze.json",
+      "track": "infrastructure",
+      "requires": [
+        "exp6284-v542-terminal-transition"
+      ],
+      "gated_on": [],
+      "agent_type": null,
+      "model": null,
+      "requires_gpu": false,
+      "model_specs_named_in_prompt": []
+    },
+    {
+      "task_id": "exp6286-v541-evidence-eligibility-ledger",
+      "deliverable": "results/experiment_6286_v541_evidence_eligibility_ledger.json",
+      "track": "infrastructure",
+      "requires": [
+        "exp6285-v542-post-marker-source-scope-freeze"
+      ],
+      "gated_on": [],
+      "agent_type": "codex",
+      "model": "gpt-5.5",
+      "requires_gpu": false,
+      "model_specs_named_in_prompt": []
+    },
+    {
+      "task_id": "exp6287-asp-continuous-relaxation",
+      "deliverable": "results/experiment_6287_asp_continuous_relaxation.json",
+      "track": "energy_reasoning",
+      "requires": [
+        "exp6286-v541-evidence-eligibility-ledger"
+      ],
+      "gated_on": [],
+      "agent_type": "codex",
+      "model": "gpt-5.5",
+      "requires_gpu": false,
+      "model_specs_named_in_prompt": []
+    },
+    {
+      "task_id": "exp6288-partial-atom-evidence-adapter",
+      "deliverable": "results/experiment_6288_partial_atom_evidence_adapter.json",
+      "track": "energy_reasoning",
+      "requires": [
+        "exp6286-v541-evidence-eligibility-ledger",
+        "exp6287-asp-continuous-relaxation"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6286-v541-evidence-eligibility-ledger",
+          "artifact_field": "eligible_flagship_raw_row_count",
+          "op": ">",
+          "value": 0
+        },
+        {
+          "upstream": "exp6287-asp-continuous-relaxation",
+          "artifact_field": "asp_continuous_relaxation_ready_score",
+          "op": "==",
+          "value": 1
+        }
+      ],
+      "agent_type": "codex",
+      "model": "gpt-5.5",
+      "requires_gpu": false,
+      "model_specs_named_in_prompt": []
+    },
+    {
+      "task_id": "exp6289-flagship-exact-state-refinement-benchmark",
+      "deliverable": "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+      "track": "live_verification",
+      "requires": [
+        "exp6288-partial-atom-evidence-adapter"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6288-partial-atom-evidence-adapter",
+          "artifact_field": "partial_atom_evidence_adapter_ready_score",
+          "op": "==",
+          "value": 1
+        }
+      ],
+      "agent_type": null,
+      "model": "opus",
+      "requires_gpu": true,
+      "model_specs_named_in_prompt": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ]
+    },
+    {
+      "task_id": "exp6290-revocable-atomic-repair-memory",
+      "deliverable": "results/experiment_6290_revocable_atomic_repair_memory.json",
+      "track": "continuous_learning",
+      "requires": [
+        "exp6286-v541-evidence-eligibility-ledger"
+      ],
+      "gated_on": [],
+      "agent_type": "codex",
+      "model": "gpt-5.5",
+      "requires_gpu": false,
+      "model_specs_named_in_prompt": []
+    },
+    {
+      "task_id": "exp6291-chronological-memory-crystallization-ab",
+      "deliverable": "results/experiment_6291_chronological_memory_crystallization_ab.json",
+      "track": "continuous_learning",
+      "requires": [
+        "exp6290-revocable-atomic-repair-memory"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6290-revocable-atomic-repair-memory",
+          "artifact_field": "revocable_memory_ready_score",
+          "op": "==",
+          "value": 1
+        }
+      ],
+      "agent_type": null,
+      "model": null,
+      "requires_gpu": false,
+      "model_specs_named_in_prompt": []
+    },
+    {
+      "task_id": "exp6292-revocable-memory-holdout-audit",
+      "deliverable": "results/experiment_6292_revocable_memory_holdout_audit.json",
+      "track": "continuous_learning",
+      "requires": [
+        "exp6291-chronological-memory-crystallization-ab"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6291-chronological-memory-crystallization-ab",
+          "artifact_field": "crystallization_promotion_ready_score",
+          "op": "==",
+          "value": 1
+        }
+      ],
+      "agent_type": null,
+      "model": null,
+      "requires_gpu": false,
+      "model_specs_named_in_prompt": []
+    },
+    {
+      "task_id": "exp6293-revocable-memory-shadow-consumer",
+      "deliverable": "results/experiment_6293_revocable_memory_shadow_consumer.json",
+      "track": "continuous_learning",
+      "requires": [
+        "exp6292-revocable-memory-holdout-audit"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6292-revocable-memory-holdout-audit",
+          "artifact_field": "heldout_revocable_transfer_ready_score",
+          "op": "==",
+          "value": 1
+        }
+      ],
+      "agent_type": null,
+      "model": "opus",
+      "requires_gpu": false,
+      "model_specs_named_in_prompt": []
+    },
+    {
+      "task_id": "exp6294-arc-mechanic-router-causal-canary",
+      "deliverable": "results/experiment_6294_arc_mechanic_router_causal_canary.json",
+      "track": "arc_live_path",
+      "requires": [
+        "exp6286-v541-evidence-eligibility-ledger"
+      ],
+      "gated_on": [],
+      "agent_type": null,
+      "model": null,
+      "requires_gpu": true,
+      "model_specs_named_in_prompt": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ]
+    },
+    {
+      "task_id": "exp6295-arc-mechanic-router-holdout-audit",
+      "deliverable": "results/experiment_6295_arc_mechanic_router_holdout_audit.json",
+      "track": "arc_live_path",
+      "requires": [
+        "exp6294-arc-mechanic-router-causal-canary"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6294-arc-mechanic-router-causal-canary",
+          "artifact_field": "arc_mechanic_causal_ready_score",
+          "op": "==",
+          "value": 1
+        }
+      ],
+      "agent_type": null,
+      "model": null,
+      "requires_gpu": true,
+      "model_specs_named_in_prompt": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ]
+    },
+    {
+      "task_id": "exp6296-v542-adversarial-capstone",
+      "deliverable": "results/experiment_6296_v542_adversarial_capstone.json",
+      "track": "synthesis",
+      "requires": [
+        "exp6284-v542-terminal-transition",
+        "exp6285-v542-post-marker-source-scope-freeze",
+        "exp6286-v541-evidence-eligibility-ledger",
+        "exp6287-asp-continuous-relaxation",
+        "exp6288-partial-atom-evidence-adapter",
+        "exp6289-flagship-exact-state-refinement-benchmark",
+        "exp6290-revocable-atomic-repair-memory",
+        "exp6291-chronological-memory-crystallization-ab",
+        "exp6292-revocable-memory-holdout-audit",
+        "exp6293-revocable-memory-shadow-consumer",
+        "exp6294-arc-mechanic-router-causal-canary",
+        "exp6295-arc-mechanic-router-holdout-audit"
+      ],
+      "gated_on": [],
+      "agent_type": null,
+      "model": null,
+      "requires_gpu": false,
+      "model_specs_named_in_prompt": []
+    }
+  ],
+  "task_count": 13,
+  "phase_counts": {
+    "arc_live_path": 2,
+    "continuous_learning": 4,
+    "energy_reasoning": 2,
+    "infrastructure": 3,
+    "live_verification": 1,
+    "synthesis": 1
+  },
+  "dependency_validation": {
+    "ok": true,
+    "failures": []
+  },
+  "gated_on_validation": {
+    "ok": true,
+    "failures": []
+  },
+  "prior_failure_validation": {
+    "ok": true,
+    "failures": []
+  },
+  "retired_dependency_count": 0,
+  "id_collision_count": 0,
+  "agent_routing_validation": {
+    "ok": true,
+    "failures": []
+  },
+  "model_policy_validation": {
+    "ok": true,
+    "failures": []
+  },
+  "prompt_contract_validation": {
+    "ok": true,
+    "failures": []
+  },
+  "raw_evidence_eligibility_policy": {
+    "exact_path_over_raw_receipt_precedence": true,
+    "raw_receipts_cannot_override_artifact_level_eligibility": true,
+    "rows": {
+      "exp6272-v541-terminal-transition": {
+        "declared_deliverable": "results/experiment_6272_v541_terminal_transition.json",
+        "terminal_class": "complete",
+        "terminal": true,
+        "raw_receipts_may_be_reused": false,
+        "source_may_be_reused": false,
+        "artifact_gate_eligible": true,
+        "artifact_level_quarantine_reason": "eligible"
+      },
+      "exp6273-v541-post-marker-source-scope-freeze": {
+        "declared_deliverable": "results/experiment_6273_v541_post_marker_source_scope_freeze.json",
+        "terminal_class": "flagged",
+        "terminal": true,
+        "raw_receipts_may_be_reused": false,
+        "source_may_be_reused": false,
+        "artifact_gate_eligible": false,
+        "artifact_level_quarantine_reason": "flagged_artifact"
+      },
+      "exp6274-asp-energy-semantic-compiler": {
+        "declared_deliverable": "results/experiment_6274_asp_energy_semantic_compiler.json",
+        "terminal_class": "complete",
+        "terminal": true,
+        "raw_receipts_may_be_reused": false,
+        "source_may_be_reused": true,
+        "artifact_gate_eligible": true,
+        "artifact_level_quarantine_reason": "eligible"
+      },
+      "exp6275-flagship-asp-constraint-verification-benchmark": {
+        "declared_deliverable": "results/experiment_6275_flagship_asp_constraint_verification_benchmark.json",
+        "terminal_class": "flagged",
+        "terminal": true,
+        "raw_receipts_may_be_reused": true,
+        "source_may_be_reused": false,
+        "artifact_gate_eligible": false,
+        "artifact_level_quarantine_reason": "flagged_artifact"
+      },
+      "exp6276-certified-dual-cache-admission": {
+        "declared_deliverable": "results/experiment_6276_certified_dual_cache_admission.json",
+        "terminal_class": "null",
+        "terminal": true,
+        "raw_receipts_may_be_reused": false,
+        "source_may_be_reused": false,
+        "artifact_gate_eligible": false,
+        "artifact_level_quarantine_reason": "null_artifact_not_gate_ready"
+      },
+      "exp6277-chronological-certified-csl-ab": {
+        "declared_deliverable": "results/experiment_6277_chronological_certified_csl_ab.json",
+        "terminal_class": "skipped",
+        "terminal": true,
+        "raw_receipts_may_be_reused": false,
+        "source_may_be_reused": false,
+        "artifact_gate_eligible": false,
+        "artifact_level_quarantine_reason": "skipped_artifact_not_gate_ready"
+      },
+      "exp6278-model-family-task-holdout-csl-audit": {
+        "declared_deliverable": "results/experiment_6278_model_family_task_holdout_csl_audit.json",
+        "terminal_class": "missing",
+        "terminal": false,
+        "raw_receipts_may_be_reused": false,
+        "source_may_be_reused": false,
+        "artifact_gate_eligible": false,
+        "artifact_level_quarantine_reason": "nonterminal_or_missing_artifact"
+      },
+      "exp6279-certified-memory-shadow-consumer": {
+        "declared_deliverable": "results/experiment_6279_certified_memory_shadow_consumer.json",
+        "terminal_class": "skipped",
+        "terminal": true,
+        "raw_receipts_may_be_reused": false,
+        "source_may_be_reused": false,
+        "artifact_gate_eligible": false,
+        "artifact_level_quarantine_reason": "skipped_artifact_not_gate_ready"
+      },
+      "exp6280-variable-cardinality-mode-jump-backend": {
+        "declared_deliverable": "results/experiment_6280_variable_cardinality_mode_jump_backend.json",
+        "terminal_class": "ready",
+        "terminal": true,
+        "raw_receipts_may_be_reused": false,
+        "source_may_be_reused": true,
+        "artifact_gate_eligible": true,
+        "artifact_level_quarantine_reason": "eligible"
+      },
+      "exp6281-mode-jump-multifamily-rerun": {
+        "declared_deliverable": "results/experiment_6281_mode_jump_multifamily_rerun.json",
+        "terminal_class": "blocked",
+        "terminal": true,
+        "raw_receipts_may_be_reused": false,
+        "source_may_be_reused": false,
+        "artifact_gate_eligible": false,
+        "artifact_level_quarantine_reason": "blocked_artifact_not_gate_ready"
+      },
+      "exp6282-arc-mechanic-class-live-router": {
+        "declared_deliverable": "results/experiment_6282_arc_mechanic_class_live_router.json",
+        "terminal_class": "flagged",
+        "terminal": true,
+        "raw_receipts_may_be_reused": true,
+        "source_may_be_reused": true,
+        "artifact_gate_eligible": false,
+        "artifact_level_quarantine_reason": "flagged_artifact"
+      },
+      "exp6283-v541-adversarial-capstone": {
+        "declared_deliverable": "results/experiment_6283_v541_adversarial_capstone.json",
+        "terminal_class": "complete",
+        "terminal": true,
+        "raw_receipts_may_be_reused": false,
+        "source_may_be_reused": false,
+        "artifact_gate_eligible": true,
+        "artifact_level_quarantine_reason": "eligible"
+      }
+    },
+    "principle": "Raw receipts cannot override artifact-level eligibility."
+  },
+  "protected_files_unchanged": {
+    "unchanged": true,
+    "paths": {
+      "_bmad/traceability.md": {
+        "before_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "after_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged": true
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "before_sha256": "sha256:b9cab41062a856e985d9cfaeb6ea06678e14ccf873c3582664ff84e2ed66fa6f",
+        "after_sha256": "sha256:b9cab41062a856e985d9cfaeb6ea06678e14ccf873c3582664ff84e2ed66fa6f",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "before_sha256": "sha256:74333b18e909cf266517a59602a493e4f95a20caf06a6609f5695c715592af57",
+        "after_sha256": "sha256:74333b18e909cf266517a59602a493e4f95a20caf06a6609f5695c715592af57",
+        "unchanged": true
+      },
+      "ops/conductor-log.md": {
+        "before_sha256": "sha256:d97dc1d078cdc9a9307fdaa3fbb6df98782b1d8ee25372a701dd6a0fd123935a",
+        "after_sha256": "sha256:d97dc1d078cdc9a9307fdaa3fbb6df98782b1d8ee25372a701dd6a0fd123935a",
+        "unchanged": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "before_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "after_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "before_sha256": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "after_sha256": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "unchanged": true
+      },
+      "python/carnot/terminal_artifacts.py": {
+        "before_sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+        "after_sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+        "unchanged": true
+      },
+      "research-complete.yaml": {
+        "before_sha256": "sha256:a36483dfd67b35ae8fcdbbdc715275b98cb6ef77de7735263d5d6bf95266cbce",
+        "after_sha256": "sha256:a36483dfd67b35ae8fcdbbdc715275b98cb6ef77de7735263d5d6bf95266cbce",
+        "unchanged": true
+      },
+      "research-roadmap-next.yaml": {
+        "before_sha256": null,
+        "after_sha256": null,
+        "unchanged": true
+      },
+      "research-roadmap.yaml": {
+        "before_sha256": "sha256:cc261d9eaaeeca47473137b26f76fe8a818c4e4a378c7ee809c27575576b74ca",
+        "after_sha256": "sha256:cc261d9eaaeeca47473137b26f76fe8a818c4e4a378c7ee809c27575576b74ca",
+        "unchanged": true
+      },
+      "results/experiment_6283_v541_adversarial_capstone.json": {
+        "before_sha256": "sha256:735b298d2b2ed600dde934d72ad3fa4cb6f54ad1360976d968e29e014da56744",
+        "after_sha256": "sha256:735b298d2b2ed600dde934d72ad3fa4cb6f54ad1360976d968e29e014da56744",
+        "unchanged": true
+      },
+      "results/operational_retro_2026_08_541.json": {
+        "before_sha256": "sha256:521e41cbd5b1f64be887ea638258359df1b548287f64baadd5979d4b54fc8ab7",
+        "after_sha256": "sha256:521e41cbd5b1f64be887ea638258359df1b548287f64baadd5979d4b54fc8ab7",
+        "unchanged": true
+      },
+      "scripts/audit_roadmap_gates.py": {
+        "before_sha256": "sha256:c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9",
+        "after_sha256": "sha256:c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9",
+        "unchanged": true
+      },
+      "scripts/exclusion_manifest_lint.py": {
+        "before_sha256": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+        "after_sha256": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "before_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "after_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "unchanged": true
+      },
+      "scripts/roadmap_schema.py": {
+        "before_sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+        "after_sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+        "unchanged": true
+      }
+    }
+  },
+  "preconditions_checked": {
+    "git_status_before": [
+      " M openspec/capabilities/research-harnesses/spec.md",
+      "?? python/carnot/experiment_6284_v542_terminal_transition.py",
+      "?? tests/python/test_experiment_6284_v542_terminal_transition.py"
+    ],
+    "git_status_after_tests": [],
+    "input_hashes_before": {
+      "AGENTS.md": {
+        "present": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CODEX.md": {
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "CLAUDE.md": {
+        "present": true,
+        "sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59"
+      },
+      "research-roadmap.yaml": {
+        "present": true,
+        "sha256": "sha256:cc261d9eaaeeca47473137b26f76fe8a818c4e4a378c7ee809c27575576b74ca"
+      },
+      "research-roadmap-next.yaml": {
+        "present": false,
+        "sha256": null
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "present": true,
+        "sha256": "sha256:b9cab41062a856e985d9cfaeb6ea06678e14ccf873c3582664ff84e2ed66fa6f"
+      },
+      "results/experiment_6283_v541_adversarial_capstone.json": {
+        "present": true,
+        "sha256": "sha256:735b298d2b2ed600dde934d72ad3fa4cb6f54ad1360976d968e29e014da56744"
+      },
+      "results/operational_retro_2026_08_541.json": {
+        "present": true,
+        "sha256": "sha256:521e41cbd5b1f64be887ea638258359df1b548287f64baadd5979d4b54fc8ab7"
+      },
+      "results/experiment_6274_asp_energy_semantic_compiler.json": {
+        "present": true,
+        "sha256": "sha256:b02c88963c4815aa0e26d451ffd60fdd9f1014d32e76f638592ac114c611e96b"
+      },
+      "results/experiment_6275_flagship_asp_constraint_verification_benchmark.json": {
+        "present": true,
+        "sha256": "sha256:d9de1e4d154ef481c4784d749eb219333983a0bb756ad3241e912e277d6a4a60"
+      },
+      "results/experiment_6276_certified_dual_cache_admission.json": {
+        "present": true,
+        "sha256": "sha256:901704ad563ac7c4f115cea7e81d0264028870f70685efc7209b9233ce876d17"
+      },
+      "results/experiment_6280_variable_cardinality_mode_jump_backend.json": {
+        "present": true,
+        "sha256": "sha256:e40ebd316844e21bccf47c84946aebd6a8c4965affb74abcca4dafeacc545598"
+      },
+      "results/experiment_6281_mode_jump_multifamily_rerun.json": {
+        "present": true,
+        "sha256": "sha256:fff24fa125bb3929020492da26ad051f70a0aa2cf2b4093d06ac6b87102a5ee1"
+      },
+      "results/experiment_6282_arc_mechanic_class_live_router.json": {
+        "present": true,
+        "sha256": "sha256:7eec96fec9d112abad56375dcdfbd5a35f4aa0ad2adbe7e936303ab7019c2c22"
+      },
+      "research-complete.yaml": {
+        "present": true,
+        "sha256": "sha256:a36483dfd67b35ae8fcdbbdc715275b98cb6ef77de7735263d5d6bf95266cbce"
+      },
+      "ops/conductor-log.md": {
+        "present": true,
+        "sha256": "sha256:d97dc1d078cdc9a9307fdaa3fbb6df98782b1d8ee25372a701dd6a0fd123935a"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "present": true,
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+      },
+      "scripts/roadmap_schema.py": {
+        "present": true,
+        "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7"
+      },
+      "scripts/audit_roadmap_gates.py": {
+        "present": true,
+        "sha256": "sha256:c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9"
+      },
+      "scripts/exclusion_manifest_lint.py": {
+        "present": true,
+        "sha256": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042"
+      },
+      "python/carnot/terminal_artifacts.py": {
+        "present": true,
+        "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+      }
+    },
+    "staged_roadmap_identity": {
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:cc261d9eaaeeca47473137b26f76fe8a818c4e4a378c7ee809c27575576b74ca",
+      "milestone": "2026.08.542",
+      "requested_next_path": "research-roadmap-next.yaml",
+      "research_roadmap_next_present": false,
+      "active_roadmap_milestone": "2026.08.542",
+      "selection_note": "active research-roadmap.yaml already contains V542; no activation performed"
+    },
+    "reserved_id_scan_before_artifact_write": {
+      "scan_roots": [
+        "python/carnot",
+        "scripts/experiments",
+        "results",
+        "tests/python"
+      ],
+      "reserved_exp_ids": [
+        6284,
+        6285,
+        6286,
+        6287,
+        6288,
+        6289,
+        6290,
+        6291,
+        6292,
+        6293,
+        6294,
+        6295,
+        6296
+      ],
+      "allowed_reserved_paths": [
+        "python/carnot/experiment_6284_v542_terminal_transition.py",
+        "results/experiment_6284_v542_terminal_transition.json",
+        "tests/python/test_experiment_6284_v542_terminal_transition.py"
+      ],
+      "staged_deliverables": [
+        "results/experiment_6284_v542_terminal_transition.json",
+        "results/experiment_6285_v542_post_marker_source_scope_freeze.json",
+        "results/experiment_6286_v541_evidence_eligibility_ledger.json",
+        "results/experiment_6287_asp_continuous_relaxation.json",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6291_chronological_memory_crystallization_ab.json",
+        "results/experiment_6292_revocable_memory_holdout_audit.json",
+        "results/experiment_6293_revocable_memory_shadow_consumer.json",
+        "results/experiment_6294_arc_mechanic_router_causal_canary.json",
+        "results/experiment_6295_arc_mechanic_router_holdout_audit.json",
+        "results/experiment_6296_v542_adversarial_capstone.json"
+      ],
+      "existing_unallowed_deliverables": [],
+      "unexpected_reserved_paths_by_exp_id": {},
+      "unexpected_reserved_collision_count": 0,
+      "tracked_and_untracked_basis": "filesystem scan covers tracked and untracked files under experiment roots"
+    },
+    "protected_hashes_before_artifact_write": {
+      "research-roadmap.yaml": "sha256:cc261d9eaaeeca47473137b26f76fe8a818c4e4a378c7ee809c27575576b74ca",
+      "research-roadmap-next.yaml": null,
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "ops/changelog.md": "sha256:74333b18e909cf266517a59602a493e4f95a20caf06a6609f5695c715592af57",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "research-complete.yaml": "sha256:a36483dfd67b35ae8fcdbbdc715275b98cb6ef77de7735263d5d6bf95266cbce",
+      "ops/conductor-log.md": "sha256:d97dc1d078cdc9a9307fdaa3fbb6df98782b1d8ee25372a701dd6a0fd123935a",
+      "ops/exclusion_manifest.yaml": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:b9cab41062a856e985d9cfaeb6ea06678e14ccf873c3582664ff84e2ed66fa6f",
+      "results/experiment_6283_v541_adversarial_capstone.json": "sha256:735b298d2b2ed600dde934d72ad3fa4cb6f54ad1360976d968e29e014da56744",
+      "results/operational_retro_2026_08_541.json": "sha256:521e41cbd5b1f64be887ea638258359df1b548287f64baadd5979d4b54fc8ab7",
+      "python/carnot/terminal_artifacts.py": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+      "scripts/roadmap_schema.py": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+      "scripts/audit_roadmap_gates.py": "sha256:c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9",
+      "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042"
+    },
+    "active_roadmap_was_not_edited_by_this_task": true,
+    "research_roadmap_next_was_not_activated_by_this_task": true
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "verifier_is_oracle": false,
+  "field_provenance": {
+    "status": {
+      "principle": "The handoff closes only after exact V541 evidence and V542 contracts are checked.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "v541_milestone_roadmap_and_hash": {
+      "principle": "The V541 denominator comes from the terminal capstone record.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "v541_task_terminal_matrix": {
+      "principle": "Every V541 task keeps the class of its exact artifact path.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "v541_capstone_path_hash_and_summary": {
+      "principle": "The V541 capstone is input evidence, not an override.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "operational_retro_path_hash_and_summary": {
+      "principle": "Runtime receipts stay separate from readiness.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "focused_and_broad_validation_receipts_by_task": {
+      "principle": "Focused checks and broad-suite failures stay separate.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "missing_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts": {
+      "principle": "Mixed V541 states remain visible.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "v542_roadmap_path_and_hash": {
+      "principle": "The staged V542 roadmap identity is content-addressed.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "v542_task_ids_and_deliverables": {
+      "principle": "The V542 denominator is exactly Exp6284 through Exp6296.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "task_count": {
+      "principle": "Exactly thirteen tasks are reserved for V542.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "phase_counts": {
+      "principle": "Track counts keep the staged work auditable.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "dependency_validation": {
+      "principle": "Dependencies must point to live V542 tasks.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "gated_on_validation": {
+      "principle": "Gates may read only fields promised by upstream artifacts.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "prior_failure_validation": {
+      "principle": "Reruns need a prior, a changed mechanism, and a retirement rule.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "retired_dependency_count": {
+      "principle": "Bare zero proves no dependency points at a retired id.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "id_collision_count": {
+      "principle": "Bare zero proves reserved ids and deliverables have no unexpected file collision.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "agent_routing_validation": {
+      "principle": "Direct agent routes must match their model namespace.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "model_policy_validation": {
+      "principle": "Live LLM tasks must name mandated local SOTA GGUF models.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "prompt_contract_validation": {
+      "principle": "Run commands and endings prevent conductor drift.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "raw_evidence_eligibility_policy": {
+      "principle": "Raw receipts cannot override artifact-level eligibility.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Protected hashes show this run did not rewrite records.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Git state, hashes, roadmap identity, and collision scans are frozen first.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "This report aggregates checked-in artifacts only.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "The handoff audits records and is not an answer oracle.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every required field cites its source evidence.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "field_principles": {
+      "principle": "Every required field states why it exists.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands show the verification boundary.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes are preserved without converting failures into passes.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "duration_s": {
+      "principle": "Wall time records the audit cost without padding.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A normalized checksum detects silent payload drift.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The verdict states terminal status and preserved caveats plainly.",
+      "sources": [
+        "REQ-INFRA-6284",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/inference/sota_models.py",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "results/experiment_6283_v541_adversarial_capstone.json",
+        "results/operational_retro_2026_08_541.json",
+        "scripts/audit_roadmap_gates.py",
+        "scripts/exclusion_manifest_lint.py",
+        "scripts/roadmap_schema.py"
+      ]
+    }
+  },
+  "field_principles": {
+    "status": "The handoff closes only after exact V541 evidence and V542 contracts are checked.",
+    "v541_milestone_roadmap_and_hash": "The V541 denominator comes from the terminal capstone record.",
+    "v541_task_terminal_matrix": "Every V541 task keeps the class of its exact artifact path.",
+    "v541_capstone_path_hash_and_summary": "The V541 capstone is input evidence, not an override.",
+    "operational_retro_path_hash_and_summary": "Runtime receipts stay separate from readiness.",
+    "focused_and_broad_validation_receipts_by_task": "Focused checks and broad-suite failures stay separate.",
+    "missing_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts": "Mixed V541 states remain visible.",
+    "v542_roadmap_path_and_hash": "The staged V542 roadmap identity is content-addressed.",
+    "v542_task_ids_and_deliverables": "The V542 denominator is exactly Exp6284 through Exp6296.",
+    "task_count": "Exactly thirteen tasks are reserved for V542.",
+    "phase_counts": "Track counts keep the staged work auditable.",
+    "dependency_validation": "Dependencies must point to live V542 tasks.",
+    "gated_on_validation": "Gates may read only fields promised by upstream artifacts.",
+    "prior_failure_validation": "Reruns need a prior, a changed mechanism, and a retirement rule.",
+    "retired_dependency_count": "Bare zero proves no dependency points at a retired id.",
+    "id_collision_count": "Bare zero proves reserved ids and deliverables have no unexpected file collision.",
+    "agent_routing_validation": "Direct agent routes must match their model namespace.",
+    "model_policy_validation": "Live LLM tasks must name mandated local SOTA GGUF models.",
+    "prompt_contract_validation": "Run commands and endings prevent conductor drift.",
+    "raw_evidence_eligibility_policy": "Raw receipts cannot override artifact-level eligibility.",
+    "protected_files_unchanged": "Protected hashes show this run did not rewrite records.",
+    "preconditions_checked": "Git state, hashes, roadmap identity, and collision scans are frozen first.",
+    "inference_substrate": "This report aggregates checked-in artifacts only.",
+    "verifier_is_oracle": "The handoff audits records and is not an answer oracle.",
+    "field_provenance": "Every required field cites its source evidence.",
+    "field_principles": "Every required field states why it exists.",
+    "test_commands": "Commands show the verification boundary.",
+    "test_exit_codes": "Exit codes are preserved without converting failures into passes.",
+    "duration_s": "Wall time records the audit cost without padding.",
+    "reproducibility_checksum": "A normalized checksum detects silent payload drift.",
+    "honest_verdict": "The verdict states terminal status and preserved caveats plainly."
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6284_v542_terminal_transition.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6284_v542_terminal_transition.py -m pytest tests/python/test_experiment_6284_v542_terminal_transition.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6284_v542_terminal_transition.py --fail-under=100 --show-missing",
+    ".venv/bin/ruff check python/carnot/experiment_6284_v542_terminal_transition.py tests/python/test_experiment_6284_v542_terminal_transition.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_6284_v542_terminal_transition.py tests/python/test_experiment_6284_v542_terminal_transition.py",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6284_v542_terminal_transition.py",
+    ".venv/bin/python -m carnot.experiment_6284_v542_terminal_transition --check-roadmap-only",
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "sed -n 1,220p ops/e2e-test-plan.md",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6284_v542_terminal_transition.json"
+  ],
+  "test_exit_codes": {},
+  "duration_s": 0.660812420072034,
+  "reproducibility_checksum": "sha256:59114f38946bd165cc3cbc7646c3cc507ff2eebfa3edef54de3fee6db5f380e5",
+  "honest_verdict": "complete: V541 exact states and V542 roadmap contracts validated; raw receipts remain separate from artifact eligibility"
+}
