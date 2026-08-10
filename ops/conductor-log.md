@@ -15587,3 +15587,5 @@ Still active  |
 | 2026-08-10 08:45 UTC | Gated on Exp6265 promotion: leave-family-and-task- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6265-chronological-two-timescale-csl-ab) |
 | 2026-08-10 08:45 UTC | Gated on Exp6266 transfer: default-off energy-fami | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6266-family-task-holdout-csl-audit.fami |
 | 2026-08-10 08:47 UTC | Gated on Exp6265 promotion: leave-family-and-task- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6265-chronological-two-timescale-csl-ab) |
+| 2026-08-10 08:47 UTC | Gated on Exp6266 transfer: default-off energy-fami | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6266-family-task-holdout-csl-audit.fami |
+| 2026-08-10 08:49 UTC | Gated on Exp6265 promotion: leave-family-and-task- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6265-chronological-two-timescale-csl-ab) |
