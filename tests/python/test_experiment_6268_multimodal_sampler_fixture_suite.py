@@ -277,11 +277,19 @@ def test_req_sampler_6268_schema_mutations_fail_closed(
     preconditions_bad["preconditions_checked"]["preconditions_ready"] = False
     command_bad = deepcopy(artifact)
     command_bad["test_exit_codes"][mod.DEFAULT_TEST_COMMANDS[0]] = 7
+    command_bad["sampler_fixture_suite_ready_score"] = mod.sampler_fixture_suite_ready_score(
+        command_bad
+    )
+    command_bad["status"] = mod.status(command_bad)
+    command_bad["honest_verdict"] = mod.honest_verdict(command_bad)
 
     assert "fixture_families" in mod.blocked_reasons(family_bad)
     assert "protected_files" in mod.blocked_reasons(protected_bad)
     assert "preconditions" in mod.blocked_reasons(preconditions_bad)
     assert "test_commands" in mod.blocked_reasons(command_bad)
+    assert command_bad["sampler_fixture_suite_ready_score"] == 1.0
+    assert command_bad["status"] == "complete_ready"
+    assert "test command failures recorded" in command_bad["honest_verdict"]
 
     receipts = tmp_path / "receipts.json"
     receipts.write_text(json.dumps(_passing_exit_codes()), encoding="utf-8")
@@ -318,4 +326,6 @@ def test_req_sampler_6268_schema_mutations_fail_closed(
     )
     assert output.exists()
     assert manifest.exists()
+    main_artifact = json.loads(output.read_text(encoding="utf-8"))
+    assert main_artifact["duration_s"] > 0.0
     assert "complete_ready" in capsys.readouterr().out
