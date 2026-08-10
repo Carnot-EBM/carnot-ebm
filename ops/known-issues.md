@@ -16477,3 +16477,70 @@ Scope of the lift: THIS experiment only. A failed gate retires the Pinductor-sty
 (retire_if_same_verdict); it does not reopen the axis generally. Launch command is staged in the
 plan note; recommended launch window is with heavy conductor GPU work idle (or the conductor
 deliberately stopped, operator's call) per the two correlational reaper instances recorded above.
+
+## 2026-08-09 Kaggle score regression (0.12 best -> 0.08 -> 0.02) root-caused: submitted from a stale, disconnected kernel launcher fork
+
+Following up the same-day submission (ref 55393553, scored 0.02, worse than 07-16's 0.08 and
+07-15's best-on-record 0.12). Root cause found via direct diff, not guesswork.
+
+**There are TWO copies of the submission kernel launcher, and they had silently diverged.** The
+git-tracked, actively-maintained canonical copy is `scripts/kaggle/submission_kernel/main.py` +
+`kernel-metadata.json` -- outer-loop commits land here regularly, most recently
+`be35317c1e` (2026-08-08, "swarm timeout margin, host-RAM preflight, loud self-locate,
+server-log persistence") and `488eb8cede` (2026-08-07, "expand live-path budgets for
+Kaggle-class hardware"). The SEPARATE copy at `~/carnot_submission_staging/kernel/main.py` is a
+manually-maintained fork, last substantively touched 2026-07-31, that this session's re-stage
+work refreshed the AGENT CODE dataset from (`python/carnot/**` at current HEAD, correctly) but
+never cross-checked the KERNEL LAUNCHER SCRIPT itself against the git-tracked canonical version.
+**This session's 2026-08-09 submission used the stale staging-dir copy.**
+
+**What the stale copy was missing, concretely:**
+
+1. **The 2026-07-27 concurrency-probe fix.** The tracked version's own commit message:
+   "the server's stderr was going to DEVNULL, which is why the fault hid for months." The FIXED
+   probe checks `total_slots` and per-slot `n_ctx` against the real K=4 concurrent-induction
+   requirement (`n_ctx >= K*(prompt+n_predict)`); the OLD probe (what the staging-dir copy still
+   has) only checks `/health`, i.e. concurrency 1 -- reporting HEALTHY on a server that will
+   still silently fail once the scored run's 4 parallel game threads share it.
+2. **A stale, now-mismatched context size.** The staging-dir copy hardcodes `-c 81920` (already
+   one generation behind) for its probe. The CURRENT agent code (which the agent-code dataset
+   WAS correctly refreshed to) resolves its real context via
+   `_default_induce_n_ctx()`, which returns **106496** as of the 2026-08-08 correction
+   (REQ-ARC-WMTE-6227) -- so the probe validates a DIFFERENT, smaller config than what the live
+   agent actually requests when it launches its own server for the scored run. The tracked
+   version's own comment names this exact shape: "the old code printed 'ctx=16384' and probed
+   with -c 16384 as hardcoded strings; if the agent's own default had moved, the probe would have
+   validated a configuration the agent never used -- and validated it as HEALTHY. **That is the
+   measure-one-thing-ship-another shape of the 0.08 incident, in the diagnostic itself.**"
+3. **`machine_shape` mismatch.** Tracked `kernel-metadata.json`: `NvidiaRtxPro6000`. Staging-dir
+   copy used: `NvidiaL4x4`. The tracked version's own docstring flags this shape as itself
+   UNVERIFIED ("DO NOT submit merely to confirm this -- read it off the next real run"), so this
+   is not necessarily a second bug on top of #1/#2, but it is a further divergence between what
+   was submitted and what the project's own actively-maintained config currently specifies.
+4. **`dataset_sources` mismatch.** Tracked version lists the OLD non-QAT
+   `carnot-gemma4-31b-it-gguf` + separate `carnot-gemma4-31b-mtp-head`; the staging-dir copy
+   (correctly, per THIS session's earlier QAT dataset upload) used the combined
+   `carnot-gemma4-31b-it-qat-gguf`. This one direction is not itself a regression -- but it
+   confirms the two files were edited independently and never reconciled.
+
+**Net read: the historical "0.08 incident" this project already diagnosed and fixed (probe
+validates a config the agent doesn't use) was, this session, unknowingly REINTRODUCED via a
+disconnected file, at a worse magnitude (0.02) because the mismatch has grown by one more
+n_ctx-bump cycle** (16384 -> 81920 fixed 2026-07-27, then 81920 -> 106496 landed 2026-08-08, and
+the stale copy never got either update).
+
+**Process fix needed, not yet made:** there should be exactly ONE submission kernel launcher
+script, git-tracked, with the staging directory either eliminated or reduced to a symlink/copy
+step that ALWAYS pulls fresh from `scripts/kaggle/submission_kernel/` immediately before
+`kaggle kernels push` -- never hand-maintained in parallel. This incident is the second
+recorded instance of exactly this failure SHAPE (config validated ≠ config shipped), the first
+being the original 0.08 incident; a structural fix (single source of truth) is warranted over a
+third manual reconciliation.
+
+**Not yet done:** re-submitting with the tracked kernel. Recorded and reported; next submission
+attempt is an operator decision given each attempt consumes a rate-limited slot.
+
+**Cross-references:** `scripts/kaggle/submission_kernel/main.py` (canonical, current) vs
+`/home/ianblenke/carnot_submission_staging/kernel/main.py` (stale fork used for ref 55393553);
+commits `3af9256bd6`/`fa81eb9f77` (2026-07-27 concurrency fix), `be35317c1e` (2026-08-08 latest);
+REQ-ARC-WMTE-6227 (the 81920->106496 n_ctx correction); `/home/ianblenke/carnot_submission_staging/MANIFEST.md`'s OUTCOME section (2026-08-09).
