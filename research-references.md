@@ -33323,3 +33323,116 @@ Carnot reproduces them locally.
   V540 unless a new admissible mechanism or receipt exists before activation.
 
 <!-- V540-PLANNER-REFRESH-20260809-END -->
+
+## V541 Planner Refresh (2026-08-10, after milestone 2026.08.540)
+
+This refresh was completed before drafting milestone `2026.08.541`. It
+searched 2025-2026 arXiv work first across energy-based reasoning, neural
+constraint solving, Ising sampling, hallucination verification, KANs,
+constrained generation, probabilistic hardware, and continual learning. It
+then refreshed OpenReview, Hugging Face Papers, Semantic Scholar citation
+trails for EBT (`2507.02092`) and ARM-EBM (`2512.15605`), Extropic and Logical
+Intelligence first-party pages, and targeted GitHub discovery. Source claims
+remain hypotheses until Carnot reproduces them locally.
+
+### Promoted: certified online energy memory
+
+- **Test-Time Adaptation with Online Personalized Energy-Based Cache for
+  Fine-Grained Video Expression Recognition** - arXiv:2608.06467,
+  https://arxiv.org/abs/2608.06467; submitted 2026-08-06. EB-CaP uses a
+  lightweight EBM to sample online prototypes. It keeps separate positive and
+  negative caches, admits rows through an adaptive entropy gate, and limits
+  redundancy through a diversity gate. It updates no base-model weights.
+  Carnot hook: replace V540's over-conservative task-conditional familiarity
+  threshold with dual caches and explicit entropy/diversity admission. Preserve
+  immutable pre-decision snapshots, delayed exact-verifier commits, rollback,
+  and held-family tests. The paper's video results do not establish Carnot
+  transfer; only the mechanism is promoted.
+- **Self-Poisoning in Adaptive Out-of-Distribution Detection: A
+  Sharp-Threshold Theory and Certified Label-Free Calibration** -
+  arXiv:2607.21673, https://arxiv.org/abs/2607.21673; submitted 2026-07-23.
+  The paper models adaptive-memory impurity as a generalized Polya urn. The
+  admission-kernel slope acts as a reproduction number: values below one stay
+  benign, while values above one collapse. A gate calibrated only from a
+  frozen reserve breaks the feedback loop in the studied setting. Carnot hook:
+  measure the empirical admission slope, require an upper confidence bound
+  below one, and fail closed when the certificate is absent. Keep exact labels
+  for evaluation even if admission calibration itself is label-free.
+- **Learning on the Job: Continual Learning from Deployment Feedback for
+  Frozen-Weights Agents** - arXiv:2607.22157,
+  https://arxiv.org/abs/2607.22157; submitted 2026-07-24. The study distils
+  deployment outcome verdicts and corrections into an external rule memory
+  while model weights remain frozen. It reports gains over static RAG and
+  cross-model transfer of the resulting store. Carnot hook: use exact verifier
+  outcomes as the post-decision feedback channel and evaluate forward transfer,
+  retention, negative transfer, quarantine, and cross-model readability. Do
+  not count replay-only gains as a live-path self-learning result.
+
+### Promoted: executable declarative constraint semantics
+
+- **Answer Set Programming Energised! End-to-End Neurosymbolic Reasoning and
+  Learning with ASP and Energy Based Models** - arXiv:2607.08136,
+  https://arxiv.org/abs/2607.08136; submitted 2026-07-09. This source was
+  indexed earlier for finite-state fixtures. V541 promotes a narrower local
+  implementation hook: compile a bounded ASP subset into an inspectable energy
+  decomposition and check every candidate against an independent ASP solver.
+  Include non-monotonic defaults, contradictions, scheduling, and graph
+  constraints. The exact solver is an oracle, so this supports executable
+  verification and repair but not an oracle-distinct verifier-moat claim.
+- **Distilling Answer Set Programming Theories from Large Language Models** -
+  arXiv:2607.28086, https://arxiv.org/abs/2607.28086; submitted 2026-07-30 and
+  accepted at NeSy 2026. A solver-in-the-loop harness gives models up to one
+  hour to construct complete ASP theories for three VQA datasets. The released
+  study reports large model and domain differences. Carnot disposition: use
+  its solver-loop and held-theory evaluation as design evidence, but do not
+  rerun the retired unconstrained structured-output lane. V541 may ask local
+  flagship models for ordinary candidate assignments against sealed formal
+  sidecars; it must not headline LLM-authored theories.
+
+### Source checks and watch-only results
+
+- **Equilibrium Training of Energy-Based Models with Parallel Trajectory
+  Tempering** - arXiv:2607.27077, https://arxiv.org/abs/2607.27077. The source
+  remains useful for future equilibrium-training work, but V541 first repairs
+  the fixed-six-state mode-jump backend. It does not add a new learned-energy
+  training substrate.
+- **OpenReview and Hugging Face Papers:** new searches repeated ICLR 2026
+  energy-model work and surfaced LLM-as-a-Verifier (`2607.05391`). The latter
+  averages scoring-token logits and scales repeated or decomposed evaluation,
+  but it remains a model judge rather than an exact oracle. It is a comparator,
+  not a replacement for Carnot's executable validators.
+- **Semantic Scholar:** the 2026-08-10 endpoints return 33 EBT citations and 8
+  ARM-EBM citations. The EBT count increased by one since V540, but the relevant
+  constraint and memory items in that trail were already indexed. Citation
+  counts are discovery receipts, not quality evidence.
+- **Extropic:** the first-party writing index still exposes no newer execution
+  route after the 2026-08-03 Z1 tapeout announcement. Carnot has no
+  authenticated TSU device or simulator access. No speed, power, energy, or
+  availability experiment is schedulable.
+- **Logical Intelligence:** the current first-party material still describes
+  Kona as a global, continuous, editable-trace energy reasoner and Aleph as its
+  orchestration or formal-verification layer. The site provides no public Kona
+  weights, reproducible architecture specification, or local API. Treat the
+  claims as architecture direction, not a baseline.
+- **GitHub trending and targeted repository search:** the monthly Python page
+  and fresh EBM/constraint queries exposed no maintained local dependency that
+  supersedes Carnot's exact validators, Clingo-compatible ASP path, local GGUF
+  runtime, transactional memory, or Rust/PyO3 sampler ABI. EB-CaP's linked code
+  is useful reference code only; do not vendor it during V541.
+
+### V541 planning impact
+
+- Build exact ASP-to-energy semantics first. Then evaluate the three mandated
+  local flagship GGUF families on ordinary candidate assignments with sealed
+  formal sidecars and exact certificates.
+- Retry continuous self-learning only through a changed mechanism: dual caches,
+  entropy and diversity admission, a frozen reserve, and an impurity-slope
+  certificate. Do not repeat the V540 task-threshold gate.
+- Generalize the mode-jump backend from a fixed six-state vector to typed,
+  variable-cardinality fixtures before another scientific A/B.
+- Preserve one ARC live-path slot for a mechanic-class detector. Make no level
+  solve claim and do not use hidden game source or offline ground-truth search.
+- Keep TSU and physical-board execution out of V541 because no new authenticated
+  or physical receipt exists.
+
+<!-- V541-PLANNER-REFRESH-20260810-END -->
