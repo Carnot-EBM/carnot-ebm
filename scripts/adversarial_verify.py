@@ -103,11 +103,20 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from carnot.terminal_artifacts import (
+    TerminalClassification,
+    classify_artifact_path,
+    classify_artifact_payload,
+    path_sha256,
+)
+
 # Floating-point agreement threshold for tautology detection. Two
 # distinct metrics agreeing to 5 significant figures is suspicious;
 # legitimate cases (two implementations of the same function with the
 # same seed) should be deliberate and documented.
 TAUTOLOGY_DIGITS = 5
+NONTERMINAL_FLAG_KIND = "NONTERMINAL_DECLARED_ARTIFACT"
+DECLARED_EXPERIMENT_ARTIFACT_RE = re.compile(r"experiment_\d+_.*\.json$")
 
 DEGENERATE_DELTA_THRESHOLD = 0.95
 DEGENERATE_BASELINE_THRESHOLD = 0.05
@@ -474,6 +483,38 @@ class Flag:
 
     def to_dict(self) -> dict[str, str]:
         return {"kind": self.kind, "severity": self.severity, "detail": self.detail}
+
+
+def _declared_experiment_artifact_path(path: Path) -> bool:
+    return bool(DECLARED_EXPERIMENT_ARTIFACT_RE.match(path.name))
+
+
+def check_terminal_artifact_readiness(
+    classification: TerminalClassification,
+    flags: list[Flag],
+) -> None:
+    """Flag declared artifacts whose exact path has no terminal state."""
+
+    if classification.terminal:
+        return
+    flags.append(
+        Flag(
+            kind=NONTERMINAL_FLAG_KIND,
+            severity="critical",
+            detail=(
+                f"declared artifact is nonterminal: path={classification.path}; "
+                f"classification={classification.classification}; reason={classification.reason}"
+            ),
+        )
+    )
+
+
+def _flag_summary(flags: list[Flag]) -> dict[str, Any]:
+    return {
+        "flag_count": len(flags),
+        "max_severity": max((Flag.SEVERITY_RANK[f.severity] for f in flags), default=-1),
+        "flags": [f.to_dict() for f in flags],
+    }
 
 
 def _is_finite_number(v: Any) -> bool:
@@ -5967,28 +6008,45 @@ def check_arc_outer_loop_solve(d: dict[str, Any], flags: list[Flag]) -> None:
 
 def verify_artifact(path: Path) -> dict[str, Any]:
     """Run all checks on a single artifact. Return a report dict."""
+    flags: list[Flag] = []
+    declared = _declared_experiment_artifact_path(path)
     try:
         with open(path) as f:
             d_raw = json.load(f)
     except Exception as e:
+        if declared:
+            check_terminal_artifact_readiness(classify_artifact_path(path), flags)
         return {
             "artifact": str(path),
             "loaded": False,
             "error": str(e),
-            "flags": [],
+            **_flag_summary(flags),
         }
-
-    flags: list[Flag] = []
 
     # Skip non-dict top-level artifacts (some experiments emit a list
     # at top level — those aren't standard results files).
     if not isinstance(d_raw, dict):
+        if declared:
+            classification = classify_artifact_payload(
+                d_raw,
+                path=path,
+                sha256=path_sha256(path),
+            )
+            check_terminal_artifact_readiness(classification, flags)
         return {
             "artifact": str(path),
             "loaded": True,
             "non_dict_top_level": True,
-            "flags": [],
+            **_flag_summary(flags),
         }
+
+    if declared:
+        classification = classify_artifact_payload(
+            d_raw,
+            path=path,
+            sha256=path_sha256(path),
+        )
+        check_terminal_artifact_readiness(classification, flags)
 
     schema_raw = d_raw.get("schema", "") or ""
     schema = schema_raw if isinstance(schema_raw, str) else ""
@@ -6000,7 +6058,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
             "artifact": str(path),
             "loaded": True,
             "blocked_gate_artifact": True,
-            "flags": [],
+            **_flag_summary(flags),
         }
 
     # Skip retrospective artifacts — they summarize other experiments
@@ -6022,9 +6080,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
             "is_retro": True,
             "exp_id": d_raw.get("experiment") or d_raw.get("experiment_id"),
             "title": title[:80],
-            "flag_count": 0,
-            "max_severity": -1,
-            "flags": [],
+            **_flag_summary(flags),
         }
 
     # Flatten nested-metric containers (e.g. `metrics`,`report`) so
@@ -6079,9 +6135,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
         "exp_id": d_raw.get("experiment") or d_raw.get("experiment_id"),
         "title": title[:80],
         "honest_verdict": verdict[:80],
-        "flag_count": len(flags),
-        "max_severity": max((Flag.SEVERITY_RANK[f.severity] for f in flags), default=-1),
-        "flags": [f.to_dict() for f in flags],
+        **_flag_summary(flags),
     }
 
 

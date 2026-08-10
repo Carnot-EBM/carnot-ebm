@@ -1518,6 +1518,91 @@ unchanged, the checksum matches, and GGUF mutation count is the bare integer
 |---|---|---|
 | REQ-INFRA-6228 | `python/carnot/inference/llama_server_supervisor.py`; `python/carnot/experiment_6228_supervised_three_family_runtime_endurance.py`; terminal artifact `results/experiment_6228_supervised_three_family_runtime_endurance.json`. | `tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py`; `tests/python/test_llama_server_supervisor.py`. |
 
+## REQ-INFRA-6262: Declared Terminal Artifacts SHALL Be Readiness-Gated By Exact Artifact State
+
+Carnot SHALL add a fail-closed readiness boundary outside
+`scripts/research_conductor.py` for declared experiment artifacts. The boundary
+SHALL reuse `python/carnot/terminal_artifacts.py` as the only verdict
+vocabulary. It SHALL NOT trust conductor receipt text, completion logs, or
+roadmap intent over the exact declared artifact path.
+
+The adversarial verifier SHALL emit one named CRITICAL finding for a declared
+experiment artifact whose exact path is missing, malformed, running,
+bootstrap-only, partial, contradictory, or unknown. Missing paths and malformed
+JSON SHALL keep distinct details. Honest `blocked` artifacts and gate-skipped
+terminal artifacts SHALL remain terminal controls.
+
+Gate-field eligibility SHALL require both conditions:
+
+- The exact artifact path classifies as terminal.
+- The exact top-level field exists as a bare field on that artifact.
+
+Principle-wrapped values, nested values, conductor receipt fields, similar field
+names, and absent fields SHALL NOT be gate eligible. A receipt SHALL record an
+override attempt, but it SHALL NOT make a nonterminal artifact terminal.
+
+Exp6262 SHALL write
+`results/experiment_6262_terminal_artifact_readiness_contract.json`. The
+artifact SHALL include these required fields: `status`,
+`exp6228_path_hash_and_exact_classification`,
+`classifier_source_hash_before_after`,
+`adversarial_verifier_source_hash_before_after`,
+`supported_terminal_classes`, `rejected_nonterminal_classes`,
+`exact_path_over_receipt_precedence`, `gate_field_eligibility_contract`,
+`exp6228_regression_flag_code_and_severity`,
+`honest_blocked_control_result`, `gate_skip_control_result`,
+`receipt_override_negative_control`, `readiness_missing_negative_control`,
+`false_positive_fixture_results`, `focused_test_results`,
+`qa_layer_audit_results`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`, `test_exit_codes`,
+`terminal_artifact_contract_ready_score`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+`terminal_artifact_contract_ready_score` SHALL be the bare integer `1` only
+when every required control passes and every focused command exits zero.
+
+### SCENARIO-INFRA-6262-1: Exp6228 Preconditions Receipt Is Critical
+GIVEN `results/experiment_6228_supervised_three_family_runtime_endurance.json`
+contains a valid precondition receipt without terminal `status` and
+`honest_verdict`
+WHEN adversarial verification checks the declared artifact boundary
+THEN it emits `NONTERMINAL_DECLARED_ARTIFACT` with severity `critical`
+AND the detail records the exact path classification as `unknown`.
+
+### SCENARIO-INFRA-6262-2: Nonterminal Classes Fail Closed
+GIVEN declared artifact fixtures that are running, bootstrap-only, partial,
+contradictory, missing, malformed, or unknown
+WHEN the readiness boundary classifies each fixture
+THEN each fixture receives a CRITICAL adversarial finding
+AND missing and malformed details remain distinct.
+
+### SCENARIO-INFRA-6262-3: Receipts Cannot Override Exact Paths
+GIVEN a nonterminal or missing declared artifact
+AND a conductor receipt that says `OK`
+WHEN the readiness boundary classifies the exact path
+THEN the result records the receipt override attempt
+AND the terminal class remains nonterminal.
+
+### SCENARIO-INFRA-6262-4: Gates Need Terminal Bare Fields
+GIVEN an artifact with a top-level field, a nested field, a
+principle-wrapped field, and a receipt field
+WHEN gate-field eligibility is evaluated
+THEN only a terminal artifact with an exact bare top-level field is eligible.
+
+### SCENARIO-INFRA-6262-5: Honest Terminal Controls Stay Clean
+GIVEN complete, null, honest blocked, and gate-skipped terminal artifacts
+WHEN the adversarial verifier checks them
+THEN no `NONTERMINAL_DECLARED_ARTIFACT` finding is emitted.
+
+### SCENARIO-INFRA-6262-6: Exp6262 Writes The Readiness Contract Artifact
+GIVEN the focused tests, source hashes, Exp6228 regression classification, QA
+checks, and protected-file hashes
+WHEN `python -m carnot.experiment_6262_terminal_artifact_readiness_contract
+--date 20260810` runs
+THEN the result artifact contains all required fields, a matching checksum, a
+bare readiness score of `1`, and a terminal-prefixed honest verdict.
+
 ## REQ-INFRA-6238: V539 Exact-Path Capstone SHALL Preserve Terminal States And Reject Unsupported Claims
 
 Carnot SHALL build Exp6238 as the V539 branch-independent capstone. The
