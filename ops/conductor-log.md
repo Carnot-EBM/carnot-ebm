@@ -15607,3 +15607,5 @@ Still active  |
 | 2026-08-10 15:09 UTC | Certified positive-negative energy cache admission | OK | 86 passed, 1 warning in 8.05s |
 | 2026-08-10 15:11 UTC | Gated on Exp6276 certificate: chronological contin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6276-certified-dual-cache-admission.cer |
 | 2026-08-10 15:13 UTC | Gated on Exp6276 certificate: chronological contin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6276-certified-dual-cache-admission.cer |
+| 2026-08-10 15:16 UTC | Gated on Exp6276 certificate: chronological contin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6276-certified-dual-cache-admission.cer |
+| 2026-08-10 15:18 UTC | Gated on Exp6277 promotion: model-family and task- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6277-chronological-certified-csl-ab) |
