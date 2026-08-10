@@ -2001,6 +2001,105 @@ AND the normalized checksum matches the payload.
 |---|---|---|
 | REQ-INFRA-6271 | Implemented by `python/carnot/experiment_6271_v540_adversarial_capstone.py`; terminal artifact `results/experiment_6271_v540_adversarial_capstone.json`. | Covered by `tests/python/test_experiment_6271_v540_adversarial_capstone.py`. |
 
+## REQ-INFRA-6272: V541 Transition SHALL Preserve V540 Exact Evidence And Validate The Reserved Roadmap
+
+Carnot SHALL build Exp6272 as the exact handoff from terminal milestone
+`2026.08.540` into `2026.08.541`. It SHALL classify every V540 task from the
+declared deliverable path recorded by the V540 capstone or archived milestone
+ledger. A conductor receipt SHALL be evidence only. It SHALL NOT promote a
+missing, nonterminal, blocked, skipped, null, flagged, retired, or ready state
+into another class.
+
+Exp6272 SHALL preserve focused task checks and broad-suite checks as separate
+receipts. A broad-suite failure SHALL NOT erase a focused pass, and a focused
+pass SHALL NOT hide the broad-suite failure. Gate skips, missing files, null
+results, blocked results, ready artifacts, and unsupported-backend findings
+SHALL remain separate rows and separate counts.
+
+Exp6272 SHALL validate the V541 roadmap without activating a staged roadmap
+and without editing `research-roadmap.yaml`. It SHALL verify exactly twelve
+task ids in Exp6272 through Exp6283 order, their deliverable paths, phases,
+dependencies, structured gates, prior-failure blocks, task-specific routing,
+model policy, prompt run-command contracts, prompt endings, protected files,
+and tracked plus untracked reserved-id collisions. Structured gates SHALL be
+checked against the upstream task's `REQUIRED ARTIFACT FIELDS` block. Any
+retired dependency or incomplete `prior_failures` entry SHALL fail closed.
+
+The Exp6272 artifact SHALL be written atomically to
+`results/experiment_6272_v541_terminal_transition.json` with
+`inference_substrate=aggregation_from_upstream_artifacts` and
+`verifier_is_oracle=false`. `task_count` SHALL equal `12`.
+`retired_dependency_count` and `id_collision_count` SHALL be bare integer `0`.
+The artifact SHALL include these required fields: `status`,
+`v540_milestone_roadmap_and_hash`, `v540_task_terminal_matrix`,
+`v540_capstone_path_hash_and_summary`,
+`operational_retro_path_hash_and_summary`,
+`focused_and_broad_validation_receipts_by_task`,
+`missing_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts`,
+`v541_roadmap_path_and_hash`, `v541_task_ids_and_deliverables`, `task_count`,
+`phase_counts`, `dependency_validation`, `gated_on_validation`,
+`prior_failure_validation`, `retired_dependency_count`, `id_collision_count`,
+`agent_routing_validation`, `model_policy_validation`,
+`prompt_contract_validation`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`, `test_exit_codes`,
+`duration_s`, `reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INFRA-6272-1: V540 Exact Paths Outrank Receipts
+
+GIVEN the V540 capstone or archive names declared deliverables
+AND the conductor ledger contains terminal-looking receipts
+WHEN Exp6272 builds the V540 terminal matrix
+THEN it reclassifies each exact path with `python/carnot/terminal_artifacts.py`
+AND records receipt override attempts without changing the exact-path class.
+
+### SCENARIO-INFRA-6272-2: Focused And Broad Validation Receipts Stay Separate
+
+GIVEN a task has focused commands and a broad-suite command
+WHEN Exp6272 summarizes validation evidence
+THEN focused passes, broad-suite failures, timeouts, and missing receipts are
+reported separately by task.
+
+### SCENARIO-INFRA-6272-3: V541 Roadmap Shape And Collisions Fail Closed
+
+GIVEN the V541 roadmap reserves Exp6272 through Exp6283
+WHEN Exp6272 validates ids and deliverables
+THEN exactly twelve tasks in order are required
+AND tracked plus untracked collisions outside the task-owned Exp6272 files
+produce a nonzero collision count.
+
+### SCENARIO-INFRA-6272-4: Gates And Prior Failures Are Structured
+
+GIVEN a V541 task declares `requires`, `gated_on`, or `prior_failures`
+WHEN Exp6272 validates the roadmap
+THEN every dependency must exist and not be retired
+AND every gate must reference an upstream required artifact field
+AND every prior-failure entry must include experiment id, verdict,
+addressed-by text, and `retire_if_same_verdict: true`.
+
+### SCENARIO-INFRA-6272-5: Routing And Prompt Contracts Match V541 Policy
+
+GIVEN V541 uses Codex GPT-5.5 for formulaic code tasks and Opus for declared
+judgment or cross-file tasks
+WHEN Exp6272 validates task routing
+THEN each task's `agent_type` and `model` match the direct V541 policy
+AND every prompt includes its matching run command and protected-file ending.
+
+### SCENARIO-INFRA-6272-6: Artifact Is Checksummed And Non-Mutating
+
+GIVEN precondition hashes, roadmap checks, command receipts, and field
+principles are assembled
+WHEN Exp6272 writes the handoff artifact
+THEN every required field has provenance and a principle
+AND the checksum matches the normalized payload
+AND protected files remain byte-identical except the task-owned result.
+
+## Implementation Status (REQ-INFRA-6272)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6272 | Pending implementation: `python/carnot/experiment_6272_v541_terminal_transition.py`; terminal artifact `results/experiment_6272_v541_terminal_transition.json`. | Pending focused tests: `tests/python/test_experiment_6272_v541_terminal_transition.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone

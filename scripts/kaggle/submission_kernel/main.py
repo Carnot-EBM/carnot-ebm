@@ -21,7 +21,9 @@ bundled engine is unavailable the agent degrades gracefully to the CPU graph-exp
 (try/except in arc_executable_world_model._induce_and_plan), so the submission still plays
 games even if the LLM tier is unavailable.
 
-Attach as datasets: carnot-agent-code, carnot-llamacpp-mtp-binary, carnot-gemma4-31b-it-gguf.
+Attach as datasets: carnot-agent-code, carnot-llamacpp-mtp-binary, carnot-gemma4-31b-it-qat-gguf
+(this ONE dataset carries BOTH the target gguf and its matching MTP drafter -- the resolution
+logic below identifies each by filename pattern, not by which dataset slug it came from).
 Add the competition as a data source. GPU on. Internet OFF (the gateway is internal).
 
 =========================== 2026-07-28 GENERATOR SWITCH — READ ===========================
@@ -37,6 +39,21 @@ TWO THINGS ARE NOT DONE AND WILL BREAK THE NEXT SUBMISSION IF IGNORED:
     `iancblenke/carnot-gemma4-31b-it-gguf`, which the OPERATOR must create and upload (the
     18.3GB gemma-4-31B-it-Q4_K_M.gguf). Until then the push fails at dataset resolution --
     deliberately a LOUD failure rather than silently running the old 9B.
+
+    RESOLVED 2026-08-10, DIFFERENTLY THAN DESCRIBED ABOVE (never-prune: original text kept,
+    correction appended). The project switched to the QAT quantization on 2026-08-09
+    (`unsloth/gemma-4-31B-it-qat-GGUF`, statistically indistinguishable from Q4_K_M offline,
+    p=1.0, but ~1GB smaller and ships a matching QAT MTP drafter). `kernel-metadata.json` now
+    requests `iancblenke/carnot-gemma4-31b-it-qat-gguf` -- ONE dataset carrying BOTH the
+    17.3GB target and its 491MB drafter -- not the two-dataset non-QAT pair this paragraph
+    describes. That dataset exists and is uploaded (verified via `kaggle datasets files`,
+    byte-exact against the local QAT snapshot). This correction is also why a 2026-08-09
+    submission (ref 55393553) scored 0.02, well below the 0.08/0.12 prior baselines: it used a
+    STALE, hand-maintained COPY of this kernel script from a staging directory that had
+    silently diverged from this tracked file and was missing the concurrency-probe fix and the
+    current n_ctx resolution below. See `ops/known-issues.md`'s 2026-08-09 "Kaggle score
+    regression" entry for the full incident. The staging directory should now always be
+    re-populated from THIS file immediately before push, never hand-edited in parallel.
 
  2. `machine_shape` IS "NvidiaRtxPro6000" AND IS UNVERIFIED BY US. It was chosen on two
     independent pieces of evidence — the arcprize.org 2026 starter kit names an `rtx6000`
@@ -597,8 +614,8 @@ if server and gguf:
 else:
     print("LLM TIER DISABLED: llama-server/gguf NOT FOUND under /kaggle/input -- running CPU graph-explore "
           f"ONLY (server={server}, gguf={gguf}). Verify the carnot-llamacpp-mtp-binary + "
-          "carnot-gemma4-31b-it-gguf datasets are attached (the retired qwen GGUF dataset is no "
-          "longer used; carnot-gemma4-31b-mtp-head is also expected, for speculative decoding).",
+          "carnot-gemma4-31b-it-qat-gguf datasets are attached (that one dataset carries BOTH "
+          "the target weights and the matching MTP drafter).",
           flush=True)
 
 from agents.agent import Agent
