@@ -1,0 +1,1066 @@
+{
+  "schema": "carnot.experiment_6273.v541_post_marker_source_scope_freeze.v1",
+  "experiment_id": "exp6273-v541-post-marker-source-scope-freeze",
+  "run_date": "20260810",
+  "result_path": "results/experiment_6273_v541_post_marker_source_scope_freeze.json",
+  "status": "complete",
+  "planner_marker_and_hash": {
+    "marker_text": "V541-PLANNER-REFRESH-20260810-END",
+    "marker_comment": "<!-- V541-PLANNER-REFRESH-20260810-END -->",
+    "marker_count": 1,
+    "marker_comment_sha256": "sha256:f128e5e694cbf8e0d0ea1ef81aec6a1c8e1850fb54bf91ecc6006fda42d21ef6",
+    "research_references_sha256": "sha256:9136f20a0ae9b87af9de784a68116eae103b48a612dc50acde8a48162b7efe44",
+    "marker_byte_offset": 2689145,
+    "marker_commit": "c64324d44920bdfb8d8f6d5b5ba64ee1e4829507",
+    "marker_committed_at_utc": "2026-08-10T12:50:11Z"
+  },
+  "query_window": {
+    "marker": "V541-PLANNER-REFRESH-20260810-END",
+    "window_start_exclusive": "2026-08-10T12:50:11Z",
+    "window_end_inclusive": "2026-08-10T23:59:59Z",
+    "same_day_policy": "Bare 2026-08-10 dates are rejected without a timestamp strictly after the marker.",
+    "accepted_at_or_before_marker": false
+  },
+  "source_channel_receipts": [
+    {
+      "channel": "arxiv",
+      "queried_at": "2026-08-10",
+      "queries": [
+        "arXiv submittedDate after 2026-08-10T12:50:11Z for EBM reasoning",
+        "sweep_clusters.py cluster 1 and 4 URLs"
+      ],
+      "stable_urls": [
+        "https://arxiv.org/search/advanced",
+        "https://export.arxiv.org/api/query"
+      ],
+      "strict_post_marker_hits": 0,
+      "endpoint_status": "api_rate_exceeded_advanced_search_no_scope_hit",
+      "receipt": "The strict arXiv window returned no stable scope-changing post-marker source before the API rate limit."
+    },
+    {
+      "channel": "openreview",
+      "queried_at": "2026-08-10",
+      "queries": [
+        "OpenReview ICLR 2026 and EBT searches"
+      ],
+      "stable_urls": [
+        "https://openreview.net/forum?id=ZBj3Qp1bYg"
+      ],
+      "strict_post_marker_hits": 0,
+      "endpoint_status": "api_http_403_challenge_required",
+      "receipt": "OpenReview API required challenge verification; browser search surfaced no strict post-marker contract delta."
+    },
+    {
+      "channel": "extropic",
+      "queried_at": "2026-08-10",
+      "queries": [
+        "Extropic writing and hardware pages"
+      ],
+      "stable_urls": [
+        "https://extropic.ai/writing",
+        "https://extropic.ai/hardware"
+      ],
+      "strict_post_marker_hits": 0,
+      "receipt": "The writing page still led with the 2026-08-03 Z1 announcement; hardware still labels Z1 as early access 2027."
+    },
+    {
+      "channel": "semantic_scholar_ebt_arm",
+      "queried_at": "2026-08-10",
+      "queries": [
+        "Semantic Scholar EBT 2507.02092 citations",
+        "Semantic Scholar ARM-EBM 2512.15605 citations"
+      ],
+      "stable_urls": [
+        "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations",
+        "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations"
+      ],
+      "strict_post_marker_hits": 0,
+      "endpoint_status": "http_429",
+      "receipt": "Both citation endpoints returned 429 during the execution sweep, so no citation row was promoted."
+    },
+    {
+      "channel": "hugging_face_papers",
+      "queried_at": "2026-08-10",
+      "queries": [
+        "Hugging Face daily papers 2026-08-10"
+      ],
+      "stable_urls": [
+        "https://huggingface.co/api/daily_papers?date=2026-08-10"
+      ],
+      "strict_post_marker_hits": 0,
+      "receipt": "Daily rows were submitted at 2026-08-10T00:00:00Z or published before the marker, so they are cutoff-confounded."
+    },
+    {
+      "channel": "targeted_github",
+      "queried_at": "2026-08-10",
+      "queries": [
+        "GitHub repos for EBT, Self-Poisoning, ASP EBM, and variable-cardinality pushed after marker",
+        "extropic-ai/torx repository metadata"
+      ],
+      "stable_urls": [
+        "https://github.com/extropic-ai/torx"
+      ],
+      "strict_post_marker_hits": 0,
+      "receipt": "Targeted GitHub search returned total_count=0; extropic-ai/torx pushed_at predates the marker."
+    },
+    {
+      "channel": "logical_intelligence",
+      "queried_at": "2026-08-10",
+      "queries": [
+        "Logical Intelligence Kona and home pages"
+      ],
+      "stable_urls": [
+        "https://logicalintelligence.com/kona-ebms-energy-based-models",
+        "https://logicalintelligence.com/"
+      ],
+      "strict_post_marker_hits": 0,
+      "receipt": "Public pages remain dated 2026-06-26 or undated product pages with no public weights or local API route."
+    }
+  ],
+  "discovered_candidates": [
+    {
+      "stable_id": "arxiv:2608.06467",
+      "title": "Test-Time Adaptation with Online Personalized Energy-Based Cache",
+      "url": "https://arxiv.org/abs/2608.06467",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-08-06T00:00:00Z",
+      "date_evidence": "submitted before the V541 marker",
+      "scope_effect": "EB-CaP dual-cache mechanism was already sealed in the V541 planner block.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:4d14cef452830af896a92ed70d86fedfd7f218c335a4888980058b811115c10e"
+    },
+    {
+      "stable_id": "arxiv:2607.21673",
+      "title": "Self-Poisoning in Adaptive Out-of-Distribution Detection",
+      "url": "https://arxiv.org/abs/2607.21673",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-07-23T00:00:00Z",
+      "date_evidence": "submitted before the V541 marker",
+      "scope_effect": "Admission-slope certificate was already sealed in the V541 planner block.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:dc2d5a0709112c095f967192856e5a0a25f9fa0db360711362a6e8a0b212536e"
+    },
+    {
+      "stable_id": "arxiv:2607.08136",
+      "title": "Answer Set Programming Energised!",
+      "url": "https://arxiv.org/abs/2607.08136",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-07-09T06:18:35Z",
+      "date_evidence": "submitted before the V541 marker",
+      "scope_effect": "ASP energy semantics were already sealed in the V541 planner block.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:ecad9687817857f3f4357e0da8923d247c3f6399d7f98c1922d6f9375d421a15"
+    },
+    {
+      "stable_id": "hf:daily_papers:2026-08-10",
+      "title": "Hugging Face Papers 2026-08-10 daily batch",
+      "url": "https://huggingface.co/api/daily_papers?date=2026-08-10",
+      "source_channel": "hugging_face_papers",
+      "source_kind": "secondary",
+      "source_timestamp": "2026-08-10T00:00:00Z",
+      "date_evidence": "submittedOnDailyAt is before the marker",
+      "scope_effect": "Rows were pre-marker or unrelated to V541 contracts.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": false,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:f0219e71ba9f4cfdc2c8324cb2bb1ffccf90c71a469e33f9f91f7f09218fed9e"
+    },
+    {
+      "stable_id": "github:extropic-ai/torx",
+      "title": "Torx",
+      "url": "https://github.com/extropic-ai/torx",
+      "source_channel": "targeted_github",
+      "source_kind": "first_party",
+      "source_timestamp": "2026-08-05T06:33:38Z",
+      "date_evidence": "GitHub pushed_at predates the marker",
+      "scope_effect": "First-party Torx code does not add a Carnot execution route.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:f5aa87bd614310028125aacd41ea39213607b766efd79e6a3504500d76982960"
+    },
+    {
+      "stable_id": "logical:kona-ebms-energy-based-models",
+      "title": "Kona: Energy-Based Models for AI Reasoning",
+      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+      "source_channel": "logical_intelligence",
+      "source_kind": "first_party",
+      "source_timestamp": "2026-06-26T00:00:00Z",
+      "date_evidence": "page date predates the marker",
+      "scope_effect": "Strategic context only; no public Kona weights or local API route.",
+      "reproducible_evidence": false,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:79de25fa5635e5a2d837b3565a8b54476a5567849ff88de2fd94f0395967df68"
+    }
+  ],
+  "accepted_findings": [],
+  "rejected_duplicate_or_watch_only_findings": [
+    {
+      "stable_id": "arxiv:2608.06467",
+      "title": "Test-Time Adaptation with Online Personalized Energy-Based Cache",
+      "url": "https://arxiv.org/abs/2608.06467",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-08-06T00:00:00Z",
+      "date_evidence": "submitted before the V541 marker",
+      "scope_effect": "EB-CaP dual-cache mechanism was already sealed in the V541 planner block.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:4d14cef452830af896a92ed70d86fedfd7f218c335a4888980058b811115c10e",
+      "disposition": "duplicate",
+      "rejection_reason": "stable id already appears in research-references.md"
+    },
+    {
+      "stable_id": "arxiv:2607.21673",
+      "title": "Self-Poisoning in Adaptive Out-of-Distribution Detection",
+      "url": "https://arxiv.org/abs/2607.21673",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-07-23T00:00:00Z",
+      "date_evidence": "submitted before the V541 marker",
+      "scope_effect": "Admission-slope certificate was already sealed in the V541 planner block.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:dc2d5a0709112c095f967192856e5a0a25f9fa0db360711362a6e8a0b212536e",
+      "disposition": "duplicate",
+      "rejection_reason": "stable id already appears in research-references.md"
+    },
+    {
+      "stable_id": "arxiv:2607.08136",
+      "title": "Answer Set Programming Energised!",
+      "url": "https://arxiv.org/abs/2607.08136",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-07-09T06:18:35Z",
+      "date_evidence": "submitted before the V541 marker",
+      "scope_effect": "ASP energy semantics were already sealed in the V541 planner block.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:ecad9687817857f3f4357e0da8923d247c3f6399d7f98c1922d6f9375d421a15",
+      "disposition": "duplicate",
+      "rejection_reason": "stable id already appears in research-references.md"
+    },
+    {
+      "stable_id": "hf:daily_papers:2026-08-10",
+      "title": "Hugging Face Papers 2026-08-10 daily batch",
+      "url": "https://huggingface.co/api/daily_papers?date=2026-08-10",
+      "source_channel": "hugging_face_papers",
+      "source_kind": "secondary",
+      "source_timestamp": "2026-08-10T00:00:00Z",
+      "date_evidence": "submittedOnDailyAt is before the marker",
+      "scope_effect": "Rows were pre-marker or unrelated to V541 contracts.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": false,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:f0219e71ba9f4cfdc2c8324cb2bb1ffccf90c71a469e33f9f91f7f09218fed9e",
+      "disposition": "watch_only",
+      "rejection_reason": "watch-only evidence does not change a V541 contract"
+    },
+    {
+      "stable_id": "github:extropic-ai/torx",
+      "title": "Torx",
+      "url": "https://github.com/extropic-ai/torx",
+      "source_channel": "targeted_github",
+      "source_kind": "first_party",
+      "source_timestamp": "2026-08-05T06:33:38Z",
+      "date_evidence": "GitHub pushed_at predates the marker",
+      "scope_effect": "First-party Torx code does not add a Carnot execution route.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:f5aa87bd614310028125aacd41ea39213607b766efd79e6a3504500d76982960",
+      "disposition": "duplicate",
+      "rejection_reason": "URL already appears in research-references.md"
+    },
+    {
+      "stable_id": "logical:kona-ebms-energy-based-models",
+      "title": "Kona: Energy-Based Models for AI Reasoning",
+      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+      "source_channel": "logical_intelligence",
+      "source_kind": "first_party",
+      "source_timestamp": "2026-06-26T00:00:00Z",
+      "date_evidence": "page date predates the marker",
+      "scope_effect": "Strategic context only; no public Kona weights or local API route.",
+      "reproducible_evidence": false,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:79de25fa5635e5a2d837b3565a8b54476a5567849ff88de2fd94f0395967df68",
+      "disposition": "duplicate",
+      "rejection_reason": "URL already appears in research-references.md"
+    }
+  ],
+  "accepted_count": 0,
+  "references_append_receipt": {
+    "reference_hash_before": "sha256:9136f20a0ae9b87af9de784a68116eae103b48a612dc50acde8a48162b7efe44",
+    "reference_hash_after": "sha256:9136f20a0ae9b87af9de784a68116eae103b48a612dc50acde8a48162b7efe44",
+    "references_byte_identical": true,
+    "append_count": 0,
+    "append_heading": null,
+    "append_status": "complete_null"
+  },
+  "frozen_asp_semantics_contract": {
+    "version": "v541.6273",
+    "bounded_subset": [
+      "facts",
+      "grounded rules",
+      "default negation",
+      "integrity constraints",
+      "cardinality constraints"
+    ],
+    "exact_asp_solver_is_oracle": true,
+    "oracle_boundary": "The exact ASP solver defines formal correctness and is not an oracle-distinct verifier.",
+    "llm_authored_theories_allowed": false,
+    "claim_limit": "ASP energy terms support exact verification and repair only."
+  },
+  "frozen_flagship_benchmark_contract": {
+    "version": "v541.6273",
+    "models": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "model_weight_mutation_allowed": false,
+    "hidden_formal_sidecar_required": true,
+    "ordinary_candidate_assignments_only": true,
+    "external_text_scorer_allowed": false
+  },
+  "frozen_certified_cache_contract": {
+    "version": "v541.6273",
+    "positive_negative_caches": true,
+    "entropy_gate_required": true,
+    "diversity_gate_required": true,
+    "frozen_reserve_required": true,
+    "impurity_reproduction_upper_bound_required": "<1",
+    "rollback_required": true
+  },
+  "frozen_chronological_csl_contract": {
+    "version": "v541.6273",
+    "continuous_learning_task": true,
+    "event_order": "strict chronological replay",
+    "decision_write_rule": "read immutable snapshot before outcome; write only after exact outcome",
+    "weight_mutation_allowed": false,
+    "replay_only_gain_is_live_path_result": false,
+    "heldout_family_audit_required": true
+  },
+  "frozen_variable_cardinality_sampler_contract": {
+    "version": "v541.6273",
+    "fixed_six_state_only": false,
+    "required_metadata": [
+      "family",
+      "shape",
+      "cardinality",
+      "encoding",
+      "proposal_domain"
+    ],
+    "fixture_families": [
+      "binary Ising",
+      "multistate Potts",
+      "bounded typed factor"
+    ],
+    "rust_python_parity_required": true,
+    "hardware_speedup_claim_allowed": false
+  },
+  "frozen_arc_live_provenance_contract": {
+    "version": "v541.6273",
+    "live_path_required": true,
+    "hidden_game_source_access_allowed": false,
+    "offline_ground_truth_search_allowed": false,
+    "per_game_adapter_allowed": false,
+    "level_solve_claim_allowed": false,
+    "registry_update_allowed": false
+  },
+  "frozen_hardware_boundary": {
+    "version": "v541.6273",
+    "current_board_execution_route_supported": false,
+    "current_tsu_execution_route_supported": false,
+    "hardware_claim_count": 0,
+    "claim_boundary": "No current board or TSU route supports execution, speed, power, energy-efficiency, or availability claims.",
+    "allowed_statement": "Hardware and Extropic remain watch-only until authenticated execution receipts exist."
+  },
+  "roadmap_path_and_hash": {
+    "requested_path": "research-roadmap-next.yaml",
+    "audited_path": "research-roadmap.yaml",
+    "requested_missing": true,
+    "selection_note": "research-roadmap-next.yaml missing; audited active V541 roadmap",
+    "sha256": "sha256:6fdc2b479e236570684f130d95d8b0a78d51c2d76e580382da7bb8b298377501",
+    "milestone": "2026.08.541"
+  },
+  "roadmap_schema_result": {
+    "passed": true,
+    "task_count": 12,
+    "milestone": "2026.08.541",
+    "model": "scripts.roadmap_schema.Roadmap"
+  },
+  "exclusion_manifest_lint_result": {
+    "passed": true,
+    "risk_count": 0,
+    "hard_risk_count": 0,
+    "risks": []
+  },
+  "prior_failure_contract_result": {
+    "passed": true,
+    "checked_task_count": 12,
+    "failure_count": 0,
+    "failures": []
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "unchanged": true,
+    "paths": {
+      "AGENTS.md": {
+        "before_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "after_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "CODEX.md": {
+        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "CLAUDE.md": {
+        "before_sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+        "after_sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "research-references.md": {
+        "before_sha256": "sha256:9136f20a0ae9b87af9de784a68116eae103b48a612dc50acde8a48162b7efe44",
+        "after_sha256": "sha256:9136f20a0ae9b87af9de784a68116eae103b48a612dc50acde8a48162b7efe44",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "research-roadmap.yaml": {
+        "before_sha256": "sha256:6fdc2b479e236570684f130d95d8b0a78d51c2d76e580382da7bb8b298377501",
+        "after_sha256": "sha256:6fdc2b479e236570684f130d95d8b0a78d51c2d76e580382da7bb8b298377501",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "research-roadmap-next.yaml": {
+        "before_sha256": null,
+        "after_sha256": null,
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "before_sha256": "sha256:20138e28cd4e94eb6a0ae4021794715e6acad9d309e4143d301f80457d5f1699",
+        "after_sha256": "sha256:20138e28cd4e94eb6a0ae4021794715e6acad9d309e4143d301f80457d5f1699",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "results/experiment_6272_v541_terminal_transition.json": {
+        "before_sha256": "sha256:4fe05425739ba4018d0112baf91894c808d8236f1e932e621430aa0edabd2e56",
+        "after_sha256": "sha256:4fe05425739ba4018d0112baf91894c808d8236f1e932e621430aa0edabd2e56",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "before_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "after_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "ops/known-issues.md": {
+        "before_sha256": "sha256:ab76483ac487f6e8914c0b3e8f91809756b5a00ed72c5ad9e86b69ab2b22bba7",
+        "after_sha256": "sha256:ab76483ac487f6e8914c0b3e8f91809756b5a00ed72c5ad9e86b69ab2b22bba7",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "before_sha256": "sha256:2beeef9f397c67c4f7542b0a33276b6af1d3c416afa03987dfc28956316ee6ac",
+        "after_sha256": "sha256:2beeef9f397c67c4f7542b0a33276b6af1d3c416afa03987dfc28956316ee6ac",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "before_sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+        "after_sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "_bmad/traceability.md": {
+        "before_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "after_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "before_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "after_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "openspec/capabilities/research-harnesses/spec.md": {
+        "before_sha256": "sha256:5c3aba7a63aede1bde180f32b1ef3ee742b25531f21cc47594658a5d7331d372",
+        "after_sha256": "sha256:5c3aba7a63aede1bde180f32b1ef3ee742b25531f21cc47594658a5d7331d372",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      }
+    }
+  },
+  "preconditions_checked": {
+    "git_status_before": [
+      " M openspec/capabilities/research-harnesses/spec.md",
+      "?? python/carnot/experiment_6273_v541_post_marker_source_scope_freeze.py",
+      "?? tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py"
+    ],
+    "git_status_after_tests": [
+      " M openspec/capabilities/research-harnesses/spec.md",
+      "?? python/carnot/experiment_6273_v541_post_marker_source_scope_freeze.py",
+      "?? tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py"
+    ],
+    "input_hashes": {
+      "CODEX.md": {
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "CLAUDE.md": {
+        "present": true,
+        "sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59"
+      },
+      "research-references.md": {
+        "present": true,
+        "sha256": "sha256:9136f20a0ae9b87af9de784a68116eae103b48a612dc50acde8a48162b7efe44"
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "present": true,
+        "sha256": "sha256:20138e28cd4e94eb6a0ae4021794715e6acad9d309e4143d301f80457d5f1699"
+      },
+      "research-roadmap.yaml": {
+        "present": true,
+        "sha256": "sha256:6fdc2b479e236570684f130d95d8b0a78d51c2d76e580382da7bb8b298377501"
+      },
+      "research-roadmap-next.yaml": {
+        "present": false,
+        "sha256": null
+      },
+      "results/experiment_6272_v541_terminal_transition.json": {
+        "present": true,
+        "sha256": "sha256:4fe05425739ba4018d0112baf91894c808d8236f1e932e621430aa0edabd2e56"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "present": true,
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+      },
+      "ops/known-issues.md": {
+        "present": true,
+        "sha256": "sha256:ab76483ac487f6e8914c0b3e8f91809756b5a00ed72c5ad9e86b69ab2b22bba7"
+      },
+      "scripts/sweep_clusters.py": {
+        "present": true,
+        "sha256": "sha256:04cd28779f763d369af1d7aa1934602fb841cc48b119440608d127b027d131d0"
+      },
+      "scripts/sweep_semscholar.py": {
+        "present": true,
+        "sha256": "sha256:cf0ee3b6e9d0f64987fa93dfe15ae4cb3c02c2a3b09e265d720ed8c1d9941351"
+      }
+    },
+    "protected_hashes_before": {
+      "AGENTS.md": {
+        "present": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CODEX.md": {
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "CLAUDE.md": {
+        "present": true,
+        "sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59"
+      },
+      "research-references.md": {
+        "present": true,
+        "sha256": "sha256:9136f20a0ae9b87af9de784a68116eae103b48a612dc50acde8a48162b7efe44"
+      },
+      "research-roadmap.yaml": {
+        "present": true,
+        "sha256": "sha256:6fdc2b479e236570684f130d95d8b0a78d51c2d76e580382da7bb8b298377501"
+      },
+      "research-roadmap-next.yaml": {
+        "present": false,
+        "sha256": null
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "present": true,
+        "sha256": "sha256:20138e28cd4e94eb6a0ae4021794715e6acad9d309e4143d301f80457d5f1699"
+      },
+      "results/experiment_6272_v541_terminal_transition.json": {
+        "present": true,
+        "sha256": "sha256:4fe05425739ba4018d0112baf91894c808d8236f1e932e621430aa0edabd2e56"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "present": true,
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+      },
+      "ops/known-issues.md": {
+        "present": true,
+        "sha256": "sha256:ab76483ac487f6e8914c0b3e8f91809756b5a00ed72c5ad9e86b69ab2b22bba7"
+      },
+      "ops/changelog.md": {
+        "present": true,
+        "sha256": "sha256:2beeef9f397c67c4f7542b0a33276b6af1d3c416afa03987dfc28956316ee6ac"
+      },
+      "ops/status.md": {
+        "present": true,
+        "sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb"
+      },
+      "_bmad/traceability.md": {
+        "present": true,
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "scripts/research_conductor.py": {
+        "present": true,
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      },
+      "openspec/capabilities/research-harnesses/spec.md": {
+        "present": true,
+        "sha256": "sha256:5c3aba7a63aede1bde180f32b1ef3ee742b25531f21cc47594658a5d7331d372"
+      }
+    },
+    "exclusive_lower_time_bound": "2026-08-10T12:50:11Z",
+    "source_channel_count": 7,
+    "gate_audit_result": {
+      "n_tasks_audited": 12,
+      "n_gate_upstream_checks": 5,
+      "n_gate_upstream_failures": 0,
+      "n_prior_failures_checks": 12,
+      "n_prior_failures_missing": 0,
+      "n_model_agent_coherence_failures": 0,
+      "n_gate_field_cross_ref_failures": 0,
+      "roadmap_gate_audit_passed": true,
+      "failure_details": [],
+      "audit_script_written": true,
+      "honest_verdict": "all_checks_pass"
+    },
+    "collision_result": {
+      "passed": true,
+      "collision_count": 0,
+      "collisions": []
+    },
+    "model_policy_result": {
+      "passed": true,
+      "policy": "V541 direct routing was validated by Exp6272; Exp6273 records the frozen active roadmap.",
+      "checked_task_count": 12
+    },
+    "prompt_ending_result": {
+      "passed": true,
+      "failure_task_ids": [],
+      "required_ending": "Do NOT push. Do NOT modify scripts/research_conductor.py."
+    },
+    "prior_failure_contract_result": {
+      "passed": true,
+      "checked_task_count": 12,
+      "failure_count": 0,
+      "failures": []
+    },
+    "nonmutating_e2e_check": "ops/e2e-test-plan.md inspected; no Exp6273 mutating E2E applies."
+  },
+  "inference_substrate": "post_marker_source_ingestion_and_v541_scope_freeze",
+  "verifier_is_oracle": false,
+  "field_provenance": {
+    "status": {
+      "principle": "The freeze is complete only when source, roadmap, and contract checks pass.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "planner_marker_and_hash": {
+      "principle": "The exact marker defines the novelty boundary.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "query_window": {
+      "principle": "The lower bound is exclusive, so same-time evidence cannot enter.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "source_channel_receipts": {
+      "principle": "Every required channel records how the null was reached.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "discovered_candidates": {
+      "principle": "Rejected rows stay visible for reproducibility.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "accepted_findings": {
+      "principle": "Only stable post-marker findings may change references.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "rejected_duplicate_or_watch_only_findings": {
+      "principle": "Duplicates and watch-only rows cannot move V541 scope.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "accepted_count": {
+      "principle": "A bare integer drives null versus append behavior.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "references_append_receipt": {
+      "principle": "The reference ledger must be unchanged for a null search.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_asp_semantics_contract": {
+      "principle": "ASP semantics must be exact and solver-checked.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_flagship_benchmark_contract": {
+      "principle": "Flagship GGUF rows need sealed sidecars and frozen weights.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_certified_cache_contract": {
+      "principle": "Cache admission must be certified under shift.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_chronological_csl_contract": {
+      "principle": "Continuous learning must preserve chronological causality.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_variable_cardinality_sampler_contract": {
+      "principle": "Sampler claims need typed cardinalities, not one vector shape.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_arc_live_provenance_contract": {
+      "principle": "ARC facts must come from the live path only.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_hardware_boundary": {
+      "principle": "No board or TSU claim is allowed without an execution route.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "roadmap_path_and_hash": {
+      "principle": "The audited roadmap identity is content-addressed.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "roadmap_schema_result": {
+      "principle": "Schema parsing catches malformed roadmap contracts.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "exclusion_manifest_lint_result": {
+      "principle": "Retired scopes remain closed by default.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "prior_failure_contract_result": {
+      "principle": "Reruns must state the prior failure and the changed mechanism.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Protected files are hash-checked around the artifact write.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Input hashes, git status, searches, and nonmutating checks are recorded.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "This is deterministic source ingestion and V541 scope freezing.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "False because no benchmark answer is verified.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every required field cites concrete evidence.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "field_principles": {
+      "principle": "Every required field states why it exists.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "test_commands": {
+      "principle": "Command names show how the artifact was verified.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes keep failed checks from being hidden.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "duration_s": {
+      "principle": "Wall time is reported without padding.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "The normalized payload is content-addressed.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The terminal verdict states null, delta, or block directly.",
+      "sources": [
+        "REQ-INFRA-6273",
+        "research-references V541 marker",
+        "source channel receipts",
+        "V541 roadmap validators",
+        "frozen contract serializers"
+      ]
+    }
+  },
+  "field_principles": {
+    "status": "The freeze is complete only when source, roadmap, and contract checks pass.",
+    "planner_marker_and_hash": "The exact marker defines the novelty boundary.",
+    "query_window": "The lower bound is exclusive, so same-time evidence cannot enter.",
+    "source_channel_receipts": "Every required channel records how the null was reached.",
+    "discovered_candidates": "Rejected rows stay visible for reproducibility.",
+    "accepted_findings": "Only stable post-marker findings may change references.",
+    "rejected_duplicate_or_watch_only_findings": "Duplicates and watch-only rows cannot move V541 scope.",
+    "accepted_count": "A bare integer drives null versus append behavior.",
+    "references_append_receipt": "The reference ledger must be unchanged for a null search.",
+    "frozen_asp_semantics_contract": "ASP semantics must be exact and solver-checked.",
+    "frozen_flagship_benchmark_contract": "Flagship GGUF rows need sealed sidecars and frozen weights.",
+    "frozen_certified_cache_contract": "Cache admission must be certified under shift.",
+    "frozen_chronological_csl_contract": "Continuous learning must preserve chronological causality.",
+    "frozen_variable_cardinality_sampler_contract": "Sampler claims need typed cardinalities, not one vector shape.",
+    "frozen_arc_live_provenance_contract": "ARC facts must come from the live path only.",
+    "frozen_hardware_boundary": "No board or TSU claim is allowed without an execution route.",
+    "roadmap_path_and_hash": "The audited roadmap identity is content-addressed.",
+    "roadmap_schema_result": "Schema parsing catches malformed roadmap contracts.",
+    "exclusion_manifest_lint_result": "Retired scopes remain closed by default.",
+    "prior_failure_contract_result": "Reruns must state the prior failure and the changed mechanism.",
+    "protected_files_unchanged": "Protected files are hash-checked around the artifact write.",
+    "preconditions_checked": "Input hashes, git status, searches, and nonmutating checks are recorded.",
+    "inference_substrate": "This is deterministic source ingestion and V541 scope freezing.",
+    "verifier_is_oracle": "False because no benchmark answer is verified.",
+    "field_provenance": "Every required field cites concrete evidence.",
+    "field_principles": "Every required field states why it exists.",
+    "test_commands": "Command names show how the artifact was verified.",
+    "test_exit_codes": "Exit codes keep failed checks from being hidden.",
+    "duration_s": "Wall time is reported without padding.",
+    "reproducibility_checksum": "The normalized payload is content-addressed.",
+    "honest_verdict": "The terminal verdict states null, delta, or block directly."
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6273_v541_post_marker_source_scope_freeze.py -m pytest tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6273_v541_post_marker_source_scope_freeze.py --fail-under=100 --show-missing",
+    ".venv/bin/ruff check python/carnot/experiment_6273_v541_post_marker_source_scope_freeze.py tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_6273_v541_post_marker_source_scope_freeze.py tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py",
+    ".venv/bin/python -m carnot.experiment_6273_v541_post_marker_source_scope_freeze --check-roadmap-only",
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "sed -n 1,220p ops/e2e-test-plan.md",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6273_v541_post_marker_source_scope_freeze.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/pytest tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6273_v541_post_marker_source_scope_freeze.py -m pytest tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6273_v541_post_marker_source_scope_freeze.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/ruff check python/carnot/experiment_6273_v541_post_marker_source_scope_freeze.py tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_6273_v541_post_marker_source_scope_freeze.py tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py": 0,
+    ".venv/bin/python -m carnot.experiment_6273_v541_post_marker_source_scope_freeze --check-roadmap-only": 0,
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    "sed -n 1,220p ops/e2e-test-plan.md": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6273_v541_post_marker_source_scope_freeze.json": 0
+  },
+  "duration_s": 7.1805877150036395,
+  "reproducibility_checksum": "sha256:95f16eb310bc9a6a6e9e2ab262e3e178a71af904b06fb915c79f4123bc179243",
+  "honest_verdict": "complete_null: accepted_count=0; no reproducible post-V541-marker findings; references unchanged; V541 contracts frozen"
+}

@@ -2100,6 +2100,102 @@ AND protected files remain byte-identical except the task-owned result.
 |---|---|---|
 | REQ-INFRA-6272 | Pending implementation: `python/carnot/experiment_6272_v541_terminal_transition.py`; terminal artifact `results/experiment_6272_v541_terminal_transition.json`. | Pending focused tests: `tests/python/test_experiment_6272_v541_terminal_transition.py`. |
 
+## REQ-INFRA-6273: V541 Post-Marker Source Scope Freeze SHALL Be Strict, Null-Safe, And Contract-Complete
+
+Carnot SHALL build Exp6273 as a deterministic V541 post-marker source sweep
+and scope freeze. The sweep SHALL hash the exact
+`<!-- V541-PLANNER-REFRESH-20260810-END -->` marker and SHALL accept only
+stable, reproducible evidence dated strictly after the marker commit time.
+Evidence at the marker time, before the marker time, or with only a bare same
+day date SHALL be rejected before any reference append.
+
+Exp6273 SHALL record receipts for arXiv, OpenReview, Extropic, Semantic
+Scholar EBT and ARM-EBM citation routes, Hugging Face Papers, targeted GitHub,
+and Logical Intelligence. It SHALL deduplicate candidates against all earlier
+`research-references.md` blocks and prior candidate identifiers. A zero-source
+delta SHALL be terminal. In that case `research-references.md` SHALL remain
+byte-identical, `accepted_count` SHALL be the bare integer `0`, and
+`honest_verdict` SHALL start with `complete_null:`.
+
+Exp6273 SHALL freeze machine-readable contracts for ASP semantics, the
+flagship GGUF benchmark, certified cache admission, chronological
+self-learning, variable-cardinality sampling, ARC live provenance, and the
+hardware boundary. The ASP contract SHALL state that an exact ASP solver is an
+oracle. The hardware boundary SHALL state that no current board or TSU route
+supports Carnot execution, speed, power, energy-efficiency, or availability
+claims.
+
+The Exp6273 artifact SHALL be written atomically to
+`results/experiment_6273_v541_post_marker_source_scope_freeze.json` with
+`inference_substrate=post_marker_source_ingestion_and_v541_scope_freeze` and
+`verifier_is_oracle=false`. It SHALL audit the V541 roadmap without editing
+`research-roadmap.yaml`.
+
+The Exp6273 artifact SHALL include these required fields: `status`,
+`planner_marker_and_hash`, `query_window`, `source_channel_receipts`,
+`discovered_candidates`, `accepted_findings`,
+`rejected_duplicate_or_watch_only_findings`, `accepted_count`,
+`references_append_receipt`, `frozen_asp_semantics_contract`,
+`frozen_flagship_benchmark_contract`, `frozen_certified_cache_contract`,
+`frozen_chronological_csl_contract`,
+`frozen_variable_cardinality_sampler_contract`,
+`frozen_arc_live_provenance_contract`, `frozen_hardware_boundary`,
+`roadmap_path_and_hash`, `roadmap_schema_result`,
+`exclusion_manifest_lint_result`, `prior_failure_contract_result`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INFRA-6273-1: Marker Bound Is Exclusive
+
+GIVEN the sealed V541 planner refresh marker in `research-references.md`
+WHEN Exp6273 classifies a candidate at or before the marker commit time
+THEN the candidate is rejected, and a bare same-day date is rejected unless a
+strictly later timestamp is present.
+
+### SCENARIO-INFRA-6273-2: Zero Findings Preserve References
+
+GIVEN every source channel returns no strictly later stable evidence, duplicate
+evidence, pre-marker evidence, or watch-only evidence
+WHEN Exp6273 writes its artifact
+THEN `accepted_count` is the bare integer `0`, `accepted_findings` is empty,
+`research-references.md` is byte-identical, and `honest_verdict` starts with
+`complete_null:`.
+
+### SCENARIO-INFRA-6273-3: Stable URLs And Duplicates Fail Closed
+
+GIVEN a candidate has no stable URL, repeats an earlier source id, repeats an
+existing reference block, or lacks a scope-changing reproducible dependency
+WHEN Exp6273 deduplicates the candidate ledger
+THEN the row is recorded only in
+`rejected_duplicate_or_watch_only_findings`.
+
+### SCENARIO-INFRA-6273-4: Frozen Contracts Preserve V541 Boundaries
+
+GIVEN the V541 roadmap depends on ASP semantics, flagship GGUF verification,
+certified cache admission, chronological CSL, variable-cardinality sampling,
+ARC live provenance, and no hardware claim
+WHEN Exp6273 serializes the frozen contracts
+THEN each contract has a stable version, required boundary fields, an ASP
+oracle statement, immutable GGUF weights, live ARC provenance, and explicit
+claim limits for boards and TSU routes.
+
+### SCENARIO-INFRA-6273-5: Artifact Schema Is Principle Annotated
+
+GIVEN source receipts, roadmap receipts, protected hashes, field principles,
+and command receipts
+WHEN Exp6273 validates the report before writing
+THEN every required field is present, every field has provenance and a
+principle, `verifier_is_oracle=false`, the checksum matches the normalized
+payload, and the honest verdict has a terminal prefix.
+
+## Implementation Status (REQ-INFRA-6273)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6273 | Pending implementation: `python/carnot/experiment_6273_v541_post_marker_source_scope_freeze.py`; terminal artifact `results/experiment_6273_v541_post_marker_source_scope_freeze.json`. | Pending focused tests: `tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
