@@ -24557,8 +24557,61 @@ refactor prompt carries Y.
 Given `CARNOT_ARC_E3_DIR` unset, the experiment script exits before any collection, induction,
 or store write -- the shared `results/arc_e3` store is never touched.
 
+#### UPDATE 2026-08-09 — RESULT: gate NOT met (2 of 6 games), but a real, large per-game win on ka59
+
+Ran to completion with the conductor and orphan-cleanup timer stopped for the whole run (per the
+same isolation protocol as REQ-ARC-WMTE-6247's clean retry). All 12 cells (6 games x 2 arms)
+completed on the first attempt, `generator_healthy_after=true` throughout -- no reaper hits, no
+server storms, a fully clean measurement.
+
+| game | linear (held change_fidelity) | rex | delta |
+|---|---|---|---|
+| ft09 | 0.0 | 0.0 | 0.0 |
+| tr87 | 0.1253 | 0.3965 | **+0.2712** |
+| cn04 | 0.0863 | 0.0553 | -0.031 |
+| ar25 | 0.6149 | 0.3071 | -0.3078 |
+| ka59 | 0.3125 | **0.9792** | **+0.6667** |
+| re86 | 0.4871 | 0.2491 | -0.238 |
+
+`n_games_comparable=6`, `n_games_rex_improved=2`, `pooled_mean_delta=+0.0602` (positive only
+because ka59's single large win outweighs three moderate losses -- read the mean as an artifact
+of one outlier, not as evidence of typical benefit), `any_candidate_reached_trust_threshold=true`
+(ka59's 0.9792 clears the 0.5 live-trust gate by a wide margin). `honest_verdict:
+complete_rex_gate_not_met_2_of_6_games_pooled_delta_0.0602_variant_retired`.
+
+**Gate result: NOT MET.** The pre-registered bar (>= 4 of 6 games improved AND pooled delta > 0)
+required BOTH conditions; only the pooled-delta half passed, on the strength of one outlier.
+2 of 6 improved is a clean, real negative for REx as a BLANKET replacement for the linear
+refinement lineage. Per the pre-registration in §3, **this retires the Pinductor-style REx
+variant** (`retire_if_same_verdict` semantics) -- it does not get re-proposed as a universal
+lever without a new mechanism class and a fresh operator decision.
+
+**What is NOT retired by this result: the possibility that REx helps on a per-game or
+per-mechanic-class basis rather than universally.** ka59's +0.6667 is not noise-sized -- it took
+the induced engine from below the live trust threshold (0.3125) to well above it (0.9792) at the
+SAME LLM-call budget as linear. tr87 also improved meaningfully (+0.2712). Both wins and both
+losses were roughly comparable in magnitude (0.03-0.67), so the failure mode is not "REx never
+helps," it is "REx does not help UNCONDITIONALLY, and this experiment cannot distinguish which
+games benefit from which don't." A follow-up question worth recording (not proposed as a next
+action, since the retirement above is unconditional pending a fresh operator decision): does
+ka59/tr87 share a structural property (e.g. a game class where UCB1's return-to-a-strong-parent
+behavior matters more than QBC's counterexample reordering, or vice versa) that could predict
+which future games would benefit, versus a per-game gamble with no predictive signal? That
+question was not investigated here.
+
+**Fixed one schema gap found while verifying:** the artifact initially lacked a top-level
+`status` field (a field this experiment's own sibling artifacts, e.g. REQ-ARC-WMTE-6246/6247,
+also lack) and tripped a CRITICAL `NONTERMINAL_DECLARED_ARTIFACT` flag under
+`carnot.terminal_artifacts` -- code that is itself uncommitted, in-flight work from a concurrent
+session at the time this ran. Added `status: "complete"` (matching the project's existing
+convention elsewhere in `results/`); `adversarial_verify.py` and
+`determination_preservation_lint.py` both clean after the fix. Not a defect in this experiment's
+own honesty -- the `honest_verdict` field was always correct and terminal-prefixed; the flag was
+a stricter-than-before schema check that this artifact (and others predating it) simply hadn't
+been written against yet.
+
 ## Implementation Status (REQ-ARC-WMTE-6248)
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-ARC-WMTE-6248 | `python/carnot/agentic/arc_rex_refinement.py` (UCB1 + QBC + candidate tree, one code path for both arms); `scripts/experiments/experiment_6248_pinductor_rex_ab.py` (prepared, launch staged in the plan note -- NOT yet run). | `tests/python/test_arc_rex_refinement.py` (CPU-only: UCB1 math, entropy edges, QBC reordering, budget accounting, arm behavioral difference, final selection, fake-proposer control flow). |
+| REQ-ARC-WMTE-6248 | `python/carnot/agentic/arc_rex_refinement.py` (UCB1 + QBC + candidate tree, one code path for both arms); `scripts/experiments/experiment_6248_pinductor_rex_ab.py` (run 2026-08-09, clean, 12/12 cells valid). | `tests/python/test_arc_rex_refinement.py` (CPU-only: UCB1 math, entropy edges, QBC reordering, budget accounting, arm behavioral difference, final selection, fake-proposer control flow, 18/18 passing) + `results/experiment_6248_pinductor_rex_ab.json` (the live A/B: gate NOT met, 2/6 games improved, pooled delta +0.0602 driven by one outlier, ka59 crossed the live-trust threshold; Pinductor-style REx retired as a blanket lever per `retire_if_same_verdict`). |

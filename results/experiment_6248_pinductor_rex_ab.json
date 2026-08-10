@@ -1,0 +1,1095 @@
+{
+  "experiment": "experiment_6248_pinductor_rex_ab",
+  "title": "Pinductor-style REx refinement A/B: UCB1+QBC population search vs linear lineage",
+  "run_date": "2026-08-10T03:38:54Z",
+  "roster": [
+    "ft09",
+    "tr87",
+    "cn04",
+    "ar25",
+    "ka59",
+    "re86"
+  ],
+  "budget_llm_calls_per_arm_cell": 4,
+  "n_collect": 60,
+  "n_valid": 10,
+  "n_held": 10,
+  "per_game_results": [
+    {
+      "game": "ft09",
+      "arm": "linear",
+      "llm_calls": 4,
+      "nodes": [
+        {
+          "idx": 0,
+          "parent": null,
+          "valid_fidelity": 0.0,
+          "valid_accuracy": 1.0,
+          "n_visit": 1,
+          "n_mismatches": 0
+        },
+        {
+          "idx": 1,
+          "parent": 0,
+          "valid_fidelity": 0.0,
+          "valid_accuracy": 1.0,
+          "n_visit": 1,
+          "n_mismatches": 0
+        },
+        {
+          "idx": 2,
+          "parent": 1,
+          "valid_fidelity": 0.0,
+          "valid_accuracy": 1.0,
+          "n_visit": 1,
+          "n_mismatches": 0
+        }
+      ],
+      "events": [
+        {
+          "round": 0,
+          "kind": "induce",
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 1,
+          "kind": "refactor",
+          "parent": 0,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 2,
+          "kind": "refactor",
+          "parent": 1,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 3,
+          "kind": "refactor",
+          "parent": 2,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 3,
+          "kind": "no_new_source",
+          "parent": 2
+        }
+      ],
+      "final_idx": 0,
+      "final_valid_fidelity": 0.0,
+      "wall_s": 144.7,
+      "generator_healthy_after": true,
+      "held_change_fidelity": 0.0,
+      "held_accuracy": 1.0,
+      "held_cell_recall": 0.0,
+      "held_n_changing": 0,
+      "hud_mask_status": "refused_swallow_check_unmeasurable",
+      "held_per_node": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "held_best_any_candidate": 0.0
+    },
+    {
+      "game": "ft09",
+      "arm": "rex",
+      "llm_calls": 4,
+      "nodes": [
+        {
+          "idx": 0,
+          "parent": null,
+          "valid_fidelity": 0.0,
+          "valid_accuracy": 1.0,
+          "n_visit": 1,
+          "n_mismatches": 0
+        },
+        {
+          "idx": 1,
+          "parent": 0,
+          "valid_fidelity": 0.0,
+          "valid_accuracy": 1.0,
+          "n_visit": 1,
+          "n_mismatches": 0
+        },
+        {
+          "idx": 2,
+          "parent": 1,
+          "valid_fidelity": 0.0,
+          "valid_accuracy": 1.0,
+          "n_visit": 1,
+          "n_mismatches": 0
+        },
+        {
+          "idx": 3,
+          "parent": 2,
+          "valid_fidelity": 0.0,
+          "valid_accuracy": 1.0,
+          "n_visit": 0,
+          "n_mismatches": 0
+        }
+      ],
+      "events": [
+        {
+          "round": 0,
+          "kind": "induce",
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 1,
+          "kind": "refactor",
+          "parent": 0,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 2,
+          "kind": "refactor",
+          "parent": 1,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 3,
+          "kind": "refactor",
+          "parent": 2,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        }
+      ],
+      "final_idx": 0,
+      "final_valid_fidelity": 0.0,
+      "wall_s": 162.0,
+      "generator_healthy_after": true,
+      "held_change_fidelity": 0.0,
+      "held_accuracy": 1.0,
+      "held_cell_recall": 0.0,
+      "held_n_changing": 0,
+      "hud_mask_status": "refused_swallow_check_unmeasurable",
+      "held_per_node": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "held_best_any_candidate": 0.0
+    },
+    {
+      "game": "tr87",
+      "arm": "linear",
+      "llm_calls": 4,
+      "nodes": [
+        {
+          "idx": 0,
+          "parent": null,
+          "valid_fidelity": 0.1167,
+          "valid_accuracy": 0.0,
+          "n_visit": 1,
+          "n_mismatches": 10
+        },
+        {
+          "idx": 1,
+          "parent": 0,
+          "valid_fidelity": 0.0482,
+          "valid_accuracy": 0.0,
+          "n_visit": 1,
+          "n_mismatches": 10
+        },
+        {
+          "idx": 2,
+          "parent": 1,
+          "valid_fidelity": 0.0482,
+          "valid_accuracy": 0.0,
+          "n_visit": 1,
+          "n_mismatches": 10
+        },
+        {
+          "idx": 3,
+          "parent": 2,
+          "valid_fidelity": 0.0482,
+          "valid_accuracy": 0.0,
+          "n_visit": 0,
+          "n_mismatches": 10
+        }
+      ],
+      "events": [
+        {
+          "round": 0,
+          "kind": "induce",
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 1,
+          "kind": "refactor",
+          "parent": 0,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 2,
+          "kind": "refactor",
+          "parent": 1,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 3,
+          "kind": "refactor",
+          "parent": 2,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        }
+      ],
+      "final_idx": 0,
+      "final_valid_fidelity": 0.1167,
+      "wall_s": 723.5,
+      "generator_healthy_after": true,
+      "held_change_fidelity": 0.1253,
+      "held_accuracy": 0.0,
+      "held_cell_recall": 0.25,
+      "held_n_changing": 10,
+      "hud_mask_status": "applied",
+      "held_per_node": [
+        0.1253,
+        0.0152,
+        0.0152,
+        0.0152
+      ],
+      "held_best_any_candidate": 0.1253
+    },
+    {
+      "game": "tr87",
+      "arm": "rex",
+      "llm_calls": 4,
+      "nodes": [
+        {
+          "idx": 0,
+          "parent": null,
+          "valid_fidelity": 0.76,
+          "valid_accuracy": 0.6,
+          "n_visit": 1,
+          "n_mismatches": 4
+        },
+        {
+          "idx": 1,
+          "parent": 0,
+          "valid_fidelity": 0.8,
+          "valid_accuracy": 0.6,
+          "n_visit": 1,
+          "n_mismatches": 4
+        },
+        {
+          "idx": 2,
+          "parent": 1,
+          "valid_fidelity": 0.8,
+          "valid_accuracy": 0.6,
+          "n_visit": 1,
+          "n_mismatches": 4
+        },
+        {
+          "idx": 3,
+          "parent": 2,
+          "valid_fidelity": 0.8,
+          "valid_accuracy": 0.6,
+          "n_visit": 0,
+          "n_mismatches": 4
+        }
+      ],
+      "events": [
+        {
+          "round": 0,
+          "kind": "induce",
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 1,
+          "kind": "refactor",
+          "parent": 0,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 2,
+          "kind": "refactor",
+          "parent": 1,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 3,
+          "kind": "refactor",
+          "parent": 2,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        }
+      ],
+      "final_idx": 1,
+      "final_valid_fidelity": 0.8,
+      "wall_s": 373.4,
+      "generator_healthy_after": true,
+      "held_change_fidelity": 0.3965,
+      "held_accuracy": 0.2,
+      "held_cell_recall": 0.4548,
+      "held_n_changing": 10,
+      "hud_mask_status": "applied",
+      "held_per_node": [
+        0.42,
+        0.3965,
+        0.3965,
+        0.3965
+      ],
+      "held_best_any_candidate": 0.42
+    },
+    {
+      "game": "cn04",
+      "arm": "linear",
+      "llm_calls": 4,
+      "nodes": [
+        {
+          "idx": 0,
+          "parent": null,
+          "valid_fidelity": 0.0855,
+          "valid_accuracy": 0.3,
+          "n_visit": 1,
+          "n_mismatches": 7
+        },
+        {
+          "idx": 1,
+          "parent": 0,
+          "valid_fidelity": 0.0855,
+          "valid_accuracy": 0.3,
+          "n_visit": 1,
+          "n_mismatches": 7
+        },
+        {
+          "idx": 2,
+          "parent": 1,
+          "valid_fidelity": 0.0855,
+          "valid_accuracy": 0.3,
+          "n_visit": 1,
+          "n_mismatches": 7
+        },
+        {
+          "idx": 3,
+          "parent": 2,
+          "valid_fidelity": 0.0855,
+          "valid_accuracy": 0.3,
+          "n_visit": 0,
+          "n_mismatches": 7
+        }
+      ],
+      "events": [
+        {
+          "round": 0,
+          "kind": "induce",
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 1,
+          "kind": "refactor",
+          "parent": 0,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 2,
+          "kind": "refactor",
+          "parent": 1,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 3,
+          "kind": "refactor",
+          "parent": 2,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        }
+      ],
+      "final_idx": 0,
+      "final_valid_fidelity": 0.0855,
+      "wall_s": 904.9,
+      "generator_healthy_after": true,
+      "held_change_fidelity": 0.0863,
+      "held_accuracy": 0.1,
+      "held_cell_recall": 0.2557,
+      "held_n_changing": 9,
+      "hud_mask_status": "unresolved",
+      "held_per_node": [
+        0.0863,
+        0.0863,
+        0.0863,
+        0.0863
+      ],
+      "held_best_any_candidate": 0.0863
+    },
+    {
+      "game": "cn04",
+      "arm": "rex",
+      "llm_calls": 4,
+      "nodes": [
+        {
+          "idx": 0,
+          "parent": null,
+          "valid_fidelity": 0.0427,
+          "valid_accuracy": 0.0,
+          "n_visit": 1,
+          "n_mismatches": 10
+        },
+        {
+          "idx": 1,
+          "parent": 0,
+          "valid_fidelity": 0.0249,
+          "valid_accuracy": 0.0,
+          "n_visit": 1,
+          "n_mismatches": 10
+        },
+        {
+          "idx": 2,
+          "parent": 1,
+          "valid_fidelity": 0.0249,
+          "valid_accuracy": 0.0,
+          "n_visit": 1,
+          "n_mismatches": 10
+        },
+        {
+          "idx": 3,
+          "parent": 2,
+          "valid_fidelity": 0.0249,
+          "valid_accuracy": 0.0,
+          "n_visit": 0,
+          "n_mismatches": 10
+        }
+      ],
+      "events": [
+        {
+          "round": 0,
+          "kind": "induce",
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 1,
+          "kind": "refactor",
+          "parent": 0,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 2,
+          "kind": "refactor",
+          "parent": 1,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 3,
+          "kind": "refactor",
+          "parent": 2,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        }
+      ],
+      "final_idx": 0,
+      "final_valid_fidelity": 0.0427,
+      "wall_s": 1327.7,
+      "generator_healthy_after": true,
+      "held_change_fidelity": 0.0553,
+      "held_accuracy": 0.1,
+      "held_cell_recall": 0.1517,
+      "held_n_changing": 9,
+      "hud_mask_status": "unresolved",
+      "held_per_node": [
+        0.0553,
+        0.0309,
+        0.0319,
+        0.0319
+      ],
+      "held_best_any_candidate": 0.0553
+    },
+    {
+      "game": "ar25",
+      "arm": "linear",
+      "llm_calls": 4,
+      "nodes": [
+        {
+          "idx": 0,
+          "parent": null,
+          "valid_fidelity": 0.4695,
+          "valid_accuracy": 0.2,
+          "n_visit": 1,
+          "n_mismatches": 8
+        },
+        {
+          "idx": 1,
+          "parent": 0,
+          "valid_fidelity": 0.3553,
+          "valid_accuracy": 0.2,
+          "n_visit": 1,
+          "n_mismatches": 8
+        },
+        {
+          "idx": 2,
+          "parent": 1,
+          "valid_fidelity": 0.4241,
+          "valid_accuracy": 0.2,
+          "n_visit": 1,
+          "n_mismatches": 8
+        },
+        {
+          "idx": 3,
+          "parent": 2,
+          "valid_fidelity": 0.424,
+          "valid_accuracy": 0.2,
+          "n_visit": 0,
+          "n_mismatches": 8
+        }
+      ],
+      "events": [
+        {
+          "round": 0,
+          "kind": "induce",
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 1,
+          "kind": "refactor",
+          "parent": 0,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 2,
+          "kind": "refactor",
+          "parent": 1,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 3,
+          "kind": "refactor",
+          "parent": 2,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        }
+      ],
+      "final_idx": 0,
+      "final_valid_fidelity": 0.4695,
+      "wall_s": 587.4,
+      "generator_healthy_after": true,
+      "held_change_fidelity": 0.6149,
+      "held_accuracy": 0.2,
+      "held_cell_recall": 0.8349,
+      "held_n_changing": 9,
+      "hud_mask_status": "applied",
+      "held_per_node": [
+        0.6149,
+        0.3653,
+        0.3653,
+        0.3648
+      ],
+      "held_best_any_candidate": 0.6149
+    },
+    {
+      "game": "ar25",
+      "arm": "rex",
+      "llm_calls": 4,
+      "nodes": [
+        {
+          "idx": 0,
+          "parent": null,
+          "valid_fidelity": 0.3869,
+          "valid_accuracy": 0.2,
+          "n_visit": 1,
+          "n_mismatches": 8
+        },
+        {
+          "idx": 1,
+          "parent": 0,
+          "valid_fidelity": 0.3869,
+          "valid_accuracy": 0.2,
+          "n_visit": 1,
+          "n_mismatches": 8
+        },
+        {
+          "idx": 2,
+          "parent": 1,
+          "valid_fidelity": 0.3869,
+          "valid_accuracy": 0.2,
+          "n_visit": 1,
+          "n_mismatches": 8
+        },
+        {
+          "idx": 3,
+          "parent": 2,
+          "valid_fidelity": 0.3869,
+          "valid_accuracy": 0.2,
+          "n_visit": 0,
+          "n_mismatches": 8
+        }
+      ],
+      "events": [
+        {
+          "round": 0,
+          "kind": "induce",
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 1,
+          "kind": "refactor",
+          "parent": 0,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 2,
+          "kind": "refactor",
+          "parent": 1,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 3,
+          "kind": "refactor",
+          "parent": 2,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        }
+      ],
+      "final_idx": 0,
+      "final_valid_fidelity": 0.3869,
+      "wall_s": 516.2,
+      "generator_healthy_after": true,
+      "held_change_fidelity": 0.3071,
+      "held_accuracy": 0.2,
+      "held_cell_recall": 0.5138,
+      "held_n_changing": 9,
+      "hud_mask_status": "applied",
+      "held_per_node": [
+        0.3071,
+        0.3071,
+        0.3071,
+        0.3071
+      ],
+      "held_best_any_candidate": 0.3071
+    },
+    {
+      "game": "ka59",
+      "arm": "linear",
+      "llm_calls": 4,
+      "nodes": [
+        {
+          "idx": 0,
+          "parent": null,
+          "valid_fidelity": 0.1528,
+          "valid_accuracy": 0.6,
+          "n_visit": 1,
+          "n_mismatches": 4
+        },
+        {
+          "idx": 1,
+          "parent": 0,
+          "valid_fidelity": 0.1528,
+          "valid_accuracy": 0.6,
+          "n_visit": 1,
+          "n_mismatches": 4
+        },
+        {
+          "idx": 2,
+          "parent": 1,
+          "valid_fidelity": 0.1528,
+          "valid_accuracy": 0.6,
+          "n_visit": 1,
+          "n_mismatches": 4
+        },
+        {
+          "idx": 3,
+          "parent": 2,
+          "valid_fidelity": 0.1528,
+          "valid_accuracy": 0.6,
+          "n_visit": 0,
+          "n_mismatches": 4
+        }
+      ],
+      "events": [
+        {
+          "round": 0,
+          "kind": "induce",
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 1,
+          "kind": "refactor",
+          "parent": 0,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 2,
+          "kind": "refactor",
+          "parent": 1,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 3,
+          "kind": "refactor",
+          "parent": 2,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        }
+      ],
+      "final_idx": 0,
+      "final_valid_fidelity": 0.1528,
+      "wall_s": 2077.9,
+      "generator_healthy_after": true,
+      "held_change_fidelity": 0.3125,
+      "held_accuracy": 0.2,
+      "held_cell_recall": 0.3125,
+      "held_n_changing": 8,
+      "hud_mask_status": "applied",
+      "held_per_node": [
+        0.3125,
+        0.3125,
+        0.3125,
+        0.3125
+      ],
+      "held_best_any_candidate": 0.3125
+    },
+    {
+      "game": "ka59",
+      "arm": "rex",
+      "llm_calls": 4,
+      "nodes": [
+        {
+          "idx": 0,
+          "parent": null,
+          "valid_fidelity": 0.4722,
+          "valid_accuracy": 0.6,
+          "n_visit": 1,
+          "n_mismatches": 4
+        },
+        {
+          "idx": 1,
+          "parent": 0,
+          "valid_fidelity": 0.9444,
+          "valid_accuracy": 0.8,
+          "n_visit": 1,
+          "n_mismatches": 2
+        },
+        {
+          "idx": 2,
+          "parent": 1,
+          "valid_fidelity": 0.9444,
+          "valid_accuracy": 0.8,
+          "n_visit": 1,
+          "n_mismatches": 2
+        },
+        {
+          "idx": 3,
+          "parent": 2,
+          "valid_fidelity": 0.9444,
+          "valid_accuracy": 0.8,
+          "n_visit": 0,
+          "n_mismatches": 2
+        }
+      ],
+      "events": [
+        {
+          "round": 0,
+          "kind": "induce",
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 1,
+          "kind": "refactor",
+          "parent": 0,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 2,
+          "kind": "refactor",
+          "parent": 1,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 3,
+          "kind": "refactor",
+          "parent": 2,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        }
+      ],
+      "final_idx": 1,
+      "final_valid_fidelity": 0.9444,
+      "wall_s": 1192.5,
+      "generator_healthy_after": true,
+      "held_change_fidelity": 0.9792,
+      "held_accuracy": 0.9,
+      "held_cell_recall": 0.9792,
+      "held_n_changing": 8,
+      "hud_mask_status": "applied",
+      "held_per_node": [
+        0.4896,
+        0.9792,
+        0.9792,
+        0.9792
+      ],
+      "held_best_any_candidate": 0.9792
+    },
+    {
+      "game": "re86",
+      "arm": "linear",
+      "llm_calls": 4,
+      "nodes": [
+        {
+          "idx": 0,
+          "parent": null,
+          "valid_fidelity": 0.7345,
+          "valid_accuracy": 0.0,
+          "n_visit": 1,
+          "n_mismatches": 10
+        },
+        {
+          "idx": 1,
+          "parent": 0,
+          "valid_fidelity": 0.2993,
+          "valid_accuracy": 0.0,
+          "n_visit": 1,
+          "n_mismatches": 10
+        },
+        {
+          "idx": 2,
+          "parent": 1,
+          "valid_fidelity": 0.2993,
+          "valid_accuracy": 0.0,
+          "n_visit": 1,
+          "n_mismatches": 10
+        },
+        {
+          "idx": 3,
+          "parent": 2,
+          "valid_fidelity": 0.2993,
+          "valid_accuracy": 0.0,
+          "n_visit": 0,
+          "n_mismatches": 10
+        }
+      ],
+      "events": [
+        {
+          "round": 0,
+          "kind": "induce",
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 1,
+          "kind": "refactor",
+          "parent": 0,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 2,
+          "kind": "refactor",
+          "parent": 1,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 3,
+          "kind": "refactor",
+          "parent": 2,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        }
+      ],
+      "final_idx": 0,
+      "final_valid_fidelity": 0.7345,
+      "wall_s": 867.5,
+      "generator_healthy_after": true,
+      "held_change_fidelity": 0.4871,
+      "held_accuracy": 0.0,
+      "held_cell_recall": 0.6916,
+      "held_n_changing": 10,
+      "hud_mask_status": "applied",
+      "held_per_node": [
+        0.4871,
+        0.3209,
+        0.3209,
+        0.3209
+      ],
+      "held_best_any_candidate": 0.4871
+    },
+    {
+      "game": "re86",
+      "arm": "rex",
+      "llm_calls": 4,
+      "nodes": [
+        {
+          "idx": 0,
+          "parent": null,
+          "valid_fidelity": 0.4563,
+          "valid_accuracy": 0.0,
+          "n_visit": 1,
+          "n_mismatches": 10
+        },
+        {
+          "idx": 1,
+          "parent": 0,
+          "valid_fidelity": 0.2007,
+          "valid_accuracy": 0.0,
+          "n_visit": 1,
+          "n_mismatches": 10
+        },
+        {
+          "idx": 2,
+          "parent": 1,
+          "valid_fidelity": 0.2007,
+          "valid_accuracy": 0.0,
+          "n_visit": 1,
+          "n_mismatches": 10
+        }
+      ],
+      "events": [
+        {
+          "round": 0,
+          "kind": "induce",
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 1,
+          "kind": "refactor",
+          "parent": 0,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 2,
+          "kind": "refactor",
+          "parent": 1,
+          "ok": true,
+          "detail": "local gguf (GPU server) wrote world_model.py"
+        },
+        {
+          "round": 3,
+          "kind": "refactor",
+          "parent": 2,
+          "ok": false,
+          "detail": "local model code unusable after 3 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=16384 OUTPUT LIMIT before completing])"
+        }
+      ],
+      "final_idx": 0,
+      "final_valid_fidelity": 0.4563,
+      "wall_s": 1926.6,
+      "generator_healthy_after": true,
+      "held_change_fidelity": 0.2491,
+      "held_accuracy": 0.0,
+      "held_cell_recall": 0.514,
+      "held_n_changing": 10,
+      "hud_mask_status": "applied",
+      "held_per_node": [
+        0.2491,
+        0.1607,
+        0.1607
+      ],
+      "held_best_any_candidate": 0.2491
+    }
+  ],
+  "paired_deltas": [
+    {
+      "game": "ft09",
+      "linear": 0.0,
+      "rex": 0.0,
+      "delta": 0.0
+    },
+    {
+      "game": "tr87",
+      "linear": 0.1253,
+      "rex": 0.3965,
+      "delta": 0.2712
+    },
+    {
+      "game": "cn04",
+      "linear": 0.0863,
+      "rex": 0.0553,
+      "delta": -0.031
+    },
+    {
+      "game": "ar25",
+      "linear": 0.6149,
+      "rex": 0.3071,
+      "delta": -0.3078
+    },
+    {
+      "game": "ka59",
+      "linear": 0.3125,
+      "rex": 0.9792,
+      "delta": 0.6667
+    },
+    {
+      "game": "re86",
+      "linear": 0.4871,
+      "rex": 0.2491,
+      "delta": -0.238
+    }
+  ],
+  "n_games_comparable": 6,
+  "n_games_rex_improved": 2,
+  "pooled_mean_delta": 0.0602,
+  "gate_min_games_improved": 4,
+  "gate_met": false,
+  "any_candidate_reached_trust_threshold": true,
+  "trust_threshold": 0.5,
+  "engine_visible_refactor_prompt": true,
+  "operator_authorization": "2026-08-09 operator directive 'Let's plan out and prepare Pinductor to be run' -- the explicit operator decision the standing refinement-axis hold required.",
+  "prior_failures": [
+    {
+      "experiment_id": "exp5766",
+      "verdict": "cegis_refinement_null",
+      "addressed_by": "instrument defect (engine source never in prompt) fixed and forced ON in both arms here"
+    },
+    {
+      "experiment_id": "exp6091",
+      "verdict": "blocked_reaper_zero_valid_cells",
+      "addressed_by": "per-cell checkpoint + retry; conductor-isolation launch option per 2026-08-09 reaper findings"
+    },
+    {
+      "experiment_id": "exp5764",
+      "verdict": "single_shot_heldout_0.378",
+      "addressed_by": "this measures SEARCH STRUCTURE on top of the same generator, a question single-shot quality does not answer"
+    }
+  ],
+  "retire_if_same_verdict": true,
+  "solve_provenance": "development_proxy",
+  "arc_solve_claim": false,
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_principle": "held-out change_fidelity is an oracle-distinct graded dynamics score, not the executable win-condition oracle.",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": {
+    "generator": "unsloth/gemma-4-31B-it-qat-GGUF",
+    "quant": "UD-Q4_K_XL",
+    "kv_cache_quant": "q8_0",
+    "port": 8940
+  },
+  "random_seed": 6248,
+  "honest_verdict": "complete_rex_gate_not_met_2_of_6_games_pooled_delta_0.0602_variant_retired",
+  "duration_s": 10818.34,
+  "reproducibility_checksum": "77a0f1e877435d3c792e60e6ca869b92f6163acd580b76b4c1e613149fbdf728",
+  "status": "complete"
+}

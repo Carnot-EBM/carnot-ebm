@@ -125,6 +125,30 @@ class TerminalClassification:
         }
 
 
+@dataclass(frozen=True)
+class GateFieldEligibility:
+    """Whether one exact artifact field may feed a downstream gate."""
+
+    field: str
+    eligible: bool
+    reason: str
+    classification: TerminalClassification
+    field_present: bool
+    field_is_bare: bool
+    value: Any = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "field": self.field,
+            "eligible": self.eligible,
+            "reason": self.reason,
+            "classification": self.classification.to_dict(),
+            "field_present": self.field_present,
+            "field_is_bare": self.field_is_bare,
+            "value": self.value,
+        }
+
+
 def canonical_json(value: Any) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
 
@@ -190,6 +214,10 @@ def _nonempty(value: Any) -> bool:
     if value in (None, False, "", [], {}, ()):
         return False
     return True
+
+
+def _principle_wrapped(value: Any) -> bool:
+    return isinstance(value, Mapping) and "value" in value and "principle" in value
 
 
 def _artifact_flagged(payload: Mapping[str, Any]) -> bool:
@@ -363,6 +391,116 @@ def classify_artifact_path(
     )
     return TerminalClassification(
         **{**got.to_dict(), "present": True, "sha256": digest}
+    )
+
+
+def gate_field_eligibility(
+    payload: Mapping[str, Any] | Any,
+    field: str,
+    *,
+    path: str | Path | None = None,
+    sha256: str | None = None,
+    conductor_receipt: Mapping[str, Any] | None = None,
+) -> GateFieldEligibility:
+    """Allow a gate to read only a terminal artifact's exact bare field."""
+
+    classification = classify_artifact_payload(
+        payload,
+        path=path,
+        sha256=sha256,
+        conductor_receipt=conductor_receipt,
+    )
+    if not isinstance(payload, Mapping):
+        return GateFieldEligibility(
+            field=field,
+            eligible=False,
+            reason="artifact payload is not an object",
+            classification=classification,
+            field_present=False,
+            field_is_bare=False,
+        )
+
+    field_present = field in payload
+    value = payload.get(field) if field_present else None
+    field_is_bare = field_present and not _principle_wrapped(value)
+    if not classification.terminal:
+        return GateFieldEligibility(
+            field=field,
+            eligible=False,
+            reason=f"nonterminal artifact classification={classification.classification}",
+            classification=classification,
+            field_present=field_present,
+            field_is_bare=field_is_bare,
+            value=value,
+        )
+    if not field_present:
+        return GateFieldEligibility(
+            field=field,
+            eligible=False,
+            reason=f"exact bare field {field!r} is absent",
+            classification=classification,
+            field_present=False,
+            field_is_bare=False,
+        )
+    if not field_is_bare:
+        return GateFieldEligibility(
+            field=field,
+            eligible=False,
+            reason=f"exact field {field!r} exists but is not bare",
+            classification=classification,
+            field_present=True,
+            field_is_bare=False,
+            value=value,
+        )
+    return GateFieldEligibility(
+        field=field,
+        eligible=True,
+        reason=f"terminal artifact exposes exact bare field {field!r}",
+        classification=classification,
+        field_present=True,
+        field_is_bare=True,
+        value=value,
+    )
+
+
+def gate_field_eligibility_for_path(
+    path: str | Path,
+    field: str,
+    *,
+    conductor_receipt: Mapping[str, Any] | None = None,
+) -> GateFieldEligibility:
+    """Classify the exact path before exposing any gate field."""
+
+    artifact_path = Path(path)
+    classification = classify_artifact_path(artifact_path, conductor_receipt=conductor_receipt)
+    payload: Any = {}
+    if classification.present and classification.loadable:
+        try:
+            payload = json.loads(artifact_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            payload = {}
+    if not isinstance(payload, Mapping):
+        payload = {}
+
+    field_present = field in payload
+    value = payload.get(field) if field_present else None
+    field_is_bare = field_present and not _principle_wrapped(value)
+    if not classification.terminal:
+        return GateFieldEligibility(
+            field=field,
+            eligible=False,
+            reason=f"nonterminal artifact classification={classification.classification}",
+            classification=classification,
+            field_present=field_present,
+            field_is_bare=field_is_bare,
+            value=value,
+        )
+    return gate_field_eligibility(
+        payload,
+        field,
+        path=artifact_path,
+        sha256=classification.sha256,
+        conductor_receipt=conductor_receipt,
     )
 
 
