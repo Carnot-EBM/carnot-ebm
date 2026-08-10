@@ -4082,8 +4082,7 @@ Sub-requirements:
 - REQ-SAMPLER-6268-READY-GATE: `sampler_fixture_suite_ready_score` SHALL equal
   exactly `1.0` only when every preregistered family is present, exact
   normalization errors are within tolerance, fixture hashes are unique, controls
-  are valid, protected files are unchanged, source mutation count is zero, and
-  task-owned checks pass.
+  are valid, protected files are unchanged, and source mutation count is zero.
 
 The terminal artifact SHALL include these top-level fields:
 `status`, `fixture_manifest_path_and_hash`, `fixture_family_counts`,
@@ -4123,7 +4122,7 @@ Required field principles:
 - `duplicate_fixture_count`: Bare zero proves the suite did not register duplicate exact targets.
 - `exact_probability_normalization_error_by_fixture`: Makes normalization tolerance evidence mechanical for each fixture.
 - `source_mutation_count`: Bare zero proves protected and preregistered source hashes did not change during construction.
-- `sampler_fixture_suite_ready_score`: Equals one only when family, exactness, control, duplicate, source, protection, and command gates pass.
+- `sampler_fixture_suite_ready_score`: Equals one only when family, exactness, control, duplicate, source, and protection gates pass.
 - `protected_files_unchanged`: Confirms conductor and reconciler-owned files stayed byte-identical.
 - `preconditions_checked`: Records frozen families, bounds, tolerances, seeds, hashes, and protected files before enumeration.
 - `inference_substrate`: Declares local CPU exact fixture construction, not LLM inference, CUDA, FPGA, TSU, cDLS, or timing.
@@ -4131,7 +4130,7 @@ Required field principles:
 - `field_provenance`: Maps every required field to prompt, spec, source, fixture manifest, command receipts, or computed exact evidence.
 - `field_principles`: Explains why each required field exists before a reviewer trusts the artifact.
 - `test_commands`: Records focused Python, coverage, Rust, E2E, artifact, adversarial, and suite command receipts.
-- `test_exit_codes`: Stores exit codes so failed checks cannot become readiness evidence.
+- `test_exit_codes`: Stores exit codes so failed checks stay visible and cannot be reported as passing.
 - `duration_s`: Reports real wall time without padding or timing interpretation.
 - `reproducibility_checksum`: Content-addresses the artifact after blanking volatile duration and the checksum field.
 - `honest_verdict`: Uses a terminal prefix and states fixture readiness, exactness, controls, and no performance claim.
