@@ -15609,3 +15609,5 @@ Still active  |
 | 2026-08-10 15:13 UTC | Gated on Exp6276 certificate: chronological contin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6276-certified-dual-cache-admission.cer |
 | 2026-08-10 15:16 UTC | Gated on Exp6276 certificate: chronological contin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6276-certified-dual-cache-admission.cer |
 | 2026-08-10 15:18 UTC | Gated on Exp6277 promotion: model-family and task- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6277-chronological-certified-csl-ab) |
+| 2026-08-10 15:18 UTC | Gated on Exp6278 transfer: default-off certified-m | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6278-model-family-task-holdout-csl-audi |
+| 2026-08-10 15:20 UTC | Gated on Exp6277 promotion: model-family and task- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6277-chronological-certified-csl-ab) |
