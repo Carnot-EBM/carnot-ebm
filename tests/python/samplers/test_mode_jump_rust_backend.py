@@ -7,6 +7,7 @@ SCENARIO-SAMPLE-6208-RUNTIME-PARITY, SCENARIO-SAMPLE-6208-BOUNDARY-ERRORS.
 from __future__ import annotations
 
 from copy import deepcopy
+import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -20,20 +21,31 @@ from carnot.samplers.mode_jump_rust_backend import (
     CHECKPOINT_SCHEMA_VERSION,
     MODE_JUMP_ALGORITHM,
     MODE_JUMP_TOPOLOGY,
+    TYPED_STATE_METADATA_SCHEMA_VERSION,
+    VARIABLE_CARDINALITY_TOPOLOGY,
     ModeJumpRustBackend,
     checkpoint_checksum,
     descriptor_for_run,
     frozen_mode_jump_inputs,
+    mode_jump_inputs_from_fixture_receipt,
+    normalize_typed_state_metadata,
+    typed_state_metadata_from_fixture_receipt,
 )
 
 
 REPO = Path(__file__).resolve().parents[3]
 SPEC_PATH = REPO / "openspec/capabilities/samplers/spec.md"
+EXP6268_PATH = REPO / "results/experiment_6268_multimodal_sampler_fixture_suite.json"
 
 
 def _fixture_inputs(dtype: np.dtype = np.float64) -> tuple[list[str], np.ndarray, np.ndarray]:
     labels, target, proposal = frozen_mode_jump_inputs()
     return labels, np.asarray(target, dtype=dtype), np.asarray(proposal, dtype=dtype)
+
+
+def _exp6268_receipts() -> list[dict[str, object]]:
+    artifact = json.loads(EXP6268_PATH.read_text(encoding="utf-8"))
+    return list(artifact["exact_enumeration_receipts"])
 
 
 def test_req_sample_6208_spec_declares_runtime_adapter_contract() -> None:
@@ -58,6 +70,30 @@ def test_req_sample_6208_spec_declares_runtime_adapter_contract() -> None:
         "SCENARIO-SAMPLE-6208-BOUNDARY-ERRORS",
         "production_python_samplerbackend_plus_rust_pyo3_mode_jump_cpu",
         "hardware_or_speed_power_energy_claimed",
+    ):
+        assert marker in section or marker in normalized
+
+
+def test_req_sampler_6280_spec_declares_variable_cardinality_contract() -> None:
+    """REQ-SAMPLER-6280: OpenSpec anchors typed metadata and controls."""
+
+    spec = SPEC_PATH.read_text(encoding="utf-8")
+    section = spec[spec.index("### REQ-SAMPLER-6280") :]
+    normalized = " ".join(section.split())
+
+    for marker in (
+        "REQ-SAMPLER-6280-SPEC-FIRST",
+        "REQ-SAMPLER-6280-METADATA",
+        "REQ-SAMPLER-6280-COMPATIBILITY",
+        "REQ-SAMPLER-6280-PARITY",
+        "REQ-SAMPLER-6280-ACTIVATION",
+        "REQ-SAMPLER-6280-CONTROLS",
+        "SCENARIO-SAMPLER-6280-METADATA-ROUNDTRIP",
+        "SCENARIO-SAMPLER-6280-PROPOSAL-PARITY",
+        "SCENARIO-SAMPLER-6280-NO-AB-VALUE-CLAIM",
+        "typed_state_metadata_schema",
+        "variable_cardinality_backend_ready_score",
+        "local_cpu_rust_python_variable_cardinality_sampler_abi",
     ):
         assert marker in section or marker in normalized
 
@@ -94,6 +130,182 @@ def test_req_sample_6208_factory_preserves_default_cpu_and_requires_opt_in(
     assert result["receipt"]["fallback_reason"] == "feature_flag_disabled"
     assert result["samples"].shape == (4, 6)
     assert result["samples"].dtype == np.bool_
+
+
+@pytest.mark.parametrize("receipt", _exp6268_receipts(), ids=lambda row: row["fixture_name"])
+def test_req_sampler_6280_typed_metadata_roundtrips_exp6268_fixtures(
+    receipt: dict[str, object],
+) -> None:
+    """SCENARIO-SAMPLER-6280-METADATA-ROUNDTRIP: each fixture has explicit metadata."""
+
+    labels, target, proposal, metadata = mode_jump_inputs_from_fixture_receipt(receipt)
+    normalized = normalize_typed_state_metadata(metadata, label_count=len(labels))
+    direct_metadata = typed_state_metadata_from_fixture_receipt(receipt)
+
+    assert direct_metadata == metadata
+    assert normalized["schema"] == TYPED_STATE_METADATA_SCHEMA_VERSION
+    assert normalized["shape"] == [len(normalized["cardinalities"])]
+    assert normalized["support_count"] == len(labels) == target.shape[0] == proposal.shape[0]
+    assert normalized["state_space_size"] >= normalized["support_count"]
+    assert normalized["proposal_domain"] in {
+        "explicit_support_complete_no_self",
+        "explicit_support_table",
+    }
+    assert normalized["state_labels"] == labels
+    assert target.shape == (len(labels),)
+    assert proposal.shape == (len(labels), len(labels))
+    assert np.allclose(proposal.sum(axis=1), 1.0)
+
+    from carnot._rust import RustModeJumpStateMetadata
+
+    rust_metadata = RustModeJumpStateMetadata(
+        normalized["schema"],
+        normalized["shape"],
+        normalized["cardinalities"],
+        normalized["encoding"],
+        normalized["state_labels"],
+        normalized["state_values"],
+        normalized["proposal_domain"],
+        normalized["state_space_size"],
+    )
+    for index, label in enumerate(labels):
+        assert normalized["label_to_index"][label] == index
+        assert rust_metadata.encode_label(label) == index
+        assert rust_metadata.decode_index(index) == label
+        assert rust_metadata.state_value(label) == normalized["state_values"][index]
+
+
+@pytest.mark.parametrize("receipt", _exp6268_receipts(), ids=lambda row: row["fixture_name"])
+def test_scenario_sampler_6280_rust_python_proposal_parity_and_seed_replay(
+    receipt: dict[str, object],
+) -> None:
+    """SCENARIO-SAMPLER-6280-PROPOSAL-PARITY: Rust and Python traces match."""
+
+    labels, target, proposal, metadata = mode_jump_inputs_from_fixture_receipt(receipt)
+    descriptor = {
+        "algorithm": MODE_JUMP_ALGORITHM,
+        "topology": VARIABLE_CARDINALITY_TOPOLOGY,
+        "labels": labels,
+        "typed_state_metadata": metadata,
+        "seed": 6280,
+        "initial_label": labels[0],
+        "burn_in": 3,
+        "enable_mode_jump_runtime": True,
+        "return_trace": True,
+    }
+
+    rust_a = ModeJumpRustBackend(seed=6280).run_descriptor(target, proposal, 24, descriptor)
+    rust_b = ModeJumpRustBackend(seed=6280).run_descriptor(target, proposal, 24, descriptor)
+    fallback = ModeJumpRustBackend(seed=6280, prefer_rust=False).run_descriptor(
+        target,
+        proposal,
+        24,
+        descriptor,
+    )
+
+    assert rust_a["receipt"]["active_backend"] == ACTIVE_RUST_BACKEND
+    assert fallback["receipt"]["active_backend"] == ACTIVE_PYTHON_FALLBACK
+    assert rust_a["receipt"]["topology"] == VARIABLE_CARDINALITY_TOPOLOGY
+    assert rust_a["receipt"]["typed_state_metadata_hash"] == fallback["receipt"][
+        "typed_state_metadata_hash"
+    ]
+    np.testing.assert_array_equal(rust_a["samples"], fallback["samples"])
+    assert rust_a["sample_labels"] == fallback["sample_labels"]
+    assert rust_a["decision_log"] == fallback["decision_log"]
+    assert rust_a["checkpoint"]["state"] == fallback["checkpoint"]["state"]
+    assert rust_a["checkpoint"]["state"] == rust_b["checkpoint"]["state"]
+    assert rust_a["sample_labels"] == rust_b["sample_labels"]
+    assert any(event["accepted"] for event in rust_a["decision_log"])
+
+
+def test_req_sampler_6280_original_six_state_compatibility_path_is_unchanged() -> None:
+    """REQ-SAMPLER-6280-COMPATIBILITY: old six-state descriptor still replays."""
+
+    labels, target, proposal = _fixture_inputs()
+    descriptor = descriptor_for_run(
+        labels=labels,
+        seed=6280,
+        burn_in=3,
+        enable_mode_jump_runtime=True,
+    )
+    legacy = ModeJumpRustBackend(seed=6280).run_descriptor(target, proposal, 24, descriptor)
+    receipt = next(
+        row
+        for row in _exp6268_receipts()
+        if row["fixture_name"] == "exp6237_original_six_state"
+    )
+    labels2, target2, proposal2, metadata = mode_jump_inputs_from_fixture_receipt(receipt)
+    typed = ModeJumpRustBackend(seed=6280).run_descriptor(
+        target2,
+        proposal2,
+        24,
+        {
+            **descriptor,
+            "topology": VARIABLE_CARDINALITY_TOPOLOGY,
+            "labels": labels2,
+            "typed_state_metadata": metadata,
+        },
+    )
+
+    np.testing.assert_array_equal(legacy["samples"], typed["samples"])
+    assert legacy["sample_labels"] == typed["sample_labels"]
+    assert legacy["decision_log"] == typed["decision_log"]
+    assert legacy["checkpoint"]["state"] == typed["checkpoint"]["state"]
+
+
+def test_req_sampler_6280_malformed_metadata_and_domains_fail_closed() -> None:
+    """REQ-SAMPLER-6280-CONTROLS: malformed metadata and proposals fail closed."""
+
+    receipt = next(row for row in _exp6268_receipts() if row["fixture_name"] == "potts_chain3_q3")
+    labels, target, proposal, metadata = mode_jump_inputs_from_fixture_receipt(receipt)
+    descriptor = {
+        "algorithm": MODE_JUMP_ALGORITHM,
+        "topology": VARIABLE_CARDINALITY_TOPOLOGY,
+        "labels": labels,
+        "typed_state_metadata": metadata,
+        "seed": 6280,
+        "initial_label": labels[0],
+        "enable_mode_jump_runtime": True,
+    }
+
+    bad_cardinality = deepcopy(metadata)
+    bad_cardinality["cardinalities"][0] = 2
+    with pytest.raises(ValueError, match="cardinality"):
+        ModeJumpRustBackend().run_descriptor(
+            target,
+            proposal,
+            2,
+            {**descriptor, "typed_state_metadata": bad_cardinality},
+        )
+
+    bad_shape = deepcopy(metadata)
+    bad_shape["shape"] = [1, 3]
+    with pytest.raises(ValueError, match="rank-1"):
+        ModeJumpRustBackend().run_descriptor(
+            target,
+            proposal,
+            2,
+            {**descriptor, "typed_state_metadata": bad_shape},
+        )
+
+    bad_domain = proposal.copy()
+    bad_domain[0, :] = 0.0
+    bad_domain[0, 0] = 1.0
+    with pytest.raises(ValueError, match="proposal support"):
+        ModeJumpRustBackend().run_descriptor(target, bad_domain, 2, descriptor)
+
+    permuted = deepcopy(metadata)
+    permuted["state_labels"] = list(reversed(permuted["state_labels"]))
+    with pytest.raises(ValueError, match="labels"):
+        ModeJumpRustBackend().run_descriptor(
+            target,
+            proposal,
+            2,
+            {**descriptor, "typed_state_metadata": permuted},
+        )
+
+    with pytest.raises(ValueError, match="target probabilities"):
+        ModeJumpRustBackend().run_descriptor(target.reshape(3, 9), proposal, 2, descriptor)
 
 
 def test_scenario_sample_6208_enabled_rust_path_matches_exact_python_fallback() -> None:

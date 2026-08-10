@@ -31,6 +31,8 @@ JsonDict = dict[str, Any]
 REPO_ROOT = Path(__file__).resolve().parents[3]
 MODE_JUMP_ALGORITHM = "exp6166_cross_mode_categorical_mh_v1"
 MODE_JUMP_TOPOLOGY = "fixed_categorical_mode_jump"
+VARIABLE_CARDINALITY_TOPOLOGY = "typed_variable_cardinality_mode_jump"
+TYPED_STATE_METADATA_SCHEMA_VERSION = "carnot.mode_jump.typed_state_metadata.v1"
 CHECKPOINT_SCHEMA_VERSION = "carnot.mode_jump_samplerbackend.checkpoint.v1"
 ACTIVE_RUST_BACKEND = "rust_pyo3"
 ACTIVE_PYTHON_FALLBACK = "python_exact_fallback"
@@ -38,9 +40,12 @@ FEATURE_ENV_VAR = "CARNOT_ENABLE_MODE_JUMP_RUNTIME"
 DEFAULT_MODE_JUMP_BACKEND_SEED = 6194
 MODE_JUMP_BACKEND_SPEC_REFS = [
     "REQ-SAMPLE-6208",
+    "REQ-SAMPLER-6280",
     "SCENARIO-SAMPLE-6208-DEFAULT-OFF-FALLBACK",
     "SCENARIO-SAMPLE-6208-RUNTIME-PARITY",
     "SCENARIO-SAMPLE-6208-BOUNDARY-ERRORS",
+    "SCENARIO-SAMPLER-6280-METADATA-ROUNDTRIP",
+    "SCENARIO-SAMPLER-6280-PROPOSAL-PARITY",
 ]
 
 
@@ -85,19 +90,27 @@ def descriptor_for_run(
     burn_in: int = 0,
     enable_mode_jump_runtime: bool = False,
     force_python_fallback: bool = False,
+    typed_state_metadata: Mapping[str, Any] | None = None,
 ) -> JsonDict:
     """Build the stable descriptor accepted by ``ModeJumpRustBackend``."""
 
     frozen_labels = frozen_mode_jump_inputs()[0]
+    active_labels = [str(label) for label in (labels if labels is not None else frozen_labels)]
     descriptor: JsonDict = {
         "algorithm": MODE_JUMP_ALGORITHM,
-        "topology": MODE_JUMP_TOPOLOGY,
-        "labels": [str(label) for label in (labels if labels is not None else frozen_labels)],
+        "topology": (
+            VARIABLE_CARDINALITY_TOPOLOGY
+            if typed_state_metadata is not None
+            else MODE_JUMP_TOPOLOGY
+        ),
+        "labels": active_labels,
         "seed": int(seed),
         "initial_label": str(initial_label),
         "burn_in": int(burn_in),
         "enable_mode_jump_runtime": bool(enable_mode_jump_runtime),
     }
+    if typed_state_metadata is not None:
+        descriptor["typed_state_metadata"] = dict(typed_state_metadata)
     if force_python_fallback:
         descriptor["force_python_fallback"] = True
     return descriptor
@@ -108,6 +121,7 @@ class _NormalizedDescriptor:
     algorithm: str
     topology: str
     labels: tuple[str, ...]
+    typed_state_metadata: Mapping[str, Any] | None
     seed: int
     initial_label: str
     burn_in: int
@@ -125,6 +139,11 @@ class _NormalizedDescriptor:
                 "algorithm": self.algorithm,
                 "topology": self.topology,
                 "labels": list(self.labels),
+                "typed_state_metadata_hash": (
+                    sha256_json(self.typed_state_metadata)
+                    if self.typed_state_metadata is not None
+                    else None
+                ),
                 "seed": self.seed,
                 "initial_label": self.initial_label,
                 "burn_in": self.burn_in,
@@ -204,9 +223,15 @@ class ModeJumpRustBackend:
         target, proposal, input_support = self._coerce_mode_jump_inputs(
             target_probabilities,
             proposal_probabilities,
+            config=config,
         )
         descriptor = self._normalize_descriptor(config, target.size)
-        input_hash = self._input_hash(descriptor.labels, target, proposal)
+        input_hash = self._input_hash(
+            descriptor.labels,
+            target,
+            proposal,
+            typed_state_metadata=descriptor.typed_state_metadata,
+        )
         active_backend, fallback_reason, core, rust_module = self._select_core(
             target,
             proposal,
@@ -300,6 +325,7 @@ class ModeJumpRustBackend:
         target, proposal, _ = self._coerce_mode_jump_inputs(
             target_probabilities,
             proposal_probabilities,
+            config=config,
         )
         descriptor = self._normalize_descriptor_without_checkpoint(config, target.size)
         if checkpoint.get("payload_checksum") != checkpoint_checksum(checkpoint):
@@ -308,11 +334,23 @@ class ModeJumpRustBackend:
             raise ValueError("checkpoint schema_version mismatch")
         if checkpoint.get("algorithm") != MODE_JUMP_ALGORITHM:
             raise ValueError("checkpoint algorithm mismatch")
-        if checkpoint.get("topology") != MODE_JUMP_TOPOLOGY:
+        if checkpoint.get("topology") != descriptor.topology:
             raise ValueError("checkpoint topology mismatch")
         if checkpoint.get("labels") != list(descriptor.labels):
             raise ValueError("checkpoint labels mismatch")
-        if checkpoint.get("input_hash") != self._input_hash(descriptor.labels, target, proposal):
+        expected_metadata_hash = (
+            sha256_json(descriptor.typed_state_metadata)
+            if descriptor.typed_state_metadata is not None
+            else None
+        )
+        if checkpoint.get("typed_state_metadata_hash") != expected_metadata_hash:
+            raise ValueError("checkpoint typed_state_metadata_hash mismatch")
+        if checkpoint.get("input_hash") != self._input_hash(
+            descriptor.labels,
+            target,
+            proposal,
+            typed_state_metadata=descriptor.typed_state_metadata,
+        ):
             raise ValueError("checkpoint input_hash mismatch")
         if int(checkpoint.get("seed", -1)) != descriptor.seed:
             raise ValueError("checkpoint seed mismatch")
@@ -353,17 +391,38 @@ class ModeJumpRustBackend:
                 None,
             )
 
-        required = ("RustModeJumpConfig", "RustModeJumpCore", "RustModeJumpState")
+        required = ["RustModeJumpConfig", "RustModeJumpCore", "RustModeJumpState"]
+        if descriptor.typed_state_metadata is not None:
+            required.append("RustModeJumpStateMetadata")
         missing = [name for name in required if not hasattr(rust_module, name)]
         if missing:
             return ACTIVE_PYTHON_FALLBACK, f"rust_symbol_missing:{','.join(missing)}", None, None
 
         try:
-            rust_config = rust_module.RustModeJumpConfig(
-                list(descriptor.labels),
-                target.astype(float).tolist(),
-                proposal.astype(float).tolist(),
-            )
+            if descriptor.typed_state_metadata is None:
+                rust_config = rust_module.RustModeJumpConfig(
+                    list(descriptor.labels),
+                    target.astype(float).tolist(),
+                    proposal.astype(float).tolist(),
+                )
+            else:
+                metadata = descriptor.typed_state_metadata
+                rust_metadata = rust_module.RustModeJumpStateMetadata(
+                    str(metadata["schema"]),
+                    [int(value) for value in metadata["shape"]],
+                    [int(value) for value in metadata["cardinalities"]],
+                    str(metadata["encoding"]),
+                    [str(value) for value in metadata["state_labels"]],
+                    [[int(item) for item in row] for row in metadata["state_values"]],
+                    str(metadata["proposal_domain"]),
+                    int(metadata["state_space_size"]),
+                )
+                rust_config = rust_module.RustModeJumpConfig.with_metadata(
+                    list(descriptor.labels),
+                    target.astype(float).tolist(),
+                    proposal.astype(float).tolist(),
+                    rust_metadata,
+                )
             return ACTIVE_RUST_BACKEND, None, rust_module.RustModeJumpCore(rust_config), rust_module
         except Exception as exc:
             return (
@@ -498,17 +557,37 @@ class ModeJumpRustBackend:
         algorithm = descriptor.get("algorithm")
         if algorithm != MODE_JUMP_ALGORITHM:
             raise ValueError("descriptor algorithm must be exp6166_cross_mode_categorical_mh_v1")
-        topology = descriptor.get("topology", MODE_JUMP_TOPOLOGY)
-        if topology != MODE_JUMP_TOPOLOGY:
+        raw_metadata = descriptor.get("typed_state_metadata")
+        typed_state_metadata = (
+            normalize_typed_state_metadata(raw_metadata, label_count=label_count)
+            if isinstance(raw_metadata, Mapping)
+            else None
+        )
+        default_topology = (
+            VARIABLE_CARDINALITY_TOPOLOGY
+            if typed_state_metadata is not None
+            else MODE_JUMP_TOPOLOGY
+        )
+        topology = str(descriptor.get("topology", default_topology))
+        if typed_state_metadata is None and topology != MODE_JUMP_TOPOLOGY:
             raise ValueError("unsupported topology for mode-jump sampler backend")
+        if typed_state_metadata is not None and topology != VARIABLE_CARDINALITY_TOPOLOGY:
+            raise ValueError("typed state metadata requires variable-cardinality topology")
         frozen_labels = tuple(frozen_mode_jump_inputs()[0])
-        labels = tuple(str(label) for label in descriptor.get("labels", frozen_labels))
-        if labels != frozen_labels or len(labels) != label_count:
-            raise ValueError("descriptor labels must match frozen Exp6194 labels")
+        if typed_state_metadata is None:
+            labels = tuple(str(label) for label in descriptor.get("labels", frozen_labels))
+            if labels != frozen_labels or len(labels) != label_count:
+                raise ValueError("descriptor labels must match frozen Exp6194 labels")
+        else:
+            metadata_labels = tuple(str(label) for label in typed_state_metadata["state_labels"])
+            labels = tuple(str(label) for label in descriptor.get("labels", metadata_labels))
+            if labels != metadata_labels or len(labels) != label_count:
+                raise ValueError("descriptor labels must match typed state metadata labels")
         seed = int(descriptor.get("seed", self.seed))
         if seed < 0 or seed >= 2**64:
             raise ValueError("seed must fit in u64")
-        initial_label = str(descriptor.get("initial_label", exp6194.INITIAL_LABEL))
+        initial_default = exp6194.INITIAL_LABEL if typed_state_metadata is None else labels[0]
+        initial_label = str(descriptor.get("initial_label", initial_default))
         if initial_label not in labels:
             raise ValueError("initial_label must be one of the frozen labels")
         burn_in = int(descriptor.get("burn_in", 0))
@@ -519,8 +598,9 @@ class ModeJumpRustBackend:
         timeout_s = descriptor.get("timeout_s")
         return _NormalizedDescriptor(
             algorithm=MODE_JUMP_ALGORITHM,
-            topology=MODE_JUMP_TOPOLOGY,
+            topology=topology,
             labels=labels,
+            typed_state_metadata=typed_state_metadata,
             seed=seed,
             initial_label=initial_label,
             burn_in=burn_in,
@@ -536,7 +616,50 @@ class ModeJumpRustBackend:
     def _coerce_mode_jump_inputs(
         target_probabilities: object,
         proposal_probabilities: object,
+        *,
+        config: Mapping[str, Any] | None = None,
     ) -> tuple[np.ndarray, np.ndarray, JsonDict]:
+        raw_metadata = _typed_state_metadata_from_config(config)
+        if raw_metadata is not None:
+            raw_target = np.asarray(target_probabilities)
+            raw_proposal = np.asarray(proposal_probabilities)
+            target = np.asarray(target_probabilities, dtype=np.float64)
+            proposal = np.asarray(proposal_probabilities, dtype=np.float64)
+            if target.ndim != 1:
+                raise ValueError("target probabilities must be a rank-1 vector")
+            metadata = normalize_typed_state_metadata(raw_metadata, label_count=int(target.size))
+            label_count = len(metadata["state_labels"])
+            if target.shape != (label_count,):
+                raise ValueError("target probabilities must match typed metadata labels")
+            if proposal.shape != (label_count, label_count):
+                raise ValueError("proposal probabilities must match typed metadata labels")
+            _validate_probability_inputs(target, proposal, target_name="target probabilities")
+            rust_supported = (
+                isinstance(target_probabilities, np.ndarray)
+                and isinstance(proposal_probabilities, np.ndarray)
+                and raw_target.dtype == np.float64
+                and raw_proposal.dtype == np.float64
+                and raw_target.flags.c_contiguous
+                and raw_proposal.flags.c_contiguous
+            )
+            return (
+                target.copy(),
+                proposal.copy(),
+                {
+                    "target_dtype": str(raw_target.dtype),
+                    "proposal_dtype": str(raw_proposal.dtype),
+                    "target_shape": list(raw_target.shape),
+                    "proposal_shape": list(raw_proposal.shape),
+                    "target_c_contiguous": bool(raw_target.flags.c_contiguous),
+                    "proposal_c_contiguous": bool(raw_proposal.flags.c_contiguous),
+                    "rust_supported": bool(rust_supported),
+                    "typed_state_metadata_schema": metadata["schema"],
+                    "typed_state_metadata_hash": sha256_json(metadata),
+                    "state_space_size": int(metadata["state_space_size"]),
+                    "support_count": int(metadata["support_count"]),
+                    "encoding": metadata["encoding"],
+                },
+            )
         frozen_labels, frozen_target, frozen_proposal = frozen_mode_jump_inputs()
         raw_target = np.asarray(target_probabilities)
         raw_proposal = np.asarray(proposal_probabilities)
@@ -550,6 +673,7 @@ class ModeJumpRustBackend:
             raise ValueError("mode-jump probabilities must contain only finite values")
         if np.any(target <= 0.0):
             raise ValueError("target probabilities must be positive on frozen support")
+        _validate_probability_inputs(target, proposal, target_name="target probabilities")
         if not np.allclose(target, frozen_target, atol=1e-7, rtol=0.0):
             raise ValueError("target probabilities must match frozen Exp6194 target")
         if not np.allclose(proposal, frozen_proposal, atol=1e-7, rtol=0.0):
@@ -581,6 +705,8 @@ class ModeJumpRustBackend:
         labels: Sequence[str],
         target: np.ndarray,
         proposal: np.ndarray,
+        *,
+        typed_state_metadata: Mapping[str, Any] | None = None,
     ) -> str:
         return sha256_json(
             {
@@ -588,6 +714,14 @@ class ModeJumpRustBackend:
                 "target_probabilities": np.asarray(target, dtype=np.float64).tolist(),
                 "proposal_probabilities": np.asarray(proposal, dtype=np.float64).tolist(),
                 "algorithm": MODE_JUMP_ALGORITHM,
+                "topology": (
+                    VARIABLE_CARDINALITY_TOPOLOGY
+                    if typed_state_metadata is not None
+                    else MODE_JUMP_TOPOLOGY
+                ),
+                "typed_state_metadata": (
+                    dict(typed_state_metadata) if typed_state_metadata is not None else None
+                ),
             }
         )
 
@@ -611,8 +745,13 @@ class ModeJumpRustBackend:
         checkpoint: JsonDict = {
             "schema_version": CHECKPOINT_SCHEMA_VERSION,
             "algorithm": MODE_JUMP_ALGORITHM,
-            "topology": MODE_JUMP_TOPOLOGY,
+            "topology": descriptor.topology,
             "labels": list(descriptor.labels),
+            "typed_state_metadata_hash": (
+                sha256_json(descriptor.typed_state_metadata)
+                if descriptor.typed_state_metadata is not None
+                else None
+            ),
             "descriptor_hash": descriptor.descriptor_hash,
             "input_hash": input_hash,
             "seed": int(descriptor.seed),
@@ -642,8 +781,13 @@ class ModeJumpRustBackend:
             "active_backend": active_backend,
             "fallback_reason": fallback_reason,
             "algorithm": MODE_JUMP_ALGORITHM,
-            "topology": MODE_JUMP_TOPOLOGY,
+            "topology": descriptor.topology,
             "descriptor_hash": descriptor.descriptor_hash,
+            "typed_state_metadata_hash": (
+                sha256_json(descriptor.typed_state_metadata)
+                if descriptor.typed_state_metadata is not None
+                else None
+            ),
             "input_hash": input_hash,
             "input_support": dict(input_support),
             "feature_enabled_by_config": bool(descriptor.enable_mode_jump_runtime),
@@ -663,6 +807,298 @@ class ModeJumpRustBackend:
 
 def _env_flag_enabled() -> bool:
     return os.environ.get(FEATURE_ENV_VAR, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def complete_support_proposal(label_count: int) -> np.ndarray:
+    """Build a finite support proposal table for ABI parity controls."""
+
+    if int(label_count) <= 1:
+        raise ValueError("proposal support requires at least two labels")
+    proposal = np.full(
+        (int(label_count), int(label_count)),
+        1.0 / float(int(label_count) - 1),
+        dtype=np.float64,
+    )
+    np.fill_diagonal(proposal, 0.0)
+    return proposal
+
+
+def mode_jump_inputs_from_fixture_receipt(
+    receipt: Mapping[str, Any],
+) -> tuple[list[str], np.ndarray, np.ndarray, JsonDict]:
+    """Return labels, target, proposal, and metadata for one Exp6268 receipt."""
+
+    metadata = typed_state_metadata_from_fixture_receipt(receipt)
+    labels = [str(label) for label in metadata["state_labels"]]
+    if str(receipt["target_type"]) == "categorical_mode_jump":
+        definition = dict(receipt["definition"])
+        target = np.asarray(definition["target_probabilities"], dtype=np.float64)
+        proposal = np.asarray(definition["proposal_probabilities"], dtype=np.float64)
+    else:
+        probability_by_label = {
+            str(row["state_label"]): float(row["probability"]) for row in receipt["support"]
+        }
+        target = np.asarray([probability_by_label[label] for label in labels], dtype=np.float64)
+        proposal = complete_support_proposal(len(labels))
+    return labels, target, proposal, metadata
+
+
+def typed_state_metadata_from_fixture_receipt(receipt: Mapping[str, Any]) -> JsonDict:
+    """Build typed rank-1 state metadata from an Exp6268 exact fixture receipt."""
+
+    target_type = str(receipt["target_type"])
+    if target_type == "categorical_mode_jump":
+        return _categorical_metadata(receipt)
+    if target_type == "ising":
+        return _comma_state_metadata(
+            receipt,
+            cardinalities=[2] * int(receipt["definition"]["n_spins"]),
+            encoding="ising_pm_one_rank1",
+            categories=[["-1", "+1"] for _ in range(int(receipt["definition"]["n_spins"]))],
+        )
+    if target_type == "potts":
+        n_spins = int(receipt["definition"]["n_spins"])
+        q_states = int(receipt["definition"]["q_states"])
+        return _comma_state_metadata(
+            receipt,
+            cardinalities=[q_states] * n_spins,
+            encoding="potts_zero_based_rank1",
+            categories=[list(receipt["definition"]["state_labels"]) for _ in range(n_spins)],
+        )
+    if target_type == "typed_factor":
+        return _typed_factor_metadata(receipt)
+    raise ValueError(f"unsupported typed state fixture target_type: {target_type}")
+
+
+def normalize_typed_state_metadata(
+    metadata: Mapping[str, Any],
+    *,
+    label_count: int,
+) -> JsonDict:
+    """Validate and normalize explicit typed state metadata."""
+
+    if not isinstance(metadata, Mapping):
+        raise ValueError("typed state metadata must be an object")
+    schema = str(metadata.get("schema"))
+    if schema != TYPED_STATE_METADATA_SCHEMA_VERSION:
+        raise ValueError("typed state metadata schema mismatch")
+    shape = [int(value) for value in metadata.get("shape", [])]
+    cardinalities = [int(value) for value in metadata.get("cardinalities", [])]
+    if len(shape) != 1:
+        raise ValueError("typed state metadata shape must be rank-1")
+    if not cardinalities or shape[0] != len(cardinalities):
+        raise ValueError("typed state metadata shape must match cardinality count")
+    if any(cardinality < 2 for cardinality in cardinalities):
+        raise ValueError("typed state metadata cardinality values must be at least 2")
+    state_space_size = int(metadata.get("state_space_size", 0))
+    expected_size = _product(cardinalities)
+    if state_space_size != expected_size:
+        raise ValueError(
+            "typed state metadata cardinality state_space_size must match cardinalities"
+        )
+    labels = [str(label) for label in metadata.get("state_labels", [])]
+    if len(labels) != int(label_count) or len(set(labels)) != len(labels):
+        raise ValueError("typed state metadata labels must match target labels and be unique")
+    raw_values = metadata.get("state_values", [])
+    state_values = [[int(item) for item in row] for row in raw_values]
+    if len(state_values) != len(labels):
+        raise ValueError("typed state metadata state_values length must match labels")
+    seen_values: set[tuple[int, ...]] = set()
+    for state_value in state_values:
+        if len(state_value) != len(cardinalities):
+            raise ValueError("typed state metadata state value length must match cardinalities")
+        for coordinate, cardinality in zip(state_value, cardinalities, strict=True):
+            if coordinate < 0 or coordinate >= cardinality:
+                raise ValueError("typed state metadata state value exceeds cardinality")
+        value_key = tuple(state_value)
+        if value_key in seen_values:
+            raise ValueError("typed state metadata state values must be unique")
+        seen_values.add(value_key)
+    if len(labels) > state_space_size:
+        raise ValueError("typed state metadata support exceeds state space")
+    proposal_domain = str(metadata.get("proposal_domain"))
+    if proposal_domain not in {"explicit_support_complete_no_self", "explicit_support_table"}:
+        raise ValueError("typed state metadata proposal_domain is unsupported")
+    variables = list(metadata.get("variables", []))
+    normalized: JsonDict = {
+        "schema": schema,
+        "shape": shape,
+        "cardinalities": cardinalities,
+        "encoding": str(metadata.get("encoding")),
+        "variables": variables,
+        "state_labels": labels,
+        "state_values": state_values,
+        "label_to_index": {label: index for index, label in enumerate(labels)},
+        "proposal_domain": proposal_domain,
+        "state_space_size": state_space_size,
+        "support_count": len(labels),
+        "roundtrip_rule": "state_label -> support_index -> state_label; state_value stays within per-variable cardinality",
+    }
+    return normalized
+
+
+def _typed_state_metadata_from_config(config: Mapping[str, Any] | None) -> Mapping[str, Any] | None:
+    if not isinstance(config, Mapping):
+        return None
+    descriptor = config.get("descriptor", config)
+    if not isinstance(descriptor, Mapping):
+        return None
+    metadata = descriptor.get("typed_state_metadata")
+    return metadata if isinstance(metadata, Mapping) else None
+
+
+def _validate_probability_inputs(
+    target: np.ndarray,
+    proposal: np.ndarray,
+    *,
+    target_name: str,
+) -> None:
+    if not np.all(np.isfinite(target)) or not np.all(np.isfinite(proposal)):
+        raise ValueError("mode-jump probabilities must contain only finite values")
+    if np.any(target <= 0.0):
+        raise ValueError(f"{target_name} must be positive on support")
+    if abs(float(np.sum(target)) - 1.0) > 1.0e-7:
+        raise ValueError(f"{target_name} must sum to 1.0")
+    if np.any(proposal < 0.0):
+        raise ValueError("proposal probabilities must be nonnegative")
+    for row_index, row in enumerate(proposal):
+        if abs(float(np.sum(row)) - 1.0) > 1.0e-7:
+            raise ValueError(f"proposal row {row_index} must sum to 1.0")
+    support = proposal > 0.0
+    if not np.array_equal(support, support.T):
+        raise ValueError("proposal support must be symmetric for MH correction")
+    if np.any(np.diag(support)) and np.any(~np.eye(proposal.shape[0], dtype=bool) & support):
+        return
+
+
+def _categorical_metadata(receipt: Mapping[str, Any]) -> JsonDict:
+    definition = dict(receipt["definition"])
+    labels = [str(label) for label in definition["labels"]]
+    variables = [
+        {
+            "id": "label",
+            "kind": "categorical",
+            "cardinality": len(labels),
+            "categories": labels,
+        }
+    ]
+    return normalize_typed_state_metadata(
+        {
+            "schema": TYPED_STATE_METADATA_SCHEMA_VERSION,
+            "shape": [1],
+            "cardinalities": [len(labels)],
+            "encoding": "categorical_label_rank1",
+            "variables": variables,
+            "state_labels": labels,
+            "state_values": [[index] for index in range(len(labels))],
+            "proposal_domain": "explicit_support_table",
+            "state_space_size": int(receipt["state_space_size"]),
+        },
+        label_count=len(labels),
+    )
+
+
+def _comma_state_metadata(
+    receipt: Mapping[str, Any],
+    *,
+    cardinalities: Sequence[int],
+    encoding: str,
+    categories: Sequence[Sequence[str]],
+) -> JsonDict:
+    labels = [str(row["state_label"]) for row in receipt["support"]]
+    state_values = []
+    for label in labels:
+        parts = label.split(",")
+        encoded = []
+        for raw, cardinality in zip(parts, cardinalities, strict=True):
+            if raw == "-1":
+                encoded.append(0)
+            elif raw == "+1":
+                encoded.append(1)
+            else:
+                value = int(raw)
+                if value < 0 or value >= int(cardinality):
+                    raise ValueError("state label exceeds cardinality")
+                encoded.append(value)
+        state_values.append(encoded)
+    variables = [
+        {
+            "id": f"x{index}",
+            "kind": "categorical",
+            "cardinality": int(cardinality),
+            "categories": list(category),
+        }
+        for index, (cardinality, category) in enumerate(zip(cardinalities, categories, strict=True))
+    ]
+    return normalize_typed_state_metadata(
+        {
+            "schema": TYPED_STATE_METADATA_SCHEMA_VERSION,
+            "shape": [len(cardinalities)],
+            "cardinalities": [int(value) for value in cardinalities],
+            "encoding": encoding,
+            "variables": variables,
+            "state_labels": labels,
+            "state_values": state_values,
+            "proposal_domain": "explicit_support_complete_no_self",
+            "state_space_size": int(receipt["state_space_size"]),
+        },
+        label_count=len(labels),
+    )
+
+
+def _typed_factor_metadata(receipt: Mapping[str, Any]) -> JsonDict:
+    definition = dict(receipt["definition"])
+    wires = {str(row["id"]): dict(row) for row in definition["program_payload"]["wires"]}
+    wire_order = [str(value) for value in receipt.get("wire_order", wires.keys())]
+    variables = []
+    cardinalities = []
+    for wire_id in wire_order:
+        wire = wires[wire_id]
+        categories = [str(value) for value in wire.get("categories", [])]
+        cardinality = len(categories) if categories else 2
+        variables.append(
+            {
+                "id": wire_id,
+                "kind": str(wire.get("kind", "categorical")),
+                "cardinality": int(cardinality),
+                "categories": categories,
+            }
+        )
+        cardinalities.append(int(cardinality))
+    labels = [str(row["state_label"]) for row in receipt["support"]]
+    state_values = []
+    for support_row in receipt["support"]:
+        state = dict(support_row["state"])
+        encoded = []
+        for variable in variables:
+            value = state[variable["id"]]
+            categories = list(variable["categories"])
+            if categories:
+                encoded.append(categories.index(str(value)))
+            else:
+                encoded.append(int(value))
+        state_values.append(encoded)
+    return normalize_typed_state_metadata(
+        {
+            "schema": TYPED_STATE_METADATA_SCHEMA_VERSION,
+            "shape": [len(cardinalities)],
+            "cardinalities": cardinalities,
+            "encoding": "typed_factor_wire_order_rank1",
+            "variables": variables,
+            "state_labels": labels,
+            "state_values": state_values,
+            "proposal_domain": "explicit_support_complete_no_self",
+            "state_space_size": int(receipt["state_space_size"]),
+        },
+        label_count=len(labels),
+    )
+
+
+def _product(values: Sequence[int]) -> int:
+    result = 1
+    for value in values:
+        result *= int(value)
+    return result
 
 
 def _normalize_state(state: Mapping[str, Any]) -> JsonDict:

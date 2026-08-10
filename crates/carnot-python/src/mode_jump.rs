@@ -4,7 +4,8 @@
 //! SCENARIO-RUSTPY-6194-BOUNDARY-PARITY
 
 use carnot_samplers::mode_jump::{
-    ModeJumpConfig, ModeJumpCore, ModeJumpRunSummary, ModeJumpState, ModeJumpStepOutcome,
+    ModeJumpConfig, ModeJumpCore, ModeJumpRunSummary, ModeJumpState, ModeJumpStateMetadata,
+    ModeJumpStepOutcome,
 };
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
@@ -41,6 +42,23 @@ fn state_from_dict(snapshot: &Bound<'_, PyDict>) -> PyResult<ModeJumpState> {
         .ok_or_else(|| PyValueError::new_err("snapshot missing accepted_count"))?
         .extract::<usize>()?;
     ModeJumpState::new(current_label, rng_state, step, accepted_count).map_err(value_error)
+}
+
+fn metadata_to_dict<'py>(
+    py: Python<'py>,
+    metadata: &ModeJumpStateMetadata,
+) -> PyResult<Bound<'py, PyDict>> {
+    let d = PyDict::new(py);
+    d.set_item("schema", metadata.schema.clone())?;
+    d.set_item("shape", metadata.shape.clone())?;
+    d.set_item("cardinalities", metadata.cardinalities.clone())?;
+    d.set_item("encoding", metadata.encoding.clone())?;
+    d.set_item("state_labels", metadata.state_labels.clone())?;
+    d.set_item("state_values", metadata.state_values.clone())?;
+    d.set_item("proposal_domain", metadata.proposal_domain.clone())?;
+    d.set_item("state_space_size", metadata.state_space_size)?;
+    d.set_item("support_count", metadata.state_labels.len())?;
+    Ok(d)
 }
 
 fn step_to_dict<'py>(
@@ -119,6 +137,76 @@ impl PyModeJumpConfig {
             inner: ModeJumpConfig::new(labels, target_probabilities, proposal_probabilities)
                 .map_err(value_error)?,
         })
+    }
+
+    #[staticmethod]
+    fn with_metadata(
+        labels: Vec<String>,
+        target_probabilities: Vec<f64>,
+        proposal_probabilities: Vec<Vec<f64>>,
+        metadata: &PyModeJumpStateMetadata,
+    ) -> PyResult<Self> {
+        Ok(Self {
+            inner: ModeJumpConfig::new_with_metadata(
+                labels,
+                target_probabilities,
+                proposal_probabilities,
+                metadata.inner.clone(),
+            )
+            .map_err(value_error)?,
+        })
+    }
+}
+
+/// Explicit typed state metadata for variable-cardinality mode-jump domains.
+#[pyclass(name = "RustModeJumpStateMetadata")]
+#[derive(Clone)]
+pub struct PyModeJumpStateMetadata {
+    inner: ModeJumpStateMetadata,
+}
+
+#[pymethods]
+impl PyModeJumpStateMetadata {
+    #[new]
+    fn new(
+        schema: String,
+        shape: Vec<usize>,
+        cardinalities: Vec<usize>,
+        encoding: String,
+        state_labels: Vec<String>,
+        state_values: Vec<Vec<usize>>,
+        proposal_domain: String,
+        state_space_size: usize,
+    ) -> PyResult<Self> {
+        Ok(Self {
+            inner: ModeJumpStateMetadata::new(
+                schema,
+                shape,
+                cardinalities,
+                encoding,
+                state_labels,
+                state_values,
+                proposal_domain,
+                state_space_size,
+            )
+            .map_err(value_error)?,
+        })
+    }
+
+    fn snapshot<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        metadata_to_dict(py, &self.inner)
+    }
+
+    fn encode_label(&self, label: String) -> PyResult<usize> {
+        self.inner.encode_label(&label).map_err(value_error)
+    }
+
+    fn decode_index(&self, index: usize) -> PyResult<String> {
+        self.inner.decode_index(index).map_err(value_error)
+    }
+
+    fn state_value(&self, label: String) -> PyResult<Vec<usize>> {
+        self.inner.state_value(&label).map_err(value_error)
     }
 }
 
@@ -240,11 +328,13 @@ impl PyModeJumpCore {
 pub fn register_mode_jump_module(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "mode_jump")?;
     module.add_class::<PyModeJumpConfig>()?;
+    module.add_class::<PyModeJumpStateMetadata>()?;
     module.add_class::<PyModeJumpState>()?;
     module.add_class::<PyModeJumpCore>()?;
     parent.add_submodule(&module)?;
 
     parent.add_class::<PyModeJumpConfig>()?;
+    parent.add_class::<PyModeJumpStateMetadata>()?;
     parent.add_class::<PyModeJumpState>()?;
     parent.add_class::<PyModeJumpCore>()?;
     Ok(())

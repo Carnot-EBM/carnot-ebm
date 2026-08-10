@@ -19,6 +19,134 @@ pub struct ModeJumpConfig {
     pub labels: Vec<String>,
     pub target_probabilities: Vec<f64>,
     pub proposal_probabilities: Vec<Vec<f64>>,
+    pub state_metadata: Option<ModeJumpStateMetadata>,
+}
+
+/// Explicit rank-1 typed state metadata for variable-cardinality domains.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ModeJumpStateMetadata {
+    pub schema: String,
+    pub shape: Vec<usize>,
+    pub cardinalities: Vec<usize>,
+    pub encoding: String,
+    pub state_labels: Vec<String>,
+    pub state_values: Vec<Vec<usize>>,
+    pub proposal_domain: String,
+    pub state_space_size: usize,
+}
+
+impl ModeJumpStateMetadata {
+    /// Validate state labels and mixed-radix values before the sampler uses them.
+    pub fn new(
+        schema: String,
+        shape: Vec<usize>,
+        cardinalities: Vec<usize>,
+        encoding: String,
+        state_labels: Vec<String>,
+        state_values: Vec<Vec<usize>>,
+        proposal_domain: String,
+        state_space_size: usize,
+    ) -> Result<Self, String> {
+        if schema != "carnot.mode_jump.typed_state_metadata.v1" {
+            return Err("typed state metadata schema mismatch".to_string());
+        }
+        if shape.len() != 1 {
+            return Err("typed state metadata shape must be rank-1".to_string());
+        }
+        if cardinalities.is_empty() {
+            return Err("typed state metadata cardinalities must be non-empty".to_string());
+        }
+        if shape[0] != cardinalities.len() {
+            return Err("typed state metadata shape must match cardinality count".to_string());
+        }
+        if cardinalities.iter().any(|cardinality| *cardinality < 2) {
+            return Err("typed state metadata cardinalities must be at least 2".to_string());
+        }
+        if encoding.trim().is_empty() {
+            return Err("typed state metadata encoding must be non-empty".to_string());
+        }
+        if proposal_domain != "explicit_support_complete_no_self"
+            && proposal_domain != "explicit_support_table"
+        {
+            return Err("typed state metadata proposal_domain is unsupported".to_string());
+        }
+        if state_labels.is_empty() {
+            return Err("typed state metadata state_labels must be non-empty".to_string());
+        }
+        if state_values.len() != state_labels.len() {
+            return Err("typed state metadata state_values length must match labels".to_string());
+        }
+        let expected_space = cardinalities
+            .iter()
+            .try_fold(1_usize, |acc, value| acc.checked_mul(*value))
+            .ok_or_else(|| "typed state metadata state_space_size overflow".to_string())?;
+        if expected_space != state_space_size {
+            return Err(
+                "typed state metadata state_space_size must match cardinalities".to_string(),
+            );
+        }
+        let mut seen = HashSet::with_capacity(state_labels.len());
+        let mut seen_values = HashSet::with_capacity(state_values.len());
+        for (label, value) in state_labels.iter().zip(state_values.iter()) {
+            if label.is_empty() || label.contains('|') {
+                return Err(
+                    "typed state metadata labels must be non-empty and must not contain '|'"
+                        .to_string(),
+                );
+            }
+            if !seen.insert(label.clone()) {
+                return Err("typed state metadata labels must be unique".to_string());
+            }
+            if value.len() != cardinalities.len() {
+                return Err(
+                    "typed state metadata state value length must match cardinalities".to_string(),
+                );
+            }
+            for (coordinate, cardinality) in value.iter().zip(cardinalities.iter()) {
+                if *coordinate >= *cardinality {
+                    return Err("typed state metadata state value exceeds cardinality".to_string());
+                }
+            }
+            if !seen_values.insert(value.clone()) {
+                return Err("typed state metadata state values must be unique".to_string());
+            }
+        }
+        if state_labels.len() > state_space_size {
+            return Err("typed state metadata support exceeds state space".to_string());
+        }
+        Ok(Self {
+            schema,
+            shape,
+            cardinalities,
+            encoding,
+            state_labels,
+            state_values,
+            proposal_domain,
+            state_space_size,
+        })
+    }
+
+    /// Return the proposal-table index for a valid state label.
+    pub fn encode_label(&self, label: &str) -> Result<usize, String> {
+        self.state_labels
+            .iter()
+            .position(|candidate| candidate == label)
+            .ok_or_else(|| format!("typed state metadata label not in domain: {label}"))
+    }
+
+    /// Return the state label at a proposal-table index.
+    pub fn decode_index(&self, index: usize) -> Result<String, String> {
+        self.state_labels
+            .get(index)
+            .cloned()
+            .ok_or_else(|| "typed state metadata index outside domain".to_string())
+    }
+
+    /// Return the mixed-radix state value for a valid state label.
+    pub fn state_value(&self, label: &str) -> Result<Vec<usize>, String> {
+        let index = self.encode_label(label)?;
+        Ok(self.state_values[index].clone())
+    }
 }
 
 impl ModeJumpConfig {
@@ -27,6 +155,33 @@ impl ModeJumpConfig {
         labels: Vec<String>,
         target_probabilities: Vec<f64>,
         proposal_probabilities: Vec<Vec<f64>>,
+    ) -> Result<Self, String> {
+        Self::new_internal(labels, target_probabilities, proposal_probabilities, None)
+    }
+
+    /// Validate a finite target, proposal table, and explicit typed metadata.
+    pub fn new_with_metadata(
+        labels: Vec<String>,
+        target_probabilities: Vec<f64>,
+        proposal_probabilities: Vec<Vec<f64>>,
+        state_metadata: ModeJumpStateMetadata,
+    ) -> Result<Self, String> {
+        if state_metadata.state_labels != labels {
+            return Err("typed state metadata labels must match config labels".to_string());
+        }
+        Self::new_internal(
+            labels,
+            target_probabilities,
+            proposal_probabilities,
+            Some(state_metadata),
+        )
+    }
+
+    fn new_internal(
+        labels: Vec<String>,
+        target_probabilities: Vec<f64>,
+        proposal_probabilities: Vec<Vec<f64>>,
+        state_metadata: Option<ModeJumpStateMetadata>,
     ) -> Result<Self, String> {
         if labels.is_empty() {
             return Err("labels must be non-empty".to_string());
@@ -86,6 +241,7 @@ impl ModeJumpConfig {
             labels,
             target_probabilities,
             proposal_probabilities,
+            state_metadata,
         })
     }
 }

@@ -26,6 +26,7 @@ try:
         RustModeJumpConfig,
         RustModeJumpCore,
         RustModeJumpState,
+        RustModeJumpStateMetadata,
         RustOneAxisTemperingConfig,
         RustOneAxisTemperingCore,
         RustOneAxisTemperingState,
@@ -47,6 +48,7 @@ except ImportError:
     RustModeJumpConfig = None  # type: ignore[assignment,misc]
     RustModeJumpCore = None  # type: ignore[assignment,misc]
     RustModeJumpState = None  # type: ignore[assignment,misc]
+    RustModeJumpStateMetadata = None  # type: ignore[assignment,misc]
     RustOneAxisTemperingConfig = None  # type: ignore[assignment,misc]
     RustOneAxisTemperingCore = None  # type: ignore[assignment,misc]
     RustOneAxisTemperingState = None  # type: ignore[assignment,misc]
@@ -66,6 +68,7 @@ __all__ = [
     "RustModeJumpConfig",
     "RustModeJumpCore",
     "RustModeJumpState",
+    "RustModeJumpStateMetadata",
     "RustOneAxisTemperingConfig",
     "RustOneAxisTemperingCore",
     "RustOneAxisTemperingState",

@@ -1,0 +1,1185 @@
+{
+  "deterministic_seed_replay_by_fixture": {
+    "all_passed": true,
+    "fixtures": {
+      "control_unimodal_ising3": {
+        "checkpoint_state": {
+          "accepted_count": 18,
+          "current_label": "+1,+1,+1",
+          "rng_state": 3058057609379119256,
+          "step": 104
+        },
+        "passed": true,
+        "sample_labels_sha256": "sha256:67f159dc61c2fbdcc7185899df36afadc35047a07a609e23e36048c87355b63e",
+        "seed": 6280
+      },
+      "exp6237_original_six_state": {
+        "checkpoint_state": {
+          "accepted_count": 61,
+          "current_label": "left_shoulder",
+          "rng_state": 3058057609379119256,
+          "step": 104
+        },
+        "passed": true,
+        "sample_labels_sha256": "sha256:73fd24d48371c68d5fa7c0734bcf94361ae2e01ee6ef1bfafcf9be229e508857",
+        "seed": 6280
+      },
+      "ising_ferromagnetic_ring4": {
+        "checkpoint_state": {
+          "accepted_count": 10,
+          "current_label": "+1,+1,+1,+1",
+          "rng_state": 3058057609379119256,
+          "step": 104
+        },
+        "passed": true,
+        "sample_labels_sha256": "sha256:f6a3ac35cf65d9da953fa54df47da95de3256dc0f8f15cb44eeaadb4676cd38b",
+        "seed": 6280
+      },
+      "ising_ferromagnetic_ring5": {
+        "checkpoint_state": {
+          "accepted_count": 16,
+          "current_label": "-1,-1,-1,-1,-1",
+          "rng_state": 3058057609379119256,
+          "step": 104
+        },
+        "passed": true,
+        "sample_labels_sha256": "sha256:1be26bb5b47846cc51efa940b40c71af9cc55e9ebf7447622ba431c3d14e034b",
+        "seed": 6280
+      },
+      "potts_antiferro_triangle3_q3": {
+        "checkpoint_state": {
+          "accepted_count": 68,
+          "current_label": "1,1,0",
+          "rng_state": 3058057609379119256,
+          "step": 104
+        },
+        "passed": true,
+        "sample_labels_sha256": "sha256:0b48dd927723fdae039615fc43d3cd461ebb3e3a08a443d9f85d8a26cc543447",
+        "seed": 6280
+      },
+      "potts_chain3_q3": {
+        "checkpoint_state": {
+          "accepted_count": 69,
+          "current_label": "1,1,1",
+          "rng_state": 3058057609379119256,
+          "step": 104
+        },
+        "passed": true,
+        "sample_labels_sha256": "sha256:c064f8922b02f3fb0934f7d4f8a94435be870284835ca8a2b0d706de9b1f8b42",
+        "seed": 6280
+      },
+      "typed_access_control_exp6152": {
+        "checkpoint_state": {
+          "accepted_count": 42,
+          "current_label": "{\"accepted\":1,\"blocked\":0,\"candidate_item\":\"ac_e0_0\",\"clearance\":\"clearance_3\",\"clearance_ok\":1,\"eligible\":1,\"gate_open\":1,\"member_group\":\"ac_g0_0\",\"strategy_clean\":1}",
+          "rng_state": 3058057609379119256,
+          "step": 104
+        },
+        "passed": true,
+        "sample_labels_sha256": "sha256:332c145d6830c12cb83459cd9e97a9710784d97bd7f01d1a37e35f0c5c717b59",
+        "seed": 6280
+      },
+      "typed_multimodal_factor_exp6166": {
+        "checkpoint_state": {
+          "accepted_count": 50,
+          "current_label": "{\"mode_state\":\"right_shoulder\"}",
+          "rng_state": 3058057609379119256,
+          "step": 104
+        },
+        "passed": true,
+        "sample_labels_sha256": "sha256:6939521df0398171d24f1e9f8194107e502cecbf11e5d39dac2e646e729d6175",
+        "seed": 6280
+      }
+    },
+    "principle": "Proves fixed seeds replay identical traces and checkpoints."
+  },
+  "duration_s": 9.42033e-07,
+  "exp6268_fixture_path_hash_and_terminal_class": {
+    "fixture_count": 8,
+    "path": "results/experiment_6268_multimodal_sampler_fixture_suite.json",
+    "principle": "Pins the exact fixture suite and its terminal class before support claims are trusted.",
+    "sampler_fixture_suite_ready_score": 1.0,
+    "sha256": "sha256:392b6a8e4f37130ba70ba5eb4ac2ad6c18d361452ab5f1383cdc4a578af27761",
+    "status": "complete_ready",
+    "terminal_class": "complete_ready"
+  },
+  "exp6269_failure_path_hash_and_root_cause": {
+    "failure_messages": [
+      "target probabilities must have frozen shape (6,)",
+      "target probabilities must match frozen Exp6194 target"
+    ],
+    "path": "results/experiment_6269_mode_jump_multifamily_ab.json",
+    "principle": "Pins the prior failure and names the fixed ABI root cause instead of rerunning the A/B.",
+    "root_cause": "mode_jump_rust_backend accepted only the frozen six-state shape and target before Exp6269 could compare non-six-state fixtures",
+    "sampler_value_claimed": false,
+    "scientific_ab_rerun": false,
+    "sha256": "sha256:4ad015f42b42c956f143d028000791e8bcd3862b81a2f2e2ad2100961ee1c098",
+    "status": "blocked_safety",
+    "terminal_class": "blocked_safety",
+    "unsupported_cell_count": 14
+  },
+  "field_principles": {
+    "deterministic_seed_replay_by_fixture": "Proves fixed seeds replay identical traces and checkpoints.",
+    "duration_s": "Reports real wall time without timing interpretation.",
+    "exp6268_fixture_path_hash_and_terminal_class": "Pins the exact fixture suite and its terminal class before support claims are trusted.",
+    "exp6269_failure_path_hash_and_root_cause": "Pins the prior failure and names the fixed ABI root cause instead of rerunning the A/B.",
+    "field_principles": "Explains why each required field exists before a reviewer trusts the JSON shape.",
+    "field_provenance": "Maps every required field to prompt, spec, source, upstream artifact, command, or computed ABI evidence.",
+    "focused_python_test_results": "Records focused Python test and coverage results for the changed code.",
+    "focused_rust_test_results": "Records focused Rust test results for the changed core.",
+    "honest_verdict": "Uses a terminal prefix and states ABI readiness without claiming sampler value.",
+    "inference_substrate": "Declares local CPU Rust/Python variable-cardinality ABI verification, not timing, LLM, GPU, cDLS, or hardware work.",
+    "label_permutation_controls": "Shows label order drift is detected instead of silently relabeling states.",
+    "malformed_cardinality_controls": "Shows bad cardinality metadata fails closed.",
+    "malformed_shape_controls": "Shows rank and shape mismatches fail closed.",
+    "original_six_state_regression_receipt": "Proves the fixed six-state compatibility path still replays.",
+    "out_of_domain_proposal_controls": "Shows proposal labels or indices outside the metadata domain fail closed.",
+    "preconditions_checked": "Records git status, source hashes, fixture hashes, tool versions, ABI hashes, supported shapes, seed, and protected hashes before edits.",
+    "protected_files_unchanged": "Confirms conductor-owned and reconciler-owned files stayed byte-identical.",
+    "random_seed": "Records the replay seed used for deterministic controls.",
+    "reproducibility_checksum": "Content-addresses the artifact after blanking volatile duration and checksum fields.",
+    "rust_and_python_source_paths_hashes_before_after": "Shows which backend and binding files changed, by hash.",
+    "rust_python_encode_decode_roundtrip_by_fixture": "Proves both languages map state labels to indices and back exactly.",
+    "rust_python_proposal_parity_by_fixture": "Proves both languages read the same proposal domain and probability table.",
+    "source_mutation_count": "Bare zero proves no protected or preregistered source drift occurred during verification.",
+    "status": "Separates ready ABI evidence from blocked metadata, parity, or control states.",
+    "supported_fixture_families_and_shapes": "Lists the Exp6268 families and rank-1 shapes accepted by the new ABI.",
+    "test_commands": "Lists focused Python, coverage, Rust, E2E, experiment, adversarial, and suite commands.",
+    "test_exit_codes": "Stores command exit codes so failed checks cannot become readiness evidence.",
+    "treatment_attempt_accept_and_fire_counts_by_fixture": "Proves treatment activation before readiness.",
+    "typed_state_metadata_schema": "Defines shape, cardinality, encoding, proposal domain, and round-trip rules in one place.",
+    "unsupported_shapes_and_fail_closed_behavior": "Records unsupported ranks or malformed surfaces as errors, not fallback samples.",
+    "variable_cardinality_backend_ready_score": "Equals one only when support, parity, replay, activation, controls, and commands all pass.",
+    "verifier_is_oracle": "States that exact finite metadata, proposal tables, and deterministic replay are the verifier."
+  },
+  "field_provenance": {
+    "deterministic_seed_replay_by_fixture": {
+      "principle": "Proves fixed seeds replay identical traces and checkpoints.",
+      "source": "computed_abi_evidence"
+    },
+    "duration_s": {
+      "principle": "Reports real wall time without timing interpretation.",
+      "source": "artifact_writer"
+    },
+    "exp6268_fixture_path_hash_and_terminal_class": {
+      "principle": "Pins the exact fixture suite and its terminal class before support claims are trusted.",
+      "source": "upstream_artifact"
+    },
+    "exp6269_failure_path_hash_and_root_cause": {
+      "principle": "Pins the prior failure and names the fixed ABI root cause instead of rerunning the A/B.",
+      "source": "upstream_artifact"
+    },
+    "field_principles": {
+      "principle": "Explains why each required field exists before a reviewer trusts the JSON shape.",
+      "source": "spec_and_prompt"
+    },
+    "field_provenance": {
+      "principle": "Maps every required field to prompt, spec, source, upstream artifact, command, or computed ABI evidence.",
+      "source": "spec_and_prompt"
+    },
+    "focused_python_test_results": {
+      "principle": "Records focused Python test and coverage results for the changed code.",
+      "source": "command_receipts"
+    },
+    "focused_rust_test_results": {
+      "principle": "Records focused Rust test results for the changed core.",
+      "source": "command_receipts"
+    },
+    "honest_verdict": {
+      "principle": "Uses a terminal prefix and states ABI readiness without claiming sampler value.",
+      "source": "computed_abi_evidence"
+    },
+    "inference_substrate": {
+      "principle": "Declares local CPU Rust/Python variable-cardinality ABI verification, not timing, LLM, GPU, cDLS, or hardware work.",
+      "source": "computed_abi_evidence"
+    },
+    "label_permutation_controls": {
+      "principle": "Shows label order drift is detected instead of silently relabeling states.",
+      "source": "computed_abi_evidence"
+    },
+    "malformed_cardinality_controls": {
+      "principle": "Shows bad cardinality metadata fails closed.",
+      "source": "computed_abi_evidence"
+    },
+    "malformed_shape_controls": {
+      "principle": "Shows rank and shape mismatches fail closed.",
+      "source": "computed_abi_evidence"
+    },
+    "original_six_state_regression_receipt": {
+      "principle": "Proves the fixed six-state compatibility path still replays.",
+      "source": "computed_abi_evidence"
+    },
+    "out_of_domain_proposal_controls": {
+      "principle": "Shows proposal labels or indices outside the metadata domain fail closed.",
+      "source": "computed_abi_evidence"
+    },
+    "preconditions_checked": {
+      "principle": "Records git status, source hashes, fixture hashes, tool versions, ABI hashes, supported shapes, seed, and protected hashes before edits.",
+      "source": "computed_abi_evidence"
+    },
+    "protected_files_unchanged": {
+      "principle": "Confirms conductor-owned and reconciler-owned files stayed byte-identical.",
+      "source": "computed_abi_evidence"
+    },
+    "random_seed": {
+      "principle": "Records the replay seed used for deterministic controls.",
+      "source": "computed_abi_evidence"
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addresses the artifact after blanking volatile duration and checksum fields.",
+      "source": "artifact_writer"
+    },
+    "rust_and_python_source_paths_hashes_before_after": {
+      "principle": "Shows which backend and binding files changed, by hash.",
+      "source": "computed_abi_evidence"
+    },
+    "rust_python_encode_decode_roundtrip_by_fixture": {
+      "principle": "Proves both languages map state labels to indices and back exactly.",
+      "source": "computed_abi_evidence"
+    },
+    "rust_python_proposal_parity_by_fixture": {
+      "principle": "Proves both languages read the same proposal domain and probability table.",
+      "source": "computed_abi_evidence"
+    },
+    "source_mutation_count": {
+      "principle": "Bare zero proves no protected or preregistered source drift occurred during verification.",
+      "source": "computed_abi_evidence"
+    },
+    "status": {
+      "principle": "Separates ready ABI evidence from blocked metadata, parity, or control states.",
+      "source": "computed_abi_evidence"
+    },
+    "supported_fixture_families_and_shapes": {
+      "principle": "Lists the Exp6268 families and rank-1 shapes accepted by the new ABI.",
+      "source": "computed_abi_evidence"
+    },
+    "test_commands": {
+      "principle": "Lists focused Python, coverage, Rust, E2E, experiment, adversarial, and suite commands.",
+      "source": "command_receipts"
+    },
+    "test_exit_codes": {
+      "principle": "Stores command exit codes so failed checks cannot become readiness evidence.",
+      "source": "command_receipts"
+    },
+    "treatment_attempt_accept_and_fire_counts_by_fixture": {
+      "principle": "Proves treatment activation before readiness.",
+      "source": "computed_abi_evidence"
+    },
+    "typed_state_metadata_schema": {
+      "principle": "Defines shape, cardinality, encoding, proposal domain, and round-trip rules in one place.",
+      "source": "computed_abi_evidence"
+    },
+    "unsupported_shapes_and_fail_closed_behavior": {
+      "principle": "Records unsupported ranks or malformed surfaces as errors, not fallback samples.",
+      "source": "computed_abi_evidence"
+    },
+    "variable_cardinality_backend_ready_score": {
+      "principle": "Equals one only when support, parity, replay, activation, controls, and commands all pass.",
+      "source": "computed_abi_evidence"
+    },
+    "verifier_is_oracle": {
+      "principle": "States that exact finite metadata, proposal tables, and deterministic replay are the verifier.",
+      "source": "computed_abi_evidence"
+    }
+  },
+  "focused_python_test_results": {
+    "all_passed": true,
+    "commands": [
+      {
+        "command": ".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py -q -o addopts=",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py -m pytest tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py -q --no-cov -o addopts=",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py --fail-under=100",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/pytest tests/python/test_e2e_serialization.py tests/python/test_pyo3_integration.py -q -o addopts=",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/ruff check python/carnot/samplers/mode_jump_rust_backend.py python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py crates/carnot-samplers/tests/mode_jump.rs",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/python -m carnot.experiment_6280_variable_cardinality_mode_jump_backend --date 20260810",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6280_variable_cardinality_mode_jump_backend.json",
+        "exit_code": 0
+      }
+    ],
+    "principle": "Records focused Python test and coverage results for the changed code."
+  },
+  "focused_rust_test_results": {
+    "all_passed": true,
+    "commands": [
+      {
+        "command": "cargo test -p carnot-samplers --test mode_jump --quiet",
+        "exit_code": 0
+      }
+    ],
+    "principle": "Records focused Rust test results for the changed core."
+  },
+  "honest_verdict": "complete_ready: variable-cardinality mode-jump ABI supports Exp6268 families with exact Rust/Python parity; no scientific A/B value claim",
+  "inference_substrate": "local_cpu_rust_python_variable_cardinality_sampler_abi",
+  "label_permutation_controls": {
+    "all_fail_closed": true,
+    "controls": [
+      {
+        "control": "reversed_metadata_labels",
+        "error_type": "ValueError",
+        "fail_closed": true,
+        "fallback_output_substituted": false,
+        "message": "descriptor labels must match typed state metadata labels"
+      }
+    ],
+    "principle": "Shows label order drift is detected instead of silently relabeling states."
+  },
+  "malformed_cardinality_controls": {
+    "all_fail_closed": true,
+    "controls": [
+      {
+        "control": "potts_cardinality_too_small",
+        "error_type": "ValueError",
+        "fail_closed": true,
+        "fallback_output_substituted": false,
+        "message": "typed state metadata cardinality state_space_size must match cardinalities"
+      }
+    ],
+    "principle": "Shows bad cardinality metadata fails closed."
+  },
+  "malformed_shape_controls": {
+    "all_fail_closed": true,
+    "controls": [
+      {
+        "control": "metadata_rank2_shape",
+        "error_type": "ValueError",
+        "fail_closed": true,
+        "fallback_output_substituted": false,
+        "message": "typed state metadata shape must be rank-1"
+      },
+      {
+        "control": "target_rank2_shape",
+        "error_type": "ValueError",
+        "fail_closed": true,
+        "fallback_output_substituted": false,
+        "message": "target probabilities must be a rank-1 vector"
+      }
+    ],
+    "principle": "Shows rank and shape mismatches fail closed."
+  },
+  "original_six_state_regression_receipt": {
+    "checkpoint_state": {
+      "accepted_count": 61,
+      "current_label": "left_shoulder",
+      "rng_state": 3058057609379119256,
+      "step": 104
+    },
+    "decision_log_sha256": "sha256:33b5ebb2e75f8eabe08fe23ab825949d0f28ea0c2c46fdb7e8f4ec9fd22464e8",
+    "fixture": "exp6237_original_six_state",
+    "legacy_topology": "fixed_categorical_mode_jump",
+    "passed": true,
+    "principle": "Proves the fixed six-state compatibility path still replays.",
+    "sample_labels_sha256": "sha256:73fd24d48371c68d5fa7c0734bcf94361ae2e01ee6ef1bfafcf9be229e508857",
+    "typed_topology": "typed_variable_cardinality_mode_jump"
+  },
+  "out_of_domain_proposal_controls": {
+    "all_fail_closed": true,
+    "controls": [
+      {
+        "control": "asymmetric_or_self_only_support",
+        "error_type": "ValueError",
+        "fail_closed": true,
+        "fallback_output_substituted": false,
+        "message": "proposal support must be symmetric for MH correction"
+      },
+      {
+        "control": "proposal_table_outside_metadata_domain",
+        "error_type": "ValueError",
+        "fail_closed": true,
+        "fallback_output_substituted": false,
+        "message": "proposal probabilities must match typed metadata labels"
+      }
+    ],
+    "principle": "Shows proposal labels or indices outside the metadata domain fail closed."
+  },
+  "preconditions_checked": {
+    "abi_hashes_before_task": {
+      "crates/carnot-python/src/mode_jump.rs": "sha256:83b788dafaaca79f6d90304d2cc558ce339fc10404901ca0a334d91dbbe3d275",
+      "crates/carnot-samplers/src/mode_jump.rs": "sha256:d5e9fba57da0a190459c76b6bdc90e65e4e38c41cad4c13c8a54c1965079388d",
+      "openspec/capabilities/samplers/spec.md": "sha256:3e8fc1487dccd250bf9e9125d522c8eef6531e71a18d105a3e5236904e1ff234",
+      "python/carnot/samplers/backend.py": "sha256:fb121be3b43b80cb7b6583db0ff3c5adba2fb00cbd13e2cae2157f0bf8b78296",
+      "python/carnot/samplers/mode_jump_rust_backend.py": "sha256:fa202e80662270539a911473945f236d64522a16fa4398dc41b407efe3b2b9bf",
+      "python/carnot/samplers/potts_sampler.py": "sha256:a36ef46d4b0048d083bfe133165b16f944e70897aed8b3b1610f210f648f09d7",
+      "results/experiment_6268_multimodal_sampler_fixture_suite.json": "sha256:392b6a8e4f37130ba70ba5eb4ac2ad6c18d361452ab5f1383cdc4a578af27761",
+      "results/experiment_6269_mode_jump_multifamily_ab.json": "sha256:4ad015f42b42c956f143d028000791e8bcd3862b81a2f2e2ad2100961ee1c098"
+    },
+    "cargo_version": {
+      "argv": [
+        "cargo",
+        "--version"
+      ],
+      "available": true,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "cargo 1.97.1 (c980f4866 2026-06-30) (Arch Linux rust 1:1.97.1-1.1)"
+    },
+    "checks": {
+      "exp6269_failure_hash_recorded": true,
+      "fixture_hash_recorded": true,
+      "git_status_recorded": true,
+      "protected_hashes_captured": true,
+      "sampler_spec_has_req": true,
+      "seed_recorded": true,
+      "source_hashes_captured": true,
+      "supported_shapes_recorded": true
+    },
+    "experiment_id": "experiment_6280_variable_cardinality_mode_jump_backend",
+    "git_status_before": {
+      "argv": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "available": true,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "M crates/carnot-python/src/mode_jump.rs\n M crates/carnot-samplers/src/mode_jump.rs\n M crates/carnot-samplers/tests/mode_jump.rs\n M openspec/capabilities/samplers/spec.md\n M python/carnot/_rust_compat.py\n M python/carnot/samplers/mode_jump_rust_backend.py\n M tests/python/samplers/test_mode_jump_rust_backend.py\n?? python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py\n?? tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py"
+    },
+    "platform_python_version": "3.12.13",
+    "preconditions_ready": true,
+    "principle": "Records git status, source hashes, fixture hashes, tool versions, ABI hashes, supported shapes, seed, and protected hashes before edits.",
+    "protected_hashes_before_run_sha256": "sha256:a0fa21d533fa6d2cedb347b6d71d736a74b50738409a9de2ce29e8152ad50f00",
+    "python_version": "3.12.13",
+    "random_seed": 6280,
+    "run_date": "20260810",
+    "rustc_version": {
+      "argv": [
+        "rustc",
+        "--version"
+      ],
+      "available": true,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "rustc 1.97.1 (8bab26f4f 2026-07-14) (Arch Linux rust 1:1.97.1-1.1)"
+    },
+    "schema": "carnot.experiment_6280.variable_cardinality_mode_jump_backend.v1",
+    "source_hashes_before_run_sha256": "sha256:e5c7a35f76af0e49912d4cc0c21bd3f3fbb55609b48e1ab38de5f64acf089ae0",
+    "supported_fixture_shapes_sha256": "sha256:ce0d5a26b080927615e3e53552cc727f08798c6d3fa788844445f639949450bc"
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "_bmad/traceability.md": {
+        "exists": true,
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "size_bytes": 1198752
+      },
+      "ops/changelog.md": {
+        "exists": true,
+        "sha256": "sha256:825201fe68bafb34fc0bfaa7aecfb89a338882ae1aecb1fbccdeb888ad7b78bb",
+        "size_bytes": 4075242
+      },
+      "ops/status.md": {
+        "exists": true,
+        "sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+        "size_bytes": 1181912
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "size_bytes": 307361
+      }
+    },
+    "before": {
+      "_bmad/traceability.md": {
+        "exists": true,
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "size_bytes": 1198752
+      },
+      "ops/changelog.md": {
+        "exists": true,
+        "sha256": "sha256:825201fe68bafb34fc0bfaa7aecfb89a338882ae1aecb1fbccdeb888ad7b78bb",
+        "size_bytes": 4075242
+      },
+      "ops/status.md": {
+        "exists": true,
+        "sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+        "size_bytes": 1181912
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "size_bytes": 307361
+      }
+    },
+    "changed_paths": [],
+    "principle": "Confirms conductor-owned and reconciler-owned files stayed byte-identical.",
+    "unchanged": true
+  },
+  "random_seed": 6280,
+  "reproducibility_checksum": "sha256:516302c870e4c38677eff74bc3d98ec4a806872bd15a5a168479728ac1f2e442",
+  "rust_and_python_source_paths_hashes_before_after": {
+    "after_hashes": {
+      "AGENTS.md": {
+        "exists": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "size_bytes": 1165
+      },
+      "CLAUDE.md": {
+        "exists": true,
+        "sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+        "size_bytes": 287325
+      },
+      "CODEX.md": {
+        "exists": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "size_bytes": 2396
+      },
+      "crates/carnot-python/src/mode_jump.rs": {
+        "exists": true,
+        "sha256": "sha256:2320597cec0b6ae8345a2f46cec8b7f6c1af7d8b34c9a0edc993d5d7abeeb56b",
+        "size_bytes": 10882
+      },
+      "crates/carnot-samplers/src/mode_jump.rs": {
+        "exists": true,
+        "sha256": "sha256:3f6d9da9518602497c2048bc24462ebd53bf16c65550466f66013b1f1771c013",
+        "size_bytes": 22847
+      },
+      "crates/carnot-samplers/tests/mode_jump.rs": {
+        "exists": true,
+        "sha256": "sha256:60f0be434134e1102e705cefda3e5bf669ef644cb16da8c279d82f37da0b6c8b",
+        "size_bytes": 11050
+      },
+      "openspec/capabilities/samplers/spec.md": {
+        "exists": true,
+        "sha256": "sha256:e2409cde8d74ae482cb7437093c79247845afabb7e2dc893c2536e6fe592a7be",
+        "size_bytes": 301633
+      },
+      "python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py": {
+        "exists": true,
+        "sha256": "sha256:84028e4442f8b2b272d10c118734028a674001bc89e70502ad3d4fcdfcdd7489",
+        "size_bytes": 46229
+      },
+      "python/carnot/samplers/backend.py": {
+        "exists": true,
+        "sha256": "sha256:fb121be3b43b80cb7b6583db0ff3c5adba2fb00cbd13e2cae2157f0bf8b78296",
+        "size_bytes": 28471
+      },
+      "python/carnot/samplers/mode_jump_rust_backend.py": {
+        "exists": true,
+        "sha256": "sha256:f94c05ce4f355702380871ce51c4080a5291eac8c0752c9fd487066e561d2351",
+        "size_bytes": 50113
+      },
+      "python/carnot/samplers/potts_sampler.py": {
+        "exists": true,
+        "sha256": "sha256:a36ef46d4b0048d083bfe133165b16f944e70897aed8b3b1610f210f648f09d7",
+        "size_bytes": 6834
+      },
+      "results/experiment_6268_multimodal_sampler_fixture_suite.json": {
+        "exists": true,
+        "sha256": "sha256:392b6a8e4f37130ba70ba5eb4ac2ad6c18d361452ab5f1383cdc4a578af27761",
+        "size_bytes": 176858
+      },
+      "results/experiment_6269_mode_jump_multifamily_ab.json": {
+        "exists": true,
+        "sha256": "sha256:4ad015f42b42c956f143d028000791e8bcd3862b81a2f2e2ad2100961ee1c098",
+        "size_bytes": 91359
+      },
+      "tests/python/samplers/test_mode_jump_rust_backend.py": {
+        "exists": true,
+        "sha256": "sha256:9c6dbf6ffb4338fc333368b63ebbf85ba13ba2aec7492de00cacf952f379b037",
+        "size_bytes": 22180
+      },
+      "tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py": {
+        "exists": true,
+        "sha256": "sha256:608b9b8a0997e9da4a28eaec6dee0389fd6d75b33c98465b4ea0960194725615",
+        "size_bytes": 11383
+      }
+    },
+    "changed_from_pre_task": [
+      "python/carnot/samplers/mode_jump_rust_backend.py",
+      "crates/carnot-samplers/src/mode_jump.rs",
+      "crates/carnot-python/src/mode_jump.rs",
+      "openspec/capabilities/samplers/spec.md"
+    ],
+    "pre_task_hashes": {
+      "crates/carnot-python/src/mode_jump.rs": "sha256:83b788dafaaca79f6d90304d2cc558ce339fc10404901ca0a334d91dbbe3d275",
+      "crates/carnot-samplers/src/mode_jump.rs": "sha256:d5e9fba57da0a190459c76b6bdc90e65e4e38c41cad4c13c8a54c1965079388d",
+      "openspec/capabilities/samplers/spec.md": "sha256:3e8fc1487dccd250bf9e9125d522c8eef6531e71a18d105a3e5236904e1ff234",
+      "python/carnot/samplers/backend.py": "sha256:fb121be3b43b80cb7b6583db0ff3c5adba2fb00cbd13e2cae2157f0bf8b78296",
+      "python/carnot/samplers/mode_jump_rust_backend.py": "sha256:fa202e80662270539a911473945f236d64522a16fa4398dc41b407efe3b2b9bf",
+      "python/carnot/samplers/potts_sampler.py": "sha256:a36ef46d4b0048d083bfe133165b16f944e70897aed8b3b1610f210f648f09d7",
+      "results/experiment_6268_multimodal_sampler_fixture_suite.json": "sha256:392b6a8e4f37130ba70ba5eb4ac2ad6c18d361452ab5f1383cdc4a578af27761",
+      "results/experiment_6269_mode_jump_multifamily_ab.json": "sha256:4ad015f42b42c956f143d028000791e8bcd3862b81a2f2e2ad2100961ee1c098"
+    },
+    "principle": "Shows which backend and binding files changed, by hash.",
+    "source_paths": [
+      "AGENTS.md",
+      "CODEX.md",
+      "CLAUDE.md",
+      "openspec/capabilities/samplers/spec.md",
+      "python/carnot/samplers/mode_jump_rust_backend.py",
+      "python/carnot/samplers/backend.py",
+      "python/carnot/samplers/potts_sampler.py",
+      "crates/carnot-samplers/src/mode_jump.rs",
+      "crates/carnot-python/src/mode_jump.rs",
+      "crates/carnot-samplers/tests/mode_jump.rs",
+      "tests/python/samplers/test_mode_jump_rust_backend.py",
+      "python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py",
+      "tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py",
+      "results/experiment_6268_multimodal_sampler_fixture_suite.json",
+      "results/experiment_6269_mode_jump_multifamily_ab.json"
+    ]
+  },
+  "rust_python_encode_decode_roundtrip_by_fixture": {
+    "all_passed": true,
+    "fixtures": {
+      "control_unimodal_ising3": {
+        "metadata_hash": "sha256:1646a4a321bd27ff8d2202524804ba514ec2ad580747380a3b12b1de384d8ecd",
+        "mismatch_count": 0,
+        "mismatches": [],
+        "passed": true,
+        "state_space_size": 8,
+        "support_count": 8
+      },
+      "exp6237_original_six_state": {
+        "metadata_hash": "sha256:50862a4a20426e1a25b754e6602bd179b7dacb3472790114e8da4b1b44e1fb6f",
+        "mismatch_count": 0,
+        "mismatches": [],
+        "passed": true,
+        "state_space_size": 6,
+        "support_count": 6
+      },
+      "ising_ferromagnetic_ring4": {
+        "metadata_hash": "sha256:244dda9fe61fb30334e386492f5577ed1ef06b2112f050eb393060643e32e0ce",
+        "mismatch_count": 0,
+        "mismatches": [],
+        "passed": true,
+        "state_space_size": 16,
+        "support_count": 16
+      },
+      "ising_ferromagnetic_ring5": {
+        "metadata_hash": "sha256:1ed35d552f3f3d1a1afed64d368ce6aedc4b524ee58ff5d8b3c6088ed1e028da",
+        "mismatch_count": 0,
+        "mismatches": [],
+        "passed": true,
+        "state_space_size": 32,
+        "support_count": 32
+      },
+      "potts_antiferro_triangle3_q3": {
+        "metadata_hash": "sha256:b10eac54e0efeff1d7d48b30df195c6d1a02bb49552f8629f9d83b85e20a450a",
+        "mismatch_count": 0,
+        "mismatches": [],
+        "passed": true,
+        "state_space_size": 27,
+        "support_count": 27
+      },
+      "potts_chain3_q3": {
+        "metadata_hash": "sha256:85bc15c04d1d4bcdaa5aae4ac2d21c5fb9de149ef3e116fdea879fe8dadbbd13",
+        "mismatch_count": 0,
+        "mismatches": [],
+        "passed": true,
+        "state_space_size": 27,
+        "support_count": 27
+      },
+      "typed_access_control_exp6152": {
+        "metadata_hash": "sha256:bc88b6aa9a5641cec10457dd0e7e1d538c8891f2080aaa7d3df54fedc7e0fbb1",
+        "mismatch_count": 0,
+        "mismatches": [],
+        "passed": true,
+        "state_space_size": 1536,
+        "support_count": 6
+      },
+      "typed_multimodal_factor_exp6166": {
+        "metadata_hash": "sha256:045c1dc486bdb0261aed6e140fe8ef8e67bacf41d7e4e275f96ce830772c72f2",
+        "mismatch_count": 0,
+        "mismatches": [],
+        "passed": true,
+        "state_space_size": 7,
+        "support_count": 6
+      }
+    },
+    "principle": "Proves both languages map state labels to indices and back exactly."
+  },
+  "rust_python_proposal_parity_by_fixture": {
+    "all_passed": true,
+    "fixtures": {
+      "control_unimodal_ising3": {
+        "active_backend": "rust_pyo3",
+        "decision_log_sha256": "sha256:db26ba1334e166253b89c375f9146e3bfc4464e1386138d093672adb6f0762ce",
+        "fallback_backend": "python_exact_fallback",
+        "passed": true,
+        "proposal_shape": [
+          8,
+          8
+        ],
+        "sample_labels_sha256": "sha256:67f159dc61c2fbdcc7185899df36afadc35047a07a609e23e36048c87355b63e"
+      },
+      "exp6237_original_six_state": {
+        "active_backend": "rust_pyo3",
+        "decision_log_sha256": "sha256:33b5ebb2e75f8eabe08fe23ab825949d0f28ea0c2c46fdb7e8f4ec9fd22464e8",
+        "fallback_backend": "python_exact_fallback",
+        "passed": true,
+        "proposal_shape": [
+          6,
+          6
+        ],
+        "sample_labels_sha256": "sha256:73fd24d48371c68d5fa7c0734bcf94361ae2e01ee6ef1bfafcf9be229e508857"
+      },
+      "ising_ferromagnetic_ring4": {
+        "active_backend": "rust_pyo3",
+        "decision_log_sha256": "sha256:585ae944cd511cede35b59abab77e099128a830b22ab953a0aa71d93ebc0038d",
+        "fallback_backend": "python_exact_fallback",
+        "passed": true,
+        "proposal_shape": [
+          16,
+          16
+        ],
+        "sample_labels_sha256": "sha256:f6a3ac35cf65d9da953fa54df47da95de3256dc0f8f15cb44eeaadb4676cd38b"
+      },
+      "ising_ferromagnetic_ring5": {
+        "active_backend": "rust_pyo3",
+        "decision_log_sha256": "sha256:75d21ee45c7b751f3f4a4931942bebacbee4ce97dbcafd9c90b2aad53557e728",
+        "fallback_backend": "python_exact_fallback",
+        "passed": true,
+        "proposal_shape": [
+          32,
+          32
+        ],
+        "sample_labels_sha256": "sha256:1be26bb5b47846cc51efa940b40c71af9cc55e9ebf7447622ba431c3d14e034b"
+      },
+      "potts_antiferro_triangle3_q3": {
+        "active_backend": "rust_pyo3",
+        "decision_log_sha256": "sha256:416ab4a3e20e8ffed34bff2b1a27919eff9a5851ce88a80b7a8dd6805b2756dd",
+        "fallback_backend": "python_exact_fallback",
+        "passed": true,
+        "proposal_shape": [
+          27,
+          27
+        ],
+        "sample_labels_sha256": "sha256:0b48dd927723fdae039615fc43d3cd461ebb3e3a08a443d9f85d8a26cc543447"
+      },
+      "potts_chain3_q3": {
+        "active_backend": "rust_pyo3",
+        "decision_log_sha256": "sha256:252274efde015d09b05d556b4d424c3b591b2d019d685f2911555bb41d419271",
+        "fallback_backend": "python_exact_fallback",
+        "passed": true,
+        "proposal_shape": [
+          27,
+          27
+        ],
+        "sample_labels_sha256": "sha256:c064f8922b02f3fb0934f7d4f8a94435be870284835ca8a2b0d706de9b1f8b42"
+      },
+      "typed_access_control_exp6152": {
+        "active_backend": "rust_pyo3",
+        "decision_log_sha256": "sha256:dbf34201d8a11f296e0a07a3b08b419da8b58ce7c5207c9f848873899bfcacb1",
+        "fallback_backend": "python_exact_fallback",
+        "passed": true,
+        "proposal_shape": [
+          6,
+          6
+        ],
+        "sample_labels_sha256": "sha256:332c145d6830c12cb83459cd9e97a9710784d97bd7f01d1a37e35f0c5c717b59"
+      },
+      "typed_multimodal_factor_exp6166": {
+        "active_backend": "rust_pyo3",
+        "decision_log_sha256": "sha256:85d720c7fb4c20869d72e0946bccac1da64386a919527b4c47faf0851f9fe740",
+        "fallback_backend": "python_exact_fallback",
+        "passed": true,
+        "proposal_shape": [
+          6,
+          6
+        ],
+        "sample_labels_sha256": "sha256:6939521df0398171d24f1e9f8194107e502cecbf11e5d39dac2e646e729d6175"
+      }
+    },
+    "principle": "Proves both languages read the same proposal domain and probability table."
+  },
+  "source_mutation_count": 0,
+  "status": "complete_ready",
+  "supported_fixture_families_and_shapes": {
+    "all_preregistered_families_supported": true,
+    "families": {
+      "ising_multimodal": {
+        "fixture_count": 2,
+        "shapes": [
+          [
+            4
+          ],
+          [
+            5
+          ]
+        ],
+        "target_types": [
+          "ising"
+        ]
+      },
+      "original_six_state_positive_control": {
+        "fixture_count": 1,
+        "shapes": [
+          [
+            1
+          ]
+        ],
+        "target_types": [
+          "categorical_mode_jump"
+        ]
+      },
+      "potts": {
+        "fixture_count": 2,
+        "shapes": [
+          [
+            3
+          ],
+          [
+            3
+          ]
+        ],
+        "target_types": [
+          "potts"
+        ]
+      },
+      "typed_factor": {
+        "fixture_count": 2,
+        "shapes": [
+          [
+            9
+          ],
+          [
+            1
+          ]
+        ],
+        "target_types": [
+          "typed_factor"
+        ]
+      },
+      "unimodal_control": {
+        "fixture_count": 1,
+        "shapes": [
+          [
+            3
+          ]
+        ],
+        "target_types": [
+          "ising"
+        ]
+      }
+    },
+    "fixture_count": 8,
+    "fixtures": [
+      {
+        "cardinalities": [
+          6
+        ],
+        "encoding": "categorical_label_rank1",
+        "family": "original_six_state_positive_control",
+        "fixture_name": "exp6237_original_six_state",
+        "proposal_domain": "explicit_support_table",
+        "shape": [
+          1
+        ],
+        "state_space_size": 6,
+        "support_count": 6,
+        "target_type": "categorical_mode_jump"
+      },
+      {
+        "cardinalities": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "encoding": "ising_pm_one_rank1",
+        "family": "ising_multimodal",
+        "fixture_name": "ising_ferromagnetic_ring4",
+        "proposal_domain": "explicit_support_complete_no_self",
+        "shape": [
+          4
+        ],
+        "state_space_size": 16,
+        "support_count": 16,
+        "target_type": "ising"
+      },
+      {
+        "cardinalities": [
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "encoding": "ising_pm_one_rank1",
+        "family": "ising_multimodal",
+        "fixture_name": "ising_ferromagnetic_ring5",
+        "proposal_domain": "explicit_support_complete_no_self",
+        "shape": [
+          5
+        ],
+        "state_space_size": 32,
+        "support_count": 32,
+        "target_type": "ising"
+      },
+      {
+        "cardinalities": [
+          3,
+          3,
+          3
+        ],
+        "encoding": "potts_zero_based_rank1",
+        "family": "potts",
+        "fixture_name": "potts_chain3_q3",
+        "proposal_domain": "explicit_support_complete_no_self",
+        "shape": [
+          3
+        ],
+        "state_space_size": 27,
+        "support_count": 27,
+        "target_type": "potts"
+      },
+      {
+        "cardinalities": [
+          3,
+          3,
+          3
+        ],
+        "encoding": "potts_zero_based_rank1",
+        "family": "potts",
+        "fixture_name": "potts_antiferro_triangle3_q3",
+        "proposal_domain": "explicit_support_complete_no_self",
+        "shape": [
+          3
+        ],
+        "state_space_size": 27,
+        "support_count": 27,
+        "target_type": "potts"
+      },
+      {
+        "cardinalities": [
+          3,
+          2,
+          2,
+          4,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "encoding": "typed_factor_wire_order_rank1",
+        "family": "typed_factor",
+        "fixture_name": "typed_access_control_exp6152",
+        "proposal_domain": "explicit_support_complete_no_self",
+        "shape": [
+          9
+        ],
+        "state_space_size": 1536,
+        "support_count": 6,
+        "target_type": "typed_factor"
+      },
+      {
+        "cardinalities": [
+          7
+        ],
+        "encoding": "typed_factor_wire_order_rank1",
+        "family": "typed_factor",
+        "fixture_name": "typed_multimodal_factor_exp6166",
+        "proposal_domain": "explicit_support_complete_no_self",
+        "shape": [
+          1
+        ],
+        "state_space_size": 7,
+        "support_count": 6,
+        "target_type": "typed_factor"
+      },
+      {
+        "cardinalities": [
+          2,
+          2,
+          2
+        ],
+        "encoding": "ising_pm_one_rank1",
+        "family": "unimodal_control",
+        "fixture_name": "control_unimodal_ising3",
+        "proposal_domain": "explicit_support_complete_no_self",
+        "shape": [
+          3
+        ],
+        "state_space_size": 8,
+        "support_count": 8,
+        "target_type": "ising"
+      }
+    ],
+    "principle": "Lists the Exp6268 families and rank-1 shapes accepted by the new ABI."
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py -q -o addopts=",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py -m pytest tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py -q --no-cov -o addopts=",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py --fail-under=100",
+    "cargo test -p carnot-samplers --test mode_jump --quiet",
+    ".venv/bin/pytest tests/python/test_e2e_serialization.py tests/python/test_pyo3_integration.py -q -o addopts=",
+    ".venv/bin/ruff check python/carnot/samplers/mode_jump_rust_backend.py python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py crates/carnot-samplers/tests/mode_jump.rs",
+    ".venv/bin/python -m carnot.experiment_6280_variable_cardinality_mode_jump_backend --date 20260810",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6280_variable_cardinality_mode_jump_backend.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py --fail-under=100": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py -m pytest tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py -q --no-cov -o addopts=": 0,
+    ".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py -q -o addopts=": 0,
+    ".venv/bin/pytest tests/python/test_e2e_serialization.py tests/python/test_pyo3_integration.py -q -o addopts=": 0,
+    ".venv/bin/python -m carnot.experiment_6280_variable_cardinality_mode_jump_backend --date 20260810": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6280_variable_cardinality_mode_jump_backend.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py crates/carnot-samplers/tests/mode_jump.rs": 0,
+    ".venv/bin/ruff check python/carnot/samplers/mode_jump_rust_backend.py python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py": 0,
+    "cargo test -p carnot-samplers --test mode_jump --quiet": 0
+  },
+  "treatment_attempt_accept_and_fire_counts_by_fixture": {
+    "activation_proven_before_readiness": true,
+    "fixtures": {
+      "control_unimodal_ising3": {
+        "acceptance_rate": 0.173076923077,
+        "accepted_count": 18,
+        "active_backend": "rust_pyo3",
+        "attempted_count": 104,
+        "passed": true,
+        "treatment_accept_count": 14,
+        "treatment_attempt_count": 100,
+        "treatment_fire_count": 14
+      },
+      "exp6237_original_six_state": {
+        "acceptance_rate": 0.586538461538,
+        "accepted_count": 61,
+        "active_backend": "rust_pyo3",
+        "attempted_count": 104,
+        "passed": true,
+        "treatment_accept_count": 40,
+        "treatment_attempt_count": 60,
+        "treatment_fire_count": 40
+      },
+      "ising_ferromagnetic_ring4": {
+        "acceptance_rate": 0.096153846154,
+        "accepted_count": 10,
+        "active_backend": "rust_pyo3",
+        "attempted_count": 104,
+        "passed": true,
+        "treatment_accept_count": 10,
+        "treatment_attempt_count": 104,
+        "treatment_fire_count": 10
+      },
+      "ising_ferromagnetic_ring5": {
+        "acceptance_rate": 0.153846153846,
+        "accepted_count": 16,
+        "active_backend": "rust_pyo3",
+        "attempted_count": 104,
+        "passed": true,
+        "treatment_accept_count": 12,
+        "treatment_attempt_count": 97,
+        "treatment_fire_count": 12
+      },
+      "potts_antiferro_triangle3_q3": {
+        "acceptance_rate": 0.653846153846,
+        "accepted_count": 68,
+        "active_backend": "rust_pyo3",
+        "attempted_count": 104,
+        "passed": true,
+        "treatment_accept_count": 58,
+        "treatment_attempt_count": 92,
+        "treatment_fire_count": 58
+      },
+      "potts_chain3_q3": {
+        "acceptance_rate": 0.663461538462,
+        "accepted_count": 69,
+        "active_backend": "rust_pyo3",
+        "attempted_count": 104,
+        "passed": true,
+        "treatment_accept_count": 60,
+        "treatment_attempt_count": 93,
+        "treatment_fire_count": 60
+      },
+      "typed_access_control_exp6152": {
+        "acceptance_rate": 0.403846153846,
+        "accepted_count": 42,
+        "active_backend": "rust_pyo3",
+        "attempted_count": 104,
+        "passed": true,
+        "treatment_accept_count": 33,
+        "treatment_attempt_count": 69,
+        "treatment_fire_count": 33
+      },
+      "typed_multimodal_factor_exp6166": {
+        "acceptance_rate": 0.480769230769,
+        "accepted_count": 50,
+        "active_backend": "rust_pyo3",
+        "attempted_count": 104,
+        "passed": true,
+        "treatment_accept_count": 40,
+        "treatment_attempt_count": 86,
+        "treatment_fire_count": 40
+      }
+    },
+    "principle": "Proves treatment activation before readiness."
+  },
+  "typed_state_metadata_schema": {
+    "ambiguous_encoding_rejected": true,
+    "cardinality_rule": "each variable cardinality is explicit and at least two",
+    "encoding_values": [
+      "categorical_label_rank1",
+      "ising_pm_one_rank1",
+      "potts_zero_based_rank1",
+      "typed_factor_wire_order_rank1"
+    ],
+    "principle": "Defines shape, cardinality, encoding, proposal domain, and round-trip rules in one place.",
+    "proposal_domains": [
+      "explicit_support_table",
+      "explicit_support_complete_no_self"
+    ],
+    "rank": 1,
+    "roundtrip_rule": "state_label -> support_index -> state_label; state_value stays inside per-variable cardinality",
+    "schema": "carnot.mode_jump.typed_state_metadata.v1",
+    "shape_rule": "shape equals [len(cardinalities)]"
+  },
+  "unsupported_shapes_and_fail_closed_behavior": {
+    "all_fail_closed": true,
+    "controls": [
+      {
+        "control": "metadata_rank2_shape",
+        "error_type": "ValueError",
+        "fail_closed": true,
+        "fallback_output_substituted": false,
+        "message": "typed state metadata shape must be rank-1"
+      },
+      {
+        "control": "target_rank2_shape",
+        "error_type": "ValueError",
+        "fail_closed": true,
+        "fallback_output_substituted": false,
+        "message": "target probabilities must be a rank-1 vector"
+      }
+    ],
+    "fallback_output_substituted": false,
+    "principle": "Records unsupported ranks or malformed surfaces as errors, not fallback samples.",
+    "unsupported_shape_count": 2
+  },
+  "variable_cardinality_backend_ready_score": 1.0,
+  "verifier_is_oracle": {
+    "not_oracle_for": [
+      "sampler workload value",
+      "timing",
+      "hardware",
+      "scientific A/B"
+    ],
+    "oracle": "exact typed metadata validation plus deterministic Rust/Python MH trace parity",
+    "principle": "States that exact finite metadata, proposal tables, and deterministic replay are the verifier.",
+    "value": true
+  }
+}
