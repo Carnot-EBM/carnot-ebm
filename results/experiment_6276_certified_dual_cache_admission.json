@@ -1,0 +1,1229 @@
+{
+  "admission_kernel_r_squared": 1.0,
+  "arm_definitions": {
+    "all_arms_identical_event_order": true,
+    "arm_count": 4,
+    "arm_names": [
+      "no_cache",
+      "unconditional_cache",
+      "exp6264_global_threshold",
+      "certified_dual_cache"
+    ],
+    "definitions": {
+      "certified_dual_cache": "fire only after entropy, diversity, reserve, and negative-cache checks",
+      "exp6264_global_threshold": "fire when Exp6264 global threshold admits the row",
+      "no_cache": "always abstain",
+      "unconditional_cache": "fire on every clean held row"
+    },
+    "event_order_hash_by_arm": {
+      "certified_dual_cache": "sha256:4fdf74b14be52cd166af0ab8ec3654f44873d4df98334dec96613acc4557094c",
+      "exp6264_global_threshold": "sha256:4fdf74b14be52cd166af0ab8ec3654f44873d4df98334dec96613acc4557094c",
+      "no_cache": "sha256:4fdf74b14be52cd166af0ab8ec3654f44873d4df98334dec96613acc4557094c",
+      "unconditional_cache": "sha256:4fdf74b14be52cd166af0ab8ec3654f44873d4df98334dec96613acc4557094c"
+    },
+    "held_decision_count_by_arm": {
+      "certified_dual_cache": 288,
+      "exp6264_global_threshold": 288,
+      "no_cache": 288,
+      "unconditional_cache": 288
+    }
+  },
+  "broad_suite_result_and_disposition": {
+    "command": ".venv/bin/pytest tests/python -q",
+    "disposition": "failed_recorded",
+    "exit_code": 2,
+    "observed_failure_summary": "Interrupted after 11m05s with 298 failed, 14 errors, 16107 passed, 7 skipped, and xdist worker aborts in unrelated JAX/transformers tests."
+  },
+  "cache_purity_and_redundancy_by_arm": {
+    "certified_dual_cache": {
+      "cache_state_hash": "sha256:7aad00393f7b24c95468de7a1dcb31c147dbb51beecac0f7f501a525f3fbc67b",
+      "negative_cache": {
+        "family_count": 4,
+        "model_count": 2,
+        "record_count": 13,
+        "safe_record_count": 0,
+        "unsafe_record_count": 13
+      },
+      "positive_cache": {
+        "family_count": 4,
+        "model_count": 2,
+        "record_count": 21,
+        "safe_record_count": 21,
+        "unsafe_record_count": 0
+      },
+      "redundant_candidate_count": 110
+    },
+    "exp6264_global_threshold": {
+      "cache_record_count": 0,
+      "control_only": true
+    },
+    "no_cache": {
+      "cache_record_count": 0
+    },
+    "unconditional_cache": {
+      "cache_record_count": 0,
+      "control_only": true
+    }
+  },
+  "calibration_and_abstention_by_arm": {
+    "certified_dual_cache": {
+      "held": {
+        "abstain_count": 208,
+        "abstention_rate": 0.7222222222222222,
+        "brier": 0.3651307545270046,
+        "ece": 0.41760684017357896,
+        "mean_admission_probability": 0.207393159826421,
+        "mean_safe_label": 0.625,
+        "positive_label": "safe_advice_valid",
+        "row_count": 288
+      },
+      "test": {
+        "abstain_count": 160,
+        "abstention_rate": 1.0,
+        "brier": 0.625,
+        "ece": 0.625,
+        "mean_admission_probability": 0.0,
+        "mean_safe_label": 0.625,
+        "positive_label": "safe_advice_valid",
+        "row_count": 160
+      },
+      "validation": {
+        "abstain_count": 48,
+        "abstention_rate": 0.375,
+        "brier": 0.0402941976857604,
+        "ece": 0.15836539039055275,
+        "mean_admission_probability": 0.46663460960944725,
+        "mean_safe_label": 0.625,
+        "positive_label": "safe_advice_valid",
+        "row_count": 128
+      }
+    },
+    "exp6264_global_threshold": {
+      "held": {
+        "abstain_count": 108,
+        "abstention_rate": 0.375,
+        "brier": 0.06855898999055986,
+        "ece": 0.2613016075002879,
+        "mean_admission_probability": 0.5695217265942533,
+        "mean_safe_label": 0.625,
+        "positive_label": "safe_advice_valid",
+        "row_count": 288
+      },
+      "test": {
+        "abstain_count": 60,
+        "abstention_rate": 0.375,
+        "brier": 0.06867020940990183,
+        "ece": 0.26151135131104686,
+        "mean_admission_probability": 0.5696921903050688,
+        "mean_safe_label": 0.625,
+        "positive_label": "safe_advice_valid",
+        "row_count": 160
+      },
+      "validation": {
+        "abstain_count": 48,
+        "abstention_rate": 0.375,
+        "brier": 0.06841996571638238,
+        "ece": 0.2610394277368393,
+        "mean_admission_probability": 0.5693086469557338,
+        "mean_safe_label": 0.625,
+        "positive_label": "safe_advice_valid",
+        "row_count": 128
+      }
+    },
+    "no_cache": {
+      "held": {
+        "abstain_count": 288,
+        "abstention_rate": 1.0,
+        "brier": 0.625,
+        "ece": 0.625,
+        "mean_admission_probability": 0.0,
+        "mean_safe_label": 0.625,
+        "positive_label": "safe_advice_valid",
+        "row_count": 288
+      },
+      "test": {
+        "abstain_count": 160,
+        "abstention_rate": 1.0,
+        "brier": 0.625,
+        "ece": 0.625,
+        "mean_admission_probability": 0.0,
+        "mean_safe_label": 0.625,
+        "positive_label": "safe_advice_valid",
+        "row_count": 160
+      },
+      "validation": {
+        "abstain_count": 128,
+        "abstention_rate": 1.0,
+        "brier": 0.625,
+        "ece": 0.625,
+        "mean_admission_probability": 0.0,
+        "mean_safe_label": 0.625,
+        "positive_label": "safe_advice_valid",
+        "row_count": 128
+      }
+    },
+    "unconditional_cache": {
+      "held": {
+        "abstain_count": 0,
+        "abstention_rate": 0.0,
+        "brier": 0.375,
+        "ece": 0.375,
+        "mean_admission_probability": 1.0,
+        "mean_safe_label": 0.625,
+        "positive_label": "safe_advice_valid",
+        "row_count": 288
+      },
+      "test": {
+        "abstain_count": 0,
+        "abstention_rate": 0.0,
+        "brier": 0.375,
+        "ece": 0.375,
+        "mean_admission_probability": 1.0,
+        "mean_safe_label": 0.625,
+        "positive_label": "safe_advice_valid",
+        "row_count": 160
+      },
+      "validation": {
+        "abstain_count": 0,
+        "abstention_rate": 0.0,
+        "brier": 0.375,
+        "ece": 0.375,
+        "mean_admission_probability": 1.0,
+        "mean_safe_label": 0.625,
+        "positive_label": "safe_advice_valid",
+        "row_count": 128
+      }
+    }
+  },
+  "certified_admission_ready_score": 0.0,
+  "coverage_by_arm_partition_model_task_family": {
+    "certified_dual_cache": {
+      "held": {
+        "coverage": 0.2777777777777778,
+        "fire_count": 80,
+        "fire_count_by_model_task_family": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF|budget_release": 10,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|claim_triage": 10,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|credential_rotation": 10,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|data_pipeline": 10,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|budget_release": 10,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|claim_triage": 10,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|credential_rotation": 10,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|data_pipeline": 10
+        },
+        "row_count": 288,
+        "safe_row_count": 180,
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 108
+      },
+      "test": {
+        "coverage": 0.0,
+        "fire_count": 0,
+        "fire_count_by_model_task_family": {},
+        "row_count": 160,
+        "safe_row_count": 100,
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 60
+      },
+      "validation": {
+        "coverage": 0.625,
+        "fire_count": 80,
+        "fire_count_by_model_task_family": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF|budget_release": 10,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|claim_triage": 10,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|credential_rotation": 10,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|data_pipeline": 10,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|budget_release": 10,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|claim_triage": 10,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|credential_rotation": 10,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|data_pipeline": 10
+        },
+        "row_count": 128,
+        "safe_row_count": 80,
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 48
+      }
+    },
+    "exp6264_global_threshold": {
+      "held": {
+        "coverage": 0.625,
+        "fire_count": 180,
+        "fire_count_by_model_task_family": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF|budget_release": 10,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|claim_triage": 10,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|credential_rotation": 10,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|data_pipeline": 10,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|grid_egress_routing": 25,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|sensor_failover_triage": 25,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|budget_release": 10,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|claim_triage": 10,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|credential_rotation": 10,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|data_pipeline": 10,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|grid_egress_routing": 25,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|sensor_failover_triage": 25
+        },
+        "row_count": 288,
+        "safe_row_count": 180,
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 108
+      },
+      "test": {
+        "coverage": 0.625,
+        "fire_count": 100,
+        "fire_count_by_model_task_family": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF|grid_egress_routing": 25,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|sensor_failover_triage": 25,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|grid_egress_routing": 25,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|sensor_failover_triage": 25
+        },
+        "row_count": 160,
+        "safe_row_count": 100,
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 60
+      },
+      "validation": {
+        "coverage": 0.625,
+        "fire_count": 80,
+        "fire_count_by_model_task_family": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF|budget_release": 10,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|claim_triage": 10,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|credential_rotation": 10,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|data_pipeline": 10,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|budget_release": 10,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|claim_triage": 10,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|credential_rotation": 10,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|data_pipeline": 10
+        },
+        "row_count": 128,
+        "safe_row_count": 80,
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 48
+      }
+    },
+    "no_cache": {
+      "held": {
+        "coverage": 0.0,
+        "fire_count": 0,
+        "fire_count_by_model_task_family": {},
+        "row_count": 288,
+        "safe_row_count": 180,
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 108
+      },
+      "test": {
+        "coverage": 0.0,
+        "fire_count": 0,
+        "fire_count_by_model_task_family": {},
+        "row_count": 160,
+        "safe_row_count": 100,
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 60
+      },
+      "validation": {
+        "coverage": 0.0,
+        "fire_count": 0,
+        "fire_count_by_model_task_family": {},
+        "row_count": 128,
+        "safe_row_count": 80,
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 48
+      }
+    },
+    "unconditional_cache": {
+      "held": {
+        "coverage": 1.0,
+        "fire_count": 288,
+        "fire_count_by_model_task_family": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF|budget_release": 16,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|claim_triage": 16,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|credential_rotation": 16,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|data_pipeline": 16,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|grid_egress_routing": 40,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|sensor_failover_triage": 40,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|budget_release": 16,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|claim_triage": 16,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|credential_rotation": 16,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|data_pipeline": 16,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|grid_egress_routing": 40,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|sensor_failover_triage": 40
+        },
+        "row_count": 288,
+        "safe_row_count": 180,
+        "unsafe_advice_count": 108,
+        "unsafe_row_count": 108
+      },
+      "test": {
+        "coverage": 1.0,
+        "fire_count": 160,
+        "fire_count_by_model_task_family": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF|grid_egress_routing": 40,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|sensor_failover_triage": 40,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|grid_egress_routing": 40,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|sensor_failover_triage": 40
+        },
+        "row_count": 160,
+        "safe_row_count": 100,
+        "unsafe_advice_count": 60,
+        "unsafe_row_count": 60
+      },
+      "validation": {
+        "coverage": 1.0,
+        "fire_count": 128,
+        "fire_count_by_model_task_family": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF|budget_release": 16,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|claim_triage": 16,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|credential_rotation": 16,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|data_pipeline": 16,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|budget_release": 16,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|claim_triage": 16,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|credential_rotation": 16,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|data_pipeline": 16
+        },
+        "row_count": 128,
+        "safe_row_count": 80,
+        "unsafe_advice_count": 48,
+        "unsafe_row_count": 48
+      }
+    }
+  },
+  "diversity_gate_definition_and_fit_receipt": {
+    "definition": "same model-family cache records must differ by an energy gap",
+    "fit_partitions": [
+      "train"
+    ],
+    "held_labels_used_for_fit_count": 0,
+    "min_energy_gap": 0.05,
+    "observed_min_nonzero_gap": 0.0039999999999995595,
+    "redundant_candidate_count": 110,
+    "support_key": "model_hf_id|family"
+  },
+  "drift_controls": {
+    "passed": true,
+    "shifted_family_fire_count": 0,
+    "shifted_family_row_count": 160,
+    "synthetic_drift_fire_count": 0,
+    "synthetic_drift_row_count": 288
+  },
+  "duration_s": 0.223891,
+  "entropy_gate_definition_and_fit_receipt": {
+    "confidence_gate": "requires finite reserve certificate before held advice",
+    "definition": "binary entropy of Exp6161 safe-advice probability",
+    "entropy_margin": 0.01,
+    "entropy_threshold": 0.8684492111476264,
+    "fit_partitions": [
+      "train",
+      "frozen_reserve"
+    ],
+    "fit_row_count": 192,
+    "held_labels_used_for_fit_count": 0,
+    "reserve_row_count": 48,
+    "reserve_safe_fire_count": 24,
+    "reserve_unsafe_fire_count": 0
+  },
+  "exp6264_control_path_hash_and_summary": {
+    "absolute_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6264_energy_familiarity_memory_gate.json",
+    "artifact_global_threshold": {
+      "action_counts": {
+        "true_safe_acceptance": 120,
+        "unsafe_abstention": 72
+      },
+      "candidate_count": 27,
+      "direction": "lower_is_familiar",
+      "energy_max": 4.30121962427335,
+      "energy_min": -4.563480523971864,
+      "energy_scale": 4.056330472048001,
+      "fire_count": 120,
+      "fit_row_count": 192,
+      "row_count": 192,
+      "safe_count": 120,
+      "threshold": 0.13683932616272387,
+      "unsafe_count": 72,
+      "unsafe_fire_count": 0,
+      "utility": 84.0,
+      "utility_per_row": 0.4375
+    },
+    "artifact_ready_score": 0.0,
+    "artifact_status": "complete_null",
+    "exact_hash_matched": true,
+    "expected_sha256": "sha256:cc3bbe1eac4a7e07440414329bbc3aef17f9caf20950a60591eb131fa2ffffde",
+    "path": "results/experiment_6264_energy_familiarity_memory_gate.json",
+    "reproduced_global_threshold": {
+      "fit_row_count": 192,
+      "held_fire_count": 180,
+      "shifted_fire_count": 100,
+      "shifted_unsafe_advice_count": 0,
+      "threshold": 0.13683932616272387
+    },
+    "sha256": "sha256:cc3bbe1eac4a7e07440414329bbc3aef17f9caf20950a60591eb131fa2ffffde",
+    "task_conditional_threshold_reused_as_treatment": false
+  },
+  "experiment_id": "experiment_6276_certified_dual_cache_admission",
+  "field_principles": {
+    "admission_kernel_r_squared": "Reports kernel fit quality.",
+    "arm_definitions": "Freezes compared arms and shared decision order.",
+    "broad_suite_result_and_disposition": "Records broad-suite status separately.",
+    "cache_purity_and_redundancy_by_arm": "Reports cache purity and redundancy.",
+    "calibration_and_abstention_by_arm": "Reports calibration and abstention.",
+    "certified_admission_ready_score": "Uses a conjunctive readiness gate.",
+    "coverage_by_arm_partition_model_task_family": "Reports coverage before pooling.",
+    "diversity_gate_definition_and_fit_receipt": "Shows diversity gate definition and fit source.",
+    "drift_controls": "Shows shifted or drifted rows fail closed.",
+    "duration_s": "Records deterministic replay wall time.",
+    "entropy_gate_definition_and_fit_receipt": "Shows entropy gate definition and fit source.",
+    "exp6264_control_path_hash_and_summary": "Reproduces the global-threshold control without reusing task thresholds.",
+    "field_principles": "Echoes one principle for every required field.",
+    "field_provenance": "Maps each field to its evidence source.",
+    "focused_scientific_test_result": "Records focused scientific checks.",
+    "frozen_reserve_manifest_path_and_hash": "Pins reserve rows used for the certificate.",
+    "frozen_train_validation_test_partitions": "Freezes chronological partitions before fitting gates.",
+    "honest_verdict": "States the result with a terminal prefix.",
+    "impurity_admission_kernel_fit": "Records the frozen-reserve slope fit.",
+    "impurity_reproduction_number": "Reports the estimated impurity slope.",
+    "impurity_reproduction_number_upper_confidence_bound": "Fails closed unless the upper bound is below one.",
+    "inference_substrate": "Declares cached-artifact aggregation with no LLM.",
+    "paired_intervals_and_sample_sizes": "Reports paired intervals and sample sizes.",
+    "paper_mechanism_receipts_and_claim_boundary": "Separates imported mechanism ideas from local evidence.",
+    "poison_controls": "Shows poisoned rows do not enter advice or cache.",
+    "positive_and_negative_cache_schema": "Defines the two cache sides and record fields.",
+    "preconditions_checked": "Records checks completed before evaluation.",
+    "protected_files_unchanged": "Proves protected files stayed byte-identical.",
+    "random_seed": "Freezes deterministic sampling and intervals.",
+    "reproducibility_checksum": "Hashes the artifact with this field normalized.",
+    "rollback_identity_receipt": "Proves byte-identical rollback.",
+    "source_mutation_count": "Bare zero proves source artifacts stayed immutable.",
+    "status": "Terminal state follows preconditions, certificate, controls, and tests.",
+    "test_commands": "Lists focused, coverage, full-suite, CLI, spec, and adversarial checks.",
+    "test_exit_codes": "Records command exits so failures stay visible.",
+    "unsafe_advice_by_arm_partition_model_task_family": "Reports unsafe advice before pooling.",
+    "upstream_bridge_path_hash_and_terminal_class": "Pins the sealed Exp6263 source and terminal class.",
+    "utility_and_negative_transfer_by_arm": "Reports utility and negative transfer.",
+    "verifier_is_oracle": "States exact labels are not the admission verifier.",
+    "weight_mutation_count": "Bare zero proves no model weights changed."
+  },
+  "field_provenance": {
+    "admission_kernel_r_squared": {
+      "principle": "Reports kernel fit quality.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "arm_definitions": {
+      "principle": "Freezes compared arms and shared decision order.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "broad_suite_result_and_disposition": {
+      "principle": "Records broad-suite status separately.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "cache_purity_and_redundancy_by_arm": {
+      "principle": "Reports cache purity and redundancy.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "calibration_and_abstention_by_arm": {
+      "principle": "Reports calibration and abstention.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "certified_admission_ready_score": {
+      "principle": "Uses a conjunctive readiness gate.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "coverage_by_arm_partition_model_task_family": {
+      "principle": "Reports coverage before pooling.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "diversity_gate_definition_and_fit_receipt": {
+      "principle": "Shows diversity gate definition and fit source.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "drift_controls": {
+      "principle": "Shows shifted or drifted rows fail closed.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "duration_s": {
+      "principle": "Records deterministic replay wall time.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "entropy_gate_definition_and_fit_receipt": {
+      "principle": "Shows entropy gate definition and fit source.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "exp6264_control_path_hash_and_summary": {
+      "principle": "Reproduces the global-threshold control without reusing task thresholds.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "field_principles": {
+      "principle": "Echoes one principle for every required field.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "field_provenance": {
+      "principle": "Maps each field to its evidence source.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "focused_scientific_test_result": {
+      "principle": "Records focused scientific checks.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "frozen_reserve_manifest_path_and_hash": {
+      "principle": "Pins reserve rows used for the certificate.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "frozen_train_validation_test_partitions": {
+      "principle": "Freezes chronological partitions before fitting gates.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "honest_verdict": {
+      "principle": "States the result with a terminal prefix.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "impurity_admission_kernel_fit": {
+      "principle": "Records the frozen-reserve slope fit.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "impurity_reproduction_number": {
+      "principle": "Reports the estimated impurity slope.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "impurity_reproduction_number_upper_confidence_bound": {
+      "principle": "Fails closed unless the upper bound is below one.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "inference_substrate": {
+      "principle": "Declares cached-artifact aggregation with no LLM.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "paired_intervals_and_sample_sizes": {
+      "principle": "Reports paired intervals and sample sizes.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "paper_mechanism_receipts_and_claim_boundary": {
+      "principle": "Separates imported mechanism ideas from local evidence.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "poison_controls": {
+      "principle": "Shows poisoned rows do not enter advice or cache.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "positive_and_negative_cache_schema": {
+      "principle": "Defines the two cache sides and record fields.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "preconditions_checked": {
+      "principle": "Records checks completed before evaluation.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "protected_files_unchanged": {
+      "principle": "Proves protected files stayed byte-identical.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "random_seed": {
+      "principle": "Freezes deterministic sampling and intervals.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "reproducibility_checksum": {
+      "principle": "Hashes the artifact with this field normalized.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "rollback_identity_receipt": {
+      "principle": "Proves byte-identical rollback.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "source_mutation_count": {
+      "principle": "Bare zero proves source artifacts stayed immutable.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "status": {
+      "principle": "Terminal state follows preconditions, certificate, controls, and tests.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "test_commands": {
+      "principle": "Lists focused, coverage, full-suite, CLI, spec, and adversarial checks.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "test_exit_codes": {
+      "principle": "Records command exits so failures stay visible.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "unsafe_advice_by_arm_partition_model_task_family": {
+      "principle": "Reports unsafe advice before pooling.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "upstream_bridge_path_hash_and_terminal_class": {
+      "principle": "Pins the sealed Exp6263 source and terminal class.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "utility_and_negative_transfer_by_arm": {
+      "principle": "Reports utility and negative transfer.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "verifier_is_oracle": {
+      "principle": "States exact labels are not the admission verifier.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    },
+    "weight_mutation_count": {
+      "principle": "Bare zero proves no model weights changed.",
+      "source": "REQ-LEARN-6276 Exp6263 bridge, Exp6264 control, reserve certificate, arm metrics, controls, and tests"
+    }
+  },
+  "focused_scientific_test_result": {
+    "command": ".venv/bin/pytest tests/python/test_experiment_6276_certified_dual_cache_admission.py -q --no-cov -n 0",
+    "exit_code": 0,
+    "passed": true
+  },
+  "frozen_reserve_manifest_path_and_hash": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6276_certified_dual_cache_admission.json.frozen_reserve.json",
+    "row_count": 48,
+    "schema": "carnot.experiment_6276.certified_dual_cache_admission.v1.frozen_reserve_manifest",
+    "sha256": "sha256:5962d0030e6ca9e47157979f03c9ba216163bace49091376a0612561fc64cbc8"
+  },
+  "frozen_train_validation_test_partitions": {
+    "event_order_hashes": {
+      "test": "sha256:aa18761d6d21dd407a288764a234f83b8f785d08574ac5023e25cbfb190951d0",
+      "train": "sha256:8cabc36354e24243716cfca5758c6b9f9bb1324aa84e954a3bcb689deef6c755",
+      "validation": "sha256:8a379fd1a4d7bab04a0c0bfe4aaffbedf00af7cbf62a4f6ca432c2d9cae77cf6"
+    },
+    "held_labels_used_for_fit_count": 0,
+    "partition_hashes": {
+      "test": "sha256:82c1302786237053dedbf5b4c266b56756ff7d34d345762bdbf044aaabfa31e3",
+      "train": "sha256:0c1ee35ccf0e1a75563c216bc82087678458af89eff3b7a34766798162390360",
+      "validation": "sha256:536dc0b3c0136dd69f7fecade04466e14dbfa0009788a76593783437c4d1b315"
+    },
+    "partition_overlap_count": 0,
+    "quarantine_manifest_hash": "sha256:eb4170926ecd719a9afa69e929f57a570e0cf46e7d5a15a53ae3456268bdf54f",
+    "quarantined_rows_entered_headline_count": 0,
+    "quarantined_source_count": 3,
+    "quarantined_source_ids_hash": "sha256:a2cbb0fbf31f044510b7ebaa2b2c7fe5d83f6b35c169ed30dc732df0936ad04f",
+    "reserve_row_count": 48,
+    "reserve_row_hash": "sha256:e4235a70cad15ab6b038c82997acc4b8334c56165887630e12383f6d5cd66a70",
+    "reserve_selection_rule": "training rows where index modulo 4 equals 0",
+    "row_count_by_partition": {
+      "test": 160,
+      "train": 192,
+      "validation": 128
+    },
+    "unique_row_count_by_partition": {
+      "test": 160,
+      "train": 192,
+      "validation": 128
+    }
+  },
+  "honest_verdict": "complete_null: certified dual-cache mechanics ran, but a recorded test command failed so readiness stayed closed",
+  "impurity_admission_kernel_fit": {
+    "certified": true,
+    "confidence_level": 0.95,
+    "impurity_levels": [
+      0.0,
+      0.1,
+      0.2,
+      0.3
+    ],
+    "impurity_reproduction_number": 0.0,
+    "linear_fit": {
+      "intercept": 0.0,
+      "n": 4,
+      "r_squared": 1.0,
+      "slope": 0.0
+    },
+    "method": "frozen-reserve zero-propagation slope certificate",
+    "observed_admitted_impurity": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "reserve_admitted_count": 24,
+    "reserve_row_count": 48,
+    "reserve_unsafe_admitted_count": 0,
+    "upper_confidence_bound": 0.1173461561549487
+  },
+  "impurity_reproduction_number": 0.0,
+  "impurity_reproduction_number_upper_confidence_bound": 0.1173461561549487,
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "paired_intervals_and_sample_sizes": {
+    "bootstrap_replicates": 256,
+    "certified_dual_cache_vs_global_held_utility": {
+      "ci95": [
+        -0.5078125,
+        -0.3732638888888889
+      ],
+      "mean_delta": -0.4340277777777778,
+      "n": 288
+    },
+    "certified_dual_cache_vs_unconditional_known_coverage": {
+      "ci95": [
+        -0.453125,
+        -0.2890625
+      ],
+      "mean_delta": -0.375,
+      "n": 128
+    },
+    "certified_dual_cache_vs_unconditional_shifted_unsafe_advice": {
+      "ci95": [
+        -0.44375,
+        -0.30625
+      ],
+      "mean_delta": -0.375,
+      "n": 160
+    },
+    "paired_unit": "bridge_row_id"
+  },
+  "paper_mechanism_receipts_and_claim_boundary": {
+    "local_claim": "Exp6276 measures cached-artifact admission on Exp6263 only.",
+    "local_reference_path": "research-references.md",
+    "local_reference_sha256": "sha256:9136f20a0ae9b87af9de784a68116eae103b48a612dc50acde8a48162b7efe44",
+    "mechanisms": {
+      "eb_cap": {
+        "claim_boundary": "mechanism only; no video-recognition transfer claim",
+        "source": "arXiv:2608.06467",
+        "used_claim": "separate positive and negative caches with entropy and diversity gates"
+      },
+      "self_poisoning": {
+        "claim_boundary": "local reserve certificate only; no theorem reproduction claim",
+        "source": "arXiv:2607.21673",
+        "used_claim": "frozen-reserve impurity-slope certificate"
+      }
+    }
+  },
+  "poison_controls": {
+    "certified_dual_cache_fire_count": 0,
+    "passed": true,
+    "poisoned_cache_write_count": 0,
+    "poisoned_row_count": 288
+  },
+  "positive_and_negative_cache_schema": {
+    "cache_sides": [
+      "positive",
+      "negative"
+    ],
+    "cache_state_hash": "sha256:7aad00393f7b24c95468de7a1dcb31c147dbb51beecac0f7f501a525f3fbc67b",
+    "negative_record_count": 13,
+    "positive_record_count": 21,
+    "record_fields": [
+      "cache_side",
+      "row_id",
+      "event_id",
+      "model_hf_id",
+      "family",
+      "energy",
+      "entropy",
+      "unsafe_label",
+      "support_key",
+      "source_hash"
+    ],
+    "schema": "carnot.experiment_6276.certified_dual_cache_admission.v1.dual_cache_record"
+  },
+  "precondition_hashes": {
+    "AGENTS.md": {
+      "exists": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    "CLAUDE.md": {
+      "exists": true,
+      "sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59"
+    },
+    "CODEX.md": {
+      "exists": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    "openspec/capabilities/self-learning/spec.md": {
+      "exists": true,
+      "sha256": "sha256:d2a99127db8f7de9d8360184275e87d3fe79c9125e77c3541d15bcdfa83ab2c6"
+    },
+    "python/carnot/experiment_6276_certified_dual_cache_admission.py": {
+      "exists": true,
+      "sha256": "sha256:4bbb53259b5126a88c9576cc169ef136901ddf8b52ca062274315b7da7c993c0"
+    },
+    "research-references.md": {
+      "exists": true,
+      "sha256": "sha256:9136f20a0ae9b87af9de784a68116eae103b48a612dc50acde8a48162b7efe44"
+    },
+    "results/experiment_6263_clean_sota_event_replay_bridge.json": {
+      "exists": true,
+      "sha256": "sha256:38af00462fdc8d389f27f223f02e22faa2994a60193f983209ce6b9d1f42cdd6"
+    },
+    "results/experiment_6263_clean_sota_event_replay_bridge.quarantine.json": {
+      "exists": true,
+      "sha256": "sha256:eb4170926ecd719a9afa69e929f57a570e0cf46e7d5a15a53ae3456268bdf54f"
+    },
+    "results/experiment_6263_clean_sota_event_replay_bridge.rows.jsonl": {
+      "exists": true,
+      "sha256": "sha256:3ba8b1b0eb256fc157eb2cc0333df169c206c7e33b8a35ef80c2242b53d1483b"
+    },
+    "results/experiment_6264_energy_familiarity_memory_gate.json": {
+      "exists": true,
+      "sha256": "sha256:cc3bbe1eac4a7e07440414329bbc3aef17f9caf20950a60591eb131fa2ffffde"
+    },
+    "tests/python/test_experiment_6276_certified_dual_cache_admission.py": {
+      "exists": true,
+      "sha256": "sha256:709a96b276294631fdb323d84644fd3c544e1230a5c4e2db933cc4149b03f43b"
+    }
+  },
+  "preconditions_checked": {
+    "arms_frozen": [
+      "no_cache",
+      "unconditional_cache",
+      "exp6264_global_threshold",
+      "certified_dual_cache"
+    ],
+    "certificate_available": true,
+    "confidence_method": "one-sided exact zero-success upper bound",
+    "exp6263_bridge_hash_verified": true,
+    "exp6264_control_hash_verified": true,
+    "held_labels_used_for_fit_count": 0,
+    "protected_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:989c85e9484e84ca2cde844c94c9abf6e91ecd9f34c485e6c4af8f33c42b6f78",
+      "ops/status.md": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+      "results/experiment_6263_clean_sota_event_replay_bridge.json": "sha256:38af00462fdc8d389f27f223f02e22faa2994a60193f983209ce6b9d1f42cdd6",
+      "results/experiment_6263_clean_sota_event_replay_bridge.quarantine.json": "sha256:eb4170926ecd719a9afa69e929f57a570e0cf46e7d5a15a53ae3456268bdf54f",
+      "results/experiment_6263_clean_sota_event_replay_bridge.rows.jsonl": "sha256:3ba8b1b0eb256fc157eb2cc0333df169c206c7e33b8a35ef80c2242b53d1483b",
+      "results/experiment_6264_energy_familiarity_memory_gate.json": "sha256:cc3bbe1eac4a7e07440414329bbc3aef17f9caf20950a60591eb131fa2ffffde",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "random_seed": 6276,
+    "reserve_frozen_before_held_evaluation": true,
+    "safety_gate": "entropy + positive support + negative-cache veto + reserve certificate",
+    "sample_sizes_verified": true,
+    "source_hashes_after": {
+      "results/experiment_6263_clean_sota_event_replay_bridge.json": "sha256:38af00462fdc8d389f27f223f02e22faa2994a60193f983209ce6b9d1f42cdd6",
+      "results/experiment_6263_clean_sota_event_replay_bridge.quarantine.json": "sha256:eb4170926ecd719a9afa69e929f57a570e0cf46e7d5a15a53ae3456268bdf54f",
+      "results/experiment_6263_clean_sota_event_replay_bridge.rows.jsonl": "sha256:3ba8b1b0eb256fc157eb2cc0333df169c206c7e33b8a35ef80c2242b53d1483b",
+      "results/experiment_6264_energy_familiarity_memory_gate.json": "sha256:cc3bbe1eac4a7e07440414329bbc3aef17f9caf20950a60591eb131fa2ffffde"
+    },
+    "source_hashes_before": {
+      "results/experiment_6263_clean_sota_event_replay_bridge.json": "sha256:38af00462fdc8d389f27f223f02e22faa2994a60193f983209ce6b9d1f42cdd6",
+      "results/experiment_6263_clean_sota_event_replay_bridge.quarantine.json": "sha256:eb4170926ecd719a9afa69e929f57a570e0cf46e7d5a15a53ae3456268bdf54f",
+      "results/experiment_6263_clean_sota_event_replay_bridge.rows.jsonl": "sha256:3ba8b1b0eb256fc157eb2cc0333df169c206c7e33b8a35ef80c2242b53d1483b",
+      "results/experiment_6264_energy_familiarity_memory_gate.json": "sha256:cc3bbe1eac4a7e07440414329bbc3aef17f9caf20950a60591eb131fa2ffffde"
+    }
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:989c85e9484e84ca2cde844c94c9abf6e91ecd9f34c485e6c4af8f33c42b6f78",
+      "ops/status.md": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+      "results/experiment_6263_clean_sota_event_replay_bridge.json": "sha256:38af00462fdc8d389f27f223f02e22faa2994a60193f983209ce6b9d1f42cdd6",
+      "results/experiment_6263_clean_sota_event_replay_bridge.quarantine.json": "sha256:eb4170926ecd719a9afa69e929f57a570e0cf46e7d5a15a53ae3456268bdf54f",
+      "results/experiment_6263_clean_sota_event_replay_bridge.rows.jsonl": "sha256:3ba8b1b0eb256fc157eb2cc0333df169c206c7e33b8a35ef80c2242b53d1483b",
+      "results/experiment_6264_energy_familiarity_memory_gate.json": "sha256:cc3bbe1eac4a7e07440414329bbc3aef17f9caf20950a60591eb131fa2ffffde",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:989c85e9484e84ca2cde844c94c9abf6e91ecd9f34c485e6c4af8f33c42b6f78",
+      "ops/status.md": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+      "results/experiment_6263_clean_sota_event_replay_bridge.json": "sha256:38af00462fdc8d389f27f223f02e22faa2994a60193f983209ce6b9d1f42cdd6",
+      "results/experiment_6263_clean_sota_event_replay_bridge.quarantine.json": "sha256:eb4170926ecd719a9afa69e929f57a570e0cf46e7d5a15a53ae3456268bdf54f",
+      "results/experiment_6263_clean_sota_event_replay_bridge.rows.jsonl": "sha256:3ba8b1b0eb256fc157eb2cc0333df169c206c7e33b8a35ef80c2242b53d1483b",
+      "results/experiment_6264_energy_familiarity_memory_gate.json": "sha256:cc3bbe1eac4a7e07440414329bbc3aef17f9caf20950a60591eb131fa2ffffde",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "changed_paths": [],
+    "unchanged": true
+  },
+  "random_seed": 6276,
+  "reproducibility_checksum": "sha256:bd43737ddf1b19c40f6114b72d853d81734cb1a8f736e64fdb39758fe364cadb",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6276_certified_dual_cache_admission.json",
+  "rollback_identity_receipt": {
+    "baseline_cache_hash": "sha256:7aad00393f7b24c95468de7a1dcb31c147dbb51beecac0f7f501a525f3fbc67b",
+    "exact_rollback": true,
+    "mutated_cache_hash": "sha256:8cd053080cb9a12ce9c3b2008483dd6e54a80dc4e7635e78e4868f8b2d4decb7",
+    "restored_cache_hash": "sha256:7aad00393f7b24c95468de7a1dcb31c147dbb51beecac0f7f501a525f3fbc67b",
+    "rollback_mode": "in-memory state restore before artifact write"
+  },
+  "run_date": "20260810",
+  "schema": "carnot.experiment_6276.certified_dual_cache_admission.v1",
+  "source_mutation_count": 0,
+  "status": "complete_null",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6276_certified_dual_cache_admission.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6276_certified_dual_cache_admission.py -m pytest tests/python/test_experiment_6276_certified_dual_cache_admission.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6276_certified_dual_cache_admission.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python -m carnot.experiment_6276_certified_dual_cache_admission --date 20260810",
+    ".venv/bin/python -m carnot.experiment_6276_certified_dual_cache_admission --date 20260810 --validate",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6276_certified_dual_cache_admission.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6276_certified_dual_cache_admission.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6276_certified_dual_cache_admission.py -m pytest tests/python/test_experiment_6276_certified_dual_cache_admission.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6276_certified_dual_cache_admission.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_6276_certified_dual_cache_admission.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6276_certified_dual_cache_admission --date 20260810": 0,
+    ".venv/bin/python -m carnot.experiment_6276_certified_dual_cache_admission --date 20260810 --validate": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6276_certified_dual_cache_admission.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6276_certified_dual_cache_admission.py": 0
+  },
+  "unsafe_advice_by_arm_partition_model_task_family": {
+    "certified_dual_cache": {
+      "held": {
+        "row_count": 288,
+        "unsafe_advice_by_model_task_family": {},
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 108
+      },
+      "test": {
+        "row_count": 160,
+        "unsafe_advice_by_model_task_family": {},
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 60
+      },
+      "validation": {
+        "row_count": 128,
+        "unsafe_advice_by_model_task_family": {},
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 48
+      }
+    },
+    "exp6264_global_threshold": {
+      "held": {
+        "row_count": 288,
+        "unsafe_advice_by_model_task_family": {},
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 108
+      },
+      "test": {
+        "row_count": 160,
+        "unsafe_advice_by_model_task_family": {},
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 60
+      },
+      "validation": {
+        "row_count": 128,
+        "unsafe_advice_by_model_task_family": {},
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 48
+      }
+    },
+    "no_cache": {
+      "held": {
+        "row_count": 288,
+        "unsafe_advice_by_model_task_family": {},
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 108
+      },
+      "test": {
+        "row_count": 160,
+        "unsafe_advice_by_model_task_family": {},
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 60
+      },
+      "validation": {
+        "row_count": 128,
+        "unsafe_advice_by_model_task_family": {},
+        "unsafe_advice_count": 0,
+        "unsafe_row_count": 48
+      }
+    },
+    "unconditional_cache": {
+      "held": {
+        "row_count": 288,
+        "unsafe_advice_by_model_task_family": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF|budget_release": 6,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|claim_triage": 6,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|credential_rotation": 6,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|data_pipeline": 6,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|grid_egress_routing": 15,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|sensor_failover_triage": 15,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|budget_release": 6,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|claim_triage": 6,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|credential_rotation": 6,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|data_pipeline": 6,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|grid_egress_routing": 15,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|sensor_failover_triage": 15
+        },
+        "unsafe_advice_count": 108,
+        "unsafe_row_count": 108
+      },
+      "test": {
+        "row_count": 160,
+        "unsafe_advice_by_model_task_family": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF|grid_egress_routing": 15,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|sensor_failover_triage": 15,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|grid_egress_routing": 15,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|sensor_failover_triage": 15
+        },
+        "unsafe_advice_count": 60,
+        "unsafe_row_count": 60
+      },
+      "validation": {
+        "row_count": 128,
+        "unsafe_advice_by_model_task_family": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF|budget_release": 6,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|claim_triage": 6,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|credential_rotation": 6,
+          "unsloth/Qwen3.6-35B-A3B-GGUF|data_pipeline": 6,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|budget_release": 6,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|claim_triage": 6,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|credential_rotation": 6,
+          "unsloth/gemma-4-26B-A4B-it-GGUF|data_pipeline": 6
+        },
+        "unsafe_advice_count": 48,
+        "unsafe_row_count": 48
+      }
+    }
+  },
+  "upstream_bridge_path_hash_and_terminal_class": {
+    "absolute_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6263_clean_sota_event_replay_bridge.json",
+    "exact_hash_matched": true,
+    "expected_sha256": "sha256:38af00462fdc8d389f27f223f02e22faa2994a60193f983209ce6b9d1f42cdd6",
+    "honest_verdict": "complete_ready: clean Exp6160 and Exp6162 local-SOTA events are sealed for chronological replay; Exp6146 remains quarantine-only",
+    "path": "results/experiment_6263_clean_sota_event_replay_bridge.json",
+    "sha256": "sha256:38af00462fdc8d389f27f223f02e22faa2994a60193f983209ce6b9d1f42cdd6",
+    "status": "complete_ready",
+    "terminal_class": "complete_ready"
+  },
+  "utility_and_negative_transfer_by_arm": {
+    "certified_dual_cache": {
+      "held": {
+        "action_counts": {
+          "safe_abstention": 100,
+          "true_safe_acceptance": 80,
+          "unsafe_abstention": 108
+        },
+        "negative_transfer_present": false,
+        "row_count": 288,
+        "unsafe_advice_excess_vs_no_cache": 0,
+        "utility": 1.0,
+        "utility_delta_vs_no_cache": 0.3472222222222222,
+        "utility_per_row": 0.003472222222222222
+      },
+      "test": {
+        "action_counts": {
+          "safe_abstention": 100,
+          "unsafe_abstention": 60
+        },
+        "negative_transfer_present": false,
+        "row_count": 160,
+        "unsafe_advice_excess_vs_no_cache": 0,
+        "utility": -55.0,
+        "utility_delta_vs_no_cache": 0.0,
+        "utility_per_row": -0.34375
+      },
+      "validation": {
+        "action_counts": {
+          "true_safe_acceptance": 80,
+          "unsafe_abstention": 48
+        },
+        "negative_transfer_present": false,
+        "row_count": 128,
+        "unsafe_advice_excess_vs_no_cache": 0,
+        "utility": 56.0,
+        "utility_delta_vs_no_cache": 0.78125,
+        "utility_per_row": 0.4375
+      }
+    },
+    "exp6264_global_threshold": {
+      "held": {
+        "action_counts": {
+          "true_safe_acceptance": 180,
+          "unsafe_abstention": 108
+        },
+        "negative_transfer_present": false,
+        "row_count": 288,
+        "unsafe_advice_excess_vs_no_cache": 0,
+        "utility": 126.0,
+        "utility_delta_vs_no_cache": 0.78125,
+        "utility_per_row": 0.4375
+      },
+      "test": {
+        "action_counts": {
+          "true_safe_acceptance": 100,
+          "unsafe_abstention": 60
+        },
+        "negative_transfer_present": false,
+        "row_count": 160,
+        "unsafe_advice_excess_vs_no_cache": 0,
+        "utility": 70.0,
+        "utility_delta_vs_no_cache": 0.78125,
+        "utility_per_row": 0.4375
+      },
+      "validation": {
+        "action_counts": {
+          "true_safe_acceptance": 80,
+          "unsafe_abstention": 48
+        },
+        "negative_transfer_present": false,
+        "row_count": 128,
+        "unsafe_advice_excess_vs_no_cache": 0,
+        "utility": 56.0,
+        "utility_delta_vs_no_cache": 0.78125,
+        "utility_per_row": 0.4375
+      }
+    },
+    "no_cache": {
+      "held": {
+        "action_counts": {
+          "safe_abstention": 180,
+          "unsafe_abstention": 108
+        },
+        "negative_transfer_present": false,
+        "row_count": 288,
+        "unsafe_advice_excess_vs_no_cache": 0,
+        "utility": -99.0,
+        "utility_delta_vs_no_cache": 0.0,
+        "utility_per_row": -0.34375
+      },
+      "test": {
+        "action_counts": {
+          "safe_abstention": 100,
+          "unsafe_abstention": 60
+        },
+        "negative_transfer_present": false,
+        "row_count": 160,
+        "unsafe_advice_excess_vs_no_cache": 0,
+        "utility": -55.0,
+        "utility_delta_vs_no_cache": 0.0,
+        "utility_per_row": -0.34375
+      },
+      "validation": {
+        "action_counts": {
+          "safe_abstention": 80,
+          "unsafe_abstention": 48
+        },
+        "negative_transfer_present": false,
+        "row_count": 128,
+        "unsafe_advice_excess_vs_no_cache": 0,
+        "utility": -44.0,
+        "utility_delta_vs_no_cache": 0.0,
+        "utility_per_row": -0.34375
+      }
+    },
+    "unconditional_cache": {
+      "held": {
+        "action_counts": {
+          "false_unsafe_acceptance": 108,
+          "true_safe_acceptance": 180
+        },
+        "negative_transfer_present": true,
+        "row_count": 288,
+        "unsafe_advice_excess_vs_no_cache": 108,
+        "utility": -684.0,
+        "utility_delta_vs_no_cache": -2.03125,
+        "utility_per_row": -2.375
+      },
+      "test": {
+        "action_counts": {
+          "false_unsafe_acceptance": 60,
+          "true_safe_acceptance": 100
+        },
+        "negative_transfer_present": true,
+        "row_count": 160,
+        "unsafe_advice_excess_vs_no_cache": 60,
+        "utility": -380.0,
+        "utility_delta_vs_no_cache": -2.03125,
+        "utility_per_row": -2.375
+      },
+      "validation": {
+        "action_counts": {
+          "false_unsafe_acceptance": 48,
+          "true_safe_acceptance": 80
+        },
+        "negative_transfer_present": true,
+        "row_count": 128,
+        "unsafe_advice_excess_vs_no_cache": 48,
+        "utility": -304.0,
+        "utility_delta_vs_no_cache": -2.03125,
+        "utility_per_row": -2.375
+      }
+    }
+  },
+  "verifier_is_oracle": false,
+  "weight_mutation_count": 0
+}

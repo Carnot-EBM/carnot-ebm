@@ -415,6 +415,139 @@ enter advice, and repeated replay is byte-stable.
 
 ---
 
+## REQ-LEARN-6276: Certified Dual-Cache Admission on the Sealed Bridge
+
+**Given** the sealed Exp6263 bridge and the Exp6264 global-threshold control
+**When** Exp6276 evaluates adaptive memory admission
+**Then** it SHALL compare no cache, unconditional cache, Exp6264 global
+threshold, and certified dual-cache arms
+**And** it SHALL write
+`results/experiment_6276_certified_dual_cache_admission.json`.
+
+### REQ-LEARN-6276 Sub-requirements
+
+- REQ-LEARN-6276-1: Exp6276 SHALL verify the Exp6263 bridge hash and terminal
+  class, reproduce the Exp6264 global-threshold control, freeze train,
+  validation, test, reserve rows, arms, safety gate, confidence method, seed,
+  and protected hashes before held evaluation.
+- REQ-LEARN-6276-1a: The arm identifiers SHALL be `no_cache`,
+  `unconditional_cache`, `exp6264_global_threshold`, and
+  `certified_dual_cache`.
+- REQ-LEARN-6276-2: The certified treatment SHALL keep separate positive and
+  negative caches. Cache records SHALL come only from the training prefix and
+  SHALL record label side, family, model, energy, entropy, support, and source
+  row hash.
+- REQ-LEARN-6276-3: Entropy and diversity gates SHALL be fit only from the
+  training prefix and frozen reserve. Held labels SHALL NOT tune gates.
+- REQ-LEARN-6276-4: A frozen-reserve certificate SHALL estimate the adaptive
+  impurity admission-kernel slope and an upper confidence bound. The treatment
+  SHALL fail closed when the upper bound is at least `1.0` or cannot be
+  estimated.
+- REQ-LEARN-6276-5: Held chronological, shifted-family, poison, and drift rows
+  SHALL be reported by arm, partition, model, task family, and stratum before
+  pooling.
+- REQ-LEARN-6276-6: Readiness SHALL require impurity upper bound below `1.0`,
+  useful heldout coverage, zero unsafe shifted advice, clean poison controls,
+  clean drift controls, exact rollback, zero source mutation, zero weight
+  mutation, protected files unchanged, and clean recorded tests.
+- REQ-LEARN-6276-7: `weight_mutation_count` and `source_mutation_count` SHALL
+  be bare `0`. The artifact SHALL declare
+  `aggregation_from_upstream_artifacts`, set `verifier_is_oracle` to `false`,
+  and state that exact labels are evaluation evidence.
+
+### Required Artifact Fields and Principles
+
+- `status`: Terminal state follows preconditions, certificate, controls, and
+  tests.
+- `upstream_bridge_path_hash_and_terminal_class`: Pins the sealed Exp6263
+  source and terminal class.
+- `exp6264_control_path_hash_and_summary`: Reproduces the global-threshold
+  control without reusing task thresholds.
+- `paper_mechanism_receipts_and_claim_boundary`: Separates imported mechanism
+  ideas from local evidence.
+- `frozen_train_validation_test_partitions`: Freezes chronological partitions
+  before fitting gates.
+- `frozen_reserve_manifest_path_and_hash`: Pins reserve rows used for the
+  certificate.
+- `arm_definitions`: Freezes compared arms and shared decision order.
+- `positive_and_negative_cache_schema`: Defines the two cache sides and record
+  fields.
+- `entropy_gate_definition_and_fit_receipt`: Shows entropy gate definition and
+  fit source.
+- `diversity_gate_definition_and_fit_receipt`: Shows diversity gate definition
+  and fit source.
+- `impurity_admission_kernel_fit`: Records the frozen-reserve slope fit.
+- `admission_kernel_r_squared`: Reports kernel fit quality.
+- `impurity_reproduction_number`: Reports the estimated impurity slope.
+- `impurity_reproduction_number_upper_confidence_bound`: Fails closed unless
+  the upper bound is below one.
+- `coverage_by_arm_partition_model_task_family`: Reports coverage before
+  pooling.
+- `unsafe_advice_by_arm_partition_model_task_family`: Reports unsafe advice
+  before pooling.
+- `calibration_and_abstention_by_arm`: Reports calibration and abstention.
+- `cache_purity_and_redundancy_by_arm`: Reports cache purity and redundancy.
+- `utility_and_negative_transfer_by_arm`: Reports utility and negative
+  transfer.
+- `poison_controls`: Shows poisoned rows do not enter advice or cache.
+- `drift_controls`: Shows shifted or drifted rows fail closed.
+- `rollback_identity_receipt`: Proves byte-identical rollback.
+- `paired_intervals_and_sample_sizes`: Reports paired intervals and sample
+  sizes.
+- `focused_scientific_test_result`: Records focused scientific checks.
+- `broad_suite_result_and_disposition`: Records broad-suite status separately.
+- `certified_admission_ready_score`: Uses a conjunctive readiness gate.
+- `weight_mutation_count`: Bare zero proves no model weights changed.
+- `source_mutation_count`: Bare zero proves source artifacts stayed immutable.
+- `protected_files_unchanged`: Proves protected files stayed byte-identical.
+- `preconditions_checked`: Records checks completed before evaluation.
+- `inference_substrate`: Declares cached-artifact aggregation with no LLM.
+- `verifier_is_oracle`: States exact labels are not the admission verifier.
+- `field_provenance`: Maps each field to its evidence source.
+- `field_principles`: Echoes one principle for every required field.
+- `test_commands`: Lists focused, coverage, full-suite, CLI, spec, and
+  adversarial checks.
+- `test_exit_codes`: Records command exits so failures stay visible.
+- `duration_s`: Records deterministic replay wall time.
+- `random_seed`: Freezes deterministic sampling and intervals.
+- `reproducibility_checksum`: Hashes the artifact with this field normalized.
+- `honest_verdict`: States the result with a terminal prefix.
+
+## SCENARIO-LEARN-6276-PARTITIONS: Reserve and Held Rows Stay Frozen
+
+**Given** the Exp6263 bridge rows
+**When** Exp6276 builds caches and gates
+**Then** only training-prefix and reserve rows affect admission parameters
+**And** validation, test, poison, and drift labels remain evaluation-only.
+
+## SCENARIO-LEARN-6276-DUAL-CACHE: Dual Cache Uses Entropy and Diversity Gates
+
+**Given** positive, negative, poisoned, unseen-family, and redundant rows
+**When** the certified dual-cache arm evaluates a candidate
+**Then** advice fires only for clean rows that pass entropy, diversity, reserve,
+and negative-cache veto checks.
+
+## SCENARIO-LEARN-6276-CERTIFICATE: Impurity Upper Bound Fails Closed
+
+**Given** a frozen-reserve admission kernel
+**When** the impurity reproduction upper confidence bound is estimated
+**Then** readiness requires the bound to be finite and below `1.0`.
+
+## SCENARIO-LEARN-6276-CONTROLS: Controls and Rollback Are Exact
+
+**Given** poison rows, shifted-family drift rows, and a simulated cache store
+**When** Exp6276 evaluates controls and rollback
+**Then** poison and drift advice counts stay zero and rollback restores the
+baseline cache hash exactly.
+
+## Implementation Status (REQ-LEARN-6276)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6276 | Planned | tests/python/test_experiment_6276_certified_dual_cache_admission.py |
+
+---
+
 ## REQ-PSV-005: PSV Question Pool Must Contain >= 100 Questions and Sample Randomly Per Iteration
 
 **Given** a PSV self-play loop running for multiple iterations
