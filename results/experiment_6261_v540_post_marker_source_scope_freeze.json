@@ -77,8 +77,8 @@
         "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605"
       ],
       "strict_post_marker_hits": 0,
-      "endpoint_status": "api_http_429_rate_limited",
-      "receipt": "Semantic Scholar keyword and paper routes were rate-limited, so no citation row was promoted."
+      "endpoint_status": "ebt_api_http_429_arm_api_ok",
+      "receipt": "EBT paper lookup was rate-limited. ARM-EBM lookup returned eight citations, all pre-marker or date-ambiguous, so no citation row was promoted."
     },
     {
       "channel": "hugging_face_papers",
@@ -577,8 +577,8 @@
         "unchanged": true
       },
       "ops/changelog.md": {
-        "before_sha256": "sha256:1cc7f96c902a9ae6cabf4a9f286b40ff7bee53da3a247ca1fecdf003b42bc34a",
-        "after_sha256": "sha256:1cc7f96c902a9ae6cabf4a9f286b40ff7bee53da3a247ca1fecdf003b42bc34a",
+        "before_sha256": "sha256:ad37e2388e364b15bddfdf48fc69e5c879e50389eb42aed6869fef38eaf817c6",
+        "after_sha256": "sha256:ad37e2388e364b15bddfdf48fc69e5c879e50389eb42aed6869fef38eaf817c6",
         "authorized_after_sha256": null,
         "unchanged": true
       },
@@ -610,34 +610,10 @@
   },
   "preconditions_checked": {
     "git_status_before": [
-      " M openspec/capabilities/research-harnesses/spec.md",
-      " M ops/conductor-heartbeat.json",
-      " M ops/conductor-log.md",
-      " M ops/conductor-state.json",
-      " M results/experiment_1822_rtl_synth.log",
-      " M results/experiment_2031.json",
-      " M results/experiment_2427_kv260_yosys_v4.json",
-      " M results/experiment_2510_ensemble_v7.json",
-      " M results/experiment_2824_cross_corpus_verifier_matrix.json",
-      " M results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json",
-      " M results/experiment_833_constraint_delta_root_cause.json",
-      "?? python/carnot/experiment_6261_v540_post_marker_source_scope_freeze.py",
-      "?? tests/python/test_experiment_6261_v540_post_marker_source_scope_freeze.py"
+      " M python/carnot/experiment_6261_v540_post_marker_source_scope_freeze.py"
     ],
     "git_status_after_tests": [
-      " M openspec/capabilities/research-harnesses/spec.md",
-      " M ops/conductor-heartbeat.json",
-      " M ops/conductor-log.md",
-      " M ops/conductor-state.json",
-      " M results/experiment_1822_rtl_synth.log",
-      " M results/experiment_2031.json",
-      " M results/experiment_2427_kv260_yosys_v4.json",
-      " M results/experiment_2510_ensemble_v7.json",
-      " M results/experiment_2824_cross_corpus_verifier_matrix.json",
-      " M results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json",
-      " M results/experiment_833_constraint_delta_root_cause.json",
-      "?? python/carnot/experiment_6261_v540_post_marker_source_scope_freeze.py",
-      "?? tests/python/test_experiment_6261_v540_post_marker_source_scope_freeze.py"
+      " M python/carnot/experiment_6261_v540_post_marker_source_scope_freeze.py"
     ],
     "input_hashes": {
       "CODEX.md": {
@@ -728,7 +704,7 @@
       },
       "ops/changelog.md": {
         "present": true,
-        "sha256": "sha256:1cc7f96c902a9ae6cabf4a9f286b40ff7bee53da3a247ca1fecdf003b42bc34a"
+        "sha256": "sha256:ad37e2388e364b15bddfdf48fc69e5c879e50389eb42aed6869fef38eaf817c6"
       },
       "ops/status.md": {
         "present": true,
@@ -781,7 +757,7 @@
       "failure_count": 0,
       "failures": []
     },
-    "full_suite_failure_summary": ".venv/bin/pytest tests/python -q exited 3 after 3062.72s: 469 failed, 24036 passed, 56 skipped, 177 warnings, 15 errors. Observed unrelated worker crashes in z3_math_verifier, experiment_295_apple_verify_repair tokenizer prewarm, and tests/python/test_experiment_834_jepa_v24_dg_prm.py."
+    "full_suite_failure_summary": ".venv/bin/pytest tests/python -q exited 2 after 1116.16s: 289 failed, 16142 passed, 31 skipped, 151 warnings, 14 errors before manual interruption after the command had already failed. Observed unrelated worker crashes in z3_math_verifier and experiment_295_apple_verify_repair tokenizer prewarm, plus reporting artifact FileNotFound errors."
   },
   "inference_substrate": "post_marker_source_ingestion_and_v540_scope_freeze",
   "verifier_is_oracle": false,
@@ -1155,10 +1131,10 @@
     ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6261_v540_post_marker_source_scope_freeze.py": 0,
     ".venv/bin/python scripts/root_clutter_sweep.py": 0,
     "sed -n 1,220p ops/e2e-test-plan.md": 0,
-    ".venv/bin/pytest tests/python -q": 3,
+    ".venv/bin/pytest tests/python -q": 2,
     ".venv/bin/python scripts/adversarial_verify.py results/experiment_6261_v540_post_marker_source_scope_freeze.json": 0
   },
-  "duration_s": 6.755182787077501,
-  "reproducibility_checksum": "sha256:2e47fc6ebd66b262b5af3c5b2a9816d27ec4bf239dc37d246abeadd005c519bd",
+  "duration_s": 6.941956933122128,
+  "reproducibility_checksum": "sha256:aa85610dae9988af7641d4fe42512f3e56783397f66661b8d5eaabbad8e06c2e",
   "honest_verdict": "blocked: accepted_count=0; V540 source freeze checks failed"
 }
