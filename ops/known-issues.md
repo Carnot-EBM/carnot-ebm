@@ -16454,3 +16454,26 @@ no LLM/reaper exposure.
 
 Cross-references: REQ-ARC-WMTE-6244 (Mode A diagnosis), REQ-ARC-WMTE-6245 (nav-gate negative),
 REQ-ARC-FCP-5699-14 through -20 (the original zero-gradient investigation on tu93).
+
+## 2026-08-09 refinement-axis hold LIFTED for one experiment (operator decision): Pinductor-style REx A/B prepared as REQ-ARC-WMTE-6248
+
+The standing hold ("Do NOT propose a follow-up on the refinement / single-shot-GGUF-induction
+axis ... banked, not queued" -- see the exp6091 closure entry above) reserved this axis for "an
+operator decision to spend a slot on it." That decision arrived 2026-08-09: the SOTA scan entry
+in `research-studying.md` surfaced Pinductor (arXiv:2605.13740) and flagged it as exactly this
+axis; the operator responded "Let's plan out and prepare Pinductor to be run."
+
+Prepared (NOT yet launched):
+- Plan + prior-failures block: `docs/research-notes/pinductor-rex-refinement-plan-2026-08-09.md`
+- Module: `python/carnot/agentic/arc_rex_refinement.py` (UCB1 parent selection with a finite
+  fresh-node bonus, QBC committee vote entropy ordering the refactor prompt's bounded mismatch
+  list, one code path for both arms so the LLM-call budget is equal by construction)
+- Tests: `tests/python/test_arc_rex_refinement.py` (18 CPU-only tests, all passing)
+- Driver: `scripts/experiments/experiment_6248_pinductor_rex_ab.py` (6 games x 2 arms x 4 LLM
+  calls, per-cell checkpointed, refuses to start without an isolated CARNOT_ARC_E3_DIR, forces
+  the banked exp5766 instrument fix ON in both arms)
+
+Scope of the lift: THIS experiment only. A failed gate retires the Pinductor-style variant
+(retire_if_same_verdict); it does not reopen the axis generally. Launch command is staged in the
+plan note; recommended launch window is with heavy conductor GPU work idle (or the conductor
+deliberately stopped, operator's call) per the two correlational reaper instances recorded above.
