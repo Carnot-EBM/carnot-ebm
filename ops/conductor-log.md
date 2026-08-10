@@ -15583,3 +15583,5 @@ Still active  |
 | 2026-08-10 08:37 UTC | Gated on Exp6263 clean replay: task-conditional en | OK | 87 passed, 1 warning in 8.46s |
 | 2026-08-10 08:39 UTC | Gated on Exp6264 familiarity: chronological two-ti | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6264-energy-familiarity-memory-gate.fam |
 | 2026-08-10 08:41 UTC | Gated on Exp6264 familiarity: chronological two-ti | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6264-energy-familiarity-memory-gate.fam |
+| 2026-08-10 08:43 UTC | Gated on Exp6264 familiarity: chronological two-ti | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6264-energy-familiarity-memory-gate.fam |
+| 2026-08-10 08:45 UTC | Gated on Exp6265 promotion: leave-family-and-task- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6265-chronological-two-timescale-csl-ab) |
