@@ -1900,6 +1900,107 @@ payload, and the honest verdict has a terminal prefix.
 |---|---|---|
 | REQ-INFRA-6261 | Implemented by `python/carnot/experiment_6261_v540_post_marker_source_scope_freeze.py`; terminal artifact `results/experiment_6261_v540_post_marker_source_scope_freeze.json`. | Covered by `tests/python/test_experiment_6261_v540_post_marker_source_scope_freeze.py`. |
 
+## REQ-INFRA-6271: V540 Capstone SHALL Preserve Branch-Independent Exact-Path Evidence
+
+Carnot SHALL build Exp6271 as the ungated capstone for milestone
+`2026.08.540`. The capstone SHALL load the active roadmap, freeze the roadmap
+path and hash, and use the exact declared deliverable path for each Exp6260
+through Exp6271 task. It SHALL NOT replace a missing exact artifact with an
+alias, sidecar, conductor receipt, or roadmap intent.
+
+Exp6271 SHALL classify every declared deliverable with
+`python/carnot/terminal_artifacts.py`. Conductor receipts SHALL be recorded as
+context only. A conductor `OK`, `GATE_BLOCK`, or other terminal-looking receipt
+SHALL NOT override missing, malformed, running, bootstrap-only, partial,
+contradictory, or unknown artifact state. A gate tombstone SHALL stay skipped.
+
+Exp6271 SHALL rerun the current adversarial rules for every present artifact.
+It SHALL preserve stamped artifact flags separately from current-rule flags.
+Any missing artifact, nonterminal artifact, current critical flag, failed
+structured gate, or absent exact readiness field SHALL block promotion for the
+affected branch. The terminal-artifact, continuous-learning, and sampler
+branches SHALL have separate ledgers. One branch SHALL NOT promote another.
+
+Exp6271 SHALL recompute structured gates from exact bare upstream fields with
+the shared gate-field eligibility semantics. Missing upstream artifacts,
+missing fields, principle-wrapped fields, and nonterminal upstream artifacts
+SHALL fail closed. The capstone SHALL record these failures without
+synthesizing default values.
+
+The Exp6271 artifact SHALL be written atomically to
+`results/experiment_6271_v540_adversarial_capstone.json` with
+`inference_substrate=aggregation_from_upstream_artifacts` and
+`verifier_is_oracle=false`. It SHALL make no live-LLM, runtime, ARC solve,
+hardware, speed, power, registry, source-mutation, or model-weight claim. Each
+of those claim or mutation counters SHALL be the bare integer `0`.
+
+The Exp6271 artifact SHALL include these required fields: `status`,
+`milestone_roadmap_path_and_hash`, `exact_declared_deliverable_matrix`,
+`conductor_receipt_matrix`, `exact_path_over_receipt_precedence`,
+`current_rule_adversarial_results_by_task`,
+`terminal_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts`,
+`gate_cascade_receipts`, `terminal_artifact_contract_state`,
+`clean_sota_replay_state`, `familiarity_gate_state`,
+`continuous_learning_state`, `family_task_transfer_state`,
+`shadow_consumer_state`, `sampler_fixture_state`,
+`mode_jump_safety_and_value_state`, `sampler_router_state`,
+`branch_independent_promotion_ledger`, `prior_failure_retirement_actions`,
+`source_mutation_count`, `weight_mutation_count`, `live_llm_call_count`,
+`arc_solve_claim_count`, `registry_update_count`, `hardware_claim_count`,
+`speed_or_power_claim_count`, `protected_files_unchanged`,
+`spec_traceability_status_changelog_reconciliation`, `prd_gap_table`,
+`next_milestone_recommendations`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INFRA-6271-1: Exact Paths Outrank Receipts
+
+GIVEN a declared deliverable path is missing or nonterminal
+AND the conductor log contains a terminal-looking receipt for that task
+WHEN Exp6271 builds its deliverable matrix
+THEN the matrix keeps the exact-path classifier result
+AND records that the receipt attempted no promotion.
+
+### SCENARIO-INFRA-6271-2: Gate Cascades Read Exact Bare Fields
+
+GIVEN a downstream task declares a `gated_on` upstream field
+WHEN the upstream artifact is missing, nonterminal, lacks the exact field, or
+wraps the field in a principle object
+THEN Exp6271 records the gate as failed
+AND it does not synthesize a default value.
+
+### SCENARIO-INFRA-6271-3: Current Flags Do Not Hide Stamped Flags
+
+GIVEN a present artifact carries a stamped adversarial flag
+AND the current verifier returns a separate set of flags
+WHEN Exp6271 records adversarial results
+THEN the stamped and current-rule flag states stay distinct
+AND any current critical flag blocks branch promotion.
+
+### SCENARIO-INFRA-6271-4: Branch Ledgers Are Independent
+
+GIVEN the continuous-learning branch has a closed familiarity gate
+AND the sampler branch has a ready fixture suite but no workload value
+WHEN Exp6271 computes promotion ledgers
+THEN each branch reports its own ready, blocked, skipped, null, or missing
+state
+AND neither branch may launder the other into promotion.
+
+### SCENARIO-INFRA-6271-5: Forbidden Claim Counters Are Bare Zero
+
+GIVEN the capstone is an aggregation over checked-in evidence
+WHEN Exp6271 validates its report
+THEN source mutation, weight mutation, live-LLM call, ARC solve, registry
+update, hardware, speed, and power counters are all bare `0`
+AND the normalized checksum matches the payload.
+
+## Implementation Status (REQ-INFRA-6271)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6271 | Implemented by `python/carnot/experiment_6271_v540_adversarial_capstone.py`; terminal artifact `results/experiment_6271_v540_adversarial_capstone.json`. | Covered by `tests/python/test_experiment_6271_v540_adversarial_capstone.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
