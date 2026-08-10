@@ -15600,3 +15600,4 @@ Still active  |
 | 2026-08-10 11:52 UTC | V540 exact-path adversarial capstone and PRD-gap r | OK | 89 passed, 1 warning in 9.59s |
 | 2026-08-10 12:50 UTC | Plan milestone 2026.08.541 | OK | 12 tasks proposed |
 | 2026-08-10 12:52 UTC | Milestone 2026.08.541 activated | OK | 12 tasks queued |
+| 2026-08-10 13:13 UTC | Exact terminal-boundary handoff from V540 into V54 | OK | 91 passed, 1 warning in 11.72s |
