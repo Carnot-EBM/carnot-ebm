@@ -4169,3 +4169,138 @@ preregistered family, exactness, and control gate passes.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-6268 | Planned (`python/carnot/experiment_6268_multimodal_sampler_fixture_suite.py`, `results/experiment_6268_multimodal_sampler_fixture_suite.json`) | Planned (`tests/python/test_experiment_6268_multimodal_sampler_fixture_suite.py`) |
+
+### REQ-SAMPLER-6269: Mode-Jump Multifamily A/B
+
+Carnot MUST provide Exp6269 at
+`python/carnot/experiment_6269_mode_jump_multifamily_ab.py` and write
+`results/experiment_6269_mode_jump_multifamily_ab.json` without modifying
+`scripts/research_conductor.py`. The experiment SHALL run a matched
+fallback-versus-mode-jump A/B across every Exp6268 fixture supported by the
+existing Rust/PyO3 mode-jump backend. Unsupported Exp6268 fixtures SHALL be
+preserved as unsupported cells. They SHALL NOT be replaced with fallback
+output. No cDLS, hardware, timing speedup, power, or efficiency claim is in
+scope.
+
+Sub-requirements:
+- REQ-SAMPLER-6269-PRECONDITIONS: Exp6269 SHALL validate the Exp6268 exact
+  suite, freeze the fixture/seed/arm matrix, fixed budgets, equivalence
+  margins, value gate, protected hashes, and upstream fixture hash before
+  sampler outcomes are compared.
+- REQ-SAMPLER-6269-MATCHED-CELLS: Each supported fixture/seed/arm cell SHALL
+  share the same target, initial state, seed, burn-in, retained sample count,
+  proposal budget, and schedule. Each successful cell SHALL record an
+  independent chain receipt and sample hash.
+- REQ-SAMPLER-6269-ACTIVATION: Treatment activation SHALL be proven before
+  outcome comparison. The positive control SHALL require Rust/PyO3 selection,
+  nonzero treatment attempts, nonzero treatment accepts, and nonzero treatment
+  fires. Inactive treatment evidence SHALL produce an instrument failure.
+- REQ-SAMPLER-6269-EXACTNESS: For each supported fixture and arm, Exp6269
+  SHALL compare empirical samples with the exact Exp6268 target. It SHALL
+  report exact distribution error, energy error, basin occupancy, barrier
+  crossings, autocorrelation, ESS, and acceptance before pooled summaries.
+- REQ-SAMPLER-6269-INTERVALS: Exp6269 SHALL compute paired intervals with
+  sample sizes and preregistered equivalence margins. It SHALL separate
+  distribution safety, mixing value, and descriptive wall time.
+- REQ-SAMPLER-6269-VALUE-GATE: Workload value SHALL require distribution
+  safety plus a preregistered positive mixing improvement on at least two
+  non-toy fixture families with no exactness regression. Otherwise
+  `mode_jump_workload_value_ready_score` SHALL be `0.0`.
+- REQ-SAMPLER-6269-NEGATIVE-TESTS: Focused tests SHALL cover inactive
+  treatment, unsupported shape, seed mismatch, sample-count mismatch,
+  acceptance accounting, and exactness regression.
+
+The terminal artifact SHALL include these top-level fields:
+`status`, `upstream_fixture_path_and_hash`,
+`preregistered_fixture_seed_arm_matrix`, `matched_arm_configuration`,
+`rust_pyo3_backend_receipts`,
+`treatment_attempt_accept_and_fire_counts_by_fixture`,
+`positive_and_inactive_control_results`, `chain_sample_hashes`,
+`exact_distribution_error_by_arm_fixture`,
+`energy_error_by_arm_fixture`,
+`basin_occupancy_and_barrier_crossings_by_arm_fixture`,
+`autocorrelation_ess_and_acceptance_by_arm_fixture`,
+`paired_intervals_equivalence_margins_and_sample_sizes`,
+`harmful_regressions`, `descriptive_wall_time_by_arm_fixture`,
+`unsupported_or_failed_cells`, `source_mutation_count`,
+`hardware_claim_count`, `timing_speedup_claimed`,
+`mode_jump_safety_ready_score`, `mode_jump_workload_value_ready_score`,
+`protected_files_unchanged`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+`source_mutation_count` and `hardware_claim_count` SHALL be the bare integer
+`0`. `timing_speedup_claimed` SHALL be the bare boolean `false`.
+`inference_substrate` SHALL equal
+`local_cpu_exact_multifamily_mode_jump_ab`.
+
+Required field principles:
+
+- `status`: Separates safety evidence, workload-value evidence, blockers, and instrument failures.
+- `upstream_fixture_path_and_hash`: Pins the Exp6268 exact suite consumed by the A/B.
+- `preregistered_fixture_seed_arm_matrix`: Freezes fixtures, seeds, arms, budgets, margins, and the value gate before sampling.
+- `matched_arm_configuration`: Proves each compared arm uses the same target, seed, initial state, burn-in, retained sample count, proposal budget, and schedule.
+- `rust_pyo3_backend_receipts`: Authenticates the backend, descriptor, input hash, final state, and transition budget for each chain.
+- `treatment_attempt_accept_and_fire_counts_by_fixture`: Proves treatment activity before outcome comparison.
+- `positive_and_inactive_control_results`: Records both the activation-positive control and the inactive-treatment fail-closed control.
+- `chain_sample_hashes`: Content-addresses retained samples without making the artifact depend on raw sample arrays.
+- `exact_distribution_error_by_arm_fixture`: Reports empirical-versus-exact distribution error per fixture and arm.
+- `energy_error_by_arm_fixture`: Reports empirical-versus-exact energy error per fixture and arm.
+- `basin_occupancy_and_barrier_crossings_by_arm_fixture`: Reports basin mass and cross-basin transitions per fixture and arm.
+- `autocorrelation_ess_and_acceptance_by_arm_fixture`: Reports autocorrelation, ESS, and acceptance per fixture and arm.
+- `paired_intervals_equivalence_margins_and_sample_sizes`: Stores paired intervals, equivalence margins, and n before any value decision.
+- `harmful_regressions`: Lists exactness or mixing regressions that block safety.
+- `descriptive_wall_time_by_arm_fixture`: Records wall time as cost evidence only.
+- `unsupported_or_failed_cells`: Preserves unsupported or failed Exp6268 cells without fallback substitution.
+- `source_mutation_count`: Bare zero proves this experiment did not mutate preregistered source during compute.
+- `hardware_claim_count`: Bare zero prevents a software sampler A/B from becoming a hardware claim.
+- `timing_speedup_claimed`: Bare false prevents descriptive wall time from becoming a speedup claim.
+- `mode_jump_safety_ready_score`: Equals one only when exactness, activation, controls, protected files, source, and command gates pass.
+- `mode_jump_workload_value_ready_score`: Equals one only when safety and the non-toy positive mixing value gate both pass.
+- `protected_files_unchanged`: Confirms conductor-owned and reconciler-owned files stayed byte-identical.
+- `preconditions_checked`: Records exact-suite validation, frozen budgets, frozen margins, value gate, and protected hashes.
+- `inference_substrate`: Declares local CPU exact multifamily mode-jump sampling, not hardware, cDLS, or LLM inference.
+- `verifier_is_oracle`: States that Exp6268 exact finite distributions are the oracle.
+- `field_provenance`: Maps every required field to prompt, spec, source, upstream fixture, command, or chain evidence.
+- `field_principles`: Explains why each artifact field exists before a reviewer trusts the JSON shape.
+- `test_commands`: Records focused Python, coverage, Rust, E2E, artifact, adversarial, and suite command receipts.
+- `test_exit_codes`: Stores exit codes so failed checks cannot become readiness evidence.
+- `duration_s`: Reports real wall time without padding.
+- `reproducibility_checksum`: Content-addresses the artifact after blanking volatile duration and checksum fields.
+- `honest_verdict`: Uses a terminal prefix and states safety, workload value, unsupported fixtures, and no hardware or speedup claim.
+
+### SCENARIO-SAMPLER-6269-MATCHED-SUPPORTED-CELLS: Supported Fixtures Get Matched Chain Receipts
+
+**Given** the frozen Exp6268 exact fixture suite, fixed seeds, and fixed
+budgets
+**When** Exp6269 runs
+**Then** each Exp6268 fixture supported by the existing Rust/PyO3 backend has
+matched fallback and mode-jump cells
+**And** each successful chain records backend receipts, treatment counts,
+sample hashes, distribution error, energy error, basin occupancy, barrier
+crossings, autocorrelation, ESS, acceptance, and descriptive wall time.
+
+### SCENARIO-SAMPLER-6269-UNSUPPORTED-CELLS-FAIL-CLOSED: Unsupported Fixtures Are Preserved
+
+**Given** Exp6268 Ising, Potts, typed-factor, and control fixtures that the
+fixed mode-jump backend does not support
+**When** Exp6269 builds the A/B artifact
+**Then** unsupported fixtures are recorded in `unsupported_or_failed_cells`
+**And** no unsupported fixture contributes fallback samples, pooled quality,
+or workload-value evidence.
+
+### SCENARIO-SAMPLER-6269-SAFETY-VALUE-SEPARATION: Safety Does Not Imply Workload Value
+
+**Given** paired exactness intervals, mixing intervals, activation controls,
+and the preregistered value gate
+**When** Exp6269 computes readiness scores
+**Then** `mode_jump_safety_ready_score` can pass only with no exactness
+regression
+**And** `mode_jump_workload_value_ready_score` can pass only with positive
+mixing improvement on at least two non-toy fixture families.
+
+## Implementation Status (REQ-SAMPLER-6269)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-6269 | Planned (`python/carnot/experiment_6269_mode_jump_multifamily_ab.py`, `results/experiment_6269_mode_jump_multifamily_ab.json`) | Planned (`tests/python/test_experiment_6269_mode_jump_multifamily_ab.py`) |
