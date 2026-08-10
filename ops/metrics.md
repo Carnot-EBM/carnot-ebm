@@ -3315,3 +3315,15 @@ complete `engine()` with a return on the click path, and commit if it lands.
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-07-31T03:15:00Z | 2026-07-31T04:55:00Z | Captured ft09's real induce prompts from the agent itself (trace verified element-identical to the banked live LLM-ON cell, 60/60) and swept the completion budget 4096/8192/16384 x 3 seeded attempts across the combined induce, engine-only induce and refactor calls on live gemma-4-31B-it. Result: 0 usable engines at every budget; under the shipped sampler NO generated engine ever changes the grid (the refactor lane's best are identity functions scoring 19/25 heldout-exact on a no-op-heavy split). A sampler control found `repeat_penalty 1.1` gives 3/3 non-degenerate engines at cell recall 0.9474 in under half the budget — scorer cross-validated to the cell against the shipped gate — and was deliberately NOT shipped. Also found: the seed does not reach across server instances; ft09's banked engine was mis-attributed to round 1; `_INDUCE_DEFAULT_MAX_TOKENS` binds none of its four sites (fix written, NOT landed, deferred to `ops/pending-fixes/` because artifact-freshness-lint would require 12 artifact rebuilds incl. a live capture). Budget lever retired in the exclusion manifest. | ~600k |
+
+## Session: 2026-08-10 Milestone 2026.08.542 Research Planning
+
+User instruction summary: review completed milestone `.541`, search current
+2025-2026 research, update references, and stage the next 10-14 experiment
+roadmap without changing the active roadmap, conductor, or remote state.
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-08-10T19:26:12Z | PENDING | Read the required project and V541 evidence, searched the requested primary and secondary sources, appended the V542 reference refresh, designed milestone 2026.08.542 with 13 tasks across four phases, staged the vNEXT document and conductor YAML, reconciled planning status and changelog, and ran schema, gate, exclusion, prompt, model, collision, root-clutter, focused-test, and spec-coverage checks. | TBD |

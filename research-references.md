@@ -33436,3 +33436,109 @@ remain hypotheses until Carnot reproduces them locally.
   or physical receipt exists.
 
 <!-- V541-PLANNER-REFRESH-20260810-END -->
+
+## V542 Planner Refresh (2026-08-10, after milestone 2026.08.541)
+
+This refresh was completed before drafting milestone `2026.08.542`. It
+searched arXiv first for 2025-2026 work on energy reasoning, neural constraint
+solving, Ising sampling, hallucination verification, KANs, constrained
+generation, sampling hardware, and continual learning. It then checked
+OpenReview, Hugging Face Papers, Semantic Scholar routes for EBT
+(`2507.02092`) and ARM-EBM (`2512.15605`), Extropic, Logical Intelligence, and
+GitHub discovery. Source claims remain hypotheses until Carnot reproduces them
+locally.
+
+### Promoted: revocable and measurable verifier memory
+
+- **TEPA: Revoking Stale Memories for Conflict-Robust Language Agents** -
+  arXiv:2608.07429, https://arxiv.org/abs/2608.07429; submitted 2026-08-07.
+  TEPA gives each keyed precedent an explicit validity state. Fresh
+  contradictory evidence revokes the active precedent but preserves its audit
+  history. The paper reports that append-only and last-write-wins memory fall
+  below no memory during full reversal, while explicit revocation remains
+  strong. Carnot hook: replace V541's over-abstaining dual cache with a
+  transactional precedent lifecycle. Require exact-verifier evidence for each
+  revoke or re-promote transition. Keep all revoked rows available for audit
+  but unavailable to retrieval.
+- **MIRA: Evidence-Verified Repair Memory for Text-to-SQL Correction** -
+  arXiv:2608.06950, https://arxiv.org/abs/2608.06950; submitted 2026-08-07.
+  MIRA splits a correction into independently reusable repair items. It checks
+  each item against current database evidence before adaptation. Carnot hook:
+  store atomic constraint repairs instead of bundled advice. Activate only the
+  items supported by the current exact sidecar. This is a mechanism change
+  from V541's positive and negative prototype caches.
+- **From Test-Time Scaling to Reusable Memory: Measuring Crystallization in
+  Text-to-SQL** - arXiv:2608.07213, https://arxiv.org/abs/2608.07213;
+  submitted 2026-08-07. The benchmark holds the solver fixed and separates
+  exact replay, cross-question retention, and held-out same-database transfer.
+  It reports a 4.34-point held-out first-attempt gain from verified corrected
+  queries on BIRD. Carnot hook: a self-learning result must separate repeated
+  event reuse from same-template transfer and unseen-family transfer. The
+  study's SQL result does not establish transfer to Carnot's constraint
+  fixtures.
+
+### Promoted: fixed-budget generation and verification control
+
+- **CoBa: Cost-Effective Test-Time Scaling via Compute-Balanced Routing** -
+  arXiv:2608.07424, https://arxiv.org/abs/2608.07424; submitted 2026-08-07.
+  CoBa chooses whether the next compute unit goes to generation, verification,
+  or stopping. It reports accuracy close to much larger candidate pools with
+  fewer parameter-weighted tokens. Carnot hook: compare a preregistered budget
+  router against one-shot generation, fixed repeated generation, and
+  always-run exact completion. Exact validity, model tokens, verifier work,
+  and wall time must remain separate outcomes.
+
+### Architecture cue, not empirical promotion
+
+- **Diffusion Reasoning for Formal Logic: Closing the Gap Between Mathematical
+  and Deductive Consistency in LLMs** - ICLR 2026 LLM Reasoning Workshop,
+  https://openreview.net/forum?id=nOThfUG7eS. This short position paper proposes
+  solver-guided diffusion with an incremental belief store. It does not provide
+  evidence for a Carnot-ready diffusion solver. Carnot hook: use exact solver
+  feedback inside a small, bounded refinement loop. Do not claim a learned
+  diffusion or non-autoregressive model result from this source.
+
+### Source checks with no new executable promotion
+
+- **KANs:** GRS-KAN (`2607.01449`) and KAN verification (`2602.06737`) remain
+  the relevant recent items. They were already indexed. No new result clears
+  Carnot's prior certificate and utility gates, so V542 does not reopen a KAN
+  training lane.
+- **Ising and sampling hardware:** recent FPGA, p-bit, and thermodynamic work
+  did not create a new authenticated local route. The V541 variable-cardinality
+  backend remains reusable, but its mode-jump treatment showed no workload
+  value. V542 does not extend that treatment.
+- **Hallucination verification and Hugging Face Papers:** recent verifier pages
+  still emphasize model judges, repeated evaluation, or post-training. None
+  displaces Carnot's exact ASP oracle or warrants reopening the retired
+  external text-scorer line.
+- **Semantic Scholar:** unauthenticated API calls for EBT and ARM-EBM returned
+  HTTP 429 during this refresh. The same-day V541 receipts remain 33 EBT
+  citations and 8 ARM-EBM citations. No new citation-derived task is claimed.
+- **Extropic:** the 2026-08-03 Z1 tapeout post remains the newest first-party
+  hardware update found. Carnot has no authenticated simulator API or device
+  route. No TSU task is eligible.
+- **Logical Intelligence:** current public Kona material still describes
+  continuous editable traces and partial-trace energy, but exposes no weights,
+  reproducible architecture, or local API. It remains architecture context.
+- **GitHub trending and targeted repository search:** the Crystallization code
+  release is useful as evaluation-design reference. No new repository
+  supersedes Carnot's exact validator, local GGUF, transactional memory, or
+  live-agent paths. V542 should not vendor a new framework.
+
+### V542 planning impact
+
+- Convert ordinary model text into fail-closed partial atom evidence. Refine
+  the full assignment against the exact ASP energy. Keep the exact solver as
+  an explicit oracle control.
+- Test a bounded continuous relaxation only after proving exact agreement on
+  every discrete vertex. Report fractional traps and cold-start controls.
+- Replace the null certified dual cache with keyed revocation and atomic,
+  evidence-supported repair items. Evaluate it with replay, template-transfer,
+  and unseen-family partitions.
+- Validate the ARC mechanic router with a matched live-agent canary. Make no
+  level-solve claim.
+- Keep mode-jump, KAN training, TSU execution, and external generated-text
+  scorer work out of V542.
+
+<!-- V542-PLANNER-REFRESH-20260810-END -->

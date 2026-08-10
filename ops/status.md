@@ -44,6 +44,45 @@ GATEWAY CHARGE, READ IT: the "gateway-accurate"
 3.69% was a MODEL — the real figure read off the gateway's own scorecard Card is 0.018097 at the
 median, the model is wrong on 17 of 44 cells, and on 6 cells the true sign is NEGATIVE)
 
+## Session 2026-08-10 - Milestone 2026.08.542 Research Planning
+
+### What's Working
+
+- The next milestone is staged in `research-roadmap-next.yaml` with 13 tasks,
+  Exp6284-Exp6296, across four phases: evidence integrity, exact-state energy
+  refinement, revocable continuous self-learning, and ARC causal validation.
+- The plan responds to V541's terminal evidence. It keeps the exact ASP
+  compiler and typed backend. It does not promote the flagged flagship or ARC
+  artifacts. It does not extend the low-utility dual cache or zero-value
+  mode-jump treatment unchanged.
+- Exp6289 requires all three mandated local GGUF families. Exp6294 and Exp6295
+  require Qwen3.6-35B-A3B and Gemma-4-31B. Every live task requires real CUDA
+  offload and terminal per-model receipts.
+- Exp6291 is the required continuous self-learning task. It uses frozen model
+  weights, pre-decision snapshots, post-outcome transactions, keyed revocation,
+  atomic repairs, and separate replay, same-template, and unseen-family results.
+- The V542 source refresh adds TEPA (`2608.07429`), MIRA (`2608.06950`),
+  Crystallization (`2608.07213`), CoBa (`2608.07424`), and a watch-only
+  solver-guided diffusion design cue to `research-references.md`.
+- Pydantic parsing, seven gate-field cross-references, prior-failure coverage,
+  exclusion-manifest lint, prompt sections and endings, model policy, ID and
+  deliverable collision checks, and root-clutter checks pass. The five focused
+  roadmap and conductor test files pass 102 tests.
+
+### What's Next
+
+1. Operator review and activation of milestone `.542`.
+2. Exp6286 must qualify individual immutable raw rows without promoting the
+   flagged Exp6275 benchmark artifact.
+3. Exp6289 must show value beyond cold exact completion. Oracle repair alone
+   cannot promote the energy branch.
+4. Exp6291 must show non-replay transfer. Replay-only gains cannot open its
+   downstream gates.
+5. Exp6294 and Exp6295 test proposal routing only. They make no public-level
+   solve or registry-update claim.
+
+`research-roadmap.yaml` and `scripts/research_conductor.py` remain unchanged.
+
 ## Session 2026-07-31 REVIEW RESPONSE (outer-loop, REQ-ARC-WMTE-6047-E)
 
 ### What's Working
