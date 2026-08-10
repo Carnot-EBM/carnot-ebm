@@ -1,0 +1,441 @@
+{
+  "date": "20260810",
+  "fixtures": [
+    {
+      "description": "graph path2 three colors",
+      "family": "graph_coloring",
+      "fixture_id": "graph_path2_three_colors",
+      "permutation_of": null,
+      "program_text": "1 { color_v1_red; color_v1_green; color_v1_blue } 1.\n1 { color_v2_red; color_v2_green; color_v2_blue } 1.\n:- color_v1_red, color_v2_red.\n:- color_v1_green, color_v2_green.\n:- color_v1_blue, color_v2_blue.\n",
+      "tags": [
+        "cardinality"
+      ]
+    },
+    {
+      "description": "graph path2 three colors permuted",
+      "family": "graph_coloring",
+      "fixture_id": "graph_path2_three_colors_permuted",
+      "permutation_of": "graph_path2_three_colors",
+      "program_text": "1 { color_n1_amber; color_n1_cyan; color_n1_lime } 1.\n1 { color_n2_amber; color_n2_cyan; color_n2_lime } 1.\n:- color_n1_amber, color_n2_amber.\n:- color_n1_cyan, color_n2_cyan.\n:- color_n1_lime, color_n2_lime.\n",
+      "tags": [
+        "cardinality",
+        "label_permutation"
+      ]
+    },
+    {
+      "description": "graph triangle three colors",
+      "family": "graph_coloring",
+      "fixture_id": "graph_triangle_three_colors",
+      "permutation_of": null,
+      "program_text": "1 { color_v1_red; color_v1_green; color_v1_blue } 1.\n1 { color_v2_red; color_v2_green; color_v2_blue } 1.\n1 { color_v3_red; color_v3_green; color_v3_blue } 1.\n:- color_v1_red, color_v2_red.\n:- color_v1_green, color_v2_green.\n:- color_v1_blue, color_v2_blue.\n:- color_v2_red, color_v3_red.\n:- color_v2_green, color_v3_green.\n:- color_v2_blue, color_v3_blue.\n:- color_v1_red, color_v3_red.\n:- color_v1_green, color_v3_green.\n:- color_v1_blue, color_v3_blue.\n",
+      "tags": [
+        "cardinality"
+      ]
+    },
+    {
+      "description": "graph triangle two colors unsat",
+      "family": "graph_coloring",
+      "fixture_id": "graph_triangle_two_colors_unsat",
+      "permutation_of": null,
+      "program_text": "1 { color_v1_red; color_v1_blue } 1.\n1 { color_v2_red; color_v2_blue } 1.\n1 { color_v3_red; color_v3_blue } 1.\n:- color_v1_red, color_v2_red.\n:- color_v1_blue, color_v2_blue.\n:- color_v2_red, color_v3_red.\n:- color_v2_blue, color_v3_blue.\n:- color_v1_red, color_v3_red.\n:- color_v1_blue, color_v3_blue.\n",
+      "tags": [
+        "cardinality",
+        "negative_control"
+      ]
+    },
+    {
+      "description": "graph path3 two colors",
+      "family": "graph_coloring",
+      "fixture_id": "graph_path3_two_colors",
+      "permutation_of": null,
+      "program_text": "1 { color_v1_red; color_v1_blue } 1.\n1 { color_v2_red; color_v2_blue } 1.\n1 { color_v3_red; color_v3_blue } 1.\n:- color_v1_red, color_v2_red.\n:- color_v1_blue, color_v2_blue.\n:- color_v2_red, color_v3_red.\n:- color_v2_blue, color_v3_blue.\n",
+      "tags": [
+        "cardinality"
+      ]
+    },
+    {
+      "description": "graph empty2 two colors",
+      "family": "graph_coloring",
+      "fixture_id": "graph_empty2_two_colors",
+      "permutation_of": null,
+      "program_text": "1 { color_v1_red; color_v1_blue } 1.\n1 { color_v2_red; color_v2_blue } 1.\n",
+      "tags": [
+        "cardinality",
+        "positive_control"
+      ]
+    },
+    {
+      "description": "graph complete2 two colors",
+      "family": "graph_coloring",
+      "fixture_id": "graph_complete2_two_colors",
+      "permutation_of": null,
+      "program_text": "1 { color_v1_red; color_v1_blue } 1.\n1 { color_v2_red; color_v2_blue } 1.\n:- color_v1_red, color_v2_red.\n:- color_v1_blue, color_v2_blue.\n",
+      "tags": [
+        "cardinality"
+      ]
+    },
+    {
+      "description": "graph fixed endpoint path",
+      "family": "graph_coloring",
+      "fixture_id": "graph_fixed_endpoint_path",
+      "permutation_of": null,
+      "program_text": "color_v1_red.\n1 { color_v1_red; color_v1_green; color_v1_blue } 1.\n1 { color_v2_red; color_v2_green; color_v2_blue } 1.\n:- color_v1_red, color_v2_red.\n:- color_v1_green, color_v2_green.\n:- color_v1_blue, color_v2_blue.\n",
+      "tags": [
+        "cardinality",
+        "fact"
+      ]
+    },
+    {
+      "description": "schedule two tasks no same morning",
+      "family": "scheduling",
+      "fixture_id": "schedule_two_tasks_no_same_morning",
+      "permutation_of": null,
+      "program_text": "1 { a_morning; a_night } 1.\n1 { b_morning; b_night } 1.\n:- a_morning, b_morning.\n",
+      "tags": [
+        "cardinality"
+      ]
+    },
+    {
+      "description": "schedule two tasks all different",
+      "family": "scheduling",
+      "fixture_id": "schedule_two_tasks_all_different",
+      "permutation_of": null,
+      "program_text": "1 { a_morning; a_night } 1.\n1 { b_morning; b_night } 1.\n:- a_morning, b_morning.\n:- a_night, b_night.\n",
+      "tags": [
+        "cardinality"
+      ]
+    },
+    {
+      "description": "schedule three tasks three slots",
+      "family": "scheduling",
+      "fixture_id": "schedule_three_tasks_three_slots",
+      "permutation_of": null,
+      "program_text": "1 { a_morning; a_midday; a_night } 1.\n1 { b_morning; b_midday; b_night } 1.\n1 { c_morning; c_midday; c_night } 1.\n:- a_morning, b_morning.\n:- a_midday, b_midday.\n:- a_night, b_night.\n:- a_morning, c_morning.\n:- a_midday, c_midday.\n:- a_night, c_night.\n:- b_morning, c_morning.\n:- b_midday, c_midday.\n:- b_night, c_night.\n",
+      "tags": [
+        "cardinality"
+      ]
+    },
+    {
+      "description": "schedule forced a morning",
+      "family": "scheduling",
+      "fixture_id": "schedule_forced_a_morning",
+      "permutation_of": null,
+      "program_text": "a_morning.\n1 { a_morning; a_night } 1.\n1 { b_morning; b_night } 1.\n:- a_morning, b_morning.\n",
+      "tags": [
+        "cardinality",
+        "fact"
+      ]
+    },
+    {
+      "description": "schedule forced conflict unsat",
+      "family": "scheduling",
+      "fixture_id": "schedule_forced_conflict_unsat",
+      "permutation_of": null,
+      "program_text": "a_morning.\nb_morning.\n1 { a_morning; a_night } 1.\n1 { b_morning; b_night } 1.\n:- a_morning, b_morning.\n",
+      "tags": [
+        "cardinality",
+        "negative_control"
+      ]
+    },
+    {
+      "description": "schedule block night slot",
+      "family": "scheduling",
+      "fixture_id": "schedule_block_night_slot",
+      "permutation_of": null,
+      "program_text": "1 { a_morning; a_night } 1.\n1 { b_morning; b_night } 1.\n:- a_night.\n:- b_night.\n",
+      "tags": [
+        "cardinality"
+      ]
+    },
+    {
+      "description": "schedule preassigned two tasks",
+      "family": "scheduling",
+      "fixture_id": "schedule_preassigned_two_tasks",
+      "permutation_of": null,
+      "program_text": "a_morning.\nb_midday.\n1 { a_morning; a_midday; a_night } 1.\n1 { b_morning; b_midday; b_night } 1.\n1 { c_morning; c_midday; c_night } 1.\n:- a_morning, b_morning.\n:- a_midday, b_midday.\n:- a_night, b_night.\n:- a_morning, c_morning.\n:- a_midday, c_midday.\n:- a_night, c_night.\n:- b_morning, c_morning.\n:- b_midday, c_midday.\n:- b_night, c_night.\n",
+      "tags": [
+        "cardinality",
+        "fact"
+      ]
+    },
+    {
+      "description": "schedule four tasks pair balance",
+      "family": "scheduling",
+      "fixture_id": "schedule_four_tasks_pair_balance",
+      "permutation_of": null,
+      "program_text": "1 { a_morning; a_night } 1.\n1 { b_morning; b_night } 1.\n1 { c_morning; c_night } 1.\n1 { d_morning; d_night } 1.\n:- a_morning, b_morning.\n:- a_night, b_night.\n:- c_morning, d_morning.\n:- c_night, d_night.\n",
+      "tags": [
+        "cardinality"
+      ]
+    },
+    {
+      "description": "default bird flies",
+      "family": "non_monotonic_defaults",
+      "fixture_id": "default_bird_flies",
+      "permutation_of": null,
+      "program_text": "bird.\nflies :- bird, not injured.\n",
+      "tags": [
+        "default_negation",
+        "fact"
+      ]
+    },
+    {
+      "description": "default injury blocks flight",
+      "family": "non_monotonic_defaults",
+      "fixture_id": "default_injury_blocks_flight",
+      "permutation_of": null,
+      "program_text": "bird.\ninjured.\nabnormal :- injured.\nflies :- bird, not abnormal.\n",
+      "tags": [
+        "default_negation",
+        "fact"
+      ]
+    },
+    {
+      "description": "default mutual choice",
+      "family": "non_monotonic_defaults",
+      "fixture_id": "default_mutual_choice",
+      "permutation_of": null,
+      "program_text": "a :- not b.\nb :- not a.\n:- a, b.\n",
+      "tags": [
+        "default_negation"
+      ]
+    },
+    {
+      "description": "default work or rest",
+      "family": "non_monotonic_defaults",
+      "fixture_id": "default_work_or_rest",
+      "permutation_of": null,
+      "program_text": "work :- not rest.\nrest :- not work.\n:- work, rest.\n",
+      "tags": [
+        "default_negation"
+      ]
+    },
+    {
+      "description": "default chain no exception",
+      "family": "non_monotonic_defaults",
+      "fixture_id": "default_chain_no_exception",
+      "permutation_of": null,
+      "program_text": "safe.\nok :- safe, not revoked.\naccept :- ok, not quarantined.\n",
+      "tags": [
+        "default_negation",
+        "fact"
+      ]
+    },
+    {
+      "description": "default revoked blocks ok",
+      "family": "non_monotonic_defaults",
+      "fixture_id": "default_revoked_blocks_ok",
+      "permutation_of": null,
+      "program_text": "safe.\nrevoked.\nok :- safe, not revoked.\naccept :- ok, not quarantined.\n",
+      "tags": [
+        "default_negation",
+        "fact"
+      ]
+    },
+    {
+      "description": "default forbidden default unsat",
+      "family": "non_monotonic_defaults",
+      "fixture_id": "default_forbidden_default_unsat",
+      "permutation_of": null,
+      "program_text": "a :- not b.\n:- a.\n",
+      "tags": [
+        "default_negation",
+        "negative_control"
+      ]
+    },
+    {
+      "description": "default two level choice",
+      "family": "non_monotonic_defaults",
+      "fixture_id": "default_two_level_choice",
+      "permutation_of": null,
+      "program_text": "a :- not b.\nb :- not a.\nc :- a, not d.\nd :- b, not c.\n",
+      "tags": [
+        "default_negation"
+      ]
+    },
+    {
+      "description": "contradiction fact forbidden",
+      "family": "contradictions",
+      "fixture_id": "contradiction_fact_forbidden",
+      "permutation_of": null,
+      "program_text": "bad.\n:- bad.\n",
+      "tags": [
+        "fact",
+        "negative_control"
+      ]
+    },
+    {
+      "description": "contradiction pair forbidden",
+      "family": "contradictions",
+      "fixture_id": "contradiction_pair_forbidden",
+      "permutation_of": null,
+      "program_text": "a.\nb.\n:- a, b.\n",
+      "tags": [
+        "fact",
+        "negative_control"
+      ]
+    },
+    {
+      "description": "contradiction cardinality upper",
+      "family": "contradictions",
+      "fixture_id": "contradiction_cardinality_upper",
+      "permutation_of": null,
+      "program_text": "1 { a; b } 1.\na.\nb.\n",
+      "tags": [
+        "cardinality",
+        "fact",
+        "negative_control"
+      ]
+    },
+    {
+      "description": "contradiction all choices forbidden",
+      "family": "contradictions",
+      "fixture_id": "contradiction_all_choices_forbidden",
+      "permutation_of": null,
+      "program_text": "1 { a; b } 1.\n:- a.\n:- b.\n",
+      "tags": [
+        "cardinality",
+        "negative_control"
+      ]
+    },
+    {
+      "description": "contradiction default both forbidden",
+      "family": "contradictions",
+      "fixture_id": "contradiction_default_both_forbidden",
+      "permutation_of": null,
+      "program_text": "a :- not b.\nb :- not a.\n:- a.\n:- b.\n",
+      "tags": [
+        "default_negation",
+        "negative_control"
+      ]
+    },
+    {
+      "description": "contradiction positive chain",
+      "family": "contradictions",
+      "fixture_id": "contradiction_positive_chain",
+      "permutation_of": null,
+      "program_text": "a.\nc :- a.\n:- c.\n",
+      "tags": [
+        "fact",
+        "negative_control"
+      ]
+    },
+    {
+      "description": "contradiction three choice upper",
+      "family": "contradictions",
+      "fixture_id": "contradiction_three_choice_upper",
+      "permutation_of": null,
+      "program_text": "1 { a; b; c } 2.\na.\nb.\nc.\n",
+      "tags": [
+        "cardinality",
+        "fact",
+        "negative_control"
+      ]
+    },
+    {
+      "description": "contradiction default chain forbidden",
+      "family": "contradictions",
+      "fixture_id": "contradiction_default_chain_forbidden",
+      "permutation_of": null,
+      "program_text": "ok.\nfail :- ok, not blocked.\n:- fail.\n",
+      "tags": [
+        "default_negation",
+        "fact",
+        "negative_control"
+      ]
+    },
+    {
+      "description": "control fact positive",
+      "family": "positive_negative_controls",
+      "fixture_id": "control_fact_positive",
+      "permutation_of": null,
+      "program_text": "a.\n",
+      "tags": [
+        "fact",
+        "positive_control"
+      ]
+    },
+    {
+      "description": "control positive chain",
+      "family": "positive_negative_controls",
+      "fixture_id": "control_positive_chain",
+      "permutation_of": null,
+      "program_text": "a.\nb :- a.\nc :- b.\n",
+      "tags": [
+        "fact",
+        "positive_control"
+      ]
+    },
+    {
+      "description": "control open optional pair",
+      "family": "positive_negative_controls",
+      "fixture_id": "control_open_optional_pair",
+      "permutation_of": null,
+      "program_text": "0 { a; b } 2.\n",
+      "tags": [
+        "cardinality",
+        "positive_control"
+      ]
+    },
+    {
+      "description": "control exact one yes no",
+      "family": "positive_negative_controls",
+      "fixture_id": "control_exact_one_yes_no",
+      "permutation_of": null,
+      "program_text": "1 { yes; no } 1.\n",
+      "tags": [
+        "cardinality",
+        "positive_control"
+      ]
+    },
+    {
+      "description": "control negative constraint leaves yes",
+      "family": "positive_negative_controls",
+      "fixture_id": "control_negative_constraint_leaves_yes",
+      "permutation_of": null,
+      "program_text": "1 { yes; no } 1.\n:- no.\n",
+      "tags": [
+        "cardinality",
+        "negative_control"
+      ]
+    },
+    {
+      "description": "control label base",
+      "family": "positive_negative_controls",
+      "fixture_id": "control_label_base",
+      "permutation_of": null,
+      "program_text": "1 { alpha; beta } 1.\ngamma :- alpha.\n",
+      "tags": [
+        "cardinality",
+        "label_permutation",
+        "positive_control"
+      ]
+    },
+    {
+      "description": "control label permuted",
+      "family": "positive_negative_controls",
+      "fixture_id": "control_label_permuted",
+      "permutation_of": "control_label_base",
+      "program_text": "1 { left; right } 1.\ndone :- left.\n",
+      "tags": [
+        "cardinality",
+        "label_permutation",
+        "positive_control"
+      ]
+    },
+    {
+      "description": "control unsupported true atom rejected",
+      "family": "positive_negative_controls",
+      "fixture_id": "control_unsupported_true_atom_rejected",
+      "permutation_of": null,
+      "program_text": "a :- b.\n",
+      "tags": [
+        "normal_rule",
+        "negative_control"
+      ]
+    }
+  ],
+  "max_state_count": 4096,
+  "random_seed": 6274,
+  "schema": "carnot.exp6274.asp_energy_fixture_manifest.v1"
+}

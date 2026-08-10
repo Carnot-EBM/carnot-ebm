@@ -12,6 +12,58 @@ selector experiments before any hidden-state extraction is attempted.
 
 ## Requirements
 
+### REQ-CONSTRAINT-6274: Bounded ASP Semantic Energy Compiler
+
+The repository SHALL provide an executable bounded ASP semantic compiler for
+Exp6274. The compiler SHALL accept only explicit ground facts, grounded normal
+rules, default negation in rule bodies, integrity constraints, and standalone
+bounded cardinality choice rules. It SHALL reject unsupported syntax before any
+energy terms are built.
+
+The compiler SHALL emit inspectable energy terms for facts, normal rules,
+integrity constraints, bounded cardinality rules, and stable-model support. For
+every enumerated state it SHALL report per-rule violation receipts that name the
+local failed rule or semantic support check.
+
+The Exp6274 harness SHALL evaluate at least 40 trusted formal fixtures across
+graph coloring, scheduling, non-monotonic defaults, contradictions, and positive
+or negative controls. Every fixture SHALL have a bounded finite state space that
+is exactly enumerated. The zero-energy states emitted by the compiler SHALL be
+compared by set equality against an independent ASP solver answer-set list.
+
+The terminal artifact SHALL be
+`results/experiment_6274_asp_energy_semantic_compiler.json`. It SHALL state the
+paper source and claim boundary, supported and unsupported ASP constructs,
+source and fixture hashes, independent solver version and receipts, fixture
+counts, exact state counts, per-fixture answer sets, zero-energy states,
+semantic parity, rule-local violation evidence, all required controls, test
+commands, exit codes, reproducibility checksum, `verifier_is_oracle=true`, and
+an honest verdict. The artifact SHALL NOT claim a learned verifier or an
+oracle-distinct verifier moat.
+
+### SCENARIO-CONSTRAINT-6274-SOLVER-PARITY: Energy Matches ASP Answer Sets
+
+Given trusted bounded ASP fixtures in the supported subset,
+When Exp6274 compiles each fixture and enumerates all possible atom states,
+Then the zero-energy states exactly equal the independent solver answer sets
+for every fixture.
+
+### SCENARIO-CONSTRAINT-6274-FAIL-CLOSED: Unsupported Syntax Is Rejected
+
+Given ASP text with variables, disjunction, optimization, arithmetic terms, or
+unsupported aggregates,
+When the bounded compiler receives that text,
+Then it rejects the program before energy construction and reports the failing
+syntax class.
+
+### SCENARIO-CONSTRAINT-6274-LOCAL-RECEIPTS: Violations Name Local Causes
+
+Given an enumerated state that violates a fact, normal rule, integrity
+constraint, bounded cardinality rule, or stable-model support check,
+When the compiler decomposes energy for that state,
+Then the receipt names the violated rule or semantic support check and gives a
+non-zero local energy contribution.
+
 ### REQ-CONSTRAINT-VERIFY-6175: CCTU Headroom Audit Fail-Closed Gate
 
 The repository SHALL provide an Exp6175 audit over the Exp6174 CCTU K8 pool.
