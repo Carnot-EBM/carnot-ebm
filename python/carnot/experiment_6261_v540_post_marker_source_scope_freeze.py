@@ -191,11 +191,12 @@ DEFAULT_TEST_COMMANDS = (
 )
 
 FULL_SUITE_FAILURE_SUMMARY = (
-    ".venv/bin/pytest tests/python -q exited 3 after 3062.72s: "
-    "469 failed, 24036 passed, 56 skipped, 177 warnings, 15 errors. "
-    "Observed unrelated worker crashes in z3_math_verifier, "
-    "experiment_295_apple_verify_repair tokenizer prewarm, and "
-    "tests/python/test_experiment_834_jepa_v24_dg_prm.py."
+    ".venv/bin/pytest tests/python -q exited 2 after 1116.16s: "
+    "289 failed, 16142 passed, 31 skipped, 151 warnings, 14 errors before "
+    "manual interruption after the command had already failed. Observed "
+    "unrelated worker crashes in z3_math_verifier and "
+    "experiment_295_apple_verify_repair tokenizer prewarm, plus reporting "
+    "artifact FileNotFound errors."
 )
 
 RECORDED_TEST_RECEIPTS: Mapping[str, JsonDict] = {
@@ -208,8 +209,8 @@ RECORDED_TEST_RECEIPTS: Mapping[str, JsonDict] = {
     for command in DEFAULT_TEST_COMMANDS
 } | {
     ".venv/bin/pytest tests/python -q": {
-        "exit_code": 3,
-        "classification": "failed_unrelated_full_suite",
+        "exit_code": 2,
+        "classification": "failed_global_suite_interrupted_after_unrelated_failures",
         "stdout_tail": FULL_SUITE_FAILURE_SUMMARY,
         "stderr_tail": "",
     }
@@ -262,8 +263,8 @@ DEFAULT_SOURCE_CHANNEL_RECEIPTS: tuple[JsonDict, ...] = (
             "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605",
         ],
         "strict_post_marker_hits": 0,
-        "endpoint_status": "api_http_429_rate_limited",
-        "receipt": "Semantic Scholar keyword and paper routes were rate-limited, so no citation row was promoted.",
+        "endpoint_status": "ebt_api_http_429_arm_api_ok",
+        "receipt": "EBT paper lookup was rate-limited. ARM-EBM lookup returned eight citations, all pre-marker or date-ambiguous, so no citation row was promoted.",
     },
     {
         "channel": "hugging_face_papers",
