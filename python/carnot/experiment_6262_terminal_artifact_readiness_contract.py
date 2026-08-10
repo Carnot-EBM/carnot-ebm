@@ -40,7 +40,9 @@ CommandRunner = Callable[[tuple[str, ...], Path], JsonDict]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RESULT_RELATIVE_PATH = Path("results/experiment_6262_terminal_artifact_readiness_contract.json")
-EXP6228_RELATIVE_PATH = Path("results/experiment_6228_supervised_three_family_runtime_endurance.json")
+EXP6228_RELATIVE_PATH = Path(
+    "results/experiment_6228_supervised_three_family_runtime_endurance.json"
+)
 CLASSIFIER_RELATIVE_PATH = Path("python/carnot/terminal_artifacts.py")
 ADVERSARIAL_VERIFIER_RELATIVE_PATH = Path("scripts/adversarial_verify.py")
 RESEARCH_CONDUCTOR_RELATIVE_PATH = Path("scripts/research_conductor.py")
@@ -234,7 +236,8 @@ def _protected_files_unchanged(before: JsonMap, after: JsonMap) -> JsonDict:
         "after": dict(after),
         "changed_paths": changed,
         "unchanged": not changed,
-        "scripts_research_conductor_py_untouched": before.get(conductor_key) == after.get(conductor_key),
+        "scripts_research_conductor_py_untouched": before.get(conductor_key)
+        == after.get(conductor_key),
     }
 
 
@@ -280,7 +283,10 @@ def _rejected_nonterminal_classes(root: Path) -> JsonDict:
     payload_cases: tuple[tuple[str, JsonMap], ...] = (
         ("running", {"status": "running", "honest_verdict": "running"}),
         ("running_bootstrap", {"status": "running_bootstrap", "honest_verdict": "running"}),
-        ("bootstrap_only", {"status": "bootstrap_only", "honest_verdict": "blocked: bootstrap only"}),
+        (
+            "bootstrap_only",
+            {"status": "bootstrap_only", "honest_verdict": "blocked: bootstrap only"},
+        ),
         ("partial", {"status": "complete_partial", "honest_verdict": "complete_partial: partial"}),
         ("contradictory", {"status": "complete_ready", "honest_verdict": "blocked_precondition"}),
         ("unknown", {"status": "preconditions_recorded", "honest_verdict": None}),
@@ -336,7 +342,11 @@ def _supported_terminal_classes() -> JsonDict:
             "gates_evaluated": [{"passed": False}],
         },
         "retired": {"status": "retired", "honest_verdict": "retired: closed"},
-        "flagged": {"status": "complete", "honest_verdict": "complete: quarantined", "flagged_adversarial": True},
+        "flagged": {
+            "status": "complete",
+            "honest_verdict": "complete: quarantined",
+            "flagged_adversarial": True,
+        },
     }
     rows = {name: _control_result(payload) for name, payload in payloads.items()}
     return {
@@ -430,7 +440,8 @@ def _required_controls_pass(report: JsonMap) -> bool:
     return (
         report.get("exp6228_regression_flag_code_and_severity", {}).get("kind")
         == NONTERMINAL_FLAG_KIND
-        and report.get("exp6228_regression_flag_code_and_severity", {}).get("severity") == "critical"
+        and report.get("exp6228_regression_flag_code_and_severity", {}).get("severity")
+        == "critical"
         and report.get("supported_terminal_classes", {}).get("all_terminal") is True
         and report.get("rejected_nonterminal_classes", {}).get("all_rejected") is True
         and report.get("exact_path_over_receipt_precedence", {}).get("receipt_override_attempted")
@@ -447,9 +458,7 @@ def _required_controls_pass(report: JsonMap) -> bool:
         and report.get("readiness_missing_negative_control", {}).get("severity") == "critical"
         and isinstance(false_positive, Mapping)
         and all(
-            isinstance(row, Mapping)
-            and row.get("terminal") is True
-            and row.get("flag_count") == 0
+            isinstance(row, Mapping) and row.get("terminal") is True and row.get("flag_count") == 0
             for row in false_positive.values()
         )
         and _commands_pass(report.get("focused_test_results", []))
@@ -551,7 +560,9 @@ def build_report(
         "test_commands": list(FOCUSED_TEST_COMMANDS) + list(QA_COMMANDS),
         "test_exit_codes": _test_exit_codes(focused_results + qa_results),
         "terminal_artifact_contract_ready_score": 0,
-        "duration_s": float(duration_s if duration_s is not None else time.perf_counter() - started),
+        "duration_s": float(
+            duration_s if duration_s is not None else time.perf_counter() - started
+        ),
         "reproducibility_checksum": "",
         "honest_verdict": "blocked: Exp6262 readiness controls did not all pass",
     }
@@ -575,7 +586,11 @@ def validate_report(report: JsonMap) -> list[str]:
     controls_pass = _required_controls_pass(report)
     if type(score) is not int or score not in (0, 1) or (score == 1) != controls_pass:
         errors.append("terminal_artifact_contract_ready_score")
-    if report.get("exp6228_regression_flag_code_and_severity", {}).get("kind") != NONTERMINAL_FLAG_KIND or report.get("exp6228_regression_flag_code_and_severity", {}).get("severity") != "critical":
+    if (
+        report.get("exp6228_regression_flag_code_and_severity", {}).get("kind")
+        != NONTERMINAL_FLAG_KIND
+        or report.get("exp6228_regression_flag_code_and_severity", {}).get("severity") != "critical"
+    ):
         errors.append("exp6228_regression_flag_code_and_severity")
     if score == 1 and (
         not _commands_pass(report.get("focused_test_results", []))

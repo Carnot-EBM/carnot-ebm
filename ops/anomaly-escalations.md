@@ -1308,3 +1308,28 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
 - artifact: results/experiment_6238_v539_adversarial_capstone.json
+
+## experiment_833_constraint_delta_root_cause.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['NONTERMINAL_DECLARED_ARTIFACT'] on a non-negative verdict
+- artifact: results/experiment_833_constraint_delta_root_cause.json
+
+## experiment_3361_archive_v309_activate_v310.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['NONTERMINAL_DECLARED_ARTIFACT'] on a non-negative verdict
+- artifact: results/experiment_3361_archive_v309_activate_v310.json
+
+## experiment_3377_archive_v310_activate_v311.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['NONTERMINAL_DECLARED_ARTIFACT'] on a non-negative verdict
+- artifact: results/experiment_3377_archive_v310_activate_v311.json
+
+## experiment_3392_archive_v311_activate_v312.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['NONTERMINAL_DECLARED_ARTIFACT'] on a non-negative verdict
+- artifact: results/experiment_3392_archive_v311_activate_v312.json
+
+## experiment_1736_kanele_synth.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['NONTERMINAL_DECLARED_ARTIFACT'] on a non-negative verdict
+- artifact: results/experiment_1736_kanele_synth.json

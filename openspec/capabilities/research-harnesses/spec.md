@@ -1532,6 +1532,13 @@ bootstrap-only, partial, contradictory, or unknown. Missing paths and malformed
 JSON SHALL keep distinct details. Honest `blocked` artifacts and gate-skipped
 terminal artifacts SHALL remain terminal controls.
 
+Generic artifact sweeps SHALL auto-enroll only experiment artifacts that carry
+the readiness contract marker `status`. Exact declared paths that are missing,
+malformed, or not loadable SHALL still be checkable by an explicit verifier
+handoff. This keeps legacy terminal-verdict-only fixtures out of the new
+readiness contract while preserving fail-closed checks for declared task
+deliverables.
+
 Gate-field eligibility SHALL require both conditions:
 
 - The exact artifact path classifies as terminal.

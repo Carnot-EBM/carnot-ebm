@@ -850,6 +850,130 @@ SCENARIO-LEARN-6164-TRANSACTION, SCENARIO-LEARN-6164-READY
 
 ---
 
+## REQ-LEARN-6263: Clean Local-SOTA Event Replay Bridge
+
+**Given** Exp6160 and Exp6162 are current-rule-clean local-SOTA evidence
+**And** Exp6146 has useful provenance but lacks a current random seed
+**When** Exp6263 builds the replay bridge
+**Then** it SHALL write
+`results/experiment_6263_clean_sota_event_replay_bridge.json`
+**And** it SHALL admit only Exp6160 and Exp6162 into the clean source set.
+**And** Exp6146 rows SHALL remain quarantine-only until an authorized
+corrigendum updates the immutable source.
+
+### REQ-LEARN-6263 Sub-requirements
+
+- REQ-LEARN-6263-1: Exp6263 SHALL hash every candidate artifact and row file
+  before materialization, classify source artifacts with the Exp6262 terminal
+  contract, and record git status before and after tests.
+- REQ-LEARN-6263-2: The bridge SHALL preserve source hashes, row order,
+  model identity, task identity, family, prompt hash, parser state, exact label
+  hashes, exact outcomes, and decision partitions.
+- REQ-LEARN-6263-3: The bridge SHALL write an immutable content-addressed row
+  manifest and record that manifest path and SHA-256 hash in the artifact.
+- REQ-LEARN-6263-4: The bridge SHALL fail closed on duplicate row identities,
+  chronological time reversal, train-validation-test overlap, mutable source
+  hashes, row-count mismatch, parser-failure loss, and alias collisions.
+- REQ-LEARN-6263-5: Exp6263 SHALL not load an LLM. It SHALL set
+  `inference_substrate` to `aggregation_from_upstream_artifacts` and record a
+  zero-model-load receipt.
+- REQ-LEARN-6263-6: `event_replay_bridge_ready_score` SHALL be bare `1.0`
+  only when duplicate count, time reversal count, train-held overlap count,
+  source mutation count, and every command exit code are clean.
+
+### REQ-LEARN-6263 Required Artifact Fields and Principles
+
+- `status`: Terminal status follows clean source admission, quarantine, replay
+  validation, protected-file hashes, and command receipts.
+- `source_artifact_paths_hashes_and_terminal_classes`: Every candidate source
+  artifact and row file is content-addressed, and source artifacts include
+  Exp6262 terminal classifications.
+- `model_specs`: Records the two admitted Exp6160 provenance-only models and
+  the Exp6146 Gemma-31B quarantine-only model.
+- `no_model_load_receipt`: Proves model, tokenizer, CUDA, GPU, and loader
+  invocation counts are zero.
+- `clean_source_ids`: Lists admitted Exp6160 and Exp6162 source identifiers.
+- `quarantined_source_ids_and_reasons`: Lists Exp6146 source identifiers and
+  the missing-random-seed quarantine reason.
+- `immutable_row_manifest_path_and_hash`: Pins the emitted row manifest path,
+  row count, and hash.
+- `chronological_order_receipts`: Records per-model monotonic order, first and
+  last event, row-order hash, and time-reversal count.
+- `row_count_by_model_task_family_and_partition`: Counts rows by model, task,
+  family, and frozen train-validation-test partition.
+- `exact_label_and_parser_provenance`: Preserves exact label hashes, outcomes,
+  parser states, invalid-output counts, prompt hashes, and decode-policy
+  hashes.
+- `duplicate_count`: Bare zero proves replay row identities are unique.
+- `time_reversal_count`: Bare zero proves chronological order did not reverse.
+- `train_validation_test_overlap_count`: Bare zero proves no source event
+  crosses frozen partitions for one model.
+- `malformed_or_parser_failure_count_by_disposition`: Counts parser failures
+  that are preserved in admitted rows or quarantined sources.
+- `source_mutation_count`: Bare zero proves source hashes match after
+  materialization and tests.
+- `replay_positive_control`: Shows byte-identical replay accepts the source
+  manifest.
+- `replay_negative_controls`: Shows duplicate, reorder, alias, row-loss,
+  parser-disposition, and mutation controls fail closed.
+- `event_replay_bridge_ready_score`: Bare one means all strict replay gates
+  and command receipts pass.
+- `protected_files_unchanged`: Proves protected source, source artifacts, row
+  files, conductor, ops, and traceability paths stayed byte-identical.
+- `preconditions_checked`: Records run date, git status, source hashes, output
+  paths, and Exp6262 classifications before materialization.
+- `inference_substrate`: Declares aggregation from upstream artifacts.
+- `verifier_is_oracle`: False because the bridge checks evidence integrity, not
+  benchmark truth.
+- `field_provenance`: Maps every field to REQ-LEARN-6263, upstream artifacts,
+  row files, validations, controls, commands, or protected-file hashes.
+- `field_principles`: Stores the audit reason for each required field.
+- `test_commands`: Lists focused unit, coverage, spec, lint, CLI, E2E-plan,
+  and adversarial checks.
+- `test_exit_codes`: Stores bare integer exit codes for each command.
+- `duration_s`: Reports measured wall time without padding.
+- `reproducibility_checksum`: Hashes the normalized artifact.
+- `honest_verdict`: Uses a terminal prefix and states whether the bridge is
+  ready or blocked.
+
+### SCENARIO-LEARN-6263-BRIDGE: Clean Rows Replay Chronologically
+
+**Given** Exp6160 row sidecars and Exp6162 are current-rule-clean
+**When** Exp6263 builds the bridge
+**Then** the row manifest preserves row order, model identity, family, exact
+labels, parser state, and frozen train-validation-test partitions
+**And** duplicate, time-reversal, overlap, and source-mutation counts are bare
+zero.
+
+### SCENARIO-LEARN-6263-QUARANTINE: Warned Sources Stay Out
+
+**Given** Exp6146 has no current random seed
+**When** Exp6263 builds the source manifest
+**Then** Exp6146 artifact and row sources are listed only in quarantine
+**And** their rows do not appear in the clean replay manifest.
+
+### SCENARIO-LEARN-6263-NEGATIVES: Replay Attacks Fail Closed
+
+**Given** duplicate, reordered, alias-colliding, row-loss, parser-disposition,
+and source-mutation controls
+**When** the bridge validates them
+**Then** each control is rejected without writing a ready bridge.
+
+### SCENARIO-LEARN-6263-REPLAY: Byte Replay is Identical
+
+**Given** the same clean source hashes and row sidecars
+**When** Exp6263 materializes the bridge twice
+**Then** the row manifest bytes and normalized bridge checksum are identical.
+
+**Spec traces:** REQ-LEARN-6263,
+SCENARIO-LEARN-6263-BRIDGE, SCENARIO-LEARN-6263-QUARANTINE,
+SCENARIO-LEARN-6263-NEGATIVES, SCENARIO-LEARN-6263-REPLAY
+**Implementation Status:** Implemented
+(`python/carnot/experiment_6263_clean_sota_event_replay_bridge.py`,
+`tests/python/test_experiment_6263_clean_sota_event_replay_bridge.py`)
+
+---
+
 ## REQ-PSV-014: SRSA Memory Gate — SessionMemory.write_with_verification MUST Reject Unverified Repairs
 
 **Given** a repair text is produced by the self-play loop
