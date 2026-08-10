@@ -1037,6 +1037,11 @@ SUBMITTED_WORLD_MODEL_CHANGE_GATE_HIDDEN_STATE_ENABLED: Optional[bool] = None
 # topology table plus scalar counts, a different construction entirely.
 SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED = False
 
+# REQ-ARC-WMTE-6282: default-off mechanic-class evidence for the live inducer.
+# The route is game-blind. It reads only observed transition deltas and appends a
+# short class/uncertainty block to the prompt. Control arms stay byte-identical.
+SUBMITTED_MECHANIC_CLASS_ROUTER_ENABLED = False
+
 
 def _flag_env(name: str, default: bool) -> bool:
     """Read a per-arm override, falling back to the shipped SUBMITTED_* default.
@@ -1097,6 +1102,14 @@ def induce_prompt_enrichment_enabled() -> bool:
 
     return _flag_env(
         "CARNOT_ARC_INDUCE_PROMPT_ENRICHMENT", SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED
+    )
+
+
+def mechanic_class_router_enabled() -> bool:
+    """REQ-ARC-WMTE-6282 arm selector. CARNOT_ARC_MECHANIC_CLASS_ROUTER=1 turns it on."""
+
+    return _flag_env(
+        "CARNOT_ARC_MECHANIC_CLASS_ROUTER", SUBMITTED_MECHANIC_CLASS_ROUTER_ENABLED
     )
 
 
@@ -3086,6 +3099,20 @@ def _object_delta_perception_block(trans: list[Transition]) -> str:
     return ("\n" + block) if block else ""
 
 
+def _mechanic_class_router_block(trans: list[Transition]) -> str:
+    """REQ-ARC-WMTE-6282: append game-blind mechanic class evidence when enabled."""
+
+    if not mechanic_class_router_enabled():
+        return ""
+    try:
+        from carnot.agentic import arc_mechanic_class_detector
+
+        block = arc_mechanic_class_detector.prompt_block(trans)
+    except Exception:
+        return ""
+    return ("\n" + block) if block else ""
+
+
 # REQ-ARC-WMTE-5717: DEV-ONLY playbook methodology exemplars for the STALL re-induction
 # path. Default OFF (env CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED unset -> byte-identical
 # prompt, exactly like the CARNOT_ARC_CODEONLY_INDUCE / _REFACTOR_STRUCTURE_REMINDER
@@ -3191,7 +3218,7 @@ deterministic. Write ONLY that one file.
 
 OBSERVED TRANSITIONS:
 {_transitions_block(trans, k, previous_level_complete_grid=previous_level_complete_grid, hud_mask=hud_mask, hud_mask_enabled=hud_mask_enabled, win_transition=win_transition)}
-{(_action_semantics_and_counts_block(trans, k, hud_mask=hud_mask, hud_mask_enabled=hud_mask_enabled) + chr(10)) if induce_prompt_enrichment_enabled() else ""}{("OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):" + chr(10) + objects_block(trans, previous_level_complete_grid=previous_level_complete_grid)) if _object_perception_on() else ""}{(chr(10) + _object_identity_crossref_note(trans, previous_level_complete_grid=previous_level_complete_grid)) if (induce_prompt_enrichment_enabled() and _object_perception_on()) else ""}{_object_delta_perception_block(trans)}"""
+{(_action_semantics_and_counts_block(trans, k, hud_mask=hud_mask, hud_mask_enabled=hud_mask_enabled) + chr(10)) if induce_prompt_enrichment_enabled() else ""}{("OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):" + chr(10) + objects_block(trans, previous_level_complete_grid=previous_level_complete_grid)) if _object_perception_on() else ""}{(chr(10) + _object_identity_crossref_note(trans, previous_level_complete_grid=previous_level_complete_grid)) if (induce_prompt_enrichment_enabled() and _object_perception_on()) else ""}{_object_delta_perception_block(trans)}{_mechanic_class_router_block(trans)}"""
 
 
 _REFACTOR_PROMPT_MAX_CELLS_PER_MISMATCH = 8
