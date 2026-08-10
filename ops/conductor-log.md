@@ -15622,3 +15622,4 @@ Still active  |
 | 2026-08-10 19:50 UTC | Plan milestone 2026.08.542 | OK | 13 tasks proposed |
 | 2026-08-10 19:53 UTC | Milestone 2026.08.542 activated | OK | 13 tasks queued |
 | 2026-08-10 20:09 UTC | Exact terminal-boundary handoff from V541 into V54 | OK | 90 passed, 1 warning in 12.11s |
+| 2026-08-10 21:19 UTC | Post-V542-marker source delta and experimental-sco | OK | 90 passed, 1 warning in 74.41s (0:01:14) |
