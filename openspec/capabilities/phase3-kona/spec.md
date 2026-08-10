@@ -1446,6 +1446,55 @@ The Exp 3822 workflow MUST write `results/experiment_3822_trm_escapes_grids_p1.j
 - Focused tests verify the behavior.
 - `results/experiment_3822_trm_escapes_grids_p1.json` records all required fields and an honest verdict.
 
+### REQ-KONA-6287: Bounded ASP Continuous Relaxation Bridge
+
+Carnot SHALL provide a bounded continuous relaxation for the exact Exp6274 ASP
+energy. The relaxation SHALL use the multilinear extension of the finite
+discrete energy over atom probabilities in `[0, 1]`. The claim boundary SHALL
+state that this proves equality on binary vertices only. It SHALL NOT claim a
+learned Kona model, a learned verifier, or a diffusion language model.
+
+The Exp6287 workflow SHALL read the trusted Exp6274 compiler artifact and
+fixture manifest. It SHALL freeze their hashes, the relaxation source hashes,
+the atom and vertex bounds, the finite-difference tolerance, the optimizer
+budgets, the random seeds, and protected file hashes before it evaluates
+fixtures. It SHALL reject fixtures outside the preregistered bounded state
+limit.
+
+The workflow SHALL enumerate every binary vertex for each eligible fixture. At
+every vertex, the continuous relaxation energy SHALL equal the Exp6274 discrete
+energy decomposition. The workflow SHALL compute analytic gradients of the
+multilinear extension and compare them against central finite differences away
+from the box boundary.
+
+The workflow SHALL run blank, random, and partial-state starts with fixed step
+and restart budgets. It SHALL report refinement success, final energy,
+rounding energy, restart count, and exact enumeration work separately. It SHALL
+also report fractional stationary points, rounding failures, Clingo oracle
+controls, cold exact enumeration controls, unsupported size controls, and
+unsupported syntax controls.
+
+The terminal artifact SHALL be
+`results/experiment_6287_asp_continuous_relaxation.json`. It SHALL include
+`status`, `upstream_compiler_path_hash_and_terminal_class`,
+`relaxation_definition_and_claim_boundary`, `source_paths_and_hashes`,
+`eligible_fixture_manifest_path_and_hash`, `fixture_count`,
+`atom_count_and_vertex_count_by_fixture`, `exact_vertex_energy_parity_by_fixture`,
+`parity_failure_count`, `analytic_gradient_definition`,
+`finite_difference_gradient_checks`, `refinement_optimizer_and_fixed_budgets`,
+`blank_random_and_partial_start_manifest`,
+`refinement_outcomes_by_start_fixture_and_seed`,
+`fractional_stationary_points_by_fixture`, `rounding_failures_by_fixture`,
+`exact_completion_controls`, `cold_start_controls`,
+`unsupported_size_and_syntax_controls`, `oracle_claim_boundary`,
+`asp_continuous_relaxation_ready_score`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`, `test_exit_codes`,
+`duration_s`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`. `parity_failure_count` SHALL be a bare integer. Readiness
+SHALL require exact vertex parity and passing gradient checks. Readiness SHALL
+NOT require a positive refinement result.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -1972,6 +2021,38 @@ and the Exp 1662 artifact records the reusable module path and complete schema.
 **Then** it outputs `results/experiment_3822_trm_escapes_grids_p1.json` with all REQ-KONA-040 required fields, sets `decision_class` based on length generalization metrics, and correctly confirms AR headroom.
 
 **Spec traces:** REQ-KONA-040
+
+### SCENARIO-KONA-6287-VERTEX-PARITY: Multilinear Extension Matches ASP Vertices
+
+**Given** the trusted Exp6274 fixtures that fit the preregistered atom and
+vertex bounds
+**When** Exp6287 builds the multilinear relaxation and enumerates every binary
+vertex
+**Then** each continuous vertex energy equals the Exp6274 discrete energy
+decomposition for that vertex.
+
+**Spec traces:** REQ-KONA-6287
+
+### SCENARIO-KONA-6287-GRADIENT-CHECK: Analytic Gradients Match Finite Differences
+
+**Given** an eligible fixture and a probability vector away from the box
+boundary
+**When** Exp6287 evaluates the analytic gradient and central finite-difference
+gradient
+**Then** the maximum absolute error is within the preregistered tolerance.
+
+**Spec traces:** REQ-KONA-6287
+
+### SCENARIO-KONA-6287-CONTROLS: Refinement And Oracle Controls Stay Separate
+
+**Given** blank, random, and partial-state starts under fixed optimizer budgets
+**When** Exp6287 refines each start and rounds the final probability vector
+**Then** the artifact reports refinement outcomes, rounding failures,
+fractional stationary points, Clingo controls, cold exact enumeration controls,
+and unsupported-input controls without using refinement success as a readiness
+gate.
+
+**Spec traces:** REQ-KONA-6287
 
 
 ## Out of scope
