@@ -132,6 +132,83 @@ When Exp6275 evaluates the model cell,
 Then the cell stops with an honest terminal disposition and the artifact records
 the failed or timeout cell instead of fabricating model results.
 
+### REQ-CONSTRAINT-6288: Fail-Closed Partial Atom Evidence Adapter
+
+The repository SHALL provide an Exp6288 adapter that replays only the
+Exp6286-eligible immutable raw rows from the flagged Exp6275 benchmark. The
+adapter SHALL extract explicit positive atom evidence and explicit negative
+atom evidence from ordinary model text. It SHALL mark all other atoms unknown.
+It SHALL NOT ask a model for finite IDs, JSON, or formal theory. It SHALL NOT
+run an LLM.
+
+The adapter SHALL use a frozen atom vocabulary for each fixture before
+extraction. It SHALL reject contradictions, foreign atoms, ambiguous negation,
+empty outputs, zero-token rows, and evidence that no sealed exact answer set can
+support. It SHALL check support against the sealed formal sidecar only after
+the lexical extraction decision has been made.
+
+The Exp6288 workflow SHALL compare evidence-warm continuous refinement and
+exact completion against blank and random starts under identical fixed budgets.
+It SHALL keep positive, negative, unknown, rejected, and contradictory states
+separate. The readiness gate SHALL require at least one accepted row in each
+represented mandated model family, positive evidence precision above the
+preregistered floor, clean leakage controls, zero unsafe evidence acceptance,
+and zero source model weight mutation. A positive warm-start delta SHALL NOT be
+required for readiness.
+
+The terminal artifact SHALL be
+`results/experiment_6288_partial_atom_evidence_adapter.json`. It SHALL include
+`status`, `upstream_eligibility_path_hash_and_terminal_class`,
+`upstream_relaxation_path_hash_and_terminal_class`,
+`eligible_raw_manifest_path_and_hash`, `raw_source_paths_and_hashes`,
+`models_represented`, `frozen_atom_vocabulary_by_fixture`,
+`adapter_source_paths_and_hashes`,
+`positive_negative_unknown_evidence_by_row`,
+`contradiction_foreign_atom_and_ambiguous_negation_rejections`,
+`accepted_and_rejected_row_counts`,
+`evidence_precision_coverage_and_sample_sizes_by_model_family_and_fixture_family`,
+`evidence_leakage_controls`, `warm_blank_and_random_start_outcomes`,
+`continuous_refinement_results`, `exact_completion_results`,
+`cold_exact_completion_controls`, `unsafe_evidence_acceptance_count`,
+`partial_atom_evidence_adapter_ready_score`,
+`source_model_weight_mutation_count`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`, `test_exit_codes`,
+`duration_s`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`. `unsafe_evidence_acceptance_count` and
+`source_model_weight_mutation_count` SHALL be bare integer zero.
+
+### SCENARIO-CONSTRAINT-6288-EXTRACT-FAIL-CLOSED: Unsafe Text Is Rejected
+
+Given ordinary model text that contains contradictory atom statements, a
+foreign atom, ambiguous negation, an empty output, or a zero generated-token
+receipt,
+When Exp6288 extracts partial atom evidence,
+Then the row is rejected with the rejection class recorded and no unsafe atom
+is accepted.
+
+**Spec traces:** REQ-CONSTRAINT-6288
+
+### SCENARIO-CONSTRAINT-6288-ORACLE-AFTER-EXTRACTION: Labels Stay Hidden
+
+Given an eligible raw row, a frozen atom vocabulary, and the sealed exact
+sidecar,
+When Exp6288 extracts atom evidence,
+Then extraction uses only raw text and the vocabulary, and sealed exact answer
+sets are consulted only afterward for support, precision, and coverage.
+
+**Spec traces:** REQ-CONSTRAINT-6288
+
+### SCENARIO-CONSTRAINT-6288-WARM-CONTROLS: Budgets Stay Matched
+
+Given accepted partial atom evidence for an eligible fixture,
+When Exp6288 runs evidence-warm, blank, and random continuous refinement plus
+exact completion controls,
+Then all arms use identical fixed budgets, and readiness does not depend on a
+positive evidence-warm delta.
+
+**Spec traces:** REQ-CONSTRAINT-6288
+
 ### REQ-CONSTRAINT-VERIFY-6175: CCTU Headroom Audit Fail-Closed Gate
 
 The repository SHALL provide an Exp6175 audit over the Exp6174 CCTU K8 pool.
