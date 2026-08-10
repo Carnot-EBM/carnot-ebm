@@ -2499,6 +2499,100 @@ payload, and the honest verdict has a terminal prefix.
 |---|---|---|
 | REQ-INFRA-6285 | Pending implementation: `python/carnot/experiment_6285_v542_post_marker_source_scope_freeze.py`; terminal artifact `results/experiment_6285_v542_post_marker_source_scope_freeze.json`. | Pending focused tests: `tests/python/test_experiment_6285_v542_post_marker_source_scope_freeze.py`. |
 
+## REQ-INFRA-6286: V541 Evidence Eligibility Ledger SHALL Validate Raw Receipts Without Laundering Flagged Artifacts
+
+Carnot SHALL build Exp6286 as a deterministic V541 evidence eligibility
+ledger for V542. The ledger SHALL read the V541 capstone, operational retro,
+the Exp6274, Exp6275, Exp6276, Exp6280, Exp6281, and Exp6282 artifacts, the
+Exp6275 event corpus, all Exp6275 raw output sidecars, the Exp6275 sealed
+manifest, the Exp6275 formal sidecar, the current adversarial verifier, the
+terminal artifact classifier, the anomaly escalation log, and the exclusion
+manifest. It SHALL hash these inputs before deriving any eligibility row.
+
+Exp6286 SHALL re-run current adversarial verification for each present V541
+artifact and keep stamped flags separate from current-rule flags. A stamped or
+current flagged artifact SHALL remain ineligible for artifact-level promotion.
+Raw Exp6275 rows MAY be validated as receipts only. Raw-row validation SHALL
+check model output, prompt, seed, token, sidecar, and outcome provenance. It
+SHALL NOT rescore parse, semantic, or scientific outcomes. A raw row missing
+any required provenance SHALL be quarantined. Eligible and quarantined row
+counts SHALL sum to the exact Exp6275 event-corpus row count.
+
+Exp6286 SHALL write immutable eligible-row and quarantine manifests for
+Exp6275 rows. These manifests SHALL NOT edit the Exp6275 artifact, event
+corpus, raw sidecars, sealed manifest, or formal sidecar. Valid raw rows SHALL
+NOT reopen the Exp6275 artifact-level readiness, because the headline artifact
+is stamped flagged. The ledger SHALL mark Exp6274 and Exp6280 source substrate
+reusable. It SHALL mark unchanged Exp6276 and Exp6281 treatments ineligible
+for V542 extension. It SHALL mark Exp6282 source reusable but the result
+unpromoted.
+
+The Exp6286 artifact SHALL be written atomically to
+`results/experiment_6286_v541_evidence_eligibility_ledger.json` with
+`inference_substrate=aggregation_from_upstream_artifacts` and
+`verifier_is_oracle=false`. It SHALL include these required fields: `status`,
+`v541_capstone_path_hash_and_terminal_class`,
+`current_rule_adversarial_results_by_v541_task`, `asp_compiler_eligibility`,
+`flagship_artifact_eligibility`,
+`flagship_raw_manifest_paths_and_hashes`,
+`flagship_raw_row_validation_rules`, `eligible_flagship_raw_row_count`,
+`quarantined_flagship_raw_row_count`,
+`flagship_raw_row_eligibility_manifest_path_and_hash`,
+`dual_cache_treatment_eligibility`,
+`global_threshold_control_eligibility`, `typed_backend_eligibility`,
+`mode_jump_treatment_eligibility`, `arc_router_source_eligibility`,
+`arc_result_eligibility`, `branch_stop_ledger`,
+`no_claim_laundering_receipt`, `source_mutation_count`,
+`protected_files_unchanged`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+`source_mutation_count` SHALL be the bare integer `0`. Every required field
+SHALL have one short field principle and a provenance entry. The honest verdict
+SHALL start with a terminal prefix.
+
+### SCENARIO-INFRA-6286-1: Claim Laundering Stays Blocked
+
+GIVEN Exp6275 or Exp6282 is stamped flagged
+WHEN Exp6286 validates source or raw receipts from that experiment
+THEN the source receipts may be recorded
+AND artifact-level promotion remains closed.
+
+### SCENARIO-INFRA-6286-2: Raw Row Counts Are Conserved
+
+GIVEN the Exp6275 event corpus has a fixed row count
+WHEN Exp6286 validates raw-row provenance
+THEN eligible and quarantined row counts sum to the exact source row count.
+
+### SCENARIO-INFRA-6286-3: Missing Provenance Quarantines A Row
+
+GIVEN an Exp6275 event row lacks model output, prompt, seed, token, sidecar, or
+outcome provenance
+WHEN Exp6286 validates the row by provenance only
+THEN the row appears in the quarantine manifest with the missing fields named.
+
+### SCENARIO-INFRA-6286-4: Hash Drift Fails Closed
+
+GIVEN a source artifact, raw sidecar, event corpus, rule file, or protected
+file hash changes after preconditions are frozen
+WHEN Exp6286 validates the report
+THEN the protected-file or manifest hash receipt records the drift and the
+report is invalid for a clean verdict.
+
+### SCENARIO-INFRA-6286-5: Source Mutation Count Is Bare Zero
+
+GIVEN Exp6286 is an aggregation over checked-in evidence
+WHEN the artifact is validated
+THEN `source_mutation_count` is the bare integer `0`, required field
+principles exist, and the normalized checksum matches the payload.
+
+## Implementation Status (REQ-INFRA-6286)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6286 | Pending implementation: `python/carnot/experiment_6286_v541_evidence_eligibility_ledger.py`; terminal artifact `results/experiment_6286_v541_evidence_eligibility_ledger.json`. | Pending focused tests: `tests/python/test_experiment_6286_v541_evidence_eligibility_ledger.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
