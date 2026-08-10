@@ -2312,6 +2312,97 @@ editing operator-curated public documents.
 |---|---|---|
 | REQ-INFRA-6283 | Pending implementation: `python/carnot/experiment_6283_v541_adversarial_capstone.py`; terminal artifact `results/experiment_6283_v541_adversarial_capstone.json`. | Pending focused tests: `tests/python/test_experiment_6283_v541_adversarial_capstone.py`. |
 
+## REQ-INFRA-6284: V542 Transition SHALL Preserve V541 Exact Evidence And Validate The Reserved Roadmap
+
+Carnot SHALL build Exp6284 as the exact V541-to-V542 handoff. It SHALL read the
+V541 capstone, the V541 operational retro, the exact V541 declared artifacts,
+the staged V542 roadmap, the exclusion manifest, and the roadmap validation
+helpers. It SHALL classify every V541 task from the task's declared artifact
+path under the current terminal-artifact rules. Conductor receipts and raw
+evidence receipts SHALL be recorded separately. They SHALL NOT override the
+exact artifact path classification or artifact-level eligibility.
+
+Exp6284 SHALL validate exactly 13 V542 tasks in Exp6284 through Exp6296 order.
+It SHALL validate task ids, deliverables, dependencies, structured gates,
+prior-failure blocks, reserved file collisions, agent routing, model policy,
+prompt run commands, prompt endings, protected files, and local SOTA GGUF
+contracts. Structured gates SHALL reference fields that appear in the upstream
+task's `REQUIRED ARTIFACT FIELDS` block. Dependencies SHALL NOT point to retired
+experiment ids. Each non-empty `prior_failures` row SHALL include a prior id,
+verdict, changed-mechanism explanation, and `retire_if_same_verdict=true`.
+
+The Exp6284 artifact SHALL be written atomically to
+`results/experiment_6284_v542_terminal_transition.json` with
+`inference_substrate=aggregation_from_upstream_artifacts` and
+`verifier_is_oracle=false`. It SHALL include these required fields: `status`,
+`v541_milestone_roadmap_and_hash`, `v541_task_terminal_matrix`,
+`v541_capstone_path_hash_and_summary`,
+`operational_retro_path_hash_and_summary`,
+`focused_and_broad_validation_receipts_by_task`,
+`missing_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts`,
+`v542_roadmap_path_and_hash`, `v542_task_ids_and_deliverables`, `task_count`,
+`phase_counts`, `dependency_validation`, `gated_on_validation`,
+`prior_failure_validation`, `retired_dependency_count`, `id_collision_count`,
+`agent_routing_validation`, `model_policy_validation`,
+`prompt_contract_validation`, `raw_evidence_eligibility_policy`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+`task_count` SHALL be the bare integer `13`. `retired_dependency_count` and
+`id_collision_count` SHALL be bare integer `0`. Every required field SHALL have
+a one-line field principle and provenance entry. The honest verdict SHALL start
+with `complete:`, `complete_ready:`, `complete_null:`, `blocked:`,
+`blocked_safety:`, or `skipped:`.
+
+### SCENARIO-INFRA-6284-1: V541 Exact Paths Outrank Receipts
+
+GIVEN the V541 capstone records declared deliverable paths and conductor
+receipts
+WHEN Exp6284 builds the V541 terminal matrix
+THEN every row is classified from the exact JSON path
+AND any terminal-looking receipt is recorded without changing the class.
+
+### SCENARIO-INFRA-6284-2: Raw Evidence Cannot Promote Flagged Artifacts
+
+GIVEN a V541 artifact has raw receipts but is flagged, null, blocked, skipped,
+missing, retired, or nonterminal
+WHEN Exp6284 records raw evidence eligibility
+THEN raw receipts stay separate from artifact-level eligibility
+AND only exact terminal unflagged artifact state can feed a roadmap gate.
+
+### SCENARIO-INFRA-6284-3: V542 Roadmap Contracts Fail Closed
+
+GIVEN the V542 roadmap declares tasks, deliverables, dependencies, gates, and
+prior failures
+WHEN Exp6284 validates the roadmap
+THEN the task ids match Exp6284 through Exp6296 in order
+AND bad gates, retired dependencies, duplicate ids, incomplete priors, bad
+routes, bad model policy, and bad prompt endings are reported as failures.
+
+### SCENARIO-INFRA-6284-4: SOTA GGUF Prompt Contracts Are Enforced
+
+GIVEN a live LLM V542 task requires local GGUF model execution
+WHEN Exp6284 validates the model policy
+THEN the task prompt names mandated SOTA GGUF ids in `MODEL_SPECS`
+AND legacy or missing headline model ids fail validation.
+
+### SCENARIO-INFRA-6284-5: Artifact Schema Is Principle Annotated
+
+GIVEN precondition hashes, protected hashes, command receipts, roadmap checks,
+and V541 terminal classifications
+WHEN Exp6284 validates the report before writing
+THEN every required field is present, every field has provenance and a
+principle, `task_count=13`, zero counts are bare integers, and the checksum
+matches the normalized payload.
+
+## Implementation Status (REQ-INFRA-6284)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6284 | Pending implementation: `python/carnot/experiment_6284_v542_terminal_transition.py`; terminal artifact `results/experiment_6284_v542_terminal_transition.json`. | Pending focused tests: `tests/python/test_experiment_6284_v542_terminal_transition.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
