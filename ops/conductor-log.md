@@ -15624,3 +15624,4 @@ Still active  |
 | 2026-08-10 20:09 UTC | Exact terminal-boundary handoff from V541 into V54 | OK | 90 passed, 1 warning in 12.11s |
 | 2026-08-10 21:19 UTC | Post-V542-marker source delta and experimental-sco | OK | 90 passed, 1 warning in 74.41s (0:01:14) |
 | 2026-08-10 21:37 UTC | Current-rule V541 evidence eligibility and branch- | OK | 87 passed, 1 warning in 10.54s |
+| 2026-08-10 21:52 UTC | Exact-vertex bounded continuous relaxation of ASP  | OK | 90 passed, 1 warning in 12.69s |
