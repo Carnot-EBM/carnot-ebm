@@ -1,0 +1,2409 @@
+{
+  "schema": "carnot.experiment_6283.v541_adversarial_capstone.v1",
+  "experiment_id": "exp6283-v541-adversarial-capstone",
+  "run_date": "20260810",
+  "status": "complete",
+  "milestone_roadmap_path_and_hash": {
+    "milestone": "2026.08.541",
+    "roadmap_path": "research-roadmap.yaml",
+    "roadmap_sha256": "sha256:6fdc2b479e236570684f130d95d8b0a78d51c2d76e580382da7bb8b298377501",
+    "milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "milestone_doc_sha256": "sha256:20138e28cd4e94eb6a0ae4021794715e6acad9d309e4143d301f80457d5f1699",
+    "task_ids": [
+      "exp6272-v541-terminal-transition",
+      "exp6273-v541-post-marker-source-scope-freeze",
+      "exp6274-asp-energy-semantic-compiler",
+      "exp6275-flagship-asp-constraint-verification-benchmark",
+      "exp6276-certified-dual-cache-admission",
+      "exp6277-chronological-certified-csl-ab",
+      "exp6278-model-family-task-holdout-csl-audit",
+      "exp6279-certified-memory-shadow-consumer",
+      "exp6280-variable-cardinality-mode-jump-backend",
+      "exp6281-mode-jump-multifamily-rerun",
+      "exp6282-arc-mechanic-class-live-router",
+      "exp6283-v541-adversarial-capstone"
+    ],
+    "expected_task_ids": [
+      "exp6272-v541-terminal-transition",
+      "exp6273-v541-post-marker-source-scope-freeze",
+      "exp6274-asp-energy-semantic-compiler",
+      "exp6275-flagship-asp-constraint-verification-benchmark",
+      "exp6276-certified-dual-cache-admission",
+      "exp6277-chronological-certified-csl-ab",
+      "exp6278-model-family-task-holdout-csl-audit",
+      "exp6279-certified-memory-shadow-consumer",
+      "exp6280-variable-cardinality-mode-jump-backend",
+      "exp6281-mode-jump-multifamily-rerun",
+      "exp6282-arc-mechanic-class-live-router",
+      "exp6283-v541-adversarial-capstone"
+    ],
+    "task_count": 12,
+    "principle": "The active roadmap defines the V541 denominator."
+  },
+  "exact_declared_deliverable_matrix": {
+    "exp6272-v541-terminal-transition": {
+      "task_id": "exp6272-v541-terminal-transition",
+      "title": "Exact terminal-boundary handoff from V540 into V541",
+      "track": "infrastructure",
+      "declared_deliverable": "results/experiment_6272_v541_terminal_transition.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:4fe05425739ba4018d0112baf91894c808d8236f1e932e621430aa0edabd2e56",
+      "terminal_class": "complete",
+      "terminal": true,
+      "reason": "status=complete verdict=complete",
+      "status_raw": "complete",
+      "honest_verdict_raw": "complete: V540 exact states and V541 roadmap contracts validated; broad-suite outcomes are recorded separately from focused checks",
+      "receipt_status": "OK",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6273-v541-post-marker-source-scope-freeze": {
+      "task_id": "exp6273-v541-post-marker-source-scope-freeze",
+      "title": "Post-V541-marker source delta and experimental-scope freeze",
+      "track": "infrastructure",
+      "declared_deliverable": "results/experiment_6273_v541_post_marker_source_scope_freeze.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:3c115d011a9931afdc0fd300a114d1d483a446042ef73d5303f0c01fc9e1a9dc",
+      "terminal_class": "flagged",
+      "terminal": true,
+      "reason": "artifact carries flagged_adversarial or corrigendum_pending",
+      "status_raw": "complete",
+      "honest_verdict_raw": "complete_null: accepted_count=0; no reproducible post-V541-marker findings; references unchanged; V541 contracts frozen",
+      "receipt_status": "FLAGGED",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": true,
+      "corrigendum_pending_stamped": true,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6274-asp-energy-semantic-compiler": {
+      "task_id": "exp6274-asp-energy-semantic-compiler",
+      "title": "Bounded ASP-to-energy semantic compiler with independent exact parity",
+      "track": "constraint_semantics",
+      "declared_deliverable": "results/experiment_6274_asp_energy_semantic_compiler.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:b02c88963c4815aa0e26d451ffd60fdd9f1014d32e76f638592ac114c611e96b",
+      "terminal_class": "complete",
+      "terminal": true,
+      "reason": "status=complete verdict=complete",
+      "status_raw": "complete",
+      "honest_verdict_raw": "complete: bounded ASP energy compiler matches clingo oracle on trusted fixtures",
+      "receipt_status": "OK",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [
+        "results/experiment_6274_asp_energy_fixture_manifest.json"
+      ]
+    },
+    "exp6275-flagship-asp-constraint-verification-benchmark": {
+      "task_id": "exp6275-flagship-asp-constraint-verification-benchmark",
+      "title": "Gated on Exp6274 semantic parity: three-family flagship ASP constraint benchmark",
+      "track": "live_verification",
+      "declared_deliverable": "results/experiment_6275_flagship_asp_constraint_verification_benchmark.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:d9de1e4d154ef481c4784d749eb219333983a0bb756ad3241e912e277d6a4a60",
+      "terminal_class": "flagged",
+      "terminal": true,
+      "reason": "artifact carries flagged_adversarial or corrigendum_pending",
+      "status_raw": "complete_ready",
+      "honest_verdict_raw": "complete_partial: test_exit_codes",
+      "receipt_status": "FLAGGED",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": true,
+      "corrigendum_pending_stamped": true,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [
+        "results/experiment_6275_flagship_asp_constraint_verification_benchmark.formal_sidecar.json",
+        "results/experiment_6275_flagship_asp_constraint_verification_benchmark.sealed_manifest.json"
+      ]
+    },
+    "exp6276-certified-dual-cache-admission": {
+      "task_id": "exp6276-certified-dual-cache-admission",
+      "title": "Certified positive-negative energy cache admission under shift",
+      "track": "continuous_learning",
+      "declared_deliverable": "results/experiment_6276_certified_dual_cache_admission.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:901704ad563ac7c4f115cea7e81d0264028870f70685efc7209b9233ce876d17",
+      "terminal_class": "null",
+      "terminal": true,
+      "reason": "status=null verdict=null",
+      "status_raw": "complete_null",
+      "honest_verdict_raw": "complete_null: certified dual-cache mechanics ran, but a recorded test command failed so readiness stayed closed",
+      "receipt_status": "GATE_BLOCK",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [
+        "results/experiment_6276_certified_dual_cache_admission.json.frozen_reserve.json"
+      ]
+    },
+    "exp6277-chronological-certified-csl-ab": {
+      "task_id": "exp6277-chronological-certified-csl-ab",
+      "title": "Gated on Exp6276 certificate: chronological continuous self-learning A/B",
+      "track": "continuous_learning",
+      "declared_deliverable": "results/experiment_6277_chronological_certified_csl_ab.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:966b251c191403c0a0c8a3ba86d2d5e7427ae456215605979b684a67edc73d65",
+      "terminal_class": "skipped",
+      "terminal": true,
+      "reason": "blocked artifact records a gate skip",
+      "status_raw": "blocked",
+      "honest_verdict_raw": "blocked_gate_check_failed",
+      "receipt_status": "GATE_BLOCK",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6278-model-family-task-holdout-csl-audit": {
+      "task_id": "exp6278-model-family-task-holdout-csl-audit",
+      "title": "Gated on Exp6277 promotion: model-family and task-family self-learning audit",
+      "track": "continuous_learning",
+      "declared_deliverable": "results/experiment_6278_model_family_task_holdout_csl_audit.json",
+      "present": false,
+      "loadable": false,
+      "sha256": null,
+      "terminal_class": "missing",
+      "terminal": false,
+      "reason": "artifact path is missing",
+      "status_raw": null,
+      "honest_verdict_raw": null,
+      "receipt_status": "GATE_BLOCK",
+      "receipt_override_attempted": true,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6279-certified-memory-shadow-consumer": {
+      "task_id": "exp6279-certified-memory-shadow-consumer",
+      "title": "Gated on Exp6278 transfer: default-off certified-memory shadow consumer",
+      "track": "continuous_learning",
+      "declared_deliverable": "results/experiment_6279_certified_memory_shadow_consumer.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:500d8a580a8ab1f4881c265b82cefc59441297267121bd420756636fcd7d777a",
+      "terminal_class": "skipped",
+      "terminal": true,
+      "reason": "blocked artifact records a gate skip",
+      "status_raw": "blocked",
+      "honest_verdict_raw": "blocked_gate_check_failed",
+      "receipt_status": "GATE_BLOCK",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6280-variable-cardinality-mode-jump-backend": {
+      "task_id": "exp6280-variable-cardinality-mode-jump-backend",
+      "title": "Typed variable-cardinality Rust/PyO3 mode-jump backend",
+      "track": "sampler",
+      "declared_deliverable": "results/experiment_6280_variable_cardinality_mode_jump_backend.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:e40ebd316844e21bccf47c84946aebd6a8c4965affb74abcca4dafeacc545598",
+      "terminal_class": "ready",
+      "terminal": true,
+      "reason": "status=ready verdict=ready",
+      "status_raw": "complete_ready",
+      "honest_verdict_raw": "complete_ready: variable-cardinality mode-jump ABI supports Exp6268 families with exact Rust/Python parity; no scientific A/B value claim",
+      "receipt_status": "OK",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6281-mode-jump-multifamily-rerun": {
+      "task_id": "exp6281-mode-jump-multifamily-rerun",
+      "title": "Gated on Exp6280 backend parity: exact multi-family mode-jump A/B",
+      "track": "sampler",
+      "declared_deliverable": "results/experiment_6281_mode_jump_multifamily_rerun.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:fff24fa125bb3929020492da26ad051f70a0aa2cf2b4093d06ac6b87102a5ee1",
+      "terminal_class": "blocked",
+      "terminal": true,
+      "reason": "status=blocked verdict=blocked",
+      "status_raw": "blocked_safety",
+      "honest_verdict_raw": "blocked_safety: safety=0.0; workload_value=0.0; supported_fixtures=8; unsupported_or_failed_cells=0; non_toy_positive_mixing_families=0; retirement=blocked_no_retirement_recommendation; hardware_claim_count=0; timing_speedup_claimed=False",
+      "receipt_status": "OK",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6282-arc-mechanic-class-live-router": {
+      "task_id": "exp6282-arc-mechanic-class-live-router",
+      "title": "ARC live-path push-block and toggle-move mechanic-class router",
+      "track": "arc_live_agent",
+      "declared_deliverable": "results/experiment_6282_arc_mechanic_class_live_router.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:7eec96fec9d112abad56375dcdfbd5a35f4aa0ad2adbe7e936303ab7019c2c22",
+      "terminal_class": "flagged",
+      "terminal": true,
+      "reason": "artifact carries flagged_adversarial or corrigendum_pending",
+      "status_raw": "complete",
+      "honest_verdict_raw": "complete: mechanic_class_router_canary_no_solve_claim",
+      "receipt_status": "FLAGGED",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": true,
+      "corrigendum_pending_stamped": true,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [
+        "results/experiment_6282_arc_mechanic_class_fixture_manifest.json"
+      ]
+    },
+    "exp6283-v541-adversarial-capstone": {
+      "task_id": "exp6283-v541-adversarial-capstone",
+      "title": "V541 exact-path adversarial capstone and PRD-gap reconciliation",
+      "track": "synthesis",
+      "declared_deliverable": "results/experiment_6283_v541_adversarial_capstone.json",
+      "present": false,
+      "loadable": true,
+      "sha256": "sha256:9d1f100bdde7015e3265c1f6cc92e7dc8708ab2d9bed09f4e2259b0c36482b7d",
+      "terminal_class": "complete",
+      "terminal": true,
+      "reason": "status=complete verdict=complete",
+      "status_raw": "complete",
+      "honest_verdict_raw": "complete: Exp6283 capstone payload under construction",
+      "receipt_status": null,
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "flagged_adversarial_stamped": false,
+      "corrigendum_pending_stamped": false,
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    }
+  },
+  "conductor_receipt_matrix": {
+    "exp6272-v541-terminal-transition": {
+      "receipt_found": true,
+      "timestamp": "2026-08-10 13:13 UTC",
+      "title_fragment": "Exact terminal-boundary handoff from V540 into V54",
+      "status": "OK",
+      "detail": "91 passed, 1 warning in 11.72s",
+      "raw_line": "| 2026-08-10 13:13 UTC | Exact terminal-boundary handoff from V540 into V54 | OK | 91 passed, 1 warning in 11.72s |"
+    },
+    "exp6273-v541-post-marker-source-scope-freeze": {
+      "receipt_found": true,
+      "timestamp": "2026-08-10 13:50 UTC",
+      "title_fragment": "Post-V541-marker source delta and experimental-sco",
+      "status": "FLAGGED",
+      "detail": "adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea",
+      "raw_line": "| 2026-08-10 13:50 UTC | Post-V541-marker source delta and experimental-sco | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |"
+    },
+    "exp6274-asp-energy-semantic-compiler": {
+      "receipt_found": true,
+      "timestamp": "2026-08-10 14:11 UTC",
+      "title_fragment": "Bounded ASP-to-energy semantic compiler with indep",
+      "status": "OK",
+      "detail": "89 passed, 1 warning in 9.65s",
+      "raw_line": "| 2026-08-10 14:11 UTC | Bounded ASP-to-energy semantic compiler with indep | OK | 89 passed, 1 warning in 9.65s |"
+    },
+    "exp6275-flagship-asp-constraint-verification-benchmark": {
+      "receipt_found": true,
+      "timestamp": "2026-08-10 14:39 UTC",
+      "title_fragment": "Gated on Exp6274 semantic parity: three-family fla",
+      "status": "FLAGGED",
+      "detail": "adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT \u2014 result quarantined,",
+      "raw_line": "| 2026-08-10 14:39 UTC | Gated on Exp6274 semantic parity: three-family fla | FLAGGED | adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT \u2014 result quarantined, |"
+    },
+    "exp6276-certified-dual-cache-admission": {
+      "receipt_found": true,
+      "timestamp": "2026-08-10 15:16 UTC",
+      "title_fragment": "Gated on Exp6276 certificate: chronological contin",
+      "status": "GATE_BLOCK",
+      "detail": "1 of 1 gate(s) failed; first failure: exp6276-certified-dual-cache-admission.cer",
+      "raw_line": "| 2026-08-10 15:16 UTC | Gated on Exp6276 certificate: chronological contin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6276-certified-dual-cache-admission.cer |"
+    },
+    "exp6277-chronological-certified-csl-ab": {
+      "receipt_found": true,
+      "timestamp": "2026-08-10 15:22 UTC",
+      "title_fragment": "Gated on Exp6277 promotion: model-family and task-",
+      "status": "GATE_BLOCK",
+      "detail": "Pre-emptive skip: upstream retired (exp6277-chronological-certified-csl-ab)",
+      "raw_line": "| 2026-08-10 15:22 UTC | Gated on Exp6277 promotion: model-family and task- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6277-chronological-certified-csl-ab) |"
+    },
+    "exp6278-model-family-task-holdout-csl-audit": {
+      "receipt_found": true,
+      "timestamp": "2026-08-10 15:22 UTC",
+      "title_fragment": "Gated on Exp6277 promotion: model-family and task-",
+      "status": "GATE_BLOCK",
+      "detail": "Pre-emptive skip: upstream retired (exp6277-chronological-certified-csl-ab)",
+      "raw_line": "| 2026-08-10 15:22 UTC | Gated on Exp6277 promotion: model-family and task- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6277-chronological-certified-csl-ab) |"
+    },
+    "exp6279-certified-memory-shadow-consumer": {
+      "receipt_found": true,
+      "timestamp": "2026-08-10 15:22 UTC",
+      "title_fragment": "Gated on Exp6278 transfer: default-off certified-m",
+      "status": "GATE_BLOCK",
+      "detail": "1 of 1 gate(s) failed; first failure: exp6278-model-family-task-holdout-csl-audi",
+      "raw_line": "| 2026-08-10 15:22 UTC | Gated on Exp6278 transfer: default-off certified-m | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6278-model-family-task-holdout-csl-audi |"
+    },
+    "exp6280-variable-cardinality-mode-jump-backend": {
+      "receipt_found": true,
+      "timestamp": "2026-08-10 16:02 UTC",
+      "title_fragment": "Typed variable-cardinality Rust/PyO3 mode-jump bac",
+      "status": "OK",
+      "detail": "133 passed, 1 warning in 10.95s",
+      "raw_line": "| 2026-08-10 16:02 UTC | Typed variable-cardinality Rust/PyO3 mode-jump bac | OK | 133 passed, 1 warning in 10.95s |"
+    },
+    "exp6281-mode-jump-multifamily-rerun": {
+      "receipt_found": true,
+      "timestamp": "2026-08-10 17:57 UTC",
+      "title_fragment": "Gated on Exp6280 backend parity: exact multi-famil",
+      "status": "OK",
+      "detail": "cache hit: 89 passed, 1 warning in 24.25s",
+      "raw_line": "| 2026-08-10 17:57 UTC | Gated on Exp6280 backend parity: exact multi-famil | OK | cache hit: 89 passed, 1 warning in 24.25s |"
+    },
+    "exp6282-arc-mechanic-class-live-router": {
+      "receipt_found": true,
+      "timestamp": "2026-08-10 18:28 UTC",
+      "title_fragment": "ARC live-path push-block and toggle-move mechanic-",
+      "status": "FLAGGED",
+      "detail": "adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea",
+      "raw_line": "| 2026-08-10 18:28 UTC | ARC live-path push-block and toggle-move mechanic- | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |"
+    },
+    "exp6283-v541-adversarial-capstone": {
+      "receipt_found": false,
+      "status": null,
+      "detail": null,
+      "raw_line": null
+    }
+  },
+  "exact_path_over_receipt_precedence": {
+    "receipt_overrode_any_exact_path": false,
+    "receipt_override_attempt_count": 1,
+    "rows": {
+      "exp6272-v541-terminal-transition": {
+        "declared_deliverable": "results/experiment_6272_v541_terminal_transition.json",
+        "terminal_class": "complete",
+        "receipt_status": "OK",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false
+      },
+      "exp6273-v541-post-marker-source-scope-freeze": {
+        "declared_deliverable": "results/experiment_6273_v541_post_marker_source_scope_freeze.json",
+        "terminal_class": "flagged",
+        "receipt_status": "FLAGGED",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false
+      },
+      "exp6274-asp-energy-semantic-compiler": {
+        "declared_deliverable": "results/experiment_6274_asp_energy_semantic_compiler.json",
+        "terminal_class": "complete",
+        "receipt_status": "OK",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false
+      },
+      "exp6275-flagship-asp-constraint-verification-benchmark": {
+        "declared_deliverable": "results/experiment_6275_flagship_asp_constraint_verification_benchmark.json",
+        "terminal_class": "flagged",
+        "receipt_status": "FLAGGED",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false
+      },
+      "exp6276-certified-dual-cache-admission": {
+        "declared_deliverable": "results/experiment_6276_certified_dual_cache_admission.json",
+        "terminal_class": "null",
+        "receipt_status": "GATE_BLOCK",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false
+      },
+      "exp6277-chronological-certified-csl-ab": {
+        "declared_deliverable": "results/experiment_6277_chronological_certified_csl_ab.json",
+        "terminal_class": "skipped",
+        "receipt_status": "GATE_BLOCK",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false
+      },
+      "exp6278-model-family-task-holdout-csl-audit": {
+        "declared_deliverable": "results/experiment_6278_model_family_task_holdout_csl_audit.json",
+        "terminal_class": "missing",
+        "receipt_status": "GATE_BLOCK",
+        "receipt_override_attempted": true,
+        "receipt_overrode": false
+      },
+      "exp6279-certified-memory-shadow-consumer": {
+        "declared_deliverable": "results/experiment_6279_certified_memory_shadow_consumer.json",
+        "terminal_class": "skipped",
+        "receipt_status": "GATE_BLOCK",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false
+      },
+      "exp6280-variable-cardinality-mode-jump-backend": {
+        "declared_deliverable": "results/experiment_6280_variable_cardinality_mode_jump_backend.json",
+        "terminal_class": "ready",
+        "receipt_status": "OK",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false
+      },
+      "exp6281-mode-jump-multifamily-rerun": {
+        "declared_deliverable": "results/experiment_6281_mode_jump_multifamily_rerun.json",
+        "terminal_class": "blocked",
+        "receipt_status": "OK",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false
+      },
+      "exp6282-arc-mechanic-class-live-router": {
+        "declared_deliverable": "results/experiment_6282_arc_mechanic_class_live_router.json",
+        "terminal_class": "flagged",
+        "receipt_status": "FLAGGED",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false
+      },
+      "exp6283-v541-adversarial-capstone": {
+        "declared_deliverable": "results/experiment_6283_v541_adversarial_capstone.json",
+        "terminal_class": "complete",
+        "receipt_status": null,
+        "receipt_override_attempted": false,
+        "receipt_overrode": false
+      }
+    },
+    "principle": "The declared JSON path outranks orchestration text."
+  },
+  "current_rule_adversarial_results_by_task": {
+    "exp6272-v541-terminal-transition": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6272_v541_terminal_transition.json",
+      "present": true,
+      "stamped_flagged_adversarial": false,
+      "stamped_corrigendum_pending": false,
+      "current_rule_flag_count": 0,
+      "current_rule_critical_flag_count": 0,
+      "current_rule_warn_flag_count": 0,
+      "current_rule_flags": []
+    },
+    "exp6273-v541-post-marker-source-scope-freeze": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6273_v541_post_marker_source_scope_freeze.json",
+      "present": true,
+      "stamped_flagged_adversarial": true,
+      "stamped_corrigendum_pending": true,
+      "current_rule_flag_count": 2,
+      "current_rule_critical_flag_count": 1,
+      "current_rule_warn_flag_count": 1,
+      "current_rule_flags": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical",
+          "detail": "duration_s=7.1805877150036395 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+        },
+        {
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn",
+          "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable."
+        }
+      ]
+    },
+    "exp6274-asp-energy-semantic-compiler": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6274_asp_energy_semantic_compiler.json",
+      "present": true,
+      "stamped_flagged_adversarial": false,
+      "stamped_corrigendum_pending": false,
+      "current_rule_flag_count": 0,
+      "current_rule_critical_flag_count": 0,
+      "current_rule_warn_flag_count": 0,
+      "current_rule_flags": []
+    },
+    "exp6275-flagship-asp-constraint-verification-benchmark": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6275_flagship_asp_constraint_verification_benchmark.json",
+      "present": true,
+      "stamped_flagged_adversarial": true,
+      "stamped_corrigendum_pending": true,
+      "current_rule_flag_count": 0,
+      "current_rule_critical_flag_count": 0,
+      "current_rule_warn_flag_count": 0,
+      "current_rule_flags": []
+    },
+    "exp6276-certified-dual-cache-admission": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6276_certified_dual_cache_admission.json",
+      "present": true,
+      "stamped_flagged_adversarial": false,
+      "stamped_corrigendum_pending": false,
+      "current_rule_flag_count": 0,
+      "current_rule_critical_flag_count": 0,
+      "current_rule_warn_flag_count": 0,
+      "current_rule_flags": []
+    },
+    "exp6277-chronological-certified-csl-ab": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6277_chronological_certified_csl_ab.json",
+      "present": true,
+      "stamped_flagged_adversarial": false,
+      "stamped_corrigendum_pending": false,
+      "current_rule_flag_count": 0,
+      "current_rule_critical_flag_count": 0,
+      "current_rule_warn_flag_count": 0,
+      "current_rule_flags": []
+    },
+    "exp6278-model-family-task-holdout-csl-audit": {
+      "path": "results/experiment_6278_model_family_task_holdout_csl_audit.json",
+      "present": false,
+      "stamped_flagged_adversarial": false,
+      "stamped_corrigendum_pending": false,
+      "current_rule_flag_count": 0,
+      "current_rule_critical_flag_count": 0,
+      "current_rule_warn_flag_count": 0,
+      "current_rule_flags": [],
+      "skipped": "missing_artifact"
+    },
+    "exp6279-certified-memory-shadow-consumer": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6279_certified_memory_shadow_consumer.json",
+      "present": true,
+      "stamped_flagged_adversarial": false,
+      "stamped_corrigendum_pending": false,
+      "current_rule_flag_count": 0,
+      "current_rule_critical_flag_count": 0,
+      "current_rule_warn_flag_count": 0,
+      "current_rule_flags": []
+    },
+    "exp6280-variable-cardinality-mode-jump-backend": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6280_variable_cardinality_mode_jump_backend.json",
+      "present": true,
+      "stamped_flagged_adversarial": false,
+      "stamped_corrigendum_pending": false,
+      "current_rule_flag_count": 0,
+      "current_rule_critical_flag_count": 0,
+      "current_rule_warn_flag_count": 0,
+      "current_rule_flags": []
+    },
+    "exp6281-mode-jump-multifamily-rerun": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6281_mode_jump_multifamily_rerun.json",
+      "present": true,
+      "stamped_flagged_adversarial": false,
+      "stamped_corrigendum_pending": false,
+      "current_rule_flag_count": 0,
+      "current_rule_critical_flag_count": 0,
+      "current_rule_warn_flag_count": 0,
+      "current_rule_flags": []
+    },
+    "exp6282-arc-mechanic-class-live-router": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6282_arc_mechanic_class_live_router.json",
+      "present": true,
+      "stamped_flagged_adversarial": true,
+      "stamped_corrigendum_pending": true,
+      "current_rule_flag_count": 1,
+      "current_rule_critical_flag_count": 1,
+      "current_rule_warn_flag_count": 0,
+      "current_rule_flags": [
+        {
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical",
+          "detail": "duration_s=44.043 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+        }
+      ]
+    },
+    "exp6283-v541-adversarial-capstone": {
+      "path": "results/experiment_6283_v541_adversarial_capstone.json",
+      "present": false,
+      "stamped_flagged_adversarial": false,
+      "stamped_corrigendum_pending": false,
+      "current_rule_flag_count": 0,
+      "current_rule_critical_flag_count": 0,
+      "current_rule_warn_flag_count": 0,
+      "current_rule_flags": [],
+      "skipped": "self_artifact_verified_after_final_write"
+    }
+  },
+  "terminal_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts": {
+    "terminal": 11,
+    "nonterminal": 1,
+    "missing": 1,
+    "malformed": 0,
+    "running": 0,
+    "running_bootstrap": 0,
+    "bootstrap_only": 0,
+    "partial": 0,
+    "contradictory": 0,
+    "unknown": 0,
+    "blocked": 1,
+    "skipped": 2,
+    "null": 1,
+    "flagged": 3,
+    "retired": 0,
+    "ready": 1,
+    "complete": 3,
+    "positive": 0,
+    "terminal_class_counts": {
+      "blocked": 1,
+      "complete": 3,
+      "flagged": 3,
+      "missing": 1,
+      "null": 1,
+      "ready": 1,
+      "skipped": 2
+    },
+    "count_principles": {
+      "terminal": "Terminal artifacts may close but still can fail promotion.",
+      "nonterminal": "Nonterminal exact artifacts cannot feed claims.",
+      "missing": "Missing exact paths cannot be replaced by aliases.",
+      "malformed": "Malformed JSON fails closed.",
+      "running": "Running artifacts are not terminal evidence.",
+      "running_bootstrap": "Bootstrap-running artifacts are not evidence.",
+      "bootstrap_only": "Bootstrap-only artifacts cannot support gates.",
+      "partial": "Partial artifacts cannot promote branches.",
+      "contradictory": "Conflicting status markers fail closed.",
+      "unknown": "Unknown markers fail closed.",
+      "blocked": "Blocked artifacts are terminal blockers.",
+      "skipped": "Gate tombstones stay skipped.",
+      "null": "Null evidence is separate from positive evidence.",
+      "flagged": "Stamped or current flags quarantine promotion.",
+      "retired": "Retired scopes stay retired.",
+      "ready": "Ready evidence is counted apart from complete evidence.",
+      "complete": "Complete evidence still needs branch gates.",
+      "positive": "Positive evidence is never inferred from another branch."
+    }
+  },
+  "gate_cascade_receipts": {
+    "gates": [
+      {
+        "task_id": "exp6275-flagship-asp-constraint-verification-benchmark",
+        "upstream": "exp6274-asp-energy-semantic-compiler",
+        "upstream_declared_deliverable": "results/experiment_6274_asp_energy_semantic_compiler.json",
+        "artifact_field": "asp_energy_semantic_ready_score",
+        "op": "==",
+        "expected": 1,
+        "actual": 1.0,
+        "passed": true,
+        "reason": "passed",
+        "eligibility": {
+          "field": "asp_energy_semantic_ready_score",
+          "eligible": true,
+          "reason": "terminal artifact exposes exact bare field 'asp_energy_semantic_ready_score'",
+          "classification": {
+            "classification": "complete",
+            "terminal": true,
+            "reason": "status=complete verdict=complete",
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6274_asp_energy_semantic_compiler.json",
+            "present": true,
+            "loadable": true,
+            "sha256": "sha256:b02c88963c4815aa0e26d451ffd60fdd9f1014d32e76f638592ac114c611e96b",
+            "status_raw": "complete",
+            "status_prefix": "complete",
+            "status_class": "complete",
+            "honest_verdict_raw": "complete: bounded ASP energy compiler matches clingo oracle on trusted fixtures",
+            "honest_verdict_prefix": "complete",
+            "verdict_class": "complete",
+            "receipt_override_attempted": false,
+            "receipt_overrode": false,
+            "conductor_receipt_status": null
+          },
+          "field_present": true,
+          "field_is_bare": true,
+          "value": 1.0
+        },
+        "principle": "A gate can read only a terminal exact artifact with an exact bare field."
+      },
+      {
+        "task_id": "exp6277-chronological-certified-csl-ab",
+        "upstream": "exp6276-certified-dual-cache-admission",
+        "upstream_declared_deliverable": "results/experiment_6276_certified_dual_cache_admission.json",
+        "artifact_field": "certified_admission_ready_score",
+        "op": "==",
+        "expected": 1,
+        "actual": 0.0,
+        "passed": false,
+        "reason": "operator_mismatch",
+        "eligibility": {
+          "field": "certified_admission_ready_score",
+          "eligible": true,
+          "reason": "terminal artifact exposes exact bare field 'certified_admission_ready_score'",
+          "classification": {
+            "classification": "null",
+            "terminal": true,
+            "reason": "status=null verdict=null",
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6276_certified_dual_cache_admission.json",
+            "present": true,
+            "loadable": true,
+            "sha256": "sha256:901704ad563ac7c4f115cea7e81d0264028870f70685efc7209b9233ce876d17",
+            "status_raw": "complete_null",
+            "status_prefix": "complete_null",
+            "status_class": "null",
+            "honest_verdict_raw": "complete_null: certified dual-cache mechanics ran, but a recorded test command failed so readiness stayed closed",
+            "honest_verdict_prefix": "complete_null",
+            "verdict_class": "null",
+            "receipt_override_attempted": false,
+            "receipt_overrode": false,
+            "conductor_receipt_status": null
+          },
+          "field_present": true,
+          "field_is_bare": true,
+          "value": 0.0
+        },
+        "principle": "A gate can read only a terminal exact artifact with an exact bare field."
+      },
+      {
+        "task_id": "exp6278-model-family-task-holdout-csl-audit",
+        "upstream": "exp6277-chronological-certified-csl-ab",
+        "upstream_declared_deliverable": "results/experiment_6277_chronological_certified_csl_ab.json",
+        "artifact_field": "continuous_learning_promotion_ready_score",
+        "op": "==",
+        "expected": 1,
+        "actual": null,
+        "passed": false,
+        "reason": "ineligible_upstream_field",
+        "eligibility": {
+          "field": "continuous_learning_promotion_ready_score",
+          "eligible": false,
+          "reason": "exact bare field 'continuous_learning_promotion_ready_score' is absent",
+          "classification": {
+            "classification": "skipped",
+            "terminal": true,
+            "reason": "blocked artifact records a gate skip",
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6277_chronological_certified_csl_ab.json",
+            "present": true,
+            "loadable": true,
+            "sha256": "sha256:966b251c191403c0a0c8a3ba86d2d5e7427ae456215605979b684a67edc73d65",
+            "status_raw": "blocked",
+            "status_prefix": "blocked",
+            "status_class": "blocked",
+            "honest_verdict_raw": "blocked_gate_check_failed",
+            "honest_verdict_prefix": "blocked_gate_check_failed",
+            "verdict_class": "blocked",
+            "receipt_override_attempted": false,
+            "receipt_overrode": false,
+            "conductor_receipt_status": null
+          },
+          "field_present": false,
+          "field_is_bare": false,
+          "value": null
+        },
+        "principle": "A gate can read only a terminal exact artifact with an exact bare field."
+      },
+      {
+        "task_id": "exp6279-certified-memory-shadow-consumer",
+        "upstream": "exp6278-model-family-task-holdout-csl-audit",
+        "upstream_declared_deliverable": "results/experiment_6278_model_family_task_holdout_csl_audit.json",
+        "artifact_field": "heldout_certified_transfer_ready_score",
+        "op": "==",
+        "expected": 1,
+        "actual": null,
+        "passed": false,
+        "reason": "ineligible_upstream_field",
+        "eligibility": {
+          "field": "heldout_certified_transfer_ready_score",
+          "eligible": false,
+          "reason": "nonterminal artifact classification=missing",
+          "classification": {
+            "classification": "missing",
+            "terminal": false,
+            "reason": "artifact path is missing",
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6278_model_family_task_holdout_csl_audit.json",
+            "present": false,
+            "loadable": false,
+            "sha256": null,
+            "status_raw": null,
+            "status_prefix": null,
+            "status_class": "unknown",
+            "honest_verdict_raw": null,
+            "honest_verdict_prefix": null,
+            "verdict_class": "unknown",
+            "receipt_override_attempted": false,
+            "receipt_overrode": false,
+            "conductor_receipt_status": null
+          },
+          "field_present": false,
+          "field_is_bare": false,
+          "value": null
+        },
+        "principle": "A gate can read only a terminal exact artifact with an exact bare field."
+      },
+      {
+        "task_id": "exp6281-mode-jump-multifamily-rerun",
+        "upstream": "exp6280-variable-cardinality-mode-jump-backend",
+        "upstream_declared_deliverable": "results/experiment_6280_variable_cardinality_mode_jump_backend.json",
+        "artifact_field": "variable_cardinality_backend_ready_score",
+        "op": "==",
+        "expected": 1,
+        "actual": 1.0,
+        "passed": true,
+        "reason": "passed",
+        "eligibility": {
+          "field": "variable_cardinality_backend_ready_score",
+          "eligible": true,
+          "reason": "terminal artifact exposes exact bare field 'variable_cardinality_backend_ready_score'",
+          "classification": {
+            "classification": "ready",
+            "terminal": true,
+            "reason": "status=ready verdict=ready",
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6280_variable_cardinality_mode_jump_backend.json",
+            "present": true,
+            "loadable": true,
+            "sha256": "sha256:e40ebd316844e21bccf47c84946aebd6a8c4965affb74abcca4dafeacc545598",
+            "status_raw": "complete_ready",
+            "status_prefix": "complete_ready",
+            "status_class": "ready",
+            "honest_verdict_raw": "complete_ready: variable-cardinality mode-jump ABI supports Exp6268 families with exact Rust/Python parity; no scientific A/B value claim",
+            "honest_verdict_prefix": "complete_ready",
+            "verdict_class": "ready",
+            "receipt_override_attempted": false,
+            "receipt_overrode": false,
+            "conductor_receipt_status": null
+          },
+          "field_present": true,
+          "field_is_bare": true,
+          "value": 1.0
+        },
+        "principle": "A gate can read only a terminal exact artifact with an exact bare field."
+      }
+    ],
+    "passed_count": 2,
+    "failed_count": 3,
+    "principle": "Structured gates are recomputed from exact bare fields."
+  },
+  "asp_semantic_compiler_state": {
+    "task_id": "exp6274-asp-energy-semantic-compiler",
+    "declared_deliverable": "results/experiment_6274_asp_energy_semantic_compiler.json",
+    "sha256": "sha256:b02c88963c4815aa0e26d451ffd60fdd9f1014d32e76f638592ac114c611e96b",
+    "status": "complete",
+    "honest_verdict": "complete: bounded ASP energy compiler matches clingo oracle on trusted fixtures",
+    "terminal_class": "complete",
+    "terminal": true,
+    "readiness_fields": {
+      "asp_energy_semantic_ready_score": 1.0
+    },
+    "current_rule_critical_flag_count": 0,
+    "stamped_or_current_flagged": false,
+    "promotion_allowed": true,
+    "state_principle": "ASP semantics must stand on exact compiler parity evidence.",
+    "asp_energy_semantic_ready_score": 1.0
+  },
+  "flagship_asp_benchmark_state": {
+    "task_id": "exp6275-flagship-asp-constraint-verification-benchmark",
+    "declared_deliverable": "results/experiment_6275_flagship_asp_constraint_verification_benchmark.json",
+    "sha256": "sha256:d9de1e4d154ef481c4784d749eb219333983a0bb756ad3241e912e277d6a4a60",
+    "status": "complete_ready",
+    "honest_verdict": "complete_partial: test_exit_codes",
+    "terminal_class": "flagged",
+    "terminal": true,
+    "readiness_fields": {
+      "flagship_asp_event_corpus_ready_score": 1.0
+    },
+    "current_rule_critical_flag_count": 0,
+    "stamped_or_current_flagged": true,
+    "promotion_allowed": false,
+    "state_principle": "Flagship benchmark evidence cannot outrank its flagged artifact.",
+    "flagship_asp_event_corpus_ready_score": 1.0
+  },
+  "certified_admission_state": {
+    "task_id": "exp6276-certified-dual-cache-admission",
+    "declared_deliverable": "results/experiment_6276_certified_dual_cache_admission.json",
+    "sha256": "sha256:901704ad563ac7c4f115cea7e81d0264028870f70685efc7209b9233ce876d17",
+    "status": "complete_null",
+    "honest_verdict": "complete_null: certified dual-cache mechanics ran, but a recorded test command failed so readiness stayed closed",
+    "terminal_class": "null",
+    "terminal": true,
+    "readiness_fields": {
+      "certified_admission_ready_score": 0.0
+    },
+    "current_rule_critical_flag_count": 0,
+    "stamped_or_current_flagged": false,
+    "promotion_allowed": false,
+    "state_principle": "Certified admission must pass before CSL can run.",
+    "certified_admission_ready_score": 0.0
+  },
+  "chronological_continuous_learning_state": {
+    "task_id": "exp6277-chronological-certified-csl-ab",
+    "declared_deliverable": "results/experiment_6277_chronological_certified_csl_ab.json",
+    "sha256": "sha256:966b251c191403c0a0c8a3ba86d2d5e7427ae456215605979b684a67edc73d65",
+    "status": "blocked",
+    "honest_verdict": "blocked_gate_check_failed",
+    "terminal_class": "skipped",
+    "terminal": true,
+    "readiness_fields": {
+      "continuous_learning_promotion_ready_score": null
+    },
+    "current_rule_critical_flag_count": 0,
+    "stamped_or_current_flagged": false,
+    "promotion_allowed": false,
+    "state_principle": "A CSL gate tombstone remains skipped.",
+    "continuous_learning_promotion_ready_score": null
+  },
+  "heldout_transfer_state": {
+    "task_id": "exp6278-model-family-task-holdout-csl-audit",
+    "declared_deliverable": "results/experiment_6278_model_family_task_holdout_csl_audit.json",
+    "sha256": null,
+    "status": null,
+    "honest_verdict": null,
+    "terminal_class": "missing",
+    "terminal": false,
+    "readiness_fields": {
+      "heldout_certified_transfer_ready_score": null
+    },
+    "current_rule_critical_flag_count": 0,
+    "stamped_or_current_flagged": false,
+    "promotion_allowed": false,
+    "state_principle": "Missing heldout transfer cannot be promoted.",
+    "heldout_certified_transfer_ready_score": null
+  },
+  "shadow_consumer_state": {
+    "task_id": "exp6279-certified-memory-shadow-consumer",
+    "declared_deliverable": "results/experiment_6279_certified_memory_shadow_consumer.json",
+    "sha256": "sha256:500d8a580a8ab1f4881c265b82cefc59441297267121bd420756636fcd7d777a",
+    "status": "blocked",
+    "honest_verdict": "blocked_gate_check_failed",
+    "terminal_class": "skipped",
+    "terminal": true,
+    "readiness_fields": {
+      "default_off_shadow_ready_score": null
+    },
+    "current_rule_critical_flag_count": 0,
+    "stamped_or_current_flagged": false,
+    "promotion_allowed": false,
+    "state_principle": "A skipped shadow consumer is not integration evidence.",
+    "default_off_shadow_ready_score": null
+  },
+  "variable_cardinality_backend_state": {
+    "task_id": "exp6280-variable-cardinality-mode-jump-backend",
+    "declared_deliverable": "results/experiment_6280_variable_cardinality_mode_jump_backend.json",
+    "sha256": "sha256:e40ebd316844e21bccf47c84946aebd6a8c4965affb74abcca4dafeacc545598",
+    "status": "complete_ready",
+    "honest_verdict": "complete_ready: variable-cardinality mode-jump ABI supports Exp6268 families with exact Rust/Python parity; no scientific A/B value claim",
+    "terminal_class": "ready",
+    "terminal": true,
+    "readiness_fields": {
+      "variable_cardinality_backend_ready_score": 1.0
+    },
+    "current_rule_critical_flag_count": 0,
+    "stamped_or_current_flagged": false,
+    "promotion_allowed": true,
+    "state_principle": "Backend readiness is separate from sampler value.",
+    "variable_cardinality_backend_ready_score": 1.0
+  },
+  "mode_jump_safety_and_value_state": {
+    "task_id": "exp6281-mode-jump-multifamily-rerun",
+    "declared_deliverable": "results/experiment_6281_mode_jump_multifamily_rerun.json",
+    "sha256": "sha256:fff24fa125bb3929020492da26ad051f70a0aa2cf2b4093d06ac6b87102a5ee1",
+    "status": "blocked_safety",
+    "honest_verdict": "blocked_safety: safety=0.0; workload_value=0.0; supported_fixtures=8; unsupported_or_failed_cells=0; non_toy_positive_mixing_families=0; retirement=blocked_no_retirement_recommendation; hardware_claim_count=0; timing_speedup_claimed=False",
+    "terminal_class": "blocked",
+    "terminal": true,
+    "readiness_fields": {
+      "mode_jump_safety_ready_score": 0.0,
+      "mode_jump_workload_value_ready_score": 0.0
+    },
+    "current_rule_critical_flag_count": 0,
+    "stamped_or_current_flagged": false,
+    "promotion_allowed": false,
+    "state_principle": "Mode-jump safety and workload value are independent gates.",
+    "mode_jump_safety_ready_score": 0.0,
+    "mode_jump_workload_value_ready_score": 0.0
+  },
+  "arc_mechanic_router_state": {
+    "task_id": "exp6282-arc-mechanic-class-live-router",
+    "declared_deliverable": "results/experiment_6282_arc_mechanic_class_live_router.json",
+    "sha256": "sha256:7eec96fec9d112abad56375dcdfbd5a35f4aa0ad2adbe7e936303ab7019c2c22",
+    "status": "complete",
+    "honest_verdict": "complete: mechanic_class_router_canary_no_solve_claim",
+    "terminal_class": "flagged",
+    "terminal": true,
+    "readiness_fields": {
+      "arc_mechanic_router_ready_score": 1.0
+    },
+    "current_rule_critical_flag_count": 1,
+    "stamped_or_current_flagged": true,
+    "promotion_allowed": false,
+    "state_principle": "ARC router evidence must be live-path and unflagged.",
+    "arc_mechanic_router_ready_score": 1.0
+  },
+  "arc_provenance_and_registry_receipts": {
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "registry_precheck_path_hash_and_target_receipt": {
+      "path": "ops/arc_solve_registry.yaml",
+      "public_level_targeted": false,
+      "public_registry_games_full_clear_count": 25,
+      "public_registry_games_not_full_clear_count": 0,
+      "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "target": "synthetic_push_block_mechanic_canary",
+      "target_kind": "synthetic_unseen_mechanic_fixture_not_public_registry_level",
+      "target_present_in_registry": false,
+      "target_receipt": {
+        "mechanic_class": "push_block",
+        "why_eligible": "synthetic unseen mechanic fixture; no reproduced public level targeted"
+      }
+    },
+    "target_was_unsolved_at_precheck": true,
+    "solve_provenance": "live_agent_self_discovery",
+    "game_level_solve_claimed": false,
+    "hidden_game_source_access_count": 0,
+    "outer_loop_ground_truth_search_count": 0,
+    "exhaustive_bfs_count": 0,
+    "per_game_adapter_count": 0,
+    "registry_update_count": 0,
+    "capstone_registry_update_count": 0,
+    "principle": "ARC source, solve, and registry counts must stay explicit."
+  },
+  "branch_independent_promotion_ledger": {
+    "asp_verification": {
+      "promotion_allowed": false,
+      "blocking_reasons": [
+        "exp6275-flagship-asp-constraint-verification-benchmark_flagged_or_current_critical",
+        "flagship_asp_benchmark_closed"
+      ],
+      "task_ids": [
+        "exp6274-asp-energy-semantic-compiler",
+        "exp6275-flagship-asp-constraint-verification-benchmark"
+      ]
+    },
+    "continuous_self_learning": {
+      "promotion_allowed": false,
+      "blocking_reasons": [
+        "certified_admission_closed",
+        "chronological_csl_closed",
+        "heldout_transfer_missing",
+        "shadow_consumer_closed"
+      ],
+      "task_ids": [
+        "exp6276-certified-dual-cache-admission",
+        "exp6277-chronological-certified-csl-ab",
+        "exp6278-model-family-task-holdout-csl-audit",
+        "exp6279-certified-memory-shadow-consumer"
+      ]
+    },
+    "sampler": {
+      "promotion_allowed": false,
+      "blocking_reasons": [
+        "mode_jump_value_closed"
+      ],
+      "task_ids": [
+        "exp6280-variable-cardinality-mode-jump-backend",
+        "exp6281-mode-jump-multifamily-rerun"
+      ]
+    },
+    "arc": {
+      "promotion_allowed": false,
+      "blocking_reasons": [
+        "arc_mechanic_router_closed",
+        "exp6282-arc-mechanic-class-live-router_flagged_or_current_critical"
+      ],
+      "task_ids": [
+        "exp6282-arc-mechanic-class-live-router"
+      ]
+    },
+    "principle": "One branch cannot launder another branch."
+  },
+  "prior_failure_retirement_actions": {
+    "actions": [
+      {
+        "task_id": "exp6272-v541-terminal-transition",
+        "prior_experiment_id": "exp6260-v540-terminal-transition",
+        "prior_verdict": "blocked: one or more recorded validation commands failed or timed out",
+        "current_terminal_class": "complete",
+        "current_verdict": "complete: V540 exact states and V541 roadmap contracts validated; broad-suite outcomes are recorded separately from focused checks",
+        "action": "no_retirement_current_verdict_differs",
+        "rule_fired": false,
+        "would_update_exclusion_manifest": false
+      },
+      {
+        "task_id": "exp6273-v541-post-marker-source-scope-freeze",
+        "prior_experiment_id": "exp6261-v540-post-marker-source-scope-freeze",
+        "prior_verdict": "blocked: accepted_count=0; V540 source freeze checks failed",
+        "current_terminal_class": "flagged",
+        "current_verdict": "complete_null: accepted_count=0; no reproducible post-V541-marker findings; references unchanged; V541 contracts frozen",
+        "action": "no_retirement_current_verdict_differs",
+        "rule_fired": false,
+        "would_update_exclusion_manifest": false
+      },
+      {
+        "task_id": "exp6274-asp-energy-semantic-compiler",
+        "prior_experiment_id": "exp5714-one-axis-tempering-rust-parity",
+        "prior_verdict": "complete: one-axis corrected-cDLS Rust/Python parity is exact within frozen tolerances; portability only, no speed claim",
+        "current_terminal_class": "complete",
+        "current_verdict": "complete: bounded ASP energy compiler matches clingo oracle on trusted fixtures",
+        "action": "no_retirement_current_verdict_differs",
+        "rule_fired": false,
+        "would_update_exclusion_manifest": false
+      },
+      {
+        "task_id": "exp6275-flagship-asp-constraint-verification-benchmark",
+        "prior_experiment_id": "exp6228-supervised-three-family-runtime-endurance",
+        "prior_verdict": "nonterminal: status=preconditions_recorded; honest_verdict and scientific result fields were absent",
+        "current_terminal_class": "flagged",
+        "current_verdict": "complete_partial: test_exit_codes",
+        "action": "no_retirement_current_verdict_differs",
+        "rule_fired": false,
+        "would_update_exclusion_manifest": false
+      },
+      {
+        "task_id": "exp6276-certified-dual-cache-admission",
+        "prior_experiment_id": "exp6264-energy-familiarity-memory-gate",
+        "prior_verdict": "complete_null: energy familiarity mechanics passed, but a recorded test command failed so the readiness conjunction stayed closed",
+        "current_terminal_class": "null",
+        "current_verdict": "complete_null: certified dual-cache mechanics ran, but a recorded test command failed so readiness stayed closed",
+        "action": "no_retirement_current_verdict_differs",
+        "rule_fired": false,
+        "would_update_exclusion_manifest": false
+      },
+      {
+        "task_id": "exp6277-chronological-certified-csl-ab",
+        "prior_experiment_id": "exp6265-chronological-two-timescale-csl-ab",
+        "prior_verdict": "blocked_gate_check_failed",
+        "current_terminal_class": "skipped",
+        "current_verdict": "blocked_gate_check_failed",
+        "action": "retire_if_same_verdict_rule_fired_recorded_only",
+        "rule_fired": true,
+        "would_update_exclusion_manifest": false
+      },
+      {
+        "task_id": "exp6278-model-family-task-holdout-csl-audit",
+        "prior_experiment_id": "exp6266-family-task-holdout-csl-audit",
+        "prior_verdict": "missing: the downstream task did not execute after the Exp6265 gate failure",
+        "current_terminal_class": "missing",
+        "current_verdict": "",
+        "action": "no_retirement_exact_artifact_missing",
+        "rule_fired": false,
+        "would_update_exclusion_manifest": false
+      },
+      {
+        "task_id": "exp6279-certified-memory-shadow-consumer",
+        "prior_experiment_id": "exp6267-constraint-memory-shadow-consumer-v2",
+        "prior_verdict": "blocked_gate_check_failed",
+        "current_terminal_class": "skipped",
+        "current_verdict": "blocked_gate_check_failed",
+        "action": "retire_if_same_verdict_rule_fired_recorded_only",
+        "rule_fired": true,
+        "would_update_exclusion_manifest": false
+      },
+      {
+        "task_id": "exp6280-variable-cardinality-mode-jump-backend",
+        "prior_experiment_id": "exp6269-mode-jump-multifamily-ab",
+        "prior_verdict": "blocked_safety: safety=0.0; workload_value=0.0; supported_fixtures=1; unsupported_fixtures=7; non_toy_positive_mixing_families=0",
+        "current_terminal_class": "ready",
+        "current_verdict": "complete_ready: variable-cardinality mode-jump ABI supports Exp6268 families with exact Rust/Python parity; no scientific A/B value claim",
+        "action": "no_retirement_current_verdict_differs",
+        "rule_fired": false,
+        "would_update_exclusion_manifest": false
+      },
+      {
+        "task_id": "exp6281-mode-jump-multifamily-rerun",
+        "prior_experiment_id": "exp6269-mode-jump-multifamily-ab",
+        "prior_verdict": "blocked_safety: safety=0.0; workload_value=0.0; supported_fixtures=1; unsupported_fixtures=7; non_toy_positive_mixing_families=0",
+        "current_terminal_class": "blocked",
+        "current_verdict": "blocked_safety: safety=0.0; workload_value=0.0; supported_fixtures=8; unsupported_or_failed_cells=0; non_toy_positive_mixing_families=0; retirement=blocked_no_retirement_recommendation; hardware_claim_count=0; timing_speedup_claimed=False",
+        "action": "no_retirement_current_verdict_differs",
+        "rule_fired": false,
+        "would_update_exclusion_manifest": false
+      },
+      {
+        "task_id": "exp6282-arc-mechanic-class-live-router",
+        "prior_experiment_id": "exp6232-arc-admissible-depth-portfolio",
+        "prior_verdict": "complete: skipped_fewer_than_two_eligible_depth_levers_no_model_load",
+        "current_terminal_class": "flagged",
+        "current_verdict": "complete: mechanic_class_router_canary_no_solve_claim",
+        "action": "no_retirement_current_verdict_differs",
+        "rule_fired": false,
+        "would_update_exclusion_manifest": false
+      },
+      {
+        "task_id": "exp6283-v541-adversarial-capstone",
+        "prior_experiment_id": "exp6271-v540-adversarial-capstone",
+        "prior_verdict": "complete: V540 capstone preserved exact terminal nonterminal blocked skipped null flagged retired and ready states without promoting CSL sampler ARC runtime hardware speed or power claims",
+        "current_terminal_class": "complete",
+        "current_verdict": "complete: Exp6283 capstone payload under construction",
+        "action": "no_retirement_current_verdict_differs",
+        "rule_fired": false,
+        "would_update_exclusion_manifest": false
+      }
+    ],
+    "rule_fired_count": 2,
+    "manifest_update_count": 0,
+    "principle": "Retire-if-same-verdict actions use exact verdicts only."
+  },
+  "publication_gate_g1_g2_g3_g4_and_unmet_gates": {
+    "paper_ready": true,
+    "gates": {
+      "G1": {
+        "pass": true,
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "pass": true,
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125"
+      },
+      "G3": {
+        "pass": true,
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": []
+      },
+      "G4": {
+        "pass": true,
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "unmet_gates": [],
+    "principle": "Publication readiness comes from the stable gate script."
+  },
+  "source_mutation_count": 0,
+  "weight_mutation_count": 0,
+  "unauthorized_external_call_count": 0,
+  "hidden_game_source_access_count": 0,
+  "outer_loop_ground_truth_search_count": 0,
+  "arc_level_solve_claim_count": 0,
+  "registry_update_count": 0,
+  "hardware_claim_count": 0,
+  "speed_power_or_energy_claim_count": 0,
+  "protected_files_unchanged": {
+    "unchanged": true,
+    "paths": {
+      "_bmad/traceability.md": {
+        "before_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "after_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged": true
+      },
+      "openspec/capabilities/research-harnesses/spec.md": {
+        "before_sha256": "sha256:b204ac7d35feb87b7cf9d7678bdf3663c0efbb7ab9dcdb8bde85eeef901d9319",
+        "after_sha256": "sha256:b204ac7d35feb87b7cf9d7678bdf3663c0efbb7ab9dcdb8bde85eeef901d9319",
+        "unchanged": true
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "before_sha256": "sha256:20138e28cd4e94eb6a0ae4021794715e6acad9d309e4143d301f80457d5f1699",
+        "after_sha256": "sha256:20138e28cd4e94eb6a0ae4021794715e6acad9d309e4143d301f80457d5f1699",
+        "unchanged": true
+      },
+      "ops/arc_solve_registry.yaml": {
+        "before_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "after_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "before_sha256": "sha256:5db62ad33f6bc6fe3d46ed1f534de7bd59187026065b4c7eadd206fa769a01f6",
+        "after_sha256": "sha256:5db62ad33f6bc6fe3d46ed1f534de7bd59187026065b4c7eadd206fa769a01f6",
+        "unchanged": true
+      },
+      "ops/conductor-log.md": {
+        "before_sha256": "sha256:b34eac96e25081770fc81559f3f08c6772027afa05d18fc33122f1e608876ce6",
+        "after_sha256": "sha256:b34eac96e25081770fc81559f3f08c6772027afa05d18fc33122f1e608876ce6",
+        "unchanged": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "before_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "after_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "before_sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+        "after_sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+        "unchanged": true
+      },
+      "python/carnot/terminal_artifacts.py": {
+        "before_sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+        "after_sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+        "unchanged": true
+      },
+      "research-roadmap.yaml": {
+        "before_sha256": "sha256:6fdc2b479e236570684f130d95d8b0a78d51c2d76e580382da7bb8b298377501",
+        "after_sha256": "sha256:6fdc2b479e236570684f130d95d8b0a78d51c2d76e580382da7bb8b298377501",
+        "unchanged": true
+      },
+      "scripts/adversarial_verify.py": {
+        "before_sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+        "after_sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+        "unchanged": true
+      },
+      "scripts/publication_gate.py": {
+        "before_sha256": "sha256:e69f55eb33295352f65e27d1586d5bfcadcde2988dbb5e870d39155de46640c4",
+        "after_sha256": "sha256:e69f55eb33295352f65e27d1586d5bfcadcde2988dbb5e870d39155de46640c4",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "before_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "after_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "unchanged": true
+      },
+      "scripts/summarize_artifact.py": {
+        "before_sha256": "sha256:62bf92bd99b7325ae841e4d93270ccd53338c9d54765e14acadbb7f5c35d1c7d",
+        "after_sha256": "sha256:62bf92bd99b7325ae841e4d93270ccd53338c9d54765e14acadbb7f5c35d1c7d",
+        "unchanged": true
+      }
+    }
+  },
+  "spec_traceability_status_changelog_reconciliation": {
+    "openspec_req_infra_6283_present": true,
+    "implementation_status_present": true,
+    "ops_status_changelog_traceability_touched_by_this_task": false,
+    "stop_when_done_rule_deferred_ops_traceability_updates": true,
+    "hashes": {
+      "openspec/capabilities/research-harnesses/spec.md": {
+        "before_sha256": "sha256:b204ac7d35feb87b7cf9d7678bdf3663c0efbb7ab9dcdb8bde85eeef901d9319",
+        "after_sha256": "sha256:b204ac7d35feb87b7cf9d7678bdf3663c0efbb7ab9dcdb8bde85eeef901d9319",
+        "unchanged_during_capstone": true
+      },
+      "_bmad/traceability.md": {
+        "before_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "after_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged_during_capstone": true
+      },
+      "ops/status.md": {
+        "before_sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+        "after_sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+        "unchanged_during_capstone": true
+      },
+      "ops/changelog.md": {
+        "before_sha256": "sha256:5db62ad33f6bc6fe3d46ed1f534de7bd59187026065b4c7eadd206fa769a01f6",
+        "after_sha256": "sha256:5db62ad33f6bc6fe3d46ed1f534de7bd59187026065b4c7eadd206fa769a01f6",
+        "unchanged_during_capstone": true
+      }
+    },
+    "principle": "Reconciliation reports evidence without editing protected docs."
+  },
+  "prd_gap_table": [
+    {
+      "gap": "asp_semantics_and_flagship_verification",
+      "status": "blocked",
+      "evidence": [
+        "results/experiment_6274_asp_energy_semantic_compiler.json",
+        "results/experiment_6275_flagship_asp_constraint_verification_benchmark.json"
+      ],
+      "reason": [
+        "exp6275-flagship-asp-constraint-verification-benchmark_flagged_or_current_critical",
+        "flagship_asp_benchmark_closed"
+      ]
+    },
+    {
+      "gap": "certified_continuous_self_learning",
+      "status": "blocked",
+      "evidence": [
+        "results/experiment_6276_certified_dual_cache_admission.json",
+        "results/experiment_6277_chronological_certified_csl_ab.json",
+        "results/experiment_6278_model_family_task_holdout_csl_audit.json",
+        "results/experiment_6279_certified_memory_shadow_consumer.json"
+      ],
+      "reason": [
+        "certified_admission_closed",
+        "chronological_csl_closed",
+        "heldout_transfer_missing",
+        "shadow_consumer_closed"
+      ]
+    },
+    {
+      "gap": "variable_cardinality_mode_jumping",
+      "status": "blocked",
+      "evidence": [
+        "results/experiment_6280_variable_cardinality_mode_jump_backend.json",
+        "results/experiment_6281_mode_jump_multifamily_rerun.json"
+      ],
+      "reason": [
+        "mode_jump_value_closed"
+      ]
+    },
+    {
+      "gap": "arc_live_mechanic_router",
+      "status": "blocked",
+      "evidence": "results/experiment_6282_arc_mechanic_class_live_router.json",
+      "reason": [
+        "arc_mechanic_router_closed",
+        "exp6282-arc-mechanic-class-live-router_flagged_or_current_critical"
+      ]
+    }
+  ],
+  "next_milestone_recommendations": [
+    {
+      "branch": "asp_verification",
+      "recommendation": "Repair or rerun the flagship ASP benchmark before promoting its event corpus.",
+      "evidence": [
+        "exp6275-flagship-asp-constraint-verification-benchmark_flagged_or_current_critical",
+        "flagship_asp_benchmark_closed"
+      ]
+    },
+    {
+      "branch": "continuous_self_learning",
+      "recommendation": "Keep certified memory default-off until admission, chronology, heldout, and shadow gates pass.",
+      "evidence": [
+        "certified_admission_closed",
+        "chronological_csl_closed",
+        "heldout_transfer_missing",
+        "shadow_consumer_closed"
+      ]
+    },
+    {
+      "branch": "sampler",
+      "recommendation": "Keep the typed backend but do not promote mode-jump workload value.",
+      "evidence": [
+        "mode_jump_value_closed"
+      ]
+    },
+    {
+      "branch": "arc",
+      "recommendation": "Fix the live-router duration or provenance flag before promoting ARC route value.",
+      "evidence": [
+        "arc_mechanic_router_closed",
+        "exp6282-arc-mechanic-class-live-router_flagged_or_current_critical"
+      ]
+    }
+  ],
+  "preconditions_checked": {
+    "checked_before_classification": true,
+    "milestone": "2026.08.541",
+    "roadmap_sha256": "sha256:6fdc2b479e236570684f130d95d8b0a78d51c2d76e580382da7bb8b298377501",
+    "milestone_doc_sha256": "sha256:20138e28cd4e94eb6a0ae4021794715e6acad9d309e4143d301f80457d5f1699",
+    "declared_deliverable_hashes": {
+      "exp6272-v541-terminal-transition": {
+        "declared_deliverable": "results/experiment_6272_v541_terminal_transition.json",
+        "sha256": "sha256:4fe05425739ba4018d0112baf91894c808d8236f1e932e621430aa0edabd2e56"
+      },
+      "exp6273-v541-post-marker-source-scope-freeze": {
+        "declared_deliverable": "results/experiment_6273_v541_post_marker_source_scope_freeze.json",
+        "sha256": "sha256:3c115d011a9931afdc0fd300a114d1d483a446042ef73d5303f0c01fc9e1a9dc"
+      },
+      "exp6274-asp-energy-semantic-compiler": {
+        "declared_deliverable": "results/experiment_6274_asp_energy_semantic_compiler.json",
+        "sha256": "sha256:b02c88963c4815aa0e26d451ffd60fdd9f1014d32e76f638592ac114c611e96b"
+      },
+      "exp6275-flagship-asp-constraint-verification-benchmark": {
+        "declared_deliverable": "results/experiment_6275_flagship_asp_constraint_verification_benchmark.json",
+        "sha256": "sha256:d9de1e4d154ef481c4784d749eb219333983a0bb756ad3241e912e277d6a4a60"
+      },
+      "exp6276-certified-dual-cache-admission": {
+        "declared_deliverable": "results/experiment_6276_certified_dual_cache_admission.json",
+        "sha256": "sha256:901704ad563ac7c4f115cea7e81d0264028870f70685efc7209b9233ce876d17"
+      },
+      "exp6277-chronological-certified-csl-ab": {
+        "declared_deliverable": "results/experiment_6277_chronological_certified_csl_ab.json",
+        "sha256": "sha256:966b251c191403c0a0c8a3ba86d2d5e7427ae456215605979b684a67edc73d65"
+      },
+      "exp6278-model-family-task-holdout-csl-audit": {
+        "declared_deliverable": "results/experiment_6278_model_family_task_holdout_csl_audit.json",
+        "sha256": null
+      },
+      "exp6279-certified-memory-shadow-consumer": {
+        "declared_deliverable": "results/experiment_6279_certified_memory_shadow_consumer.json",
+        "sha256": "sha256:500d8a580a8ab1f4881c265b82cefc59441297267121bd420756636fcd7d777a"
+      },
+      "exp6280-variable-cardinality-mode-jump-backend": {
+        "declared_deliverable": "results/experiment_6280_variable_cardinality_mode_jump_backend.json",
+        "sha256": "sha256:e40ebd316844e21bccf47c84946aebd6a8c4965affb74abcca4dafeacc545598"
+      },
+      "exp6281-mode-jump-multifamily-rerun": {
+        "declared_deliverable": "results/experiment_6281_mode_jump_multifamily_rerun.json",
+        "sha256": "sha256:fff24fa125bb3929020492da26ad051f70a0aa2cf2b4093d06ac6b87102a5ee1"
+      },
+      "exp6282-arc-mechanic-class-live-router": {
+        "declared_deliverable": "results/experiment_6282_arc_mechanic_class_live_router.json",
+        "sha256": "sha256:7eec96fec9d112abad56375dcdfbd5a35f4aa0ad2adbe7e936303ab7019c2c22"
+      },
+      "exp6283-v541-adversarial-capstone": {
+        "declared_deliverable": "results/experiment_6283_v541_adversarial_capstone.json",
+        "sha256": null
+      }
+    },
+    "conductor_receipt_matrix_sha256": "sha256:d8343e4b0c69590d4df247db3dc65e4b980c2047e51e15ef7b3989bb5777fb08",
+    "registry_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "current_adversarial_rules_sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+    "protected_hashes_before": {
+      "research-roadmap.yaml": "sha256:6fdc2b479e236570684f130d95d8b0a78d51c2d76e580382da7bb8b298377501",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:20138e28cd4e94eb6a0ae4021794715e6acad9d309e4143d301f80457d5f1699",
+      "ops/conductor-log.md": "sha256:b34eac96e25081770fc81559f3f08c6772027afa05d18fc33122f1e608876ce6",
+      "ops/exclusion_manifest.yaml": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+      "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "openspec/capabilities/research-harnesses/spec.md": "sha256:b204ac7d35feb87b7cf9d7678bdf3663c0efbb7ab9dcdb8bde85eeef901d9319",
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/status.md": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+      "ops/changelog.md": "sha256:5db62ad33f6bc6fe3d46ed1f534de7bd59187026065b4c7eadd206fa769a01f6",
+      "python/carnot/terminal_artifacts.py": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+      "scripts/adversarial_verify.py": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+      "scripts/summarize_artifact.py": "sha256:62bf92bd99b7325ae841e4d93270ccd53338c9d54765e14acadbb7f5c35d1c7d",
+      "scripts/publication_gate.py": "sha256:e69f55eb33295352f65e27d1586d5bfcadcde2988dbb5e870d39155de46640c4",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "input_hashes_before": {
+      "research-roadmap.yaml": {
+        "present": true,
+        "sha256": "sha256:6fdc2b479e236570684f130d95d8b0a78d51c2d76e580382da7bb8b298377501"
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "present": true,
+        "sha256": "sha256:20138e28cd4e94eb6a0ae4021794715e6acad9d309e4143d301f80457d5f1699"
+      },
+      "ops/conductor-log.md": {
+        "present": true,
+        "sha256": "sha256:b34eac96e25081770fc81559f3f08c6772027afa05d18fc33122f1e608876ce6"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "present": true,
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+      },
+      "ops/arc_solve_registry.yaml": {
+        "present": true,
+        "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947"
+      },
+      "openspec/capabilities/research-harnesses/spec.md": {
+        "present": true,
+        "sha256": "sha256:b204ac7d35feb87b7cf9d7678bdf3663c0efbb7ab9dcdb8bde85eeef901d9319"
+      },
+      "_bmad/traceability.md": {
+        "present": true,
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "ops/status.md": {
+        "present": true,
+        "sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb"
+      },
+      "ops/changelog.md": {
+        "present": true,
+        "sha256": "sha256:5db62ad33f6bc6fe3d46ed1f534de7bd59187026065b4c7eadd206fa769a01f6"
+      },
+      "python/carnot/terminal_artifacts.py": {
+        "present": true,
+        "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+      },
+      "scripts/adversarial_verify.py": {
+        "present": true,
+        "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+      },
+      "scripts/summarize_artifact.py": {
+        "present": true,
+        "sha256": "sha256:62bf92bd99b7325ae841e4d93270ccd53338c9d54765e14acadbb7f5c35d1c7d"
+      },
+      "scripts/publication_gate.py": {
+        "present": true,
+        "sha256": "sha256:e69f55eb33295352f65e27d1586d5bfcadcde2988dbb5e870d39155de46640c4"
+      },
+      "scripts/research_conductor.py": {
+        "present": true,
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      },
+      "AGENTS.md": {
+        "present": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CODEX.md": {
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "CLAUDE.md": {
+        "present": true,
+        "sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59"
+      },
+      "openspec/capabilities/constraint-verification/spec.md": {
+        "present": true,
+        "sha256": "sha256:994480a796d5fc1f2e50af7028e0cc41d12a510dcdb762ac323e8c656f6de4ea"
+      },
+      "openspec/capabilities/self-learning/spec.md": {
+        "present": true,
+        "sha256": "sha256:d2a99127db8f7de9d8360184275e87d3fe79c9125e77c3541d15bcdfa83ab2c6"
+      },
+      "openspec/capabilities/samplers/spec.md": {
+        "present": true,
+        "sha256": "sha256:8d9e7fcf335326fce59e5162ca76f0cd95524c285a0580a0b29bec150e69691e"
+      },
+      "openspec/capabilities/arc-world-model-trust-energy/spec.md": {
+        "present": true,
+        "sha256": "sha256:7b139f64be9d576e064081ff8500ecb0b665e77defc2abc5abf157240881273c"
+      }
+    },
+    "git_status_before": [
+      " M openspec/capabilities/research-harnesses/spec.md",
+      " M ops/anomaly-escalations.md",
+      "M  ops/conductor-heartbeat.json",
+      "M  ops/conductor-log.md",
+      "M  ops/conductor-state.json",
+      "M  results/experiment_6282_arc_mechanic_class_live_router.json",
+      "?? python/carnot/experiment_6283_v541_adversarial_capstone.py",
+      "?? tests/python/test_experiment_6283_v541_adversarial_capstone.py"
+    ],
+    "git_status_after_tests": [],
+    "principle": "Inputs, receipts, registry, and rule hashes are frozen first."
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "verifier_is_oracle": false,
+  "field_provenance": {
+    "status": {
+      "principle": "The capstone is terminal only after exact V541 evidence is classified.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "milestone_roadmap_path_and_hash": {
+      "principle": "The active roadmap defines the V541 denominator.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "exact_declared_deliverable_matrix": {
+      "principle": "Exact paths prevent aliases from replacing missing work.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "conductor_receipt_matrix": {
+      "principle": "Receipts provide context but cannot promote artifacts.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "exact_path_over_receipt_precedence": {
+      "principle": "The declared JSON path outranks orchestration text.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "current_rule_adversarial_results_by_task": {
+      "principle": "Current flags are checked before promotion.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "terminal_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts": {
+      "principle": "All evidence classes stay visible.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "gate_cascade_receipts": {
+      "principle": "Structured gates are recomputed from exact bare fields.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "asp_semantic_compiler_state": {
+      "principle": "ASP semantics must stand on exact compiler parity evidence.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "flagship_asp_benchmark_state": {
+      "principle": "Flagship benchmark evidence cannot outrank its flagged artifact.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "certified_admission_state": {
+      "principle": "Certified admission must pass before CSL can run.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "chronological_continuous_learning_state": {
+      "principle": "A CSL gate tombstone remains skipped.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "heldout_transfer_state": {
+      "principle": "Missing heldout transfer cannot be promoted.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "shadow_consumer_state": {
+      "principle": "A skipped shadow consumer is not integration evidence.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "variable_cardinality_backend_state": {
+      "principle": "Backend readiness is separate from sampler value.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "mode_jump_safety_and_value_state": {
+      "principle": "Mode-jump safety and workload value are independent gates.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "arc_mechanic_router_state": {
+      "principle": "ARC router evidence must be live-path and unflagged.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "arc_provenance_and_registry_receipts": {
+      "principle": "ARC source, solve, and registry counts must stay explicit.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "branch_independent_promotion_ledger": {
+      "principle": "One branch cannot launder another branch.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "prior_failure_retirement_actions": {
+      "principle": "Retire-if-same-verdict actions use exact verdicts only.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "publication_gate_g1_g2_g3_g4_and_unmet_gates": {
+      "principle": "Publication readiness comes from the stable gate script.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "source_mutation_count": {
+      "principle": "Bare zero proves this capstone did not mutate sources.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "weight_mutation_count": {
+      "principle": "Bare zero proves no model weights changed.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "unauthorized_external_call_count": {
+      "principle": "Bare zero proves no unapproved external call is claimed.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "hidden_game_source_access_count": {
+      "principle": "Bare zero preserves hidden-game source discipline.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "outer_loop_ground_truth_search_count": {
+      "principle": "Bare zero prevents outer-loop solve laundering.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "arc_level_solve_claim_count": {
+      "principle": "Bare zero proves no ARC level solve is claimed.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "registry_update_count": {
+      "principle": "Bare zero proves the ARC registry was not updated.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "hardware_claim_count": {
+      "principle": "Bare zero proves no hardware result is claimed.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "speed_power_or_energy_claim_count": {
+      "principle": "Bare zero blocks speed, power, and energy claims.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Protected hashes show this run did not rewrite records.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "spec_traceability_status_changelog_reconciliation": {
+      "principle": "Reconciliation reports evidence without editing protected docs.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "prd_gap_table": {
+      "principle": "PRD gaps cite exact artifacts and blockers.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "next_milestone_recommendations": {
+      "principle": "Recommendations come from observed blockers only.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Inputs, receipts, registry, and rule hashes are frozen first.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "The capstone aggregates checked-in artifacts only.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "False because this audits records, not benchmark answers.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every required field cites its source evidence.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "field_principles": {
+      "principle": "Every required field states why it exists.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands show the verification boundary.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes stop failures from being laundered.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "duration_s": {
+      "principle": "Wall time is reported without padding.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "The normalized payload is content-addressed.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The verdict states mixed V541 evidence without strengthening it.",
+      "sources": [
+        "REQ-INFRA-6283",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "ops/arc_solve_registry.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "research-roadmap.yaml",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "scripts/summarize_artifact.py"
+      ]
+    }
+  },
+  "field_principles": {
+    "status": "The capstone is terminal only after exact V541 evidence is classified.",
+    "milestone_roadmap_path_and_hash": "The active roadmap defines the V541 denominator.",
+    "exact_declared_deliverable_matrix": "Exact paths prevent aliases from replacing missing work.",
+    "conductor_receipt_matrix": "Receipts provide context but cannot promote artifacts.",
+    "exact_path_over_receipt_precedence": "The declared JSON path outranks orchestration text.",
+    "current_rule_adversarial_results_by_task": "Current flags are checked before promotion.",
+    "terminal_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts": "All evidence classes stay visible.",
+    "gate_cascade_receipts": "Structured gates are recomputed from exact bare fields.",
+    "asp_semantic_compiler_state": "ASP semantics must stand on exact compiler parity evidence.",
+    "flagship_asp_benchmark_state": "Flagship benchmark evidence cannot outrank its flagged artifact.",
+    "certified_admission_state": "Certified admission must pass before CSL can run.",
+    "chronological_continuous_learning_state": "A CSL gate tombstone remains skipped.",
+    "heldout_transfer_state": "Missing heldout transfer cannot be promoted.",
+    "shadow_consumer_state": "A skipped shadow consumer is not integration evidence.",
+    "variable_cardinality_backend_state": "Backend readiness is separate from sampler value.",
+    "mode_jump_safety_and_value_state": "Mode-jump safety and workload value are independent gates.",
+    "arc_mechanic_router_state": "ARC router evidence must be live-path and unflagged.",
+    "arc_provenance_and_registry_receipts": "ARC source, solve, and registry counts must stay explicit.",
+    "branch_independent_promotion_ledger": "One branch cannot launder another branch.",
+    "prior_failure_retirement_actions": "Retire-if-same-verdict actions use exact verdicts only.",
+    "publication_gate_g1_g2_g3_g4_and_unmet_gates": "Publication readiness comes from the stable gate script.",
+    "source_mutation_count": "Bare zero proves this capstone did not mutate sources.",
+    "weight_mutation_count": "Bare zero proves no model weights changed.",
+    "unauthorized_external_call_count": "Bare zero proves no unapproved external call is claimed.",
+    "hidden_game_source_access_count": "Bare zero preserves hidden-game source discipline.",
+    "outer_loop_ground_truth_search_count": "Bare zero prevents outer-loop solve laundering.",
+    "arc_level_solve_claim_count": "Bare zero proves no ARC level solve is claimed.",
+    "registry_update_count": "Bare zero proves the ARC registry was not updated.",
+    "hardware_claim_count": "Bare zero proves no hardware result is claimed.",
+    "speed_power_or_energy_claim_count": "Bare zero blocks speed, power, and energy claims.",
+    "protected_files_unchanged": "Protected hashes show this run did not rewrite records.",
+    "spec_traceability_status_changelog_reconciliation": "Reconciliation reports evidence without editing protected docs.",
+    "prd_gap_table": "PRD gaps cite exact artifacts and blockers.",
+    "next_milestone_recommendations": "Recommendations come from observed blockers only.",
+    "preconditions_checked": "Inputs, receipts, registry, and rule hashes are frozen first.",
+    "inference_substrate": "The capstone aggregates checked-in artifacts only.",
+    "verifier_is_oracle": "False because this audits records, not benchmark answers.",
+    "field_provenance": "Every required field cites its source evidence.",
+    "field_principles": "Every required field states why it exists.",
+    "test_commands": "Commands show the verification boundary.",
+    "test_exit_codes": "Exit codes stop failures from being laundered.",
+    "duration_s": "Wall time is reported without padding.",
+    "reproducibility_checksum": "The normalized payload is content-addressed.",
+    "honest_verdict": "The verdict states mixed V541 evidence without strengthening it."
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6283_v541_adversarial_capstone.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6283_v541_adversarial_capstone.py -m pytest tests/python/test_experiment_6283_v541_adversarial_capstone.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6283_v541_adversarial_capstone.py --fail-under=100 --show-missing",
+    ".venv/bin/ruff check python/carnot/experiment_6283_v541_adversarial_capstone.py tests/python/test_experiment_6283_v541_adversarial_capstone.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_6283_v541_adversarial_capstone.py tests/python/test_experiment_6283_v541_adversarial_capstone.py",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6283_v541_adversarial_capstone.py",
+    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/python scripts/publication_gate.py --json",
+    "sed -n 1,220p ops/e2e-test-plan.md",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6283_v541_adversarial_capstone.json"
+  ],
+  "test_exit_codes": {},
+  "duration_s": 0.4522034127730876,
+  "reproducibility_checksum": "sha256:11d4cf397b578af57405083182ab5adb41d5f0f36fc380d7004edc976218643b",
+  "honest_verdict": "complete: V541 capstone preserved exact branch evidence without promoting flagged, missing, skipped, null, or blocked artifacts"
+}

@@ -15617,3 +15617,4 @@ Still active  |
 | 2026-08-10 16:02 UTC | Typed variable-cardinality Rust/PyO3 mode-jump bac | OK | 133 passed, 1 warning in 10.95s |
 | 2026-08-10 17:26 UTC | Gated on Exp6280 backend parity: exact multi-famil | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: t(json.dumps(_ |
 | 2026-08-10 17:57 UTC | Gated on Exp6280 backend parity: exact multi-famil | OK | cache hit: 89 passed, 1 warning in 24.25s |
+| 2026-08-10 18:28 UTC | ARC live-path push-block and toggle-move mechanic- | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
