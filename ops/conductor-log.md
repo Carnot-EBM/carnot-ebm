@@ -15615,3 +15615,4 @@ Still active  |
 | 2026-08-10 15:22 UTC | Gated on Exp6277 promotion: model-family and task- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6277-chronological-certified-csl-ab) |
 | 2026-08-10 15:22 UTC | Gated on Exp6278 transfer: default-off certified-m | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6278-model-family-task-holdout-csl-audi |
 | 2026-08-10 16:02 UTC | Typed variable-cardinality Rust/PyO3 mode-jump bac | OK | 133 passed, 1 warning in 10.95s |
+| 2026-08-10 17:26 UTC | Gated on Exp6280 backend parity: exact multi-famil | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: t(json.dumps(_ |
