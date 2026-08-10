@@ -1,0 +1,273 @@
+{
+  "date": "20260810",
+  "entries": {
+    "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_fact_forbidden": {
+      "allowed_labels": [
+        "bad"
+      ],
+      "asp_theory_hash": "c361919df7712c379321baee3d58cab0f2f78c759ee67050564640bb43b90793",
+      "atom_display": {
+        "bad": "bad"
+      },
+      "exact_answer_sets": [],
+      "family": "contradictions",
+      "fixture_id": "contradiction_fact_forbidden",
+      "formal_sidecar_hash": "8c548fe3ba5ff10c7c565c76797035687081f0c097ed2b55e02258c01afdbb2c",
+      "program_text": "bad.\n:- bad.\n",
+      "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_fact_forbidden"
+    },
+    "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_bird_flies": {
+      "allowed_labels": [
+        "bird",
+        "flies",
+        "injured"
+      ],
+      "asp_theory_hash": "732ebda2492271ad343bbbaf1477478f2b29e37107709a6aca9561a846ec4d05",
+      "atom_display": {
+        "bird": "bird",
+        "flies": "flies",
+        "injured": "injured"
+      },
+      "exact_answer_sets": [
+        [
+          "bird",
+          "flies"
+        ]
+      ],
+      "family": "non_monotonic_defaults",
+      "fixture_id": "default_bird_flies",
+      "formal_sidecar_hash": "968319b8e2436a5a6ce0e4a82ebd7d65cc110ff798f62dd0a6669a0b7e4da2cd",
+      "program_text": "bird.\nflies :- bird, not injured.\n",
+      "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_bird_flies"
+    },
+    "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_path2_three_colors": {
+      "allowed_labels": [
+        "color_v1_blue",
+        "color_v1_green",
+        "color_v1_red",
+        "color_v2_blue",
+        "color_v2_green",
+        "color_v2_red"
+      ],
+      "asp_theory_hash": "e59c2125338386a4aacc02b4cb59cd77972d8f624b614911d08c87e2dfc87b19",
+      "atom_display": {
+        "color_v1_blue": "color v1 blue",
+        "color_v1_green": "color v1 green",
+        "color_v1_red": "color v1 red",
+        "color_v2_blue": "color v2 blue",
+        "color_v2_green": "color v2 green",
+        "color_v2_red": "color v2 red"
+      },
+      "exact_answer_sets": [
+        [
+          "color_v1_blue",
+          "color_v2_green"
+        ],
+        [
+          "color_v1_blue",
+          "color_v2_red"
+        ],
+        [
+          "color_v1_green",
+          "color_v2_blue"
+        ],
+        [
+          "color_v1_green",
+          "color_v2_red"
+        ],
+        [
+          "color_v1_red",
+          "color_v2_blue"
+        ],
+        [
+          "color_v1_red",
+          "color_v2_green"
+        ]
+      ],
+      "family": "graph_coloring",
+      "fixture_id": "graph_path2_three_colors",
+      "formal_sidecar_hash": "30cca757cf7738de7d752bacd1e3cefe8fba71bae40b2e30e8457669cd18dcc0",
+      "program_text": "1 { color_v1_red; color_v1_green; color_v1_blue } 1.\n1 { color_v2_red; color_v2_green; color_v2_blue } 1.\n:- color_v1_red, color_v2_red.\n:- color_v1_green, color_v2_green.\n:- color_v1_blue, color_v2_blue.\n",
+      "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_path2_three_colors"
+    },
+    "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_fact_forbidden": {
+      "allowed_labels": [
+        "bad"
+      ],
+      "asp_theory_hash": "c361919df7712c379321baee3d58cab0f2f78c759ee67050564640bb43b90793",
+      "atom_display": {
+        "bad": "bad"
+      },
+      "exact_answer_sets": [],
+      "family": "contradictions",
+      "fixture_id": "contradiction_fact_forbidden",
+      "formal_sidecar_hash": "8c548fe3ba5ff10c7c565c76797035687081f0c097ed2b55e02258c01afdbb2c",
+      "program_text": "bad.\n:- bad.\n",
+      "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_fact_forbidden"
+    },
+    "exp6275|unsloth_gemma_4_31b_it_gguf|default_bird_flies": {
+      "allowed_labels": [
+        "bird",
+        "flies",
+        "injured"
+      ],
+      "asp_theory_hash": "732ebda2492271ad343bbbaf1477478f2b29e37107709a6aca9561a846ec4d05",
+      "atom_display": {
+        "bird": "bird",
+        "flies": "flies",
+        "injured": "injured"
+      },
+      "exact_answer_sets": [
+        [
+          "bird",
+          "flies"
+        ]
+      ],
+      "family": "non_monotonic_defaults",
+      "fixture_id": "default_bird_flies",
+      "formal_sidecar_hash": "968319b8e2436a5a6ce0e4a82ebd7d65cc110ff798f62dd0a6669a0b7e4da2cd",
+      "program_text": "bird.\nflies :- bird, not injured.\n",
+      "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_bird_flies"
+    },
+    "exp6275|unsloth_gemma_4_31b_it_gguf|graph_path2_three_colors": {
+      "allowed_labels": [
+        "color_v1_blue",
+        "color_v1_green",
+        "color_v1_red",
+        "color_v2_blue",
+        "color_v2_green",
+        "color_v2_red"
+      ],
+      "asp_theory_hash": "e59c2125338386a4aacc02b4cb59cd77972d8f624b614911d08c87e2dfc87b19",
+      "atom_display": {
+        "color_v1_blue": "color v1 blue",
+        "color_v1_green": "color v1 green",
+        "color_v1_red": "color v1 red",
+        "color_v2_blue": "color v2 blue",
+        "color_v2_green": "color v2 green",
+        "color_v2_red": "color v2 red"
+      },
+      "exact_answer_sets": [
+        [
+          "color_v1_blue",
+          "color_v2_green"
+        ],
+        [
+          "color_v1_blue",
+          "color_v2_red"
+        ],
+        [
+          "color_v1_green",
+          "color_v2_blue"
+        ],
+        [
+          "color_v1_green",
+          "color_v2_red"
+        ],
+        [
+          "color_v1_red",
+          "color_v2_blue"
+        ],
+        [
+          "color_v1_red",
+          "color_v2_green"
+        ]
+      ],
+      "family": "graph_coloring",
+      "fixture_id": "graph_path2_three_colors",
+      "formal_sidecar_hash": "30cca757cf7738de7d752bacd1e3cefe8fba71bae40b2e30e8457669cd18dcc0",
+      "program_text": "1 { color_v1_red; color_v1_green; color_v1_blue } 1.\n1 { color_v2_red; color_v2_green; color_v2_blue } 1.\n:- color_v1_red, color_v2_red.\n:- color_v1_green, color_v2_green.\n:- color_v1_blue, color_v2_blue.\n",
+      "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_path2_three_colors"
+    },
+    "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_fact_forbidden": {
+      "allowed_labels": [
+        "bad"
+      ],
+      "asp_theory_hash": "c361919df7712c379321baee3d58cab0f2f78c759ee67050564640bb43b90793",
+      "atom_display": {
+        "bad": "bad"
+      },
+      "exact_answer_sets": [],
+      "family": "contradictions",
+      "fixture_id": "contradiction_fact_forbidden",
+      "formal_sidecar_hash": "8c548fe3ba5ff10c7c565c76797035687081f0c097ed2b55e02258c01afdbb2c",
+      "program_text": "bad.\n:- bad.\n",
+      "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_fact_forbidden"
+    },
+    "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_bird_flies": {
+      "allowed_labels": [
+        "bird",
+        "flies",
+        "injured"
+      ],
+      "asp_theory_hash": "732ebda2492271ad343bbbaf1477478f2b29e37107709a6aca9561a846ec4d05",
+      "atom_display": {
+        "bird": "bird",
+        "flies": "flies",
+        "injured": "injured"
+      },
+      "exact_answer_sets": [
+        [
+          "bird",
+          "flies"
+        ]
+      ],
+      "family": "non_monotonic_defaults",
+      "fixture_id": "default_bird_flies",
+      "formal_sidecar_hash": "968319b8e2436a5a6ce0e4a82ebd7d65cc110ff798f62dd0a6669a0b7e4da2cd",
+      "program_text": "bird.\nflies :- bird, not injured.\n",
+      "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_bird_flies"
+    },
+    "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_path2_three_colors": {
+      "allowed_labels": [
+        "color_v1_blue",
+        "color_v1_green",
+        "color_v1_red",
+        "color_v2_blue",
+        "color_v2_green",
+        "color_v2_red"
+      ],
+      "asp_theory_hash": "e59c2125338386a4aacc02b4cb59cd77972d8f624b614911d08c87e2dfc87b19",
+      "atom_display": {
+        "color_v1_blue": "color v1 blue",
+        "color_v1_green": "color v1 green",
+        "color_v1_red": "color v1 red",
+        "color_v2_blue": "color v2 blue",
+        "color_v2_green": "color v2 green",
+        "color_v2_red": "color v2 red"
+      },
+      "exact_answer_sets": [
+        [
+          "color_v1_blue",
+          "color_v2_green"
+        ],
+        [
+          "color_v1_blue",
+          "color_v2_red"
+        ],
+        [
+          "color_v1_green",
+          "color_v2_blue"
+        ],
+        [
+          "color_v1_green",
+          "color_v2_red"
+        ],
+        [
+          "color_v1_red",
+          "color_v2_blue"
+        ],
+        [
+          "color_v1_red",
+          "color_v2_green"
+        ]
+      ],
+      "family": "graph_coloring",
+      "fixture_id": "graph_path2_three_colors",
+      "formal_sidecar_hash": "30cca757cf7738de7d752bacd1e3cefe8fba71bae40b2e30e8457669cd18dcc0",
+      "program_text": "1 { color_v1_red; color_v1_green; color_v1_blue } 1.\n1 { color_v2_red; color_v2_green; color_v2_blue } 1.\n:- color_v1_red, color_v2_red.\n:- color_v1_green, color_v2_green.\n:- color_v1_blue, color_v2_blue.\n",
+      "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_path2_three_colors"
+    }
+  },
+  "schema": "carnot.exp6289.hidden_formal_sidecar.v1"
+}

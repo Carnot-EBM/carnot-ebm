@@ -15625,3 +15625,4 @@ Still active  |
 | 2026-08-10 21:19 UTC | Post-V542-marker source delta and experimental-sco | OK | 90 passed, 1 warning in 74.41s (0:01:14) |
 | 2026-08-10 21:37 UTC | Current-rule V541 evidence eligibility and branch- | OK | 87 passed, 1 warning in 10.54s |
 | 2026-08-10 21:52 UTC | Exact-vertex bounded continuous relaxation of ASP  | OK | 90 passed, 1 warning in 12.69s |
+| 2026-08-10 22:13 UTC | Gated on Exp6286 raw receipts and Exp6287 parity:  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |

@@ -1,0 +1,138 @@
+{
+  "date": "20260810",
+  "random_seeds": [
+    6289,
+    6290,
+    6291
+  ],
+  "schema": "carnot.exp6289.sealed_task_manifest.v1",
+  "tasks_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": [
+      {
+        "family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "32c278758f86276940607ccd2db1d2cf05131f7dd5b45064c3d6483b43ef3a23",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable descriptions: bad.\nChoose the descriptions that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The description bad must be selected.\n2. It is forbidden that bad is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use EMPTY after ANSWER when no description should be selected.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_fact_forbidden",
+        "visible_labels": [
+          "bad"
+        ]
+      },
+      {
+        "family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "b0ab3c9640dc9f42f120094cb2d7793ec3cc0a970448b6e9bfa9ce7743b18f7f",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable descriptions: color v1 blue, color v1 green, color v1 red, color v2 blue, color v2 green, color v2 red.\nChoose the descriptions that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 descriptions from this group: color v1 red, color v1 green, color v1 blue.\n2. Select at least 1 and at most 1 descriptions from this group: color v2 red, color v2 green, color v2 blue.\n3. It is forbidden that color v1 red is selected and color v2 red is selected.\n4. It is forbidden that color v1 green is selected and color v2 green is selected.\n5. It is forbidden that color v1 blue is selected and color v2 blue is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use EMPTY after ANSWER when no description should be selected.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_path2_three_colors",
+        "visible_labels": [
+          "color v1 blue",
+          "color v1 green",
+          "color v1 red",
+          "color v2 blue",
+          "color v2 green",
+          "color v2 red"
+        ]
+      },
+      {
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "f3dae740f251381875bb312139986758dcdf8740316922ff8079e4ee07a8b603",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable descriptions: bird, flies, injured.\nChoose the descriptions that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The description bird must be selected.\n2. When bird is selected and injured is not selected, the label flies must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use EMPTY after ANSWER when no description should be selected.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_bird_flies",
+        "visible_labels": [
+          "bird",
+          "flies",
+          "injured"
+        ]
+      }
+    ],
+    "unsloth/gemma-4-26B-A4B-it-GGUF": [
+      {
+        "family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "32c278758f86276940607ccd2db1d2cf05131f7dd5b45064c3d6483b43ef3a23",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable descriptions: bad.\nChoose the descriptions that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The description bad must be selected.\n2. It is forbidden that bad is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use EMPTY after ANSWER when no description should be selected.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_fact_forbidden",
+        "visible_labels": [
+          "bad"
+        ]
+      },
+      {
+        "family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "b0ab3c9640dc9f42f120094cb2d7793ec3cc0a970448b6e9bfa9ce7743b18f7f",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable descriptions: color v1 blue, color v1 green, color v1 red, color v2 blue, color v2 green, color v2 red.\nChoose the descriptions that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 descriptions from this group: color v1 red, color v1 green, color v1 blue.\n2. Select at least 1 and at most 1 descriptions from this group: color v2 red, color v2 green, color v2 blue.\n3. It is forbidden that color v1 red is selected and color v2 red is selected.\n4. It is forbidden that color v1 green is selected and color v2 green is selected.\n5. It is forbidden that color v1 blue is selected and color v2 blue is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use EMPTY after ANSWER when no description should be selected.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_path2_three_colors",
+        "visible_labels": [
+          "color v1 blue",
+          "color v1 green",
+          "color v1 red",
+          "color v2 blue",
+          "color v2 green",
+          "color v2 red"
+        ]
+      },
+      {
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "f3dae740f251381875bb312139986758dcdf8740316922ff8079e4ee07a8b603",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable descriptions: bird, flies, injured.\nChoose the descriptions that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The description bird must be selected.\n2. When bird is selected and injured is not selected, the label flies must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use EMPTY after ANSWER when no description should be selected.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_bird_flies",
+        "visible_labels": [
+          "bird",
+          "flies",
+          "injured"
+        ]
+      }
+    ],
+    "unsloth/gemma-4-31B-it-GGUF": [
+      {
+        "family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "32c278758f86276940607ccd2db1d2cf05131f7dd5b45064c3d6483b43ef3a23",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable descriptions: bad.\nChoose the descriptions that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The description bad must be selected.\n2. It is forbidden that bad is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use EMPTY after ANSWER when no description should be selected.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_fact_forbidden",
+        "visible_labels": [
+          "bad"
+        ]
+      },
+      {
+        "family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "b0ab3c9640dc9f42f120094cb2d7793ec3cc0a970448b6e9bfa9ce7743b18f7f",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable descriptions: color v1 blue, color v1 green, color v1 red, color v2 blue, color v2 green, color v2 red.\nChoose the descriptions that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 descriptions from this group: color v1 red, color v1 green, color v1 blue.\n2. Select at least 1 and at most 1 descriptions from this group: color v2 red, color v2 green, color v2 blue.\n3. It is forbidden that color v1 red is selected and color v2 red is selected.\n4. It is forbidden that color v1 green is selected and color v2 green is selected.\n5. It is forbidden that color v1 blue is selected and color v2 blue is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use EMPTY after ANSWER when no description should be selected.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_path2_three_colors",
+        "visible_labels": [
+          "color v1 blue",
+          "color v1 green",
+          "color v1 red",
+          "color v2 blue",
+          "color v2 green",
+          "color v2 red"
+        ]
+      },
+      {
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "f3dae740f251381875bb312139986758dcdf8740316922ff8079e4ee07a8b603",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable descriptions: bird, flies, injured.\nChoose the descriptions that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The description bird must be selected.\n2. When bird is selected and injured is not selected, the label flies must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use EMPTY after ANSWER when no description should be selected.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_bird_flies",
+        "visible_labels": [
+          "bird",
+          "flies",
+          "injured"
+        ]
+      }
+    ]
+  },
+  "tasks_per_model": 3
+}
