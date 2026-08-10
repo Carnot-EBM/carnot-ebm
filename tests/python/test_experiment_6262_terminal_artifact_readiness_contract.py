@@ -158,6 +158,17 @@ def test_req_infra_6262_validate_report_rejects_bad_outputs() -> None:
     bad_verdict["reproducibility_checksum"] = mod.payload_checksum(bad_verdict)
     assert "honest_verdict" in mod.validate_report(bad_verdict)
 
+    blocked_bad_verdict = deepcopy(report)
+    blocked_bad_verdict["terminal_artifact_contract_ready_score"] = 0
+    blocked_bad_verdict["focused_test_results"][0]["exit_code"] = 124
+    blocked_bad_verdict["test_exit_codes"][
+        blocked_bad_verdict["focused_test_results"][0]["command"]
+    ] = 124
+    blocked_bad_verdict["status"] = "blocked"
+    blocked_bad_verdict["honest_verdict"] = "timeout without terminal prefix"
+    blocked_bad_verdict["reproducibility_checksum"] = mod.payload_checksum(blocked_bad_verdict)
+    assert "honest_verdict" in mod.validate_report(blocked_bad_verdict)
+
     bad_checksum = deepcopy(report)
     bad_checksum["reproducibility_checksum"] = "sha256:bad"
     assert "reproducibility_checksum" in mod.validate_report(bad_checksum)
@@ -201,4 +212,3 @@ def test_req_infra_6262_writer_refuses_invalid_report(
             env={ARTIFACT_ROOT_ENV: str(artifact_root)},
         )
     assert not (artifact_root / mod.RESULT_RELATIVE_PATH.name).exists()
-

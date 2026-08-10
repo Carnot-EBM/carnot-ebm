@@ -1,0 +1,949 @@
+{
+  "schema": "carnot.experiment_6262.terminal_artifact_readiness_contract.v1",
+  "experiment_id": "exp6262-terminal-artifact-readiness-contract",
+  "run_date": "20260810",
+  "status": "blocked",
+  "exp6228_path_hash_and_exact_classification": {
+    "path": "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+    "sha256": "sha256:f288a69693b8ee1cd461e1ee9436cb6743949a5d6e3685b97ee8449d38b4a773",
+    "classification": {
+      "classification": "unknown",
+      "terminal": false,
+      "reason": "status or honest_verdict is absent or unknown",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6228_supervised_three_family_runtime_endurance.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:f288a69693b8ee1cd461e1ee9436cb6743949a5d6e3685b97ee8449d38b4a773",
+      "status_raw": "preconditions_recorded",
+      "status_prefix": "preconditions_recorded",
+      "status_class": "unknown",
+      "honest_verdict_raw": null,
+      "honest_verdict_prefix": null,
+      "verdict_class": "unknown",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "conductor_receipt_status": null
+    }
+  },
+  "classifier_source_hash_before_after": {
+    "path": "python/carnot/terminal_artifacts.py",
+    "before": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+    "after": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+    "unchanged": true
+  },
+  "adversarial_verifier_source_hash_before_after": {
+    "path": "scripts/adversarial_verify.py",
+    "before": "sha256:3a9859214cd2ac6c0251b9a8b8e27dd39b6023f6f5a52a99db0fd3d1165584f8",
+    "after": "sha256:3a9859214cd2ac6c0251b9a8b8e27dd39b6023f6f5a52a99db0fd3d1165584f8",
+    "unchanged": true
+  },
+  "supported_terminal_classes": {
+    "declared_classes": [
+      "blocked",
+      "complete",
+      "flagged",
+      "null",
+      "positive",
+      "ready",
+      "retired",
+      "skipped"
+    ],
+    "rows": {
+      "complete": {
+        "classification": "complete",
+        "terminal": true,
+        "reason": "status=complete verdict=complete",
+        "flag_count": 0,
+        "flags": [],
+        "payload_sha256": "sha256:fc01e5f0f9c557901dfbb2fd83400ac0e9998fa3141b6fb419a7f1e59b5e8ffc"
+      },
+      "ready": {
+        "classification": "ready",
+        "terminal": true,
+        "reason": "status=ready verdict=ready",
+        "flag_count": 0,
+        "flags": [],
+        "payload_sha256": "sha256:f660989a3226ccbbb43b3dfbe164b7eb854f6dc59f0848dfbdaddd95d2c7979d"
+      },
+      "positive": {
+        "classification": "positive",
+        "terminal": true,
+        "reason": "status=positive verdict=positive",
+        "flag_count": 0,
+        "flags": [],
+        "payload_sha256": "sha256:2b82870736fa76bedb1ba56755f0e38b350b6f12c0e1e163d9aa7679ea7e61ff"
+      },
+      "null": {
+        "classification": "null",
+        "terminal": true,
+        "reason": "status=null verdict=null",
+        "flag_count": 0,
+        "flags": [],
+        "payload_sha256": "sha256:f7e29328ab01a498371e442c914debf72552ac94dc824ab761baae78fc812528"
+      },
+      "blocked": {
+        "classification": "blocked",
+        "terminal": true,
+        "reason": "status=blocked verdict=blocked",
+        "flag_count": 0,
+        "flags": [],
+        "payload_sha256": "sha256:c9b204a7505c8475777cb2ea076a5e376d901ee733fdf00927160d1dba2acd2d"
+      },
+      "skipped": {
+        "classification": "skipped",
+        "terminal": true,
+        "reason": "blocked artifact records a gate skip",
+        "flag_count": 0,
+        "flags": [],
+        "payload_sha256": "sha256:0e2541a664d271b3992c4d8e213ca809676ece2e027758b007912c0a57b8f6f8"
+      },
+      "retired": {
+        "classification": "retired",
+        "terminal": true,
+        "reason": "status=retired verdict=retired",
+        "flag_count": 0,
+        "flags": [],
+        "payload_sha256": "sha256:b07859bdfe9478d5144ff00979f453e4fa85fc4bb4e85e7196247580e313c22d"
+      },
+      "flagged": {
+        "classification": "flagged",
+        "terminal": true,
+        "reason": "artifact carries flagged_adversarial or corrigendum_pending",
+        "flag_count": 0,
+        "flags": [],
+        "payload_sha256": "sha256:ebca2c9d329fdd72e48dd68192c80922c43d2cc40fb6e4c2fddb1879bbbccd86"
+      }
+    },
+    "all_terminal": true
+  },
+  "rejected_nonterminal_classes": {
+    "declared_classes": [
+      "bootstrap_only",
+      "contradictory",
+      "malformed",
+      "missing",
+      "partial",
+      "running",
+      "running_bootstrap",
+      "unknown"
+    ],
+    "rows": {
+      "running": {
+        "classification": "running",
+        "terminal": false,
+        "reason": "nonterminal running marker present",
+        "flag_count": 1,
+        "severity": "critical",
+        "kind": "NONTERMINAL_DECLARED_ARTIFACT"
+      },
+      "running_bootstrap": {
+        "classification": "running_bootstrap",
+        "terminal": false,
+        "reason": "nonterminal running_bootstrap marker present",
+        "flag_count": 1,
+        "severity": "critical",
+        "kind": "NONTERMINAL_DECLARED_ARTIFACT"
+      },
+      "bootstrap_only": {
+        "classification": "bootstrap_only",
+        "terminal": false,
+        "reason": "nonterminal bootstrap_only marker present",
+        "flag_count": 1,
+        "severity": "critical",
+        "kind": "NONTERMINAL_DECLARED_ARTIFACT"
+      },
+      "partial": {
+        "classification": "partial",
+        "terminal": false,
+        "reason": "partial marker present",
+        "flag_count": 1,
+        "severity": "critical",
+        "kind": "NONTERMINAL_DECLARED_ARTIFACT"
+      },
+      "contradictory": {
+        "classification": "contradictory",
+        "terminal": false,
+        "reason": "status=ready conflicts with verdict=blocked",
+        "flag_count": 1,
+        "severity": "critical",
+        "kind": "NONTERMINAL_DECLARED_ARTIFACT"
+      },
+      "unknown": {
+        "classification": "unknown",
+        "terminal": false,
+        "reason": "status or honest_verdict is absent or unknown",
+        "flag_count": 1,
+        "severity": "critical",
+        "kind": "NONTERMINAL_DECLARED_ARTIFACT"
+      },
+      "missing": {
+        "classification": "missing",
+        "terminal": false,
+        "reason": "artifact path is missing",
+        "flag_count": 1,
+        "severity": "critical",
+        "kind": "NONTERMINAL_DECLARED_ARTIFACT"
+      },
+      "malformed": {
+        "classification": "malformed",
+        "terminal": false,
+        "reason": "artifact JSON could not be loaded: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+        "flag_count": 1,
+        "severity": "critical",
+        "kind": "NONTERMINAL_DECLARED_ARTIFACT"
+      }
+    },
+    "all_rejected": true
+  },
+  "exact_path_over_receipt_precedence": {
+    "classification": "unknown",
+    "terminal": false,
+    "reason": "status or honest_verdict is absent or unknown",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6228_supervised_three_family_runtime_endurance.json",
+    "present": true,
+    "loadable": true,
+    "sha256": "sha256:f288a69693b8ee1cd461e1ee9436cb6743949a5d6e3685b97ee8449d38b4a773",
+    "status_raw": "preconditions_recorded",
+    "status_prefix": "preconditions_recorded",
+    "status_class": "unknown",
+    "honest_verdict_raw": null,
+    "honest_verdict_prefix": null,
+    "verdict_class": "unknown",
+    "receipt_override_attempted": true,
+    "receipt_overrode": false,
+    "conductor_receipt_status": "OK"
+  },
+  "gate_field_eligibility_contract": {
+    "terminal_exact_bare": {
+      "field": "ready_score",
+      "eligible": true,
+      "reason": "terminal artifact exposes exact bare field 'ready_score'",
+      "classification": {
+        "classification": "ready",
+        "terminal": true,
+        "reason": "status=ready verdict=ready",
+        "path": null,
+        "present": true,
+        "loadable": true,
+        "sha256": null,
+        "status_raw": "complete_ready",
+        "status_prefix": "complete_ready",
+        "status_class": "ready",
+        "honest_verdict_raw": "complete_ready: ok",
+        "honest_verdict_prefix": "complete_ready",
+        "verdict_class": "ready",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": null
+      },
+      "field_present": true,
+      "field_is_bare": true,
+      "value": 1
+    },
+    "terminal_wrapped": {
+      "field": "ready_score",
+      "eligible": false,
+      "reason": "exact field 'ready_score' exists but is not bare",
+      "classification": {
+        "classification": "ready",
+        "terminal": true,
+        "reason": "status=ready verdict=ready",
+        "path": null,
+        "present": true,
+        "loadable": true,
+        "sha256": null,
+        "status_raw": "complete_ready",
+        "status_prefix": "complete_ready",
+        "status_class": "ready",
+        "honest_verdict_raw": "complete_ready: ok",
+        "honest_verdict_prefix": "complete_ready",
+        "verdict_class": "ready",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": null
+      },
+      "field_present": true,
+      "field_is_bare": false,
+      "value": {
+        "value": 1,
+        "principle": "fixture"
+      }
+    },
+    "terminal_nested": {
+      "field": "ready_score",
+      "eligible": false,
+      "reason": "exact bare field 'ready_score' is absent",
+      "classification": {
+        "classification": "ready",
+        "terminal": true,
+        "reason": "status=ready verdict=ready",
+        "path": null,
+        "present": true,
+        "loadable": true,
+        "sha256": null,
+        "status_raw": "complete_ready",
+        "status_prefix": "complete_ready",
+        "status_class": "ready",
+        "honest_verdict_raw": "complete_ready: ok",
+        "honest_verdict_prefix": "complete_ready",
+        "verdict_class": "ready",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": null
+      },
+      "field_present": false,
+      "field_is_bare": false,
+      "value": null
+    },
+    "nonterminal_exact_bare": {
+      "field": "ready_score",
+      "eligible": false,
+      "reason": "nonterminal artifact classification=running",
+      "classification": {
+        "classification": "running",
+        "terminal": false,
+        "reason": "nonterminal running marker present",
+        "path": null,
+        "present": true,
+        "loadable": true,
+        "sha256": null,
+        "status_raw": "running",
+        "status_prefix": "running",
+        "status_class": "running",
+        "honest_verdict_raw": "running",
+        "honest_verdict_prefix": "running",
+        "verdict_class": "running",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": null
+      },
+      "field_present": true,
+      "field_is_bare": true,
+      "value": 1
+    }
+  },
+  "exp6228_regression_flag_code_and_severity": {
+    "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+    "severity": "critical",
+    "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6228_supervised_three_family_runtime_endurance.json; classification=unknown; reason=status or honest_verdict is absent or unknown",
+    "classification": "unknown",
+    "flag_count": 1
+  },
+  "honest_blocked_control_result": {
+    "classification": "blocked",
+    "terminal": true,
+    "reason": "status=blocked verdict=blocked",
+    "flag_count": 0,
+    "flags": [],
+    "payload_sha256": "sha256:c9b204a7505c8475777cb2ea076a5e376d901ee733fdf00927160d1dba2acd2d"
+  },
+  "gate_skip_control_result": {
+    "classification": "skipped",
+    "terminal": true,
+    "reason": "blocked artifact records a gate skip",
+    "flag_count": 0,
+    "flags": [],
+    "payload_sha256": "sha256:0e2541a664d271b3992c4d8e213ca809676ece2e027758b007912c0a57b8f6f8"
+  },
+  "receipt_override_negative_control": {
+    "field": "three_family_runtime_ready_score",
+    "eligible": false,
+    "reason": "nonterminal artifact classification=unknown",
+    "classification": {
+      "classification": "unknown",
+      "terminal": false,
+      "reason": "status or honest_verdict is absent or unknown",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6228_supervised_three_family_runtime_endurance.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:f288a69693b8ee1cd461e1ee9436cb6743949a5d6e3685b97ee8449d38b4a773",
+      "status_raw": "preconditions_recorded",
+      "status_prefix": "preconditions_recorded",
+      "status_class": "unknown",
+      "honest_verdict_raw": null,
+      "honest_verdict_prefix": null,
+      "verdict_class": "unknown",
+      "receipt_override_attempted": true,
+      "receipt_overrode": false,
+      "conductor_receipt_status": "OK"
+    },
+    "field_present": true,
+    "field_is_bare": true,
+    "value": null
+  },
+  "readiness_missing_negative_control": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6262_missing_readiness_negative_control.json",
+    "classification": "missing",
+    "reason": "artifact path is missing",
+    "severity": "critical",
+    "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+    "flag_count": 1,
+    "flags": [
+      {
+        "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+        "severity": "critical",
+        "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6262_missing_readiness_negative_control.json; classification=missing; reason=artifact path is missing"
+      }
+    ]
+  },
+  "false_positive_fixture_results": {
+    "complete": {
+      "classification": "complete",
+      "terminal": true,
+      "reason": "status=complete verdict=complete",
+      "flag_count": 0,
+      "flags": [],
+      "payload_sha256": "sha256:fc01e5f0f9c557901dfbb2fd83400ac0e9998fa3141b6fb419a7f1e59b5e8ffc"
+    },
+    "null": {
+      "classification": "null",
+      "terminal": true,
+      "reason": "status=null verdict=null",
+      "flag_count": 0,
+      "flags": [],
+      "payload_sha256": "sha256:f7e29328ab01a498371e442c914debf72552ac94dc824ab761baae78fc812528"
+    },
+    "blocked": {
+      "classification": "blocked",
+      "terminal": true,
+      "reason": "status=blocked verdict=blocked",
+      "flag_count": 0,
+      "flags": [],
+      "payload_sha256": "sha256:c9b204a7505c8475777cb2ea076a5e376d901ee733fdf00927160d1dba2acd2d"
+    },
+    "gate_skip": {
+      "classification": "skipped",
+      "terminal": true,
+      "reason": "blocked artifact records a gate skip",
+      "flag_count": 0,
+      "flags": [],
+      "payload_sha256": "sha256:0e2541a664d271b3992c4d8e213ca809676ece2e027758b007912c0a57b8f6f8"
+    }
+  },
+  "focused_test_results": [
+    {
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": "10 passed in 2.33s",
+      "stderr_tail": "",
+      "command": ".venv/bin/pytest tests/python/test_terminal_artifact_readiness_contract_6262.py tests/python/test_experiment_6262_terminal_artifact_readiness_contract.py -q --no-cov -n 0"
+    },
+    {
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": "10 passed in 3.80s",
+      "stderr_tail": "",
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6262_terminal_artifact_readiness_contract.py -m pytest tests/python/test_terminal_artifact_readiness_contract_6262.py tests/python/test_experiment_6262_terminal_artifact_readiness_contract.py -q --no-cov -n 0"
+    },
+    {
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": "python/carnot/experiment_6262_terminal_artifact_readiness_contract.py 168 0 100%",
+      "stderr_tail": "",
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6262_terminal_artifact_readiness_contract.py --fail-under=100 --show-missing"
+    },
+    {
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": "OK: All tests reference specification requirements.",
+      "stderr_tail": "",
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_terminal_artifact_readiness_contract_6262.py tests/python/test_experiment_6262_terminal_artifact_readiness_contract.py"
+    }
+  ],
+  "qa_layer_audit_results": [
+    {
+      "exit_code": 124,
+      "classification": "timeout_after_3600s_full_suite",
+      "stdout_tail": "Full .venv/bin/pytest tests/python -q was invoked by the required module command and timed out after 3600s while legacy hardware/Yosys pytest workers were still CPU-active.",
+      "stderr_tail": "Writer exited 1 because validation refused a ready artifact after the timeout.",
+      "command": ".venv/bin/pytest tests/python -q"
+    },
+    {
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": "verifier_authenticity_lint: clean (578 files scanned)",
+      "stderr_tail": "",
+      "command": ".venv/bin/python scripts/verifier_authenticity_lint.py"
+    },
+    {
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": "determination-preservation-lint: OK",
+      "stderr_tail": "",
+      "command": ".venv/bin/python scripts/determination_preservation_lint.py --all"
+    },
+    {
+      "exit_code": 0,
+      "classification": "passed_with_root_warning",
+      "stdout_tail": "[root-clutter-sweep] DRY-RUN (use --apply to act) min_age=120min; quarantine=0 delete=0; WARN tracked non-allowlist root files: ['skills-lock.json']",
+      "stderr_tail": "",
+      "command": ".venv/bin/python scripts/root_clutter_sweep.py"
+    },
+    {
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": "ops/e2e-test-plan.md read through E2E-008; no Exp6262 compute-bound E2E run applies to deterministic artifact replay.",
+      "stderr_tail": "",
+      "command": "sed -n 1,220p ops/e2e-test-plan.md"
+    }
+  ],
+  "protected_files_unchanged": {
+    "before": {
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "CLAUDE.md": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+      "openspec/capabilities/research-harnesses/spec.md": "sha256:74b44265be05b93c9b20b6633ccc973990d071487dc0ea3781859dfa0d990fe2",
+      "python/carnot/terminal_artifacts.py": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+      "scripts/adversarial_verify.py": "sha256:3a9859214cd2ac6c0251b9a8b8e27dd39b6023f6f5a52a99db0fd3d1165584f8",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "scripts/conductor_gates.py": "sha256:9bb1f3ea71076d81b8c39665e27e743acf27bdbdafa621cfd9b29395554aa45e",
+      "scripts/determination_preservation_lint.py": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "tests/python/test_terminal_artifact_readiness_contract_6262.py": "sha256:9a6240dfe019ceb1c95f64f5d791fd0a085724f29942e894d5702a362067b646",
+      "tests/python/test_experiment_6262_terminal_artifact_readiness_contract.py": "sha256:dc8da3f77661a17631b3ebec45be13ba1545fcc7b64b298ea7e5fcc79ad1f4be",
+      "results/experiment_6228_supervised_three_family_runtime_endurance.json": "sha256:f288a69693b8ee1cd461e1ee9436cb6743949a5d6e3685b97ee8449d38b4a773"
+    },
+    "after": {
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "CLAUDE.md": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+      "openspec/capabilities/research-harnesses/spec.md": "sha256:74b44265be05b93c9b20b6633ccc973990d071487dc0ea3781859dfa0d990fe2",
+      "python/carnot/terminal_artifacts.py": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+      "scripts/adversarial_verify.py": "sha256:3a9859214cd2ac6c0251b9a8b8e27dd39b6023f6f5a52a99db0fd3d1165584f8",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "scripts/conductor_gates.py": "sha256:9bb1f3ea71076d81b8c39665e27e743acf27bdbdafa621cfd9b29395554aa45e",
+      "scripts/determination_preservation_lint.py": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "tests/python/test_terminal_artifact_readiness_contract_6262.py": "sha256:9a6240dfe019ceb1c95f64f5d791fd0a085724f29942e894d5702a362067b646",
+      "tests/python/test_experiment_6262_terminal_artifact_readiness_contract.py": "sha256:dc8da3f77661a17631b3ebec45be13ba1545fcc7b64b298ea7e5fcc79ad1f4be",
+      "results/experiment_6228_supervised_three_family_runtime_endurance.json": "sha256:f288a69693b8ee1cd461e1ee9436cb6743949a5d6e3685b97ee8449d38b4a773"
+    },
+    "changed_paths": [],
+    "unchanged": true,
+    "scripts_research_conductor_py_untouched": true
+  },
+  "preconditions_checked": {
+    "run_date": "20260810",
+    "git_status_before": [
+      " M openspec/capabilities/research-harnesses/spec.md",
+      " M ops/.pretest-poison-counter.json",
+      " M tests/python/test_experiment_6262_terminal_artifact_readiness_contract.py",
+      "?? python/carnot/experiment_6262_terminal_artifact_readiness_contract.py"
+    ],
+    "git_status_after_tests": [
+      " M openspec/capabilities/research-harnesses/spec.md",
+      " M ops/.pretest-poison-counter.json",
+      " M tests/python/test_experiment_6262_terminal_artifact_readiness_contract.py",
+      "?? python/carnot/experiment_6262_terminal_artifact_readiness_contract.py"
+    ],
+    "protected_hashes_before": {
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "CLAUDE.md": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+      "openspec/capabilities/research-harnesses/spec.md": "sha256:74b44265be05b93c9b20b6633ccc973990d071487dc0ea3781859dfa0d990fe2",
+      "python/carnot/terminal_artifacts.py": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+      "scripts/adversarial_verify.py": "sha256:3a9859214cd2ac6c0251b9a8b8e27dd39b6023f6f5a52a99db0fd3d1165584f8",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "scripts/conductor_gates.py": "sha256:9bb1f3ea71076d81b8c39665e27e743acf27bdbdafa621cfd9b29395554aa45e",
+      "scripts/determination_preservation_lint.py": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "tests/python/test_terminal_artifact_readiness_contract_6262.py": "sha256:9a6240dfe019ceb1c95f64f5d791fd0a085724f29942e894d5702a362067b646",
+      "tests/python/test_experiment_6262_terminal_artifact_readiness_contract.py": "sha256:dc8da3f77661a17631b3ebec45be13ba1545fcc7b64b298ea7e5fcc79ad1f4be",
+      "results/experiment_6228_supervised_three_family_runtime_endurance.json": "sha256:f288a69693b8ee1cd461e1ee9436cb6743949a5d6e3685b97ee8449d38b4a773"
+    },
+    "protected_hashes_after": {
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "CLAUDE.md": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+      "openspec/capabilities/research-harnesses/spec.md": "sha256:74b44265be05b93c9b20b6633ccc973990d071487dc0ea3781859dfa0d990fe2",
+      "python/carnot/terminal_artifacts.py": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+      "scripts/adversarial_verify.py": "sha256:3a9859214cd2ac6c0251b9a8b8e27dd39b6023f6f5a52a99db0fd3d1165584f8",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "scripts/conductor_gates.py": "sha256:9bb1f3ea71076d81b8c39665e27e743acf27bdbdafa621cfd9b29395554aa45e",
+      "scripts/determination_preservation_lint.py": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "tests/python/test_terminal_artifact_readiness_contract_6262.py": "sha256:9a6240dfe019ceb1c95f64f5d791fd0a085724f29942e894d5702a362067b646",
+      "tests/python/test_experiment_6262_terminal_artifact_readiness_contract.py": "sha256:dc8da3f77661a17631b3ebec45be13ba1545fcc7b64b298ea7e5fcc79ad1f4be",
+      "results/experiment_6228_supervised_three_family_runtime_endurance.json": "sha256:f288a69693b8ee1cd461e1ee9436cb6743949a5d6e3685b97ee8449d38b4a773"
+    },
+    "exp6228_classification_before": {
+      "classification": "unknown",
+      "terminal": false,
+      "reason": "status or honest_verdict is absent or unknown",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6228_supervised_three_family_runtime_endurance.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:f288a69693b8ee1cd461e1ee9436cb6743949a5d6e3685b97ee8449d38b4a773",
+      "status_raw": "preconditions_recorded",
+      "status_prefix": "preconditions_recorded",
+      "status_class": "unknown",
+      "honest_verdict_raw": null,
+      "honest_verdict_prefix": null,
+      "verdict_class": "unknown",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "conductor_receipt_status": null
+    },
+    "exp6228_classification_after": {
+      "classification": "unknown",
+      "terminal": false,
+      "reason": "status or honest_verdict is absent or unknown",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6228_supervised_three_family_runtime_endurance.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:f288a69693b8ee1cd461e1ee9436cb6743949a5d6e3685b97ee8449d38b4a773",
+      "status_raw": "preconditions_recorded",
+      "status_prefix": "preconditions_recorded",
+      "status_class": "unknown",
+      "honest_verdict_raw": null,
+      "honest_verdict_prefix": null,
+      "verdict_class": "unknown",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "conductor_receipt_status": null
+    },
+    "exact_source_hashes_before": {
+      "python/carnot/terminal_artifacts.py": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+      "scripts/adversarial_verify.py": "sha256:3a9859214cd2ac6c0251b9a8b8e27dd39b6023f6f5a52a99db0fd3d1165584f8"
+    },
+    "fixture_hashes": {
+      "results/experiment_6228_supervised_three_family_runtime_endurance.json": "sha256:f288a69693b8ee1cd461e1ee9436cb6743949a5d6e3685b97ee8449d38b4a773"
+    }
+  },
+  "inference_substrate": "deterministic_terminal_artifact_readiness_replay_no_model",
+  "verifier_is_oracle": false,
+  "field_provenance": {
+    "status": {
+      "principle": "Declares this report terminal only when all readiness controls and commands pass.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "exp6228_path_hash_and_exact_classification": {
+      "principle": "Pins Exp6228 to its exact path and current nonterminal class.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "classifier_source_hash_before_after": {
+      "principle": "Proves the shared classifier source did not change during replay.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "adversarial_verifier_source_hash_before_after": {
+      "principle": "Proves the adversarial boundary source did not change during replay.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "supported_terminal_classes": {
+      "principle": "Names terminal classes that may satisfy artifact readiness.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "rejected_nonterminal_classes": {
+      "principle": "Names nonterminal classes that must receive a critical finding.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "exact_path_over_receipt_precedence": {
+      "principle": "Shows a conductor receipt cannot override exact artifact state.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "gate_field_eligibility_contract": {
+      "principle": "Shows gates may read only terminal artifacts with exact bare fields.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "exp6228_regression_flag_code_and_severity": {
+      "principle": "Records the critical Exp6228 regression finding.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "honest_blocked_control_result": {
+      "principle": "Keeps honest blocked terminal artifacts from false positives.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "gate_skip_control_result": {
+      "principle": "Keeps gate-skipped terminal artifacts from false positives.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "receipt_override_negative_control": {
+      "principle": "Rejects receipt-only readiness data from downstream gates.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "readiness_missing_negative_control": {
+      "principle": "Keeps absent declared artifacts distinct from malformed artifacts.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "false_positive_fixture_results": {
+      "principle": "Records clean terminal controls for complete, null, blocked, and gate-skip states.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "focused_test_results": {
+      "principle": "Stores focused unit, coverage, and spec checks for this contract.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "qa_layer_audit_results": {
+      "principle": "Stores whole-suite, verifier, preservation, clutter, and E2E-plan checks.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Compares protected evidence and source hashes before and after checks.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Records git status, fixture hashes, source hashes, and Exp6228 classification.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Declares deterministic artifact replay with no model inference.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "False because this verifies artifact state, not benchmark answer truth.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Ties each required field to the spec, classifier, verifier, or command receipts.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "field_principles": {
+      "principle": "Keeps the reason for each required field next to the emitted value.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "test_commands": {
+      "principle": "Lists every command whose exit code contributes to this report.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Stores command exit codes as bare integers.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "terminal_artifact_contract_ready_score": {
+      "principle": "Bare one means every readiness control and command passed.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "duration_s": {
+      "principle": "Reports real wall time for deterministic replay without padding.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addresses the normalized report payload.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "Uses a terminal prefix and states that Exp6228 remains nonterminal.",
+      "sources": [
+        "REQ-INFRA-6262",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "results/experiment_6228_supervised_three_family_runtime_endurance.json",
+        "focused command receipts"
+      ]
+    }
+  },
+  "field_principles": {
+    "status": "Declares this report terminal only when all readiness controls and commands pass.",
+    "exp6228_path_hash_and_exact_classification": "Pins Exp6228 to its exact path and current nonterminal class.",
+    "classifier_source_hash_before_after": "Proves the shared classifier source did not change during replay.",
+    "adversarial_verifier_source_hash_before_after": "Proves the adversarial boundary source did not change during replay.",
+    "supported_terminal_classes": "Names terminal classes that may satisfy artifact readiness.",
+    "rejected_nonterminal_classes": "Names nonterminal classes that must receive a critical finding.",
+    "exact_path_over_receipt_precedence": "Shows a conductor receipt cannot override exact artifact state.",
+    "gate_field_eligibility_contract": "Shows gates may read only terminal artifacts with exact bare fields.",
+    "exp6228_regression_flag_code_and_severity": "Records the critical Exp6228 regression finding.",
+    "honest_blocked_control_result": "Keeps honest blocked terminal artifacts from false positives.",
+    "gate_skip_control_result": "Keeps gate-skipped terminal artifacts from false positives.",
+    "receipt_override_negative_control": "Rejects receipt-only readiness data from downstream gates.",
+    "readiness_missing_negative_control": "Keeps absent declared artifacts distinct from malformed artifacts.",
+    "false_positive_fixture_results": "Records clean terminal controls for complete, null, blocked, and gate-skip states.",
+    "focused_test_results": "Stores focused unit, coverage, and spec checks for this contract.",
+    "qa_layer_audit_results": "Stores whole-suite, verifier, preservation, clutter, and E2E-plan checks.",
+    "protected_files_unchanged": "Compares protected evidence and source hashes before and after checks.",
+    "preconditions_checked": "Records git status, fixture hashes, source hashes, and Exp6228 classification.",
+    "inference_substrate": "Declares deterministic artifact replay with no model inference.",
+    "verifier_is_oracle": "False because this verifies artifact state, not benchmark answer truth.",
+    "field_provenance": "Ties each required field to the spec, classifier, verifier, or command receipts.",
+    "field_principles": "Keeps the reason for each required field next to the emitted value.",
+    "test_commands": "Lists every command whose exit code contributes to this report.",
+    "test_exit_codes": "Stores command exit codes as bare integers.",
+    "terminal_artifact_contract_ready_score": "Bare one means every readiness control and command passed.",
+    "duration_s": "Reports real wall time for deterministic replay without padding.",
+    "reproducibility_checksum": "Content-addresses the normalized report payload.",
+    "honest_verdict": "Uses a terminal prefix and states that Exp6228 remains nonterminal."
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_terminal_artifact_readiness_contract_6262.py tests/python/test_experiment_6262_terminal_artifact_readiness_contract.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6262_terminal_artifact_readiness_contract.py -m pytest tests/python/test_terminal_artifact_readiness_contract_6262.py tests/python/test_experiment_6262_terminal_artifact_readiness_contract.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6262_terminal_artifact_readiness_contract.py --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_terminal_artifact_readiness_contract_6262.py tests/python/test_experiment_6262_terminal_artifact_readiness_contract.py",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/verifier_authenticity_lint.py",
+    ".venv/bin/python scripts/determination_preservation_lint.py --all",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "sed -n 1,220p ops/e2e-test-plan.md"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/pytest tests/python/test_terminal_artifact_readiness_contract_6262.py tests/python/test_experiment_6262_terminal_artifact_readiness_contract.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6262_terminal_artifact_readiness_contract.py -m pytest tests/python/test_terminal_artifact_readiness_contract_6262.py tests/python/test_experiment_6262_terminal_artifact_readiness_contract.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6262_terminal_artifact_readiness_contract.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_terminal_artifact_readiness_contract_6262.py tests/python/test_experiment_6262_terminal_artifact_readiness_contract.py": 0,
+    ".venv/bin/pytest tests/python -q": 124,
+    ".venv/bin/python scripts/verifier_authenticity_lint.py": 0,
+    ".venv/bin/python scripts/determination_preservation_lint.py --all": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    "sed -n 1,220p ops/e2e-test-plan.md": 0
+  },
+  "terminal_artifact_contract_ready_score": 0,
+  "duration_s": 0.10818882007151842,
+  "reproducibility_checksum": "sha256:42f81dd65745b8c9ef6d9dd0e04547a3b77836670e22ba6ed772a81f8f79a2ee",
+  "honest_verdict": "blocked: Exp6262 readiness controls did not all pass"
+}
