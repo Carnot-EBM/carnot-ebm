@@ -15594,3 +15594,4 @@ Still active  |
 +          |
 | 2026-08-10 10:31 UTC | Exact multimodal Ising, Potts, and typed-factor sa | OK | 87 passed, 1 warning in 7.59s |
 | 2026-08-10 11:28 UTC | Gated on Exp6268 exact suite: activated mode-jump  | OK | 91 passed, 1 warning in 9.85s |
+| 2026-08-10 11:30 UTC | Gated on Exp6269 workload value: descriptor-only d | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6269-mode-jump-multifamily-ab.mode_jump |
