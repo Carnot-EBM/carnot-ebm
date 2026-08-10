@@ -1,0 +1,4415 @@
+{
+  "MODEL_SPECS": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loader": "llama_cpp.Llama",
+      "n_gpu_layers": -1,
+      "name": "Qwen3.6-35B-A3B",
+      "role": "flagship MoE ordinary-text generator",
+      "runtime": "llama.cpp GGUF with CUDA offload"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "loader": "llama_cpp.Llama",
+      "n_gpu_layers": -1,
+      "name": "Gemma4-31B-it",
+      "role": "flagship dense ordinary-text generator",
+      "runtime": "llama.cpp GGUF with CUDA offload"
+    },
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loader": "llama_cpp.Llama",
+      "n_gpu_layers": -1,
+      "name": "Gemma4-26B-A4B-it",
+      "role": "middle MoE ordinary-text generator",
+      "runtime": "llama.cpp GGUF with CUDA offload"
+    }
+  ],
+  "arm_definitions_and_fixed_compute_budget": {
+    "cold_exact_completion": {
+      "exact_completion_budget": 4096,
+      "model_value_credit": false
+    },
+    "compute_balanced_route": {
+      "budget_source": "same generated rows and exact budget as other arms",
+      "max_actions": 3,
+      "route": [
+        "generate",
+        "verify",
+        "stop_or_exact_complete"
+      ]
+    },
+    "one_shot": {
+      "generation_samples": 1,
+      "max_tokens": 48,
+      "timeout_s": 120
+    },
+    "partial_evidence_continuous_refinement": {
+      "optimizer_steps": 24,
+      "restart_budget": 1,
+      "step_size": 0.25
+    },
+    "partial_evidence_exact_completion": {
+      "evidence_source": "first ordinary generation sample",
+      "exact_completion_budget": 4096
+    },
+    "repeated_generation": {
+      "generation_samples": 2,
+      "max_tokens_per_sample": 48,
+      "timeout_s_per_sample": 120
+    },
+    "row_count_basis": 18
+  },
+  "cold_exact_completion_results": {
+    "arm": "cold_exact_completion",
+    "exact_valid_count": 6,
+    "fixed_budget": {
+      "exact_completion_budget": 4096,
+      "model_value_credit": false
+    },
+    "parse_success_count": 9,
+    "records": [
+      {
+        "arm": "cold_exact_completion",
+        "counts_as_model_value": false,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": true,
+        "selected_labels": [],
+        "state_evaluations": 2,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_fact_forbidden",
+        "verifier_work": 2,
+        "wall_time_s": 0.0
+      },
+      {
+        "arm": "cold_exact_completion",
+        "counts_as_model_value": false,
+        "evidence_supported": false,
+        "exact_valid": true,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": true,
+        "selected_labels": [
+          "color_v1_green",
+          "color_v2_blue"
+        ],
+        "state_evaluations": 64,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_path2_three_colors",
+        "verifier_work": 64,
+        "wall_time_s": 0.0
+      },
+      {
+        "arm": "cold_exact_completion",
+        "counts_as_model_value": false,
+        "evidence_supported": false,
+        "exact_valid": true,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": true,
+        "selected_labels": [
+          "bird",
+          "flies"
+        ],
+        "state_evaluations": 8,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_bird_flies",
+        "verifier_work": 8,
+        "wall_time_s": 0.0
+      },
+      {
+        "arm": "cold_exact_completion",
+        "counts_as_model_value": false,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": true,
+        "selected_labels": [],
+        "state_evaluations": 2,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_fact_forbidden",
+        "verifier_work": 2,
+        "wall_time_s": 0.0
+      },
+      {
+        "arm": "cold_exact_completion",
+        "counts_as_model_value": false,
+        "evidence_supported": false,
+        "exact_valid": true,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": true,
+        "selected_labels": [
+          "color_v1_green",
+          "color_v2_blue"
+        ],
+        "state_evaluations": 64,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_path2_three_colors",
+        "verifier_work": 64,
+        "wall_time_s": 0.0
+      },
+      {
+        "arm": "cold_exact_completion",
+        "counts_as_model_value": false,
+        "evidence_supported": false,
+        "exact_valid": true,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": true,
+        "selected_labels": [
+          "bird",
+          "flies"
+        ],
+        "state_evaluations": 8,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_bird_flies",
+        "verifier_work": 8,
+        "wall_time_s": 0.0
+      },
+      {
+        "arm": "cold_exact_completion",
+        "counts_as_model_value": false,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": true,
+        "selected_labels": [],
+        "state_evaluations": 2,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_fact_forbidden",
+        "verifier_work": 2,
+        "wall_time_s": 0.0
+      },
+      {
+        "arm": "cold_exact_completion",
+        "counts_as_model_value": false,
+        "evidence_supported": false,
+        "exact_valid": true,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": true,
+        "selected_labels": [
+          "color_v1_green",
+          "color_v2_blue"
+        ],
+        "state_evaluations": 64,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_path2_three_colors",
+        "verifier_work": 64,
+        "wall_time_s": 0.0
+      },
+      {
+        "arm": "cold_exact_completion",
+        "counts_as_model_value": false,
+        "evidence_supported": false,
+        "exact_valid": true,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": true,
+        "selected_labels": [
+          "bird",
+          "flies"
+        ],
+        "state_evaluations": 8,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_bird_flies",
+        "verifier_work": 8,
+        "wall_time_s": 0.0
+      }
+    ],
+    "row_count": 9
+  },
+  "compute_balanced_route_results": {
+    "arm": "compute_balanced_route",
+    "exact_valid_count": 0,
+    "fixed_budget": {
+      "budget_source": "same generated rows and exact budget as other arms",
+      "max_actions": 3,
+      "route": [
+        "generate",
+        "verify",
+        "stop_or_exact_complete"
+      ]
+    },
+    "parse_success_count": 1,
+    "records": [
+      {
+        "arm": "compute_balanced_route",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 140,
+        "parse_success": false,
+        "route_actions": [
+          "generate",
+          "verify",
+          "stop_after_repeated_generation"
+        ],
+        "selected_labels": [],
+        "state_evaluations": 4,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_fact_forbidden",
+        "verifier_work": 3,
+        "wall_time_s": 0.451908
+      },
+      {
+        "arm": "compute_balanced_route",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 330,
+        "parse_success": false,
+        "route_actions": [
+          "generate",
+          "verify",
+          "stop_after_repeated_generation"
+        ],
+        "selected_labels": [],
+        "state_evaluations": 128,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_path2_three_colors",
+        "verifier_work": 65,
+        "wall_time_s": 0.11468
+      },
+      {
+        "arm": "compute_balanced_route",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 164,
+        "parse_success": false,
+        "route_actions": [
+          "generate",
+          "verify",
+          "stop_after_repeated_generation"
+        ],
+        "selected_labels": [],
+        "state_evaluations": 16,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_bird_flies",
+        "verifier_work": 9,
+        "wall_time_s": 0.080515
+      },
+      {
+        "arm": "compute_balanced_route",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 44,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 140,
+        "parse_success": false,
+        "route_actions": [
+          "generate",
+          "verify",
+          "stop_after_repeated_generation"
+        ],
+        "selected_labels": [],
+        "state_evaluations": 4,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_fact_forbidden",
+        "verifier_work": 3,
+        "wall_time_s": 2.619822
+      },
+      {
+        "arm": "compute_balanced_route",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 66,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 330,
+        "parse_success": false,
+        "route_actions": [
+          "generate",
+          "verify",
+          "stop_after_repeated_generation"
+        ],
+        "selected_labels": [],
+        "state_evaluations": 128,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_path2_three_colors",
+        "verifier_work": 65,
+        "wall_time_s": 2.729586
+      },
+      {
+        "arm": "compute_balanced_route",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 16,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 164,
+        "parse_success": false,
+        "route_actions": [
+          "generate",
+          "verify",
+          "stop_after_repeated_generation"
+        ],
+        "selected_labels": [],
+        "state_evaluations": 16,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_bird_flies",
+        "verifier_work": 9,
+        "wall_time_s": 0.806941
+      },
+      {
+        "arm": "compute_balanced_route",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 13,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 140,
+        "parse_success": true,
+        "route_actions": [
+          "generate",
+          "verify",
+          "stop_after_repeated_generation"
+        ],
+        "selected_labels": [
+          "bad"
+        ],
+        "state_evaluations": 4,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_fact_forbidden",
+        "verifier_work": 3,
+        "wall_time_s": 0.49704
+      },
+      {
+        "arm": "compute_balanced_route",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 23,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 330,
+        "parse_success": false,
+        "route_actions": [
+          "generate",
+          "verify",
+          "stop_after_repeated_generation"
+        ],
+        "selected_labels": [],
+        "state_evaluations": 128,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_path2_three_colors",
+        "verifier_work": 65,
+        "wall_time_s": 0.715997
+      },
+      {
+        "arm": "compute_balanced_route",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 20,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 164,
+        "parse_success": false,
+        "route_actions": [
+          "generate",
+          "verify",
+          "stop_after_repeated_generation"
+        ],
+        "selected_labels": [],
+        "state_evaluations": 16,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_bird_flies",
+        "verifier_work": 9,
+        "wall_time_s": 0.338248
+      }
+    ],
+    "row_count": 9
+  },
+  "cuda_and_gpu_offload_receipts_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "cuda_inventory": {
+        "nvidia_smi": {
+          "cmd": [
+            "nvidia-smi",
+            "--query-gpu=index,name,memory.total",
+            "--format=csv,noheader"
+          ],
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "0, NVIDIA GeForce RTX 3090, 24576 MiB\n1, NVIDIA GeForce RTX 3090, 24576 MiB"
+        }
+      },
+      "gpu_ownership_before_loading": {
+        "compute_apps": {
+          "cmd": [
+            "nvidia-smi",
+            "--query-compute-apps=pid,process_name,used_memory",
+            "--format=csv,noheader,nounits"
+          ],
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "3926032, .venv/bin/python, 256\n3926032, .venv/bin/python, 256"
+        }
+      },
+      "llama_cpp_python_offload": {
+        "available": true,
+        "supports_gpu_offload": true,
+        "version": "0.3.33"
+      },
+      "model_receipt": {
+        "duration_s": 10.064955,
+        "gpu_offload": {
+          "memory_after_load_mb": {
+            "0": 11008,
+            "1": 10892
+          },
+          "memory_before_mb": {
+            "0": 266,
+            "1": 266
+          },
+          "observed": true,
+          "requested": true
+        },
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "peak_vram_mb": 11062,
+        "terminal_disposition": "complete: llama_cpp_generation_finished"
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "cuda_inventory": {
+        "nvidia_smi": {
+          "cmd": [
+            "nvidia-smi",
+            "--query-gpu=index,name,memory.total",
+            "--format=csv,noheader"
+          ],
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "0, NVIDIA GeForce RTX 3090, 24576 MiB\n1, NVIDIA GeForce RTX 3090, 24576 MiB"
+        }
+      },
+      "gpu_ownership_before_loading": {
+        "compute_apps": {
+          "cmd": [
+            "nvidia-smi",
+            "--query-compute-apps=pid,process_name,used_memory",
+            "--format=csv,noheader,nounits"
+          ],
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "3926032, .venv/bin/python, 256\n3926032, .venv/bin/python, 256"
+        }
+      },
+      "llama_cpp_python_offload": {
+        "available": true,
+        "supports_gpu_offload": true,
+        "version": "0.3.33"
+      },
+      "model_receipt": {
+        "duration_s": 9.230882,
+        "gpu_offload": {
+          "memory_after_load_mb": {
+            "0": 8958,
+            "1": 9158
+          },
+          "memory_before_mb": {
+            "0": 308,
+            "1": 308
+          },
+          "observed": true,
+          "requested": true
+        },
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "peak_vram_mb": 9178,
+        "terminal_disposition": "complete: llama_cpp_generation_finished"
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "cuda_inventory": {
+        "nvidia_smi": {
+          "cmd": [
+            "nvidia-smi",
+            "--query-gpu=index,name,memory.total",
+            "--format=csv,noheader"
+          ],
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "0, NVIDIA GeForce RTX 3090, 24576 MiB\n1, NVIDIA GeForce RTX 3090, 24576 MiB"
+        }
+      },
+      "gpu_ownership_before_loading": {
+        "compute_apps": {
+          "cmd": [
+            "nvidia-smi",
+            "--query-compute-apps=pid,process_name,used_memory",
+            "--format=csv,noheader,nounits"
+          ],
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "3926032, .venv/bin/python, 256\n3926032, .venv/bin/python, 256"
+        }
+      },
+      "llama_cpp_python_offload": {
+        "available": true,
+        "supports_gpu_offload": true,
+        "version": "0.3.33"
+      },
+      "model_receipt": {
+        "duration_s": 14.775064,
+        "gpu_offload": {
+          "memory_after_load_mb": {
+            "0": 10278,
+            "1": 10780
+          },
+          "memory_before_mb": {
+            "0": 302,
+            "1": 302
+          },
+          "observed": true,
+          "requested": true
+        },
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "peak_vram_mb": 10808,
+        "terminal_disposition": "complete: llama_cpp_generation_finished"
+      }
+    }
+  },
+  "duration_s": 99.78903000499122,
+  "exact_solver_oracle_receipt": {
+    "cold_exact_solver_counts_as_model_value": false,
+    "formal_sidecar_entry_count": 9,
+    "formal_sidecar_used_by_solver_only": true,
+    "principle": "Discloses that exact scoring is oracle sidecar scoring.",
+    "verifier_is_oracle": true
+  },
+  "exact_validity_by_arm_model_and_fixture_family": {
+    "cold_exact_completion": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        }
+      }
+    },
+    "compute_balanced_route": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      }
+    },
+    "one_shot": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      }
+    },
+    "partial_evidence_continuous_refinement": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      }
+    },
+    "partial_evidence_exact_completion": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      }
+    },
+    "repeated_generation": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "exact_valid": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      }
+    }
+  },
+  "field_principles": {
+    "MODEL_SPECS": "Names the three required local SOTA GGUF families.",
+    "arm_definitions_and_fixed_compute_budget": "Freezes matched arm budgets.",
+    "cold_exact_completion_results": "Reports the exact oracle control with no model value.",
+    "compute_balanced_route_results": "Reports the fixed route over generate, verify, and stop.",
+    "cuda_and_gpu_offload_receipts_by_model": "Records CUDA and offload evidence per model.",
+    "duration_s": "Records wall-clock duration.",
+    "exact_solver_oracle_receipt": "Discloses that exact scoring is oracle sidecar scoring.",
+    "exact_validity_by_arm_model_and_fixture_family": "Separates correctness by arm and family.",
+    "field_principles": "Gives each required field a reason.",
+    "field_provenance": "Maps each field to spec, code, sidecars, or runtime receipts.",
+    "formal_sidecar_path_and_hash": "Pins the hidden exact sidecar.",
+    "harmful_regressions": "Blocks readiness if warm evidence harms exact validity.",
+    "honest_verdict": "States the terminal claim boundary.",
+    "inference_substrate": "Declares live local LLM inference.",
+    "model_file_hashes_revisions_and_quantizations": "Pins model bytes and quantization.",
+    "model_tokens_verifier_work_and_wall_time_by_arm_model_and_fixture_family": "Separates token and verifier costs.",
+    "models_used": "Shows no legacy model substituted a headline row.",
+    "one_shot_results": "Reports ordinary first-response validity.",
+    "paired_deltas_intervals_and_sample_sizes": "Reports paired deltas and sample sizes.",
+    "parser_and_evidence_coverage_by_arm_model_and_fixture_family": "Shows parse and evidence coverage.",
+    "partial_evidence_continuous_refinement_results": "Reports bounded refinement from evidence.",
+    "partial_evidence_exact_completion_results": "Reports exact completion warmed by evidence.",
+    "preconditions_checked": "Records frozen gates before inference.",
+    "prompt_seed_token_timeout_and_terminal_disposition_by_row": "Keeps each prompt row auditable.",
+    "protected_files_unchanged": "Shows protected files stayed byte-stable during the run.",
+    "qwen_zero_token_control": "Proves zero-token Qwen rows fail closed.",
+    "random_seeds": "Pins all deterministic seeds.",
+    "raw_output_paths_and_hashes": "Preserves raw prompts, outputs, seeds, and hashes.",
+    "repeated_generation_results": "Reports fixed repeated generation under the same tasks.",
+    "reproducibility_checksum": "Detects drift in the artifact payload.",
+    "sealed_task_manifest_path_and_hash": "Pins the prompt-visible task set.",
+    "solver_nodes_or_state_evaluations_by_arm_model_and_fixture_family": "Separates exact work from tokens.",
+    "source_model_weight_mutation_count": "Bare zero proves no source weights changed.",
+    "status": "Names whether the sealed run reached readiness or closed blocked.",
+    "terminal_model_dispositions": "Forces every model cell to a terminal state.",
+    "test_commands": "Lists the verification boundary.",
+    "test_exit_codes": "Records observed command exits.",
+    "tokenizer_and_chat_template_hashes": "Pins embedded GGUF text formatting receipts.",
+    "upstream_adapter_path_hash_and_terminal_class": "Pins Exp6288 as the evidence source.",
+    "verifier_is_oracle": "States the verifier is the exact ASP oracle.",
+    "warm_start_value_ready_score": "Opens only on warm-start value without exact harm."
+  },
+  "field_provenance": {
+    "MODEL_SPECS": {
+      "principle": "Names the three required local SOTA GGUF families.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "arm_definitions_and_fixed_compute_budget": {
+      "principle": "Freezes matched arm budgets.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "cold_exact_completion_results": {
+      "principle": "Reports the exact oracle control with no model value.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "compute_balanced_route_results": {
+      "principle": "Reports the fixed route over generate, verify, and stop.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "cuda_and_gpu_offload_receipts_by_model": {
+      "principle": "Records CUDA and offload evidence per model.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "duration_s": {
+      "principle": "Records wall-clock duration.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "exact_solver_oracle_receipt": {
+      "principle": "Discloses that exact scoring is oracle sidecar scoring.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "exact_validity_by_arm_model_and_fixture_family": {
+      "principle": "Separates correctness by arm and family.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "field_principles": {
+      "principle": "Gives each required field a reason.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "field_provenance": {
+      "principle": "Maps each field to spec, code, sidecars, or runtime receipts.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "formal_sidecar_path_and_hash": {
+      "principle": "Pins the hidden exact sidecar.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "harmful_regressions": {
+      "principle": "Blocks readiness if warm evidence harms exact validity.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "honest_verdict": {
+      "principle": "States the terminal claim boundary.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "inference_substrate": {
+      "principle": "Declares live local LLM inference.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "model_file_hashes_revisions_and_quantizations": {
+      "principle": "Pins model bytes and quantization.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "model_tokens_verifier_work_and_wall_time_by_arm_model_and_fixture_family": {
+      "principle": "Separates token and verifier costs.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "models_used": {
+      "principle": "Shows no legacy model substituted a headline row.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "one_shot_results": {
+      "principle": "Reports ordinary first-response validity.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "paired_deltas_intervals_and_sample_sizes": {
+      "principle": "Reports paired deltas and sample sizes.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "parser_and_evidence_coverage_by_arm_model_and_fixture_family": {
+      "principle": "Shows parse and evidence coverage.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "partial_evidence_continuous_refinement_results": {
+      "principle": "Reports bounded refinement from evidence.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "partial_evidence_exact_completion_results": {
+      "principle": "Reports exact completion warmed by evidence.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "preconditions_checked": {
+      "principle": "Records frozen gates before inference.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "prompt_seed_token_timeout_and_terminal_disposition_by_row": {
+      "principle": "Keeps each prompt row auditable.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "protected_files_unchanged": {
+      "principle": "Shows protected files stayed byte-stable during the run.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "qwen_zero_token_control": {
+      "principle": "Proves zero-token Qwen rows fail closed.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "random_seeds": {
+      "principle": "Pins all deterministic seeds.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "raw_output_paths_and_hashes": {
+      "principle": "Preserves raw prompts, outputs, seeds, and hashes.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "repeated_generation_results": {
+      "principle": "Reports fixed repeated generation under the same tasks.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "reproducibility_checksum": {
+      "principle": "Detects drift in the artifact payload.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "sealed_task_manifest_path_and_hash": {
+      "principle": "Pins the prompt-visible task set.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "solver_nodes_or_state_evaluations_by_arm_model_and_fixture_family": {
+      "principle": "Separates exact work from tokens.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "source_model_weight_mutation_count": {
+      "principle": "Bare zero proves no source weights changed.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "status": {
+      "principle": "Names whether the sealed run reached readiness or closed blocked.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "terminal_model_dispositions": {
+      "principle": "Forces every model cell to a terminal state.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "test_commands": {
+      "principle": "Lists the verification boundary.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "test_exit_codes": {
+      "principle": "Records observed command exits.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "tokenizer_and_chat_template_hashes": {
+      "principle": "Pins embedded GGUF text formatting receipts.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "upstream_adapter_path_hash_and_terminal_class": {
+      "principle": "Pins Exp6288 as the evidence source.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "verifier_is_oracle": {
+      "principle": "States the verifier is the exact ASP oracle.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    },
+    "warm_start_value_ready_score": {
+      "principle": "Opens only on warm-start value without exact harm.",
+      "sources": [
+        "openspec/capabilities/constraint-verification/spec.md",
+        "python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "python/carnot/experiment_6275_flagship_asp_constraint_verification_benchmark.py",
+        "python/carnot/inference/sota_models.py"
+      ],
+      "spec": "REQ-CONSTRAINT-6289"
+    }
+  },
+  "formal_sidecar_path_and_hash": {
+    "entry_count": 9,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6289_flagship_exact_state_refinement_benchmark.formal_sidecar.json",
+    "sha256": "bca136252757caba5c81fc6d6c8a6307e795b39edd31e510b90b80b9748e25f0"
+  },
+  "harmful_regressions": {
+    "exact_validity_harm_count": 6,
+    "rows": [
+      {
+        "fixture_family": "graph_coloring",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_path2_three_colors"
+      },
+      {
+        "fixture_family": "non_monotonic_defaults",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_bird_flies"
+      },
+      {
+        "fixture_family": "graph_coloring",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_path2_three_colors"
+      },
+      {
+        "fixture_family": "non_monotonic_defaults",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_bird_flies"
+      },
+      {
+        "fixture_family": "graph_coloring",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_path2_three_colors"
+      },
+      {
+        "fixture_family": "non_monotonic_defaults",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_bird_flies"
+      }
+    ]
+  },
+  "honest_verdict": "complete: benchmark ran but recorded failing verification commands",
+  "inference_substrate": "live_llm_inference",
+  "model_file_hashes_revisions_and_quantizations": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "sha256": "ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "size_bytes": 22134528992
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "sha256": "34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "size_bytes": 16947539744
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "sha256": "9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "size_bytes": 18323731456
+    }
+  },
+  "model_tokens_verifier_work_and_wall_time_by_arm_model_and_fixture_family": {
+    "cold_exact_completion": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 2.0,
+          "wall_time_s": 0.0
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 64.0,
+          "wall_time_s": 0.0
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 8.0,
+          "wall_time_s": 0.0
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 2.0,
+          "wall_time_s": 0.0
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 64.0,
+          "wall_time_s": 0.0
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 8.0,
+          "wall_time_s": 0.0
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 2.0,
+          "wall_time_s": 0.0
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 64.0,
+          "wall_time_s": 0.0
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 8.0,
+          "wall_time_s": 0.0
+        }
+      }
+    },
+    "compute_balanced_route": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 140.0,
+          "verifier_work": 3.0,
+          "wall_time_s": 0.451908
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 330.0,
+          "verifier_work": 65.0,
+          "wall_time_s": 0.11468
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 164.0,
+          "verifier_work": 9.0,
+          "wall_time_s": 0.080515
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 13.0,
+          "model_prompt_tokens": 140.0,
+          "verifier_work": 3.0,
+          "wall_time_s": 0.49704
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 23.0,
+          "model_prompt_tokens": 330.0,
+          "verifier_work": 65.0,
+          "wall_time_s": 0.715997
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 20.0,
+          "model_prompt_tokens": 164.0,
+          "verifier_work": 9.0,
+          "wall_time_s": 0.338248
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 44.0,
+          "model_prompt_tokens": 140.0,
+          "verifier_work": 3.0,
+          "wall_time_s": 2.619822
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 66.0,
+          "model_prompt_tokens": 330.0,
+          "verifier_work": 65.0,
+          "wall_time_s": 2.729586
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 16.0,
+          "model_prompt_tokens": 164.0,
+          "verifier_work": 9.0,
+          "wall_time_s": 0.806941
+        }
+      }
+    },
+    "one_shot": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 70.0,
+          "verifier_work": 1.0,
+          "wall_time_s": 0.449808
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 165.0,
+          "verifier_work": 1.0,
+          "wall_time_s": 0.112407
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 82.0,
+          "verifier_work": 1.0,
+          "wall_time_s": 0.078415
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 4.0,
+          "model_prompt_tokens": 70.0,
+          "verifier_work": 1.0,
+          "wall_time_s": 0.382818
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 5.0,
+          "model_prompt_tokens": 165.0,
+          "verifier_work": 1.0,
+          "wall_time_s": 0.486053
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 10.0,
+          "model_prompt_tokens": 82.0,
+          "verifier_work": 1.0,
+          "wall_time_s": 0.199675
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 24.0,
+          "model_prompt_tokens": 70.0,
+          "verifier_work": 1.0,
+          "wall_time_s": 1.688239
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 31.0,
+          "model_prompt_tokens": 165.0,
+          "verifier_work": 1.0,
+          "wall_time_s": 1.393959
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 16.0,
+          "model_prompt_tokens": 82.0,
+          "verifier_work": 1.0,
+          "wall_time_s": 0.778394
+        }
+      }
+    },
+    "partial_evidence_continuous_refinement": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 0.0,
+          "wall_time_s": 0.0
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 0.0,
+          "wall_time_s": 0.0
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 0.0,
+          "wall_time_s": 0.0
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 0.0,
+          "wall_time_s": 0.0
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 0.0,
+          "wall_time_s": 0.0
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 0.0,
+          "wall_time_s": 0.0
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 0.0,
+          "wall_time_s": 0.0
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 0.0,
+          "wall_time_s": 0.0
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 0.0,
+          "wall_time_s": 0.0
+        }
+      }
+    },
+    "partial_evidence_exact_completion": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 2.0,
+          "wall_time_s": 0.0
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 64.0,
+          "wall_time_s": 0.0
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 8.0,
+          "wall_time_s": 0.0
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 2.0,
+          "wall_time_s": 0.0
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 64.0,
+          "wall_time_s": 0.0
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 8.0,
+          "wall_time_s": 0.0
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 2.0,
+          "wall_time_s": 0.0
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 64.0,
+          "wall_time_s": 0.0
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 0.0,
+          "verifier_work": 8.0,
+          "wall_time_s": 0.0
+        }
+      }
+    },
+    "repeated_generation": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 140.0,
+          "verifier_work": 2.0,
+          "wall_time_s": 0.451908
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 330.0,
+          "verifier_work": 2.0,
+          "wall_time_s": 0.11468
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 0.0,
+          "model_prompt_tokens": 164.0,
+          "verifier_work": 2.0,
+          "wall_time_s": 0.080515
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 13.0,
+          "model_prompt_tokens": 140.0,
+          "verifier_work": 3.0,
+          "wall_time_s": 0.49704
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 23.0,
+          "model_prompt_tokens": 330.0,
+          "verifier_work": 2.0,
+          "wall_time_s": 0.715997
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 20.0,
+          "model_prompt_tokens": 164.0,
+          "verifier_work": 2.0,
+          "wall_time_s": 0.338248
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "model_generated_tokens": 44.0,
+          "model_prompt_tokens": 140.0,
+          "verifier_work": 2.0,
+          "wall_time_s": 2.619822
+        },
+        "graph_coloring": {
+          "model_generated_tokens": 66.0,
+          "model_prompt_tokens": 330.0,
+          "verifier_work": 2.0,
+          "wall_time_s": 2.729586
+        },
+        "non_monotonic_defaults": {
+          "model_generated_tokens": 16.0,
+          "model_prompt_tokens": 164.0,
+          "verifier_work": 2.0,
+          "wall_time_s": 0.806941
+        }
+      }
+    }
+  },
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "one_shot_results": {
+    "arm": "one_shot",
+    "exact_valid_count": 0,
+    "fixed_budget": {
+      "generation_samples": 1,
+      "max_tokens": 48,
+      "timeout_s": 120
+    },
+    "parse_success_count": 0,
+    "records": [
+      {
+        "arm": "one_shot",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 70,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 2,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_fact_forbidden",
+        "verifier_work": 1,
+        "wall_time_s": 0.449808
+      },
+      {
+        "arm": "one_shot",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 165,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 64,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_path2_three_colors",
+        "verifier_work": 1,
+        "wall_time_s": 0.112407
+      },
+      {
+        "arm": "one_shot",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 82,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 8,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_bird_flies",
+        "verifier_work": 1,
+        "wall_time_s": 0.078415
+      },
+      {
+        "arm": "one_shot",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 24,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 70,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 2,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_fact_forbidden",
+        "verifier_work": 1,
+        "wall_time_s": 1.688239
+      },
+      {
+        "arm": "one_shot",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 31,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 165,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 64,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_path2_three_colors",
+        "verifier_work": 1,
+        "wall_time_s": 1.393959
+      },
+      {
+        "arm": "one_shot",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 16,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 82,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 8,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_bird_flies",
+        "verifier_work": 1,
+        "wall_time_s": 0.778394
+      },
+      {
+        "arm": "one_shot",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 4,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 70,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 2,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_fact_forbidden",
+        "verifier_work": 1,
+        "wall_time_s": 0.382818
+      },
+      {
+        "arm": "one_shot",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 5,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 165,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 64,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_path2_three_colors",
+        "verifier_work": 1,
+        "wall_time_s": 0.486053
+      },
+      {
+        "arm": "one_shot",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 10,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 82,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 8,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_bird_flies",
+        "verifier_work": 1,
+        "wall_time_s": 0.199675
+      }
+    ],
+    "row_count": 9
+  },
+  "paired_deltas_intervals_and_sample_sizes": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "contradictions": {
+        "continuous_warm_minus_blank_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "repeated_minus_one_shot_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "warm_exact_minus_cold_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "warm_exact_work_delta_vs_cold": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        }
+      },
+      "graph_coloring": {
+        "continuous_warm_minus_blank_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "repeated_minus_one_shot_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "warm_exact_minus_cold_exact": {
+          "ci95": [
+            -1.0,
+            -1.0
+          ],
+          "mean_delta": -1.0,
+          "sample_size": 1
+        },
+        "warm_exact_work_delta_vs_cold": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        }
+      },
+      "non_monotonic_defaults": {
+        "continuous_warm_minus_blank_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "repeated_minus_one_shot_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "warm_exact_minus_cold_exact": {
+          "ci95": [
+            -1.0,
+            -1.0
+          ],
+          "mean_delta": -1.0,
+          "sample_size": 1
+        },
+        "warm_exact_work_delta_vs_cold": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        }
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "contradictions": {
+        "continuous_warm_minus_blank_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "repeated_minus_one_shot_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "warm_exact_minus_cold_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "warm_exact_work_delta_vs_cold": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        }
+      },
+      "graph_coloring": {
+        "continuous_warm_minus_blank_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "repeated_minus_one_shot_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "warm_exact_minus_cold_exact": {
+          "ci95": [
+            -1.0,
+            -1.0
+          ],
+          "mean_delta": -1.0,
+          "sample_size": 1
+        },
+        "warm_exact_work_delta_vs_cold": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        }
+      },
+      "non_monotonic_defaults": {
+        "continuous_warm_minus_blank_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "repeated_minus_one_shot_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "warm_exact_minus_cold_exact": {
+          "ci95": [
+            -1.0,
+            -1.0
+          ],
+          "mean_delta": -1.0,
+          "sample_size": 1
+        },
+        "warm_exact_work_delta_vs_cold": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        }
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "contradictions": {
+        "continuous_warm_minus_blank_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "repeated_minus_one_shot_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "warm_exact_minus_cold_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "warm_exact_work_delta_vs_cold": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        }
+      },
+      "graph_coloring": {
+        "continuous_warm_minus_blank_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "repeated_minus_one_shot_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "warm_exact_minus_cold_exact": {
+          "ci95": [
+            -1.0,
+            -1.0
+          ],
+          "mean_delta": -1.0,
+          "sample_size": 1
+        },
+        "warm_exact_work_delta_vs_cold": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        }
+      },
+      "non_monotonic_defaults": {
+        "continuous_warm_minus_blank_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "repeated_minus_one_shot_exact": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        },
+        "warm_exact_minus_cold_exact": {
+          "ci95": [
+            -1.0,
+            -1.0
+          ],
+          "mean_delta": -1.0,
+          "sample_size": 1
+        },
+        "warm_exact_work_delta_vs_cold": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1
+        }
+      }
+    }
+  },
+  "parser_and_evidence_coverage_by_arm_model_and_fixture_family": {
+    "cold_exact_completion": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        }
+      }
+    },
+    "compute_balanced_route": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      }
+    },
+    "one_shot": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      }
+    },
+    "partial_evidence_continuous_refinement": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      }
+    },
+    "partial_evidence_exact_completion": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      }
+    },
+    "repeated_generation": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 1,
+            "rate": 1.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "graph_coloring": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        },
+        "non_monotonic_defaults": {
+          "evidence_supported": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          },
+          "parse_success": {
+            "denominator": 1,
+            "numerator": 0,
+            "rate": 0.0
+          }
+        }
+      }
+    }
+  },
+  "partial_evidence_continuous_refinement_results": {
+    "arm": "partial_evidence_continuous_refinement",
+    "blank_success_count": 0,
+    "evidence_warm_minus_blank_success_delta": 0,
+    "evidence_warm_success_count": 0,
+    "fixed_budget": {
+      "optimizer_steps": 24,
+      "restart_budget": 1,
+      "step_size": 0.25
+    },
+    "random_success_count": 0,
+    "records": [
+      {
+        "arm": "partial_evidence_continuous_refinement",
+        "blank_exact_valid": false,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "random_exact_valid": false,
+        "selected_labels": [],
+        "starts": {},
+        "state_evaluations": 0,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_fact_forbidden",
+        "verifier_work": 0,
+        "wall_time_s": 0.0
+      },
+      {
+        "arm": "partial_evidence_continuous_refinement",
+        "blank_exact_valid": false,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "random_exact_valid": false,
+        "selected_labels": [],
+        "starts": {},
+        "state_evaluations": 0,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_path2_three_colors",
+        "verifier_work": 0,
+        "wall_time_s": 0.0
+      },
+      {
+        "arm": "partial_evidence_continuous_refinement",
+        "blank_exact_valid": false,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "random_exact_valid": false,
+        "selected_labels": [],
+        "starts": {},
+        "state_evaluations": 0,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_bird_flies",
+        "verifier_work": 0,
+        "wall_time_s": 0.0
+      },
+      {
+        "arm": "partial_evidence_continuous_refinement",
+        "blank_exact_valid": false,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "random_exact_valid": false,
+        "selected_labels": [],
+        "starts": {},
+        "state_evaluations": 0,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_fact_forbidden",
+        "verifier_work": 0,
+        "wall_time_s": 0.0
+      },
+      {
+        "arm": "partial_evidence_continuous_refinement",
+        "blank_exact_valid": false,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "random_exact_valid": false,
+        "selected_labels": [],
+        "starts": {},
+        "state_evaluations": 0,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_path2_three_colors",
+        "verifier_work": 0,
+        "wall_time_s": 0.0
+      },
+      {
+        "arm": "partial_evidence_continuous_refinement",
+        "blank_exact_valid": false,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "random_exact_valid": false,
+        "selected_labels": [],
+        "starts": {},
+        "state_evaluations": 0,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_bird_flies",
+        "verifier_work": 0,
+        "wall_time_s": 0.0
+      },
+      {
+        "arm": "partial_evidence_continuous_refinement",
+        "blank_exact_valid": false,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "random_exact_valid": false,
+        "selected_labels": [],
+        "starts": {},
+        "state_evaluations": 0,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_fact_forbidden",
+        "verifier_work": 0,
+        "wall_time_s": 0.0
+      },
+      {
+        "arm": "partial_evidence_continuous_refinement",
+        "blank_exact_valid": false,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "random_exact_valid": false,
+        "selected_labels": [],
+        "starts": {},
+        "state_evaluations": 0,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_path2_three_colors",
+        "verifier_work": 0,
+        "wall_time_s": 0.0
+      },
+      {
+        "arm": "partial_evidence_continuous_refinement",
+        "blank_exact_valid": false,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "random_exact_valid": false,
+        "selected_labels": [],
+        "starts": {},
+        "state_evaluations": 0,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_bird_flies",
+        "verifier_work": 0,
+        "wall_time_s": 0.0
+      }
+    ],
+    "row_count": 9
+  },
+  "partial_evidence_exact_completion_results": {
+    "arm": "partial_evidence_exact_completion",
+    "cold_state_evaluations": 222,
+    "exact_valid_count": 0,
+    "fixed_budget": {
+      "evidence_source": "first ordinary generation sample",
+      "exact_completion_budget": 4096
+    },
+    "records": [
+      {
+        "arm": "partial_evidence_exact_completion",
+        "cold_state_evaluations": 2,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "exact_validity_harm": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 2,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_fact_forbidden",
+        "verifier_work": 2,
+        "wall_time_s": 0.0,
+        "work_delta_vs_cold": 0
+      },
+      {
+        "arm": "partial_evidence_exact_completion",
+        "cold_state_evaluations": 64,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "exact_validity_harm": true,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "selected_labels": [
+          "color_v1_blue",
+          "color_v2_green"
+        ],
+        "state_evaluations": 64,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_path2_three_colors",
+        "verifier_work": 64,
+        "wall_time_s": 0.0,
+        "work_delta_vs_cold": 0
+      },
+      {
+        "arm": "partial_evidence_exact_completion",
+        "cold_state_evaluations": 8,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "exact_validity_harm": true,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "selected_labels": [
+          "bird",
+          "flies"
+        ],
+        "state_evaluations": 8,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_bird_flies",
+        "verifier_work": 8,
+        "wall_time_s": 0.0,
+        "work_delta_vs_cold": 0
+      },
+      {
+        "arm": "partial_evidence_exact_completion",
+        "cold_state_evaluations": 2,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "exact_validity_harm": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 2,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_fact_forbidden",
+        "verifier_work": 2,
+        "wall_time_s": 0.0,
+        "work_delta_vs_cold": 0
+      },
+      {
+        "arm": "partial_evidence_exact_completion",
+        "cold_state_evaluations": 64,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "exact_validity_harm": true,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "selected_labels": [
+          "color_v1_blue",
+          "color_v2_green"
+        ],
+        "state_evaluations": 64,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_path2_three_colors",
+        "verifier_work": 64,
+        "wall_time_s": 0.0,
+        "work_delta_vs_cold": 0
+      },
+      {
+        "arm": "partial_evidence_exact_completion",
+        "cold_state_evaluations": 8,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "exact_validity_harm": true,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "selected_labels": [
+          "bird",
+          "flies"
+        ],
+        "state_evaluations": 8,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_bird_flies",
+        "verifier_work": 8,
+        "wall_time_s": 0.0,
+        "work_delta_vs_cold": 0
+      },
+      {
+        "arm": "partial_evidence_exact_completion",
+        "cold_state_evaluations": 2,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "exact_validity_harm": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 2,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_fact_forbidden",
+        "verifier_work": 2,
+        "wall_time_s": 0.0,
+        "work_delta_vs_cold": 0
+      },
+      {
+        "arm": "partial_evidence_exact_completion",
+        "cold_state_evaluations": 64,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "exact_validity_harm": true,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "selected_labels": [
+          "color_v1_blue",
+          "color_v2_green"
+        ],
+        "state_evaluations": 64,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_path2_three_colors",
+        "verifier_work": 64,
+        "wall_time_s": 0.0,
+        "work_delta_vs_cold": 0
+      },
+      {
+        "arm": "partial_evidence_exact_completion",
+        "cold_state_evaluations": 8,
+        "evidence_supported": false,
+        "exact_valid": false,
+        "exact_validity_harm": true,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 0,
+        "parse_success": false,
+        "selected_labels": [
+          "bird",
+          "flies"
+        ],
+        "state_evaluations": 8,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_bird_flies",
+        "verifier_work": 8,
+        "wall_time_s": 0.0,
+        "work_delta_vs_cold": 0
+      }
+    ],
+    "row_count": 9,
+    "warm_minus_cold_work_delta": 0,
+    "warm_state_evaluations": 222
+  },
+  "preconditions_checked": {
+    "arm_budget_hash": "4a9e22b5bd587e08f76a1618092a4f9618c4b4828f41fce43adab222667bf1fa",
+    "cuda_inventory": {
+      "nvidia_smi": {
+        "cmd": [
+          "nvidia-smi",
+          "--query-gpu=index,name,memory.total",
+          "--format=csv,noheader"
+        ],
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "0, NVIDIA GeForce RTX 3090, 24576 MiB\n1, NVIDIA GeForce RTX 3090, 24576 MiB"
+      }
+    },
+    "date": "20260810",
+    "formal_sidecar_hash": "bca136252757caba5c81fc6d6c8a6307e795b39edd31e510b90b80b9748e25f0",
+    "gpu_ownership_before_loading": {
+      "compute_apps": {
+        "cmd": [
+          "nvidia-smi",
+          "--query-compute-apps=pid,process_name,used_memory",
+          "--format=csv,noheader,nounits"
+        ],
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "3926032, .venv/bin/python, 256\n3926032, .venv/bin/python, 256"
+      }
+    },
+    "inference_substrate": "live_llm_inference",
+    "llama_cpp_python_offload": {
+      "available": true,
+      "supports_gpu_offload": true,
+      "version": "0.3.33"
+    },
+    "model_records_hash": "65056cd03d770e8322e4e354198f9dd13677007baf97faad2ae1be34b462f436",
+    "principle": "Records frozen gates before inference.",
+    "protected_hashes_before": {
+      "CLAUDE.md": "c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+      "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "results/experiment_6275_flagship_asp_constraint_verification_benchmark.formal_sidecar.json": "daf642689bd2f0b029fcac8aede20b5309d690aa58bc915cb11ab6989dfeee81",
+      "results/experiment_6275_flagship_asp_constraint_verification_benchmark.sealed_manifest.json": "6effd6e13953d550ab9262e4600c3c2c2209ebc7b09db4be0833c8929c1fb36b",
+      "results/experiment_6288_partial_atom_evidence_adapter.json": "2dcce102f803888496484d2ff1d1ac130a2f2d2666db4331c1249ad109e8fe81",
+      "scripts/research_conductor.py": "16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "random_seeds": [
+      6289,
+      6290,
+      6291
+    ],
+    "schema": "carnot.exp6289.preconditions.v1",
+    "task_manifest_hash": "893c52e66050b92f642beffdd0925e9907330143d99e3a39173205eba5decd00",
+    "timeouts": {
+      "generation_timeout_s": 120,
+      "model_cell_timeout_s": 1800
+    }
+  },
+  "prompt_seed_token_timeout_and_terminal_disposition_by_row": [
+    {
+      "evidence_supported": false,
+      "generated_token_count": 0,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parse_success": false,
+      "prompt_hash": "32c278758f86276940607ccd2db1d2cf05131f7dd5b45064c3d6483b43ef3a23",
+      "prompt_token_count": 70,
+      "raw_output_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sample_index": 0,
+      "seed": 6289,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_fact_forbidden",
+      "terminal_disposition": "blocked: zero_token_row",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 0,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parse_success": false,
+      "prompt_hash": "32c278758f86276940607ccd2db1d2cf05131f7dd5b45064c3d6483b43ef3a23",
+      "prompt_token_count": 70,
+      "raw_output_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sample_index": 1,
+      "seed": 6290,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_fact_forbidden",
+      "terminal_disposition": "blocked: zero_token_row",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 0,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parse_success": false,
+      "prompt_hash": "b0ab3c9640dc9f42f120094cb2d7793ec3cc0a970448b6e9bfa9ce7743b18f7f",
+      "prompt_token_count": 165,
+      "raw_output_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sample_index": 0,
+      "seed": 6390,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_path2_three_colors",
+      "terminal_disposition": "blocked: zero_token_row",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 0,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parse_success": false,
+      "prompt_hash": "b0ab3c9640dc9f42f120094cb2d7793ec3cc0a970448b6e9bfa9ce7743b18f7f",
+      "prompt_token_count": 165,
+      "raw_output_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sample_index": 1,
+      "seed": 6391,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_path2_three_colors",
+      "terminal_disposition": "blocked: zero_token_row",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 0,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parse_success": false,
+      "prompt_hash": "f3dae740f251381875bb312139986758dcdf8740316922ff8079e4ee07a8b603",
+      "prompt_token_count": 82,
+      "raw_output_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sample_index": 0,
+      "seed": 6491,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_bird_flies",
+      "terminal_disposition": "blocked: zero_token_row",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 0,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parse_success": false,
+      "prompt_hash": "f3dae740f251381875bb312139986758dcdf8740316922ff8079e4ee07a8b603",
+      "prompt_token_count": 82,
+      "raw_output_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sample_index": 1,
+      "seed": 6492,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_bird_flies",
+      "terminal_disposition": "blocked: zero_token_row",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 24,
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "parse_success": false,
+      "prompt_hash": "32c278758f86276940607ccd2db1d2cf05131f7dd5b45064c3d6483b43ef3a23",
+      "prompt_token_count": 70,
+      "raw_output_hash": "8ea96921f2d637d8616938651bce5e2bb402dfaa83d37482618063b5bae8ff5c",
+      "sample_index": 0,
+      "seed": 1006292,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_fact_forbidden",
+      "terminal_disposition": "complete: parser_rejected_but_row_terminal",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 20,
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "parse_success": false,
+      "prompt_hash": "32c278758f86276940607ccd2db1d2cf05131f7dd5b45064c3d6483b43ef3a23",
+      "prompt_token_count": 70,
+      "raw_output_hash": "d78b30fda71e22bb9592abdd0dc56816f98c7bb8712fabe6bdbd70b24a5912a3",
+      "sample_index": 1,
+      "seed": 1006293,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_fact_forbidden",
+      "terminal_disposition": "complete: parser_rejected_but_row_terminal",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 31,
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "parse_success": false,
+      "prompt_hash": "b0ab3c9640dc9f42f120094cb2d7793ec3cc0a970448b6e9bfa9ce7743b18f7f",
+      "prompt_token_count": 165,
+      "raw_output_hash": "b8b1ecbfedb6da356b44c96e7390ffafe45f4d439c1acb1c86a1e7c7a71619c1",
+      "sample_index": 0,
+      "seed": 1006393,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_path2_three_colors",
+      "terminal_disposition": "complete: parser_rejected_but_row_terminal",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 35,
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "parse_success": false,
+      "prompt_hash": "b0ab3c9640dc9f42f120094cb2d7793ec3cc0a970448b6e9bfa9ce7743b18f7f",
+      "prompt_token_count": 165,
+      "raw_output_hash": "8f9bfd070f3c8786467e74e4f519cf3cc7092f2bb41dd5b30bc949d5b8c16ebb",
+      "sample_index": 1,
+      "seed": 1006394,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_path2_three_colors",
+      "terminal_disposition": "complete: parser_rejected_but_row_terminal",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 16,
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "parse_success": false,
+      "prompt_hash": "f3dae740f251381875bb312139986758dcdf8740316922ff8079e4ee07a8b603",
+      "prompt_token_count": 82,
+      "raw_output_hash": "944608e1c0b625e605ba1b1aa6a4e25cc606e24fc5be35596ab3f309bd4462f2",
+      "sample_index": 0,
+      "seed": 1006494,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_bird_flies",
+      "terminal_disposition": "complete: parser_rejected_but_row_terminal",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 0,
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "parse_success": false,
+      "prompt_hash": "f3dae740f251381875bb312139986758dcdf8740316922ff8079e4ee07a8b603",
+      "prompt_token_count": 82,
+      "raw_output_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sample_index": 1,
+      "seed": 1006495,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_bird_flies",
+      "terminal_disposition": "blocked: zero_token_row",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 4,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "parse_success": false,
+      "prompt_hash": "32c278758f86276940607ccd2db1d2cf05131f7dd5b45064c3d6483b43ef3a23",
+      "prompt_token_count": 70,
+      "raw_output_hash": "64aef761a8fba9f0082269545f30e6d40dfbbdf97b38008a0ad7b45a7336f385",
+      "sample_index": 0,
+      "seed": 2006295,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_fact_forbidden",
+      "terminal_disposition": "complete: parser_rejected_but_row_terminal",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 9,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "parse_success": true,
+      "prompt_hash": "32c278758f86276940607ccd2db1d2cf05131f7dd5b45064c3d6483b43ef3a23",
+      "prompt_token_count": 70,
+      "raw_output_hash": "b3022f0b1ebfcdb21155ad0c3c772839285c8016484e08991c83ce4a4ac8d974",
+      "sample_index": 1,
+      "seed": 2006296,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_fact_forbidden",
+      "terminal_disposition": "complete: row_scored",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 5,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "parse_success": false,
+      "prompt_hash": "b0ab3c9640dc9f42f120094cb2d7793ec3cc0a970448b6e9bfa9ce7743b18f7f",
+      "prompt_token_count": 165,
+      "raw_output_hash": "55169e6cc61cbfbc8263c717b0d5eb8d0c090f54b3c2215310ef8f4f97f47157",
+      "sample_index": 0,
+      "seed": 2006396,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_path2_three_colors",
+      "terminal_disposition": "complete: parser_rejected_but_row_terminal",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 18,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "parse_success": false,
+      "prompt_hash": "b0ab3c9640dc9f42f120094cb2d7793ec3cc0a970448b6e9bfa9ce7743b18f7f",
+      "prompt_token_count": 165,
+      "raw_output_hash": "481a432869f36669adc3889154f110739aaafce3494b40959c50aa21ff306e9c",
+      "sample_index": 1,
+      "seed": 2006397,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_path2_three_colors",
+      "terminal_disposition": "complete: parser_rejected_but_row_terminal",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 10,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "parse_success": false,
+      "prompt_hash": "f3dae740f251381875bb312139986758dcdf8740316922ff8079e4ee07a8b603",
+      "prompt_token_count": 82,
+      "raw_output_hash": "522acb7c9d57470c8e4ff7f68e644a2625e7dcb78a5d621b20b30cf3ed60ab3c",
+      "sample_index": 0,
+      "seed": 2006497,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_bird_flies",
+      "terminal_disposition": "complete: parser_rejected_but_row_terminal",
+      "timeout": false
+    },
+    {
+      "evidence_supported": false,
+      "generated_token_count": 10,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "parse_success": false,
+      "prompt_hash": "f3dae740f251381875bb312139986758dcdf8740316922ff8079e4ee07a8b603",
+      "prompt_token_count": 82,
+      "raw_output_hash": "cfaea17f3fa8a34745c9bf87dd38d373e018b58e7c0d7e0bf81d2117d0119bd4",
+      "sample_index": 1,
+      "seed": 2006498,
+      "semantic_valid": false,
+      "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_bird_flies",
+      "terminal_disposition": "complete: parser_rejected_but_row_terminal",
+      "timeout": false
+    }
+  ],
+  "protected_files_unchanged": {
+    "CLAUDE.md": {
+      "after_sha256": "c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+      "before_sha256": "c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+      "unchanged": true
+    },
+    "CODEX.md": {
+      "after_sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "before_sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "unchanged": true
+    },
+    "principle": "Shows protected files stayed byte-stable during the run.",
+    "results/experiment_6275_flagship_asp_constraint_verification_benchmark.formal_sidecar.json": {
+      "after_sha256": "daf642689bd2f0b029fcac8aede20b5309d690aa58bc915cb11ab6989dfeee81",
+      "before_sha256": "daf642689bd2f0b029fcac8aede20b5309d690aa58bc915cb11ab6989dfeee81",
+      "unchanged": true
+    },
+    "results/experiment_6275_flagship_asp_constraint_verification_benchmark.sealed_manifest.json": {
+      "after_sha256": "6effd6e13953d550ab9262e4600c3c2c2209ebc7b09db4be0833c8929c1fb36b",
+      "before_sha256": "6effd6e13953d550ab9262e4600c3c2c2209ebc7b09db4be0833c8929c1fb36b",
+      "unchanged": true
+    },
+    "results/experiment_6288_partial_atom_evidence_adapter.json": {
+      "after_sha256": "2dcce102f803888496484d2ff1d1ac130a2f2d2666db4331c1249ad109e8fe81",
+      "before_sha256": "2dcce102f803888496484d2ff1d1ac130a2f2d2666db4331c1249ad109e8fe81",
+      "unchanged": true
+    },
+    "scripts/research_conductor.py": {
+      "after_sha256": "16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "before_sha256": "16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "unchanged": true
+    }
+  },
+  "qwen_zero_token_control": {
+    "accepted_as_evidence_count": 0,
+    "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "qwen_zero_token_rows": 6,
+    "terminal_control": "complete: zero-token rows fail closed"
+  },
+  "random_seeds": [
+    6289,
+    6290,
+    6291
+  ],
+  "raw_output_paths_and_hashes": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "contains_prompt": true,
+      "contains_raw_output": true,
+      "contains_seed": true,
+      "contains_timeout": true,
+      "contains_token_count": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6289_flagship_exact_state_refinement_raw/unsloth_qwen3_6_35b_a3b_gguf.raw.jsonl",
+      "row_count": 6,
+      "sha256": "527f29adc011627007bb1d828119471f3b9cd9b12f164165ec6656b5839dc158"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "contains_prompt": true,
+      "contains_raw_output": true,
+      "contains_seed": true,
+      "contains_timeout": true,
+      "contains_token_count": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6289_flagship_exact_state_refinement_raw/unsloth_gemma_4_26b_a4b_it_gguf.raw.jsonl",
+      "row_count": 6,
+      "sha256": "ae07d82a50e81597f015e360bea869e2710a333950c0d5e4483d7c1b35bb8608"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "contains_prompt": true,
+      "contains_raw_output": true,
+      "contains_seed": true,
+      "contains_timeout": true,
+      "contains_token_count": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6289_flagship_exact_state_refinement_raw/unsloth_gemma_4_31b_it_gguf.raw.jsonl",
+      "row_count": 6,
+      "sha256": "65879a287cb3bd4b24920cdbc4ebd250fe7d736036c4328429e026ef67cab6d3"
+    }
+  },
+  "repeated_generation_results": {
+    "arm": "repeated_generation",
+    "exact_valid_count": 0,
+    "fixed_budget": {
+      "generation_samples": 2,
+      "max_tokens_per_sample": 48,
+      "timeout_s_per_sample": 120
+    },
+    "parse_success_count": 1,
+    "records": [
+      {
+        "arm": "repeated_generation",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 140,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 4,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_fact_forbidden",
+        "verifier_work": 2,
+        "wall_time_s": 0.451908
+      },
+      {
+        "arm": "repeated_generation",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 330,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 128,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_path2_three_colors",
+        "verifier_work": 2,
+        "wall_time_s": 0.11468
+      },
+      {
+        "arm": "repeated_generation",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_prompt_tokens": 164,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 16,
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_bird_flies",
+        "verifier_work": 2,
+        "wall_time_s": 0.080515
+      },
+      {
+        "arm": "repeated_generation",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 44,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 140,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 4,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_fact_forbidden",
+        "verifier_work": 2,
+        "wall_time_s": 2.619822
+      },
+      {
+        "arm": "repeated_generation",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 66,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 330,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 128,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_path2_three_colors",
+        "verifier_work": 2,
+        "wall_time_s": 2.729586
+      },
+      {
+        "arm": "repeated_generation",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 16,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_prompt_tokens": 164,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 16,
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_bird_flies",
+        "verifier_work": 2,
+        "wall_time_s": 0.806941
+      },
+      {
+        "arm": "repeated_generation",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_generated_tokens": 13,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 140,
+        "parse_success": true,
+        "selected_labels": [
+          "bad"
+        ],
+        "state_evaluations": 4,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_fact_forbidden",
+        "verifier_work": 3,
+        "wall_time_s": 0.49704
+      },
+      {
+        "arm": "repeated_generation",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_generated_tokens": 23,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 330,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 128,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_path2_three_colors",
+        "verifier_work": 2,
+        "wall_time_s": 0.715997
+      },
+      {
+        "arm": "repeated_generation",
+        "evidence_supported": false,
+        "exact_valid": false,
+        "fixture_family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_generated_tokens": 20,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_prompt_tokens": 164,
+        "parse_success": false,
+        "selected_labels": [],
+        "state_evaluations": 16,
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_bird_flies",
+        "verifier_work": 2,
+        "wall_time_s": 0.338248
+      }
+    ],
+    "row_count": 9
+  },
+  "reproducibility_checksum": "8c61624fee3a137352267b47bda19e6afcddbdd6f938025760f0f67ebe9efcdf",
+  "sealed_task_manifest_path_and_hash": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6289_flagship_exact_state_refinement_benchmark.sealed_task_manifest.json",
+    "sha256": "893c52e66050b92f642beffdd0925e9907330143d99e3a39173205eba5decd00",
+    "task_count": 9
+  },
+  "solver_nodes_or_state_evaluations_by_arm_model_and_fixture_family": {
+    "cold_exact_completion": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "state_evaluations": 2.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 64.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 8.0
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "state_evaluations": 2.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 64.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 8.0
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "state_evaluations": 2.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 64.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 8.0
+        }
+      }
+    },
+    "compute_balanced_route": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "state_evaluations": 4.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 128.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 16.0
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "state_evaluations": 4.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 128.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 16.0
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "state_evaluations": 4.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 128.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 16.0
+        }
+      }
+    },
+    "one_shot": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "state_evaluations": 2.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 64.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 8.0
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "state_evaluations": 2.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 64.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 8.0
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "state_evaluations": 2.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 64.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 8.0
+        }
+      }
+    },
+    "partial_evidence_continuous_refinement": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "state_evaluations": 0.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 0.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 0.0
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "state_evaluations": 0.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 0.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 0.0
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "state_evaluations": 0.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 0.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 0.0
+        }
+      }
+    },
+    "partial_evidence_exact_completion": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "state_evaluations": 2.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 64.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 8.0
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "state_evaluations": 2.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 64.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 8.0
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "state_evaluations": 2.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 64.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 8.0
+        }
+      }
+    },
+    "repeated_generation": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "contradictions": {
+          "state_evaluations": 4.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 128.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 16.0
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "contradictions": {
+          "state_evaluations": 4.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 128.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 16.0
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "contradictions": {
+          "state_evaluations": 4.0
+        },
+        "graph_coloring": {
+          "state_evaluations": 128.0
+        },
+        "non_monotonic_defaults": {
+          "state_evaluations": 16.0
+        }
+      }
+    }
+  },
+  "source_model_weight_mutation_count": 0,
+  "status": "complete_no_value",
+  "terminal_model_dispositions": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": "complete: llama_cpp_generation_finished",
+    "unsloth/gemma-4-26B-A4B-it-GGUF": "complete: llama_cpp_generation_finished",
+    "unsloth/gemma-4-31B-it-GGUF": "complete: llama_cpp_generation_finished"
+  },
+  "test_commands": [
+    ".venv/bin/python -m carnot.experiment_6289_flagship_exact_state_refinement_benchmark --date 20260810",
+    ".venv/bin/pytest tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --branch --include=python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py -m pytest tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6289_flagship_exact_state_refinement_benchmark.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/python -m carnot.experiment_6289_flagship_exact_state_refinement_benchmark --date 20260810": 0
+  },
+  "tokenizer_and_chat_template_hashes": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "chat_template_hash": "sha256:404d022b730f5cdfd6a33e255b385d297129bfe63e0e73d88226cabf0246bc92",
+      "chat_template_source": "embedded_in_gguf_or_llama_default",
+      "tokenizer_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "tokenizer_loadable": true,
+      "tokenizer_status": "embedded GGUF tokenizer OK (7 tokens on probe)"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "chat_template_hash": "sha256:b209a55ee54f75fe42ea6558d512fbb8f674e7c7faafa9377f0e18a0aff7b84d",
+      "chat_template_source": "embedded_in_gguf_or_llama_default",
+      "tokenizer_hash": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "tokenizer_loadable": true,
+      "tokenizer_status": "embedded GGUF tokenizer OK (8 tokens on probe)"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "chat_template_hash": "sha256:14f61608ca45b64db14f26a5ba5cbc3e919f0940c9a1f755063072424648d878",
+      "chat_template_source": "embedded_in_gguf_or_llama_default",
+      "tokenizer_hash": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "tokenizer_loadable": true,
+      "tokenizer_status": "embedded GGUF tokenizer OK (8 tokens on probe)"
+    }
+  },
+  "upstream_adapter_path_hash_and_terminal_class": {
+    "partial_atom_evidence_adapter_ready_score": 1.0,
+    "path": "results/experiment_6288_partial_atom_evidence_adapter.json",
+    "sha256": "2dcce102f803888496484d2ff1d1ac130a2f2d2666db4331c1249ad109e8fe81",
+    "status": "complete",
+    "terminal_class": "complete"
+  },
+  "verifier_is_oracle": true,
+  "warm_start_value_ready_score": 0.0
+}

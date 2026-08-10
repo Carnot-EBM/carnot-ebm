@@ -209,6 +209,97 @@ positive evidence-warm delta.
 
 **Spec traces:** REQ-CONSTRAINT-6288
 
+### REQ-CONSTRAINT-6289: Flagship Exact-State Refinement Benchmark
+
+The repository SHALL provide an Exp6289 sealed live benchmark over the three
+mandated local SOTA GGUF families:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. `MODEL_SPECS` SHALL include all three hub
+IDs. A headline row SHALL NOT use a legacy small model as a substitute.
+
+Exp6289 SHALL freeze tasks, sidecars, model paths, quantizations, prompt
+templates, budgets, seeds, timeouts, and protected hashes before inference. It
+SHALL resolve GGUF paths with `cached_sota_pair()` or exact cached paths. It
+SHALL record CUDA offload receipts for each model. If a model cannot run with a
+terminal receipt, its row SHALL close as terminal blocked.
+
+Exp6289 SHALL expose only ordinary text prompts. Prompts SHALL NOT expose ASP
+theories, formal atom IDs, gold assignments, exact answer sets, or solver
+receipts. The exact solver SHALL see the formal sidecar and SHALL be declared as
+an oracle.
+
+Exp6289 SHALL compare one-shot ordinary text, fixed repeated generation,
+partial-evidence continuous refinement, partial-evidence exact completion, cold
+exact completion, and a preregistered CoBa-inspired route that chooses
+generation, verification, or stop under one fixed budget. It SHALL keep model
+tokens, verifier work, exact solver work, and wall time separate.
+
+Readiness SHALL require a positive preregistered warm-start work delta or a
+positive bounded-refinement delta with no exact-validity harm. Cold exact solve success SHALL NOT count as model value.
+Source model weights SHALL not mutate.
+
+The terminal artifact SHALL be
+`results/experiment_6289_flagship_exact_state_refinement_benchmark.json`. It
+SHALL include `status`,
+`upstream_adapter_path_hash_and_terminal_class`,
+`sealed_task_manifest_path_and_hash`, `formal_sidecar_path_and_hash`,
+`MODEL_SPECS`, `models_used`,
+`model_file_hashes_revisions_and_quantizations`,
+`tokenizer_and_chat_template_hashes`,
+`cuda_and_gpu_offload_receipts_by_model`, `raw_output_paths_and_hashes`,
+`prompt_seed_token_timeout_and_terminal_disposition_by_row`,
+`terminal_model_dispositions`, `arm_definitions_and_fixed_compute_budget`,
+`one_shot_results`, `repeated_generation_results`,
+`partial_evidence_continuous_refinement_results`,
+`partial_evidence_exact_completion_results`, `cold_exact_completion_results`,
+`compute_balanced_route_results`,
+`exact_validity_by_arm_model_and_fixture_family`,
+`parser_and_evidence_coverage_by_arm_model_and_fixture_family`,
+`solver_nodes_or_state_evaluations_by_arm_model_and_fixture_family`,
+`model_tokens_verifier_work_and_wall_time_by_arm_model_and_fixture_family`,
+`paired_deltas_intervals_and_sample_sizes`, `harmful_regressions`,
+`qwen_zero_token_control`, `exact_solver_oracle_receipt`,
+`warm_start_value_ready_score`, `source_model_weight_mutation_count`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`, `random_seeds`,
+`reproducibility_checksum`, and `honest_verdict`.
+`source_model_weight_mutation_count` SHALL be bare integer `0`.
+`verifier_is_oracle` SHALL be `true`. Every model disposition SHALL be terminal.
+`field_principles` SHALL give one short principle for every required field.
+`honest_verdict` SHALL start with a terminal prefix.
+
+### SCENARIO-CONSTRAINT-6289-SEALED-SOTA: Sealed Prompts Use Mandated GGUFs
+
+Given Exp6289 model specs and sealed tasks,
+When the benchmark freezes prompts and model rows,
+Then all three mandated GGUF hub IDs are present, no legacy model substitutes a
+headline row, and no prompt exposes ASP text, formal atom IDs, exact answers, or
+solver receipts.
+
+**Spec traces:** REQ-CONSTRAINT-6289
+
+### SCENARIO-CONSTRAINT-6289-MATCHED-BUDGETS: Arms Share Fixed Budgets
+
+Given matched tasks and seeds for one model family,
+When Exp6289 runs generation, repeated generation, evidence refinement, exact
+completion, cold exact completion, and the CoBa route,
+Then all arms report their fixed budgets, model tokens, verifier work, solver
+state evaluations, wall time, paired deltas, and sample sizes separately.
+
+**Spec traces:** REQ-CONSTRAINT-6289
+
+### SCENARIO-CONSTRAINT-6289-ORACLE-VALUE: Solver Work Is Not Laundered
+
+Given exact solver success from a cold sidecar solve,
+When Exp6289 computes readiness,
+Then cold exact success is not counted as model value, zero-token Qwen rows fail
+closed, nonterminal rows become terminal blocked, and readiness opens only with
+positive warm-start or bounded-refinement value and no exact-validity harm.
+
+**Spec traces:** REQ-CONSTRAINT-6289
+
 ### REQ-CONSTRAINT-VERIFY-6175: CCTU Headroom Audit Fail-Closed Gate
 
 The repository SHALL provide an Exp6175 audit over the Exp6174 CCTU K8 pool.
