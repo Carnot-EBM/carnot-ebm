@@ -1559,6 +1559,9 @@ artifact SHALL include these required fields: `status`,
 `terminal_artifact_contract_ready_score`, `duration_s`,
 `reproducibility_checksum`, and `honest_verdict`.
 
+The artifact SHALL declare
+`inference_substrate=deterministic_terminal_artifact_readiness_replay_no_model`.
+
 `terminal_artifact_contract_ready_score` SHALL be the bare integer `1` only
 when every required control passes and every focused command exits zero.
 
