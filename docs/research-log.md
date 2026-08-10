@@ -6101,3 +6101,10 @@ The critical path for milestone .250:
 - theme: short compute and synthesis execution exposed phase and runner-attribution telemetry gaps
 - key result: compute work had no task-scoped GPU-idle finding, but the data cannot explain the compute durations or establish concurrent multi-model runner selection
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.540
+
+- exp_range: exp6268-exp6268 (visible timing-data reference only; the complete milestone range is not available)
+- theme: terminal handoff latency dominated a short synthesis-heavy closeout while compute work lacked GPU engagement
+- key result: the supplied state classifies the two compute-bound experiments as GPU-idle, but no data available this milestone establishes concurrent model loading or a missed DualGPURunner dispatch
+- acceptance: no data available this milestone

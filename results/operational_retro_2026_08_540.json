@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.540",
+  "generated_at": "2026-08-10T11:59:57Z",
+  "retro_type": "operational_in_progress",
+  "summary": "Eleven experiments finished in 9.5 minutes. The 9-minute synthesis handoff dominated elapsed time, while the two compute-bound experiments fall under the supplied GPU-idle classification; only one appears in the top five, with a rounded duration of 0 minutes.",
+  "total_wall_time_minutes": 9.5,
+  "experiments_completed": 11,
+  "slowest_experiments": [
+    {
+      "experiment": "Exact terminal-boundary handoff from V539 into V540",
+      "duration_minutes": 9.33,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Post-V540-marker source delta and experimental-scope freeze",
+      "duration_minutes": 0.12,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Clean immutable local-SOTA event corpus to chronological replay bridge",
+      "duration_minutes": 0.01,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp6268 exact suite: activated mode-jump multi-family A/B",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Terminal-artifact completeness and downstream-readiness contract",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "bottlenecks_identified": [
+    "The synthesis-only terminal-boundary handoff took 9 of the milestone's 9.5 minutes and was the demonstrated wall-time bottleneck.",
+    "GPU engagement was absent while compute-bound work was present. The rounded timing data does not quantify the resulting delay.",
+    "Disk-mtime fallback produced 0-minute entries and no phase attribution, so the longest compute phase and its cause are not available."
+  ],
+  "improvements_suggested": [
+    "Add monotonic phase timers and reusable checkpoint receipts to the terminal-boundary handoff so unchanged validation work can be skipped safely.",
+    "Add a compute-bound startup health check that correlates the task process with GPU utilization and stops or retries a run that remains idle after startup.",
+    "Record loaded-model count and dispatcher choice in each compute artifact; select DualGPURunner only when at least two models are loaded concurrently.",
+    "Persist sub-minute task and phase durations instead of relying on rounded disk modification times."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Checkpoint and phase-time the terminal-boundary handoff.",
+    "Gate compute-bound execution on task-correlated GPU engagement.",
+    "Emit precise duration, loaded-model-count, and dispatcher receipts for every compute task."
+  ],
+  "compute_bound_experiments_count": 2,
+  "gpu_idle_on_compute_bound_tasks": true,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The fallback reconstructs the milestone total but rounds several listed tasks to 0 minutes and does not expose phase causes. No data available this milestone supports a measured savings estimate or a missed concurrent-model DualGPURunner dispatch.",
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false
+}
