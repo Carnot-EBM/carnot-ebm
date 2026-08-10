@@ -457,6 +457,52 @@ Caution: the Duck's own results are 0 wins in 500 runs (median 0.07) — port th
 a hypothesis, not as a proven winner. *Gate: pre-register levels-completed on a >= 10-game
 offline set vs the current cascade; retire on parity or worse.*
 
+**RETIRED (2026-08-09) — premise checked before building, found already refuted by existing
+evidence.** Before building, checked whether this bet's premise still holds. It does not, on two
+independent grounds:
+
+1. **The greedy-direct architecture Duck actually uses (large model, no search, direct real-env
+   commits) is ALREADY built and measured — 5 times, all null.** `REQ-ARC-WMTE-5829`
+   (`carnot.agentic.arc_greedy_direct_agent`) is a faithful port of Duck's execution model (per
+   its own spec: greedy commit after up to `max_turns` inspection turns, no rollback, no search)
+   already running gemma-4-31B. Five iterations (`results/outer_loop_arc_winner_greedy_direct_
+   ab_{20260723,v2objects,v3reflect,v4goalverify,v5sweep8}_20260723.json`) all report the identical
+   verdict: `complete_greedy_direct_gemma31_honest_null_no_discovery_matches_our_stack_zero_
+   baseline`. So the plan's stated premise ("three factors have changed: 31B generator...") is
+   stale — the 31B-generator factor is not new or untested; it already nulled under this exact
+   execution model.
+2. **The one genuinely-novel remaining axis (arbitrary Python vs a 5-function dispatch table)
+   would only matter if multi-step lookahead/search were the binding constraint — and that
+   hypothesis is dead, with hard evidence, twice.** `docs/research-notes/arc-lever-triangulation-
+   2026-07-23.md` (5-agent synthesis over `REQ-ARC-FCP-5757` +
+   `results/outer_loop_arc_candidate_coverage_attribution_20260723.json`) found bucket-b
+   (in-candidate-set actions that only pay off via downstream lookahead) is **0.00% across BOTH
+   independent runs — 0 of 247 winning-path progress actions, 12 games total.** Duck's own
+   architecture doesn't even attempt real lookahead either (per the source audit: "greedy forward
+   execution with real, irreversible steps — not planning against a model"), so an arbitrary-code
+   sandbox would not unlock a capability Duck itself lacks.
+
+**Where the real bottleneck actually is (per the same triangulation, convergent with this
+session's own goal-energy zero-gradient finding above in 4b):** world-model-induction-grade
+SEQUENCE ROUTING — composing a correct 13-33-action ordering from individually-available,
+individually-frame-changing candidates. A 31B generator swapped in offline (constraint relaxed)
+still moves 0 live levels (`experiment_5722`, `delta_0.0`) with held-out induction accuracy only
+0.378 (`experiment_5764`) — far below what a 14-step plan needs (`0.378^14 ~ 0`). The triangulation
+states this plainly: **"at or near a genuine capability frontier, not an obvious engineering fix."**
+Ranking/selection is separately confirmed dead (7-9 A/Bs, all null,
+`docs/research-notes/arc-lever-triangulation-2026-07-23.md`'s evidence table).
+
+**Consequence for this plan.** With 4e retired on evidence, EVERY item in this plan (0a-4e) is now
+DONE, NEGATIVE, REDIRECTED, or RETIRED. The remaining candidate levers are the triangulation's own
+ranked list, both large and outside this plan's original cheap-lever scope: (1) an offline-distilled
+cross-game goal-progress signal trained big on the 3090s then distilled to live-inference cost
+(the triangulation's own "best-supported untested, constraint-compatible lever" — but explicitly
+not guaranteed, partly circular with induction, and prior learned-signal levers already nulled), or
+(2) a fresh SOTA literature scan specifically on hidden-game discovery methods (cheap, informative,
+recommended to run BEFORE committing to (1) per the triangulation's own ordering). Neither is a
+same-session build; both are strategic-scale decisions worth explicit operator input rather than
+autonomous selection.
+
 ### Standing infrastructure item (parallel, not gating)
 
 **The unidentified llama-server reaper.** Blocks the conductor's exp6217 today, will recur on any
