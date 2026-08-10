@@ -2196,6 +2196,122 @@ payload, and the honest verdict has a terminal prefix.
 |---|---|---|
 | REQ-INFRA-6273 | Pending implementation: `python/carnot/experiment_6273_v541_post_marker_source_scope_freeze.py`; terminal artifact `results/experiment_6273_v541_post_marker_source_scope_freeze.json`. | Pending focused tests: `tests/python/test_experiment_6273_v541_post_marker_source_scope_freeze.py`. |
 
+## REQ-INFRA-6283: V541 Capstone SHALL Preserve Exact Paths And Branch-Independent Evidence
+
+Carnot SHALL build Exp6283 as an ungated adversarial capstone for milestone
+`2026.08.541`. It SHALL load the active roadmap, the activated milestone
+document, conductor receipts, the ARC solve registry, the current adversarial
+rules, and the exact declared deliverables for Exp6272 through Exp6282. It SHALL
+classify each task from its declared path. Conductor receipts SHALL be recorded
+as evidence only. A conductor OK, FLAGGED, GATE_BLOCK, or skip receipt SHALL NOT
+promote a missing, nonterminal, blocked, skipped, null, flagged, retired, or
+ready exact artifact.
+
+Exp6283 SHALL re-run the current adversarial verifier on every present declared
+artifact and keep stamped artifact flags separate from current-rule flags. It
+SHALL recompute every structured gate from exact bare upstream fields by using
+the terminal artifact classifier. Wrapped, missing, nonterminal, or absent
+fields SHALL fail closed without defaults. A gate tombstone SHALL remain
+skipped.
+
+Exp6283 SHALL publish independent ledgers for ASP verification, continuous
+self-learning, variable-cardinality sampling, and ARC live-path mechanic
+routing. A positive or ready field in one branch SHALL NOT promote another
+branch. Missing, nonterminal, flagged, or gate-skipped artifacts SHALL never be
+promoted. Prior-failure `retire_if_same_verdict` actions SHALL be applied by
+exact current verdict comparison and recorded without changing the ARC registry
+or making a solve claim.
+
+The Exp6283 artifact SHALL be written atomically to
+`results/experiment_6283_v541_adversarial_capstone.json` with
+`inference_substrate=aggregation_from_upstream_artifacts` and
+`verifier_is_oracle=false`. It SHALL include these required fields: `status`,
+`milestone_roadmap_path_and_hash`, `exact_declared_deliverable_matrix`,
+`conductor_receipt_matrix`, `exact_path_over_receipt_precedence`,
+`current_rule_adversarial_results_by_task`,
+`terminal_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts`,
+`gate_cascade_receipts`, `asp_semantic_compiler_state`,
+`flagship_asp_benchmark_state`, `certified_admission_state`,
+`chronological_continuous_learning_state`, `heldout_transfer_state`,
+`shadow_consumer_state`, `variable_cardinality_backend_state`,
+`mode_jump_safety_and_value_state`, `arc_mechanic_router_state`,
+`arc_provenance_and_registry_receipts`,
+`branch_independent_promotion_ledger`, `prior_failure_retirement_actions`,
+`publication_gate_g1_g2_g3_g4_and_unmet_gates`, `source_mutation_count`,
+`weight_mutation_count`, `unauthorized_external_call_count`,
+`hidden_game_source_access_count`, `outer_loop_ground_truth_search_count`,
+`arc_level_solve_claim_count`, `registry_update_count`, `hardware_claim_count`,
+`speed_power_or_energy_claim_count`, `protected_files_unchanged`,
+`spec_traceability_status_changelog_reconciliation`, `prd_gap_table`,
+`next_milestone_recommendations`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+`source_mutation_count`, `weight_mutation_count`,
+`unauthorized_external_call_count`, `hidden_game_source_access_count`,
+`outer_loop_ground_truth_search_count`, `arc_level_solve_claim_count`,
+`registry_update_count`, `hardware_claim_count`, and
+`speed_power_or_energy_claim_count` SHALL be bare integer `0`. Every required
+field SHALL have a one-line field principle and provenance entry. The
+publication gate SHALL come from `scripts/publication_gate.py`.
+
+### SCENARIO-INFRA-6283-1: Exact Paths Outrank Receipts
+
+GIVEN V541 tasks have declared deliverable paths
+AND conductor receipts contain OK, FLAGGED, GATE_BLOCK, or skipped rows
+WHEN Exp6283 builds the declared deliverable matrix
+THEN each row is classified from the exact JSON path
+AND any receipt override attempt is recorded without changing the class.
+
+### SCENARIO-INFRA-6283-2: Gates Read Only Terminal Bare Fields
+
+GIVEN a V541 task declares a structured `gated_on` field
+WHEN Exp6283 recomputes the gate
+THEN the gate reads only the upstream exact artifact's bare field
+AND missing, wrapped, nonterminal, or missing-artifact fields fail closed.
+
+### SCENARIO-INFRA-6283-3: Current And Stamped Flags Stay Separate
+
+GIVEN an artifact has a stamped `flagged_adversarial` or `corrigendum_pending`
+field
+WHEN Exp6283 re-runs the current adversarial verifier
+THEN stamped flags and current-rule critical or warning flags are reported in
+separate fields.
+
+### SCENARIO-INFRA-6283-4: Branch Ledgers Cannot Launder Evidence
+
+GIVEN ASP, self-learning, sampler, and ARC branches have different terminal
+states
+WHEN Exp6283 builds promotion ledgers
+THEN each branch promotes only from its own exact terminal, unflagged, ready
+evidence
+AND missing, skipped, null, blocked, or flagged artifacts block only their own
+branch.
+
+### SCENARIO-INFRA-6283-5: Zero Claim Counters Are Bare Integers
+
+GIVEN Exp6283 is an aggregation over checked-in evidence
+WHEN the artifact is validated
+THEN all mutation, unauthorized-call, hidden-source, outer-loop search, solve,
+registry, hardware, speed, power, and energy counters are bare integer `0`
+AND the normalized checksum matches the payload.
+
+### SCENARIO-INFRA-6283-6: Publication Gate And Reconciliation Are Recorded
+
+GIVEN the capstone has classified exact V541 evidence
+WHEN Exp6283 runs publication-gate and reconciliation checks
+THEN it records G1 through G4 and unmet gates from
+`scripts/publication_gate.py`
+AND it records OpenSpec, traceability, status, and changelog hashes without
+editing operator-curated public documents.
+
+## Implementation Status (REQ-INFRA-6283)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6283 | Pending implementation: `python/carnot/experiment_6283_v541_adversarial_capstone.py`; terminal artifact `results/experiment_6283_v541_adversarial_capstone.json`. | Pending focused tests: `tests/python/test_experiment_6283_v541_adversarial_capstone.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
