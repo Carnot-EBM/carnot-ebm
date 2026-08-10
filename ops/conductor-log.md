@@ -15592,3 +15592,4 @@ Still active  |
 | 2026-08-10 08:49 UTC | Gated on Exp6266 transfer: default-off energy-fami | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6266-family-task-holdout-csl-audit.fami |
 | 2026-08-10 10:12 UTC | Exact multimodal Ising, Potts, and typed-factor sa | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: 0",
 +          |
+| 2026-08-10 10:31 UTC | Exact multimodal Ising, Potts, and typed-factor sa | OK | 87 passed, 1 warning in 7.59s |
