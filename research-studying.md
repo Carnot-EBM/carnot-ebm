@@ -5640,3 +5640,95 @@ ARC sprint (through 2026-06-30). Decisions:
 - variance_reduced_uncertainty_head
 - fast_slow_process_router
 <!-- EXP4995-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-END -->
+
+## 2026-08-09 (outer-loop, operator-directed): fresh SOTA scan on hidden-game discovery, following retirement of ARC plan 4e
+
+**Trigger:** `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md`'s Phase 4e (a
+Duck-style Python-REPL-sandbox port) was retired before building — premise already refuted by the
+2026-07-23 lever triangulation (search/lookahead dead, ranking dead, real bottleneck = induction-
+grade sequence routing "at or near a genuine capability frontier"). Operator was offered two next
+options (an offline goal-progress signal training run, or a fresh literature scan first) and chose
+the scan. This entry is that scan, run via low-concurrency WebSearch/WebFetch per the SOTA-Ingestion
+Cycle Discipline (not `/deep-research` — same reliability rationale as every prior ingestion round).
+Corpus was ~6.5 weeks stale (last entry above: 2026-06-25); this scan targeted specifically "hidden-
+game discovery" / world-model induction from scratch, the exact axis the triangulation pinned as the
+open bottleneck, rather than a broad ARC-AGI-3 sweep.
+
+**Finding 1 — Claude Opus 5 set a new ARC-AGI-3 SOTA (30.2%, ~4x the prior 7.8%) via genuinely
+stronger reasoning, not a novel harness.** (ARC Prize's own results page,
+`arcprize.org/results/anthropic-claude-opus-5`; corroborated independently by ARC Prize's own X
+announcement, officechai.com, techtimes.com, blockchain.news, mindstudio.ai — six independent
+sources converge on the same number and the same qualitative description.) Notable: it produced
+"the first algebraic reflection equation documented from any frontier AI" while inducing a game's
+mechanics (`4_center = 2*axis - 5_center`), and cleared 5 Public Demo environments (including AR25,
+LP85, R11L — three games this project's own registry has hand-solved) that no prior model had
+beaten. The official results page discloses no harness/scaffold detail beyond a "High" vs "Max"
+reasoning-effort setting (ARC-AGI-3 was evaluated only at High "due to the short testing window" —
+Max is untested, so headroom above 30.2% is unmeasured even for this model).
+
+**Read on this finding: strong corroboration, zero directly-actionable local lever.** Per CLAUDE.md
+"Decentralization-Respecting Design Constraints" rule 1/2, Carnot's live agent must work end-to-end
+on local open-weight models; a closed frontier model's score is not a technique to port. But the
+RESULT itself is exactly the kind of evidence the 2026-07-23 triangulation asked for: it shows the
+induction/reasoning-quality axis has real, large headroom that a sufficiently capable model can
+reach spontaneously (a coherent symbolic equation for a mechanic, not just pattern-following) —
+consistent with, not contradicting, "at or near a genuine capability frontier." A parallel general
+finding from this scan's broader search: research on LLM-guided environment-dynamics learning
+describes a **threshold-like dependence on model quality** — weaker models fail to recover correct
+executable dynamics, but performance "jumps sharply" once a capability threshold is crossed. This
+directly matches our own measured shape (31B held-out induction accuracy only 0.378, `experiment_
+5764`) — we may be sitting just below such a threshold rather than on a smooth capability curve,
+which has a real implication: don't assume "still not working at 31B" extrapolates linearly to
+"will never work at any locally-runnable size."
+
+**Finding 2 — Pinductor (arXiv:2605.13740, "Learning POMDP World Models from Observations with
+Language-Model Priors," code at `github.com/atomresearch/pinductor`) is a genuinely relevant OPEN
+technique — but maps directly onto an axis this project has an EXPLICIT standing directive not to
+re-queue without an operator decision.** Pinductor has an LLM propose candidate executable programs
+for transition/observation/reward/initial-state distributions from raw trajectories alone (same
+paradigm as Carnot's own `arc_executable_world_model.py`), then ITERATIVELY REFINES them via a
+kernel-based likelihood objective scored against filtered belief distributions — a real per-step
+repair signal, not a bare pass/fail. Reported result: matches a privileged-state LLM baseline and
+beats non-LLM baselines across 5 partially-observable MiniGrid tasks (structurally close to
+ARC-AGI-3's turn-based grid format).
+
+**Why this is not a "go build it" finding.** `ops/known-issues.md`'s "Binding consequences for the
+planner" note (2026-07 era, still standing — the ARC-AGI-3 Generalization-Testing Floor it cites is
+still the active CLAUDE.md floor) states verbatim: **"Do NOT propose a follow-up on the refinement /
+single-shot-GGUF-induction axis — not a fresh prompt phrasing, not a budget or repetition-control
+variation, and not a re-run of the engine-visible A/B, however tempting the fixed instrument makes
+it."** This project already built and partially fixed a CEGIS-style counterexample-guided
+refinement loop for the exact same purpose (`execute_bounded_llm_reinduction` /
+`CARNOT_ARC_REFACTOR_SHOW_ENGINE`, citing arXiv:2606.11521, fixed 2026-07-06 to pass real
+per-transition mismatch evidence instead of a fake scalar) — it is banked, tested, default-OFF,
+and the note is explicit that spending another slot on this axis needs "an operator decision," not
+planner-initiated re-proposal, however well-supported the literature now looks. Pinductor's
+iterative-belief-repair mechanism is a specific, better-evidenced VARIANT of that same refinement
+idea, so it does not escape the standing hold on its own — flagging it here is exactly the
+"operator decision" trigger the note anticipated, not an argument to bypass it.
+
+**Net output of this scan (per the SOTA-Ingestion Cycle Discipline's required deliverable):**
+- No build performed. Two candidate directions surfaced, neither auto-actioned:
+  1. Pinductor-style iterative belief-repair refinement — real, evidenced, open, LOCAL-model-
+     compatible, but held by the standing "do not re-queue without operator decision" note above.
+  2. The threshold-dependence framing suggests re-testing induction quality at the next-larger
+     locally-runnable open model (if/when one becomes available) rather than assuming the current
+     ceiling is permanent — a watch item, not an immediate action.
+- Flagged for the next roadmap: if the operator authorizes spending a slot on the refinement axis,
+  Pinductor's specific mechanism (kernel-likelihood-scored belief repair, not just "show the engine
+  in the prompt") is the concrete design to map onto `arc_llm_reinduction.py`, not a re-run of the
+  prior exact experiment.
+
+**Preconditions:** WebSearch/WebFetch reachability confirmed (multiple successful queries/fetches
+this session). `scripts/sweep_clusters.py`/`sweep_semscholar.py` were not invoked this round — the
+scan was narrow (one specific open question) rather than a broad cluster sweep, so direct
+WebSearch/WebFetch against a handful of targeted queries was the appropriate tool, consistent with
+the discipline's "low-concurrency WebSearch + WebFetch of the top 5-8 papers" allowance for a
+focused pass.
+
+**Cross-references:** `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 4e
+(the retirement that triggered this scan) · `docs/research-notes/arc-lever-triangulation-2026-07-23.md`
+(the binding-constraint diagnosis this scan corroborates) · `ops/known-issues.md`'s exp6091/exp5766
+CEGIS-refinement history (the standing hold this scan's Finding 2 respects) · arXiv:2605.13740
+(Pinductor) · arXiv:2606.11521 (counterexample-guided refinement, already partially adopted) ·
+`arcprize.org/results/anthropic-claude-opus-5` (Finding 1's primary source).
