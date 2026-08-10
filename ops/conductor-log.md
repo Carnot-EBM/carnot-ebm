@@ -15580,3 +15580,4 @@ Still active  |
 | 2026-08-10 06:30 UTC | Terminal-artifact completeness and downstream-read | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output:   assert "clas |
 | 2026-08-10 07:54 UTC | Clean immutable local-SOTA event corpus to chronol | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ["honest_verdi |
 | 2026-08-10 08:06 UTC | Clean immutable local-SOTA event corpus to chronol | OK | 98 passed, 1 warning in 14.54s |
+| 2026-08-10 08:37 UTC | Gated on Exp6263 clean replay: task-conditional en | OK | 87 passed, 1 warning in 8.46s |
