@@ -1,0 +1,1247 @@
+{
+  "date": "20260810",
+  "random_seed": 6275,
+  "schema": "carnot.exp6275.sealed_flagship_asp_benchmark.v1",
+  "tasks_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": [
+      {
+        "allowed_labels": [
+          "bad"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "d0b042af7329566ad96f9481989bf5fe89ff6555e9b2c6f7aa67fa22b811ea73",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: bad.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label bad must be selected.\n2. It is forbidden that bad is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_fact_forbidden"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_pair_forbidden",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "a0144e62d68b9b01716a95aae90ecb02707f326b2c3371d85fdb6570f7232104",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a must be selected.\n2. The label b must be selected.\n3. It is forbidden that a is selected and b is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_pair_forbidden"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_cardinality_upper",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "962717b03bf4263186f54ea8f05f75aa838e34341e914b41f4d7bdde4cdbdd53",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a must be selected.\n2. The label b must be selected.\n3. Select at least 1 and at most 1 labels from this group: a, b.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_cardinality_upper"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_all_choices_forbidden",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "55492b86135e775870421825009895dddaa064d1f9b0925871732898b9f337d2",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: a, b.\n2. It is forbidden that a is selected.\n3. It is forbidden that b is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_all_choices_forbidden"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_default_both_forbidden",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "c42770a700b40bace4f54a68fa1cec5afe470c84d93b8ec1c23fe41c57cece98",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. When b is not selected, the label a must be selected.\n2. When a is not selected, the label b must be selected.\n3. It is forbidden that a is selected.\n4. It is forbidden that b is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_default_both_forbidden"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "c"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_positive_chain",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "0d51496aee1e8af3414ccc5158f68818978ca1c7bb15c7aa156dac481e690447",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: a, c.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a must be selected.\n2. When a is selected, the label c must be selected.\n3. It is forbidden that c is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|contradiction_positive_chain"
+      },
+      {
+        "allowed_labels": [
+          "color_v1_blue",
+          "color_v1_green",
+          "color_v1_red",
+          "color_v2_blue",
+          "color_v2_green",
+          "color_v2_red"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "74b5c95472f92ffeea34af1f5aed432e9571225035c9b140e7bbf074ecd5035d",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_v1_blue, color_v1_green, color_v1_red, color_v2_blue, color_v2_green, color_v2_red.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_v1_red, color_v1_green, color_v1_blue.\n2. Select at least 1 and at most 1 labels from this group: color_v2_red, color_v2_green, color_v2_blue.\n3. It is forbidden that color_v1_red is selected and color_v2_red is selected.\n4. It is forbidden that color_v1_green is selected and color_v2_green is selected.\n5. It is forbidden that color_v1_blue is selected and color_v2_blue is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_path2_three_colors"
+      },
+      {
+        "allowed_labels": [
+          "color_n1_amber",
+          "color_n1_cyan",
+          "color_n1_lime",
+          "color_n2_amber",
+          "color_n2_cyan",
+          "color_n2_lime"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors_permuted",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "c1b7c837abcdd6d819064fa6f6e5dd19f92800aea660a6efea4ca516e3cd4f8b",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_n1_amber, color_n1_cyan, color_n1_lime, color_n2_amber, color_n2_cyan, color_n2_lime.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_n1_amber, color_n1_cyan, color_n1_lime.\n2. Select at least 1 and at most 1 labels from this group: color_n2_amber, color_n2_cyan, color_n2_lime.\n3. It is forbidden that color_n1_amber is selected and color_n2_amber is selected.\n4. It is forbidden that color_n1_cyan is selected and color_n2_cyan is selected.\n5. It is forbidden that color_n1_lime is selected and color_n2_lime is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_path2_three_colors_permuted"
+      },
+      {
+        "allowed_labels": [
+          "color_v1_blue",
+          "color_v1_green",
+          "color_v1_red",
+          "color_v2_blue",
+          "color_v2_green",
+          "color_v2_red",
+          "color_v3_blue",
+          "color_v3_green",
+          "color_v3_red"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_triangle_three_colors",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "69ec2dcd6413c441c273298a871d6d0eaf4c657313988c3cd2d65734fadd22df",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_v1_blue, color_v1_green, color_v1_red, color_v2_blue, color_v2_green, color_v2_red, color_v3_blue, color_v3_green, color_v3_red.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_v1_red, color_v1_green, color_v1_blue.\n2. Select at least 1 and at most 1 labels from this group: color_v2_red, color_v2_green, color_v2_blue.\n3. Select at least 1 and at most 1 labels from this group: color_v3_red, color_v3_green, color_v3_blue.\n4. It is forbidden that color_v1_red is selected and color_v2_red is selected.\n5. It is forbidden that color_v1_green is selected and color_v2_green is selected.\n6. It is forbidden that color_v1_blue is selected and color_v2_blue is selected.\n7. It is forbidden that color_v2_red is selected and color_v3_red is selected.\n8. It is forbidden that color_v2_green is selected and color_v3_green is selected.\n9. It is forbidden that color_v2_blue is selected and color_v3_blue is selected.\n10. It is forbidden that color_v1_red is selected and color_v3_red is selected.\n11. It is forbidden that color_v1_green is selected and color_v3_green is selected.\n12. It is forbidden that color_v1_blue is selected and color_v3_blue is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_triangle_three_colors"
+      },
+      {
+        "allowed_labels": [
+          "color_v1_blue",
+          "color_v1_red",
+          "color_v2_blue",
+          "color_v2_red",
+          "color_v3_blue",
+          "color_v3_red"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_triangle_two_colors_unsat",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "ee9f805b35df7c958a9e7128c1240394f5853f686e297b2888bf68c9eca69bac",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_v1_blue, color_v1_red, color_v2_blue, color_v2_red, color_v3_blue, color_v3_red.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_v1_red, color_v1_blue.\n2. Select at least 1 and at most 1 labels from this group: color_v2_red, color_v2_blue.\n3. Select at least 1 and at most 1 labels from this group: color_v3_red, color_v3_blue.\n4. It is forbidden that color_v1_red is selected and color_v2_red is selected.\n5. It is forbidden that color_v1_blue is selected and color_v2_blue is selected.\n6. It is forbidden that color_v2_red is selected and color_v3_red is selected.\n7. It is forbidden that color_v2_blue is selected and color_v3_blue is selected.\n8. It is forbidden that color_v1_red is selected and color_v3_red is selected.\n9. It is forbidden that color_v1_blue is selected and color_v3_blue is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_triangle_two_colors_unsat"
+      },
+      {
+        "allowed_labels": [
+          "color_v1_blue",
+          "color_v1_red",
+          "color_v2_blue",
+          "color_v2_red",
+          "color_v3_blue",
+          "color_v3_red"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_path3_two_colors",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "543506165d949d935e11c3192654405e012ecd7ae30d0d9fba12218e213fe529",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_v1_blue, color_v1_red, color_v2_blue, color_v2_red, color_v3_blue, color_v3_red.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_v1_red, color_v1_blue.\n2. Select at least 1 and at most 1 labels from this group: color_v2_red, color_v2_blue.\n3. Select at least 1 and at most 1 labels from this group: color_v3_red, color_v3_blue.\n4. It is forbidden that color_v1_red is selected and color_v2_red is selected.\n5. It is forbidden that color_v1_blue is selected and color_v2_blue is selected.\n6. It is forbidden that color_v2_red is selected and color_v3_red is selected.\n7. It is forbidden that color_v2_blue is selected and color_v3_blue is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_path3_two_colors"
+      },
+      {
+        "allowed_labels": [
+          "color_v1_blue",
+          "color_v1_red",
+          "color_v2_blue",
+          "color_v2_red"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_empty2_two_colors",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "1da2d5238acde3be841ac09c5bbbd312f417b2644b98015fcfd5cf64ffd43362",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_v1_blue, color_v1_red, color_v2_blue, color_v2_red.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_v1_red, color_v1_blue.\n2. Select at least 1 and at most 1 labels from this group: color_v2_red, color_v2_blue.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|graph_empty2_two_colors"
+      },
+      {
+        "allowed_labels": [
+          "bird",
+          "flies",
+          "injured"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "69b27e18202df4d2e98cbcff0a18baded5b6944205a3858476759e149d906330",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: bird, flies, injured.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label bird must be selected.\n2. When bird is selected and injured is not selected, the label flies must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_bird_flies"
+      },
+      {
+        "allowed_labels": [
+          "abnormal",
+          "bird",
+          "flies",
+          "injured"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_injury_blocks_flight",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "e5fd7d936b49e62ba269a48ade4126ba4c298f563f626514d9bbc2f9b77b06f0",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: abnormal, bird, flies, injured.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label bird must be selected.\n2. The label injured must be selected.\n3. When injured is selected, the label abnormal must be selected.\n4. When bird is selected and abnormal is not selected, the label flies must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_injury_blocks_flight"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_mutual_choice",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "c08d1b21f8dd202e74e2b20150033f72325cb09963674d4a844aae24cfaf87f2",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. When b is not selected, the label a must be selected.\n2. When a is not selected, the label b must be selected.\n3. It is forbidden that a is selected and b is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_mutual_choice"
+      },
+      {
+        "allowed_labels": [
+          "rest",
+          "work"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_work_or_rest",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "0dd1475cd5f0704bd3b7fb5e11a279cc7fd8bb564bbc013ee2f81de0202fc7b0",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: rest, work.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. When rest is not selected, the label work must be selected.\n2. When work is not selected, the label rest must be selected.\n3. It is forbidden that work is selected and rest is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_work_or_rest"
+      },
+      {
+        "allowed_labels": [
+          "accept",
+          "ok",
+          "quarantined",
+          "revoked",
+          "safe"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_chain_no_exception",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "8cf6d9e6c2b2f7b6a3a46e08e42beebc3380bbccd1565f6c155ba46e9f46d320",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: accept, ok, quarantined, revoked, safe.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label safe must be selected.\n2. When safe is selected and revoked is not selected, the label ok must be selected.\n3. When ok is selected and quarantined is not selected, the label accept must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_chain_no_exception"
+      },
+      {
+        "allowed_labels": [
+          "accept",
+          "ok",
+          "quarantined",
+          "revoked",
+          "safe"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_revoked_blocks_ok",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "42d216b12b422b834eba56deebf101c4c7c34c0df681fbf76a3a7c21d89e4fef",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: accept, ok, quarantined, revoked, safe.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label safe must be selected.\n2. The label revoked must be selected.\n3. When safe is selected and revoked is not selected, the label ok must be selected.\n4. When ok is selected and quarantined is not selected, the label accept must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|default_revoked_blocks_ok"
+      },
+      {
+        "allowed_labels": [
+          "a"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_fact_positive",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "bd58e9b7d441768765d55bd45f10c9e99d3a8808ae2b56156db542c44809fc10",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: a.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|control_fact_positive"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b",
+          "c"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_positive_chain",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "80f34345ab120b2a9e0dbee6f6bb00e118655c173b585e85c9d6f903f1c42519",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: a, b, c.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a must be selected.\n2. When a is selected, the label b must be selected.\n3. When b is selected, the label c must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|control_positive_chain"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_open_optional_pair",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "76b3df700b64748d292b23b6eaa90b48076bac926d82a1cbe3b6710ea00ed44e",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 0 and at most 2 labels from this group: a, b.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|control_open_optional_pair"
+      },
+      {
+        "allowed_labels": [
+          "no",
+          "yes"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_exact_one_yes_no",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "234529fc9cc0b18f5048c527d10290cd8a3539fbab2d26bcf985b9bc98f3801d",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: no, yes.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: yes, no.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|control_exact_one_yes_no"
+      },
+      {
+        "allowed_labels": [
+          "no",
+          "yes"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_negative_constraint_leaves_yes",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "504b60fca0fdc22c153549f182630a27c728c2b74ffa91b63c356eafa8b307ea",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: no, yes.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: yes, no.\n2. It is forbidden that no is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|control_negative_constraint_leaves_yes"
+      },
+      {
+        "allowed_labels": [
+          "alpha",
+          "beta",
+          "gamma"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_label_base",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "d48b200f44331288530d5e181bb8171376c86c8e90f5806d9dc04834add3a4f7",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: alpha, beta, gamma.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: alpha, beta.\n2. When alpha is selected, the label gamma must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|control_label_base"
+      },
+      {
+        "allowed_labels": [
+          "a_morning",
+          "a_night",
+          "b_morning",
+          "b_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_two_tasks_no_same_morning",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "25caf55990629e262fc026b535a075bba7908ff5c74b38d28c69a848b481599e",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_morning, a_night, b_morning, b_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: a_morning, a_night.\n2. Select at least 1 and at most 1 labels from this group: b_morning, b_night.\n3. It is forbidden that a_morning is selected and b_morning is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|schedule_two_tasks_no_same_morning"
+      },
+      {
+        "allowed_labels": [
+          "a_morning",
+          "a_night",
+          "b_morning",
+          "b_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_two_tasks_all_different",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "0794afa9d51b6748bd8e282c37ab693dcc0075675a6437148cbab221651c6d6b",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_morning, a_night, b_morning, b_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: a_morning, a_night.\n2. Select at least 1 and at most 1 labels from this group: b_morning, b_night.\n3. It is forbidden that a_morning is selected and b_morning is selected.\n4. It is forbidden that a_night is selected and b_night is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|schedule_two_tasks_all_different"
+      },
+      {
+        "allowed_labels": [
+          "a_midday",
+          "a_morning",
+          "a_night",
+          "b_midday",
+          "b_morning",
+          "b_night",
+          "c_midday",
+          "c_morning",
+          "c_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_three_tasks_three_slots",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "f051549dc024a7a58ecd30649ce65e7c5114c14c91eb7ff94d343f496baa2255",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_midday, a_morning, a_night, b_midday, b_morning, b_night, c_midday, c_morning, c_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: a_morning, a_midday, a_night.\n2. Select at least 1 and at most 1 labels from this group: b_morning, b_midday, b_night.\n3. Select at least 1 and at most 1 labels from this group: c_morning, c_midday, c_night.\n4. It is forbidden that a_morning is selected and b_morning is selected.\n5. It is forbidden that a_midday is selected and b_midday is selected.\n6. It is forbidden that a_night is selected and b_night is selected.\n7. It is forbidden that a_morning is selected and c_morning is selected.\n8. It is forbidden that a_midday is selected and c_midday is selected.\n9. It is forbidden that a_night is selected and c_night is selected.\n10. It is forbidden that b_morning is selected and c_morning is selected.\n11. It is forbidden that b_midday is selected and c_midday is selected.\n12. It is forbidden that b_night is selected and c_night is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|schedule_three_tasks_three_slots"
+      },
+      {
+        "allowed_labels": [
+          "a_morning",
+          "a_night",
+          "b_morning",
+          "b_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_forced_a_morning",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "b999a7945a63282ffa7123aee8feb79c1b0f8929e159e8696d52dd9444a88ac0",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_morning, a_night, b_morning, b_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a_morning must be selected.\n2. Select at least 1 and at most 1 labels from this group: a_morning, a_night.\n3. Select at least 1 and at most 1 labels from this group: b_morning, b_night.\n4. It is forbidden that a_morning is selected and b_morning is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|schedule_forced_a_morning"
+      },
+      {
+        "allowed_labels": [
+          "a_morning",
+          "a_night",
+          "b_morning",
+          "b_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_forced_conflict_unsat",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "bc8a2ed14b906ee1a99ffb89bbd22d20262926be7b0768a8b4adcca44e0988f3",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_morning, a_night, b_morning, b_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a_morning must be selected.\n2. The label b_morning must be selected.\n3. Select at least 1 and at most 1 labels from this group: a_morning, a_night.\n4. Select at least 1 and at most 1 labels from this group: b_morning, b_night.\n5. It is forbidden that a_morning is selected and b_morning is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|schedule_forced_conflict_unsat"
+      },
+      {
+        "allowed_labels": [
+          "a_morning",
+          "a_night",
+          "b_morning",
+          "b_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_block_night_slot",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "f597a849f68c26c965108163237d742481764c5983088e09b9f8225ecedb9390",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_morning, a_night, b_morning, b_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: a_morning, a_night.\n2. Select at least 1 and at most 1 labels from this group: b_morning, b_night.\n3. It is forbidden that a_night is selected.\n4. It is forbidden that b_night is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_qwen3_6_35b_a3b_gguf|schedule_block_night_slot"
+      }
+    ],
+    "unsloth/gemma-4-26B-A4B-it-GGUF": [
+      {
+        "allowed_labels": [
+          "bad"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "d0b042af7329566ad96f9481989bf5fe89ff6555e9b2c6f7aa67fa22b811ea73",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: bad.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label bad must be selected.\n2. It is forbidden that bad is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_fact_forbidden"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_pair_forbidden",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "a0144e62d68b9b01716a95aae90ecb02707f326b2c3371d85fdb6570f7232104",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a must be selected.\n2. The label b must be selected.\n3. It is forbidden that a is selected and b is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_pair_forbidden"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_cardinality_upper",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "962717b03bf4263186f54ea8f05f75aa838e34341e914b41f4d7bdde4cdbdd53",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a must be selected.\n2. The label b must be selected.\n3. Select at least 1 and at most 1 labels from this group: a, b.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_cardinality_upper"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_all_choices_forbidden",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "55492b86135e775870421825009895dddaa064d1f9b0925871732898b9f337d2",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: a, b.\n2. It is forbidden that a is selected.\n3. It is forbidden that b is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_all_choices_forbidden"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_default_both_forbidden",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "c42770a700b40bace4f54a68fa1cec5afe470c84d93b8ec1c23fe41c57cece98",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. When b is not selected, the label a must be selected.\n2. When a is not selected, the label b must be selected.\n3. It is forbidden that a is selected.\n4. It is forbidden that b is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_default_both_forbidden"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "c"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_positive_chain",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "0d51496aee1e8af3414ccc5158f68818978ca1c7bb15c7aa156dac481e690447",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: a, c.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a must be selected.\n2. When a is selected, the label c must be selected.\n3. It is forbidden that c is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|contradiction_positive_chain"
+      },
+      {
+        "allowed_labels": [
+          "color_v1_blue",
+          "color_v1_green",
+          "color_v1_red",
+          "color_v2_blue",
+          "color_v2_green",
+          "color_v2_red"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "74b5c95472f92ffeea34af1f5aed432e9571225035c9b140e7bbf074ecd5035d",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_v1_blue, color_v1_green, color_v1_red, color_v2_blue, color_v2_green, color_v2_red.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_v1_red, color_v1_green, color_v1_blue.\n2. Select at least 1 and at most 1 labels from this group: color_v2_red, color_v2_green, color_v2_blue.\n3. It is forbidden that color_v1_red is selected and color_v2_red is selected.\n4. It is forbidden that color_v1_green is selected and color_v2_green is selected.\n5. It is forbidden that color_v1_blue is selected and color_v2_blue is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_path2_three_colors"
+      },
+      {
+        "allowed_labels": [
+          "color_n1_amber",
+          "color_n1_cyan",
+          "color_n1_lime",
+          "color_n2_amber",
+          "color_n2_cyan",
+          "color_n2_lime"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors_permuted",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "c1b7c837abcdd6d819064fa6f6e5dd19f92800aea660a6efea4ca516e3cd4f8b",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_n1_amber, color_n1_cyan, color_n1_lime, color_n2_amber, color_n2_cyan, color_n2_lime.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_n1_amber, color_n1_cyan, color_n1_lime.\n2. Select at least 1 and at most 1 labels from this group: color_n2_amber, color_n2_cyan, color_n2_lime.\n3. It is forbidden that color_n1_amber is selected and color_n2_amber is selected.\n4. It is forbidden that color_n1_cyan is selected and color_n2_cyan is selected.\n5. It is forbidden that color_n1_lime is selected and color_n2_lime is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_path2_three_colors_permuted"
+      },
+      {
+        "allowed_labels": [
+          "color_v1_blue",
+          "color_v1_green",
+          "color_v1_red",
+          "color_v2_blue",
+          "color_v2_green",
+          "color_v2_red",
+          "color_v3_blue",
+          "color_v3_green",
+          "color_v3_red"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_triangle_three_colors",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "69ec2dcd6413c441c273298a871d6d0eaf4c657313988c3cd2d65734fadd22df",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_v1_blue, color_v1_green, color_v1_red, color_v2_blue, color_v2_green, color_v2_red, color_v3_blue, color_v3_green, color_v3_red.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_v1_red, color_v1_green, color_v1_blue.\n2. Select at least 1 and at most 1 labels from this group: color_v2_red, color_v2_green, color_v2_blue.\n3. Select at least 1 and at most 1 labels from this group: color_v3_red, color_v3_green, color_v3_blue.\n4. It is forbidden that color_v1_red is selected and color_v2_red is selected.\n5. It is forbidden that color_v1_green is selected and color_v2_green is selected.\n6. It is forbidden that color_v1_blue is selected and color_v2_blue is selected.\n7. It is forbidden that color_v2_red is selected and color_v3_red is selected.\n8. It is forbidden that color_v2_green is selected and color_v3_green is selected.\n9. It is forbidden that color_v2_blue is selected and color_v3_blue is selected.\n10. It is forbidden that color_v1_red is selected and color_v3_red is selected.\n11. It is forbidden that color_v1_green is selected and color_v3_green is selected.\n12. It is forbidden that color_v1_blue is selected and color_v3_blue is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_triangle_three_colors"
+      },
+      {
+        "allowed_labels": [
+          "color_v1_blue",
+          "color_v1_red",
+          "color_v2_blue",
+          "color_v2_red",
+          "color_v3_blue",
+          "color_v3_red"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_triangle_two_colors_unsat",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "ee9f805b35df7c958a9e7128c1240394f5853f686e297b2888bf68c9eca69bac",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_v1_blue, color_v1_red, color_v2_blue, color_v2_red, color_v3_blue, color_v3_red.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_v1_red, color_v1_blue.\n2. Select at least 1 and at most 1 labels from this group: color_v2_red, color_v2_blue.\n3. Select at least 1 and at most 1 labels from this group: color_v3_red, color_v3_blue.\n4. It is forbidden that color_v1_red is selected and color_v2_red is selected.\n5. It is forbidden that color_v1_blue is selected and color_v2_blue is selected.\n6. It is forbidden that color_v2_red is selected and color_v3_red is selected.\n7. It is forbidden that color_v2_blue is selected and color_v3_blue is selected.\n8. It is forbidden that color_v1_red is selected and color_v3_red is selected.\n9. It is forbidden that color_v1_blue is selected and color_v3_blue is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_triangle_two_colors_unsat"
+      },
+      {
+        "allowed_labels": [
+          "color_v1_blue",
+          "color_v1_red",
+          "color_v2_blue",
+          "color_v2_red",
+          "color_v3_blue",
+          "color_v3_red"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_path3_two_colors",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "543506165d949d935e11c3192654405e012ecd7ae30d0d9fba12218e213fe529",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_v1_blue, color_v1_red, color_v2_blue, color_v2_red, color_v3_blue, color_v3_red.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_v1_red, color_v1_blue.\n2. Select at least 1 and at most 1 labels from this group: color_v2_red, color_v2_blue.\n3. Select at least 1 and at most 1 labels from this group: color_v3_red, color_v3_blue.\n4. It is forbidden that color_v1_red is selected and color_v2_red is selected.\n5. It is forbidden that color_v1_blue is selected and color_v2_blue is selected.\n6. It is forbidden that color_v2_red is selected and color_v3_red is selected.\n7. It is forbidden that color_v2_blue is selected and color_v3_blue is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_path3_two_colors"
+      },
+      {
+        "allowed_labels": [
+          "color_v1_blue",
+          "color_v1_red",
+          "color_v2_blue",
+          "color_v2_red"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_empty2_two_colors",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "1da2d5238acde3be841ac09c5bbbd312f417b2644b98015fcfd5cf64ffd43362",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_v1_blue, color_v1_red, color_v2_blue, color_v2_red.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_v1_red, color_v1_blue.\n2. Select at least 1 and at most 1 labels from this group: color_v2_red, color_v2_blue.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|graph_empty2_two_colors"
+      },
+      {
+        "allowed_labels": [
+          "bird",
+          "flies",
+          "injured"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "69b27e18202df4d2e98cbcff0a18baded5b6944205a3858476759e149d906330",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: bird, flies, injured.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label bird must be selected.\n2. When bird is selected and injured is not selected, the label flies must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_bird_flies"
+      },
+      {
+        "allowed_labels": [
+          "abnormal",
+          "bird",
+          "flies",
+          "injured"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_injury_blocks_flight",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "e5fd7d936b49e62ba269a48ade4126ba4c298f563f626514d9bbc2f9b77b06f0",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: abnormal, bird, flies, injured.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label bird must be selected.\n2. The label injured must be selected.\n3. When injured is selected, the label abnormal must be selected.\n4. When bird is selected and abnormal is not selected, the label flies must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_injury_blocks_flight"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_mutual_choice",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "c08d1b21f8dd202e74e2b20150033f72325cb09963674d4a844aae24cfaf87f2",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. When b is not selected, the label a must be selected.\n2. When a is not selected, the label b must be selected.\n3. It is forbidden that a is selected and b is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_mutual_choice"
+      },
+      {
+        "allowed_labels": [
+          "rest",
+          "work"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_work_or_rest",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "0dd1475cd5f0704bd3b7fb5e11a279cc7fd8bb564bbc013ee2f81de0202fc7b0",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: rest, work.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. When rest is not selected, the label work must be selected.\n2. When work is not selected, the label rest must be selected.\n3. It is forbidden that work is selected and rest is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_work_or_rest"
+      },
+      {
+        "allowed_labels": [
+          "accept",
+          "ok",
+          "quarantined",
+          "revoked",
+          "safe"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_chain_no_exception",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "8cf6d9e6c2b2f7b6a3a46e08e42beebc3380bbccd1565f6c155ba46e9f46d320",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: accept, ok, quarantined, revoked, safe.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label safe must be selected.\n2. When safe is selected and revoked is not selected, the label ok must be selected.\n3. When ok is selected and quarantined is not selected, the label accept must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_chain_no_exception"
+      },
+      {
+        "allowed_labels": [
+          "accept",
+          "ok",
+          "quarantined",
+          "revoked",
+          "safe"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_revoked_blocks_ok",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "42d216b12b422b834eba56deebf101c4c7c34c0df681fbf76a3a7c21d89e4fef",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: accept, ok, quarantined, revoked, safe.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label safe must be selected.\n2. The label revoked must be selected.\n3. When safe is selected and revoked is not selected, the label ok must be selected.\n4. When ok is selected and quarantined is not selected, the label accept must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|default_revoked_blocks_ok"
+      },
+      {
+        "allowed_labels": [
+          "a"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_fact_positive",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "bd58e9b7d441768765d55bd45f10c9e99d3a8808ae2b56156db542c44809fc10",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: a.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|control_fact_positive"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b",
+          "c"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_positive_chain",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "80f34345ab120b2a9e0dbee6f6bb00e118655c173b585e85c9d6f903f1c42519",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: a, b, c.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a must be selected.\n2. When a is selected, the label b must be selected.\n3. When b is selected, the label c must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|control_positive_chain"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_open_optional_pair",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "76b3df700b64748d292b23b6eaa90b48076bac926d82a1cbe3b6710ea00ed44e",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 0 and at most 2 labels from this group: a, b.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|control_open_optional_pair"
+      },
+      {
+        "allowed_labels": [
+          "no",
+          "yes"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_exact_one_yes_no",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "234529fc9cc0b18f5048c527d10290cd8a3539fbab2d26bcf985b9bc98f3801d",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: no, yes.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: yes, no.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|control_exact_one_yes_no"
+      },
+      {
+        "allowed_labels": [
+          "no",
+          "yes"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_negative_constraint_leaves_yes",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "504b60fca0fdc22c153549f182630a27c728c2b74ffa91b63c356eafa8b307ea",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: no, yes.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: yes, no.\n2. It is forbidden that no is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|control_negative_constraint_leaves_yes"
+      },
+      {
+        "allowed_labels": [
+          "alpha",
+          "beta",
+          "gamma"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_label_base",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "d48b200f44331288530d5e181bb8171376c86c8e90f5806d9dc04834add3a4f7",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: alpha, beta, gamma.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: alpha, beta.\n2. When alpha is selected, the label gamma must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|control_label_base"
+      },
+      {
+        "allowed_labels": [
+          "a_morning",
+          "a_night",
+          "b_morning",
+          "b_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_two_tasks_no_same_morning",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "25caf55990629e262fc026b535a075bba7908ff5c74b38d28c69a848b481599e",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_morning, a_night, b_morning, b_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: a_morning, a_night.\n2. Select at least 1 and at most 1 labels from this group: b_morning, b_night.\n3. It is forbidden that a_morning is selected and b_morning is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|schedule_two_tasks_no_same_morning"
+      },
+      {
+        "allowed_labels": [
+          "a_morning",
+          "a_night",
+          "b_morning",
+          "b_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_two_tasks_all_different",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "0794afa9d51b6748bd8e282c37ab693dcc0075675a6437148cbab221651c6d6b",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_morning, a_night, b_morning, b_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: a_morning, a_night.\n2. Select at least 1 and at most 1 labels from this group: b_morning, b_night.\n3. It is forbidden that a_morning is selected and b_morning is selected.\n4. It is forbidden that a_night is selected and b_night is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|schedule_two_tasks_all_different"
+      },
+      {
+        "allowed_labels": [
+          "a_midday",
+          "a_morning",
+          "a_night",
+          "b_midday",
+          "b_morning",
+          "b_night",
+          "c_midday",
+          "c_morning",
+          "c_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_three_tasks_three_slots",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "f051549dc024a7a58ecd30649ce65e7c5114c14c91eb7ff94d343f496baa2255",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_midday, a_morning, a_night, b_midday, b_morning, b_night, c_midday, c_morning, c_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: a_morning, a_midday, a_night.\n2. Select at least 1 and at most 1 labels from this group: b_morning, b_midday, b_night.\n3. Select at least 1 and at most 1 labels from this group: c_morning, c_midday, c_night.\n4. It is forbidden that a_morning is selected and b_morning is selected.\n5. It is forbidden that a_midday is selected and b_midday is selected.\n6. It is forbidden that a_night is selected and b_night is selected.\n7. It is forbidden that a_morning is selected and c_morning is selected.\n8. It is forbidden that a_midday is selected and c_midday is selected.\n9. It is forbidden that a_night is selected and c_night is selected.\n10. It is forbidden that b_morning is selected and c_morning is selected.\n11. It is forbidden that b_midday is selected and c_midday is selected.\n12. It is forbidden that b_night is selected and c_night is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|schedule_three_tasks_three_slots"
+      },
+      {
+        "allowed_labels": [
+          "a_morning",
+          "a_night",
+          "b_morning",
+          "b_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_forced_a_morning",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "b999a7945a63282ffa7123aee8feb79c1b0f8929e159e8696d52dd9444a88ac0",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_morning, a_night, b_morning, b_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a_morning must be selected.\n2. Select at least 1 and at most 1 labels from this group: a_morning, a_night.\n3. Select at least 1 and at most 1 labels from this group: b_morning, b_night.\n4. It is forbidden that a_morning is selected and b_morning is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|schedule_forced_a_morning"
+      },
+      {
+        "allowed_labels": [
+          "a_morning",
+          "a_night",
+          "b_morning",
+          "b_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_forced_conflict_unsat",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "bc8a2ed14b906ee1a99ffb89bbd22d20262926be7b0768a8b4adcca44e0988f3",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_morning, a_night, b_morning, b_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a_morning must be selected.\n2. The label b_morning must be selected.\n3. Select at least 1 and at most 1 labels from this group: a_morning, a_night.\n4. Select at least 1 and at most 1 labels from this group: b_morning, b_night.\n5. It is forbidden that a_morning is selected and b_morning is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|schedule_forced_conflict_unsat"
+      },
+      {
+        "allowed_labels": [
+          "a_morning",
+          "a_night",
+          "b_morning",
+          "b_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_block_night_slot",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "prompt_hash": "f597a849f68c26c965108163237d742481764c5983088e09b9f8225ecedb9390",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_morning, a_night, b_morning, b_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: a_morning, a_night.\n2. Select at least 1 and at most 1 labels from this group: b_morning, b_night.\n3. It is forbidden that a_night is selected.\n4. It is forbidden that b_night is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_26b_a4b_it_gguf|schedule_block_night_slot"
+      }
+    ],
+    "unsloth/gemma-4-31B-it-GGUF": [
+      {
+        "allowed_labels": [
+          "bad"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_fact_forbidden",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "d0b042af7329566ad96f9481989bf5fe89ff6555e9b2c6f7aa67fa22b811ea73",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: bad.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label bad must be selected.\n2. It is forbidden that bad is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_fact_forbidden"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_pair_forbidden",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "a0144e62d68b9b01716a95aae90ecb02707f326b2c3371d85fdb6570f7232104",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a must be selected.\n2. The label b must be selected.\n3. It is forbidden that a is selected and b is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_pair_forbidden"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_cardinality_upper",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "962717b03bf4263186f54ea8f05f75aa838e34341e914b41f4d7bdde4cdbdd53",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a must be selected.\n2. The label b must be selected.\n3. Select at least 1 and at most 1 labels from this group: a, b.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_cardinality_upper"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_all_choices_forbidden",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "55492b86135e775870421825009895dddaa064d1f9b0925871732898b9f337d2",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: a, b.\n2. It is forbidden that a is selected.\n3. It is forbidden that b is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_all_choices_forbidden"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_default_both_forbidden",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "c42770a700b40bace4f54a68fa1cec5afe470c84d93b8ec1c23fe41c57cece98",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. When b is not selected, the label a must be selected.\n2. When a is not selected, the label b must be selected.\n3. It is forbidden that a is selected.\n4. It is forbidden that b is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_default_both_forbidden"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "c"
+        ],
+        "family": "contradictions",
+        "fixture_id": "contradiction_positive_chain",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "0d51496aee1e8af3414ccc5158f68818978ca1c7bb15c7aa156dac481e690447",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: contradictions.\nAvailable labels: a, c.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a must be selected.\n2. When a is selected, the label c must be selected.\n3. It is forbidden that c is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|contradiction_positive_chain"
+      },
+      {
+        "allowed_labels": [
+          "color_v1_blue",
+          "color_v1_green",
+          "color_v1_red",
+          "color_v2_blue",
+          "color_v2_green",
+          "color_v2_red"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "74b5c95472f92ffeea34af1f5aed432e9571225035c9b140e7bbf074ecd5035d",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_v1_blue, color_v1_green, color_v1_red, color_v2_blue, color_v2_green, color_v2_red.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_v1_red, color_v1_green, color_v1_blue.\n2. Select at least 1 and at most 1 labels from this group: color_v2_red, color_v2_green, color_v2_blue.\n3. It is forbidden that color_v1_red is selected and color_v2_red is selected.\n4. It is forbidden that color_v1_green is selected and color_v2_green is selected.\n5. It is forbidden that color_v1_blue is selected and color_v2_blue is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_path2_three_colors"
+      },
+      {
+        "allowed_labels": [
+          "color_n1_amber",
+          "color_n1_cyan",
+          "color_n1_lime",
+          "color_n2_amber",
+          "color_n2_cyan",
+          "color_n2_lime"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_path2_three_colors_permuted",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "c1b7c837abcdd6d819064fa6f6e5dd19f92800aea660a6efea4ca516e3cd4f8b",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_n1_amber, color_n1_cyan, color_n1_lime, color_n2_amber, color_n2_cyan, color_n2_lime.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_n1_amber, color_n1_cyan, color_n1_lime.\n2. Select at least 1 and at most 1 labels from this group: color_n2_amber, color_n2_cyan, color_n2_lime.\n3. It is forbidden that color_n1_amber is selected and color_n2_amber is selected.\n4. It is forbidden that color_n1_cyan is selected and color_n2_cyan is selected.\n5. It is forbidden that color_n1_lime is selected and color_n2_lime is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_path2_three_colors_permuted"
+      },
+      {
+        "allowed_labels": [
+          "color_v1_blue",
+          "color_v1_green",
+          "color_v1_red",
+          "color_v2_blue",
+          "color_v2_green",
+          "color_v2_red",
+          "color_v3_blue",
+          "color_v3_green",
+          "color_v3_red"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_triangle_three_colors",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "69ec2dcd6413c441c273298a871d6d0eaf4c657313988c3cd2d65734fadd22df",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_v1_blue, color_v1_green, color_v1_red, color_v2_blue, color_v2_green, color_v2_red, color_v3_blue, color_v3_green, color_v3_red.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_v1_red, color_v1_green, color_v1_blue.\n2. Select at least 1 and at most 1 labels from this group: color_v2_red, color_v2_green, color_v2_blue.\n3. Select at least 1 and at most 1 labels from this group: color_v3_red, color_v3_green, color_v3_blue.\n4. It is forbidden that color_v1_red is selected and color_v2_red is selected.\n5. It is forbidden that color_v1_green is selected and color_v2_green is selected.\n6. It is forbidden that color_v1_blue is selected and color_v2_blue is selected.\n7. It is forbidden that color_v2_red is selected and color_v3_red is selected.\n8. It is forbidden that color_v2_green is selected and color_v3_green is selected.\n9. It is forbidden that color_v2_blue is selected and color_v3_blue is selected.\n10. It is forbidden that color_v1_red is selected and color_v3_red is selected.\n11. It is forbidden that color_v1_green is selected and color_v3_green is selected.\n12. It is forbidden that color_v1_blue is selected and color_v3_blue is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_triangle_three_colors"
+      },
+      {
+        "allowed_labels": [
+          "color_v1_blue",
+          "color_v1_red",
+          "color_v2_blue",
+          "color_v2_red",
+          "color_v3_blue",
+          "color_v3_red"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_triangle_two_colors_unsat",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "ee9f805b35df7c958a9e7128c1240394f5853f686e297b2888bf68c9eca69bac",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_v1_blue, color_v1_red, color_v2_blue, color_v2_red, color_v3_blue, color_v3_red.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_v1_red, color_v1_blue.\n2. Select at least 1 and at most 1 labels from this group: color_v2_red, color_v2_blue.\n3. Select at least 1 and at most 1 labels from this group: color_v3_red, color_v3_blue.\n4. It is forbidden that color_v1_red is selected and color_v2_red is selected.\n5. It is forbidden that color_v1_blue is selected and color_v2_blue is selected.\n6. It is forbidden that color_v2_red is selected and color_v3_red is selected.\n7. It is forbidden that color_v2_blue is selected and color_v3_blue is selected.\n8. It is forbidden that color_v1_red is selected and color_v3_red is selected.\n9. It is forbidden that color_v1_blue is selected and color_v3_blue is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_triangle_two_colors_unsat"
+      },
+      {
+        "allowed_labels": [
+          "color_v1_blue",
+          "color_v1_red",
+          "color_v2_blue",
+          "color_v2_red",
+          "color_v3_blue",
+          "color_v3_red"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_path3_two_colors",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "543506165d949d935e11c3192654405e012ecd7ae30d0d9fba12218e213fe529",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_v1_blue, color_v1_red, color_v2_blue, color_v2_red, color_v3_blue, color_v3_red.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_v1_red, color_v1_blue.\n2. Select at least 1 and at most 1 labels from this group: color_v2_red, color_v2_blue.\n3. Select at least 1 and at most 1 labels from this group: color_v3_red, color_v3_blue.\n4. It is forbidden that color_v1_red is selected and color_v2_red is selected.\n5. It is forbidden that color_v1_blue is selected and color_v2_blue is selected.\n6. It is forbidden that color_v2_red is selected and color_v3_red is selected.\n7. It is forbidden that color_v2_blue is selected and color_v3_blue is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_path3_two_colors"
+      },
+      {
+        "allowed_labels": [
+          "color_v1_blue",
+          "color_v1_red",
+          "color_v2_blue",
+          "color_v2_red"
+        ],
+        "family": "graph_coloring",
+        "fixture_id": "graph_empty2_two_colors",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "1da2d5238acde3be841ac09c5bbbd312f417b2644b98015fcfd5cf64ffd43362",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: graph coloring.\nAvailable labels: color_v1_blue, color_v1_red, color_v2_blue, color_v2_red.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: color_v1_red, color_v1_blue.\n2. Select at least 1 and at most 1 labels from this group: color_v2_red, color_v2_blue.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|graph_empty2_two_colors"
+      },
+      {
+        "allowed_labels": [
+          "bird",
+          "flies",
+          "injured"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_bird_flies",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "69b27e18202df4d2e98cbcff0a18baded5b6944205a3858476759e149d906330",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: bird, flies, injured.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label bird must be selected.\n2. When bird is selected and injured is not selected, the label flies must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_bird_flies"
+      },
+      {
+        "allowed_labels": [
+          "abnormal",
+          "bird",
+          "flies",
+          "injured"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_injury_blocks_flight",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "e5fd7d936b49e62ba269a48ade4126ba4c298f563f626514d9bbc2f9b77b06f0",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: abnormal, bird, flies, injured.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label bird must be selected.\n2. The label injured must be selected.\n3. When injured is selected, the label abnormal must be selected.\n4. When bird is selected and abnormal is not selected, the label flies must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_injury_blocks_flight"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_mutual_choice",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "c08d1b21f8dd202e74e2b20150033f72325cb09963674d4a844aae24cfaf87f2",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. When b is not selected, the label a must be selected.\n2. When a is not selected, the label b must be selected.\n3. It is forbidden that a is selected and b is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_mutual_choice"
+      },
+      {
+        "allowed_labels": [
+          "rest",
+          "work"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_work_or_rest",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "0dd1475cd5f0704bd3b7fb5e11a279cc7fd8bb564bbc013ee2f81de0202fc7b0",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: rest, work.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. When rest is not selected, the label work must be selected.\n2. When work is not selected, the label rest must be selected.\n3. It is forbidden that work is selected and rest is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_work_or_rest"
+      },
+      {
+        "allowed_labels": [
+          "accept",
+          "ok",
+          "quarantined",
+          "revoked",
+          "safe"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_chain_no_exception",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "8cf6d9e6c2b2f7b6a3a46e08e42beebc3380bbccd1565f6c155ba46e9f46d320",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: accept, ok, quarantined, revoked, safe.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label safe must be selected.\n2. When safe is selected and revoked is not selected, the label ok must be selected.\n3. When ok is selected and quarantined is not selected, the label accept must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_chain_no_exception"
+      },
+      {
+        "allowed_labels": [
+          "accept",
+          "ok",
+          "quarantined",
+          "revoked",
+          "safe"
+        ],
+        "family": "non_monotonic_defaults",
+        "fixture_id": "default_revoked_blocks_ok",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "42d216b12b422b834eba56deebf101c4c7c34c0df681fbf76a3a7c21d89e4fef",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: non monotonic defaults.\nAvailable labels: accept, ok, quarantined, revoked, safe.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label safe must be selected.\n2. The label revoked must be selected.\n3. When safe is selected and revoked is not selected, the label ok must be selected.\n4. When ok is selected and quarantined is not selected, the label accept must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|default_revoked_blocks_ok"
+      },
+      {
+        "allowed_labels": [
+          "a"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_fact_positive",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "bd58e9b7d441768765d55bd45f10c9e99d3a8808ae2b56156db542c44809fc10",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: a.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|control_fact_positive"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b",
+          "c"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_positive_chain",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "80f34345ab120b2a9e0dbee6f6bb00e118655c173b585e85c9d6f903f1c42519",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: a, b, c.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a must be selected.\n2. When a is selected, the label b must be selected.\n3. When b is selected, the label c must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|control_positive_chain"
+      },
+      {
+        "allowed_labels": [
+          "a",
+          "b"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_open_optional_pair",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "76b3df700b64748d292b23b6eaa90b48076bac926d82a1cbe3b6710ea00ed44e",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: a, b.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 0 and at most 2 labels from this group: a, b.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|control_open_optional_pair"
+      },
+      {
+        "allowed_labels": [
+          "no",
+          "yes"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_exact_one_yes_no",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "234529fc9cc0b18f5048c527d10290cd8a3539fbab2d26bcf985b9bc98f3801d",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: no, yes.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: yes, no.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|control_exact_one_yes_no"
+      },
+      {
+        "allowed_labels": [
+          "no",
+          "yes"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_negative_constraint_leaves_yes",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "504b60fca0fdc22c153549f182630a27c728c2b74ffa91b63c356eafa8b307ea",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: no, yes.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: yes, no.\n2. It is forbidden that no is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|control_negative_constraint_leaves_yes"
+      },
+      {
+        "allowed_labels": [
+          "alpha",
+          "beta",
+          "gamma"
+        ],
+        "family": "positive_negative_controls",
+        "fixture_id": "control_label_base",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "d48b200f44331288530d5e181bb8171376c86c8e90f5806d9dc04834add3a4f7",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: positive negative controls.\nAvailable labels: alpha, beta, gamma.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: alpha, beta.\n2. When alpha is selected, the label gamma must be selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|control_label_base"
+      },
+      {
+        "allowed_labels": [
+          "a_morning",
+          "a_night",
+          "b_morning",
+          "b_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_two_tasks_no_same_morning",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "25caf55990629e262fc026b535a075bba7908ff5c74b38d28c69a848b481599e",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_morning, a_night, b_morning, b_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: a_morning, a_night.\n2. Select at least 1 and at most 1 labels from this group: b_morning, b_night.\n3. It is forbidden that a_morning is selected and b_morning is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|schedule_two_tasks_no_same_morning"
+      },
+      {
+        "allowed_labels": [
+          "a_morning",
+          "a_night",
+          "b_morning",
+          "b_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_two_tasks_all_different",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "0794afa9d51b6748bd8e282c37ab693dcc0075675a6437148cbab221651c6d6b",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_morning, a_night, b_morning, b_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: a_morning, a_night.\n2. Select at least 1 and at most 1 labels from this group: b_morning, b_night.\n3. It is forbidden that a_morning is selected and b_morning is selected.\n4. It is forbidden that a_night is selected and b_night is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|schedule_two_tasks_all_different"
+      },
+      {
+        "allowed_labels": [
+          "a_midday",
+          "a_morning",
+          "a_night",
+          "b_midday",
+          "b_morning",
+          "b_night",
+          "c_midday",
+          "c_morning",
+          "c_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_three_tasks_three_slots",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "f051549dc024a7a58ecd30649ce65e7c5114c14c91eb7ff94d343f496baa2255",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_midday, a_morning, a_night, b_midday, b_morning, b_night, c_midday, c_morning, c_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: a_morning, a_midday, a_night.\n2. Select at least 1 and at most 1 labels from this group: b_morning, b_midday, b_night.\n3. Select at least 1 and at most 1 labels from this group: c_morning, c_midday, c_night.\n4. It is forbidden that a_morning is selected and b_morning is selected.\n5. It is forbidden that a_midday is selected and b_midday is selected.\n6. It is forbidden that a_night is selected and b_night is selected.\n7. It is forbidden that a_morning is selected and c_morning is selected.\n8. It is forbidden that a_midday is selected and c_midday is selected.\n9. It is forbidden that a_night is selected and c_night is selected.\n10. It is forbidden that b_morning is selected and c_morning is selected.\n11. It is forbidden that b_midday is selected and c_midday is selected.\n12. It is forbidden that b_night is selected and c_night is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|schedule_three_tasks_three_slots"
+      },
+      {
+        "allowed_labels": [
+          "a_morning",
+          "a_night",
+          "b_morning",
+          "b_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_forced_a_morning",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "b999a7945a63282ffa7123aee8feb79c1b0f8929e159e8696d52dd9444a88ac0",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_morning, a_night, b_morning, b_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a_morning must be selected.\n2. Select at least 1 and at most 1 labels from this group: a_morning, a_night.\n3. Select at least 1 and at most 1 labels from this group: b_morning, b_night.\n4. It is forbidden that a_morning is selected and b_morning is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|schedule_forced_a_morning"
+      },
+      {
+        "allowed_labels": [
+          "a_morning",
+          "a_night",
+          "b_morning",
+          "b_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_forced_conflict_unsat",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "bc8a2ed14b906ee1a99ffb89bbd22d20262926be7b0768a8b4adcca44e0988f3",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_morning, a_night, b_morning, b_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. The label a_morning must be selected.\n2. The label b_morning must be selected.\n3. Select at least 1 and at most 1 labels from this group: a_morning, a_night.\n4. Select at least 1 and at most 1 labels from this group: b_morning, b_night.\n5. It is forbidden that a_morning is selected and b_morning is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|schedule_forced_conflict_unsat"
+      },
+      {
+        "allowed_labels": [
+          "a_morning",
+          "a_night",
+          "b_morning",
+          "b_night"
+        ],
+        "family": "scheduling",
+        "fixture_id": "schedule_block_night_slot",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hash": "f597a849f68c26c965108163237d742481764c5983088e09b9f8225ecedb9390",
+        "prompt_text": "Solve this finite assignment puzzle using only the rules below.\nPuzzle family: scheduling.\nAvailable labels: a_morning, a_night, b_morning, b_night.\nChoose the labels that should be true. You may answer IMPOSSIBLE if no assignment works.\nRules in ordinary language:\n1. Select at least 1 and at most 1 labels from this group: a_morning, a_night.\n2. Select at least 1 and at most 1 labels from this group: b_morning, b_night.\n3. It is forbidden that a_night is selected.\n4. It is forbidden that b_night is selected.\nReturn one line only in this format: ANSWER: label_a, label_b. Use ANSWER: NONE for an empty assignment.",
+        "task_id": "exp6275|unsloth_gemma_4_31b_it_gguf|schedule_block_night_slot"
+      }
+    ]
+  },
+  "tasks_per_model": 30
+}

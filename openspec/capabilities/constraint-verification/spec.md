@@ -64,6 +64,74 @@ When the compiler decomposes energy for that state,
 Then the receipt names the violated rule or semantic support check and gives a
 non-zero local energy contribution.
 
+### REQ-CONSTRAINT-6275: Flagship ASP Constraint Verification Benchmark
+
+The repository SHALL provide an Exp6275 sealed natural-language benchmark built
+from the Exp6274 fixture families. The benchmark SHALL expose only natural
+language task descriptions to candidate models. It SHALL NOT expose ASP program
+text, formal sidecars, zero-energy states, solver answer sets, exact answers,
+or verifier receipts in model prompts.
+
+Exp6275 SHALL run the mandated local GGUF models
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` through direct llama.cpp-backed inference
+with GPU offload receipts. Each model SHALL receive at least 30 tasks across the
+supported Exp6274 fixture families. The run SHALL preserve every raw prompt,
+raw output, seed, token count, timeout state, and content hash in immutable
+sidecars.
+
+Exp6275 SHALL compare one-shot output, fixed-budget self-consistency, and
+energy-guided repair. It SHALL report parseability and semantic validity as
+separate outcomes. It SHALL score semantic validity only with exact solver
+certificates from the Exp6274 sidecar. It SHALL preserve per-model,
+per-family, and per-arm results, including residual rule violations,
+abstentions, failed or timeout cells, paired intervals, sample sizes, latency,
+and token counts.
+
+The terminal artifact SHALL be
+`results/experiment_6275_flagship_asp_constraint_verification_benchmark.json`.
+It SHALL include the task-required fields for model/cache/llama.cpp/GPU
+receipts, sealed benchmark hashes, formal sidecar nonexposure, seed matrix,
+task counts, raw output hashes, parse success, semantic validity, exact
+certificate coverage, format and semantic repair margins, residual violations,
+abstentions, paired intervals, latency, failed cells, event corpus readiness,
+zero weight mutation, zero external text scorer calls, protected file receipts,
+preconditions, `inference_substrate="live_llm_inference"`,
+`verifier_is_oracle=true`, field provenance, one field principle per required
+field, test commands, exit codes, duration, seed, checksum, and an honest
+verdict. The artifact SHALL NOT claim an external text scorer, a learned
+verifier, or an oracle-distinct verifier moat.
+
+### SCENARIO-CONSTRAINT-6275-SEALED-PROMPTS: Sidecars Stay Hidden
+
+Given Exp6275 tasks derived from Exp6274 fixtures,
+When prompts are built for a model,
+Then no prompt contains ASP syntax, exact answer strings, solver answer-set
+lists, zero-energy state lists, formal sidecar hashes as answers, or verifier
+receipt text.
+
+### SCENARIO-CONSTRAINT-6275-SEPARATE-OUTCOMES: Format And Semantics Are Separate
+
+Given raw model output for one-shot and self-consistency arms,
+When Exp6275 scores the output,
+Then parse success is recorded independently from exact semantic validity, and
+format repair margin is not collapsed into semantic repair margin.
+
+### SCENARIO-CONSTRAINT-6275-EXACT-REPAIR: Energy Repair Uses Solver Certificates
+
+Given a parseable but semantically invalid assignment,
+When Exp6275 runs energy-guided repair,
+Then the repaired assignment is accepted only if the Exp6274 exact oracle
+certifies it, and residual rule violations remain visible when repair fails.
+
+### SCENARIO-CONSTRAINT-6275-BLOCKED-CELL: Failed Receipts Stop A Model Cell
+
+Given a mandated model is missing, lacks GPU offload proof, times out, or lacks
+required cache/hash receipts,
+When Exp6275 evaluates the model cell,
+Then the cell stops with an honest terminal disposition and the artifact records
+the failed or timeout cell instead of fabricating model results.
+
 ### REQ-CONSTRAINT-VERIFY-6175: CCTU Headroom Audit Fail-Closed Gate
 
 The repository SHALL provide an Exp6175 audit over the Exp6174 CCTU K8 pool.
