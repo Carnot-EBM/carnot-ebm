@@ -15575,3 +15575,4 @@ Still active  |
 | 2026-08-09 18:50 UTC | Post-V540-marker source delta and experimental-sco | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: nels["source_c |
 | 2026-08-09 23:51 UTC | Post-V540-marker source delta and experimental-sco | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6261_v540_po |
 | 2026-08-10 00:26 UTC | Post-V540-marker source delta and experimental-sco | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6261_v540_po |
+| 2026-08-10 03:46 UTC | Terminal-artifact completeness and downstream-read | SKIP | Pre-tests failing, self-heal failed:  |
