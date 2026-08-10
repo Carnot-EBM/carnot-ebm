@@ -24615,3 +24615,74 @@ been written against yet.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6248 | `python/carnot/agentic/arc_rex_refinement.py` (UCB1 + QBC + candidate tree, one code path for both arms); `scripts/experiments/experiment_6248_pinductor_rex_ab.py` (run 2026-08-09, clean, 12/12 cells valid). | `tests/python/test_arc_rex_refinement.py` (CPU-only: UCB1 math, entropy edges, QBC reordering, budget accounting, arm behavioral difference, final selection, fake-proposer control flow, 18/18 passing) + `results/experiment_6248_pinductor_rex_ab.json` (the live A/B: gate NOT met, 2/6 games improved, pooled delta +0.0602 driven by one outlier, ka59 crossed the live-trust threshold; Pinductor-style REx retired as a blanket lever per `retire_if_same_verdict`). |
+
+### REQ-ARC-WMTE-6282: Game-Blind Mechanic-Class Detector Routed Into Live Induction
+
+The live ARC inducer SHALL expose a default-off mechanic-class route that classifies the
+agent's own transition history as `push_block`, `toggle_move`, `navigation`, `negative`, or
+`unknown`. The detector SHALL be game-blind: it SHALL use synthetic controls and live
+transition deltas only, and it SHALL NOT read hidden game source, run offline ground-truth
+search, run exhaustive BFS, mutate model weights, update the solve registry, or install a
+per-game adapter.
+
+The detector SHALL report class probabilities, uncertainty, support counts, and route
+activation. When the route is enabled, `induce_prompt()` SHALL append a short
+mechanic-class block to the existing prompt. The block SHALL give the class and uncertainty
+as evidence for a general rule. It SHALL NOT include a game-specific solve, hardcoded
+coordinate, hidden source fact, or banked action sequence. The disabled route SHALL leave the
+prompt byte-identical to the prior control prompt.
+
+Experiment 6282 SHALL run a bounded matched control/treatment live-inducer canary using the
+mandated Qwen GGUF model resolved through `cached_sota_pair()`. The canary target SHALL be an
+eligible unsolved mechanic fixture after a registry precheck, not a registry level already
+reproduced by the live mechanism. The artifact SHALL make no game-level solve claim and SHALL
+record detector accuracy, route activation, proposal coverage, invalid action rate, and budget
+cost for both arms.
+
+`python/carnot/experiment_6282_arc_mechanic_class_live_router.py` SHALL write
+`results/experiment_6282_arc_mechanic_class_live_router.json` with these bare top-level fields:
+`status`, `registry_precheck_path_hash_and_target_receipt`, `target_was_unsolved_at_precheck`,
+`model_specs`, `cache_resolution_model_hash_and_quantization`,
+`llama_cpp_binary_version_and_hash`, `cuda_gpu_and_offload_receipts`, `peak_vram`,
+`detector_source_paths_and_hashes`, `synthetic_fixture_manifest_path_and_hash`,
+`push_block_and_toggle_move_fixture_counts`, `detector_classification_metrics_and_sample_sizes`,
+`uncertainty_calibration`, `live_transition_history_hashes`, `route_activation_counts`,
+`treatment_and_control_proposal_hashes`, `proposal_coverage_by_arm`, `invalid_action_rate_by_arm`,
+`interaction_budget_by_arm`, `treatment_fire_receipt`, `evidence_provenance`,
+`solve_provenance`, `game_level_solve_claimed`, `hidden_game_source_access_count`,
+`outer_loop_ground_truth_search_count`, `exhaustive_bfs_count`, `per_game_adapter_count`,
+`registry_update_count`, `weight_mutation_count`, `harmful_regressions`,
+`arc_mechanic_router_ready_score`, `protected_files_unchanged`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`, `random_seed`, `reproducibility_checksum`,
+and `honest_verdict`.
+
+`solve_provenance` SHALL equal `live_agent_self_discovery`.
+`game_level_solve_claimed` SHALL be false. The source, search, BFS, adapter, registry, and
+weight-mutation counts SHALL be bare integer zero values. `inference_substrate` SHALL equal
+`live_llm_inference`. `field_principles` SHALL include one short principle for every required
+field.
+
+#### SCENARIO-ARC-WMTE-6282-GAME-BLIND-FIXTURES
+
+Given synthetic push-block, toggle-move, navigation, and negative controls, the detector
+classifies held-out fixtures without a game id, hidden source, registry entry, BFS result, or
+adapter lookup. The fixture manifest records family counts and a content hash.
+
+#### SCENARIO-ARC-WMTE-6282-LIVE-PROMPT-ROUTE
+
+Given transition history and the route disabled, the live induction prompt is unchanged. Given
+the same history and the route enabled, the prompt contains exactly one mechanic-class block
+with class, uncertainty, and support counts.
+
+#### SCENARIO-ARC-WMTE-6282-ARTIFACT-PROVENANCE
+
+Given a completed bounded canary, the artifact validates all required fields, records a matched
+control/treatment proposal hash, keeps every forbidden access counter as bare zero, and refuses
+any game-level solve claim.
+
+## Implementation Status (REQ-ARC-WMTE-6282)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6282 | Pending. | Pending. |

@@ -228,6 +228,7 @@ from carnot.agentic.arc_executable_world_model import (  # noqa: E402
     ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
     ARC_LIVE_GENERATOR_REPO_SUBSTR,
     ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT,
+    SUBMITTED_MECHANIC_CLASS_ROUTER_ENABLED,
     _default_induce_timeout_s,
 )
 
@@ -7932,6 +7933,8 @@ SUBMITTED_AGENT_CONFIG = {
     "factored_planner_enabled": False,
     "factored_trust_threshold": 0.75,
     "world_model_dsl_wired": True,
+    "mechanic_class_router_wired": True,
+    "mechanic_class_router_enabled": SUBMITTED_MECHANIC_CLASS_ROUTER_ENABLED,
     "online_discriminative": True,
     "dense_curiosity_progress_loop_enabled": False,
     "dense_curiosity_weight": 0.15,

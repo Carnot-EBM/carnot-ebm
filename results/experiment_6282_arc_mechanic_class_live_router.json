@@ -1,0 +1,690 @@
+{
+  "arc_mechanic_router_ready_score": 1.0,
+  "cache_resolution_model_hash_and_quantization": {
+    "cached_sota_pair_attempted": true,
+    "cached_sota_pair_available": true,
+    "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "model_exists": true,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+    "model_size_bytes": 22134528992,
+    "preferred_quant": "Q4_K_M",
+    "quantization": "UD-Q4_K_M",
+    "resolved_via": "cached_sota_pair"
+  },
+  "cuda_gpu_and_offload_receipts": {
+    "after": [
+      {
+        "driver_version": "610.43.03",
+        "index": 0,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 308,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      {
+        "driver_version": "610.43.03",
+        "index": 1,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 308,
+        "name": "NVIDIA GeForce RTX 3090"
+      }
+    ],
+    "before": [
+      {
+        "driver_version": "610.43.03",
+        "index": 0,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 4,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      {
+        "driver_version": "610.43.03",
+        "index": 1,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 4,
+        "name": "NVIDIA GeForce RTX 3090"
+      }
+    ],
+    "offload_requested": "n_gpu_layers=-1",
+    "runner": "llama_cpp"
+  },
+  "detector_classification_metrics_and_sample_sizes": {
+    "by_family": {
+      "navigation": {
+        "correct": 8,
+        "total": 8
+      },
+      "negative": {
+        "correct": 8,
+        "total": 8
+      },
+      "push_block": {
+        "correct": 8,
+        "total": 8
+      },
+      "toggle_move": {
+        "correct": 8,
+        "total": 8
+      }
+    },
+    "confusion": {
+      "navigation": {
+        "navigation": 8
+      },
+      "negative": {
+        "negative": 8
+      },
+      "push_block": {
+        "push_block": 8
+      },
+      "toggle_move": {
+        "toggle_move": 8
+      }
+    },
+    "forbidden_inputs": {
+      "adapter_used": false,
+      "bfs_used": false,
+      "game_id_used": false,
+      "hidden_source_used": false
+    },
+    "mean_uncertainty": 0.207221,
+    "overall_accuracy": 1.0,
+    "sample_size": 32
+  },
+  "detector_source_paths_and_hashes": [
+    {
+      "exists": true,
+      "path": "python/carnot/agentic/arc_mechanic_class_detector.py",
+      "sha256": "sha256:6c34d23d5794df12087c8fb93d36eba3c77045cfc52e964030df88e11307e620",
+      "size_bytes": 14946
+    },
+    {
+      "exists": true,
+      "path": "python/carnot/agentic/arc_executable_world_model.py",
+      "sha256": "sha256:5162727ddd97ba8dbf5e47bd1bfa1f22760a82fd294c8f90d4128b6ca1e61f37",
+      "size_bytes": 454002
+    },
+    {
+      "exists": true,
+      "path": "python/carnot/agentic/arc_competition_agent.py",
+      "sha256": "sha256:01dff6a47b3ee4d79dde884ec91b11b0a65d8f5b92f7a5e6968d8b1ac735de93",
+      "size_bytes": 469213
+    },
+    {
+      "exists": true,
+      "path": "python/carnot/experiment_6282_arc_mechanic_class_live_router.py",
+      "sha256": "sha256:9f1464a82e291a567dbea5001ede9720947fb8c40cffc684563edf34ee0fe5f5",
+      "size_bytes": 30266
+    },
+    {
+      "exists": true,
+      "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "sha256": "sha256:7b139f64be9d576e064081ff8500ecb0b665e77defc2abc5abf157240881273c",
+      "size_bytes": 1724237
+    }
+  ],
+  "duration_s": 44.043,
+  "evidence_provenance": {
+    "hidden_game_source_used": false,
+    "live_transition_history_source": "agent_visible_transition_deltas",
+    "registry_used_for_precheck_only": true,
+    "synthetic_controls_only_for_detector": true,
+    "upstream_audit_paths": [
+      "results/experiment_6232_arc_admissible_depth_portfolio.json",
+      "results/experiment_6244_mode_a_error_class_diagnosis.json",
+      "results/experiment_6245_nav_confidence_internal_heldout_negative.json"
+    ]
+  },
+  "exhaustive_bfs_count": 0,
+  "field_principles": {
+    "arc_mechanic_router_ready_score": "Summarizes readiness without solve credit.",
+    "cache_resolution_model_hash_and_quantization": "Pins the local GGUF and quantization.",
+    "cuda_gpu_and_offload_receipts": "Records GPU visibility and offload evidence.",
+    "detector_classification_metrics_and_sample_sizes": "Reports accuracy with denominators.",
+    "detector_source_paths_and_hashes": "Pins detector and route source bytes.",
+    "duration_s": "Records wall-clock cost.",
+    "evidence_provenance": "Separates synthetic and live-transition evidence from forbidden inputs.",
+    "exhaustive_bfs_count": "Must stay zero for bounded canary discipline.",
+    "field_principles": "Gives one audit reason per field.",
+    "field_provenance": "Maps every field to computation and spec.",
+    "game_level_solve_claimed": "Keeps the canary from becoming solve credit.",
+    "harmful_regressions": "Reports any detected route harm.",
+    "hidden_game_source_access_count": "Must stay zero for hidden-source discipline.",
+    "honest_verdict": "Terminal verdict states no solve claim.",
+    "inference_substrate": "Declares live GGUF inference.",
+    "interaction_budget_by_arm": "Shows matched prompt and decode budgets.",
+    "invalid_action_rate_by_arm": "Flags malformed action proposals.",
+    "live_transition_history_hashes": "Pins the canary transitions shown to the route.",
+    "llama_cpp_binary_version_and_hash": "Pins the runtime that loaded the GGUF.",
+    "model_specs": "Names the mandated Qwen live inducer.",
+    "outer_loop_ground_truth_search_count": "Must stay zero for self-discovery discipline.",
+    "peak_vram": "Shows the live run paid real memory cost.",
+    "per_game_adapter_count": "Must stay zero for game-blind routing.",
+    "preconditions_checked": "Records git, registry, model, CUDA, caps, and seed.",
+    "proposal_coverage_by_arm": "Reports proposal content coverage by arm.",
+    "protected_files_unchanged": "Proves conductor and registry files were not edited.",
+    "push_block_and_toggle_move_fixture_counts": "Shows both requested families are covered.",
+    "random_seed": "Pins synthetic and decode randomness.",
+    "registry_precheck_path_hash_and_target_receipt": "Pins the registry read and target choice.",
+    "registry_update_count": "Must stay zero because no solve is banked.",
+    "reproducibility_checksum": "Detects artifact drift.",
+    "route_activation_counts": "Proves treatment fired and control did not.",
+    "solve_provenance": "States live-agent self-discovery provenance.",
+    "status": "Separates a completed canary from a blocked live run.",
+    "synthetic_fixture_manifest_path_and_hash": "Pins the trusted synthetic controls.",
+    "target_was_unsolved_at_precheck": "Prevents re-targeting a reproduced public level.",
+    "test_commands": "Lists verification commands.",
+    "test_exit_codes": "Records command outcomes.",
+    "treatment_and_control_proposal_hashes": "Hashes matched prompts and proposals.",
+    "treatment_fire_receipt": "Records the exact class and uncertainty inserted.",
+    "uncertainty_calibration": "Shows uncertainty came from held-out controls.",
+    "verifier_is_oracle": "False because no game oracle verifies a solve.",
+    "weight_mutation_count": "Must stay zero because the model is not trained."
+  },
+  "field_provenance": {
+    "arc_mechanic_router_ready_score": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "cache_resolution_model_hash_and_quantization": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "cuda_gpu_and_offload_receipts": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "detector_classification_metrics_and_sample_sizes": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "detector_source_paths_and_hashes": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "duration_s": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "evidence_provenance": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "exhaustive_bfs_count": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "field_principles": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "field_provenance": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "game_level_solve_claimed": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "harmful_regressions": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "hidden_game_source_access_count": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "honest_verdict": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "inference_substrate": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "interaction_budget_by_arm": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "invalid_action_rate_by_arm": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "live_transition_history_hashes": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "llama_cpp_binary_version_and_hash": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "model_specs": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "outer_loop_ground_truth_search_count": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "peak_vram": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "per_game_adapter_count": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "preconditions_checked": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "proposal_coverage_by_arm": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "protected_files_unchanged": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "push_block_and_toggle_move_fixture_counts": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "random_seed": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "registry_precheck_path_hash_and_target_receipt": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "registry_update_count": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "reproducibility_checksum": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "route_activation_counts": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "solve_provenance": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "status": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "synthetic_fixture_manifest_path_and_hash": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "target_was_unsolved_at_precheck": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "test_commands": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "test_exit_codes": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "treatment_and_control_proposal_hashes": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "treatment_fire_receipt": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "uncertainty_calibration": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "verifier_is_oracle": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ],
+    "weight_mutation_count": [
+      "REQ-ARC-WMTE-6282",
+      "experiment_6282_arc_mechanic_class_live_router"
+    ]
+  },
+  "game_level_solve_claimed": false,
+  "harmful_regressions": {
+    "count": 0,
+    "items": []
+  },
+  "hidden_game_source_access_count": 0,
+  "honest_verdict": "complete: mechanic_class_router_canary_no_solve_claim",
+  "inference_substrate": "live_llm_inference",
+  "interaction_budget_by_arm": {
+    "control": {
+      "llm_calls": 1,
+      "max_tokens": 32,
+      "prompt_chars": 2870,
+      "prompt_token_estimate": 718,
+      "wall_s": 0.9399
+    },
+    "treatment": {
+      "llm_calls": 1,
+      "max_tokens": 32,
+      "prompt_chars": 3089,
+      "prompt_token_estimate": 772,
+      "wall_s": 0.4665
+    }
+  },
+  "invalid_action_rate_by_arm": {
+    "control": 0.0,
+    "treatment": 0.0
+  },
+  "live_transition_history_hashes": {
+    "history_sha256": "sha256:2028f3257b4c19718829d8dccb1036d79517ac97511860fbb3e14ef733a97da2",
+    "rows": [
+      {
+        "action": 4,
+        "changed_cells": 3,
+        "data": null,
+        "grid_sha256": "sha256:683054c046d77b7d69640eb9e1de55c7fb182c3b114e41f2e348559262b4a99f",
+        "next_grid_sha256": "sha256:1ca80cae91430d1c4555a87bfc765a87ed347a0833f13156276ab051c4a1f63f"
+      },
+      {
+        "action": 4,
+        "changed_cells": 3,
+        "data": null,
+        "grid_sha256": "sha256:1ca80cae91430d1c4555a87bfc765a87ed347a0833f13156276ab051c4a1f63f",
+        "next_grid_sha256": "sha256:4b151f6ed09130f6aeaf2a23b589ac26411a747072440c09c3fa4f0938160355"
+      },
+      {
+        "action": 4,
+        "changed_cells": 3,
+        "data": null,
+        "grid_sha256": "sha256:4b151f6ed09130f6aeaf2a23b589ac26411a747072440c09c3fa4f0938160355",
+        "next_grid_sha256": "sha256:27e434ce039bfe19f703d8b722944a20452ab912a999aef770b7d50a2d4e4601"
+      },
+      {
+        "action": 4,
+        "changed_cells": 3,
+        "data": null,
+        "grid_sha256": "sha256:27e434ce039bfe19f703d8b722944a20452ab912a999aef770b7d50a2d4e4601",
+        "next_grid_sha256": "sha256:0eb101f0b39147558d943cad9d170c921814083a130f0c32cbd80fce4689487f"
+      }
+    ],
+    "target": "synthetic_push_block_mechanic_canary",
+    "transition_count": 4
+  },
+  "llama_cpp_binary_version_and_hash": {
+    "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+    "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+    "package": "llama_cpp_python",
+    "system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
+    "version": "0.3.33"
+  },
+  "model_specs": {
+    "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "preferred_quant": "Q4_K_M",
+    "role": "flagship MoE live mechanic-aware inducer",
+    "runtime": "llama.cpp GGUF with GPU offload"
+  },
+  "outer_loop_ground_truth_search_count": 0,
+  "peak_vram": {
+    "after_total_used_mb": 616,
+    "before_total_used_mb": 8,
+    "peak_used_mb_observed": 308
+  },
+  "per_game_adapter_count": 0,
+  "preconditions_checked": {
+    "cuda_snapshot_before": [
+      {
+        "driver_version": "610.43.03",
+        "index": 0,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 4,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      {
+        "driver_version": "610.43.03",
+        "index": 1,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 4,
+        "name": "NVIDIA GeForce RTX 3090"
+      }
+    ],
+    "date": "20260810",
+    "git_status_before_run": "M openspec/capabilities/arc-world-model-trust-energy/spec.md\n M python/carnot/agentic/arc_competition_agent.py\n M python/carnot/agentic/arc_executable_world_model.py\n M results/experiment_1736_kanele_synth.json\n M results/experiment_1822_rtl_synth.log\n M results/experiment_2031.json\n?? python/carnot/agentic/arc_mechanic_class_detector.py\n?? python/carnot/experiment_6282_arc_mechanic_class_live_router.py\n?? results/experiment_6282_arc_mechanic_class_fixture_manifest.json\n?? tests/python/test_experiment_6282_arc_mechanic_class_live_router.py",
+    "interaction_cap": {
+      "arms": 2,
+      "max_tokens_per_arm": 32
+    },
+    "model_resolved": true,
+    "protected_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "ops/changelog.md": "sha256:ca1a8d41c4e304f336f3b2091fc5f4667aa122a0b25e2c735d330f201f3c072b",
+      "ops/status.md": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "registry_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "seed": 6282,
+    "target": "synthetic_push_block_mechanic_canary",
+    "wall_time_cap_s": 900
+  },
+  "proposal_coverage_by_arm": {
+    "control": 0.75,
+    "treatment": 0.25
+  },
+  "protected_files_unchanged": {
+    "_bmad/traceability.md": {
+      "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "unchanged": true
+    },
+    "ops/arc_solve_registry.yaml": {
+      "after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "unchanged": true
+    },
+    "ops/changelog.md": {
+      "after": "sha256:ca1a8d41c4e304f336f3b2091fc5f4667aa122a0b25e2c735d330f201f3c072b",
+      "before": "sha256:ca1a8d41c4e304f336f3b2091fc5f4667aa122a0b25e2c735d330f201f3c072b",
+      "unchanged": true
+    },
+    "ops/status.md": {
+      "after": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+      "before": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+      "unchanged": true
+    },
+    "scripts/research_conductor.py": {
+      "after": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "before": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "unchanged": true
+    }
+  },
+  "push_block_and_toggle_move_fixture_counts": {
+    "push_block": 8,
+    "toggle_move": 8
+  },
+  "random_seed": 6282,
+  "registry_precheck_path_hash_and_target_receipt": {
+    "path": "ops/arc_solve_registry.yaml",
+    "public_level_targeted": false,
+    "public_registry_games_full_clear_count": 25,
+    "public_registry_games_not_full_clear_count": 0,
+    "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "target": "synthetic_push_block_mechanic_canary",
+    "target_kind": "synthetic_unseen_mechanic_fixture_not_public_registry_level",
+    "target_present_in_registry": false,
+    "target_receipt": {
+      "mechanic_class": "push_block",
+      "why_eligible": "synthetic unseen mechanic fixture; no reproduced public level targeted"
+    }
+  },
+  "registry_update_count": 0,
+  "reproducibility_checksum": "sha256:bcdaea6560d9b92f5e815a62c4b8e4f5e4321231e72855dfdd9f12c8d4ad8f6b",
+  "route_activation_counts": {
+    "control": 0,
+    "treatment": 1
+  },
+  "solve_provenance": "live_agent_self_discovery",
+  "status": "complete",
+  "synthetic_fixture_manifest_path_and_hash": {
+    "fixture_count": 32,
+    "path": "results/experiment_6282_arc_mechanic_class_fixture_manifest.json",
+    "sha256": "sha256:9cec7b669078cf2c1dfa4daae362bd7da646d7eb852cba2667d0800f82f405ad"
+  },
+  "target_was_unsolved_at_precheck": true,
+  "test_commands": [
+    ".venv/bin/python -m carnot.experiment_6282_arc_mechanic_class_live_router --date 20260810",
+    ".venv/bin/pytest tests/python/test_experiment_6282_arc_mechanic_class_live_router.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/agentic/arc_mechanic_class_detector.py,python/carnot/experiment_6282_arc_mechanic_class_live_router.py -m pytest tests/python/test_experiment_6282_arc_mechanic_class_live_router.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/agentic/arc_mechanic_class_detector.py,python/carnot/experiment_6282_arc_mechanic_class_live_router.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6282_arc_mechanic_class_live_router.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6282_arc_mechanic_class_live_router.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/agentic/arc_mechanic_class_detector.py,python/carnot/experiment_6282_arc_mechanic_class_live_router.py -m pytest tests/python/test_experiment_6282_arc_mechanic_class_live_router.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/agentic/arc_mechanic_class_detector.py,python/carnot/experiment_6282_arc_mechanic_class_live_router.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_6282_arc_mechanic_class_live_router.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6282_arc_mechanic_class_live_router --date 20260810": null,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6282_arc_mechanic_class_live_router.json": null,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6282_arc_mechanic_class_live_router.py": 0
+  },
+  "treatment_and_control_proposal_hashes": {
+    "control": {
+      "prompt_sha256": "sha256:b25dd3b337fe25da57a0f055912fe011311c521c1da7e35e5c2adc5d7c94afe8",
+      "proposal_chars": 134,
+      "proposal_sha256": "sha256:4fc3733a8f655fe05ea49524c97466103647e6715ca210a00e939223d52f0364"
+    },
+    "treatment": {
+      "prompt_sha256": "sha256:14aab7fabd90096dc530105f1c4dd9d6b43310c823b9d61dead461c0dc6f8acf",
+      "proposal_chars": 141,
+      "proposal_sha256": "sha256:ae01b53da90e48948bfa7e9efd9ab6d95c5a3359ae98765940fdd89bfdd25b06"
+    }
+  },
+  "treatment_fire_receipt": {
+    "class_result": {
+      "predicted_class": "push_block",
+      "probabilities": {
+        "navigation": 0.040816,
+        "negative": 0.040816,
+        "push_block": 0.857143,
+        "toggle_move": 0.040816,
+        "unknown": 0.020408
+      },
+      "sample_size": 4,
+      "support": {
+        "changed_ratio": 1.0,
+        "keyboard_changed": 4,
+        "mean_changed_cells": 3.0,
+        "n_changed": 4,
+        "n_transitions": 4,
+        "navigation_like": 0,
+        "push_like": 4,
+        "toggle_like": 0,
+        "top_margin": 0.816327
+      },
+      "uncertainty": 0.183673
+    },
+    "fired": true,
+    "route_block_sha256": "sha256:2af2f89b392f080d3e59c756c2993cb2112249e6a8a2d91d83da9fb84bd56f0f"
+  },
+  "uncertainty_calibration": {
+    "mean_uncertainty_correct": 0.207221,
+    "mean_uncertainty_incorrect": null,
+    "method": "synthetic_controls_margin_uncertainty",
+    "rows": [
+      {
+        "correct": true,
+        "family": "push_block",
+        "fixture_id": "push_block_00",
+        "predicted_class": "push_block",
+        "uncertainty": 0.183673
+      },
+      {
+        "correct": true,
+        "family": "push_block",
+        "fixture_id": "push_block_01",
+        "predicted_class": "push_block",
+        "uncertainty": 0.183673
+      },
+      {
+        "correct": true,
+        "family": "push_block",
+        "fixture_id": "push_block_02",
+        "predicted_class": "push_block",
+        "uncertainty": 0.183673
+      },
+      {
+        "correct": true,
+        "family": "push_block",
+        "fixture_id": "push_block_03",
+        "predicted_class": "push_block",
+        "uncertainty": 0.183673
+      },
+      {
+        "correct": true,
+        "family": "push_block",
+        "fixture_id": "push_block_04",
+        "predicted_class": "push_block",
+        "uncertainty": 0.183673
+      },
+      {
+        "correct": true,
+        "family": "push_block",
+        "fixture_id": "push_block_05",
+        "predicted_class": "push_block",
+        "uncertainty": 0.183673
+      },
+      {
+        "correct": true,
+        "family": "push_block",
+        "fixture_id": "push_block_06",
+        "predicted_class": "push_block",
+        "uncertainty": 0.183673
+      },
+      {
+        "correct": true,
+        "family": "push_block",
+        "fixture_id": "push_block_07",
+        "predicted_class": "push_block",
+        "uncertainty": 0.183673
+      },
+      {
+        "correct": true,
+        "family": "toggle_move",
+        "fixture_id": "toggle_move_00",
+        "predicted_class": "toggle_move",
+        "uncertainty": 0.183673
+      },
+      {
+        "correct": true,
+        "family": "toggle_move",
+        "fixture_id": "toggle_move_01",
+        "predicted_class": "toggle_move",
+        "uncertainty": 0.183673
+      },
+      {
+        "correct": true,
+        "family": "toggle_move",
+        "fixture_id": "toggle_move_02",
+        "predicted_class": "toggle_move",
+        "uncertainty": 0.183673
+      },
+      {
+        "correct": true,
+        "family": "toggle_move",
+        "fixture_id": "toggle_move_03",
+        "predicted_class": "toggle_move",
+        "uncertainty": 0.183673
+      }
+    ],
+    "sample_size": 32
+  },
+  "verifier_is_oracle": false,
+  "weight_mutation_count": 0
+}
