@@ -503,6 +503,18 @@ recommended to run BEFORE committing to (1) per the triangulation's own ordering
 same-session build; both are strategic-scale decisions worth explicit operator input rather than
 autonomous selection.
 
+**FOLLOW-UP (2026-08-09, operator-directed): option 2 ran, surfaced Pinductor, and the operator
+authorized preparing it.** The SOTA scan (`research-studying.md` 2026-08-09 entry) surfaced
+Pinductor (arXiv:2605.13740) — population-based, UCB1-tree, disagreement-guided refinement of
+LLM-induced executable world models — and flagged that it lands on the refinement axis held under
+the standing "operator decision required" note. The operator gave that decision: "Let's plan out
+and prepare Pinductor to be run." Prepared as REQ-ARC-WMTE-6248: plan note
+(`docs/research-notes/pinductor-rex-refinement-plan-2026-08-09.md`, with the full prior-failures
+block), module (`python/carnot/agentic/arc_rex_refinement.py`), CPU-only tests (18 passing), and
+the A/B driver (`scripts/experiments/experiment_6248_pinductor_rex_ab.py`) — staged, not yet
+launched. Gate pre-registered: REx beats linear on HELD change_fidelity in >= 4 of 6 games with
+pooled delta > 0, retire-on-fail.
+
 ### Standing infrastructure item (parallel, not gating)
 
 **The unidentified llama-server reaper.** Blocks the conductor's exp6217 today, will recur on any

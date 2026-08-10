@@ -24487,3 +24487,78 @@ terminal `honest_verdict` prefix.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6232 | Pending. | Pending. |
+
+### REQ-ARC-WMTE-6248: Pinductor-Style REx Refinement A/B (Population Search vs Linear Lineage, Operator-Authorized Reopening of the Refinement Axis)
+
+**Origin:** 2026-08-09 operator directive: "Let's plan out and prepare Pinductor to be run."
+That directive is the explicit operator decision the standing hold in `ops/known-issues.md`
+("Do NOT propose a follow-up on the refinement / single-shot-GGUF-induction axis ... banked, not
+queued") reserved this axis for. The hold is lifted for this ONE prepared experiment only. Full
+plan, prior-failure block, and paper mapping: `docs/research-notes/
+pinductor-rex-refinement-plan-2026-08-09.md`. Source technique: arXiv:2605.13740 (Pinductor),
+reference clone at `~/arc-sota-refs/pinductor` (MIT, inspiration tier per
+`feedback_audit_untrusted_code` -- mechanisms reimplemented, no code copied or executed).
+
+`carnot.agentic.arc_rex_refinement` SHALL implement a budget-parity refinement harness with ONE
+code path and two configurations:
+
+- **linear** (baseline): 1 induce + (B-1) refinements, each refining the LATEST candidate, with
+  mismatches shown in natural corpus order -- the current production refinement shape.
+- **rex** (treatment): 1 induce + (B-1) refinements where each round picks the parent candidate
+  by UCB1 over all candidates so far (quality = VALID-slice `change_fidelity`; exploration bonus
+  uses a `(visits+1)` denominator so a fresh node gets the largest bonus WITHOUT an infinite
+  shortcut that would bypass the quality term), reorders the parent's mismatch list by QBC
+  committee vote entropy (Shannon entropy over distinct next-grid predictions of all current
+  candidates on that transition) so the bounded refactor prompt carries the most-disagreed-on
+  counterexamples, and writes the parent's source into the ISOLATED engine store before
+  `refactor` so the engine-visible prompt (`CARNOT_ARC_REFACTOR_SHOW_ENGINE=1`, forced ON in
+  both arms) shows the actual parent being refined.
+
+Both arms SHALL select their final candidate by argmax VALID `change_fidelity` (deterministic;
+a declared deviation from the paper's near-best softmax). Candidate scoring SHALL use
+`WorldModelVerifier` with the game's own HUD mask explicitly enabled (the REQ-ARC-WMTE-6233/6246
+convention). Data per game SHALL be a three-way split (TRAIN shown to the LLM / VALID for
+selection and QBC, never shown / HELD for the final A/B metric only, never used during the run).
+
+`scripts/experiments/experiment_6248_pinductor_rex_ab.py` SHALL run the paired A/B on 6 games
+(ft09, tr87, cn04, ar25, ka59, re86) at B=4 LLM calls per arm-cell against the frozen live
+generator (gemma-4-31B-it-qat), per-cell checkpointed, and SHALL refuse to start unless
+`CARNOT_ARC_E3_DIR` points at a private scratch directory (the exp6246 guard; reinforced by
+exp6247's own shared-store clobber incident).
+
+**Pre-registered gate:** REx beats linear on HELD `change_fidelity` in >= 4 of 6 games AND the
+pooled mean paired delta is > 0. A failed gate retires the Pinductor-style refinement variant
+(`retire_if_same_verdict` semantics -- no further refinement variant without a NEW mechanism
+class and a fresh operator decision). A passed gate authorizes only the follow-up decision
+(default-OFF live-path wiring + live A/B), not a default flip. Secondary reported-not-gated
+marker: whether ANY candidate reaches HELD `change_fidelity >= 0.5` (the live trust threshold).
+
+#### SCENARIO-ARC-WMTE-6248-BUDGET-PARITY-BY-CONSTRUCTION
+
+Given both arms run through the same `run_rex` code path with the same per-cell LLM-call budget
+B, differing only in parent-selection policy and mismatch ordering, no budget difference can
+confound the comparison, and the artifact records the per-arm call counts as equal.
+
+#### SCENARIO-ARC-WMTE-6248-UCB1-CONSULTS-QUALITY
+
+Given three candidates with distinct VALID change-fidelity scores and equal visit counts, UCB1
+selection picks the highest-scoring one; given equal scores and unequal visits, it picks the
+least-visited one. A fresh node receives the largest exploration bonus but never an infinite
+score that would bypass the quality term.
+
+#### SCENARIO-ARC-WMTE-6248-QBC-ORDERS-BY-DISAGREEMENT
+
+Given a committee of candidate engines that all agree on transition X and split three ways on
+transition Y, the QBC reordering places Y's mismatch before X's, so the bounded (first-5)
+refactor prompt carries Y.
+
+#### SCENARIO-ARC-WMTE-6248-ISOLATED-STORE-REFUSAL
+
+Given `CARNOT_ARC_E3_DIR` unset, the experiment script exits before any collection, induction,
+or store write -- the shared `results/arc_e3` store is never touched.
+
+## Implementation Status (REQ-ARC-WMTE-6248)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6248 | `python/carnot/agentic/arc_rex_refinement.py` (UCB1 + QBC + candidate tree, one code path for both arms); `scripts/experiments/experiment_6248_pinductor_rex_ab.py` (prepared, launch staged in the plan note -- NOT yet run). | `tests/python/test_arc_rex_refinement.py` (CPU-only: UCB1 math, entropy edges, QBC reordering, budget accounting, arm behavioral difference, final selection, fake-proposer control flow). |
