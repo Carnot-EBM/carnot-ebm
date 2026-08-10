@@ -4049,3 +4049,124 @@ sampler verdict.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-6237 | Planned (`python/carnot/experiment_6237_activated_mode_jump_sampler_ab.py`, `results/experiment_6237_activated_mode_jump_sampler_ab.json`) | Planned (`tests/python/test_experiment_6237_activated_mode_jump_sampler_ab.py`) |
+
+### REQ-SAMPLER-6268: Frozen Bounded Exact Sampler Fixture Suite
+
+Carnot MUST provide Exp6268 at
+`python/carnot/experiment_6268_multimodal_sampler_fixture_suite.py` and write
+`results/experiment_6268_multimodal_sampler_fixture_suite.json` without
+modifying `scripts/research_conductor.py`. The experiment SHALL freeze a
+bounded exact sampler fixture suite before any later A/B run. The suite SHALL
+cover binary Ising, multistate Potts, and Carnot typed-factor targets. It SHALL
+not run a headline sampler comparison. It SHALL not make timing, CUDA, cDLS,
+FPGA, TSU, power, or speedup claims.
+
+Sub-requirements:
+- REQ-SAMPLER-6268-PRECONDITIONS: Exp6268 SHALL freeze fixture families, size
+  bounds, exact tolerance, seeds, source hashes, protected files, and artifact
+  paths before exact enumeration is interpreted.
+- REQ-SAMPLER-6268-FAMILIES: The preregistered suite SHALL include the original
+  six-state Exp6237 treatment-positive control, at least two multimodal Ising
+  targets, at least two Potts targets, and at least two Carnot typed-factor
+  targets.
+- REQ-SAMPLER-6268-EXACT: Every bounded state space SHALL be enumerated by code
+  independent of the sampler under test. The artifact SHALL store normalized
+  probabilities, energies, modes, basins, barriers, hashes, and normalization
+  errors for every fixture.
+- REQ-SAMPLER-6268-CONTROLS: The suite SHALL include unimodal,
+  inactive-treatment, and unsupported-shape controls. Valid controls SHALL be
+  required before readiness can equal one.
+- REQ-SAMPLER-6268-NEGATIVE-TESTS: Focused tests SHALL cover normalization,
+  label permutation, Potts cardinality, typed-factor arity, duplicate fixtures,
+  and energy-sign errors.
+- REQ-SAMPLER-6268-READY-GATE: `sampler_fixture_suite_ready_score` SHALL equal
+  exactly `1.0` only when every preregistered family is present, exact
+  normalization errors are within tolerance, fixture hashes are unique, controls
+  are valid, protected files are unchanged, source mutation count is zero, and
+  task-owned checks pass.
+
+The terminal artifact SHALL include these top-level fields:
+`status`, `fixture_manifest_path_and_hash`, `fixture_family_counts`,
+`source_paths_and_hashes`, `state_space_sizes`,
+`exact_enumeration_receipts`, `normalized_target_probability_hashes`,
+`energy_and_factor_definitions`, `basin_labels_and_barrier_metadata`,
+`mode_jump_support_by_fixture`, `original_six_state_positive_control`,
+`unimodal_control`, `inactive_treatment_control`,
+`unsupported_shape_control`, `random_seeds_and_schedule_defaults`,
+`duplicate_fixture_count`,
+`exact_probability_normalization_error_by_fixture`, `source_mutation_count`,
+`sampler_fixture_suite_ready_score`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `reproducibility_checksum`, and
+`honest_verdict`. `duplicate_fixture_count` and `source_mutation_count` SHALL
+be the bare integer `0`. `inference_substrate` SHALL equal
+`local_cpu_exact_fixture_construction`.
+
+Required field principles:
+
+- `status`: Separates ready exact-suite evidence from blocked fixture, control, and command states.
+- `fixture_manifest_path_and_hash`: Pins the generated fixture manifest so later sampler runs consume the same suite.
+- `fixture_family_counts`: Proves the preregistered binary Ising, Potts, typed-factor, and control families are all present.
+- `source_paths_and_hashes`: Pins source, spec, test, upstream artifact, sampler, and protected paths before the JSON is trusted.
+- `state_space_sizes`: Makes every bounded enumeration size explicit.
+- `exact_enumeration_receipts`: Stores independently enumerated probabilities, energies, modes, basins, and normalization receipts.
+- `normalized_target_probability_hashes`: Content-addresses normalized target probabilities per fixture.
+- `energy_and_factor_definitions`: Records the Ising Hamiltonians, Potts couplings, and typed factor kernels used to enumerate targets.
+- `basin_labels_and_barrier_metadata`: Records basin assignment and minimum barrier evidence instead of inferring modality from names.
+- `mode_jump_support_by_fixture`: Separates the six-state supported mode-jump target from unsupported suite fixtures and inactive controls.
+- `original_six_state_positive_control`: Proves the Exp6237 treatment-positive fixture is reproduced in the suite.
+- `unimodal_control`: Proves a valid exact target can be unimodal and therefore cannot support a multimodal treatment claim.
+- `inactive_treatment_control`: Proves inactive treatment evidence is classified as an instrument failure, not a null result.
+- `unsupported_shape_control`: Proves unsupported fixture shapes fail closed at the mode-jump boundary.
+- `random_seeds_and_schedule_defaults`: Freezes replay seeds and default construction schedules without making timing claims.
+- `duplicate_fixture_count`: Bare zero proves the suite did not register duplicate exact targets.
+- `exact_probability_normalization_error_by_fixture`: Makes normalization tolerance evidence mechanical for each fixture.
+- `source_mutation_count`: Bare zero proves protected and preregistered source hashes did not change during construction.
+- `sampler_fixture_suite_ready_score`: Equals one only when family, exactness, control, duplicate, source, protection, and command gates pass.
+- `protected_files_unchanged`: Confirms conductor and reconciler-owned files stayed byte-identical.
+- `preconditions_checked`: Records frozen families, bounds, tolerances, seeds, hashes, and protected files before enumeration.
+- `inference_substrate`: Declares local CPU exact fixture construction, not LLM inference, CUDA, FPGA, TSU, cDLS, or timing.
+- `verifier_is_oracle`: States that exact finite enumeration is the oracle for this suite.
+- `field_provenance`: Maps every required field to prompt, spec, source, fixture manifest, command receipts, or computed exact evidence.
+- `field_principles`: Explains why each required field exists before a reviewer trusts the artifact.
+- `test_commands`: Records focused Python, coverage, Rust, E2E, artifact, adversarial, and suite command receipts.
+- `test_exit_codes`: Stores exit codes so failed checks cannot become readiness evidence.
+- `duration_s`: Reports real wall time without padding or timing interpretation.
+- `reproducibility_checksum`: Content-addresses the artifact after blanking volatile duration and the checksum field.
+- `honest_verdict`: Uses a terminal prefix and states fixture readiness, exactness, controls, and no performance claim.
+
+### SCENARIO-SAMPLER-6268-EXACT-SUITE: Fixture Families Are Frozen And Enumerated
+
+**Given** the preregistered Exp6268 fixture family manifest, size bounds,
+tolerance, and seeds
+**When** Exp6268 builds the suite
+**Then** it enumerates the original six-state control, at least two
+multimodal Ising targets, at least two Potts targets, and at least two
+typed-factor targets independent of sampler execution
+**And** every target has normalized probabilities, energies, modes, basins,
+barriers, hashes, and state-space size receipts.
+
+### SCENARIO-SAMPLER-6268-CONTROLS-FAIL-CLOSED: Controls Gate Readiness
+
+**Given** unimodal, inactive-treatment, unsupported-shape, duplicate,
+label-permutation, Potts-cardinality, typed-arity, and energy-sign controls
+**When** Exp6268 validates the fixture suite
+**Then** valid controls are recorded, invalid mutations are rejected, duplicate
+fixture count is the bare integer `0`, and inactive treatment cannot produce a
+null sampler verdict.
+
+### SCENARIO-SAMPLER-6268-NO-PERFORMANCE-CLAIM: Exact Construction Stays Claim-Bounded
+
+**Given** the frozen exact fixture suite
+**When** Exp6268 writes the terminal artifact
+**Then** `inference_substrate` is `local_cpu_exact_fixture_construction`,
+source mutation count is the bare integer `0`, no timing or hardware claim is
+made, and `sampler_fixture_suite_ready_score` is `1.0` only when every
+preregistered family, exactness, and control gate passes.
+
+## Implementation Status (REQ-SAMPLER-6268)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-6268 | Planned (`python/carnot/experiment_6268_multimodal_sampler_fixture_suite.py`, `results/experiment_6268_multimodal_sampler_fixture_suite.json`) | Planned (`tests/python/test_experiment_6268_multimodal_sampler_fixture_suite.py`) |
