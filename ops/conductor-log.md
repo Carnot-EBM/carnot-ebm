@@ -15582,3 +15582,4 @@ Still active  |
 | 2026-08-10 08:06 UTC | Clean immutable local-SOTA event corpus to chronol | OK | 98 passed, 1 warning in 14.54s |
 | 2026-08-10 08:37 UTC | Gated on Exp6263 clean replay: task-conditional en | OK | 87 passed, 1 warning in 8.46s |
 | 2026-08-10 08:39 UTC | Gated on Exp6264 familiarity: chronological two-ti | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6264-energy-familiarity-memory-gate.fam |
+| 2026-08-10 08:41 UTC | Gated on Exp6264 familiarity: chronological two-ti | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6264-energy-familiarity-memory-gate.fam |
