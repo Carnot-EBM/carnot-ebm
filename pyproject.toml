@@ -66,6 +66,10 @@ dependencies = [
     # checks. Keep this in core deps because carnot.pipeline imports the
     # monitor in normal package use and tests exercise the live PySAT path.
     "python-sat>=1.8.dev0",
+    # clingo — independent ASP oracle for bounded semantic-energy fixtures.
+    # Exp6274 compiles a narrow ASP subset to inspectable energy terms, then
+    # checks zero-energy states against clingo answer sets.
+    "clingo>=5.8,<6",
     # MCP is part of the Phase-1 software ship surface. `python -m carnot.mcp`
     # must speak real stdio JSON-RPC after a plain package install, not only
     # after an optional extra.

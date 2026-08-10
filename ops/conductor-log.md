@@ -15601,3 +15601,4 @@ Still active  |
 | 2026-08-10 12:50 UTC | Plan milestone 2026.08.541 | OK | 12 tasks proposed |
 | 2026-08-10 12:52 UTC | Milestone 2026.08.541 activated | OK | 12 tasks queued |
 | 2026-08-10 13:13 UTC | Exact terminal-boundary handoff from V540 into V54 | OK | 91 passed, 1 warning in 11.72s |
+| 2026-08-10 13:50 UTC | Post-V541-marker source delta and experimental-sco | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
