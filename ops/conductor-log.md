@@ -15676,3 +15676,5 @@ Still active  |
 | 2026-08-11 12:37 UTC | Exact held-family vulnerable/fixed Python pair fix | OK | 87 passed, 1 warning in 8.91s |
 | 2026-08-11 12:39 UTC | Three-family local state corpus gated on Exp6312 r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6312-model-local-representation-surface |
 | 2026-08-11 12:41 UTC | Three-family local state corpus gated on Exp6312 r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6312-model-local-representation-surface |
+| 2026-08-11 12:43 UTC | Three-family local state corpus gated on Exp6312 r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6312-model-local-representation-surface |
+| 2026-08-11 12:45 UTC | Per-model paired-difference energy probes gated on | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6314-three-family-model-local-state-corpu |
