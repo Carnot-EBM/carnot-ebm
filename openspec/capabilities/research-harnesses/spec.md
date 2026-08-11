@@ -2919,6 +2919,114 @@ field-principle entry, the checksum matches the normalized payload, and
 |---|---|---|
 | REQ-INFRA-6310 | Pending implementation: `python/carnot/experiment_6310_v544_terminal_transition.py`; terminal artifact `results/experiment_6310_v544_terminal_transition.json`. | Pending focused tests: `tests/python/test_experiment_6310_v544_terminal_transition.py`. |
 
+## REQ-INFRA-6311: V544 Post-Marker Source Freeze SHALL Be Strict, Null-Safe, And Contract-Complete
+
+Carnot SHALL build Exp6311 as a deterministic V544 post-marker source sweep
+and execution-scope freeze. The sweep SHALL hash the exact
+`<!-- V544-PLANNER-REFRESH-20260811-END -->` marker in
+`research-references.md`. It SHALL record the marker line. It SHALL use the
+marker commit time as the exclusive lower bound for novelty.
+
+Exp6311 SHALL search arXiv first. It SHALL then search OpenReview, Hugging
+Face Papers, Semantic Scholar citation routes for EBT and ARM-EBM, Extropic,
+Logical Intelligence, and GitHub. Each channel SHALL record direct URLs, query
+timestamps, dates, raw endpoint status, and a disposition. HTTP failures,
+browser challenges, empty endpoints, and inaccessible pages SHALL be recorded
+as receipts, not promoted findings.
+
+Exp6311 SHALL deduplicate candidates against all earlier
+`research-references.md` planner markers and against repeated source ids,
+URLs, titles, and content hashes in the current sweep. Exp6311 SHALL accept
+only stable, non-duplicate, reproducible, primary or first-party evidence that
+is strictly later than the V544 marker and that changes a local executable
+contract. A zero-source delta SHALL be terminal. In that case
+`accepted_count` SHALL be the bare integer `0`, `accepted_findings` SHALL be
+empty, `research-references.md` SHALL remain byte-identical, and
+`honest_verdict` SHALL start with `complete_null:`.
+
+Exp6311 SHALL freeze contracts for the V544 model-local state surface, exact
+code-pair fixture, per-model energy, versioned same-domain learner, protected
+validation, ARC shadow no-solve path, and no-hardware-claim boundary. The
+contracts SHALL explicitly exclude the retired V543 shared activation bus,
+shared-state initializer, licensed cross-family transfer, external text
+scorer, KAN replacement, generated-answer transport, TSU execution, and
+unchanged physical-board probe.
+
+The Exp6311 artifact SHALL be written atomically to
+`results/experiment_6311_v544_post_marker_source_scope_freeze.json` with
+`inference_substrate=web_and_bibliographic_search_only` and
+`verifier_is_oracle=false`. It SHALL not modify `scripts/research_conductor.py`.
+
+The Exp6311 artifact SHALL include these required fields: `status`,
+`v544_marker_text_and_line`, `search_window_start_utc`,
+`search_completed_utc`, `source_queries_by_channel`, `source_receipts`,
+`accepted_findings`, `accepted_count`, `duplicate_findings`,
+`watch_only_findings`, `inaccessible_sources`,
+`excluded_findings_and_reasons`,
+`semantic_scholar_ebt_and_arm_ebm_receipts`, `extropic_status`,
+`logical_intelligence_status`, `github_status`,
+`frozen_model_local_surface_contract`, `frozen_exact_pair_fixture_contract`,
+`frozen_model_local_energy_contract`,
+`frozen_versioned_learning_contract`,
+`frozen_protected_validation_contract`,
+`frozen_arc_shadow_no_solve_contract`, `frozen_hardware_exclusions`,
+`roadmap_scope_delta`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+### SCENARIO-INFRA-6311-1: Marker Bound Is Exclusive
+
+GIVEN the sealed V544 planner refresh marker in `research-references.md`
+WHEN Exp6311 classifies a candidate at or before the marker commit time
+THEN the candidate is rejected, and a bare same-day date is rejected unless a
+strictly later timestamp is present.
+
+### SCENARIO-INFRA-6311-2: Zero Findings Preserve References
+
+GIVEN every source channel returns no strictly later stable evidence,
+duplicate evidence, inaccessible evidence, pre-marker evidence, or watch-only
+evidence
+WHEN Exp6311 writes its artifact
+THEN `accepted_count` is the bare integer `0`, `accepted_findings` is empty,
+`research-references.md` is byte-identical, and `honest_verdict` starts with
+`complete_null:`.
+
+### SCENARIO-INFRA-6311-3: Dedupe And Scope Hashes Fail Closed
+
+GIVEN a candidate has no stable URL, repeats an earlier source id, repeats an
+existing reference block, repeats a current-sweep content hash, lacks a local
+executable consequence, or changes protected input hashes
+WHEN Exp6311 deduplicates and validates the sweep
+THEN the row is not accepted and the protected hash ledger records the exact
+before and after state.
+
+### SCENARIO-INFRA-6311-4: Frozen Contracts Preserve V544 Boundaries
+
+GIVEN V544 depends on model-local surfaces, exact code pairs, per-model energy
+heads, versioned same-domain learning, protected validation, ARC shadow
+evidence, and no hardware claim
+WHEN Exp6311 serializes frozen contracts
+THEN each contract has a stable version, required boundary fields, explicit
+retired-mechanism exclusions, and no shared-bus, cross-family, generated-text,
+TSU, or physical-board promotion path.
+
+### SCENARIO-INFRA-6311-5: Artifact Schema Is Principle Annotated
+
+GIVEN source receipts, protected hashes, field principles, and command
+receipts
+WHEN Exp6311 validates the report before writing
+THEN every required field is present, every field has provenance and a
+principle, `verifier_is_oracle=false`, the checksum matches the normalized
+payload, and the honest verdict has a terminal prefix.
+
+## Implementation Status (REQ-INFRA-6311)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6311 | Pending implementation: `python/carnot/experiment_6311_v544_post_marker_source_scope_freeze.py`; terminal artifact `results/experiment_6311_v544_post_marker_source_scope_freeze.json`. | Pending focused tests: `tests/python/test_experiment_6311_v544_post_marker_source_scope_freeze.py`. |
+
 ## REQ-INFRA-6298: Terminal Evidence Preflight SHALL Fail Closed Before Gate Consumption
 
 Carnot SHALL provide a reusable standalone terminal-evidence preflight for
