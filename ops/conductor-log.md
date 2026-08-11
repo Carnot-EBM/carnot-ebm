@@ -15627,3 +15627,4 @@ Still active  |
 | 2026-08-10 21:52 UTC | Exact-vertex bounded continuous relaxation of ASP  | OK | 90 passed, 1 warning in 12.69s |
 | 2026-08-10 22:13 UTC | Gated on Exp6286 raw receipts and Exp6287 parity:  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-10 22:33 UTC | Gated on Exp6288 adapter readiness: three-family l | OK | 92 passed, 1 warning in 9.79s |
+| 2026-08-10 23:56 UTC | Keyed revocable atomic repair memory under sealed  | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: broken fields  |
