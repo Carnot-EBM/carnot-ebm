@@ -15684,3 +15684,5 @@ Still active  |
 | 2026-08-11 13:22 UTC | Per-model paired-difference energy probes gated on | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6314-three-family-model-local-state-corpu |
 | 2026-08-11 14:43 UTC | Independent integrity audit for every model-local  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: nke/github.com |
 | 2026-08-11 14:45 UTC | Fresh live three-family benchmark gated on Exp6316 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6316-model-local-probe-integrity-audit) |
+| 2026-08-11 15:04 UTC | Continuous self-learning with versioned factor-loc | OK | 88 passed, 1 warning in 9.45s |
+| 2026-08-11 15:06 UTC | Fresh live three-family benchmark gated on Exp6316 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6316-model-local-probe-integrity-audit) |
