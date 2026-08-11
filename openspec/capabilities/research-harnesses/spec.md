@@ -3035,6 +3035,114 @@ payload, and the honest verdict has a terminal prefix.
 |---|---|---|
 | REQ-INFRA-6299 | Implemented: `python/carnot/experiment_6299_v543_post_marker_source_scope_freeze.py`; terminal artifact `results/experiment_6299_v543_post_marker_source_scope_freeze.json`. | Implemented: `tests/python/test_experiment_6299_v543_post_marker_source_scope_freeze.py`. |
 
+## REQ-INTEG-6309: V543 Adversarial Capstone SHALL Preserve Exact Branch Evidence And Bound Claims
+
+Carnot SHALL build Exp6309 as the V543 adversarial capstone for milestone
+`2026.08.543`. The capstone SHALL classify the exact declared deliverable for
+each task from Exp6297 through Exp6309. It SHALL NOT substitute aliases,
+source modules, conductor receipts, sidecars, or similarly named files for a
+missing exact deliverable.
+
+Exp6309 SHALL independently rerun current adversarial artifact checks on the
+declared artifact paths and SHALL keep stamped determinations separate from
+current-rule determinations. It SHALL also replay the Exp6298 terminal-evidence
+preflight fixture logic without rewriting the Exp6298 artifact. Missing,
+nonterminal, blocked, skipped, null, flagged, retired, ready, oracle-only,
+replay-only, safety-only, and unlicensed-transfer states SHALL remain visible.
+The conserved terminal-class denominator SHALL cover exactly 13 tasks.
+
+Exp6309 SHALL adjudicate four branches independently: infrastructure and source
+integrity, shared model state to exact energy, continuous online learning plus
+licensed transfer, and ARC target-validated routing. The capstone SHALL NOT
+count exact-oracle completion as verifier value, replay as transfer, safety as
+utility, retrieval as licensed transfer, or ARC proxy metrics as a solve. The
+top-level `verifier_is_oracle` field SHALL be the exact string
+`mixed_with_explicit_per_branch_boundary`, with each branch carrying its own
+oracle boundary.
+
+Exp6309 SHALL replay structured roadmap gates from exact bare upstream fields.
+It SHALL apply `retire_if_same_verdict` mechanically. When the current verdict
+matches a prior verdict covered by that rule, the report SHALL record an
+explicit retirement action and SHALL list any exclusion-manifest update. When
+the rule does not fire, the report SHALL state that no manifest update occurred.
+
+The Exp6309 artifact SHALL be written atomically to
+`results/experiment_6309_v543_adversarial_capstone.json`. It SHALL include
+these required fields: `status`, `milestone_roadmap_path_and_hash`,
+`exact_declared_task_artifact_matrix`,
+`upstream_terminal_classification_by_task`,
+`current_rule_adversarial_results_by_task`,
+`missing_nonterminal_blocked_skipped_null_flagged_retired_ready_oracle_only_replay_only_safety_only_and_unlicensed_counts`,
+`terminal_evidence_preflight_summary`,
+`branch_independent_promotion_ledger`, `shared_activation_bus_verdict`,
+`shared_state_initializer_verdict`, `live_three_family_value_verdict`,
+`continuous_self_learning_verdict`, `online_learning_safety_verdict`,
+`evidence_licensed_transfer_verdict`, `arc_target_validation_verdict`,
+`oracle_claim_boundary`, `replay_is_not_transfer_boundary`,
+`safety_cannot_promote_utility_boundary`, `arc_no_solve_claim_boundary`,
+`prd_gap_verdicts`, `prior_failure_retirement_actions`,
+`exclusion_manifest_updates`, `publication_gate_replay`,
+`architecture_reconciliation_receipt`,
+`openspec_traceability_status_changelog_and_reference_reconciliation_receipts`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INTEG-6309-1: Exact Declared Artifacts Conserve The Denominator
+
+GIVEN the active V543 roadmap and declared deliverables for Exp6297 through
+Exp6309
+WHEN Exp6309 builds its artifact matrix
+THEN exactly 13 task rows are present, every row is classified from the exact
+declared path, missing Exp6303 remains missing, and no alias or conductor
+receipt replaces it.
+
+### SCENARIO-INTEG-6309-2: Current Rules And Stamps Stay Separate
+
+GIVEN stamped flags and the current `scripts/adversarial_verify.py` rules
+WHEN Exp6309 reviews declared artifacts
+THEN stamped `flagged_adversarial` state, current critical flags, and
+current warnings are recorded separately for each task.
+
+### SCENARIO-INTEG-6309-3: Structured Gates Are Replayed From Bare Fields
+
+GIVEN V543 roadmap gates for Exp6302, Exp6303, Exp6305, and Exp6308
+WHEN Exp6309 replays the gates
+THEN only terminal exact artifacts with exact bare fields feed gate decisions,
+and skipped or missing upstream evidence cannot pass a downstream gate.
+
+### SCENARIO-INTEG-6309-4: Branch Promotion Is Independent
+
+GIVEN the infrastructure, shared-state, online-learning, licensed-transfer,
+safety, and ARC route artifacts
+WHEN Exp6309 builds the promotion ledger
+THEN each branch receives its own promotion verdict and blocker list, with no
+pooled score hiding a failed task or fold.
+
+### SCENARIO-INTEG-6309-5: Claim Boundaries Are Explicit
+
+GIVEN oracle, replay, safety, retrieval, and ARC proxy evidence
+WHEN Exp6309 writes boundary receipts
+THEN exact oracle evidence is not verifier value, replay is not transfer,
+safety is not utility, retrieval is not licensed transfer, and ARC route
+metrics are not a solve claim.
+
+### SCENARIO-INTEG-6309-6: Schema And Reconciliation Receipts Are Principle Annotated
+
+GIVEN the capstone report
+WHEN Exp6309 validates it before writing
+THEN every required field is present, every required field has provenance and a
+field-principle entry, `verifier_is_oracle` is
+`mixed_with_explicit_per_branch_boundary`, the checksum matches the normalized
+payload, and `honest_verdict` starts with a terminal prefix.
+
+## Implementation Status (REQ-INTEG-6309)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INTEG-6309 | Planned: `python/carnot/experiment_6309_v543_adversarial_capstone.py`; terminal artifact `results/experiment_6309_v543_adversarial_capstone.json`. | Planned: `tests/python/test_experiment_6309_v543_adversarial_capstone.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
