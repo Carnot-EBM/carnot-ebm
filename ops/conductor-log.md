@@ -15631,3 +15631,5 @@ Still active  |
 | 2026-08-11 00:14 UTC | Keyed revocable atomic repair memory under sealed  | OK | cache hit: 88 passed, 1 warning in 8.31s |
 | 2026-08-11 00:16 UTC | Gated on Exp6290 readiness: chronological continuo | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6290-revocable-atomic-repair-memory.rev |
 | 2026-08-11 00:18 UTC | Gated on Exp6290 readiness: chronological continuo | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6290-revocable-atomic-repair-memory.rev |
+| 2026-08-11 00:20 UTC | Gated on Exp6290 readiness: chronological continuo | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6290-revocable-atomic-repair-memory.rev |
+| 2026-08-11 00:22 UTC | Gated on Exp6291 crystallization: model-family and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6291-chronological-memory-crystallization |
