@@ -1,0 +1,2035 @@
+{
+  "schema": "carnot.experiment_6300.three_family_universal_activation_bus.v1",
+  "experiment": 6300,
+  "experiment_id": "experiment_6300_three_family_universal_activation_bus",
+  "run_date": "20260811",
+  "status": "blocked",
+  "paper_source_and_local_claim_boundary": {
+    "paper": {
+      "arxiv_id": "2608.09521",
+      "title": "One Adapter Pair per Model: A Universal Activation Interface for Language Models",
+      "url": "https://arxiv.org/abs/2608.09521",
+      "submitted": "2026-08-10"
+    },
+    "local_claim_boundary": [
+      "Exp6300 fits linear adapter pairs on Exp5852 embeddings only.",
+      "It tests held-fold alignment, reconstruction, neighborhoods, and model identity leakage.",
+      "It does not claim reusable probes, SAE features, activation tool transfer, NLA reuse, or energy-head value."
+    ]
+  },
+  "upstream_corpus_paths_hashes_and_terminal_classes": {
+    "results/experiment_5852_three_family_paired_embeddings.json": {
+      "sha256": "sha256:6572a11552c673e5f946a505db1e1767fcde110f18affc77ebefd6302957abc4",
+      "terminal_class": {
+        "status": "complete",
+        "honest_verdict": "ready: paired_embedding_corpus_complete_all_three_models",
+        "terminal": true
+      }
+    },
+    "results/experiment_5852_three_family_paired_embeddings.rows.jsonl": {
+      "sha256": "sha256:a76ccc5f25e5aa626d601472e2843fa075810a513357984a745a22f5b9c21e23",
+      "row_count": 1944,
+      "source_row_count": 648
+    },
+    "results/experiment_5853_paired_embedding_integrity_audit.json": {
+      "sha256": "sha256:1f3df42cf5a858e277d3a00a64e0450e4bf51d4a4c64e63a0f393bdf2a5a2b4e",
+      "terminal_class": {
+        "status": "disqualified",
+        "honest_verdict": "disqualified: claim_flip_direction_cell_failure,disaggregated_cell_failure,label_or_pair_permutation_survives,norm_only_or_length_control_failure,raw_model_dimension_identity_shortcut",
+        "terminal": true
+      },
+      "surviving_shortcuts": [
+        "claim_flip_direction_cell_failure",
+        "disaggregated_cell_failure",
+        "label_or_pair_permutation_survives",
+        "norm_only_or_length_control_failure",
+        "raw_model_dimension_identity_shortcut"
+      ]
+    },
+    "results/experiment_5854_portable_comparative_energy_controls.json": {
+      "sha256": "sha256:92096cda08d7e525b06b499f62d089c37007de40ad8a5091a5730f896466edfc",
+      "terminal_class": {
+        "status": "blocked",
+        "honest_verdict": "blocked_gate_check_failed",
+        "terminal": true
+      }
+    },
+    "results/experiment_6298_terminal_evidence_preflight_linter.json": {
+      "sha256": "sha256:e7dc0eba9e59f8b1a48e5c95d3f8df2a0c56c2f47c3e07d8692cc8b94ba3564b",
+      "terminal_class": {
+        "status": "complete",
+        "honest_verdict": "complete: terminal evidence preflight rejected V542 and synthetic bad fixtures with zero false accepts and zero false rejects",
+        "terminal": true
+      },
+      "terminal_evidence_preflight_ready_score": 1.0
+    }
+  },
+  "MODEL_SPECS": [
+    {
+      "active_params_b": 3.0,
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "context_length": 512,
+      "family": "qwen3.6-35b-a3b",
+      "gpu": 0,
+      "headline_eligible": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "llama_cpp_loader": "carnot.pipeline.gemma4_quantized_loader.Gemma4QuantizedLoader",
+      "local_model_present": true,
+      "local_path_hash": "sha256:6f682e0d9878ebd3211620f00fb8a28d4d2aa124d238a3fbfe038220455a504c",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "tokenizer_receipt": {
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+        "loadable": true,
+        "receipt_hash": "sha256:c1caaf7ac29b8b02ae0ef76e5f771c7086e3f80a3c7f16763b4c2eb6395a41f5",
+        "source": "embedded_gguf_llama_cpp_vocab_only"
+      },
+      "total_params_b": 35.0
+    },
+    {
+      "active_params_b": 31.0,
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "context_length": 512,
+      "family": "gemma-4-31b-it",
+      "gpu": 1,
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "llama_cpp_loader": "carnot.pipeline.gemma4_quantized_loader.Gemma4QuantizedLoader",
+      "local_model_present": true,
+      "local_path_hash": "sha256:330c00a9ca503ff3a01df8db6bd046991f1f849b7436ced943721312827a6200",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "role": "dense",
+      "tokenizer_receipt": {
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "loadable": true,
+        "receipt_hash": "sha256:926720bb6763aa8e8f3a6dffaec7006f6a6a72c74f60b6bb6db3cc78273af995",
+        "source": "embedded_gguf_llama_cpp_vocab_only"
+      },
+      "total_params_b": 31.0
+    },
+    {
+      "active_params_b": 4.0,
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "context_length": 512,
+      "family": "gemma-4-26b-a4b-it",
+      "gpu": 0,
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "llama_cpp_loader": "carnot.pipeline.gemma4_quantized_loader.Gemma4QuantizedLoader",
+      "local_model_present": true,
+      "local_path_hash": "sha256:3f7cc310b05e1efc7816fca37c1e612177b3ff237d6a2ea648af336062a3cbe9",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "tokenizer_receipt": {
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "loadable": true,
+        "receipt_hash": "sha256:926720bb6763aa8e8f3a6dffaec7006f6a6a72c74f60b6bb6db3cc78273af995",
+        "source": "embedded_gguf_llama_cpp_vocab_only"
+      },
+      "total_params_b": 26.0
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "model_embedding_dimensions": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": 2048,
+    "unsloth/gemma-4-31B-it-GGUF": 5376,
+    "unsloth/gemma-4-26B-A4B-it-GGUF": 2816
+  },
+  "no_live_model_load_receipt": {
+    "llm_loaded": false,
+    "generated_text": false,
+    "embedding_model_reloaded": false,
+    "reason": "Exp6300 reads immutable Exp5852 embedding rows and fits numpy adapters only."
+  },
+  "unlabeled_fit_contract": {
+    "matched_alignment_keys": [
+      "source_row_id",
+      "condition_suffix",
+      "pair_group_id"
+    ],
+    "fit_inputs": [
+      "embedding vectors",
+      "matched row IDs",
+      "model identity for adapter routing"
+    ],
+    "excluded_inputs": [
+      "oracle_label_receipt",
+      "exact_label",
+      "generated text",
+      "solver output"
+    ],
+    "exact_labels_used_for_fitting": false,
+    "energy_head_trained": false,
+    "llm_text_generation_used": false
+  },
+  "fold_manifest_path_and_hash": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6300_three_family_universal_activation_bus/fold_manifest.json",
+    "sha256": "sha256:e17dc6fae4723e0122a5fbba8d1e390cea044283c4dea60de00c1f40fc570de8",
+    "manifest_hash": "sha256:4a843e9655491c0adc8506f7b34685bcef0a6c1bc352e6abbe8b18031d912ed3",
+    "fold_count": 5
+  },
+  "shared_dimension": 128,
+  "adapter_architecture_and_parameter_counts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "architecture": "linear_encoder_decoder",
+      "input_dimension": 2048,
+      "shared_dimension": 128,
+      "encoder_parameters": 262272,
+      "decoder_parameters": 264192,
+      "total_parameters": 526464
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "architecture": "linear_encoder_decoder",
+      "input_dimension": 5376,
+      "shared_dimension": 128,
+      "encoder_parameters": 688256,
+      "decoder_parameters": 693504,
+      "total_parameters": 1381760
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "architecture": "linear_encoder_decoder",
+      "input_dimension": 2816,
+      "shared_dimension": 128,
+      "encoder_parameters": 360576,
+      "decoder_parameters": 363264,
+      "total_parameters": 723840
+    }
+  },
+  "train_validation_and_holdout_row_counts": {
+    "fold_0": {
+      "train_items": 776,
+      "validation_items": 256,
+      "holdout_items": 264,
+      "train_source_rows": 388,
+      "validation_source_rows": 128,
+      "holdout_source_rows": 132
+    },
+    "fold_1": {
+      "train_items": 808,
+      "validation_items": 256,
+      "holdout_items": 232,
+      "train_source_rows": 404,
+      "validation_source_rows": 128,
+      "holdout_source_rows": 116
+    },
+    "fold_2": {
+      "train_items": 776,
+      "validation_items": 232,
+      "holdout_items": 288,
+      "train_source_rows": 388,
+      "validation_source_rows": 116,
+      "holdout_source_rows": 144
+    },
+    "fold_3": {
+      "train_items": 788,
+      "validation_items": 224,
+      "holdout_items": 284,
+      "train_source_rows": 394,
+      "validation_source_rows": 112,
+      "holdout_source_rows": 142
+    },
+    "fold_4": {
+      "train_items": 820,
+      "validation_items": 248,
+      "holdout_items": 228,
+      "train_source_rows": 410,
+      "validation_source_rows": 124,
+      "holdout_source_rows": 114
+    }
+  },
+  "reconstruction_metrics_by_model_and_fold": {
+    "fold_0": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "relative_mse": 0.080021,
+        "tolerance": 0.5,
+        "passed": true,
+        "holdout_item_count": 264
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "relative_mse": 0.219685,
+        "tolerance": 0.5,
+        "passed": true,
+        "holdout_item_count": 264
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "relative_mse": 0.34256,
+        "tolerance": 0.5,
+        "passed": true,
+        "holdout_item_count": 264
+      }
+    },
+    "fold_1": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "relative_mse": 0.078445,
+        "tolerance": 0.5,
+        "passed": true,
+        "holdout_item_count": 232
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "relative_mse": 0.203922,
+        "tolerance": 0.5,
+        "passed": true,
+        "holdout_item_count": 232
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "relative_mse": 0.343998,
+        "tolerance": 0.5,
+        "passed": true,
+        "holdout_item_count": 232
+      }
+    },
+    "fold_2": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "relative_mse": 0.078816,
+        "tolerance": 0.5,
+        "passed": true,
+        "holdout_item_count": 288
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "relative_mse": 0.223184,
+        "tolerance": 0.5,
+        "passed": true,
+        "holdout_item_count": 288
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "relative_mse": 0.312222,
+        "tolerance": 0.5,
+        "passed": true,
+        "holdout_item_count": 288
+      }
+    },
+    "fold_3": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "relative_mse": 0.071113,
+        "tolerance": 0.5,
+        "passed": true,
+        "holdout_item_count": 284
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "relative_mse": 0.251468,
+        "tolerance": 0.5,
+        "passed": true,
+        "holdout_item_count": 284
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "relative_mse": 0.358404,
+        "tolerance": 0.5,
+        "passed": true,
+        "holdout_item_count": 284
+      }
+    },
+    "fold_4": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "relative_mse": 0.0666,
+        "tolerance": 0.5,
+        "passed": true,
+        "holdout_item_count": 228
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "relative_mse": 0.274999,
+        "tolerance": 0.5,
+        "passed": true,
+        "holdout_item_count": 228
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "relative_mse": 0.353576,
+        "tolerance": 0.5,
+        "passed": true,
+        "holdout_item_count": 228
+      }
+    }
+  },
+  "cross_model_retrieval_metrics_by_pair_and_fold": {
+    "fold_0": {
+      "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "learned_bus_top1_accuracy": 0.200758,
+        "learned_bus_mrr": 0.367188,
+        "raw_padded_mrr": 0.023071,
+        "random_projection_mrr": 0.007652,
+        "positive_over_raw_padded": true,
+        "positive_over_random_projection": true,
+        "holdout_item_count": 264
+      },
+      "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "learned_bus_top1_accuracy": 0.185606,
+        "learned_bus_mrr": 0.333597,
+        "raw_padded_mrr": 0.019509,
+        "random_projection_mrr": 0.027039,
+        "positive_over_raw_padded": true,
+        "positive_over_random_projection": true,
+        "holdout_item_count": 264
+      },
+      "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "learned_bus_top1_accuracy": 0.162879,
+        "learned_bus_mrr": 0.297213,
+        "raw_padded_mrr": 0.014243,
+        "random_projection_mrr": 0.04479,
+        "positive_over_raw_padded": true,
+        "positive_over_random_projection": true,
+        "holdout_item_count": 264
+      }
+    },
+    "fold_1": {
+      "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "learned_bus_top1_accuracy": 0.211207,
+        "learned_bus_mrr": 0.377996,
+        "raw_padded_mrr": 0.033037,
+        "random_projection_mrr": 0.008509,
+        "positive_over_raw_padded": true,
+        "positive_over_random_projection": true,
+        "holdout_item_count": 232
+      },
+      "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "learned_bus_top1_accuracy": 0.193966,
+        "learned_bus_mrr": 0.343047,
+        "raw_padded_mrr": 0.020271,
+        "random_projection_mrr": 0.038577,
+        "positive_over_raw_padded": true,
+        "positive_over_random_projection": true,
+        "holdout_item_count": 232
+      },
+      "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "learned_bus_top1_accuracy": 0.133621,
+        "learned_bus_mrr": 0.282804,
+        "raw_padded_mrr": 0.019163,
+        "random_projection_mrr": 0.054787,
+        "positive_over_raw_padded": true,
+        "positive_over_random_projection": true,
+        "holdout_item_count": 232
+      }
+    },
+    "fold_2": {
+      "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "learned_bus_top1_accuracy": 0.180556,
+        "learned_bus_mrr": 0.320013,
+        "raw_padded_mrr": 0.017149,
+        "random_projection_mrr": 0.00851,
+        "positive_over_raw_padded": true,
+        "positive_over_random_projection": true,
+        "holdout_item_count": 288
+      },
+      "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "learned_bus_top1_accuracy": 0.135417,
+        "learned_bus_mrr": 0.299119,
+        "raw_padded_mrr": 0.01648,
+        "random_projection_mrr": 0.021926,
+        "positive_over_raw_padded": true,
+        "positive_over_random_projection": true,
+        "holdout_item_count": 288
+      },
+      "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "learned_bus_top1_accuracy": 0.138889,
+        "learned_bus_mrr": 0.286285,
+        "raw_padded_mrr": 0.011611,
+        "random_projection_mrr": 0.040239,
+        "positive_over_raw_padded": true,
+        "positive_over_random_projection": true,
+        "holdout_item_count": 288
+      }
+    },
+    "fold_3": {
+      "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "learned_bus_top1_accuracy": 0.158451,
+        "learned_bus_mrr": 0.305472,
+        "raw_padded_mrr": 0.022896,
+        "random_projection_mrr": 0.007012,
+        "positive_over_raw_padded": true,
+        "positive_over_random_projection": true,
+        "holdout_item_count": 284
+      },
+      "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "learned_bus_top1_accuracy": 0.126761,
+        "learned_bus_mrr": 0.277205,
+        "raw_padded_mrr": 0.016375,
+        "random_projection_mrr": 0.026663,
+        "positive_over_raw_padded": true,
+        "positive_over_random_projection": true,
+        "holdout_item_count": 284
+      },
+      "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "learned_bus_top1_accuracy": 0.158451,
+        "learned_bus_mrr": 0.280809,
+        "raw_padded_mrr": 0.009125,
+        "random_projection_mrr": 0.03845,
+        "positive_over_raw_padded": true,
+        "positive_over_random_projection": true,
+        "holdout_item_count": 284
+      }
+    },
+    "fold_4": {
+      "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "learned_bus_top1_accuracy": 0.188596,
+        "learned_bus_mrr": 0.331047,
+        "raw_padded_mrr": 0.028861,
+        "random_projection_mrr": 0.008966,
+        "positive_over_raw_padded": true,
+        "positive_over_random_projection": true,
+        "holdout_item_count": 228
+      },
+      "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "learned_bus_top1_accuracy": 0.184211,
+        "learned_bus_mrr": 0.319832,
+        "raw_padded_mrr": 0.020989,
+        "random_projection_mrr": 0.03876,
+        "positive_over_raw_padded": true,
+        "positive_over_random_projection": true,
+        "holdout_item_count": 228
+      },
+      "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "learned_bus_top1_accuracy": 0.135965,
+        "learned_bus_mrr": 0.271962,
+        "raw_padded_mrr": 0.012532,
+        "random_projection_mrr": 0.04355,
+        "positive_over_raw_padded": true,
+        "positive_over_random_projection": true,
+        "holdout_item_count": 228
+      }
+    }
+  },
+  "neighborhood_consistency_by_fold": {
+    "fold_0": {
+      "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "top_k": 10,
+        "mean_jaccard": 0.406887
+      },
+      "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "top_k": 10,
+        "mean_jaccard": 0.387295
+      },
+      "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "top_k": 10,
+        "mean_jaccard": 0.338749
+      }
+    },
+    "fold_1": {
+      "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "top_k": 10,
+        "mean_jaccard": 0.445431
+      },
+      "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "top_k": 10,
+        "mean_jaccard": 0.400645
+      },
+      "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "top_k": 10,
+        "mean_jaccard": 0.366265
+      }
+    },
+    "fold_2": {
+      "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "top_k": 10,
+        "mean_jaccard": 0.408068
+      },
+      "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "top_k": 10,
+        "mean_jaccard": 0.398624
+      },
+      "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "top_k": 10,
+        "mean_jaccard": 0.366783
+      }
+    },
+    "fold_3": {
+      "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "top_k": 10,
+        "mean_jaccard": 0.410093
+      },
+      "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "top_k": 10,
+        "mean_jaccard": 0.365812
+      },
+      "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "top_k": 10,
+        "mean_jaccard": 0.326662
+      }
+    },
+    "fold_4": {
+      "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "top_k": 10,
+        "mean_jaccard": 0.379636
+      },
+      "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "top_k": 10,
+        "mean_jaccard": 0.369104
+      },
+      "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "top_k": 10,
+        "mean_jaccard": 0.326956
+      }
+    }
+  },
+  "model_identity_accuracy_by_fold": {
+    "fold_0": {
+      "accuracy": 0.352273,
+      "chance": 0.333333,
+      "tolerance": 0.05,
+      "threshold": 0.383333,
+      "passed": true,
+      "sample_count": 792
+    },
+    "fold_1": {
+      "accuracy": 0.310345,
+      "chance": 0.333333,
+      "tolerance": 0.05,
+      "threshold": 0.383333,
+      "passed": true,
+      "sample_count": 696
+    },
+    "fold_2": {
+      "accuracy": 0.328704,
+      "chance": 0.333333,
+      "tolerance": 0.05,
+      "threshold": 0.383333,
+      "passed": true,
+      "sample_count": 864
+    },
+    "fold_3": {
+      "accuracy": 0.311033,
+      "chance": 0.333333,
+      "tolerance": 0.05,
+      "threshold": 0.383333,
+      "passed": true,
+      "sample_count": 852
+    },
+    "fold_4": {
+      "accuracy": 0.343567,
+      "chance": 0.333333,
+      "tolerance": 0.05,
+      "threshold": 0.383333,
+      "passed": true,
+      "sample_count": 684
+    }
+  },
+  "chance_identity_accuracy": 0.333333,
+  "raw_padded_and_random_projection_controls": {
+    "fold_0": {
+      "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "raw_padded": {
+          "top1_accuracy": 0.003788,
+          "mean_reciprocal_rank": 0.023071,
+          "candidate_count": 264
+        },
+        "random_projection": {
+          "top1_accuracy": 0.0,
+          "mean_reciprocal_rank": 0.007652,
+          "candidate_count": 264
+        }
+      },
+      "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "raw_padded": {
+          "top1_accuracy": 0.003788,
+          "mean_reciprocal_rank": 0.019509,
+          "candidate_count": 264
+        },
+        "random_projection": {
+          "top1_accuracy": 0.007576,
+          "mean_reciprocal_rank": 0.027039,
+          "candidate_count": 264
+        }
+      },
+      "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "raw_padded": {
+          "top1_accuracy": 0.003788,
+          "mean_reciprocal_rank": 0.014243,
+          "candidate_count": 264
+        },
+        "random_projection": {
+          "top1_accuracy": 0.011364,
+          "mean_reciprocal_rank": 0.04479,
+          "candidate_count": 264
+        }
+      }
+    },
+    "fold_1": {
+      "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "raw_padded": {
+          "top1_accuracy": 0.012931,
+          "mean_reciprocal_rank": 0.033037,
+          "candidate_count": 232
+        },
+        "random_projection": {
+          "top1_accuracy": 0.0,
+          "mean_reciprocal_rank": 0.008509,
+          "candidate_count": 232
+        }
+      },
+      "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "raw_padded": {
+          "top1_accuracy": 0.00431,
+          "mean_reciprocal_rank": 0.020271,
+          "candidate_count": 232
+        },
+        "random_projection": {
+          "top1_accuracy": 0.017241,
+          "mean_reciprocal_rank": 0.038577,
+          "candidate_count": 232
+        }
+      },
+      "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "raw_padded": {
+          "top1_accuracy": 0.00431,
+          "mean_reciprocal_rank": 0.019163,
+          "candidate_count": 232
+        },
+        "random_projection": {
+          "top1_accuracy": 0.008621,
+          "mean_reciprocal_rank": 0.054787,
+          "candidate_count": 232
+        }
+      }
+    },
+    "fold_2": {
+      "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "raw_padded": {
+          "top1_accuracy": 0.003472,
+          "mean_reciprocal_rank": 0.017149,
+          "candidate_count": 288
+        },
+        "random_projection": {
+          "top1_accuracy": 0.0,
+          "mean_reciprocal_rank": 0.00851,
+          "candidate_count": 288
+        }
+      },
+      "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "raw_padded": {
+          "top1_accuracy": 0.003472,
+          "mean_reciprocal_rank": 0.01648,
+          "candidate_count": 288
+        },
+        "random_projection": {
+          "top1_accuracy": 0.0,
+          "mean_reciprocal_rank": 0.021926,
+          "candidate_count": 288
+        }
+      },
+      "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "raw_padded": {
+          "top1_accuracy": 0.0,
+          "mean_reciprocal_rank": 0.011611,
+          "candidate_count": 288
+        },
+        "random_projection": {
+          "top1_accuracy": 0.010417,
+          "mean_reciprocal_rank": 0.040239,
+          "candidate_count": 288
+        }
+      }
+    },
+    "fold_3": {
+      "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "raw_padded": {
+          "top1_accuracy": 0.003521,
+          "mean_reciprocal_rank": 0.022896,
+          "candidate_count": 284
+        },
+        "random_projection": {
+          "top1_accuracy": 0.0,
+          "mean_reciprocal_rank": 0.007012,
+          "candidate_count": 284
+        }
+      },
+      "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "raw_padded": {
+          "top1_accuracy": 0.0,
+          "mean_reciprocal_rank": 0.016375,
+          "candidate_count": 284
+        },
+        "random_projection": {
+          "top1_accuracy": 0.003521,
+          "mean_reciprocal_rank": 0.026663,
+          "candidate_count": 284
+        }
+      },
+      "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "raw_padded": {
+          "top1_accuracy": 0.0,
+          "mean_reciprocal_rank": 0.009125,
+          "candidate_count": 284
+        },
+        "random_projection": {
+          "top1_accuracy": 0.007042,
+          "mean_reciprocal_rank": 0.03845,
+          "candidate_count": 284
+        }
+      }
+    },
+    "fold_4": {
+      "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "raw_padded": {
+          "top1_accuracy": 0.008772,
+          "mean_reciprocal_rank": 0.028861,
+          "candidate_count": 228
+        },
+        "random_projection": {
+          "top1_accuracy": 0.0,
+          "mean_reciprocal_rank": 0.008966,
+          "candidate_count": 228
+        }
+      },
+      "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "raw_padded": {
+          "top1_accuracy": 0.004386,
+          "mean_reciprocal_rank": 0.020989,
+          "candidate_count": 228
+        },
+        "random_projection": {
+          "top1_accuracy": 0.008772,
+          "mean_reciprocal_rank": 0.03876,
+          "candidate_count": 228
+        }
+      },
+      "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+        "model_pair": [
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "raw_padded": {
+          "top1_accuracy": 0.0,
+          "mean_reciprocal_rank": 0.012532,
+          "candidate_count": 228
+        },
+        "random_projection": {
+          "top1_accuracy": 0.004386,
+          "mean_reciprocal_rank": 0.04355,
+          "candidate_count": 228
+        }
+      }
+    }
+  },
+  "norm_length_and_token_count_controls": {
+    "scalar_controls_by_fold": {
+      "fold_0": {
+        "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+          "model_pair": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-31B-it-GGUF"
+          ],
+          "norm_length_token_count_mrr": 0.033248,
+          "norm_length_token_count_top1": 0.007576
+        },
+        "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+          "model_pair": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "norm_length_token_count_mrr": 0.025763,
+          "norm_length_token_count_top1": 0.0
+        },
+        "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+          "model_pair": [
+            "unsloth/gemma-4-31B-it-GGUF",
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "norm_length_token_count_mrr": 0.073733,
+          "norm_length_token_count_top1": 0.018939
+        }
+      },
+      "fold_1": {
+        "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+          "model_pair": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-31B-it-GGUF"
+          ],
+          "norm_length_token_count_mrr": 0.035176,
+          "norm_length_token_count_top1": 0.008621
+        },
+        "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+          "model_pair": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "norm_length_token_count_mrr": 0.028802,
+          "norm_length_token_count_top1": 0.0
+        },
+        "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+          "model_pair": [
+            "unsloth/gemma-4-31B-it-GGUF",
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "norm_length_token_count_mrr": 0.061241,
+          "norm_length_token_count_top1": 0.0
+        }
+      },
+      "fold_2": {
+        "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+          "model_pair": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-31B-it-GGUF"
+          ],
+          "norm_length_token_count_mrr": 0.039201,
+          "norm_length_token_count_top1": 0.010417
+        },
+        "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+          "model_pair": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "norm_length_token_count_mrr": 0.027023,
+          "norm_length_token_count_top1": 0.0
+        },
+        "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+          "model_pair": [
+            "unsloth/gemma-4-31B-it-GGUF",
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "norm_length_token_count_mrr": 0.069583,
+          "norm_length_token_count_top1": 0.017361
+        }
+      },
+      "fold_3": {
+        "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+          "model_pair": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-31B-it-GGUF"
+          ],
+          "norm_length_token_count_mrr": 0.031213,
+          "norm_length_token_count_top1": 0.003521
+        },
+        "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+          "model_pair": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "norm_length_token_count_mrr": 0.040703,
+          "norm_length_token_count_top1": 0.014085
+        },
+        "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+          "model_pair": [
+            "unsloth/gemma-4-31B-it-GGUF",
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "norm_length_token_count_mrr": 0.071104,
+          "norm_length_token_count_top1": 0.017606
+        }
+      },
+      "fold_4": {
+        "qwen3_6_35b_a3b_gguf__gemma_4_31b_it_gguf": {
+          "model_pair": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-31B-it-GGUF"
+          ],
+          "norm_length_token_count_mrr": 0.038696,
+          "norm_length_token_count_top1": 0.008772
+        },
+        "qwen3_6_35b_a3b_gguf__gemma_4_26b_a4b_it_gguf": {
+          "model_pair": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "norm_length_token_count_mrr": 0.037408,
+          "norm_length_token_count_top1": 0.013158
+        },
+        "gemma_4_31b_it_gguf__gemma_4_26b_a4b_it_gguf": {
+          "model_pair": [
+            "unsloth/gemma-4-31B-it-GGUF",
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "norm_length_token_count_mrr": 0.066797,
+          "norm_length_token_count_top1": 0.008772
+        }
+      }
+    },
+    "token_count_pairing": "condition-level token counts replayed from Exp5852",
+    "raw_dimension_identity_shortcut_from_exp5853": 1.0
+  },
+  "checkpoint_paths_and_hashes": {
+    "fold_0|unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6300_three_family_universal_activation_bus/adapters/fold_0/qwen3_6_35b_a3b_gguf.npz",
+      "sha256": "sha256:5cf0dccd976a123b107fb3a8ca8515caa463c06aa03069318e08f635df7032b8",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parameter_count": 526464
+    },
+    "fold_0|unsloth/gemma-4-31B-it-GGUF": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6300_three_family_universal_activation_bus/adapters/fold_0/gemma_4_31b_it_gguf.npz",
+      "sha256": "sha256:1eb3bd9e6c8424ef3a56f219af9ddc4219d5713e88076a2574c343354fb139cb",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "parameter_count": 1381760
+    },
+    "fold_0|unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6300_three_family_universal_activation_bus/adapters/fold_0/gemma_4_26b_a4b_it_gguf.npz",
+      "sha256": "sha256:0fd06f4f50112a0dfbf950c68b0fbfd8fe0f3d18e53639b7a901f669df8ce279",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "parameter_count": 723840
+    },
+    "fold_1|unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6300_three_family_universal_activation_bus/adapters/fold_1/qwen3_6_35b_a3b_gguf.npz",
+      "sha256": "sha256:f3f0c45214147fc8f58d5cdbfb9fe01e7b9d9f0f001d3f4d1076db6a285e0833",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parameter_count": 526464
+    },
+    "fold_1|unsloth/gemma-4-31B-it-GGUF": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6300_three_family_universal_activation_bus/adapters/fold_1/gemma_4_31b_it_gguf.npz",
+      "sha256": "sha256:804ed984a33a9595c05335476493361c7ab61510d0df798d0a46a13bd6b788c1",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "parameter_count": 1381760
+    },
+    "fold_1|unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6300_three_family_universal_activation_bus/adapters/fold_1/gemma_4_26b_a4b_it_gguf.npz",
+      "sha256": "sha256:3c9e9975071965161f83126d952ca97535d173bf1649d5b2d6a45bf5e91bbd84",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "parameter_count": 723840
+    },
+    "fold_2|unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6300_three_family_universal_activation_bus/adapters/fold_2/qwen3_6_35b_a3b_gguf.npz",
+      "sha256": "sha256:58d9ce05bc13d109faa29eee296728172048353a9d9067df4a7fba70c03bd49d",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parameter_count": 526464
+    },
+    "fold_2|unsloth/gemma-4-31B-it-GGUF": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6300_three_family_universal_activation_bus/adapters/fold_2/gemma_4_31b_it_gguf.npz",
+      "sha256": "sha256:8bb6e39d4d3691288626ee0ece6d989ab858398c2c0e672e7defd1e336c854f8",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "parameter_count": 1381760
+    },
+    "fold_2|unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6300_three_family_universal_activation_bus/adapters/fold_2/gemma_4_26b_a4b_it_gguf.npz",
+      "sha256": "sha256:e1266fdc16b9e67bd4dd7be72b5135b849bafbdfe30ca41b056533cc91492d72",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "parameter_count": 723840
+    },
+    "fold_3|unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6300_three_family_universal_activation_bus/adapters/fold_3/qwen3_6_35b_a3b_gguf.npz",
+      "sha256": "sha256:1e3f2bbcfb02a09b4f4c949711fe5656b7cfa0e4677863d0cc834f3bd06acc6c",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parameter_count": 526464
+    },
+    "fold_3|unsloth/gemma-4-31B-it-GGUF": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6300_three_family_universal_activation_bus/adapters/fold_3/gemma_4_31b_it_gguf.npz",
+      "sha256": "sha256:6bb5ad47df11905c0ff7adcfa713f220cdce2a11617681033ad4ee2079ece23f",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "parameter_count": 1381760
+    },
+    "fold_3|unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6300_three_family_universal_activation_bus/adapters/fold_3/gemma_4_26b_a4b_it_gguf.npz",
+      "sha256": "sha256:64373748e6f0e57cf48f92b63edc40898b4c65ab79c7592137c1befd45ee360a",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "parameter_count": 723840
+    },
+    "fold_4|unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6300_three_family_universal_activation_bus/adapters/fold_4/qwen3_6_35b_a3b_gguf.npz",
+      "sha256": "sha256:8f1c0787060c3019485d17bdb998856f2d6b394897105edb2d184267affddb68",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "parameter_count": 526464
+    },
+    "fold_4|unsloth/gemma-4-31B-it-GGUF": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6300_three_family_universal_activation_bus/adapters/fold_4/gemma_4_31b_it_gguf.npz",
+      "sha256": "sha256:5bc62695c7d41d80d38f52276ad4bcc10bdc21524419ce1ae82dfee957506e8e",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "parameter_count": 1381760
+    },
+    "fold_4|unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6300_three_family_universal_activation_bus/adapters/fold_4/gemma_4_26b_a4b_it_gguf.npz",
+      "sha256": "sha256:894bfae742f7443b3a98622499ffa3aa9af5e18d5604faaffc88d56f3baed6a0",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "parameter_count": 723840
+    }
+  },
+  "source_model_weight_mutation_count": 0,
+  "shared_activation_bus_ready_score": 1.0,
+  "protected_files_unchanged": {
+    "unchanged": true,
+    "paths": {
+      "openspec/capabilities/phase3-kona/spec.md": {
+        "before_sha256": "sha256:65d00caadeb079b227f55d88fd86b902c91e8ab100a8730dcdf3fe66780947ea",
+        "after_sha256": "sha256:65d00caadeb079b227f55d88fd86b902c91e8ab100a8730dcdf3fe66780947ea",
+        "unchanged": true
+      },
+      "python/carnot/experiment_6300_three_family_universal_activation_bus.py": {
+        "before_sha256": "sha256:4ac5b926e90568fc943a23640f968fb1bf79758a5b7c9d4d92685a10853665be",
+        "after_sha256": "sha256:4ac5b926e90568fc943a23640f968fb1bf79758a5b7c9d4d92685a10853665be",
+        "unchanged": true
+      },
+      "results/experiment_5852_three_family_paired_embeddings.json": {
+        "before_sha256": "sha256:6572a11552c673e5f946a505db1e1767fcde110f18affc77ebefd6302957abc4",
+        "after_sha256": "sha256:6572a11552c673e5f946a505db1e1767fcde110f18affc77ebefd6302957abc4",
+        "unchanged": true
+      },
+      "results/experiment_5852_three_family_paired_embeddings.rows.jsonl": {
+        "before_sha256": "sha256:a76ccc5f25e5aa626d601472e2843fa075810a513357984a745a22f5b9c21e23",
+        "after_sha256": "sha256:a76ccc5f25e5aa626d601472e2843fa075810a513357984a745a22f5b9c21e23",
+        "unchanged": true
+      },
+      "results/experiment_5853_paired_embedding_integrity_audit.json": {
+        "before_sha256": "sha256:1f3df42cf5a858e277d3a00a64e0450e4bf51d4a4c64e63a0f393bdf2a5a2b4e",
+        "after_sha256": "sha256:1f3df42cf5a858e277d3a00a64e0450e4bf51d4a4c64e63a0f393bdf2a5a2b4e",
+        "unchanged": true
+      },
+      "results/experiment_5854_portable_comparative_energy_controls.json": {
+        "before_sha256": "sha256:92096cda08d7e525b06b499f62d089c37007de40ad8a5091a5730f896466edfc",
+        "after_sha256": "sha256:92096cda08d7e525b06b499f62d089c37007de40ad8a5091a5730f896466edfc",
+        "unchanged": true
+      },
+      "results/experiment_6298_terminal_evidence_preflight_linter.json": {
+        "before_sha256": "sha256:e7dc0eba9e59f8b1a48e5c95d3f8df2a0c56c2f47c3e07d8692cc8b94ba3564b",
+        "after_sha256": "sha256:e7dc0eba9e59f8b1a48e5c95d3f8df2a0c56c2f47c3e07d8692cc8b94ba3564b",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "before_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "after_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "unchanged": true
+      },
+      "tests/python/test_experiment_6300_three_family_universal_activation_bus.py": {
+        "before_sha256": "sha256:1e14a2b6c23819b2893064f7543f4156c7b49c1f5c9b817823c3ae87902f58f0",
+        "after_sha256": "sha256:1e14a2b6c23819b2893064f7543f4156c7b49c1f5c9b817823c3ae87902f58f0",
+        "unchanged": true
+      }
+    },
+    "model_weight_receipts": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "before": {
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "path_exists": true,
+          "precomputed_sha256_from_exp5852": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "stat_size_bytes": 22134528992,
+          "hashing_policy": "replayed Exp5852 GGUF hash; Exp6300 never opens weights for model loading"
+        },
+        "after": {
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "path_exists": true,
+          "precomputed_sha256_from_exp5852": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "stat_size_bytes": 22134528992,
+          "hashing_policy": "replayed Exp5852 GGUF hash; Exp6300 never opens weights for model loading"
+        },
+        "unchanged": true
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "before": {
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "path_exists": true,
+          "precomputed_sha256_from_exp5852": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "stat_size_bytes": 16947539744,
+          "hashing_policy": "replayed Exp5852 GGUF hash; Exp6300 never opens weights for model loading"
+        },
+        "after": {
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "path_exists": true,
+          "precomputed_sha256_from_exp5852": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "stat_size_bytes": 16947539744,
+          "hashing_policy": "replayed Exp5852 GGUF hash; Exp6300 never opens weights for model loading"
+        },
+        "unchanged": true
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "before": {
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "path_exists": true,
+          "precomputed_sha256_from_exp5852": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "stat_size_bytes": 18323731456,
+          "hashing_policy": "replayed Exp5852 GGUF hash; Exp6300 never opens weights for model loading"
+        },
+        "after": {
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "path_exists": true,
+          "precomputed_sha256_from_exp5852": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "stat_size_bytes": 18323731456,
+          "hashing_policy": "replayed Exp5852 GGUF hash; Exp6300 never opens weights for model loading"
+        },
+        "unchanged": true
+      }
+    }
+  },
+  "preconditions_checked": {
+    "run_date": "20260811",
+    "preconditions_ready": true,
+    "blocked_reasons": [],
+    "upstream_corpus_paths_hashes_and_terminal_classes": {
+      "results/experiment_5852_three_family_paired_embeddings.json": {
+        "sha256": "sha256:6572a11552c673e5f946a505db1e1767fcde110f18affc77ebefd6302957abc4",
+        "terminal_class": {
+          "status": "complete",
+          "honest_verdict": "ready: paired_embedding_corpus_complete_all_three_models",
+          "terminal": true
+        }
+      },
+      "results/experiment_5852_three_family_paired_embeddings.rows.jsonl": {
+        "sha256": "sha256:a76ccc5f25e5aa626d601472e2843fa075810a513357984a745a22f5b9c21e23",
+        "row_count": 1944,
+        "source_row_count": 648
+      },
+      "results/experiment_5853_paired_embedding_integrity_audit.json": {
+        "sha256": "sha256:1f3df42cf5a858e277d3a00a64e0450e4bf51d4a4c64e63a0f393bdf2a5a2b4e",
+        "terminal_class": {
+          "status": "disqualified",
+          "honest_verdict": "disqualified: claim_flip_direction_cell_failure,disaggregated_cell_failure,label_or_pair_permutation_survives,norm_only_or_length_control_failure,raw_model_dimension_identity_shortcut",
+          "terminal": true
+        },
+        "surviving_shortcuts": [
+          "claim_flip_direction_cell_failure",
+          "disaggregated_cell_failure",
+          "label_or_pair_permutation_survives",
+          "norm_only_or_length_control_failure",
+          "raw_model_dimension_identity_shortcut"
+        ]
+      },
+      "results/experiment_5854_portable_comparative_energy_controls.json": {
+        "sha256": "sha256:92096cda08d7e525b06b499f62d089c37007de40ad8a5091a5730f896466edfc",
+        "terminal_class": {
+          "status": "blocked",
+          "honest_verdict": "blocked_gate_check_failed",
+          "terminal": true
+        }
+      },
+      "results/experiment_6298_terminal_evidence_preflight_linter.json": {
+        "sha256": "sha256:e7dc0eba9e59f8b1a48e5c95d3f8df2a0c56c2f47c3e07d8692cc8b94ba3564b",
+        "terminal_class": {
+          "status": "complete",
+          "honest_verdict": "complete: terminal evidence preflight rejected V542 and synthetic bad fixtures with zero false accepts and zero false rejects",
+          "terminal": true
+        },
+        "terminal_evidence_preflight_ready_score": 1.0
+      }
+    },
+    "row_stream_summary_before_array_allocation": {
+      "row_count": 1944,
+      "source_row_count": 648,
+      "model_embedding_dimensions": {
+        "unsloth/Qwen3.6-35B-A3B-GGUF": [
+          2048
+        ],
+        "unsloth/gemma-4-26B-A4B-it-GGUF": [
+          2816
+        ],
+        "unsloth/gemma-4-31B-it-GGUF": [
+          5376
+        ]
+      },
+      "file_sha256": "sha256:a76ccc5f25e5aa626d601472e2843fa075810a513357984a745a22f5b9c21e23"
+    },
+    "model_embedding_dimensions_verified": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": [
+        2048
+      ],
+      "unsloth/gemma-4-26B-A4B-it-GGUF": [
+        2816
+      ],
+      "unsloth/gemma-4-31B-it-GGUF": [
+        5376
+      ]
+    },
+    "mandated_model_ids_verified": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "memory": {
+      "available_mb": 110652,
+      "required_mb": 16384,
+      "ok": true
+    },
+    "disk": {
+      "available_mb": 1137980,
+      "required_mb": 16384,
+      "ok": true
+    },
+    "random_seeds": {
+      "fold_seed": 6300,
+      "adapter_seed": 6300,
+      "random_projection_seed": 6300
+    },
+    "fold_policy": {
+      "n_folds": 5,
+      "group_unit": "pair_group_id",
+      "validation_modulus": 4
+    },
+    "protected_hashes_before": {
+      "results/experiment_5852_three_family_paired_embeddings.json": {
+        "present": true,
+        "sha256": "sha256:6572a11552c673e5f946a505db1e1767fcde110f18affc77ebefd6302957abc4"
+      },
+      "results/experiment_5852_three_family_paired_embeddings.rows.jsonl": {
+        "present": true,
+        "sha256": "sha256:a76ccc5f25e5aa626d601472e2843fa075810a513357984a745a22f5b9c21e23"
+      },
+      "results/experiment_5853_paired_embedding_integrity_audit.json": {
+        "present": true,
+        "sha256": "sha256:1f3df42cf5a858e277d3a00a64e0450e4bf51d4a4c64e63a0f393bdf2a5a2b4e"
+      },
+      "results/experiment_5854_portable_comparative_energy_controls.json": {
+        "present": true,
+        "sha256": "sha256:92096cda08d7e525b06b499f62d089c37007de40ad8a5091a5730f896466edfc"
+      },
+      "results/experiment_6298_terminal_evidence_preflight_linter.json": {
+        "present": true,
+        "sha256": "sha256:e7dc0eba9e59f8b1a48e5c95d3f8df2a0c56c2f47c3e07d8692cc8b94ba3564b"
+      },
+      "openspec/capabilities/phase3-kona/spec.md": {
+        "present": true,
+        "sha256": "sha256:65d00caadeb079b227f55d88fd86b902c91e8ab100a8730dcdf3fe66780947ea"
+      },
+      "python/carnot/experiment_6300_three_family_universal_activation_bus.py": {
+        "present": true,
+        "sha256": "sha256:4ac5b926e90568fc943a23640f968fb1bf79758a5b7c9d4d92685a10853665be"
+      },
+      "tests/python/test_experiment_6300_three_family_universal_activation_bus.py": {
+        "present": true,
+        "sha256": "sha256:1e14a2b6c23819b2893064f7543f4156c7b49c1f5c9b817823c3ae87902f58f0"
+      },
+      "scripts/research_conductor.py": {
+        "present": true,
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      }
+    },
+    "model_weight_receipts_before": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "path_exists": true,
+        "precomputed_sha256_from_exp5852": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "stat_size_bytes": 22134528992,
+        "hashing_policy": "replayed Exp5852 GGUF hash; Exp6300 never opens weights for model loading"
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "path_exists": true,
+        "precomputed_sha256_from_exp5852": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "stat_size_bytes": 18323731456,
+        "hashing_policy": "replayed Exp5852 GGUF hash; Exp6300 never opens weights for model loading"
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "path_exists": true,
+        "precomputed_sha256_from_exp5852": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "stat_size_bytes": 16947539744,
+        "hashing_policy": "replayed Exp5852 GGUF hash; Exp6300 never opens weights for model loading"
+      }
+    },
+    "exp5853_disqualification_preserved": true,
+    "exp5854_blocked_control_preserved": true
+  },
+  "inference_substrate": "offline_embedding_adapter_fit_no_llm_load",
+  "verifier_is_oracle": false,
+  "field_provenance": {
+    "status": {
+      "principle": "The artifact must close with a terminal state.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "paper_source_and_local_claim_boundary": {
+      "principle": "External paper claims stay separate from local evidence.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "upstream_corpus_paths_hashes_and_terminal_classes": {
+      "principle": "The fit must bind to immutable Exp5852 evidence.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "MODEL_SPECS": {
+      "principle": "The mandated model identities must not be substituted.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "models_used": {
+      "principle": "The report must name every model that supplied embeddings.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "model_embedding_dimensions": {
+      "principle": "Native dimensions explain why raw comparisons were unsafe.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "no_live_model_load_receipt": {
+      "principle": "The adapter fit must not reload or query an LLM.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "unlabeled_fit_contract": {
+      "principle": "Only matched row IDs and embeddings may train the adapters.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "fold_manifest_path_and_hash": {
+      "principle": "The held folds must be frozen before fitting.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "shared_dimension": {
+      "principle": "A fixed shared dimension makes all adapters comparable.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "adapter_architecture_and_parameter_counts": {
+      "principle": "Linear adapter size must stay explicit.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "train_validation_and_holdout_row_counts": {
+      "principle": "Counts expose the data used by each fold.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "reconstruction_metrics_by_model_and_fold": {
+      "principle": "Each decoder must preserve native embeddings within tolerance.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "cross_model_retrieval_metrics_by_pair_and_fold": {
+      "principle": "Held matched-row retrieval measures alignment.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "neighborhood_consistency_by_fold": {
+      "principle": "Shared neighborhoods must agree across models.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "model_identity_accuracy_by_fold": {
+      "principle": "Model identity leakage must not replace semantic alignment.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "chance_identity_accuracy": {
+      "principle": "The leakage gate needs a visible chance baseline.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "raw_padded_and_random_projection_controls": {
+      "principle": "Raw and random controls prevent shortcut promotion.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "norm_length_and_token_count_controls": {
+      "principle": "Norm and token envelopes must not carry the result.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "checkpoint_paths_and_hashes": {
+      "principle": "Saved adapter weights must be byte-addressable.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "source_model_weight_mutation_count": {
+      "principle": "Source model weights must remain untouched.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "shared_activation_bus_ready_score": {
+      "principle": "Readiness is a bare gate derived from held-fold metrics.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Protected hashes prove source evidence was not rewritten.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Hashes, dimensions, resources, seeds, and folds are checked first.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "The substrate states that this is offline adapter fitting.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "This adapter audit is not an answer oracle.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every field must cite the evidence that produced it.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "field_principles": {
+      "principle": "Every field must state why it is required.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "test_commands": {
+      "principle": "The report lists the verification commands.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes keep failed verification visible.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured wall time prevents padded runtime claims.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "random_seeds": {
+      "principle": "Deterministic seeds make folds and controls reproducible.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A normalized checksum detects artifact drift.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The verdict must start with a terminal prefix.",
+      "sources": [
+        "arXiv:2608.09521",
+        "results/experiment_5852_three_family_paired_embeddings.json",
+        "results/experiment_5852_three_family_paired_embeddings.rows.jsonl",
+        "results/experiment_5853_paired_embedding_integrity_audit.json",
+        "results/experiment_5854_portable_comparative_energy_controls.json",
+        "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "python/carnot/experiment_6300_three_family_universal_activation_bus.py",
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+        "openspec/capabilities/phase3-kona/spec.md"
+      ]
+    }
+  },
+  "field_principles": {
+    "status": "The artifact must close with a terminal state.",
+    "paper_source_and_local_claim_boundary": "External paper claims stay separate from local evidence.",
+    "upstream_corpus_paths_hashes_and_terminal_classes": "The fit must bind to immutable Exp5852 evidence.",
+    "MODEL_SPECS": "The mandated model identities must not be substituted.",
+    "models_used": "The report must name every model that supplied embeddings.",
+    "model_embedding_dimensions": "Native dimensions explain why raw comparisons were unsafe.",
+    "no_live_model_load_receipt": "The adapter fit must not reload or query an LLM.",
+    "unlabeled_fit_contract": "Only matched row IDs and embeddings may train the adapters.",
+    "fold_manifest_path_and_hash": "The held folds must be frozen before fitting.",
+    "shared_dimension": "A fixed shared dimension makes all adapters comparable.",
+    "adapter_architecture_and_parameter_counts": "Linear adapter size must stay explicit.",
+    "train_validation_and_holdout_row_counts": "Counts expose the data used by each fold.",
+    "reconstruction_metrics_by_model_and_fold": "Each decoder must preserve native embeddings within tolerance.",
+    "cross_model_retrieval_metrics_by_pair_and_fold": "Held matched-row retrieval measures alignment.",
+    "neighborhood_consistency_by_fold": "Shared neighborhoods must agree across models.",
+    "model_identity_accuracy_by_fold": "Model identity leakage must not replace semantic alignment.",
+    "chance_identity_accuracy": "The leakage gate needs a visible chance baseline.",
+    "raw_padded_and_random_projection_controls": "Raw and random controls prevent shortcut promotion.",
+    "norm_length_and_token_count_controls": "Norm and token envelopes must not carry the result.",
+    "checkpoint_paths_and_hashes": "Saved adapter weights must be byte-addressable.",
+    "source_model_weight_mutation_count": "Source model weights must remain untouched.",
+    "shared_activation_bus_ready_score": "Readiness is a bare gate derived from held-fold metrics.",
+    "protected_files_unchanged": "Protected hashes prove source evidence was not rewritten.",
+    "preconditions_checked": "Hashes, dimensions, resources, seeds, and folds are checked first.",
+    "inference_substrate": "The substrate states that this is offline adapter fitting.",
+    "verifier_is_oracle": "This adapter audit is not an answer oracle.",
+    "field_provenance": "Every field must cite the evidence that produced it.",
+    "field_principles": "Every field must state why it is required.",
+    "test_commands": "The report lists the verification commands.",
+    "test_exit_codes": "Exit codes keep failed verification visible.",
+    "duration_s": "Measured wall time prevents padded runtime claims.",
+    "random_seeds": "Deterministic seeds make folds and controls reproducible.",
+    "reproducibility_checksum": "A normalized checksum detects artifact drift.",
+    "honest_verdict": "The verdict must start with a terminal prefix."
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6300_three_family_universal_activation_bus.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --branch --include=python/carnot/experiment_6300_three_family_universal_activation_bus.py -m pytest tests/python/test_experiment_6300_three_family_universal_activation_bus.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6300_three_family_universal_activation_bus.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python -m carnot.experiment_6300_three_family_universal_activation_bus --date 20260811",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6300_three_family_universal_activation_bus.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\""
+  ],
+  "test_exit_codes": {
+    ".venv/bin/pytest tests/python/test_experiment_6300_three_family_universal_activation_bus.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --branch --include=python/carnot/experiment_6300_three_family_universal_activation_bus.py -m pytest tests/python/test_experiment_6300_three_family_universal_activation_bus.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6300_three_family_universal_activation_bus.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    ".venv/bin/python -m carnot.experiment_6300_three_family_universal_activation_bus --date 20260811": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6300_three_family_universal_activation_bus.json": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\"": 0
+  },
+  "duration_s": 16.529748592991382,
+  "random_seeds": {
+    "fold_seed": 6300,
+    "adapter_seed": 6300,
+    "random_projection_seed": 6300
+  },
+  "reproducibility_checksum": "sha256:2097e2da11a092fab1551bd78e143bf116e9d6ca959761ab75d258c58969b6ec",
+  "honest_verdict": "blocked: adapter gates passed but full Python suite attempt exited nonzero"
+}
