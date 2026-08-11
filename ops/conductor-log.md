@@ -15637,3 +15637,4 @@ Still active  |
 | 2026-08-11 00:24 UTC | Gated on Exp6291 crystallization: model-family and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6291-chronological-memory-crystallization |
 | 2026-08-11 00:24 UTC | Gated on Exp6292 transfer: default-off revocable-m | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6292-revocable-memory-holdout-audit.hel |
 | 2026-08-11 00:26 UTC | Gated on Exp6291 crystallization: model-family and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6291-chronological-memory-crystallization |
+| 2026-08-11 00:27 UTC | Gated on Exp6292 transfer: default-off revocable-m | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6292-revocable-memory-holdout-audit.hel |
