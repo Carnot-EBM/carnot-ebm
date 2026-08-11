@@ -192,6 +192,8 @@ def test_artifact_serialization_and_validation(
 
     assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(loaded)
     assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(loaded["field_principles"])
+    assert loaded["random_seed"] == mod.RANDOM_SEED
+    assert "replay" in loaded["inference_substrate"]
     assert mod.validate_artifact(loaded) == []
     loaded["source_model_weight_mutation_count"] = {"value": 0}
     errors = mod.validate_artifact(loaded)
@@ -298,3 +300,10 @@ def test_defensive_validation_paths(tmp_path: Path) -> None:
     tampered = dict(artifact)
     tampered["shared_dimension"] = 99
     assert "reproducibility_checksum mismatch" in mod.validate_artifact(tampered)
+
+
+def test_default_verification_exit_codes_are_successful() -> None:
+    """REQ-KONA-6300: terminal artifacts record successful verification exits."""
+
+    assert mod.DEFAULT_TEST_EXIT_CODES
+    assert all(code == 0 for code in mod.DEFAULT_TEST_EXIT_CODES.values())
