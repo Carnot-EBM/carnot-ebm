@@ -33660,3 +33660,152 @@ locally.
   physical-board probes out of V543.
 
 <!-- V543-PLANNER-REFRESH-20260810-END -->
+
+## V544 Planner Refresh (2026-08-11, after milestone 2026.08.543)
+
+This refresh was completed before drafting milestone `2026.08.544`. It
+searched arXiv first for 2025-2026 work on energy reasoning, neural constraint
+solving, Ising sampling, hallucination verification, KANs, constrained
+generation, sampling hardware, and continual learning. It then checked
+OpenReview, Hugging Face Papers, Semantic Scholar citation routes for EBT
+(`2507.02092`) and ARM-EBM (`2512.15605`), Extropic, Logical Intelligence, and
+GitHub discovery. Source claims remain hypotheses until Carnot reproduces them
+locally.
+
+### Promoted: model-local activation verification
+
+- **Activation Probes Surface Code-Security Signals that the Model's Output
+  Misses** - arXiv:2608.09643, https://arxiv.org/abs/2608.09643; submitted
+  2026-08-10 and accepted at the ICML 2026 TAIGR workshop. The study fits one
+  linear activation probe per open-weight reviewer on paired vulnerable and
+  fixed Python functions. On held weakness types, the probe ranks the
+  vulnerable function above its fix in 61-67% of eligible pairs and beats the
+  same model's prompted YES/NO verdict. Carnot hook: keep each GGUF family in
+  its native representation space. Test a model-local hidden-state surface
+  when the runtime exposes one, with a preregistered output-free prefix-state
+  trajectory as the fallback. Compare against prompted verdict, norm-only,
+  length-only, and final-pooled-embedding controls. This mechanism does not
+  align models into the V543 shared bus and must pass held-family, claim-flip,
+  pair-swap, evaluator-swap, and label-permutation controls.
+- **Energy-Based Constraint Networks: Learning Structural Coherence Across
+  Modalities** - OpenReview/TMLR under review,
+  https://openreview.net/forum?id=gl6l8nTXBB; posted 2026-05-01. The model maps
+  frozen encoder states to both a global consistency energy and localized
+  per-position energies. Carnot hook: retain a decomposed energy output as an
+  audit target, but do not infer cross-model comparability or empirical value
+  from this paper. Each local head still needs an exact-validator comparison.
+
+### Promoted: governed continuous self-learning
+
+- **OpenLoopEvolve: A Verifiable Self-Evolution Framework for Loop Policies in
+  Long-Horizon Complex Tasks** - arXiv:2608.09380,
+  https://arxiv.org/abs/2608.09380; submitted 2026-08-10. OpenLoopEvolve treats
+  loop policies as versioned assets with parent lineages. It uses paired
+  champion--challenger evaluation, releases online changes only at a later task
+  boundary, monitors them, and rolls them back to their parent on degradation.
+  Carnot hook: promote the positive V543 reference-anchored initializer into a
+  versioned same-domain learner. Keep base-model weights frozen. Require exact
+  verifier receipts for candidate admission, boundary activation, monitoring,
+  rollback, and restart identity. Do not reopen retired cross-family licensed
+  transfer.
+- **Agentic Auto-Research is Fuzz Testing** - arXiv:2608.09855,
+  https://arxiv.org/abs/2608.09855; submitted 2026-08-10. The paper argues that
+  autonomous experiment loops need a cheap dense epistemic-progress signal to
+  select the next intervention, while final validation stays protected from
+  adaptive reuse. Carnot hook: compare feedback-directed candidate updates
+  with repeated sampling under the same update and verifier budget. Measure
+  whether the dense signal predicts protected exact-verifier gain. Never use
+  the optimized progress signal as release authority.
+- **Beyond Binary: Continuous State Optimization with Graph-Structured
+  Objectives** - arXiv:2608.09366, https://arxiv.org/abs/2608.09366; submitted
+  2026-08-10. Lazy Graph-LinUCB uses a factor graph and movement costs to make
+  sparse asynchronous updates. The paper reports more than a threefold
+  movement-cost reduction at similar cumulative loss on its workloads. Carnot
+  hook: decompose the learned initializer into exact constraint factors. Charge
+  every changed factor and compare lazy factor updates with full-state updates
+  under matched regret and update budgets. The paper's result does not
+  establish a Carnot speed or accuracy gain.
+- **SHE: Trajectory-driven Safety Harness Evolution for LLM Agents** -
+  arXiv:2608.09885, https://arxiv.org/abs/2608.09885; submitted 2026-08-10.
+  SHE assigns distinct safety responsibilities to prompt, rule, memory, and
+  tool-policy assets, then attributes failures before evolving one component.
+  Carnot hook: preserve component-level blame and rollback receipts for every
+  online initializer update. Safety checks must cover poison, reversal,
+  forgetting, protected-file mutation, and utility regression independently.
+
+### Watch: later verified-code branch candidate
+
+- **P3: Joint Program-and-Proof Planning for Verified Code Generation** -
+  arXiv:2608.09277, https://arxiv.org/abs/2608.09277; submitted 2026-08-10.
+  P3 derives one plan for the program and its proof before it elaborates either
+  artifact. It reports 4.6-11.2 percentage-point solve-rate gains over a strong
+  sequential baseline and lower cost on Verina, AlgoVeri, and Lean4Commit0.
+  Carnot hook: a future local-GGUF code-verification experiment could compare
+  joint program-and-proof planning with sequential program-then-proof repair
+  under the same samples, tokens, and exact Lean checks. V544 records the
+  design but does not add an unrelated fifth execution branch.
+
+### Architecture cues, not empirical promotions
+
+- **Energy-Structured Latent World Models with Neural Time Fields for
+  Physically Consistent Open-World Motion Planning** - arXiv:2608.09876,
+  https://arxiv.org/abs/2608.09876; submitted 2026-08-10. The work places
+  energy and momentum in the latent state and constrains transitions through
+  dissipation and control ports. Carnot hook: ARC transition hypotheses should
+  expose decomposed transition residuals and causal control provenance. The
+  robotics result does not validate an ARC world model or authorize a solve
+  claim.
+- **Agentic Harnesses: LLM-Driven Verification Layers for Robot Autonomy** -
+  arXiv:2608.09857, https://arxiv.org/abs/2608.09857; submitted 2026-08-10.
+  The paper inserts accept, reject, and escalate decisions between a planner
+  and robot controls. Carnot already has a stronger exact-validator authority
+  model. Its useful cue is fail-closed middleware placement, not LLM-judge
+  replacement of the verifier.
+
+### Secondary-source status
+
+- **Semantic Scholar:** the citation API returned the current EBT and ARM-EBM
+  citing-paper lists. The newest directly relevant EBT items were the already
+  indexed Explorative Modeling (`2607.27372`) and Solver-Hard diagnostic
+  (`2607.17047`). The ARM-EBM list still led with the already indexed
+  Distributional EBM (`2605.18871`) and LoopUS (`2605.11011`). None supplies a
+  clean reason to reopen external generated-text scoring, final-state probing,
+  or learned cross-family transfer.
+- **OpenReview and Hugging Face Papers:** searches repeated Spilled Energy,
+  Energy-Based Constraint Networks, and LLM-as-a-Verifier (`2607.05391`). The
+  new activation-probe paper is the only item that changes V544's executable
+  representation plan. Probabilistic model judges remain baselines and cannot
+  replace exact release authority.
+- **Extropic:** the 2026-08-03 Z1 tapeout announcement remains the newest
+  first-party hardware update found. Carnot still has no authenticated device
+  or simulator receipt that can support a hardware speed, power, or sampling
+  claim. V544 uses CPU/GPU sparse-factor accounting only and schedules no TSU
+  task.
+- **Logical Intelligence:** the May and June 2026 Aleph posts reinforce joint
+  formal reasoning and machine-checkable code verification. Public Kona pages
+  still expose no weights, reproducible architecture, or local API. Kona stays
+  a product-direction comparison, not a runnable baseline.
+- **GitHub trending and targeted repository search:** recent EBM and KAN
+  repositories had little independent adoption and did not provide a stronger
+  verifier, probe runtime, constraint solver, or maintained hardware path.
+  V544 vendors no new framework and does not reopen KAN replacement work.
+
+### V544 planning impact
+
+- Close the failed universal activation bus. Test one model-local probe per
+  mandated GGUF family on exact vulnerable/fixed and constraint-pair fixtures.
+- Preflight the representation surface before the expensive corpus run. Stop
+  if neither hidden-state extraction nor the output-free prefix trajectory
+  passes small causal controls.
+- Turn the positive reference-anchored initializer into a versioned,
+  factor-local champion--challenger learner. Release only at task boundaries
+  and keep protected exact validation outside the adaptive loop.
+- Compare feedback-directed updates with repeated sampling under matched
+  budgets. Audit safety, rollback, forgetting, and update movement costs.
+- Wire the validated ARC route only as a default-off live-path shadow. Make no
+  game or level solve claim.
+- Keep shared-state alignment, licensed cross-family transfer, KAN training,
+  external text scorers, TSU execution, and unchanged physical-board probes out
+  of V544.
+
+<!-- V544-PLANNER-REFRESH-20260811-END -->

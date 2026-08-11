@@ -1,341 +1,365 @@
-# Research Roadmap vNEXT: Shared-State Energy and Licensed Online Learning
+# Research Roadmap vNEXT: Model-Local Verification and Governed Self-Evolution
 
-**Milestone:** `2026.08.543`
-**Date:** 2026-08-10
-**Experiments:** Exp6297-Exp6309
+**Milestone:** `2026.08.544`
+**Date:** 2026-08-11
+**Experiments:** Exp6310-Exp6322
 **Phases:** 4
 **Primary requirements:** FR7, FR11, FR12
-**North-star constraint:** move model-native state toward whole-configuration energy refinement without promoting an oracle, replay, or ARC proxy as the product result
+**North-star constraint:** extract useful correctness energy from real local model state and improve a verifier-bound learner online without reopening failed shared-state, cross-family transfer, or proxy-solve paths
 
 ## Milestone thesis
 
-V542 completed its 13-task execution but did not promote a new branch. It did
-prove two reusable foundations: bounded ASP energy has a vertex-exact
-continuous relaxation, and ordinary model text can be reduced to fail-closed
-partial atom evidence. It also produced decisive negative evidence. The
-partial-evidence artifact was methodology-flagged, the flagship warm start
-showed no value, revocable memory failed its recorded verification command,
-and the ARC canary reached `0.91` rather than its exact `1.0` promotion gate.
+V543 closed two attractive but unsupported paths. Its shared activation bus did
+not survive the independent shortcut audit, and the licensed cross-family
+transfer task repeated its blocked gate and is now retired. The milestone also
+established two positive foundations. Reference-anchored online state learning
+improved future exact outcomes without unsafe commits, and the ARC
+target-licensed route passed both its causal canary and held-fold audit without
+claiming a solve.
 
-V543 changes the representation and learning mechanisms. Instead of asking
-generated text to carry the state, it uses the complete Exp5852 three-family
-embedding corpus to learn one linear adapter pair per model into a shared
-activation space. An independent audit must first remove the exact shortcuts
-that disqualified Exp5853. Only then may shared model state initialize V542's
-exact-vertex ASP relaxation. Cold starts, per-model raw embeddings, and the
-exact solver remain controls.
+V544 keeps those boundaries. It does not repair or retry the universal bus. It
+tests one correctness-energy probe per model, in each model's native state
+space. A representation-surface preflight must first prove that the local GGUF
+runtime exposes a causal signal that is not a norm, length, model-ID, label, or
+pair-order shortcut. The expensive branch then uses exact vulnerable/fixed
+Python pairs and all three mandated SOTA GGUF families. Cross-model agreement
+is an outcome, never a shared representation or pooled rescue.
 
-Continuous self-learning updates only a small state initializer. Base GGUF
-weights stay frozen. Online updates are anchored to a frozen reference and
-committed only after an immutable exact verifier reveals the outcome. Prior
-strategies retrieved across families are hypotheses, not knowledge, until the
-target-side validator licenses them. The ARC branch applies the same rule to a
-mechanic route learned from the live agent's own observations and makes no
-level-solve claim.
+The self-learning branch starts from V543's positive same-domain initializer.
+It turns the initializer into a versioned, factor-local policy asset. Candidate
+versions face matched champion--challenger evaluation. A release can activate
+only at the next task boundary and can roll back byte-for-byte to its parent.
+A second experiment compares dense-feedback-directed search with repeated
+sampling while protecting final validation from adaptive reuse. Base-model
+weights, exact validators, and validation partitions remain immutable.
 
-## What V542 proved
+The ARC branch moves a validated route into the actual `E3AgentPolicy` only as
+a default-off shadow. It measures route availability and prospective action
+support on the live path. It does not inspect hidden game state, update the
+solve registry, or claim a game or level solve.
 
-| Branch | V542 evidence | V543 consequence |
+## What V543 proved
+
+| Branch | V543 evidence | V544 consequence |
 |---|---|---|
-| Milestone integrity | Exp6284 and Exp6296 preserved exact terminal classes across 13 tasks. The capstone found 6 complete, 1 flagged, 2 null, 3 skipped, and 1 missing/nonterminal branch state, with no promoted new branch. | Start from the exact capstone, repair evidence admission before new science, and keep branch-independent promotion. |
-| Source freeze | Exp6285 accepted zero post-marker findings and terminated cleanly. | Search strictly after the V543 marker. Zero findings remain valid. |
-| Continuous ASP energy | Exp6287 proved the multilinear relaxation agrees with the discrete ASP energy on every tested vertex and supplies checked gradients. | Reuse it as the editable state substrate. Do not rebuild the relaxation. |
-| Partial evidence | Exp6288 implemented a fail-closed adapter, but the artifact was adversarial-flagged for a sub-microsecond compute receipt and missing methodology. | Do not rerun that adapter. Move from text evidence to an explicit cross-model activation interface. |
-| Flagship value | Exp6289 loaded the mandated models but recorded failing verification commands and `warm_start_value_ready_score=0`. Exact completion remained an oracle-only repair. | Use a non-generation activation surface, preflight terminal evidence, and require value over cold and raw-embedding controls. |
-| Revocable memory | Exp6290 implemented the lifecycle but ended `complete_null` because a recorded test command failed. Exp6291 gate-blocked, Exp6292 was absent, and Exp6293 gate-blocked. | Do not repeat advice memory. Update a small state initializer online with reference anchoring, exact post-outcome commits, and rollback. |
-| ARC live path | Exp6294 produced a clean 67.7-second causal canary with no solve claim, but readiness was `0.91`. Exp6295 correctly gate-blocked. | Treat the route as an untrusted hypothesis. Require target-side evidence from the agent's own transitions before activation, then rerun the held-game audit only through a structured gate. |
-| Publication state | Exp6296 kept the existing FoVer publication gates true while rejecting flagged, missing, skipped, null, blocked, oracle-only, and replay-only evidence. | Preserve the paper boundary and reconcile architecture claims only for independently promoted branches. |
+| Milestone integrity | Exp6309 preserved all 13 declared states. Shared-state and licensed-transfer branches remained blocked. | Begin with a terminal handoff. Preserve branch-local promotion and exact terminal classes. |
+| Source freeze | Exp6299 ended `complete_null` with zero accepted post-marker findings. | Search only after the V544 marker. A zero delta is valid, but the 2026-08-10 papers already indexed by the planner define the new scope. |
+| Shared activation bus | Exp6300 declared the bus ready, but Exp6301 set `activation_bus_integrity_ready_score=0.0`. Claim-flip, disaggregated-cell, evaluator-swap, norm-only, and pair-swap controls failed. | Close the shared bus. Use independent model-local probes and repeat every failed control before any value claim. |
+| Shared-state initializer | Exp6302 repeated `blocked_gate_check_failed`; Exp6303 had no deliverable. The exact retry is retired. | Do not retry a shared activation-to-ASP initializer or its live benchmark. Change both representation and task: local correctness energy over exact code pairs. |
+| Continuous self-learning | Exp6304 ended `complete_positive`; the reference-anchored learner improved future exact outcomes without unsafe commits. | Extend the positive learner with version lineage, factor-local updates, delayed release, matched challengers, and exact rollback. Do not count replay as learning. |
+| Licensed transfer | Exp6305 repeated `blocked_gate_check_failed` and the exact cross-family transfer retry is retired. | Keep every online update same-domain. No cross-family policy or activation transfer is scheduled. |
+| Learning safety | Exp6306 ended `complete_positive` with fail-closed copied-state checks. | Preserve the safety harness and add version-parent, dense-feedback, protected-validation, and component-attribution attacks. Safety cannot promote utility. |
+| ARC route | Exp6307 and Exp6308 each reported readiness `1.0`, no hidden source access, and no solve claim. Exp6307 has a live methodology warning because `random_seed` is absent. | Add the missing seed receipt, wire a default-off live-path shadow, and measure it prospectively. Do not re-solve any registry level. |
 
 ## The three largest gaps to the PRD vision
 
-### Gap 1: model-native state is not connected to exact global energy
+### Gap 1: no shortcut-safe model-native correctness energy
 
-FR12 requires deterministic constraints, while the Phase 3 vision requires a
-continuous editable global state. Carnot currently verifies or repairs text
-outside the model. Exp5852 extracted real three-family embeddings, but Exp5853
-found raw model-dimension identity, claim-flip, pair-permutation, and norm or
-length shortcuts. V543 learns an explicit per-model activation contract and
-audits those exact failure modes before using it.
+FR12 needs deterministic constraints, while the Phase 3 vision needs learned
+energy over model state. The final pooled embedding and the V543 shared bus
+both failed causal controls. Carnot still has no clean result showing that real
+flagship model state predicts exact correctness better than prompt verdicts,
+norm, length, or chance. V544 changes the scope to one probe per model and uses
+held weakness families plus exact executable sidecars.
 
-### Gap 2: continuous refinement has no measured model value
+### Gap 2: continuous learning is positive but not governable as a released asset
 
-FR7 requires iterative inference over configurations. V542's ASP relaxation is
-semantically valid, but its model warm start did not beat cold exact completion
-or show reduced refinement work. V543 maps a shared activation into the
-continuous atom state and measures exact validity, refinement steps, exact
-fallback work, wall time, and harm on held task and model families. The exact
-solver remains an oracle and cannot count as verifier value.
+FR11 requires improvement, retention, auditability, and rollback across an
+ongoing stream. Exp6304 proved a bounded reference-anchored update, but it did
+not version policies, delay activation to task boundaries, attribute changes
+to constraint factors, or compare feedback-directed search with repeated
+candidate sampling. V544 adds those controls without touching GGUF weights or
+crossing model families.
 
-### Gap 3: autonomous learning is neither continuously useful nor safely transferable
+### Gap 3: a validated ARC route is not yet present on the shipped live path
 
-FR11 requires online improvement, retention, immutable validation, and
-rollback. Advice memories have repeatedly abstained, failed verification, or
-gate-blocked. V543 makes the learned object smaller and more direct: the
-model-to-state initializer. It compares frozen, unanchored online, and
-reference-anchored updates on a chronological stream, then licenses any
-cross-family strategy on the target's exact validator. Replay is not transfer.
+The target-license route passed canary and holdout audits, but those artifacts
+do not prove that the submitted `E3AgentPolicy` can compute the route in a
+fresh run. V544 adds a default-off shadow consumer with parity tests and fresh
+agent-owned transition windows. This is a reachability and attribution task,
+not a solve task.
 
 ## Research delta used by this roadmap
 
-- Universal Activation Bus (`arXiv:2608.09521`) motivates one adapter pair per
-  model and a frozen shared activation contract. This directly changes the
-  mechanism that failed Exp5853.
-- VERDI (`arXiv:2608.09537`) motivates target-side evidence licensing and the
-  rule that retrieved experience is only a transfer hypothesis.
-- SR-OPSD (`arXiv:2608.09745`) motivates reference-anchored online updates. V543
-  adapts the geometry to a small initializer and does not fine-tune an LLM.
-- Open-Ended Optimization (`arXiv:2608.09629`) supports allowing an adaptive
-  update policy inside fixed objectives, budgets, data boundaries, and exact
-  validation. Admission and rollback authority stay external.
-- Thermodynamic matrix inversion (`arXiv:2608.09743`) motivates a deterministic
-  optimizer control: stochastic or thermodynamic language alone is not a
-  hardware advantage on a convex single-minimum problem.
-- The 2026 KAN language-model audit (`arXiv:2607.15525`) found no consistent
-  quality or latency advantage. V543 does not reopen KAN training.
+- Activation Probes (`arXiv:2608.09643`) motivates one linear security probe
+  per open-weight reviewer and held weakness-type evaluation. V544 adapts the
+  idea to the three mandated GGUF families and adds Carnot's failed shortcut
+  controls.
+- Energy-Based Constraint Networks (OpenReview `gl6l8nTXBB`) motivates global
+  plus localized energy outputs. It does not establish cross-model alignment or
+  replace exact validators.
+- OpenLoopEvolve (`arXiv:2608.09380`) motivates version lineages,
+  champion--challenger evaluation, task-boundary activation, monitoring, and
+  parent rollback.
+- Agentic Auto-Research is Fuzz Testing (`arXiv:2608.09855`) motivates a cheap
+  dense progress signal that chooses the next update. Protected exact
+  validation remains the only release authority.
+- Beyond Binary (`arXiv:2608.09366`) motivates factor graphs, lazy local
+  updates, and explicit movement costs for online initializer state.
+- SHE (`arXiv:2608.09885`) motivates component-level failure attribution and
+  safety-utility checks for every evolved asset.
+- Energy-Structured Latent World Models (`arXiv:2608.09876`) motivates causal
+  transition-residual receipts for the ARC shadow. The robotics results do not
+  support an ARC solve claim.
+- P3 (`arXiv:2608.09277`) is promoted for a later verified-code branch. V544
+  records its joint program-and-proof design but does not dilute this milestone
+  with a fifth branch.
 
-The full source disposition is in `research-references.md` under the V543
+The full source disposition is in `research-references.md` under the V544
 planner marker.
 
 ## Target architecture
 
 ```text
-                 sealed matched constraint texts
-                              │
-            ┌─────────────────┼─────────────────┐
-            ▼                 ▼                 ▼
-       Qwen3.6 GGUF      Gemma-4 dense     Gemma-4 MoE
-            │                 │                 │
-            └──── per-model linear encoder/decoder ────┐
-                                                        ▼
-                                              shared activation bus
-                                                        │
-                                  independent shortcut audit
-                                  ┌─────────────┴─────────────┐
-                                  │ ready                     │ closed
-                                  ▼                           ▼
-                         model-to-state initializer       no value claim
-                                  │
-                                  ▼
-                  vertex-exact ASP continuous relaxation
-                                  │
-                    bounded gradient refinement / fallback
-                                  │
-                                  ▼
-                   exact certificate ◄── Clingo oracle control
-                                  │
-          read snapshot ─► decide ─► reveal exact outcome ─► update
-                                  │
-                 frozen / unanchored / reference-anchored arms
-                                  │
-                                  ▼
-                   target-side transfer license and rollback
+               exact paired Python safety fixture
+                │ vulnerable/fixed + sidecar proof
+                │
+      ┌─────────┴──────────┬────────────────────┐
+      ▼                    ▼                    ▼
+ Qwen3.6-35B MoE     Gemma-4-31B dense    Gemma-4-26B MoE
+      │                    │                    │
+      │ one native state   │ one native state   │ one native state
+      │ surface + head     │ surface + head     │ surface + head
+      └────────────── no shared bus ─────────────┘
+                           │
+              independent shortcut audit
+                           │
+          ┌────────────────┴─────────────────┐
+          │ clean                            │ closed
+          ▼                                  ▼
+ model-local correctness energy         no value claim
+          │
+ prompted / final-pool / norm / length / exact-validator controls
+
+Continuous self-learning:
+sealed event ─► predecision snapshot ─► exact outcome reveal ─► factor update
+                       │                         │
+                  champion vN              challenger vN+1
+                       └──── paired gate ─ task boundary release
+                                             │
+                                monitor ─ degrade ─ rollback parent
+
+Dense guidance stream ─► progress signal ─► next candidate intervention
+Protected validation  ─────────────────────► release verdict only
 
 ARC live branch:
-own attempts ─► mechanic hypothesis ─► runtime transition checks
-     │                                      │
-     └── router off / retrieval only / licensed route A/B ──► no solve claim
+own attempts ─► target-license evidence ─► default-off E3 shadow proposal
+      │                                           │
+      └── shipped action unchanged ─ prospective support audit ─ no solve
 ```
 
-## Phase 0: terminal evidence and source freeze
+## Phase 0: terminal boundary, source freeze, and representation preflight
 
-### Exp6297: V542-to-V543 terminal transition
+### Exp6310: V543-to-V544 terminal transition
 
-Build the exact handoff from Exp6296 and the operational retro. Validate all 13
-staged tasks, gates, prior-failure blocks, model rules, IDs, paths, and prompt
-endings. Do not activate the staged roadmap.
+Consume Exp6309, the V543 operational retro, exclusion manifest, staged YAML,
+and all declared artifacts. Validate 13 task IDs, dependencies, structured
+gates, required prior-failure blocks, model policy, prompt endings, and
+protected files. Do not activate the staged roadmap.
 
-**Deliverable:** `results/experiment_6297_v543_terminal_transition.json`
+**Deliverable:** `results/experiment_6310_v544_terminal_transition.json`
 
-### Exp6298: terminal-evidence preflight linter
+### Exp6311: post-marker source and scope freeze
 
-Add a standalone preflight that checks required artifact fields, terminal
-prefixes, substrate and duration receipts, test-command existence, recorded
-exit codes, and downstream gate fields before an artifact is eligible. It may
-not modify the conductor. Replay the exact Exp6288-Exp6290 failure shapes.
+Freeze the V544 paper set, model-local probe contract, versioned same-domain
+learning contract, ARC no-solve boundary, and hardware exclusions. The scan
+starts after the V544 reference marker. A zero new-source delta is terminal.
 
-**Deliverable:** `results/experiment_6298_terminal_evidence_preflight_linter.json`
+**Deliverable:** `results/experiment_6311_v544_post_marker_source_scope_freeze.json`
 
-### Exp6299: post-marker source and scope freeze
+### Exp6312: model-local representation-surface preflight
 
-Search only after the V543 planner marker. Freeze activation-bus, state
-initializer, online-learning, target-license, ARC, and no-hardware-claim
-contracts. A zero-source delta is terminal.
+Replay the Exp5853 and Exp6301 failure ledger. Test the runtime surface on all
+three mandated GGUF families before any large corpus. Prefer a true local
+hidden-state surface if the local runtime exposes it with reproducible tensor
+provenance. Otherwise test a preregistered output-free prefix-state trajectory.
+The surface must respond to a causal code fix while defeating A/A, length,
+norm, pair-order, label, truncation, and model-identity controls. It may end
+cleanly null and close Phase 1.
 
-**Deliverable:** `results/experiment_6299_v543_post_marker_source_scope_freeze.json`
+**Deliverable:** `results/experiment_6312_model_local_representation_surface_preflight.json`
 
-## Phase 1: shared model state to exact energy
+## Phase 1: model-local correctness energy
 
-### Exp6300: three-family universal activation bus
+### Exp6313: exact paired code-safety fixture
 
-Reuse the immutable Exp5852 paired embeddings. Fit one linear encoder-decoder
-pair per model into a fixed shared space using unlabeled matched rows. Split by
-task family, perturbation family, and template before fitting. Report
-cross-model retrieval, reconstruction, neighborhood consistency, and model-ID
-leakage. Do not train an energy head yet.
+Build length-matched vulnerable/fixed single-function Python pairs across
+preregistered weakness families. Each pair needs compile, executable property,
+AST/constraint, mutation, split, and provenance receipts. Hold out complete
+weakness, repository, template, and perturbation groups. The fixture proves
+only its declared properties; it is not a universal security benchmark.
 
-**Deliverable:** `results/experiment_6300_three_family_universal_activation_bus.json`
+**Deliverable:** `results/experiment_6313_exact_code_safety_pair_fixture.json`
 
-### Exp6301: independent activation-bus integrity audit
+### Exp6314: three-family model-local state corpus, gated on Exp6312 readiness=1
 
-Reconstruct Exp6300 from hashes and replay the Exp5853 adversarial controls:
-claim flips, pair swaps, label permutations, norm and length controls,
-truncation, duplicates, model identity, and held-family folds. No pooled mean
-may hide a failed disaggregated cell.
+Extract the frozen representation surface for every exact pair from
+Qwen3.6-35B-A3B, Gemma-4-31B, and Gemma-4-26B-A4B. Store native tensors and
+paired differences separately by model. No generation, shared adapter,
+cross-model normalization, or pooled rescue is allowed.
 
-**Deliverable:** `results/experiment_6301_activation_bus_integrity_audit.json`
+**Deliverable:** `results/experiment_6314_three_family_model_local_state_corpus.json`
 
-### Exp6302: shared activation-to-state initializer, gated on Exp6301 integrity=1
+### Exp6315: model-local paired-difference energy probes, gated on Exp6314 readiness=1
 
-Only after the bus passes its audit, fit a bounded initializer from shared
-state to V542's continuous ASP atom vector. Compare cold blank, cold random,
-raw per-model, and shared-bus starts with identical refinement budgets. Require
-exact validity non-inferiority and lower work on held folds.
+Fit one small linear or monotone energy head per model. Train on complete group
+folds. Compare paired-difference, absolute-state, final-pooled, norm, length,
+prompted-verdict, and chance controls. Report held weakness families and every
+model independently.
 
-**Deliverable:** `results/experiment_6302_shared_activation_state_initializer.json`
+**Deliverable:** `results/experiment_6315_model_local_paired_difference_energy_probes.json`
 
-### Exp6303: live three-family shared-state benchmark, gated on Exp6302 readiness=1
+### Exp6316: independent model-local probe integrity audit
 
-Extract fresh embeddings from all three mandated GGUF families on a sealed
-holdout. Compare the frozen shared initializer against cold and raw per-model
-controls. Record CUDA, model, tokenizer, seed, raw-row, exact-work, and timing
-receipts. Generated-answer transport is not used.
+Reconstruct the corpus and heads from hashes. Replay claim flips, pair swaps,
+label permutations, evaluator swaps, norm/length residualization, truncation,
+duplicates, model identity, split leakage, and underpowered-cell controls. No
+mean may hide a failed model or held family.
 
-**Deliverable:** `results/experiment_6303_live_three_family_shared_state_benchmark.json`
+**Deliverable:** `results/experiment_6316_model_local_probe_integrity_audit.json`
 
-## Phase 2: continuous self-learning and licensed transfer
+### Exp6317: live three-family verifier benchmark, gated on Exp6316 integrity=1
 
-### Exp6304: reference-anchored online state learning
+Freeze the clean heads and evaluate a fresh exact holdout with all three GGUF
+families. Headline value requires the local energy to beat chance and the same
+model's prompted verdict on every adequately powered model fold, without
+calling the exact sidecar a learned-verifier win.
 
-Run the milestone's required continuous self-learning experiment independently
-of Phase 1 promotion. On a sealed chronological ASP stream, compare a frozen
-initializer, an unanchored on-policy update, and a reference-anchored update.
-Reveal exact outcomes only after each decision. Update no GGUF weights. Measure
-forward transfer, retention, regret, reversal, poison, rollback, and memory
-cost.
+**Deliverable:** `results/experiment_6317_live_three_family_model_local_verifier_benchmark.json`
 
-**Deliverable:** `results/experiment_6304_reference_anchored_online_state_learning.json`
+## Phase 2: governed continuous self-learning
 
-### Exp6305: evidence-licensed cross-family transfer, gated on Exp6301=1 and Exp6304=1
+### Exp6318: versioned factor-local online initializer
 
-Build optimization fingerprints from shared probes. Compare no transfer,
-retrieval-only transfer, and target-licensed transfer while holding out each
-model and task family. A retrieved strategy remains inactive until a frozen
-target calibration slice passes exact validation.
+Extend the positive Exp6304 initializer on a new sealed chronological stream.
+Compare frozen, full-state reference-anchored, and lazy factor-local
+reference-anchored arms under matched update budgets. Candidate versions have
+parents, immutable snapshots, paired challenger gates, task-boundary release,
+monitoring, and exact rollback. This is the milestone's required continuous
+self-learning experiment. It is same-domain only.
 
-**Deliverable:** `results/experiment_6305_evidence_licensed_cross_family_transfer.json`
+**Deliverable:** `results/experiment_6318_versioned_factor_local_online_initializer.json`
 
-### Exp6306: independent online-learning safety audit
+### Exp6319: feedback-directed update search, gated on Exp6318 readiness=1
 
-Audit Exp6304 even if utility is null. Inject false passes, contradictions,
-stale references, reversals, poisoned rows, missing validators, process
-restarts, and corrupted snapshots. Prove fail-closed behavior and byte-exact
-rollback. Safety alone cannot promote utility.
+Use a cheap dense progress signal to select the next factor-update candidate.
+Compare feedback-directed search with repeated sampling under identical
+candidate, update, and verifier budgets. Keep final exact validation sealed
+from the adaptive loop. Measure validated improvements per cost, signal
+predictiveness, false discoveries, and movement cost.
 
-**Deliverable:** `results/experiment_6306_online_state_learning_safety_audit.json`
+**Deliverable:** `results/experiment_6319_feedback_directed_online_update_search.json`
 
-## Phase 3: ARC live path and capstone
+### Exp6320: independent online self-evolution safety audit
 
-### Exp6307: ARC target-validated mechanic-route causal canary
+Attack the version registry, parent links, task-boundary release, protected
+validation, dense progress signal, exact outcome channel, factor attribution,
+rollback, restart, poison, reversal, and forgetting controls. Audit Exp6318
+even if Exp6319 is skipped or null. Safety-only success cannot promote utility.
 
-Treat V542's mechanic route as an untrusted retrieved hypothesis. Compare
-router-off, retrieval-only, and target-licensed arms. The licensed arm may
-activate only after the live agent's own attempts and runtime transition checks
-support the route. Use fresh fixtures, matched budgets, real flagship GGUF
-receipts, and no hidden source or level-solve credit.
+**Deliverable:** `results/experiment_6320_online_self_evolution_safety_audit.json`
 
-**Deliverable:** `results/experiment_6307_arc_target_validated_route_canary.json`
+## Phase 3: ARC live shadow and capstone
 
-### Exp6308: held-game ARC route audit, gated on Exp6307 readiness=1
+### Exp6321: ARC target-licensed route live-shadow A/B
 
-Freeze the target-license policy. Evaluate held games and mechanic strata with
-no refit. Keep the feature default off. Require no adequately powered fold to
-show harm. This remains a live-agent path audit, not a solve task.
+Registry-precheck every selected game and level. Add the Exp6307/Exp6308 route
+as a default-off shadow on the real `E3AgentPolicy` construction path. Use only
+the agent's own fresh attempts and runtime transition evidence. Compare shadow
+off with shadow computed but unable to change actions. Record supported and
+unsupported proposals, latency, parity, seed, and escape-hatch counts. Credit
+zero solves and leave the submitted behavior unchanged.
 
-**Deliverable:** `results/experiment_6308_arc_target_validated_route_holdout.json`
+**Deliverable:** `results/experiment_6321_arc_target_licensed_route_live_shadow_ab.json`
 
-### Exp6309: V543 adversarial capstone and reconciliation
+### Exp6322: V544 adversarial capstone and reconciliation
 
-Classify every exact declared artifact. Preserve missing, flagged, null,
-blocked, skipped, oracle-only, replay-only, and safety-only states. Promote
-branches independently. Reconcile OpenSpec, traceability, status, changelog,
-architecture, publication tables, and the next-milestone evidence ledger.
+Classify every declared artifact and preserve missing, flagged, null, blocked,
+skipped, oracle-only, safety-only, shadow-only, and ready states. Promote each
+branch independently. Reconcile OpenSpec, traceability, architecture, status,
+changelog, completed research, and operational retro documents only to exact
+artifact evidence.
 
-**Deliverable:** `results/experiment_6309_v543_adversarial_capstone.json`
+**Deliverable:** `results/experiment_6322_v544_adversarial_capstone.json`
 
 ## Dependency graph
 
 ```text
-6297 transition
- ├─► 6298 terminal-evidence preflight ───────────────────────┐
- └─► 6299 source/scope freeze ────────┬──────────────────────┤
-                                      │                      │
-                                      ▼                      │
-                              6300 activation bus             │
-                                      ▼                      │
-                              6301 integrity audit            │
-                               │                 │             │
-                     gate=1 ───┘                 └── gate=1 ─┐ │
-                               ▼                              │ │
-                       6302 state initializer                  │ │
-                               ▼ gate=1                        │ │
-                       6303 live benchmark                     │ │
-                                                              │ │
-6299 ─► 6304 online learning ──► 6306 safety audit            │ │
-              │ gate=1                                        │ │
-              └──────────────► 6305 licensed transfer ◄───────┘ │
-                                                                │
-6298 + 6299 ─► 6307 ARC target-license canary ─► 6308 holdout  │
-                                                    gate=1      │
-                                                                │
-all exact declared artifacts ───────────────────────────────► 6309
+Exp6310 terminal transition
+  ├── Exp6311 source/scope freeze
+  │     ├── Exp6312 representation preflight
+  │     │     └─[surface=1]─► Exp6314 live state corpus
+  │     │                       └─[corpus=1]─► Exp6315 local probes
+  │     │                                         └► Exp6316 integrity audit
+  │     │                                              └─[integrity=1]─► Exp6317 live benchmark
+  │     ├── Exp6313 exact code-safety fixture ────────────────┘
+  │     ├── Exp6318 versioned online initializer
+  │     │     └─[readiness=1]─► Exp6319 feedback-directed search
+  │     │                              └► Exp6320 safety audit
+  │     └── Exp6321 ARC live-shadow A/B
+  └───────────────────────────────────────────────────────────┐
+                                                              ▼
+                 Exp6322 capstone consumes Exp6310-Exp6321
 ```
 
-All structured gates are conjunctive. A skipped downstream task is terminal
-evidence and must not be reinterpreted as a null scientific result.
+The self-learning branch is independent of model-local probe promotion. The
+ARC branch is independent of both. Structured gates prevent expensive live
+tasks from consuming agent and GPU time after a prerequisite closes.
 
-## Hardware requirements
+## Hardware and runtime requirements
 
-| Phase | Hardware | Requirement and boundary |
+| Resource | Tasks | Requirement |
 |---|---|---|
-| Phase 0 | CPU, local disk, network for source refresh | No model load. Hash all inputs. Exp6298 must not patch `scripts/research_conductor.py`. |
-| Phase 1 offline | CPU plus existing Exp5852 corpus; optional one RTX 3090 for small adapter fitting | Exp6300-Exp6302 may use cached, hash-bound embeddings. They must not claim fresh model inference. |
-| Phase 1 live | Dual RTX 3090 GPUs | Exp6303 loads the three mandated GGUF families sequentially or under measured safe placement. Require CUDA/offload and memory receipts before model construction. |
-| Phase 2 | CPU or one RTX 3090 for small initializer updates | Base GGUF weights remain frozen. The learned factor/state objective must retain a CPU/GPU path and an explicit factor decomposition suitable for future Ising/THRML compilation. |
-| Phase 3 | Dual RTX 3090 GPUs for matched ARC generation; CPU for replay and capstone | Bound every call, avoid heavy concurrent model work, and record the known intermittent server/reaper boundary. No hidden-game source access. |
+| Dual RTX 3090 CUDA host | Exp6312, Exp6314, Exp6317, Exp6321 | Use the cached mandated GGUF files. Record model hashes, tokenizer hashes, CUDA devices, layer offload, VRAM before/peak/after, actual work duration, and unload receipts. Run models sequentially when memory isolation is needed. |
+| CPU and RAM | All tasks; especially Exp6313, Exp6315-Exp6320, Exp6322 | Exact Python/AST/property checks, linear heads, online updates, audits, and capstone aggregation must have deterministic CPU paths. Record peak RSS for large corpus tasks. |
+| Local disk | Exp6314 and Exp6317 | Reserve at least 25 GiB before extraction. Write raw rows and checkpoints atomically. Hash every manifest and tensor shard. |
+| KV260 / PolarFire / GateMate | None | No new workload or physical receipt justifies a board task. Preserve existing outcomes. |
+| Extropic TSU / Z1 | None | The public tapeout announcement does not provide authenticated local access. No availability, speed, power, or sampling claim is allowed. |
 
-No FPGA or TSU task is scheduled. KV260 and PolarFire have no new workload
-receipt, GateMate remains physically blocked at IDCODE, and Carnot has no
-authenticated Extropic device or simulator route. V543 may document factor
-compatibility but may make no board, latency, power, speed, or availability
-claim. A future hardware experiment requires a new dated physical or
-authenticated receipt.
+The model-local heads and factor-local learner have a future sparse hardware
+path: native per-model projections are matrix-vector operations; factor updates
+and exact energies are sparse graph reductions. V544 measures operation counts
+and memory movement on CPU/GPU. It does not claim FPGA or thermodynamic speed.
 
-## Explicit exclusions
+## Explicit exclusions and rerun discipline
 
-- No generated-answer transport, parser, grammar, or stop-token retry.
-- No external generated-text EBM, uPRM, EBRM, or Phase-D scorer rerun.
-- No MMLU-Pro final-state hidden-probe retry; the activation bus uses a changed
-  representation and exact configuration domain.
-- No KAN replacement or mode-jump sampler extension.
-- No LLM weight fine-tuning, GRPO, live LoRA, or verifier-as-reward training.
-- No ARC public-level solve target, hidden-source read, offline ground-truth
-  BFS, per-game adapter, or registry credit.
-- No hardware speed, power, energy, or availability claim without a new
-  physical or authenticated route.
+- Do not retry the Exp6300 shared activation bus, Exp6302 shared initializer,
+  or missing Exp6303 shared-state benchmark.
+- Do not retry Exp6305 licensed cross-family transfer. V544 learning stays
+  within one declared task domain and one version lineage.
+- Do not use finite-ID generated-answer transport, parser retries, grammar
+  transport, or external generated-text energy scorers.
+- Do not reopen KAN replacement, MMLU-Pro final-state probing, mode-jump
+  sampling, or unchanged physical-board probes.
+- Do not use hidden game source, offline ground-truth BFS, per-game adapters,
+  prior-game trajectories, or registry targets in the ARC task.
+- Do not count exact-validator labels, exact repairs, replay hits, protected
+  validation, safety-only evidence, or shadow-only ARC proposals as product
+  gains.
+- Every scope-adjacent task carries the prior honest verdict, a concrete
+  mechanism change, and `retire_if_same_verdict: true` in the staged YAML.
 
-## Milestone success condition
+## Milestone success criteria
 
-V543 succeeds scientifically even if every value gate is null, provided the
-artifacts are terminal and honest. A positive architecture result requires:
+V544 succeeds as a research milestone if it produces decision-grade terminal
+evidence, including a clean null. Branch promotion is stricter:
 
-1. the shared activation bus passes every independent shortcut and identity
-   control;
-2. the shared-state initializer improves exact-valid refinement work on held
-   folds without accuracy harm and without crediting the exact oracle;
-3. reference-anchored online learning improves future chronological events,
-   retains old capability, survives safety audit, and rolls back exactly; and
-4. any cross-family or ARC route is licensed by target-side evidence before it
-   affects a decision.
+1. **Model-local verification:** every mandated model passes the independent
+   shortcut audit, and its frozen local energy beats chance and its own
+   prompted-verdict baseline on adequately powered fresh exact holdouts.
+2. **Continuous self-learning:** a versioned factor-local learner improves
+   future-event utility over frozen state, does not regress the full-state
+   anchored control, reduces update movement, releases only at boundaries, and
+   rolls back exactly with zero unsafe commits.
+3. **Feedback-directed search:** protected validation confirms more genuine
+   improvements per matched cost than repeated sampling, and the dense signal
+   never acts as release authority.
+4. **ARC reachability:** the actual `E3AgentPolicy` computes the target-licensed
+   route in a default-off shadow on fresh agent-owned windows, preserves action
+   parity, accesses no escape hatch, and credits zero solves.
+5. **Evidence integrity:** every declared artifact is terminal or explicitly
+   missing; all required commands, durations, substrates, seeds, hashes,
+   principles, provenance, and adversarial states remain visible in Exp6322.
 
-The capstone must keep these branches independent. No aggregate score may hide
-a failed model, task family, safety stratum, or ARC fold.
+No aggregate score may rescue a failed model, fold, safety gate, or provenance
+cell. A clean refutation closes its branch and informs the next milestone.
