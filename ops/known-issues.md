@@ -16544,3 +16544,44 @@ attempt is an operator decision given each attempt consumes a rate-limited slot.
 `/home/ianblenke/carnot_submission_staging/kernel/main.py` (stale fork used for ref 55393553);
 commits `3af9256bd6`/`fa81eb9f77` (2026-07-27 concurrency fix), `be35317c1e` (2026-08-08 latest);
 REQ-ARC-WMTE-6227 (the 81920->106496 n_ctx correction); `/home/ianblenke/carnot_submission_staging/MANIFEST.md`'s OUTCOME section (2026-08-09).
+
+## 2026-08-11 operator physical action: ALL FPGA hardware power-cycled — GateMate changed-state gate should now unblock
+
+**Operator directive (2026-08-11T12:58:49Z UTC):** "I have just power cycled all of the FPGA
+hardware." This is the physical state change `REQ-HW-6121` / `experiment_6121_gatemate_changed_
+state_gate_v530.py` has been blocked waiting on since `.530` (2026-08-04): "operator must change
+physical state and record a dated receipt."
+
+**Dated physical receipt (structured, for the next GateMate gate script to consume):**
+
+```json
+{
+  "exists": true,
+  "receipt_date": "20260811",
+  "source": "operator directive 2026-08-11T12:58:49Z: \"I have just power cycled all of the FPGA hardware\"",
+  "changes": [
+    {"field": "power", "description": "operator power-cycled all attached FPGA boards, including GateMate"}
+  ],
+  "board": "Cologne Chip GateMate A1-EVB-2M",
+  "power": "power-cycled 2026-08-11 per operator directive (was: cached physical power unresolved; raw all-ones TDO suggested open or unpowered target)",
+  "usb_dirtyjtag": "1209:c0ca, bus 3, path 2.3 (re-enumerated after power cycle -- device number changed from the last recorded bus 003 device 006; SAME shared hub path 2.3, confirming the physical connection was not moved, only power-cycled)",
+  "verified_read_only": "lsusb (2026-08-11T12:58:49Z): 1209:c0ca present, bus 3 device 11, path 2.3 -- no JTAG command run, no detect attempted; that single non-destructive detect is reserved for the gated script per the operator_action_packet's do_not_do list"
+}
+```
+
+**This satisfies `_receipt_authorizes_changed_state`'s three conditions**: `changes` is non-empty,
+`receipt_date` ("20260811") > `LAST_ATTEMPT_DATE` ("20260704"), and the changed field ("power")
+is in the physical-fields set the gate checks. The next GateMate gate task (whatever version
+number the current milestone assigns it) should read this receipt and permit exactly ONE
+non-destructive `openFPGALoader -c dirtyJtag --detect` -- no flash, no synthesis, no place/route,
+no pack, per the operator_action_packet's `do_not_do` list. Not run here: that command is
+reserved for the gated experiment script, not for ad-hoc execution outside its authorization
+chain.
+
+**Other attached boards, read-only reachability checked at the same time (not gated the same
+way -- these use plain SSH-reachability preconditions, not a physical-receipt gate):**
+- **KV260**: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` -> exit 0, reachable.
+- **PolarFire**: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'` -> hostname
+  `mpfs-disco-kit.local` did not resolve. Likely still completing its post-power-cycle boot /
+  mDNS re-announcement; not yet confirmed reachable. Worth a re-check before the next PolarFire
+  task runs; not itself evidence of a hardware problem after a deliberate power cycle.
