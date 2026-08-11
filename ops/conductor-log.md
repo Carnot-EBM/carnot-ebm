@@ -15652,3 +15652,4 @@ Still active  |
 | 2026-08-11 05:39 UTC | Post-V543-marker source delta and experimental-sco | OK | 90 passed, 1 warning in 59.03s |
 | 2026-08-11 06:12 UTC | Universal activation bus over the three mandated G | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6300_three_f |
 | 2026-08-11 06:48 UTC | Universal activation bus over the three mandated G | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6300_three_f |
+| 2026-08-11 07:10 UTC | Universal activation bus over the three mandated G | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |

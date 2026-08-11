@@ -102,7 +102,7 @@
     },
     "openspec/capabilities/research-harnesses/spec.md": {
       "present": true,
-      "sha256": "sha256:2b26de600129a579ac3680d74d787c7ec9635268b688d4ed40e0fb42cbf9619f"
+      "sha256": "sha256:0a1664d6002babfd3a8471b9cc4f4d5dce2f1a4740798399f95e09ba3e8f1760"
     },
     "ops/e2e-test-plan.md": {
       "present": true,
@@ -1345,12 +1345,28 @@
   },
   "preconditions_checked": {
     "git_status_before": [
-      " M openspec/capabilities/research-harnesses/spec.md",
-      "?? python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
-      "?? python/carnot/terminal_evidence_preflight.py",
-      "?? tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      " M openspec/capabilities/constraint-verification/spec.md",
+      " M ops/anomaly-escalations.md",
+      "M  ops/conductor-heartbeat.json",
+      "M  ops/conductor-log.md",
+      "M  ops/conductor-state.json",
+      "M  results/experiment_6300_three_family_universal_activation_bus.json",
+      "?? python/carnot/experiment_6301_activation_bus_integrity_audit.py",
+      "?? results/experiment_6301_activation_bus_integrity_audit.json",
+      "?? tests/python/test_experiment_6301_activation_bus_integrity_audit.py"
     ],
-    "git_status_after_tests": [],
+    "git_status_after_tests": [
+      " M openspec/capabilities/constraint-verification/spec.md",
+      " M ops/anomaly-escalations.md",
+      "M  ops/conductor-heartbeat.json",
+      "M  ops/conductor-log.md",
+      "M  ops/conductor-state.json",
+      " M results/experiment_6298_terminal_evidence_preflight_linter.json",
+      "M  results/experiment_6300_three_family_universal_activation_bus.json",
+      "?? python/carnot/experiment_6301_activation_bus_integrity_audit.py",
+      "?? results/experiment_6301_activation_bus_integrity_audit.json",
+      "?? tests/python/test_experiment_6301_activation_bus_integrity_audit.py"
+    ],
     "protected_hashes_before_artifact_write": {
       "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
       "results/experiment_6288_partial_atom_evidence_adapter.json": "sha256:2dcce102f803888496484d2ff1d1ac130a2f2d2666db4331c1249ad109e8fe81",
@@ -1424,7 +1440,7 @@
       },
       "openspec/capabilities/research-harnesses/spec.md": {
         "present": true,
-        "sha256": "sha256:2b26de600129a579ac3680d74d787c7ec9635268b688d4ed40e0fb42cbf9619f"
+        "sha256": "sha256:0a1664d6002babfd3a8471b9cc4f4d5dce2f1a4740798399f95e09ba3e8f1760"
       },
       "ops/e2e-test-plan.md": {
         "present": true,
@@ -2119,9 +2135,9 @@
     ".venv/bin/python scripts/adversarial_verify.py results/experiment_6298_terminal_evidence_preflight_linter.json"
   ],
   "test_exit_codes": {},
-  "duration_s": 0.0713750368449837,
+  "duration_s": 0.16975758387707174,
   "random_seed": 6298,
-  "reproducibility_checksum": "sha256:2b4195ec74d014698ef0de82e311d090721eee97f30c22a43e19a97196a3e132",
+  "reproducibility_checksum": "sha256:ded9f955f9cbd8da5ba0377e46955a24b7d24443504a475ccd1775be98973b52",
   "terminal_evidence_preflight_ready_score": 1.0,
   "honest_verdict": "complete: terminal evidence preflight rejected V542 and synthetic bad fixtures with zero false accepts and zero false rejects"
 }

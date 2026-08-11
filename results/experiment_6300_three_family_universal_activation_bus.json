@@ -2031,5 +2031,18 @@
     "random_projection_seed": 6300
   },
   "reproducibility_checksum": "sha256:858fe6da0462234acda0d5b2ef0f6ba2d063f9dd51534fc288b97df9522d9561",
-  "honest_verdict": "complete: shared activation bus ready on held folds without model identity leakage"
+  "honest_verdict": "complete: shared activation bus ready on held folds without model identity leakage",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=17.108900215942413 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
+    }
+  ]
 }
