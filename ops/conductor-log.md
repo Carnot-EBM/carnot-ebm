@@ -15655,3 +15655,4 @@ Still active  |
 | 2026-08-11 07:10 UTC | Universal activation bus over the three mandated G | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-11 07:33 UTC | Independent shortcut and leakage audit of the shar | OK | 86 passed, 1 warning in 8.03s |
 | 2026-08-11 07:35 UTC | Shared activation-to-ASP-state initializer gated o | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6301-activation-bus-integrity-audit.act |
+| 2026-08-11 07:37 UTC | Shared activation-to-ASP-state initializer gated o | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6301-activation-bus-integrity-audit.act |
