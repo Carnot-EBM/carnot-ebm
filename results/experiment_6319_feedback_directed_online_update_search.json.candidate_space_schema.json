@@ -1,0 +1,164 @@
+{
+  "bounded_factor_names": [
+    "accept_factor",
+    "repair_factor",
+    "reject_factor",
+    "drift_factor",
+    "poison_factor"
+  ],
+  "candidate_count": 8,
+  "candidate_count_per_arm": 4,
+  "candidate_rows": [
+    {
+      "candidate_id": "cand_accept_confirm",
+      "changed_factor_set": [
+        "accept_factor"
+      ],
+      "movement_cost": {
+        "changed_factor_count": 1,
+        "changed_parameter_count": 3,
+        "changed_state_bytes": 129,
+        "l1_movement": 0.4,
+        "total": 0.4629
+      },
+      "mutation_class": "confirm",
+      "parent_policy_id": "exp6318_factor_local_policy_v000",
+      "step_size": 0.2,
+      "target_state_mutation": "accept"
+    },
+    {
+      "candidate_id": "cand_repair_to_repair",
+      "changed_factor_set": [
+        "repair_factor"
+      ],
+      "movement_cost": {
+        "changed_factor_count": 1,
+        "changed_parameter_count": 3,
+        "changed_state_bytes": 132,
+        "l1_movement": 1.24,
+        "total": 1.3032
+      },
+      "mutation_class": "repair_cue",
+      "parent_policy_id": "exp6318_factor_local_policy_v000",
+      "step_size": 0.62,
+      "target_state_mutation": "repair"
+    },
+    {
+      "candidate_id": "cand_reject_to_reject",
+      "changed_factor_set": [
+        "reject_factor"
+      ],
+      "movement_cost": {
+        "changed_factor_count": 1,
+        "changed_parameter_count": 3,
+        "changed_state_bytes": 132,
+        "l1_movement": 1.24,
+        "total": 1.3032
+      },
+      "mutation_class": "reject_cue",
+      "parent_policy_id": "exp6318_factor_local_policy_v000",
+      "step_size": 0.62,
+      "target_state_mutation": "reject"
+    },
+    {
+      "candidate_id": "cand_drift_to_repair",
+      "changed_factor_set": [
+        "drift_factor"
+      ],
+      "movement_cost": {
+        "changed_factor_count": 1,
+        "changed_parameter_count": 3,
+        "changed_state_bytes": 129,
+        "l1_movement": 0.84,
+        "total": 0.9029
+      },
+      "mutation_class": "drift_repair",
+      "parent_policy_id": "exp6318_factor_local_policy_v000",
+      "step_size": 0.42,
+      "target_state_mutation": "repair"
+    },
+    {
+      "candidate_id": "cand_drift_to_reject",
+      "changed_factor_set": [
+        "drift_factor"
+      ],
+      "movement_cost": {
+        "changed_factor_count": 1,
+        "changed_parameter_count": 3,
+        "changed_state_bytes": 129,
+        "l1_movement": 0.84,
+        "total": 0.9029
+      },
+      "mutation_class": "drift_reject",
+      "parent_policy_id": "exp6318_factor_local_policy_v000",
+      "step_size": 0.42,
+      "target_state_mutation": "reject"
+    },
+    {
+      "candidate_id": "cand_poison_to_reject",
+      "changed_factor_set": [
+        "poison_factor"
+      ],
+      "movement_cost": {
+        "changed_factor_count": 1,
+        "changed_parameter_count": 3,
+        "changed_state_bytes": 134,
+        "l1_movement": 0.9,
+        "total": 0.9634
+      },
+      "mutation_class": "poison_guard",
+      "parent_policy_id": "exp6318_factor_local_policy_v000",
+      "step_size": 0.45,
+      "target_state_mutation": "reject"
+    },
+    {
+      "candidate_id": "cand_accept_to_reject",
+      "changed_factor_set": [
+        "accept_factor"
+      ],
+      "movement_cost": {
+        "changed_factor_count": 1,
+        "changed_parameter_count": 3,
+        "changed_state_bytes": 131,
+        "l1_movement": 1.44,
+        "total": 1.5031
+      },
+      "mutation_class": "negative_control",
+      "parent_policy_id": "exp6318_factor_local_policy_v000",
+      "step_size": 0.72,
+      "target_state_mutation": "reject"
+    },
+    {
+      "candidate_id": "cand_repair_to_accept",
+      "changed_factor_set": [
+        "repair_factor"
+      ],
+      "movement_cost": {
+        "changed_factor_count": 1,
+        "changed_parameter_count": 3,
+        "changed_state_bytes": 134,
+        "l1_movement": 1.1,
+        "total": 1.1634
+      },
+      "mutation_class": "negative_control",
+      "parent_policy_id": "exp6318_factor_local_policy_v000",
+      "step_size": 0.55,
+      "target_state_mutation": "accept"
+    }
+  ],
+  "random_seeds": {
+    "candidate_space": 6319,
+    "feedback_directed": 6321,
+    "interval": 6322,
+    "protected_seal": 6323,
+    "repeated_uniform": 6320
+  },
+  "schema": "carnot.experiment_6319.feedback_directed_online_update_search.v1.candidate_space",
+  "source_policy": "Exp6318 factor-local reference initializer",
+  "source_policy_hash": "sha256:e7568ee649e49890d927636fb924b2b40ef7d3ea6a89f7dab6c6c92b4db254fc",
+  "target_states": [
+    "accept",
+    "repair",
+    "reject"
+  ]
+}

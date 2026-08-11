@@ -1062,3 +1062,149 @@ remain bare integer zeros.
 | REQ-CSL-6318-CONTROLS | Planned | tests/python/test_experiment_6318_versioned_factor_local_online_initializer.py |
 | REQ-CSL-6318-READY | Planned | tests/python/test_experiment_6318_versioned_factor_local_online_initializer.py |
 | REQ-CSL-6318-PROVENANCE | Planned | tests/python/test_experiment_6318_versioned_factor_local_online_initializer.py |
+
+## REQ-CSL-6319: Feedback-Directed Online Update Search
+
+**Given** Exp6318 reports
+`versioned_factor_local_learning_ready_score == 1.0`
+**When** Exp6319 searches bounded factor-local candidate updates
+**Then** it SHALL write
+`results/experiment_6319_feedback_directed_online_update_search.json`
+**And** it SHALL compare repeated uniform candidate sampling with
+feedback-directed candidate selection
+**And** arm IDs SHALL include `repeated_uniform_candidate_sampling` and
+`feedback_directed_candidate_selection`
+**And** both arms SHALL use the same starting candidate pool, candidate count,
+update operations, development exact-verifier calls, wall-time ceiling, and
+movement-budget ceiling
+**And** final protected validation SHALL stay sealed until both searches stop.
+
+## REQ-CSL-6319-PROTECTED-SEAL: Protected Validation Opens Once
+
+**Given** the final validation partition is sealed before search
+**When** either arm selects and evaluates candidates on development evidence
+**Then** the arm SHALL NOT read protected targets, protected exact outcomes, or
+protected-derived scores
+**And** protected validation SHALL open exactly once after both arms terminate
+**And** `protected_validation_reuse_count` SHALL be bare `0`.
+
+## REQ-CSL-6319-DENSE-SIGNAL: Development-Only Progress Signal
+
+**Given** a candidate update has development-stream predictions, exact
+development outcomes, and movement receipts
+**When** Exp6319 computes dense progress
+**Then** the signal SHALL use only development-stream evidence available before
+protected validation
+**And** the signal MAY rank the next candidate
+**And** the signal SHALL NOT authorize release
+**And** `progress_signal_release_authority_count` SHALL be bare `0`.
+
+## REQ-CSL-6319-MATCHED-ARMS: Candidate And Budget Parity
+
+**Given** repeated sampling and feedback-directed search arms
+**When** the searches terminate
+**Then** candidate count, update-operation count, exact development-verifier
+call count, wall-time ceiling, movement-budget ceiling, and source candidate
+pool hash SHALL match across arms
+**And** source model weights SHALL remain immutable
+**And** `source_model_weight_mutation_count` SHALL be bare `0`.
+
+## REQ-CSL-6319-READY: Protected Improvement Gate
+
+**Given** development search is complete and protected validation has opened
+once
+**When** `feedback_directed_search_ready_score` is computed
+**Then** it SHALL be one only when development dense progress has positive
+protected signal predictiveness, feedback-directed search yields more
+validated improvements per matched cost than repeated sampling, protected
+regression count is no higher than repeated sampling, protected false
+discovery count is no higher than repeated sampling, protected validation is
+not reused, the dense signal has no release authority, model weights are
+unchanged, protected files are unchanged, and verification commands pass.
+
+## REQ-CSL-6319-PROVENANCE: Required Artifact Fields
+
+Exp6319 SHALL emit these fields with the stated principles:
+
+- `status`: Terminal state follows the upstream gate, sealed search, protected evaluation, and verification.
+- `paper_source_and_local_claim_boundary`: The fuzz-testing paper is a design cue only. Local claims stop at bounded deterministic candidate updates.
+- `upstream_path_hash_and_terminal_class`: Exp6318 is hash-pinned and must be positive before this run executes.
+- `structured_gate_receipt`: The upstream gate and local schema gate are replayed before search.
+- `candidate_space_schema_and_hash`: The bounded candidate pool is frozen and content-addressed.
+- `development_stream_manifest_path_and_hash`: Development evidence is frozen before adaptive selection.
+- `protected_validation_manifest_path_and_hash`: Protected rows are committed before search and hide targets.
+- `protected_partition_seal_and_access_log`: Protected validation opens once after both arms stop.
+- `repeated_sampling_and_feedback_directed_arm_definitions`: Arm roles and selection authority are explicit.
+- `dense_progress_signal_definition_and_cost`: The progress score is cheap and development-only.
+- `matched_candidate_update_verifier_time_and_movement_budgets`: Candidate count, update work, verifier calls, wall cap, and movement cap match across arms.
+- `candidate_lineage_and_intervention_receipts`: Each selected intervention records parent, mutation, arm, and pre-execution reason.
+- `development_progress_by_candidate_and_arm`: Development signal rows show the evidence used for ranking.
+- `protected_exact_outcomes_by_candidate_and_arm`: Protected exact outcomes open only after search.
+- `signal_predictiveness_intervals_and_sample_sizes`: Signal-to-protected-improvement estimates include sample sizes.
+- `validated_improvements_false_discoveries_and_regressions_by_arm`: Protected improvements, false discoveries, and regressions stay separated.
+- `validated_improvements_per_cost_by_arm`: Protected improvement yield is divided by matched cost.
+- `movement_memory_and_wall_time_by_arm`: Movement, memory, and wall time are charged per arm.
+- `protected_validation_reuse_count`: Bare zero proves no adaptive reuse of protected validation.
+- `progress_signal_release_authority_count`: Bare zero proves the dense signal cannot release candidates.
+- `source_model_weight_mutation_count`: Bare zero proves no source model weights changed.
+- `feedback_directed_search_ready_score`: Readiness is conjunctive and uses protected exact validation.
+- `protected_files_unchanged`: Conductor, ops, traceability, and forbidden files remain byte-identical during the run.
+- `preconditions_checked`: Inputs, hashes, seals, budgets, thresholds, seeds, and protected files are frozen first.
+- `inference_substrate`: The run declares deterministic exact ASP candidate search with no LLM and no base model load.
+- `verifier_is_oracle`: Exact validators are outcome authorities, but the progress signal is not.
+- `field_provenance`: Every field maps to spec, inputs, receipts, metrics, tests, commands, or hashes.
+- `field_principles`: Every required field carries its guard principle.
+- `test_commands`: Focused tests, coverage, full pytest, E2E reading, run command, validation, adversarial checks, and root-clutter checks are listed.
+- `test_exit_codes`: Failed verification commands prevent readiness.
+- `duration_s`: Wall time is measured without padding.
+- `random_seeds`: Candidate, arm, interval, and seal seeds are fixed.
+- `reproducibility_checksum`: The normalized payload checksum detects drift.
+- `honest_verdict`: The verdict starts with a terminal prefix and states whether feedback direction earned readiness.
+
+## SCENARIO-CSL-6319-PROTECTED-LEAKAGE: Search Cannot See Protected Targets
+
+**Given** protected rows are sealed before search
+**When** candidate selection receipts and development progress rows are
+inspected
+**Then** they SHALL contain no protected target states or protected exact
+outcomes.
+
+## SCENARIO-CSL-6319-BUDGET-PARITY: Arms Are Matched
+
+**Given** both arms use the same candidate pool
+**When** search completes
+**Then** candidate count, update-operation count, development exact-verifier
+calls, wall-time ceiling, movement-budget ceiling, and candidate-pool hash
+SHALL match.
+
+## SCENARIO-CSL-6319-ONE-TIME-OPEN: Protected Validation Is Not Reused
+
+**Given** both searches have stopped
+**When** protected validation opens
+**Then** the access log SHALL show one open, zero adaptive reuse, and no
+feedback from protected outcomes into later selection.
+
+## SCENARIO-CSL-6319-SIGNAL-TAMPERING: Readiness Fails On Signal Abuse
+
+**Given** an artifact gives release authority to dense progress or feeds
+protected validation into progress
+**When** readiness is recomputed
+**Then** `feedback_directed_search_ready_score` SHALL be `0.0`.
+
+## SCENARIO-CSL-6319-DETERMINISTIC-REPLAY: Same Inputs Reproduce
+
+**Given** the same date, seeds, upstream gate, candidate pool, manifests, and
+budgets
+**When** Exp6319 reruns
+**Then** the normalized reproducibility checksum SHALL match.
+
+## Implementation Status (REQ-CSL-6319)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CSL-6319 | Planned | tests/python/test_experiment_6319_feedback_directed_online_update_search.py |
+| REQ-CSL-6319-PROTECTED-SEAL | Planned | tests/python/test_experiment_6319_feedback_directed_online_update_search.py |
+| REQ-CSL-6319-DENSE-SIGNAL | Planned | tests/python/test_experiment_6319_feedback_directed_online_update_search.py |
+| REQ-CSL-6319-MATCHED-ARMS | Planned | tests/python/test_experiment_6319_feedback_directed_online_update_search.py |
+| REQ-CSL-6319-READY | Planned | tests/python/test_experiment_6319_feedback_directed_online_update_search.py |
+| REQ-CSL-6319-PROVENANCE | Planned | tests/python/test_experiment_6319_feedback_directed_online_update_search.py |
