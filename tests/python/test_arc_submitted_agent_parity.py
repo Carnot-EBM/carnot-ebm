@@ -318,6 +318,80 @@ def test_req_arc_fcp_5699_12_env_var_enables_sge_without_touching_module_flag(mo
     assert router.game_id == "sp80"
 
 
+def test_req_arc_wmte_6321_target_licensed_route_shadow_default_off() -> None:
+    """SCENARIO-ARC-WMTE-6321-DEFAULT-OFF-PARITY: submitted E3 has no active shadow."""
+
+    pol = E3AgentPolicy(
+        "paritytest",
+        proposer=None,
+        value_head=lambda _frame: 0.0,
+        candidate_router=None,
+        frame_change_scorer=None,
+        action_effect_expansion_prior=False,
+        goal_bias=None,
+        goal_candidate_guidance=None,
+        program_synthesis_filter=False,
+        controllable_novelty=False,
+        object_centric_proposal=False,
+        structured_evidence_memory=False,
+        epistemic_ledger=False,
+        inert_click_pruner=False,
+        hazard_move_pruner=False,
+        similarity_retrieval=False,
+    )
+
+    assert pol.target_licensed_route_shadow_enabled is False
+    assert pol.target_licensed_route_shadow() is None
+
+
+def test_req_arc_wmte_6321_computed_shadow_does_not_change_policy_state() -> None:
+    """SCENARIO-ARC-WMTE-6321-SHADOW-COMPUTED-ISOLATION: shadow records only."""
+
+    from carnot import experiment_6307_arc_target_validated_route_canary as exp6307
+
+    pol = E3AgentPolicy(
+        "paritytest",
+        proposer=None,
+        value_head=lambda _frame: 0.0,
+        candidate_router=None,
+        frame_change_scorer=None,
+        action_effect_expansion_prior=False,
+        goal_bias=None,
+        goal_candidate_guidance=None,
+        program_synthesis_filter=False,
+        controllable_novelty=False,
+        object_centric_proposal=False,
+        structured_evidence_memory=False,
+        epistemic_ledger=False,
+        inert_click_pruner=False,
+        hazard_move_pruner=False,
+        similarity_retrieval=False,
+        target_licensed_route_shadow=True,
+    )
+    pol.transitions.extend(exp6307._push_transitions(4, 6321))
+    move = (4, None)
+    before_budget = pol.explore_budget
+    before_plan = list(pol.plan)
+
+    returned = pol.record_target_licensed_route_shadow(move, latest_level=0)
+    shadow = pol.target_licensed_route_shadow()
+
+    assert returned == move
+    assert pol.explore_budget == before_budget
+    assert pol.plan == before_plan
+    assert shadow is not None
+    receipt = shadow.receipt()
+    assert receipt["enabled"] is True
+    assert receipt["row_count"] == 1
+    row = receipt["rows"][0]
+    assert row["action_parity"] is True
+    assert row["prospective_action_supported"] is True
+    assert row["route_reachable"] is True
+    assert row["registry_update_count"] == 0
+    assert row["level_before_shadow"] == row["level_after_shadow"] == 0
+    assert row["explore_budget_before_shadow"] == row["explore_budget_after_shadow"] == before_budget
+
+
 def test_req_arc_fcp_5699_11_load_sge_candidate_router_reuses_frozen_generator_config(monkeypatch):
     """_load_sge_candidate_router() must build a LocalGGUFProposer configured IDENTICALLY
     to _proposer()'s own lazy default (same repo_substr/mtp/kv_quant/no_think_prefix) so it
