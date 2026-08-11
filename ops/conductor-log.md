@@ -15666,3 +15666,4 @@ Still active  |
 | 2026-08-11 08:06 UTC | VERDI-style transfer gated on Exp6301 integrity=1  | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6301-activation-bus-integrity-audit.act |
 | 2026-08-11 08:22 UTC | Independent poison, reversal, restart, and rollbac | OK | 87 passed, 1 warning in 9.74s |
 | 2026-08-11 09:38 UTC | ARC live-path target-validated mechanic-route caus | OK | 115 passed, 1 warning in 11.41s |
+| 2026-08-11 09:57 UTC | Held-game ARC target-license audit gated on Exp630 | OK | 112 passed, 1 warning in 12.42s |
