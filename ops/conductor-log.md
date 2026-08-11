@@ -15680,3 +15680,5 @@ Still active  |
 | 2026-08-11 12:45 UTC | Per-model paired-difference energy probes gated on | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6314-three-family-model-local-state-corpu |
 | 2026-08-11 13:01 UTC | Independent integrity audit for every model-local  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6316_model_l |
 | 2026-08-11 13:03 UTC | Per-model paired-difference energy probes gated on | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6314-three-family-model-local-state-corpu |
+| 2026-08-11 13:20 UTC | Independent integrity audit for every model-local  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6316_model_l |
+| 2026-08-11 13:22 UTC | Per-model paired-difference energy probes gated on | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6314-three-family-model-local-state-corpu |
