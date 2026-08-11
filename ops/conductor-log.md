@@ -15656,3 +15656,5 @@ Still active  |
 | 2026-08-11 07:33 UTC | Independent shortcut and leakage audit of the shar | OK | 86 passed, 1 warning in 8.03s |
 | 2026-08-11 07:35 UTC | Shared activation-to-ASP-state initializer gated o | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6301-activation-bus-integrity-audit.act |
 | 2026-08-11 07:37 UTC | Shared activation-to-ASP-state initializer gated o | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6301-activation-bus-integrity-audit.act |
+| 2026-08-11 07:39 UTC | Shared activation-to-ASP-state initializer gated o | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6301-activation-bus-integrity-audit.act |
+| 2026-08-11 07:41 UTC | Live three-family shared-state value benchmark gat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6302-shared-activation-state-initializer) |
