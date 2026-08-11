@@ -24894,8 +24894,98 @@ mutation, duration padding, missing field principles, false licenses, arm
 mismatch, baseline harm, nonterminal verdicts, model substitution, and checksum
 drift.
 
-## Implementation Status (REQ-ARC-WMTE-6307)
+### REQ-ARC-WMTE-6308: ARC Target-Validated Route Holdout Audit
+
+Experiment 6308 SHALL run only after replaying the Exp6307 gate and confirming
+`arc_target_licensed_router_ready_score == 1.0`. It SHALL freeze Exp6307's
+target-license policy, thresholds, predicates, prompt contract, model/action
+budgets, source paths, and default-off feature flag. It SHALL evaluate the
+frozen three-arm policy on held game folds and held mechanic strata without
+refitting, threshold tuning, per-game adapters, registry updates, hidden-source
+access, outer-loop ground-truth search, or solve credit.
+
+The three arms SHALL remain `router_off`, `retrieval_only_static_route`, and
+`target_licensed_route`. Each held cell SHALL match history, actions, action
+budget, token budget, model id, model-call count, and seed across arms. The
+workflow SHALL build the held fold manifest before execution and prove no fold
+overlaps with Exp6307 fitting, threshold, or canary cells. Missing,
+underpowered, and harmful folds SHALL be preserved in the terminal artifact. A
+pooled mean SHALL NOT promote a failed adequately powered fold.
+
+`MODEL_SPECS` SHALL include both `unsloth/gemma-4-31B-it-GGUF` and
+`unsloth/Qwen3.6-35B-A3B-GGUF`. The feature default SHALL remain false. The
+readiness score SHALL be `1.0` only when each adequately powered held fold has
+either a positive proposal-path delta or an invalid-route reduction and no
+baseline harm. The artifact SHALL make no solve or registry claim.
+
+`python/carnot/experiment_6308_arc_target_validated_route_holdout.py` SHALL
+write `results/experiment_6308_arc_target_validated_route_holdout.json` with
+these bare top-level fields: `status`,
+`upstream_path_hash_and_terminal_class`, `structured_gate_receipt`,
+`registry_precheck_path_hash_and_target_receipt`, `solve_provenance`,
+`frozen_policy_paths_and_hashes`, `default_flag_name_value_and_receipt`,
+`held_game_mechanic_model_seed_and_transition_fold_manifest_path_and_hash`,
+`no_refit_receipts_by_fold`, `MODEL_SPECS`, `models_used`,
+`model_file_hashes_revisions_and_quantizations`,
+`tokenizer_and_chat_template_hashes`,
+`cuda_and_gpu_offload_receipts_by_model`, `raw_output_paths_and_hashes`,
+`row_counts_by_fold_and_stratum`,
+`hypothesis_activation_rejection_and_abstention_by_fold`,
+`proposal_acceptance_invalid_rate_diversity_and_latency_by_fold`,
+`paired_deltas_intervals_and_sample_sizes_by_fold`,
+`missing_underpowered_or_harmful_folds`, `baseline_harm_controls_by_fold`,
+`hidden_game_source_access_count`, `outer_loop_ground_truth_search_count`,
+`arc_level_solve_claim_count`, `registry_update_count`,
+`source_model_weight_mutation_count`,
+`arc_target_licensed_generalization_ready_score`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`, `test_exit_codes`,
+`duration_s`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+`solve_provenance` SHALL equal `live_agent_self_discovery`. Hidden-source,
+outer-loop-search, solve-claim, registry-update, and source-model-weight-
+mutation counts SHALL be bare integer zero values. `honest_verdict` SHALL start
+with a terminal prefix. `field_principles` SHALL include one short principle
+for every required field.
+
+The frozen policy SHALL run without refitting.
+
+#### SCENARIO-ARC-WMTE-6308-GATE-REPLAY
+
+Given Exp6307 is the upstream canary, when Experiment 6308 starts, then it
+records the upstream path hash, terminal class, and structured receipt proving
+the ready score is exactly `1.0` before any held fold is evaluated.
+
+#### SCENARIO-ARC-WMTE-6308-FOLD-ISOLATION
+
+Given held folds are built, when the fold manifest is sealed, then the manifest
+records game ids, mechanic strata, model ids, seeds, transition hashes, and
+zero overlap with Exp6307 fitting, threshold, and canary cells.
+
+#### SCENARIO-ARC-WMTE-6308-NO-REFIT-DEFAULT-OFF
+
+Given the frozen policy is evaluated, when any fold is processed, then no
+threshold, predicate, adapter, prompt, or budget is refit and the target-license
+feature default remains false.
+
+#### SCENARIO-ARC-WMTE-6308-PER-FOLD-GATE
+
+Given held fold metrics are aggregated, when readiness is computed, then every
+adequately powered fold must pass by positive proposal-path delta or invalid
+route reduction with no baseline harm. Missing, underpowered, or harmful folds
+remain listed and cannot be hidden by a pooled mean.
+
+#### SCENARIO-ARC-WMTE-6308-ZERO-SOLVE-CREDIT
+
+Given any completed or blocked 6308 artifact, validation refuses hidden-source
+access, outer-loop search, solve claims, registry updates, source weight
+mutation, default-on drift, refit receipts, model substitution, nonterminal
+verdicts, missing field principles, and checksum drift.
+
+## Implementation Status (REQ-ARC-WMTE-6307, REQ-ARC-WMTE-6308)
 
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6307 | Pending. | Pending. |
+| REQ-ARC-WMTE-6308 | Implemented in `python/carnot/experiment_6308_arc_target_validated_route_holdout.py`. | `tests/python/test_experiment_6308_arc_target_validated_route_holdout.py`. |

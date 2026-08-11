@@ -1,0 +1,78 @@
+{
+  "error": null,
+  "latency_s": 0.03,
+  "request": {
+    "abstained": false,
+    "action_budget": 12,
+    "arm": "target_licensed_route",
+    "cell_key": "sha256:ffe0af5420e8973436240a08eb41351a73ffaa39f5830abaf84c5db3b2b6c148",
+    "fixture_id": "exp6308_held_games_beta_sp80_toggle_move_seed6308003",
+    "fold_id": "held_games_beta",
+    "held_game_id": "sp80",
+    "license_predicates": {
+      "class_agrees_with_retrieval": true,
+      "observed_mechanic": "toggle_move",
+      "retrieved_hypothesis": "toggle_move",
+      "sample_size_min": true,
+      "support": {
+        "changed_ratio": 1.0,
+        "keyboard_changed": 3,
+        "mean_changed_cells": 4.0,
+        "n_changed": 3,
+        "n_transitions": 3,
+        "navigation_like": 0,
+        "push_like": 0,
+        "toggle_like": 3,
+        "top_margin": 0.816327
+      },
+      "support_count_min": true,
+      "uncertainty": 0.183673,
+      "uncertainty_below_max": true
+    },
+    "licensed": true,
+    "mechanic": "toggle_move",
+    "model_budget_tokens": 32,
+    "model_call_budget": 1,
+    "model_call_index": 0,
+    "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "model_name": "Qwen3.6-35B-A3B",
+    "mutation_receipt": {
+      "mutated_observed_mechanic": "negative",
+      "mutated_predicates": {
+        "class_agrees_with_retrieval": false,
+        "observed_mechanic": "negative",
+        "retrieved_hypothesis": "toggle_move",
+        "sample_size_min": true,
+        "support": {
+          "changed_ratio": 0.0,
+          "keyboard_changed": 0,
+          "mean_changed_cells": 0.0,
+          "n_changed": 0,
+          "n_transitions": 3,
+          "navigation_like": 0,
+          "push_like": 0,
+          "toggle_like": 0,
+          "top_margin": 0.769231
+        },
+        "support_count_min": false,
+        "uncertainty": 0.230769,
+        "uncertainty_below_max": true
+      },
+      "mutated_transition_count": 3,
+      "mutation_control_rejected": true,
+      "mutation_kind": "no_effect_next_grid_replacement",
+      "source_model_weight_mutation": false
+    },
+    "observed_mechanic": "toggle_move",
+    "pair_key": "sha256:ffe0af5420e8973436240a08eb41351a73ffaa39f5830abaf84c5db3b2b6c148",
+    "prompt_sha256": "sha256:9ec552b3238ab4ce22e3a81ef9e650453d942e78656efd203d3cc42868062d88",
+    "quantization": "UD-Q4_K_M",
+    "rejected": false,
+    "retrieved_hypothesis": "toggle_move",
+    "route_active": true,
+    "seed": 6308003,
+    "starting_history_hash": "sha256:5b17c08f60160e38849ca708d2eec4b65c9cdcc254bc3214dce16ab1552614de",
+    "window_id": "exp6308_held_games_beta_sp80_toggle_move_seed6308003_window"
+  },
+  "text": "CANARY_ARM=target_licensed_route\nValidated toggle_move push block toggle switch move contact object flip ACTION4.\n```python\ndef engine(grid, action, data):\n    return grid.copy()\n```\nEND_CANARY\n"
+}

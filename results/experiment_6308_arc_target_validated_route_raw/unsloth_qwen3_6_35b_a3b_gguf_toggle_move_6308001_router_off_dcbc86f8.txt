@@ -1,0 +1,78 @@
+{
+  "error": null,
+  "latency_s": 0.02,
+  "request": {
+    "abstained": true,
+    "action_budget": 12,
+    "arm": "router_off",
+    "cell_key": "sha256:3cba761244cb054015cc60b6d9da138d3d2ad362ec586b72b6b56318dcbc86f8",
+    "fixture_id": "exp6308_held_games_alpha_r11l_toggle_move_seed6308001",
+    "fold_id": "held_games_alpha",
+    "held_game_id": "r11l",
+    "license_predicates": {
+      "class_agrees_with_retrieval": true,
+      "observed_mechanic": "toggle_move",
+      "retrieved_hypothesis": "toggle_move",
+      "sample_size_min": true,
+      "support": {
+        "changed_ratio": 1.0,
+        "keyboard_changed": 3,
+        "mean_changed_cells": 4.0,
+        "n_changed": 3,
+        "n_transitions": 3,
+        "navigation_like": 0,
+        "push_like": 0,
+        "toggle_like": 3,
+        "top_margin": 0.816327
+      },
+      "support_count_min": true,
+      "uncertainty": 0.183673,
+      "uncertainty_below_max": true
+    },
+    "licensed": false,
+    "mechanic": "toggle_move",
+    "model_budget_tokens": 32,
+    "model_call_budget": 1,
+    "model_call_index": 0,
+    "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "model_name": "Qwen3.6-35B-A3B",
+    "mutation_receipt": {
+      "mutated_observed_mechanic": "negative",
+      "mutated_predicates": {
+        "class_agrees_with_retrieval": false,
+        "observed_mechanic": "negative",
+        "retrieved_hypothesis": "toggle_move",
+        "sample_size_min": true,
+        "support": {
+          "changed_ratio": 0.0,
+          "keyboard_changed": 0,
+          "mean_changed_cells": 0.0,
+          "n_changed": 0,
+          "n_transitions": 3,
+          "navigation_like": 0,
+          "push_like": 0,
+          "toggle_like": 0,
+          "top_margin": 0.769231
+        },
+        "support_count_min": false,
+        "uncertainty": 0.230769,
+        "uncertainty_below_max": true
+      },
+      "mutated_transition_count": 3,
+      "mutation_control_rejected": true,
+      "mutation_kind": "no_effect_next_grid_replacement",
+      "source_model_weight_mutation": false
+    },
+    "observed_mechanic": "toggle_move",
+    "pair_key": "sha256:3cba761244cb054015cc60b6d9da138d3d2ad362ec586b72b6b56318dcbc86f8",
+    "prompt_sha256": "sha256:c54a2adec1839d1f025bd15cb75384eee2a30baf2f571590bca6bb80e88e2852",
+    "quantization": "UD-Q4_K_M",
+    "rejected": false,
+    "retrieved_hypothesis": null,
+    "route_active": false,
+    "seed": 6308001,
+    "starting_history_hash": "sha256:b8bc41d667c46270cf013035686bb1d52b5fae56679f5cc99ad8a1e5a24e7709",
+    "window_id": "exp6308_held_games_alpha_r11l_toggle_move_seed6308001_window"
+  },
+  "text": "CANARY_ARM=router_off\nGeneric move object ACTION4.\n```python\ndef engine(grid, action, data):\n    return grid.copy()\n```\nEND_CANARY\n"
+}

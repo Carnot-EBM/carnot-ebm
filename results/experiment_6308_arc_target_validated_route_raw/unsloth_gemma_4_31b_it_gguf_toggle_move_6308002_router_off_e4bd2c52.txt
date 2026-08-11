@@ -1,0 +1,78 @@
+{
+  "error": null,
+  "latency_s": 0.02,
+  "request": {
+    "abstained": true,
+    "action_budget": 12,
+    "arm": "router_off",
+    "cell_key": "sha256:7a6c1bb8e8e950170eb8bf9f43a9a423b94f655053592ef3288eca39e4bd2c52",
+    "fixture_id": "exp6308_held_games_alpha_ls20_toggle_move_seed6308002",
+    "fold_id": "held_games_alpha",
+    "held_game_id": "ls20",
+    "license_predicates": {
+      "class_agrees_with_retrieval": true,
+      "observed_mechanic": "toggle_move",
+      "retrieved_hypothesis": "toggle_move",
+      "sample_size_min": true,
+      "support": {
+        "changed_ratio": 1.0,
+        "keyboard_changed": 3,
+        "mean_changed_cells": 4.0,
+        "n_changed": 3,
+        "n_transitions": 3,
+        "navigation_like": 0,
+        "push_like": 0,
+        "toggle_like": 3,
+        "top_margin": 0.816327
+      },
+      "support_count_min": true,
+      "uncertainty": 0.183673,
+      "uncertainty_below_max": true
+    },
+    "licensed": false,
+    "mechanic": "toggle_move",
+    "model_budget_tokens": 32,
+    "model_call_budget": 1,
+    "model_call_index": 0,
+    "model_id": "unsloth/gemma-4-31B-it-GGUF",
+    "model_name": "Gemma4-31B-it",
+    "mutation_receipt": {
+      "mutated_observed_mechanic": "negative",
+      "mutated_predicates": {
+        "class_agrees_with_retrieval": false,
+        "observed_mechanic": "negative",
+        "retrieved_hypothesis": "toggle_move",
+        "sample_size_min": true,
+        "support": {
+          "changed_ratio": 0.0,
+          "keyboard_changed": 0,
+          "mean_changed_cells": 0.0,
+          "n_changed": 0,
+          "n_transitions": 3,
+          "navigation_like": 0,
+          "push_like": 0,
+          "toggle_like": 0,
+          "top_margin": 0.769231
+        },
+        "support_count_min": false,
+        "uncertainty": 0.230769,
+        "uncertainty_below_max": true
+      },
+      "mutated_transition_count": 3,
+      "mutation_control_rejected": true,
+      "mutation_kind": "no_effect_next_grid_replacement",
+      "source_model_weight_mutation": false
+    },
+    "observed_mechanic": "toggle_move",
+    "pair_key": "sha256:7a6c1bb8e8e950170eb8bf9f43a9a423b94f655053592ef3288eca39e4bd2c52",
+    "prompt_sha256": "sha256:811734ddaa871e58444af06eaad0bba285335ab0ae5067d8b29970f4130638c2",
+    "quantization": "Q4_K_M",
+    "rejected": false,
+    "retrieved_hypothesis": null,
+    "route_active": false,
+    "seed": 6308002,
+    "starting_history_hash": "sha256:c416abcd04b8a7fc121cf3adabd57540a3fcf8f70a801069d236974a28328757",
+    "window_id": "exp6308_held_games_alpha_ls20_toggle_move_seed6308002_window"
+  },
+  "text": "CANARY_ARM=router_off\nGeneric move object ACTION4.\n```python\ndef engine(grid, action, data):\n    return grid.copy()\n```\nEND_CANARY\n"
+}
