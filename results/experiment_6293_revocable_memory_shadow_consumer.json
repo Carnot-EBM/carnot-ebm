@@ -1,0 +1,24 @@
+{
+  "experiment": 6293,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-11",
+  "started_at": "2026-08-11T00:22:54.180239+00:00",
+  "finished_at": "2026-08-11T00:22:54.180239+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp6292 transfer: default-off revocable-memory shadow consumer",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6292-revocable-memory-holdout-audit.heldout_revocable_transfer_ready_score (upstream artifact not found for task id 'exp6292-revocable-memory-holdout-audit')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6292-revocable-memory-holdout-audit",
+      "artifact_field": "heldout_revocable_transfer_ready_score",
+      "op": "==",
+      "expected": 1,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp6292-revocable-memory-holdout-audit'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
