@@ -15689,3 +15689,4 @@ Still active  |
 | 2026-08-11 15:21 UTC | Dense feedback-directed update search gated on Exp | OK | 86 passed, 1 warning in 9.44s |
 | 2026-08-11 15:23 UTC | Fresh live three-family benchmark gated on Exp6316 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6316-model-local-probe-integrity-audit) |
 | 2026-08-11 15:37 UTC | Independent versioned-learning and protected-valid | OK | 88 passed, 1 warning in 9.25s |
+| 2026-08-11 16:51 UTC | Default-off ARC target-licensed route shadow on th | OK | 160 passed, 1 warning in 16.89s |
