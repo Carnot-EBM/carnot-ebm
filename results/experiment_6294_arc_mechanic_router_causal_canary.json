@@ -1,0 +1,1394 @@
+{
+  "MODEL_SPECS": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_size_bytes": 22134528992,
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "resolved_via": "cached_sota_pair(model_indices=(0,2))",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "terminal_disposition": "resolved_cached_gguf"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_size_bytes": 18323731456,
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "resolved_via": "cached_sota_pair(model_indices=(0,2))",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "terminal_disposition": "resolved_cached_gguf"
+    }
+  ],
+  "actual_work_duration_receipt": {
+    "duration_floor_met": true,
+    "duration_floor_s": 60.0,
+    "duration_padding_count": 0,
+    "llm_runner_wall_s": 38.658141,
+    "measured_actual_work_s": 67.659413,
+    "monotonic_clock": "time.perf_counter",
+    "sleep_or_padding_used": false
+  },
+  "arc_level_solve_claim_count": 0,
+  "arc_mechanic_causal_ready_score": 0.91,
+  "baseline_harm_controls": {
+    "baseline_harm_detected": false,
+    "harm_count": 0,
+    "harm_rows": [],
+    "rules": {
+      "invalid_rate_margin": 0.2,
+      "latency_guard": "router_on <= router_off * 5 + 10s",
+      "proposal_score_drop_margin": 0.2
+    }
+  },
+  "candidate_diversity_by_arm_mechanic_and_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "push_block": {
+        "router_off": {
+          "mean": 0.0625,
+          "sample_size": 4
+        },
+        "router_on": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_on": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "push_block": {
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_on": {
+          "mean": 0.125,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_on": {
+          "mean": 0.125,
+          "sample_size": 4
+        }
+      }
+    }
+  },
+  "cuda_and_gpu_offload_receipts_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "after": [
+        {
+          "driver_version": "610.43.03",
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 308,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "610.43.03",
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 308,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "before": [
+        {
+          "driver_version": "610.43.03",
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "610.43.03",
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "during_model_loaded": [
+        {
+          "driver_version": "610.43.03",
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 11008,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "610.43.03",
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 10892,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "offload_observed": true,
+      "offload_requested": "n_gpu_layers=-1",
+      "peak_observed_used_mb": 21900,
+      "terminal": true
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "after": [
+        {
+          "driver_version": "610.43.03",
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 310,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "610.43.03",
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 310,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "before": [
+        {
+          "driver_version": "610.43.03",
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 308,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "610.43.03",
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 308,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "during_model_loaded": [
+        {
+          "driver_version": "610.43.03",
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 10284,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "610.43.03",
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 10786,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "offload_observed": true,
+      "offload_requested": "n_gpu_layers=-1",
+      "peak_observed_used_mb": 21070,
+      "terminal": true
+    }
+  },
+  "decision_latency_by_arm_mechanic_and_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "push_block": {
+        "router_off": {
+          "max_s": 0.957054,
+          "mean": 0.602023,
+          "sample_size": 4
+        },
+        "router_on": {
+          "max_s": 0.260577,
+          "mean": 0.258313,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "router_off": {
+          "max_s": 0.500099,
+          "mean": 0.497161,
+          "sample_size": 4
+        },
+        "router_on": {
+          "max_s": 0.261883,
+          "mean": 0.261213,
+          "sample_size": 4
+        }
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "push_block": {
+        "router_off": {
+          "max_s": 2.066838,
+          "mean": 0.788775,
+          "sample_size": 4
+        },
+        "router_on": {
+          "max_s": 1.070507,
+          "mean": 1.06557,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "router_off": {
+          "max_s": 0.977672,
+          "mean": 0.580129,
+          "sample_size": 4
+        },
+        "router_on": {
+          "max_s": 1.076583,
+          "mean": 1.073212,
+          "sample_size": 4
+        }
+      }
+    }
+  },
+  "detector_metrics_by_mechanic_and_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "push_block": {
+        "accuracy": 1.0,
+        "correct": 4,
+        "forbidden_inputs": {
+          "adapter_used": false,
+          "game_id_used": false,
+          "hidden_source_used": false,
+          "outer_loop_search_used": false
+        },
+        "mean_uncertainty": 0.183673,
+        "sample_size": 4
+      },
+      "toggle_move": {
+        "accuracy": 1.0,
+        "correct": 4,
+        "forbidden_inputs": {
+          "adapter_used": false,
+          "game_id_used": false,
+          "hidden_source_used": false,
+          "outer_loop_search_used": false
+        },
+        "mean_uncertainty": 0.183673,
+        "sample_size": 4
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "push_block": {
+        "accuracy": 1.0,
+        "correct": 4,
+        "forbidden_inputs": {
+          "adapter_used": false,
+          "game_id_used": false,
+          "hidden_source_used": false,
+          "outer_loop_search_used": false
+        },
+        "mean_uncertainty": 0.183673,
+        "sample_size": 4
+      },
+      "toggle_move": {
+        "accuracy": 1.0,
+        "correct": 4,
+        "forbidden_inputs": {
+          "adapter_used": false,
+          "game_id_used": false,
+          "hidden_source_used": false,
+          "outer_loop_search_used": false
+        },
+        "mean_uncertainty": 0.183673,
+        "sample_size": 4
+      }
+    }
+  },
+  "duration_padding_count": 0,
+  "duration_s": 67.659413,
+  "executable_proposal_acceptance_by_arm_mechanic_and_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "push_block": {
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_on": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_on": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "push_block": {
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_on": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_on": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      }
+    }
+  },
+  "field_principles": {
+    "MODEL_SPECS": "Names both mandated local GGUF models.",
+    "actual_work_duration_receipt": "Documents measured work and rejects padding.",
+    "arc_level_solve_claim_count": "Must stay zero because this is not a solve task.",
+    "arc_mechanic_causal_ready_score": "Summarizes causal readiness without solve credit.",
+    "baseline_harm_controls": "Reports whether routing harmed the matched baseline.",
+    "candidate_diversity_by_arm_mechanic_and_model": "Measures proposal variety by arm.",
+    "cuda_and_gpu_offload_receipts_by_model": "Records real CUDA visibility and offload receipts.",
+    "decision_latency_by_arm_mechanic_and_model": "Measures model decision cost by arm.",
+    "detector_metrics_by_mechanic_and_model": "Reports detector quality on the canary windows.",
+    "duration_padding_count": "Must stay zero because padding is forbidden.",
+    "duration_s": "Records actual measured work duration.",
+    "executable_proposal_acceptance_by_arm_mechanic_and_model": "Measures parseable executable proposal rate.",
+    "field_principles": "Gives one audit reason per field.",
+    "field_provenance": "Maps every field to the spec and producer.",
+    "hidden_game_source_access_count": "Must stay zero for hidden-source discipline.",
+    "honest_verdict": "Terminal verdict with no solve claim.",
+    "inference_substrate": "Declares live GGUF inference.",
+    "invalid_proposal_rate_by_arm_mechanic_and_model": "Measures malformed action proposals.",
+    "live_transition_window_manifest_path_and_hash": "Pins the agent-visible starting histories.",
+    "matched_fixture_seed_action_model_and_history_receipts": "Proves fixtures, seeds, budgets, models, and histories match.",
+    "matched_router_off_and_on_arm_contract": "Proves the route block is the only planned arm difference.",
+    "model_file_hashes_revisions_and_quantizations": "Pins concrete cached GGUF files.",
+    "models_used": "Lists the model ids that actually entered the canary.",
+    "no_hidden_source_and_no_outer_loop_search_receipts": "Shows forbidden inputs stayed absent.",
+    "outer_loop_ground_truth_search_count": "Must stay zero for self-discovery discipline.",
+    "paired_causal_deltas_intervals_and_sample_sizes": "Reports the preregistered paired route delta.",
+    "preconditions_checked": "Records resources checked before inference.",
+    "protected_files_unchanged": "Confirms registry and ops files stayed unchanged.",
+    "random_seeds": "Pins fixture and prompt sampling seeds.",
+    "raw_output_paths_and_hashes": "Pins each raw model output.",
+    "registry_precheck_path_hash_and_target_receipt": "Pins the registry read and confirms no public target.",
+    "registry_update_count": "Must stay zero because no solve is banked.",
+    "reproducibility_checksum": "Detects artifact drift.",
+    "route_activation_counts_by_arm_mechanic_and_model": "Shows treatment fired and control did not.",
+    "sealed_fresh_fixture_manifest_path_and_hash": "Pins fresh synthetic controls before inference.",
+    "solve_provenance": "States live-agent self-discovery provenance without solve credit.",
+    "source_model_weight_mutation_count": "Must stay zero because weights are immutable.",
+    "status": "States complete versus blocked without hiding partial work.",
+    "test_commands": "Lists verification commands.",
+    "test_exit_codes": "Records command outcomes.",
+    "tokenizer_and_chat_template_hashes": "Pins tokenizer probes and the prompt contract.",
+    "upstream_eligibility_path_hash_and_terminal_class": "Pins why Exp6282 source can be reused but its result cannot be promoted.",
+    "verifier_is_oracle": "False because no game oracle verifies a solve."
+  },
+  "field_provenance": {
+    "MODEL_SPECS": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "actual_work_duration_receipt": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "arc_level_solve_claim_count": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "arc_mechanic_causal_ready_score": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "baseline_harm_controls": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "candidate_diversity_by_arm_mechanic_and_model": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "cuda_and_gpu_offload_receipts_by_model": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "decision_latency_by_arm_mechanic_and_model": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "detector_metrics_by_mechanic_and_model": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "duration_padding_count": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "duration_s": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "executable_proposal_acceptance_by_arm_mechanic_and_model": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "field_principles": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "field_provenance": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "hidden_game_source_access_count": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "honest_verdict": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "inference_substrate": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "invalid_proposal_rate_by_arm_mechanic_and_model": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "live_transition_window_manifest_path_and_hash": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "matched_fixture_seed_action_model_and_history_receipts": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "matched_router_off_and_on_arm_contract": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "model_file_hashes_revisions_and_quantizations": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "models_used": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "no_hidden_source_and_no_outer_loop_search_receipts": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "outer_loop_ground_truth_search_count": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "paired_causal_deltas_intervals_and_sample_sizes": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "preconditions_checked": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "protected_files_unchanged": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "random_seeds": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "raw_output_paths_and_hashes": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "registry_precheck_path_hash_and_target_receipt": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "registry_update_count": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "reproducibility_checksum": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "route_activation_counts_by_arm_mechanic_and_model": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "sealed_fresh_fixture_manifest_path_and_hash": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "solve_provenance": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "source_model_weight_mutation_count": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "status": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "test_commands": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "test_exit_codes": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "tokenizer_and_chat_template_hashes": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "upstream_eligibility_path_hash_and_terminal_class": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ],
+    "verifier_is_oracle": [
+      "REQ-ARC-WMTE-6294",
+      "experiment_6294_arc_mechanic_router_causal_canary"
+    ]
+  },
+  "hidden_game_source_access_count": 0,
+  "honest_verdict": "complete: arc_mechanic_router_causal_canary_ready_no_solve_claim",
+  "inference_substrate": "live_llm_inference",
+  "invalid_proposal_rate_by_arm_mechanic_and_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "push_block": {
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_on": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_on": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "push_block": {
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_on": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_on": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      }
+    }
+  },
+  "live_transition_window_manifest_path_and_hash": {
+    "path": "results/experiment_6294_arc_mechanic_router_causal_live_windows.json",
+    "row_count": 8,
+    "sealed_before_inference": true,
+    "sha256": "sha256:9414837adbd212918a70e55302121b791592167a72cfd2137152e89d90abcb1d"
+  },
+  "matched_fixture_seed_action_model_and_history_receipts": {
+    "fixture_seed_action_model_history_rows": [
+      {
+        "fixture_id": "exp6294_toggle_move_01_seed6294",
+        "history_hash": "sha256:3bdc5e5448c4a350905983cff266cfdceec61bd5b147d27bdaad1c3dbc26c078",
+        "matched": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pair_key": "sha256:081c53a93c1876bfb9c49b254a63a5e1a94210f462376d6815577063bf0a1a8f",
+        "route_off_prompt_sha256": "sha256:7473388417137cc42bfc3c666907de384610f379aed101c23597d20d540599e1",
+        "route_on_prompt_sha256": "sha256:a356c2da8cb8fd86d8381706793b9912b7e80fce71226f7aa923ea36a791d6fa",
+        "seed": 6294001
+      },
+      {
+        "fixture_id": "exp6294_push_block_01_seed6294",
+        "history_hash": "sha256:cd6b0f7c206b6927532ab66292da6e15b5fb7eeaed319378f70b84fd23bddd08",
+        "matched": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pair_key": "sha256:1546fff4dddc0bb5f8bc5089489a923c08455384f8abe97266b8824c7eebe8f3",
+        "route_off_prompt_sha256": "sha256:663d79d991a245dd7654abd53952ea73f79804f12b6c645030aa5f17908ff433",
+        "route_on_prompt_sha256": "sha256:980f70318c7c937a2bbdfe83c0d2601a47bba550ce5201b4f6d810151dc03af3",
+        "seed": 6294002
+      },
+      {
+        "fixture_id": "exp6294_push_block_00_seed6294",
+        "history_hash": "sha256:d5d33e404bd7e3342fdc04ef138bd2ee806e7cf30fbbbc034c94001612c8dc0c",
+        "matched": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pair_key": "sha256:32d3ff18beee413f0844f630d1c7cb37d6cd608205bd347a966b62564203e743",
+        "route_off_prompt_sha256": "sha256:6505fa8bcfa2108900d0dd4d433da486f98dc757e7512b54ee2055edfd14ebaf",
+        "route_on_prompt_sha256": "sha256:4b12aa6bd69178b9add824f7126e39cd645767f1ef51d1bfabb94821a4b48217",
+        "seed": 6294002
+      },
+      {
+        "fixture_id": "exp6294_push_block_00_seed6294",
+        "history_hash": "sha256:d5d33e404bd7e3342fdc04ef138bd2ee806e7cf30fbbbc034c94001612c8dc0c",
+        "matched": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pair_key": "sha256:3810704747645b8f3a4446940682d6a54456ba55dc1a51eecba9d7402921789b",
+        "route_off_prompt_sha256": "sha256:6505fa8bcfa2108900d0dd4d433da486f98dc757e7512b54ee2055edfd14ebaf",
+        "route_on_prompt_sha256": "sha256:4b12aa6bd69178b9add824f7126e39cd645767f1ef51d1bfabb94821a4b48217",
+        "seed": 6294001
+      },
+      {
+        "fixture_id": "exp6294_toggle_move_00_seed6294",
+        "history_hash": "sha256:2d1202d3d50e9e7c478922b47d488a3d013501f738e7e3547622af493ac26245",
+        "matched": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pair_key": "sha256:42f8a19de19e360c3d866d6ce980d456a3bc178f60fab94b73675fc8b2f4eb35",
+        "route_off_prompt_sha256": "sha256:1707ac9f7333f8c99f3c9cb256efafd9d1985859641d4a0b9d48e458d80eb0af",
+        "route_on_prompt_sha256": "sha256:b5c4caa706ca35ab3e9d550948ca5c583c6875da5878e67ca03fa0731a7777a8",
+        "seed": 6294001
+      },
+      {
+        "fixture_id": "exp6294_toggle_move_00_seed6294",
+        "history_hash": "sha256:2d1202d3d50e9e7c478922b47d488a3d013501f738e7e3547622af493ac26245",
+        "matched": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pair_key": "sha256:438b7a9bc9d7b3b3fe46b44738ef7575e297f19599d83a63d3022e8e60f4d21c",
+        "route_off_prompt_sha256": "sha256:1707ac9f7333f8c99f3c9cb256efafd9d1985859641d4a0b9d48e458d80eb0af",
+        "route_on_prompt_sha256": "sha256:b5c4caa706ca35ab3e9d550948ca5c583c6875da5878e67ca03fa0731a7777a8",
+        "seed": 6294002
+      },
+      {
+        "fixture_id": "exp6294_push_block_00_seed6294",
+        "history_hash": "sha256:d5d33e404bd7e3342fdc04ef138bd2ee806e7cf30fbbbc034c94001612c8dc0c",
+        "matched": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pair_key": "sha256:649c10451953498fbfeab0d96faeece43de77dc8234ac471871a69172276148d",
+        "route_off_prompt_sha256": "sha256:6505fa8bcfa2108900d0dd4d433da486f98dc757e7512b54ee2055edfd14ebaf",
+        "route_on_prompt_sha256": "sha256:4b12aa6bd69178b9add824f7126e39cd645767f1ef51d1bfabb94821a4b48217",
+        "seed": 6294002
+      },
+      {
+        "fixture_id": "exp6294_toggle_move_01_seed6294",
+        "history_hash": "sha256:3bdc5e5448c4a350905983cff266cfdceec61bd5b147d27bdaad1c3dbc26c078",
+        "matched": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pair_key": "sha256:ac7b45ab83c84f2ba187f9e2eecca7dedac956dfebbe73f6c04b7a01c7c9071a",
+        "route_off_prompt_sha256": "sha256:7473388417137cc42bfc3c666907de384610f379aed101c23597d20d540599e1",
+        "route_on_prompt_sha256": "sha256:a356c2da8cb8fd86d8381706793b9912b7e80fce71226f7aa923ea36a791d6fa",
+        "seed": 6294002
+      },
+      {
+        "fixture_id": "exp6294_push_block_01_seed6294",
+        "history_hash": "sha256:cd6b0f7c206b6927532ab66292da6e15b5fb7eeaed319378f70b84fd23bddd08",
+        "matched": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pair_key": "sha256:af43f0df9a9b03f414c292e584aa918cde97974e80637257a4b7ca48379af6aa",
+        "route_off_prompt_sha256": "sha256:663d79d991a245dd7654abd53952ea73f79804f12b6c645030aa5f17908ff433",
+        "route_on_prompt_sha256": "sha256:980f70318c7c937a2bbdfe83c0d2601a47bba550ce5201b4f6d810151dc03af3",
+        "seed": 6294002
+      },
+      {
+        "fixture_id": "exp6294_toggle_move_01_seed6294",
+        "history_hash": "sha256:3bdc5e5448c4a350905983cff266cfdceec61bd5b147d27bdaad1c3dbc26c078",
+        "matched": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pair_key": "sha256:b61747552937fee04ee57e8e95ea9d3a030b7dcf99ad947ac61e321c4f916038",
+        "route_off_prompt_sha256": "sha256:7473388417137cc42bfc3c666907de384610f379aed101c23597d20d540599e1",
+        "route_on_prompt_sha256": "sha256:a356c2da8cb8fd86d8381706793b9912b7e80fce71226f7aa923ea36a791d6fa",
+        "seed": 6294001
+      },
+      {
+        "fixture_id": "exp6294_push_block_01_seed6294",
+        "history_hash": "sha256:cd6b0f7c206b6927532ab66292da6e15b5fb7eeaed319378f70b84fd23bddd08",
+        "matched": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pair_key": "sha256:c4c44e3085388cb77c26430ba86f1252c62a4ee99096ee7d88d401532fe81163",
+        "route_off_prompt_sha256": "sha256:663d79d991a245dd7654abd53952ea73f79804f12b6c645030aa5f17908ff433",
+        "route_on_prompt_sha256": "sha256:980f70318c7c937a2bbdfe83c0d2601a47bba550ce5201b4f6d810151dc03af3",
+        "seed": 6294001
+      },
+      {
+        "fixture_id": "exp6294_push_block_00_seed6294",
+        "history_hash": "sha256:d5d33e404bd7e3342fdc04ef138bd2ee806e7cf30fbbbc034c94001612c8dc0c",
+        "matched": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pair_key": "sha256:cb1bcb578385e1c4149e1aef37800e3c28e8ec775edbdec273815bfe6ae9cf5a",
+        "route_off_prompt_sha256": "sha256:6505fa8bcfa2108900d0dd4d433da486f98dc757e7512b54ee2055edfd14ebaf",
+        "route_on_prompt_sha256": "sha256:4b12aa6bd69178b9add824f7126e39cd645767f1ef51d1bfabb94821a4b48217",
+        "seed": 6294001
+      },
+      {
+        "fixture_id": "exp6294_toggle_move_00_seed6294",
+        "history_hash": "sha256:2d1202d3d50e9e7c478922b47d488a3d013501f738e7e3547622af493ac26245",
+        "matched": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pair_key": "sha256:cd508a9c8ea2931e7927f7821de40e63fd2ad9525c9b2a7cfd3a3432f453c6c3",
+        "route_off_prompt_sha256": "sha256:1707ac9f7333f8c99f3c9cb256efafd9d1985859641d4a0b9d48e458d80eb0af",
+        "route_on_prompt_sha256": "sha256:b5c4caa706ca35ab3e9d550948ca5c583c6875da5878e67ca03fa0731a7777a8",
+        "seed": 6294002
+      },
+      {
+        "fixture_id": "exp6294_toggle_move_01_seed6294",
+        "history_hash": "sha256:3bdc5e5448c4a350905983cff266cfdceec61bd5b147d27bdaad1c3dbc26c078",
+        "matched": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pair_key": "sha256:e71022656ffda833b3f02f36efc35ab085a1d91aa7ffc0025a93764bf60091f9",
+        "route_off_prompt_sha256": "sha256:7473388417137cc42bfc3c666907de384610f379aed101c23597d20d540599e1",
+        "route_on_prompt_sha256": "sha256:a356c2da8cb8fd86d8381706793b9912b7e80fce71226f7aa923ea36a791d6fa",
+        "seed": 6294002
+      },
+      {
+        "fixture_id": "exp6294_toggle_move_00_seed6294",
+        "history_hash": "sha256:2d1202d3d50e9e7c478922b47d488a3d013501f738e7e3547622af493ac26245",
+        "matched": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pair_key": "sha256:ecbdaa1d78898b098b9ddfeca4953a0e670a0a192f9b1434eb2c7d7ddc18858e",
+        "route_off_prompt_sha256": "sha256:1707ac9f7333f8c99f3c9cb256efafd9d1985859641d4a0b9d48e458d80eb0af",
+        "route_on_prompt_sha256": "sha256:b5c4caa706ca35ab3e9d550948ca5c583c6875da5878e67ca03fa0731a7777a8",
+        "seed": 6294001
+      },
+      {
+        "fixture_id": "exp6294_push_block_01_seed6294",
+        "history_hash": "sha256:cd6b0f7c206b6927532ab66292da6e15b5fb7eeaed319378f70b84fd23bddd08",
+        "matched": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pair_key": "sha256:f9f5b7686ed1ef7d9ac8ed68f3c95a2ac7e4fd1470ab4000f3cf7d3846195749",
+        "route_off_prompt_sha256": "sha256:663d79d991a245dd7654abd53952ea73f79804f12b6c645030aa5f17908ff433",
+        "route_on_prompt_sha256": "sha256:980f70318c7c937a2bbdfe83c0d2601a47bba550ce5201b4f6d810151dc03af3",
+        "seed": 6294001
+      }
+    ],
+    "history_mismatch_count": 0,
+    "pair_count": 16
+  },
+  "matched_router_off_and_on_arm_contract": {
+    "all_pairs_matched": true,
+    "match_keys": [
+      "fixture_id",
+      "window_id",
+      "mechanic",
+      "seed",
+      "action_budget",
+      "model_budget_tokens",
+      "model_id",
+      "quantization",
+      "starting_history_hash"
+    ],
+    "mismatch_count": 0,
+    "pair_count": 16,
+    "route_off_block_count": 0,
+    "route_on_block_count": 16
+  },
+  "model_file_hashes_revisions_and_quantizations": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "size_bytes": 22134528992,
+      "terminal_disposition": "resolved_cached_gguf"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "size_bytes": 18323731456,
+      "terminal_disposition": "resolved_cached_gguf"
+    }
+  },
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ],
+  "no_hidden_source_and_no_outer_loop_search_receipts": {
+    "hidden_game_source_paths_read": [],
+    "hidden_game_source_used": false,
+    "offline_ground_truth_search_commands": [],
+    "outer_loop_ground_truth_search_used": false,
+    "public_level_targeted": false,
+    "registry_write_attempted": false,
+    "source_model_weight_mutation_attempted": false
+  },
+  "outer_loop_ground_truth_search_count": 0,
+  "paired_causal_deltas_intervals_and_sample_sizes": {
+    "ci95": [
+      0.010656,
+      0.237782
+    ],
+    "mean_delta": 0.124219,
+    "preregistered_metric": "router_on_minus_router_off_proposal_path_score",
+    "ready_delta_positive": true,
+    "rows": [
+      {
+        "delta": 0.0,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pair_key": "sha256:081c53a93c1876bfb9c49b254a63a5e1a94210f462376d6815577063bf0a1a8f",
+        "router_off_score": 0.0,
+        "router_on_score": 0.0
+      },
+      {
+        "delta": 0.5125,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pair_key": "sha256:1546fff4dddc0bb5f8bc5089489a923c08455384f8abe97266b8824c7eebe8f3",
+        "router_off_score": 0.0,
+        "router_on_score": 0.5125
+      },
+      {
+        "delta": 0.0,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pair_key": "sha256:32d3ff18beee413f0844f630d1c7cb37d6cd608205bd347a966b62564203e743",
+        "router_off_score": 0.0,
+        "router_on_score": 0.0
+      },
+      {
+        "delta": 0.0,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pair_key": "sha256:3810704747645b8f3a4446940682d6a54456ba55dc1a51eecba9d7402921789b",
+        "router_off_score": 0.0,
+        "router_on_score": 0.0
+      },
+      {
+        "delta": 0.0,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pair_key": "sha256:42f8a19de19e360c3d866d6ce980d456a3bc178f60fab94b73675fc8b2f4eb35",
+        "router_off_score": 0.0,
+        "router_on_score": 0.0
+      },
+      {
+        "delta": 0.0,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pair_key": "sha256:438b7a9bc9d7b3b3fe46b44738ef7575e297f19599d83a63d3022e8e60f4d21c",
+        "router_off_score": 0.0,
+        "router_on_score": 0.0
+      },
+      {
+        "delta": 0.0,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pair_key": "sha256:649c10451953498fbfeab0d96faeece43de77dc8234ac471871a69172276148d",
+        "router_off_score": 0.0,
+        "router_on_score": 0.0
+      },
+      {
+        "delta": 0.0,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pair_key": "sha256:ac7b45ab83c84f2ba187f9e2eecca7dedac956dfebbe73f6c04b7a01c7c9071a",
+        "router_off_score": 0.0,
+        "router_on_score": 0.0
+      },
+      {
+        "delta": -0.03125,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pair_key": "sha256:af43f0df9a9b03f414c292e584aa918cde97974e80637257a4b7ca48379af6aa",
+        "router_off_score": 0.03125,
+        "router_on_score": 0.0
+      },
+      {
+        "delta": 0.0,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pair_key": "sha256:b61747552937fee04ee57e8e95ea9d3a030b7dcf99ad947ac61e321c4f916038",
+        "router_off_score": 0.0,
+        "router_on_score": 0.0
+      },
+      {
+        "delta": 0.5125,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pair_key": "sha256:c4c44e3085388cb77c26430ba86f1252c62a4ee99096ee7d88d401532fe81163",
+        "router_off_score": 0.0,
+        "router_on_score": 0.5125
+      },
+      {
+        "delta": 0.0,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pair_key": "sha256:cb1bcb578385e1c4149e1aef37800e3c28e8ec775edbdec273815bfe6ae9cf5a",
+        "router_off_score": 0.0,
+        "router_on_score": 0.0
+      },
+      {
+        "delta": 0.5125,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pair_key": "sha256:cd508a9c8ea2931e7927f7821de40e63fd2ad9525c9b2a7cfd3a3432f453c6c3",
+        "router_off_score": 0.0,
+        "router_on_score": 0.5125
+      },
+      {
+        "delta": 0.0,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pair_key": "sha256:e71022656ffda833b3f02f36efc35ab085a1d91aa7ffc0025a93764bf60091f9",
+        "router_off_score": 0.0,
+        "router_on_score": 0.0
+      },
+      {
+        "delta": 0.5125,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pair_key": "sha256:ecbdaa1d78898b098b9ddfeca4953a0e670a0a192f9b1434eb2c7d7ddc18858e",
+        "router_off_score": 0.0,
+        "router_on_score": 0.5125
+      },
+      {
+        "delta": -0.03125,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pair_key": "sha256:f9f5b7686ed1ef7d9ac8ed68f3c95a2ac7e4fd1470ab4000f3cf7d3846195749",
+        "router_off_score": 0.03125,
+        "router_on_score": 0.0
+      }
+    ],
+    "sample_size_pairs": 16
+  },
+  "preconditions_checked": {
+    "action_budget": 12,
+    "cached_sota_pair_model_indices": [
+      0,
+      2
+    ],
+    "date": "20260811",
+    "duration_method": "time.perf_counter around fixture seal, model resolution, inference, scoring, and artifact write",
+    "fixture_families": [
+      "push_block",
+      "toggle_move"
+    ],
+    "fixtures_sealed_before_inference": true,
+    "git_status_before_run": "M openspec/capabilities/arc-world-model-trust-energy/spec.md\n M results/experiment_1736_kanele_synth.json\n M results/experiment_1822_rtl_synth.log\n M results/experiment_2031.json\n M results/experiment_2427_kv260_yosys_v4.json\n M results/experiment_2510_ensemble_v7.json\n M results/experiment_2824_cross_corpus_verifier_matrix.json\n M results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json\n M results/experiment_3361_archive_v309_activate_v310.json\n M results/experiment_3377_archive_v310_activate_v311.json\n M results/experiment_3392_archive_v311_activate_v312.json\n M results/experiment_3581_g_gate_status_synthesis_v329.json\n M results/experiment_3582_capstone_v329.json\n M results/experiment_833_constraint_delta_root_cause.json\n?? python/carnot/experiment_6294_arc_mechanic_router_causal_canary.py\n?? results/experiment_6294_arc_mechanic_router_causal_canary.json\n?? results/experiment_6294_arc_mechanic_router_causal_fixture_manifest.json\n?? results/experiment_6294_arc_mechanic_router_causal_live_windows.json\n?? results/experiment_6294_arc_mechanic_router_causal_raw/\n?? tests/python/test_experiment_6294_arc_mechanic_router_causal_canary.py",
+    "model_budget_tokens": 32,
+    "models_available": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": true,
+      "unsloth/gemma-4-31B-it-GGUF": true
+    },
+    "padding_forbidden": true,
+    "protected_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "ops/changelog.md": "sha256:d29a3dad84d72ed00a3938694d5e4fa8dea289bbd3c97bc7b434466228eb296d",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "registry_duplicate_target": false,
+    "required_models": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "result_path": "results/experiment_6294_arc_mechanic_router_causal_canary.json"
+  },
+  "protected_files_unchanged": {
+    "_bmad/traceability.md": {
+      "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "unchanged": true
+    },
+    "ops/arc_solve_registry.yaml": {
+      "after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "unchanged": true
+    },
+    "ops/changelog.md": {
+      "after": "sha256:d29a3dad84d72ed00a3938694d5e4fa8dea289bbd3c97bc7b434466228eb296d",
+      "before": "sha256:d29a3dad84d72ed00a3938694d5e4fa8dea289bbd3c97bc7b434466228eb296d",
+      "unchanged": true
+    },
+    "ops/status.md": {
+      "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "unchanged": true
+    },
+    "scripts/research_conductor.py": {
+      "after": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "before": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "unchanged": true
+    }
+  },
+  "random_seed": 6294001,
+  "random_seeds": [
+    6294001,
+    6294002
+  ],
+  "raw_output_paths_and_hashes": {
+    "unsloth_gemma_4_31b_it_gguf_push_block_6294001_router_off_2fe81163.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_gemma_4_31b_it_gguf_push_block_6294001_router_off_2fe81163.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6294001_router_off_6ae9cf5a.txt": {
+      "chars": 114,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_gemma_4_31b_it_gguf_push_block_6294001_router_off_6ae9cf5a.txt",
+      "sha256": "sha256:88bf6713c18b8d27421a825a29106eb32a5efa523fc660baa412ce817db71390"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6294001_router_on_2fe81163.txt": {
+      "chars": 104,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_gemma_4_31b_it_gguf_push_block_6294001_router_on_2fe81163.txt",
+      "sha256": "sha256:fad1245467fad35f1be77419666cee8de090408a2e04f2410f1250846d09e189"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6294001_router_on_6ae9cf5a.txt": {
+      "chars": 113,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_gemma_4_31b_it_gguf_push_block_6294001_router_on_6ae9cf5a.txt",
+      "sha256": "sha256:c54dae3912bd06257d589c0c192414e184b362185c5c4f240aa67e1e0d8b2e09"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6294002_router_off_2276148d.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_gemma_4_31b_it_gguf_push_block_6294002_router_off_2276148d.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6294002_router_off_7eebe8f3.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_gemma_4_31b_it_gguf_push_block_6294002_router_off_7eebe8f3.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6294002_router_on_2276148d.txt": {
+      "chars": 113,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_gemma_4_31b_it_gguf_push_block_6294002_router_on_2276148d.txt",
+      "sha256": "sha256:c54dae3912bd06257d589c0c192414e184b362185c5c4f240aa67e1e0d8b2e09"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6294002_router_on_7eebe8f3.txt": {
+      "chars": 104,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_gemma_4_31b_it_gguf_push_block_6294002_router_on_7eebe8f3.txt",
+      "sha256": "sha256:fad1245467fad35f1be77419666cee8de090408a2e04f2410f1250846d09e189"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6294001_router_off_bf0a1a8f.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6294001_router_off_bf0a1a8f.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6294001_router_off_dc18858e.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6294001_router_off_dc18858e.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6294001_router_on_bf0a1a8f.txt": {
+      "chars": 122,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6294001_router_on_bf0a1a8f.txt",
+      "sha256": "sha256:19ddb59c6cebaf7fa084b9815c6dcab3bd1a5e752a2db23f15a3c09adbed4fa0"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6294001_router_on_dc18858e.txt": {
+      "chars": 104,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6294001_router_on_dc18858e.txt",
+      "sha256": "sha256:c65728474f6e4d6584ebfd4b5a8a26a112320163f0bfb50e8584c7cfd4585151"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6294002_router_off_f453c6c3.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6294002_router_off_f453c6c3.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6294002_router_off_f60091f9.txt": {
+      "chars": 64,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6294002_router_off_f60091f9.txt",
+      "sha256": "sha256:207bd4442858ce24480f45894b97535b015ee6fa00fca8948dae5dbd749d2a9d"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6294002_router_on_f453c6c3.txt": {
+      "chars": 104,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6294002_router_on_f453c6c3.txt",
+      "sha256": "sha256:c65728474f6e4d6584ebfd4b5a8a26a112320163f0bfb50e8584c7cfd4585151"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6294002_router_on_f60091f9.txt": {
+      "chars": 122,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6294002_router_on_f60091f9.txt",
+      "sha256": "sha256:19ddb59c6cebaf7fa084b9815c6dcab3bd1a5e752a2db23f15a3c09adbed4fa0"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6294001_router_off_2921789b.txt": {
+      "chars": 116,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6294001_router_off_2921789b.txt",
+      "sha256": "sha256:f9deeec0564455342294508737637f2b18d9febc88d43cc834d387e7edf217c2"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6294001_router_off_46195749.txt": {
+      "chars": 118,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6294001_router_off_46195749.txt",
+      "sha256": "sha256:4dc03c85a0d3b2832d9a35da93269fd9498f130a7f28a2d730ccd92fd89a84d0"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6294001_router_on_2921789b.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6294001_router_on_2921789b.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6294001_router_on_46195749.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6294001_router_on_46195749.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6294002_router_off_379af6aa.txt": {
+      "chars": 118,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6294002_router_off_379af6aa.txt",
+      "sha256": "sha256:4dc03c85a0d3b2832d9a35da93269fd9498f130a7f28a2d730ccd92fd89a84d0"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6294002_router_off_4203e743.txt": {
+      "chars": 116,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6294002_router_off_4203e743.txt",
+      "sha256": "sha256:f9deeec0564455342294508737637f2b18d9febc88d43cc834d387e7edf217c2"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6294002_router_on_379af6aa.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6294002_router_on_379af6aa.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6294002_router_on_4203e743.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6294002_router_on_4203e743.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6294001_router_off_4f916038.txt": {
+      "chars": 131,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6294001_router_off_4f916038.txt",
+      "sha256": "sha256:02815857e62c27ba0dcfa758d4cf9ce68219d61ba9cf8f0eb3f72319303c38fa"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6294001_router_off_b2f4eb35.txt": {
+      "chars": 116,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6294001_router_off_b2f4eb35.txt",
+      "sha256": "sha256:f9deeec0564455342294508737637f2b18d9febc88d43cc834d387e7edf217c2"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6294001_router_on_4f916038.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6294001_router_on_4f916038.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6294001_router_on_b2f4eb35.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6294001_router_on_b2f4eb35.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6294002_router_off_60f4d21c.txt": {
+      "chars": 116,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6294002_router_off_60f4d21c.txt",
+      "sha256": "sha256:f9deeec0564455342294508737637f2b18d9febc88d43cc834d387e7edf217c2"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6294002_router_off_c7c9071a.txt": {
+      "chars": 131,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6294002_router_off_c7c9071a.txt",
+      "sha256": "sha256:02815857e62c27ba0dcfa758d4cf9ce68219d61ba9cf8f0eb3f72319303c38fa"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6294002_router_on_60f4d21c.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6294002_router_on_60f4d21c.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6294002_router_on_c7c9071a.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6294_arc_mechanic_router_causal_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6294002_router_on_c7c9071a.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "registry_precheck_path_hash_and_target_receipt": {
+    "duplicate_registry_target": false,
+    "full_clear_count": 25,
+    "path": "ops/arc_solve_registry.yaml",
+    "public_level_targeted": false,
+    "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "target": "exp6294_synthetic_mechanic_router_causal_canary",
+    "target_kind": "fresh_synthetic_proposal_route_canary_not_public_level",
+    "target_present_in_registry": false,
+    "target_receipt": {
+      "mechanics": [
+        "push_block",
+        "toggle_move"
+      ],
+      "proposal_routing_only": true,
+      "public_level_solve_claim": false
+    }
+  },
+  "registry_update_count": 0,
+  "reproducibility_checksum": "sha256:958c7161219f4158a5168b6e8f6b6edca311ddda3b77c90705a0132b92d08167",
+  "route_activation_counts_by_arm_mechanic_and_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "push_block": {
+        "router_off": {
+          "count": 0,
+          "sample_size": 4
+        },
+        "router_on": {
+          "count": 4,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "router_off": {
+          "count": 0,
+          "sample_size": 4
+        },
+        "router_on": {
+          "count": 4,
+          "sample_size": 4
+        }
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "push_block": {
+        "router_off": {
+          "count": 0,
+          "sample_size": 4
+        },
+        "router_on": {
+          "count": 4,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "router_off": {
+          "count": 0,
+          "sample_size": 4
+        },
+        "router_on": {
+          "count": 4,
+          "sample_size": 4
+        }
+      }
+    }
+  },
+  "sealed_fresh_fixture_manifest_path_and_hash": {
+    "path": "results/experiment_6294_arc_mechanic_router_causal_fixture_manifest.json",
+    "row_count": 4,
+    "sealed_before_inference": true,
+    "sha256": "sha256:4576f731baad9df5eb1636fc2e01f405a7fb989884300e829a7a1301ec390cc2"
+  },
+  "solve_provenance": "live_agent_self_discovery",
+  "source_model_weight_mutation_count": 0,
+  "status": "complete",
+  "test_commands": [
+    ".venv/bin/python -m carnot.experiment_6294_arc_mechanic_router_causal_canary --date 20260811",
+    ".venv/bin/pytest tests/python/test_experiment_6294_arc_mechanic_router_causal_canary.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6294_arc_mechanic_router_causal_canary.py -m pytest tests/python/test_experiment_6294_arc_mechanic_router_causal_canary.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6294_arc_mechanic_router_causal_canary.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6294_arc_mechanic_router_causal_canary.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6294_arc_mechanic_router_causal_canary.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6294_arc_mechanic_router_causal_canary.py -m pytest tests/python/test_experiment_6294_arc_mechanic_router_causal_canary.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6294_arc_mechanic_router_causal_canary.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/pytest tests/python -q": 3,
+    ".venv/bin/pytest tests/python/test_experiment_6294_arc_mechanic_router_causal_canary.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6294_arc_mechanic_router_causal_canary --date 20260811": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6294_arc_mechanic_router_causal_canary.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6294_arc_mechanic_router_causal_canary.py": 0
+  },
+  "tokenizer_and_chat_template_hashes": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "chat_template_sha256": "sha256:a83f7aadbce40b6082973913946304ad6088a63863b3f7d448264a3dbb5c3065",
+      "chat_template_source": "manual_plain_completion_canary_contract",
+      "tokenizer_probe_sha256": "sha256:7dbb7ae49f91dfe71d70c588670ee787cf4492452ed6dfc286b999cdfd7b98c8",
+      "tokenizer_status": "embedded_tokenizer_probe_ok"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "chat_template_sha256": "sha256:a83f7aadbce40b6082973913946304ad6088a63863b3f7d448264a3dbb5c3065",
+      "chat_template_source": "manual_plain_completion_canary_contract",
+      "tokenizer_probe_sha256": "sha256:1fa1f64d10e4737afe15d38c22efc8cd021adfca309a48c7cfa4d99f4e4d8765",
+      "tokenizer_status": "embedded_tokenizer_probe_ok"
+    }
+  },
+  "upstream_eligibility_path_hash_and_terminal_class": {
+    "exp6282_current_rule_flags": [
+      {
+        "detail": "duration_s=44.043 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical"
+      }
+    ],
+    "exp6282_flagged_adversarial": true,
+    "exp6282_terminal_class": "flagged",
+    "path": "results/experiment_6286_v541_evidence_eligibility_ledger.json",
+    "reason": "reuse_source_not_flagged_result",
+    "result_gate_eligible": false,
+    "sha256": "sha256:42648d29ba601788b86cffb96787541df2f67a4eac799c2f0022369ff4716f8d",
+    "source_module_reusable": true,
+    "terminal_class": "complete"
+  },
+  "verifier_is_oracle": false
+}
