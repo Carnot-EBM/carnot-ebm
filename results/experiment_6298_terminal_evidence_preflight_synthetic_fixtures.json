@@ -1,0 +1,770 @@
+{
+  "schema": "carnot.terminal_evidence_preflight.synthetic_fixtures.v1",
+  "spec_refs": [
+    "REQ-INFRA-6298",
+    "SCENARIO-INFRA-6298-2",
+    "SCENARIO-INFRA-6298-5"
+  ],
+  "gate_fields": [
+    {
+      "field": "terminal_evidence_preflight_ready_score",
+      "expected_type": "number"
+    }
+  ],
+  "fixtures": [
+    {
+      "fixture_id": "clean",
+      "expected_accept": true,
+      "expected_failure_classes": [],
+      "payload": {
+        "status": "complete",
+        "honest_verdict": "complete: synthetic terminal evidence fixture passed",
+        "inference_substrate": "artifact_qa_lint_tests",
+        "duration_s": 0.01,
+        "preconditions_checked": {
+          "synthetic_fixture": true
+        },
+        "verifier_is_oracle": false,
+        "random_seed": 6298,
+        "field_principles": {
+          "status": "status is required so terminal evidence can be audited.",
+          "honest_verdict": "honest_verdict is required so terminal evidence can be audited.",
+          "inference_substrate": "inference_substrate is required so terminal evidence can be audited.",
+          "duration_s": "duration_s is required so terminal evidence can be audited.",
+          "preconditions_checked": "preconditions_checked is required so terminal evidence can be audited.",
+          "verifier_is_oracle": "verifier_is_oracle is required so terminal evidence can be audited.",
+          "field_principles": "field_principles is required so terminal evidence can be audited.",
+          "field_provenance": "field_provenance is required so terminal evidence can be audited.",
+          "test_commands": "test_commands is required so terminal evidence can be audited.",
+          "test_exit_codes": "test_exit_codes is required so terminal evidence can be audited.",
+          "reproducibility_checksum": "reproducibility_checksum is required so terminal evidence can be audited.",
+          "terminal_evidence_preflight_ready_score": "terminal_evidence_preflight_ready_score is required so terminal evidence can be audited."
+        },
+        "field_provenance": {
+          "status": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "status is required so terminal evidence can be audited."
+          },
+          "honest_verdict": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "honest_verdict is required so terminal evidence can be audited."
+          },
+          "inference_substrate": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "inference_substrate is required so terminal evidence can be audited."
+          },
+          "duration_s": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "duration_s is required so terminal evidence can be audited."
+          },
+          "preconditions_checked": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "preconditions_checked is required so terminal evidence can be audited."
+          },
+          "verifier_is_oracle": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "verifier_is_oracle is required so terminal evidence can be audited."
+          },
+          "field_principles": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "field_principles is required so terminal evidence can be audited."
+          },
+          "field_provenance": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "field_provenance is required so terminal evidence can be audited."
+          },
+          "test_commands": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "test_commands is required so terminal evidence can be audited."
+          },
+          "test_exit_codes": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "test_exit_codes is required so terminal evidence can be audited."
+          },
+          "reproducibility_checksum": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "reproducibility_checksum is required so terminal evidence can be audited."
+          },
+          "terminal_evidence_preflight_ready_score": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "terminal_evidence_preflight_ready_score is required so terminal evidence can be audited."
+          }
+        },
+        "test_commands": [
+          ".venv/bin/pytest tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py -q --no-cov -n 0"
+        ],
+        "test_exit_codes": {
+          ".venv/bin/pytest tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py -q --no-cov -n 0": 0
+        },
+        "reproducibility_checksum": "sha256:synthetic-fixture",
+        "terminal_evidence_preflight_ready_score": 1.0
+      }
+    },
+    {
+      "fixture_id": "missing_field",
+      "expected_accept": false,
+      "expected_failure_classes": [
+        "missing_required_field",
+        "duration_missing"
+      ],
+      "payload": {
+        "status": "complete",
+        "honest_verdict": "complete: synthetic terminal evidence fixture passed",
+        "inference_substrate": "artifact_qa_lint_tests",
+        "preconditions_checked": {
+          "synthetic_fixture": true
+        },
+        "verifier_is_oracle": false,
+        "random_seed": 6298,
+        "field_principles": {
+          "status": "status is required so terminal evidence can be audited.",
+          "honest_verdict": "honest_verdict is required so terminal evidence can be audited.",
+          "inference_substrate": "inference_substrate is required so terminal evidence can be audited.",
+          "duration_s": "duration_s is required so terminal evidence can be audited.",
+          "preconditions_checked": "preconditions_checked is required so terminal evidence can be audited.",
+          "verifier_is_oracle": "verifier_is_oracle is required so terminal evidence can be audited.",
+          "field_principles": "field_principles is required so terminal evidence can be audited.",
+          "field_provenance": "field_provenance is required so terminal evidence can be audited.",
+          "test_commands": "test_commands is required so terminal evidence can be audited.",
+          "test_exit_codes": "test_exit_codes is required so terminal evidence can be audited.",
+          "reproducibility_checksum": "reproducibility_checksum is required so terminal evidence can be audited.",
+          "terminal_evidence_preflight_ready_score": "terminal_evidence_preflight_ready_score is required so terminal evidence can be audited."
+        },
+        "field_provenance": {
+          "status": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "status is required so terminal evidence can be audited."
+          },
+          "honest_verdict": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "honest_verdict is required so terminal evidence can be audited."
+          },
+          "inference_substrate": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "inference_substrate is required so terminal evidence can be audited."
+          },
+          "duration_s": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "duration_s is required so terminal evidence can be audited."
+          },
+          "preconditions_checked": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "preconditions_checked is required so terminal evidence can be audited."
+          },
+          "verifier_is_oracle": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "verifier_is_oracle is required so terminal evidence can be audited."
+          },
+          "field_principles": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "field_principles is required so terminal evidence can be audited."
+          },
+          "field_provenance": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "field_provenance is required so terminal evidence can be audited."
+          },
+          "test_commands": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "test_commands is required so terminal evidence can be audited."
+          },
+          "test_exit_codes": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "test_exit_codes is required so terminal evidence can be audited."
+          },
+          "reproducibility_checksum": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "reproducibility_checksum is required so terminal evidence can be audited."
+          },
+          "terminal_evidence_preflight_ready_score": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "terminal_evidence_preflight_ready_score is required so terminal evidence can be audited."
+          }
+        },
+        "test_commands": [
+          ".venv/bin/pytest tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py -q --no-cov -n 0"
+        ],
+        "test_exit_codes": {
+          ".venv/bin/pytest tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py -q --no-cov -n 0": 0
+        },
+        "reproducibility_checksum": "sha256:synthetic-fixture",
+        "terminal_evidence_preflight_ready_score": 1.0
+      }
+    },
+    {
+      "fixture_id": "bad_prefix",
+      "expected_accept": false,
+      "expected_failure_classes": [
+        "missing_terminal_prefix"
+      ],
+      "payload": {
+        "status": "complete",
+        "honest_verdict": "synthetic fixture passed",
+        "inference_substrate": "artifact_qa_lint_tests",
+        "duration_s": 0.01,
+        "preconditions_checked": {
+          "synthetic_fixture": true
+        },
+        "verifier_is_oracle": false,
+        "random_seed": 6298,
+        "field_principles": {
+          "status": "status is required so terminal evidence can be audited.",
+          "honest_verdict": "honest_verdict is required so terminal evidence can be audited.",
+          "inference_substrate": "inference_substrate is required so terminal evidence can be audited.",
+          "duration_s": "duration_s is required so terminal evidence can be audited.",
+          "preconditions_checked": "preconditions_checked is required so terminal evidence can be audited.",
+          "verifier_is_oracle": "verifier_is_oracle is required so terminal evidence can be audited.",
+          "field_principles": "field_principles is required so terminal evidence can be audited.",
+          "field_provenance": "field_provenance is required so terminal evidence can be audited.",
+          "test_commands": "test_commands is required so terminal evidence can be audited.",
+          "test_exit_codes": "test_exit_codes is required so terminal evidence can be audited.",
+          "reproducibility_checksum": "reproducibility_checksum is required so terminal evidence can be audited.",
+          "terminal_evidence_preflight_ready_score": "terminal_evidence_preflight_ready_score is required so terminal evidence can be audited."
+        },
+        "field_provenance": {
+          "status": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "status is required so terminal evidence can be audited."
+          },
+          "honest_verdict": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "honest_verdict is required so terminal evidence can be audited."
+          },
+          "inference_substrate": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "inference_substrate is required so terminal evidence can be audited."
+          },
+          "duration_s": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "duration_s is required so terminal evidence can be audited."
+          },
+          "preconditions_checked": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "preconditions_checked is required so terminal evidence can be audited."
+          },
+          "verifier_is_oracle": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "verifier_is_oracle is required so terminal evidence can be audited."
+          },
+          "field_principles": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "field_principles is required so terminal evidence can be audited."
+          },
+          "field_provenance": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "field_provenance is required so terminal evidence can be audited."
+          },
+          "test_commands": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "test_commands is required so terminal evidence can be audited."
+          },
+          "test_exit_codes": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "test_exit_codes is required so terminal evidence can be audited."
+          },
+          "reproducibility_checksum": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "reproducibility_checksum is required so terminal evidence can be audited."
+          },
+          "terminal_evidence_preflight_ready_score": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "terminal_evidence_preflight_ready_score is required so terminal evidence can be audited."
+          }
+        },
+        "test_commands": [
+          ".venv/bin/pytest tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py -q --no-cov -n 0"
+        ],
+        "test_exit_codes": {
+          ".venv/bin/pytest tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py -q --no-cov -n 0": 0
+        },
+        "reproducibility_checksum": "sha256:synthetic-fixture",
+        "terminal_evidence_preflight_ready_score": 1.0
+      }
+    },
+    {
+      "fixture_id": "bad_gate_type",
+      "expected_accept": false,
+      "expected_failure_classes": [
+        "gate_field_type_mismatch"
+      ],
+      "payload": {
+        "status": "complete",
+        "honest_verdict": "complete: synthetic terminal evidence fixture passed",
+        "inference_substrate": "artifact_qa_lint_tests",
+        "duration_s": 0.01,
+        "preconditions_checked": {
+          "synthetic_fixture": true
+        },
+        "verifier_is_oracle": false,
+        "random_seed": 6298,
+        "field_principles": {
+          "status": "status is required so terminal evidence can be audited.",
+          "honest_verdict": "honest_verdict is required so terminal evidence can be audited.",
+          "inference_substrate": "inference_substrate is required so terminal evidence can be audited.",
+          "duration_s": "duration_s is required so terminal evidence can be audited.",
+          "preconditions_checked": "preconditions_checked is required so terminal evidence can be audited.",
+          "verifier_is_oracle": "verifier_is_oracle is required so terminal evidence can be audited.",
+          "field_principles": "field_principles is required so terminal evidence can be audited.",
+          "field_provenance": "field_provenance is required so terminal evidence can be audited.",
+          "test_commands": "test_commands is required so terminal evidence can be audited.",
+          "test_exit_codes": "test_exit_codes is required so terminal evidence can be audited.",
+          "reproducibility_checksum": "reproducibility_checksum is required so terminal evidence can be audited.",
+          "terminal_evidence_preflight_ready_score": "terminal_evidence_preflight_ready_score is required so terminal evidence can be audited."
+        },
+        "field_provenance": {
+          "status": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "status is required so terminal evidence can be audited."
+          },
+          "honest_verdict": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "honest_verdict is required so terminal evidence can be audited."
+          },
+          "inference_substrate": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "inference_substrate is required so terminal evidence can be audited."
+          },
+          "duration_s": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "duration_s is required so terminal evidence can be audited."
+          },
+          "preconditions_checked": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "preconditions_checked is required so terminal evidence can be audited."
+          },
+          "verifier_is_oracle": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "verifier_is_oracle is required so terminal evidence can be audited."
+          },
+          "field_principles": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "field_principles is required so terminal evidence can be audited."
+          },
+          "field_provenance": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "field_provenance is required so terminal evidence can be audited."
+          },
+          "test_commands": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "test_commands is required so terminal evidence can be audited."
+          },
+          "test_exit_codes": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "test_exit_codes is required so terminal evidence can be audited."
+          },
+          "reproducibility_checksum": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "reproducibility_checksum is required so terminal evidence can be audited."
+          },
+          "terminal_evidence_preflight_ready_score": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "terminal_evidence_preflight_ready_score is required so terminal evidence can be audited."
+          }
+        },
+        "test_commands": [
+          ".venv/bin/pytest tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py -q --no-cov -n 0"
+        ],
+        "test_exit_codes": {
+          ".venv/bin/pytest tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py -q --no-cov -n 0": 0
+        },
+        "reproducibility_checksum": "sha256:synthetic-fixture",
+        "terminal_evidence_preflight_ready_score": "1.0"
+      }
+    },
+    {
+      "fixture_id": "determination_drop",
+      "expected_accept": false,
+      "expected_failure_classes": [
+        "determination_dropped"
+      ],
+      "payload": {
+        "status": "complete",
+        "honest_verdict": "complete: synthetic terminal evidence fixture passed",
+        "inference_substrate": "artifact_qa_lint_tests",
+        "duration_s": 0.01,
+        "preconditions_checked": {
+          "synthetic_fixture": true
+        },
+        "verifier_is_oracle": false,
+        "random_seed": 6298,
+        "field_principles": {
+          "status": "status is required so terminal evidence can be audited.",
+          "honest_verdict": "honest_verdict is required so terminal evidence can be audited.",
+          "inference_substrate": "inference_substrate is required so terminal evidence can be audited.",
+          "duration_s": "duration_s is required so terminal evidence can be audited.",
+          "preconditions_checked": "preconditions_checked is required so terminal evidence can be audited.",
+          "verifier_is_oracle": "verifier_is_oracle is required so terminal evidence can be audited.",
+          "field_principles": "field_principles is required so terminal evidence can be audited.",
+          "field_provenance": "field_provenance is required so terminal evidence can be audited.",
+          "test_commands": "test_commands is required so terminal evidence can be audited.",
+          "test_exit_codes": "test_exit_codes is required so terminal evidence can be audited.",
+          "reproducibility_checksum": "reproducibility_checksum is required so terminal evidence can be audited.",
+          "terminal_evidence_preflight_ready_score": "terminal_evidence_preflight_ready_score is required so terminal evidence can be audited."
+        },
+        "field_provenance": {
+          "status": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "status is required so terminal evidence can be audited."
+          },
+          "honest_verdict": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "honest_verdict is required so terminal evidence can be audited."
+          },
+          "inference_substrate": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "inference_substrate is required so terminal evidence can be audited."
+          },
+          "duration_s": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "duration_s is required so terminal evidence can be audited."
+          },
+          "preconditions_checked": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "preconditions_checked is required so terminal evidence can be audited."
+          },
+          "verifier_is_oracle": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "verifier_is_oracle is required so terminal evidence can be audited."
+          },
+          "field_principles": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "field_principles is required so terminal evidence can be audited."
+          },
+          "field_provenance": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "field_provenance is required so terminal evidence can be audited."
+          },
+          "test_commands": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "test_commands is required so terminal evidence can be audited."
+          },
+          "test_exit_codes": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "test_exit_codes is required so terminal evidence can be audited."
+          },
+          "reproducibility_checksum": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "reproducibility_checksum is required so terminal evidence can be audited."
+          },
+          "terminal_evidence_preflight_ready_score": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "terminal_evidence_preflight_ready_score is required so terminal evidence can be audited."
+          }
+        },
+        "test_commands": [
+          ".venv/bin/pytest tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py -q --no-cov -n 0"
+        ],
+        "test_exit_codes": {
+          ".venv/bin/pytest tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py -q --no-cov -n 0": 0
+        },
+        "reproducibility_checksum": "sha256:synthetic-fixture",
+        "terminal_evidence_preflight_ready_score": 1.0
+      },
+      "baseline_payload": {
+        "status": "complete",
+        "honest_verdict": "complete: synthetic terminal evidence fixture passed",
+        "inference_substrate": "artifact_qa_lint_tests",
+        "duration_s": 0.01,
+        "preconditions_checked": {
+          "synthetic_fixture": true
+        },
+        "verifier_is_oracle": false,
+        "random_seed": 6298,
+        "field_principles": {
+          "status": "status is required so terminal evidence can be audited.",
+          "honest_verdict": "honest_verdict is required so terminal evidence can be audited.",
+          "inference_substrate": "inference_substrate is required so terminal evidence can be audited.",
+          "duration_s": "duration_s is required so terminal evidence can be audited.",
+          "preconditions_checked": "preconditions_checked is required so terminal evidence can be audited.",
+          "verifier_is_oracle": "verifier_is_oracle is required so terminal evidence can be audited.",
+          "field_principles": "field_principles is required so terminal evidence can be audited.",
+          "field_provenance": "field_provenance is required so terminal evidence can be audited.",
+          "test_commands": "test_commands is required so terminal evidence can be audited.",
+          "test_exit_codes": "test_exit_codes is required so terminal evidence can be audited.",
+          "reproducibility_checksum": "reproducibility_checksum is required so terminal evidence can be audited.",
+          "terminal_evidence_preflight_ready_score": "terminal_evidence_preflight_ready_score is required so terminal evidence can be audited."
+        },
+        "field_provenance": {
+          "status": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "status is required so terminal evidence can be audited."
+          },
+          "honest_verdict": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "honest_verdict is required so terminal evidence can be audited."
+          },
+          "inference_substrate": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "inference_substrate is required so terminal evidence can be audited."
+          },
+          "duration_s": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "duration_s is required so terminal evidence can be audited."
+          },
+          "preconditions_checked": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "preconditions_checked is required so terminal evidence can be audited."
+          },
+          "verifier_is_oracle": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "verifier_is_oracle is required so terminal evidence can be audited."
+          },
+          "field_principles": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "field_principles is required so terminal evidence can be audited."
+          },
+          "field_provenance": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "field_provenance is required so terminal evidence can be audited."
+          },
+          "test_commands": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "test_commands is required so terminal evidence can be audited."
+          },
+          "test_exit_codes": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "test_exit_codes is required so terminal evidence can be audited."
+          },
+          "reproducibility_checksum": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "reproducibility_checksum is required so terminal evidence can be audited."
+          },
+          "terminal_evidence_preflight_ready_score": {
+            "sources": [
+              "REQ-INFRA-6298",
+              "synthetic_fixture"
+            ],
+            "principle": "terminal_evidence_preflight_ready_score is required so terminal evidence can be audited."
+          }
+        },
+        "test_commands": [
+          ".venv/bin/pytest tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py -q --no-cov -n 0"
+        ],
+        "test_exit_codes": {
+          ".venv/bin/pytest tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py -q --no-cov -n 0": 0
+        },
+        "reproducibility_checksum": "sha256:synthetic-fixture",
+        "terminal_evidence_preflight_ready_score": 1.0,
+        "flagged_adversarial": true,
+        "corrigendum_pending": [
+          {
+            "kind": "FIXTURE_FLAG",
+            "detail": "baseline protected record"
+          }
+        ]
+      }
+    }
+  ]
+}

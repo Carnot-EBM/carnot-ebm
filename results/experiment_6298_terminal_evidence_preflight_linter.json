@@ -1,0 +1,2127 @@
+{
+  "schema": "carnot.experiment_6298.terminal_evidence_preflight_linter.v1",
+  "experiment_id": "exp6298-terminal-evidence-preflight-linter",
+  "run_date": "20260811",
+  "status": "complete",
+  "failure_taxonomy": {
+    "definitions": {
+      "malformed_payload": "The artifact JSON did not load to a top-level object.",
+      "missing_required_field": "A required top-level artifact field is absent.",
+      "nonterminal_artifact": "The shared terminal classifier did not find a terminal state.",
+      "missing_terminal_prefix": "honest_verdict does not start with an accepted terminal prefix.",
+      "field_principles_not_mapping": "field_principles is absent or not an object.",
+      "field_provenance_not_mapping": "field_provenance is absent or not an object.",
+      "missing_field_principle": "A required field has no field_principles entry.",
+      "missing_field_provenance": "A required field has no field_provenance entry.",
+      "missing_inference_substrate": "inference_substrate is absent or empty.",
+      "unknown_compute_bound_substrate": "A compute-bound artifact used an unknown substrate name.",
+      "duration_missing": "duration_s is absent or not a finite number.",
+      "duration_floor_violation": "duration_s is below the selected substrate duration floor.",
+      "methodology_missing": "Compute-bound evidence is missing model, seed, or checksum receipts.",
+      "reproducibility_missing": "A seed, checksum, or precondition receipt is absent.",
+      "test_commands_missing": "test_commands is absent, empty, or not a list of strings.",
+      "test_exit_codes_not_mapping": "test_exit_codes is absent or not an object.",
+      "test_exit_code_missing": "A declared test command has no recorded exit code.",
+      "test_exit_code_extra": "An exit-code entry names a command not declared in test_commands.",
+      "test_exit_code_not_int": "A recorded exit code is not a bare integer.",
+      "test_exit_code_nonzero": "A recorded test command exited nonzero.",
+      "gate_field_nonterminal_artifact": "A staged gate points at a nonterminal artifact.",
+      "gate_field_missing": "A staged gate field is absent at the top level.",
+      "gate_field_not_bare": "A staged gate field is principle-wrapped rather than bare.",
+      "gate_field_type_mismatch": "A staged gate field has the wrong bare value type.",
+      "determination_dropped": "A protected determination or review marker was dropped."
+    },
+    "observed_counts": {
+      "determination_dropped": 1,
+      "duration_floor_violation": 1,
+      "duration_missing": 1,
+      "gate_field_nonterminal_artifact": 1,
+      "gate_field_type_mismatch": 1,
+      "methodology_missing": 1,
+      "missing_required_field": 1,
+      "missing_terminal_prefix": 1,
+      "nonterminal_artifact": 1,
+      "test_exit_code_missing": 2,
+      "test_exit_code_nonzero": 1,
+      "unknown_compute_bound_substrate": 1
+    },
+    "taxonomy_is_closed_for_report": true
+  },
+  "source_paths_and_hashes": {
+    "AGENTS.md": {
+      "present": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    "CODEX.md": {
+      "present": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    "CLAUDE.md": {
+      "present": true,
+      "sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59"
+    },
+    "results/experiment_6288_partial_atom_evidence_adapter.json": {
+      "present": true,
+      "sha256": "sha256:2dcce102f803888496484d2ff1d1ac130a2f2d2666db4331c1249ad109e8fe81"
+    },
+    "results/experiment_6289_flagship_exact_state_refinement_benchmark.json": {
+      "present": true,
+      "sha256": "sha256:b2731febd977a7a8478533d735359931333ff80d64b450c06d61bd19816baa8d"
+    },
+    "results/experiment_6290_revocable_atomic_repair_memory.json": {
+      "present": true,
+      "sha256": "sha256:8f572fa80e6039716be4407b7c38a0a8a6629c46276b1898d0a05bbb30e141ff"
+    },
+    "results/experiment_6296_v542_adversarial_capstone.json": {
+      "present": true,
+      "sha256": "sha256:ed96dbf3cab60f4f225d07df601c0234da4abfaa0b618dd210e5264e3aa01ccb"
+    },
+    "scripts/adversarial_verify.py": {
+      "present": true,
+      "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+    },
+    "scripts/conductor_gates.py": {
+      "present": true,
+      "sha256": "sha256:9bb1f3ea71076d81b8c39665e27e743acf27bdbdafa621cfd9b29395554aa45e"
+    },
+    "python/carnot/terminal_artifacts.py": {
+      "present": true,
+      "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+    },
+    "python/carnot/terminal_evidence_preflight.py": {
+      "present": true,
+      "sha256": "sha256:10c622a15ee433b8afacfba66e0d62bbf3b6b55d7c84186871ddee20f536f86d"
+    },
+    "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py": {
+      "present": true,
+      "sha256": "sha256:fd7362330f6a53da2c8ad102369a044b57d66f705383c7d89b7d6a9c31a2b48c"
+    },
+    "scripts/determination_preservation_lint.py": {
+      "present": true,
+      "sha256": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821"
+    },
+    "openspec/capabilities/research-harnesses/spec.md": {
+      "present": true,
+      "sha256": "sha256:2b26de600129a579ac3680d74d787c7ec9635268b688d4ed40e0fb42cbf9619f"
+    },
+    "ops/e2e-test-plan.md": {
+      "present": true,
+      "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+    },
+    "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py": {
+      "present": true,
+      "sha256": "sha256:28c74f10acdab8cbcf78c7f9bab0a257c8ed064ae30b4aa620f0f6b0fed9e06f"
+    }
+  },
+  "v542_fixture_paths_hashes_and_expected_classes": [
+    {
+      "fixture_id": "exp6288",
+      "path": "results/experiment_6288_partial_atom_evidence_adapter.json",
+      "path_sha256": "sha256:2dcce102f803888496484d2ff1d1ac130a2f2d2666db4331c1249ad109e8fe81",
+      "expected_accept": false,
+      "expected_failure_classes": [
+        "duration_floor_violation",
+        "methodology_missing"
+      ],
+      "observed_accept": false,
+      "observed_failure_classes": [
+        "unknown_compute_bound_substrate",
+        "duration_floor_violation",
+        "methodology_missing",
+        "test_exit_code_missing"
+      ]
+    },
+    {
+      "fixture_id": "exp6289",
+      "path": "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+      "path_sha256": "sha256:b2731febd977a7a8478533d735359931333ff80d64b450c06d61bd19816baa8d",
+      "expected_accept": false,
+      "expected_failure_classes": [
+        "test_exit_code_missing"
+      ],
+      "observed_accept": false,
+      "observed_failure_classes": [
+        "test_exit_code_missing"
+      ]
+    },
+    {
+      "fixture_id": "exp6290",
+      "path": "results/experiment_6290_revocable_atomic_repair_memory.json",
+      "path_sha256": "sha256:8f572fa80e6039716be4407b7c38a0a8a6629c46276b1898d0a05bbb30e141ff",
+      "expected_accept": false,
+      "expected_failure_classes": [
+        "test_exit_code_nonzero"
+      ],
+      "observed_accept": false,
+      "observed_failure_classes": [
+        "test_exit_code_nonzero"
+      ]
+    }
+  ],
+  "synthetic_fixture_manifest_path_and_hash": {
+    "path": "results/experiment_6298_terminal_evidence_preflight_synthetic_fixtures.json",
+    "file_sha256": "sha256:76feab2c4b62dc7feee78cf06e49c79b56f44aefd5977acbf9b2c3b3d9100a69",
+    "payload_sha256": "sha256:6e66cee0af8ff3798a865a6b80900e149e6812e974ac072512593d173fa23614",
+    "fixture_ids": [
+      "clean",
+      "missing_field",
+      "bad_prefix",
+      "bad_gate_type",
+      "determination_drop"
+    ],
+    "gate_fields": [
+      {
+        "field": "terminal_evidence_preflight_ready_score",
+        "expected_type": "number"
+      }
+    ]
+  },
+  "required_field_checks": {
+    "exp6288": {
+      "ok": true,
+      "required_fields": [
+        "status",
+        "honest_verdict",
+        "inference_substrate",
+        "duration_s",
+        "preconditions_checked",
+        "verifier_is_oracle",
+        "field_principles",
+        "field_provenance",
+        "test_commands",
+        "test_exit_codes",
+        "reproducibility_checksum"
+      ],
+      "missing": [],
+      "failure_classes": []
+    },
+    "exp6289": {
+      "ok": true,
+      "required_fields": [
+        "status",
+        "honest_verdict",
+        "inference_substrate",
+        "duration_s",
+        "preconditions_checked",
+        "verifier_is_oracle",
+        "field_principles",
+        "field_provenance",
+        "test_commands",
+        "test_exit_codes",
+        "reproducibility_checksum"
+      ],
+      "missing": [],
+      "failure_classes": []
+    },
+    "exp6290": {
+      "ok": true,
+      "required_fields": [
+        "status",
+        "honest_verdict",
+        "inference_substrate",
+        "duration_s",
+        "preconditions_checked",
+        "verifier_is_oracle",
+        "field_principles",
+        "field_provenance",
+        "test_commands",
+        "test_exit_codes",
+        "reproducibility_checksum"
+      ],
+      "missing": [],
+      "failure_classes": []
+    },
+    "clean": {
+      "ok": true,
+      "required_fields": [
+        "status",
+        "honest_verdict",
+        "inference_substrate",
+        "duration_s",
+        "preconditions_checked",
+        "verifier_is_oracle",
+        "field_principles",
+        "field_provenance",
+        "test_commands",
+        "test_exit_codes",
+        "reproducibility_checksum"
+      ],
+      "missing": [],
+      "failure_classes": []
+    },
+    "missing_field": {
+      "ok": false,
+      "required_fields": [
+        "status",
+        "honest_verdict",
+        "inference_substrate",
+        "duration_s",
+        "preconditions_checked",
+        "verifier_is_oracle",
+        "field_principles",
+        "field_provenance",
+        "test_commands",
+        "test_exit_codes",
+        "reproducibility_checksum"
+      ],
+      "missing": [
+        "duration_s"
+      ],
+      "failure_classes": [
+        "missing_required_field"
+      ]
+    },
+    "bad_prefix": {
+      "ok": true,
+      "required_fields": [
+        "status",
+        "honest_verdict",
+        "inference_substrate",
+        "duration_s",
+        "preconditions_checked",
+        "verifier_is_oracle",
+        "field_principles",
+        "field_provenance",
+        "test_commands",
+        "test_exit_codes",
+        "reproducibility_checksum"
+      ],
+      "missing": [],
+      "failure_classes": []
+    },
+    "bad_gate_type": {
+      "ok": true,
+      "required_fields": [
+        "status",
+        "honest_verdict",
+        "inference_substrate",
+        "duration_s",
+        "preconditions_checked",
+        "verifier_is_oracle",
+        "field_principles",
+        "field_provenance",
+        "test_commands",
+        "test_exit_codes",
+        "reproducibility_checksum"
+      ],
+      "missing": [],
+      "failure_classes": []
+    },
+    "determination_drop": {
+      "ok": true,
+      "required_fields": [
+        "status",
+        "honest_verdict",
+        "inference_substrate",
+        "duration_s",
+        "preconditions_checked",
+        "verifier_is_oracle",
+        "field_principles",
+        "field_provenance",
+        "test_commands",
+        "test_exit_codes",
+        "reproducibility_checksum"
+      ],
+      "missing": [],
+      "failure_classes": []
+    }
+  },
+  "terminal_prefix_checks": {
+    "exp6288": {
+      "ok": true,
+      "classification": {
+        "classification": "flagged",
+        "terminal": true,
+        "reason": "artifact carries flagged_adversarial or corrigendum_pending",
+        "path": null,
+        "present": true,
+        "loadable": true,
+        "sha256": null,
+        "status_raw": "complete",
+        "status_prefix": "complete",
+        "status_class": "complete",
+        "honest_verdict_raw": "complete: partial atom evidence adapter passed fail-closed replay gates",
+        "honest_verdict_prefix": "complete",
+        "verdict_class": "complete",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": null
+      },
+      "honest_verdict": "complete: partial atom evidence adapter passed fail-closed replay gates",
+      "accepted_prefixes": [
+        "complete:",
+        "complete_",
+        "complete_ready:",
+        "complete_null:",
+        "success:",
+        "success_",
+        "passed:",
+        "passed_",
+        "shipped:",
+        "shipped_",
+        "blocked:",
+        "blocked_",
+        "skipped:",
+        "skipped_",
+        "flagged:",
+        "flagged_"
+      ],
+      "failure_classes": []
+    },
+    "exp6289": {
+      "ok": true,
+      "classification": {
+        "classification": "complete",
+        "terminal": true,
+        "reason": "status=complete verdict=complete",
+        "path": null,
+        "present": true,
+        "loadable": true,
+        "sha256": null,
+        "status_raw": "complete_no_value",
+        "status_prefix": "complete_no_value",
+        "status_class": "complete",
+        "honest_verdict_raw": "complete: benchmark ran but recorded failing verification commands",
+        "honest_verdict_prefix": "complete",
+        "verdict_class": "complete",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": null
+      },
+      "honest_verdict": "complete: benchmark ran but recorded failing verification commands",
+      "accepted_prefixes": [
+        "complete:",
+        "complete_",
+        "complete_ready:",
+        "complete_null:",
+        "success:",
+        "success_",
+        "passed:",
+        "passed_",
+        "shipped:",
+        "shipped_",
+        "blocked:",
+        "blocked_",
+        "skipped:",
+        "skipped_",
+        "flagged:",
+        "flagged_"
+      ],
+      "failure_classes": []
+    },
+    "exp6290": {
+      "ok": true,
+      "classification": {
+        "classification": "null",
+        "terminal": true,
+        "reason": "status=null verdict=null",
+        "path": null,
+        "present": true,
+        "loadable": true,
+        "sha256": null,
+        "status_raw": "complete_null",
+        "status_prefix": "complete_null",
+        "status_class": "null",
+        "honest_verdict_raw": "complete_null: revocable memory ran, but a recorded test command failed",
+        "honest_verdict_prefix": "complete_null",
+        "verdict_class": "null",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": null
+      },
+      "honest_verdict": "complete_null: revocable memory ran, but a recorded test command failed",
+      "accepted_prefixes": [
+        "complete:",
+        "complete_",
+        "complete_ready:",
+        "complete_null:",
+        "success:",
+        "success_",
+        "passed:",
+        "passed_",
+        "shipped:",
+        "shipped_",
+        "blocked:",
+        "blocked_",
+        "skipped:",
+        "skipped_",
+        "flagged:",
+        "flagged_"
+      ],
+      "failure_classes": []
+    },
+    "clean": {
+      "ok": true,
+      "classification": {
+        "classification": "complete",
+        "terminal": true,
+        "reason": "status=complete verdict=complete",
+        "path": null,
+        "present": true,
+        "loadable": true,
+        "sha256": null,
+        "status_raw": "complete",
+        "status_prefix": "complete",
+        "status_class": "complete",
+        "honest_verdict_raw": "complete: synthetic terminal evidence fixture passed",
+        "honest_verdict_prefix": "complete",
+        "verdict_class": "complete",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": null
+      },
+      "honest_verdict": "complete: synthetic terminal evidence fixture passed",
+      "accepted_prefixes": [
+        "complete:",
+        "complete_",
+        "complete_ready:",
+        "complete_null:",
+        "success:",
+        "success_",
+        "passed:",
+        "passed_",
+        "shipped:",
+        "shipped_",
+        "blocked:",
+        "blocked_",
+        "skipped:",
+        "skipped_",
+        "flagged:",
+        "flagged_"
+      ],
+      "failure_classes": []
+    },
+    "missing_field": {
+      "ok": true,
+      "classification": {
+        "classification": "complete",
+        "terminal": true,
+        "reason": "status=complete verdict=complete",
+        "path": null,
+        "present": true,
+        "loadable": true,
+        "sha256": null,
+        "status_raw": "complete",
+        "status_prefix": "complete",
+        "status_class": "complete",
+        "honest_verdict_raw": "complete: synthetic terminal evidence fixture passed",
+        "honest_verdict_prefix": "complete",
+        "verdict_class": "complete",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": null
+      },
+      "honest_verdict": "complete: synthetic terminal evidence fixture passed",
+      "accepted_prefixes": [
+        "complete:",
+        "complete_",
+        "complete_ready:",
+        "complete_null:",
+        "success:",
+        "success_",
+        "passed:",
+        "passed_",
+        "shipped:",
+        "shipped_",
+        "blocked:",
+        "blocked_",
+        "skipped:",
+        "skipped_",
+        "flagged:",
+        "flagged_"
+      ],
+      "failure_classes": []
+    },
+    "bad_prefix": {
+      "ok": false,
+      "classification": {
+        "classification": "unknown",
+        "terminal": false,
+        "reason": "status or honest_verdict is absent or unknown",
+        "path": null,
+        "present": true,
+        "loadable": true,
+        "sha256": null,
+        "status_raw": "complete",
+        "status_prefix": "complete",
+        "status_class": "complete",
+        "honest_verdict_raw": "synthetic fixture passed",
+        "honest_verdict_prefix": "synthetic",
+        "verdict_class": "unknown",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": null
+      },
+      "honest_verdict": "synthetic fixture passed",
+      "accepted_prefixes": [
+        "complete:",
+        "complete_",
+        "complete_ready:",
+        "complete_null:",
+        "success:",
+        "success_",
+        "passed:",
+        "passed_",
+        "shipped:",
+        "shipped_",
+        "blocked:",
+        "blocked_",
+        "skipped:",
+        "skipped_",
+        "flagged:",
+        "flagged_"
+      ],
+      "failure_classes": [
+        "nonterminal_artifact",
+        "missing_terminal_prefix"
+      ]
+    },
+    "bad_gate_type": {
+      "ok": true,
+      "classification": {
+        "classification": "complete",
+        "terminal": true,
+        "reason": "status=complete verdict=complete",
+        "path": null,
+        "present": true,
+        "loadable": true,
+        "sha256": null,
+        "status_raw": "complete",
+        "status_prefix": "complete",
+        "status_class": "complete",
+        "honest_verdict_raw": "complete: synthetic terminal evidence fixture passed",
+        "honest_verdict_prefix": "complete",
+        "verdict_class": "complete",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": null
+      },
+      "honest_verdict": "complete: synthetic terminal evidence fixture passed",
+      "accepted_prefixes": [
+        "complete:",
+        "complete_",
+        "complete_ready:",
+        "complete_null:",
+        "success:",
+        "success_",
+        "passed:",
+        "passed_",
+        "shipped:",
+        "shipped_",
+        "blocked:",
+        "blocked_",
+        "skipped:",
+        "skipped_",
+        "flagged:",
+        "flagged_"
+      ],
+      "failure_classes": []
+    },
+    "determination_drop": {
+      "ok": true,
+      "classification": {
+        "classification": "complete",
+        "terminal": true,
+        "reason": "status=complete verdict=complete",
+        "path": null,
+        "present": true,
+        "loadable": true,
+        "sha256": null,
+        "status_raw": "complete",
+        "status_prefix": "complete",
+        "status_class": "complete",
+        "honest_verdict_raw": "complete: synthetic terminal evidence fixture passed",
+        "honest_verdict_prefix": "complete",
+        "verdict_class": "complete",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": null
+      },
+      "honest_verdict": "complete: synthetic terminal evidence fixture passed",
+      "accepted_prefixes": [
+        "complete:",
+        "complete_",
+        "complete_ready:",
+        "complete_null:",
+        "success:",
+        "success_",
+        "passed:",
+        "passed_",
+        "shipped:",
+        "shipped_",
+        "blocked:",
+        "blocked_",
+        "skipped:",
+        "skipped_",
+        "flagged:",
+        "flagged_"
+      ],
+      "failure_classes": []
+    }
+  },
+  "field_principle_coverage_checks": {
+    "exp6288": {
+      "ok": true,
+      "principle_count": 32,
+      "provenance_count": 32,
+      "missing_field_principles": [],
+      "missing_field_provenance": [],
+      "failure_classes": []
+    },
+    "exp6289": {
+      "ok": true,
+      "principle_count": 41,
+      "provenance_count": 41,
+      "missing_field_principles": [],
+      "missing_field_provenance": [],
+      "failure_classes": []
+    },
+    "exp6290": {
+      "ok": true,
+      "principle_count": 34,
+      "provenance_count": 34,
+      "missing_field_principles": [],
+      "missing_field_provenance": [],
+      "failure_classes": []
+    },
+    "clean": {
+      "ok": true,
+      "principle_count": 12,
+      "provenance_count": 12,
+      "missing_field_principles": [],
+      "missing_field_provenance": [],
+      "failure_classes": []
+    },
+    "missing_field": {
+      "ok": true,
+      "principle_count": 12,
+      "provenance_count": 12,
+      "missing_field_principles": [],
+      "missing_field_provenance": [],
+      "failure_classes": []
+    },
+    "bad_prefix": {
+      "ok": true,
+      "principle_count": 12,
+      "provenance_count": 12,
+      "missing_field_principles": [],
+      "missing_field_provenance": [],
+      "failure_classes": []
+    },
+    "bad_gate_type": {
+      "ok": true,
+      "principle_count": 12,
+      "provenance_count": 12,
+      "missing_field_principles": [],
+      "missing_field_provenance": [],
+      "failure_classes": []
+    },
+    "determination_drop": {
+      "ok": true,
+      "principle_count": 12,
+      "provenance_count": 12,
+      "missing_field_principles": [],
+      "missing_field_provenance": [],
+      "failure_classes": []
+    }
+  },
+  "substrate_duration_and_methodology_checks": {
+    "exp6288": {
+      "ok": false,
+      "declared_substrate": "deterministic_partial_atom_text_adapter_no_llm",
+      "classification": {
+        "kind": "unknown",
+        "declared_value": "deterministic_partial_atom_text_adapter_no_llm",
+        "matched_value": "",
+        "source": "unknown_top_level_inference_substrate"
+      },
+      "compute_bound_marker_present": true,
+      "duration_s": 3.708992153406143e-07,
+      "duration_floor": {
+        "substrate": "deterministic_partial_atom_text_adapter_no_llm",
+        "min_duration_s": 60.0,
+        "reason": "live_model"
+      },
+      "missing_methodology": [
+        "model_specs/target_model"
+      ],
+      "failure_classes": [
+        "unknown_compute_bound_substrate",
+        "duration_floor_violation",
+        "methodology_missing"
+      ]
+    },
+    "exp6289": {
+      "ok": true,
+      "declared_substrate": "live_llm_inference",
+      "classification": {
+        "kind": "live_model",
+        "declared_value": "live_llm_inference",
+        "matched_value": "live_llm_inference",
+        "source": "top_level_inference_substrate"
+      },
+      "compute_bound_marker_present": true,
+      "duration_s": 99.78903000499122,
+      "duration_floor": {
+        "substrate": "live_llm_inference",
+        "min_duration_s": 60.0,
+        "reason": "live_model"
+      },
+      "missing_methodology": [],
+      "failure_classes": []
+    },
+    "exp6290": {
+      "ok": true,
+      "declared_substrate": "deterministic_exact_sidecar_replay_external_memory_no_llm",
+      "classification": {
+        "kind": "unknown",
+        "declared_value": "deterministic_exact_sidecar_replay_external_memory_no_llm",
+        "matched_value": "",
+        "source": "unknown_top_level_inference_substrate"
+      },
+      "compute_bound_marker_present": false,
+      "duration_s": 0.176674,
+      "duration_floor": {
+        "substrate": "deterministic_exact_sidecar_replay_external_memory_no_llm",
+        "min_duration_s": 0.0001,
+        "reason": "deterministic_verifier"
+      },
+      "missing_methodology": [],
+      "failure_classes": []
+    },
+    "clean": {
+      "ok": true,
+      "declared_substrate": "artifact_qa_lint_tests",
+      "classification": {
+        "kind": "no_llm",
+        "declared_value": "artifact_qa_lint_tests",
+        "matched_value": "artifact_qa_lint_tests",
+        "source": "top_level_inference_substrate"
+      },
+      "compute_bound_marker_present": false,
+      "duration_s": 0.01,
+      "duration_floor": {
+        "substrate": "artifact_qa_lint_tests",
+        "min_duration_s": 0.0001,
+        "reason": "artifact_qa_lint_tests"
+      },
+      "missing_methodology": [],
+      "failure_classes": []
+    },
+    "missing_field": {
+      "ok": false,
+      "declared_substrate": "artifact_qa_lint_tests",
+      "classification": {
+        "kind": "no_llm",
+        "declared_value": "artifact_qa_lint_tests",
+        "matched_value": "artifact_qa_lint_tests",
+        "source": "top_level_inference_substrate"
+      },
+      "compute_bound_marker_present": false,
+      "duration_s": null,
+      "duration_floor": {
+        "substrate": "artifact_qa_lint_tests",
+        "min_duration_s": 0.0001,
+        "reason": "artifact_qa_lint_tests"
+      },
+      "missing_methodology": [],
+      "failure_classes": [
+        "duration_missing"
+      ]
+    },
+    "bad_prefix": {
+      "ok": true,
+      "declared_substrate": "artifact_qa_lint_tests",
+      "classification": {
+        "kind": "no_llm",
+        "declared_value": "artifact_qa_lint_tests",
+        "matched_value": "artifact_qa_lint_tests",
+        "source": "top_level_inference_substrate"
+      },
+      "compute_bound_marker_present": false,
+      "duration_s": 0.01,
+      "duration_floor": {
+        "substrate": "artifact_qa_lint_tests",
+        "min_duration_s": 0.0001,
+        "reason": "artifact_qa_lint_tests"
+      },
+      "missing_methodology": [],
+      "failure_classes": []
+    },
+    "bad_gate_type": {
+      "ok": true,
+      "declared_substrate": "artifact_qa_lint_tests",
+      "classification": {
+        "kind": "no_llm",
+        "declared_value": "artifact_qa_lint_tests",
+        "matched_value": "artifact_qa_lint_tests",
+        "source": "top_level_inference_substrate"
+      },
+      "compute_bound_marker_present": false,
+      "duration_s": 0.01,
+      "duration_floor": {
+        "substrate": "artifact_qa_lint_tests",
+        "min_duration_s": 0.0001,
+        "reason": "artifact_qa_lint_tests"
+      },
+      "missing_methodology": [],
+      "failure_classes": []
+    },
+    "determination_drop": {
+      "ok": true,
+      "declared_substrate": "artifact_qa_lint_tests",
+      "classification": {
+        "kind": "no_llm",
+        "declared_value": "artifact_qa_lint_tests",
+        "matched_value": "artifact_qa_lint_tests",
+        "source": "top_level_inference_substrate"
+      },
+      "compute_bound_marker_present": false,
+      "duration_s": 0.01,
+      "duration_floor": {
+        "substrate": "artifact_qa_lint_tests",
+        "min_duration_s": 0.0001,
+        "reason": "artifact_qa_lint_tests"
+      },
+      "missing_methodology": [],
+      "failure_classes": []
+    }
+  },
+  "test_command_and_exit_code_checks": {
+    "exp6288": {
+      "ok": false,
+      "command_count": 7,
+      "exit_code_count": 1,
+      "missing_exit_codes": [
+        ".venv/bin/pytest tests/python/test_experiment_6288_partial_atom_evidence_adapter.py -q --no-cov -n 0",
+        ".venv/bin/coverage run --branch --include=python/carnot/experiment_6288_partial_atom_evidence_adapter.py -m pytest tests/python/test_experiment_6288_partial_atom_evidence_adapter.py -q --no-cov -n 0",
+        ".venv/bin/coverage report --include=python/carnot/experiment_6288_partial_atom_evidence_adapter.py --fail-under=100",
+        ".venv/bin/pytest tests/python -q",
+        ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6288_partial_atom_evidence_adapter.py",
+        ".venv/bin/python scripts/adversarial_verify.py results/experiment_6288_partial_atom_evidence_adapter.json"
+      ],
+      "extra_exit_codes": [],
+      "non_integer_exit_codes": [],
+      "nonzero_exit_codes": [],
+      "executed_commands": [],
+      "failure_classes": [
+        "test_exit_code_missing"
+      ]
+    },
+    "exp6289": {
+      "ok": false,
+      "command_count": 6,
+      "exit_code_count": 1,
+      "missing_exit_codes": [
+        ".venv/bin/pytest tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py -q --no-cov -n 0",
+        ".venv/bin/coverage run --rcfile=/dev/null --branch --include=python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py -m pytest tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6289_flagship_exact_state_refinement_benchmark.py --fail-under=100",
+        ".venv/bin/pytest tests/python -q",
+        ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6289_flagship_exact_state_refinement_benchmark.py",
+        ".venv/bin/python scripts/adversarial_verify.py results/experiment_6289_flagship_exact_state_refinement_benchmark.json"
+      ],
+      "extra_exit_codes": [],
+      "non_integer_exit_codes": [],
+      "nonzero_exit_codes": [],
+      "executed_commands": [],
+      "failure_classes": [
+        "test_exit_code_missing"
+      ]
+    },
+    "exp6290": {
+      "ok": false,
+      "command_count": 8,
+      "exit_code_count": 8,
+      "missing_exit_codes": [],
+      "extra_exit_codes": [],
+      "non_integer_exit_codes": [],
+      "nonzero_exit_codes": [
+        {
+          "command": ".venv/bin/pytest tests/python -q",
+          "exit_code": 2
+        }
+      ],
+      "executed_commands": [],
+      "failure_classes": [
+        "test_exit_code_nonzero"
+      ]
+    },
+    "clean": {
+      "ok": true,
+      "command_count": 1,
+      "exit_code_count": 1,
+      "missing_exit_codes": [],
+      "extra_exit_codes": [],
+      "non_integer_exit_codes": [],
+      "nonzero_exit_codes": [],
+      "executed_commands": [],
+      "failure_classes": []
+    },
+    "missing_field": {
+      "ok": true,
+      "command_count": 1,
+      "exit_code_count": 1,
+      "missing_exit_codes": [],
+      "extra_exit_codes": [],
+      "non_integer_exit_codes": [],
+      "nonzero_exit_codes": [],
+      "executed_commands": [],
+      "failure_classes": []
+    },
+    "bad_prefix": {
+      "ok": true,
+      "command_count": 1,
+      "exit_code_count": 1,
+      "missing_exit_codes": [],
+      "extra_exit_codes": [],
+      "non_integer_exit_codes": [],
+      "nonzero_exit_codes": [],
+      "executed_commands": [],
+      "failure_classes": []
+    },
+    "bad_gate_type": {
+      "ok": true,
+      "command_count": 1,
+      "exit_code_count": 1,
+      "missing_exit_codes": [],
+      "extra_exit_codes": [],
+      "non_integer_exit_codes": [],
+      "nonzero_exit_codes": [],
+      "executed_commands": [],
+      "failure_classes": []
+    },
+    "determination_drop": {
+      "ok": true,
+      "command_count": 1,
+      "exit_code_count": 1,
+      "missing_exit_codes": [],
+      "extra_exit_codes": [],
+      "non_integer_exit_codes": [],
+      "nonzero_exit_codes": [],
+      "executed_commands": [],
+      "failure_classes": []
+    }
+  },
+  "gate_field_type_checks": {
+    "exp6288": {
+      "ok": true,
+      "gate_fields": [],
+      "failure_classes": []
+    },
+    "exp6289": {
+      "ok": true,
+      "gate_fields": [],
+      "failure_classes": []
+    },
+    "exp6290": {
+      "ok": true,
+      "gate_fields": [],
+      "failure_classes": []
+    },
+    "clean": {
+      "ok": true,
+      "gate_fields": [
+        {
+          "field": "terminal_evidence_preflight_ready_score",
+          "expected_type": "number",
+          "eligibility": {
+            "field": "terminal_evidence_preflight_ready_score",
+            "eligible": true,
+            "reason": "terminal artifact exposes exact bare field 'terminal_evidence_preflight_ready_score'",
+            "classification": {
+              "classification": "complete",
+              "terminal": true,
+              "reason": "status=complete verdict=complete",
+              "path": null,
+              "present": true,
+              "loadable": true,
+              "sha256": null,
+              "status_raw": "complete",
+              "status_prefix": "complete",
+              "status_class": "complete",
+              "honest_verdict_raw": "complete: synthetic terminal evidence fixture passed",
+              "honest_verdict_prefix": "complete",
+              "verdict_class": "complete",
+              "receipt_override_attempted": false,
+              "receipt_overrode": false,
+              "conductor_receipt_status": null
+            },
+            "field_present": true,
+            "field_is_bare": true,
+            "value": 1.0
+          },
+          "failure_classes": [],
+          "ok": true
+        }
+      ],
+      "failure_classes": []
+    },
+    "missing_field": {
+      "ok": true,
+      "gate_fields": [
+        {
+          "field": "terminal_evidence_preflight_ready_score",
+          "expected_type": "number",
+          "eligibility": {
+            "field": "terminal_evidence_preflight_ready_score",
+            "eligible": true,
+            "reason": "terminal artifact exposes exact bare field 'terminal_evidence_preflight_ready_score'",
+            "classification": {
+              "classification": "complete",
+              "terminal": true,
+              "reason": "status=complete verdict=complete",
+              "path": null,
+              "present": true,
+              "loadable": true,
+              "sha256": null,
+              "status_raw": "complete",
+              "status_prefix": "complete",
+              "status_class": "complete",
+              "honest_verdict_raw": "complete: synthetic terminal evidence fixture passed",
+              "honest_verdict_prefix": "complete",
+              "verdict_class": "complete",
+              "receipt_override_attempted": false,
+              "receipt_overrode": false,
+              "conductor_receipt_status": null
+            },
+            "field_present": true,
+            "field_is_bare": true,
+            "value": 1.0
+          },
+          "failure_classes": [],
+          "ok": true
+        }
+      ],
+      "failure_classes": []
+    },
+    "bad_prefix": {
+      "ok": false,
+      "gate_fields": [
+        {
+          "field": "terminal_evidence_preflight_ready_score",
+          "expected_type": "number",
+          "eligibility": {
+            "field": "terminal_evidence_preflight_ready_score",
+            "eligible": false,
+            "reason": "nonterminal artifact classification=unknown",
+            "classification": {
+              "classification": "unknown",
+              "terminal": false,
+              "reason": "status or honest_verdict is absent or unknown",
+              "path": null,
+              "present": true,
+              "loadable": true,
+              "sha256": null,
+              "status_raw": "complete",
+              "status_prefix": "complete",
+              "status_class": "complete",
+              "honest_verdict_raw": "synthetic fixture passed",
+              "honest_verdict_prefix": "synthetic",
+              "verdict_class": "unknown",
+              "receipt_override_attempted": false,
+              "receipt_overrode": false,
+              "conductor_receipt_status": null
+            },
+            "field_present": true,
+            "field_is_bare": true,
+            "value": 1.0
+          },
+          "failure_classes": [
+            "gate_field_nonterminal_artifact"
+          ],
+          "ok": false
+        }
+      ],
+      "failure_classes": [
+        "gate_field_nonterminal_artifact"
+      ]
+    },
+    "bad_gate_type": {
+      "ok": false,
+      "gate_fields": [
+        {
+          "field": "terminal_evidence_preflight_ready_score",
+          "expected_type": "number",
+          "eligibility": {
+            "field": "terminal_evidence_preflight_ready_score",
+            "eligible": true,
+            "reason": "terminal artifact exposes exact bare field 'terminal_evidence_preflight_ready_score'",
+            "classification": {
+              "classification": "complete",
+              "terminal": true,
+              "reason": "status=complete verdict=complete",
+              "path": null,
+              "present": true,
+              "loadable": true,
+              "sha256": null,
+              "status_raw": "complete",
+              "status_prefix": "complete",
+              "status_class": "complete",
+              "honest_verdict_raw": "complete: synthetic terminal evidence fixture passed",
+              "honest_verdict_prefix": "complete",
+              "verdict_class": "complete",
+              "receipt_override_attempted": false,
+              "receipt_overrode": false,
+              "conductor_receipt_status": null
+            },
+            "field_present": true,
+            "field_is_bare": true,
+            "value": "1.0"
+          },
+          "failure_classes": [
+            "gate_field_type_mismatch"
+          ],
+          "ok": false
+        }
+      ],
+      "failure_classes": [
+        "gate_field_type_mismatch"
+      ]
+    },
+    "determination_drop": {
+      "ok": true,
+      "gate_fields": [
+        {
+          "field": "terminal_evidence_preflight_ready_score",
+          "expected_type": "number",
+          "eligibility": {
+            "field": "terminal_evidence_preflight_ready_score",
+            "eligible": true,
+            "reason": "terminal artifact exposes exact bare field 'terminal_evidence_preflight_ready_score'",
+            "classification": {
+              "classification": "complete",
+              "terminal": true,
+              "reason": "status=complete verdict=complete",
+              "path": null,
+              "present": true,
+              "loadable": true,
+              "sha256": null,
+              "status_raw": "complete",
+              "status_prefix": "complete",
+              "status_class": "complete",
+              "honest_verdict_raw": "complete: synthetic terminal evidence fixture passed",
+              "honest_verdict_prefix": "complete",
+              "verdict_class": "complete",
+              "receipt_override_attempted": false,
+              "receipt_overrode": false,
+              "conductor_receipt_status": null
+            },
+            "field_present": true,
+            "field_is_bare": true,
+            "value": 1.0
+          },
+          "failure_classes": [],
+          "ok": true
+        }
+      ],
+      "failure_classes": []
+    }
+  },
+  "determination_preservation_checks": {
+    "exp6288": {
+      "ok": true,
+      "baseline_present": false,
+      "dropped_determination_fields": [],
+      "failure_classes": []
+    },
+    "exp6289": {
+      "ok": true,
+      "baseline_present": false,
+      "dropped_determination_fields": [],
+      "failure_classes": []
+    },
+    "exp6290": {
+      "ok": true,
+      "baseline_present": false,
+      "dropped_determination_fields": [],
+      "failure_classes": []
+    },
+    "clean": {
+      "ok": true,
+      "baseline_present": false,
+      "dropped_determination_fields": [],
+      "failure_classes": []
+    },
+    "missing_field": {
+      "ok": true,
+      "baseline_present": false,
+      "dropped_determination_fields": [],
+      "failure_classes": []
+    },
+    "bad_prefix": {
+      "ok": true,
+      "baseline_present": false,
+      "dropped_determination_fields": [],
+      "failure_classes": []
+    },
+    "bad_gate_type": {
+      "ok": true,
+      "baseline_present": false,
+      "dropped_determination_fields": [],
+      "failure_classes": []
+    },
+    "determination_drop": {
+      "ok": false,
+      "baseline_present": true,
+      "dropped_determination_fields": [
+        "corrigendum_pending",
+        "flagged_adversarial"
+      ],
+      "failure_classes": [
+        "determination_dropped"
+      ]
+    }
+  },
+  "clean_fixture_accept_count": 1,
+  "bad_fixture_reject_count": 7,
+  "false_accept_count": 0,
+  "false_reject_count": 0,
+  "cli_contract": {
+    "run_command": ".venv/bin/python -m carnot.experiment_6298_terminal_evidence_preflight_linter --date YYYYMMDD",
+    "actual_date_arg": "20260811",
+    "standalone_from_conductor": true,
+    "does_not_modify_research_conductor": true,
+    "does_not_execute_artifact_supplied_commands": true,
+    "default_gate_fields": [
+      {
+        "field": "terminal_evidence_preflight_ready_score",
+        "expected_type": "number"
+      }
+    ]
+  },
+  "protected_files_unchanged": {
+    "unchanged": true,
+    "paths": {
+      "ops/e2e-test-plan.md": {
+        "before_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "after_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "unchanged": true
+      },
+      "python/carnot/terminal_artifacts.py": {
+        "before_sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+        "after_sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+        "unchanged": true
+      },
+      "results/experiment_6288_partial_atom_evidence_adapter.json": {
+        "before_sha256": "sha256:2dcce102f803888496484d2ff1d1ac130a2f2d2666db4331c1249ad109e8fe81",
+        "after_sha256": "sha256:2dcce102f803888496484d2ff1d1ac130a2f2d2666db4331c1249ad109e8fe81",
+        "unchanged": true
+      },
+      "results/experiment_6289_flagship_exact_state_refinement_benchmark.json": {
+        "before_sha256": "sha256:b2731febd977a7a8478533d735359931333ff80d64b450c06d61bd19816baa8d",
+        "after_sha256": "sha256:b2731febd977a7a8478533d735359931333ff80d64b450c06d61bd19816baa8d",
+        "unchanged": true
+      },
+      "results/experiment_6290_revocable_atomic_repair_memory.json": {
+        "before_sha256": "sha256:8f572fa80e6039716be4407b7c38a0a8a6629c46276b1898d0a05bbb30e141ff",
+        "after_sha256": "sha256:8f572fa80e6039716be4407b7c38a0a8a6629c46276b1898d0a05bbb30e141ff",
+        "unchanged": true
+      },
+      "results/experiment_6296_v542_adversarial_capstone.json": {
+        "before_sha256": "sha256:ed96dbf3cab60f4f225d07df601c0234da4abfaa0b618dd210e5264e3aa01ccb",
+        "after_sha256": "sha256:ed96dbf3cab60f4f225d07df601c0234da4abfaa0b618dd210e5264e3aa01ccb",
+        "unchanged": true
+      },
+      "scripts/adversarial_verify.py": {
+        "before_sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+        "after_sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+        "unchanged": true
+      },
+      "scripts/conductor_gates.py": {
+        "before_sha256": "sha256:9bb1f3ea71076d81b8c39665e27e743acf27bdbdafa621cfd9b29395554aa45e",
+        "after_sha256": "sha256:9bb1f3ea71076d81b8c39665e27e743acf27bdbdafa621cfd9b29395554aa45e",
+        "unchanged": true
+      },
+      "scripts/determination_preservation_lint.py": {
+        "before_sha256": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
+        "after_sha256": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "before_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "after_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "unchanged": true
+      }
+    }
+  },
+  "preconditions_checked": {
+    "git_status_before": [
+      " M openspec/capabilities/research-harnesses/spec.md",
+      "?? python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+      "?? python/carnot/terminal_evidence_preflight.py",
+      "?? tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+    ],
+    "git_status_after_tests": [],
+    "protected_hashes_before_artifact_write": {
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "results/experiment_6288_partial_atom_evidence_adapter.json": "sha256:2dcce102f803888496484d2ff1d1ac130a2f2d2666db4331c1249ad109e8fe81",
+      "results/experiment_6289_flagship_exact_state_refinement_benchmark.json": "sha256:b2731febd977a7a8478533d735359931333ff80d64b450c06d61bd19816baa8d",
+      "results/experiment_6290_revocable_atomic_repair_memory.json": "sha256:8f572fa80e6039716be4407b7c38a0a8a6629c46276b1898d0a05bbb30e141ff",
+      "results/experiment_6296_v542_adversarial_capstone.json": "sha256:ed96dbf3cab60f4f225d07df601c0234da4abfaa0b618dd210e5264e3aa01ccb",
+      "scripts/adversarial_verify.py": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+      "scripts/conductor_gates.py": "sha256:9bb1f3ea71076d81b8c39665e27e743acf27bdbdafa621cfd9b29395554aa45e",
+      "python/carnot/terminal_artifacts.py": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+      "scripts/determination_preservation_lint.py": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+    },
+    "prior_artifact_hashes_frozen": {
+      "results/experiment_6288_partial_atom_evidence_adapter.json": "sha256:2dcce102f803888496484d2ff1d1ac130a2f2d2666db4331c1249ad109e8fe81",
+      "results/experiment_6289_flagship_exact_state_refinement_benchmark.json": "sha256:b2731febd977a7a8478533d735359931333ff80d64b450c06d61bd19816baa8d",
+      "results/experiment_6290_revocable_atomic_repair_memory.json": "sha256:8f572fa80e6039716be4407b7c38a0a8a6629c46276b1898d0a05bbb30e141ff"
+    },
+    "synthetic_manifest_payload_sha256": "sha256:6e66cee0af8ff3798a865a6b80900e149e6812e974ac072512593d173fa23614",
+    "source_hashes_frozen": {
+      "AGENTS.md": {
+        "present": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CODEX.md": {
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "CLAUDE.md": {
+        "present": true,
+        "sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59"
+      },
+      "results/experiment_6288_partial_atom_evidence_adapter.json": {
+        "present": true,
+        "sha256": "sha256:2dcce102f803888496484d2ff1d1ac130a2f2d2666db4331c1249ad109e8fe81"
+      },
+      "results/experiment_6289_flagship_exact_state_refinement_benchmark.json": {
+        "present": true,
+        "sha256": "sha256:b2731febd977a7a8478533d735359931333ff80d64b450c06d61bd19816baa8d"
+      },
+      "results/experiment_6290_revocable_atomic_repair_memory.json": {
+        "present": true,
+        "sha256": "sha256:8f572fa80e6039716be4407b7c38a0a8a6629c46276b1898d0a05bbb30e141ff"
+      },
+      "results/experiment_6296_v542_adversarial_capstone.json": {
+        "present": true,
+        "sha256": "sha256:ed96dbf3cab60f4f225d07df601c0234da4abfaa0b618dd210e5264e3aa01ccb"
+      },
+      "scripts/adversarial_verify.py": {
+        "present": true,
+        "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+      },
+      "scripts/conductor_gates.py": {
+        "present": true,
+        "sha256": "sha256:9bb1f3ea71076d81b8c39665e27e743acf27bdbdafa621cfd9b29395554aa45e"
+      },
+      "python/carnot/terminal_artifacts.py": {
+        "present": true,
+        "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+      },
+      "python/carnot/terminal_evidence_preflight.py": {
+        "present": true,
+        "sha256": "sha256:10c622a15ee433b8afacfba66e0d62bbf3b6b55d7c84186871ddee20f536f86d"
+      },
+      "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py": {
+        "present": true,
+        "sha256": "sha256:fd7362330f6a53da2c8ad102369a044b57d66f705383c7d89b7d6a9c31a2b48c"
+      },
+      "scripts/determination_preservation_lint.py": {
+        "present": true,
+        "sha256": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821"
+      },
+      "openspec/capabilities/research-harnesses/spec.md": {
+        "present": true,
+        "sha256": "sha256:2b26de600129a579ac3680d74d787c7ec9635268b688d4ed40e0fb42cbf9619f"
+      },
+      "ops/e2e-test-plan.md": {
+        "present": true,
+        "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+      },
+      "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py": {
+        "present": true,
+        "sha256": "sha256:28c74f10acdab8cbcf78c7f9bab0a257c8ed064ae30b4aa620f0f6b0fed9e06f"
+      }
+    }
+  },
+  "inference_substrate": "artifact_qa_lint_tests",
+  "verifier_is_oracle": false,
+  "field_provenance": {
+    "status": {
+      "principle": "The report closes only after fixture replay and protected hashes pass.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "failure_taxonomy": {
+      "principle": "Stable class names make each rejection auditable.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "source_paths_and_hashes": {
+      "principle": "Source hashes bind the linter to the exact code and inputs.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "v542_fixture_paths_hashes_and_expected_classes": {
+      "principle": "Prior failures stay immutable inputs.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "synthetic_fixture_manifest_path_and_hash": {
+      "principle": "Synthetic fixtures need a stable manifest.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "required_field_checks": {
+      "principle": "Missing fields are the cheapest fabrication signal.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "terminal_prefix_checks": {
+      "principle": "A terminal prefix prevents partial verdict laundering.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "field_principle_coverage_checks": {
+      "principle": "Each required field must carry the reason it exists.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "substrate_duration_and_methodology_checks": {
+      "principle": "Compute claims need plausible time and receipts.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "test_command_and_exit_code_checks": {
+      "principle": "Recorded verification failures must stay visible.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "gate_field_type_checks": {
+      "principle": "Gates must read exact bare values of the expected type.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "determination_preservation_checks": {
+      "principle": "Review determinations must not silently disappear.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "clean_fixture_accept_count": {
+      "principle": "The linter must accept known-good terminal evidence.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "bad_fixture_reject_count": {
+      "principle": "The linter must reject known-bad terminal evidence.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "false_accept_count": {
+      "principle": "Bare zero proves bad fixtures did not pass.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "false_reject_count": {
+      "principle": "Bare zero proves the clean fixture did not fail.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "cli_contract": {
+      "principle": "The CLI must be reproducible and separate from the conductor.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Protected hashes prove this run did not rewrite inputs.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "The run records git state, hashes, and fixture setup first.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "This task runs artifact QA lint tests, not model inference.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "The linter checks evidence quality and is not an answer oracle.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every required field cites the evidence source that produced it.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "field_principles": {
+      "principle": "Every required field states the guard principle it serves.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "test_commands": {
+      "principle": "The report lists the bounded project-owned verification commands.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "The report preserves exit codes without converting failures to passes.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "duration_s": {
+      "principle": "Wall time records the QA cost without padding.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "random_seed": {
+      "principle": "A fixed seed makes the synthetic fixture manifest reproducible.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "A normalized checksum detects silent payload drift.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "terminal_evidence_preflight_ready_score": {
+      "principle": "The score is one only with zero false counts.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The verdict states the terminal result with a safe prefix.",
+      "sources": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODEX.md",
+        "openspec/capabilities/research-harnesses/spec.md",
+        "ops/e2e-test-plan.md",
+        "python/carnot/experiment_6298_terminal_evidence_preflight_linter.py",
+        "python/carnot/terminal_artifacts.py",
+        "python/carnot/terminal_evidence_preflight.py",
+        "results/experiment_6288_partial_atom_evidence_adapter.json",
+        "results/experiment_6289_flagship_exact_state_refinement_benchmark.json",
+        "results/experiment_6290_revocable_atomic_repair_memory.json",
+        "results/experiment_6296_v542_adversarial_capstone.json",
+        "scripts/adversarial_verify.py",
+        "scripts/conductor_gates.py",
+        "scripts/determination_preservation_lint.py",
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py"
+      ]
+    }
+  },
+  "field_principles": {
+    "status": "The report closes only after fixture replay and protected hashes pass.",
+    "failure_taxonomy": "Stable class names make each rejection auditable.",
+    "source_paths_and_hashes": "Source hashes bind the linter to the exact code and inputs.",
+    "v542_fixture_paths_hashes_and_expected_classes": "Prior failures stay immutable inputs.",
+    "synthetic_fixture_manifest_path_and_hash": "Synthetic fixtures need a stable manifest.",
+    "required_field_checks": "Missing fields are the cheapest fabrication signal.",
+    "terminal_prefix_checks": "A terminal prefix prevents partial verdict laundering.",
+    "field_principle_coverage_checks": "Each required field must carry the reason it exists.",
+    "substrate_duration_and_methodology_checks": "Compute claims need plausible time and receipts.",
+    "test_command_and_exit_code_checks": "Recorded verification failures must stay visible.",
+    "gate_field_type_checks": "Gates must read exact bare values of the expected type.",
+    "determination_preservation_checks": "Review determinations must not silently disappear.",
+    "clean_fixture_accept_count": "The linter must accept known-good terminal evidence.",
+    "bad_fixture_reject_count": "The linter must reject known-bad terminal evidence.",
+    "false_accept_count": "Bare zero proves bad fixtures did not pass.",
+    "false_reject_count": "Bare zero proves the clean fixture did not fail.",
+    "cli_contract": "The CLI must be reproducible and separate from the conductor.",
+    "protected_files_unchanged": "Protected hashes prove this run did not rewrite inputs.",
+    "preconditions_checked": "The run records git state, hashes, and fixture setup first.",
+    "inference_substrate": "This task runs artifact QA lint tests, not model inference.",
+    "verifier_is_oracle": "The linter checks evidence quality and is not an answer oracle.",
+    "field_provenance": "Every required field cites the evidence source that produced it.",
+    "field_principles": "Every required field states the guard principle it serves.",
+    "test_commands": "The report lists the bounded project-owned verification commands.",
+    "test_exit_codes": "The report preserves exit codes without converting failures to passes.",
+    "duration_s": "Wall time records the QA cost without padding.",
+    "random_seed": "A fixed seed makes the synthetic fixture manifest reproducible.",
+    "reproducibility_checksum": "A normalized checksum detects silent payload drift.",
+    "terminal_evidence_preflight_ready_score": "The score is one only with zero false counts.",
+    "honest_verdict": "The verdict states the terminal result with a safe prefix."
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --branch --include=python/carnot/terminal_evidence_preflight.py,python/carnot/experiment_6298_terminal_evidence_preflight_linter.py -m pytest tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/terminal_evidence_preflight.py,python/carnot/experiment_6298_terminal_evidence_preflight_linter.py --fail-under=100 --show-missing",
+    ".venv/bin/ruff check python/carnot/terminal_evidence_preflight.py python/carnot/experiment_6298_terminal_evidence_preflight_linter.py tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py",
+    ".venv/bin/ruff format --check python/carnot/terminal_evidence_preflight.py python/carnot/experiment_6298_terminal_evidence_preflight_linter.py tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py",
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/python scripts/determination_preservation_lint.py --all",
+    "sed -n 1,220p ops/e2e-test-plan.md",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6298_terminal_evidence_preflight_linter.json"
+  ],
+  "test_exit_codes": {},
+  "duration_s": 0.0713750368449837,
+  "random_seed": 6298,
+  "reproducibility_checksum": "sha256:2b4195ec74d014698ef0de82e311d090721eee97f30c22a43e19a97196a3e132",
+  "terminal_evidence_preflight_ready_score": 1.0,
+  "honest_verdict": "complete: terminal evidence preflight rejected V542 and synthetic bad fixtures with zero false accepts and zero false rejects"
+}

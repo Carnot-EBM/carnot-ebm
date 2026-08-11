@@ -2814,6 +2814,118 @@ field-principle entry, the checksum matches the normalized payload, and
 |---|---|---|
 | REQ-INFRA-6297 | Pending implementation: `python/carnot/experiment_6297_v543_terminal_transition.py`; terminal artifact `results/experiment_6297_v543_terminal_transition.json`. | Pending focused tests: `tests/python/test_experiment_6297_v543_terminal_transition.py`. |
 
+## REQ-INFRA-6298: Terminal Evidence Preflight SHALL Fail Closed Before Gate Consumption
+
+Carnot SHALL provide a reusable standalone terminal-evidence preflight for
+experiment result artifacts and staged gate fields. The preflight SHALL live
+outside `scripts/research_conductor.py`. It SHALL expose a library function
+under `python/carnot/` and a thin module CLI runnable as
+`.venv/bin/python -m carnot.experiment_6298_terminal_evidence_preflight_linter --date YYYYMMDD`.
+
+The preflight SHALL check required-field presence, a terminal-prefixed
+`honest_verdict`, field-principle coverage, field provenance, inference
+substrate declaration, substrate duration floors, methodology receipts,
+test-command existence, recorded exit-code parity, staged gate-field type,
+reproducibility fields, determination preservation, and protected-file hashes.
+It SHALL compare only already-recorded test commands and exit codes unless a
+fixture explicitly opts into a bounded project-owned command. It SHALL NOT
+execute arbitrary command strings embedded in a result artifact.
+
+The preflight SHALL use the current substrate duration table from
+`scripts/adversarial_verify.py`. It SHALL fail closed on unknown
+compute-bound substrates, missing methodology receipts, missing duration
+measurements, and impossible timing below the selected substrate floor.
+Structured gate fields SHALL be eligible only when the exact artifact is
+terminal, the field is present at the top level, the value is not
+principle-wrapped, and the bare value has the expected type.
+
+Exp6298 SHALL replay the V542 failure shapes without rewriting prior
+artifacts: Exp6288's implausibly short and methodologically incomplete
+compute-bound evidence, and Exp6289 plus Exp6290's recorded verification
+receipt failures. Exp6298 SHALL also evaluate synthetic clean, missing-field,
+bad-prefix, bad-gate-type, and determination-drop fixtures.
+
+Exp6298 SHALL write
+`results/experiment_6298_terminal_evidence_preflight_linter.json`. It SHALL
+also write a synthetic fixture manifest and record that manifest's path and
+hash. Its `inference_substrate` SHALL be exactly `artifact_qa_lint_tests`.
+The terminal artifact SHALL include these required fields: `status`,
+`failure_taxonomy`, `source_paths_and_hashes`,
+`v542_fixture_paths_hashes_and_expected_classes`,
+`synthetic_fixture_manifest_path_and_hash`, `required_field_checks`,
+`terminal_prefix_checks`, `field_principle_coverage_checks`,
+`substrate_duration_and_methodology_checks`,
+`test_command_and_exit_code_checks`, `gate_field_type_checks`,
+`determination_preservation_checks`, `clean_fixture_accept_count`,
+`bad_fixture_reject_count`, `false_accept_count`, `false_reject_count`,
+`cli_contract`, `protected_files_unchanged`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
+`random_seed`, `reproducibility_checksum`,
+`terminal_evidence_preflight_ready_score`, and `honest_verdict`.
+
+For a readiness artifact, `false_accept_count` and `false_reject_count` SHALL
+be bare integer `0`, `verifier_is_oracle` SHALL be false, every required field
+SHALL have one field principle, and `honest_verdict` SHALL start with a
+terminal prefix. `terminal_evidence_preflight_ready_score` SHALL be `1.0`
+only when the clean fixture is accepted, every bad fixture is rejected, both
+false-counts are zero, and protected files are byte-identical.
+
+### SCENARIO-INFRA-6298-1: V542 Failure Shapes Replay Without Prior Artifact Mutation
+
+GIVEN the checked-in Exp6288, Exp6289, and Exp6290 result artifacts
+WHEN the terminal-evidence preflight replays them as immutable fixtures
+THEN Exp6288 is rejected for substrate duration or methodology evidence, and
+Exp6289 plus Exp6290 are rejected for recorded test-command receipt parity or
+nonzero exit-code evidence.
+
+### SCENARIO-INFRA-6298-2: Synthetic Fixture Matrix Has Zero False Counts
+
+GIVEN clean, missing-field, bad-prefix, bad-gate-type, and determination-drop
+synthetic fixtures
+WHEN the preflight evaluates the manifest
+THEN the clean fixture is accepted, every bad fixture is rejected, and both
+false accept and false reject counts are bare integer zero.
+
+### SCENARIO-INFRA-6298-3: Substrate And Methodology Checks Use The Canonical Floor Table
+
+GIVEN an artifact with compute-bound markers, an unknown substrate, missing
+methodology receipts, or `duration_s` below the selected floor
+WHEN the preflight evaluates substrate evidence
+THEN it rejects the artifact with explicit failure classes and records the
+selected floor descriptor.
+
+### SCENARIO-INFRA-6298-4: Test Commands Are Compared, Not Executed
+
+GIVEN an artifact records `test_commands` and `test_exit_codes`
+WHEN the preflight checks verification receipts
+THEN every declared command must have one recorded exit code, no extra exit
+code may appear, every recorded code must be integer zero, and the preflight
+does not execute artifact-supplied command strings.
+
+### SCENARIO-INFRA-6298-5: Gate Fields Must Be Terminal Exact Bare Typed Values
+
+GIVEN a staged gate points at a missing, nonterminal, principle-wrapped, or
+wrong-typed field
+WHEN the preflight checks gate-field eligibility
+THEN it rejects the staged gate before conductor gate evaluation can consume
+the value.
+
+### SCENARIO-INFRA-6298-6: Artifact Schema, Protected Hashes, And CLI Contract Are Validated
+
+GIVEN an Exp6298 report, field principles, provenance, protected hashes,
+fixture manifest, and command receipts
+WHEN the CLI validates and writes the report
+THEN every required field is present, the checksum matches the normalized
+payload, protected files remain byte-identical, `verifier_is_oracle=false`,
+and the verdict has a terminal prefix.
+
+## Implementation Status (REQ-INFRA-6298)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6298 | Implemented: `python/carnot/terminal_evidence_preflight.py`, `python/carnot/experiment_6298_terminal_evidence_preflight_linter.py`; terminal artifact `results/experiment_6298_terminal_evidence_preflight_linter.json`. | Implemented: `tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
