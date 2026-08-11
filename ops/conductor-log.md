@@ -15640,3 +15640,4 @@ Still active  |
 | 2026-08-11 00:27 UTC | Gated on Exp6292 transfer: default-off revocable-m | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6292-revocable-memory-holdout-audit.hel |
 | 2026-08-11 01:37 UTC | Matched live-agent causal canary for the ARC mecha | OK | 99 passed, 1 warning in 8.28s |
 | 2026-08-11 01:39 UTC | Gated on Exp6294 causal benefit: held-mechanic-out | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6294-arc-mechanic-router-causal-canary. |
+| 2026-08-11 01:41 UTC | Gated on Exp6294 causal benefit: held-mechanic-out | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6294-arc-mechanic-router-causal-canary. |
