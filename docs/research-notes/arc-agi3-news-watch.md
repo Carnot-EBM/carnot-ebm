@@ -132,3 +132,7 @@ CHECK_TIMED_OUT
 
 CHECK_TIMED_OUT
 
+## 2026-08-11 13:12 UTC -- NEW
+
+Lord Han Solo moved into third place with a 1.65 score from an August 10 submission, displacing GeniusYY (1.64) to fourth. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+

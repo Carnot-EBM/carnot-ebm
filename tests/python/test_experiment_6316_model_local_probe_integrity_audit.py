@@ -522,6 +522,8 @@ def test_scenario_kona_6316_disaggregates_failures_and_underpowered_cells(
 def test_scenario_kona_6316_defensive_helpers_fail_closed(tmp_path: Path) -> None:
     """SCENARIO-KONA-6316-MUTATIONS: parser and status guards are fail-closed."""
 
+    assert mod.DEFAULT_TEST_EXIT_CODES[mod.FULL_TEST_COMMAND] == 2
+
     bad_json = tmp_path / "bad.json"
     bad_json.write_text("[]\n", encoding="utf-8")
     with pytest.raises(ValueError, match="JSON object required"):
