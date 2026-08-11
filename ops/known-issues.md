@@ -16610,3 +16610,24 @@ check (`_generator_cuda_min_free_mb` + a live nvidia-smi read) measures real fre
 runtime rather than assuming a topology, so it is already correct regardless of card count.
 The definitive answer (card count, VRAM total) will be in the `LLM GPU HARDWARE:` line of
 submission ref 55425907's real scored-run log, once available.
+
+## 2026-08-11 Kaggle regression RESOLVED: corrected kernel scored 0.09 (fix confirmed working)
+
+Follow-up to the 2026-08-09 root-cause entry and the 2026-08-11 resubmission. Submission ref
+`55425907` (the corrected kernel, pulled fresh from `scripts/kaggle/submission_kernel/`) came
+back **COMPLETE, public score 0.09** -- up from the regression's 0.02 (4.5x), slightly above the
+2026-07-16 prior baseline (0.08), still below the 2026-07-15 best on record (0.12).
+
+**The fix is confirmed to have worked.** The stale-fork regression (missing the 2026-07-27
+concurrency-probe fix, a stale hardcoded n_ctx literal, and a divergent dataset binding) is
+resolved -- this run is back in the healthy range. The residual 0.09-vs-0.12 gap was NOT
+investigated this session (candidates not ruled in or out: normal run variance, the QAT
+quantization switch, the RTX Pro 6000-vs-L4x4 hardware difference) -- a separate, lower-urgency
+question for later, now that the actual regression is closed.
+
+`LLM GPU HARDWARE:` line from the real scored rerun (which would settle the single-vs-quad-GPU
+question in the entry above) remains unretrieved -- `kaggle kernels output` only ever returns
+the Save & Run preview log, confirmed again on this check, never the internal competition-rerun
+log.
+
+Full detail: `/home/ianblenke/carnot_submission_staging/MANIFEST.md`'s OUTCOME 2026-08-11 section.
