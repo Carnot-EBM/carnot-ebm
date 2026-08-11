@@ -1546,6 +1546,54 @@ accuracy no greater than chance plus tolerance. The verdict SHALL start with a
 terminal prefix and SHALL not claim reusable probes, SAE features, activation
 tool transfer, or energy value.
 
+### REQ-KONA-6316: Model-Local Probe Integrity Audit
+
+Carnot SHALL provide an Exp6316 replay audit for the model-local probe chain
+spanning Exp6313 through Exp6315. The audit SHALL start from immutable path
+hashes, terminal classifications, frozen mutation rules, frozen seeds, and
+protected-file hashes before reading any candidate metric. The audit SHALL
+classify blocked, skipped, null, malformed, and missing declared inputs from
+artifact bytes rather than conductor receipts.
+
+The audit SHALL reconstruct exact fixture row membership, sidecars, splits,
+checkpoint identities, per-model decisions, and terminal upstream classes
+without refitting failed cells. It SHALL replay claim flips, pair swaps, label
+permutations, evaluator swaps, A/A noise, norm controls, length controls,
+final-pool controls, prompt-verdict receipt substitution, truncation,
+duplicates, missing rows, checkpoint swaps, model identity, split leakage,
+held-label leakage, random-label training, random-pair controls, and
+underpowered-cell attacks. Each mutation SHALL be applied alone and in frozen
+combinations that prove planted failures are detected.
+
+The terminal artifact SHALL be
+`results/experiment_6316_model_local_probe_integrity_audit.json`. It SHALL
+include `status`, `audited_paths_hashes_and_terminal_classes`,
+`independent_row_checkpoint_and_decision_reconstruction`, `MODEL_SPECS`,
+`models_audited`, `corpus_and_split_replay_receipts`,
+`checkpoint_reload_and_score_identity_by_model`,
+`claim_flip_pair_swap_label_permutation_and_evaluator_swap_results`,
+`aa_noise_norm_length_final_pool_and_prompt_substitution_results`,
+`truncation_duplicate_missing_checkpoint_swap_and_model_identity_results`,
+`split_and_held_label_leakage_results`, `random_label_and_random_pair_controls`,
+`energy_direction_results_by_model_and_fold`,
+`disaggregated_metrics_intervals_and_sample_sizes`,
+`failed_harm_underpowered_missing_and_flagged_cells`,
+`pooled_rescue_attempt_count`, `source_model_weight_mutation_count`,
+`audit_mutation_manifest_path_and_hash`,
+`model_local_probe_integrity_ready_score`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`, `test_exit_codes`,
+`duration_s`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+`pooled_rescue_attempt_count` and `source_model_weight_mutation_count` SHALL be
+bare integer zero. Readiness SHALL be `1.0` only when every adequately powered
+model, fold, held-family cell, and integrity control passes. A blocked, skipped,
+null, missing, underpowered, or failed cell SHALL remain listed and SHALL force
+readiness to `0.0`. `field_principles` SHALL cover every required field. The
+audit SHALL reject aggregate rescue, outcome-field self-attestation, and exact
+validator leakage into a learned probe.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -2143,6 +2191,38 @@ and any higher leakage blocks readiness.
 
 **Spec traces:** REQ-KONA-6300
 
+### SCENARIO-KONA-6316-REPLAY: Inputs, Rows, Splits, And Checkpoints Are Replayed
+
+**Given** the declared Exp6313 through Exp6315 paths and upstream replay inputs
+**When** Exp6316 runs
+**Then** it records hashes and terminal classes for every declared path,
+recomputes exact fixture row and sidecar hashes, reloads checkpoint identities,
+and records any missing or blocked declared input as a terminal audit finding.
+
+**Spec traces:** REQ-KONA-6316
+
+### SCENARIO-KONA-6316-MUTATIONS: Integrity Mutations Fail Closed
+
+**Given** frozen mutation rules for claim flips, pair swaps, label
+permutations, evaluator swaps, controls, leakage, truncation, duplicates,
+missing rows, checkpoint swaps, random labels, and random pairs
+**When** Exp6316 applies each mutation and preregistered combinations
+**Then** every planted failure is detected, no failed cell is refit, and no
+aggregate or final-pool rescue can set readiness to one.
+
+**Spec traces:** REQ-KONA-6316
+
+### SCENARIO-KONA-6316-DISAGGREGATED: Failed And Underpowered Cells Stay Visible
+
+**Given** one model, fold, held-family, weakness-family, or control cell fails
+or lacks power
+**When** Exp6316 computes the final verdict
+**Then** the failed or underpowered cell is listed explicitly,
+`pooled_rescue_attempt_count == 0`,
+`source_model_weight_mutation_count == 0`, and
+`model_local_probe_integrity_ready_score == 0.0`.
+
+**Spec traces:** REQ-KONA-6316
 
 ## Out of scope
 

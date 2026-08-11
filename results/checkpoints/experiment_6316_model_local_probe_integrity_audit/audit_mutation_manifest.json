@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.experiment_6316.model_local_probe_integrity_audit.v1.mutation_manifest",
+  "run_date": "20260811",
+  "random_seed": 6316,
+  "decision_rule": "all adequate cells and controls must pass; no aggregate rescue",
+  "single_mutation_rules": [
+    "claim_flip",
+    "pair_swap",
+    "label_permutation",
+    "evaluator_swap",
+    "aa_noise",
+    "norm_control",
+    "length_control",
+    "final_pool_control",
+    "prompt_verdict_receipt_substitution",
+    "truncation",
+    "duplicates",
+    "missing_rows",
+    "checkpoint_swap",
+    "model_identity",
+    "split_leakage",
+    "held_label_leakage",
+    "random_label_training",
+    "random_pair_control",
+    "underpowered_cell"
+  ],
+  "preregistered_combinations": [
+    [
+      "claim_flip",
+      "pair_swap",
+      "label_permutation"
+    ],
+    [
+      "norm_control",
+      "length_control",
+      "truncation"
+    ],
+    [
+      "missing_rows",
+      "checkpoint_swap",
+      "model_identity"
+    ],
+    [
+      "split_leakage",
+      "held_label_leakage",
+      "random_label_training"
+    ]
+  ],
+  "source_model_weight_mutation_allowed": false,
+  "refit_failed_cell_allowed": false
+}
