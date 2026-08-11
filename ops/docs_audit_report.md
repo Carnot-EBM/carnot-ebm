@@ -4,94 +4,82 @@
 # docs_audit_report — 2026-08-10
 
 ## TL;DR (stranger's 30-second take)
-
-I would close the tab. The premise is understandable, but the page immediately buries it under vanity counters, unexplained benchmark jargon, contradictory licensing, and suspiciously clean results with no direct evidence.
+I would close the tab. The opening explains Carnot clearly, but the page rapidly turns into an unauditable research dashboard packed with vanity counts, unexplained benchmarks, suspiciously perfect results, and a direct license contradiction.
 
 ## TOP 3 PROBLEMS
-
-1. “What we measured” — 12 disconnected metrics without sample sizes, confidence intervals, methodology, or artifact links.
-2. Hero badge vs footer — the project is simultaneously advertised as MIT-0 and Apache 2.0.
-3. Hero and “What you can check” — internal progress reporting and acronym soup replace a focused explanation of why I should use Carnot.
+1. **License contradiction — hero/metadata vs footer:** MIT-0 at the top, Apache 2.0 at the bottom; that alone makes the project look unmanaged.
+2. **Evidence without evidence — “What we measured”:** twelve jargon-heavy result cards provide almost no sample sizes, confidence intervals, protocols, or direct artifact links.
+3. **Landing-page overload — navigation, hero, and card grids:** 14 navigation choices and roughly 33 card-like blocks bury the product story under internal research operations.
 
 ## DETAILED FINDINGS
-
 ### Bloat
-
-- Entire page — 33 card-like blocks plus four headline statistics — cap the landing page at roughly 12–15 high-value cards and move the rest into reports or blog indexes.
-- Navigation — 12 navigation links plus two repository buttons — cap at 5–7 primary destinations.
-- “What we measured” — 12 result cards — cap at 4–6 decisive, comparable results.
-- “From the blog” — seven article cards, mostly project retrospectives — show three and link to the archive.
-- Hero — four statistics, three calls to action, and a full “Recent progress” card compete above the fold — retain one CTA and at most two meaningful proof points.
-- “Recent progress” — approximately 47 body words, technically below the 60-word result-card limit but far too dense for the hero — remove or cap around 25 words.
-- “Why Energy-Based?” — approximately 72 body words, below the 120-word bento limit but too long and speculative for a supporting card — cap around 50 words.
-- Preprint description — approximately 67 words of publication status and reproducibility process — cap around 35–45 words.
-- No literal body-length hard limit is exceeded: bento bodies remain below 120 words, result-card bodies below 60, and the footer paragraph below 100. The bloat comes from accumulation and poor prioritization.
+- Entire page — approximately 33 card-like blocks: 1 recent-progress card, 2 problem cards, 4 process cards, 7 capability cards, 12 result cards, and 7 blog cards — suggested cap: roughly 12–16 total, with the rest on deeper pages.
+- Navigation — 12 text links plus 2 repository buttons — suggested cap: 4–6 primary destinations.
+- Hero — 3 calls to action, 4 statistics, and a “Recent progress” result card before the actual problem statement — suggested cap: 1 primary CTA, 1 secondary CTA, and 1–2 credible proof points.
+- Evidence section — 12 result cards — suggested cap: 4–6 results that share a comprehensible evaluation frame.
+- Writing section — 7 blog cards — suggested cap: 3 recent or foundational posts.
+- Individual-card thresholds — no bento body appears to exceed 120 words; the longest is roughly 72 words. The “Recent progress” result card is approximately 58 words including its label and title, just under the 60-word cap. Footer copy is approximately 9 words. The primary bloat is cumulative rather than one oversized card.
 
 ### Internal jargon
-
-- Hero statistics and “Recent progress” — `AUROC`, `FoVer`, `5-seed dual-condition`, `architecture-only`, `v2`, and “repinned” — none tells a stranger what was tested or why the score matters.
-- Hero statistics — “5,458 experiment runs” and “382 completed milestones” — internal activity counters masquerading as evidence of product quality.
-- “Why Energy-Based?” — “gradient that the repair step can descend on,” “FPGA Ising machines,” and “thermodynamic samplers” — unexplained research jargon followed by an unsupported scaling claim.
-- “Multi-step reasoning” — “verified-fact memory” and “AND-composed” — implementation terminology with no user-facing meaning.
-- “APIs & portable memory” — `MCP`, `VerdictRecord`, and `SessionMemory` — insider API names presented before the visitor understands the basic integration contract.
-- “Test-Time Compute (TTC) & PREM” — the acronyms are expanded, but “Process-Reward Energy Model variance” and “intrinsic motivation for continuous self-learning” remain meaningless marketing language.
-- Results cards — `KV260 FPGA`, `Ising-guided fuzzing`, `HumanEval-50`, `EstimationVerifier`, `SVAMP AUC`, `CRANE`, `VeriCoT`, `CoT`, `GSM8K`, `TP rate`, `PRM-BiasBench`, `k=5`, `HalluGuard v3`, `pp`, and `CCTU` — this section reads like experiment-table shorthand pasted into marketing copy.
-- Blog cards — `NTK`, an unexplained arXiv identifier, and “Deep Think rounds” — more project-internal vocabulary competing for first-visit attention.
-- No raw `Exp ####`, `.###` milestone, flag-syntax, or `X/Y criteria met` strings appear. That specific class of jargon has been avoided.
+- Hero statistics and “Recent progress” — `AUROC`, `FoVer`, `5-seed dual-condition`, `architecture-only`, `v2 0.9857`, “experiment runs,” and “completed milestones” — none tells a newcomer what was tested or why the result matters.
+- “Why Energy-Based?” — `gradient`, `FPGA Ising machines`, and `thermodynamic samplers` — jumps from an accessible explanation into specialist hardware terminology and an unsupported scalability claim.
+- “Typed constraints” — `CCTU constrained tool-use micro-benchmark` — an unidentified benchmark with no task definition or denominator.
+- “Multi-step reasoning” — `AND-composed`, “verified-fact memory,” and “production verifier ensemble” — implementation vocabulary masquerading as user-facing benefits.
+- “APIs & portable memory” — `MCP`, `HTTP REST`, `VerdictRecord`, and `SessionMemory` — insider API names without a concrete integration example.
+- “Test-Time Compute (TTC) & PREM” — expanded acronyms followed by “variance” and “intrinsic motivation for continuous self-learning” — expansion is not explanation; the card remains opaque.
+- Results section — `KV260 FPGA`, `Ising`, `HumanEval-50`, `EstimationVerifier`, `SVAMP AUC`, `FoVer baseline`, `CRANE`, `VeriCoT`, `CoT`, `GSM8K TP rate`, `PRM-BiasBench`, `k=5`, `HalluGuard v3`, and `0.0pp` — this reads like experiment bookkeeping, not a case for using the product.
+- Preprint — `paper-v6`, `FoVer`, `continuous-integration checkout`, and `non-operator environment` — internal process language with no named independent reproducer.
+- Blog cards — `NTK`, “Deep Think Rounds,” “30B model,” and “verifier-filtered self-distillation” — potentially valid article topics, but hostile to a first-time visitor.
 
 ### Per-milestone narrative
-
-- “Recent progress” — “Repinned from v2 0.9857 after pre-submission adversarial audit” reads like a changelog entry.
-- “Carnot position paper (paper-v6)” — the version suffix is internal document-management debris.
-- Preprint description — “clean continuous-integration checkout in a non-operator environment” and “pending operator-initiated upload” read like closeout notes, not public-facing value.
-- “Research operations” — planner, inner agent, adversarial-verify pass, structured JSON artifacts, and reproducibility metadata describe the project’s internal workflow, not something a visitor can use.
-- “From the blog” — retractions, cheating agents, fatal findings, and dogfooding dominate seven cards. Transparency is useful, but this volume makes the project look unstable and self-absorbed.
+- Hero statistics — `382 Completed milestones` — pure internal throughput accounting; strangers cannot infer product maturity or quality from it.
+- “Recent progress” — “Repinned from v2 0.9857 after pre-submission adversarial audit” — reads like a changelog or retrospective pasted into the hero.
+- Preprint — `paper-v6` and “pending operator-initiated upload” — draft-management status that belongs in project operations, not the landing-page pitch.
+- Writing section — multiple stories about audits, retractions, autonomous-loop failures, and defenses shipped — collectively makes the landing page feel like a postmortem archive.
+- No literal `Exp 1688` or `Milestone .120` identifiers appear, but the page still exposes the same internal-status mentality through milestone totals, version labels, and closeout narration.
 
 ### Inconsistencies
-
-- “MIT-0 · Open Source” and the MIT-0 metadata vs “Apache 2.0 License” in the footer.
-- “Install and verify in five lines” vs no installation command in either quick-start code block; the Python example has roughly seven executable statements, while the Rust example does not verify an LLM response at all.
-- “Every number below is backed by a checked-in experiment artifact” and “labels every benchmark number with provenance” vs no card linking its artifact, commit, sample size, model version, confidence interval, or explicit provenance class.
-- “+3.0 points on pass-rate” for HumanEval vs “+18pp” for HumanEval-50 — possibly different experiments, but the page does not explain why two code-repair claims differ by 6×.
-- “Seven capabilities” vs cards for research operations, API surfaces, and a compute controller, none of which is a kind of LLM output that Carnot checks.
-- The TTC/PREM card sits outside the `.bento-grid` because of misplaced closing tags; several sections contain unmatched or missing container closures. Browser error recovery may hide this, but the source structure is visibly unfinished.
-- “Production verifier” and “ships” language vs evidence dominated by micro-benchmarks, prototypes, synthetic-pilot caveats, and a paper still awaiting upload.
+- `MIT-0` in metadata and the hero badge vs `Apache 2.0 License` in the footer.
+- “Install and verify in five lines” vs a Python example that omits the installation command and exceeds five executable lines.
+- The Python tab demonstrates verification and repair vs the Rust tab, which only constructs an Ising model and samples an undefined `activations` value.
+- “Seven capabilities” under “What you can check” vs three cards that are not checkable output categories: research operations, integration surfaces, and a compute-budget controller.
+- HumanEval repair improves by `+3.0 points` vs HumanEval-50 repair improving `+18pp`; these may use different scopes, but the page does not explain them, so they look contradictory.
+- Headline FoVer verifier `0.9131 AUROC` vs a math card reporting `0.90 AUC` against a `0.125 FoVer baseline`; the tasks and comparability are not explained.
+- Result meters use incompatible semantics: `+3.0 points` gets a 14.6% bar, `+4.9 points` gets 66.7%, while “live on silicon” and `2.0× speedup` receive 100% bars. The graphic encodes no coherent quantity.
 
 ### Missing essentials
-
-- The one-sentence purpose is present and reasonably clear: Carnot checks an LLM answer for internal consistency and can request a repair.
-- Trust is not established. Assertions about checked-in artifacts and independent reproduction are not substitutes for direct artifact links, named evaluators, sample sizes, confidence intervals, model versions, and methodology.
-- Python installation is mentioned in the hero, but the section explicitly titled “Install” omits it. Rust installation, prerequisites, supported versions, and hardware requirements are absent.
-- An authoritative license is effectively missing because the two visible answers contradict each other.
-- Maintenance is only implied by “© 2026 Ian Blenke.” There is no explicit maintainer statement, team or governance information, contact route, support policy, or release status.
-- The page never clearly distinguishes production-ready capabilities from prototypes, research experiments, and speculative hardware work.
+- What Carnot does — present and reasonably clear in the hero: it checks an LLM answer for internal consistency and can request a repair.
+- Why to trust the numbers — missing. “Checked-in artifact” is asserted, but result cards do not link to those artifacts or show evaluation protocol, denominator, confidence interval, model version, hardware, or date.
+- Independent validation — effectively missing. “Non-operator environment” is unnamed, and the claimed confidence interval is not displayed.
+- Installation — partially present as inline `pip install carnot-ebm`, but absent from the actual quick-start code. Rust installation and required dependencies are not shown.
+- License — technically present twice, but the two answers conflict.
+- Maintainer — Ian Blenke appears in a copyright line, not as an explicitly identified maintainer. There is no maintainer/team description, contact route, or governance information.
+- Product maturity — unclear. “Production verifier,” thousands of experiments, an unpublished paper, autonomous research failures, and a pending upload create incompatible maturity signals.
 
 ### Fabrication signals
-
-- `99.3% of wrong code flagged` in “Code” — near-perfect performance without the number of wrong samples, false-positive rate, confidence interval, or artifact link.
-- `GSM8K extraction TP rate: 0.5 → 1.0` — perfect endpoint with no sample size or holdout description.
-- `k=5 ensemble catches 60/60 attacks` — a perfect result on a small, apparently constructed attack set with no unseen evaluation.
-- `0.0pp accuracy delta with 4.4% cost savings` — exact zero degradation without uncertainty looks engineered.
-- `2.0× speedup, identical losses` — suspiciously clean performance and equivalence claims without tolerances or run details.
-- “Zero false positives” in “Carnot Dogfooding by the Numbers” — another perfect operational claim without an audit denominator.
-- `0.9131` AUROC to four decimal places — false precision unless the five-seed distribution and confidence interval are immediately available.
-- `5,458` experiments, `382` milestones, and `30,658` tests — highly specific vanity totals without links or definitions; they look generated rather than independently meaningful.
-- Two 100%-filled meters are used for “live on silicon” and “identical losses,” even though neither claim represents a percentage. The visualization manufactures certainty.
+- `GSM8K extraction TP rate: 0.5 → 1.0` — perfect endpoint with no sample size, held-out protocol, or uncertainty.
+- `k=5 ensemble catches 60/60 attacks` — perfect score on an apparently small, possibly fixed attack set without an external test set.
+- `Zero false positives` in “Carnot Dogfooding by the Numbers” — perfect operational claim without a definition of false positive or independent review.
+- `2.0× speedup, identical losses` — suspiciously exact performance and equivalence claims with no variance or measurement conditions.
+- `0.0pp accuracy delta with 4.4% cost savings` — a perfect no-regression claim presented without precision bounds or trial count.
+- `99.3% of wrong code flagged` — near-perfect detection on a 164-problem benchmark without stating how many wrong submissions formed the denominator.
+- `0.9131 AUROC` — four-decimal precision and “within the published confidence interval,” but neither the interval nor a direct reproduction record is visible.
+- `5,475` experiments, `382` milestones, and `30,658` tests — highly specific bulk counts without timestamps or links; they look machine-generated and do not establish correctness.
 
 ## WHAT'S WORKING
-
-- The arithmetic example and “Extract → Check → Repair” sequence explain the core idea in plain language.
-- Putting `pip install carnot-ebm` above the fold and acknowledging the earlier AUROC retraction are useful instincts toward usability and transparency.
+- The hero and `47 + 28` example explain the basic problem in plain language.
+- “Extract → Check → Repair” gives newcomers a useful mental model, and the PyPI package name is visible immediately.
 
 ## RECOMMENDED OPERATOR ACTIONS
-
-1. Resolve the MIT-0/Apache 2.0 contradiction everywhere before publishing anything else.
-2. Reduce the hero to one plain-language promise, one primary CTA, the install command, and at most two defensible proof points.
-3. Remove experiment, milestone, and test counters; activity volume is not evidence of correctness.
-4. Replace the 12-card evidence wall with 3–5 comparable results, each showing dataset, sample size, model/version, baseline, uncertainty, date, and a direct artifact link.
-5. Define or remove every acronym and internal identifier; move research terminology into the technical report.
-6. Reconcile the +3pp and +18pp code claims and clearly separate production results, prototypes, synthetic pilots, and infrastructure measurements.
-7. Make the quick start truthful: include the install command and a genuine five-line verification example. Label the Rust sampler example as low-level infrastructure or replace it.
-8. Move research-operations narrative, paper upload status, and most blog retrospectives off the primary landing path.
-9. State who maintains Carnot, how to contact them, and what support or release maturity users should expect.
-10. Fix the malformed container/grid markup before judging the final visual hierarchy.
+1. Resolve the MIT-0 versus Apache 2.0 contradiction everywhere before making any other credibility claim.
+2. Reduce the hero to one product sentence, one copyable installation command, one primary CTA, and one well-supported result.
+3. Remove experiment, milestone, and test-volume counters; replace them with evidence a potential user can evaluate.
+4. Cut navigation to the essential paths and move specialist material into documentation.
+5. Reduce the evidence grid to 4–6 results. For each, show baseline, final value, sample size, model, protocol, uncertainty, date, and a direct artifact or paper link.
+6. Translate or remove FoVer, CCTU, PREM, CRANE, VeriCoT, HalluGuard, PRM-BiasBench, and similar names from the first-time-reader path.
+7. Move research operations, hardware prototypes, autonomous-loop retrospectives, and compute-budget work out of “What you can check.”
+8. Make the Python quick start genuinely runnable from a clean environment. Either provide an equivalent Rust verification example or label Rust as a lower-level sampler API.
+9. Replace percentage-like meters with labeled numerical comparisons or remove them; their current scales are meaningless.
+10. Explicitly identify the maintainer, license, support/contact path, and project maturity.
+11. Reconcile the `+3pp`, `+18pp`, `0.90`, `0.9131`, and `0.125` claims by naming their distinct datasets and protocols beside each number.
+12. Qualify every perfect or near-perfect result with its denominator, held-out status, uncertainty, and limitations—or remove it from the landing page.

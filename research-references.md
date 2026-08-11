@@ -33542,3 +33542,121 @@ locally.
   scorer work out of V542.
 
 <!-- V542-PLANNER-REFRESH-20260810-END -->
+
+## V543 Planner Refresh (2026-08-10, after milestone 2026.08.542)
+
+This refresh was completed before drafting milestone `2026.08.543`. It
+searched arXiv first for 2025-2026 work on energy reasoning, neural constraint
+solving, Ising sampling, hallucination verification, KANs, constrained
+generation, sampling hardware, and continual learning. It then checked
+OpenReview, Hugging Face Papers, Semantic Scholar routes for EBT
+(`2507.02092`) and ARM-EBM (`2512.15605`), Extropic, Logical Intelligence, and
+GitHub discovery. Source claims remain hypotheses until Carnot reproduces them
+locally.
+
+### Promoted: a shared activation contract for model-native state
+
+- **One Adapter Pair per Model: A Universal Activation Interface for Language
+  Models** - arXiv:2608.09521, https://arxiv.org/abs/2608.09521; submitted
+  2026-08-10. The Universal Activation Bus learns a shared dense space plus one
+  lightweight linear encoder-decoder pair per model. New models join through
+  unlabeled matched text after the shared interface is frozen, and activation
+  tools can then move between connected models. Carnot hook: use the complete
+  Exp5852 three-family paired-embedding corpus to test whether explicit
+  per-model adapters remove the raw-dimension identity shortcut that
+  disqualified Exp5853. Require held-template alignment, reconstruction,
+  claim-flip, norm/length, pair-swap, label-permutation, and model-identity
+  controls before fitting any energy head. This is a new representation
+  mechanism, not a rerun of the retired MMLU-Pro final-state probe.
+
+### Promoted: verifier-licensed continual transfer
+
+- **verdi: retrieval is not transfer for continual world model optimization**
+  - arXiv:2608.09537, https://arxiv.org/abs/2608.09537; submitted 2026-08-10.
+  VERDI treats retrieved prior strategies as hypotheses. It builds target
+  fingerprints from shared probes and admits reusable evidence only after a
+  frozen target-side verifier validates the candidate; contradictions can
+  evolve the probe set. Carnot hook: a learned initializer or repair strategy
+  from one constraint or model family must remain inactive until exact
+  target-side validation licenses it. Measure retrieval-only negative transfer
+  separately from licensed transfer, preserve immutable decision snapshots,
+  and fail closed on missing evidence.
+- **SR-OPSD: Self-Referenced On-Policy Self-Distillation** -
+  arXiv:2608.09745, https://arxiv.org/abs/2608.09745; submitted 2026-08-10.
+  The paper derives an adaptive token target as a geometric interpolation
+  between a self-teacher and a fixed reference, then separates target placement
+  from projection geometry through a Renyi-divergence family. Carnot hook: do
+  not schedule LLM fine-tuning. Instead, test the same safety idea on the small
+  model-to-state initializer: compare frozen, unanchored online, and
+  reference-anchored updates on a chronological exact-verifier stream. Require
+  rollback, retention, reversal, poison, and unseen-family controls.
+
+### Architecture and hardware controls, not immediate promotions
+
+- **Rethinking Self-Evolving Agents: Do We Still Need Prescribed Optimization
+  Pipelines?** - arXiv:2608.09629, https://arxiv.org/abs/2608.09629; submitted
+  2026-08-10. Open-Ended Optimization keeps the objective, allowed
+  interactions, budget, data boundary, and evaluation fixed while a capable
+  optimizer composes the improvement route. Carnot disposition: keep the
+  immutable validator and resource boundary external. The result is useful
+  evidence that the internal update policy may be adaptive, but it does not
+  justify delegating admission, rollback, or exact-verifier authority to an
+  LLM.
+- **Theoretical Analysis of Thermodynamic Matrix Inversion: First-order
+  Equivalence to Preconditioned Gradient Descent and Implications for Analog
+  Computing** - arXiv:2608.09743, https://arxiv.org/abs/2608.09743; submitted
+  2026-08-10. For the studied convex single-minimum matrix-inversion problem,
+  the first-order covariance dynamics reduce to deterministic preconditioned
+  gradient descent and thermal fluctuations are algorithmically redundant.
+  Carnot disposition: every continuous-state or future TSU comparison needs a
+  deterministic optimizer control. Do not claim a sampling or hardware benefit
+  on a convex relaxation merely because it has a thermodynamic formulation.
+- **Kolmogorov--Arnold Networks for Small Language Models** -
+  arXiv:2607.15525, https://arxiv.org/abs/2607.15525. The ten-seed study finds
+  an auditable scalar-function interface but no consistent benchmark, quality,
+  or latency advantage over strong MLP controls. This confirms the existing
+  decision not to reopen a KAN replacement lane.
+
+### Secondary-source status
+
+- **OpenReview and Hugging Face Papers:** the refresh repeated Energy-Based
+  Constraint Networks, NRGPT, LLM-as-a-Verifier, V_1, and executable-verifier
+  data work. None supplies a stronger local dependency than the new activation
+  bus plus Carnot's exact validators. External generated-text energy scoring
+  remains retired.
+- **Semantic Scholar:** unauthenticated EBT and ARM-EBM citation endpoints
+  again returned HTTP 429. The last clean same-day receipt remains 33 EBT
+  citations and 8 ARM-EBM citations; no citation-count claim is advanced.
+- **Extropic and hardware:** first-party pages still expose THRML simulation
+  and product plans but no authenticated Carnot TSU device or simulator route.
+  No speed, power, energy, or availability experiment is schedulable. The new
+  matrix-inversion analysis strengthens the need for deterministic baselines
+  when such a route eventually exists.
+- **Logical Intelligence:** the current Kona 1.0 page still describes a
+  constraint-enforcement layer, while the January architecture post describes
+  globally scored continuous editable traces. No public weights, reproducible
+  architecture specification, or local API were found. Treat Kona as product
+  direction, not a runnable baseline.
+- **GitHub trending and targeted repository search:** no new maintained
+  repository superseded Carnot's paired-embedding corpus, exact ASP validator,
+  local GGUF runtime, transactional learning controls, or live ARC path. Do not
+  vendor a new framework in V543.
+
+### V543 planning impact
+
+- Repair the cross-model representation boundary with explicit per-model
+  activation adapters and an independent shortcut audit before measuring
+  model-native energy value.
+- Map shared model state into the vertex-exact ASP continuous relaxation, then
+  compare against cold starts and the exact oracle without calling the oracle
+  a verifier win.
+- Make continuous self-learning update only the small initializer. Anchor
+  updates to a frozen reference and license cross-family transfer with the
+  target's exact validator.
+- Carry one ARC live-path task by treating a routed mechanic as an untrusted
+  hypothesis until the agent's own runtime observations validate it. Make no
+  solve claim.
+- Keep KAN training, external text scorers, TSU execution, and unchanged
+  physical-board probes out of V543.
+
+<!-- V543-PLANNER-REFRESH-20260810-END -->

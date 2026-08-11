@@ -2,13 +2,13 @@
   "schema": "carnot.experiment_6296.v542_adversarial_capstone.v1",
   "experiment_id": "exp6296-v542-adversarial-capstone",
   "run_date": "20260811",
-  "status": "complete",
+  "status": "blocked",
   "milestone_roadmap_path_and_hash": {
     "milestone": "2026.08.542",
     "roadmap_path": "research-roadmap.yaml",
     "roadmap_sha256": "sha256:cc261d9eaaeeca47473137b26f76fe8a818c4e4a378c7ee809c27575576b74ca",
     "milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
-    "milestone_doc_sha256": "sha256:b9cab41062a856e985d9cfaeb6ea06678e14ccf873c3582664ff84e2ed66fa6f",
+    "milestone_doc_sha256": "sha256:b4ff1586bc909b509fbb0f7cb2e5108fe2ad6981e5f9ae932b4b2eb301294bed",
     "task_ids": [
       "exp6284-v542-terminal-transition",
       "exp6285-v542-post-marker-source-scope-freeze",
@@ -308,15 +308,15 @@
       "title": "V542 exact-path adversarial capstone and PRD-gap reconciliation",
       "track": "synthesis",
       "declared_deliverable": "results/experiment_6296_v542_adversarial_capstone.json",
-      "present": false,
+      "present": true,
       "loadable": true,
-      "sha256": "sha256:21f1146313807b8e546755d10625b703364bb4f2af8bfe96ddeb52996ca9ed52",
-      "terminal_class": "complete",
+      "sha256": "sha256:fdbcdf7b2381e579d73dd4196755c435d72a6bd85b4d4f2463d69575cee653a1",
+      "terminal_class": "blocked",
       "terminal": true,
-      "reason": "status=complete verdict=complete",
-      "status_raw": "complete",
-      "honest_verdict_raw": "complete: V542 capstone preserved exact branch evidence without promoting flagged, missing, skipped, null, blocked, oracle-only, or replay-only evidence",
-      "receipt_status": null,
+      "reason": "status=blocked verdict=blocked",
+      "status_raw": "blocked",
+      "honest_verdict_raw": "blocked: one or more recorded validation commands failed",
+      "receipt_status": "OK",
       "receipt_override_attempted": false,
       "receipt_overrode": false,
       "flagged_adversarial_stamped": false,
@@ -423,10 +423,12 @@
       "raw_line": "| 2026-08-11 01:43 UTC | Gated on Exp6294 causal benefit: held-mechanic-out | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6294-arc-mechanic-router-causal-canary. |"
     },
     "exp6296-v542-adversarial-capstone": {
-      "receipt_found": false,
-      "status": null,
-      "detail": null,
-      "raw_line": null
+      "receipt_found": true,
+      "timestamp": "2026-08-11 02:02 UTC",
+      "title_fragment": "V542 exact-path adversarial capstone and PRD-gap r",
+      "status": "OK",
+      "detail": "88 passed, 1 warning in 10.26s",
+      "raw_line": "| 2026-08-11 02:02 UTC | V542 exact-path adversarial capstone and PRD-gap r | OK | 88 passed, 1 warning in 10.26s |"
     }
   },
   "exact_path_over_receipt_precedence": {
@@ -519,8 +521,8 @@
       },
       "exp6296-v542-adversarial-capstone": {
         "declared_deliverable": "results/experiment_6296_v542_adversarial_capstone.json",
-        "terminal_class": "complete",
-        "receipt_status": null,
+        "terminal_class": "blocked",
+        "receipt_status": "OK",
         "receipt_override_attempted": false,
         "receipt_overrode": false
       }
@@ -668,7 +670,7 @@
     },
     "exp6296-v542-adversarial-capstone": {
       "path": "results/experiment_6296_v542_adversarial_capstone.json",
-      "present": false,
+      "present": true,
       "stamped_flagged_adversarial": false,
       "stamped_corrigendum_pending": false,
       "current_rule_flag_count": 0,
@@ -689,16 +691,17 @@
     "partial": 0,
     "contradictory": 0,
     "unknown": 0,
-    "blocked": 0,
+    "blocked": 1,
     "skipped": 3,
     "null": 2,
     "flagged": 1,
     "retired": 0,
     "ready": 0,
-    "complete": 6,
+    "complete": 5,
     "positive": 0,
     "terminal_class_counts": {
-      "complete": 6,
+      "blocked": 1,
+      "complete": 5,
       "flagged": 1,
       "missing": 1,
       "null": 2,
@@ -1561,8 +1564,8 @@
         "task_id": "exp6296-v542-adversarial-capstone",
         "prior_experiment_id": "exp6283-v541-adversarial-capstone",
         "prior_verdict": "complete: V541 capstone preserved exact branch evidence without promoting flagged, missing, skipped, null, or blocked artifacts",
-        "current_terminal_class": "complete",
-        "current_verdict": "complete: V542 capstone preserved exact branch evidence without promoting flagged, missing, skipped, null, blocked, oracle-only, or replay-only evidence",
+        "current_terminal_class": "blocked",
+        "current_verdict": "blocked: one or more recorded validation commands failed",
         "action": "no_retirement_current_verdict_differs",
         "rule_fired": false,
         "would_update_exclusion_manifest": false
@@ -1608,7 +1611,7 @@
   "hardware_claim_count": 0,
   "speed_power_or_energy_claim_count": 0,
   "protected_files_unchanged": {
-    "unchanged": true,
+    "unchanged": false,
     "paths": {
       "_bmad/traceability.md": {
         "before_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
@@ -1642,8 +1645,8 @@
       },
       "openspec/change-proposals/research-roadmap-vNEXT.md": {
         "before_sha256": "sha256:b9cab41062a856e985d9cfaeb6ea06678e14ccf873c3582664ff84e2ed66fa6f",
-        "after_sha256": "sha256:b9cab41062a856e985d9cfaeb6ea06678e14ccf873c3582664ff84e2ed66fa6f",
-        "unchanged": true
+        "after_sha256": "sha256:b4ff1586bc909b509fbb0f7cb2e5108fe2ad6981e5f9ae932b4b2eb301294bed",
+        "unchanged": false
       },
       "ops/arc_solve_registry.yaml": {
         "before_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
@@ -1652,13 +1655,13 @@
       },
       "ops/changelog.md": {
         "before_sha256": "sha256:49f1200ca91162c7a995fb70cc2e4fef3f634a65df493c393ee5316cabf4241d",
-        "after_sha256": "sha256:49f1200ca91162c7a995fb70cc2e4fef3f634a65df493c393ee5316cabf4241d",
-        "unchanged": true
+        "after_sha256": "sha256:da7a9fcb7e2ad62962dd52a90062192cb48dfc22d9e1a304da0b2080a6ffc6ee",
+        "unchanged": false
       },
       "ops/conductor-log.md": {
         "before_sha256": "sha256:68ab665add7174eaf7d42eec40720d31090cd7e8e0d5b27afa449a3b7e3b668a",
-        "after_sha256": "sha256:68ab665add7174eaf7d42eec40720d31090cd7e8e0d5b27afa449a3b7e3b668a",
-        "unchanged": true
+        "after_sha256": "sha256:b0128ff4f026f161cf9ae82644439b4b222af0e7d7e6b6136a03194133f41039",
+        "unchanged": false
       },
       "ops/exclusion_manifest.yaml": {
         "before_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
@@ -1725,8 +1728,8 @@
       },
       "ops/changelog.md": {
         "before_sha256": "sha256:49f1200ca91162c7a995fb70cc2e4fef3f634a65df493c393ee5316cabf4241d",
-        "after_sha256": "sha256:49f1200ca91162c7a995fb70cc2e4fef3f634a65df493c393ee5316cabf4241d",
-        "unchanged_during_capstone": true
+        "after_sha256": "sha256:da7a9fcb7e2ad62962dd52a90062192cb48dfc22d9e1a304da0b2080a6ffc6ee",
+        "unchanged_during_capstone": false
       }
     },
     "principle": "Reconciliation reports evidence without editing protected docs."
@@ -1840,7 +1843,7 @@
     "checked_before_classification": true,
     "milestone": "2026.08.542",
     "roadmap_sha256": "sha256:cc261d9eaaeeca47473137b26f76fe8a818c4e4a378c7ee809c27575576b74ca",
-    "milestone_doc_sha256": "sha256:b9cab41062a856e985d9cfaeb6ea06678e14ccf873c3582664ff84e2ed66fa6f",
+    "milestone_doc_sha256": "sha256:b4ff1586bc909b509fbb0f7cb2e5108fe2ad6981e5f9ae932b4b2eb301294bed",
     "declared_deliverable_hashes": {
       "exp6284-v542-terminal-transition": {
         "declared_deliverable": "results/experiment_6284_v542_terminal_transition.json",
@@ -1892,10 +1895,10 @@
       },
       "exp6296-v542-adversarial-capstone": {
         "declared_deliverable": "results/experiment_6296_v542_adversarial_capstone.json",
-        "sha256": null
+        "sha256": "sha256:d18e3324ea94cbf46d578eca9ee37b9afa0833c91ca5cd40da9ffb59d077288d"
       }
     },
-    "conductor_receipt_matrix_sha256": "sha256:851f30e320477c48499531ef0570d55c7df48e971c47ef79833dfd1a6ca9b1ed",
+    "conductor_receipt_matrix_sha256": "sha256:b57fd15a3d73be2eb77b408bbf64c144799529e7f80185e38b95b8662198087b",
     "registry_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
     "current_adversarial_rules_sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
     "protected_hashes_before": {
@@ -1925,11 +1928,11 @@
       },
       "openspec/change-proposals/research-roadmap-vNEXT.md": {
         "present": true,
-        "sha256": "sha256:b9cab41062a856e985d9cfaeb6ea06678e14ccf873c3582664ff84e2ed66fa6f"
+        "sha256": "sha256:b4ff1586bc909b509fbb0f7cb2e5108fe2ad6981e5f9ae932b4b2eb301294bed"
       },
       "ops/conductor-log.md": {
         "present": true,
-        "sha256": "sha256:68ab665add7174eaf7d42eec40720d31090cd7e8e0d5b27afa449a3b7e3b668a"
+        "sha256": "sha256:b0128ff4f026f161cf9ae82644439b4b222af0e7d7e6b6136a03194133f41039"
       },
       "ops/arc_solve_registry.yaml": {
         "present": true,
@@ -1969,7 +1972,7 @@
       },
       "ops/changelog.md": {
         "present": true,
-        "sha256": "sha256:49f1200ca91162c7a995fb70cc2e4fef3f634a65df493c393ee5316cabf4241d"
+        "sha256": "sha256:da7a9fcb7e2ad62962dd52a90062192cb48dfc22d9e1a304da0b2080a6ffc6ee"
       },
       "python/carnot/terminal_artifacts.py": {
         "present": true,
@@ -2057,7 +2060,23 @@
       "?? python/carnot/experiment_6296_v542_adversarial_capstone.py",
       "?? tests/python/test_experiment_6296_v542_adversarial_capstone.py"
     ],
-    "git_status_after_tests": [],
+    "git_status_after_tests": [
+      " M openspec/change-proposals/research-roadmap-vNEXT.md",
+      " M ops/arc_self_solve_audit_report.md",
+      " M ops/docs_audit_report.md",
+      " M ops/verifier_authenticity_audit_report.md",
+      " M research-references.md",
+      " M results/experiment_2427_kv260_yosys_v4.json",
+      " M results/experiment_2510_ensemble_v7.json",
+      " M results/experiment_2824_cross_corpus_verifier_matrix.json",
+      " M results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json",
+      " M results/experiment_3361_archive_v309_activate_v310.json",
+      " M results/experiment_3377_archive_v310_activate_v311.json",
+      " M results/experiment_3392_archive_v311_activate_v312.json",
+      " M results/experiment_3581_g_gate_status_synthesis_v329.json",
+      " M results/experiment_3582_capstone_v329.json",
+      " M results/experiment_833_constraint_delta_root_cause.json"
+    ],
     "principle": "Inputs, receipts, registry, and rule hashes are frozen first."
   },
   "inference_substrate": "aggregation_from_upstream_artifacts",
@@ -3068,8 +3087,22 @@
     ".venv/bin/pytest tests/python -q",
     ".venv/bin/python scripts/adversarial_verify.py results/experiment_6296_v542_adversarial_capstone.json"
   ],
-  "test_exit_codes": {},
-  "duration_s": 0.7325339789967984,
-  "reproducibility_checksum": "sha256:22afe21e1d8071fec12e8b56e4ae2a8583b3247e428fcc1a56c9f10ed84291b0",
-  "honest_verdict": "complete: V542 capstone preserved exact branch evidence without promoting flagged, missing, skipped, null, blocked, oracle-only, or replay-only evidence"
+  "test_exit_codes": {
+    ".venv/bin/pytest tests/python/test_experiment_6296_v542_adversarial_capstone.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6296_v542_adversarial_capstone.py -m pytest tests/python/test_experiment_6296_v542_adversarial_capstone.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6296_v542_adversarial_capstone.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/ruff check python/carnot/experiment_6296_v542_adversarial_capstone.py tests/python/test_experiment_6296_v542_adversarial_capstone.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_6296_v542_adversarial_capstone.py tests/python/test_experiment_6296_v542_adversarial_capstone.py": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6296_v542_adversarial_capstone.py": 0,
+    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/python scripts/publication_gate.py --json": 0,
+    "sed -n 1,220p ops/e2e-test-plan.md": 0,
+    ".venv/bin/pytest tests/python -q": 124,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6296_v542_adversarial_capstone.json": 0
+  },
+  "duration_s": 3620.8791273110546,
+  "reproducibility_checksum": "sha256:69bfe76fd030d9af022ebab87ea5489c890707e06494c2e154fc30bef9e07e24",
+  "honest_verdict": "blocked: one or more recorded validation commands failed"
 }
