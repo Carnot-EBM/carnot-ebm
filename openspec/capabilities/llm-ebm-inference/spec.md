@@ -2547,6 +2547,109 @@ counts, Python/Z3 label replay, shortcut control coverage, CUDA release
 receipts, and `all_family_corpus_ready_score == 1.0` without launching a
 ranker.
 
+### REQ-INFRA-6312: Model-Local Representation Surface Preflight
+
+The system SHALL provide Exp 6312 at
+`python/carnot/experiment_6312_model_local_representation_surface_preflight.py`.
+It SHALL write
+`results/experiment_6312_model_local_representation_surface_preflight.json`.
+The run SHALL qualify one native representation surface for each mandated local
+GGUF model:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+Before model construction, Exp 6312 SHALL check local model files, tokenizer
+receipts, CUDA devices, free VRAM, RAM, disk, timeout budget, random seeds,
+runtime representation capabilities, output paths, and protected file hashes.
+`MODEL_SPECS` SHALL include all three models in mandated order.  Each entry
+SHALL record local file path, file hash, revision, quantization, context
+length, tokenizer hash, CUDA placement, and headline eligibility.  Missing
+preconditions SHALL terminate with `status="complete_null"` and
+`model_local_representation_surface_ready_score=0.0`.
+
+Exp 6312 SHALL freeze the surface-selection rule before reading fixture labels.
+It SHALL prefer a true hidden-state surface only when the installed runtime
+exposes hidden tensors with tensor provenance.  If that receipt is unavailable,
+it SHALL use the preregistered output-free prefix-state trajectory built from
+repeated deterministic embeddings.  It SHALL not generate answers.  It SHALL
+not train, fit, load, or reuse a cross-model adapter.  It SHALL collect raw
+surface rows atomically per model and unload each model before the next model.
+It SHALL record GPU memory before load, peak or load receipt, and after
+release.
+
+The micro fixture SHALL contain exact vulnerable/fixed code pairs with matched
+code lengths, A/A duplicates, claim-flip controls, pair-swap controls, label
+permutation controls, evaluator-swap controls, norm controls, length controls,
+truncation controls, duplicate controls, and model-identity controls.  Every
+control SHALL be measured per model.  No model surface SHALL rescue another
+model.  Readiness SHALL be bare `1.0` only when every mandated model has one
+reproducible nondegenerate surface and all causal and shortcut controls pass.
+Otherwise readiness SHALL be bare `0.0`.
+
+The terminal artifact SHALL expose `status`,
+`paper_source_and_local_claim_boundary`, `upstream_failure_ledger`,
+`MODEL_SPECS`, `models_used`,
+`model_file_hashes_revisions_and_quantizations`, `tokenizer_hashes`,
+`cuda_and_gpu_offload_receipts_by_model`,
+`gpu_memory_before_peak_and_after_release_by_model`,
+`candidate_surface_inventory_by_model`, `selected_surface_by_model`,
+`surface_tensor_shapes_and_hashes`,
+`hidden_state_runtime_receipts_by_model`,
+`prefix_trajectory_fallback_receipts_by_model`,
+`micro_fixture_path_and_hash`, `causal_intervention_results_by_model`,
+`aa_noise_results_by_model`,
+`claim_flip_pair_swap_label_permutation_evaluator_swap_results_by_model`,
+`norm_length_truncation_duplicate_and_identity_results_by_model`,
+`underpowered_or_missing_cells`, `no_generation_receipt`,
+`no_shared_adapter_receipt`, `surface_selection_rule`,
+`actual_work_duration_receipt`, `duration_padding_count`,
+`source_model_weight_mutation_count`,
+`model_local_representation_surface_ready_score`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`, `test_exit_codes`,
+`duration_s`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`.  `duration_padding_count` and
+`source_model_weight_mutation_count` SHALL be bare `0`.
+
+Artifact field principles SHALL be recorded for every required field.
+The principles SHALL explain why the field prevents paper overreach, upstream
+failure reuse, missing model provenance, tokenizer drift, CUDA fiction,
+surface-selection leakage, generation leakage, shared-adapter leakage,
+duration padding, source weight mutation, or uncontrolled shortcut passage.
+
+### SCENARIO-INFRA-6312-COMPLETE-NULL: Missing Runtime Closes Cleanly
+
+**Given** at least one mandated local GGUF, tokenizer, CUDA, VRAM, RAM, disk,
+timeout, output, or hidden/fallback surface precondition is unavailable
+**When** Exp 6312 runs
+**Then** it writes the terminal artifact with `status="complete_null"`
+**And** it records the failed preconditions and upstream failure ledger
+**And** it does not construct a model or generate text
+**And** `model_local_representation_surface_ready_score == 0.0`.
+
+### SCENARIO-INFRA-6312-SURFACE-SELECTION: Hidden State Wins Only With Provenance
+
+**Given** the hidden-state runtime receipt exposes tensor provenance for a
+mandated model
+**When** Exp 6312 selects a surface before reading labels
+**Then** it selects the hidden-state surface for that model.
+
+**Given** hidden-state tensor provenance is unavailable
+**When** Exp 6312 selects a surface
+**Then** it selects the preregistered output-free prefix trajectory fallback
+**And** records the hidden-state failure receipt.
+
+### SCENARIO-INFRA-6312-CONTROLS: Per-Model Causal Controls Gate Readiness
+
+**Given** all three mandated models produce deterministic nondegenerate
+surfaces
+**When** Exp 6312 evaluates the micro fixture
+**Then** vulnerable/fixed causal pairs pass per model
+**And** A/A, claim-flip, pair-swap, label-permutation, evaluator-swap, norm,
+length, truncation, duplicate, and model-identity controls pass per model
+**And** readiness becomes `1.0` only when every model passes independently.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -2584,6 +2687,7 @@ ranker.
 | REQ-INFER-5301 | Implemented (`python/carnot/experiment_5301_ebt_spectral_step_control_diagnostic_v484.py`) | Implemented (`tests/python/test_experiment_5301_ebt_spectral_step_control_diagnostic_v484.py`) |
 | REQ-INFER-5317 | Implemented (`python/carnot/experiment_5317_ebt_telemetry_audit_reemit_v485.py`) | Implemented (`tests/python/test_experiment_5317_ebt_telemetry_audit_reemit_v485.py`) |
 | REQ-INFER-SOTA-5964 | Implemented (`python/carnot/experiment_5964_sota_atom_compatibility_corpus.py`) | Implemented (`tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py`) |
+| REQ-INFRA-6312 | Implemented (`python/carnot/experiment_6312_model_local_representation_surface_preflight.py`) | Implemented (`tests/python/test_experiment_6312_model_local_representation_surface_preflight.py`) |
 | REQ-INFER-SOTA-026 | Implemented (`python/carnot/reporting/hermetic_cuda_runtime_repair_ledger_3220.py`) | Implemented (`tests/python/test_experiment_3220_hermetic_cuda_runtime_repair_ledger.py`) |
 | REQ-INFER-SOTA-027 | Planned (`python/carnot/experiment_5097_clean_sota_endpoint_logprob_cache.py`, `results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json`) | Planned (`tests/python/test_experiment_5097_clean_sota_endpoint_logprob_cache.py`) |
 | REQ-INFER-SOTA-028 | Implemented (`python/carnot/experiment_5119_sota_endpoint_rootcause.py`, `scripts/experiment_5119_sota_endpoint_rootcause_v469.py`, `results/experiment_5119_sota_endpoint_rootcause_v469.json`) | Implemented (`tests/python/test_experiment_5119_sota_endpoint_rootcause.py`) |
