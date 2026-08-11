@@ -1,0 +1,33 @@
+{
+  "experiment": 6305,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-11",
+  "started_at": "2026-08-11T08:02:41.212093+00:00",
+  "finished_at": "2026-08-11T08:02:41.212093+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "VERDI-style transfer gated on Exp6301 integrity=1 and Exp6304 readiness=1",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp6301-activation-bus-integrity-audit.activation_bus_integrity_ready_score (actual=0.0 == expected=1.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6301-activation-bus-integrity-audit",
+      "artifact_field": "activation_bus_integrity_ready_score",
+      "op": "==",
+      "expected": 1.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 == expected=1.0"
+    },
+    {
+      "upstream": "exp6304-reference-anchored-online-state-learning",
+      "artifact_field": "reference_anchored_online_learning_ready_score",
+      "op": "==",
+      "expected": 1.0,
+      "actual": 1.0,
+      "passed": true,
+      "reason": "actual=1.0 == expected=1.0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
