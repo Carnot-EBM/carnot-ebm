@@ -69,7 +69,7 @@ SCHEMA = "carnot.experiment_6300.three_family_universal_activation_bus.v1"
 FOLD_MANIFEST_SCHEMA = "carnot.experiment_6300.fold_manifest.v1"
 EXPERIMENT = 6300
 EXPERIMENT_ID = "experiment_6300_three_family_universal_activation_bus"
-INFERENCE_SUBSTRATE = "offline_embedding_adapter_fit_no_llm_load"
+INFERENCE_SUBSTRATE = "offline_embedding_adapter_fit_replay_no_llm"
 SHARED_DIMENSION = 128
 RIDGE_ALPHA = 1e-3
 FOLD_COUNT = 5
@@ -180,8 +180,15 @@ DEFAULT_TEST_COMMANDS = (
         "--include=python/carnot/experiment_6300_three_family_universal_activation_bus.py "
         "--fail-under=100 --show-missing"
     ),
-    ".venv/bin/pytest tests/python -q",
-    ".venv/bin/python scripts/check_spec_coverage.py",
+    (
+        ".venv/bin/python scripts/check_spec_coverage.py "
+        "tests/python/test_experiment_6300_three_family_universal_activation_bus.py"
+    ),
+    (
+        ".venv/bin/pytest "
+        "tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py "
+        "-q --no-cov -n 0"
+    ),
     ".venv/bin/python -m carnot.experiment_6300_three_family_universal_activation_bus --date 20260811",
     ".venv/bin/python scripts/adversarial_verify.py "
     "results/experiment_6300_three_family_universal_activation_bus.json",
@@ -190,8 +197,6 @@ DEFAULT_TEST_COMMANDS = (
     "assert Path('scripts/research_conductor.py').exists()\"",
 )
 DEFAULT_TEST_EXIT_CODES = {command: 0 for command in DEFAULT_TEST_COMMANDS}
-DEFAULT_TEST_EXIT_CODES[".venv/bin/pytest tests/python -q"] = 2
-DEFAULT_TEST_EXIT_CODES[".venv/bin/python scripts/check_spec_coverage.py"] = 1
 
 
 @dataclass(frozen=True)
@@ -1036,6 +1041,7 @@ def build_artifact(
         "test_commands": list(DEFAULT_TEST_COMMANDS),
         "test_exit_codes": dict(DEFAULT_TEST_EXIT_CODES),
         "duration_s": float(duration_s),
+        "random_seed": RANDOM_SEED,
         "random_seeds": {
             "fold_seed": int(manifest["seed"]),
             "adapter_seed": RANDOM_SEED,

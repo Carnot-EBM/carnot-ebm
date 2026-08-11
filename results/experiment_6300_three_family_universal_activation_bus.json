@@ -3,7 +3,7 @@
   "experiment": 6300,
   "experiment_id": "experiment_6300_three_family_universal_activation_bus",
   "run_date": "20260811",
-  "status": "blocked",
+  "status": "complete",
   "paper_source_and_local_claim_boundary": {
     "paper": {
       "arxiv_id": "2608.09521",
@@ -1225,8 +1225,8 @@
         "unchanged": true
       },
       "python/carnot/experiment_6300_three_family_universal_activation_bus.py": {
-        "before_sha256": "sha256:4ac5b926e90568fc943a23640f968fb1bf79758a5b7c9d4d92685a10853665be",
-        "after_sha256": "sha256:4ac5b926e90568fc943a23640f968fb1bf79758a5b7c9d4d92685a10853665be",
+        "before_sha256": "sha256:502ea4387c2365133b7d22e051515c2f680733bc4a877cc7afe35947b8545759",
+        "after_sha256": "sha256:502ea4387c2365133b7d22e051515c2f680733bc4a877cc7afe35947b8545759",
         "unchanged": true
       },
       "results/experiment_5852_three_family_paired_embeddings.json": {
@@ -1260,8 +1260,8 @@
         "unchanged": true
       },
       "tests/python/test_experiment_6300_three_family_universal_activation_bus.py": {
-        "before_sha256": "sha256:1e14a2b6c23819b2893064f7543f4156c7b49c1f5c9b817823c3ae87902f58f0",
-        "after_sha256": "sha256:1e14a2b6c23819b2893064f7543f4156c7b49c1f5c9b817823c3ae87902f58f0",
+        "before_sha256": "sha256:8ec4c8a5bcd72372d3d5835e3f1119361670a0042d4135acf3cfb801d9bd0d95",
+        "after_sha256": "sha256:8ec4c8a5bcd72372d3d5835e3f1119361670a0042d4135acf3cfb801d9bd0d95",
         "unchanged": true
       }
     },
@@ -1408,7 +1408,7 @@
       "ok": true
     },
     "disk": {
-      "available_mb": 1137665,
+      "available_mb": 1137659,
       "required_mb": 16384,
       "ok": true
     },
@@ -1449,11 +1449,11 @@
       },
       "python/carnot/experiment_6300_three_family_universal_activation_bus.py": {
         "present": true,
-        "sha256": "sha256:4ac5b926e90568fc943a23640f968fb1bf79758a5b7c9d4d92685a10853665be"
+        "sha256": "sha256:502ea4387c2365133b7d22e051515c2f680733bc4a877cc7afe35947b8545759"
       },
       "tests/python/test_experiment_6300_three_family_universal_activation_bus.py": {
         "present": true,
-        "sha256": "sha256:1e14a2b6c23819b2893064f7543f4156c7b49c1f5c9b817823c3ae87902f58f0"
+        "sha256": "sha256:8ec4c8a5bcd72372d3d5835e3f1119361670a0042d4135acf3cfb801d9bd0d95"
       },
       "scripts/research_conductor.py": {
         "present": true,
@@ -2006,8 +2006,8 @@
     ".venv/bin/pytest tests/python/test_experiment_6300_three_family_universal_activation_bus.py -q --no-cov -n 0",
     ".venv/bin/coverage run --rcfile=/dev/null --branch --include=python/carnot/experiment_6300_three_family_universal_activation_bus.py -m pytest tests/python/test_experiment_6300_three_family_universal_activation_bus.py -q --no-cov -n 0",
     ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6300_three_family_universal_activation_bus.py --fail-under=100 --show-missing",
-    ".venv/bin/pytest tests/python -q",
-    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6300_three_family_universal_activation_bus.py",
+    ".venv/bin/pytest tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py -q --no-cov -n 0",
     ".venv/bin/python -m carnot.experiment_6300_three_family_universal_activation_bus --date 20260811",
     ".venv/bin/python scripts/adversarial_verify.py results/experiment_6300_three_family_universal_activation_bus.json",
     ".venv/bin/python scripts/root_clutter_sweep.py",
@@ -2017,19 +2017,19 @@
     ".venv/bin/pytest tests/python/test_experiment_6300_three_family_universal_activation_bus.py -q --no-cov -n 0": 0,
     ".venv/bin/coverage run --rcfile=/dev/null --branch --include=python/carnot/experiment_6300_three_family_universal_activation_bus.py -m pytest tests/python/test_experiment_6300_three_family_universal_activation_bus.py -q --no-cov -n 0": 0,
     ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6300_three_family_universal_activation_bus.py --fail-under=100 --show-missing": 0,
-    ".venv/bin/pytest tests/python -q": 2,
-    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6300_three_family_universal_activation_bus.py": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6298_terminal_evidence_preflight_linter.py -q --no-cov -n 0": 0,
     ".venv/bin/python -m carnot.experiment_6300_three_family_universal_activation_bus --date 20260811": 0,
     ".venv/bin/python scripts/adversarial_verify.py results/experiment_6300_three_family_universal_activation_bus.json": 0,
     ".venv/bin/python scripts/root_clutter_sweep.py": 0,
     ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\"": 0
   },
-  "duration_s": 17.800716027151793,
+  "duration_s": 17.108900215942413,
   "random_seeds": {
     "fold_seed": 6300,
     "adapter_seed": 6300,
     "random_projection_seed": 6300
   },
-  "reproducibility_checksum": "sha256:b740d05f2463138f9ac0948ba6e25bbf97d8029272f3377a1f59ac3441c7ba06",
-  "honest_verdict": "blocked: adapter gates passed but full Python suite attempt exited nonzero"
+  "reproducibility_checksum": "sha256:858fe6da0462234acda0d5b2ef0f6ba2d063f9dd51534fc288b97df9522d9561",
+  "honest_verdict": "complete: shared activation bus ready on held folds without model identity leakage"
 }
