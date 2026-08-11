@@ -1,0 +1,2654 @@
+{
+  "MODEL_SPECS": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_size_bytes": 22134528992,
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "resolved_via": "cached_sota_pair(model_indices=(0,2))",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "terminal_disposition": "resolved_cached_gguf"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_size_bytes": 18323731456,
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "resolved_via": "cached_sota_pair(model_indices=(0,2))",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "terminal_disposition": "resolved_cached_gguf"
+    }
+  ],
+  "actual_work_duration_receipt": {
+    "duration_floor_met": true,
+    "duration_floor_s": 60.0,
+    "duration_padding_count": 0,
+    "llm_runner_wall_s": 31.953691,
+    "measured_actual_work_s": 71.965674,
+    "monotonic_clock": "time.perf_counter",
+    "sleep_or_padding_used": false
+  },
+  "arc_level_solve_claim_count": 0,
+  "arc_target_licensed_router_ready_score": 1.0,
+  "baseline_harm_controls": {
+    "baseline_harm_detected": false,
+    "harm_count": 0,
+    "harm_rows": [],
+    "rules": {
+      "baseline_arms": [
+        "router_off",
+        "retrieval_only_static_route"
+      ],
+      "invalid_rate_margin": 0.2,
+      "latency_guard": "target_licensed <= router_off * 5 + 10s",
+      "proposal_score_drop_margin": 0.2
+    }
+  },
+  "candidate_diversity_by_arm_mechanic_and_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "push_block": {
+        "retrieval_only_static_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "retrieval_only_static_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "push_block": {
+        "retrieval_only_static_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "retrieval_only_static_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      }
+    }
+  },
+  "cuda_and_gpu_offload_receipts_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "after": [
+        {
+          "driver_version": "610.43.03",
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 308,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "610.43.03",
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 308,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "before": [
+        {
+          "driver_version": "610.43.03",
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "610.43.03",
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "during_model_loaded": [
+        {
+          "driver_version": "610.43.03",
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 11008,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "610.43.03",
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 10892,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "offload_observed": true,
+      "offload_requested": "n_gpu_layers=-1",
+      "peak_observed_used_mb": 21900,
+      "terminal": true
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "after": [
+        {
+          "driver_version": "610.43.03",
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 310,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "610.43.03",
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 310,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "before": [
+        {
+          "driver_version": "610.43.03",
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 308,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "610.43.03",
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 308,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "during_model_loaded": [
+        {
+          "driver_version": "610.43.03",
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 10284,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "610.43.03",
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 10786,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "offload_observed": true,
+      "offload_requested": "n_gpu_layers=-1",
+      "peak_observed_used_mb": 21070,
+      "terminal": true
+    }
+  },
+  "decision_latency_by_arm_mechanic_and_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "push_block": {
+        "retrieval_only_static_route": {
+          "max_s": 0.121068,
+          "mean": 0.119668,
+          "sample_size": 4
+        },
+        "router_off": {
+          "max_s": 0.456677,
+          "mean": 0.195282,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "max_s": 0.117321,
+          "mean": 0.113245,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "retrieval_only_static_route": {
+          "max_s": 0.382721,
+          "mean": 0.184769,
+          "sample_size": 4
+        },
+        "router_off": {
+          "max_s": 0.109096,
+          "mean": 0.10735,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "max_s": 0.118356,
+          "mean": 0.114686,
+          "sample_size": 4
+        }
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "push_block": {
+        "retrieval_only_static_route": {
+          "max_s": 1.007767,
+          "mean": 0.409302,
+          "sample_size": 4
+        },
+        "router_off": {
+          "max_s": 1.066991,
+          "mean": 0.724104,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "max_s": 0.198245,
+          "mean": 0.197156,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "retrieval_only_static_route": {
+          "max_s": 0.210381,
+          "mean": 0.209245,
+          "sample_size": 4
+        },
+        "router_off": {
+          "max_s": 1.110839,
+          "mean": 0.837143,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "max_s": 0.200668,
+          "mean": 0.197934,
+          "sample_size": 4
+        }
+      }
+    }
+  },
+  "duration_padding_count": 0,
+  "duration_s": 71.965674,
+  "executable_proposal_acceptance_by_arm_mechanic_and_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "push_block": {
+        "retrieval_only_static_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "retrieval_only_static_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "push_block": {
+        "retrieval_only_static_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "retrieval_only_static_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      }
+    }
+  },
+  "field_principles": {
+    "MODEL_SPECS": "Names both mandated headline GGUF models.",
+    "actual_work_duration_receipt": "Documents measured work and rejects padding.",
+    "arc_level_solve_claim_count": "Must stay zero because this is not a solve task.",
+    "arc_target_licensed_router_ready_score": "Equals one only when every readiness gate passes.",
+    "baseline_harm_controls": "Reports whether licensing harmed controls.",
+    "candidate_diversity_by_arm_mechanic_and_model": "Measures proposal variety by arm.",
+    "cuda_and_gpu_offload_receipts_by_model": "Records CUDA visibility and offload receipts.",
+    "decision_latency_by_arm_mechanic_and_model": "Measures model decision cost by arm.",
+    "duration_padding_count": "Must stay zero because padding is forbidden.",
+    "duration_s": "Records measured wall time.",
+    "executable_proposal_acceptance_by_arm_mechanic_and_model": "Measures parseable proposal code.",
+    "field_principles": "Gives one audit reason per required field.",
+    "field_provenance": "Maps every field to the spec and producer.",
+    "hidden_game_source_access_count": "Must stay zero for hidden-source discipline.",
+    "honest_verdict": "Terminal verdict with no solve claim.",
+    "hypothesis_retrieval_activation_rejection_and_abstention_counts": "Separates retrieval from transfer.",
+    "inference_substrate": "Declares live GGUF inference.",
+    "invalid_proposal_rate_by_arm_mechanic_and_model": "Measures malformed action references.",
+    "live_transition_window_manifest_path_and_hash": "Pins the agent-visible transition windows.",
+    "matched_seed_history_action_budget_and_model_call_receipts": "Proves matched seeds and budgets.",
+    "model_file_hashes_revisions_and_quantizations": "Pins concrete local GGUF files.",
+    "models_used": "Lists models that entered the canary.",
+    "no_hidden_source_and_no_outer_loop_search_receipts": "Shows forbidden inputs stayed absent.",
+    "outer_loop_ground_truth_search_count": "Must stay zero for self-discovery discipline.",
+    "paired_causal_deltas_intervals_and_sample_sizes": "Reports preregistered route-path deltas.",
+    "preconditions_checked": "Records registry, preflight, resources, seeds, and hashes.",
+    "protected_files_unchanged": "Confirms registry, ops, trace, and conductor files stayed unchanged.",
+    "random_seeds": "Pins fixture and prompt seeds.",
+    "raw_output_paths_and_hashes": "Pins every raw model output.",
+    "registry_precheck_path_hash_and_target_receipt": "Proves the synthetic target is not banked.",
+    "registry_update_count": "Must stay zero because no solve is banked.",
+    "reproducibility_checksum": "Detects artifact drift.",
+    "route_activation_counts_by_arm_mechanic_and_model": "Shows only licensed routes can fire.",
+    "router_off_retrieval_only_and_target_licensed_arm_contract": "Proves the three arm states.",
+    "sealed_fresh_fixture_manifest_path_and_hash": "Pins fresh synthetic transition fixtures.",
+    "solve_provenance": "States live-agent self-discovery without solve credit.",
+    "source_model_weight_mutation_count": "Must stay zero because weights are immutable.",
+    "status": "States complete versus blocked without hiding partial work.",
+    "target_validation_predicates_and_mutation_receipts": "Shows target checks reject mutations.",
+    "test_commands": "Lists verification commands.",
+    "test_exit_codes": "Records command outcomes.",
+    "tokenizer_and_chat_template_hashes": "Pins tokenizer probes and the prompt contract.",
+    "upstream_paths_hashes_and_terminal_classes": "Pins the 6294, 6295, 6298, and V543 inputs.",
+    "verifier_is_oracle": "False because no game oracle verifies a solve."
+  },
+  "field_provenance": {
+    "MODEL_SPECS": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "actual_work_duration_receipt": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "arc_level_solve_claim_count": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "arc_target_licensed_router_ready_score": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "baseline_harm_controls": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "candidate_diversity_by_arm_mechanic_and_model": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "cuda_and_gpu_offload_receipts_by_model": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "decision_latency_by_arm_mechanic_and_model": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "duration_padding_count": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "duration_s": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "executable_proposal_acceptance_by_arm_mechanic_and_model": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "field_principles": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "field_provenance": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "hidden_game_source_access_count": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "honest_verdict": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "hypothesis_retrieval_activation_rejection_and_abstention_counts": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "inference_substrate": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "invalid_proposal_rate_by_arm_mechanic_and_model": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "live_transition_window_manifest_path_and_hash": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "matched_seed_history_action_budget_and_model_call_receipts": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "model_file_hashes_revisions_and_quantizations": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "models_used": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "no_hidden_source_and_no_outer_loop_search_receipts": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "outer_loop_ground_truth_search_count": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "paired_causal_deltas_intervals_and_sample_sizes": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "preconditions_checked": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "protected_files_unchanged": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "random_seeds": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "raw_output_paths_and_hashes": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "registry_precheck_path_hash_and_target_receipt": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "registry_update_count": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "reproducibility_checksum": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "route_activation_counts_by_arm_mechanic_and_model": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "router_off_retrieval_only_and_target_licensed_arm_contract": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "sealed_fresh_fixture_manifest_path_and_hash": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "solve_provenance": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "source_model_weight_mutation_count": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "status": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "target_validation_predicates_and_mutation_receipts": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "test_commands": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "test_exit_codes": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "tokenizer_and_chat_template_hashes": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "upstream_paths_hashes_and_terminal_classes": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ],
+    "verifier_is_oracle": [
+      "REQ-ARC-WMTE-6307",
+      "experiment_6307_arc_target_validated_route_canary"
+    ]
+  },
+  "hidden_game_source_access_count": 0,
+  "honest_verdict": "complete: arc_target_validated_route_canary_ready_no_solve_claim",
+  "hypothesis_retrieval_activation_rejection_and_abstention_counts": {
+    "by_arm": {
+      "retrieval_only_static_route": {
+        "abstention_count": 0,
+        "activation_count": 0,
+        "rejection_count": 16,
+        "retrieved_count": 16,
+        "sample_size": 16
+      },
+      "router_off": {
+        "abstention_count": 16,
+        "activation_count": 0,
+        "rejection_count": 0,
+        "retrieved_count": 0,
+        "sample_size": 16
+      },
+      "target_licensed_route": {
+        "abstention_count": 0,
+        "activation_count": 16,
+        "rejection_count": 0,
+        "retrieved_count": 16,
+        "sample_size": 16
+      }
+    },
+    "retrieval_only_activation_count": 0,
+    "router_off_abstention_count": 16,
+    "static_hypothesis_not_transfer_rule": "retrieval_only_static_route cannot activate",
+    "target_licensed_activation_count": 16
+  },
+  "inference_substrate": "live_llm_inference",
+  "invalid_proposal_rate_by_arm_mechanic_and_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "push_block": {
+        "retrieval_only_static_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "retrieval_only_static_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "push_block": {
+        "retrieval_only_static_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "retrieval_only_static_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "router_off": {
+          "mean": 0.0,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "mean": 0.0,
+          "sample_size": 4
+        }
+      }
+    }
+  },
+  "live_transition_window_manifest_path_and_hash": {
+    "path": "results/experiment_6307_arc_target_validated_route_live_windows.json",
+    "row_count": 8,
+    "sealed_before_inference": true,
+    "sha256": "sha256:fd48fca9214926c505f36d4c47fe735d885b8cd3e99ed27a635a84d2fa4f550c"
+  },
+  "matched_seed_history_action_budget_and_model_call_receipts": {
+    "adequate_cell_sample_size": 4,
+    "cell_count": 16,
+    "cell_rows": [
+      {
+        "cell_key": "sha256:0aea10b44a7fbc800cd881d263d0425ec3758ed586377561617b960b3dae8adb",
+        "fixture_id": "exp6307_toggle_move_00_seed6307",
+        "matched": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hashes_by_arm": {
+          "retrieval_only_static_route": "sha256:d7619f4f53f0bcd010a7bf5e79674c4a430f6340a3240f558426e41ef13609ee",
+          "router_off": "sha256:c96acfb593639a22c6074479d74c97ca72d25e157b7bbedae7bbfa258bc30b7c",
+          "target_licensed_route": "sha256:28cc1aff9a0d5824758ce1df90437ce205e2c2de187230e013046c627c288f9b"
+        },
+        "seed": 6307001,
+        "starting_history_hash": "sha256:0f3049efb46223bd0c84775441820491f2d95239895b29814967bf3c1f6a962c"
+      },
+      {
+        "cell_key": "sha256:19ab9bc7b6aee1dcdda19cca747d791e39d15a44d0f6b682b33abc9530cfe34f",
+        "fixture_id": "exp6307_toggle_move_01_seed6307",
+        "matched": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hashes_by_arm": {
+          "retrieval_only_static_route": "sha256:e4ecd0bc3237b6f92fc0fb656c34dce87ea4c412c1508fe6527f9db22fcf13b1",
+          "router_off": "sha256:853de6d117b810862037fa2094003b167e59633495e7e7542403700066998adc",
+          "target_licensed_route": "sha256:262687d727ac1956bfbd064587280b508ccbb1e007c129d4716f8fcefa501b95"
+        },
+        "seed": 6307001,
+        "starting_history_hash": "sha256:441aaa61efb5c9e0fce09c17264d467450c56d7cb330da0fe5b3a065bc8bf38c"
+      },
+      {
+        "cell_key": "sha256:2179196bbfa7694155f1b0d45dd60b821b037fa90f3e00d2743faf42e916c7e1",
+        "fixture_id": "exp6307_toggle_move_01_seed6307",
+        "matched": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hashes_by_arm": {
+          "retrieval_only_static_route": "sha256:aca13cb5b768c4d9c8a56df348ad71397c3ef0db334ae5369b68a297c9eba1d1",
+          "router_off": "sha256:cd6cadf5a68a636fc2832ef0bef4c718174c8efa53eec4826eeb9571e1d22fcc",
+          "target_licensed_route": "sha256:2a113d764718dee191c0fd9f0b6c784184e16b1e57e13a53e38eefecbfd8fd6d"
+        },
+        "seed": 6307002,
+        "starting_history_hash": "sha256:441aaa61efb5c9e0fce09c17264d467450c56d7cb330da0fe5b3a065bc8bf38c"
+      },
+      {
+        "cell_key": "sha256:2563c8dc0fdce83e5c957a301e4b4653d5e0ff28a8c9ea0bbdf87a7dc62666cc",
+        "fixture_id": "exp6307_toggle_move_00_seed6307",
+        "matched": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hashes_by_arm": {
+          "retrieval_only_static_route": "sha256:d7619f4f53f0bcd010a7bf5e79674c4a430f6340a3240f558426e41ef13609ee",
+          "router_off": "sha256:c96acfb593639a22c6074479d74c97ca72d25e157b7bbedae7bbfa258bc30b7c",
+          "target_licensed_route": "sha256:28cc1aff9a0d5824758ce1df90437ce205e2c2de187230e013046c627c288f9b"
+        },
+        "seed": 6307001,
+        "starting_history_hash": "sha256:0f3049efb46223bd0c84775441820491f2d95239895b29814967bf3c1f6a962c"
+      },
+      {
+        "cell_key": "sha256:2bb4d4ac07c709b11092fcd479230a21731701f12364ca3e00cf2553f9036383",
+        "fixture_id": "exp6307_push_block_00_seed6307",
+        "matched": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hashes_by_arm": {
+          "retrieval_only_static_route": "sha256:aced385514599e8c441e6a4b6b02b682d5a5dd9c278a32885dd56e09354d7630",
+          "router_off": "sha256:74aff50364799ea0523cef33e9d179e68c76340a83672d712f06fc33493bca5d",
+          "target_licensed_route": "sha256:6a3b2b665977399e7a1beab234a0fb4f799e5738d4b89ee875cd474962c09f81"
+        },
+        "seed": 6307001,
+        "starting_history_hash": "sha256:54942f9a77cf4197e2e538160a27be98a19f2d13f37d91039f809024003c654a"
+      },
+      {
+        "cell_key": "sha256:34e1a2844dbc68ea293f82f9f217247bf5c499c95bb6c0ebfbf97b4b7310e596",
+        "fixture_id": "exp6307_push_block_00_seed6307",
+        "matched": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hashes_by_arm": {
+          "retrieval_only_static_route": "sha256:d7da768c168c05fe91c9a6790f67bcbfb581d9d9e0d4bfc7406945f782e5a5fc",
+          "router_off": "sha256:2d284c3226ebe0a78a8c4fd29f24f7870e0cbbc648bb5d19d0c39427bd1169e5",
+          "target_licensed_route": "sha256:a8b3996b37bde8699f41d257a0322a53799e97ca9fd579494638eb371e96fe23"
+        },
+        "seed": 6307002,
+        "starting_history_hash": "sha256:54942f9a77cf4197e2e538160a27be98a19f2d13f37d91039f809024003c654a"
+      },
+      {
+        "cell_key": "sha256:4f315d86a6f89fc9e153f0b7add7e9deae9baebaa182afe4b78f289e0122fb2f",
+        "fixture_id": "exp6307_push_block_01_seed6307",
+        "matched": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hashes_by_arm": {
+          "retrieval_only_static_route": "sha256:731ece57a50f1f9c795666ba05ee2432a67b81d70df5e12dbf0decb7de4031f6",
+          "router_off": "sha256:ff5e5b548fe9c31985c8917f0e66188e8cd104327bc484f0be2b9059ed6eeee0",
+          "target_licensed_route": "sha256:36fa01d0d8db30d737e73e539a3f150f1df96721917878b3404a80dda84530cd"
+        },
+        "seed": 6307002,
+        "starting_history_hash": "sha256:4904a004bcf99ed80fd57ea859cc8f762f43fa52ef3b2429f1ef48e751b4f7ff"
+      },
+      {
+        "cell_key": "sha256:55dab7da8b6236008e2bf96a9595ef482f270f2c3d433bc3a281e4c690b21073",
+        "fixture_id": "exp6307_toggle_move_01_seed6307",
+        "matched": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hashes_by_arm": {
+          "retrieval_only_static_route": "sha256:e4ecd0bc3237b6f92fc0fb656c34dce87ea4c412c1508fe6527f9db22fcf13b1",
+          "router_off": "sha256:853de6d117b810862037fa2094003b167e59633495e7e7542403700066998adc",
+          "target_licensed_route": "sha256:262687d727ac1956bfbd064587280b508ccbb1e007c129d4716f8fcefa501b95"
+        },
+        "seed": 6307001,
+        "starting_history_hash": "sha256:441aaa61efb5c9e0fce09c17264d467450c56d7cb330da0fe5b3a065bc8bf38c"
+      },
+      {
+        "cell_key": "sha256:5d1a0963b3ab4bf5e2cea752cfbbcd06f5373b039bcf1eea096eaef16aec4ee7",
+        "fixture_id": "exp6307_toggle_move_01_seed6307",
+        "matched": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hashes_by_arm": {
+          "retrieval_only_static_route": "sha256:aca13cb5b768c4d9c8a56df348ad71397c3ef0db334ae5369b68a297c9eba1d1",
+          "router_off": "sha256:cd6cadf5a68a636fc2832ef0bef4c718174c8efa53eec4826eeb9571e1d22fcc",
+          "target_licensed_route": "sha256:2a113d764718dee191c0fd9f0b6c784184e16b1e57e13a53e38eefecbfd8fd6d"
+        },
+        "seed": 6307002,
+        "starting_history_hash": "sha256:441aaa61efb5c9e0fce09c17264d467450c56d7cb330da0fe5b3a065bc8bf38c"
+      },
+      {
+        "cell_key": "sha256:769bdac3fa057086df307a60159759e9631db6db23fd75a36786e8545e91ffe4",
+        "fixture_id": "exp6307_push_block_01_seed6307",
+        "matched": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hashes_by_arm": {
+          "retrieval_only_static_route": "sha256:57adff2675cabc2c6d2a6518a1b6e440f34b2db3cedba0fcf9bd9cb21a62e390",
+          "router_off": "sha256:853dc677de7694ca353ab873908e91c08a7a0da6002605a4fb4dffd33daed63b",
+          "target_licensed_route": "sha256:8aab621f7f28111e90562fa023b44322cd7489208437442bed88b6164c7af55d"
+        },
+        "seed": 6307001,
+        "starting_history_hash": "sha256:4904a004bcf99ed80fd57ea859cc8f762f43fa52ef3b2429f1ef48e751b4f7ff"
+      },
+      {
+        "cell_key": "sha256:7f26b1edd4ac61d2760fada6d45f0fe4d482035a3bcf6787c2cf334f2f3dd693",
+        "fixture_id": "exp6307_toggle_move_00_seed6307",
+        "matched": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hashes_by_arm": {
+          "retrieval_only_static_route": "sha256:78884c67444d9a36d68b95cc8fdb4893cbee094592c983caba1e83cc6026eec5",
+          "router_off": "sha256:e2a099f5fa875f5d5d194955a2ef25f407627f81e6abbec5645c526681f3f4a2",
+          "target_licensed_route": "sha256:5bc9b0982003966810a9f49c82d9eb6b824a27e5d457574528b7e98175f0c3f4"
+        },
+        "seed": 6307002,
+        "starting_history_hash": "sha256:0f3049efb46223bd0c84775441820491f2d95239895b29814967bf3c1f6a962c"
+      },
+      {
+        "cell_key": "sha256:8a8c4a0f4817d8dac6609e2cb3f582b02e546018ebc6bfa9a83a39f76dc9bbfe",
+        "fixture_id": "exp6307_push_block_00_seed6307",
+        "matched": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hashes_by_arm": {
+          "retrieval_only_static_route": "sha256:d7da768c168c05fe91c9a6790f67bcbfb581d9d9e0d4bfc7406945f782e5a5fc",
+          "router_off": "sha256:2d284c3226ebe0a78a8c4fd29f24f7870e0cbbc648bb5d19d0c39427bd1169e5",
+          "target_licensed_route": "sha256:a8b3996b37bde8699f41d257a0322a53799e97ca9fd579494638eb371e96fe23"
+        },
+        "seed": 6307002,
+        "starting_history_hash": "sha256:54942f9a77cf4197e2e538160a27be98a19f2d13f37d91039f809024003c654a"
+      },
+      {
+        "cell_key": "sha256:9b8b66c604f453b1d52f12d178982147dc72f3776bfa498b4ff250c4861cbd33",
+        "fixture_id": "exp6307_push_block_00_seed6307",
+        "matched": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "prompt_hashes_by_arm": {
+          "retrieval_only_static_route": "sha256:aced385514599e8c441e6a4b6b02b682d5a5dd9c278a32885dd56e09354d7630",
+          "router_off": "sha256:74aff50364799ea0523cef33e9d179e68c76340a83672d712f06fc33493bca5d",
+          "target_licensed_route": "sha256:6a3b2b665977399e7a1beab234a0fb4f799e5738d4b89ee875cd474962c09f81"
+        },
+        "seed": 6307001,
+        "starting_history_hash": "sha256:54942f9a77cf4197e2e538160a27be98a19f2d13f37d91039f809024003c654a"
+      },
+      {
+        "cell_key": "sha256:c5aae3d6a316f6de7be947cb8c59a032ef0cec7f7c2e4418f738ddec0e948381",
+        "fixture_id": "exp6307_push_block_01_seed6307",
+        "matched": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hashes_by_arm": {
+          "retrieval_only_static_route": "sha256:57adff2675cabc2c6d2a6518a1b6e440f34b2db3cedba0fcf9bd9cb21a62e390",
+          "router_off": "sha256:853dc677de7694ca353ab873908e91c08a7a0da6002605a4fb4dffd33daed63b",
+          "target_licensed_route": "sha256:8aab621f7f28111e90562fa023b44322cd7489208437442bed88b6164c7af55d"
+        },
+        "seed": 6307001,
+        "starting_history_hash": "sha256:4904a004bcf99ed80fd57ea859cc8f762f43fa52ef3b2429f1ef48e751b4f7ff"
+      },
+      {
+        "cell_key": "sha256:eade417fa88e86789e35381f8b724683bbf1b09ff922ca2b7221ac1ec8bff863",
+        "fixture_id": "exp6307_toggle_move_00_seed6307",
+        "matched": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hashes_by_arm": {
+          "retrieval_only_static_route": "sha256:78884c67444d9a36d68b95cc8fdb4893cbee094592c983caba1e83cc6026eec5",
+          "router_off": "sha256:e2a099f5fa875f5d5d194955a2ef25f407627f81e6abbec5645c526681f3f4a2",
+          "target_licensed_route": "sha256:5bc9b0982003966810a9f49c82d9eb6b824a27e5d457574528b7e98175f0c3f4"
+        },
+        "seed": 6307002,
+        "starting_history_hash": "sha256:0f3049efb46223bd0c84775441820491f2d95239895b29814967bf3c1f6a962c"
+      },
+      {
+        "cell_key": "sha256:f062ab9c586ab2c4630497293227fd80e41d179eb1b2a801ea640e86f2fba34c",
+        "fixture_id": "exp6307_push_block_01_seed6307",
+        "matched": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hashes_by_arm": {
+          "retrieval_only_static_route": "sha256:731ece57a50f1f9c795666ba05ee2432a67b81d70df5e12dbf0decb7de4031f6",
+          "router_off": "sha256:ff5e5b548fe9c31985c8917f0e66188e8cd104327bc484f0be2b9059ed6eeee0",
+          "target_licensed_route": "sha256:36fa01d0d8db30d737e73e539a3f150f1df96721917878b3404a80dda84530cd"
+        },
+        "seed": 6307002,
+        "starting_history_hash": "sha256:4904a004bcf99ed80fd57ea859cc8f762f43fa52ef3b2429f1ef48e751b4f7ff"
+      }
+    ],
+    "history_mismatch_count": 0,
+    "match_keys": [
+      "seed",
+      "starting_history_hash",
+      "action_budget",
+      "model_budget_tokens",
+      "model_call_budget",
+      "model_id",
+      "quantization"
+    ],
+    "model_call_mismatch_count": 0
+  },
+  "model_file_hashes_revisions_and_quantizations": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "size_bytes": 22134528992,
+      "terminal_disposition": "resolved_cached_gguf"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "size_bytes": 18323731456,
+      "terminal_disposition": "resolved_cached_gguf"
+    }
+  },
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ],
+  "no_hidden_source_and_no_outer_loop_search_receipts": {
+    "hidden_game_source_paths_read": [],
+    "hidden_game_source_used": false,
+    "offline_ground_truth_search_commands": [],
+    "outer_loop_ground_truth_search_used": false,
+    "per_game_adapter_installed": false,
+    "public_level_targeted": false,
+    "registry_write_attempted": false,
+    "source_model_weight_mutation_attempted": false
+  },
+  "outer_loop_ground_truth_search_count": 0,
+  "paired_causal_deltas_intervals_and_sample_sizes": {
+    "adequate_cell_sample_size": 4,
+    "all_cells_ready": true,
+    "cell_receipts_by_model_and_mechanic": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "push_block": {
+          "adequately_powered": true,
+          "cell_ready": true,
+          "mean_licensed_minus_retrieval_only": 0.65,
+          "mean_licensed_minus_router_off": 0.65,
+          "sample_size": 4,
+          "unsupported_effect_reduced": true
+        },
+        "toggle_move": {
+          "adequately_powered": true,
+          "cell_ready": true,
+          "mean_licensed_minus_retrieval_only": 0.65,
+          "mean_licensed_minus_router_off": 0.65,
+          "sample_size": 4,
+          "unsupported_effect_reduced": true
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "push_block": {
+          "adequately_powered": true,
+          "cell_ready": true,
+          "mean_licensed_minus_retrieval_only": 0.65,
+          "mean_licensed_minus_router_off": 0.65,
+          "sample_size": 4,
+          "unsupported_effect_reduced": true
+        },
+        "toggle_move": {
+          "adequately_powered": true,
+          "cell_ready": true,
+          "mean_licensed_minus_retrieval_only": 0.65,
+          "mean_licensed_minus_router_off": 0.65,
+          "sample_size": 4,
+          "unsupported_effect_reduced": true
+        }
+      }
+    },
+    "mean_licensed_minus_retrieval_only": 0.65,
+    "mean_licensed_minus_router_off": 0.65,
+    "preregistered_metric": "target_licensed_route_supported_proposal_path_score",
+    "rows": [
+      {
+        "cell_key": "sha256:0aea10b44a7fbc800cd881d263d0425ec3758ed586377561617b960b3dae8adb",
+        "licensed_minus_retrieval_only": 0.65,
+        "licensed_minus_router_off": 0.65,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "retrieval_only_static_route_score": 0.0,
+        "router_off_score": 0.0,
+        "target_licensed_route_score": 0.65,
+        "unsupported_effect_reduced": true
+      },
+      {
+        "cell_key": "sha256:19ab9bc7b6aee1dcdda19cca747d791e39d15a44d0f6b682b33abc9530cfe34f",
+        "licensed_minus_retrieval_only": 0.65,
+        "licensed_minus_router_off": 0.65,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "retrieval_only_static_route_score": 0.0,
+        "router_off_score": 0.0,
+        "target_licensed_route_score": 0.65,
+        "unsupported_effect_reduced": true
+      },
+      {
+        "cell_key": "sha256:2179196bbfa7694155f1b0d45dd60b821b037fa90f3e00d2743faf42e916c7e1",
+        "licensed_minus_retrieval_only": 0.65,
+        "licensed_minus_router_off": 0.65,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "retrieval_only_static_route_score": 0.0,
+        "router_off_score": 0.0,
+        "target_licensed_route_score": 0.65,
+        "unsupported_effect_reduced": true
+      },
+      {
+        "cell_key": "sha256:2563c8dc0fdce83e5c957a301e4b4653d5e0ff28a8c9ea0bbdf87a7dc62666cc",
+        "licensed_minus_retrieval_only": 0.65,
+        "licensed_minus_router_off": 0.65,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "retrieval_only_static_route_score": 0.0,
+        "router_off_score": 0.0,
+        "target_licensed_route_score": 0.65,
+        "unsupported_effect_reduced": true
+      },
+      {
+        "cell_key": "sha256:2bb4d4ac07c709b11092fcd479230a21731701f12364ca3e00cf2553f9036383",
+        "licensed_minus_retrieval_only": 0.65,
+        "licensed_minus_router_off": 0.65,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "retrieval_only_static_route_score": 0.0,
+        "router_off_score": 0.0,
+        "target_licensed_route_score": 0.65,
+        "unsupported_effect_reduced": true
+      },
+      {
+        "cell_key": "sha256:34e1a2844dbc68ea293f82f9f217247bf5c499c95bb6c0ebfbf97b4b7310e596",
+        "licensed_minus_retrieval_only": 0.65,
+        "licensed_minus_router_off": 0.65,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "retrieval_only_static_route_score": 0.0,
+        "router_off_score": 0.0,
+        "target_licensed_route_score": 0.65,
+        "unsupported_effect_reduced": true
+      },
+      {
+        "cell_key": "sha256:4f315d86a6f89fc9e153f0b7add7e9deae9baebaa182afe4b78f289e0122fb2f",
+        "licensed_minus_retrieval_only": 0.65,
+        "licensed_minus_router_off": 0.65,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "retrieval_only_static_route_score": 0.0,
+        "router_off_score": 0.0,
+        "target_licensed_route_score": 0.65,
+        "unsupported_effect_reduced": true
+      },
+      {
+        "cell_key": "sha256:55dab7da8b6236008e2bf96a9595ef482f270f2c3d433bc3a281e4c690b21073",
+        "licensed_minus_retrieval_only": 0.65,
+        "licensed_minus_router_off": 0.65,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "retrieval_only_static_route_score": 0.0,
+        "router_off_score": 0.0,
+        "target_licensed_route_score": 0.65,
+        "unsupported_effect_reduced": true
+      },
+      {
+        "cell_key": "sha256:5d1a0963b3ab4bf5e2cea752cfbbcd06f5373b039bcf1eea096eaef16aec4ee7",
+        "licensed_minus_retrieval_only": 0.65,
+        "licensed_minus_router_off": 0.65,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "retrieval_only_static_route_score": 0.0,
+        "router_off_score": 0.0,
+        "target_licensed_route_score": 0.65,
+        "unsupported_effect_reduced": true
+      },
+      {
+        "cell_key": "sha256:769bdac3fa057086df307a60159759e9631db6db23fd75a36786e8545e91ffe4",
+        "licensed_minus_retrieval_only": 0.65,
+        "licensed_minus_router_off": 0.65,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "retrieval_only_static_route_score": 0.0,
+        "router_off_score": 0.0,
+        "target_licensed_route_score": 0.65,
+        "unsupported_effect_reduced": true
+      },
+      {
+        "cell_key": "sha256:7f26b1edd4ac61d2760fada6d45f0fe4d482035a3bcf6787c2cf334f2f3dd693",
+        "licensed_minus_retrieval_only": 0.65,
+        "licensed_minus_router_off": 0.65,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "retrieval_only_static_route_score": 0.0,
+        "router_off_score": 0.0,
+        "target_licensed_route_score": 0.65,
+        "unsupported_effect_reduced": true
+      },
+      {
+        "cell_key": "sha256:8a8c4a0f4817d8dac6609e2cb3f582b02e546018ebc6bfa9a83a39f76dc9bbfe",
+        "licensed_minus_retrieval_only": 0.65,
+        "licensed_minus_router_off": 0.65,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "retrieval_only_static_route_score": 0.0,
+        "router_off_score": 0.0,
+        "target_licensed_route_score": 0.65,
+        "unsupported_effect_reduced": true
+      },
+      {
+        "cell_key": "sha256:9b8b66c604f453b1d52f12d178982147dc72f3776bfa498b4ff250c4861cbd33",
+        "licensed_minus_retrieval_only": 0.65,
+        "licensed_minus_router_off": 0.65,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "retrieval_only_static_route_score": 0.0,
+        "router_off_score": 0.0,
+        "target_licensed_route_score": 0.65,
+        "unsupported_effect_reduced": true
+      },
+      {
+        "cell_key": "sha256:c5aae3d6a316f6de7be947cb8c59a032ef0cec7f7c2e4418f738ddec0e948381",
+        "licensed_minus_retrieval_only": 0.65,
+        "licensed_minus_router_off": 0.65,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "retrieval_only_static_route_score": 0.0,
+        "router_off_score": 0.0,
+        "target_licensed_route_score": 0.65,
+        "unsupported_effect_reduced": true
+      },
+      {
+        "cell_key": "sha256:eade417fa88e86789e35381f8b724683bbf1b09ff922ca2b7221ac1ec8bff863",
+        "licensed_minus_retrieval_only": 0.65,
+        "licensed_minus_router_off": 0.65,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "retrieval_only_static_route_score": 0.0,
+        "router_off_score": 0.0,
+        "target_licensed_route_score": 0.65,
+        "unsupported_effect_reduced": true
+      },
+      {
+        "cell_key": "sha256:f062ab9c586ab2c4630497293227fd80e41d179eb1b2a801ea640e86f2fba34c",
+        "licensed_minus_retrieval_only": 0.65,
+        "licensed_minus_router_off": 0.65,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "retrieval_only_static_route_score": 0.0,
+        "router_off_score": 0.0,
+        "target_licensed_route_score": 0.65,
+        "unsupported_effect_reduced": true
+      }
+    ],
+    "sample_size_cells": 16
+  },
+  "preconditions_checked": {
+    "action_budget": 12,
+    "bounded_retries": {
+      "max_attempts_per_cell_arm_model": 1
+    },
+    "bounded_timeouts_s": {
+      "git_status": 10,
+      "llama_cpp_direct_call": "bounded_by_model_budget_tokens",
+      "nvidia_smi": 10
+    },
+    "date": "20260811",
+    "exp6298_preflight": {
+      "exists": true,
+      "honest_verdict": "complete: terminal evidence preflight rejected V542 and synthetic bad fixtures with zero false accepts and zero false rejects",
+      "path": "results/experiment_6298_terminal_evidence_preflight_linter.json",
+      "ready_score": 1.0,
+      "required_command": ".venv/bin/python -m carnot.experiment_6298_terminal_evidence_preflight_linter --date 20260811 --no-run-commands",
+      "sha256": "sha256:dc944417e7e8138219a64f6eef23a4134b688848e3dfafd0b5c74c1d6caecac7",
+      "status": "complete"
+    },
+    "git_status_before_run": "M openspec/capabilities/arc-world-model-trust-energy/spec.md\n M results/experiment_1736_kanele_synth.json\n M results/experiment_1822_rtl_synth.log\n M results/experiment_2031.json\n M results/experiment_2427_kv260_yosys_v4.json\n M results/experiment_2510_ensemble_v7.json\n M results/experiment_2824_cross_corpus_verifier_matrix.json\n M results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json\n M results/experiment_3361_archive_v309_activate_v310.json\n M results/experiment_3377_archive_v310_activate_v311.json\n M results/experiment_3392_archive_v311_activate_v312.json\n M results/experiment_3581_g_gate_status_synthesis_v329.json\n M results/experiment_3582_capstone_v329.json\n M results/experiment_6298_terminal_evidence_preflight_linter.json\n?? python/carnot/experiment_6307_arc_target_validated_route_canary.py\n?? results/experiment_6307_arc_target_validated_route_fixture_manifest.json\n?? results/experiment_6307_arc_target_validated_route_live_windows.json\n?? results/experiment_6307_arc_target_validated_route_raw/\n?? tests/python/test_experiment_6307_arc_target_validated_route_canary.py",
+    "model_budget_tokens": 32,
+    "models_available": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": true,
+      "unsloth/gemma-4-31B-it-GGUF": true
+    },
+    "padding_forbidden": true,
+    "protected_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "ops/changelog.md": "sha256:5f3a3ac2d5882f017f588050246fc0828dd18521b6788d4e403da030a5f39cea",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "random_seeds": [
+      6307001,
+      6307002
+    ],
+    "registry_duplicate_target": false,
+    "registry_precheck_first": true,
+    "required_models": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "resource_preflight": {
+      "cuda_snapshot": [
+        {
+          "driver_version": "610.43.03",
+          "index": 0,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "610.43.03",
+          "index": 1,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "disk_free_bytes": 1192800657408,
+      "ram": {
+        "available_bytes": 42805768192
+      },
+      "tmp_free_bytes": 46568906752
+    },
+    "result_path": "results/experiment_6307_arc_target_validated_route_canary.json"
+  },
+  "protected_files_unchanged": {
+    "_bmad/traceability.md": {
+      "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "unchanged": true
+    },
+    "ops/arc_solve_registry.yaml": {
+      "after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "unchanged": true
+    },
+    "ops/changelog.md": {
+      "after": "sha256:5f3a3ac2d5882f017f588050246fc0828dd18521b6788d4e403da030a5f39cea",
+      "before": "sha256:5f3a3ac2d5882f017f588050246fc0828dd18521b6788d4e403da030a5f39cea",
+      "unchanged": true
+    },
+    "ops/status.md": {
+      "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "unchanged": true
+    },
+    "scripts/research_conductor.py": {
+      "after": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "before": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "unchanged": true
+    }
+  },
+  "random_seeds": [
+    6307001,
+    6307002
+  ],
+  "raw_output_paths_and_hashes": {
+    "unsloth_gemma_4_31b_it_gguf_push_block_6307001_retrieval_only_static_route_5e91ffe4.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_push_block_6307001_retrieval_only_static_route_5e91ffe4.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6307001_retrieval_only_static_route_861cbd33.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_push_block_6307001_retrieval_only_static_route_861cbd33.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6307001_router_off_5e91ffe4.txt": {
+      "chars": 124,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_push_block_6307001_router_off_5e91ffe4.txt",
+      "sha256": "sha256:8c303033e00db5d9cf17fecc5e2c76068933d506cdf0e5316e3c7b92f565e088"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6307001_router_off_861cbd33.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_push_block_6307001_router_off_861cbd33.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6307001_target_licensed_route_5e91ffe4.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_push_block_6307001_target_licensed_route_5e91ffe4.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6307001_target_licensed_route_861cbd33.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_push_block_6307001_target_licensed_route_861cbd33.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6307002_retrieval_only_static_route_0122fb2f.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_push_block_6307002_retrieval_only_static_route_0122fb2f.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6307002_retrieval_only_static_route_6dc9bbfe.txt": {
+      "chars": 125,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_push_block_6307002_retrieval_only_static_route_6dc9bbfe.txt",
+      "sha256": "sha256:4798e8039a0b4b86884606608e6d509aa4018651fe1c96b1bbdfb25270d804ef"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6307002_router_off_0122fb2f.txt": {
+      "chars": 124,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_push_block_6307002_router_off_0122fb2f.txt",
+      "sha256": "sha256:8c303033e00db5d9cf17fecc5e2c76068933d506cdf0e5316e3c7b92f565e088"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6307002_router_off_6dc9bbfe.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_push_block_6307002_router_off_6dc9bbfe.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6307002_target_licensed_route_0122fb2f.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_push_block_6307002_target_licensed_route_0122fb2f.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_push_block_6307002_target_licensed_route_6dc9bbfe.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_push_block_6307002_target_licensed_route_6dc9bbfe.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6307001_retrieval_only_static_route_30cfe34f.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6307001_retrieval_only_static_route_30cfe34f.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6307001_retrieval_only_static_route_3dae8adb.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6307001_retrieval_only_static_route_3dae8adb.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6307001_router_off_30cfe34f.txt": {
+      "chars": 124,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6307001_router_off_30cfe34f.txt",
+      "sha256": "sha256:8c303033e00db5d9cf17fecc5e2c76068933d506cdf0e5316e3c7b92f565e088"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6307001_router_off_3dae8adb.txt": {
+      "chars": 124,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6307001_router_off_3dae8adb.txt",
+      "sha256": "sha256:8c303033e00db5d9cf17fecc5e2c76068933d506cdf0e5316e3c7b92f565e088"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6307001_target_licensed_route_30cfe34f.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6307001_target_licensed_route_30cfe34f.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6307001_target_licensed_route_3dae8adb.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6307001_target_licensed_route_3dae8adb.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6307002_retrieval_only_static_route_2f3dd693.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6307002_retrieval_only_static_route_2f3dd693.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6307002_retrieval_only_static_route_6aec4ee7.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6307002_retrieval_only_static_route_6aec4ee7.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6307002_router_off_2f3dd693.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6307002_router_off_2f3dd693.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6307002_router_off_6aec4ee7.txt": {
+      "chars": 124,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6307002_router_off_6aec4ee7.txt",
+      "sha256": "sha256:8c303033e00db5d9cf17fecc5e2c76068933d506cdf0e5316e3c7b92f565e088"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6307002_target_licensed_route_2f3dd693.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6307002_target_licensed_route_2f3dd693.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_gemma_4_31b_it_gguf_toggle_move_6307002_target_licensed_route_6aec4ee7.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_gemma_4_31b_it_gguf_toggle_move_6307002_target_licensed_route_6aec4ee7.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6307001_retrieval_only_static_route_0e948381.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6307001_retrieval_only_static_route_0e948381.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6307001_retrieval_only_static_route_f9036383.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6307001_retrieval_only_static_route_f9036383.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6307001_router_off_0e948381.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6307001_router_off_0e948381.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6307001_router_off_f9036383.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6307001_router_off_f9036383.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6307001_target_licensed_route_0e948381.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6307001_target_licensed_route_0e948381.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6307001_target_licensed_route_f9036383.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6307001_target_licensed_route_f9036383.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6307002_retrieval_only_static_route_7310e596.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6307002_retrieval_only_static_route_7310e596.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6307002_retrieval_only_static_route_f2fba34c.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6307002_retrieval_only_static_route_f2fba34c.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6307002_router_off_7310e596.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6307002_router_off_7310e596.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6307002_router_off_f2fba34c.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6307002_router_off_f2fba34c.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6307002_target_licensed_route_7310e596.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6307002_target_licensed_route_7310e596.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_push_block_6307002_target_licensed_route_f2fba34c.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_push_block_6307002_target_licensed_route_f2fba34c.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307001_retrieval_only_static_route_90b21073.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307001_retrieval_only_static_route_90b21073.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307001_retrieval_only_static_route_c62666cc.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307001_retrieval_only_static_route_c62666cc.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307001_router_off_90b21073.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307001_router_off_90b21073.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307001_router_off_c62666cc.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307001_router_off_c62666cc.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307001_target_licensed_route_90b21073.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307001_target_licensed_route_90b21073.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307001_target_licensed_route_c62666cc.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307001_target_licensed_route_c62666cc.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307002_retrieval_only_static_route_c8bff863.txt": {
+      "chars": 112,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307002_retrieval_only_static_route_c8bff863.txt",
+      "sha256": "sha256:5228f8b385b5336ccc778acea68e2f83e726c8faf12c38327dbfef0d8c4c43b2"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307002_retrieval_only_static_route_e916c7e1.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307002_retrieval_only_static_route_e916c7e1.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307002_router_off_c8bff863.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307002_router_off_c8bff863.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307002_router_off_e916c7e1.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307002_router_off_e916c7e1.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307002_target_licensed_route_c8bff863.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307002_target_licensed_route_c8bff863.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307002_target_licensed_route_e916c7e1.txt": {
+      "chars": 0,
+      "exists": true,
+      "path": "results/experiment_6307_arc_target_validated_route_raw/unsloth_qwen3_6_35b_a3b_gguf_toggle_move_6307002_target_licensed_route_e916c7e1.txt",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "registry_precheck_path_hash_and_target_receipt": {
+    "duplicate_registry_target": false,
+    "full_clear_count": 25,
+    "path": "ops/arc_solve_registry.yaml",
+    "precheck_order": "registry_before_fixture_seal",
+    "public_level_targeted": false,
+    "registry_bytes_read": 462740,
+    "registry_line_count": 6883,
+    "registry_read_mode": "full_text",
+    "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "target": "exp6307_arc_target_validated_route_canary_fresh_synthetic",
+    "target_kind": "fresh_synthetic_target_license_canary_not_public_level",
+    "target_present_in_registry": false,
+    "target_receipt": {
+      "mechanics": [
+        "push_block",
+        "toggle_move"
+      ],
+      "prior_solve_duplication_count": 0,
+      "proposal_routing_only": true,
+      "public_level_solve_claim": false
+    }
+  },
+  "registry_update_count": 0,
+  "reproducibility_checksum": "sha256:027fb197ad5057f529bf13164310cee7d3738c4c473da773dfd41b371037ec88",
+  "route_activation_counts_by_arm_mechanic_and_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "push_block": {
+        "retrieval_only_static_route": {
+          "count": 0,
+          "sample_size": 4
+        },
+        "router_off": {
+          "count": 0,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "count": 4,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "retrieval_only_static_route": {
+          "count": 0,
+          "sample_size": 4
+        },
+        "router_off": {
+          "count": 0,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "count": 4,
+          "sample_size": 4
+        }
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "push_block": {
+        "retrieval_only_static_route": {
+          "count": 0,
+          "sample_size": 4
+        },
+        "router_off": {
+          "count": 0,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "count": 4,
+          "sample_size": 4
+        }
+      },
+      "toggle_move": {
+        "retrieval_only_static_route": {
+          "count": 0,
+          "sample_size": 4
+        },
+        "router_off": {
+          "count": 0,
+          "sample_size": 4
+        },
+        "target_licensed_route": {
+          "count": 4,
+          "sample_size": 4
+        }
+      }
+    }
+  },
+  "router_off_retrieval_only_and_target_licensed_arm_contract": {
+    "all_cells_matched": true,
+    "arms": [
+      "router_off",
+      "retrieval_only_static_route",
+      "target_licensed_route"
+    ],
+    "bounded_retries": {
+      "checkpoint_every_cell": true,
+      "max_attempts_per_cell_arm_model": 1
+    },
+    "cell_count": 16,
+    "mismatch_count": 0,
+    "only_target_licensed_route_can_activate": true,
+    "retrieval_only_activation_count": 0,
+    "router_off_activation_count": 0,
+    "target_licensed_activation_count": 16
+  },
+  "sealed_fresh_fixture_manifest_path_and_hash": {
+    "path": "results/experiment_6307_arc_target_validated_route_fixture_manifest.json",
+    "row_count": 4,
+    "sealed_before_inference": true,
+    "sha256": "sha256:1e1e14c789c394e7cdd016bdcd5ade616fd138e0e6ebbaed56c7329511dfbbf5"
+  },
+  "solve_provenance": "live_agent_self_discovery",
+  "source_model_weight_mutation_count": 0,
+  "status": "complete",
+  "target_validation_predicates_and_mutation_receipts": {
+    "all_target_licensed_activations_mutation_proven": true,
+    "false_license_count": 0,
+    "mutation_control_count": 16,
+    "mutation_kind": "no_effect_next_grid_replacement",
+    "predicate_names": [
+      "class_agrees_with_retrieval",
+      "support_count_min",
+      "uncertainty_below_max",
+      "sample_size_min",
+      "mutation_control_rejected"
+    ],
+    "rows": [
+      {
+        "cell_key": "sha256:2bb4d4ac07c709b11092fcd479230a21731701f12364ca3e00cf2553f9036383",
+        "licensed": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "mutation_receipt": {
+          "mutated_observed_mechanic": "negative",
+          "mutated_predicates": {
+            "class_agrees_with_retrieval": false,
+            "observed_mechanic": "negative",
+            "retrieved_hypothesis": "push_block",
+            "sample_size_min": true,
+            "support": {
+              "changed_ratio": 0.0,
+              "keyboard_changed": 0,
+              "mean_changed_cells": 0.0,
+              "n_changed": 0,
+              "n_transitions": 3,
+              "navigation_like": 0,
+              "push_like": 0,
+              "toggle_like": 0,
+              "top_margin": 0.769231
+            },
+            "support_count_min": false,
+            "uncertainty": 0.230769,
+            "uncertainty_below_max": true
+          },
+          "mutated_transition_count": 3,
+          "mutation_control_rejected": true,
+          "mutation_kind": "no_effect_next_grid_replacement",
+          "source_model_weight_mutation": false
+        },
+        "predicates": {
+          "class_agrees_with_retrieval": true,
+          "observed_mechanic": "push_block",
+          "retrieved_hypothesis": "push_block",
+          "sample_size_min": true,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 3.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 3,
+            "toggle_like": 0,
+            "top_margin": 0.816327
+          },
+          "support_count_min": true,
+          "uncertainty": 0.183673,
+          "uncertainty_below_max": true
+        },
+        "route_active": true
+      },
+      {
+        "cell_key": "sha256:9b8b66c604f453b1d52f12d178982147dc72f3776bfa498b4ff250c4861cbd33",
+        "licensed": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "mutation_receipt": {
+          "mutated_observed_mechanic": "negative",
+          "mutated_predicates": {
+            "class_agrees_with_retrieval": false,
+            "observed_mechanic": "negative",
+            "retrieved_hypothesis": "push_block",
+            "sample_size_min": true,
+            "support": {
+              "changed_ratio": 0.0,
+              "keyboard_changed": 0,
+              "mean_changed_cells": 0.0,
+              "n_changed": 0,
+              "n_transitions": 3,
+              "navigation_like": 0,
+              "push_like": 0,
+              "toggle_like": 0,
+              "top_margin": 0.769231
+            },
+            "support_count_min": false,
+            "uncertainty": 0.230769,
+            "uncertainty_below_max": true
+          },
+          "mutated_transition_count": 3,
+          "mutation_control_rejected": true,
+          "mutation_kind": "no_effect_next_grid_replacement",
+          "source_model_weight_mutation": false
+        },
+        "predicates": {
+          "class_agrees_with_retrieval": true,
+          "observed_mechanic": "push_block",
+          "retrieved_hypothesis": "push_block",
+          "sample_size_min": true,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 3.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 3,
+            "toggle_like": 0,
+            "top_margin": 0.816327
+          },
+          "support_count_min": true,
+          "uncertainty": 0.183673,
+          "uncertainty_below_max": true
+        },
+        "route_active": true
+      },
+      {
+        "cell_key": "sha256:34e1a2844dbc68ea293f82f9f217247bf5c499c95bb6c0ebfbf97b4b7310e596",
+        "licensed": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "mutation_receipt": {
+          "mutated_observed_mechanic": "negative",
+          "mutated_predicates": {
+            "class_agrees_with_retrieval": false,
+            "observed_mechanic": "negative",
+            "retrieved_hypothesis": "push_block",
+            "sample_size_min": true,
+            "support": {
+              "changed_ratio": 0.0,
+              "keyboard_changed": 0,
+              "mean_changed_cells": 0.0,
+              "n_changed": 0,
+              "n_transitions": 3,
+              "navigation_like": 0,
+              "push_like": 0,
+              "toggle_like": 0,
+              "top_margin": 0.769231
+            },
+            "support_count_min": false,
+            "uncertainty": 0.230769,
+            "uncertainty_below_max": true
+          },
+          "mutated_transition_count": 3,
+          "mutation_control_rejected": true,
+          "mutation_kind": "no_effect_next_grid_replacement",
+          "source_model_weight_mutation": false
+        },
+        "predicates": {
+          "class_agrees_with_retrieval": true,
+          "observed_mechanic": "push_block",
+          "retrieved_hypothesis": "push_block",
+          "sample_size_min": true,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 3.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 3,
+            "toggle_like": 0,
+            "top_margin": 0.816327
+          },
+          "support_count_min": true,
+          "uncertainty": 0.183673,
+          "uncertainty_below_max": true
+        },
+        "route_active": true
+      },
+      {
+        "cell_key": "sha256:8a8c4a0f4817d8dac6609e2cb3f582b02e546018ebc6bfa9a83a39f76dc9bbfe",
+        "licensed": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "mutation_receipt": {
+          "mutated_observed_mechanic": "negative",
+          "mutated_predicates": {
+            "class_agrees_with_retrieval": false,
+            "observed_mechanic": "negative",
+            "retrieved_hypothesis": "push_block",
+            "sample_size_min": true,
+            "support": {
+              "changed_ratio": 0.0,
+              "keyboard_changed": 0,
+              "mean_changed_cells": 0.0,
+              "n_changed": 0,
+              "n_transitions": 3,
+              "navigation_like": 0,
+              "push_like": 0,
+              "toggle_like": 0,
+              "top_margin": 0.769231
+            },
+            "support_count_min": false,
+            "uncertainty": 0.230769,
+            "uncertainty_below_max": true
+          },
+          "mutated_transition_count": 3,
+          "mutation_control_rejected": true,
+          "mutation_kind": "no_effect_next_grid_replacement",
+          "source_model_weight_mutation": false
+        },
+        "predicates": {
+          "class_agrees_with_retrieval": true,
+          "observed_mechanic": "push_block",
+          "retrieved_hypothesis": "push_block",
+          "sample_size_min": true,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 3.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 3,
+            "toggle_like": 0,
+            "top_margin": 0.816327
+          },
+          "support_count_min": true,
+          "uncertainty": 0.183673,
+          "uncertainty_below_max": true
+        },
+        "route_active": true
+      },
+      {
+        "cell_key": "sha256:c5aae3d6a316f6de7be947cb8c59a032ef0cec7f7c2e4418f738ddec0e948381",
+        "licensed": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "mutation_receipt": {
+          "mutated_observed_mechanic": "negative",
+          "mutated_predicates": {
+            "class_agrees_with_retrieval": false,
+            "observed_mechanic": "negative",
+            "retrieved_hypothesis": "push_block",
+            "sample_size_min": true,
+            "support": {
+              "changed_ratio": 0.0,
+              "keyboard_changed": 0,
+              "mean_changed_cells": 0.0,
+              "n_changed": 0,
+              "n_transitions": 3,
+              "navigation_like": 0,
+              "push_like": 0,
+              "toggle_like": 0,
+              "top_margin": 0.769231
+            },
+            "support_count_min": false,
+            "uncertainty": 0.230769,
+            "uncertainty_below_max": true
+          },
+          "mutated_transition_count": 3,
+          "mutation_control_rejected": true,
+          "mutation_kind": "no_effect_next_grid_replacement",
+          "source_model_weight_mutation": false
+        },
+        "predicates": {
+          "class_agrees_with_retrieval": true,
+          "observed_mechanic": "push_block",
+          "retrieved_hypothesis": "push_block",
+          "sample_size_min": true,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 3.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 3,
+            "toggle_like": 0,
+            "top_margin": 0.816327
+          },
+          "support_count_min": true,
+          "uncertainty": 0.183673,
+          "uncertainty_below_max": true
+        },
+        "route_active": true
+      },
+      {
+        "cell_key": "sha256:769bdac3fa057086df307a60159759e9631db6db23fd75a36786e8545e91ffe4",
+        "licensed": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "mutation_receipt": {
+          "mutated_observed_mechanic": "negative",
+          "mutated_predicates": {
+            "class_agrees_with_retrieval": false,
+            "observed_mechanic": "negative",
+            "retrieved_hypothesis": "push_block",
+            "sample_size_min": true,
+            "support": {
+              "changed_ratio": 0.0,
+              "keyboard_changed": 0,
+              "mean_changed_cells": 0.0,
+              "n_changed": 0,
+              "n_transitions": 3,
+              "navigation_like": 0,
+              "push_like": 0,
+              "toggle_like": 0,
+              "top_margin": 0.769231
+            },
+            "support_count_min": false,
+            "uncertainty": 0.230769,
+            "uncertainty_below_max": true
+          },
+          "mutated_transition_count": 3,
+          "mutation_control_rejected": true,
+          "mutation_kind": "no_effect_next_grid_replacement",
+          "source_model_weight_mutation": false
+        },
+        "predicates": {
+          "class_agrees_with_retrieval": true,
+          "observed_mechanic": "push_block",
+          "retrieved_hypothesis": "push_block",
+          "sample_size_min": true,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 3.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 3,
+            "toggle_like": 0,
+            "top_margin": 0.816327
+          },
+          "support_count_min": true,
+          "uncertainty": 0.183673,
+          "uncertainty_below_max": true
+        },
+        "route_active": true
+      },
+      {
+        "cell_key": "sha256:f062ab9c586ab2c4630497293227fd80e41d179eb1b2a801ea640e86f2fba34c",
+        "licensed": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "mutation_receipt": {
+          "mutated_observed_mechanic": "negative",
+          "mutated_predicates": {
+            "class_agrees_with_retrieval": false,
+            "observed_mechanic": "negative",
+            "retrieved_hypothesis": "push_block",
+            "sample_size_min": true,
+            "support": {
+              "changed_ratio": 0.0,
+              "keyboard_changed": 0,
+              "mean_changed_cells": 0.0,
+              "n_changed": 0,
+              "n_transitions": 3,
+              "navigation_like": 0,
+              "push_like": 0,
+              "toggle_like": 0,
+              "top_margin": 0.769231
+            },
+            "support_count_min": false,
+            "uncertainty": 0.230769,
+            "uncertainty_below_max": true
+          },
+          "mutated_transition_count": 3,
+          "mutation_control_rejected": true,
+          "mutation_kind": "no_effect_next_grid_replacement",
+          "source_model_weight_mutation": false
+        },
+        "predicates": {
+          "class_agrees_with_retrieval": true,
+          "observed_mechanic": "push_block",
+          "retrieved_hypothesis": "push_block",
+          "sample_size_min": true,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 3.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 3,
+            "toggle_like": 0,
+            "top_margin": 0.816327
+          },
+          "support_count_min": true,
+          "uncertainty": 0.183673,
+          "uncertainty_below_max": true
+        },
+        "route_active": true
+      },
+      {
+        "cell_key": "sha256:4f315d86a6f89fc9e153f0b7add7e9deae9baebaa182afe4b78f289e0122fb2f",
+        "licensed": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "mutation_receipt": {
+          "mutated_observed_mechanic": "negative",
+          "mutated_predicates": {
+            "class_agrees_with_retrieval": false,
+            "observed_mechanic": "negative",
+            "retrieved_hypothesis": "push_block",
+            "sample_size_min": true,
+            "support": {
+              "changed_ratio": 0.0,
+              "keyboard_changed": 0,
+              "mean_changed_cells": 0.0,
+              "n_changed": 0,
+              "n_transitions": 3,
+              "navigation_like": 0,
+              "push_like": 0,
+              "toggle_like": 0,
+              "top_margin": 0.769231
+            },
+            "support_count_min": false,
+            "uncertainty": 0.230769,
+            "uncertainty_below_max": true
+          },
+          "mutated_transition_count": 3,
+          "mutation_control_rejected": true,
+          "mutation_kind": "no_effect_next_grid_replacement",
+          "source_model_weight_mutation": false
+        },
+        "predicates": {
+          "class_agrees_with_retrieval": true,
+          "observed_mechanic": "push_block",
+          "retrieved_hypothesis": "push_block",
+          "sample_size_min": true,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 3.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 3,
+            "toggle_like": 0,
+            "top_margin": 0.816327
+          },
+          "support_count_min": true,
+          "uncertainty": 0.183673,
+          "uncertainty_below_max": true
+        },
+        "route_active": true
+      },
+      {
+        "cell_key": "sha256:2563c8dc0fdce83e5c957a301e4b4653d5e0ff28a8c9ea0bbdf87a7dc62666cc",
+        "licensed": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "mutation_receipt": {
+          "mutated_observed_mechanic": "negative",
+          "mutated_predicates": {
+            "class_agrees_with_retrieval": false,
+            "observed_mechanic": "negative",
+            "retrieved_hypothesis": "toggle_move",
+            "sample_size_min": true,
+            "support": {
+              "changed_ratio": 0.0,
+              "keyboard_changed": 0,
+              "mean_changed_cells": 0.0,
+              "n_changed": 0,
+              "n_transitions": 3,
+              "navigation_like": 0,
+              "push_like": 0,
+              "toggle_like": 0,
+              "top_margin": 0.769231
+            },
+            "support_count_min": false,
+            "uncertainty": 0.230769,
+            "uncertainty_below_max": true
+          },
+          "mutated_transition_count": 3,
+          "mutation_control_rejected": true,
+          "mutation_kind": "no_effect_next_grid_replacement",
+          "source_model_weight_mutation": false
+        },
+        "predicates": {
+          "class_agrees_with_retrieval": true,
+          "observed_mechanic": "toggle_move",
+          "retrieved_hypothesis": "toggle_move",
+          "sample_size_min": true,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 4.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 0,
+            "toggle_like": 3,
+            "top_margin": 0.816327
+          },
+          "support_count_min": true,
+          "uncertainty": 0.183673,
+          "uncertainty_below_max": true
+        },
+        "route_active": true
+      },
+      {
+        "cell_key": "sha256:0aea10b44a7fbc800cd881d263d0425ec3758ed586377561617b960b3dae8adb",
+        "licensed": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "mutation_receipt": {
+          "mutated_observed_mechanic": "negative",
+          "mutated_predicates": {
+            "class_agrees_with_retrieval": false,
+            "observed_mechanic": "negative",
+            "retrieved_hypothesis": "toggle_move",
+            "sample_size_min": true,
+            "support": {
+              "changed_ratio": 0.0,
+              "keyboard_changed": 0,
+              "mean_changed_cells": 0.0,
+              "n_changed": 0,
+              "n_transitions": 3,
+              "navigation_like": 0,
+              "push_like": 0,
+              "toggle_like": 0,
+              "top_margin": 0.769231
+            },
+            "support_count_min": false,
+            "uncertainty": 0.230769,
+            "uncertainty_below_max": true
+          },
+          "mutated_transition_count": 3,
+          "mutation_control_rejected": true,
+          "mutation_kind": "no_effect_next_grid_replacement",
+          "source_model_weight_mutation": false
+        },
+        "predicates": {
+          "class_agrees_with_retrieval": true,
+          "observed_mechanic": "toggle_move",
+          "retrieved_hypothesis": "toggle_move",
+          "sample_size_min": true,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 4.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 0,
+            "toggle_like": 3,
+            "top_margin": 0.816327
+          },
+          "support_count_min": true,
+          "uncertainty": 0.183673,
+          "uncertainty_below_max": true
+        },
+        "route_active": true
+      },
+      {
+        "cell_key": "sha256:eade417fa88e86789e35381f8b724683bbf1b09ff922ca2b7221ac1ec8bff863",
+        "licensed": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "mutation_receipt": {
+          "mutated_observed_mechanic": "negative",
+          "mutated_predicates": {
+            "class_agrees_with_retrieval": false,
+            "observed_mechanic": "negative",
+            "retrieved_hypothesis": "toggle_move",
+            "sample_size_min": true,
+            "support": {
+              "changed_ratio": 0.0,
+              "keyboard_changed": 0,
+              "mean_changed_cells": 0.0,
+              "n_changed": 0,
+              "n_transitions": 3,
+              "navigation_like": 0,
+              "push_like": 0,
+              "toggle_like": 0,
+              "top_margin": 0.769231
+            },
+            "support_count_min": false,
+            "uncertainty": 0.230769,
+            "uncertainty_below_max": true
+          },
+          "mutated_transition_count": 3,
+          "mutation_control_rejected": true,
+          "mutation_kind": "no_effect_next_grid_replacement",
+          "source_model_weight_mutation": false
+        },
+        "predicates": {
+          "class_agrees_with_retrieval": true,
+          "observed_mechanic": "toggle_move",
+          "retrieved_hypothesis": "toggle_move",
+          "sample_size_min": true,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 4.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 0,
+            "toggle_like": 3,
+            "top_margin": 0.816327
+          },
+          "support_count_min": true,
+          "uncertainty": 0.183673,
+          "uncertainty_below_max": true
+        },
+        "route_active": true
+      },
+      {
+        "cell_key": "sha256:7f26b1edd4ac61d2760fada6d45f0fe4d482035a3bcf6787c2cf334f2f3dd693",
+        "licensed": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "mutation_receipt": {
+          "mutated_observed_mechanic": "negative",
+          "mutated_predicates": {
+            "class_agrees_with_retrieval": false,
+            "observed_mechanic": "negative",
+            "retrieved_hypothesis": "toggle_move",
+            "sample_size_min": true,
+            "support": {
+              "changed_ratio": 0.0,
+              "keyboard_changed": 0,
+              "mean_changed_cells": 0.0,
+              "n_changed": 0,
+              "n_transitions": 3,
+              "navigation_like": 0,
+              "push_like": 0,
+              "toggle_like": 0,
+              "top_margin": 0.769231
+            },
+            "support_count_min": false,
+            "uncertainty": 0.230769,
+            "uncertainty_below_max": true
+          },
+          "mutated_transition_count": 3,
+          "mutation_control_rejected": true,
+          "mutation_kind": "no_effect_next_grid_replacement",
+          "source_model_weight_mutation": false
+        },
+        "predicates": {
+          "class_agrees_with_retrieval": true,
+          "observed_mechanic": "toggle_move",
+          "retrieved_hypothesis": "toggle_move",
+          "sample_size_min": true,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 4.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 0,
+            "toggle_like": 3,
+            "top_margin": 0.816327
+          },
+          "support_count_min": true,
+          "uncertainty": 0.183673,
+          "uncertainty_below_max": true
+        },
+        "route_active": true
+      },
+      {
+        "cell_key": "sha256:55dab7da8b6236008e2bf96a9595ef482f270f2c3d433bc3a281e4c690b21073",
+        "licensed": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "mutation_receipt": {
+          "mutated_observed_mechanic": "negative",
+          "mutated_predicates": {
+            "class_agrees_with_retrieval": false,
+            "observed_mechanic": "negative",
+            "retrieved_hypothesis": "toggle_move",
+            "sample_size_min": true,
+            "support": {
+              "changed_ratio": 0.0,
+              "keyboard_changed": 0,
+              "mean_changed_cells": 0.0,
+              "n_changed": 0,
+              "n_transitions": 3,
+              "navigation_like": 0,
+              "push_like": 0,
+              "toggle_like": 0,
+              "top_margin": 0.769231
+            },
+            "support_count_min": false,
+            "uncertainty": 0.230769,
+            "uncertainty_below_max": true
+          },
+          "mutated_transition_count": 3,
+          "mutation_control_rejected": true,
+          "mutation_kind": "no_effect_next_grid_replacement",
+          "source_model_weight_mutation": false
+        },
+        "predicates": {
+          "class_agrees_with_retrieval": true,
+          "observed_mechanic": "toggle_move",
+          "retrieved_hypothesis": "toggle_move",
+          "sample_size_min": true,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 4.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 0,
+            "toggle_like": 3,
+            "top_margin": 0.816327
+          },
+          "support_count_min": true,
+          "uncertainty": 0.183673,
+          "uncertainty_below_max": true
+        },
+        "route_active": true
+      },
+      {
+        "cell_key": "sha256:19ab9bc7b6aee1dcdda19cca747d791e39d15a44d0f6b682b33abc9530cfe34f",
+        "licensed": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "mutation_receipt": {
+          "mutated_observed_mechanic": "negative",
+          "mutated_predicates": {
+            "class_agrees_with_retrieval": false,
+            "observed_mechanic": "negative",
+            "retrieved_hypothesis": "toggle_move",
+            "sample_size_min": true,
+            "support": {
+              "changed_ratio": 0.0,
+              "keyboard_changed": 0,
+              "mean_changed_cells": 0.0,
+              "n_changed": 0,
+              "n_transitions": 3,
+              "navigation_like": 0,
+              "push_like": 0,
+              "toggle_like": 0,
+              "top_margin": 0.769231
+            },
+            "support_count_min": false,
+            "uncertainty": 0.230769,
+            "uncertainty_below_max": true
+          },
+          "mutated_transition_count": 3,
+          "mutation_control_rejected": true,
+          "mutation_kind": "no_effect_next_grid_replacement",
+          "source_model_weight_mutation": false
+        },
+        "predicates": {
+          "class_agrees_with_retrieval": true,
+          "observed_mechanic": "toggle_move",
+          "retrieved_hypothesis": "toggle_move",
+          "sample_size_min": true,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 4.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 0,
+            "toggle_like": 3,
+            "top_margin": 0.816327
+          },
+          "support_count_min": true,
+          "uncertainty": 0.183673,
+          "uncertainty_below_max": true
+        },
+        "route_active": true
+      },
+      {
+        "cell_key": "sha256:2179196bbfa7694155f1b0d45dd60b821b037fa90f3e00d2743faf42e916c7e1",
+        "licensed": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "mutation_receipt": {
+          "mutated_observed_mechanic": "negative",
+          "mutated_predicates": {
+            "class_agrees_with_retrieval": false,
+            "observed_mechanic": "negative",
+            "retrieved_hypothesis": "toggle_move",
+            "sample_size_min": true,
+            "support": {
+              "changed_ratio": 0.0,
+              "keyboard_changed": 0,
+              "mean_changed_cells": 0.0,
+              "n_changed": 0,
+              "n_transitions": 3,
+              "navigation_like": 0,
+              "push_like": 0,
+              "toggle_like": 0,
+              "top_margin": 0.769231
+            },
+            "support_count_min": false,
+            "uncertainty": 0.230769,
+            "uncertainty_below_max": true
+          },
+          "mutated_transition_count": 3,
+          "mutation_control_rejected": true,
+          "mutation_kind": "no_effect_next_grid_replacement",
+          "source_model_weight_mutation": false
+        },
+        "predicates": {
+          "class_agrees_with_retrieval": true,
+          "observed_mechanic": "toggle_move",
+          "retrieved_hypothesis": "toggle_move",
+          "sample_size_min": true,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 4.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 0,
+            "toggle_like": 3,
+            "top_margin": 0.816327
+          },
+          "support_count_min": true,
+          "uncertainty": 0.183673,
+          "uncertainty_below_max": true
+        },
+        "route_active": true
+      },
+      {
+        "cell_key": "sha256:5d1a0963b3ab4bf5e2cea752cfbbcd06f5373b039bcf1eea096eaef16aec4ee7",
+        "licensed": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "mutation_receipt": {
+          "mutated_observed_mechanic": "negative",
+          "mutated_predicates": {
+            "class_agrees_with_retrieval": false,
+            "observed_mechanic": "negative",
+            "retrieved_hypothesis": "toggle_move",
+            "sample_size_min": true,
+            "support": {
+              "changed_ratio": 0.0,
+              "keyboard_changed": 0,
+              "mean_changed_cells": 0.0,
+              "n_changed": 0,
+              "n_transitions": 3,
+              "navigation_like": 0,
+              "push_like": 0,
+              "toggle_like": 0,
+              "top_margin": 0.769231
+            },
+            "support_count_min": false,
+            "uncertainty": 0.230769,
+            "uncertainty_below_max": true
+          },
+          "mutated_transition_count": 3,
+          "mutation_control_rejected": true,
+          "mutation_kind": "no_effect_next_grid_replacement",
+          "source_model_weight_mutation": false
+        },
+        "predicates": {
+          "class_agrees_with_retrieval": true,
+          "observed_mechanic": "toggle_move",
+          "retrieved_hypothesis": "toggle_move",
+          "sample_size_min": true,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 4.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 0,
+            "toggle_like": 3,
+            "top_margin": 0.816327
+          },
+          "support_count_min": true,
+          "uncertainty": 0.183673,
+          "uncertainty_below_max": true
+        },
+        "route_active": true
+      }
+    ],
+    "target_license_max_uncertainty": 0.35,
+    "target_license_min_changed": 3
+  },
+  "test_commands": [
+    ".venv/bin/python -m carnot.experiment_6307_arc_target_validated_route_canary --date 20260811",
+    ".venv/bin/pytest tests/python/test_experiment_6307_arc_target_validated_route_canary.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6307_arc_target_validated_route_canary.py -m pytest tests/python/test_experiment_6307_arc_target_validated_route_canary.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6307_arc_target_validated_route_canary.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6307_arc_target_validated_route_canary.py",
+    ".venv/bin/python -m carnot.experiment_6298_terminal_evidence_preflight_linter --date 20260811 --no-run-commands",
+    "sed -n 1,180p ops/e2e-test-plan.md",
+    ".venv/bin/python scripts/determination_preservation_lint.py --all",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6307_arc_target_validated_route_canary.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6307_arc_target_validated_route_canary.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6307_arc_target_validated_route_canary.py -m pytest tests/python/test_experiment_6307_arc_target_validated_route_canary.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_6307_arc_target_validated_route_canary.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6298_terminal_evidence_preflight_linter --date 20260811 --no-run-commands": 0,
+    ".venv/bin/python -m carnot.experiment_6307_arc_target_validated_route_canary --date 20260811": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6307_arc_target_validated_route_canary.json": null,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6307_arc_target_validated_route_canary.py": 0,
+    ".venv/bin/python scripts/determination_preservation_lint.py --all": 0,
+    "sed -n 1,180p ops/e2e-test-plan.md": 0
+  },
+  "tokenizer_and_chat_template_hashes": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "chat_template_sha256": "sha256:10a9402e0747de567116480c9e96fcedef48f4907b491213ea4ec82c2cee9064",
+      "chat_template_source": "manual_plain_completion_target_license_contract",
+      "tokenizer_probe_sha256": "sha256:0a4a4c0ed11f40df958335c209aa88c36e69405916729f285307d2d7f14184ad",
+      "tokenizer_status": "embedded_tokenizer_probe_ok"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "chat_template_sha256": "sha256:10a9402e0747de567116480c9e96fcedef48f4907b491213ea4ec82c2cee9064",
+      "chat_template_source": "manual_plain_completion_target_license_contract",
+      "tokenizer_probe_sha256": "sha256:9980d9ce88b084c8ed8677ebf1e74192e49aceb0bb18087c0d2c1cc5c331d477",
+      "tokenizer_status": "embedded_tokenizer_probe_ok"
+    }
+  },
+  "upstream_paths_hashes_and_terminal_classes": {
+    "exp6294_result_reused_as_motivation_only": true,
+    "exp6295_skip_respected": true,
+    "principle": "prior results are inputs, not solve claims",
+    "rows": [
+      {
+        "exists": true,
+        "path": "research-references.md",
+        "sha256": "sha256:71353b17346a2de056e84fce6b9f21d1de23c75554926b3ea16105c27e18d5b1",
+        "terminal_class": "reference",
+        "v543_verdi_marker_present": true
+      },
+      {
+        "arc_mechanic_causal_ready_score": 0.91,
+        "exact_one_gate_eligible": false,
+        "exists": true,
+        "path": "results/experiment_6294_arc_mechanic_router_causal_canary.json",
+        "sha256": "sha256:83f3a54e031f72a10b13ff6dc3847fd34c8bf7925a562be0c56a2c70bfa1d932",
+        "terminal_class": "complete"
+      },
+      {
+        "blocked_at_layer": "conductor_pre_gate",
+        "exists": true,
+        "path": "results/experiment_6295_arc_mechanic_router_holdout_audit.json",
+        "sha256": "sha256:91f2769afd99ec5d39c3c47438349a19125416512ced3c31d091af7ef10981d7",
+        "terminal_class": "blocked"
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6298_terminal_evidence_preflight_linter.json",
+        "sha256": "sha256:dc944417e7e8138219a64f6eef23a4134b688848e3dfafd0b5c74c1d6caecac7",
+        "terminal_class": "complete"
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6299_v543_post_marker_source_scope_freeze.json",
+        "sha256": "sha256:89c2bf5fe42b97364c8f7fc192f88e1414af6cfc2611e52dbd05643ab3e657cb",
+        "terminal_class": "complete"
+      }
+    ]
+  },
+  "verifier_is_oracle": false
+}

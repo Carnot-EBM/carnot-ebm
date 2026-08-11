@@ -24779,3 +24779,123 @@ principles.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6294 | Pending. | Pending. |
+
+### REQ-ARC-WMTE-6307: ARC Target-Validated Mechanic Route Canary
+
+Experiment 6307 SHALL apply the V543 VERDI rule that retrieval is not transfer
+to ARC mechanic routing. A retrieved mechanic route SHALL be an inactive
+hypothesis until the live agent's own transition evidence validates it on the
+target runtime window. The experiment SHALL compare three arms:
+
+- `router_off`: no retrieved mechanic route is shown or activated.
+- `retrieval_only_static_route`: a retrieved mechanic hypothesis is present, but
+  it is not licensed and SHALL NOT activate route behavior.
+- `target_licensed_route`: the same hypothesis may activate only after target
+  predicates pass on the agent-visible transitions and a mutation control proves
+  those predicates can reject a false route.
+
+The workflow SHALL perform a registry precheck before fixture construction,
+model resolution, or inference. It SHALL read the full solve registry, hash it,
+and prove the synthetic target is not a duplicate public target. It SHALL run
+the Exp6298 terminal-evidence preflight, record model cache, CUDA/offload, free
+VRAM, disk, RAM, timeout, seed, and protected-hash receipts, and then seal fresh
+synthetic transition fixtures. Fixtures SHALL use public development mechanic
+templates only. They SHALL NOT read hidden game source, run outer-loop
+ground-truth search, duplicate a prior solve, install a per-game adapter, mutate
+model weights, or update the solve registry.
+
+For every fixture, model, and seed, all three arms SHALL match starting history,
+actions, action budget, token budget, quantization, model id, and model-call
+count. The target-license policy SHALL be generic. It SHALL use only visible
+`(before, action, data, after)` transitions discovered by the agent. It SHALL
+validate class agreement, minimum support, uncertainty margin, and mutation
+rejection. A false or missing license SHALL fail closed into rejection or
+abstention. The experiment SHALL not target, infer, or claim any level solve.
+
+`MODEL_SPECS` SHALL include both `unsloth/gemma-4-31B-it-GGUF` and
+`unsloth/Qwen3.6-35B-A3B-GGUF`. The artifact SHALL record concrete cached GGUF
+paths, file hashes, revisions, quantizations, embedded-tokenizer receipts,
+chat-template hashes, and CUDA/GPU-offload receipts by model. If a required
+model or CUDA/offload receipt is unavailable, the artifact SHALL stop with a
+terminal blocked verdict and SHALL not synthesize treatment metrics.
+
+Readiness SHALL be exactly `1.0` only when each adequately powered
+mechanic/model cell shows target validation reducing unsupported or invalid
+route effects, the preregistered proposal-path metric improves for the
+target-licensed arm against both controls, baseline harm is absent, required
+models and CUDA/offload receipts are terminal, and at least 60 seconds of actual
+measured work occur. Sleeping or artificial duration padding SHALL be forbidden
+and counted separately.
+
+`python/carnot/experiment_6307_arc_target_validated_route_canary.py` SHALL write
+`results/experiment_6307_arc_target_validated_route_canary.json` with these bare
+top-level fields: `status`, `upstream_paths_hashes_and_terminal_classes`,
+`registry_precheck_path_hash_and_target_receipt`, `solve_provenance`,
+`sealed_fresh_fixture_manifest_path_and_hash`,
+`live_transition_window_manifest_path_and_hash`,
+`no_hidden_source_and_no_outer_loop_search_receipts`, `MODEL_SPECS`,
+`models_used`, `model_file_hashes_revisions_and_quantizations`,
+`tokenizer_and_chat_template_hashes`,
+`cuda_and_gpu_offload_receipts_by_model`, `raw_output_paths_and_hashes`,
+`router_off_retrieval_only_and_target_licensed_arm_contract`,
+`matched_seed_history_action_budget_and_model_call_receipts`,
+`target_validation_predicates_and_mutation_receipts`,
+`hypothesis_retrieval_activation_rejection_and_abstention_counts`,
+`route_activation_counts_by_arm_mechanic_and_model`,
+`executable_proposal_acceptance_by_arm_mechanic_and_model`,
+`invalid_proposal_rate_by_arm_mechanic_and_model`,
+`candidate_diversity_by_arm_mechanic_and_model`,
+`decision_latency_by_arm_mechanic_and_model`,
+`paired_causal_deltas_intervals_and_sample_sizes`, `baseline_harm_controls`,
+`actual_work_duration_receipt`, `duration_padding_count`,
+`arc_target_licensed_router_ready_score`, `hidden_game_source_access_count`,
+`outer_loop_ground_truth_search_count`, `arc_level_solve_claim_count`,
+`registry_update_count`, `source_model_weight_mutation_count`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+`solve_provenance` SHALL equal `live_agent_self_discovery`. Hidden-source,
+outer-loop-search, solve-claim, registry-update, duration-padding, and
+source-model-weight-mutation counts SHALL be bare integer zero values.
+`honest_verdict` SHALL start with a terminal prefix. `field_principles` SHALL
+include one short principle for every required field.
+
+#### SCENARIO-ARC-WMTE-6307-REGISTRY-PRECHECK
+
+Given the experiment starts, when preconditions run, then the registry hash and
+target receipt are recorded before fixture sealing. The target is absent from
+the solve registry and no registry update occurs.
+
+#### SCENARIO-ARC-WMTE-6307-INACTIVE-HYPOTHESES
+
+Given a retrieved mechanic route without target validation, when the
+retrieval-only arm is built, then the route remains inactive, activation count
+is zero, and the hypothesis is counted as rejected or abstained.
+
+#### SCENARIO-ARC-WMTE-6307-TARGET-LICENSE
+
+Given the live agent's own transitions support the retrieved mechanic, when
+the target-license predicates pass and a no-effect mutation is rejected, then
+only the target-licensed arm may activate the route.
+
+#### SCENARIO-ARC-WMTE-6307-MATCHED-THREE-ARM-CELLS
+
+Given matched windows, models, and seeds, when requests are built, then each
+cell has exactly the three required arms and the same starting history, action
+budget, token budget, quantization, and model-call count.
+
+#### SCENARIO-ARC-WMTE-6307-ARTIFACT-GUARDS
+
+Given any completed or blocked 6307 artifact, validation refuses hidden-source
+access, outer-loop search, solve claims, registry updates, source weight
+mutation, duration padding, missing field principles, false licenses, arm
+mismatch, baseline harm, nonterminal verdicts, model substitution, and checksum
+drift.
+
+## Implementation Status (REQ-ARC-WMTE-6307)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6307 | Pending. | Pending. |
