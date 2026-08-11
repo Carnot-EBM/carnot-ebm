@@ -452,3 +452,81 @@ When Exp6175 computes the preregistered gates,
 Then parseability, competence, headroom, minority, and family-support conjuncts
 fail closed, readiness is zero, future rows are forbidden, and the artifact
 reports `retired:`.
+
+### REQ-VERIFY-6301: Activation Bus Integrity Audit
+
+The repository SHALL provide an Exp6301 integrity audit for the frozen Exp6300
+activation bus. The audit SHALL treat Exp6300 as a representation experiment,
+not as an authority for state or energy claims.
+
+Exp6301 SHALL reconstruct every evaluation row from Exp5852 row hashes and the
+frozen Exp6300 fold manifest. It SHALL load only cached Exp6300 adapter
+checkpoints. It SHALL NOT refit Exp6300. It SHALL NOT train a scientific energy
+head. It SHALL initialize fresh evaluation consumers for the audit controls.
+
+Exp6301 SHALL replay claim-flip, pair-member swap, deterministic label
+permutation, model-ID prediction, norm-only, length-only, token-count,
+truncation, duplicate reweighting, no-information, evaluator-swap, false-pass
+injection, and held-family controls. Folds SHALL remain group-aware. Decisions
+SHALL stay disaggregated by fold, model, axis, family, hardness, and surface.
+Pooled results SHALL NOT override a failed cell.
+
+Exp6301 SHALL require model-ID accuracy near chance in the shared space while
+also reporting matched semantic alignment. It SHALL report both signals. It
+SHALL NOT trade one off against the other silently.
+
+The terminal artifact SHALL be
+`results/experiment_6301_activation_bus_integrity_audit.json`. It SHALL include
+`status`, `upstream_path_hash_and_terminal_class`, `MODEL_SPECS`,
+`models_covered`, `row_and_checkpoint_reconstruction_receipts`,
+`evaluator_independence_receipts`, `fold_leakage_checks`,
+`claim_flip_sensitivity`, `pair_swap_controls`,
+`label_permutation_controls`, `model_identity_controls`,
+`norm_length_token_and_truncation_controls`,
+`duplicate_and_no_information_controls`, `evaluator_swap_receipts`,
+`disaggregated_cell_decisions`, `failed_cells`, `surviving_shortcuts`,
+`false_pass_injection_results`, `activation_bus_integrity_ready_score`,
+`source_mutation_count`, `protected_files_unchanged`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
+`random_seeds`, `reproducibility_checksum`, and `honest_verdict`.
+`source_mutation_count` SHALL be the bare integer `0`. `MODEL_SPECS` SHALL name
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+Readiness SHALL be bare `1.0` only when all preconditions pass, all adequately
+powered cells pass, every false-pass injection is blocked, zero shortcuts
+survive, every test command exits zero, and protected files remain unchanged.
+Otherwise readiness SHALL be bare `0.0`, and `honest_verdict` SHALL start with
+a terminal prefix that names the blocking reason.
+
+### SCENARIO-VERIFY-6301-RECONSTRUCT: Rows And Checkpoints Are Replayed
+
+Given Exp5852 rows, the Exp6300 fold manifest, and Exp6300 adapter
+checkpoints,
+When Exp6301 runs,
+Then it recomputes row hashes, checks checkpoint hashes, reconstructs held rows
+from group-aware folds, and records that no Exp6300 refit occurred.
+
+**Spec traces:** REQ-VERIFY-6301
+
+### SCENARIO-VERIFY-6301-SHORTCUTS: Controls Fail Closed
+
+Given a cached bus whose shared vectors carry a claim-direction, pair-swap,
+label, model-ID, norm, length, token-count, truncation, duplicate, null, or
+held-family shortcut,
+When Exp6301 evaluates disaggregated cells,
+Then the matching shortcut appears in `surviving_shortcuts`, the failed cell is
+listed, and readiness is `0.0`.
+
+**Spec traces:** REQ-VERIFY-6301
+
+### SCENARIO-VERIFY-6301-INDEPENDENCE: Consumers Are Fresh
+
+Given an Exp6300 artifact that reports ready decisions,
+When Exp6301 audits it,
+Then Exp6301 ignores Exp6300 decision labels, initializes independent
+evaluation consumers, runs evaluator-swap and false-pass injections, and blocks
+any injected false pass.
+
+**Spec traces:** REQ-VERIFY-6301
