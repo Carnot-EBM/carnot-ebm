@@ -825,6 +825,196 @@ def _route_explore_budget(route: dict[str, Any]) -> int:
     return SUBMITTED_GRAPH_EXPLORE_BUDGET
 
 
+class TargetLicensedRouteShadowLedger:
+    """Observation-only target-license route ledger.
+
+    The ledger reads transitions the live policy already collected. It never
+    returns an action to the policy, so a bad shadow row can only hurt the
+    measurement artifact, not the submitted move.
+    """
+
+    def __init__(
+        self,
+        *,
+        enabled: bool,
+        max_uncertainty: float = 0.35,
+        min_changed: int = 3,
+    ) -> None:
+        self.enabled = bool(enabled)
+        self.max_uncertainty = float(max_uncertainty)
+        self.min_changed = int(min_changed)
+        self.rows: list[dict[str, Any]] = []
+        self.errors: list[str] = []
+
+    @staticmethod
+    def _move_payload(move: Any) -> dict[str, Any]:
+        kind, data = move if isinstance(move, tuple) and len(move) == 2 else (None, None)
+        return {
+            "action": "RESET" if kind == "RESET" else (int(kind) if kind is not None else None),
+            "data": dict(data) if isinstance(data, dict) else data,
+        }
+
+    @staticmethod
+    def _snapshot(policy: Any, latest_level: int | None) -> dict[str, Any]:
+        return {
+            "explore_budget": int(getattr(policy, "explore_budget", 0) or 0),
+            "plan_len": len(getattr(policy, "plan", []) or []),
+            "plan_pi": int(getattr(policy, "pi", 0) or 0),
+            "phase": getattr(policy, "phase", None),
+            "level": int(latest_level if latest_level is not None else 0),
+            "transition_count": len(getattr(policy, "transitions", []) or []),
+        }
+
+    def _license_receipt(self, transitions: Sequence[Any]) -> dict[str, Any]:
+        if not transitions:
+            return {
+                "route_reachable": False,
+                "licensed": False,
+                "abstained": True,
+                "false_license": False,
+                "reason": "no_agent_owned_transitions",
+                "observed_mechanic": "unknown",
+                "support": {"n_changed": 0},
+                "uncertainty": 1.0,
+                "sample_size": 0,
+            }
+        try:
+            from carnot.agentic import arc_mechanic_class_detector as detector
+
+            result = detector.classify_transition_history(transitions)
+            support = dict(result.support)
+            observed = str(result.predicted_class)
+            route_reachable = bool(
+                observed not in ("unknown", "negative")
+                and int(support.get("n_changed") or 0) >= self.min_changed
+                and float(result.uncertainty) <= self.max_uncertainty
+                and int(result.sample_size) >= self.min_changed
+            )
+            return {
+                "route_reachable": route_reachable,
+                "licensed": route_reachable,
+                "abstained": not route_reachable,
+                "false_license": False,
+                "reason": "target_runtime_evidence_supports_route"
+                if route_reachable
+                else "target_runtime_evidence_insufficient",
+                "observed_mechanic": observed,
+                "probabilities": dict(result.probabilities),
+                "support": support,
+                "uncertainty": float(result.uncertainty),
+                "sample_size": int(result.sample_size),
+            }
+        except Exception as exc:
+            self.errors.append(repr(exc)[:160])
+            return {
+                "route_reachable": False,
+                "licensed": False,
+                "abstained": True,
+                "false_license": False,
+                "reason": "detector_failed_closed",
+                "observed_mechanic": "unknown",
+                "support": {"n_changed": 0},
+                "uncertainty": 1.0,
+                "sample_size": len(transitions),
+            }
+
+    @staticmethod
+    def _observed_actions(transitions: Sequence[Any]) -> set[int]:
+        out: set[int] = set()
+        for transition in transitions:
+            try:
+                out.add(int(getattr(transition, "action", 0)))
+            except Exception:
+                pass
+        return out
+
+    def observe(
+        self,
+        policy: Any,
+        *,
+        shipped_move: Any,
+        prospective_move: Any | None = None,
+        latest_level: int | None = None,
+    ) -> dict[str, Any] | None:
+        if not self.enabled:
+            return None
+        before = self._snapshot(policy, latest_level)
+        transitions = tuple(getattr(policy, "transitions", []) or [])
+        license_receipt = self._license_receipt(transitions)
+        proposal = prospective_move if prospective_move is not None else shipped_move
+        shipped_payload = self._move_payload(shipped_move)
+        proposal_payload = self._move_payload(proposal)
+        observed_actions = self._observed_actions(transitions)
+        proposed_action = proposal_payload["action"]
+        valid_action = isinstance(proposed_action, int) and 1 <= proposed_action <= 6
+        route_reachable = bool(license_receipt["route_reachable"])
+        supported = bool(
+            route_reachable
+            and valid_action
+            and (not observed_actions or int(proposed_action) in observed_actions)
+        )
+        unsupported = bool(route_reachable and valid_action and not supported)
+        after = self._snapshot(policy, latest_level)
+        row = {
+            "row_index": len(self.rows),
+            "enabled": True,
+            "route_reachable": route_reachable,
+            "licensed": bool(license_receipt["licensed"]),
+            "abstained": bool(license_receipt["abstained"]),
+            "false_license": bool(license_receipt["false_license"]),
+            "observed_mechanic": license_receipt.get("observed_mechanic"),
+            "license_reason": license_receipt.get("reason"),
+            "transition_count": len(transitions),
+            "observed_actions": sorted(observed_actions),
+            "shipped_action": shipped_payload,
+            "prospective_action": proposal_payload,
+            "prospective_action_supported": supported,
+            "unsupported_proposal": unsupported,
+            "applied_unsupported_proposal": False,
+            "action_parity": True,
+            "explore_budget_before_shadow": before["explore_budget"],
+            "explore_budget_after_shadow": after["explore_budget"],
+            "plan_len_before_shadow": before["plan_len"],
+            "plan_len_after_shadow": after["plan_len"],
+            "phase_before_shadow": before["phase"],
+            "phase_after_shadow": after["phase"],
+            "level_before_shadow": before["level"],
+            "level_after_shadow": after["level"],
+            "registry_update_count": 0,
+            "source_bfs_adapter_prior_game_hidden_state_and_registry_target_access_count": 0,
+            "license_receipt": license_receipt,
+        }
+        self.rows.append(row)
+        return row
+
+    def receipt(self) -> dict[str, Any]:
+        return {
+            "enabled": self.enabled,
+            "row_count": len(self.rows),
+            "error_count": len(self.errors),
+            "errors": list(self.errors),
+            "route_reachable_count": sum(int(row["route_reachable"]) for row in self.rows),
+            "supported_proposal_count": sum(
+                int(row["prospective_action_supported"]) for row in self.rows
+            ),
+            "unsupported_proposal_count": sum(
+                int(row["unsupported_proposal"]) for row in self.rows
+            ),
+            "abstention_count": sum(int(row["abstained"]) for row in self.rows),
+            "false_license_count": sum(int(row["false_license"]) for row in self.rows),
+            "action_parity": all(bool(row["action_parity"]) for row in self.rows),
+            "budget_parity": all(
+                row["explore_budget_before_shadow"] == row["explore_budget_after_shadow"]
+                for row in self.rows
+            ),
+            "level_state_parity": all(
+                row["level_before_shadow"] == row["level_after_shadow"] for row in self.rows
+            ),
+            "registry_update_count": sum(int(row["registry_update_count"]) for row in self.rows),
+            "rows": [dict(row) for row in self.rows],
+        }
+
+
 def _recommend_live_approach(
     game_id: str,
     *,
@@ -4963,6 +5153,7 @@ class E3AgentPolicy:
         generic_causal_primitive: Any | None = None,
         epistemic_ledger: Any = _DEFAULT_EPISTEMIC_LEDGER,
         structured_evidence_memory: Any = _DEFAULT_STRUCTURED_EVIDENCE_MEMORY,
+        target_licensed_route_shadow: Any | bool | None = False,
     ) -> None:
         import os
 
@@ -5039,6 +5230,12 @@ class E3AgentPolicy:
             structured_evidence_memory = SUBMITTED_STRUCTURED_EVIDENCE_MEMORY_ENABLED
         self.structured_evidence_memory = coerce_structured_evidence_memory(
             structured_evidence_memory
+        )
+        self.target_licensed_route_shadow_enabled = bool(target_licensed_route_shadow)
+        self._target_licensed_route_shadow = (
+            TargetLicensedRouteShadowLedger(enabled=True)
+            if self.target_licensed_route_shadow_enabled
+            else None
         )
         self.approach_recommendation["strategy"] = self.strategy_route
         self._route_from_frame_checked = False
@@ -6097,8 +6294,37 @@ class E3AgentPolicy:
         its return sites.
         """
         if self._provenance is None:
-            return self._next_move_routed(frames, latest)
-        return self._next_move_recorded(frames, latest)
+            move = self._next_move_routed(frames, latest)
+        else:
+            move = self._next_move_recorded(frames, latest)
+        return self.record_target_licensed_route_shadow(
+            move,
+            latest_level=_level_of(latest) if latest is not None else None,
+        )
+
+    def target_licensed_route_shadow(self) -> TargetLicensedRouteShadowLedger | None:
+        """Return the target-license shadow ledger, or None on the submitted default."""
+
+        return self._target_licensed_route_shadow
+
+    def record_target_licensed_route_shadow(
+        self,
+        move: Any,
+        *,
+        latest_level: int | None = None,
+        prospective_move: Any | None = None,
+    ) -> Any:
+        """Record an observation-only route-shadow row and return the original move."""
+
+        shadow = self._target_licensed_route_shadow
+        if shadow is not None:
+            shadow.observe(
+                self,
+                shipped_move=move,
+                prospective_move=prospective_move,
+                latest_level=latest_level,
+            )
+        return move
 
     def _next_move_recorded(self, frames, latest):
         """Run the real routing and append one provenance row. Observation only.

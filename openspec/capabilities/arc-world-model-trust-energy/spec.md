@@ -24983,6 +24983,102 @@ access, outer-loop search, solve claims, registry updates, source weight
 mutation, default-on drift, refit receipts, model substitution, nonterminal
 verdicts, missing field principles, and checksum drift.
 
+### REQ-ARC-WMTE-6321: Live E3 Target-Licensed Route Shadow A/B
+
+Experiment 6321 SHALL wire the target-licensed mechanic route into the actual
+submitted `E3AgentPolicy` construction path only as a default-off shadow. The
+shadow SHALL read only the live policy's own runtime transitions and prospective
+action evidence. It SHALL NOT change the shipped action, action budget, token
+budget, solve registry, level state, submitted config, or protected files.
+
+Before any attempt, Experiment 6321 SHALL run a registry precheck and freeze the
+selected games, levels, model windows, budgets, seeds, route rules, expected
+parity, and protected hashes. Each selected game/level SHALL be checked against
+`ops/arc_solve_registry.yaml`; duplicate registry targets SHALL fail closed. The
+selected cells SHALL be proposal-routing telemetry only. They SHALL NOT be solve
+targets, level-credit targets, per-game adapters, offline BFS targets, prior-game
+trajectory readers, hidden-source readers, hidden-state readers, or registry
+updates.
+
+The A/B SHALL compare `shadow_off` and `shadow_computed` arms through fresh
+`E3AgentPolicy` instances built from the same submitted defaults. Each arm SHALL
+use the same selected synthetic visible game window, seed, action budget, model
+id, quantization, and runtime observations. The `shadow_computed` arm MAY record
+target-license reachability, supported and unsupported proposals, prospective
+action support, latency, and resource cost. It SHALL return the byte-identical
+shipped action sequence produced by the corresponding `shadow_off` arm.
+
+`MODEL_SPECS` SHALL include both `unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-31B-it-GGUF` with concrete cached file hashes, revisions,
+quantizations, tokenizer hashes, and CUDA/GPU offload receipts. The artifact
+SHALL correct the Exp6307 missing-`random_seed` methodology warning by recording
+whether the checked-in Exp6307 artifact lacks the singular field, whether the
+current Exp6307 writer emits it, and how 6321 records `random_seeds` for its own
+run.
+
+`python/carnot/experiment_6321_arc_target_licensed_route_live_shadow_ab.py`
+SHALL write
+`results/experiment_6321_arc_target_licensed_route_live_shadow_ab.json` with
+these bare top-level fields: `status`,
+`exp6307_and_exp6308_paths_hashes_and_terminal_classes`,
+`arc_registry_precheck_path_hash_and_result`,
+`selected_game_level_and_nonduplicate_reason`, `solve_provenance`,
+`MODEL_SPECS`, `models_used`,
+`model_file_hashes_revisions_and_quantizations`, `tokenizer_hashes`,
+`cuda_and_gpu_offload_receipts_by_model`,
+`live_agent_entrypoint_and_e3_policy_hash`,
+`submitted_config_pre_and_post_hashes`, `default_off_shadow_wiring_receipt`,
+`shadow_off_and_shadow_computed_arm_definitions`,
+`fresh_agent_owned_transition_manifest_path_and_hash`,
+`target_license_evidence_receipts`,
+`route_reachability_by_model_window_and_seed`,
+`supported_unsupported_and_abstained_proposals_by_arm`,
+`prospective_action_support_by_arm`,
+`action_budget_registry_and_level_state_parity`,
+`latency_and_resource_cost_by_arm`,
+`source_bfs_adapter_prior_game_hidden_state_and_registry_target_access_count`,
+`hidden_game_source_access_count`, `solve_claimed`, `levels_credited`,
+`registry_update_count`, `actual_work_duration_receipt`,
+`duration_padding_count`, `arc_route_live_shadow_ready_score`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`, `random_seeds`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+`solve_provenance` SHALL equal `live_agent_self_discovery`. All access,
+solve, level-credit, registry-update, and duration-padding counts SHALL be bare
+integer zero values. `solve_claimed` SHALL be bare false. Readiness SHALL mean
+route reachability plus exact action parity and zero escape-hatch access. It
+SHALL NOT mean a level solve.
+
+#### SCENARIO-ARC-WMTE-6321-DEFAULT-OFF-PARITY
+
+Given a normal submitted `E3AgentPolicy` construction, when the target-licensed
+route shadow is not requested, then the shadow ledger is absent, the shipped
+action is unchanged, and submitted config hashes stay unchanged before and after
+policy construction.
+
+#### SCENARIO-ARC-WMTE-6321-SHADOW-COMPUTED-ISOLATION
+
+Given the shadow is computed on the policy's own visible transitions, when an
+action is selected, then the shadow records license reachability and prospective
+support without mutating the returned action, action budget, registry hash, or
+level counter.
+
+#### SCENARIO-ARC-WMTE-6321-REGISTRY-PRECHECK
+
+Given the selected game and level cells, when preconditions run, then the solve
+registry hash and nonduplicate result are recorded before attempts, and any
+duplicate selected target blocks readiness.
+
+#### SCENARIO-ARC-WMTE-6321-ARTIFACT-GUARDS
+
+Given any 6321 artifact, validation refuses hidden-source access, source/BFS/
+adapter/prior-game/hidden-state/registry-target access, solve claims, level
+credit, registry updates, duration padding, unsupported model substitution,
+action parity drift, default-on shadow drift, missing field principles, and
+checksum drift.
+
 ## Implementation Status (REQ-ARC-WMTE-6307, REQ-ARC-WMTE-6308)
 
 | REQ | Implementation | Tests |
