@@ -2593,6 +2593,124 @@ principles exist, and the normalized checksum matches the payload.
 |---|---|---|
 | REQ-INFRA-6286 | Pending implementation: `python/carnot/experiment_6286_v541_evidence_eligibility_ledger.py`; terminal artifact `results/experiment_6286_v541_evidence_eligibility_ledger.json`. | Pending focused tests: `tests/python/test_experiment_6286_v541_evidence_eligibility_ledger.py`. |
 
+## REQ-INFRA-6296: V542 Capstone SHALL Preserve Exact Branch Evidence Without Claim Laundering
+
+Carnot SHALL build Exp6296 as an ungated branch-independent capstone for
+milestone `2026.08.542`. The capstone SHALL load the active V542 roadmap,
+the exact declared deliverables for Exp6284 through Exp6295, conductor
+receipts, the ARC registry, the current adversarial verifier, the terminal
+artifact classifier, and protected file hashes before deriving any branch
+state. It SHALL write
+`results/experiment_6296_v542_adversarial_capstone.json`.
+
+Exp6296 SHALL classify each task by its exact declared artifact path. A
+conductor OK receipt SHALL NOT override a missing, malformed, running,
+partial, unknown, flagged, blocked, skipped, retired, null, or nonterminal
+artifact. A gate tombstone SHALL remain skipped. Same-number aliases and
+sidecars SHALL be recorded only as ignored aliases.
+
+Exp6296 SHALL re-run current adversarial verification for every present
+upstream artifact. It SHALL preserve stamped artifact flags separately from
+current-rule flags. Missing artifacts and nonterminal artifacts SHALL NOT feed
+branch promotion. Structured gates SHALL be recomputed from exact bare fields
+only. Missing fields SHALL stay missing. Principle-wrapped fields SHALL NOT
+be treated as gate inputs.
+
+Exp6296 SHALL publish separate promotion ledgers for exact-state energy
+refinement, revocable continuous self-learning, and ARC mechanic-route causal
+validation. Oracle repair alone SHALL NOT promote the energy-refinement
+branch. Replay-only gains SHALL NOT promote continuous learning. A no-solve
+ARC canary SHALL NOT become an ARC solve claim. Prior failures with
+`retire_if_same_verdict=true` SHALL be evaluated by exact verdict string and
+recorded without editing the exclusion manifest.
+
+The Exp6296 artifact SHALL include these required fields: `status`,
+`milestone_roadmap_path_and_hash`, `exact_declared_deliverable_matrix`,
+`conductor_receipt_matrix`, `exact_path_over_receipt_precedence`,
+`current_rule_adversarial_results_by_task`,
+`terminal_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts`,
+`gate_cascade_receipts`, `v541_evidence_eligibility_state`,
+`asp_continuous_relaxation_state`, `partial_atom_adapter_state`,
+`flagship_refinement_benchmark_state`, `oracle_value_boundary_receipt`,
+`revocable_memory_state`, `chronological_crystallization_state`,
+`nonreplay_transfer_receipt`, `heldout_memory_transfer_state`,
+`shadow_consumer_state`, `arc_causal_canary_state`, `arc_holdout_state`,
+`arc_provenance_and_registry_receipts`,
+`branch_independent_promotion_ledger`, `prior_failure_retirement_actions`,
+`publication_gate_g1_g2_g3_g4_and_unmet_gates`, `source_mutation_count`,
+`weight_mutation_count`, `unauthorized_external_call_count`,
+`hidden_game_source_access_count`, `outer_loop_ground_truth_search_count`,
+`arc_level_solve_claim_count`, `registry_update_count`,
+`hardware_claim_count`, `speed_power_or_energy_claim_count`,
+`protected_files_unchanged`,
+`spec_traceability_status_changelog_reconciliation`, `prd_gap_table`,
+`next_milestone_recommendations`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+`source_mutation_count`, `weight_mutation_count`,
+`unauthorized_external_call_count`, `hidden_game_source_access_count`,
+`outer_loop_ground_truth_search_count`, `arc_level_solve_claim_count`,
+`registry_update_count`, `hardware_claim_count`, and
+`speed_power_or_energy_claim_count` SHALL be bare integer `0`. Every required
+field SHALL have one short field principle and a provenance entry. The honest
+verdict SHALL start with a terminal prefix.
+
+### SCENARIO-INFRA-6296-1: Exact Paths Outrank Receipts
+
+GIVEN a V542 task has an exact declared deliverable that is missing or
+nonterminal and a conductor receipt that says OK
+WHEN Exp6296 builds the deliverable matrix
+THEN the artifact keeps the missing or nonterminal class, records the override
+attempt, and does not use same-number aliases.
+
+### SCENARIO-INFRA-6296-2: Gates Read Only Terminal Bare Fields
+
+GIVEN a structured gate points at a nonterminal artifact, a missing artifact,
+a missing field, or a principle-wrapped field
+WHEN Exp6296 recomputes the gate cascade
+THEN the gate fails closed and records why the exact bare upstream field was
+ineligible.
+
+### SCENARIO-INFRA-6296-3: Flags Stay Separate And Exclude Promotion
+
+GIVEN an upstream V542 artifact has a stamped adversarial flag or a current
+critical verifier flag
+WHEN Exp6296 computes the task state and branch ledger
+THEN stamped and current flags remain separate, and the affected branch is not
+promoted.
+
+### SCENARIO-INFRA-6296-4: Branches Cannot Launder Claims
+
+GIVEN exact-state energy refinement, continuous learning, and ARC have
+different terminal states
+WHEN Exp6296 builds its promotion ledger
+THEN oracle repair alone is not model value, replay-only gains are not
+transfer, and an ARC no-solve canary is not a solve claim.
+
+### SCENARIO-INFRA-6296-5: Retire-If-Same-Verdict Is Mechanical
+
+GIVEN a prior failure has `retire_if_same_verdict=true`
+WHEN the current exact artifact verdict equals the prior verdict
+THEN Exp6296 records a retirement action and leaves the exclusion manifest
+unchanged.
+
+### SCENARIO-INFRA-6296-6: Artifact Schema Is Principle Annotated
+
+GIVEN the capstone report, field principles, provenance, protected hashes, and
+command receipts
+WHEN Exp6296 validates the report before writing
+THEN every required field is present, all forbidden claim counters are bare
+integer zero, the checksum matches the normalized payload, and the honest
+verdict has a terminal prefix.
+
+## Implementation Status (REQ-INFRA-6296)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6296 | Implemented: `python/carnot/experiment_6296_v542_adversarial_capstone.py`; terminal artifact `results/experiment_6296_v542_adversarial_capstone.json`. | Implemented: `tests/python/test_experiment_6296_v542_adversarial_capstone.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
