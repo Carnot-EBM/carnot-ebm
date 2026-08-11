@@ -15633,3 +15633,5 @@ Still active  |
 | 2026-08-11 00:18 UTC | Gated on Exp6290 readiness: chronological continuo | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6290-revocable-atomic-repair-memory.rev |
 | 2026-08-11 00:20 UTC | Gated on Exp6290 readiness: chronological continuo | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6290-revocable-atomic-repair-memory.rev |
 | 2026-08-11 00:22 UTC | Gated on Exp6291 crystallization: model-family and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6291-chronological-memory-crystallization |
+| 2026-08-11 00:22 UTC | Gated on Exp6292 transfer: default-off revocable-m | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6292-revocable-memory-holdout-audit.hel |
+| 2026-08-11 00:24 UTC | Gated on Exp6291 crystallization: model-family and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6291-chronological-memory-crystallization |
