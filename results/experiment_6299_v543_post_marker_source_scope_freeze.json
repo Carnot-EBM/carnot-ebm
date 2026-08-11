@@ -1,0 +1,1298 @@
+{
+  "schema": "carnot.experiment_6299.v543_post_marker_source_scope_freeze.v1",
+  "experiment_id": "exp6299-v543-post-marker-source-scope-freeze",
+  "status": "complete",
+  "planner_marker_and_hash": {
+    "marker_text": "V543-PLANNER-REFRESH-20260810-END",
+    "marker_comment": "<!-- V543-PLANNER-REFRESH-20260810-END -->",
+    "marker_count": 1,
+    "marker_comment_sha256": "sha256:a9ca32cae2c781cc370678c35cece7f80149243f10209e263cdcf25f50e539e9",
+    "research_references_sha256": "sha256:71353b17346a2de056e84fce6b9f21d1de23c75554926b3ea16105c27e18d5b1",
+    "marker_byte_offset": 2702539,
+    "marker_commit": "50f47c770cf8b8ac7088cc38620a373f4810daca",
+    "marker_committed_at_local": "2026-08-10T23:13:56-04:00",
+    "marker_committed_at_utc": "2026-08-11T03:13:56Z"
+  },
+  "query_window": {
+    "date": "20260811",
+    "window_start_exclusive": "2026-08-11T03:13:56Z",
+    "window_end_inclusive": "2026-08-11T23:59:59Z",
+    "lower_bound_source": "git log -1 -S V543-PLANNER-REFRESH-20260810-END -- research-references.md",
+    "strict_after_rule": "candidate timestamp must be greater than window_start_exclusive"
+  },
+  "source_channel_receipts": [
+    {
+      "channel": "arxiv",
+      "queried_at": "2026-08-11",
+      "queries": [
+        "arXiv all submissions submittedDate:[202608110314 TO 202608120000]",
+        "activation bus, EBM reasoning, online transfer, thermodynamic hardware, and ARC topical submittedDate windows",
+        "exact arXiv id check for HF 2026-08-11 topical rows and sealed V543 papers"
+      ],
+      "stable_urls": [
+        "https://export.arxiv.org/api/query",
+        "https://arxiv.org/abs/2608.09521",
+        "https://arxiv.org/abs/2608.09537",
+        "https://arxiv.org/abs/2608.09745",
+        "https://arxiv.org/abs/2608.09629",
+        "https://arxiv.org/abs/2608.09743",
+        "https://arxiv.org/abs/2608.09819",
+        "https://arxiv.org/abs/2608.09096"
+      ],
+      "strict_post_marker_hits": 0,
+      "endpoint_status": "http_200_all_after_marker_total_0_with_topical_429_or_timeout_receipts",
+      "receipt": "The all-submission arXiv window after 2026-08-11T03:13:56Z returned zero entries. Broader topical queries produced HTTP 429 or timeout receipts. HF topical rows resolved to arXiv timestamps before the marker."
+    },
+    {
+      "channel": "openreview",
+      "queried_at": "2026-08-11",
+      "queries": [
+        "OpenReview API term search for energy based model reasoning verification",
+        "OpenReview search pages for Universal Activation Interface and VERDI"
+      ],
+      "stable_urls": [
+        "https://api2.openreview.net/notes/search",
+        "https://openreview.net/search?term=Universal%20Activation%20Interface%20language%20models",
+        "https://openreview.net/search?term=VERDI%20retrieval%20is%20not%20transfer%20continual%20world%20model"
+      ],
+      "strict_post_marker_hits": 0,
+      "endpoint_status": "http_200_search_receipts_no_contract_changing_post_marker_primary",
+      "receipt": "OpenReview returned searchable pages and sample notes, but no stable post-marker primary row that changes V543 contracts."
+    },
+    {
+      "channel": "extropic",
+      "queried_at": "2026-08-11",
+      "queries": [
+        "Extropic home, writing, software, and Torx routes"
+      ],
+      "stable_urls": [
+        "https://extropic.ai/",
+        "https://extropic.ai/writing",
+        "https://extropic.ai/software",
+        "https://docs.torx.ai/"
+      ],
+      "strict_post_marker_hits": 0,
+      "endpoint_status": "http_200_no_authenticated_carnot_tsu_or_board_route",
+      "receipt": "First-party pages describe Z1 or Torx direction, but expose no authenticated Carnot TSU execution route."
+    },
+    {
+      "channel": "semantic_scholar_ebt_arm",
+      "queried_at": "2026-08-11",
+      "queries": [
+        "Semantic Scholar EBT 2507.02092 citations",
+        "Semantic Scholar ARM-EBM 2512.15605 citations"
+      ],
+      "stable_urls": [
+        "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations",
+        "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations"
+      ],
+      "strict_post_marker_hits": 0,
+      "endpoint_status": "http_200_10_ebt_rows_8_arm_rows_no_post_marker_citation",
+      "receipt": "EBT citation samples reached 2026-08-01 and ARM-EBM samples reached 2026-07-02, before the marker."
+    },
+    {
+      "channel": "hugging_face_papers",
+      "queried_at": "2026-08-11",
+      "queries": [
+        "Hugging Face daily papers 2026-08-11",
+        "Hugging Face daily papers 2026-08-10",
+        "Hugging Face Papers Universal Activation Interface search"
+      ],
+      "stable_urls": [
+        "https://huggingface.co/api/daily_papers?date=2026-08-11",
+        "https://huggingface.co/api/daily_papers?date=2026-08-10",
+        "https://huggingface.co/papers?q=Universal%20Activation%20Interface"
+      ],
+      "strict_post_marker_hits": 0,
+      "endpoint_status": "http_200_daily_rows_but_primary_timestamps_pre_marker_or_secondary_only",
+      "receipt": "The 2026-08-11 daily API returned 9 rows. Topical primary arXiv timestamps were before the marker, so no row was promoted."
+    },
+    {
+      "channel": "targeted_github",
+      "queried_at": "2026-08-11",
+      "queries": [
+        "GitHub repos for Universal Activation Interface",
+        "GitHub repos for VERDI retrieval is not transfer",
+        "GitHub repos for SR-OPSD",
+        "GitHub repos for activation bus language models",
+        "GitHub repos for ARC target validated mechanic route"
+      ],
+      "stable_urls": [
+        "https://api.github.com/search/repositories?q=%22Universal%20Activation%20Interface%22%20language%20models",
+        "https://api.github.com/search/repositories?q=%22VERDI%22%20%22retrieval%20is%20not%20transfer%22",
+        "https://api.github.com/search/repositories?q=%22SR-OPSD%22"
+      ],
+      "strict_post_marker_hits": 0,
+      "endpoint_status": "http_200_total_count_0_for_targeted_repo_queries",
+      "receipt": "Targeted repository queries returned zero matching repositories for the contract-changing V543 terms."
+    },
+    {
+      "channel": "logical_intelligence",
+      "queried_at": "2026-08-11",
+      "queries": [
+        "Logical Intelligence home and Kona pages"
+      ],
+      "stable_urls": [
+        "https://logicalintelligence.com/",
+        "https://logicalintelligence.com/kona-ebms-energy-based-models"
+      ],
+      "strict_post_marker_hits": 0,
+      "endpoint_status": "http_200_first_party_pages_published_2026_06_26",
+      "receipt": "Public Kona pages remain first-party architecture context with no public weights, reproducible spec, or local API route."
+    }
+  ],
+  "discovered_candidates": [
+    {
+      "stable_id": "arxiv:2608.09521",
+      "title": "One Adapter Pair per Model: A Universal Activation Interface for Language Models",
+      "url": "https://arxiv.org/abs/2608.09521",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-08-10T12:21:36Z",
+      "date_evidence": "arXiv v1 timestamp predates the V543 marker commit",
+      "scope_effect": "Already sealed as the V543 activation bus mechanism.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:6d6d3885c629f56ff0e19bbd37d6e7832ca7922928ed0b309d70b7f7783bb640",
+      "disposition": "duplicate",
+      "rejection_reason": "stable id already appears in research-references.md"
+    },
+    {
+      "stable_id": "arxiv:2608.09537",
+      "title": "verdi: retrieval is not transfer for continual world model optimization",
+      "url": "https://arxiv.org/abs/2608.09537",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-08-10T12:35:59Z",
+      "date_evidence": "arXiv v1 timestamp predates the V543 marker commit",
+      "scope_effect": "Already sealed as target-side evidence licensing.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:cf01b76f27c807210d8585425a4dbe834b9bb22f29da2d04f44e358f11e99ec8",
+      "disposition": "duplicate",
+      "rejection_reason": "stable id already appears in research-references.md"
+    },
+    {
+      "stable_id": "arxiv:2608.09745",
+      "title": "SR-OPSD: Self-Referenced On-Policy Self-Distillation",
+      "url": "https://arxiv.org/abs/2608.09745",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-08-10T15:40:07Z",
+      "date_evidence": "arXiv v1 timestamp predates the V543 marker commit",
+      "scope_effect": "Already sealed as reference-anchored online learning evidence.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:47822a8f3f41d651d3b6ea3e1d50a0d44df2addd27ba3c243a5d61eb6d16d3d4",
+      "disposition": "duplicate",
+      "rejection_reason": "stable id already appears in research-references.md"
+    },
+    {
+      "stable_id": "arxiv:2608.09629",
+      "title": "Rethinking Self-Evolving Agents: Do We Still Need Prescribed Optimization Pipelines?",
+      "url": "https://arxiv.org/abs/2608.09629",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-08-10T14:10:25Z",
+      "date_evidence": "arXiv v1 timestamp predates the V543 marker commit",
+      "scope_effect": "Already sealed as adaptive optimizer context inside fixed boundaries.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:5f5b363355f79945f2d1a21a83d5f40d26cd9ee1c8dfca45f9db2f92f0d35abe",
+      "disposition": "duplicate",
+      "rejection_reason": "stable id already appears in research-references.md"
+    },
+    {
+      "stable_id": "arxiv:2608.09743",
+      "title": "Theoretical Analysis of Thermodynamic Matrix Inversion",
+      "url": "https://arxiv.org/abs/2608.09743",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-08-10T15:38:47Z",
+      "date_evidence": "arXiv v1 timestamp predates the V543 marker commit",
+      "scope_effect": "Already sealed as deterministic optimizer control evidence.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:0c78c0c00fa9ff700a4d1b8df68a0c8ddf319da82d870bec180597175c7f10bf",
+      "disposition": "duplicate",
+      "rejection_reason": "stable id already appears in research-references.md"
+    },
+    {
+      "stable_id": "arxiv:2608.09819",
+      "title": "Macaron-V1: Towards Open Continual Learning with Self-Improvement and Mixture-of-LoRA",
+      "url": "https://arxiv.org/abs/2608.09819",
+      "source_channel": "hugging_face_papers",
+      "source_kind": "secondary_to_primary",
+      "source_timestamp": "2026-08-10T16:39:55Z",
+      "date_evidence": "HF 2026-08-11 row resolves to a pre-marker arXiv v1 timestamp",
+      "scope_effect": "Topical only; V543 already forbids GGUF weight mutation and LoRA updates.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:9883ca80b85716ce187e17395847236a5497f031241e592218c7f75f8b0e10d3",
+      "disposition": "watch_only",
+      "rejection_reason": "watch-only evidence does not change a V543 contract"
+    },
+    {
+      "stable_id": "arxiv:2608.09096",
+      "title": "Evo-Bench: Can Language Models Improve Agent Harness?",
+      "url": "https://arxiv.org/abs/2608.09096",
+      "source_channel": "hugging_face_papers",
+      "source_kind": "secondary_to_primary",
+      "source_timestamp": "2026-08-10T03:49:28Z",
+      "date_evidence": "HF 2026-08-11 row resolves to a pre-marker arXiv v1 timestamp",
+      "scope_effect": "Watch-only benchmark context; it does not change Exp6299 frozen contracts.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:91c170753567c27512e6060106d0a174463266485003309ae86f5e8f9cd87398",
+      "disposition": "watch_only",
+      "rejection_reason": "watch-only evidence does not change a V543 contract"
+    },
+    {
+      "stable_id": "github:targeted-v543-queries",
+      "title": "Targeted GitHub search receipts for V543 contract terms",
+      "url": "https://api.github.com/search/repositories?q=%22Universal%20Activation%20Interface%22%20language%20models",
+      "source_channel": "targeted_github",
+      "source_kind": "secondary",
+      "source_timestamp": "2026-08-11T03:20:00Z",
+      "date_evidence": "search was run after the marker",
+      "scope_effect": "Zero repository matches; this is a receipt, not a finding.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": false,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:974c97b478c9c765a59bcfb535384f909f7cdf50a09ee455d857faf4efeb44bf",
+      "disposition": "watch_only",
+      "rejection_reason": "watch-only evidence does not change a V543 contract"
+    },
+    {
+      "stable_id": "logical:kona-ebms-energy-based-models",
+      "title": "Kona: Energy-Based Models for AI Reasoning",
+      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+      "source_channel": "logical_intelligence",
+      "source_kind": "first_party",
+      "source_timestamp": "2026-06-26T23:47:00Z",
+      "date_evidence": "first-party page publication date predates the marker",
+      "scope_effect": "Strategic context only; no public weights or local API route.",
+      "reproducible_evidence": false,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:79de25fa5635e5a2d837b3565a8b54476a5567849ff88de2fd94f0395967df68",
+      "disposition": "duplicate",
+      "rejection_reason": "URL already appears in research-references.md"
+    }
+  ],
+  "accepted_findings": [],
+  "rejected_duplicate_or_watch_only_findings": [
+    {
+      "stable_id": "arxiv:2608.09521",
+      "title": "One Adapter Pair per Model: A Universal Activation Interface for Language Models",
+      "url": "https://arxiv.org/abs/2608.09521",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-08-10T12:21:36Z",
+      "date_evidence": "arXiv v1 timestamp predates the V543 marker commit",
+      "scope_effect": "Already sealed as the V543 activation bus mechanism.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:6d6d3885c629f56ff0e19bbd37d6e7832ca7922928ed0b309d70b7f7783bb640",
+      "disposition": "duplicate",
+      "rejection_reason": "stable id already appears in research-references.md"
+    },
+    {
+      "stable_id": "arxiv:2608.09537",
+      "title": "verdi: retrieval is not transfer for continual world model optimization",
+      "url": "https://arxiv.org/abs/2608.09537",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-08-10T12:35:59Z",
+      "date_evidence": "arXiv v1 timestamp predates the V543 marker commit",
+      "scope_effect": "Already sealed as target-side evidence licensing.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:cf01b76f27c807210d8585425a4dbe834b9bb22f29da2d04f44e358f11e99ec8",
+      "disposition": "duplicate",
+      "rejection_reason": "stable id already appears in research-references.md"
+    },
+    {
+      "stable_id": "arxiv:2608.09745",
+      "title": "SR-OPSD: Self-Referenced On-Policy Self-Distillation",
+      "url": "https://arxiv.org/abs/2608.09745",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-08-10T15:40:07Z",
+      "date_evidence": "arXiv v1 timestamp predates the V543 marker commit",
+      "scope_effect": "Already sealed as reference-anchored online learning evidence.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:47822a8f3f41d651d3b6ea3e1d50a0d44df2addd27ba3c243a5d61eb6d16d3d4",
+      "disposition": "duplicate",
+      "rejection_reason": "stable id already appears in research-references.md"
+    },
+    {
+      "stable_id": "arxiv:2608.09629",
+      "title": "Rethinking Self-Evolving Agents: Do We Still Need Prescribed Optimization Pipelines?",
+      "url": "https://arxiv.org/abs/2608.09629",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-08-10T14:10:25Z",
+      "date_evidence": "arXiv v1 timestamp predates the V543 marker commit",
+      "scope_effect": "Already sealed as adaptive optimizer context inside fixed boundaries.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:5f5b363355f79945f2d1a21a83d5f40d26cd9ee1c8dfca45f9db2f92f0d35abe",
+      "disposition": "duplicate",
+      "rejection_reason": "stable id already appears in research-references.md"
+    },
+    {
+      "stable_id": "arxiv:2608.09743",
+      "title": "Theoretical Analysis of Thermodynamic Matrix Inversion",
+      "url": "https://arxiv.org/abs/2608.09743",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-08-10T15:38:47Z",
+      "date_evidence": "arXiv v1 timestamp predates the V543 marker commit",
+      "scope_effect": "Already sealed as deterministic optimizer control evidence.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:0c78c0c00fa9ff700a4d1b8df68a0c8ddf319da82d870bec180597175c7f10bf",
+      "disposition": "duplicate",
+      "rejection_reason": "stable id already appears in research-references.md"
+    },
+    {
+      "stable_id": "arxiv:2608.09819",
+      "title": "Macaron-V1: Towards Open Continual Learning with Self-Improvement and Mixture-of-LoRA",
+      "url": "https://arxiv.org/abs/2608.09819",
+      "source_channel": "hugging_face_papers",
+      "source_kind": "secondary_to_primary",
+      "source_timestamp": "2026-08-10T16:39:55Z",
+      "date_evidence": "HF 2026-08-11 row resolves to a pre-marker arXiv v1 timestamp",
+      "scope_effect": "Topical only; V543 already forbids GGUF weight mutation and LoRA updates.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:9883ca80b85716ce187e17395847236a5497f031241e592218c7f75f8b0e10d3",
+      "disposition": "watch_only",
+      "rejection_reason": "watch-only evidence does not change a V543 contract"
+    },
+    {
+      "stable_id": "arxiv:2608.09096",
+      "title": "Evo-Bench: Can Language Models Improve Agent Harness?",
+      "url": "https://arxiv.org/abs/2608.09096",
+      "source_channel": "hugging_face_papers",
+      "source_kind": "secondary_to_primary",
+      "source_timestamp": "2026-08-10T03:49:28Z",
+      "date_evidence": "HF 2026-08-11 row resolves to a pre-marker arXiv v1 timestamp",
+      "scope_effect": "Watch-only benchmark context; it does not change Exp6299 frozen contracts.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:91c170753567c27512e6060106d0a174463266485003309ae86f5e8f9cd87398",
+      "disposition": "watch_only",
+      "rejection_reason": "watch-only evidence does not change a V543 contract"
+    },
+    {
+      "stable_id": "github:targeted-v543-queries",
+      "title": "Targeted GitHub search receipts for V543 contract terms",
+      "url": "https://api.github.com/search/repositories?q=%22Universal%20Activation%20Interface%22%20language%20models",
+      "source_channel": "targeted_github",
+      "source_kind": "secondary",
+      "source_timestamp": "2026-08-11T03:20:00Z",
+      "date_evidence": "search was run after the marker",
+      "scope_effect": "Zero repository matches; this is a receipt, not a finding.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": false,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:974c97b478c9c765a59bcfb535384f909f7cdf50a09ee455d857faf4efeb44bf",
+      "disposition": "watch_only",
+      "rejection_reason": "watch-only evidence does not change a V543 contract"
+    },
+    {
+      "stable_id": "logical:kona-ebms-energy-based-models",
+      "title": "Kona: Energy-Based Models for AI Reasoning",
+      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+      "source_channel": "logical_intelligence",
+      "source_kind": "first_party",
+      "source_timestamp": "2026-06-26T23:47:00Z",
+      "date_evidence": "first-party page publication date predates the marker",
+      "scope_effect": "Strategic context only; no public weights or local API route.",
+      "reproducible_evidence": false,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:79de25fa5635e5a2d837b3565a8b54476a5567849ff88de2fd94f0395967df68",
+      "disposition": "duplicate",
+      "rejection_reason": "URL already appears in research-references.md"
+    }
+  ],
+  "accepted_count": 0,
+  "references_append_receipt": {
+    "append_count": 0,
+    "references_before_sha256": "sha256:71353b17346a2de056e84fce6b9f21d1de23c75554926b3ea16105c27e18d5b1",
+    "references_after_sha256": "sha256:71353b17346a2de056e84fce6b9f21d1de23c75554926b3ea16105c27e18d5b1",
+    "references_byte_identical": true,
+    "append_heading": null,
+    "append_marker": null
+  },
+  "frozen_activation_bus_contract": {
+    "version": "v543.6299",
+    "source_evidence": "arXiv:2608.09521 sealed before V543 marker",
+    "one_adapter_pair_per_model": true,
+    "shared_space_frozen_before_new_model_join": true,
+    "fit_inputs": "unlabeled matched activation rows only",
+    "forbidden_inputs": [
+      "exact_labels",
+      "generated_answer_text",
+      "energy_head_targets"
+    ],
+    "required_controls": [
+      "held_template_alignment",
+      "reconstruction",
+      "claim_flip",
+      "pair_swap",
+      "label_permutation",
+      "model_identity",
+      "norm_length_token_count"
+    ],
+    "claim_limit": "The bus is a representation ABI, not an energy-value result."
+  },
+  "frozen_integrity_audit_contract": {
+    "version": "v543.6299",
+    "independent_reconstruction_required": true,
+    "auditor_reads_only_hash_bound_inputs": true,
+    "surviving_shortcut_tolerance": 0,
+    "pooled_mean_can_hide_failed_cell": false,
+    "controls": [
+      "claim_flip",
+      "pair_swap",
+      "label_permutation",
+      "model_identity",
+      "norm_only",
+      "length_only",
+      "token_count",
+      "truncation",
+      "duplicate_reweighting",
+      "no_information",
+      "evaluator_swap"
+    ],
+    "claim_limit": "Integrity can pass or block downstream work but cannot promote utility alone."
+  },
+  "frozen_state_initializer_contract": {
+    "version": "v543.6299",
+    "gated_on_integrity_audit": true,
+    "target_state": "bounded vertex-exact ASP continuous atom vector",
+    "required_arms": [
+      "cold_blank",
+      "cold_random",
+      "raw_per_model_linear",
+      "random_projection",
+      "shared_activation_bus"
+    ],
+    "exact_asp_or_clingo_is_oracle": true,
+    "oracle_credit_allowed": false,
+    "positive_claim_gate": "exact-valid non-inferiority plus lower refinement or fallback work on held folds"
+  },
+  "frozen_live_benchmark_contract": {
+    "version": "v543.6299",
+    "fresh_three_family_embedding_extraction_required": true,
+    "models": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "generated_answer_transport_allowed": false,
+    "required_receipts": [
+      "cuda",
+      "gpu_offload",
+      "tokenizer_hash",
+      "raw_row_hash",
+      "timing"
+    ],
+    "exact_asp_or_clingo_is_oracle": true,
+    "claim_limit": "Fresh live benchmark value must beat cold and raw starts without accuracy harm."
+  },
+  "frozen_online_learning_contract": {
+    "version": "v543.6299",
+    "learned_object": "small activation-to-state initializer",
+    "gguf_weight_mutation_allowed": false,
+    "arms": [
+      "frozen",
+      "unanchored_online",
+      "reference_anchored_online"
+    ],
+    "outcome_reveal_rule": "exact outcome is visible only after each decision",
+    "required_controls": [
+      "rollback",
+      "retention",
+      "reversal",
+      "poison",
+      "unseen_family"
+    ],
+    "reference_anchor_required_for_promotion": true,
+    "exact_asp_or_clingo_is_oracle": true
+  },
+  "frozen_transfer_license_contract": {
+    "version": "v543.6299",
+    "source_evidence": "arXiv:2608.09537 sealed before V543 marker",
+    "target_side_validator_required": true,
+    "retrieval_only_activation_allowed": false,
+    "strategy_state_before_license": "hypothesis_only",
+    "license_inputs": [
+      "target_fingerprint",
+      "frozen_calibration_slice",
+      "exact_validator"
+    ],
+    "contradiction_policy": "evolve probe registry without rewriting prior evidence",
+    "exact_asp_or_clingo_is_oracle": true
+  },
+  "frozen_arc_target_validation_contract": {
+    "version": "v543.6299",
+    "route_state_before_validation": "untrusted_hypothesis",
+    "validation_source": "live agent self-discovered transitions",
+    "arms": [
+      "router_off",
+      "retrieval_only",
+      "target_licensed"
+    ],
+    "hidden_game_source_access_allowed": false,
+    "offline_ground_truth_search_allowed": false,
+    "level_solve_claim_allowed": false,
+    "registry_update_allowed": false,
+    "exact_asp_or_clingo_is_oracle": false,
+    "claim_limit": "ARC route evidence is a live-path canary, not a level solve."
+  },
+  "frozen_hardware_boundary": {
+    "version": "v543.6299",
+    "current_board_execution_route_supported": false,
+    "current_tsu_execution_route_supported": false,
+    "current_board_or_tsu_hardware_claim_allowed": false,
+    "hardware_claim_count": 0,
+    "speed_power_energy_or_availability_claim_count": 0,
+    "claim_boundary": "No current board or TSU route supports a hardware claim, speed claim, power claim, energy claim, or availability claim.",
+    "allowed_statement": "Hardware compatibility may be architectural only until dated physical or authenticated execution receipts exist."
+  },
+  "roadmap_path_and_hash": {
+    "requested_path": "research-roadmap-next.yaml",
+    "audited_path": "research-roadmap.yaml",
+    "requested_missing": true,
+    "selection_note": "research-roadmap-next.yaml missing; audited active V543 roadmap",
+    "sha256": "sha256:484cd11bba91bc2768278f5220be5763224c36f5a575ef89f52ce0afc13b5f03"
+  },
+  "roadmap_schema_result": {
+    "passed": true,
+    "task_count": 13,
+    "milestone": "2026.08.543",
+    "model": "scripts.roadmap_schema.Roadmap"
+  },
+  "exclusion_manifest_lint_result": {
+    "passed": true,
+    "risk_count": 0,
+    "hard_risk_count": 0,
+    "risks": []
+  },
+  "prior_failure_contract_result": {
+    "passed": true,
+    "checked_task_count": 13,
+    "failure_count": 0,
+    "failures": []
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "unchanged": true,
+    "paths": {
+      "AGENTS.md": {
+        "before_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "after_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "CODEX.md": {
+        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "CLAUDE.md": {
+        "before_sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+        "after_sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "research-references.md": {
+        "before_sha256": "sha256:71353b17346a2de056e84fce6b9f21d1de23c75554926b3ea16105c27e18d5b1",
+        "after_sha256": "sha256:71353b17346a2de056e84fce6b9f21d1de23c75554926b3ea16105c27e18d5b1",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "research-roadmap.yaml": {
+        "before_sha256": "sha256:484cd11bba91bc2768278f5220be5763224c36f5a575ef89f52ce0afc13b5f03",
+        "after_sha256": "sha256:484cd11bba91bc2768278f5220be5763224c36f5a575ef89f52ce0afc13b5f03",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "research-roadmap-next.yaml": {
+        "before_sha256": null,
+        "after_sha256": null,
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "before_sha256": "sha256:b4ff1586bc909b509fbb0f7cb2e5108fe2ad6981e5f9ae932b4b2eb301294bed",
+        "after_sha256": "sha256:b4ff1586bc909b509fbb0f7cb2e5108fe2ad6981e5f9ae932b4b2eb301294bed",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "results/experiment_6297_v543_terminal_transition.json": {
+        "before_sha256": "sha256:594cff87aba1a47798387176343a5e9cd0436268b533c8fdd01fa29015d4e69b",
+        "after_sha256": "sha256:594cff87aba1a47798387176343a5e9cd0436268b533c8fdd01fa29015d4e69b",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "before_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "after_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "ops/known-issues.md": {
+        "before_sha256": "sha256:ab76483ac487f6e8914c0b3e8f91809756b5a00ed72c5ad9e86b69ab2b22bba7",
+        "after_sha256": "sha256:ab76483ac487f6e8914c0b3e8f91809756b5a00ed72c5ad9e86b69ab2b22bba7",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "before_sha256": "sha256:a8e295c9a0083b1d484bd2298942596410dba286ce86c8960c87b9b47e658f9e",
+        "after_sha256": "sha256:a8e295c9a0083b1d484bd2298942596410dba286ce86c8960c87b9b47e658f9e",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "before_sha256": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "after_sha256": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "_bmad/traceability.md": {
+        "before_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "after_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "before_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "after_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "openspec/capabilities/research-harnesses/spec.md": {
+        "before_sha256": "sha256:af0a065b4be357ff36c1c65934c667041a6e1e29f8b16bc77f5aed1368234019",
+        "after_sha256": "sha256:af0a065b4be357ff36c1c65934c667041a6e1e29f8b16bc77f5aed1368234019",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      }
+    }
+  },
+  "preconditions_checked": {
+    "input_paths_and_hashes": {
+      "CODEX.md": {
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "CLAUDE.md": {
+        "present": true,
+        "sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59"
+      },
+      "research-references.md": {
+        "present": true,
+        "sha256": "sha256:71353b17346a2de056e84fce6b9f21d1de23c75554926b3ea16105c27e18d5b1"
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "present": true,
+        "sha256": "sha256:b4ff1586bc909b509fbb0f7cb2e5108fe2ad6981e5f9ae932b4b2eb301294bed"
+      },
+      "research-roadmap.yaml": {
+        "present": true,
+        "sha256": "sha256:484cd11bba91bc2768278f5220be5763224c36f5a575ef89f52ce0afc13b5f03"
+      },
+      "research-roadmap-next.yaml": {
+        "present": false,
+        "sha256": null
+      },
+      "results/experiment_6297_v543_terminal_transition.json": {
+        "present": true,
+        "sha256": "sha256:594cff87aba1a47798387176343a5e9cd0436268b533c8fdd01fa29015d4e69b"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "present": true,
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+      },
+      "ops/known-issues.md": {
+        "present": true,
+        "sha256": "sha256:ab76483ac487f6e8914c0b3e8f91809756b5a00ed72c5ad9e86b69ab2b22bba7"
+      },
+      "scripts/sweep_clusters.py": {
+        "present": true,
+        "sha256": "sha256:04cd28779f763d369af1d7aa1934602fb841cc48b119440608d127b027d131d0"
+      },
+      "scripts/sweep_semscholar.py": {
+        "present": true,
+        "sha256": "sha256:cf0ee3b6e9d0f64987fa93dfe15ae4cb3c02c2a3b09e265d720ed8c1d9941351"
+      }
+    },
+    "protected_hashes_before": {
+      "AGENTS.md": {
+        "present": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CODEX.md": {
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "CLAUDE.md": {
+        "present": true,
+        "sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59"
+      },
+      "research-references.md": {
+        "present": true,
+        "sha256": "sha256:71353b17346a2de056e84fce6b9f21d1de23c75554926b3ea16105c27e18d5b1"
+      },
+      "research-roadmap.yaml": {
+        "present": true,
+        "sha256": "sha256:484cd11bba91bc2768278f5220be5763224c36f5a575ef89f52ce0afc13b5f03"
+      },
+      "research-roadmap-next.yaml": {
+        "present": false,
+        "sha256": null
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "present": true,
+        "sha256": "sha256:b4ff1586bc909b509fbb0f7cb2e5108fe2ad6981e5f9ae932b4b2eb301294bed"
+      },
+      "results/experiment_6297_v543_terminal_transition.json": {
+        "present": true,
+        "sha256": "sha256:594cff87aba1a47798387176343a5e9cd0436268b533c8fdd01fa29015d4e69b"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "present": true,
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+      },
+      "ops/known-issues.md": {
+        "present": true,
+        "sha256": "sha256:ab76483ac487f6e8914c0b3e8f91809756b5a00ed72c5ad9e86b69ab2b22bba7"
+      },
+      "ops/changelog.md": {
+        "present": true,
+        "sha256": "sha256:a8e295c9a0083b1d484bd2298942596410dba286ce86c8960c87b9b47e658f9e"
+      },
+      "ops/status.md": {
+        "present": true,
+        "sha256": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180"
+      },
+      "_bmad/traceability.md": {
+        "present": true,
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "scripts/research_conductor.py": {
+        "present": true,
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      },
+      "openspec/capabilities/research-harnesses/spec.md": {
+        "present": true,
+        "sha256": "sha256:af0a065b4be357ff36c1c65934c667041a6e1e29f8b16bc77f5aed1368234019"
+      }
+    },
+    "git_status_before": [
+      "M  openspec/capabilities/research-harnesses/spec.md",
+      "M  ops/conductor-heartbeat.json",
+      "M  ops/conductor-log.md",
+      "M  ops/conductor-state.json",
+      "A  python/carnot/experiment_6299_v543_post_marker_source_scope_freeze.py",
+      "M  results/experiment_1736_kanele_synth.json",
+      "M  results/experiment_1822_rtl_synth.log",
+      "M  results/experiment_2031.json",
+      "M  results/experiment_2427_kv260_yosys_v4.json",
+      "M  results/experiment_2510_ensemble_v7.json",
+      "M  results/experiment_2824_cross_corpus_verifier_matrix.json",
+      "M  results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json",
+      "M  results/experiment_3361_archive_v309_activate_v310.json",
+      "M  results/experiment_3377_archive_v310_activate_v311.json",
+      "M  results/experiment_3392_archive_v311_activate_v312.json",
+      "M  results/experiment_3581_g_gate_status_synthesis_v329.json",
+      "M  results/experiment_3582_capstone_v329.json",
+      "A  tests/python/test_experiment_6299_v543_post_marker_source_scope_freeze.py"
+    ],
+    "git_status_after_tests": [
+      "M  openspec/capabilities/research-harnesses/spec.md",
+      "M  ops/conductor-heartbeat.json",
+      "M  ops/conductor-log.md",
+      "M  ops/conductor-state.json",
+      "A  python/carnot/experiment_6299_v543_post_marker_source_scope_freeze.py",
+      "M  results/experiment_1736_kanele_synth.json",
+      "M  results/experiment_1822_rtl_synth.log",
+      "M  results/experiment_2031.json",
+      "M  results/experiment_2427_kv260_yosys_v4.json",
+      "M  results/experiment_2510_ensemble_v7.json",
+      "M  results/experiment_2824_cross_corpus_verifier_matrix.json",
+      "M  results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json",
+      "M  results/experiment_3361_archive_v309_activate_v310.json",
+      "M  results/experiment_3377_archive_v310_activate_v311.json",
+      "M  results/experiment_3392_archive_v311_activate_v312.json",
+      "M  results/experiment_3581_g_gate_status_synthesis_v329.json",
+      "M  results/experiment_3582_capstone_v329.json",
+      "A  tests/python/test_experiment_6299_v543_post_marker_source_scope_freeze.py"
+    ],
+    "roadmap_gate_result": {
+      "n_tasks_audited": 13,
+      "n_gate_upstream_checks": 5,
+      "n_gate_upstream_failures": 0,
+      "n_prior_failures_checks": 13,
+      "n_prior_failures_missing": 0,
+      "n_model_agent_coherence_failures": 0,
+      "n_gate_field_cross_ref_failures": 0,
+      "roadmap_gate_audit_passed": true,
+      "failure_details": [],
+      "audit_script_written": true,
+      "honest_verdict": "all_checks_pass"
+    },
+    "model_policy_result": {
+      "passed": true,
+      "failure_task_ids": [],
+      "required_model": "gpt-5.5"
+    },
+    "prompt_ending_result": {
+      "passed": true,
+      "failure_task_ids": [],
+      "required_ending": "Do NOT push. Do NOT modify scripts/research_conductor.py."
+    },
+    "collision_result": {
+      "passed": true,
+      "collision_count": 0,
+      "collisions": []
+    },
+    "source_search_lower_bound_exclusive": "2026-08-11T03:13:56Z",
+    "research_roadmap_yaml_mutated": false,
+    "research_roadmap_next_present": false
+  },
+  "inference_substrate": "web_and_bibliographic_search_only",
+  "verifier_is_oracle": false,
+  "field_provenance": {
+    "status": {
+      "principle": "The freeze is complete only when source, roadmap, and contract checks pass.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "planner_marker_and_hash": {
+      "principle": "The exact marker defines the novelty boundary.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "query_window": {
+      "principle": "The lower bound is exclusive, so same-time evidence cannot enter.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "source_channel_receipts": {
+      "principle": "Every required channel records how the null was reached.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "discovered_candidates": {
+      "principle": "Rejected rows stay visible for reproducibility.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "accepted_findings": {
+      "principle": "Only stable post-marker findings may change references.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "rejected_duplicate_or_watch_only_findings": {
+      "principle": "Duplicates and watch-only rows cannot move V543 scope.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "accepted_count": {
+      "principle": "A bare integer drives null versus append behavior.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "references_append_receipt": {
+      "principle": "The reference ledger must be unchanged for a null search.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_activation_bus_contract": {
+      "principle": "The shared activation ABI must remove raw model identity shortcuts.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_integrity_audit_contract": {
+      "principle": "An independent audit prevents pooled metrics from hiding shortcut cells.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_state_initializer_contract": {
+      "principle": "The initializer may use shared state only after the bus passes audit.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_live_benchmark_contract": {
+      "principle": "Live value needs fresh model receipts and matched cold/raw controls.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_online_learning_contract": {
+      "principle": "Online learning updates only the small initializer under a reference anchor.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_transfer_license_contract": {
+      "principle": "Retrieved experience stays inactive until target validation licenses it.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_arc_target_validation_contract": {
+      "principle": "ARC route hypotheses need the live agent's own target evidence.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_hardware_boundary": {
+      "principle": "No board or TSU claim is allowed without an execution route.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "roadmap_path_and_hash": {
+      "principle": "The audited roadmap identity is content-addressed.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "roadmap_schema_result": {
+      "principle": "Schema parsing catches malformed roadmap contracts.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "exclusion_manifest_lint_result": {
+      "principle": "Retired scopes remain closed by default.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "prior_failure_contract_result": {
+      "principle": "Reruns must state the prior failure and the changed mechanism.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Protected files are hash-checked around the artifact write.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Input hashes, git status, searches, and nonmutating checks are recorded.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "This is web and bibliographic search with no model execution.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "False at the artifact level; exact ASP and Clingo are contract oracles.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every required field cites concrete evidence.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "field_principles": {
+      "principle": "Every required field states why it exists.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "test_commands": {
+      "principle": "Command names show how the artifact was verified.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes keep failed checks from being hidden.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "duration_s": {
+      "principle": "Wall time is reported without padding.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "The normalized payload is content-addressed.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The terminal verdict states null, delta, or block directly.",
+      "sources": [
+        "REQ-INFRA-6299",
+        "research-references V543 marker",
+        "source channel receipts",
+        "V543 roadmap validators",
+        "frozen contract serializers"
+      ]
+    }
+  },
+  "field_principles": {
+    "status": "The freeze is complete only when source, roadmap, and contract checks pass.",
+    "planner_marker_and_hash": "The exact marker defines the novelty boundary.",
+    "query_window": "The lower bound is exclusive, so same-time evidence cannot enter.",
+    "source_channel_receipts": "Every required channel records how the null was reached.",
+    "discovered_candidates": "Rejected rows stay visible for reproducibility.",
+    "accepted_findings": "Only stable post-marker findings may change references.",
+    "rejected_duplicate_or_watch_only_findings": "Duplicates and watch-only rows cannot move V543 scope.",
+    "accepted_count": "A bare integer drives null versus append behavior.",
+    "references_append_receipt": "The reference ledger must be unchanged for a null search.",
+    "frozen_activation_bus_contract": "The shared activation ABI must remove raw model identity shortcuts.",
+    "frozen_integrity_audit_contract": "An independent audit prevents pooled metrics from hiding shortcut cells.",
+    "frozen_state_initializer_contract": "The initializer may use shared state only after the bus passes audit.",
+    "frozen_live_benchmark_contract": "Live value needs fresh model receipts and matched cold/raw controls.",
+    "frozen_online_learning_contract": "Online learning updates only the small initializer under a reference anchor.",
+    "frozen_transfer_license_contract": "Retrieved experience stays inactive until target validation licenses it.",
+    "frozen_arc_target_validation_contract": "ARC route hypotheses need the live agent's own target evidence.",
+    "frozen_hardware_boundary": "No board or TSU claim is allowed without an execution route.",
+    "roadmap_path_and_hash": "The audited roadmap identity is content-addressed.",
+    "roadmap_schema_result": "Schema parsing catches malformed roadmap contracts.",
+    "exclusion_manifest_lint_result": "Retired scopes remain closed by default.",
+    "prior_failure_contract_result": "Reruns must state the prior failure and the changed mechanism.",
+    "protected_files_unchanged": "Protected files are hash-checked around the artifact write.",
+    "preconditions_checked": "Input hashes, git status, searches, and nonmutating checks are recorded.",
+    "inference_substrate": "This is web and bibliographic search with no model execution.",
+    "verifier_is_oracle": "False at the artifact level; exact ASP and Clingo are contract oracles.",
+    "field_provenance": "Every required field cites concrete evidence.",
+    "field_principles": "Every required field states why it exists.",
+    "test_commands": "Command names show how the artifact was verified.",
+    "test_exit_codes": "Exit codes keep failed checks from being hidden.",
+    "duration_s": "Wall time is reported without padding.",
+    "reproducibility_checksum": "The normalized payload is content-addressed.",
+    "honest_verdict": "The terminal verdict states null, delta, or block directly."
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6299_v543_post_marker_source_scope_freeze.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6299_v543_post_marker_source_scope_freeze.py -m pytest tests/python/test_experiment_6299_v543_post_marker_source_scope_freeze.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6299_v543_post_marker_source_scope_freeze.py --fail-under=100 --show-missing",
+    ".venv/bin/ruff check python/carnot/experiment_6299_v543_post_marker_source_scope_freeze.py tests/python/test_experiment_6299_v543_post_marker_source_scope_freeze.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_6299_v543_post_marker_source_scope_freeze.py tests/python/test_experiment_6299_v543_post_marker_source_scope_freeze.py",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6299_v543_post_marker_source_scope_freeze.py",
+    ".venv/bin/python -m carnot.experiment_6299_v543_post_marker_source_scope_freeze --check-roadmap-only",
+    ".venv/bin/python scripts/roadmap_schema.py research-roadmap.yaml",
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "sed -n 1,220p ops/e2e-test-plan.md",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6299_v543_post_marker_source_scope_freeze.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/pytest tests/python/test_experiment_6299_v543_post_marker_source_scope_freeze.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6299_v543_post_marker_source_scope_freeze.py -m pytest tests/python/test_experiment_6299_v543_post_marker_source_scope_freeze.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6299_v543_post_marker_source_scope_freeze.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/ruff check python/carnot/experiment_6299_v543_post_marker_source_scope_freeze.py tests/python/test_experiment_6299_v543_post_marker_source_scope_freeze.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_6299_v543_post_marker_source_scope_freeze.py tests/python/test_experiment_6299_v543_post_marker_source_scope_freeze.py": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6299_v543_post_marker_source_scope_freeze.py": 0,
+    ".venv/bin/python -m carnot.experiment_6299_v543_post_marker_source_scope_freeze --check-roadmap-only": 0,
+    ".venv/bin/python scripts/roadmap_schema.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    "sed -n 1,220p ops/e2e-test-plan.md": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6299_v543_post_marker_source_scope_freeze.json": 0
+  },
+  "duration_s": 7.184161,
+  "reproducibility_checksum": "sha256:d829b2bd7cc30b84408e12a483ac1717fac853b75fb5edb8245533f2992c6ea4",
+  "honest_verdict": "complete_null: accepted_count=0; no reproducible post-V543-marker findings; references unchanged; V543 contracts frozen"
+}
