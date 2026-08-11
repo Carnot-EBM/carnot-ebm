@@ -599,3 +599,145 @@ mutation, or altered checksum
 | REQ-CL-6192-RETENTION-SEED | Implemented | tests/python/test_experiment_6192_live_strategy_seed_stream.py |
 | REQ-CL-6192-POISON-ROLLBACK | Implemented | tests/python/test_experiment_6192_live_strategy_seed_stream.py |
 | REQ-CL-6192-EXACT-PROVENANCE | Implemented | tests/python/test_experiment_6192_live_strategy_seed_stream.py |
+
+## REQ-CSL-6304: Reference-Anchored Online State Learning
+
+**Given** a sealed chronological stream of bounded ASP tasks
+**When** Exp6304 compares frozen, unanchored, reference-anchored, no-learning,
+and exact-oracle controls
+**Then** it SHALL write
+`results/experiment_6304_reference_anchored_online_state_learning.json`
+**And** base GGUF weights SHALL be absent and immutable
+**And** `source_model_weight_mutation_count` SHALL be bare `0`
+**And** `verifier_is_oracle` SHALL be bare `true`
+**And** arm IDs SHALL include `frozen`, `unanchored`,
+`reference_anchored`, `no_learning_control`, and
+`exact_oracle_control`.
+
+## REQ-CSL-6304-STREAM: Sealed Chronological Partitions
+
+**Given** drift, reversal, contradiction, poison, repeated-template,
+held-template, and unseen-family partitions
+**When** the experiment freezes its stream
+**Then** the manifest SHALL record the chronology, partition contract, hashes,
+seeds, exact validators, budgets, reference snapshot, and protected hashes
+before any initializer update.
+
+## REQ-CSL-6304-PREDECISION: No Outcome Leakage
+
+**Given** a chronological event at index `N`
+**When** an arm predicts an initialized ASP state
+**Then** the immutable predecision snapshot and prediction SHALL persist before
+the exact target is revealed
+**And** the decision SHALL not read labels, updates, or receipts from events
+`>= N`.
+
+## REQ-CSL-6304-UPDATE: Matched And Guarded Online Updates
+
+**Given** exact postdecision outcome receipts
+**When** learning arms update their small initializer
+**Then** unanchored and reference-anchored arms SHALL use matched update
+budgets
+**And** nonfinite, harmful, unauthenticated, contradictory, or poison updates
+SHALL reject, quarantine, or roll back.
+
+## REQ-CSL-6304-CONTROLS: Frozen And Oracle Controls
+
+**Given** the same sealed stream
+**When** Exp6304 reports results
+**Then** deterministic no-learning and exact-oracle controls SHALL stay
+explicit
+**And** replay, future same-template, held-template, and unseen-family results
+SHALL be reported separately.
+
+## REQ-CSL-6304-READY: Conjunctive Readiness Gate
+
+**Given** all arms finish
+**When** `reference_anchored_online_learning_ready_score` is computed
+**Then** it SHALL be one only with positive future-event transfer over frozen,
+non-inferior utility to unanchored, lower forgetting or lower negative
+transfer, zero unsafe commits, exact rollback, immutable source weights, and
+passing verification commands
+**And** replay-only gain SHALL be insufficient.
+
+## REQ-CSL-6304-PROVENANCE: Required Artifact Fields
+
+Exp6304 SHALL emit these fields with the stated principles:
+
+- `status`: Terminal state follows stream sealing, online updates, rollback, safety, and verification.
+- `paper_sources_and_local_claim_boundary`: SR-OPSD and VERDI are mechanism cues only. Local claims stop at the small initializer.
+- `continuous_relaxation_path_hash_and_terminal_class`: Exp6287 is pinned as the bounded ASP relaxation input.
+- `sealed_stream_manifest_path_and_hash`: The manifest hash proves event order and partitions were frozen before fitting.
+- `chronological_partition_contract`: Partition counts and visibility rules prevent replay-only claims.
+- `initializer_architecture_and_parameter_count`: The small model-to-state initializer is fully specified.
+- `frozen_unanchored_reference_anchored_and_oracle_arm_definitions`: Each arm has an explicit role and outcome authority.
+- `reference_snapshot_path_and_hash`: The reference state is immutable and hash-pinned.
+- `target_interpolation_and_projection_geometry`: The anchored update geometry is explicit and bounded.
+- `matched_update_budget`: Update attempts, step size, projection radius, and event order match across learning arms.
+- `immutable_predecision_snapshot_receipts`: Every arm-event decision has a persisted snapshot before outcome reveal.
+- `postdecision_exact_outcome_receipts`: Exact ASP outcomes are opened only after snapshots exist.
+- `commit_reject_quarantine_and_rollback_counts`: State transitions and unsafe update handling stay auditable.
+- `chronological_first_attempt_exact_rate_by_arm_and_partition`: First-attempt accuracy is separated by arm and partition.
+- `refinement_work_by_arm_and_partition`: Refinement effort is reported apart from accuracy.
+- `forward_transfer_by_arm`: Future same-template, held-template, and unseen-family transfer are separate.
+- `retention_and_forgetting_by_arm`: Earlier-family retention and forgetting are measured after later updates.
+- `negative_transfer_by_arm`: Harm against frozen is reported by arm.
+- `regret_by_arm`: Each arm's cumulative regret is measured against the exact-oracle control.
+- `reversal_and_poison_results_by_arm`: Reversal and poison behavior cannot hide inside pooled utility.
+- `memory_and_update_cost_by_arm`: Parameter, receipt, update, and snapshot costs are reported per arm.
+- `paired_intervals_and_sample_sizes`: Primary contrasts include paired intervals and sample sizes.
+- `source_model_weight_mutation_count`: Bare zero proves absent source model weights were not changed.
+- `learned_initializer_mutation_counts`: Only small initializer state may mutate, and counts are per arm.
+- `rollback_and_restart_identity`: Restart and rollback restore exact reference and active hashes.
+- `reference_anchored_online_learning_ready_score`: The readiness gate is conjunctive and excludes replay-only gain.
+- `protected_files_unchanged`: Conductor, ops, and traceability files stay byte-identical.
+- `preconditions_checked`: Inputs, seeds, validators, budgets, hashes, stream, reference, and protected files are frozen first.
+- `inference_substrate`: The run declares deterministic exact ASP state learning with no base model load.
+- `verifier_is_oracle`: Bare true states that exact validators are the outcome oracle.
+- `field_provenance`: Every field maps to spec, inputs, receipts, metrics, tests, or hashes.
+- `field_principles`: Every required field carries its guard principle.
+- `test_commands`: Focused tests, coverage, full pytest, spec coverage, E2E, terminal checks, determination preservation, and adversarial verification are listed.
+- `test_exit_codes`: Failed commands prevent readiness.
+- `duration_s`: Wall time is recorded without padding.
+- `random_seeds`: Stream, initializer, and interval seeds are fixed.
+- `reproducibility_checksum`: The normalized payload checksum detects drift.
+- `honest_verdict`: The verdict starts with a terminal prefix and states whether online learning earned readiness.
+
+## SCENARIO-CSL-6304-CHRONOLOGY: Exact Outcomes Are Revealed Late
+
+**Given** a malicious caller injects current or future labels before prediction
+**When** predecision snapshots are validated
+**Then** the artifact SHALL reject readiness rather than accepting a leaked
+chronology.
+
+## SCENARIO-CSL-6304-PARITY: Matched Updates Stay Comparable
+
+**Given** unanchored and reference-anchored arms
+**When** chronological learning completes
+**Then** both arms SHALL receive identical authenticated update opportunities
+and identical nominal update budgets.
+
+## SCENARIO-CSL-6304-ROLLBACK: Unsafe Updates Restore State
+
+**Given** false-pass, poison, nonfinite, or harmful updates
+**When** validation fails
+**Then** the update SHALL reject, quarantine, or roll back without changing
+source weights or corrupting restart identity.
+
+## SCENARIO-CSL-6304-READY: Future Transfer Opens The Gate
+
+**Given** only replay rows improve
+**When** readiness is computed
+**Then** `reference_anchored_online_learning_ready_score` SHALL remain `0.0`.
+
+## Implementation Status (REQ-CSL-6304)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CSL-6304 | Implemented | tests/python/test_experiment_6304_reference_anchored_online_state_learning.py |
+| REQ-CSL-6304-STREAM | Implemented | tests/python/test_experiment_6304_reference_anchored_online_state_learning.py |
+| REQ-CSL-6304-PREDECISION | Implemented | tests/python/test_experiment_6304_reference_anchored_online_state_learning.py |
+| REQ-CSL-6304-UPDATE | Implemented | tests/python/test_experiment_6304_reference_anchored_online_state_learning.py |
+| REQ-CSL-6304-CONTROLS | Implemented | tests/python/test_experiment_6304_reference_anchored_online_state_learning.py |
+| REQ-CSL-6304-READY | Implemented | tests/python/test_experiment_6304_reference_anchored_online_state_learning.py |
+| REQ-CSL-6304-PROVENANCE | Implemented | tests/python/test_experiment_6304_reference_anchored_online_state_learning.py |
