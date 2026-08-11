@@ -15671,3 +15671,4 @@ Still active  |
 | 2026-08-11 11:15 UTC | Plan milestone 2026.08.544 | OK | 13 tasks proposed |
 | 2026-08-11 11:17 UTC | Milestone 2026.08.544 activated | OK | 13 tasks queued |
 | 2026-08-11 11:35 UTC | Exact terminal-boundary handoff from V543 into V54 | OK | 89 passed, 1 warning in 11.63s |
+| 2026-08-11 11:52 UTC | Post-marker SOTA receipt and executable V544 scope | OK | 88 passed, 1 warning in 9.26s |
