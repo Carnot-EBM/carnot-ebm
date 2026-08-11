@@ -2711,6 +2711,109 @@ verdict has a terminal prefix.
 |---|---|---|
 | REQ-INFRA-6296 | Implemented: `python/carnot/experiment_6296_v542_adversarial_capstone.py`; terminal artifact `results/experiment_6296_v542_adversarial_capstone.json`. | Implemented: `tests/python/test_experiment_6296_v542_adversarial_capstone.py`. |
 
+## REQ-INFRA-6297: V542-To-V543 Handoff SHALL Preserve Terminal Classes And Validate The Reserved Roadmap
+
+Carnot SHALL build Exp6297 as a deterministic terminal-boundary handoff from
+milestone `2026.08.542` into milestone `2026.08.543`. The handoff SHALL read
+the V542 capstone and operational retro as input evidence. It SHALL classify
+every V542 declared deliverable by exact path with the shared terminal-artifact
+classifier. It SHALL preserve missing, nonterminal, blocked, skipped, null,
+flagged, retired, and ready states without promotion from conductor receipts or
+nearby aliases.
+
+Exp6297 SHALL validate the V543 roadmap without activating
+`research-roadmap-next.yaml` and without editing `research-roadmap.yaml`. The
+validation SHALL require exactly 13 tasks in Exp6297 through Exp6309 order, no
+duplicate ids, no reserved-id or deliverable collisions, no retired
+dependencies, valid structured gates, complete `prior_failures` entries, Codex
+direct routing through `model: gpt-5.5`, and prompt endings that preserve the
+conductor. Each live LLM task SHALL name a mandated local GGUF family in
+`MODEL_SPECS`.
+
+Exp6297 SHALL validate every structured gate against the upstream task's
+`REQUIRED ARTIFACT FIELDS` block. A gate SHALL be valid only when the upstream
+task exists, the operator is supported, and the named field is declared by the
+upstream artifact contract. Retired dependencies and incomplete prior-failure
+records SHALL make the handoff blocked.
+
+The Exp6297 artifact SHALL be written atomically to
+`results/experiment_6297_v543_terminal_transition.json`. Its
+`inference_substrate` SHALL be exactly `aggregation_from_upstream_artifacts`,
+`verifier_is_oracle` SHALL be false, and `retired_dependency_count` and
+`id_collision_count` SHALL be bare integer `0` for a passing handoff.
+
+The Exp6297 artifact SHALL include these required fields: `status`,
+`v542_roadmap_path_and_hash`, `v542_task_terminal_matrix`,
+`v542_capstone_path_hash_and_summary`,
+`operational_retro_path_hash_and_summary`,
+`focused_and_broad_validation_receipts_by_task`,
+`missing_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts`,
+`v543_roadmap_path_and_hash`, `v543_task_ids_and_deliverables`,
+`task_count`, `phase_counts`, `dependency_validation`,
+`gated_on_validation`, `prior_failure_validation`,
+`retired_dependency_count`, `id_collision_count`,
+`agent_routing_validation`, `model_policy_validation`,
+`prompt_contract_validation`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+### SCENARIO-INFRA-6297-1: V542 Exact Deliverables Classify Fail Closed
+
+GIVEN the V542 capstone matrix and exact deliverable paths
+WHEN Exp6297 builds the V542 terminal matrix
+THEN every V542 task from Exp6284 through Exp6296 is classified from its exact
+path, missing artifacts remain missing, aliases are ignored, and flagged
+artifacts remain flagged.
+
+### SCENARIO-INFRA-6297-2: V543 Identity And Collision Audit Is Exact
+
+GIVEN the V543 roadmap
+WHEN Exp6297 validates ids, deliverables, reserved ranges, dependencies, and
+retired references
+THEN the task id list is exactly Exp6297 through Exp6309 in order,
+`task_count=13`, `id_collision_count=0`, and
+`retired_dependency_count=0`.
+
+### SCENARIO-INFRA-6297-3: Gates And Prior Failures Are Structured
+
+GIVEN a gated V543 task and a task with prior failures
+WHEN Exp6297 audits the roadmap
+THEN each gate names an existing upstream task and a field in that upstream
+task's required artifact fields, and each prior-failure entry names the prior
+experiment, verdict, changed mechanism, and `retire_if_same_verdict=true`.
+
+### SCENARIO-INFRA-6297-4: Routing, Model Policy, And Prompt Endings Are Mechanical
+
+GIVEN V543 tasks routed directly to Codex and live LLM tasks
+WHEN Exp6297 audits route and prompt contracts
+THEN each Codex task uses `model: gpt-5.5`, no Gemini route is accepted, each
+live LLM task names a mandated GGUF family in `MODEL_SPECS`, and each prompt
+ends with the required run command and conductor-protection sentence.
+
+### SCENARIO-INFRA-6297-5: Protected Files Stay Byte-Identical
+
+GIVEN before-state hashes for the active roadmap, conductor, ops ledgers,
+traceability, completed record, exclusion manifest, V542 inputs, and V543
+roadmap files
+WHEN Exp6297 writes its own result artifact
+THEN those protected paths have identical before and after hashes.
+
+### SCENARIO-INFRA-6297-6: Artifact Schema Is Principle Annotated
+
+GIVEN the handoff report
+WHEN Exp6297 validates the payload before writing
+THEN every required field is present, every required field has provenance and a
+field-principle entry, the checksum matches the normalized payload, and
+`honest_verdict` starts with a terminal prefix.
+
+## Implementation Status (REQ-INFRA-6297)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6297 | Pending implementation: `python/carnot/experiment_6297_v543_terminal_transition.py`; terminal artifact `results/experiment_6297_v543_terminal_transition.json`. | Pending focused tests: `tests/python/test_experiment_6297_v543_terminal_transition.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
