@@ -104,3 +104,18 @@ CHECK_TIMED_OUT
 
 ## 2026-08-09 13:36 UTC -- checked, nothing new
 
+## 2026-08-11 13:37 UTC -- NEW
+
+- **New top-five entrant:** **Lord Han Solo** (`lordhansolo`) is **#3 at 1.65**. No public ARC-AGI-3 notebook, dataset, repository, discussion, or technique writeup was found. **Exploit/general-purpose classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [member code](https://www.kaggle.com/lordhansolo/code)
+
+- **New technique disclosure:** Current top-10 team **Helmut AGI** published its **TAAF Anim Agent**. It adds:
+
+  - An exact `(level, board-state hash, action)` no-op cache that blocks already-proven ineffective repetitions before they consume an environment action.
+  - Full intermediate-animation perception: every action gets compact metadata—frame count, distinct-frame count, whether the settled board returned to its original state, transient-pixel count, and bounding box.
+  - An on-demand `animation()` tool returning deduplicated, token-bounded frame-diff timelines or cropped transient frames, plus a hint when the agent remains stuck amid informative animations.
+  - The reported public-game A/B was statistically null: **+1.4% mean score, p=0.92**; context cost rose **17% per action**, and only **2 of 96** informative animations were inspected. This makes selective routing crucial.
+
+  **Classification: (b) general-purpose.** The published code consumes only frames returned by the API; no game-source reading or per-game policy hardcoding was found. [Writeup](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/734369), [notebook](https://www.kaggle.com/code/jakobbrggen/taaf-anim-arc-agi-3-solver), [source bundle](https://www.kaggle.com/datasets/jakobbrggen/taaf-kaggle-source-anim-20260807-anim)
+
+  **POSSIBLE CARNOT LEVER:** Promote Carnot’s existing multi-layer-frame primitive into automatic live transition evidence—cheap transient-animation metadata by default, compressed timelines only when verifier uncertainty or settle-back/no-op ambiguity warrants them.
+

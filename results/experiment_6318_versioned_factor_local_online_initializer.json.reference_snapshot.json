@@ -1,0 +1,59 @@
+{
+  "architecture": {
+    "base_gguf_weight_files_immutable": true,
+    "base_gguf_weight_files_present": false,
+    "factor_count": 5,
+    "input_features": [
+      "bias",
+      "accept_cue",
+      "repair_cue",
+      "reject_cue",
+      "drift_cue",
+      "poison_cue"
+    ],
+    "kind": "versioned_linear_model_to_asp_state_initializer",
+    "mutable_parameter_count_per_learning_arm": 18,
+    "parameter_count": 18,
+    "target_states": [
+      "accept",
+      "repair",
+      "reject"
+    ]
+  },
+  "immutable": true,
+  "parameters": [
+    [
+      0.25,
+      0.0,
+      0.0
+    ],
+    [
+      0.25,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.2,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.2
+    ],
+    [
+      0.0,
+      0.05,
+      0.05
+    ],
+    [
+      0.0,
+      0.0,
+      0.1
+    ]
+  ],
+  "schema": "carnot.experiment_6318.versioned_factor_local_online_initializer.v1.reference_snapshot",
+  "source": "Exp6304-style reference initializer cloned before learning",
+  "state_hash": "sha256:e7568ee649e49890d927636fb924b2b40ef7d3ea6a89f7dab6c6c92b4db254fc"
+}
