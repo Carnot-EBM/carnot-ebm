@@ -1013,3 +1013,39 @@ retired_extras:
     among them. Nav-side pruning is a SEPARATE direction and is not retired by this
     entry, though the 2026-07-26 HazardMovePruner measurement found it inert at
     budget 400 and search-reshaping (not reducing) at 2000.
+- id: exp5854_shared_state_initializer_gate_repeat_retired_v543
+  scope_key: exp5854_gate_blocked_shared_state_initializer_retry_v543
+  experiment_scope: Shared activation-to-ASP-state initializer retry that reaches the same blocked_gate_check_failed verdict before exercising initializer utility
+  reason: >-
+    retire_if_same_verdict: Exp6302 repeated Exp5854's blocked_gate_check_failed
+    terminal verdict because Exp6301 reported activation_bus_integrity_ready_score=0.0.
+    This retires only the exact same-gate initializer retry. A materially different
+    initializer can reopen only after the shared activation bus integrity gate clears.
+  experiment_ids:
+  - exp5854-portable-comparative-energy-controls
+  - exp6302-shared-activation-state-initializer
+  retired_milestone: 2026.08.543
+  retired_by_artifact: results/experiment_6309_v543_adversarial_capstone.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - shared-state initializer promoted after activation_bus_integrity_ready_score below 1.0
+  - retrying the Exp6302 initializer gate without new Exp6301 integrity evidence
+- id: exp6291_licensed_transfer_gate_repeat_retired_v543
+  scope_key: exp6291_gate_blocked_licensed_transfer_retry_v543
+  experiment_scope: Evidence-licensed cross-family transfer retry that reaches the same blocked_gate_check_failed verdict before target-licensed transfer evidence exists
+  reason: >-
+    retire_if_same_verdict: Exp6305 repeated Exp6291's blocked_gate_check_failed
+    terminal verdict because Exp6301 did not clear the activation-bus integrity gate.
+    This retires only the same blocked licensed-transfer retry. Retrieval-only,
+    safety-only, or replay-only evidence remains insufficient for licensed transfer.
+  experiment_ids:
+  - exp6291-chronological-memory-crystallization-ab
+  - exp6305-evidence-licensed-cross-family-transfer
+  retired_milestone: 2026.08.543
+  retired_by_artifact: results/experiment_6309_v543_adversarial_capstone.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - licensed transfer promoted while Exp6301 activation-bus integrity is blocked
+  - retrieval-only or replay-only evidence counted as evidence-licensed transfer
