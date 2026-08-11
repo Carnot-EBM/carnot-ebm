@@ -2814,6 +2814,111 @@ field-principle entry, the checksum matches the normalized payload, and
 |---|---|---|
 | REQ-INFRA-6297 | Pending implementation: `python/carnot/experiment_6297_v543_terminal_transition.py`; terminal artifact `results/experiment_6297_v543_terminal_transition.json`. | Pending focused tests: `tests/python/test_experiment_6297_v543_terminal_transition.py`. |
 
+## REQ-INFRA-6310: V543-To-V544 Handoff SHALL Preserve Terminal And Adversarial Classes
+
+Carnot SHALL build Exp6310 as a deterministic terminal-boundary handoff from
+milestone `2026.08.543` into milestone `2026.08.544`. The handoff SHALL read
+Exp6309, the V543 operational retro, the exclusion manifest, the active and
+staged roadmap paths, and all V543 declared artifacts. It SHALL classify every
+V543 declared artifact by exact path with `python/carnot/terminal_artifacts.py`.
+It SHALL preserve missing, nonterminal, blocked, skipped, null, flagged,
+retired, ready, positive, safety-only, and shadow-only states without promoting
+one branch from another branch's evidence.
+
+Exp6310 SHALL validate the V544 roadmap without activating
+`research-roadmap-next.yaml` and without editing `research-roadmap.yaml`. The
+validation SHALL require exactly 13 tasks in Exp6310 through Exp6322 order, no
+duplicate ids, no reserved-id or deliverable collisions, no retired
+dependencies, valid structured gates, complete `prior_failures` entries, Codex
+direct routing through `model: gpt-5.5`, and prompt endings that preserve the
+conductor. Each live LLM task SHALL name the three mandated local GGUF model
+identities when it needs all three model families.
+
+Exp6310 SHALL prove that the shared activation bus, shared-state initializer,
+licensed cross-family transfer, external text scorer, KAN revival, and
+unchanged hardware probe scopes are not scheduled by the V544 roadmap. A
+negated mention in a task prompt is not an activation. A dependency on a retired
+experiment SHALL make the handoff blocked.
+
+The Exp6310 artifact SHALL be written atomically to
+`results/experiment_6310_v544_terminal_transition.json`. Its
+`inference_substrate` SHALL be exactly `aggregation_from_upstream_artifacts`,
+`verifier_is_oracle` SHALL be false, `task_count` SHALL be bare integer `13`,
+and `retired_dependency_count` and `id_collision_count` SHALL be bare integer
+`0` for a passing handoff.
+
+The Exp6310 artifact SHALL include these required fields: `status`,
+`v543_roadmap_path_and_hash`, `v543_task_terminal_matrix`,
+`v543_capstone_path_hash_and_summary`,
+`operational_retro_path_hash_and_summary`,
+`missing_nonterminal_blocked_skipped_null_flagged_retired_ready_and_positive_counts`,
+`v544_roadmap_path_and_hash`, `v544_task_ids_and_deliverables`,
+`task_count`, `phase_counts`, `dependency_validation`,
+`gated_on_validation`, `prior_failure_validation`,
+`retired_dependency_count`, `id_collision_count`,
+`agent_routing_validation`, `model_policy_validation`,
+`prompt_contract_validation`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+### SCENARIO-INFRA-6310-1: V543 Exact Deliverables Preserve Current Classes
+
+GIVEN the Exp6309 exact declared task matrix and V543 deliverable paths
+WHEN Exp6310 builds the V543 terminal matrix
+THEN every V543 task from Exp6297 through Exp6309 is classified from its exact
+path, Exp6303 remains missing, Exp6300 and Exp6301 remain flagged, Exp6302 and
+Exp6305 remain skipped, and Exp6304 and Exp6306 remain positive.
+
+### SCENARIO-INFRA-6310-2: V544 Identity And Collision Audit Is Exact
+
+GIVEN the V544 roadmap
+WHEN Exp6310 validates ids, deliverables, reserved ranges, dependencies, and
+retired references
+THEN the task id list is exactly Exp6310 through Exp6322 in order,
+`task_count=13`, `id_collision_count=0`, and
+`retired_dependency_count=0`.
+
+### SCENARIO-INFRA-6310-3: Gates And Prior Failures Are Structured
+
+GIVEN a gated V544 task and a task with prior failures
+WHEN Exp6310 audits the roadmap
+THEN each gate names an existing upstream task and a field in that upstream
+task's required artifact fields, and each prior-failure entry names the prior
+experiment, verdict, changed mechanism, and `retire_if_same_verdict=true`.
+
+### SCENARIO-INFRA-6310-4: Retired Branches Are Not Reactivated
+
+GIVEN the V543 retired initializer and licensed-transfer gate repeats
+WHEN Exp6310 audits V544 title, prompt, dependency, and gate text
+THEN no task schedules the shared bus, blocked initializer retry, licensed
+cross-family transfer retry, external text scorer, KAN revival, or unchanged
+hardware probe scope.
+
+### SCENARIO-INFRA-6310-5: Routing, Model Policy, And Prompt Endings Are Mechanical
+
+GIVEN V544 tasks routed directly to Codex and live LLM tasks
+WHEN Exp6310 audits route and prompt contracts
+THEN each task uses `agent_type: codex` with `model: gpt-5.5`, no Gemini route
+is accepted, live three-family prompts name the three mandated GGUF identities,
+and each prompt ends with the required run command and conductor-protection
+sentence.
+
+### SCENARIO-INFRA-6310-6: Artifact Schema Is Principle Annotated
+
+GIVEN the handoff report
+WHEN Exp6310 validates the payload before writing
+THEN every required field is present, every required field has provenance and a
+field-principle entry, the checksum matches the normalized payload, and
+`honest_verdict` starts with a terminal prefix.
+
+## Implementation Status (REQ-INFRA-6310)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6310 | Pending implementation: `python/carnot/experiment_6310_v544_terminal_transition.py`; terminal artifact `results/experiment_6310_v544_terminal_transition.json`. | Pending focused tests: `tests/python/test_experiment_6310_v544_terminal_transition.py`. |
+
 ## REQ-INFRA-6298: Terminal Evidence Preflight SHALL Fail Closed Before Gate Consumption
 
 Carnot SHALL provide a reusable standalone terminal-evidence preflight for
