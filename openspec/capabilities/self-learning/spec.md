@@ -548,6 +548,154 @@ baseline cache hash exactly.
 
 ---
 
+## REQ-LEARN-6290: Revocable Atomic Repair Memory
+
+**Given** Exp6276 was safe but over-abstained against the Exp6264 global
+threshold control
+**When** Exp6290 evaluates revocable atomic repair memory
+**Then** it SHALL use stable precedent keys, append-only versioned state, and
+exact current sidecar evidence before retrieval
+**And** it SHALL write
+`results/experiment_6290_revocable_atomic_repair_memory.json`.
+
+### REQ-LEARN-6290 Sub-requirements
+
+- REQ-LEARN-6290-1: Exp6290 SHALL freeze source events, stream chronology,
+  arm policies, key schema, utility margin, random seeds, rollback checkpoint,
+  and protected hashes before any arm runs.
+- REQ-LEARN-6290-2: Precedent keys SHALL be deterministic hashes of a canonical
+  namespace, model family, task family, repair atom, and scope. Key collisions
+  SHALL fail closed before retrieval.
+- REQ-LEARN-6290-3: A transactional memory module SHALL keep an append-only
+  audit log separate from the active retrieval view. The log SHALL preserve
+  active, revoked, and re-promoted versions.
+- REQ-LEARN-6290-4: Corrections SHALL split into atomic constraint-repair
+  items. Bundled repairs, partial transactions, unsupported items, and poison
+  items SHALL be rejected.
+- REQ-LEARN-6290-5: Retrieval SHALL expose an item only when the item is active
+  and current exact sidecar evidence matches the item support hash.
+- REQ-LEARN-6290-6: Clean, gradual drift, full reversal, implicit conflict,
+  poison, and later re-promotion streams SHALL run in sealed chronological
+  order with frozen model weights.
+- REQ-LEARN-6290-7: Exp6290 SHALL compare `no_memory`, `append_only`,
+  `last_write_wins`, `global_threshold`, `v541_dual_cache`, and
+  `revocable_atomic_repair_memory` arms under identical event order and
+  utility accounting.
+- REQ-LEARN-6290-8: Exp6290 SHALL report safety, utility, coverage,
+  abstention, retention, stale retrieval, revoked retrieval, exact-evidence
+  rejection, and negative transfer separately by arm.
+- REQ-LEARN-6290-9: Readiness SHALL require zero unsafe advice, zero
+  revoked-row retrieval, exact rollback, bare zero model-weight mutation, clean
+  protected-file receipts, clean test receipts, and utility non-inferior to the
+  preregistered Exp6264 global-threshold margin.
+
+### Required Artifact Fields and Principles
+
+- `status`: Terminal state follows preconditions, stream replay, controls,
+  rollback, protected files, and tests.
+- `paper_sources_and_local_claim_boundary`: Separates TEPA and MIRA mechanism
+  ideas from local evidence.
+- `upstream_eligibility_path_hash_and_terminal_class`: Pins the Exp6286
+  eligibility ledger and its terminal class.
+- `event_corpus_paths_hashes_and_model_families`: Pins the Exp6263 event
+  corpus, row sidecars, and model families.
+- `sealed_stream_manifest_path_and_hash`: Pins the emitted clean, drift,
+  reversal, implicit-conflict, poison, and re-promotion streams.
+- `precedent_key_schema`: Defines the stable key namespace, inputs, canonical
+  encoder, and collision policy.
+- `active_revoked_and_repromoted_state_machine`: Defines active, revoked, and
+  re-promoted transitions.
+- `atomic_repair_item_schema`: Defines one independently reusable constraint
+  repair item.
+- `exact_evidence_activation_contract`: States the current sidecar evidence
+  needed before retrieval.
+- `append_only_audit_log_path_and_hash`: Pins the audit log and proves it is
+  separate from active retrieval.
+- `arm_definitions`: Freezes the six matched arms and shared event order.
+- `clean_drift_reversal_implicit_conflict_poison_and_repromotion_results_by_arm`: Reports each stream separately by arm.
+- `active_stale_and_revoked_retrieval_counts_by_arm`: Counts active, stale, and
+  revoked retrievals by arm.
+- `exact_evidence_rejection_counts_by_arm`: Counts unsupported activation
+  rejections by arm.
+- `unsafe_advice_counts_by_arm`: Counts unsafe advice by arm and stream.
+- `utility_coverage_abstention_and_retention_by_arm`: Reports utility,
+  coverage, abstention, and retention by arm.
+- `negative_transfer_by_arm`: Reports utility loss and unsafe excess against
+  no memory.
+- `rollback_and_restart_identity`: Proves restart determinism and byte-identical
+  rollback.
+- `paired_intervals_and_sample_sizes`: Gives paired intervals and sample sizes
+  for the primary contrasts.
+- `dual_cache_and_global_threshold_control_receipts`: Reproduces the V541 dual
+  cache and Exp6264 global-threshold controls.
+- `revocable_memory_ready_score`: Uses the conjunctive readiness gate.
+- `source_model_weight_mutation_count`: Bare zero proves frozen weights.
+- `protected_files_unchanged`: Proves protected inputs and operator-owned files
+  stayed byte-identical.
+- `preconditions_checked`: Records the frozen source, stream, arms, key schema,
+  margin, seed, rollback, and protected hash checks.
+- `inference_substrate`: Declares deterministic exact-sidecar replay with
+  external memory and no LLM.
+- `verifier_is_oracle`: States whether exact sidecar evidence is the activation
+  authority.
+- `field_provenance`: Maps each field to preconditions, streams, memory, arms,
+  controls, rollback, or tests.
+- `field_principles`: Echoes one principle for every required field.
+- `test_commands`: Lists focused, coverage, full-suite, spec, e2e, CLI, and
+  adversarial checks.
+- `test_exit_codes`: Records exit codes so failures stay visible.
+- `duration_s`: Records deterministic replay wall time.
+- `random_seeds`: Freezes all deterministic sampling and interval seeds.
+- `reproducibility_checksum`: Hashes the normalized artifact.
+- `honest_verdict`: Starts with `complete:`, `complete_null:`, or `blocked:`.
+
+## SCENARIO-LEARN-6290-KEYS: Stable Keys Fail Closed on Collision
+
+**Given** two repair items canonicalize to the same key with different support
+**When** the transactional memory commits the transaction
+**Then** the transaction SHALL fail closed
+**And** no active retrieval row SHALL change.
+
+## SCENARIO-LEARN-6290-TRANSACTION: Partial Transactions Do Not Publish
+
+**Given** a transaction contains one supported atomic repair and one unsupported
+or bundled repair
+**When** the transaction commits
+**Then** every staged item SHALL be rejected
+**And** the active retrieval view SHALL remain byte-identical.
+
+## SCENARIO-LEARN-6290-REVOCATION: Revoked Rows Never Retrieve
+
+**Given** a precedent is active and later exact sidecar evidence contradicts it
+**When** a later query asks for the same precedent key
+**Then** retrieval SHALL expose no revoked row
+**And** the audit log SHALL keep both the active and revoked versions.
+
+## SCENARIO-LEARN-6290-RESTART: Restart and Rollback Are Byte-Identical
+
+**Given** a committed audit log and active view
+**When** the store restarts and then rolls back to the checkpoint
+**Then** restart hashes SHALL match
+**And** rollback hashes SHALL equal the checkpoint hashes.
+
+## SCENARIO-LEARN-6290-STREAMS: Reversal, Conflict, Poison, and Re-Promotion
+Fail Closed or Re-Activate with Evidence
+
+**Given** sealed clean, drift, full reversal, implicit-conflict, poison, and
+re-promotion streams
+**When** all six arms run in chronological order
+**Then** the revocable arm SHALL have zero unsafe advice, zero revoked retrieval,
+exact-evidence rejections for unsupported items, and utility non-inferior to the
+preregistered global-threshold margin.
+
+## Implementation Status (REQ-LEARN-6290)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6290 | Planned (`python/carnot/memory/revocable_atomic_repair.py`, `python/carnot/experiment_6290_revocable_atomic_repair_memory.py`) | Planned (`tests/python/test_experiment_6290_revocable_atomic_repair_memory.py`) |
+
+---
+
 ## REQ-PSV-005: PSV Question Pool Must Contain >= 100 Questions and Sample Randomly Per Iteration
 
 **Given** a PSV self-play loop running for multiple iterations

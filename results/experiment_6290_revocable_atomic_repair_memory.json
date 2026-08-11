@@ -1,0 +1,1763 @@
+{
+  "active_revoked_and_repromoted_state_machine": {
+    "append_only_history_preserved": true,
+    "state_counts": {
+      "active": 8,
+      "repromoted": 16,
+      "revoked": 16
+    },
+    "states": [
+      "active",
+      "revoked",
+      "repromoted"
+    ],
+    "transitions": {
+      "promote": "candidate with current exact evidence becomes active",
+      "repromote": "new exact evidence creates a later active version",
+      "revoke": "contradictory exact evidence removes row from active view"
+    }
+  },
+  "active_stale_and_revoked_retrieval_counts_by_arm": {
+    "append_only": {
+      "active_retrieval_count": 8,
+      "revoked_retrieval_count": 24,
+      "stale_retrieval_count": 40
+    },
+    "global_threshold": {
+      "active_retrieval_count": 0,
+      "revoked_retrieval_count": 0,
+      "stale_retrieval_count": 0
+    },
+    "last_write_wins": {
+      "active_retrieval_count": 48,
+      "revoked_retrieval_count": 24,
+      "stale_retrieval_count": 0
+    },
+    "no_memory": {
+      "active_retrieval_count": 0,
+      "revoked_retrieval_count": 0,
+      "stale_retrieval_count": 0
+    },
+    "revocable_atomic_repair_memory": {
+      "active_retrieval_count": 16,
+      "revoked_retrieval_count": 0,
+      "stale_retrieval_count": 0
+    },
+    "v541_dual_cache": {
+      "active_retrieval_count": 48,
+      "revoked_retrieval_count": 0,
+      "stale_retrieval_count": 0
+    }
+  },
+  "append_only_audit_log_path_and_hash": {
+    "active_view_hash": "sha256:6073d9a3ca2c963c1f530952bc7bd3cc1807c129a64a65b847b2ab433555a501",
+    "audit_hash": "sha256:648ffffddb821a337147a403b693bba73bc28355c7a7d656dbc1badc81365b9c",
+    "entry_count": 40,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6290_revocable_atomic_repair_memory.json.audit.jsonl",
+    "separate_from_active_view": true,
+    "sha256": "sha256:8667d1ce7ddc9d227215cd68853f5a1ffbc22d174392eac8bd0ededc26c2f6b2"
+  },
+  "arm_definitions": {
+    "all_arms_identical_event_order": true,
+    "arm_count": 6,
+    "arm_names": [
+      "no_memory",
+      "append_only",
+      "last_write_wins",
+      "global_threshold",
+      "v541_dual_cache",
+      "revocable_atomic_repair_memory"
+    ],
+    "decision_count_by_arm": {
+      "append_only": 48,
+      "global_threshold": 48,
+      "last_write_wins": 48,
+      "no_memory": 48,
+      "revocable_atomic_repair_memory": 48,
+      "v541_dual_cache": 48
+    },
+    "definitions": {
+      "append_only": "retrieve the first matching precedent forever",
+      "global_threshold": "reuse Exp6264 global threshold on source energy",
+      "last_write_wins": "retrieve the latest row without revocation state",
+      "no_memory": "always abstain",
+      "revocable_atomic_repair_memory": "retrieve active atomic repairs only with current exact evidence",
+      "v541_dual_cache": "reuse Exp6276 certified dual-cache treatment"
+    },
+    "event_order_hash_by_arm": {
+      "append_only": "sha256:63225f4f3297be783160dcb21b4730acd5e4a26a6650e9fa98ec36fe5a2b6c5d",
+      "global_threshold": "sha256:63225f4f3297be783160dcb21b4730acd5e4a26a6650e9fa98ec36fe5a2b6c5d",
+      "last_write_wins": "sha256:63225f4f3297be783160dcb21b4730acd5e4a26a6650e9fa98ec36fe5a2b6c5d",
+      "no_memory": "sha256:63225f4f3297be783160dcb21b4730acd5e4a26a6650e9fa98ec36fe5a2b6c5d",
+      "revocable_atomic_repair_memory": "sha256:63225f4f3297be783160dcb21b4730acd5e4a26a6650e9fa98ec36fe5a2b6c5d",
+      "v541_dual_cache": "sha256:63225f4f3297be783160dcb21b4730acd5e4a26a6650e9fa98ec36fe5a2b6c5d"
+    }
+  },
+  "atomic_repair_item_schema": {
+    "fields": [
+      "precedent_key",
+      "namespace",
+      "model_family",
+      "task_family",
+      "repair_atom",
+      "scope",
+      "exact_evidence_key",
+      "exact_evidence_hash",
+      "correction_id",
+      "source_event_id",
+      "atomic",
+      "poisoned",
+      "version",
+      "state"
+    ],
+    "rejects": [
+      "bundled_repair",
+      "unsupported_exact_evidence",
+      "poison",
+      "key_collision"
+    ],
+    "schema": "carnot.revocable_atomic_repair_item.v1"
+  },
+  "clean_drift_reversal_implicit_conflict_poison_and_repromotion_results_by_arm": {
+    "append_only": {
+      "clean": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "true_safe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": 8.0,
+        "utility_per_row": 1.0
+      },
+      "full_reversal": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "false_unsafe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 8,
+        "utility": -64.0,
+        "utility_per_row": -8.0
+      },
+      "gradual_drift": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "true_safe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": 8.0,
+        "utility_per_row": 1.0
+      },
+      "implicit_conflict": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "false_unsafe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 8,
+        "utility": -64.0,
+        "utility_per_row": -8.0
+      },
+      "poison": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "false_unsafe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 8,
+        "utility": -64.0,
+        "utility_per_row": -8.0
+      },
+      "repromotion": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "true_safe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": 8.0,
+        "utility_per_row": 1.0
+      }
+    },
+    "global_threshold": {
+      "clean": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "true_safe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": 8.0,
+        "utility_per_row": 1.0
+      },
+      "full_reversal": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "false_unsafe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 8,
+        "utility": -64.0,
+        "utility_per_row": -8.0
+      },
+      "gradual_drift": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "true_safe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": 8.0,
+        "utility_per_row": 1.0
+      },
+      "implicit_conflict": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "false_unsafe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 8,
+        "utility": -64.0,
+        "utility_per_row": -8.0
+      },
+      "poison": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "false_unsafe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 8,
+        "utility": -64.0,
+        "utility_per_row": -8.0
+      },
+      "repromotion": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "true_safe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": 8.0,
+        "utility_per_row": 1.0
+      }
+    },
+    "last_write_wins": {
+      "clean": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "true_safe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": 8.0,
+        "utility_per_row": 1.0
+      },
+      "full_reversal": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "false_unsafe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 8,
+        "utility": -64.0,
+        "utility_per_row": -8.0
+      },
+      "gradual_drift": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "true_safe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": 8.0,
+        "utility_per_row": 1.0
+      },
+      "implicit_conflict": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "false_unsafe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 8,
+        "utility": -64.0,
+        "utility_per_row": -8.0
+      },
+      "poison": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "false_unsafe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 8,
+        "utility": -64.0,
+        "utility_per_row": -8.0
+      },
+      "repromotion": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "true_safe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": 8.0,
+        "utility_per_row": 1.0
+      }
+    },
+    "no_memory": {
+      "clean": {
+        "abstention_rate": 1.0,
+        "action_counts": {
+          "safe_abstention": 8
+        },
+        "coverage": 0.0,
+        "fire_count": 0,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": -2.0,
+        "utility_per_row": -0.25
+      },
+      "full_reversal": {
+        "abstention_rate": 1.0,
+        "action_counts": {
+          "unsafe_abstention": 8
+        },
+        "coverage": 0.0,
+        "fire_count": 0,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": -4.0,
+        "utility_per_row": -0.5
+      },
+      "gradual_drift": {
+        "abstention_rate": 1.0,
+        "action_counts": {
+          "safe_abstention": 8
+        },
+        "coverage": 0.0,
+        "fire_count": 0,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": -2.0,
+        "utility_per_row": -0.25
+      },
+      "implicit_conflict": {
+        "abstention_rate": 1.0,
+        "action_counts": {
+          "unsafe_abstention": 8
+        },
+        "coverage": 0.0,
+        "fire_count": 0,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": -4.0,
+        "utility_per_row": -0.5
+      },
+      "poison": {
+        "abstention_rate": 1.0,
+        "action_counts": {
+          "unsafe_abstention": 8
+        },
+        "coverage": 0.0,
+        "fire_count": 0,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": -4.0,
+        "utility_per_row": -0.5
+      },
+      "repromotion": {
+        "abstention_rate": 1.0,
+        "action_counts": {
+          "safe_abstention": 8
+        },
+        "coverage": 0.0,
+        "fire_count": 0,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": -2.0,
+        "utility_per_row": -0.25
+      }
+    },
+    "revocable_atomic_repair_memory": {
+      "clean": {
+        "abstention_rate": 1.0,
+        "action_counts": {
+          "safe_abstention": 8
+        },
+        "coverage": 0.0,
+        "fire_count": 0,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": -2.0,
+        "utility_per_row": -0.25
+      },
+      "full_reversal": {
+        "abstention_rate": 1.0,
+        "action_counts": {
+          "unsafe_abstention": 8
+        },
+        "coverage": 0.0,
+        "fire_count": 0,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": -4.0,
+        "utility_per_row": -0.5
+      },
+      "gradual_drift": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "true_safe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": 8.0,
+        "utility_per_row": 1.0
+      },
+      "implicit_conflict": {
+        "abstention_rate": 1.0,
+        "action_counts": {
+          "unsafe_abstention": 8
+        },
+        "coverage": 0.0,
+        "fire_count": 0,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": -4.0,
+        "utility_per_row": -0.5
+      },
+      "poison": {
+        "abstention_rate": 1.0,
+        "action_counts": {
+          "unsafe_abstention": 8
+        },
+        "coverage": 0.0,
+        "fire_count": 0,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": -4.0,
+        "utility_per_row": -0.5
+      },
+      "repromotion": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "true_safe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": 8.0,
+        "utility_per_row": 1.0
+      }
+    },
+    "v541_dual_cache": {
+      "clean": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "true_safe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": 8.0,
+        "utility_per_row": 1.0
+      },
+      "full_reversal": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "false_unsafe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 8,
+        "utility": -64.0,
+        "utility_per_row": -8.0
+      },
+      "gradual_drift": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "true_safe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": 8.0,
+        "utility_per_row": 1.0
+      },
+      "implicit_conflict": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "false_unsafe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 8,
+        "utility": -64.0,
+        "utility_per_row": -8.0
+      },
+      "poison": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "false_unsafe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 8,
+        "utility": -64.0,
+        "utility_per_row": -8.0
+      },
+      "repromotion": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "true_safe_acceptance": 8
+        },
+        "coverage": 1.0,
+        "fire_count": 8,
+        "row_count": 8,
+        "unsafe_advice_count": 0,
+        "utility": 8.0,
+        "utility_per_row": 1.0
+      }
+    }
+  },
+  "dual_cache_and_global_threshold_control_receipts": {
+    "global_threshold": {
+      "artifact_ready_score": 0.0,
+      "artifact_status": "complete_null",
+      "margin": -0.01,
+      "path": "results/experiment_6264_energy_familiarity_memory_gate.json",
+      "reproduced_threshold": 0.13683932616272387,
+      "sha256": "sha256:cc3bbe1eac4a7e07440414329bbc3aef17f9caf20950a60591eb131fa2ffffde"
+    },
+    "v541_dual_cache": {
+      "artifact_ready_score": 0.0,
+      "artifact_status": "complete_null",
+      "path": "results/experiment_6276_certified_dual_cache_admission.json",
+      "reproduced_certificate": true,
+      "sha256": "sha256:901704ad563ac7c4f115cea7e81d0264028870f70685efc7209b9233ce876d17"
+    }
+  },
+  "duration_s": 0.176674,
+  "event_corpus_paths_hashes_and_model_families": {
+    "bridge_artifact": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6263_clean_sota_event_replay_bridge.json",
+      "present": true,
+      "sha256": "sha256:38af00462fdc8d389f27f223f02e22faa2994a60193f983209ce6b9d1f42cdd6",
+      "size_bytes": 75041
+    },
+    "bridge_quarantine": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6263_clean_sota_event_replay_bridge.quarantine.json",
+      "present": true,
+      "sha256": "sha256:eb4170926ecd719a9afa69e929f57a570e0cf46e7d5a15a53ae3456268bdf54f",
+      "size_bytes": 991
+    },
+    "bridge_rows": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6263_clean_sota_event_replay_bridge.rows.jsonl",
+      "present": true,
+      "sha256": "sha256:3ba8b1b0eb256fc157eb2cc0333df169c206c7e33b8a35ef80c2242b53d1483b",
+      "size_bytes": 1219533
+    },
+    "model_families": [
+      "None"
+    ],
+    "row_count": 480,
+    "terminal_class": "complete_ready"
+  },
+  "exact_evidence_activation_contract": {
+    "activation_rule": "item exact_evidence_key must map to item exact_evidence_hash at retrieval time",
+    "mismatched_evidence": "reject_without_retrieval",
+    "missing_evidence": "reject_without_retrieval",
+    "revoked_state": "audit_only_not_retrievable"
+  },
+  "exact_evidence_rejection_counts_by_arm": {
+    "append_only": {
+      "all_streams": 0,
+      "by_reason": {}
+    },
+    "global_threshold": {
+      "all_streams": 0,
+      "by_reason": {}
+    },
+    "last_write_wins": {
+      "all_streams": 0,
+      "by_reason": {}
+    },
+    "no_memory": {
+      "all_streams": 0,
+      "by_reason": {}
+    },
+    "revocable_atomic_repair_memory": {
+      "all_streams": 16,
+      "by_reason": {
+        "unsupported_or_non_atomic_or_poison_or_revoked": 16
+      }
+    },
+    "v541_dual_cache": {
+      "all_streams": 0,
+      "by_reason": {}
+    }
+  },
+  "experiment_id": "experiment_6290_revocable_atomic_repair_memory",
+  "field_principles": {
+    "active_revoked_and_repromoted_state_machine": "Defines active, revoked, and re-promoted transitions.",
+    "active_stale_and_revoked_retrieval_counts_by_arm": "Counts active, stale, and revoked retrievals by arm.",
+    "append_only_audit_log_path_and_hash": "Pins the audit log and proves it is separate from active retrieval.",
+    "arm_definitions": "Freezes the six matched arms and shared event order.",
+    "atomic_repair_item_schema": "Defines one independently reusable constraint repair item.",
+    "clean_drift_reversal_implicit_conflict_poison_and_repromotion_results_by_arm": "Reports each stream separately by arm.",
+    "dual_cache_and_global_threshold_control_receipts": "Reproduces the V541 dual cache and Exp6264 global-threshold controls.",
+    "duration_s": "Records deterministic replay wall time.",
+    "event_corpus_paths_hashes_and_model_families": "Pins the Exp6263 event corpus, row sidecars, and model families.",
+    "exact_evidence_activation_contract": "States the current sidecar evidence needed before retrieval.",
+    "exact_evidence_rejection_counts_by_arm": "Counts unsupported activation rejections by arm.",
+    "field_principles": "Echoes one principle for every required field.",
+    "field_provenance": "Maps each field to preconditions, streams, memory, arms, controls, rollback, or tests.",
+    "honest_verdict": "Starts with `complete:`, `complete_null:`, or `blocked:`.",
+    "inference_substrate": "Declares deterministic exact-sidecar replay with external memory and no LLM.",
+    "negative_transfer_by_arm": "Reports utility loss and unsafe excess against no memory.",
+    "paired_intervals_and_sample_sizes": "Gives paired intervals and sample sizes for the primary contrasts.",
+    "paper_sources_and_local_claim_boundary": "Separates TEPA and MIRA mechanism ideas from local evidence.",
+    "precedent_key_schema": "Defines the stable key namespace, inputs, canonical encoder, and collision policy.",
+    "preconditions_checked": "Records the frozen source, stream, arms, key schema, margin, seed, rollback, and protected hash checks.",
+    "protected_files_unchanged": "Proves protected inputs and operator-owned files stayed byte-identical.",
+    "random_seeds": "Freezes all deterministic sampling and interval seeds.",
+    "reproducibility_checksum": "Hashes the normalized artifact.",
+    "revocable_memory_ready_score": "Uses the conjunctive readiness gate.",
+    "rollback_and_restart_identity": "Proves restart determinism and byte-identical rollback.",
+    "sealed_stream_manifest_path_and_hash": "Pins the emitted clean, drift, reversal, implicit-conflict, poison, and re-promotion streams.",
+    "source_model_weight_mutation_count": "Bare zero proves frozen weights.",
+    "status": "Terminal state follows preconditions, stream replay, controls, rollback, protected files, and tests.",
+    "test_commands": "Lists focused, coverage, full-suite, spec, e2e, CLI, and adversarial checks.",
+    "test_exit_codes": "Records exit codes so failures stay visible.",
+    "unsafe_advice_counts_by_arm": "Counts unsafe advice by arm and stream.",
+    "upstream_eligibility_path_hash_and_terminal_class": "Pins the Exp6286 eligibility ledger and its terminal class.",
+    "utility_coverage_abstention_and_retention_by_arm": "Reports utility, coverage, abstention, and retention by arm.",
+    "verifier_is_oracle": "States whether exact sidecar evidence is the activation authority."
+  },
+  "field_provenance": {
+    "active_revoked_and_repromoted_state_machine": {
+      "principle": "Defines active, revoked, and re-promoted transitions.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "active_stale_and_revoked_retrieval_counts_by_arm": {
+      "principle": "Counts active, stale, and revoked retrievals by arm.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "append_only_audit_log_path_and_hash": {
+      "principle": "Pins the audit log and proves it is separate from active retrieval.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "arm_definitions": {
+      "principle": "Freezes the six matched arms and shared event order.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "atomic_repair_item_schema": {
+      "principle": "Defines one independently reusable constraint repair item.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "clean_drift_reversal_implicit_conflict_poison_and_repromotion_results_by_arm": {
+      "principle": "Reports each stream separately by arm.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "dual_cache_and_global_threshold_control_receipts": {
+      "principle": "Reproduces the V541 dual cache and Exp6264 global-threshold controls.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "duration_s": {
+      "principle": "Records deterministic replay wall time.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "event_corpus_paths_hashes_and_model_families": {
+      "principle": "Pins the Exp6263 event corpus, row sidecars, and model families.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "exact_evidence_activation_contract": {
+      "principle": "States the current sidecar evidence needed before retrieval.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "exact_evidence_rejection_counts_by_arm": {
+      "principle": "Counts unsupported activation rejections by arm.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "field_principles": {
+      "principle": "Echoes one principle for every required field.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "field_provenance": {
+      "principle": "Maps each field to preconditions, streams, memory, arms, controls, rollback, or tests.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "honest_verdict": {
+      "principle": "Starts with `complete:`, `complete_null:`, or `blocked:`.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "inference_substrate": {
+      "principle": "Declares deterministic exact-sidecar replay with external memory and no LLM.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "negative_transfer_by_arm": {
+      "principle": "Reports utility loss and unsafe excess against no memory.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "paired_intervals_and_sample_sizes": {
+      "principle": "Gives paired intervals and sample sizes for the primary contrasts.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "paper_sources_and_local_claim_boundary": {
+      "principle": "Separates TEPA and MIRA mechanism ideas from local evidence.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "precedent_key_schema": {
+      "principle": "Defines the stable key namespace, inputs, canonical encoder, and collision policy.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "preconditions_checked": {
+      "principle": "Records the frozen source, stream, arms, key schema, margin, seed, rollback, and protected hash checks.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "protected_files_unchanged": {
+      "principle": "Proves protected inputs and operator-owned files stayed byte-identical.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "random_seeds": {
+      "principle": "Freezes all deterministic sampling and interval seeds.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "reproducibility_checksum": {
+      "principle": "Hashes the normalized artifact.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "revocable_memory_ready_score": {
+      "principle": "Uses the conjunctive readiness gate.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "rollback_and_restart_identity": {
+      "principle": "Proves restart determinism and byte-identical rollback.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "sealed_stream_manifest_path_and_hash": {
+      "principle": "Pins the emitted clean, drift, reversal, implicit-conflict, poison, and re-promotion streams.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "source_model_weight_mutation_count": {
+      "principle": "Bare zero proves frozen weights.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "status": {
+      "principle": "Terminal state follows preconditions, stream replay, controls, rollback, protected files, and tests.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "test_commands": {
+      "principle": "Lists focused, coverage, full-suite, spec, e2e, CLI, and adversarial checks.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "test_exit_codes": {
+      "principle": "Records exit codes so failures stay visible.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "unsafe_advice_counts_by_arm": {
+      "principle": "Counts unsafe advice by arm and stream.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "upstream_eligibility_path_hash_and_terminal_class": {
+      "principle": "Pins the Exp6286 eligibility ledger and its terminal class.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "utility_coverage_abstention_and_retention_by_arm": {
+      "principle": "Reports utility, coverage, abstention, and retention by arm.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    },
+    "verifier_is_oracle": {
+      "principle": "States whether exact sidecar evidence is the activation authority.",
+      "source": "REQ-LEARN-6290 preconditions, sealed streams, memory audit, arm metrics, controls, rollback, and tests"
+    }
+  },
+  "honest_verdict": "complete_null: revocable memory ran, but a recorded test command failed",
+  "inference_substrate": "deterministic_exact_sidecar_replay_external_memory_no_llm",
+  "negative_transfer_by_arm": {
+    "append_only": {
+      "negative_transfer_present": true,
+      "unsafe_advice_excess_vs_no_memory": 24,
+      "utility_delta_vs_no_memory": -3.125
+    },
+    "global_threshold": {
+      "negative_transfer_present": true,
+      "unsafe_advice_excess_vs_no_memory": 24,
+      "utility_delta_vs_no_memory": -3.125
+    },
+    "last_write_wins": {
+      "negative_transfer_present": true,
+      "unsafe_advice_excess_vs_no_memory": 24,
+      "utility_delta_vs_no_memory": -3.125
+    },
+    "no_memory": {
+      "negative_transfer_present": false,
+      "unsafe_advice_excess_vs_no_memory": 0,
+      "utility_delta_vs_no_memory": 0.0
+    },
+    "revocable_atomic_repair_memory": {
+      "negative_transfer_present": false,
+      "unsafe_advice_excess_vs_no_memory": 0,
+      "utility_delta_vs_no_memory": 0.4166666666666667
+    },
+    "v541_dual_cache": {
+      "negative_transfer_present": true,
+      "unsafe_advice_excess_vs_no_memory": 24,
+      "utility_delta_vs_no_memory": -3.125
+    }
+  },
+  "paired_intervals_and_sample_sizes": {
+    "bootstrap_replicates": 256,
+    "paired_unit": "sealed_stream_row",
+    "revocable_vs_append_only_unsafe_advice": {
+      "ci95": [
+        -0.6666666666666666,
+        -0.375
+      ],
+      "mean_delta": -0.5,
+      "n": 48
+    },
+    "revocable_vs_global_utility": {
+      "ci95": [
+        2.5,
+        4.453125
+      ],
+      "mean_delta": 3.5416666666666665,
+      "n": 48
+    },
+    "revocable_vs_v541_coverage": {
+      "ci95": [
+        -0.7916666666666666,
+        -0.5208333333333334
+      ],
+      "mean_delta": -0.6666666666666666,
+      "n": 48
+    }
+  },
+  "paper_sources_and_local_claim_boundary": {
+    "local_claim": "Exp6290 measures deterministic external memory on sealed Carnot rows only.",
+    "local_reference_path": "research-references.md",
+    "local_reference_sha256": "sha256:80f5b00e024f1f6ecd409c884e3d108acd8580b575f283b0598b41084638f777",
+    "sources": {
+      "MIRA": {
+        "local_boundary": "mechanism only; no SQL transfer claim",
+        "source": "arXiv:2608.06950",
+        "used_claim": "split corrections into atomic repair items"
+      },
+      "TEPA": {
+        "local_boundary": "mechanism only; local stream replay supplies all evidence",
+        "source": "arXiv:2608.07429",
+        "used_claim": "keyed validity states with explicit revocation"
+      }
+    }
+  },
+  "precedent_key_schema": {
+    "canonical_encoder": "json_sort_keys_ascii_separators",
+    "collision_policy": "abort_whole_transaction_before_active_view_change",
+    "digest": "sha256",
+    "schema": "carnot.revocable_precedent_key.v1",
+    "stable_inputs": [
+      "namespace",
+      "model_family",
+      "task_family",
+      "repair_atom",
+      "scope"
+    ]
+  },
+  "precondition_hashes": {
+    "AGENTS.md": {
+      "present": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    "CLAUDE.md": {
+      "present": true,
+      "sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59"
+    },
+    "CODEX.md": {
+      "present": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    "_bmad/traceability.md": {
+      "present": true,
+      "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+    },
+    "openspec/capabilities/self-learning/spec.md": {
+      "present": true,
+      "sha256": "sha256:2bb2c6a7a5b04a0bb38e47ef5a8c26b66b67a8508124f33ecf0211e1dbc9dcf0"
+    },
+    "ops/changelog.md": {
+      "present": true,
+      "sha256": "sha256:4f619f723263279e4a05a9349dee2d16ca44c03e8e1b43e738b28e0733701018"
+    },
+    "ops/status.md": {
+      "present": true,
+      "sha256": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180"
+    },
+    "python/carnot/experiment_6290_revocable_atomic_repair_memory.py": {
+      "present": true,
+      "sha256": "sha256:3f6a5c7ffc1c01278139823277718b1ef59c2a7b47ae485452ad9057941f045d"
+    },
+    "python/carnot/memory/revocable_atomic_repair.py": {
+      "present": true,
+      "sha256": "sha256:e076a71facccf9736a9820069fde7969f2d6d84427755b159f002393e49fdf58"
+    },
+    "research-references.md": {
+      "present": true,
+      "sha256": "sha256:80f5b00e024f1f6ecd409c884e3d108acd8580b575f283b0598b41084638f777"
+    },
+    "results/experiment_6263_clean_sota_event_replay_bridge.json": {
+      "present": true,
+      "sha256": "sha256:38af00462fdc8d389f27f223f02e22faa2994a60193f983209ce6b9d1f42cdd6"
+    },
+    "results/experiment_6263_clean_sota_event_replay_bridge.quarantine.json": {
+      "present": true,
+      "sha256": "sha256:eb4170926ecd719a9afa69e929f57a570e0cf46e7d5a15a53ae3456268bdf54f"
+    },
+    "results/experiment_6263_clean_sota_event_replay_bridge.rows.jsonl": {
+      "present": true,
+      "sha256": "sha256:3ba8b1b0eb256fc157eb2cc0333df169c206c7e33b8a35ef80c2242b53d1483b"
+    },
+    "results/experiment_6264_energy_familiarity_memory_gate.json": {
+      "present": true,
+      "sha256": "sha256:cc3bbe1eac4a7e07440414329bbc3aef17f9caf20950a60591eb131fa2ffffde"
+    },
+    "results/experiment_6276_certified_dual_cache_admission.json": {
+      "present": true,
+      "sha256": "sha256:901704ad563ac7c4f115cea7e81d0264028870f70685efc7209b9233ce876d17"
+    },
+    "results/experiment_6286_v541_evidence_eligibility_ledger.json": {
+      "present": true,
+      "sha256": "sha256:42648d29ba601788b86cffb96787541df2f67a4eac799c2f0022369ff4716f8d"
+    },
+    "scripts/research_conductor.py": {
+      "present": true,
+      "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "tests/python/test_experiment_6290_revocable_atomic_repair_memory.py": {
+      "present": true,
+      "sha256": "sha256:014d8fab4f5ac43935248082e327ce83680a5f15cf016d2c2805131df8b05085"
+    }
+  },
+  "preconditions_checked": {
+    "arm_policies_frozen": [
+      "no_memory",
+      "append_only",
+      "last_write_wins",
+      "global_threshold",
+      "v541_dual_cache",
+      "revocable_atomic_repair_memory"
+    ],
+    "git_status_after_tests": [
+      "M  openspec/capabilities/self-learning/spec.md",
+      "M  ops/conductor-heartbeat.json",
+      "M  ops/conductor-log.md",
+      "M  ops/conductor-state.json",
+      "A  python/carnot/experiment_6290_revocable_atomic_repair_memory.py",
+      "A  python/carnot/memory/revocable_atomic_repair.py",
+      "M  results/experiment_1736_kanele_synth.json",
+      "MM results/experiment_1822_rtl_synth.log",
+      "MM results/experiment_2031.json",
+      "M  results/experiment_2427_kv260_yosys_v4.json",
+      "M  results/experiment_2510_ensemble_v7.json",
+      "M  results/experiment_2824_cross_corpus_verifier_matrix.json",
+      "M  results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json",
+      "M  results/experiment_3361_archive_v309_activate_v310.json",
+      "M  results/experiment_3377_archive_v310_activate_v311.json",
+      "M  results/experiment_3392_archive_v311_activate_v312.json",
+      "M  results/experiment_3581_g_gate_status_synthesis_v329.json",
+      "M  results/experiment_3582_capstone_v329.json",
+      "M  results/experiment_833_constraint_delta_root_cause.json",
+      "A  tests/python/test_experiment_6290_revocable_atomic_repair_memory.py",
+      "?? results/experiment_6290_revocable_atomic_repair_memory.json",
+      "?? results/experiment_6290_revocable_atomic_repair_memory.json.audit.jsonl",
+      "?? results/experiment_6290_revocable_atomic_repair_memory.json.sealed_stream_manifest.json"
+    ],
+    "key_schema_frozen": {
+      "canonical_encoder": "json_sort_keys_ascii_separators",
+      "collision_policy": "abort_whole_transaction_before_active_view_change",
+      "digest": "sha256",
+      "schema": "carnot.revocable_precedent_key.v1",
+      "stable_inputs": [
+        "namespace",
+        "model_family",
+        "task_family",
+        "repair_atom",
+        "scope"
+      ]
+    },
+    "model_weights_loaded": false,
+    "protected_hashes_after": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:4f619f723263279e4a05a9349dee2d16ca44c03e8e1b43e738b28e0733701018",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6263_clean_sota_event_replay_bridge.json": "sha256:38af00462fdc8d389f27f223f02e22faa2994a60193f983209ce6b9d1f42cdd6",
+      "results/experiment_6263_clean_sota_event_replay_bridge.quarantine.json": "sha256:eb4170926ecd719a9afa69e929f57a570e0cf46e7d5a15a53ae3456268bdf54f",
+      "results/experiment_6263_clean_sota_event_replay_bridge.rows.jsonl": "sha256:3ba8b1b0eb256fc157eb2cc0333df169c206c7e33b8a35ef80c2242b53d1483b",
+      "results/experiment_6264_energy_familiarity_memory_gate.json": "sha256:cc3bbe1eac4a7e07440414329bbc3aef17f9caf20950a60591eb131fa2ffffde",
+      "results/experiment_6276_certified_dual_cache_admission.json": "sha256:901704ad563ac7c4f115cea7e81d0264028870f70685efc7209b9233ce876d17",
+      "results/experiment_6286_v541_evidence_eligibility_ledger.json": "sha256:42648d29ba601788b86cffb96787541df2f67a4eac799c2f0022369ff4716f8d",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "protected_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:4f619f723263279e4a05a9349dee2d16ca44c03e8e1b43e738b28e0733701018",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6263_clean_sota_event_replay_bridge.json": "sha256:38af00462fdc8d389f27f223f02e22faa2994a60193f983209ce6b9d1f42cdd6",
+      "results/experiment_6263_clean_sota_event_replay_bridge.quarantine.json": "sha256:eb4170926ecd719a9afa69e929f57a570e0cf46e7d5a15a53ae3456268bdf54f",
+      "results/experiment_6263_clean_sota_event_replay_bridge.rows.jsonl": "sha256:3ba8b1b0eb256fc157eb2cc0333df169c206c7e33b8a35ef80c2242b53d1483b",
+      "results/experiment_6264_energy_familiarity_memory_gate.json": "sha256:cc3bbe1eac4a7e07440414329bbc3aef17f9caf20950a60591eb131fa2ffffde",
+      "results/experiment_6276_certified_dual_cache_admission.json": "sha256:901704ad563ac7c4f115cea7e81d0264028870f70685efc7209b9233ce876d17",
+      "results/experiment_6286_v541_evidence_eligibility_ledger.json": "sha256:42648d29ba601788b86cffb96787541df2f67a4eac799c2f0022369ff4716f8d",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "random_seeds": {
+      "interval": 6291,
+      "stream": 6290
+    },
+    "rollback_checkpoint_frozen": true,
+    "source_events_frozen": true,
+    "stream_chronology_frozen": true,
+    "utility_margin": -0.01
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:4f619f723263279e4a05a9349dee2d16ca44c03e8e1b43e738b28e0733701018",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6263_clean_sota_event_replay_bridge.json": "sha256:38af00462fdc8d389f27f223f02e22faa2994a60193f983209ce6b9d1f42cdd6",
+      "results/experiment_6263_clean_sota_event_replay_bridge.quarantine.json": "sha256:eb4170926ecd719a9afa69e929f57a570e0cf46e7d5a15a53ae3456268bdf54f",
+      "results/experiment_6263_clean_sota_event_replay_bridge.rows.jsonl": "sha256:3ba8b1b0eb256fc157eb2cc0333df169c206c7e33b8a35ef80c2242b53d1483b",
+      "results/experiment_6264_energy_familiarity_memory_gate.json": "sha256:cc3bbe1eac4a7e07440414329bbc3aef17f9caf20950a60591eb131fa2ffffde",
+      "results/experiment_6276_certified_dual_cache_admission.json": "sha256:901704ad563ac7c4f115cea7e81d0264028870f70685efc7209b9233ce876d17",
+      "results/experiment_6286_v541_evidence_eligibility_ledger.json": "sha256:42648d29ba601788b86cffb96787541df2f67a4eac799c2f0022369ff4716f8d",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:4f619f723263279e4a05a9349dee2d16ca44c03e8e1b43e738b28e0733701018",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6263_clean_sota_event_replay_bridge.json": "sha256:38af00462fdc8d389f27f223f02e22faa2994a60193f983209ce6b9d1f42cdd6",
+      "results/experiment_6263_clean_sota_event_replay_bridge.quarantine.json": "sha256:eb4170926ecd719a9afa69e929f57a570e0cf46e7d5a15a53ae3456268bdf54f",
+      "results/experiment_6263_clean_sota_event_replay_bridge.rows.jsonl": "sha256:3ba8b1b0eb256fc157eb2cc0333df169c206c7e33b8a35ef80c2242b53d1483b",
+      "results/experiment_6264_energy_familiarity_memory_gate.json": "sha256:cc3bbe1eac4a7e07440414329bbc3aef17f9caf20950a60591eb131fa2ffffde",
+      "results/experiment_6276_certified_dual_cache_admission.json": "sha256:901704ad563ac7c4f115cea7e81d0264028870f70685efc7209b9233ce876d17",
+      "results/experiment_6286_v541_evidence_eligibility_ledger.json": "sha256:42648d29ba601788b86cffb96787541df2f67a4eac799c2f0022369ff4716f8d",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "changed_paths": [],
+    "unchanged": true
+  },
+  "random_seeds": {
+    "interval": 6291,
+    "stream": 6290
+  },
+  "reproducibility_checksum": "sha256:43dac2b5f447a03a6dd92f4a8dcfcb67cae02b31d6970e3a81fdda66fb6b25f9",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6290_revocable_atomic_repair_memory.json",
+  "revocable_memory_ready_score": 0.0,
+  "rollback_and_restart_identity": {
+    "checkpoint_snapshot_hash": "sha256:8b7da9b654cfe1a44d037da934d5a70e794dbbe99e25e2b393516e73aed2b317",
+    "exact_rollback": true,
+    "post_run_snapshot_hash": "sha256:3c5ce5d089e3dc48344a28e6a38faa3cf3143602d5a1dd6a8e1409512c651b6d",
+    "restart_matches_post_run": true,
+    "restart_snapshot_hash": "sha256:3c5ce5d089e3dc48344a28e6a38faa3cf3143602d5a1dd6a8e1409512c651b6d",
+    "revoked_lookup_attempts_blocked": 24,
+    "rollback_audit_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rollback_snapshot_hash": "sha256:8b7da9b654cfe1a44d037da934d5a70e794dbbe99e25e2b393516e73aed2b317"
+  },
+  "run_date": "20260810",
+  "schema": "carnot.experiment_6290.revocable_atomic_repair_memory.v1",
+  "sealed_stream_manifest_path_and_hash": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6290_revocable_atomic_repair_memory.json.sealed_stream_manifest.json",
+    "row_count": 48,
+    "sha256": "sha256:b2eb3770841232ee581d7c18dd5c4b21462d3747049ed5d6a095c051ebf7d211",
+    "stream_ids": [
+      "clean",
+      "gradual_drift",
+      "full_reversal",
+      "implicit_conflict",
+      "poison",
+      "repromotion"
+    ]
+  },
+  "source_model_weight_mutation_count": 0,
+  "status": "complete_null",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6290_revocable_atomic_repair_memory.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/memory/revocable_atomic_repair.py,python/carnot/experiment_6290_revocable_atomic_repair_memory.py -m pytest tests/python/test_experiment_6290_revocable_atomic_repair_memory.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/memory/revocable_atomic_repair.py,python/carnot/experiment_6290_revocable_atomic_repair_memory.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python -m carnot.experiment_6290_revocable_atomic_repair_memory --date 20260810",
+    ".venv/bin/python -m carnot.experiment_6290_revocable_atomic_repair_memory --date 20260810 --validate",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6290_revocable_atomic_repair_memory.py",
+    "sed -n '1,180p' ops/e2e-test-plan.md",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6290_revocable_atomic_repair_memory.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/memory/revocable_atomic_repair.py,python/carnot/experiment_6290_revocable_atomic_repair_memory.py -m pytest tests/python/test_experiment_6290_revocable_atomic_repair_memory.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/memory/revocable_atomic_repair.py,python/carnot/experiment_6290_revocable_atomic_repair_memory.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_6290_revocable_atomic_repair_memory.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6290_revocable_atomic_repair_memory --date 20260810": 0,
+    ".venv/bin/python -m carnot.experiment_6290_revocable_atomic_repair_memory --date 20260810 --validate": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6290_revocable_atomic_repair_memory.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6290_revocable_atomic_repair_memory.py": 0,
+    "sed -n '1,180p' ops/e2e-test-plan.md": 0
+  },
+  "unsafe_advice_counts_by_arm": {
+    "append_only": {
+      "all_streams": 24,
+      "clean": 0,
+      "full_reversal": 8,
+      "gradual_drift": 0,
+      "implicit_conflict": 8,
+      "poison": 8,
+      "repromotion": 0
+    },
+    "global_threshold": {
+      "all_streams": 24,
+      "clean": 0,
+      "full_reversal": 8,
+      "gradual_drift": 0,
+      "implicit_conflict": 8,
+      "poison": 8,
+      "repromotion": 0
+    },
+    "last_write_wins": {
+      "all_streams": 24,
+      "clean": 0,
+      "full_reversal": 8,
+      "gradual_drift": 0,
+      "implicit_conflict": 8,
+      "poison": 8,
+      "repromotion": 0
+    },
+    "no_memory": {
+      "all_streams": 0,
+      "clean": 0,
+      "full_reversal": 0,
+      "gradual_drift": 0,
+      "implicit_conflict": 0,
+      "poison": 0,
+      "repromotion": 0
+    },
+    "revocable_atomic_repair_memory": {
+      "all_streams": 0,
+      "clean": 0,
+      "full_reversal": 0,
+      "gradual_drift": 0,
+      "implicit_conflict": 0,
+      "poison": 0,
+      "repromotion": 0
+    },
+    "v541_dual_cache": {
+      "all_streams": 24,
+      "clean": 0,
+      "full_reversal": 8,
+      "gradual_drift": 0,
+      "implicit_conflict": 8,
+      "poison": 8,
+      "repromotion": 0
+    }
+  },
+  "upstream_eligibility_path_hash_and_terminal_class": {
+    "dual_cache_treatment_extension_blocked": true,
+    "global_threshold_control_reusable": true,
+    "honest_verdict": "complete: V541 eligibility ledger preserves raw receipts without promoting flagged or unchanged artifacts",
+    "path": "results/experiment_6286_v541_evidence_eligibility_ledger.json",
+    "sha256": "sha256:42648d29ba601788b86cffb96787541df2f67a4eac799c2f0022369ff4716f8d",
+    "status": "complete",
+    "terminal_class": "complete"
+  },
+  "utility_coverage_abstention_and_retention_by_arm": {
+    "append_only": {
+      "all_streams": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "false_unsafe_acceptance": 24,
+          "true_safe_acceptance": 24
+        },
+        "coverage": 1.0,
+        "fire_count": 48,
+        "noninferior_to_global_margin": true,
+        "retention_rate": 1.0,
+        "row_count": 48,
+        "unsafe_advice_count": 24,
+        "utility": -168.0,
+        "utility_per_row": -3.5
+      },
+      "by_stream": {
+        "clean": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "true_safe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": 8.0,
+          "utility_per_row": 1.0
+        },
+        "full_reversal": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "false_unsafe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 8,
+          "utility": -64.0,
+          "utility_per_row": -8.0
+        },
+        "gradual_drift": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "true_safe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": 8.0,
+          "utility_per_row": 1.0
+        },
+        "implicit_conflict": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "false_unsafe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 8,
+          "utility": -64.0,
+          "utility_per_row": -8.0
+        },
+        "poison": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "false_unsafe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 8,
+          "utility": -64.0,
+          "utility_per_row": -8.0
+        },
+        "repromotion": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "true_safe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": 8.0,
+          "utility_per_row": 1.0
+        }
+      }
+    },
+    "global_threshold": {
+      "all_streams": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "false_unsafe_acceptance": 24,
+          "true_safe_acceptance": 24
+        },
+        "coverage": 1.0,
+        "fire_count": 48,
+        "noninferior_to_global_margin": true,
+        "retention_rate": 1.0,
+        "row_count": 48,
+        "unsafe_advice_count": 24,
+        "utility": -168.0,
+        "utility_per_row": -3.5
+      },
+      "by_stream": {
+        "clean": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "true_safe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": 8.0,
+          "utility_per_row": 1.0
+        },
+        "full_reversal": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "false_unsafe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 8,
+          "utility": -64.0,
+          "utility_per_row": -8.0
+        },
+        "gradual_drift": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "true_safe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": 8.0,
+          "utility_per_row": 1.0
+        },
+        "implicit_conflict": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "false_unsafe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 8,
+          "utility": -64.0,
+          "utility_per_row": -8.0
+        },
+        "poison": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "false_unsafe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 8,
+          "utility": -64.0,
+          "utility_per_row": -8.0
+        },
+        "repromotion": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "true_safe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": 8.0,
+          "utility_per_row": 1.0
+        }
+      }
+    },
+    "last_write_wins": {
+      "all_streams": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "false_unsafe_acceptance": 24,
+          "true_safe_acceptance": 24
+        },
+        "coverage": 1.0,
+        "fire_count": 48,
+        "noninferior_to_global_margin": true,
+        "retention_rate": 1.0,
+        "row_count": 48,
+        "unsafe_advice_count": 24,
+        "utility": -168.0,
+        "utility_per_row": -3.5
+      },
+      "by_stream": {
+        "clean": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "true_safe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": 8.0,
+          "utility_per_row": 1.0
+        },
+        "full_reversal": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "false_unsafe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 8,
+          "utility": -64.0,
+          "utility_per_row": -8.0
+        },
+        "gradual_drift": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "true_safe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": 8.0,
+          "utility_per_row": 1.0
+        },
+        "implicit_conflict": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "false_unsafe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 8,
+          "utility": -64.0,
+          "utility_per_row": -8.0
+        },
+        "poison": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "false_unsafe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 8,
+          "utility": -64.0,
+          "utility_per_row": -8.0
+        },
+        "repromotion": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "true_safe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": 8.0,
+          "utility_per_row": 1.0
+        }
+      }
+    },
+    "no_memory": {
+      "all_streams": {
+        "abstention_rate": 1.0,
+        "action_counts": {
+          "safe_abstention": 24,
+          "unsafe_abstention": 24
+        },
+        "coverage": 0.0,
+        "fire_count": 0,
+        "noninferior_to_global_margin": true,
+        "retention_rate": 0.0,
+        "row_count": 48,
+        "unsafe_advice_count": 0,
+        "utility": -18.0,
+        "utility_per_row": -0.375
+      },
+      "by_stream": {
+        "clean": {
+          "abstention_rate": 1.0,
+          "action_counts": {
+            "safe_abstention": 8
+          },
+          "coverage": 0.0,
+          "fire_count": 0,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": -2.0,
+          "utility_per_row": -0.25
+        },
+        "full_reversal": {
+          "abstention_rate": 1.0,
+          "action_counts": {
+            "unsafe_abstention": 8
+          },
+          "coverage": 0.0,
+          "fire_count": 0,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": -4.0,
+          "utility_per_row": -0.5
+        },
+        "gradual_drift": {
+          "abstention_rate": 1.0,
+          "action_counts": {
+            "safe_abstention": 8
+          },
+          "coverage": 0.0,
+          "fire_count": 0,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": -2.0,
+          "utility_per_row": -0.25
+        },
+        "implicit_conflict": {
+          "abstention_rate": 1.0,
+          "action_counts": {
+            "unsafe_abstention": 8
+          },
+          "coverage": 0.0,
+          "fire_count": 0,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": -4.0,
+          "utility_per_row": -0.5
+        },
+        "poison": {
+          "abstention_rate": 1.0,
+          "action_counts": {
+            "unsafe_abstention": 8
+          },
+          "coverage": 0.0,
+          "fire_count": 0,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": -4.0,
+          "utility_per_row": -0.5
+        },
+        "repromotion": {
+          "abstention_rate": 1.0,
+          "action_counts": {
+            "safe_abstention": 8
+          },
+          "coverage": 0.0,
+          "fire_count": 0,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": -2.0,
+          "utility_per_row": -0.25
+        }
+      }
+    },
+    "revocable_atomic_repair_memory": {
+      "all_streams": {
+        "abstention_rate": 0.6666666666666666,
+        "action_counts": {
+          "safe_abstention": 8,
+          "true_safe_acceptance": 16,
+          "unsafe_abstention": 24
+        },
+        "coverage": 0.3333333333333333,
+        "fire_count": 16,
+        "noninferior_to_global_margin": true,
+        "retention_rate": 0.6666666666666666,
+        "row_count": 48,
+        "unsafe_advice_count": 0,
+        "utility": 2.0,
+        "utility_per_row": 0.041666666666666664
+      },
+      "by_stream": {
+        "clean": {
+          "abstention_rate": 1.0,
+          "action_counts": {
+            "safe_abstention": 8
+          },
+          "coverage": 0.0,
+          "fire_count": 0,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": -2.0,
+          "utility_per_row": -0.25
+        },
+        "full_reversal": {
+          "abstention_rate": 1.0,
+          "action_counts": {
+            "unsafe_abstention": 8
+          },
+          "coverage": 0.0,
+          "fire_count": 0,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": -4.0,
+          "utility_per_row": -0.5
+        },
+        "gradual_drift": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "true_safe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": 8.0,
+          "utility_per_row": 1.0
+        },
+        "implicit_conflict": {
+          "abstention_rate": 1.0,
+          "action_counts": {
+            "unsafe_abstention": 8
+          },
+          "coverage": 0.0,
+          "fire_count": 0,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": -4.0,
+          "utility_per_row": -0.5
+        },
+        "poison": {
+          "abstention_rate": 1.0,
+          "action_counts": {
+            "unsafe_abstention": 8
+          },
+          "coverage": 0.0,
+          "fire_count": 0,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": -4.0,
+          "utility_per_row": -0.5
+        },
+        "repromotion": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "true_safe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": 8.0,
+          "utility_per_row": 1.0
+        }
+      }
+    },
+    "v541_dual_cache": {
+      "all_streams": {
+        "abstention_rate": 0.0,
+        "action_counts": {
+          "false_unsafe_acceptance": 24,
+          "true_safe_acceptance": 24
+        },
+        "coverage": 1.0,
+        "fire_count": 48,
+        "noninferior_to_global_margin": true,
+        "retention_rate": 1.0,
+        "row_count": 48,
+        "unsafe_advice_count": 24,
+        "utility": -168.0,
+        "utility_per_row": -3.5
+      },
+      "by_stream": {
+        "clean": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "true_safe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": 8.0,
+          "utility_per_row": 1.0
+        },
+        "full_reversal": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "false_unsafe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 8,
+          "utility": -64.0,
+          "utility_per_row": -8.0
+        },
+        "gradual_drift": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "true_safe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": 8.0,
+          "utility_per_row": 1.0
+        },
+        "implicit_conflict": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "false_unsafe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 8,
+          "utility": -64.0,
+          "utility_per_row": -8.0
+        },
+        "poison": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "false_unsafe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 8,
+          "utility": -64.0,
+          "utility_per_row": -8.0
+        },
+        "repromotion": {
+          "abstention_rate": 0.0,
+          "action_counts": {
+            "true_safe_acceptance": 8
+          },
+          "coverage": 1.0,
+          "fire_count": 8,
+          "row_count": 8,
+          "unsafe_advice_count": 0,
+          "utility": 8.0,
+          "utility_per_row": 1.0
+        }
+      }
+    }
+  },
+  "verifier_is_oracle": true
+}
