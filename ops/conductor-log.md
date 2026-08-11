@@ -15686,3 +15686,5 @@ Still active  |
 | 2026-08-11 14:45 UTC | Fresh live three-family benchmark gated on Exp6316 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6316-model-local-probe-integrity-audit) |
 | 2026-08-11 15:04 UTC | Continuous self-learning with versioned factor-loc | OK | 88 passed, 1 warning in 9.45s |
 | 2026-08-11 15:06 UTC | Fresh live three-family benchmark gated on Exp6316 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6316-model-local-probe-integrity-audit) |
+| 2026-08-11 15:21 UTC | Dense feedback-directed update search gated on Exp | OK | 86 passed, 1 warning in 9.44s |
+| 2026-08-11 15:23 UTC | Fresh live three-family benchmark gated on Exp6316 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6316-model-local-probe-integrity-audit) |
