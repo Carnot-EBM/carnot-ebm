@@ -16676,3 +16676,53 @@ lower" from "this particular run was unlucky/noisy."
 
 Full detail: `/home/ianblenke/carnot_submission_staging/MANIFEST.md`'s OUTCOME 2026-08-11 section
 (updated with this finding).
+
+## 2026-08-11 RESOLVED: scored hardware fully characterized -- generator healthy, single 96GB Blackwell card
+
+Kernel v14 added preview-mode generator diagnostics (the scored rerun's log is structurally
+unreadable -- the my_agent.py diagnostics ran downstream of a framework import that only
+resolves inside the hidden rerun branch; v14 splits the diagnostics out and runs them in the
+readable preview branch on the same machine_shape/datasets/GPU). First-ever readable
+observation of the scored hardware, all from the v14 preview log:
+
+- `LLM GPU HARDWARE: NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB` -- **SINGLE
+  card, 96GB, Blackwell SKU.** Resolves the 2026-08-11 single-vs-quad / Ada-vs-Blackwell
+  question above: it is one big card, and the legacy 4x24GB layer-splitting mental model in
+  the kernel's older comments is definitively moot.
+- `HOST RAM: 185473272 kB` (~185GB) -- the MAX_ACTIONS=2000 sizing that assumed 16GiB host
+  RAM is conservative by more than 10x.
+- `LLM TIER VRAM FIT: needs 29094 MiB (n_ctx=122880, mtp=True) of 97250 free -> FITS` (3.3x
+  headroom at the full shipped config).
+- `LLM GENERATOR HEALTHY ... mtp_engaged=True` -- MTP speculation POSITIVELY confirmed
+  engaged (the draft-mtp marker, not inferred from health).
+- `LLM CONCURRENCY OK -- 4 simultaneous full-budget requests all succeeded at ctx=122880
+  with no pool truncation ... server_alive_after=True` -- the K=4 concurrency contract the
+  2026-07-27 fix defends holds on the real scored hardware.
+- Model load ~4 min; full diagnostics 478s, rc=0.
+
+**Consequence for the score investigation:** the "LLM tier never engages in scored runs"
+hypothesis is now strongly disfavored for the current kernel -- the identical resolution/launch
+code runs in the scored rerun, and it demonstrably works on the identical hardware. The 0.09
+score was earned WITH a working, MTP-accelerated 31B generator. The induction-quality frontier
+diagnosis (lever triangulation, 2026-07-23) stands as the binding constraint. Next lever per
+the operator-discussed plan: the best-of-both REx ensemble (exp6248's ka59 evidence).
+
+## 2026-08-11 REQ-ARC-WMTE-6250: best-of-both REx ensemble built (`run_rex_ensemble`)
+
+Per the item above ("next lever ... the best-of-both REx ensemble"): built
+`carnot.agentic.arc_rex_refinement.run_rex_ensemble` -- runs the `linear` and `rex` arms
+sequentially against one shared store (the second arm's own induce call resets the store, so
+no isolated-store plumbing is needed) and keeps whichever arm's `final_valid_fidelity` (VALID,
+never HELD) is higher. Motivated by a zero-cost retrospective check on exp6248's own artifact:
+VALID-score selection would have matched the HELD-optimal arm on 6 of 6 games, beating both
+the pure-linear mean (0.2710) and the pure-rex mean (0.3312) with an ensemble mean of 0.4273,
+and beating both arms on every individual game. Spec: REQ-ARC-WMTE-6250 in
+`openspec/capabilities/arc-world-model-trust-energy/spec.md`. Tests: 22/22 passing in
+`tests/python/test_arc_rex_refinement.py` (4 new: higher-valid-arm selection both directions,
+failed-first-arm fallback, budget-doubling accounting).
+
+**Not yet done:** a fresh prospective A/B (new cells, not just re-analysis of 6248's existing
+data) proving the ensemble live, and wiring it into `scripts/experiments/experiment_6248_pinductor_rex_ab.py`'s
+harness or a successor script. The retrospective check is real evidence but is not a
+substitute for a live run under the Phase Prototype + Empirical Validation discipline --
+flagging this explicitly so it is not later mistaken for a completed live gate.

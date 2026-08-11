@@ -19,6 +19,12 @@ fully observed); no near-best softmax final selection (deterministic argmax keep
 small paired A/B interpretable); one proposal per round (the tree provides the
 population across rounds). See the plan note for the full deviation list:
 docs/research-notes/pinductor-rex-refinement-plan-2026-08-09.md
+
+REQ-ARC-WMTE-6250 ADDS `run_rex_ensemble`: 6248's gate found REx does NOT beat linear as a
+blanket replacement (2 of 6 games), but the two arms fail on DIFFERENT games, and a
+retrospective check found the VALID score (known online, before HELD is ever seen) predicts
+the HELD-optimal arm on 6 of 6 games. `run_rex_ensemble` runs both arms and keeps whichever
+one's VALID score is higher -- see its own docstring for the full contract.
 """
 
 from __future__ import annotations
@@ -40,6 +46,7 @@ __all__ = [
     "qbc_order_mismatches",
     "load_engine_from_source",
     "run_rex",
+    "run_rex_ensemble",
 ]
 
 
@@ -307,4 +314,87 @@ def run_rex(
         "final_idx": final.idx,
         "final_source": final.source,
         "final_valid_fidelity": round(final.valid_fidelity, 4),
+    }
+
+
+def run_rex_ensemble(
+    game: str,
+    proposer: Any,
+    *,
+    train: Sequence[Any],
+    valid: Sequence[Any],
+    cell: int,
+    budget: int,
+    score_candidate: Callable[[str], dict],
+    read_store_source: Callable[[], Optional[str]],
+    write_store_source: Callable[[str], None],
+    make_verify_result: Callable[[RexNode, list[dict]], Any],
+    ucb1_c: float = 1.0,
+) -> dict:
+    """Run BOTH arms (linear, rex) SEQUENTIALLY and keep whichever final candidate
+    scores higher on VALID -- the only signal available online, before HELD is ever
+    seen. REQ-ARC-WMTE-6248 rejected REx as a BLANKET replacement (2 of 6 games
+    improved), but a retrospective check on that same run's own data found VALID-score
+    selection would have matched the HELD-optimal arm on 6 of 6 games (REQ-ARC-WMTE-6250)
+    -- the two arms fail on different games, and picking per-game recovers each arm's
+    wins without its losses.
+
+    ONE store, used by BOTH arms, is correct and sufficient: `run_rex` always starts
+    with `proposer.induce(...)`, which resets whatever the store held -- there is
+    nothing left from one arm for the other to accidentally inherit. This mirrors
+    exactly how experiment 6248's own harness already ran both arms back to back
+    against the same `_store_file(game)` path; this function just fuses the two calls
+    the harness made separately into one, so a caller gets the ensemble decision
+    without re-deriving the sequencing.
+
+    Costs ~2x the LLM-call budget of a single arm (both arms run to completion
+    regardless of which one is kept) -- affordable for a rare event like induction, not
+    for anything that fires every action.
+    """
+    linear = run_rex(
+        game,
+        proposer,
+        train=train,
+        valid=valid,
+        cell=cell,
+        budget=budget,
+        score_candidate=score_candidate,
+        read_store_source=read_store_source,
+        write_store_source=write_store_source,
+        make_verify_result=make_verify_result,
+        use_ucb1=False,
+        use_qbc=False,
+    )
+    rex = run_rex(
+        game,
+        proposer,
+        train=train,
+        valid=valid,
+        cell=cell,
+        budget=budget,
+        score_candidate=score_candidate,
+        read_store_source=read_store_source,
+        write_store_source=write_store_source,
+        make_verify_result=make_verify_result,
+        use_ucb1=True,
+        use_qbc=True,
+        ucb1_c=ucb1_c,
+    )
+    arms = {"linear": linear, "rex": rex}
+    available = {name: r for name, r in arms.items() if r.get("final_source")}
+    if not available:
+        chosen_arm = None
+    elif len(available) == 1:
+        chosen_arm = next(iter(available))
+    else:
+        chosen_arm = max(available, key=lambda name: available[name]["final_valid_fidelity"])
+    chosen = arms[chosen_arm] if chosen_arm else None
+    return {
+        "game": game,
+        "linear": linear,
+        "rex": rex,
+        "chosen_arm": chosen_arm,
+        "chosen_final_source": chosen.get("final_source") if chosen else None,
+        "chosen_final_valid_fidelity": chosen.get("final_valid_fidelity") if chosen else None,
+        "total_llm_calls": linear.get("llm_calls", 0) + rex.get("llm_calls", 0),
     }

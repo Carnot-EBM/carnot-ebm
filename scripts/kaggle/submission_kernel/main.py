@@ -642,7 +642,15 @@ else:
           "carnot-gemma4-31b-it-qat-gguf datasets are attached (that one dataset carries BOTH "
           "the target weights and the matching MTP drafter).",
           flush=True)
+"""
 
+# The framework bind is SPLIT OUT of the diagnostics block above (2026-08-11) so the preview
+# branch below can execute the diagnostics WITHOUT the framework import. `from agents.agent
+# import Agent` only resolves inside the competition rerun (the framework is copied to
+# /kaggle/working and my_agent.py runs from within it); in preview mode that package does not
+# exist, which is exactly why the diagnostics have never appeared in any log a human can read:
+# they lived downstream of an import that only happens in the branch whose log is hidden.
+AGENT_BIND_TAIL = r"""
 from agents.agent import Agent
 from carnot.agentic.arc_competition_agent import make_carnot_agent
 
@@ -650,7 +658,7 @@ from carnot.agentic.arc_competition_agent import make_carnot_agent
 # registered under "carnotagent" in the rewritten agents/__init__.py below.
 CarnotAgent = make_carnot_agent(Agent)
 """
-Path("/kaggle/working/my_agent.py").write_text(AGENT_SRC)
+Path("/kaggle/working/my_agent.py").write_text(AGENT_SRC + AGENT_BIND_TAIL)
 
 if os.getenv("KAGGLE_IS_COMPETITION_RERUN"):
     # 3) wait for the internal game gateway to come up (canonical pattern)
@@ -726,11 +734,56 @@ if os.getenv("KAGGLE_IS_COMPETITION_RERUN"):
         )
 else:
     # NON-rerun: write the placeholder submission so Save & Run produces a valid entry.
+    # WRITTEN FIRST, before the diagnostics below, so nothing the probe does can ever cost us
+    # a valid submission entry.
     import pandas as pd
 
     pd.DataFrame(
         [["1_0", "1", True, 1]],
         columns=["row_id", "game_id", "end_of_game", "score"],
     ).to_parquet("/kaggle/working/submission.parquet", index=False)
+
+    # PREVIEW-MODE GENERATOR DIAGNOSTICS (2026-08-11, operator-driven). The scored rerun's log
+    # is NOT retrievable: the Kaggle UI and `kaggle kernels output` both return only THIS
+    # branch's log (verified directly on ref 55425907 -- the operator's submission-page log was
+    # the 7.6s preview, nothing more). So every LLM TIER RESOLVED / GENERATOR HEALTHY /
+    # CONCURRENCY / GPU HARDWARE line the rerun prints goes somewhere no human can read, and
+    # whether the LLM tier has EVER engaged in a scored run is unobservable. Suspicious pattern
+    # that motivated this: scores barely moved across a total generator swap (Qwen-9B/L4 era
+    # 0.08-0.12 vs gemma-31B/RtxPro6000 0.09), which is consistent with the generator never
+    # engaging at all.
+    #
+    # Preview runs on the SAME machine_shape with the SAME datasets and GPU attached, so
+    # running the diagnostics HERE answers -- in a log we can actually read -- whether the
+    # generator loads, fits, and survives slot-count concurrency on the real scored hardware,
+    # and what that hardware actually is (settles the RtxPro6000 single-vs-multi-card / VRAM
+    # question). Not a byte-for-byte witness of the rerun itself (different branch, no
+    # gateway), but the same binary + weights + env on the same hardware shape is the closest
+    # observable proxy that exists.
+    #
+    # Runs in a SUBPROCESS with a hard timeout: a wedged llama-server load must not hang the
+    # kernel, and any crash is contained (the placeholder above is already on disk either way).
+    # AGENT_SRC ends before the framework bind (see AGENT_BIND_TAIL), so executing it here
+    # needs no `agents` package.
+    Path("/kaggle/working/preview_llm_diag.py").write_text(AGENT_SRC)
+    _diag_t0 = time.time()
+    try:
+        _diag = subprocess.run(
+            [sys.executable, "/kaggle/working/preview_llm_diag.py"],
+            timeout=3600,
+            check=False,
+        )
+        print(
+            f"PREVIEW LLM DIAGNOSTICS EXITED rc={_diag.returncode} "
+            f"after {time.time() - _diag_t0:.0f}s",
+            flush=True,
+        )
+    except subprocess.TimeoutExpired:
+        print(
+            f"PREVIEW LLM DIAGNOSTICS TIMED OUT after {time.time() - _diag_t0:.0f}s "
+            "(3600s budget) -- the generator load or concurrency probe wedged; treat as a "
+            "FAILED health signal for the scored hardware.",
+            flush=True,
+        )
 
 print("CarnotAgent submission notebook complete.")

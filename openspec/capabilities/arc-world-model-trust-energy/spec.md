@@ -25085,3 +25085,61 @@ checksum drift.
 |---|---|---|
 | REQ-ARC-WMTE-6307 | Pending. | Pending. |
 | REQ-ARC-WMTE-6308 | Implemented in `python/carnot/experiment_6308_arc_target_validated_route_holdout.py`. | `tests/python/test_experiment_6308_arc_target_validated_route_holdout.py`. |
+
+### REQ-ARC-WMTE-6250: Best-of-Both REx Ensemble (Per-Game VALID-Score Arm Selection)
+
+**Origin:** 2026-08-11 operator directive: "start the REx ensemble build." This is the "fresh
+operator decision" REQ-ARC-WMTE-6248's retirement clause required before any further refinement
+variant, and it is a NEW mechanism class, not a re-proposal of the retired one: 6248 retired REx
+as a BLANKET replacement for the linear arm (gate required >= 4 of 6 games improved; only 2 of 6
+did). This REQ does not re-run that gate or ask REx to win outright again -- it asks whether the
+online-available VALID score can tell, PER GAME, which of the two already-built arms to keep.
+
+A zero-cost retrospective check on 6248's own artifact (`results/experiment_6248_pinductor_rex_ab.json`)
+motivated the build before any new LLM call was spent: for each of the 6 games, comparing
+`final_valid_fidelity` (known online, before HELD is ever scored) against which arm actually had
+the higher `held_change_fidelity` (the real, only-known-after-the-fact generalization metric)
+found the two agreed on 6 of 6 games -- including both of REx's real wins (tr87, ka59) and all
+four of linear's wins (ft09 tie, cn04, ar25, re86). The resulting per-game ensemble mean
+(0.4273) beat both the pure-linear mean (0.2710) and the pure-rex mean (0.3312) outright, and beat
+both arms on every individual game, not just on average. This is evidence the two arms fail on
+DIFFERENT games (not that one is strictly better), which is exactly the condition under which a
+per-game selector recovers each arm's wins without inheriting its losses.
+
+`carnot.agentic.arc_rex_refinement.run_rex_ensemble` SHALL run the `linear` arm
+(`use_ucb1=False, use_qbc=False`) and the `rex` arm (`use_ucb1=True, use_qbc=True`) SEQUENTIALLY
+through the existing `run_rex` code path, against the SAME store (`read_store_source`,
+`write_store_source`) and the SAME train/valid split, at the SAME per-arm budget as a single-arm
+run. Store isolation between arms SHALL NOT be required: `run_rex` always begins with
+`proposer.induce(...)`, which overwrites whatever the store held, so nothing survives from one
+arm into the other's first candidate. The ensemble SHALL keep the arm with the higher
+`final_valid_fidelity` (VALID, never HELD -- HELD stays selection-blind at run time, matching
+every other REQ-ARC-WMTE-62xx selection rule); the arm with no successful candidate (a failed
+first induce) SHALL never be chosen over an arm that produced one, regardless of score; if
+BOTH arms fail to produce a candidate, `chosen_arm` SHALL be `None`.
+
+This mechanism costs ~2x the per-cell LLM-call budget of a single arm (both arms always run to
+completion, since the selection signal, VALID score, is only known after each arm finishes).
+That cost is acceptable for induction, a rare per-game event, not for anything on the live
+per-action path.
+
+#### SCENARIO-ARC-WMTE-6250-PICKS-HIGHER-VALID-ARM
+
+Given both arms produce a final candidate, the ensemble SHALL keep whichever candidate has the
+higher `final_valid_fidelity`, regardless of which arm (linear or rex) produced it.
+
+#### SCENARIO-ARC-WMTE-6250-SURVIVING-ARM-FALLBACK
+
+Given one arm's `induce` call fails and produces no candidate at all, the ensemble SHALL keep the
+other arm's result unconditionally -- an arm with no candidate SHALL NOT be comparable by score.
+
+#### SCENARIO-ARC-WMTE-6250-BUDGET-DOUBLES-BY-CONSTRUCTION
+
+Given a per-arm LLM-call budget B, the ensemble's `total_llm_calls` SHALL equal the sum of both
+arms' individual `llm_calls` (both arms always run to completion).
+
+## Implementation Status (REQ-ARC-WMTE-6250)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6250 | `python/carnot/agentic/arc_rex_refinement.py:run_rex_ensemble` (sequential linear-then-rex over the existing `run_rex` path, single shared store, VALID-score argmax selection). | `tests/python/test_arc_rex_refinement.py` (CPU-only, fake proposer: higher-valid-arm selection in both directions, failed-first-arm fallback, budget-doubling accounting; 22/22 passing including the pre-existing 6248 coverage). Retrospective validation against `results/experiment_6248_pinductor_rex_ab.json`: VALID-score selection matches the HELD-optimal arm on 6/6 games; not yet re-validated prospectively (a fresh live A/B on new cells, gated behind operator authorization per the standing refinement-axis hold, remains open follow-up work). |

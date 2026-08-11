@@ -15690,3 +15690,4 @@ Still active  |
 | 2026-08-11 15:23 UTC | Fresh live three-family benchmark gated on Exp6316 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6316-model-local-probe-integrity-audit) |
 | 2026-08-11 15:37 UTC | Independent versioned-learning and protected-valid | OK | 88 passed, 1 warning in 9.25s |
 | 2026-08-11 16:51 UTC | Default-off ARC target-licensed route shadow on th | OK | 160 passed, 1 warning in 16.89s |
+| 2026-08-11 18:14 UTC | V544 adversarial capstone, branch promotion, and r | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: t["operational |
