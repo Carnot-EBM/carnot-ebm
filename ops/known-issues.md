@@ -16585,3 +16585,28 @@ way -- these use plain SSH-reachability preconditions, not a physical-receipt ga
   `mpfs-disco-kit.local` did not resolve. Likely still completing its post-power-cycle boot /
   mDNS re-announcement; not yet confirmed reachable. Worth a re-check before the next PolarFire
   task runs; not itself evidence of a hardware problem after a deliberate power cycle.
+
+## 2026-08-11 GPU allocation VERIFIED: RTX Pro 6000 confirmed allocated for the Kaggle submission (single card, not 4x L4)
+
+**Operator directive:** "We absolutely were able to allocate an GPU RTX Pro 6000 for our
+submission run. This should be noted as it is not an L4x4 and I know we have some assumptions
+that we need to pay attention to regarding our kaggle runtime environment and GPU allocation."
+
+This resolves `scripts/kaggle/submission_kernel/main.py`'s "UNVERIFIED BY US" note on
+`machine_shape: NvidiaRtxPro6000` (kernel-metadata.json) -- the shape genuinely is being
+allocated, confirmed by the operator for submission ref 55425907. Correction appended in that
+file's own docstring (never-prune; the original "unverified" reasoning trail is kept, marked
+historical).
+
+**The assumption worth flagging, per the operator's own caveat.** Every VRAM/MTP comment in
+that file was written assuming FOUR separate 24GB L4 devices that llama-server layer-splits
+across (`CUDA_VISIBLE_DEVICES` deliberately left unset so "all 4 L4s stay visible"). `NvidiaRtxPro6000`
+carries no "x4" multiplier in the machine_shape string (unlike `NvidiaL4x4`), consistent with
+this being ONE card, not four -- in which case the multi-device layer-splitting reasoning is
+moot (nothing to split across) and what actually matters is whether that single card's VRAM
+covers the current ~26.6GB requirement at n_ctx=106496. Exact RTX PRO 6000 SKU (Ada 48GB vs
+Blackwell 96GB) not yet confirmed. **No code change was made for this** -- the existing VRAM-fit
+check (`_generator_cuda_min_free_mb` + a live nvidia-smi read) measures real free VRAM at
+runtime rather than assuming a topology, so it is already correct regardless of card count.
+The definitive answer (card count, VRAM total) will be in the `LLM GPU HARDWARE:` line of
+submission ref 55425907's real scored-run log, once available.

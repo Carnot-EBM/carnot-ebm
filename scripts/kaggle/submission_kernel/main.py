@@ -71,6 +71,31 @@ TWO THINGS ARE NOT DONE AND WILL BREAK THE NEXT SUBMISSION IF IGNORED:
     18.3GB of weights plus an 81920-cell q8 KV pool does NOT fit the 24GB NvidiaL4 this
     previously requested, so reverting machine_shape without also shrinking the model or the
     context is a guaranteed OOM.
+
+    VERIFIED 2026-08-11 (operator directive, submission ref 55425907): the RtxPro6000 shape
+    WAS actually allocated for a real run -- no longer "UNVERIFIED BY US" above (that framing
+    is kept, never-prune, for the reasoning trail; read it as historical). Operator's own
+    words, load-bearing: "We absolutely were able to allocate an GPU RTX Pro 6000 for our
+    submission run. This should be noted as it is not an L4x4."
+
+    THAT LAST CLAUSE MATTERS STRUCTURALLY, NOT JUST AS A LABEL. Every VRAM-fit and MTP
+    comment in this file above (the 4x24GB=96GB math, "all 4 L4s stay visible and the
+    weights spread across 96 GB", the CUDA_VISIBLE_DEVICES avoidance reasoning) was written
+    assuming FOUR separate 24GB devices that llama-server layer-splits across. `kernel-
+    metadata.json`'s `machine_shape` string is "NvidiaRtxPro6000" with NO "x4"-style
+    multiplier (contrast "NvidiaL4x4", which explicitly has one) -- consistent with this
+    being ONE card, not four. If so, the multi-device layer-splitting machinery this file
+    reasons about doesn't apply at all (nothing to split across); what matters instead is
+    simply whether that one card's total VRAM covers the ~26.6GB requirement at n_ctx=106496.
+    NOT YET CONFIRMED: the exact RTX PRO 6000 SKU (the Ada-generation "RTX 6000 Ada" is
+    48GB; a Blackwell-generation "RTX PRO 6000 Blackwell" can be 96GB) and therefore its
+    single-card VRAM ceiling. The code does NOT need to change for this uncertainty --
+    `_generator_cuda_min_free_mb` plus the live nvidia-smi read a few hundred lines below
+    already MEASURE the real free VRAM at runtime rather than assuming a topology, so the
+    fit check is correct regardless of 1-card vs 4-card. This note exists so a future reader
+    does not re-derive the stale 4x24GB mental model from the paragraphs above it. Read the
+    `LLM GPU HARDWARE:` line from ref 55425907's actual scored-run log once available for the
+    definitive card count and VRAM total.
 ==========================================================================================
 """
 

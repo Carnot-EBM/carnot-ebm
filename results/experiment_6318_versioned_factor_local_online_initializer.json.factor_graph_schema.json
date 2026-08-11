@@ -1,0 +1,32 @@
+{
+  "factor_names": [
+    "accept_factor",
+    "repair_factor",
+    "reject_factor",
+    "drift_factor",
+    "poison_factor"
+  ],
+  "factor_to_feature": {
+    "accept_factor": 1,
+    "drift_factor": 4,
+    "poison_factor": 5,
+    "reject_factor": 3,
+    "repair_factor": 2
+  },
+  "feature_names": [
+    "bias",
+    "accept_cue",
+    "repair_cue",
+    "reject_cue",
+    "drift_cue",
+    "poison_cue"
+  ],
+  "lazy_update_rule": "touch only active non-bias factors for factor-local arm",
+  "movement_cost_rule": "charge changed factors, changed parameters, changed bytes, and l1 movement",
+  "schema": "carnot.experiment_6318.versioned_factor_local_online_initializer.v1.factor_graph",
+  "target_states": [
+    "accept",
+    "repair",
+    "reject"
+  ]
+}

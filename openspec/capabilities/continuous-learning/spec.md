@@ -879,3 +879,186 @@ hash byte for byte.
 | REQ-CSL-6306-LEAKAGE | Planned | tests/python/test_experiment_6306_online_state_learning_safety_audit.py |
 | REQ-CSL-6306-ROLLBACK | Planned | tests/python/test_experiment_6306_online_state_learning_safety_audit.py |
 | REQ-CSL-6306-PROVENANCE | Planned | tests/python/test_experiment_6306_online_state_learning_safety_audit.py |
+
+## REQ-CSL-6318: Versioned Factor-Local Online Initializer
+
+**Given** a fresh sealed chronological exact-constraint stream in the same
+task domain as Exp6304
+**When** Exp6318 compares frozen Exp6304-style state, full-state
+reference-anchored updates, lazy factor-local reference-anchored updates,
+no-learning, and exact-oracle controls
+**Then** it SHALL write
+`results/experiment_6318_versioned_factor_local_online_initializer.json`
+**And** every candidate SHALL record version, parent, changed-factor set,
+immutable predecision snapshot, post-outcome exact receipt,
+champion--challenger decision, and movement cost
+**And** arm IDs SHALL include `frozen_exp6304_style`,
+`full_state_reference_anchored`,
+`lazy_factor_local_reference_anchored`, `no_learning_control`, and
+`exact_oracle_control`
+**And** `unsafe_commit_count`, `cross_family_transfer_count`, and
+`source_model_weight_mutation_count` SHALL be bare `0`.
+
+## REQ-CSL-6318-STREAM: Sealed Chronology And Factor Graph
+
+**Given** replay, future same-template, held-template, unseen-family,
+reversal, poison, restart, and monitoring partitions
+**When** Exp6318 freezes the run
+**Then** the stream, chronological partitions, exact validators, factor graph,
+version rules, update budgets, verifier budgets, degradation rules, seeds,
+reference state, and protected hashes SHALL be frozen before any candidate
+update.
+
+## REQ-CSL-6318-PREDECISION: Immutable Version Snapshots
+
+**Given** a chronological event at index `N`
+**When** an arm predicts from its active version
+**Then** the immutable predecision snapshot SHALL persist before exact outcome
+reveal
+**And** the snapshot SHALL include arm, active version, parent, state hash,
+changed-factor lineage, prediction, task boundary, and prior event count
+without target-label visibility.
+
+## REQ-CSL-6318-VERSIONS: Parent Lineage And Changed Factors
+
+**Given** exact post-outcome receipts
+**When** a learning arm creates a challenger
+**Then** the challenger SHALL have one parent, a non-empty changed-factor set,
+a deterministic state hash, a movement-cost receipt, and a paired
+champion--challenger comparison over the same future validation window.
+
+## REQ-CSL-6318-BUDGETS: Matched Updates And Verifiers
+
+**Given** full-state and lazy factor-local learning arms
+**When** the sealed stream completes
+**Then** update opportunities, nominal step size, boundary rules, exact
+verifier calls, and validation-window sizes SHALL match across the two arms
+**And** movement and memory costs SHALL be charged per changed factor and byte.
+
+## REQ-CSL-6318-RELEASE: Boundary Activation And Rollback
+
+**Given** a challenger passes its paired gate
+**When** it becomes eligible for release
+**Then** it SHALL activate only at a later task boundary
+**And** monitoring SHALL roll it back byte-exactly to its parent on
+preregistered planted or natural degradation
+**And** restart replay SHALL recover the same active version hashes.
+
+## REQ-CSL-6318-CONTROLS: Same-Domain Controls Only
+
+**Given** base GGUF weights are absent and immutable
+**When** Exp6318 reports transfer and safety counts
+**Then** no-learning and exact-oracle controls SHALL remain explicit
+**And** replay, future same-template, held-template, and unseen-family
+partitions SHALL be reported separately
+**And** no model-family or task-family transfer SHALL occur.
+
+## REQ-CSL-6318-READY: Conjunctive Readiness Gate
+
+**Given** all arms finish
+**When** `versioned_factor_local_learning_ready_score` is computed
+**Then** it SHALL be one only with future-event utility over frozen,
+non-inferiority to full-state anchoring, lower movement cost than full-state
+anchoring, exact task-boundary release, exact parent rollback, zero unsafe
+commits, zero cross-family transfer, zero source model mutation, oracle
+verification, unchanged protected files, and passing verification commands
+**And** replay-only gain SHALL be insufficient.
+
+## REQ-CSL-6318-PROVENANCE: Required Artifact Fields
+
+Exp6318 SHALL emit these fields with the stated principles:
+
+- `status`: Terminal state follows stream sealing, version gates, release, rollback, and verification.
+- `paper_sources_and_local_claim_boundary`: OpenLoopEvolve and Beyond Binary are design cues only. Local claims stop at same-domain initializer state.
+- `exp6304_path_hash_and_terminal_class`: Exp6304 is pinned as the positive baseline source.
+- `continuous_state_and_exact_energy_hashes`: State trajectories and exact outcome energies are content-addressed.
+- `sealed_stream_manifest_path_and_hash`: The manifest proves chronology and hidden-target commitments were frozen.
+- `chronological_partition_contract`: Partition counts and visibility rules prevent replay-only claims.
+- `factor_graph_schema_and_hash`: The factor graph schema defines the only mutable factor set.
+- `initializer_architecture_and_parameter_count`: The initializer architecture and mutable parameter count are explicit.
+- `frozen_full_state_factor_local_and_oracle_arm_definitions`: Each arm has a defined role and outcome authority.
+- `reference_snapshot_path_and_hash`: The copied Exp6304-style reference state is immutable and hash-pinned.
+- `matched_update_and_verifier_budgets`: Update and exact verifier budgets match across learning arms.
+- `version_registry_path_and_hash`: Version rows are append-only and content-addressed.
+- `version_parent_and_changed_factor_receipts`: Candidate lineage and factor attribution are explicit.
+- `immutable_predecision_snapshots`: Every arm-event prediction is persisted before outcome reveal.
+- `postdecision_exact_outcome_receipts`: Exact outcomes open only after predecision snapshots exist.
+- `champion_challenger_pairing_and_decisions`: Release decisions use paired champion--challenger comparisons.
+- `task_boundary_release_receipts`: Passing challengers activate only at later task boundaries.
+- `monitoring_degradation_and_parent_rollback_receipts`: Degradation monitoring rolls back byte-exactly to parents.
+- `first_attempt_exact_rate_refinement_work_regret_retention_forgetting_and_negative_transfer_by_arm_and_partition`: Accuracy, refinement, regret, retention, forgetting, and harm remain partitioned.
+- `movement_memory_and_update_cost_by_arm`: Each arm reports changed factors, bytes, updates, memory, and movement.
+- `reversal_poison_restart_and_rollback_results`: Reversal, poison, restart, and rollback cannot hide in pooled utility.
+- `paired_intervals_and_sample_sizes`: Primary contrasts include paired deltas and sample sizes.
+- `unsafe_commit_count`: Bare zero proves no unsafe candidate committed.
+- `cross_family_transfer_count`: Bare zero proves no model-family or task-family transfer occurred.
+- `source_model_weight_mutation_count`: Bare zero proves absent base weights were not mutated.
+- `versioned_factor_local_learning_ready_score`: Readiness is conjunctive and excludes replay-only gain.
+- `protected_files_unchanged`: Conductor, ops, and traceability files stay byte-identical.
+- `preconditions_checked`: Inputs, seeds, validators, budgets, degradation rules, factor graph, reference, and protected files are frozen first.
+- `inference_substrate`: The run declares deterministic exact ASP initializer learning with no base model load.
+- `verifier_is_oracle`: Bare true states that exact validators are outcome authorities.
+- `field_provenance`: Every field maps to spec, inputs, receipts, metrics, tests, or hashes.
+- `field_principles`: Every required field carries its guard principle.
+- `test_commands`: Focused tests, coverage, full pytest, spec coverage, E2E reading, run command, validation, adversarial checks, and root-clutter checks are listed.
+- `test_exit_codes`: Failed commands prevent readiness.
+- `duration_s`: Wall time is recorded without padding.
+- `random_seeds`: Stream, version, boundary, and interval seeds are fixed.
+- `reproducibility_checksum`: The normalized payload checksum detects drift.
+- `honest_verdict`: The verdict starts with a terminal prefix and states whether versioned factor-local learning earned readiness.
+
+## SCENARIO-CSL-6318-CHRONOLOGY: Snapshots Precede Outcomes
+
+**Given** a caller tries to reveal an exact target before prediction
+**When** Exp6318 validates predecision snapshots
+**Then** readiness SHALL reject the artifact instead of accepting leaked
+chronology.
+
+## SCENARIO-CSL-6318-LINEAGE: Versions Have Parents And Factors
+
+**Given** a challenger is created after an exact outcome
+**When** the version registry is inspected
+**Then** every non-root version SHALL point to an existing parent and SHALL
+carry the changed-factor set that caused its movement cost.
+
+## SCENARIO-CSL-6318-BUDGET-PARITY: Learning Arms Stay Comparable
+
+**Given** full-state and factor-local arms
+**When** chronological learning completes
+**Then** both arms SHALL receive identical update opportunities, verifier
+calls, validation-window sizes, release boundaries, and source reference state.
+
+## SCENARIO-CSL-6318-BOUNDARY: Release Is Delayed
+
+**Given** a challenger passes its paired comparison
+**When** activation occurs
+**Then** activation SHALL occur only at a task boundary later than challenger
+creation and validation.
+
+## SCENARIO-CSL-6318-ROLLBACK: Degradation Restores Parent Bytes
+
+**Given** planted or natural degradation is detected during monitoring
+**When** rollback executes
+**Then** the active version SHALL restore the parent state hash byte for byte
+and restart replay SHALL preserve the same hash.
+
+## SCENARIO-CSL-6318-NO-TRANSFER: Controls Do Not Mutate Base Or Families
+
+**Given** no base GGUF weights are present
+**When** controls and learning arms finish
+**Then** source-model mutation, unsafe commits, and cross-family transfer SHALL
+remain bare integer zeros.
+
+## Implementation Status (REQ-CSL-6318)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CSL-6318 | Planned | tests/python/test_experiment_6318_versioned_factor_local_online_initializer.py |
+| REQ-CSL-6318-STREAM | Planned | tests/python/test_experiment_6318_versioned_factor_local_online_initializer.py |
+| REQ-CSL-6318-PREDECISION | Planned | tests/python/test_experiment_6318_versioned_factor_local_online_initializer.py |
+| REQ-CSL-6318-VERSIONS | Planned | tests/python/test_experiment_6318_versioned_factor_local_online_initializer.py |
+| REQ-CSL-6318-BUDGETS | Planned | tests/python/test_experiment_6318_versioned_factor_local_online_initializer.py |
+| REQ-CSL-6318-RELEASE | Planned | tests/python/test_experiment_6318_versioned_factor_local_online_initializer.py |
+| REQ-CSL-6318-CONTROLS | Planned | tests/python/test_experiment_6318_versioned_factor_local_online_initializer.py |
+| REQ-CSL-6318-READY | Planned | tests/python/test_experiment_6318_versioned_factor_local_online_initializer.py |
+| REQ-CSL-6318-PROVENANCE | Planned | tests/python/test_experiment_6318_versioned_factor_local_online_initializer.py |
