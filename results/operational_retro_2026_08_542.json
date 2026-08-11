@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.542",
+  "generated_at": "2026-08-11T02:07:52Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 2.9,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Gated on Exp6288 adapter readiness: three-family live exact-state refinement ben",
+      "duration_minutes": 1.66,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Matched live-agent causal canary for the ARC mechanic-class router",
+      "duration_minutes": 1.13,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Post-V542-marker source delta and experimental-scope freeze",
+      "duration_minutes": 0.11,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exact terminal-boundary handoff from V541 into V542",
+      "duration_minutes": 0.01,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Current-rule V541 evidence eligibility and branch-stop ledger",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 12 experiments in 2.9 minutes, and 4 were compute-bound. The adapter-readiness benchmark led compute time, followed by the matched live-agent canary; adapter readiness is the only stated constraint, and no cause is available for the canary duration. The locked task-level classification reports no GPU idle on compute-bound work, while the available data does not explain multi-model dispatch.",
+  "bottlenecks_identified": [
+    "Adapter-readiness gating is the only stated constraint on the longest compute-bound entry; the data does not separate gate wait from compute time.",
+    "Disk modification-time reconstruction does not isolate gate wait, launch, model load, inference, verification, or artifact-write time.",
+    "The GPU snapshot is not joined to an active experiment, process, loaded-model count, or dispatcher choice, so it cannot establish task-time utilization or DualGPURunner selection."
+  ],
+  "improvements_suggested": [
+    "Add an adapter-readiness preflight and cache its receipt before the gated exact-state benchmark starts.",
+    "Emit monotonic phase timings for gate wait, launch, model load, inference, verification, and artifact writing.",
+    "Join GPU samples to experiment identity, process identity, active phase, loaded-model count, and dispatcher choice.",
+    "Select DualGPURunner only when telemetry confirms that at least two models are loaded concurrently, and record the selection receipt."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Preflight adapter readiness and reuse a valid readiness receipt.",
+    "Replace disk-time reconstruction with monotonic per-phase timing.",
+    "Record task-linked GPU, model-count, and runner-selection telemetry."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The timing ledger orders the work but does not support causal diagnosis. The GPU snapshot shows idle devices, but the locked task-level field is false and no concurrent-model evidence is supplied, so stronger utilization and runner claims would be unsupported."
+}

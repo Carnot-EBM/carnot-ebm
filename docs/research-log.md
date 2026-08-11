@@ -6115,3 +6115,10 @@ The critical path for milestone .250:
 - theme: a semantic-parity-gated flagship benchmark concentrated the short compute-bound operational tail
 - key result: the longest compute entry dominated the recorded timing, but the data cannot explain its phases, grade task-time GPU efficiency, or establish a concurrent-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.542
+
+- exp_range: exp6288-exp6288 (only identifier present in the authoritative timing data; the complete milestone range is not available)
+- theme: adapter readiness constrained the compute leader during a brief synthesis-heavy closeout
+- key result: the locked classification reports no compute-task GPU idle, while missing task-linked telemetry prevents a utilization grade or a concurrent-model dispatch finding
+- acceptance: no data available this milestone
