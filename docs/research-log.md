@@ -6122,3 +6122,10 @@ The critical path for milestone .250:
 - theme: adapter readiness constrained the compute leader during a brief synthesis-heavy closeout
 - key result: the locked classification reports no compute-task GPU idle, while missing task-linked telemetry prevents a utilization grade or a concurrent-model dispatch finding
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.543
+
+- exp_range: no data available this milestone
+- theme: coarse timing reconstruction ranked compute work but did not explain its execution path
+- key result: the ARC live-path target-validated mechanic-route causal canary led the compute list, while task-linked GPU and dispatch evidence was unavailable, so utilization efficiency and concurrent multi-model runner engagement could not be judged
+- acceptance: no data available this milestone
