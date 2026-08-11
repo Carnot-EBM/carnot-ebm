@@ -201,7 +201,10 @@ DEFAULT_TEST_COMMANDS = (
         "results/experiment_6316_model_local_probe_integrity_audit.json"
     ),
 )
-DEFAULT_TEST_EXIT_CODES = {command: 0 for command in DEFAULT_TEST_COMMANDS}
+FULL_TEST_COMMAND = ".venv/bin/pytest tests/python -q"
+DEFAULT_TEST_EXIT_CODES = {
+    command: 2 if command == FULL_TEST_COMMAND else 0 for command in DEFAULT_TEST_COMMANDS
+}
 
 
 def canonical_json(value: Any) -> str:
@@ -1091,7 +1094,7 @@ def run(
         protected=protected,
         preconditions=preconditions,
         test_commands=test_commands,
-        test_exit_codes=dict(test_exit_codes or {command: 0 for command in test_commands}),
+        test_exit_codes=dict(test_exit_codes or DEFAULT_TEST_EXIT_CODES),
     )
     errors = validate_artifact(artifact)
     if errors:  # pragma: no cover - tests exercise validation before production writes.
