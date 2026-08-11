@@ -24686,3 +24686,96 @@ any game-level solve claim.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6282 | Pending. | Pending. |
+
+### REQ-ARC-WMTE-6294: Matched Mechanic-Router Causal Canary
+
+Experiment 6294 SHALL run a matched router-off versus router-on causal canary
+for the ARC mechanic-class route. The canary SHALL target proposal routing only.
+It SHALL NOT target a public level, claim a public solve, update the solve
+registry, read hidden game source, run offline ground-truth search, mutate model
+weights, or install a per-game adapter.
+
+The workflow SHALL freeze fresh sealed synthetic push-block and toggle-move
+fixtures before inference. It SHALL also freeze live-agent transition windows
+that contain only agent-visible `(before, action, data, after)` histories. For
+each pair, the router-off and router-on arms SHALL match fixture id, seed,
+action budget, model budget, model id, quantization, and starting history. The
+only planned difference between arms SHALL be the default-off mechanic-router
+prompt block.
+
+`MODEL_SPECS` SHALL include both `unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-31B-it-GGUF`. The runner SHALL resolve concrete cached GGUF
+paths through `cached_sota_pair()` or the equivalent local resolver, record file
+hashes, record tokenizer and chat-template hashes from the GGUF path, and record
+CUDA/GPU-offload receipts by model. If a required model or CUDA offload is not
+available, the artifact SHALL stop with a terminal `complete: blocked_*` verdict
+and SHALL NOT synthesize proposal metrics.
+
+The canary SHALL measure detector quality, route activation, candidate
+diversity, executable proposal acceptance, invalid proposal rate, decision
+latency, and baseline harm. Readiness SHALL require a positive preregistered
+paired proposal-path delta, no baseline harm, terminal model receipts, and at least 60 seconds of actual measured work. Sleeping or artificial duration
+padding SHALL be forbidden and counted separately.
+
+`python/carnot/experiment_6294_arc_mechanic_router_causal_canary.py` SHALL write
+`results/experiment_6294_arc_mechanic_router_causal_canary.json` with these bare
+top-level fields: `status`, `upstream_eligibility_path_hash_and_terminal_class`,
+`registry_precheck_path_hash_and_target_receipt`, `solve_provenance`,
+`sealed_fresh_fixture_manifest_path_and_hash`,
+`live_transition_window_manifest_path_and_hash`,
+`no_hidden_source_and_no_outer_loop_search_receipts`, `MODEL_SPECS`,
+`models_used`, `model_file_hashes_revisions_and_quantizations`,
+`tokenizer_and_chat_template_hashes`,
+`cuda_and_gpu_offload_receipts_by_model`, `raw_output_paths_and_hashes`,
+`matched_router_off_and_on_arm_contract`,
+`matched_fixture_seed_action_model_and_history_receipts`,
+`detector_metrics_by_mechanic_and_model`,
+`route_activation_counts_by_arm_mechanic_and_model`,
+`candidate_diversity_by_arm_mechanic_and_model`,
+`executable_proposal_acceptance_by_arm_mechanic_and_model`,
+`invalid_proposal_rate_by_arm_mechanic_and_model`,
+`decision_latency_by_arm_mechanic_and_model`,
+`paired_causal_deltas_intervals_and_sample_sizes`, `baseline_harm_controls`,
+`actual_work_duration_receipt`, `duration_padding_count`,
+`arc_mechanic_causal_ready_score`, `hidden_game_source_access_count`,
+`outer_loop_ground_truth_search_count`, `arc_level_solve_claim_count`,
+`registry_update_count`, `source_model_weight_mutation_count`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+`solve_provenance` SHALL equal `live_agent_self_discovery`. Hidden-source,
+outer-loop-search, solve-claim, registry-update, duration-padding, and
+model-weight-mutation counts SHALL be bare integer zero values. `honest_verdict`
+SHALL start with a terminal prefix. `field_principles` SHALL include one short
+principle for every required field.
+
+#### SCENARIO-ARC-WMTE-6294-MATCHED-ARMS
+
+Given sealed push-block and toggle-move windows, when the router-off and
+router-on arms are built, then every pair has the same fixture id, seed, action
+budget, model budget, model id, quantization, and starting-history hash. The
+route block is present only in the router-on arm.
+
+#### SCENARIO-ARC-WMTE-6294-PROPOSAL-PATH-METRICS
+
+Given matched arm outputs, when the canary scores proposal-path outcomes, then
+the artifact reports detector quality, route activation, diversity, executable
+acceptance, invalid proposal rate, latency, paired deltas, and baseline harm for
+each mechanic and model. A ready score is positive only when the preregistered
+proposal-path delta is positive and baseline harm is absent.
+
+#### SCENARIO-ARC-WMTE-6294-PROVENANCE-GUARDS
+
+Given any completed or blocked 6294 artifact, validation refuses hidden-source
+access, outer-loop ground-truth search, public-level solve claims, registry
+updates, duration padding, model substitution, source weight mutation, arm
+mismatch, history mismatch, duplicate registry targets, and missing field
+principles.
+
+## Implementation Status (REQ-ARC-WMTE-6294)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6294 | Pending. | Pending. |
