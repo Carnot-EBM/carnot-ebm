@@ -15653,3 +15653,4 @@ Still active  |
 | 2026-08-11 06:12 UTC | Universal activation bus over the three mandated G | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6300_three_f |
 | 2026-08-11 06:48 UTC | Universal activation bus over the three mandated G | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6300_three_f |
 | 2026-08-11 07:10 UTC | Universal activation bus over the three mandated G | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-11 07:33 UTC | Independent shortcut and leakage audit of the shar | OK | 86 passed, 1 warning in 8.03s |
