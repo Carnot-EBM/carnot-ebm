@@ -2890,3 +2890,122 @@ when it computes readiness,
 then a family is ready only after the server process is task-owned, CUDA layers
 are offloaded, and at least one deterministic raw output token is persisted
 with byte hash and latency before teardown.
+
+### REQ-CODE-6313: Exact Code Safety Pair Fixture
+
+The repository shall provide an Exp6313 deterministic Python code safety pair
+fixture before any model state is extracted. The fixture shall use only
+repository-local synthetic code templates. It shall not use generated labels,
+LLM judges, or private external corpora.
+
+Exp6313 shall freeze weakness families, source families, templates,
+perturbations, minimum counts, and seeds before row generation. Each row shall
+contain one vulnerable and one fixed single-function Python pair. The two
+functions shall be length matched by character count and token-proxy count
+without adding explicit label tokens or template IDs to the code surface.
+
+Exp6313 shall label only explicitly declared safety properties. Every accepted
+pair shall pass exact compile checks, executable property checks, AST or bounded
+constraint checks, and targeted mutation checks. The exact sidecars shall assign
+the vulnerable/fixed labels, so `verifier_is_oracle` shall be true. A pair with
+inconsistent sidecars shall be rejected.
+
+Exp6313 shall freeze splits by whole group before model-state extraction. It
+shall prove zero normalized-text, template, source, and mutation overlap across
+train, validation, and held splits. It shall write A/A duplicates,
+semantically irrelevant edits, label permutations, pair swaps, and evaluator
+swaps to a control manifest. The controls shall not expose held labels to later
+surface selection.
+
+The terminal artifact shall be
+`results/experiment_6313_exact_code_safety_pair_fixture.json`. It shall include
+`status`, `fixture_scope_and_claim_boundary`, `weakness_family_taxonomy`,
+`source_and_license_receipts`, `pair_generator_version_and_hash`,
+`corpus_path_and_hash`, `sidecar_path_and_hash`,
+`control_manifest_path_and_hash`, `split_manifest_path_and_hash`,
+`pair_count_by_weakness_source_template_perturbation_and_split`,
+`compile_results`, `executable_property_results`,
+`ast_and_constraint_results`, `targeted_mutation_results`,
+`vulnerable_fixed_label_receipts`, `length_and_token_proxy_balance`,
+`duplicate_and_overlap_checks`,
+`held_weakness_source_template_and_perturbation_groups`,
+`evaluator_swap_definitions`, `positive_and_negative_control_results`,
+`invalid_or_excluded_rows`, `minimum_power_projection`,
+`exact_code_safety_fixture_ready_score`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `random_seeds`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Field principles:
+- `status`: Terminal state separates a ready exact fixture from a blocked one.
+- `fixture_scope_and_claim_boundary`: The artifact states only the declared properties it proves.
+- `weakness_family_taxonomy`: Weakness families and exact properties are frozen before generation.
+- `source_and_license_receipts`: Local synthetic provenance and license receipts replace private corpora.
+- `pair_generator_version_and_hash`: Generator version and source hashes make row construction replayable.
+- `corpus_path_and_hash`: The learner-facing corpus is committed by path, count, and bytes.
+- `sidecar_path_and_hash`: Exact label sidecars are committed separately from model surfaces.
+- `control_manifest_path_and_hash`: Control rows are sealed before any later representation selection.
+- `split_manifest_path_and_hash`: Whole-group split assignments are committed by bytes.
+- `pair_count_by_weakness_source_template_perturbation_and_split`: Disaggregated counts prevent pooled readiness.
+- `compile_results`: Both pair members must compile before any safety label is accepted.
+- `executable_property_results`: Executable properties prove the declared behavior on bounded inputs.
+- `ast_and_constraint_results`: Structural checks independently prove the causal safety edit.
+- `targeted_mutation_results`: Targeted flips prove the sidecars reject the opposite label.
+- `vulnerable_fixed_label_receipts`: Executable, structural, and mutation validators must agree.
+- `length_and_token_proxy_balance`: Exact length and token-proxy parity blocks simple shortcuts.
+- `duplicate_and_overlap_checks`: Text and group overlap checks prevent split leakage.
+- `held_weakness_source_template_and_perturbation_groups`: Held groups are frozen before model features exist.
+- `evaluator_swap_definitions`: Independent evaluator swaps expose single-evaluator artifacts.
+- `positive_and_negative_control_results`: A/A, surface, permutation, swap, and evaluator controls must pass.
+- `invalid_or_excluded_rows`: Rejected rows stay visible instead of being silently dropped.
+- `minimum_power_projection`: Power is stated for this fixture only, not universal coverage.
+- `exact_code_safety_fixture_ready_score`: Bare readiness is one only when all exact gates pass.
+- `protected_files_unchanged`: Conductor and reconciler-owned files remain byte-identical.
+- `preconditions_checked`: Specs, seeds, paths, licenses, and no-LLM gates are checked first.
+- `inference_substrate`: The artifact declares deterministic local generation with no inference.
+- `verifier_is_oracle`: True records exact sidecars as the fixture label oracle.
+- `field_provenance`: Every field traces to rows, sidecars, controls, specs, or tests.
+- `field_principles`: Every required field states the failure mode it guards.
+- `test_commands`: Commands bind unit, coverage, full-suite, spec, run, and adversarial checks.
+- `test_exit_codes`: Exit codes stop failed checks from becoming readiness.
+- `duration_s`: Measured generation time is reported without padding.
+- `random_seeds`: Seeds make ordering, splits, and controls reproducible.
+- `reproducibility_checksum`: A stable checksum detects artifact or sidecar drift.
+- `honest_verdict`: The terminal verdict states ready or blocked without broad claims.
+
+Readiness shall be bare `1.0` only when every required field is present, every
+exact sidecar passes, every accepted pair is balanced, split leakage is zero,
+all controls pass, every test command exits zero, and protected files remain
+unchanged. Otherwise readiness shall be bare `0.0`, and `honest_verdict` shall
+start with a terminal prefix that names the blocking reason.
+
+### SCENARIO-CODE-6313-SIDECARS: Exact Local Sidecars Label Pairs
+
+Given Exp6313 preregistered weakness families and local synthetic templates,
+when the fixture generator builds candidate vulnerable/fixed Python pairs,
+then each accepted pair compiles, passes the executable property sidecar, passes
+the AST or bounded constraint sidecar, passes targeted mutation checks, and
+records exact vulnerable/fixed label receipts without an LLM call.
+
+**Spec traces:** REQ-CODE-6313
+
+### SCENARIO-CODE-6313-SPLITS: Whole Groups Do Not Leak
+
+Given Exp6313 has weakness, source, template, and perturbation groups,
+when it writes train, validation, and held manifests,
+then no normalized code text, template group, source group, or mutation group
+appears in more than one split, and the held group list is committed before
+model-state extraction.
+
+**Spec traces:** REQ-CODE-6313
+
+### SCENARIO-CODE-6313-CONTROLS: Controls Are Manifested And Label-Blind
+
+Given Exp6313 accepted exact pairs,
+when it builds control manifests,
+then A/A duplicates, semantically irrelevant edits, label permutations, pair
+swaps, and evaluator swaps are present, positive controls pass, negative
+controls fail closed, and no held labels are exposed to surface selection.
+
+**Spec traces:** REQ-CODE-6313
