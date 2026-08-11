@@ -15664,3 +15664,4 @@ Still active  |
 | 2026-08-11 08:04 UTC | Live three-family shared-state value benchmark gat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6302-shared-activation-state-initializer) |
 | 2026-08-11 08:04 UTC | VERDI-style transfer gated on Exp6301 integrity=1  | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6301-activation-bus-integrity-audit.act |
 | 2026-08-11 08:06 UTC | VERDI-style transfer gated on Exp6301 integrity=1  | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6301-activation-bus-integrity-audit.act |
+| 2026-08-11 08:22 UTC | Independent poison, reversal, restart, and rollbac | OK | 87 passed, 1 warning in 9.74s |
