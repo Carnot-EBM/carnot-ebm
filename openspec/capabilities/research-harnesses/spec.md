@@ -3356,6 +3356,125 @@ payload, and `honest_verdict` starts with a terminal prefix.
 |---|---|---|
 | REQ-INTEG-6309 | Planned: `python/carnot/experiment_6309_v543_adversarial_capstone.py`; terminal artifact `results/experiment_6309_v543_adversarial_capstone.json`. | Planned: `tests/python/test_experiment_6309_v543_adversarial_capstone.py`. |
 
+## REQ-INFRA-6322: V544 Capstone SHALL Preserve Exact Evidence And Block Claim Laundering
+
+Carnot SHALL build Exp6322 as the V544 adversarial capstone for milestone
+`2026.08.544`. The capstone SHALL classify the exact declared deliverable for
+each task from Exp6310 through Exp6322. It SHALL NOT substitute aliases,
+sidecars, conductor receipts, summaries, source modules, or similarly named
+files for a missing exact deliverable.
+
+Exp6322 SHALL classify missing, nonterminal, flagged, null, blocked, skipped,
+oracle-only, safety-only, shadow-only, ready, and positive states before it
+reads headline metrics. A missing or flagged artifact SHALL NOT become null,
+ready, or positive because another artifact or document says the branch is
+healthy. Raw blocked gate status SHALL remain visible even when the shared
+terminal classifier records the row as a gate skip.
+
+Exp6322 SHALL promote the model-local representation branch, model-local probe
+integrity branch, live model-local verifier branch, versioned factor-local
+learning branch, feedback-directed search branch, online self-evolution safety
+branch, and ARC live-shadow branch independently. No aggregate score SHALL
+rescue a failed model, fold, attack, provenance cell, protected-validation
+cell, or ARC zero-credit boundary.
+
+Exp6322 SHALL set `shared_bus_promotion_allowed`,
+`cross_family_transfer_promotion_allowed`,
+`exact_oracle_as_learned_verifier_allowed`,
+`protected_validation_as_progress_allowed`, and `arc_solve_claim_allowed` to
+bare boolean `false`. It SHALL preserve ARC shadow-only evidence with
+`solve_claimed=false`, `levels_credited=0`, and `registry_update_count=0`.
+It SHALL record no hardware speed, power, board, TSU, or availability claim
+unless an exact authenticated upstream artifact supports that claim.
+
+Exp6322 SHALL replay `retire_if_same_verdict` mechanics from the staged V544
+prior-failure contract. It SHALL record manifest updates only when the staged
+contract fires. It SHALL not modify `research-roadmap.yaml` or
+`scripts/research_conductor.py`.
+
+The Exp6322 artifact SHALL be written atomically to
+`results/experiment_6322_v544_adversarial_capstone.json`. It SHALL include
+these required fields: `status`, `roadmap_path_and_hash`,
+`declared_task_ids_and_deliverables`, `task_terminal_matrix`,
+`missing_nonterminal_flagged_null_blocked_skipped_oracle_only_safety_only_shadow_only_ready_and_positive_counts`,
+`source_and_scope_freeze_summary`, `infrastructure_readiness`,
+`model_local_representation_verdict`,
+`model_local_probe_integrity_verdict`,
+`live_model_local_verifier_verdict`,
+`versioned_factor_local_learning_verdict`,
+`feedback_directed_search_verdict`,
+`online_self_evolution_safety_verdict`, `arc_live_shadow_verdict`,
+`shared_bus_promotion_allowed`,
+`cross_family_transfer_promotion_allowed`,
+`exact_oracle_as_learned_verifier_allowed`,
+`protected_validation_as_progress_allowed`, `arc_solve_claim_allowed`,
+`branch_promotion_matrix`, `exclusion_manifest_updates`,
+`failed_experiment_rerun_retirements`, `prd_gap_delta`,
+`hardware_claim_boundary`, `reconciled_document_paths_and_hashes`,
+`operational_retro_path_and_hash`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+### SCENARIO-INFRA-6322-1: Exact Declared Artifacts Conserve The V544 Denominator
+
+GIVEN the active V544 roadmap and declared deliverables for Exp6310 through
+Exp6322
+WHEN Exp6322 builds its task matrix
+THEN exactly 13 rows are present, every row is classified from its exact
+declared path, missing Exp6315 and Exp6317 remain missing, and no alias or
+receipt replaces them.
+
+### SCENARIO-INFRA-6322-2: Terminal States Are Classified Before Metrics
+
+GIVEN a null preflight, a blocked corpus, a missing probe artifact, a flagged
+integrity audit, and a zero-credit ARC shadow
+WHEN Exp6322 computes counts and branch verdicts
+THEN null, blocked, skipped, missing, flagged, safety-only, shadow-only, ready,
+and positive states remain distinct and no later metric changes the terminal
+state.
+
+### SCENARIO-INFRA-6322-3: Branch Promotion Is Independent
+
+GIVEN model-local, continuous-learning, feedback-search, safety, and ARC
+shadow artifacts
+WHEN Exp6322 builds the promotion matrix
+THEN model-local verification can close null or flagged while learning utility,
+feedback-search utility, safety, and ARC shadow reachability keep their own
+promotion verdicts.
+
+### SCENARIO-INFRA-6322-4: Laundering Guards Are Bare False
+
+GIVEN exact-oracle sidecars, protected validation, safety-only evidence,
+cross-family exclusions, and ARC shadow proposals
+WHEN Exp6322 writes its artifact
+THEN the five laundering-allowed fields are bare boolean `false`, ARC solve
+credit remains zero, and protected validation does not become adaptive
+progress.
+
+### SCENARIO-INFRA-6322-5: Retirements And Exclusions Are Mechanical
+
+GIVEN the V544 capstone prior-failure contract
+WHEN Exp6322 compares the current verdict with the staged prior verdict
+THEN `retire_if_same_verdict` fires only on exact verdict equality and
+exclusion-manifest updates are recorded only for fired rules.
+
+### SCENARIO-INFRA-6322-6: Schema, Provenance, And Reconciliation Receipts Are Complete
+
+GIVEN the capstone report
+WHEN Exp6322 validates it before writing
+THEN every required field is present, every required field has provenance and a
+field-principle entry, the checksum matches the normalized payload, protected
+files are compared by hash, reconciliation paths are exact, and
+`honest_verdict` starts with a terminal prefix.
+
+## Implementation Status (REQ-INFRA-6322)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6322 | Implemented: `python/carnot/experiment_6322_v544_adversarial_capstone.py`; terminal artifact `results/experiment_6322_v544_adversarial_capstone.json`. | Implemented: `tests/python/test_experiment_6322_v544_adversarial_capstone.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
