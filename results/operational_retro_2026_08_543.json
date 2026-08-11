@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.543",
+  "generated_at": "2026-08-11T10:25:28Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 2.0,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 6,
+  "slowest_experiments": [
+    {
+      "experiment": "ARC live-path target-validated mechanic-route causal canary",
+      "duration_minutes": 1.2,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independent shortcut and leakage audit of the shared activation bus",
+      "duration_minutes": 0.39,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Universal activation bus over the three mandated GGUF families",
+      "duration_minutes": 0.29,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Post-V543-marker source delta and experimental-scope freeze",
+      "duration_minutes": 0.12,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exact terminal-boundary handoff from V542 into V543",
+      "duration_minutes": 0.02,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 12 experiments in 2 minutes, and 6 were compute-bound. The ARC live-path target-validated mechanic-route causal canary was the longest listed compute-bound task, but the supplied data has no phase breakdown that explains why.",
+  "bottlenecks_identified": [
+    "The disk-mtime reconstruction ranks experiment elapsed times but has no task-phase detail, so it cannot attribute the longest compute-bound duration to setup, model loading, inference, or teardown.",
+    "GPU monitoring is not correlated to experiment intervals, so utilization efficiency during compute-bound tasks cannot be graded from the supplied data.",
+    "No loaded-model count or runner-selection receipt is available, so the data cannot establish whether any task ran 2 or more models in parallel or missed an eligible DualGPURunner dispatch."
+  ],
+  "improvements_suggested": [
+    "Record phase timestamps and task identifiers for every compute-bound experiment.",
+    "Attach GPU utilization samples to each compute-bound task from launch through completion.",
+    "Record loaded-model count and runner selection, and select DualGPURunner only when 2 or more models are loaded in parallel.",
+    "Keep synthesis-only tasks on the non-GPU path and exclude their expected GPU idleness from alerts."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add task-correlated phase and GPU telemetry for compute-bound experiments.",
+    "Emit loaded-model-count and runner-selection receipts before compute starts.",
+    "Dispatch parallel multi-model workloads across both GPUs with DualGPURunner while retaining one-GPU dispatch for single-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The reconstructed timing is sufficient to rank the listed work but not to identify causal runtime waste. The next retrospective will be more actionable if task-scoped phase, GPU, model-count, and dispatch evidence is captured during execution."
+}
