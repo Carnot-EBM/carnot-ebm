@@ -16631,3 +16631,48 @@ the Save & Run preview log, confirmed again on this check, never the internal co
 log.
 
 Full detail: `/home/ianblenke/carnot_submission_staging/MANIFEST.md`'s OUTCOME 2026-08-11 section.
+
+## 2026-08-11 the 0.09-vs-0.12 "gap" is not a regression -- the baselines ran a completely different stack
+
+Follow-up investigation, operator-directed ("investigate the 0.09 vs 0.12 gap"). Checked what
+config actually produced the 0.12 (2026-07-15) and 0.08 (2026-07-16) baseline submissions,
+against `.backup-kernel-metadata-20260731T182608Z.json` (the staging directory's own preserved
+snapshot from immediately before the 2026-07-31 re-stage -- no re-stage happened between
+2026-06-30 and 2026-07-31 per that re-stage's own "What changed and why" writeup, so this
+snapshot is the config that ran on 07-15/07-16):
+
+```json
+"machine_shape": "NvidiaL4",
+"dataset_sources": ["...", "...", "iancblenke/carnot-qwen35-9b-mtp-gguf"]
+```
+
+**The 0.12/0.08 baselines ran Qwen3.5-9B-MTP (the RETIRED generator) on a SINGLE NvidiaL4
+(24GB).** Today's 0.09 submission ran `gemma-4-31B-it-qat` on `NvidiaRtxPro6000`. These are not
+the same system measured twice -- they are two different generators on two different hardware
+allocations, separated by the 2026-07-28 model migration (`cfca5de955`, the 11-0-2 head-to-head
+that justified switching to gemma-4-31B for INDUCTION QUALITY specifically).
+
+**Reframing: 0.09 is not a regression from 0.12 -- it is the FIRST clean scored data point for
+the current (gemma-4-31B) stack.** No submission between 07-28 (the model migration) and today
+used a correctly-configured kernel: the very next submission attempt after the migration was
+today's stale-fork regression (ref 55393553, 0.02, root-caused separately). So there has never
+been an apples-to-apples comparison between "old stack" (Qwen 9B / single L4, scored 0.08-0.12)
+and "new stack" (gemma-4-31B / RTX Pro 6000, scored 0.09) until now, and this is a SAMPLE SIZE
+OF ONE for the new stack.
+
+**A real, substantive, still-open question this surfaces (not a regression, a genuine tradeoff):**
+ARC-AGI-3 scoring is EFFICIENCY-weighted with a hard 12h wall-clock cap (per the ARC-AGI-3
+technical report: "intelligence is fundamentally defined as efficiency"). gemma-4-31B is a much
+larger model than Qwen3.5-9B -- slower tok/s means fewer/shallower games explored to sufficient
+depth within the same wall-clock budget, which could offset whatever induction-quality gain the
+larger model provides on a per-decision basis. The 11-0-2 result that justified the migration
+measured OFFLINE INDUCTION ACCURACY only, not full-agentic wall-clock-capped scored throughput --
+so it does not by itself predict which stack scores higher end-to-end. **Not resolved this
+session** -- would need either a second gemma-4-31B/RtxPro6000 submission (to get n=2 and see if
+0.09 is representative or noisy) or a controlled comparison, neither of which was run (each
+costs a real, rate-limited submission slot). Recorded as a genuine open question, not as
+evidence the current stack is worse -- one data point cannot distinguish "the new stack scores
+lower" from "this particular run was unlucky/noisy."
+
+Full detail: `/home/ianblenke/carnot_submission_staging/MANIFEST.md`'s OUTCOME 2026-08-11 section
+(updated with this finding).
