@@ -741,3 +741,141 @@ source weights or corrupting restart identity.
 | REQ-CSL-6304-CONTROLS | Implemented | tests/python/test_experiment_6304_reference_anchored_online_state_learning.py |
 | REQ-CSL-6304-READY | Implemented | tests/python/test_experiment_6304_reference_anchored_online_state_learning.py |
 | REQ-CSL-6304-PROVENANCE | Implemented | tests/python/test_experiment_6304_reference_anchored_online_state_learning.py |
+
+## REQ-CSL-6306: Online State Learning Safety Audit
+
+**Given** Exp6304 reports a producer utility verdict for reference-anchored
+online state learning
+**When** Exp6306 audits that run
+**Then** it SHALL independently reconstruct the Exp6304 terminal artifact,
+sealed stream manifest, reference snapshot, predecision snapshots, and
+postdecision outcome log from pinned bytes
+**And** it SHALL write
+`results/experiment_6306_online_state_learning_safety_audit.json`
+without mutating the canonical Exp6304 outputs.
+
+## REQ-CSL-6306-INDEPENDENCE: Producer Utility Is Not Safety Authority
+
+**Given** Exp6304 declares a utility readiness result
+**When** Exp6306 evaluates safety
+**Then** it SHALL preserve the producer utility determination verbatim
+**And** it SHALL compute a separate safety determination
+**And** safety-only success SHALL NOT promote or rewrite the producer utility
+determination.
+
+## REQ-CSL-6306-FAULTS: Fault Injections Fail Closed
+
+**Given** copied Exp6304 state and logs
+**When** Exp6306 injects false exact passes, contradictory outcomes, stale
+references, full reversals, poisoned rows, missing validators, nonfinite
+gradients, corrupted checkpoints, interrupted writes, process restarts, and
+rollback requests
+**Then** every unsafe admission SHALL fail closed
+**And** no injected row SHALL create a committed unsafe update.
+
+## REQ-CSL-6306-AUDIT: Audit Evidence Is Append-Only
+
+**Given** Exp6306 runs every injection against temporary copied state
+**When** it records evidence
+**Then** audit log rows SHALL append in sequence
+**And** no prior audit row, canonical Exp6304 artifact, canonical Exp6304
+sidecar, base model file, or protected operations file SHALL mutate.
+
+## REQ-CSL-6306-LEAKAGE: No Predecision Leakage
+
+**Given** an injected row tries to reveal an exact outcome before a decision
+snapshot
+**When** the admission guard evaluates it
+**Then** the row SHALL reject before commit
+**And** `predecision_leak_count` SHALL remain the bare integer `0`.
+
+## REQ-CSL-6306-ROLLBACK: Rollback Is Byte-Exact
+
+**Given** corrupted checkpoint, interrupted write, restart, or rollback-request
+faults
+**When** Exp6306 restores copied state
+**Then** each rollback SHALL restore the pre-fault state bytes exactly
+**And** `byte_exact_rollback_count_and_expected.actual` SHALL equal
+`byte_exact_rollback_count_and_expected.expected`.
+
+## REQ-CSL-6306-PROVENANCE: Required Artifact Fields
+
+Exp6306 SHALL emit these fields with the stated principles:
+
+- `status`: Terminal state follows reconstruction, copied-state injections, audit append checks, and rollback checks.
+- `upstream_path_hash_and_terminal_class`: Exp6304 and Exp6298 inputs are pinned by path, hash, and terminal class.
+- `snapshot_and_log_reconstruction_receipts`: Reconstructed Exp6304 snapshots, outcomes, manifest, and reference state match pinned bytes.
+- `evaluator_independence_receipts`: The safety evaluator uses copied state and does not trust producer utility readiness.
+- `injection_manifest_path_and_hash`: The manifest records every injected fault and its deterministic seed.
+- `false_pass_results`: False exact passes reject before admission.
+- `contradiction_results`: Contradictory outcomes reject before admission.
+- `stale_reference_results`: Stale reference hashes reject before admission.
+- `reversal_results`: Full reversals reject or roll back without unsafe commit.
+- `poison_results`: Poisoned rows quarantine and do not commit.
+- `missing_validator_results`: Missing validators reject before scoring.
+- `nonfinite_update_results`: Nonfinite gradients reject before state mutation.
+- `corrupted_checkpoint_results`: Corrupted checkpoints restore the prior copied bytes.
+- `interrupted_write_results`: Interrupted writes leave the append log prefix intact and restore bytes.
+- `restart_results`: Restart replay reaches the same copied state hash.
+- `rollback_results`: Rollback requests restore byte-exact copied state.
+- `unsafe_commit_count`: Bare zero proves no unsafe injected update committed.
+- `predecision_leak_count`: Bare zero proves no injected label leaked before decision.
+- `base_model_mutation_count`: Bare zero proves no base model file changed.
+- `audit_log_mutation_count`: Bare zero proves append-only audit rows were not rewritten.
+- `byte_exact_rollback_count_and_expected`: Actual and expected byte-exact rollback counts must match.
+- `producer_utility_determination_preserved`: Exp6304 utility verdict is carried verbatim.
+- `safety_determination`: Safety is computed independently from fault outcomes.
+- `safety_cannot_promote_utility_receipt`: Safety-only success cannot raise or rewrite utility readiness.
+- `online_learning_safety_ready_score`: Safety readiness is one only when every fault fails closed and every rollback is byte-exact.
+- `protected_files_unchanged`: Protected operations files remain byte-identical.
+- `preconditions_checked`: Upstream artifacts, sidecars, validators, seeds, snapshots, logs, and protected hashes are frozen first.
+- `inference_substrate`: The run declares deterministic copied-state artifact audit with no model load.
+- `verifier_is_oracle`: Exact validators are outcome authorities, but the safety evaluator is not a utility oracle.
+- `field_provenance`: Every required field maps to inputs, reconstruction receipts, injection receipts, tests, commands, or hashes.
+- `field_principles`: Every required field carries its guard principle.
+- `test_commands`: Focused tests, coverage, full pytest, spec coverage, E2E reading, Exp6298 preflight, determination preservation, and adversarial verification are listed.
+- `test_exit_codes`: Failed commands prevent safety readiness.
+- `duration_s`: Wall time is recorded without padding.
+- `random_seeds`: Injection and reconstruction seeds are fixed.
+- `reproducibility_checksum`: The normalized payload checksum detects drift.
+- `honest_verdict`: The verdict starts with a terminal prefix and separates utility from safety.
+
+## SCENARIO-CSL-6306-RECONSTRUCT: Pinned Bytes Reconstruct Before Faults
+
+**Given** the canonical Exp6304 artifact and sidecars
+**When** Exp6306 starts
+**Then** it SHALL prove byte identity for each reconstructed input before
+running any injection.
+
+## SCENARIO-CSL-6306-FAIL-CLOSED: Every Fault Class Fails Closed
+
+**Given** each required fault class is applied to copied temporary state
+**When** admission runs
+**Then** each fault SHALL reject, quarantine, abort, or roll back
+**And** `unsafe_commit_count` SHALL be the bare integer `0`.
+
+## SCENARIO-CSL-6306-APPEND-ONLY: Evidence Rows Are Never Rewritten
+
+**Given** an audit log already contains prior rows
+**When** later injections append receipts
+**Then** the earlier byte prefix SHALL remain identical.
+
+## SCENARIO-CSL-6306-ROLLBACK: Fault Recovery Is Byte-Exact
+
+**Given** corrupted checkpoint, interrupted write, restart, and rollback-request
+faults
+**When** recovery completes
+**Then** the restored copied state hash SHALL equal the pre-fault copied state
+hash byte for byte.
+
+## Implementation Status (REQ-CSL-6306)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CSL-6306 | Planned | tests/python/test_experiment_6306_online_state_learning_safety_audit.py |
+| REQ-CSL-6306-INDEPENDENCE | Planned | tests/python/test_experiment_6306_online_state_learning_safety_audit.py |
+| REQ-CSL-6306-FAULTS | Planned | tests/python/test_experiment_6306_online_state_learning_safety_audit.py |
+| REQ-CSL-6306-AUDIT | Planned | tests/python/test_experiment_6306_online_state_learning_safety_audit.py |
+| REQ-CSL-6306-LEAKAGE | Planned | tests/python/test_experiment_6306_online_state_learning_safety_audit.py |
+| REQ-CSL-6306-ROLLBACK | Planned | tests/python/test_experiment_6306_online_state_learning_safety_audit.py |
+| REQ-CSL-6306-PROVENANCE | Planned | tests/python/test_experiment_6306_online_state_learning_safety_audit.py |
