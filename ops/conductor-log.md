@@ -15667,3 +15667,4 @@ Still active  |
 | 2026-08-11 08:22 UTC | Independent poison, reversal, restart, and rollbac | OK | 87 passed, 1 warning in 9.74s |
 | 2026-08-11 09:38 UTC | ARC live-path target-validated mechanic-route caus | OK | 115 passed, 1 warning in 11.41s |
 | 2026-08-11 09:57 UTC | Held-game ARC target-license audit gated on Exp630 | OK | 112 passed, 1 warning in 12.42s |
+| 2026-08-11 10:20 UTC | V543 adversarial capstone, PRD-gap verdicts, and d | OK | 88 passed, 1 warning in 10.05s |
