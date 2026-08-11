@@ -1495,6 +1495,57 @@ The terminal artifact SHALL be
 SHALL require exact vertex parity and passing gradient checks. Readiness SHALL
 NOT require a positive refinement result.
 
+### REQ-KONA-6300: Three-Family Universal Activation Bus
+
+Carnot SHALL fit an Exp6300 Universal Activation Bus over the immutable
+Exp5852 paired-embedding corpus. `MODEL_SPECS` SHALL preserve all three
+mandated model IDs: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+The workflow SHALL build deterministic group-aware folds before fitting. Folds
+SHALL keep matched source rows together. They SHALL hold out whole
+task-family, perturbation-family, and template groups. Adapter fitting SHALL
+use only unlabeled matched row IDs and embeddings. It SHALL NOT use exact
+labels, generate text, load an LLM, mutate source weights, or train an energy
+head.
+
+Each model SHALL get one linear encoder into a frozen shared dimension and one
+linear decoder back to its native embedding dimension. The workflow SHALL
+report reconstruction, paired cross-model retrieval, neighborhood consistency,
+and held-fold model-identity leakage. It SHALL compare the learned adapters
+against raw zero-padding and deterministic random-projection controls. It SHALL
+also report norm, length, and token-count controls so Exp5853 shortcut failures
+cannot become readiness evidence.
+
+The terminal artifact SHALL be
+`results/experiment_6300_three_family_universal_activation_bus.json`. It SHALL
+include `status`, `paper_source_and_local_claim_boundary`,
+`upstream_corpus_paths_hashes_and_terminal_classes`, `MODEL_SPECS`,
+`models_used`, `model_embedding_dimensions`, `no_live_model_load_receipt`,
+`unlabeled_fit_contract`, `fold_manifest_path_and_hash`, `shared_dimension`,
+`adapter_architecture_and_parameter_counts`,
+`train_validation_and_holdout_row_counts`,
+`reconstruction_metrics_by_model_and_fold`,
+`cross_model_retrieval_metrics_by_pair_and_fold`,
+`neighborhood_consistency_by_fold`, `model_identity_accuracy_by_fold`,
+`chance_identity_accuracy`, `raw_padded_and_random_projection_controls`,
+`norm_length_and_token_count_controls`, `checkpoint_paths_and_hashes`,
+`source_model_weight_mutation_count`, `shared_activation_bus_ready_score`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`, `random_seeds`,
+`reproducibility_checksum`, and `honest_verdict`.
+`source_model_weight_mutation_count` SHALL be a bare integer zero.
+`verifier_is_oracle` SHALL be false. `field_principles` SHALL cover every
+required artifact field.
+
+Readiness SHALL require positive held-fold alignment over both controls,
+reconstruction within the preregistered tolerance, and held-fold model-identity
+accuracy no greater than chance plus tolerance. The verdict SHALL start with a
+terminal prefix and SHALL not claim reusable probes, SAE features, activation
+tool transfer, or energy value.
+
 ## Scenarios
 
 ### SCENARIO-KONA-001: Stage 1 Primitive — RDT Fixed-Point Convergence
@@ -2053,6 +2104,44 @@ and unsupported-input controls without using refinement success as a readiness
 gate.
 
 **Spec traces:** REQ-KONA-6287
+
+### SCENARIO-KONA-6300-FOLDS: Matched Rows Stay Grouped
+
+**Given** the immutable Exp5852 three-family row file
+**When** Exp6300 builds its fold manifest
+**Then** every model and condition copy of a source row stays in one fold, and
+each fold declares held-out task-family, perturbation-family, and template
+groups before adapter fitting.
+
+**Spec traces:** REQ-KONA-6300
+
+### SCENARIO-KONA-6300-UNLABELED-FIT: Labels Stay Out Of Fitting
+
+**Given** Exp5852 rows contain oracle receipts and exact labels
+**When** Exp6300 fits the per-model linear encoder-decoder adapters
+**Then** the fit contract records that only matched row IDs and embeddings were
+used, with no exact labels, no text generation, no live LLM load, and no energy
+head.
+
+**Spec traces:** REQ-KONA-6300
+
+### SCENARIO-KONA-6300-CONTROLS: Bus Beats Raw And Random Controls
+
+**Given** the preregistered held folds and deterministic controls
+**When** Exp6300 scores cross-model retrieval and neighborhoods
+**Then** the learned bus reports positive held-fold alignment over raw padded
+and random-projection controls while preserving reconstruction within tolerance.
+
+**Spec traces:** REQ-KONA-6300
+
+### SCENARIO-KONA-6300-IDENTITY: Model Identity Does Not Leak
+
+**Given** held-fold shared activations from all three mandated models
+**When** Exp6300 evaluates model identity prediction
+**Then** held-fold identity accuracy is no greater than chance plus tolerance,
+and any higher leakage blocks readiness.
+
+**Spec traces:** REQ-KONA-6300
 
 
 ## Out of scope
