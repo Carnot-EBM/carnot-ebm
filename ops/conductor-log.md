@@ -15675,3 +15675,4 @@ Still active  |
 | 2026-08-11 12:18 UTC | Three-family model-local representation surface pr | OK | 87 passed, 1 warning in 10.84s |
 | 2026-08-11 12:37 UTC | Exact held-family vulnerable/fixed Python pair fix | OK | 87 passed, 1 warning in 8.91s |
 | 2026-08-11 12:39 UTC | Three-family local state corpus gated on Exp6312 r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6312-model-local-representation-surface |
+| 2026-08-11 12:41 UTC | Three-family local state corpus gated on Exp6312 r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6312-model-local-representation-surface |
