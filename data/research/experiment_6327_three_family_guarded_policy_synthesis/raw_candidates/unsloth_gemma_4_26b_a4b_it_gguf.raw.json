@@ -1,0 +1,63 @@
+{
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt_sha256": "sha256:9759d32582191c499c78cb94f8d8ea36fea393b0d3dcd74dc027750b1e15709b",
+  "raw_text": "\nLoading model... |\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b \b\n\n\n\u2584\u2584 \u2584\u2584\n\u2588\u2588 \u2588\u2588\n\u2588\u2588 \u2588\u2588  \u2580\u2580\u2588\u2584 \u2588\u2588\u2588\u2584\u2588\u2588\u2588\u2584  \u2580\u2580\u2588\u2584    \u2584\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2584 \u2588\u2588\u2588\u2588\u2584\n\u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588    \u2588\u2588    \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588\n\u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2580\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2580 \u2588\u2588\u2588\u2588\u2580\n                                    \u2588\u2588    \u2588\u2588\n                                    \u2580\u2580    \u2580\u2580\n\nbuild      : b9606-9b4dae81f\nmodel      : gemma-4-26B-A4B-it-UD-Q4_K_M.gguf\nmodalities : text\n\navailable commands:\n  /exit or Ctrl+C     stop or exit\n  /regen              regenerate the last response\n  /clear              clear the chat history\n  /read <file>        add a text file\n  /glob <pattern>     add text files using globbing pattern\n\n\n> You generate candidate programs for a restricted finite policy DSL.\nOutput only candidate blocks. Do not explain, score, label, or judge safety.\nDSL syntax:\npolicy name\nstates: state0, state1;\nactions: action0, action1;\nrule state0 -> action0;\nend\nEach state must have exactly one rule. Use only listed states and actions.\nFor each family below, output exactly two blocks:\nBEGIN_CANDIDATE family=<family> candidate=<0 or 1>\n<one policy program>\nEND_CANDIDATE\n\nFamilies:\nfamily: access_gate\nsplit: dev ... (truncated)\n\n|\b-\b\\\b|\b/\b \bBEGIN_CANDIDATE family=access_gate candidate=0\npolicy access_gate_0\nstates: admin, guest, locked, member;\nactions: audit, deny, read, write;\nrule admin -> write;\nrule guest -> deny;\nrule locked -> audit;\nrule member -> read;\nend\nEND_CANDIDATE\n\nBEGIN_CANDIDATE family=access_gate candidate=1\npolicy access_gate_1\nstates: admin, guest, locked, member;\nactions: audit, deny, read, write;\nrule admin -> write;\nrule guest -> read;\nrule locked -> deny;\nrule member -> audit;\nend\nEND_CANDIDATE\n\nBEGIN_CANDIDATE family=incident_response candidate=0\npolicy incident_response_0\nstates: critical, normal, offline, warning;\nactions: monitor, repair, shutdown, throttle;\nrule critical -> shutdown;\nrule normal -> monitor;\nrule offline -> repair;\nrule warning -> throttle;\nend\nEND_CANDIDATE\n\nBEGIN_CANDIDATE family=incident_response candidate=1\npolicy incident_response_1\nstates: critical, normal, offline, warning;\nactions: monitor, repair, shutdown, throttle;\nrule critical -> shutdown;\nrule normal -> throttle;\nrule offline -> repair;\nrule warning -> monitor;\nend\nEND_CANDIDATE\n\nBEGIN_CANDIDATE family=routing_policy candidate=0\npolicy routing_policy_0\nstates: error, external, local, partner;\nactions: block, proxy, retry, serve;\nrule error -> retry;\nrule external -> block;\nrule local -> serve;\nrule partner -> proxy;\nend\nEND_CANDIDATE\n\nBEGIN_CANDIDATE family=routing_policy candidate=1\npolicy routing_policy_1\nstates: error, external, local, partner;\nactions: block, proxy, retry, serve;\nrule error -> retry;\nrule external -> block;\nrule local -> serve;\nrule partner -> serve;\nend\nEND_CANDIDATE\n\nBEGIN_CANDIDATE family=quota_control candidate=0\npolicy quota_control_0\nstates: banned, fresh, hot, warm;\nactions: allow, challenge, delay, deny;\nrule banned -> deny;\nrule fresh -> allow;\nrule hot -> challenge;\nrule warm -> delay;\nend\nEND_CANDIDATE\n\nBEGIN_CANDIDATE family=quota_control candidate=1\npolicy quota_control_1\nstates: banned, fresh, hot, warm;\nactions: allow, challenge, delay, deny;\nrule banned -> deny;\nrule fresh -> challenge;\nrule hot -> delay;\nrule warm -> allow;\nend\nEND_CANDIDATE\n\n[ Prompt: 2494.4 t/s | Generation: 105.6 t/s ]\n\nExiting...\n",
+  "receipt": {
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+      "-m",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "-f",
+      "/tmp/tmpkcpzw8ao",
+      "-n",
+      "768",
+      "-c",
+      "4096",
+      "--temp",
+      "0.2",
+      "--top-p",
+      "0.9",
+      "--repeat-penalty",
+      "1.05",
+      "-s",
+      "632702",
+      "-ngl",
+      "all",
+      "-sm",
+      "none",
+      "-mg",
+      "0",
+      "-st",
+      "--no-display-prompt",
+      "--reasoning",
+      "off"
+    ],
+    "cuda_layer_offload": {
+      "cuda_layer_offload_confirmed": false,
+      "cuda_layers_offloaded": 0,
+      "evidence": "",
+      "total_layers": 0
+    },
+    "cuda_layer_offload_confirmed": false,
+    "cuda_visible_devices": "1",
+    "exit_code": 0,
+    "generated_tokens_estimated": 434,
+    "latency_s": 17.559501,
+    "memory_after_release_mb": {
+      "0": 266,
+      "1": 266
+    },
+    "memory_before_mb": {
+      "0": 266,
+      "1": 266
+    },
+    "mode": "native_llama_cpp_cli",
+    "prompt_tokens_estimated": 335,
+    "release_within_512mb": true,
+    "seed": 632702,
+    "stderr_tail": "",
+    "stdout_sha256": "sha256:a842b74b7d229c41ac421d59cb6231770a8f2f8e1104f9f52ac4e0b7cedfc87d"
+  },
+  "schema": "carnot.experiment_6327.three_family_guarded_policy_synthesis.v1.raw_model_output",
+  "seed": 632702
+}

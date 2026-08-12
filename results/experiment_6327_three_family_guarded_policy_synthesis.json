@@ -1,0 +1,2272 @@
+{
+  "MODEL_SPECS": [
+    {
+      "cache_policy": "cached_sota_pair(gpu_indices=(0,1))",
+      "contract_model_family": "qwen_moe",
+      "exists": true,
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "size_bytes": 22134528992,
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_status": "embedded GGUF tokenizer OK (7 tokens on probe)"
+    },
+    {
+      "cache_policy": "cached_sota_pair(gpu_indices=(0,1), model_indices=(0,2))",
+      "contract_model_family": "gemma_dense",
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "size_bytes": 18323731456,
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_status": "embedded GGUF tokenizer OK (8 tokens on probe)"
+    },
+    {
+      "cache_policy": "cached_sota_pair(gpu_indices=(0,1))",
+      "contract_model_family": "gemma_moe",
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "size_bytes": 16947539744,
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_status": "embedded GGUF tokenizer OK (8 tokens on probe)"
+    }
+  ],
+  "arm_definitions": {
+    "bounded_exact_factor_energy_guided_candidate_search_plus_fallback": {
+      "candidate_source": "lowest exact energy among bounded candidates",
+      "fallback": "same verified family fallback",
+      "guard": "selected candidate must have exact energy zero"
+    },
+    "exact_guard_plus_hash_pinned_fallback": {
+      "candidate_source": "candidate_index_0",
+      "fallback": "verified family fallback",
+      "guard": "Exp6326 exact factor energy must equal zero"
+    },
+    "one_raw_candidate": {
+      "candidate_source": "candidate_index_0",
+      "fallback": "none",
+      "guard": "none"
+    },
+    "reject_only_filtering": {
+      "candidate_source": "candidate_index_0",
+      "fallback": "none",
+      "guard": "Exp6326 exact factor energy must equal zero"
+    }
+  },
+  "cuda_gpu_offload_and_memory_release_receipts_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "command": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+        "-m",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "-f",
+        "/tmp/tmpla9d8nr_",
+        "-n",
+        "768",
+        "-c",
+        "4096",
+        "--temp",
+        "0.2",
+        "--top-p",
+        "0.9",
+        "--repeat-penalty",
+        "1.05",
+        "-s",
+        "632700",
+        "-ngl",
+        "all",
+        "-sm",
+        "none",
+        "-mg",
+        "0",
+        "-st",
+        "--no-display-prompt",
+        "--reasoning",
+        "off"
+      ],
+      "cuda_layer_offload": {
+        "cuda_layer_offload_confirmed": false,
+        "cuda_layers_offloaded": 0,
+        "evidence": "",
+        "total_layers": 0
+      },
+      "cuda_layer_offload_confirmed": false,
+      "cuda_visible_devices": "0",
+      "exit_code": 0,
+      "generated_tokens_estimated": 434,
+      "latency_s": 22.71424,
+      "memory_after_release_mb": {
+        "0": 266,
+        "1": 266
+      },
+      "memory_before_mb": {
+        "0": 266,
+        "1": 266
+      },
+      "mode": "native_llama_cpp_cli",
+      "prompt_tokens_estimated": 335,
+      "release_within_512mb": true,
+      "seed": 632700,
+      "stderr_tail": "",
+      "stdout_sha256": "sha256:22513ee6bc40cbc3d3acf4be0011aad87b71caa2e5385121f0596a8449d8c40f"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "command": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+        "-m",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "-f",
+        "/tmp/tmpkcpzw8ao",
+        "-n",
+        "768",
+        "-c",
+        "4096",
+        "--temp",
+        "0.2",
+        "--top-p",
+        "0.9",
+        "--repeat-penalty",
+        "1.05",
+        "-s",
+        "632702",
+        "-ngl",
+        "all",
+        "-sm",
+        "none",
+        "-mg",
+        "0",
+        "-st",
+        "--no-display-prompt",
+        "--reasoning",
+        "off"
+      ],
+      "cuda_layer_offload": {
+        "cuda_layer_offload_confirmed": false,
+        "cuda_layers_offloaded": 0,
+        "evidence": "",
+        "total_layers": 0
+      },
+      "cuda_layer_offload_confirmed": false,
+      "cuda_visible_devices": "1",
+      "exit_code": 0,
+      "generated_tokens_estimated": 434,
+      "latency_s": 17.559501,
+      "memory_after_release_mb": {
+        "0": 266,
+        "1": 266
+      },
+      "memory_before_mb": {
+        "0": 266,
+        "1": 266
+      },
+      "mode": "native_llama_cpp_cli",
+      "prompt_tokens_estimated": 335,
+      "release_within_512mb": true,
+      "seed": 632702,
+      "stderr_tail": "",
+      "stdout_sha256": "sha256:a842b74b7d229c41ac421d59cb6231770a8f2f8e1104f9f52ac4e0b7cedfc87d"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "command": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+        "-m",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "-f",
+        "/tmp/tmpsaz2ucug",
+        "-n",
+        "768",
+        "-c",
+        "4096",
+        "--temp",
+        "0.2",
+        "--top-p",
+        "0.9",
+        "--repeat-penalty",
+        "1.05",
+        "-s",
+        "632701",
+        "-ngl",
+        "all",
+        "-sm",
+        "none",
+        "-mg",
+        "0",
+        "-st",
+        "--no-display-prompt",
+        "--reasoning",
+        "off"
+      ],
+      "cuda_layer_offload": {
+        "cuda_layer_offload_confirmed": false,
+        "cuda_layers_offloaded": 0,
+        "evidence": "",
+        "total_layers": 0
+      },
+      "cuda_layer_offload_confirmed": false,
+      "cuda_visible_devices": "1",
+      "exit_code": 0,
+      "generated_tokens_estimated": 434,
+      "latency_s": 48.89073,
+      "memory_after_release_mb": {
+        "0": 266,
+        "1": 266
+      },
+      "memory_before_mb": {
+        "0": 266,
+        "1": 266
+      },
+      "mode": "native_llama_cpp_cli",
+      "prompt_tokens_estimated": 335,
+      "release_within_512mb": true,
+      "seed": 632701,
+      "stderr_tail": "",
+      "stdout_sha256": "sha256:018d0416e0d665aa41b2e5ea0aa77ef654f08f6527d8365857f7d4871e46a1cc"
+    }
+  },
+  "duration_s": 208.11025435500778,
+  "exact_factor_energies_by_candidate": {
+    "candidate_count": 24,
+    "mismatch_count": 0,
+    "rows": [
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 0,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "access_gate",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:c97f6204857f511d9dde01996f69d4561b5670bfed15eec1e5c3cf492340117c",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:821e05a1eefd4165d6761ef06ee43789989a15944feb9a73f3cb737c29469b9e",
+        "seed": 632700,
+        "semantic_hash": "sha256:c97f6204857f511d9dde01996f69d4561b5670bfed15eec1e5c3cf492340117c",
+        "split": "development"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 1,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "access_gate",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:b5129562fdc20e4f90b04eff11d4a8d7871d6662fd3a444bcee7113fbf99aedd",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:56099cd8938f6fd45bd1c372bd3d87a2fd34c9a2b614634c7e760057b616b9c2",
+        "seed": 632700,
+        "semantic_hash": "sha256:b5129562fdc20e4f90b04eff11d4a8d7871d6662fd3a444bcee7113fbf99aedd",
+        "split": "development"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 0,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "incident_response",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:4f13b2fd4e555b5909d3086f2d990f30c4489c4ed55ba14cd72bc7e3a8544f94",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:38750337a0a7da0eb7b6aab6cb96ec6e37794556d590819d8d1210b22797a24f",
+        "seed": 632700,
+        "semantic_hash": "sha256:4f13b2fd4e555b5909d3086f2d990f30c4489c4ed55ba14cd72bc7e3a8544f94",
+        "split": "development"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 1,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "incident_response",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:7e946e1b240c9e15340a68e9d8b38d64f1747fba4930f95909e0fdf3195e3f68",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:7bd572203de7639e41267e1b13f9e70759d8afba07844040432db49bbc30935f",
+        "seed": 632700,
+        "semantic_hash": "sha256:7e946e1b240c9e15340a68e9d8b38d64f1747fba4930f95909e0fdf3195e3f68",
+        "split": "development"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 0,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "routing_policy",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:0f11a90fdc29ea86d6cbae776c918de0d88e90257efc9d69ce8b0b79c9611470",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:d6dd56ae5883e4959fca171f263c6e33e176c279d24a7858cf5baf8c6a4b7c05",
+        "seed": 632700,
+        "semantic_hash": "sha256:0f11a90fdc29ea86d6cbae776c918de0d88e90257efc9d69ce8b0b79c9611470",
+        "split": "held"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 1,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "routing_policy",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:9a3298c69073415acab1f4587c160610d57582a462d4dde3042dbaa90324a17d",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:6e49f24eb0c6a028043fbab8c30c0195cd94b99093416edbf5594753f34cd2e9",
+        "seed": 632700,
+        "semantic_hash": "sha256:9a3298c69073415acab1f4587c160610d57582a462d4dde3042dbaa90324a17d",
+        "split": "held"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 0,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "quota_control",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:fbe4c4081acb60103dd4a7ce47294fca3386b5189080f3975fa6c4410444e383",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:f3d23ed1d53f4e551bc838df49b29cbe6057fcada83eac6fbc13791b7d16a348",
+        "seed": 632700,
+        "semantic_hash": "sha256:fbe4c4081acb60103dd4a7ce47294fca3386b5189080f3975fa6c4410444e383",
+        "split": "held"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 1,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "quota_control",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:7655da46a6fe760dbc038ccd3dfa5abbb1331d05b1db7d55c881f4a9fcd2b0b9",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:f711a4e81975446d643f2721d079333670348068f32cf6fffec2212bf1da99a9",
+        "seed": 632700,
+        "semantic_hash": "sha256:7655da46a6fe760dbc038ccd3dfa5abbb1331d05b1db7d55c881f4a9fcd2b0b9",
+        "split": "held"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 0,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "access_gate",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:c51d2dfc474074ea6c30a403f560e3352a025e7d31d92160856517201c01131c",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:73ea0a991479b9835db2d183ac5a5b16273315720f66dfb07e1178ffca60acd6",
+        "seed": 632701,
+        "semantic_hash": "sha256:c51d2dfc474074ea6c30a403f560e3352a025e7d31d92160856517201c01131c",
+        "split": "development"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 1,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "access_gate",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:c0a42f979f4e5fc9a4105b984eca6596cc986c22d7dc0a1c98c9eab60470a6c0",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:04cdea785bd159f7b7de2f6e897bb6206562d879f27b077a7b2c7437ca16d3a0",
+        "seed": 632701,
+        "semantic_hash": "sha256:c0a42f979f4e5fc9a4105b984eca6596cc986c22d7dc0a1c98c9eab60470a6c0",
+        "split": "development"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 0,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "incident_response",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:4f13b2fd4e555b5909d3086f2d990f30c4489c4ed55ba14cd72bc7e3a8544f94",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:3207fae7905ba8bb700a6516c5c3a4d08a83407128ff8e6a991d1a673bad6c24",
+        "seed": 632701,
+        "semantic_hash": "sha256:4f13b2fd4e555b5909d3086f2d990f30c4489c4ed55ba14cd72bc7e3a8544f94",
+        "split": "development"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 1,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "incident_response",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:7e946e1b240c9e15340a68e9d8b38d64f1747fba4930f95909e0fdf3195e3f68",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:66bf99f78932518ee095640e492bbfe307a9b2699306bee51235dababe929485",
+        "seed": 632701,
+        "semantic_hash": "sha256:7e946e1b240c9e15340a68e9d8b38d64f1747fba4930f95909e0fdf3195e3f68",
+        "split": "development"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 0,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "routing_policy",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:0f11a90fdc29ea86d6cbae776c918de0d88e90257efc9d69ce8b0b79c9611470",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:fba43870c8e9215b5178886d6ee3eac159bbcdce9d8b52e8f52add282a17ca9a",
+        "seed": 632701,
+        "semantic_hash": "sha256:0f11a90fdc29ea86d6cbae776c918de0d88e90257efc9d69ce8b0b79c9611470",
+        "split": "held"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 1,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "routing_policy",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:9a3298c69073415acab1f4587c160610d57582a462d4dde3042dbaa90324a17d",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:1112a09d2faf977107ddca954546fe55d201129fa82b10059a3c2335449e6a14",
+        "seed": 632701,
+        "semantic_hash": "sha256:9a3298c69073415acab1f4587c160610d57582a462d4dde3042dbaa90324a17d",
+        "split": "held"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 0,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "quota_control",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:b0eb07995a0c58c4b19f6895c599cfa5b0b3848373c74e8dbae5c0aa843ac7c4",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:9aa42a9e0e38a7afad873779e60df8d295815a37df2dcc6d016e0495f07cc023",
+        "seed": 632701,
+        "semantic_hash": "sha256:b0eb07995a0c58c4b19f6895c599cfa5b0b3848373c74e8dbae5c0aa843ac7c4",
+        "split": "held"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 1,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "quota_control",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:45e2735113777fba076c087fe92f920c0053416582731fa99e993ee8592125a1",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:adfe7f99842c83c893e1efd4c1c8008f9231b38eea99ba948c9425a6d1a01775",
+        "seed": 632701,
+        "semantic_hash": "sha256:45e2735113777fba076c087fe92f920c0053416582731fa99e993ee8592125a1",
+        "split": "held"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 0,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "access_gate",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:c0a42f979f4e5fc9a4105b984eca6596cc986c22d7dc0a1c98c9eab60470a6c0",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:336734e98c8efaef08fb189d045f293e8fb1ce3427b6ccf044e0ff25e3c1bd61",
+        "seed": 632702,
+        "semantic_hash": "sha256:c0a42f979f4e5fc9a4105b984eca6596cc986c22d7dc0a1c98c9eab60470a6c0",
+        "split": "development"
+      },
+      {
+        "accepted_by_exact_guard": false,
+        "candidate_index": 1,
+        "exact_energy": 2,
+        "factor_energy": 2,
+        "factor_exact_mismatch": false,
+        "family": "access_gate",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:5741b5d8144327b5796a1174a4cdeec5abd7a27b9fd57c0d1ee2e8787b774d1b",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:740f9e4535a02ad64415ef8ed4bbc69c3c479f1a6861a35643a1e0d93da5c2f5",
+        "seed": 632702,
+        "semantic_hash": "sha256:5741b5d8144327b5796a1174a4cdeec5abd7a27b9fd57c0d1ee2e8787b774d1b",
+        "split": "development"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 0,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "incident_response",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:4f13b2fd4e555b5909d3086f2d990f30c4489c4ed55ba14cd72bc7e3a8544f94",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:38750337a0a7da0eb7b6aab6cb96ec6e37794556d590819d8d1210b22797a24f",
+        "seed": 632702,
+        "semantic_hash": "sha256:4f13b2fd4e555b5909d3086f2d990f30c4489c4ed55ba14cd72bc7e3a8544f94",
+        "split": "development"
+      },
+      {
+        "accepted_by_exact_guard": false,
+        "candidate_index": 1,
+        "exact_energy": 1,
+        "factor_energy": 1,
+        "factor_exact_mismatch": false,
+        "family": "incident_response",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:d54a2197a585e7a58cbfbf645235d55659fb03cbd4031c467ea280c61b36e83e",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:180e10ec2cda0c557a2af7d53256c6654158812f43666696a29cfd73ba316127",
+        "seed": 632702,
+        "semantic_hash": "sha256:d54a2197a585e7a58cbfbf645235d55659fb03cbd4031c467ea280c61b36e83e",
+        "split": "development"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 0,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "routing_policy",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:0f11a90fdc29ea86d6cbae776c918de0d88e90257efc9d69ce8b0b79c9611470",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:d6dd56ae5883e4959fca171f263c6e33e176c279d24a7858cf5baf8c6a4b7c05",
+        "seed": 632702,
+        "semantic_hash": "sha256:0f11a90fdc29ea86d6cbae776c918de0d88e90257efc9d69ce8b0b79c9611470",
+        "split": "held"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 1,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "routing_policy",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:9a3298c69073415acab1f4587c160610d57582a462d4dde3042dbaa90324a17d",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:6e49f24eb0c6a028043fbab8c30c0195cd94b99093416edbf5594753f34cd2e9",
+        "seed": 632702,
+        "semantic_hash": "sha256:9a3298c69073415acab1f4587c160610d57582a462d4dde3042dbaa90324a17d",
+        "split": "held"
+      },
+      {
+        "accepted_by_exact_guard": true,
+        "candidate_index": 0,
+        "exact_energy": 0,
+        "factor_energy": 0,
+        "factor_exact_mismatch": false,
+        "family": "quota_control",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:45e2735113777fba076c087fe92f920c0053416582731fa99e993ee8592125a1",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:e76541b2d1d3df5a846d61db287a3e31ecff8105b10383f1a49e3e652b844daf",
+        "seed": 632702,
+        "semantic_hash": "sha256:45e2735113777fba076c087fe92f920c0053416582731fa99e993ee8592125a1",
+        "split": "held"
+      },
+      {
+        "accepted_by_exact_guard": false,
+        "candidate_index": 1,
+        "exact_energy": 2,
+        "factor_energy": 2,
+        "factor_exact_mismatch": false,
+        "family": "quota_control",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "normalization_status": "normalized",
+        "normalized_sha256": "sha256:125d4420099b33fe09abfd5728a57979999794e6541800e08c312fd272ebe003",
+        "parse_status": "parsed",
+        "raw_sha256": "sha256:fd6b6b213f09f6bc5d502190d0a1ed5e42086749b81c24d7b8e875bd05adba5a",
+        "seed": 632702,
+        "semantic_hash": "sha256:125d4420099b33fe09abfd5728a57979999794e6541800e08c312fd272ebe003",
+        "split": "held"
+      }
+    ],
+    "schema": "carnot.experiment_6327.three_family_guarded_policy_synthesis.v1.exact_factor_energy"
+  },
+  "exact_oracle_claim_boundary": {
+    "hidden_states_accessed": false,
+    "model_supplies_candidates_only": true,
+    "model_supplies_labels": false,
+    "model_supplies_safety_authority": false,
+    "source_model_weights_mutated": false,
+    "verifier": "Exp6326 exact finite-domain factor energy",
+    "verifier_is_oracle": true
+  },
+  "exact_utility_contract_violation_fallback_rate_latency_and_cost_by_model_family_arm_and_seed": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "access_gate": {
+        "bounded_exact_factor_energy_guided_candidate_search_plus_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "access_gate",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "seed": 632700,
+          "split": "development",
+          "utility": 0.92
+        },
+        "exact_guard_plus_hash_pinned_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "access_gate",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "seed": 632700,
+          "split": "development",
+          "utility": 0.92
+        },
+        "one_raw_candidate": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "access_gate",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "seed": 632700,
+          "split": "development",
+          "utility": 0.92
+        },
+        "reject_only_filtering": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "access_gate",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "seed": 632700,
+          "split": "development",
+          "utility": 0.92
+        }
+      },
+      "incident_response": {
+        "bounded_exact_factor_energy_guided_candidate_search_plus_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "incident_response",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "seed": 632700,
+          "split": "development",
+          "utility": 0.92
+        },
+        "exact_guard_plus_hash_pinned_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "incident_response",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "seed": 632700,
+          "split": "development",
+          "utility": 0.92
+        },
+        "one_raw_candidate": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "incident_response",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "seed": 632700,
+          "split": "development",
+          "utility": 0.92
+        },
+        "reject_only_filtering": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "incident_response",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "seed": 632700,
+          "split": "development",
+          "utility": 0.92
+        }
+      },
+      "quota_control": {
+        "bounded_exact_factor_energy_guided_candidate_search_plus_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "quota_control",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "seed": 632700,
+          "split": "held",
+          "utility": 0.92
+        },
+        "exact_guard_plus_hash_pinned_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "quota_control",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "seed": 632700,
+          "split": "held",
+          "utility": 0.92
+        },
+        "one_raw_candidate": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "quota_control",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "seed": 632700,
+          "split": "held",
+          "utility": 0.92
+        },
+        "reject_only_filtering": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "quota_control",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "seed": 632700,
+          "split": "held",
+          "utility": 0.92
+        }
+      },
+      "routing_policy": {
+        "bounded_exact_factor_energy_guided_candidate_search_plus_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "routing_policy",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "seed": 632700,
+          "split": "held",
+          "utility": 0.92
+        },
+        "exact_guard_plus_hash_pinned_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "routing_policy",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "seed": 632700,
+          "split": "held",
+          "utility": 0.92
+        },
+        "one_raw_candidate": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "routing_policy",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "seed": 632700,
+          "split": "held",
+          "utility": 0.92
+        },
+        "reject_only_filtering": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "routing_policy",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "seed": 632700,
+          "split": "held",
+          "utility": 0.92
+        }
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "access_gate": {
+        "bounded_exact_factor_energy_guided_candidate_search_plus_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "access_gate",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "seed": 632702,
+          "split": "development",
+          "utility": 0.92
+        },
+        "exact_guard_plus_hash_pinned_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "access_gate",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "seed": 632702,
+          "split": "development",
+          "utility": 0.92
+        },
+        "one_raw_candidate": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "access_gate",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "seed": 632702,
+          "split": "development",
+          "utility": 0.92
+        },
+        "reject_only_filtering": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "access_gate",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "seed": 632702,
+          "split": "development",
+          "utility": 0.92
+        }
+      },
+      "incident_response": {
+        "bounded_exact_factor_energy_guided_candidate_search_plus_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "incident_response",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "seed": 632702,
+          "split": "development",
+          "utility": 0.92
+        },
+        "exact_guard_plus_hash_pinned_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "incident_response",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "seed": 632702,
+          "split": "development",
+          "utility": 0.92
+        },
+        "one_raw_candidate": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "incident_response",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "seed": 632702,
+          "split": "development",
+          "utility": 0.92
+        },
+        "reject_only_filtering": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "incident_response",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "seed": 632702,
+          "split": "development",
+          "utility": 0.92
+        }
+      },
+      "quota_control": {
+        "bounded_exact_factor_energy_guided_candidate_search_plus_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "quota_control",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "seed": 632702,
+          "split": "held",
+          "utility": 0.92
+        },
+        "exact_guard_plus_hash_pinned_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "quota_control",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "seed": 632702,
+          "split": "held",
+          "utility": 0.92
+        },
+        "one_raw_candidate": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "quota_control",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "seed": 632702,
+          "split": "held",
+          "utility": 0.92
+        },
+        "reject_only_filtering": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "quota_control",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "seed": 632702,
+          "split": "held",
+          "utility": 0.92
+        }
+      },
+      "routing_policy": {
+        "bounded_exact_factor_energy_guided_candidate_search_plus_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "routing_policy",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "seed": 632702,
+          "split": "held",
+          "utility": 0.92
+        },
+        "exact_guard_plus_hash_pinned_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "routing_policy",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "seed": 632702,
+          "split": "held",
+          "utility": 0.92
+        },
+        "one_raw_candidate": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "routing_policy",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "seed": 632702,
+          "split": "held",
+          "utility": 0.92
+        },
+        "reject_only_filtering": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "routing_policy",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "seed": 632702,
+          "split": "held",
+          "utility": 0.92
+        }
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "access_gate": {
+        "bounded_exact_factor_energy_guided_candidate_search_plus_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "access_gate",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "seed": 632701,
+          "split": "development",
+          "utility": 0.92
+        },
+        "exact_guard_plus_hash_pinned_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "access_gate",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "seed": 632701,
+          "split": "development",
+          "utility": 0.92
+        },
+        "one_raw_candidate": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "access_gate",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "seed": 632701,
+          "split": "development",
+          "utility": 0.92
+        },
+        "reject_only_filtering": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "access_gate",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "seed": 632701,
+          "split": "development",
+          "utility": 0.92
+        }
+      },
+      "incident_response": {
+        "bounded_exact_factor_energy_guided_candidate_search_plus_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "incident_response",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "seed": 632701,
+          "split": "development",
+          "utility": 0.92
+        },
+        "exact_guard_plus_hash_pinned_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "incident_response",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "seed": 632701,
+          "split": "development",
+          "utility": 0.92
+        },
+        "one_raw_candidate": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "incident_response",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "seed": 632701,
+          "split": "development",
+          "utility": 0.92
+        },
+        "reject_only_filtering": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "incident_response",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "seed": 632701,
+          "split": "development",
+          "utility": 0.92
+        }
+      },
+      "quota_control": {
+        "bounded_exact_factor_energy_guided_candidate_search_plus_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "quota_control",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "seed": 632701,
+          "split": "held",
+          "utility": 0.92
+        },
+        "exact_guard_plus_hash_pinned_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "quota_control",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "seed": 632701,
+          "split": "held",
+          "utility": 0.92
+        },
+        "one_raw_candidate": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "quota_control",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "seed": 632701,
+          "split": "held",
+          "utility": 0.92
+        },
+        "reject_only_filtering": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "quota_control",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "seed": 632701,
+          "split": "held",
+          "utility": 0.92
+        }
+      },
+      "routing_policy": {
+        "bounded_exact_factor_energy_guided_candidate_search_plus_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "routing_policy",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "seed": 632701,
+          "split": "held",
+          "utility": 0.92
+        },
+        "exact_guard_plus_hash_pinned_fallback": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "routing_policy",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "seed": 632701,
+          "split": "held",
+          "utility": 0.92
+        },
+        "one_raw_candidate": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "routing_policy",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "seed": 632701,
+          "split": "held",
+          "utility": 0.92
+        },
+        "reject_only_filtering": {
+          "accepted": true,
+          "candidate_index": 0,
+          "contract_violation_count": 0,
+          "cost": 0.08,
+          "fallback_used": false,
+          "fallback_utility_charged": null,
+          "family": "routing_policy",
+          "full_fallback_cost_charged": 0.0,
+          "latency_s": 0.0,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "seed": 632701,
+          "split": "held",
+          "utility": 0.92
+        }
+      }
+    }
+  },
+  "field_principles": {
+    "MODEL_SPECS": "Records the three mandated local GGUF model rows.",
+    "arm_definitions": "Defines the four matched comparison arms.",
+    "cuda_gpu_offload_and_memory_release_receipts_by_model": "Shows each model used and released CUDA resources.",
+    "duration_s": "Reports measured wall-clock duration.",
+    "exact_factor_energies_by_candidate": "Reports exact local factor energy for each candidate.",
+    "exact_oracle_claim_boundary": "States that exact checking is the oracle.",
+    "exact_utility_contract_violation_fallback_rate_latency_and_cost_by_model_family_arm_and_seed": "Reports utility and safety per model family arm seed cell.",
+    "field_principles": "Explains why each required field exists.",
+    "field_provenance": "Maps each field to code, specs, models, fixtures, or tests.",
+    "fixture_and_split_paths_hashes": "Pins fixture, split, and fallback inputs.",
+    "generated_label_count": "Proves model text did not supply labels.",
+    "guard_accept_reject_and_fallback_receipts": "Separates acceptance, rejection, and fallback routing.",
+    "guarded_policy_synthesis_ready_score": "Opens only for complete safe cells and positive development utility delta.",
+    "harm_underpowered_missing_and_flagged_cells": "Keeps missing, harmful, and underpowered cells visible.",
+    "hidden_state_access_count": "Proves hidden activations did not enter the decision.",
+    "honest_verdict": "States the terminal claim boundary.",
+    "inference_substrate": "Declares live local GGUF generation plus exact guarding.",
+    "llama_cpp_embedded_tokenizer_receipts": "Proves tokenizer checks use embedded GGUF metadata.",
+    "matched_call_token_candidate_and_time_budgets": "Keeps cost budgets identical across arms.",
+    "model_file_hashes_revisions_quantizations_and_tokenizers": "Pins model files and tokenizer receipts.",
+    "models_used": "Names only models that supplied raw candidates.",
+    "paired_deltas_intervals_and_sample_sizes": "Shows matched search-minus-guard utility deltas.",
+    "parse_and_normalization_results": "Preserves parser failures and canonicalization results.",
+    "preconditions_checked": "Records resource, budget, fallback, seed, and protected-file gates.",
+    "prompt_and_decoder_contract": "Freezes prompts and decoder settings before output.",
+    "protected_files_unchanged": "Shows conductor and reconciler files stayed byte-identical.",
+    "random_seeds": "Pins deterministic candidate schedules.",
+    "raw_candidate_paths_hashes_and_counts": "Pins raw model output before parsing.",
+    "reproducibility_checksum": "Detects drift in the artifact payload.",
+    "source_model_weight_mutation_count": "Proves source model weights were not updated.",
+    "status": "Shows whether the run is ready, null, or blocked.",
+    "test_commands": "Lists verification commands for this artifact.",
+    "test_exit_codes": "Records command outcomes for readiness.",
+    "upstream_path_hash_terminal_class_and_gate_receipt": "Pins Exp6326 before using its exact guard.",
+    "verifier_is_oracle": "Prevents a learned-verifier or model-judge claim."
+  },
+  "field_provenance": {
+    "MODEL_SPECS": {
+      "principle": "Records the three mandated local GGUF model rows.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "arm_definitions": {
+      "principle": "Defines the four matched comparison arms.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "cuda_gpu_offload_and_memory_release_receipts_by_model": {
+      "principle": "Shows each model used and released CUDA resources.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "duration_s": {
+      "principle": "Reports measured wall-clock duration.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "exact_factor_energies_by_candidate": {
+      "principle": "Reports exact local factor energy for each candidate.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "exact_oracle_claim_boundary": {
+      "principle": "States that exact checking is the oracle.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "exact_utility_contract_violation_fallback_rate_latency_and_cost_by_model_family_arm_and_seed": {
+      "principle": "Reports utility and safety per model family arm seed cell.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "field_principles": {
+      "principle": "Explains why each required field exists.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Maps each field to code, specs, models, fixtures, or tests.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "fixture_and_split_paths_hashes": {
+      "principle": "Pins fixture, split, and fallback inputs.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "generated_label_count": {
+      "principle": "Proves model text did not supply labels.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "guard_accept_reject_and_fallback_receipts": {
+      "principle": "Separates acceptance, rejection, and fallback routing.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "guarded_policy_synthesis_ready_score": {
+      "principle": "Opens only for complete safe cells and positive development utility delta.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "harm_underpowered_missing_and_flagged_cells": {
+      "principle": "Keeps missing, harmful, and underpowered cells visible.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "hidden_state_access_count": {
+      "principle": "Proves hidden activations did not enter the decision.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "States the terminal claim boundary.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Declares live local GGUF generation plus exact guarding.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "llama_cpp_embedded_tokenizer_receipts": {
+      "principle": "Proves tokenizer checks use embedded GGUF metadata.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "matched_call_token_candidate_and_time_budgets": {
+      "principle": "Keeps cost budgets identical across arms.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "model_file_hashes_revisions_quantizations_and_tokenizers": {
+      "principle": "Pins model files and tokenizer receipts.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "models_used": {
+      "principle": "Names only models that supplied raw candidates.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "paired_deltas_intervals_and_sample_sizes": {
+      "principle": "Shows matched search-minus-guard utility deltas.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "parse_and_normalization_results": {
+      "principle": "Preserves parser failures and canonicalization results.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Records resource, budget, fallback, seed, and protected-file gates.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "prompt_and_decoder_contract": {
+      "principle": "Freezes prompts and decoder settings before output.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Shows conductor and reconciler files stayed byte-identical.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "random_seeds": {
+      "principle": "Pins deterministic candidate schedules.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "raw_candidate_paths_hashes_and_counts": {
+      "principle": "Pins raw model output before parsing.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "Detects drift in the artifact payload.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "source_model_weight_mutation_count": {
+      "principle": "Proves source model weights were not updated.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "status": {
+      "principle": "Shows whether the run is ready, null, or blocked.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "test_commands": {
+      "principle": "Lists verification commands for this artifact.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Records command outcomes for readiness.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "upstream_path_hash_terminal_class_and_gate_receipt": {
+      "principle": "Pins Exp6326 before using its exact guard.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "Prevents a learned-verifier or model-judge claim.",
+      "sources": [
+        "REQ-KONA-6327",
+        "Exp6326 exact guard",
+        "local GGUF receipts"
+      ]
+    }
+  },
+  "fixture_and_split_paths_hashes": {
+    "fallback_hashes": {
+      "access_gate": {
+        "energy": 0,
+        "family": "access_gate",
+        "semantic_hash": "sha256:c97f6204857f511d9dde01996f69d4561b5670bfed15eec1e5c3cf492340117c",
+        "source_sha256": "sha256:15b0da631402f7711ca5b6e8627a5c503fca0be66f7f5a15f6e5f72102ebc67b",
+        "verified": true
+      },
+      "incident_response": {
+        "energy": 0,
+        "family": "incident_response",
+        "semantic_hash": "sha256:4f13b2fd4e555b5909d3086f2d990f30c4489c4ed55ba14cd72bc7e3a8544f94",
+        "source_sha256": "sha256:9a5184321ccf79b744440a8d0becd98db273189ba1646c3ccd6070441a09fa73",
+        "verified": true
+      },
+      "quota_control": {
+        "energy": 0,
+        "family": "quota_control",
+        "semantic_hash": "sha256:45e2735113777fba076c087fe92f920c0053416582731fa99e993ee8592125a1",
+        "source_sha256": "sha256:6765abb047a20a0df5b85242db7e3c4c405be6da5ec8cb01f866ee4cfda16dfe",
+        "verified": true
+      },
+      "routing_policy": {
+        "energy": 0,
+        "family": "routing_policy",
+        "semantic_hash": "sha256:0f11a90fdc29ea86d6cbae776c918de0d88e90257efc9d69ce8b0b79c9611470",
+        "source_sha256": "sha256:f7adc3c0e3df6190022b770634e904f48f593152721432c60c5f5a848af594fe",
+        "verified": true
+      }
+    },
+    "fixture_manifest": {
+      "family_count": 4,
+      "path": "data/research/experiment_6326_restricted_policy_contract_compiler/fixture_manifest.json",
+      "sha256": "sha256:8f4c9c5c1f65f7ada99878188f8b0dac9d42a783df62e36831bdaef6c948295d"
+    },
+    "grammar": {
+      "path": "data/research/experiment_6326_restricted_policy_contract_compiler/policy_dsl_grammar.txt",
+      "sha256": "sha256:86550327c297f267cdc7f3373017db0a7d97b223ee6a03af391ed836c50e7d54"
+    },
+    "schema": "carnot.experiment_6327.three_family_guarded_policy_synthesis.v1.fixture_splits",
+    "splits": {
+      "access_gate": "development",
+      "incident_response": "development",
+      "quota_control": "held",
+      "routing_policy": "held"
+    }
+  },
+  "generated_label_count": 0,
+  "guard_accept_reject_and_fallback_receipts": {
+    "fallback_count_by_arm": {
+      "bounded_exact_factor_energy_guided_candidate_search_plus_fallback": 0,
+      "exact_guard_plus_hash_pinned_fallback": 0,
+      "one_raw_candidate": 0,
+      "reject_only_filtering": 0
+    },
+    "fallback_hashes": {
+      "access_gate": {
+        "energy": 0,
+        "family": "access_gate",
+        "semantic_hash": "sha256:c97f6204857f511d9dde01996f69d4561b5670bfed15eec1e5c3cf492340117c",
+        "source_sha256": "sha256:15b0da631402f7711ca5b6e8627a5c503fca0be66f7f5a15f6e5f72102ebc67b",
+        "verified": true
+      },
+      "incident_response": {
+        "energy": 0,
+        "family": "incident_response",
+        "semantic_hash": "sha256:4f13b2fd4e555b5909d3086f2d990f30c4489c4ed55ba14cd72bc7e3a8544f94",
+        "source_sha256": "sha256:9a5184321ccf79b744440a8d0becd98db273189ba1646c3ccd6070441a09fa73",
+        "verified": true
+      },
+      "quota_control": {
+        "energy": 0,
+        "family": "quota_control",
+        "semantic_hash": "sha256:45e2735113777fba076c087fe92f920c0053416582731fa99e993ee8592125a1",
+        "source_sha256": "sha256:6765abb047a20a0df5b85242db7e3c4c405be6da5ec8cb01f866ee4cfda16dfe",
+        "verified": true
+      },
+      "routing_policy": {
+        "energy": 0,
+        "family": "routing_policy",
+        "semantic_hash": "sha256:0f11a90fdc29ea86d6cbae776c918de0d88e90257efc9d69ce8b0b79c9611470",
+        "source_sha256": "sha256:f7adc3c0e3df6190022b770634e904f48f593152721432c60c5f5a848af594fe",
+        "verified": true
+      }
+    },
+    "guarded_accepted_contract_violation_count": 0,
+    "oracle": "Exp6326 exact factor energy",
+    "raw_arm_contract_violation_count": 0,
+    "schema": "carnot.experiment_6327.three_family_guarded_policy_synthesis.v1.guard_fallback"
+  },
+  "guarded_policy_synthesis_ready_score": 0.0,
+  "harm_underpowered_missing_and_flagged_cells": {
+    "development_sample_size": 6,
+    "flagged_cells": 0,
+    "guarded_accepted_contract_violation_count": 0,
+    "harmful_guarded_accept_count": 0,
+    "missing_model_count": 0,
+    "missing_models": [],
+    "model_resolution_blockers": [],
+    "parser_failure_count": 0,
+    "schema": "carnot.experiment_6327.three_family_guarded_policy_synthesis.v1.harm_missing_underpowered",
+    "underpowered_for_public_headline": true
+  },
+  "hidden_state_access_count": 0,
+  "honest_verdict": "complete_null: bounded exact-factor search did not clear the preregistered readiness gate",
+  "inference_substrate": "local_three_family_llama_cpp_cuda_guarded_policy_synthesis",
+  "llama_cpp_embedded_tokenizer_receipts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+    }
+  },
+  "matched_call_token_candidate_and_time_budgets": {
+    "by_arm": {
+      "bounded_exact_factor_energy_guided_candidate_search_plus_fallback": {
+        "candidate_count": 2,
+        "fallback_cost": 0.1,
+        "generation_cost": 0.08,
+        "max_tokens": 768,
+        "time_budget_s": 480
+      },
+      "exact_guard_plus_hash_pinned_fallback": {
+        "candidate_count": 2,
+        "fallback_cost": 0.1,
+        "generation_cost": 0.08,
+        "max_tokens": 768,
+        "time_budget_s": 480
+      },
+      "one_raw_candidate": {
+        "candidate_count": 2,
+        "fallback_cost": 0.1,
+        "generation_cost": 0.08,
+        "max_tokens": 768,
+        "time_budget_s": 480
+      },
+      "reject_only_filtering": {
+        "candidate_count": 2,
+        "fallback_cost": 0.1,
+        "generation_cost": 0.08,
+        "max_tokens": 768,
+        "time_budget_s": 480
+      }
+    },
+    "calls_per_model": 1,
+    "candidate_count": 2,
+    "candidate_utility": 1.0,
+    "fallback_cost": 0.1,
+    "fallback_utility": 0.7,
+    "max_tokens": 768,
+    "schema": "carnot.experiment_6327.three_family_guarded_policy_synthesis.v1.matched_budgets",
+    "time_budget_s": 480
+  },
+  "model_file_hashes_revisions_quantizations_and_tokenizers": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "tokenizer_loadable": true,
+      "tokenizer_status": "embedded GGUF tokenizer OK (7 tokens on probe)"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "tokenizer_loadable": true,
+      "tokenizer_status": "embedded GGUF tokenizer OK (8 tokens on probe)"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "tokenizer_loadable": true,
+      "tokenizer_status": "embedded GGUF tokenizer OK (8 tokens on probe)"
+    }
+  },
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "paired_deltas_intervals_and_sample_sizes": {
+    "by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "development_search_minus_guard": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 2,
+          "values": [
+            0.0,
+            0.0
+          ]
+        },
+        "held_search_minus_guard": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 2,
+          "values": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "development_search_minus_guard": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 2,
+          "values": [
+            0.0,
+            0.0
+          ]
+        },
+        "held_search_minus_guard": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 2,
+          "values": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "development_search_minus_guard": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 2,
+          "values": [
+            0.0,
+            0.0
+          ]
+        },
+        "held_search_minus_guard": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 2,
+          "values": [
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "development_all_models_search_minus_guard": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "mean_delta": 0.0,
+      "sample_size": 6,
+      "values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "held_all_models_search_minus_guard": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "mean_delta": 0.0,
+      "sample_size": 6,
+      "values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "schema": "carnot.experiment_6327.three_family_guarded_policy_synthesis.v1.paired_deltas"
+  },
+  "parse_and_normalization_results": {
+    "by_family": {
+      "access_gate": {
+        "candidate_count": 6,
+        "parser_failure_count": 0
+      },
+      "incident_response": {
+        "candidate_count": 6,
+        "parser_failure_count": 0
+      },
+      "quota_control": {
+        "candidate_count": 6,
+        "parser_failure_count": 0
+      },
+      "routing_policy": {
+        "candidate_count": 6,
+        "parser_failure_count": 0
+      }
+    },
+    "candidate_count": 24,
+    "normalization_success_count": 24,
+    "parser_failure_count": 0,
+    "schema": "carnot.experiment_6327.three_family_guarded_policy_synthesis.v1.parse_normalization"
+  },
+  "preconditions_checked": {
+    "all_passed": true,
+    "budget_hash": "sha256:e78d1fb74c8dc0bef481d6f85e555e4ed0da62734ded3933122a89fe528289c4",
+    "data_dir": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6327_three_family_guarded_policy_synthesis",
+    "date": "20260812",
+    "fallback_hashes": {
+      "access_gate": {
+        "energy": 0,
+        "family": "access_gate",
+        "semantic_hash": "sha256:c97f6204857f511d9dde01996f69d4561b5670bfed15eec1e5c3cf492340117c",
+        "source_sha256": "sha256:15b0da631402f7711ca5b6e8627a5c503fca0be66f7f5a15f6e5f72102ebc67b",
+        "verified": true
+      },
+      "incident_response": {
+        "energy": 0,
+        "family": "incident_response",
+        "semantic_hash": "sha256:4f13b2fd4e555b5909d3086f2d990f30c4489c4ed55ba14cd72bc7e3a8544f94",
+        "source_sha256": "sha256:9a5184321ccf79b744440a8d0becd98db273189ba1646c3ccd6070441a09fa73",
+        "verified": true
+      },
+      "quota_control": {
+        "energy": 0,
+        "family": "quota_control",
+        "semantic_hash": "sha256:45e2735113777fba076c087fe92f920c0053416582731fa99e993ee8592125a1",
+        "source_sha256": "sha256:6765abb047a20a0df5b85242db7e3c4c405be6da5ec8cb01f866ee4cfda16dfe",
+        "verified": true
+      },
+      "routing_policy": {
+        "energy": 0,
+        "family": "routing_policy",
+        "semantic_hash": "sha256:0f11a90fdc29ea86d6cbae776c918de0d88e90257efc9d69ce8b0b79c9611470",
+        "source_sha256": "sha256:f7adc3c0e3df6190022b770634e904f48f593152721432c60c5f5a848af594fe",
+        "verified": true
+      }
+    },
+    "fixture_hash": "sha256:8f4c9c5c1f65f7ada99878188f8b0dac9d42a783df62e36831bdaef6c948295d",
+    "host": {
+      "cuda_devices": {
+        "available": true,
+        "count": 2,
+        "devices": [
+          {
+            "index": 0,
+            "memory_free_mb": 23859,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 266,
+            "name": "NVIDIA GeForce RTX 3090"
+          },
+          {
+            "index": 1,
+            "memory_free_mb": 23859,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 266,
+            "name": "NVIDIA GeForce RTX 3090"
+          }
+        ]
+      },
+      "disk": {
+        "available_gb": 1109.346
+      },
+      "llama_cpp_cli": {
+        "exists": true,
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli"
+      },
+      "llama_cpp_gpu_offload": {
+        "available": true,
+        "detail": "python binding reports gpu offload support"
+      },
+      "ram": {
+        "available_gb": 112.919
+      },
+      "vram": {
+        "0": {
+          "index": 0,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        "1": {
+          "index": 1,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      }
+    },
+    "model_gate": {
+      "all_resolved": true,
+      "blocked_reasons": []
+    },
+    "prompt_hash": "sha256:9759d32582191c499c78cb94f8d8ea36fea393b0d3dcd74dc027750b1e15709b",
+    "protected_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:af87e18fa837bc76a308b1597c36719a4b38916795336b46024ac4e3549548d3",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6327_three_family_guarded_policy_synthesis.json",
+    "schema": "carnot.experiment_6327.three_family_guarded_policy_synthesis.v1.preconditions",
+    "seeds": [
+      632700,
+      632701,
+      632702
+    ],
+    "timeouts": {
+      "per_model_generation_timeout_s": 480
+    },
+    "upstream": {
+      "exists": true,
+      "gate_ready_score": 1.0,
+      "path": "results/experiment_6326_restricted_policy_contract_compiler.json",
+      "sha256": "sha256:15c492faec99f2cb77b64b6782a95743c3f5b484f9f071c2c4586254252b0fe9",
+      "status": "complete_ready",
+      "terminal_class": "ready",
+      "verifier_is_oracle": true
+    }
+  },
+  "prompt_and_decoder_contract": {
+    "candidate_block_contract": "BEGIN_CANDIDATE family=<family> candidate=<0|1> ... END_CANDIDATE",
+    "candidate_count_per_family": 2,
+    "context_tokens": 4096,
+    "embedded_gguf_tokenizer_only": true,
+    "hf_tokenizer_loader_forbidden": true,
+    "max_tokens": 768,
+    "native_llama_cpp_cli_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+    "prompt_sha256": "sha256:9759d32582191c499c78cb94f8d8ea36fea393b0d3dcd74dc027750b1e15709b",
+    "repeat_penalty": 1.05,
+    "schema": "carnot.experiment_6327.three_family_guarded_policy_synthesis.v1.prompt_decoder",
+    "temperature": 0.2,
+    "time_budget_s": 480,
+    "top_p": 0.9
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "files": {
+      "_bmad/traceability.md": {
+        "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "after": "sha256:af87e18fa837bc76a308b1597c36719a4b38916795336b46024ac4e3549548d3",
+        "before": "sha256:af87e18fa837bc76a308b1597c36719a4b38916795336b46024ac4e3549548d3",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "before": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "unchanged": true
+      }
+    }
+  },
+  "random_seeds": [
+    632700,
+    632701,
+    632702
+  ],
+  "raw_candidate_paths_hashes_and_counts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "candidate_count": 8,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6327_three_family_guarded_policy_synthesis/raw_candidates/unsloth_qwen3_6_35b_a3b_gguf.raw.json",
+      "raw_block_count": 8,
+      "seed": 632700,
+      "sha256": "sha256:7dcda2f019007a1a7afb0e9e0ee844443312c580c5fd445cc9c88555e8899d24",
+      "written_atomically": true
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "candidate_count": 8,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6327_three_family_guarded_policy_synthesis/raw_candidates/unsloth_gemma_4_26b_a4b_it_gguf.raw.json",
+      "raw_block_count": 8,
+      "seed": 632702,
+      "sha256": "sha256:fb0ed9653052506f8866fc1b18a6e349016110b54a537a730cc42ab8de6907d6",
+      "written_atomically": true
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "candidate_count": 8,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6327_three_family_guarded_policy_synthesis/raw_candidates/unsloth_gemma_4_31b_it_gguf.raw.json",
+      "raw_block_count": 8,
+      "seed": 632701,
+      "sha256": "sha256:6965d692eb37eea574636a7635ed5eb1ba31f3f746059a1a2090323024bb16e1",
+      "written_atomically": true
+    }
+  },
+  "reproducibility_checksum": "sha256:f15a8ebd974fcf9af504b7082df84b738c44d881e67271f1925d97894122839d",
+  "source_model_weight_mutation_count": 0,
+  "status": "complete_no_value",
+  "test_commands": [
+    ".venv/bin/python -m carnot.experiment_6327_three_family_guarded_policy_synthesis --date 20260812",
+    ".venv/bin/pytest tests/python/test_experiment_6327_three_family_guarded_policy_synthesis.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6327_three_family_guarded_policy_synthesis.py -m pytest tests/python/test_experiment_6327_three_family_guarded_policy_synthesis.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6327_three_family_guarded_policy_synthesis.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6327_three_family_guarded_policy_synthesis.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6327_three_family_guarded_policy_synthesis.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6327_three_family_guarded_policy_synthesis.py -m pytest tests/python/test_experiment_6327_three_family_guarded_policy_synthesis.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6327_three_family_guarded_policy_synthesis.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6327_three_family_guarded_policy_synthesis.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6327_three_family_guarded_policy_synthesis --date 20260812": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6327_three_family_guarded_policy_synthesis.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6327_three_family_guarded_policy_synthesis.py": 0
+  },
+  "upstream_path_hash_terminal_class_and_gate_receipt": {
+    "exists": true,
+    "gate_ready_score": 1.0,
+    "path": "results/experiment_6326_restricted_policy_contract_compiler.json",
+    "sha256": "sha256:15c492faec99f2cb77b64b6782a95743c3f5b484f9f071c2c4586254252b0fe9",
+    "status": "complete_ready",
+    "terminal_class": "ready",
+    "verifier_is_oracle": true
+  },
+  "verifier_is_oracle": true
+}
