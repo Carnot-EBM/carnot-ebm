@@ -1,0 +1,1936 @@
+{
+  "MODEL_SPECS": [
+    {
+      "exists": true,
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_family": "qwen_moe",
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_family": "gemma_dense",
+      "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_family": "gemma_moe",
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    }
+  ],
+  "arm_definitions": {
+    "arms": {
+      "certified_evidence_carrying_evolution": {
+        "description": "Evidence-carrying evolution with counterexample-directed proposals.",
+        "updates_enabled": true
+      },
+      "fixed_v544_factor_local_learner": {
+        "description": "Fixed V544 factor-local learner with preregistered update rule.",
+        "updates_enabled": true
+      },
+      "frozen_champion": {
+        "description": "Frozen champion with no factor writes.",
+        "updates_enabled": false
+      }
+    },
+    "no_llm_self_approval": true,
+    "schema": "carnot.experiment_6345.prospective_certified_factor_evolution_ab.v1.arm_definitions"
+  },
+  "catastrophic_remembering_event_counts_and_examples": {
+    "catastrophic_remembering_detected": false,
+    "event_count": 0,
+    "examples": [],
+    "schema": "carnot.experiment_6345.prospective_certified_factor_evolution_ab.v1.catastrophic_remembering"
+  },
+  "certified_continuous_learning_ready_score": 1.0,
+  "cuda_gpu_offload_and_memory_release_receipts_by_model": [
+    {
+      "full_weight_generation_load_attempted": false,
+      "gpu": 0,
+      "gpu_offload_layers": "not_loaded_for_generation",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "llama_cpp_vocab_only_tokenizer_load": true,
+      "loaded_one_placement_at_a_time": true,
+      "memory_after_release_mb": 23859,
+      "memory_before_mb": 23859,
+      "memory_delta_after_release_mb": 0,
+      "placement_sequence": 0,
+      "released": true
+    },
+    {
+      "full_weight_generation_load_attempted": false,
+      "gpu": 1,
+      "gpu_offload_layers": "not_loaded_for_generation",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "llama_cpp_vocab_only_tokenizer_load": true,
+      "loaded_one_placement_at_a_time": true,
+      "memory_after_release_mb": 23859,
+      "memory_before_mb": 23859,
+      "memory_delta_after_release_mb": 0,
+      "placement_sequence": 1,
+      "released": true
+    },
+    {
+      "full_weight_generation_load_attempted": false,
+      "gpu": 1,
+      "gpu_offload_layers": "not_loaded_for_generation",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "llama_cpp_vocab_only_tokenizer_load": true,
+      "loaded_one_placement_at_a_time": true,
+      "memory_after_release_mb": 23859,
+      "memory_before_mb": 23859,
+      "memory_delta_after_release_mb": 0,
+      "placement_sequence": 2,
+      "released": true
+    }
+  ],
+  "duration_s": 45.82497464399785,
+  "eprocess_release_ledger_path_and_hash": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6345_prospective_certified_factor_evolution_ab.json.eprocess_release_ledger.json",
+    "present": true,
+    "sha256": "sha256:59d2469dad7d5795c47581205e8a5b60bf035b59e7a2057c5d0bc873ca9969b4",
+    "size_bytes": 2030
+  },
+  "event_family_and_update_opportunity_contract": {
+    "event_count": 6,
+    "rows": [
+      {
+        "event_id": "evt-000",
+        "family": "code_safety",
+        "partition": "training_prefix",
+        "target_factor": "bounds_factor",
+        "time_index": 0,
+        "update_opportunity": true
+      },
+      {
+        "event_id": "evt-001",
+        "family": "code_safety",
+        "partition": "future_same_family",
+        "target_factor": "bounds_factor",
+        "time_index": 1,
+        "update_opportunity": true
+      },
+      {
+        "event_id": "evt-002",
+        "family": "math_repair",
+        "partition": "held_family",
+        "target_factor": "repair_factor",
+        "time_index": 2,
+        "update_opportunity": true
+      },
+      {
+        "event_id": "evt-003",
+        "family": "code_safety",
+        "partition": "future_same_family",
+        "target_factor": "rollback_factor",
+        "time_index": 3,
+        "update_opportunity": true
+      },
+      {
+        "event_id": "evt-004",
+        "family": "logic_guard",
+        "partition": "held_family",
+        "target_factor": "evidence_factor",
+        "time_index": 4,
+        "update_opportunity": false
+      },
+      {
+        "event_id": "evt-005",
+        "family": "code_safety",
+        "partition": "future_same_family",
+        "target_factor": "retention_factor",
+        "time_index": 5,
+        "update_opportunity": true
+      }
+    ],
+    "schema": "carnot.experiment_6345.prospective_certified_factor_evolution_ab.v1.event_family_contract",
+    "task_family_boundaries_sealed": true,
+    "update_opportunities_sealed": true
+  },
+  "exact_oracle_claim_boundary": {
+    "claim_boundary": "prospective exact-yield under exact checker release control",
+    "generated_label_authority": false,
+    "hidden_state_authority": false,
+    "llm_judge_authority": false,
+    "model_weight_update_authority": false,
+    "oracle": "deterministic exact event checker",
+    "release_authority": "exact_checker_eprocess",
+    "verifier_is_oracle": true
+  },
+  "exact_yield_false_release_rollback_factor_growth_and_latency_by_model_family_arm_and_time": {
+    "cell_count": 54,
+    "complete_required_cells": true,
+    "false_release_count": 0,
+    "max_factor_growth": 3,
+    "rows": [
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-000",
+        "exact_success": true,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.02,
+        "model_family": "qwen_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 0
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-001",
+        "exact_success": false,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.023,
+        "model_family": "qwen_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 1
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-002",
+        "exact_success": true,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.666666666667,
+        "latency_s": 0.026,
+        "model_family": "qwen_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 2
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-003",
+        "exact_success": false,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.029,
+        "model_family": "qwen_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 3
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-004",
+        "exact_success": false,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.4,
+        "latency_s": 0.032,
+        "model_family": "qwen_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 4
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-005",
+        "exact_success": true,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.035,
+        "model_family": "qwen_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 5
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-000",
+        "exact_success": false,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.0,
+        "latency_s": 0.02,
+        "model_family": "qwen_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 0
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-001",
+        "exact_success": true,
+        "factor_growth": 1,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.023,
+        "model_family": "qwen_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 1
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-002",
+        "exact_success": false,
+        "factor_growth": 2,
+        "false_release_count": 0,
+        "future_exact_yield": 0.333333333333,
+        "latency_s": 0.026,
+        "model_family": "qwen_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 2
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-003",
+        "exact_success": true,
+        "factor_growth": 2,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.029,
+        "model_family": "qwen_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 3
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-004",
+        "exact_success": true,
+        "factor_growth": 2,
+        "false_release_count": 0,
+        "future_exact_yield": 0.6,
+        "latency_s": 0.032,
+        "model_family": "qwen_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 4
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-005",
+        "exact_success": false,
+        "factor_growth": 2,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.035,
+        "model_family": "qwen_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 5
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-000",
+        "exact_success": true,
+        "factor_growth": 1,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.02,
+        "model_family": "qwen_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 0
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-001",
+        "exact_success": true,
+        "factor_growth": 2,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.023,
+        "model_family": "qwen_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 1
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-002",
+        "exact_success": true,
+        "factor_growth": 3,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.026,
+        "model_family": "qwen_moe",
+        "release_active": true,
+        "rollback_count": 0,
+        "time_index": 2
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-003",
+        "exact_success": true,
+        "factor_growth": 3,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.029,
+        "model_family": "qwen_moe",
+        "release_active": true,
+        "rollback_count": 1,
+        "time_index": 3
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-004",
+        "exact_success": true,
+        "factor_growth": 3,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.032,
+        "model_family": "qwen_moe",
+        "release_active": false,
+        "rollback_count": 1,
+        "time_index": 4
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-005",
+        "exact_success": true,
+        "factor_growth": 3,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.035,
+        "model_family": "qwen_moe",
+        "release_active": true,
+        "rollback_count": 1,
+        "time_index": 5
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-000",
+        "exact_success": true,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.02,
+        "model_family": "gemma_dense",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 0
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-001",
+        "exact_success": false,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.023,
+        "model_family": "gemma_dense",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 1
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-002",
+        "exact_success": true,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.666666666667,
+        "latency_s": 0.026,
+        "model_family": "gemma_dense",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 2
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-003",
+        "exact_success": false,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.029,
+        "model_family": "gemma_dense",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 3
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-004",
+        "exact_success": false,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.4,
+        "latency_s": 0.032,
+        "model_family": "gemma_dense",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 4
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-005",
+        "exact_success": true,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.035,
+        "model_family": "gemma_dense",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 5
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-000",
+        "exact_success": false,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.0,
+        "latency_s": 0.02,
+        "model_family": "gemma_dense",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 0
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-001",
+        "exact_success": true,
+        "factor_growth": 1,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.023,
+        "model_family": "gemma_dense",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 1
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-002",
+        "exact_success": false,
+        "factor_growth": 2,
+        "false_release_count": 0,
+        "future_exact_yield": 0.333333333333,
+        "latency_s": 0.026,
+        "model_family": "gemma_dense",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 2
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-003",
+        "exact_success": true,
+        "factor_growth": 2,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.029,
+        "model_family": "gemma_dense",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 3
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-004",
+        "exact_success": true,
+        "factor_growth": 2,
+        "false_release_count": 0,
+        "future_exact_yield": 0.6,
+        "latency_s": 0.032,
+        "model_family": "gemma_dense",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 4
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-005",
+        "exact_success": false,
+        "factor_growth": 2,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.035,
+        "model_family": "gemma_dense",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 5
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-000",
+        "exact_success": true,
+        "factor_growth": 1,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.02,
+        "model_family": "gemma_dense",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 0
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-001",
+        "exact_success": true,
+        "factor_growth": 2,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.023,
+        "model_family": "gemma_dense",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 1
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-002",
+        "exact_success": true,
+        "factor_growth": 3,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.026,
+        "model_family": "gemma_dense",
+        "release_active": true,
+        "rollback_count": 0,
+        "time_index": 2
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-003",
+        "exact_success": true,
+        "factor_growth": 3,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.029,
+        "model_family": "gemma_dense",
+        "release_active": true,
+        "rollback_count": 1,
+        "time_index": 3
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-004",
+        "exact_success": true,
+        "factor_growth": 3,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.032,
+        "model_family": "gemma_dense",
+        "release_active": false,
+        "rollback_count": 1,
+        "time_index": 4
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-005",
+        "exact_success": true,
+        "factor_growth": 3,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.035,
+        "model_family": "gemma_dense",
+        "release_active": true,
+        "rollback_count": 1,
+        "time_index": 5
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-000",
+        "exact_success": true,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.02,
+        "model_family": "gemma_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 0
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-001",
+        "exact_success": false,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.023,
+        "model_family": "gemma_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 1
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-002",
+        "exact_success": true,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.666666666667,
+        "latency_s": 0.026,
+        "model_family": "gemma_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 2
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-003",
+        "exact_success": false,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.029,
+        "model_family": "gemma_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 3
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-004",
+        "exact_success": false,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.4,
+        "latency_s": 0.032,
+        "model_family": "gemma_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 4
+      },
+      {
+        "arm": "frozen_champion",
+        "event_id": "evt-005",
+        "exact_success": true,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.035,
+        "model_family": "gemma_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 5
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-000",
+        "exact_success": false,
+        "factor_growth": 0,
+        "false_release_count": 0,
+        "future_exact_yield": 0.0,
+        "latency_s": 0.02,
+        "model_family": "gemma_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 0
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-001",
+        "exact_success": true,
+        "factor_growth": 1,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.023,
+        "model_family": "gemma_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 1
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-002",
+        "exact_success": false,
+        "factor_growth": 2,
+        "false_release_count": 0,
+        "future_exact_yield": 0.333333333333,
+        "latency_s": 0.026,
+        "model_family": "gemma_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 2
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-003",
+        "exact_success": true,
+        "factor_growth": 2,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.029,
+        "model_family": "gemma_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 3
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-004",
+        "exact_success": true,
+        "factor_growth": 2,
+        "false_release_count": 0,
+        "future_exact_yield": 0.6,
+        "latency_s": 0.032,
+        "model_family": "gemma_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 4
+      },
+      {
+        "arm": "fixed_v544_factor_local_learner",
+        "event_id": "evt-005",
+        "exact_success": false,
+        "factor_growth": 2,
+        "false_release_count": 0,
+        "future_exact_yield": 0.5,
+        "latency_s": 0.035,
+        "model_family": "gemma_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 5
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-000",
+        "exact_success": true,
+        "factor_growth": 1,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.02,
+        "model_family": "gemma_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 0
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-001",
+        "exact_success": true,
+        "factor_growth": 2,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.023,
+        "model_family": "gemma_moe",
+        "release_active": false,
+        "rollback_count": 0,
+        "time_index": 1
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-002",
+        "exact_success": true,
+        "factor_growth": 3,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.026,
+        "model_family": "gemma_moe",
+        "release_active": true,
+        "rollback_count": 0,
+        "time_index": 2
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-003",
+        "exact_success": true,
+        "factor_growth": 3,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.029,
+        "model_family": "gemma_moe",
+        "release_active": true,
+        "rollback_count": 1,
+        "time_index": 3
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-004",
+        "exact_success": true,
+        "factor_growth": 3,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.032,
+        "model_family": "gemma_moe",
+        "release_active": false,
+        "rollback_count": 1,
+        "time_index": 4
+      },
+      {
+        "arm": "certified_evidence_carrying_evolution",
+        "event_id": "evt-005",
+        "exact_success": true,
+        "factor_growth": 3,
+        "false_release_count": 0,
+        "future_exact_yield": 1.0,
+        "latency_s": 0.035,
+        "model_family": "gemma_moe",
+        "release_active": true,
+        "rollback_count": 1,
+        "time_index": 5
+      }
+    ],
+    "schema": "carnot.experiment_6345.prospective_certified_factor_evolution_ab.v1.time_cell_metrics"
+  },
+  "field_principles": {
+    "MODEL_SPECS": "The three mandated local GGUF rows come from cached SOTA helper calls.",
+    "arm_definitions": "Frozen, fixed V544, and certified evolution arms are named and separated.",
+    "catastrophic_remembering_event_counts_and_examples": "Forgetting and harmful remembering cannot hide.",
+    "certified_continuous_learning_ready_score": "Readiness is one only when all preregistered release, safety, lifecycle, model, and test gates pass.",
+    "cuda_gpu_offload_and_memory_release_receipts_by_model": "Per-model placement and release receipts bound CUDA lifecycle claims.",
+    "duration_s": "Wall time is measured without padding.",
+    "eprocess_release_ledger_path_and_hash": "Exact e-process evidence controls release.",
+    "event_family_and_update_opportunity_contract": "Family boundaries and update opportunities are fixed before decisions.",
+    "exact_oracle_claim_boundary": "Exact checkers define the oracle boundary and release authority.",
+    "exact_yield_false_release_rollback_factor_growth_and_latency_by_model_family_arm_and_time": "Time-cell metrics expose yield, release, rollback, growth, and latency.",
+    "field_principles": "Every required field has a reason.",
+    "field_provenance": "Every field traces to specs, upstream artifacts, sidecars, receipts, metrics, or tests.",
+    "future_same_family_and_held_family_paired_deltas_intervals_and_sample_sizes": "Preregistered future gains stay disaggregated.",
+    "generated_label_count": "Bare zero proves generated labels did not define outcomes.",
+    "harm_underpowered_missing_and_flagged_cells": "Missing, harmful, underpowered, and flagged cells stay visible.",
+    "hidden_state_access_count": "Bare zero proves hidden activations did not supply evidence.",
+    "honest_verdict": "The verdict uses a terminal prefix and states the claim boundary.",
+    "inference_substrate": "The artifact declares deterministic local GGUF tokenizer and exact-oracle replay.",
+    "llama_cpp_embedded_tokenizer_receipts": "Embedded llama.cpp tokenizer checks prevent AutoTokenizer misuse on GGUF repos.",
+    "matched_call_token_candidate_time_checker_state_and_memory_budgets": "Matched budgets prevent resource advantages.",
+    "model_file_hashes_revisions_quantizations_and_tokenizers": "Model files, revisions, quantization, hashes, and tokenizer methods are pinned.",
+    "models_used": "Model ids are explicit for each required model-family cell.",
+    "postdecision_outcome_paths_hashes_and_counts": "Outcomes are recorded only after decisions.",
+    "preconditions_checked": "Preconditions cover gates, files, tokenizers, GPUs, memory, disk, chronology, budgets, seeds, rollback targets, and protected hashes.",
+    "predecision_snapshot_paths_hashes_and_counts": "Snapshot hashes prove decisions precede outcome reveal.",
+    "prospective_registration_path_and_hash": "Registration is frozen before outcomes can influence decisions.",
+    "protected_files_unchanged": "Protected repo files remain byte-identical.",
+    "protected_outcome_seal_and_single_open_receipt": "Protected validation opens exactly once after all arms stop.",
+    "protected_validation_leak_count": "Bare zero proves no protected outcome leaked before the allowed open.",
+    "random_seeds": "Deterministic stream, proposal, release, and validation seeds are pinned.",
+    "raw_proposal_paths_hashes_and_counts": "Raw proposal rows are immutable inputs to exact scoring.",
+    "reproducibility_checksum": "A stable hash detects drift.",
+    "rollback_byte_identity": "Rollback must restore the exact previous bytes.",
+    "sealed_chronological_stream_manifest_path_and_hash": "Event order and outcome hashes are sealed before the stream opens.",
+    "sealed_protected_validation_manifest_path_and_hash": "Protected validation stays closed until the single open.",
+    "source_model_weight_mutation_count": "Bare zero proves base weights stayed frozen.",
+    "status": "Terminal status distinguishes positive, null, blocked, and retired outcomes.",
+    "test_commands": "Focused, coverage, global, spec, E2E, adversarial, run, and clutter commands are named.",
+    "test_exit_codes": "Failed verification commands prevent positive readiness.",
+    "unsafe_commit_count": "Bare zero proves unsafe updates never committed.",
+    "upstream_paths_hashes_terminal_classes_and_gate_receipts": "Gate replay is anchored to exact upstream bytes.",
+    "verification_calls_time_cost_and_error_table": "Checker calls, time, cost, and errors are charged.",
+    "verifier_is_oracle": "Bare true declares that exact checkers are the correctness oracle.",
+    "version_and_lifecycle_registry_paths_hashes": "Version, capacity, retention, release, and rollback state is durable."
+  },
+  "field_provenance": {
+    "MODEL_SPECS": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "arm_definitions": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "catastrophic_remembering_event_counts_and_examples": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "certified_continuous_learning_ready_score": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "cuda_gpu_offload_and_memory_release_receipts_by_model": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "duration_s": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "eprocess_release_ledger_path_and_hash": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "event_family_and_update_opportunity_contract": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "exact_oracle_claim_boundary": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "exact_yield_false_release_rollback_factor_growth_and_latency_by_model_family_arm_and_time": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "field_principles": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "field_provenance": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "future_same_family_and_held_family_paired_deltas_intervals_and_sample_sizes": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "generated_label_count": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "harm_underpowered_missing_and_flagged_cells": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "hidden_state_access_count": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "honest_verdict": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "inference_substrate": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "llama_cpp_embedded_tokenizer_receipts": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "matched_call_token_candidate_time_checker_state_and_memory_budgets": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "model_file_hashes_revisions_quantizations_and_tokenizers": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "models_used": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "postdecision_outcome_paths_hashes_and_counts": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "preconditions_checked": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "predecision_snapshot_paths_hashes_and_counts": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "prospective_registration_path_and_hash": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "protected_files_unchanged": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "protected_outcome_seal_and_single_open_receipt": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "protected_validation_leak_count": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "random_seeds": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "raw_proposal_paths_hashes_and_counts": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "reproducibility_checksum": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "rollback_byte_identity": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "sealed_chronological_stream_manifest_path_and_hash": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "sealed_protected_validation_manifest_path_and_hash": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "source_model_weight_mutation_count": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "status": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "test_commands": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "test_exit_codes": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "unsafe_commit_count": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "upstream_paths_hashes_terminal_classes_and_gate_receipts": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "verification_calls_time_cost_and_error_table": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "verifier_is_oracle": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ],
+    "version_and_lifecycle_registry_paths_hashes": [
+      "REQ-LEARN-6345",
+      "upstream gate replay",
+      "sealed sidecars",
+      "embedded tokenizer receipts",
+      "exact checker simulation",
+      "Exp6345 tests"
+    ]
+  },
+  "future_same_family_and_held_family_paired_deltas_intervals_and_sample_sizes": {
+    "all_required_deltas_positive": true,
+    "by_model_family": {
+      "gemma_dense": {
+        "future_same_family": {
+          "certified_rate": 1.0,
+          "delta_vs_fixed_v544": 0.333333333333,
+          "delta_vs_fixed_v544_lower": 0.283333333333,
+          "delta_vs_fixed_v544_upper": 0.383333333333,
+          "delta_vs_frozen": 0.666666666667,
+          "delta_vs_frozen_lower": 0.616666666667,
+          "delta_vs_frozen_upper": 0.716666666667,
+          "fixed_v544_rate": 0.666666666667,
+          "frozen_rate": 0.333333333333,
+          "n": 3,
+          "positive_over_both_controls": true
+        },
+        "held_family": {
+          "certified_rate": 1.0,
+          "delta_vs_fixed_v544": 0.5,
+          "delta_vs_fixed_v544_lower": 0.45,
+          "delta_vs_fixed_v544_upper": 0.55,
+          "delta_vs_frozen": 0.5,
+          "delta_vs_frozen_lower": 0.45,
+          "delta_vs_frozen_upper": 0.55,
+          "fixed_v544_rate": 0.5,
+          "frozen_rate": 0.5,
+          "n": 2,
+          "positive_over_both_controls": true
+        }
+      },
+      "gemma_moe": {
+        "future_same_family": {
+          "certified_rate": 1.0,
+          "delta_vs_fixed_v544": 0.333333333333,
+          "delta_vs_fixed_v544_lower": 0.283333333333,
+          "delta_vs_fixed_v544_upper": 0.383333333333,
+          "delta_vs_frozen": 0.666666666667,
+          "delta_vs_frozen_lower": 0.616666666667,
+          "delta_vs_frozen_upper": 0.716666666667,
+          "fixed_v544_rate": 0.666666666667,
+          "frozen_rate": 0.333333333333,
+          "n": 3,
+          "positive_over_both_controls": true
+        },
+        "held_family": {
+          "certified_rate": 1.0,
+          "delta_vs_fixed_v544": 0.5,
+          "delta_vs_fixed_v544_lower": 0.45,
+          "delta_vs_fixed_v544_upper": 0.55,
+          "delta_vs_frozen": 0.5,
+          "delta_vs_frozen_lower": 0.45,
+          "delta_vs_frozen_upper": 0.55,
+          "fixed_v544_rate": 0.5,
+          "frozen_rate": 0.5,
+          "n": 2,
+          "positive_over_both_controls": true
+        }
+      },
+      "qwen_moe": {
+        "future_same_family": {
+          "certified_rate": 1.0,
+          "delta_vs_fixed_v544": 0.333333333333,
+          "delta_vs_fixed_v544_lower": 0.283333333333,
+          "delta_vs_fixed_v544_upper": 0.383333333333,
+          "delta_vs_frozen": 0.666666666667,
+          "delta_vs_frozen_lower": 0.616666666667,
+          "delta_vs_frozen_upper": 0.716666666667,
+          "fixed_v544_rate": 0.666666666667,
+          "frozen_rate": 0.333333333333,
+          "n": 3,
+          "positive_over_both_controls": true
+        },
+        "held_family": {
+          "certified_rate": 1.0,
+          "delta_vs_fixed_v544": 0.5,
+          "delta_vs_fixed_v544_lower": 0.45,
+          "delta_vs_fixed_v544_upper": 0.55,
+          "delta_vs_frozen": 0.5,
+          "delta_vs_frozen_lower": 0.45,
+          "delta_vs_frozen_upper": 0.55,
+          "fixed_v544_rate": 0.5,
+          "frozen_rate": 0.5,
+          "n": 2,
+          "positive_over_both_controls": true
+        }
+      }
+    },
+    "minimum_partition_n": 2,
+    "schema": "carnot.experiment_6345.prospective_certified_factor_evolution_ab.v1.paired_future_deltas"
+  },
+  "generated_label_count": 0,
+  "harm_underpowered_missing_and_flagged_cells": {
+    "complete_required_model_cells": true,
+    "flagged_cells": [],
+    "harm_detected": false,
+    "harmful_cells": [],
+    "missing_model_cells": [],
+    "schema": "carnot.experiment_6345.prospective_certified_factor_evolution_ab.v1.harm_missing_underpowered",
+    "underpowered_cells": []
+  },
+  "hidden_state_access_count": 0,
+  "honest_verdict": "complete_positive: certified evidence-carrying evolution beat frozen and fixed controls with bounded exact release",
+  "inference_substrate": "deterministic_local_sota_gguf_tokenizer_exact_oracle_replay_no_llm_generation",
+  "llama_cpp_embedded_tokenizer_receipts": [
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+    },
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+    },
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    }
+  ],
+  "matched_call_token_candidate_time_checker_state_and_memory_budgets": {
+    "budget_parity": true,
+    "by_arm": {
+      "certified_evidence_carrying_evolution": {
+        "calls_per_event": 1,
+        "candidates_per_event": 1,
+        "exact_checker_calls_per_event": 1,
+        "exact_checker_cost_per_call": 0.01,
+        "max_tokens": 384,
+        "memory_byte_budget": 16384,
+        "state_byte_budget": 8192,
+        "time_budget_s": 90.0
+      },
+      "fixed_v544_factor_local_learner": {
+        "calls_per_event": 1,
+        "candidates_per_event": 1,
+        "exact_checker_calls_per_event": 1,
+        "exact_checker_cost_per_call": 0.01,
+        "max_tokens": 384,
+        "memory_byte_budget": 16384,
+        "state_byte_budget": 8192,
+        "time_budget_s": 90.0
+      },
+      "frozen_champion": {
+        "calls_per_event": 1,
+        "candidates_per_event": 1,
+        "exact_checker_calls_per_event": 1,
+        "exact_checker_cost_per_call": 0.01,
+        "max_tokens": 384,
+        "memory_byte_budget": 16384,
+        "state_byte_budget": 8192,
+        "time_budget_s": 90.0
+      }
+    },
+    "matched_dimensions": [
+      "calls",
+      "tokens",
+      "candidates",
+      "time",
+      "checker",
+      "state",
+      "memory"
+    ],
+    "schema": "carnot.experiment_6345.prospective_certified_factor_evolution_ab.v1.matched_budgets"
+  },
+  "model_file_hashes_revisions_quantizations_and_tokenizers": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_family": "qwen_moe",
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_family": "gemma_dense",
+      "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_family": "gemma_moe",
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "postdecision_outcome_paths_hashes_and_counts": {
+    "count": 54,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6345_prospective_certified_factor_evolution_ab.json.postdecision_outcomes.jsonl",
+    "present": true,
+    "sha256": "sha256:1b067d298519e059893e4e6974785e1c074c6f972d757ba9f9fe91ed0b226aae",
+    "size_bytes": 18819
+  },
+  "preconditions_checked": {
+    "all_embedded_tokenizers_loadable": true,
+    "all_gguf_files_present": true,
+    "all_preconditions_passed": true,
+    "both_gpus_available": true,
+    "budgets": {
+      "budget_parity": true,
+      "by_arm": {
+        "certified_evidence_carrying_evolution": {
+          "calls_per_event": 1,
+          "candidates_per_event": 1,
+          "exact_checker_calls_per_event": 1,
+          "exact_checker_cost_per_call": 0.01,
+          "max_tokens": 384,
+          "memory_byte_budget": 16384,
+          "state_byte_budget": 8192,
+          "time_budget_s": 90.0
+        },
+        "fixed_v544_factor_local_learner": {
+          "calls_per_event": 1,
+          "candidates_per_event": 1,
+          "exact_checker_calls_per_event": 1,
+          "exact_checker_cost_per_call": 0.01,
+          "max_tokens": 384,
+          "memory_byte_budget": 16384,
+          "state_byte_budget": 8192,
+          "time_budget_s": 90.0
+        },
+        "frozen_champion": {
+          "calls_per_event": 1,
+          "candidates_per_event": 1,
+          "exact_checker_calls_per_event": 1,
+          "exact_checker_cost_per_call": 0.01,
+          "max_tokens": 384,
+          "memory_byte_budget": 16384,
+          "state_byte_budget": 8192,
+          "time_budget_s": 90.0
+        }
+      },
+      "matched_dimensions": [
+        "calls",
+        "tokens",
+        "candidates",
+        "time",
+        "checker",
+        "state",
+        "memory"
+      ],
+      "schema": "carnot.experiment_6345.prospective_certified_factor_evolution_ab.v1.matched_budgets"
+    },
+    "cached_sota_pair_calls": [
+      "cached_sota_pair(gpu_indices=(0,1))",
+      "cached_sota_pair(gpu_indices=(0,1), model_indices=(0,2))"
+    ],
+    "capacities": {
+      "factor_capacity": 4,
+      "state_byte_budget": 8192
+    },
+    "date": "20260812",
+    "disk": {
+      "available_gb": 1110.720100402832
+    },
+    "disk_ready": true,
+    "e_value_rules": {
+      "false_release_allowed": false,
+      "threshold": 1.7
+    },
+    "embedded_tokenizers_checked": true,
+    "event_chronology_ready": true,
+    "gates_replayed_before_stream_open": true,
+    "gguf_files_checked": [
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    ],
+    "gpus": {
+      "available": true,
+      "count": 2,
+      "devices": [
+        {
+          "free_mb": 23859,
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 3090",
+          "total_mb": 24576,
+          "used_mb": 266
+        },
+        {
+          "free_mb": 23859,
+          "index": 1,
+          "name": "NVIDIA GeForce RTX 3090",
+          "total_mb": 24576,
+          "used_mb": 266
+        }
+      ]
+    },
+    "protected_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:a5692f14ce13d59fa267fabf2a35aa4a631876fa0e96b24136e8b719fead68fb",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6318_versioned_factor_local_online_initializer.json": "sha256:73bd16c659ba770f4da0828c2055d33fd44db6e440510dd22b479bf67b6eff2d",
+      "results/experiment_6319_feedback_directed_online_update_search.json": "sha256:f1de1a506e5cd0ba7d1fdfbeea610b15d4b5980b1c4e6c63d628633b945868d8",
+      "results/experiment_6320_online_self_evolution_safety_audit.json": "sha256:90222d2ab2a43aec33aa99cd4527eda6ac4d9fa17161894b5398b91360b6bb2e",
+      "results/experiment_6342_anytime_evalue_release_ledger.json": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+      "results/experiment_6343_evidence_carrying_factor_lifecycle.json": "sha256:d7b90a2ca5be250aa456d011c635b17958331db2cd9b32ef8aae1571c3fa53d3",
+      "results/experiment_6344_counterexample_factor_proposal_calibration.json": "sha256:76e219594ba2bddd08f2eabcdfe3073e32e2c5aea64e3e7b9eb6e56d30777aa0",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "protected_hashes_ready": true,
+    "ram": {
+      "available_gb": 112.818649291992,
+      "total_gb": 125.081378936768
+    },
+    "ram_ready": true,
+    "random_seeds": {
+      "eprocess": 634503,
+      "proposal": 634502,
+      "protected_validation": 634504,
+      "registration": 634500,
+      "stream": 634501
+    },
+    "rollback_targets": {
+      "byte_identity_required": true
+    },
+    "schema": "carnot.experiment_6345.prospective_certified_factor_evolution_ab.v1.preconditions",
+    "stream_and_split_hashes": {
+      "chronological_stream": "sha256:f0e29ba2ee205efa49e75b51ecd503382a240eae9fccf034e8f6bc053f118dfb",
+      "prospective_registration": "sha256:670043ece1d89fb33afa448f420f7e4fb1b17a7c2c9bbf74a8bf202ac00a5bc8",
+      "protected_validation": "sha256:223a4b01e842e19b54b5ef2d49cbc39d02bff29f314ef63cf589ce0db085d390"
+    },
+    "upstream_gates_passed": true,
+    "vram": {
+      "0": {
+        "free_mb": 23859,
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 3090",
+        "total_mb": 24576,
+        "used_mb": 266
+      },
+      "1": {
+        "free_mb": 23859,
+        "index": 1,
+        "name": "NVIDIA GeForce RTX 3090",
+        "total_mb": 24576,
+        "used_mb": 266
+      }
+    }
+  },
+  "predecision_snapshot_paths_hashes_and_counts": {
+    "count": 54,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6345_prospective_certified_factor_evolution_ab.json.predecision_snapshots.jsonl",
+    "present": true,
+    "sha256": "sha256:4cf256a893e477fe8e79966ed41421d9ded8f6067caca81edcbb6f236a6c773b",
+    "size_bytes": 41391
+  },
+  "prospective_registration_path_and_hash": {
+    "freeze_before_any_event_outcome_read": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6345_prospective_certified_factor_evolution_ab.json.prospective_registration.json",
+    "present": true,
+    "sha256": "sha256:670043ece1d89fb33afa448f420f7e4fb1b17a7c2c9bbf74a8bf202ac00a5bc8",
+    "size_bytes": 1284
+  },
+  "protected_files_unchanged": {
+    "files": {
+      "_bmad/traceability.md": {
+        "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "after": "sha256:a5692f14ce13d59fa267fabf2a35aa4a631876fa0e96b24136e8b719fead68fb",
+        "before": "sha256:a5692f14ce13d59fa267fabf2a35aa4a631876fa0e96b24136e8b719fead68fb",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "unchanged": true
+      },
+      "results/experiment_6318_versioned_factor_local_online_initializer.json": {
+        "after": "sha256:73bd16c659ba770f4da0828c2055d33fd44db6e440510dd22b479bf67b6eff2d",
+        "before": "sha256:73bd16c659ba770f4da0828c2055d33fd44db6e440510dd22b479bf67b6eff2d",
+        "unchanged": true
+      },
+      "results/experiment_6319_feedback_directed_online_update_search.json": {
+        "after": "sha256:f1de1a506e5cd0ba7d1fdfbeea610b15d4b5980b1c4e6c63d628633b945868d8",
+        "before": "sha256:f1de1a506e5cd0ba7d1fdfbeea610b15d4b5980b1c4e6c63d628633b945868d8",
+        "unchanged": true
+      },
+      "results/experiment_6320_online_self_evolution_safety_audit.json": {
+        "after": "sha256:90222d2ab2a43aec33aa99cd4527eda6ac4d9fa17161894b5398b91360b6bb2e",
+        "before": "sha256:90222d2ab2a43aec33aa99cd4527eda6ac4d9fa17161894b5398b91360b6bb2e",
+        "unchanged": true
+      },
+      "results/experiment_6342_anytime_evalue_release_ledger.json": {
+        "after": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+        "before": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+        "unchanged": true
+      },
+      "results/experiment_6343_evidence_carrying_factor_lifecycle.json": {
+        "after": "sha256:d7b90a2ca5be250aa456d011c635b17958331db2cd9b32ef8aae1571c3fa53d3",
+        "before": "sha256:d7b90a2ca5be250aa456d011c635b17958331db2cd9b32ef8aae1571c3fa53d3",
+        "unchanged": true
+      },
+      "results/experiment_6344_counterexample_factor_proposal_calibration.json": {
+        "after": "sha256:76e219594ba2bddd08f2eabcdfe3073e32e2c5aea64e3e7b9eb6e56d30777aa0",
+        "before": "sha256:76e219594ba2bddd08f2eabcdfe3073e32e2c5aea64e3e7b9eb6e56d30777aa0",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "before": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "unchanged": true
+      }
+    },
+    "schema": "carnot.experiment_6345.prospective_certified_factor_evolution_ab.v1.protected_files",
+    "unchanged": true
+  },
+  "protected_outcome_seal_and_single_open_receipt": {
+    "all_arms_stopped_before_open": true,
+    "arm_stop_count": 9,
+    "open_count": 1,
+    "opened_after_all_arms_stopped": true,
+    "pre_open_leak_count": 0,
+    "protected_manifest_sha256": "sha256:223a4b01e842e19b54b5ef2d49cbc39d02bff29f314ef63cf589ce0db085d390",
+    "protected_rows_opened": 18,
+    "schema": "carnot.experiment_6345.prospective_certified_factor_evolution_ab.v1.protected_open",
+    "single_open_receipt_id": "sha256:93ae20f0aa0c233655bdba88f2514f159217f338b2ff3f86e7a3a5ba1a461012"
+  },
+  "protected_validation_leak_count": 0,
+  "random_seeds": {
+    "eprocess": 634503,
+    "proposal": 634502,
+    "protected_validation": 634504,
+    "registration": 634500,
+    "stream": 634501
+  },
+  "raw_proposal_paths_hashes_and_counts": {
+    "count": 54,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6345_prospective_certified_factor_evolution_ab.json.raw_proposals.jsonl",
+    "present": true,
+    "sha256": "sha256:7e5793161eb2411f0c14c93443d9e2b5f033d7a8f7c3a9601edf6733837611a2",
+    "size_bytes": 25695
+  },
+  "reproducibility_checksum": "sha256:27e7f2925f6d17334c872130f736d378edd35c477fe25ed6037b18bd748a27aa",
+  "rollback_byte_identity": {
+    "byte_identical": true,
+    "rollback_count": 1,
+    "rollback_rows": [
+      {
+        "byte_identical": true,
+        "capacity_bound": 4,
+        "event_id": "evt-003",
+        "record_type": "rollback",
+        "restored_root": "sha256:a93020a660e2fdaf9075b10691443ce53e1d62460037b42376a0f94608d1d8e7",
+        "rollback_from": "sha256:f681a7034323bbd41ee2dc362de533d4541d4e9228d501b5c75d318e481ac313",
+        "rollback_to": "sha256:a93020a660e2fdaf9075b10691443ce53e1d62460037b42376a0f94608d1d8e7"
+      }
+    ],
+    "schema": "carnot.experiment_6345.prospective_certified_factor_evolution_ab.v1.rollback_identity"
+  },
+  "sealed_chronological_stream_manifest_path_and_hash": {
+    "event_count": 6,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6345_prospective_certified_factor_evolution_ab.json.sealed_chronological_stream_manifest.json",
+    "present": true,
+    "sealed_before_stream_open": true,
+    "sha256": "sha256:f0e29ba2ee205efa49e75b51ecd503382a240eae9fccf034e8f6bc053f118dfb",
+    "size_bytes": 3001
+  },
+  "sealed_protected_validation_manifest_path_and_hash": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6345_prospective_certified_factor_evolution_ab.json.sealed_protected_validation_manifest.json",
+    "present": true,
+    "sealed_until_all_arms_stop": true,
+    "sha256": "sha256:223a4b01e842e19b54b5ef2d49cbc39d02bff29f314ef63cf589ce0db085d390",
+    "size_bytes": 1375
+  },
+  "source_model_weight_mutation_count": 0,
+  "status": "complete_positive",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6345_prospective_certified_factor_evolution_ab.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6345_prospective_certified_factor_evolution_ab.py -m pytest tests/python/test_experiment_6345_prospective_certified_factor_evolution_ab.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6345_prospective_certified_factor_evolution_ab.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python -m carnot.experiment_6345_prospective_certified_factor_evolution_ab --date 20260812",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6345_prospective_certified_factor_evolution_ab.py",
+    "sed -n '1,240p' ops/e2e-test-plan.md",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6345_prospective_certified_factor_evolution_ab.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6345_prospective_certified_factor_evolution_ab.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6345_prospective_certified_factor_evolution_ab.py -m pytest tests/python/test_experiment_6345_prospective_certified_factor_evolution_ab.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6345_prospective_certified_factor_evolution_ab.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6345_prospective_certified_factor_evolution_ab --date 20260812": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6345_prospective_certified_factor_evolution_ab.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6345_prospective_certified_factor_evolution_ab.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    "sed -n '1,240p' ops/e2e-test-plan.md": 0
+  },
+  "unsafe_commit_count": 0,
+  "upstream_paths_hashes_terminal_classes_and_gate_receipts": {
+    "all_gates_passed": true,
+    "all_gates_replayed": true,
+    "rows": [
+      {
+        "gate": "exp6318",
+        "gate_receipt": {
+          "passed": true,
+          "replayed_before_stream_open": true
+        },
+        "honest_verdict": "complete_positive: versioned factor-local learning passed boundary release and rollback gates",
+        "path": "results/experiment_6318_versioned_factor_local_online_initializer.json",
+        "present": true,
+        "ready_score": 1.0,
+        "ready_score_key": "versioned_factor_local_learning_ready_score",
+        "sha256": "sha256:73bd16c659ba770f4da0828c2055d33fd44db6e440510dd22b479bf67b6eff2d",
+        "status": "complete_positive",
+        "terminal_class": "terminal_positive"
+      },
+      {
+        "gate": "exp6319",
+        "gate_receipt": {
+          "passed": true,
+          "replayed_before_stream_open": true
+        },
+        "honest_verdict": "complete_positive: feedback-directed search improved protected yield at matched cost",
+        "path": "results/experiment_6319_feedback_directed_online_update_search.json",
+        "present": true,
+        "ready_score": 1.0,
+        "ready_score_key": "feedback_directed_search_ready_score",
+        "sha256": "sha256:f1de1a506e5cd0ba7d1fdfbeea610b15d4b5980b1c4e6c63d628633b945868d8",
+        "status": "complete_positive",
+        "terminal_class": "terminal_positive"
+      },
+      {
+        "gate": "exp6320",
+        "gate_receipt": {
+          "passed": true,
+          "replayed_before_stream_open": true
+        },
+        "honest_verdict": "complete_positive: safety audit passed fail-closed V544 replay checks while utility promotion stayed blocked",
+        "path": "results/experiment_6320_online_self_evolution_safety_audit.json",
+        "present": true,
+        "ready_score": 1.0,
+        "ready_score_key": "online_self_evolution_safety_ready_score",
+        "sha256": "sha256:90222d2ab2a43aec33aa99cd4527eda6ac4d9fa17161894b5398b91360b6bb2e",
+        "status": "complete_positive",
+        "terminal_class": "terminal_positive"
+      },
+      {
+        "gate": "exp6342",
+        "gate_receipt": {
+          "passed": true,
+          "replayed_before_stream_open": true
+        },
+        "honest_verdict": "complete_positive: anytime e-value release certificate passed with exact safety guard",
+        "path": "results/experiment_6342_anytime_evalue_release_ledger.json",
+        "present": true,
+        "ready_score": 1.0,
+        "ready_score_key": "anytime_release_certificate_ready_score",
+        "sha256": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+        "status": "complete_positive",
+        "terminal_class": "terminal_positive"
+      },
+      {
+        "gate": "exp6343",
+        "gate_receipt": {
+          "passed": true,
+          "replayed_before_stream_open": true
+        },
+        "honest_verdict": "complete_positive: evidence-carrying factor lifecycle passed all exact gates",
+        "path": "results/experiment_6343_evidence_carrying_factor_lifecycle.json",
+        "present": true,
+        "ready_score": 1.0,
+        "ready_score_key": "evidence_factor_lifecycle_ready_score",
+        "sha256": "sha256:d7b90a2ca5be250aa456d011c635b17958331db2cd9b32ef8aae1571c3fa53d3",
+        "status": "complete_positive",
+        "terminal_class": "terminal_positive"
+      },
+      {
+        "gate": "exp6344",
+        "gate_receipt": {
+          "passed": true,
+          "replayed_before_stream_open": true
+        },
+        "honest_verdict": "complete_positive: counterexample-directed proposals beat repeated sampling per matched exact cost in every required model family",
+        "path": "results/experiment_6344_counterexample_factor_proposal_calibration.json",
+        "present": true,
+        "ready_score": 1.0,
+        "ready_score_key": "counterexample_proposal_ready_score",
+        "sha256": "sha256:76e219594ba2bddd08f2eabcdfe3073e32e2c5aea64e3e7b9eb6e56d30777aa0",
+        "status": "complete_positive",
+        "terminal_class": "terminal_positive"
+      }
+    ],
+    "schema": "carnot.experiment_6345.prospective_certified_factor_evolution_ab.v1.upstream_gate_replay"
+  },
+  "verification_calls_time_cost_and_error_table": {
+    "all_costs_accounted": true,
+    "checker_cost": 1.69,
+    "checker_error_count": 0,
+    "checker_time_s": 0.0845,
+    "eprocess_checker_calls": 6,
+    "exact_checker_calls": 54,
+    "proposal_schema_calls": 54,
+    "rollback_checker_calls": 1,
+    "schema": "carnot.experiment_6345.prospective_certified_factor_evolution_ab.v1.verification_costs",
+    "snapshot_checks": 54,
+    "total_checker_calls": 169
+  },
+  "verifier_is_oracle": true,
+  "version_and_lifecycle_registry_paths_hashes": {
+    "count": 8,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6345_prospective_certified_factor_evolution_ab.json.version_lifecycle_registry.jsonl",
+    "present": true,
+    "sha256": "sha256:6dfd8c37c104f9422727927a6b164110ed378d2d348bc76467eb04064d898256",
+    "size_bytes": 2747
+  }
+}

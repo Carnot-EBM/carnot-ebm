@@ -27870,3 +27870,131 @@ still zero.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-6159 | Planned (`python/carnot/experiment_6159_decision_calibrated_stream.py`) | Planned (`tests/python/test_experiment_6159_decision_calibrated_stream.py`) |
+
+## REQ-LEARN-6345: Prospective Certified Factor Evolution A/B
+
+Exp6345 SHALL replay the Exp6318, Exp6319, Exp6320, Exp6342, Exp6343,
+and Exp6344 structured gates before any chronological event outcome is read.
+It SHALL seal the prospective registration, chronological stream manifest,
+and protected validation manifest before event decisions. It SHALL build
+three mandated local GGUF model rows through `cached_sota_pair(gpu_indices=(0, 1))`
+helper calls, using embedded llama.cpp tokenizers. It SHALL compare a frozen
+champion, the fixed V544 factor-local learner, and certified evidence-carrying
+evolution with counterexample-directed proposals under matched budgets.
+
+- REQ-LEARN-6345-1: The artifact SHALL contain the exact required field set
+  listed below. `protected_validation_leak_count`, `unsafe_commit_count`,
+  `source_model_weight_mutation_count`, `generated_label_count`, and
+  `hidden_state_access_count` SHALL be bare integer zero.
+- REQ-LEARN-6345-2: Predecision snapshots SHALL be written before each outcome
+  reveal and SHALL exclude exact outcomes, protected validation labels,
+  generated labels, hidden state, and model weight deltas.
+- REQ-LEARN-6345-3: Release decisions SHALL use exact evidence and the
+  e-process ledger. No LLM or arm may approve its own update.
+- REQ-LEARN-6345-4: Factor updates SHALL remain factor-local, versioned,
+  bounded by capacity, and rollbackable to byte-identical prior state.
+- REQ-LEARN-6345-5: `certified_continuous_learning_ready_score` SHALL be the
+  bare scalar `1.0` only when preregistered future exact-yield gain is
+  positive over both controls, false releases and unsafe commits are zero,
+  factor growth is bounded, rollback is byte-identical, protected validation
+  opens exactly once after all arms stop, all required model cells are present,
+  and all claimed checks pass.
+
+### SCENARIO-LEARN-6345-GATE-REPLAY: Gates Replay Before Stream Open
+
+**Given** the six upstream experiment artifacts
+**When** Exp6345 starts
+**Then** each upstream path, hash, terminal class, ready score, and gate receipt
+is recorded before any chronological stream outcome is visible.
+
+### SCENARIO-LEARN-6345-SEALS: Registration and Validation Are Sealed
+
+**Given** chronological and protected validation events
+**When** Exp6345 writes the preregistration and manifests
+**Then** the learner-visible manifest contains event identity and outcome hashes
+only, the protected manifest stays closed, and protected validation opens once
+after all arms have stopped.
+
+### SCENARIO-LEARN-6345-MODELS: GGUF Tokenizers Use llama.cpp
+
+**Given** the mandated Qwen3.6-35B-A3B, Gemma4-31B-it, and Gemma4-26B-A4B-it
+GGUF models
+**When** Exp6345 builds `MODEL_SPECS`
+**Then** it resolves model paths through cached SOTA helper calls and validates
+embedded GGUF tokenizers through llama.cpp, not HuggingFace AutoTokenizer.
+
+### SCENARIO-LEARN-6345-MATCHED-ARMS: Budgets and No-Peeking Match
+
+**Given** the three matched arms
+**When** each chronological event is processed
+**Then** each arm receives the same event order, token, candidate, time,
+checker, state, and memory budgets, and each decision snapshot precedes its
+outcome reveal.
+
+### SCENARIO-LEARN-6345-RELEASE-LIFECYCLE: E-Process and Lifecycle Bound Releases
+
+**Given** exact postdecision outcomes
+**When** a factor-local update is proposed
+**Then** the exact checker and e-process decide release, rejected updates do not
+commit, lifecycle capacity stays bounded, and rollback restores exact bytes.
+
+### SCENARIO-LEARN-6345-READY: Positive Readiness Is Fully Conjunctive
+
+**Given** every required model-family-time cell
+**When** Exp6345 computes readiness
+**Then** positive readiness requires certified evolution to beat the frozen and
+fixed controls on preregistered future exact yield with zero safety, leakage,
+release, rollback, model-weight, generated-label, and hidden-state violations.
+
+### Required Artifact Fields and Principles
+
+- `status`: Terminal status distinguishes positive, null, blocked, and retired outcomes.
+- `upstream_paths_hashes_terminal_classes_and_gate_receipts`: Gate replay is anchored to exact upstream bytes.
+- `MODEL_SPECS`: The three mandated local GGUF rows come from cached SOTA helper calls.
+- `models_used`: Model ids are explicit for each required model-family cell.
+- `model_file_hashes_revisions_quantizations_and_tokenizers`: Model files, revisions, quantization, hashes, and tokenizer methods are pinned.
+- `llama_cpp_embedded_tokenizer_receipts`: Embedded llama.cpp tokenizer checks prevent AutoTokenizer misuse on GGUF repos.
+- `cuda_gpu_offload_and_memory_release_receipts_by_model`: Per-model placement and release receipts bound CUDA lifecycle claims.
+- `prospective_registration_path_and_hash`: Registration is frozen before outcomes can influence decisions.
+- `sealed_chronological_stream_manifest_path_and_hash`: Event order and outcome hashes are sealed before the stream opens.
+- `sealed_protected_validation_manifest_path_and_hash`: Protected validation stays closed until the single open.
+- `event_family_and_update_opportunity_contract`: Family boundaries and update opportunities are fixed before decisions.
+- `arm_definitions`: Frozen, fixed V544, and certified evolution arms are named and separated.
+- `matched_call_token_candidate_time_checker_state_and_memory_budgets`: Matched budgets prevent resource advantages.
+- `predecision_snapshot_paths_hashes_and_counts`: Snapshot hashes prove decisions precede outcome reveal.
+- `raw_proposal_paths_hashes_and_counts`: Raw proposal rows are immutable inputs to exact scoring.
+- `postdecision_outcome_paths_hashes_and_counts`: Outcomes are recorded only after decisions.
+- `version_and_lifecycle_registry_paths_hashes`: Version, capacity, retention, release, and rollback state is durable.
+- `eprocess_release_ledger_path_and_hash`: Exact e-process evidence controls release.
+- `exact_yield_false_release_rollback_factor_growth_and_latency_by_model_family_arm_and_time`: Time-cell metrics expose yield, release, rollback, growth, and latency.
+- `future_same_family_and_held_family_paired_deltas_intervals_and_sample_sizes`: Preregistered future gains stay disaggregated.
+- `verification_calls_time_cost_and_error_table`: Checker calls, time, cost, and errors are charged.
+- `catastrophic_remembering_event_counts_and_examples`: Forgetting and harmful remembering cannot hide.
+- `protected_outcome_seal_and_single_open_receipt`: Protected validation opens exactly once after all arms stop.
+- `protected_validation_leak_count`: Bare zero proves no protected outcome leaked before the allowed open.
+- `unsafe_commit_count`: Bare zero proves unsafe updates never committed.
+- `rollback_byte_identity`: Rollback must restore the exact previous bytes.
+- `harm_underpowered_missing_and_flagged_cells`: Missing, harmful, underpowered, and flagged cells stay visible.
+- `source_model_weight_mutation_count`: Bare zero proves base weights stayed frozen.
+- `generated_label_count`: Bare zero proves generated labels did not define outcomes.
+- `hidden_state_access_count`: Bare zero proves hidden activations did not supply evidence.
+- `exact_oracle_claim_boundary`: Exact checkers define the oracle boundary and release authority.
+- `certified_continuous_learning_ready_score`: Readiness is one only when all preregistered release, safety, lifecycle, model, and test gates pass.
+- `protected_files_unchanged`: Protected repo files remain byte-identical.
+- `preconditions_checked`: Preconditions cover gates, files, tokenizers, GPUs, memory, disk, chronology, budgets, seeds, rollback targets, and protected hashes.
+- `inference_substrate`: The artifact declares deterministic local GGUF tokenizer and exact-oracle replay.
+- `verifier_is_oracle`: Bare true declares that exact checkers are the correctness oracle.
+- `field_provenance`: Every field traces to specs, upstream artifacts, sidecars, receipts, metrics, or tests.
+- `field_principles`: Every required field has a reason.
+- `test_commands`: Focused, coverage, global, spec, E2E, adversarial, run, and clutter commands are named.
+- `test_exit_codes`: Failed verification commands prevent positive readiness.
+- `duration_s`: Wall time is measured without padding.
+- `random_seeds`: Deterministic stream, proposal, release, and validation seeds are pinned.
+- `reproducibility_checksum`: A stable hash detects drift.
+- `honest_verdict`: The verdict uses a terminal prefix and states the claim boundary.
+
+## Implementation Status (REQ-LEARN-6345)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-6345 | Planned (`python/carnot/experiment_6345_prospective_certified_factor_evolution_ab.py`, `results/experiment_6345_prospective_certified_factor_evolution_ab.json`) | Planned (`tests/python/test_experiment_6345_prospective_certified_factor_evolution_ab.py`) |
