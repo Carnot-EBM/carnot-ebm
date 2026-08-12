@@ -499,6 +499,218 @@ without authorization, or records a command other than
 
 ---
 
+### REQ-HW-6325
+
+**Title:** Exp6325 GateMate dated receipt single-detect MUST run exactly one read-only DirtyJTAG detect and then stop
+
+**Description:**
+Experiment 6325 SHALL produce
+`results/experiment_6325_gatemate_dated_receipt_single_detect.json` as the
+single authorized GateMate detect receipt for the 2026-08-11 dated physical
+power-cycle record. It SHALL validate the receipt in `ops/known-issues.md`,
+prove that its `20260811` date is newer than the prior Exp6121 and Exp6199
+failed GateMate attempts, and prove that the target is exactly the Cologne Chip
+GateMate A1-EVB-2M with DirtyJTAG cable `1209:c0ca`.
+
+Before any board-addressing command, Exp6325 SHALL hash the protected files,
+hash the declared GateMate prior receipts, record read-only USB state, record
+disk and permission receipts, resolve the exact `openFPGALoader` binary path,
+record `openFPGALoader --version` without addressing a board, and record the
+one-command budget. If the dated receipt is missing, stale, malformed, or
+targets a non-GateMate board, the artifact MUST be blocked and run zero
+hardware commands.
+
+When the preconditions pass, Exp6325 SHALL run exactly one bounded command:
+`openFPGALoader -c dirtyJtag --detect`. It SHALL capture UTC start and finish
+times, stdout, stderr, exit code, timeout state, and any detected chain/device
+IDs. It MUST stop after this attempt for success, empty chain, failure, or
+timeout. It MUST NOT run flash, erase, reset, synthesis, place, route, timing,
+KV260, or PolarFire commands.
+
+Required artifact fields:
+
+- `status`
+- `dated_physical_receipt_path_hash_date_and_text`
+- `receipt_newer_than_prior_attempts`
+- `board_and_cable_target`
+- `pre_command_usb_receipt`
+- `openfpgaloader_version_receipt`
+- `exact_authorized_command`
+- `detect_command_count`
+- `detect_started_utc`
+- `detect_finished_utc`
+- `detect_stdout`
+- `detect_stderr`
+- `detect_exit_code`
+- `detect_timeout`
+- `detected_chain_and_device_ids`
+- `post_command_usb_receipt`
+- `hardware_state_changed_from_prior_attempts`
+- `flash_command_count`
+- `erase_command_count`
+- `reset_command_count`
+- `synthesis_command_count`
+- `place_route_command_count`
+- `timing_command_count`
+- `kv260_command_count`
+- `polarfire_command_count`
+- `stop_after_single_attempt_receipt`
+- `protected_files_unchanged`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_provenance`
+- `field_principles`
+- `test_commands`
+- `test_exit_codes`
+- `duration_s`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+Required field principles:
+
+- `status`: principle "Terminal state separates blocked preconditions from a completed single detect."
+- `dated_physical_receipt_path_hash_date_and_text`: principle "The operator receipt is the only physical-change authority."
+- `receipt_newer_than_prior_attempts`: principle "Receipt date must be newer than prior failed attempts."
+- `board_and_cable_target`: principle "The one command is scoped to GateMate plus DirtyJTAG only."
+- `pre_command_usb_receipt`: principle "Read-only USB state is captured before the board command."
+- `openfpgaloader_version_receipt`: principle "Tool version is recorded without addressing a board."
+- `exact_authorized_command`: principle "Only one exact non-destructive command is allowed."
+- `detect_command_count`: principle "A bare integer enforces the single-attempt budget."
+- `detect_started_utc`: principle "UTC start time orders the hardware receipt."
+- `detect_finished_utc`: principle "UTC finish time bounds the attempt."
+- `detect_stdout`: principle "Raw stdout preserves the detection result."
+- `detect_stderr`: principle "Raw stderr preserves tool failures."
+- `detect_exit_code`: principle "Exit code prevents failed detects becoming success."
+- `detect_timeout`: principle "Timeout is a terminal outcome, not a retry trigger."
+- `detected_chain_and_device_ids`: principle "Parsed chain data is derived only from raw detect output."
+- `post_command_usb_receipt`: principle "Read-only USB state is captured after the attempt."
+- `hardware_state_changed_from_prior_attempts`: principle "Changed power state, not software repetition, authorizes this attempt."
+- `flash_command_count`: principle "Flash commands are forbidden."
+- `erase_command_count`: principle "Erase commands are forbidden."
+- `reset_command_count`: principle "Reset commands are forbidden."
+- `synthesis_command_count`: principle "Synthesis commands are forbidden."
+- `place_route_command_count`: principle "Place and route commands are forbidden."
+- `timing_command_count`: principle "Timing commands are forbidden."
+- `kv260_command_count`: principle "KV260 commands are forbidden in this GateMate task."
+- `polarfire_command_count`: principle "PolarFire commands are forbidden in this GateMate task."
+- `stop_after_single_attempt_receipt`: principle "All outcomes stop after one attempt."
+- `protected_files_unchanged`: principle "Operator and conductor files remain byte-identical."
+- `preconditions_checked`: principle "Hashes, USB, tool path, disk, permissions, timeout, and budget are checked first."
+- `inference_substrate`: principle "Use read-only host receipts plus one DirtyJTAG detect."
+- `verifier_is_oracle`: principle "Raw receipts and command output are authoritative only for visibility."
+- `field_provenance`: principle "Every field traces to a receipt, command output, parser, or test."
+- `field_principles`: principle "Every required field declares why it exists."
+- `test_commands`: principle "Verification commands are recorded."
+- `test_exit_codes`: principle "Verification exit codes are recorded."
+- `duration_s`: principle "Measured wall time is reported without padding."
+- `reproducibility_checksum`: principle "Checksum detects receipt or artifact drift."
+- `honest_verdict`: principle "Verdict names the raw outcome without inferring execution."
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_6325_gatemate_dated_receipt_single_detect --date 20260812`
+  writes `results/experiment_6325_gatemate_dated_receipt_single_detect.json`.
+- The artifact includes `spec_refs` containing `REQ-HW-6325` and the applicable
+  `SCENARIO-HW-6325-*`, `random_seed=6325`, and a stable checksum.
+- Missing, stale, malformed, or wrong-target receipts run zero hardware
+  commands and write a blocked artifact.
+- A valid 2026-08-11 GateMate power-cycle receipt permits exactly one
+  `openFPGALoader -c dirtyJtag --detect` with a bounded timeout.
+- Success, empty-chain, tool failure, and timeout all stop after that single
+  attempt and preserve raw stdout/stderr.
+- `detect_command_count` is bare `1` after the command.
+- Flash, erase, reset, synthesis, place/route, timing, KV260, and PolarFire
+  command counts are bare `0` in every valid artifact.
+
+**Implementation status:** Planned (Exp 6325)
+
+---
+
+### SCENARIO-HW-6325-1
+
+**Scenario:** Exp6325 records a matching GateMate detect once and makes no execution claim.
+
+**Given:** The 2026-08-11 GateMate power-cycle receipt is present and newer
+than Exp6121 and Exp6199,
+**When:** the single detect output contains IDCODE `0x20000001`,
+**Then:** the artifact records one detect, parsed GateMate chain visibility,
+all forbidden command counts remain zero, and `honest_verdict` begins with
+`complete_visible:`.
+
+**Implementation status:** Planned (Exp 6325)
+
+---
+
+### SCENARIO-HW-6325-2
+
+**Scenario:** Exp6325 records an empty chain once and stops.
+
+**Given:** The dated GateMate receipt authorizes one detect,
+**When:** the detect output has no device ID,
+**Then:** the artifact records one detect, an empty parsed chain, zero
+forbidden command counts, and `honest_verdict` begins with
+`blocked_empty_chain:`.
+
+**Implementation status:** Planned (Exp 6325)
+
+---
+
+### SCENARIO-HW-6325-3
+
+**Scenario:** Exp6325 records a timeout once and stops.
+
+**Given:** The dated GateMate receipt authorizes one detect,
+**When:** the detect command times out,
+**Then:** the artifact records one detect, `detect_timeout=true`, preserved
+stderr, zero retry commands, and `honest_verdict` begins with
+`blocked_timeout:`.
+
+**Implementation status:** Planned (Exp 6325)
+
+---
+
+### SCENARIO-HW-6325-4
+
+**Scenario:** Exp6325 blocks stale or missing receipts before hardware access.
+
+**Given:** The physical receipt is missing or not newer than the prior failed
+GateMate attempts,
+**When:** Exp6325 checks preconditions,
+**Then:** it writes a blocked artifact with `detect_command_count=0` and runs
+zero hardware commands.
+
+**Implementation status:** Planned (Exp 6325)
+
+---
+
+### SCENARIO-HW-6325-5
+
+**Scenario:** Exp6325 blocks wrong-target receipts before hardware access.
+
+**Given:** A dated receipt names any board or cable other than GateMate
+A1-EVB-2M with DirtyJTAG `1209:c0ca`,
+**When:** Exp6325 checks preconditions,
+**Then:** it writes a blocked artifact with zero hardware commands and
+`honest_verdict` beginning with `blocked_wrong_target:`.
+
+**Implementation status:** Planned (Exp 6325)
+
+---
+
+### SCENARIO-HW-6325-6
+
+**Scenario:** Exp6325 validation refuses a second detect or forbidden command count.
+
+**Given:** An artifact records more than one detect, a different command, or a
+non-zero flash, erase, reset, synthesis, place/route, timing, KV260, or
+PolarFire count,
+**When:** Exp6325 validates the artifact,
+**Then:** validation fails before the artifact can graduate.
+
+**Implementation status:** Planned (Exp 6325)
+
+---
+
 ### REQ-HW-5930
 
 **Title:** Exp5930 adaptive-state ABI v2 board mapping MUST produce static receipts and skip unchanged physical probes
