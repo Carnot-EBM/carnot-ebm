@@ -1,0 +1,8 @@
+policy quota_control_fallback
+states: banned, fresh, hot, warm;
+actions: allow, challenge, delay, deny;
+rule banned -> deny;
+rule fresh -> allow;
+rule hot -> challenge;
+rule warm -> delay;
+end

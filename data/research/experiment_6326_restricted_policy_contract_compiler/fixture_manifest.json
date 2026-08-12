@@ -1,0 +1,296 @@
+{
+  "adversarial_fixture_families": [
+    "vacuous_contract",
+    "parser_default",
+    "validator_mutation",
+    "test_deletion",
+    "fallback_laundering",
+    "hash_swap",
+    "semantic_hash_collision_probe",
+    "nondeterministic_normalization"
+  ],
+  "bounds": {
+    "action_type": "finite enum identifier",
+    "max_actions": 4,
+    "max_enumerated_policies_per_family": 256,
+    "max_identifier_length": 24,
+    "max_states": 4,
+    "parser_defaults_allowed": false,
+    "policy_type": "total deterministic function state -> action",
+    "state_type": "finite enum identifier",
+    "unknown_values_rejected": true
+  },
+  "date": "20260812",
+  "fixtures": [
+    {
+      "contract": {
+        "actions": [
+          "deny",
+          "read",
+          "write",
+          "audit"
+        ],
+        "clauses": [
+          {
+            "action": "deny",
+            "kind": "require_action",
+            "state": "guest",
+            "weight": 2
+          },
+          {
+            "action": "write",
+            "kind": "require_action",
+            "state": "admin",
+            "weight": 2
+          },
+          {
+            "action": "write",
+            "kind": "forbid_action",
+            "state": "locked",
+            "weight": 3
+          },
+          {
+            "actions": [
+              "read",
+              "audit"
+            ],
+            "kind": "allow_actions",
+            "state": "member",
+            "weight": 1
+          },
+          {
+            "kind": "different_action",
+            "other_state": "admin",
+            "state": "guest",
+            "weight": 1
+          }
+        ],
+        "family": "access_gate",
+        "schema": "carnot.experiment_6326.restricted_policy_contract_compiler.v1.contract",
+        "split": "development",
+        "states": [
+          "guest",
+          "member",
+          "admin",
+          "locked"
+        ]
+      },
+      "description": "Access requests must deny guests and locked accounts.",
+      "fallback_semantic_hash": "sha256:c97f6204857f511d9dde01996f69d4561b5670bfed15eec1e5c3cf492340117c",
+      "fallback_source_sha256": "sha256:15b0da631402f7711ca5b6e8627a5c503fca0be66f7f5a15f6e5f72102ebc67b",
+      "family": "access_gate",
+      "split": "development",
+      "tags": [
+        "require",
+        "forbid",
+        "allow",
+        "development"
+      ]
+    },
+    {
+      "contract": {
+        "actions": [
+          "monitor",
+          "throttle",
+          "shutdown",
+          "repair"
+        ],
+        "clauses": [
+          {
+            "action": "monitor",
+            "kind": "require_action",
+            "state": "normal",
+            "weight": 1
+          },
+          {
+            "action": "shutdown",
+            "kind": "require_action",
+            "state": "critical",
+            "weight": 3
+          },
+          {
+            "action": "repair",
+            "kind": "require_action",
+            "state": "offline",
+            "weight": 2
+          },
+          {
+            "action": "shutdown",
+            "kind": "forbid_action",
+            "state": "warning",
+            "weight": 1
+          },
+          {
+            "kind": "different_action",
+            "other_state": "critical",
+            "state": "normal",
+            "weight": 1
+          }
+        ],
+        "family": "incident_response",
+        "schema": "carnot.experiment_6326.restricted_policy_contract_compiler.v1.contract",
+        "split": "development",
+        "states": [
+          "normal",
+          "warning",
+          "critical",
+          "offline"
+        ]
+      },
+      "description": "Incident states escalate without using repair during normal operation.",
+      "fallback_semantic_hash": "sha256:4f13b2fd4e555b5909d3086f2d990f30c4489c4ed55ba14cd72bc7e3a8544f94",
+      "fallback_source_sha256": "sha256:9a5184321ccf79b744440a8d0becd98db273189ba1646c3ccd6070441a09fa73",
+      "family": "incident_response",
+      "split": "development",
+      "tags": [
+        "escalation",
+        "development"
+      ]
+    },
+    {
+      "contract": {
+        "actions": [
+          "serve",
+          "proxy",
+          "block",
+          "retry"
+        ],
+        "clauses": [
+          {
+            "action": "serve",
+            "kind": "require_action",
+            "state": "local",
+            "weight": 1
+          },
+          {
+            "action": "block",
+            "kind": "require_action",
+            "state": "external",
+            "weight": 3
+          },
+          {
+            "action": "retry",
+            "kind": "require_action",
+            "state": "error",
+            "weight": 2
+          },
+          {
+            "actions": [
+              "serve",
+              "proxy"
+            ],
+            "kind": "allow_actions",
+            "state": "partner",
+            "weight": 1
+          },
+          {
+            "action": "proxy",
+            "kind": "if_action_then",
+            "state": "partner",
+            "then_action": "block",
+            "then_state": "external",
+            "weight": 1
+          }
+        ],
+        "family": "routing_policy",
+        "schema": "carnot.experiment_6326.restricted_policy_contract_compiler.v1.contract",
+        "split": "held",
+        "states": [
+          "local",
+          "partner",
+          "external",
+          "error"
+        ]
+      },
+      "description": "Held routing policy blocks external requests and retries errors.",
+      "fallback_semantic_hash": "sha256:0f11a90fdc29ea86d6cbae776c918de0d88e90257efc9d69ce8b0b79c9611470",
+      "fallback_source_sha256": "sha256:f7adc3c0e3df6190022b770634e904f48f593152721432c60c5f5a848af594fe",
+      "family": "routing_policy",
+      "split": "held",
+      "tags": [
+        "held",
+        "implication"
+      ]
+    },
+    {
+      "contract": {
+        "actions": [
+          "allow",
+          "delay",
+          "challenge",
+          "deny"
+        ],
+        "clauses": [
+          {
+            "action": "allow",
+            "kind": "require_action",
+            "state": "fresh",
+            "weight": 1
+          },
+          {
+            "action": "deny",
+            "kind": "require_action",
+            "state": "banned",
+            "weight": 3
+          },
+          {
+            "action": "allow",
+            "kind": "forbid_action",
+            "state": "hot",
+            "weight": 2
+          },
+          {
+            "actions": [
+              "delay",
+              "challenge"
+            ],
+            "kind": "allow_actions",
+            "state": "warm",
+            "weight": 1
+          },
+          {
+            "kind": "different_action",
+            "other_state": "banned",
+            "state": "fresh",
+            "weight": 1
+          }
+        ],
+        "family": "quota_control",
+        "schema": "carnot.experiment_6326.restricted_policy_contract_compiler.v1.contract",
+        "split": "held",
+        "states": [
+          "fresh",
+          "warm",
+          "hot",
+          "banned"
+        ]
+      },
+      "description": "Held quota policy escalates hotter traffic and denies banned traffic.",
+      "fallback_semantic_hash": "sha256:45e2735113777fba076c087fe92f920c0053416582731fa99e993ee8592125a1",
+      "fallback_source_sha256": "sha256:6765abb047a20a0df5b85242db7e3c4c405be6da5ec8cb01f866ee4cfda16dfe",
+      "family": "quota_control",
+      "split": "held",
+      "tags": [
+        "held",
+        "escalation"
+      ]
+    }
+  ],
+  "random_seeds": [
+    6326,
+    6327,
+    6328
+  ],
+  "schema": "carnot.experiment_6326.restricted_policy_contract_compiler.v1.fixture_manifest",
+  "split_rules": {
+    "assignment_rule": "fixed family names, no random split after fixtures exist",
+    "development": [
+      "access_gate",
+      "incident_response"
+    ],
+    "held": [
+      "routing_policy",
+      "quota_control"
+    ]
+  }
+}

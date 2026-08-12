@@ -1,0 +1,11 @@
+# Exp6326 restricted finite policy DSL
+program        := policy_header states_line actions_line rule_line+ end_line
+policy_header  := "policy" IDENT
+states_line    := "states:" IDENT ("," IDENT)* ";"
+actions_line   := "actions:" IDENT ("," IDENT)* ";"
+rule_line      := "rule" STATE "->" ACTION ";"
+end_line       := "end"
+comment        := "#" ... end_of_line
+IDENT          := /[a-z][a-z0-9_]*/ with length <= 24
+bounds         := states <= 4, actions <= 4, every state has exactly one rule
+semantics      := finite map state -> action; source order and comments ignored

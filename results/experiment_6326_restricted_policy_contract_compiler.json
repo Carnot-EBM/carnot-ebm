@@ -1,0 +1,852 @@
+{
+  "canonical_semantics_path_and_hash": {
+    "path": "python/carnot/experiment_6326_restricted_policy_contract_compiler.py",
+    "sha256": "sha256:f4fa9bf22695a314f40b76daccf421888866908b64b470d7ec70932d7fe1b804",
+    "symbols": [
+      "PolicyProgram",
+      "semantic_hash"
+    ]
+  },
+  "contract_family_splits": {
+    "development_family_count": 2,
+    "held_family_count": 2,
+    "split_rule": "families are frozen by name before any policy synthesis",
+    "splits": {
+      "development": [
+        "access_gate",
+        "incident_response"
+      ],
+      "held": [
+        "quota_control",
+        "routing_policy"
+      ]
+    }
+  },
+  "contract_guard_ready_score": 1.0,
+  "contract_schema_path_and_hash": {
+    "path": "data/research/experiment_6326_restricted_policy_contract_compiler/contract_schema.json",
+    "sha256": "sha256:e4a2cc826e123c8d0020a11c30f3fcf14ab918a049d3bd2124e13e3d283eafbc"
+  },
+  "dsl_grammar_path_and_hash": {
+    "path": "data/research/experiment_6326_restricted_policy_contract_compiler/policy_dsl_grammar.txt",
+    "sha256": "sha256:86550327c297f267cdc7f3373017db0a7d97b223ee6a03af391ed836c50e7d54"
+  },
+  "duration_s": 4.437984898686409e-06,
+  "exact_energy_definition": {
+    "exactness_check": "complete finite-domain enumeration compares factor energy to independent clause evaluation",
+    "formula": "E(policy, contract)=sum_i weight_i * 1[factor_i(policy)=unsatisfied]",
+    "locality": "each factor scope is one or two finite states",
+    "violation_unit": "one named finite-domain clause",
+    "weights": "positive integers only"
+  },
+  "exact_oracle_claim_boundary": {
+    "boundary": "Exact safety is an oracle guard and not a learned-verifier moat.",
+    "checker": "complete finite-domain enumeration",
+    "oracle_distinct_verifier_claim": false,
+    "verifier_is_oracle": true
+  },
+  "exhaustive_contract_results_by_family": {
+    "all_families_passed": true,
+    "by_family": {
+      "access_gate": {
+        "action_count": 4,
+        "complete_domain_checked": true,
+        "energy_histogram": {
+          "0": 6,
+          "1": 6,
+          "2": 24,
+          "3": 38,
+          "4": 56,
+          "5": 62,
+          "6": 24,
+          "7": 18,
+          "8": 18,
+          "9": 4
+        },
+        "enumerated_policy_count": 256,
+        "fallback_energy": 0,
+        "fallback_satisfies_contract": true,
+        "split": "development",
+        "state_count": 4,
+        "zero_energy_policy_count": 6
+      },
+      "incident_response": {
+        "action_count": 4,
+        "complete_domain_checked": true,
+        "energy_histogram": {
+          "0": 3,
+          "1": 7,
+          "2": 14,
+          "3": 28,
+          "4": 41,
+          "5": 35,
+          "6": 80,
+          "7": 42,
+          "8": 6
+        },
+        "enumerated_policy_count": 256,
+        "fallback_energy": 0,
+        "fallback_satisfies_contract": true,
+        "split": "development",
+        "state_count": 4,
+        "zero_energy_policy_count": 3
+      },
+      "quota_control": {
+        "action_count": 4,
+        "complete_domain_checked": true,
+        "energy_histogram": {
+          "0": 6,
+          "1": 18,
+          "2": 20,
+          "3": 24,
+          "4": 66,
+          "5": 66,
+          "6": 32,
+          "7": 20,
+          "8": 4
+        },
+        "enumerated_policy_count": 256,
+        "fallback_energy": 0,
+        "fallback_satisfies_contract": true,
+        "split": "held",
+        "state_count": 4,
+        "zero_energy_policy_count": 6
+      },
+      "routing_policy": {
+        "action_count": 4,
+        "complete_domain_checked": true,
+        "energy_histogram": {
+          "0": 2,
+          "1": 8,
+          "2": 12,
+          "3": 27,
+          "4": 36,
+          "5": 36,
+          "6": 54,
+          "7": 81
+        },
+        "enumerated_policy_count": 256,
+        "fallback_energy": 0,
+        "fallback_satisfies_contract": true,
+        "split": "held",
+        "state_count": 4,
+        "zero_energy_policy_count": 2
+      }
+    },
+    "checker": "complete_finite_domain_enumeration"
+  },
+  "external_text_scorer_count": 0,
+  "factor_compiler_path_and_hash": {
+    "path": "python/carnot/experiment_6326_restricted_policy_contract_compiler.py",
+    "sha256": "sha256:f4fa9bf22695a314f40b76daccf421888866908b64b470d7ec70932d7fe1b804",
+    "symbols": [
+      "Contract",
+      "Factor",
+      "compile_contract_to_factors"
+    ]
+  },
+  "factor_energy_exactness_results": {
+    "all_passed": true,
+    "by_family": {
+      "access_gate": {
+        "factor_count": 5,
+        "mismatch_count": 0,
+        "passed": true,
+        "policy_count": 256
+      },
+      "incident_response": {
+        "factor_count": 5,
+        "mismatch_count": 0,
+        "passed": true,
+        "policy_count": 256
+      },
+      "quota_control": {
+        "factor_count": 5,
+        "mismatch_count": 0,
+        "passed": true,
+        "policy_count": 256
+      },
+      "routing_policy": {
+        "factor_count": 5,
+        "mismatch_count": 0,
+        "passed": true,
+        "policy_count": 256
+      }
+    },
+    "checked_policy_count": 1024,
+    "checker": "complete_finite_domain_enumeration",
+    "mismatch_count": 0,
+    "mismatch_samples": []
+  },
+  "fallback_programs_paths_and_hashes": {
+    "access_gate": {
+      "path": "data/research/experiment_6326_restricted_policy_contract_compiler/fallbacks/access_gate.policy",
+      "semantic_hash": "sha256:c97f6204857f511d9dde01996f69d4561b5670bfed15eec1e5c3cf492340117c",
+      "source_sha256": "sha256:15b0da631402f7711ca5b6e8627a5c503fca0be66f7f5a15f6e5f72102ebc67b",
+      "verified": true
+    },
+    "incident_response": {
+      "path": "data/research/experiment_6326_restricted_policy_contract_compiler/fallbacks/incident_response.policy",
+      "semantic_hash": "sha256:4f13b2fd4e555b5909d3086f2d990f30c4489c4ed55ba14cd72bc7e3a8544f94",
+      "source_sha256": "sha256:9a5184321ccf79b744440a8d0becd98db273189ba1646c3ccd6070441a09fa73",
+      "verified": true
+    },
+    "quota_control": {
+      "path": "data/research/experiment_6326_restricted_policy_contract_compiler/fallbacks/quota_control.policy",
+      "semantic_hash": "sha256:45e2735113777fba076c087fe92f920c0053416582731fa99e993ee8592125a1",
+      "source_sha256": "sha256:6765abb047a20a0df5b85242db7e3c4c405be6da5ec8cb01f866ee4cfda16dfe",
+      "verified": true
+    },
+    "routing_policy": {
+      "path": "data/research/experiment_6326_restricted_policy_contract_compiler/fallbacks/routing_policy.policy",
+      "semantic_hash": "sha256:0f11a90fdc29ea86d6cbae776c918de0d88e90257efc9d69ce8b0b79c9611470",
+      "source_sha256": "sha256:f7adc3c0e3df6190022b770634e904f48f593152721432c60c5f5a848af594fe",
+      "verified": true
+    }
+  },
+  "field_principles": {
+    "canonical_semantics_path_and_hash": "Pins the state-action meaning used by contracts.",
+    "contract_family_splits": "Keeps development and held families separate.",
+    "contract_guard_ready_score": "Opens only when exactness, fallbacks, and attacks pass.",
+    "contract_schema_path_and_hash": "Pins the non-prose contract format.",
+    "dsl_grammar_path_and_hash": "Pins the accepted concrete syntax.",
+    "duration_s": "Reports real wall-clock build time.",
+    "exact_energy_definition": "Defines energy as weighted unsatisfied factors.",
+    "exact_oracle_claim_boundary": "Discloses that exact checking is the oracle.",
+    "exhaustive_contract_results_by_family": "Shows every finite policy was checked.",
+    "external_text_scorer_count": "Proves no external text scorer enters the result.",
+    "factor_compiler_path_and_hash": "Pins the code that turns clauses into factors.",
+    "factor_energy_exactness_results": "Proves factor energy equals exact violations.",
+    "fallback_programs_paths_and_hashes": "Pins one verified fallback per family.",
+    "field_principles": "Explains why every required field exists.",
+    "field_provenance": "Maps each field to spec, code, sidecars, or tests.",
+    "finite_domain_or_z3_checker_path_and_hash": "Pins the exact checker authority.",
+    "fixture_manifest_path_and_hash": "Pins families, splits, contracts, and attacks.",
+    "generated_label_count": "Proves no generated labels enter the result.",
+    "hidden_state_access_count": "Proves no hidden model state enters the result.",
+    "honest_verdict": "States the terminal claim boundary.",
+    "inference_substrate": "Declares deterministic local enumeration without inference.",
+    "parser_and_normalizer_path_and_hash": "Pins the code that rejects and canonicalizes programs.",
+    "parser_rejection_and_totality_results": "Shows the parser is deterministic and fail-closed.",
+    "preconditions_checked": "Freezes grammar, bounds, split rules, hashes, and limits.",
+    "protected_files_unchanged": "Shows reconciler-owned files were not edited.",
+    "random_seeds": "Pins deterministic ordering and controls.",
+    "reproducibility_checksum": "Detects artifact drift.",
+    "source_claim_boundary": "States the paper hooks without claiming paper results.",
+    "status": "Shows whether every exact gate passed.",
+    "test_commands": "Lists the commands used to verify the run.",
+    "test_exit_codes": "Records command outcomes for readiness.",
+    "type_system_and_bounds": "Shows the finite domain is small and explicit.",
+    "vacuous_contract_parser_default_validator_mutation_test_deletion_fallback_laundering_and_hash_swap_results": "Reports adversarial controls in one fail-closed receipt.",
+    "verifier_is_oracle": "Prevents a learned-verifier claim."
+  },
+  "field_provenance": {
+    "canonical_semantics_path_and_hash": {
+      "principle": "Pins the state-action meaning used by contracts.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "contract_family_splits": {
+      "principle": "Keeps development and held families separate.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "contract_guard_ready_score": {
+      "principle": "Opens only when exactness, fallbacks, and attacks pass.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "contract_schema_path_and_hash": {
+      "principle": "Pins the non-prose contract format.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "dsl_grammar_path_and_hash": {
+      "principle": "Pins the accepted concrete syntax.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "duration_s": {
+      "principle": "Reports real wall-clock build time.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "exact_energy_definition": {
+      "principle": "Defines energy as weighted unsatisfied factors.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "exact_oracle_claim_boundary": {
+      "principle": "Discloses that exact checking is the oracle.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "exhaustive_contract_results_by_family": {
+      "principle": "Shows every finite policy was checked.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "external_text_scorer_count": {
+      "principle": "Proves no external text scorer enters the result.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "factor_compiler_path_and_hash": {
+      "principle": "Pins the code that turns clauses into factors.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "factor_energy_exactness_results": {
+      "principle": "Proves factor energy equals exact violations.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "fallback_programs_paths_and_hashes": {
+      "principle": "Pins one verified fallback per family.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "field_principles": {
+      "principle": "Explains why every required field exists.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Maps each field to spec, code, sidecars, or tests.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "finite_domain_or_z3_checker_path_and_hash": {
+      "principle": "Pins the exact checker authority.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "fixture_manifest_path_and_hash": {
+      "principle": "Pins families, splits, contracts, and attacks.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "generated_label_count": {
+      "principle": "Proves no generated labels enter the result.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "hidden_state_access_count": {
+      "principle": "Proves no hidden model state enters the result.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "States the terminal claim boundary.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Declares deterministic local enumeration without inference.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "parser_and_normalizer_path_and_hash": {
+      "principle": "Pins the code that rejects and canonicalizes programs.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "parser_rejection_and_totality_results": {
+      "principle": "Shows the parser is deterministic and fail-closed.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Freezes grammar, bounds, split rules, hashes, and limits.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Shows reconciler-owned files were not edited.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "random_seeds": {
+      "principle": "Pins deterministic ordering and controls.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "Detects artifact drift.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "source_claim_boundary": {
+      "principle": "States the paper hooks without claiming paper results.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "status": {
+      "principle": "Shows whether every exact gate passed.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "test_commands": {
+      "principle": "Lists the commands used to verify the run.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Records command outcomes for readiness.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "type_system_and_bounds": {
+      "principle": "Shows the finite domain is small and explicit.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "vacuous_contract_parser_default_validator_mutation_test_deletion_fallback_laundering_and_hash_swap_results": {
+      "principle": "Reports adversarial controls in one fail-closed receipt.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "Prevents a learned-verifier claim.",
+      "sources": [
+        "REQ-KONA-6326",
+        "Exp6326 deterministic enumeration",
+        "local sidecars"
+      ]
+    }
+  },
+  "finite_domain_or_z3_checker_path_and_hash": {
+    "path": "python/carnot/experiment_6326_restricted_policy_contract_compiler.py",
+    "sha256": "sha256:f4fa9bf22695a314f40b76daccf421888866908b64b470d7ec70932d7fe1b804",
+    "symbols": [
+      "enumerate_policy_semantics",
+      "factor_energy_exactness_results"
+    ]
+  },
+  "fixture_manifest_path_and_hash": {
+    "path": "data/research/experiment_6326_restricted_policy_contract_compiler/fixture_manifest.json",
+    "sha256": "sha256:e3574d13a92f8a84f7c85e371f2d8915fcbaf68919c5821b75fd279b8fd5d4ae"
+  },
+  "generated_label_count": 0,
+  "hidden_state_access_count": 0,
+  "honest_verdict": "ready: bounded policy contracts passed exact enumeration with verified fallbacks",
+  "inference_substrate": "deterministic_finite_policy_contract_enumeration_no_llm",
+  "parser_and_normalizer_path_and_hash": {
+    "path": "python/carnot/experiment_6326_restricted_policy_contract_compiler.py",
+    "sha256": "sha256:f4fa9bf22695a314f40b76daccf421888866908b64b470d7ec70932d7fe1b804",
+    "symbols": [
+      "parse_policy",
+      "normalize_policy"
+    ]
+  },
+  "parser_rejection_and_totality_results": {
+    "all_passed": true,
+    "all_rejections_passed": true,
+    "normalization_deterministic": true,
+    "rejection_case_count": 6,
+    "rejection_receipts": [
+      {
+        "expected": "unknown_syntax",
+        "observed": "unknown_syntax",
+        "rejected": true
+      },
+      {
+        "expected": "duplicate_rule",
+        "observed": "duplicate_rule",
+        "rejected": true
+      },
+      {
+        "expected": "missing_state_actions",
+        "observed": "missing_state_actions",
+        "rejected": true
+      },
+      {
+        "expected": "unknown_state",
+        "observed": "unknown_state",
+        "rejected": true
+      },
+      {
+        "expected": "unknown_action",
+        "observed": "unknown_action",
+        "rejected": true
+      },
+      {
+        "expected": "state_bound",
+        "observed": "state_bound",
+        "rejected": true
+      }
+    ],
+    "variant_checks": [
+      {
+        "family": "access_gate",
+        "passed": true,
+        "unique_semantic_hash_count": 1,
+        "variant_count": 3
+      },
+      {
+        "family": "incident_response",
+        "passed": true,
+        "unique_semantic_hash_count": 1,
+        "variant_count": 3
+      },
+      {
+        "family": "routing_policy",
+        "passed": true,
+        "unique_semantic_hash_count": 1,
+        "variant_count": 3
+      },
+      {
+        "family": "quota_control",
+        "passed": true,
+        "unique_semantic_hash_count": 1,
+        "variant_count": 3
+      }
+    ]
+  },
+  "preconditions_checked": {
+    "contract_families_frozen": [
+      "access_gate",
+      "incident_response",
+      "routing_policy",
+      "quota_control"
+    ],
+    "data_dir": "data/research/experiment_6326_restricted_policy_contract_compiler",
+    "date": "20260812",
+    "exact_checker_frozen": {
+      "path": "python/carnot/experiment_6326_restricted_policy_contract_compiler.py",
+      "sha256": "sha256:f4fa9bf22695a314f40b76daccf421888866908b64b470d7ec70932d7fe1b804",
+      "symbols": [
+        "enumerate_policy_semantics",
+        "exact_contract_energy",
+        "factor_energy"
+      ]
+    },
+    "fallback_hashes_frozen": {
+      "access_gate": {
+        "path": "data/research/experiment_6326_restricted_policy_contract_compiler/fallbacks/access_gate.policy",
+        "semantic_hash": "sha256:c97f6204857f511d9dde01996f69d4561b5670bfed15eec1e5c3cf492340117c",
+        "source_sha256": "sha256:15b0da631402f7711ca5b6e8627a5c503fca0be66f7f5a15f6e5f72102ebc67b",
+        "verified": true
+      },
+      "incident_response": {
+        "path": "data/research/experiment_6326_restricted_policy_contract_compiler/fallbacks/incident_response.policy",
+        "semantic_hash": "sha256:4f13b2fd4e555b5909d3086f2d990f30c4489c4ed55ba14cd72bc7e3a8544f94",
+        "source_sha256": "sha256:9a5184321ccf79b744440a8d0becd98db273189ba1646c3ccd6070441a09fa73",
+        "verified": true
+      },
+      "quota_control": {
+        "path": "data/research/experiment_6326_restricted_policy_contract_compiler/fallbacks/quota_control.policy",
+        "semantic_hash": "sha256:45e2735113777fba076c087fe92f920c0053416582731fa99e993ee8592125a1",
+        "source_sha256": "sha256:6765abb047a20a0df5b85242db7e3c4c405be6da5ec8cb01f866ee4cfda16dfe",
+        "verified": true
+      },
+      "routing_policy": {
+        "path": "data/research/experiment_6326_restricted_policy_contract_compiler/fallbacks/routing_policy.policy",
+        "semantic_hash": "sha256:0f11a90fdc29ea86d6cbae776c918de0d88e90257efc9d69ce8b0b79c9611470",
+        "source_sha256": "sha256:f7adc3c0e3df6190022b770634e904f48f593152721432c60c5f5a848af594fe",
+        "verified": true
+      }
+    },
+    "finite_bounds_frozen": {
+      "action_type": "finite enum identifier",
+      "max_actions": 4,
+      "max_enumerated_policies_per_family": 256,
+      "max_identifier_length": 24,
+      "max_states": 4,
+      "parser_defaults_allowed": false,
+      "policy_type": "total deterministic function state -> action",
+      "state_type": "finite enum identifier",
+      "unknown_values_rejected": true
+    },
+    "git_status_at_artifact_build": [
+      "?? data/research/experiment_6326_restricted_policy_contract_compiler/",
+      "?? python/carnot/experiment_6326_restricted_policy_contract_compiler.py",
+      "?? tests/python/test_experiment_6326_restricted_policy_contract_compiler.py"
+    ],
+    "grammar_frozen": {
+      "path": "data/research/experiment_6326_restricted_policy_contract_compiler/policy_dsl_grammar.txt",
+      "sha256": "sha256:86550327c297f267cdc7f3373017db0a7d97b223ee6a03af391ed836c50e7d54"
+    },
+    "protected_hashes_frozen": {
+      "after": {
+        "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "ops/changelog.md": "sha256:4ea8efee317a46f1a10e779a8a23d9a6defb9b9214a3568b836997880e1b25b1",
+        "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      },
+      "before": {
+        "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "ops/changelog.md": "sha256:4ea8efee317a46f1a10e779a8a23d9a6defb9b9214a3568b836997880e1b25b1",
+        "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      },
+      "changed": [],
+      "protected_files": [
+        "scripts/research_conductor.py",
+        "ops/changelog.md",
+        "ops/status.md",
+        "_bmad/traceability.md"
+      ],
+      "unchanged": true
+    },
+    "python_version": "3.12.13",
+    "random_seeds_frozen": [
+      6326,
+      6327,
+      6328
+    ],
+    "resource_limits_frozen": {
+      "max_policies_per_family": 256,
+      "max_total_fixture_families": 4
+    },
+    "result_path": "results/experiment_6326_restricted_policy_contract_compiler.json",
+    "schema": "carnot.experiment_6326.restricted_policy_contract_compiler.v1.preconditions",
+    "spec_req_present": true,
+    "spec_scenarios_present": true,
+    "split_rules_frozen": {
+      "assignment_rule": "fixed family names, no random split after fixtures exist",
+      "development": [
+        "access_gate",
+        "incident_response"
+      ],
+      "held": [
+        "routing_policy",
+        "quota_control"
+      ]
+    }
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:4ea8efee317a46f1a10e779a8a23d9a6defb9b9214a3568b836997880e1b25b1",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:4ea8efee317a46f1a10e779a8a23d9a6defb9b9214a3568b836997880e1b25b1",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "changed": [],
+    "protected_files": [
+      "scripts/research_conductor.py",
+      "ops/changelog.md",
+      "ops/status.md",
+      "_bmad/traceability.md"
+    ],
+    "unchanged": true
+  },
+  "random_seeds": [
+    6326,
+    6327,
+    6328
+  ],
+  "reproducibility_checksum": "sha256:9578ddc465b82ad073b7b3855e210181db0edd785ad121d983af4c7dedc26842",
+  "source_claim_boundary": {
+    "not_claimed": [
+      "learned verifier result",
+      "LLM generation quality result",
+      "natural-language ConstraintIR result",
+      "hidden-state or KAN result"
+    ],
+    "positive_claim": "Exp6326 proves a bounded local policy DSL can be checked exactly.",
+    "source_context": {
+      "MARCH": "motivates separating checker evidence from solver rationale",
+      "SEVerA": "motivates formal output contracts and verified fallback"
+    }
+  },
+  "status": "complete_ready",
+  "test_commands": [
+    ".venv/bin/python -m carnot.experiment_6326_restricted_policy_contract_compiler --date 20260812",
+    ".venv/bin/pytest tests/python/test_experiment_6326_restricted_policy_contract_compiler.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6326_restricted_policy_contract_compiler.py -m pytest tests/python/test_experiment_6326_restricted_policy_contract_compiler.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6326_restricted_policy_contract_compiler.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6326_restricted_policy_contract_compiler.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6326_restricted_policy_contract_compiler.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6326_restricted_policy_contract_compiler.py -m pytest tests/python/test_experiment_6326_restricted_policy_contract_compiler.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6326_restricted_policy_contract_compiler.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6326_restricted_policy_contract_compiler.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6326_restricted_policy_contract_compiler --date 20260812": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6326_restricted_policy_contract_compiler.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6326_restricted_policy_contract_compiler.py": 0
+  },
+  "type_system_and_bounds": {
+    "action_type": "finite enum identifier",
+    "max_actions": 4,
+    "max_enumerated_policies_per_family": 256,
+    "max_identifier_length": 24,
+    "max_states": 4,
+    "parser_defaults_allowed": false,
+    "policy_type": "total deterministic function state -> action",
+    "state_type": "finite enum identifier",
+    "unknown_values_rejected": true
+  },
+  "vacuous_contract_parser_default_validator_mutation_test_deletion_fallback_laundering_and_hash_swap_results": {
+    "all_attacks_failed_closed": true,
+    "fallback_laundering": {
+      "attack": "fallback_laundering",
+      "receipt": {
+        "actual_semantic_hash": "sha256:2bb7dac0aebde34b30b6b33b0d7f5c653b9fcb29d28b8c0afc0917f82cf8c63c",
+        "actual_source_sha256": "sha256:7b684d15397c757c750b4e8a4f6c2b21efb186eb43e51331adecf01855fb2167",
+        "energy": 2,
+        "semantic_hash_match": false,
+        "source_hash_match": false,
+        "verified": false
+      },
+      "rejected": true
+    },
+    "hash_swap": {
+      "attack": "hash_swap",
+      "receipt": {
+        "actual_semantic_hash": "sha256:c97f6204857f511d9dde01996f69d4561b5670bfed15eec1e5c3cf492340117c",
+        "actual_source_sha256": "sha256:15b0da631402f7711ca5b6e8627a5c503fca0be66f7f5a15f6e5f72102ebc67b",
+        "energy": 0,
+        "semantic_hash_match": true,
+        "source_hash_match": false,
+        "verified": false
+      },
+      "rejected": true
+    },
+    "nondeterministic_normalization": {
+      "attack": "nondeterministic_normalization",
+      "detected": false,
+      "failure_families": [],
+      "variant_count_per_family": 3
+    },
+    "parser_default": {
+      "attack": "parser_default",
+      "reason": "missing_state_actions",
+      "rejected": true
+    },
+    "semantic_hash_collision_probe": {
+      "attack": "semantic_hash_collision_probe",
+      "checked_policy_count": 1024,
+      "collision_count": 0,
+      "collision_found": false
+    },
+    "test_deletion": {
+      "attack": "test_deletion",
+      "baseline_markers_present": true,
+      "detected": true,
+      "required_markers": [
+        "SCENARIO-KONA-6326-CANONICAL-PARSER",
+        "SCENARIO-KONA-6326-FACTOR-EXACTNESS",
+        "SCENARIO-KONA-6326-FALLBACK-AND-ATTACKS"
+      ]
+    },
+    "vacuous_contract": {
+      "attack": "vacuous_contract",
+      "reason": "vacuous_contract",
+      "rejected": true
+    },
+    "validator_mutation": {
+      "attack": "validator_mutation",
+      "checked_policy_count": 256,
+      "detected": true,
+      "mutated_mismatch_count": 256
+    }
+  },
+  "verifier_is_oracle": true
+}

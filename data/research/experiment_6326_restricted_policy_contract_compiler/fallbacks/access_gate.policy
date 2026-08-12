@@ -1,0 +1,8 @@
+policy access_gate_fallback
+states: admin, guest, locked, member;
+actions: audit, deny, read, write;
+rule admin -> write;
+rule guest -> deny;
+rule locked -> deny;
+rule member -> read;
+end
