@@ -28119,3 +28119,137 @@ byte-for-byte after rollback.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-6346 | Planned (`python/carnot/experiment_6346_certified_factor_evolution_safety_audit.py`, `results/experiment_6346_certified_factor_evolution_safety_audit.json`) | Planned (`tests/python/test_experiment_6346_certified_factor_evolution_safety_audit.py`) |
+
+## REQ-LEARN-6352: Live Factor Proposal Authenticity Preflight
+
+Exp6352 SHALL prove that the three required local GGUF models can make real
+bounded factor proposals before any utility or continuous-learning claim is
+made. It SHALL resolve the required models through `cached_sota_pair()` helper
+calls. It SHALL use llama.cpp-backed GGUF loading with embedded tokenizers. It
+SHALL NOT use HuggingFace AutoTokenizer. It SHALL generate fresh exact-checkable
+failure events from deterministic instance generators in at least two families.
+It SHALL give each model only the released factor snapshot, a minimized exact
+counterexample, allowed variables, and edit bounds. It SHALL run real
+autoregressive generation, persist raw model bytes before parsing, then parse
+the bounded edit schema. It SHALL prove the proposal could not read its own
+unapproved write. Legacy small models MAY run smoke tests only. They SHALL NOT
+fill measured cells.
+
+- REQ-LEARN-6352-1: The artifact SHALL contain the exact required field set
+  listed below. `MODEL_SPECS` SHALL include
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- REQ-LEARN-6352-2: The preflight SHALL block honestly when any required GGUF
+  file, embedded tokenizer, CUDA path, two-GPU receipt, free VRAM receipt, disk
+  receipt, event generator, exact checker, seed, llama.cpp path, or protected
+  hash is unavailable.
+- REQ-LEARN-6352-3: Event generators SHALL create fresh events from at least
+  two exact-checkable families. The event manifest SHALL balance family,
+  executable structure, and surface relabeling before any model call.
+- REQ-LEARN-6352-4: Each model generation SHALL record CUDA placement,
+  process ID, command path, seed, sampling parameters, token counts, timing,
+  exit state, raw output path, and raw output hash before parsing.
+- REQ-LEARN-6352-5: Parsing SHALL use the Exp6344 bounded factor-edit schema.
+  Exact checker calls SHALL run only after each raw proposal is frozen.
+- REQ-LEARN-6352-6: Deterministic replay, same-step read/write, parser-input,
+  model-id, output-hash, clock, and active-registry mutations SHALL fail closed.
+- REQ-LEARN-6352-7: `live_factor_proposal_authenticity_ready_score` SHALL be
+  bare `1.0` only when every required model completes real generation with
+  authentic raw-output and process receipts. `live_autoregressive_generation_invoked`
+  SHALL be bare `true` for readiness. `source_model_weight_mutation_count`,
+  `generated_label_count`, `hidden_state_access_count`, and
+  `protected_validation_leak_count` SHALL be bare integer zero.
+- REQ-LEARN-6352-8: `verifier_is_oracle` SHALL be true only for exact task
+  outcomes. It SHALL NOT claim oracle status for proposal quality.
+
+### SCENARIO-LEARN-6352-PREFLIGHT: Missing Required Runtime Blocks
+
+**Given** one required model, embedded tokenizer, CUDA path, two-GPU receipt,
+disk receipt, event generator, exact checker, seed, llama.cpp path, or protected
+hash is unavailable
+**When** Exp6352 runs preconditions
+**Then** it writes
+`results/experiment_6352_live_factor_proposal_authenticity_preflight.json`
+with a `blocked:` verdict, a zero readiness score, and no measured-cell
+substitution by a legacy model.
+
+### SCENARIO-LEARN-6352-GENERATION: Live Raw Outputs Freeze Before Parsing
+
+**Given** the required three GGUF models and fresh deterministic events
+**When** each model receives the released factor snapshot, minimized
+counterexample, allowed variables, and edit bounds
+**Then** real autoregressive generation is invoked through llama.cpp, raw bytes
+are persisted before parsing, and each generation receipt records process,
+CUDA, token, timing, seed, sampling, and exit data.
+
+### SCENARIO-LEARN-6352-EVENTS: Families And Surfaces Are Balanced
+
+**Given** the deterministic event generators
+**When** Exp6352 builds its event manifest
+**Then** at least two exact-checkable families are present, each family has
+balanced executable structures, and each structure has surface relabel variants.
+
+### SCENARIO-LEARN-6352-ISOLATION: Same-Step Writes Cannot Be Read
+
+**Given** a model proposal and an unapproved candidate write
+**When** Exp6352 checks the active released factor snapshot and parser input
+**Then** the proposal read root remains the released root, the active registry
+is unchanged, and same-step read/write mutation attempts fail closed.
+
+### SCENARIO-LEARN-6352-READY: Authenticity Readiness Is Conjunctive
+
+**Given** every required model row and every exact-checkable event
+**When** Exp6352 computes readiness
+**Then** readiness is `1.0` only when live generation, raw-before-parse,
+process receipts, model identity, mutation counters, exact-checker receipts,
+protected files, and claimed tests all pass.
+
+### Required Artifact Fields and Principles
+
+- `status`: Terminal status distinguishes ready, blocked, and null authenticity outcomes.
+- `upstream_paths_hashes_and_terminal_classes`: Upstream Exp6342, Exp6343, Exp6344, and Exp6345 bytes and terminal classes are recorded first.
+- `MODEL_SPECS`: The three mandated GGUF rows come from `cached_sota_pair()` helper calls.
+- `models_used`: The measured cells name only required GGUF model ids.
+- `model_file_hashes_revisions_quantizations_and_tokenizers`: Model files, revisions, quantizations, hashes, and embedded tokenizer methods are pinned.
+- `llama_cpp_embedded_tokenizer_receipts`: Embedded tokenizer checks prove no AutoTokenizer path was used.
+- `cuda_gpu_offload_and_memory_release_receipts_by_model`: CUDA placement and release receipts are recorded per model.
+- `generated_event_manifest_path_and_hash`: Fresh event identities, families, structures, surfaces, and seeds are frozen.
+- `event_generator_paths_hashes_and_license_receipts`: Generator and checker source paths, hashes, and license receipts are pinned.
+- `event_family_structure_and_surface_balance`: Family, executable structure, and surface relabeling balance is explicit.
+- `released_factor_snapshot_path_and_hash`: The released factor version visible to proposers is frozen.
+- `information_exposure_contract`: Proposers see only the released factor version, minimized counterexample, allowed variables, and edit bounds.
+- `live_autoregressive_generation_invoked`: Bare true proves real generation ran for readiness.
+- `generation_process_receipts_by_model`: Process IDs, commands, CUDA settings, seeds, and exit states are recorded.
+- `generation_call_token_time_and_exit_receipts`: Token counts, timings, and exit states are recorded.
+- `raw_model_output_paths_hashes_and_counts`: Raw output paths, hashes, byte counts, and model counts are pinned.
+- `raw_output_before_parse_receipts`: Raw bytes are frozen before parser input is read.
+- `factor_edit_schema_path_and_hash`: The reused Exp6344 bounded edit schema is frozen.
+- `parse_valid_invalid_and_timeout_counts_by_model`: Parse outcomes, invalid rows, and timeouts are reported per model.
+- `same_step_read_write_isolation_results`: Unapproved writes cannot change the proposal read root.
+- `deterministic_replay_laundering_checks`: Replay, clock, model-id, output-hash, parser-input, and active-registry mutations fail closed.
+- `exact_checker_paths_hashes_and_versions`: Exact checker code paths, hashes, and versions are pinned.
+- `exact_checker_calls_time_cost_and_error_table`: Exact checker calls, time, cost, and errors are charged.
+- `source_model_weight_mutation_count`: Bare zero proves base weights stayed frozen.
+- `generated_label_count`: Bare zero proves model output did not define labels.
+- `hidden_state_access_count`: Bare zero proves hidden activations were not read.
+- `protected_validation_leak_count`: Bare zero proves protected validation did not steer proposals.
+- `live_factor_proposal_authenticity_ready_score`: Readiness is fully conjunctive over required live authenticity gates.
+- `harm_underpowered_missing_and_flagged_cells`: Missing, underpowered, and flagged measured cells stay visible.
+- `protected_files_unchanged`: Protected repo files and upstream artifacts remain byte-identical.
+- `preconditions_checked`: Preconditions cover models, tokenizers, CUDA, GPUs, VRAM, disk, llama.cpp, seeds, generators, checkers, and protected hashes.
+- `inference_substrate`: The artifact declares local llama.cpp GGUF generation with embedded tokenizers.
+- `verifier_is_oracle`: Exact outcomes are oracle; proposal quality is not.
+- `field_provenance`: Every field maps to specs, inputs, sidecars, generation receipts, exact checks, or tests.
+- `field_principles`: Every required field has a reason.
+- `test_commands`: Focused, coverage, full pytest, spec, E2E, adversarial, run, and clutter commands are named.
+- `test_exit_codes`: Failed verification commands prevent readiness.
+- `duration_s`: Wall time is measured without padding.
+- `random_seeds`: Event, surface, generation, parser, replay, and isolation seeds are pinned.
+- `reproducibility_checksum`: A stable checksum detects drift.
+- `honest_verdict`: The verdict uses a terminal prefix and states the authenticity boundary.
+
+## Implementation Status (REQ-LEARN-6352)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-6352 | Planned (`python/carnot/experiment_6352_live_factor_proposal_authenticity_preflight.py`, `results/experiment_6352_live_factor_proposal_authenticity_preflight.json`) | Planned (`tests/python/test_experiment_6352_live_factor_proposal_authenticity_preflight.py`) |
