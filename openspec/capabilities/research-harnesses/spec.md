@@ -3682,6 +3682,106 @@ payload, and the honest verdict has a terminal prefix.
 |---|---|---|
 | REQ-INFRA-6324 | Pending implementation: `python/carnot/experiment_6324_v545_post_marker_source_scope_freeze.py`; terminal artifact `results/experiment_6324_v545_post_marker_source_scope_freeze.json`. | Pending focused tests: `tests/python/test_experiment_6324_v545_post_marker_source_scope_freeze.py`. |
 
+## REQ-INFRA-6337: V546 Bounded Terminal Handoff SHALL Preserve Missing V545 Evidence
+
+Carnot SHALL build Exp6337 as a bounded terminal handoff from milestone
+`2026.08.545` into milestone `2026.08.546`. The handoff SHALL classify only
+the seven queued V545 identities, Exp6323 through Exp6329. It SHALL use exact
+declared result paths as artifact evidence. It SHALL record a missing Exp6323
+artifact as missing. It SHALL not infer success from a conductor receipt.
+
+Exp6337 SHALL extract all three Exp6323 wall-clock failure receipts from
+`ops/conductor-log.md`. The receipts SHALL include the timestamp, task title,
+conductor status, message text, and hard-cap seconds. Exp6337 SHALL record no
+invented Exp6323 `honest_verdict` because no artifact exists.
+
+Exp6337 SHALL prove that Exp6330 through Exp6336 were proposal-only. It SHALL
+search the conductor log for queued or executed conductor rows for those ids.
+It SHALL also search the active V546 roadmap. The receipt SHALL record that
+the identifiers appear only in the change proposal or old Exp6323 transition
+contract, not as V545 conductor tasks or active V546 task ids.
+
+Exp6337 SHALL validate the thirteen V546 tasks in the active roadmap. It SHALL
+run the repository roadmap schema, prior-failure linter, gate audit, exclusion
+manifest lint, and deterministic custom checks. The custom checks SHALL reject
+duplicate ids, duplicate deliverables, invalid dependencies, bad structured
+gates, missing `MODEL_SPECS` obligations for live LLM tasks, incomplete
+`prior_failures` entries, non-Codex routing, non-`gpt-5.5` Codex model
+routing, and prompts that do not end with
+`Do NOT push. Do NOT modify scripts/research_conductor.py.`
+
+The Exp6337 artifact SHALL be written atomically to
+`results/experiment_6337_v546_bounded_terminal_handoff.json`. It SHALL include
+these required fields: `status`, `v545_milestone_and_queue_hash`,
+`queued_v545_task_ids`, `terminal_v545_artifacts_by_task`,
+`missing_artifacts_by_task`, `exp6323_failure_receipts`,
+`proposal_only_exp6330_through_exp6336_receipt`,
+`v545_scientific_terminal_states`, `v545_hardware_terminal_state`,
+`v546_milestone_and_doc_hash`, `v546_task_ids`,
+`v546_id_collision_check`, `v546_deliverable_checks`,
+`v546_dependency_checks`, `v546_structured_gate_checks`,
+`v546_prior_failure_checks`, `v546_llm_model_policy_checks`,
+`prompt_contract_checks`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`llm_call_count`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+`llm_call_count` SHALL be the bare integer `0`. `verifier_is_oracle` SHALL be
+the bare boolean `false`. `field_principles` SHALL cover every required field.
+
+### SCENARIO-INFRA-6337-1: Missing Exp6323 Stays Missing
+
+GIVEN the V545 queue includes Exp6323 through Exp6329
+WHEN Exp6337 classifies exact result paths
+THEN Exp6323 appears in `missing_artifacts_by_task`, no substitute path is
+used, and Exp6324 through Exp6329 keep their exact terminal classifications.
+
+### SCENARIO-INFRA-6337-2: Wall-Clock Receipts Stay Separate
+
+GIVEN the conductor log has three Exp6323 hard wall-clock failures
+WHEN Exp6337 parses conductor receipts
+THEN all three rows are recorded with timestamps and hard-cap seconds, and no
+Exp6323 artifact verdict is fabricated.
+
+### SCENARIO-INFRA-6337-3: Proposal-Only Ghost IDs Do Not Enter The Queue
+
+GIVEN Exp6330 through Exp6336 occur in proposal text but not the V545 queue
+WHEN Exp6337 searches conductor and active-roadmap evidence
+THEN the receipt reports zero queued or executed conductor tasks for those ids
+and no active V546 task-id reuse.
+
+### SCENARIO-INFRA-6337-4: V546 Identity And Graph Checks Fail Closed
+
+GIVEN the active V546 roadmap declares thirteen tasks
+WHEN Exp6337 validates ids, deliverables, dependencies, and structured gates
+THEN duplicates, missing dependencies, self-dependencies, retired dependencies,
+unknown gate upstreams, and gate fields absent from upstream required-field
+blocks are reported as failures.
+
+### SCENARIO-INFRA-6337-5: Model, Prior-Failure, And Prompt Contracts Are Enforced
+
+GIVEN V546 tasks include model routing, live LLM obligations, prior failure
+entries, and prompt endings
+WHEN Exp6337 validates the roadmap
+THEN every Codex task uses `gpt-5.5`, live LLM tasks name the required
+`MODEL_SPECS` obligations, prior failures have all required subfields, and
+malformed endings fail the prompt contract check.
+
+### SCENARIO-INFRA-6337-6: Output Is Atomic, Checksummed, And Non-Mutating
+
+GIVEN the V545 evidence and V546 validation receipts are computed in memory
+WHEN Exp6337 writes its artifact
+THEN every required field is present, field provenance and field principles
+cover all required fields, the checksum matches the normalized payload,
+protected hashes remain unchanged, and the active roadmap and conductor are
+not edited.
+
+## Implementation Status (REQ-INFRA-6337)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6337 | Implemented: `python/carnot/experiment_6337_v546_bounded_terminal_handoff.py`; terminal artifact `results/experiment_6337_v546_bounded_terminal_handoff.json`. | Implemented: `tests/python/test_experiment_6337_v546_bounded_terminal_handoff.py`. |
+
 ## Implementation Status (REQ-INFRA-6322)
 
 | REQ | Implementation | Tests |
