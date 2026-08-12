@@ -22760,3 +22760,106 @@ candidate provenance, surface length, and arbitrary ids do not change labels.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6173 | Planned (`python/carnot/verify/cctu_item_bank_6173.py`, `results/experiment_6173_cctu_item_bank_preregistration.json`) | Planned (`tests/python/test_cctu_item_bank_6173.py`) |
+
+### REQ-SAFE-6328: Blind Guard Integrity Audit
+
+Carnot SHALL provide Exp6328 at
+`python/carnot/experiment_6328_blind_guard_integrity_audit.py` and write
+`results/experiment_6328_blind_guard_integrity_audit.json`. The experiment
+SHALL audit Exp6326 and Exp6327 with an independent blind checker process.
+The checker SHALL receive only canonical contract hashes, normalized policy
+semantics, exact factor evidence, and fallback hashes. It SHALL reject solver
+prose, generated rationale, claimed verdicts, arm identity, undeclared fields,
+and hidden labels.
+
+The audit SHALL reconstruct declared safety results from Exp6326 and Exp6327.
+It SHALL preserve the exact checker as oracle. It SHALL make no utility
+promotion. Safety-only success MAY produce readiness even when utility is null.
+The audit SHALL flag every safety or provenance failure.
+
+The attack suite SHALL cover vacuous contracts, parser defaults, fallback
+laundering, spec mutation, validator mutation, test deletion, hash swaps, label
+swaps, pair swaps, evaluator swaps, duplicate rows, hidden arm labels, solver
+rationale leakage, budget mismatches, and missing cells. Readiness SHALL be
+`1.0` only when all high-severity attacks fail closed and no forbidden checker
+input field is present.
+
+The terminal artifact MUST include `status`,
+`upstream_paths_hashes_and_terminal_classes`,
+`blind_checker_path_and_hash`, `checker_input_schema_and_hash`,
+`allowed_and_forbidden_input_fields`, `information_asymmetry_receipts`,
+`reconstructed_contract_factor_and_fallback_results`,
+`vacuous_contract_parser_default_fallback_laundering_spec_mutation_validator_mutation_test_deletion_and_hash_swap_results`,
+`label_pair_evaluator_duplicate_arm_leakage_rationale_leakage_budget_and_missing_cell_results`,
+`attack_fixture_paths_hashes`, `discrepancies_and_severity`,
+`utility_promotion_count`, `exact_oracle_claim_boundary`,
+`hidden_state_access_count`, `external_text_scorer_count`,
+`guard_integrity_ready_score`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `random_seeds`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes ready, null, or blocked blind-audit evidence.
+- `upstream_paths_hashes_and_terminal_classes`: Exp6326, Exp6327, sources, tests, specs, and protected files are content-addressed before audit decisions.
+- `blind_checker_path_and_hash`: The checker entry point is pinned so process-boundary changes are visible.
+- `checker_input_schema_and_hash`: The checker input contract is pinned before rows are checked.
+- `allowed_and_forbidden_input_fields`: The checker allowlist is explicit and forbids solver prose, verdicts, arm labels, undeclared evidence, and rationale.
+- `information_asymmetry_receipts`: Proves blind inputs exclude model, arm, verdict, rationale, label, and narrative fields.
+- `reconstructed_contract_factor_and_fallback_results`: Safety results are rederived from contract hashes, normalized semantics, exact factors, and fallback hashes.
+- `vacuous_contract_parser_default_fallback_laundering_spec_mutation_validator_mutation_test_deletion_and_hash_swap_results`: Exp6326-style contract and provenance attacks fail closed.
+- `label_pair_evaluator_duplicate_arm_leakage_rationale_leakage_budget_and_missing_cell_results`: Exp6327-style label, pairing, evaluator, duplication, leakage, budget, and row attacks fail closed.
+- `attack_fixture_paths_hashes`: Attack fixtures are deterministic and content-addressed.
+- `discrepancies_and_severity`: Discrepancies are grouped by model, family, arm, and severity.
+- `utility_promotion_count`: Bare zero proves safety-only success never promotes utility.
+- `exact_oracle_claim_boundary`: Exact checking remains an oracle and no learned-verifier moat is claimed.
+- `hidden_state_access_count`: Bare zero proves hidden activations never enter the checker or audit decision.
+- `external_text_scorer_count`: Bare zero proves no external text scorer enters the checker or audit decision.
+- `guard_integrity_ready_score`: Readiness is one only when all high-severity attacks fail closed and no forbidden checker input is present.
+- `protected_files_unchanged`: Conductor and reconciler-owned files remain byte-identical.
+- `preconditions_checked`: Upstream hashes, schema, allowlists, attacks, severity rules, seeds, resource limits, and protected hashes freeze before checking.
+- `inference_substrate`: The audit declares deterministic local artifact replay with a subprocess checker and no LLM call.
+- `verifier_is_oracle`: Bare true preserves the exact checker as safety authority.
+- `field_provenance`: Every field traces to specs, upstream artifacts, source hashes, checker output, attack fixtures, tests, commands, or protected hashes.
+- `field_principles`: Every required field carries its guard principle.
+- `test_commands`: Focused tests, coverage, global pytest, spec coverage, run command, adversarial verification, E2E reading, and root-clutter checks are listed.
+- `test_exit_codes`: Failed checks prevent readiness.
+- `duration_s`: Measured wall time is reported without padding.
+- `random_seeds`: All reconstruction, attack, and fixture seeds are fixed.
+- `reproducibility_checksum`: The artifact hash detects drift in inputs, schema, attacks, commands, or outputs.
+- `honest_verdict`: Use `complete_ready:`, `complete_null:`, or `blocked:` and state that utility promotion is absent.
+
+### SCENARIO-SAFE-6328-BLIND-ALLOWLIST: Checker Input Is Strict
+
+**Given** blind checker input built from Exp6326 contracts and Exp6327
+candidates
+**When** the checker subprocess reads the input
+**Then** it accepts only canonical contract hashes, normalized policy semantics,
+exact factor evidence, and fallback hashes, and rejects any solver prose,
+claimed verdict, arm label, hidden label, undeclared evidence, or rationale
+field.
+
+### SCENARIO-SAFE-6328-RECONSTRUCTION: Safety Results Are Rederived
+
+**Given** Exp6326 and Exp6327 terminal artifacts plus raw candidate receipts
+**When** Exp6328 reconstructs contracts, factors, programs, and fallbacks
+**Then** every declared safety result is rederived by the exact oracle and
+compared with upstream receipts without promoting utility.
+
+### SCENARIO-SAFE-6328-ATTACKS: Provenance And Leakage Attacks Fail Closed
+
+**Given** deterministic attack fixtures for vacuity, parser defaults, fallback
+laundering, spec mutation, validator mutation, test deletion, hash swaps, label
+swaps, pair swaps, evaluator swaps, duplicate rows, hidden arm labels, rationale
+leakage, budget mismatches, and missing cells
+**When** Exp6328 evaluates readiness
+**Then** each high-severity attack is rejected, quarantined, or blocked, and
+readiness is zero if any attack is accepted.
+
+## Implementation Status (REQ-SAFE-6328)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAFE-6328 | Planned (`python/carnot/experiment_6328_blind_guard_integrity_audit.py`, `results/experiment_6328_blind_guard_integrity_audit.json`) | Planned (`tests/python/test_experiment_6328_blind_guard_integrity_audit.py`) |
