@@ -17145,3 +17145,97 @@ one MoE game, about 16 minutes of GPU, all `held=None`. Fixed with a `_store_pat
 that points at the path the proposer actually writes. Caught by reading the per-game rows,
 not the verdict string; the run would otherwise have reported a plausible-looking
 zero-comparable-games null.
+
+## 2026-08-12 CORRECTION: "collect_transitions discards win states" was WRONG
+
+I wrote that claim into three places yesterday -- the exp6252 retraction entry, the exp6252
+corrected-result entry, and the spec's REQ-ARC-WMTE-6252 section. It is preserved there per
+never-prune. **It is wrong and must not be acted on.**
+
+**What I claimed.** That `collect_transitions` restarts the episode on level-up and
+therefore throws away the transition showing the win.
+
+**What the code actually does.** It appends FIRST and restarts AFTER:
+
+```python
+trans.append(Transition(g0, int(c.action_id), c.data, g1, l0, l1))
+if _game_over(nf) or l1 > l0:
+    f = _warm(env, warmup)   # restart happens only after the append
+```
+
+So a level-up transition WOULD be recorded, with `level_after > level_before`, if one ever
+occurred. Nothing is discarded.
+
+**The real cause, measured.** A salience-biased RANDOM walk essentially never reaches a
+level-up. Probed directly at 200 steps per game (four times the collection size the
+experiments used): dc22 0 level-ups of 200, cn04 0 level-ups of 200. The win states are not
+being thrown away -- they are never being reached.
+
+**Why the distinction changes the fix completely.** "Stop discarding" would have been a
+two-line change to a restart branch and would have accomplished exactly nothing. The actual
+problem is that random exploration cannot find a win, so a win exemplar has to be SUPPLIED
+from somewhere that already knows one. `ops/arc_solve_registry.yaml` plus
+`arc_solver_kit.reproduce` hold reproducible solves for all 25 public games, so a level-up
+transition can be replayed on demand for offline work.
+
+**What stays true, and it is the part that matters.** `induce_prompt` has dedicated slots
+for `win_transition` and `previous_level_complete_grid` -- it is built to show the model
+what winning looks like -- and every offline experiment run yesterday (exp6248, exp6250,
+exp6251, exp6254) passed NEITHER, because `collect_transitions` produced no level-up to
+pass. So every offline induction number this project holds, including exp5764's 0.378
+held-out, was measured with that slot empty. That is unchanged by this correction and is
+still the lead worth chasing.
+
+**Scope limit, per the ARC Live-Path Reachability Discipline.** Replaying a known solver to
+manufacture a win exemplar is a `development_proxy`, not a live capability: a hidden game
+has no registry entry and no adapter. On the live path the agent captures
+`previous_level_complete_grid` only AFTER it wins a level itself, so the exemplar is
+available from level 2 onward and never for level 1. An offline measurement using a
+replayed win therefore answers "does the exemplar improve induction?" -- it does NOT show
+the live agent can obtain one on a hidden level 1.
+
+**How I got it wrong.** I read the restart branch, saw `l1 > l0` triggering a reset, and
+inferred discard without checking that the append preceded it. The `n_win_grids_observed: 0`
+measurement was real and was consistent with both explanations; I picked one and wrote it up
+as fact instead of testing which. The 200-step probe that settles it takes under a minute.
+
+## 2026-08-12 INCIDENT: five artifacts lost their fabrication-gate determinations again
+
+Caught by `determination-preservation-lint` refusing a commit. This is the
+2026-07-27 / 2026-07-29 incident class recurring, and the guard did its job.
+
+**What was lost.** Five artifacts had `flagged_adversarial: True` silently dropped to
+absent, together with their `corrigendum_note` and `corrigendum_pending` records:
+`experiment_1736_kanele_synth`, `experiment_3361_archive_v309_activate_v310`,
+`experiment_3377_archive_v310_activate_v311`,
+`experiment_3392_archive_v311_activate_v312`, `experiment_833_constraint_delta_root_cause`.
+Dropping that field LIFTS a quarantine -- the fabrication gate keys off it, so the
+artifacts would have been re-admitted to headline aggregation.
+
+**State when caught.** HEAD still held the correct values; the working tree held the
+stripped ones, and they were STAGED (a concurrent `git add -A`). So the damage was one
+commit away from publication and had not yet landed.
+
+**How it was repaired, and why not by reverting.** The lint's own instruction is "re-run
+measurements are fine and expected (fail-forward); restore the determination fields
+ALONGSIDE the new numbers." A blanket `git checkout --` would have restored the
+determinations by throwing away whatever legitimate re-run numbers those files had gained.
+Instead each file was loaded, and only the determination and corrigendum keys that HEAD had
+and the working tree had lost were copied back. Lint clean afterwards. This also respects
+the guard's standing caution that blanket-reverting its reported list is how it destroyed
+authored work three times.
+
+**The mutation marker, and why it was cleared rather than acted on.** A pending marker from
+`pytest tests/python -q` (run_id `ppid-769900`) listed 17 changed paths. Its own
+attribution field was EMPTY (`attributed_to_run: []`) -- the test run observed itself
+writing nothing, and flagged all 17 as `[NOT this run]`, i.e. concurrent activity rather
+than test damage. The one genuinely damaging change inside that window was the determination
+stripping above, which is now repaired. The marker was then deleted deliberately, which the
+guard explicitly permits once the rewrite has been investigated and explained.
+
+**Root cause is unchanged and still open.** The conductor commits with `--no-verify`, so
+neither `determination-preservation-lint` nor `test-suite-mutation-check` runs on its
+commits. Every one of these guards only fires for a committer who is not exempt. Same
+asymmetry recorded for `artifact-freshness-lint` yesterday, now demonstrated on a second
+guard and with real data loss narrowly avoided rather than a mere inconvenience. The
+options listed in that entry apply here with more urgency.
