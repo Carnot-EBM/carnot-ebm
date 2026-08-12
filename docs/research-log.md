@@ -6136,3 +6136,10 @@ The critical path for milestone .250:
 - theme: representation-surface preflight dominated a brief compute-heavy execution window without phase-level attribution
 - key result: the locked classification reports no compute-task GPU idle, but the data cannot grade utilization efficiency or determine whether parallel multi-model work missed DualGPURunner
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.545
+
+- exp_range: exp6326-exp6328 (visible gate-reference bounds only; the complete milestone range is not available)
+- theme: readiness- and integrity-gated policy work concentrated the reconstructed compute tail
+- key result: honest operational limitation -- the two longest compute tasks account for the full window, but causal phases, task-linked GPU efficiency, and parallel-model runner evidence are unavailable
+- acceptance: no data available this milestone

@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.545",
+  "generated_at": "2026-08-12T14:05:05Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 5.3,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Three-family guarded policy synthesis gated on Exp6326 readiness=1",
+      "duration_minutes": 3.47,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Prospective held-family guarded-policy A/B gated on Exp6328 integrity=1",
+      "duration_minutes": 1.83,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independent blind-obligation guard integrity audit",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Post-marker SOTA receipt and executable V545 scope freeze",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "GateMate dated-receipt single non-destructive detect",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 6 experiments in 5.3 minutes, and 3 were compute-bound. The two longest recorded experiments took 3.47 and 1.83 minutes; together they account for the full 5.3-minute window.",
+  "bottlenecks_identified": [
+    "Runtime was concentrated in the Three-family guarded policy synthesis and Prospective held-family guarded-policy A/B entries. Their labels show readiness and integrity gates, but the data does not identify a causal phase.",
+    "Disk-mtime reconstruction provides elapsed-time ranking but no task-scoped phase, GPU, loaded-model-count, or runner trace."
+  ],
+  "improvements_suggested": [
+    "Emit live start, phase, and stop timing receipts for each experiment so closeout does not depend on disk-mtime reconstruction.",
+    "Sample GPU utilization during each compute-bound task and attach the samples to that task's receipt.",
+    "Record loaded-model count and runner selection for each compute-bound task; select DualGPURunner when two or more models are loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add live per-experiment phase timing receipts.",
+    "Add task-linked GPU utilization sampling for compute-bound work.",
+    "Add loaded-model-count-aware runner selection and record its dispatch receipt."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence supports runtime ranking, not causal attribution. The idle GPU snapshot does not establish compute-task inefficiency, and no parallel-model evidence supports a DualGPURunner finding; therefore a savings estimate above 0% is not supported."
+}
