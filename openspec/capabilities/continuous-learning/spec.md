@@ -1359,3 +1359,143 @@ field SHALL be promoted by safety evidence.
 | REQ-CSL-6320-ROLLBACK | Planned | tests/python/test_experiment_6320_online_self_evolution_safety_audit.py |
 | REQ-CSL-6320-BOUNDARY | Planned | tests/python/test_experiment_6320_online_self_evolution_safety_audit.py |
 | REQ-CSL-6320-PROVENANCE | Planned | tests/python/test_experiment_6320_online_self_evolution_safety_audit.py |
+
+## REQ-LEARN-6342: Anytime E-Value Release Ledger
+
+**Given** Exp6318 and Exp6319 report positive factor-local online-learning
+evidence
+**When** Exp6342 evaluates factor-local release hypotheses under repeated
+looks, optional stopping, restarts, and many proposed factors
+**Then** it SHALL write
+`results/experiment_6342_anytime_evalue_release_ledger.json`
+**And** it SHALL freeze the null family, alternatives, evidence identity,
+filtration, betting rule, alpha budget, multiplicity policy, release
+threshold, stream sizes, seeds, resource limits, exact safety guard, and
+protected hashes before outcome processing
+**And** generated labels, LLM calls, duplicate evidence, cross-factor evidence
+reuse, unsafe statistical releases, and source model mutation SHALL remain bare
+integer `0`.
+
+## REQ-LEARN-6342-LEDGER: Append-Only Canonical E-Process Events
+
+**Given** a factor-local hypothesis has a frozen predecision hash
+**When** evidence events arrive
+**Then** each accepted row SHALL carry a sequence number, previous row hash,
+canonical event hash, evidence identity, filtration time, hypothesis id,
+factor id, nonnegative e-value increment, cumulative e-value, exact-safety
+receipt, and release decision
+**And** replay from the JSONL bytes SHALL reconstruct byte-identical state.
+
+## REQ-LEARN-6342-VALIDITY: Null Error Is Anytime Valid
+
+**Given** deterministic synthetic null streams with outcome probability
+bounded by the frozen null family
+**When** optional stopping or repeated looks stop on the first threshold
+crossing
+**Then** the empirical type-I interval SHALL stay inside the preregistered
+alpha bound after the multiplicity policy is applied.
+
+## REQ-LEARN-6342-POWER: Alternative Streams Clear The Gate
+
+**Given** deterministic synthetic alternative streams with a frozen effect
+size above the null boundary
+**When** the same e-process, threshold, and exact safety guard are applied
+**Then** power SHALL clear the preregistered lower threshold
+**And** the release-delay distribution SHALL report first-crossing look
+counts.
+
+## REQ-LEARN-6342-ATTACKS: Adaptive Evidence Attacks Fail Closed
+
+**Given** duplicated rows, cross-factor evidence reuse, selected hypotheses,
+reordered events, reset attempts, truncation, row mutation, previous-hash
+breaks, and restart corruption
+**When** Exp6342 replays or appends the attacked evidence
+**Then** each attack SHALL reject, quarantine, abort, or refuse release
+**And** no attack SHALL produce a released factor.
+
+## REQ-LEARN-6342-GUARD: E-Values Cannot Bypass Exact Safety
+
+**Given** a hypothesis crosses the statistical e-value threshold
+**When** the exact safety guard rejects its evidence or source contract
+**Then** the release SHALL fail closed
+**And** readiness SHALL remain `0.0`.
+
+## REQ-LEARN-6342-PROVENANCE: Required Artifact Fields
+
+Exp6342 SHALL emit these fields with the stated principles:
+
+- `status`: Terminal state follows preregistration, e-process validity, attack closure, restart identity, exact guard, and tests.
+- `source_claim_boundary`: NxN E-valuation is a design cue only. Local claims stop at deterministic factor-local release certification.
+- `evalue_ledger_path_and_hash`: The append-only JSONL ledger is content-addressed so replay starts from bytes, not memory.
+- `ledger_schema_path_and_hash`: The frozen schema fixes row identity, hash chaining, and replay validation.
+- `null_family_and_assumptions`: The null family states the composite boundary that makes the e-process a supermartingale.
+- `filtration_and_evidence_identity_contract`: Evidence IDs, factor scope, and filtration time prevent optional-stopping leakage and duplicate reuse.
+- `betting_rule_and_predecision_hash`: The betting rule and predecision hash are frozen before outcomes so the test is not fitted after seeing labels.
+- `alpha_multiplicity_and_release_policy`: Alpha spending, multiplicity, and the release threshold are explicit and data-independent.
+- `exact_safety_guard_contract`: Statistical evidence cannot release a factor unless the exact oracle safety guard also passes.
+- `synthetic_stream_manifest_path_and_hash`: Null and alternative stream seeds, sizes, probabilities, and resource limits are frozen.
+- `null_stream_results`: Null streams report threshold crossings and the empirical error used for readiness.
+- `alternative_stream_results`: Alternative streams report power under the same frozen ledger and guard.
+- `optional_stopping_results`: First-crossing stops prove repeated looks do not inflate release beyond the bound.
+- `repeated_look_results`: Fixed and repeated-look summaries stay separated for audit.
+- `duplicate_cross_factor_reorder_and_selection_attack_results`: Duplicate rows, cross-factor reuse, event reorder, and selected hypotheses fail closed.
+- `restart_reconstruction_results`: Restart replay reproduces the same state, hashes, and release decisions.
+- `append_only_tamper_results`: Truncation, row mutation, previous-hash breaks, reset, and restart corruption are detected.
+- `type_i_error_interval_and_sample_size`: The type-I interval and sample size justify the null-error claim.
+- `power_interval_and_sample_size`: The power interval and sample size justify the alternative claim.
+- `release_delay_distribution`: First-release look counts show how long valid evidence took to cross the gate.
+- `eprocess_state_examples`: Example states make the nonnegative e-value ledger auditable without replaying all streams.
+- `exact_oracle_claim_boundary`: The exact checker is the outcome oracle, so the result is execution-grounded and not oracle-distinct.
+- `generated_label_count`: Bare zero proves no generated labels were used.
+- `llm_call_count`: Bare zero proves no LLM call was made.
+- `anytime_release_certificate_ready_score`: Readiness is one only when null error, power, attacks, restart identity, exact guard, protected files, and tests pass.
+- `protected_files_unchanged`: Conductor, ops, traceability, and upstream evidence files remain byte-identical.
+- `preconditions_checked`: Inputs, source hashes, protected hashes, nulls, alternatives, evidence contract, betting rule, alpha, threshold, guard, seeds, stream sizes, and resource limits freeze first.
+- `inference_substrate`: The run declares deterministic synthetic replay plus exact oracle checks with no LLM or base model load.
+- `verifier_is_oracle`: Bare true states that exact safety and outcome checks are the oracle.
+- `field_provenance`: Every field maps to spec, source artifacts, sidecars, streams, attacks, tests, or hashes.
+- `field_principles`: Every required field carries its guard principle.
+- `test_commands`: Focused tests, coverage, full pytest, spec coverage, run command, validation, adversarial verification, E2E reading, and root-clutter checks are listed.
+- `test_exit_codes`: Failed commands prevent readiness.
+- `duration_s`: Wall time is measured without padding.
+- `random_seeds`: Null, alternative, ledger, attack, and interval seeds are fixed.
+- `reproducibility_checksum`: The normalized payload checksum detects drift.
+- `honest_verdict`: The verdict starts with a terminal prefix and states whether the anytime release certificate is ready.
+
+## SCENARIO-LEARN-6342-OPTIONAL-STOPPING: Null Peeking Stays Bounded
+
+**Given** null streams are checked after every event
+**When** the run stops at the first crossing
+**Then** empirical type-I error SHALL remain inside the preregistered bound.
+
+## SCENARIO-LEARN-6342-REPLAY: Ledger Replay Is Byte-Identical
+
+**Given** the append-only ledger JSONL bytes
+**When** restart reconstruction replays every row
+**Then** the final state hash, release rows, and ledger digest SHALL match the
+original run.
+
+## SCENARIO-LEARN-6342-ATTACKS: Evidence Abuse Fails Closed
+
+**Given** duplicate, cross-factor, selected-hypothesis, reordered, reset, and
+tampered evidence
+**When** the ledger append or replay path evaluates it
+**Then** the attack SHALL fail closed with no release.
+
+## SCENARIO-LEARN-6342-EXACT-GUARD: Statistical Evidence Is Not Sufficient
+
+**Given** a statistical e-value crosses the release threshold
+**When** the exact safety guard rejects the candidate
+**Then** the ledger SHALL refuse release.
+
+## Implementation Status (REQ-LEARN-6342)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6342 | Implemented | tests/python/test_experiment_6342_anytime_evalue_release_ledger.py |
+| REQ-LEARN-6342-LEDGER | Implemented | tests/python/test_experiment_6342_anytime_evalue_release_ledger.py |
+| REQ-LEARN-6342-VALIDITY | Implemented | tests/python/test_experiment_6342_anytime_evalue_release_ledger.py |
+| REQ-LEARN-6342-POWER | Implemented | tests/python/test_experiment_6342_anytime_evalue_release_ledger.py |
+| REQ-LEARN-6342-ATTACKS | Implemented | tests/python/test_experiment_6342_anytime_evalue_release_ledger.py |
+| REQ-LEARN-6342-GUARD | Implemented | tests/python/test_experiment_6342_anytime_evalue_release_ledger.py |
+| REQ-LEARN-6342-PROVENANCE | Implemented | tests/python/test_experiment_6342_anytime_evalue_release_ledger.py |

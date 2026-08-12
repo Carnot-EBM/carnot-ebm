@@ -1,0 +1,965 @@
+{
+  "alpha_multiplicity_and_release_policy": {
+    "alpha": 0.05,
+    "hypothesis_count": 4,
+    "multiplicity_policy": "Bonferroni e-value threshold per frozen hypothesis",
+    "optional_stopping_policy": "release only on first threshold crossing with exact guard pass",
+    "per_hypothesis_alpha": 0.0125,
+    "release_threshold": 80.0
+  },
+  "alternative_stream_results": {
+    "empirical_power": 0.921875,
+    "example_states": [
+      {
+        "cumulative_evalue": 0.4,
+        "look_index": 0,
+        "outcome": 0,
+        "stream_index": 0,
+        "stream_kind": "alternative"
+      },
+      {
+        "cumulative_evalue": 0.64,
+        "look_index": 1,
+        "outcome": 1,
+        "stream_index": 0,
+        "stream_kind": "alternative"
+      },
+      {
+        "cumulative_evalue": 0.256,
+        "look_index": 2,
+        "outcome": 0,
+        "stream_index": 0,
+        "stream_kind": "alternative"
+      },
+      {
+        "cumulative_evalue": 0.4,
+        "look_index": 0,
+        "outcome": 0,
+        "stream_index": 1,
+        "stream_kind": "alternative"
+      },
+      {
+        "cumulative_evalue": 0.16,
+        "look_index": 1,
+        "outcome": 0,
+        "stream_index": 1,
+        "stream_kind": "alternative"
+      },
+      {
+        "cumulative_evalue": 0.064,
+        "look_index": 2,
+        "outcome": 0,
+        "stream_index": 1,
+        "stream_kind": "alternative"
+      }
+    ],
+    "fixed_terminal_crossing_count": 116,
+    "look_count_per_stream": 40,
+    "release_count": 118,
+    "stream_count": 128,
+    "stream_kind": "alternative",
+    "threshold": 80.0
+  },
+  "anytime_release_certificate_ready_score": 1.0,
+  "append_only_tamper_results": {
+    "all_tamper_attacks_detected": true,
+    "evalue_reset_attack": {
+      "detected": true,
+      "expected_reason": "previous_row_hash",
+      "reason": "previous_row_hash"
+    },
+    "previous_hash_break": {
+      "detected": true,
+      "expected_reason": "previous_row_hash",
+      "reason": "previous_row_hash"
+    },
+    "restart_corruption": {
+      "detected": true,
+      "expected_reason": "previous_row_hash",
+      "reason": "previous_row_hash"
+    },
+    "row_mutation": {
+      "detected": true,
+      "expected_reason": "row_hash",
+      "reason": "row_hash"
+    },
+    "truncation": {
+      "detected": true,
+      "mode": "ledger_hash_mismatch"
+    }
+  },
+  "betting_rule_and_predecision_hash": {
+    "betting_alternative_probability": 0.8,
+    "failure_increment": 0.4,
+    "null_boundary_probability": 0.5,
+    "predecision_hash": "sha256:9d0085e525ce55a3e71507a515b4d88b2be9a9d984511f362b46a7d27702e937",
+    "success_increment": 1.6,
+    "supermartingale_fixture": {
+      "expected_increment_under_lower_composite_null": 0.94,
+      "expected_increment_under_null": 1.0,
+      "failure_increment": 0.4,
+      "nonnegative": true,
+      "success_increment": 1.6
+    }
+  },
+  "duplicate_cross_factor_reorder_and_selection_attack_results": {
+    "all_attacks_fail_closed": true,
+    "attack_count": 4,
+    "cross_factor_reuse": {
+      "fail_closed": true,
+      "reason": "cross_factor_reuse",
+      "released": false
+    },
+    "duplicate_evidence": {
+      "fail_closed": true,
+      "reason": "duplicate_evidence",
+      "released": false
+    },
+    "released_attack_count": 0,
+    "reordered_event": {
+      "fail_closed": true,
+      "reason": "reordered_event",
+      "released": false
+    },
+    "selected_hypothesis_after_outcome": {
+      "fail_closed": true,
+      "reason": "selected_hypothesis_after_outcome",
+      "released": false
+    }
+  },
+  "duration_s": 0.0632748759817332,
+  "eprocess_state_examples": {
+    "ledger_rows": [
+      {
+        "cumulative_evalue": 0.4,
+        "evalue_increment": 0.4,
+        "hypothesis_id": "repair_factor_release",
+        "outcome": 0,
+        "release_decision": "not_released",
+        "sequence": 0
+      },
+      {
+        "cumulative_evalue": 0.16,
+        "evalue_increment": 0.4,
+        "hypothesis_id": "repair_factor_release",
+        "outcome": 0,
+        "release_decision": "not_released",
+        "sequence": 1
+      },
+      {
+        "cumulative_evalue": 0.064,
+        "evalue_increment": 0.4,
+        "hypothesis_id": "repair_factor_release",
+        "outcome": 0,
+        "release_decision": "not_released",
+        "sequence": 2
+      },
+      {
+        "cumulative_evalue": 0.1024,
+        "evalue_increment": 1.6,
+        "hypothesis_id": "repair_factor_release",
+        "outcome": 1,
+        "release_decision": "not_released",
+        "sequence": 3
+      },
+      {
+        "cumulative_evalue": 0.16384,
+        "evalue_increment": 1.6,
+        "hypothesis_id": "repair_factor_release",
+        "outcome": 1,
+        "release_decision": "not_released",
+        "sequence": 4
+      }
+    ],
+    "null_example_states": [
+      {
+        "cumulative_evalue": 0.4,
+        "look_index": 0,
+        "outcome": 0,
+        "stream_index": 0,
+        "stream_kind": "null"
+      },
+      {
+        "cumulative_evalue": 0.16,
+        "look_index": 1,
+        "outcome": 0,
+        "stream_index": 0,
+        "stream_kind": "null"
+      },
+      {
+        "cumulative_evalue": 0.256,
+        "look_index": 2,
+        "outcome": 1,
+        "stream_index": 0,
+        "stream_kind": "null"
+      },
+      {
+        "cumulative_evalue": 0.4,
+        "look_index": 0,
+        "outcome": 0,
+        "stream_index": 1,
+        "stream_kind": "null"
+      },
+      {
+        "cumulative_evalue": 0.64,
+        "look_index": 1,
+        "outcome": 1,
+        "stream_index": 1,
+        "stream_kind": "null"
+      },
+      {
+        "cumulative_evalue": 0.256,
+        "look_index": 2,
+        "outcome": 0,
+        "stream_index": 1,
+        "stream_kind": "null"
+      }
+    ]
+  },
+  "evalue_ledger_path_and_hash": {
+    "path": "results/experiment_6342_anytime_evalue_release_ledger.json.evalue_ledger.jsonl",
+    "present": true,
+    "release_count": 1,
+    "row_count": 19,
+    "sha256": "sha256:6c5461f725e7df7eba95457c9e1ef8836ebf1f798fe314eac957d32a433642ac",
+    "state_hash": "sha256:e043d4348832eea49c1b6dfdd9d8690381e6065d2c18272508b539a87569058d"
+  },
+  "exact_oracle_claim_boundary": {
+    "claim_boundary": "execution-grounded release process, not an oracle-distinct moat claim",
+    "oracle": "deterministic exact outcome and safety guard over synthetic evidence rows",
+    "verifier_is_oracle": true
+  },
+  "exact_safety_guard_contract": {
+    "exact_guard_is_oracle": true,
+    "statistical_release_requires_exact_guard": true,
+    "unsafe_threshold_crossing_crossed_threshold": true,
+    "unsafe_threshold_crossing_cumulative_evalue": 281.474976710656,
+    "unsafe_threshold_crossing_release_count": 0,
+    "unsafe_threshold_crossing_release_decision": "blocked_by_exact_guard"
+  },
+  "field_principles": {
+    "alpha_multiplicity_and_release_policy": "Alpha spending, multiplicity, and the release threshold are explicit and data-independent.",
+    "alternative_stream_results": "Alternative streams report power under the same frozen ledger and guard.",
+    "anytime_release_certificate_ready_score": "Readiness is one only when null error, power, attacks, restart identity, exact guard, protected files, and tests pass.",
+    "append_only_tamper_results": "Truncation, row mutation, previous-hash breaks, reset, and restart corruption are detected.",
+    "betting_rule_and_predecision_hash": "The betting rule and predecision hash are frozen before outcomes so the test is not fitted after seeing labels.",
+    "duplicate_cross_factor_reorder_and_selection_attack_results": "Duplicate rows, cross-factor reuse, event reorder, and selected hypotheses fail closed.",
+    "duration_s": "Wall time is measured without padding.",
+    "eprocess_state_examples": "Example states make the nonnegative e-value ledger auditable without replaying all streams.",
+    "evalue_ledger_path_and_hash": "The append-only JSONL ledger is content-addressed so replay starts from bytes, not memory.",
+    "exact_oracle_claim_boundary": "The exact checker is the outcome oracle, so the result is execution-grounded and not oracle-distinct.",
+    "exact_safety_guard_contract": "Statistical evidence cannot release a factor unless the exact oracle safety guard also passes.",
+    "field_principles": "Every required field carries its guard principle.",
+    "field_provenance": "Every field maps to spec, source artifacts, sidecars, streams, attacks, tests, or hashes.",
+    "filtration_and_evidence_identity_contract": "Evidence IDs, factor scope, and filtration time prevent optional-stopping leakage and duplicate reuse.",
+    "generated_label_count": "Bare zero proves no generated labels were used.",
+    "honest_verdict": "The verdict starts with a terminal prefix and states whether the anytime release certificate is ready.",
+    "inference_substrate": "The run declares deterministic synthetic replay plus exact oracle checks with no LLM or base model load.",
+    "ledger_schema_path_and_hash": "The frozen schema fixes row identity, hash chaining, and replay validation.",
+    "llm_call_count": "Bare zero proves no LLM call was made.",
+    "null_family_and_assumptions": "The null family states the composite boundary that makes the e-process a supermartingale.",
+    "null_stream_results": "Null streams report threshold crossings and the empirical error used for readiness.",
+    "optional_stopping_results": "First-crossing stops prove repeated looks do not inflate release beyond the bound.",
+    "power_interval_and_sample_size": "The power interval and sample size justify the alternative claim.",
+    "preconditions_checked": "Inputs, source hashes, protected hashes, nulls, alternatives, evidence contract, betting rule, alpha, threshold, guard, seeds, stream sizes, and resource limits freeze first.",
+    "protected_files_unchanged": "Conductor, ops, traceability, and upstream evidence files remain byte-identical.",
+    "random_seeds": "Null, alternative, ledger, attack, and interval seeds are fixed.",
+    "release_delay_distribution": "First-release look counts show how long valid evidence took to cross the gate.",
+    "repeated_look_results": "Fixed and repeated-look summaries stay separated for audit.",
+    "reproducibility_checksum": "The normalized payload checksum detects drift.",
+    "restart_reconstruction_results": "Restart replay reproduces the same state, hashes, and release decisions.",
+    "source_claim_boundary": "NxN E-valuation is a design cue only. Local claims stop at deterministic factor-local release certification.",
+    "status": "Terminal state follows preregistration, e-process validity, attack closure, restart identity, exact guard, and tests.",
+    "synthetic_stream_manifest_path_and_hash": "Null and alternative stream seeds, sizes, probabilities, and resource limits are frozen.",
+    "test_commands": "Focused tests, coverage, full pytest, spec coverage, run command, validation, adversarial verification, E2E reading, and root-clutter checks are listed.",
+    "test_exit_codes": "Failed commands prevent readiness.",
+    "type_i_error_interval_and_sample_size": "The type-I interval and sample size justify the null-error claim.",
+    "verifier_is_oracle": "Bare true states that exact safety and outcome checks are the oracle."
+  },
+  "field_provenance": {
+    "alpha_multiplicity_and_release_policy": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "alternative_stream_results": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "anytime_release_certificate_ready_score": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "append_only_tamper_results": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "betting_rule_and_predecision_hash": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "duplicate_cross_factor_reorder_and_selection_attack_results": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "duration_s": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "eprocess_state_examples": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "evalue_ledger_path_and_hash": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "exact_oracle_claim_boundary": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "exact_safety_guard_contract": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "field_principles": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "field_provenance": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "filtration_and_evidence_identity_contract": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "generated_label_count": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "honest_verdict": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "inference_substrate": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "ledger_schema_path_and_hash": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "llm_call_count": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "null_family_and_assumptions": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "null_stream_results": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "optional_stopping_results": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "power_interval_and_sample_size": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "preconditions_checked": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "protected_files_unchanged": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "random_seeds": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "release_delay_distribution": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "repeated_look_results": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "reproducibility_checksum": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "restart_reconstruction_results": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "source_claim_boundary": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "status": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "synthetic_stream_manifest_path_and_hash": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "test_commands": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "test_exit_codes": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "type_i_error_interval_and_sample_size": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ],
+    "verifier_is_oracle": [
+      "REQ-LEARN-6342",
+      "Exp6318 and Exp6319 evidence schema",
+      "V546 NxN E-valuation reference",
+      "synthetic stream and e-value ledger sidecars",
+      "Exp6342 focused tests"
+    ]
+  },
+  "filtration_and_evidence_identity_contract": {
+    "cross_factor_reuse_policy": "reject",
+    "deduplication_key": "evidence_identity",
+    "evidence_identity_fields": [
+      "source_schema",
+      "source_event_id",
+      "stream_kind",
+      "stream_index",
+      "look_index"
+    ],
+    "filtration_order": "events append with strictly increasing filtration_time",
+    "outcome_visibility": "target_visible_before_outcome is false until predecision hash exists"
+  },
+  "generated_label_count": 0,
+  "honest_verdict": "complete_positive: anytime e-value release certificate passed with exact safety guard",
+  "inference_substrate": "deterministic_synthetic_evalue_replay_exact_oracle_no_llm",
+  "ledger_schema_path_and_hash": {
+    "path": "results/experiment_6342_anytime_evalue_release_ledger.json.ledger_schema.json",
+    "present": true,
+    "required_field_count": 18,
+    "schema": "carnot.experiment_6342.anytime_evalue_release_ledger.v1.ledger_row",
+    "sha256": "sha256:75a9bfbf1338f180ce4b9317dd8b95a7db762565b98d85a9dc2532f9bd5692b8"
+  },
+  "llm_call_count": 0,
+  "null_family_and_assumptions": {
+    "composite_null_boundary": "P(exact_success | filtration) <= 0.5",
+    "hypotheses": {
+      "accept_factor_release": {
+        "factor_id": "accept_factor",
+        "source": "Exp6318"
+      },
+      "feedback_drift_release": {
+        "factor_id": "drift_factor",
+        "source": "Exp6319"
+      },
+      "reject_factor_release": {
+        "factor_id": "reject_factor",
+        "source": "Exp6318"
+      },
+      "repair_factor_release": {
+        "factor_id": "repair_factor",
+        "source": "Exp6318"
+      }
+    },
+    "hypothesis_count": 4,
+    "null_family_id": "factor_local_no_positive_exact_lift",
+    "supermartingale_fixture": {
+      "expected_increment_under_lower_composite_null": 0.94,
+      "expected_increment_under_null": 1.0,
+      "failure_increment": 0.4,
+      "nonnegative": true,
+      "success_increment": 1.6
+    }
+  },
+  "null_stream_results": {
+    "empirical_type_i_error": 0.01171875,
+    "example_states": [
+      {
+        "cumulative_evalue": 0.4,
+        "look_index": 0,
+        "outcome": 0,
+        "stream_index": 0,
+        "stream_kind": "null"
+      },
+      {
+        "cumulative_evalue": 0.16,
+        "look_index": 1,
+        "outcome": 0,
+        "stream_index": 0,
+        "stream_kind": "null"
+      },
+      {
+        "cumulative_evalue": 0.256,
+        "look_index": 2,
+        "outcome": 1,
+        "stream_index": 0,
+        "stream_kind": "null"
+      },
+      {
+        "cumulative_evalue": 0.4,
+        "look_index": 0,
+        "outcome": 0,
+        "stream_index": 1,
+        "stream_kind": "null"
+      },
+      {
+        "cumulative_evalue": 0.64,
+        "look_index": 1,
+        "outcome": 1,
+        "stream_index": 1,
+        "stream_kind": "null"
+      },
+      {
+        "cumulative_evalue": 0.256,
+        "look_index": 2,
+        "outcome": 0,
+        "stream_index": 1,
+        "stream_kind": "null"
+      }
+    ],
+    "fixed_terminal_crossing_count": 0,
+    "look_count_per_stream": 40,
+    "release_count": 6,
+    "stream_count": 512,
+    "stream_kind": "null",
+    "threshold": 80.0
+  },
+  "optional_stopping_results": {
+    "empirical_type_i_error": 0.01171875,
+    "release_count": 6,
+    "stopped_on_first_crossing": true,
+    "threshold": 80.0
+  },
+  "power_interval_and_sample_size": {
+    "estimate": 0.921875,
+    "lower": 0.862151726614,
+    "metric": "empirical_power",
+    "n": 128,
+    "success_count": 118,
+    "upper": 0.957013089347
+  },
+  "preconditions_checked": {
+    "alpha_multiplicity_and_release_policy": {
+      "alpha": 0.05,
+      "hypothesis_count": 4,
+      "multiplicity_policy": "Bonferroni e-value threshold per frozen hypothesis",
+      "optional_stopping_policy": "release only on first threshold crossing with exact guard pass",
+      "per_hypothesis_alpha": 0.0125,
+      "release_threshold": 80.0
+    },
+    "alternatives": {
+      "alternative_stream_count": 128,
+      "synthetic_alternative_success_probability": 0.82
+    },
+    "betting_rule": {
+      "betting_alternative_probability": 0.8,
+      "failure_increment": 0.4,
+      "null_boundary_probability": 0.5,
+      "predecision_hash": "sha256:9d0085e525ce55a3e71507a515b4d88b2be9a9d984511f362b46a7d27702e937",
+      "success_increment": 1.6,
+      "supermartingale_fixture": {
+        "expected_increment_under_lower_composite_null": 0.94,
+        "expected_increment_under_null": 1.0,
+        "failure_increment": 0.4,
+        "nonnegative": true,
+        "success_increment": 1.6
+      }
+    },
+    "exact_guard": {
+      "guard_function": "exact_safety_guard",
+      "threshold_crossing_without_guard_policy": "reject"
+    },
+    "filtration_and_evidence_identity": {
+      "cross_factor_reuse_policy": "reject",
+      "deduplication_key": "evidence_identity",
+      "evidence_identity_fields": [
+        "source_schema",
+        "source_event_id",
+        "stream_kind",
+        "stream_index",
+        "look_index"
+      ],
+      "filtration_order": "events append with strictly increasing filtration_time",
+      "outcome_visibility": "target_visible_before_outcome is false until predecision hash exists"
+    },
+    "ledger_path": "results/experiment_6342_anytime_evalue_release_ledger.json.evalue_ledger.jsonl",
+    "ledger_schema_path": "results/experiment_6342_anytime_evalue_release_ledger.json.ledger_schema.json",
+    "null_family": {
+      "composite_null_boundary": "P(exact_success | filtration) <= 0.5",
+      "hypotheses": {
+        "accept_factor_release": {
+          "factor_id": "accept_factor",
+          "source": "Exp6318"
+        },
+        "feedback_drift_release": {
+          "factor_id": "drift_factor",
+          "source": "Exp6319"
+        },
+        "reject_factor_release": {
+          "factor_id": "reject_factor",
+          "source": "Exp6318"
+        },
+        "repair_factor_release": {
+          "factor_id": "repair_factor",
+          "source": "Exp6318"
+        }
+      },
+      "hypothesis_count": 4,
+      "null_family_id": "factor_local_no_positive_exact_lift",
+      "supermartingale_fixture": {
+        "expected_increment_under_lower_composite_null": 0.94,
+        "expected_increment_under_null": 1.0,
+        "failure_increment": 0.4,
+        "nonnegative": true,
+        "success_increment": 1.6
+      }
+    },
+    "outcome_processing_after_preconditions": true,
+    "protected_hashes_before_outcomes": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:a9c9813811e7fd6b52338b807c8211fc1b5f38d8974740502b868a59e5e74611",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6318_versioned_factor_local_online_initializer.json": "sha256:73bd16c659ba770f4da0828c2055d33fd44db6e440510dd22b479bf67b6eff2d",
+      "results/experiment_6319_feedback_directed_online_update_search.json": "sha256:f1de1a506e5cd0ba7d1fdfbeea610b15d4b5980b1c4e6c63d628633b945868d8",
+      "results/experiment_6320_online_self_evolution_safety_audit.json": "sha256:90222d2ab2a43aec33aa99cd4527eda6ac4d9fa17161894b5398b91360b6bb2e",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "protected_hashes_frozen_before_outcomes": true,
+    "random_seeds": {
+      "alternative": 634300,
+      "attack": 634500,
+      "interval": 634600,
+      "ledger": 634400,
+      "null": 634200
+    },
+    "resource_limits": {
+      "generated_label_limit": 0,
+      "llm_call_limit": 0,
+      "max_alternative_stream_count": 128,
+      "max_ledger_rows": 64,
+      "max_looks_per_stream": 40,
+      "max_null_stream_count": 512
+    },
+    "result_path": "results/experiment_6342_anytime_evalue_release_ledger.json",
+    "run_date": "20260812",
+    "source_hashes": {
+      "AGENTS.md": {
+        "path": "AGENTS.md",
+        "present": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CLAUDE.md": {
+        "path": "CLAUDE.md",
+        "present": true,
+        "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+      },
+      "CODEX.md": {
+        "path": "CODEX.md",
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "_bmad/traceability.md": {
+        "path": "_bmad/traceability.md",
+        "present": true,
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "openspec/capabilities/continuous-learning/spec.md": {
+        "path": "openspec/capabilities/continuous-learning/spec.md",
+        "present": true,
+        "sha256": "sha256:756c4e85c94527e341f15ae302c0c496bc84152b8142d542dbb7c4385aea9401"
+      },
+      "ops/changelog.md": {
+        "path": "ops/changelog.md",
+        "present": true,
+        "sha256": "sha256:a9c9813811e7fd6b52338b807c8211fc1b5f38d8974740502b868a59e5e74611"
+      },
+      "ops/e2e-test-plan.md": {
+        "path": "ops/e2e-test-plan.md",
+        "present": true,
+        "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+      },
+      "ops/status.md": {
+        "path": "ops/status.md",
+        "present": true,
+        "sha256": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180"
+      },
+      "python/carnot/experiment_6342_anytime_evalue_release_ledger.py": {
+        "path": "python/carnot/experiment_6342_anytime_evalue_release_ledger.py",
+        "present": true,
+        "sha256": "sha256:25577454da38e6193771abe5005d294d249c52135e3dd57eb811f9eeb845dc32"
+      },
+      "research-program.md": {
+        "path": "research-program.md",
+        "present": true,
+        "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+      },
+      "research-references.md": {
+        "path": "research-references.md",
+        "present": true,
+        "sha256": "sha256:a8de0c84d383d4c8bb208829d15f381e738adc58101908a3b2b19c9a08b8346d"
+      },
+      "results/experiment_6318_versioned_factor_local_online_initializer.json": {
+        "path": "results/experiment_6318_versioned_factor_local_online_initializer.json",
+        "present": true,
+        "sha256": "sha256:73bd16c659ba770f4da0828c2055d33fd44db6e440510dd22b479bf67b6eff2d"
+      },
+      "results/experiment_6319_feedback_directed_online_update_search.json": {
+        "path": "results/experiment_6319_feedback_directed_online_update_search.json",
+        "present": true,
+        "sha256": "sha256:f1de1a506e5cd0ba7d1fdfbeea610b15d4b5980b1c4e6c63d628633b945868d8"
+      },
+      "results/experiment_6320_online_self_evolution_safety_audit.json": {
+        "path": "results/experiment_6320_online_self_evolution_safety_audit.json",
+        "present": true,
+        "sha256": "sha256:90222d2ab2a43aec33aa99cd4527eda6ac4d9fa17161894b5398b91360b6bb2e"
+      },
+      "scripts/research_conductor.py": {
+        "path": "scripts/research_conductor.py",
+        "present": true,
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      },
+      "tests/python/test_experiment_6342_anytime_evalue_release_ledger.py": {
+        "path": "tests/python/test_experiment_6342_anytime_evalue_release_ledger.py",
+        "present": true,
+        "sha256": "sha256:575d163f4bf616016920072612901ec07b52a5753f66ecca4c5ac496d7048ae9"
+      }
+    },
+    "stream_sizes": {
+      "alternative_stream_count": 128,
+      "looks_per_stream": 40,
+      "null_stream_count": 512
+    },
+    "synthetic_stream_manifest_path": "results/experiment_6342_anytime_evalue_release_ledger.json.synthetic_stream_manifest.json"
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:a9c9813811e7fd6b52338b807c8211fc1b5f38d8974740502b868a59e5e74611",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6318_versioned_factor_local_online_initializer.json": "sha256:73bd16c659ba770f4da0828c2055d33fd44db6e440510dd22b479bf67b6eff2d",
+      "results/experiment_6319_feedback_directed_online_update_search.json": "sha256:f1de1a506e5cd0ba7d1fdfbeea610b15d4b5980b1c4e6c63d628633b945868d8",
+      "results/experiment_6320_online_self_evolution_safety_audit.json": "sha256:90222d2ab2a43aec33aa99cd4527eda6ac4d9fa17161894b5398b91360b6bb2e",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:a9c9813811e7fd6b52338b807c8211fc1b5f38d8974740502b868a59e5e74611",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6318_versioned_factor_local_online_initializer.json": "sha256:73bd16c659ba770f4da0828c2055d33fd44db6e440510dd22b479bf67b6eff2d",
+      "results/experiment_6319_feedback_directed_online_update_search.json": "sha256:f1de1a506e5cd0ba7d1fdfbeea610b15d4b5980b1c4e6c63d628633b945868d8",
+      "results/experiment_6320_online_self_evolution_safety_audit.json": "sha256:90222d2ab2a43aec33aa99cd4527eda6ac4d9fa17161894b5398b91360b6bb2e",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "changed": [],
+    "unchanged": true
+  },
+  "random_seeds": {
+    "alternative": 634300,
+    "attack": 634500,
+    "interval": 634600,
+    "ledger": 634400,
+    "null": 634200
+  },
+  "release_delay_distribution": {
+    "max_look": 36,
+    "mean_look": 19.161016949153,
+    "median_look": 19.0,
+    "min_look": 10,
+    "released_stream_count": 118
+  },
+  "repeated_look_results": {
+    "fixed_terminal_crossing_count": 0,
+    "look_count_per_stream": 40,
+    "optional_crossing_count": 6
+  },
+  "reproducibility_checksum": "sha256:999f30750d4352a45e0cac5c3cc725e371cd2ced4cce28bae315d4f22acb15fe",
+  "restart_reconstruction_results": {
+    "byte_identical": true,
+    "ledger_hash": "sha256:fd48c90cbd2fc993585973bee4d066d495e8c20ca99dd6b20b11c31da11899b5",
+    "release_count": 1,
+    "release_rows": [
+      {
+        "cumulative_evalue": 118.059162071741,
+        "factor_id": "repair_factor",
+        "hypothesis_id": "repair_factor_release",
+        "sequence": 18
+      }
+    ],
+    "row_count": 19,
+    "state_hash": "sha256:e043d4348832eea49c1b6dfdd9d8690381e6065d2c18272508b539a87569058d"
+  },
+  "source_claim_boundary": {
+    "design_reference": "research-references.md V546 NxN E-valuation entry",
+    "local_claim": "deterministic factor-local e-value release ledger",
+    "not_claimed": [
+      "LLM-generated hypotheses",
+      "oracle-distinct verifier moat",
+      "model-weight learning"
+    ],
+    "source_experiments": [
+      "results/experiment_6318_versioned_factor_local_online_initializer.json",
+      "results/experiment_6319_feedback_directed_online_update_search.json"
+    ]
+  },
+  "status": "complete_positive",
+  "synthetic_stream_manifest_path_and_hash": {
+    "alternative_stream_count": 128,
+    "null_stream_count": 512,
+    "path": "results/experiment_6342_anytime_evalue_release_ledger.json.synthetic_stream_manifest.json",
+    "present": true,
+    "sha256": "sha256:a3e856175ed0248fe47deb1e207d4828f835b7ab65b46c5f98fc2ea66bf91505"
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6342_anytime_evalue_release_ledger.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6342_anytime_evalue_release_ledger.py -m pytest tests/python/test_experiment_6342_anytime_evalue_release_ledger.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6342_anytime_evalue_release_ledger.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python -m carnot.experiment_6342_anytime_evalue_release_ledger --date 20260812",
+    ".venv/bin/python -m carnot.experiment_6342_anytime_evalue_release_ledger --date 20260812 --validate",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6342_anytime_evalue_release_ledger.py",
+    "sed -n '1,240p' ops/e2e-test-plan.md",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6342_anytime_evalue_release_ledger.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6342_anytime_evalue_release_ledger.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6342_anytime_evalue_release_ledger.py -m pytest tests/python/test_experiment_6342_anytime_evalue_release_ledger.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6342_anytime_evalue_release_ledger.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6342_anytime_evalue_release_ledger --date 20260812": 0,
+    ".venv/bin/python -m carnot.experiment_6342_anytime_evalue_release_ledger --date 20260812 --validate": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6342_anytime_evalue_release_ledger.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6342_anytime_evalue_release_ledger.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    "sed -n '1,240p' ops/e2e-test-plan.md": 0
+  },
+  "type_i_error_interval_and_sample_size": {
+    "estimate": 0.01171875,
+    "lower": 0.005381498256,
+    "metric": "empirical_type_i_error",
+    "n": 512,
+    "success_count": 6,
+    "upper": 0.025328704256
+  },
+  "verifier_is_oracle": true
+}
