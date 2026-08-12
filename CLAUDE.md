@@ -192,10 +192,20 @@ Layer-1 lint could flag long sentences and passive voice on lines newly
 added to CLAUDE.md, scoped so it never triggers on the file's existing
 history. Not built yet.
 
+**RECONFIRMED 2026-08-11 (append-only).** Operator directive: "Due to
+problems with Opus 5 throwing up walls of complex text, all prose generated
+going forward must follow Simplified Technical English (ASD-STE100)." This
+adds a new, named rationale: dense model output is hard to read. The rule
+itself does not change. The scope stays: all new project prose. Agents must
+apply the rule to their own chat responses on this project as well, per the
+2026-08-07 scope extension's "Your own written responses" bullet.
+
 **Cross-references:**
 - 2026-08-07 operator directive — origin
 - 2026-08-07 operator directive (same day, follow-up) — the SCOPE EXTENSION
   above, to all project prose
+- 2026-08-11 operator directive — reconfirmation, with the readability
+  rationale quoted above
 - CLAUDE.md "Documentation and Communication Standards" (above) — the
   sibling rule for code comments and public docs; this rule is its
   counterpart for CLAUDE.md's own prose
