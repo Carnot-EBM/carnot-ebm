@@ -15730,3 +15730,4 @@ code |
 | 2026-08-12 22:08 UTC | V547 dated source window and two-lane scope freeze | OK | 88 passed, 1 warning in 10.65s |
 | 2026-08-12 22:34 UTC | Three-model live factor proposal authenticity pref | OK | 88 passed, 1 warning in 10.97s |
 | 2026-08-12 22:37 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |
+| 2026-08-12 22:39 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |
