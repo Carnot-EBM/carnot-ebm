@@ -17384,3 +17384,48 @@ sensitivity term to `score_goal_predicate_consistency` whenever a win grid is av
 the metric cannot pass a constant-False predicate; (2) re-induce goal predicates for the 14
 degenerate games; (3) check whether the LIVE path's predicates share the defect -- this swept
 the STORED ones, and the live agent induces its own at runtime.
+
+## 2026-08-12 REQ-ARC-WMTE-6256: the win exemplar does not fix the goal predicate either
+
+Resolves the ambiguity exp6255 left open. That run found the exemplar HURTS dynamics
+fidelity but scored the ENGINE only, so the negative might have been measuring the wrong
+half. It was not.
+`honest_verdict: complete_win_exemplar_goal_gate_not_met_sensitivity_gained_0_lost_0_of_4_fires_0_to_0_spec_delta_-0.25`.
+
+| game | engine ctrl -> treat | goal specificity | fires on real win |
+|---|---|---|---|
+| dc22 | 0.75 -> 0.375 | 1.0 -> 1.0 | False -> False |
+| cn04 | 0.5231 -> 0.1154 | 1.0 -> 1.0 | False -> False |
+| ls20 | 0.7692 -> 0.0 | 1.0 -> **0.0** | False -> False |
+| s5i5 | 0.0667 -> 0.0 | 1.0 -> 1.0 | False -> False |
+
+All eight induce calls returned ok and produced a goal predicate, so no arm is empty.
+
+**Sensitivity: 0 gained, 0 lost. NOT ONE of the eight predicates fires on a real win --
+in either arm.** The exemplar was aimed squarely at the goal predicate and moved it not at
+all. exp6255's negative therefore stands, and is now stronger: the exemplar hurts the half
+it was not aimed at and does nothing for the half it was.
+
+**ls20 got worse in a different direction.** Its specificity collapsed 1.0 -> 0.0, meaning
+10 of 10 false positives -- the predicate went from constant-False to constant-True. That is
+the opposite degeneracy, not an improvement, and it is only visible because both sides are
+scored. A specificity-only view would have called the control perfect; a sensitivity-only
+view would call the treatment perfect. Neither is.
+
+**It also independently replicates exp6255 on a fresh seed.** Different seed (6256 vs 6255),
+same direction on all four games: engine fidelity down every time. Two independent runs now
+agree the exemplar degrades dynamics induction.
+
+**And it extends exp6257 in the way that matters most.** exp6257 swept STORED engines and
+found 14 of 21 degenerate. These eight predicates are FRESH inductions from the live
+proposer, made minutes ago, and 8 of 8 fail to fire on a real win. So the defect is not stale
+storage -- it is being produced by induction right now, on the current generator, with and
+without the exemplar. That answers a good part of the "does the live path share the defect"
+question: these ARE live-proposer inductions.
+
+**Where that leaves the goal half.** The induced goal predicate is close to useless across
+the board: 14 of 21 stored and 8 of 8 freshly induced never fire on a real win, and the
+planner's termination condition depends on it. The win exemplar is now ruled out as the fix.
+The remaining candidates are unchanged from exp6257: make the metric two-sided so a
+constant-False predicate cannot score perfect, then attack induction of the predicate itself
+with something other than a prompt exemplar.
