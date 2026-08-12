@@ -15722,3 +15722,4 @@ code |
 | 2026-08-12 19:21 UTC | Gated chronological e-process factor evolution tri | OK | 88 passed, 1 warning in 9.40s |
 | 2026-08-12 19:36 UTC | Independent e-process and factor-lifecycle safety  | OK | 88 passed, 1 warning in 10.04s |
 | 2026-08-12 19:53 UTC | ARC target-licensed counterfactual action-order pr | OK | 110 passed, 1 warning in 9.76s |
+| 2026-08-12 20:12 UTC | Gated default-off live ARC action-influence A/B | OK | 118 passed, 1 warning in 12.42s |
