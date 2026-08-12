@@ -132,6 +132,74 @@ When Exp6275 evaluates the model cell,
 Then the cell stops with an honest terminal disposition and the artifact records
 the failed or timeout cell instead of fabricating model results.
 
+### REQ-KONA-6326: Restricted Policy DSL and Exact Contract Compiler
+
+The repository SHALL provide Exp6326 as a bounded typed DSL for deterministic
+finite state-action policies. The DSL SHALL declare finite states, finite
+actions, and exactly one action for each state. The parser SHALL reject unknown
+syntax, duplicate clauses, missing state actions, unknown states or actions,
+and values that exceed the frozen finite bounds.
+
+The compiler SHALL normalize each accepted program into canonical text with a
+stable semantic hash. The semantics SHALL depend only on the finite policy map,
+not on source order, comments, whitespace, parser defaults, natural-language
+ConstraintIR, generated labels, generated-text scoring, hidden model state,
+KANs, or model-generated annotations.
+
+The contract layer SHALL define independent finite-domain behavioral clauses.
+Each accepted contract SHALL name its finite state and action domain. It SHALL
+compile to named local factors. Each factor SHALL have a finite scope, a
+positive integer weight, and an exact satisfaction predicate over the canonical
+policy semantics. Total energy SHALL be the weighted count of unsatisfied
+factors.
+
+The Exp6326 harness SHALL ship development and held contract families plus
+adversarial fixtures. It SHALL verify each family by enumerating the complete
+finite policy domain or by Z3. It SHALL prove that factor energy equals exact
+contract violations for every enumerated policy. It SHALL ship one verified,
+hash-pinned fallback policy program for every fixture family.
+
+The terminal artifact SHALL be
+`results/experiment_6326_restricted_policy_contract_compiler.json`. It SHALL
+include `status`, source and claim boundaries, grammar, schema, parser,
+normalizer, semantics, factor compiler, exact checker, fixture manifest, split
+rules, fallback hashes, exhaustive results by family, factor exactness results,
+parser rejection and totality results, attack controls, exact oracle boundary,
+bare zero counts for generated labels, hidden-state access, and external text
+scorers, protected-file receipts, preconditions, `verifier_is_oracle=true`,
+field provenance, field principles for every required field, test commands,
+exit codes, duration, seeds, checksum, and an honest verdict. Readiness SHALL
+be `1.0` only when normalization is deterministic, factor energy equals exact
+violations, all fallbacks satisfy their contracts, and all attacks fail closed.
+
+### SCENARIO-KONA-6326-CANONICAL-PARSER: Parser Is Total And Deterministic
+
+Given bounded policy programs with the same state-action map but different
+source order, whitespace, or comments,
+When Exp6326 parses and normalizes them,
+Then the canonical program text and semantic hash are identical.
+
+**Spec traces:** REQ-KONA-6326
+
+### SCENARIO-KONA-6326-FACTOR-EXACTNESS: Local Factors Equal Exact Violations
+
+Given accepted contracts over finite state-action domains,
+When Exp6326 compiles each contract and enumerates every deterministic policy,
+Then the sum of unsatisfied local factors equals the independent exact violation
+count for every enumerated policy.
+
+**Spec traces:** REQ-KONA-6326
+
+### SCENARIO-KONA-6326-FALLBACK-AND-ATTACKS: Fallbacks Are Pinned And Attacks Fail
+
+Given each fixture family fallback and adversarial candidates for vacuity,
+parser defaults, validator mutation, test deletion, fallback laundering, hash
+swaps, collision probes, and nondeterministic normalization,
+When Exp6326 verifies the family manifest,
+Then every fallback satisfies its contract and every attack fails closed.
+
+**Spec traces:** REQ-KONA-6326
+
 ### REQ-CONSTRAINT-6288: Fail-Closed Partial Atom Evidence Adapter
 
 The repository SHALL provide an Exp6288 adapter that replays only the
