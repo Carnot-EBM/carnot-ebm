@@ -1,0 +1,28 @@
+{
+  "capacity_bounds": {
+    "active_compaction_policy": "oldest unprotected factor, tie-broken by factor id",
+    "active_factor_capacity": 4,
+    "quarantine_factor_capacity": 2,
+    "quarantine_overflow_policy": "reject the transition"
+  },
+  "hash_contract": "row_hash is sha256_json(row without row_hash)",
+  "required_fields": [
+    "schema",
+    "sequence",
+    "previous_row_hash",
+    "event",
+    "operation",
+    "factor_id",
+    "evidence_hash",
+    "state_hash_before",
+    "state_hash_after",
+    "state_bytes_sha256_after",
+    "active_count_after",
+    "quarantine_count_after",
+    "operation_checks",
+    "decision",
+    "accepted",
+    "row_hash"
+  ],
+  "schema": "carnot.experiment_6343.evidence_carrying_factor_lifecycle.v1.lifecycle_registry_row"
+}
