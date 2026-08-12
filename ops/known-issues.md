@@ -17487,3 +17487,50 @@ constant-True opposite degeneracy and a backward-compatibility case.
 from 1.0, or rewiring the veto to consult the new flag, is a live-path behaviour change on
 the scored agent. It should be a measured A/B and an operator decision, not a quiet edit at
 the end of an unattended session. The analysis above is the case for running that A/B.
+
+## 2026-08-12 REQ-ARC-WMTE-6258: the veto admits 21 of 26 useless predicates -- and my false-reject claim was wrong
+
+Puts a number on the code-path analysis above, using only data already on disk (exp6256's 8
+freshly induced predicates + exp6257's 21 measurable stored ones, 29 with both axes).
+`honest_verdict: complete_goal_veto_confusion_21_false_accepts_0_false_rejects_of_29_acceptance_precision_0.1923`.
+
+| outcome at the live threshold of 1.0 | count |
+|---|---|
+| FALSE ACCEPT -- degenerate predicate admitted | **21** |
+| true accept -- fires on a real win | 5 |
+| true reject | 3 |
+| FALSE REJECT -- discriminating predicate discarded | **0** |
+
+**Acceptance precision 0.1923.** Of the 26 predicates the veto admits, only 5 actually fire
+on a real win. Roughly four in five things it passes are useless, and each becomes
+`plan_in_model`'s termination condition.
+
+**CORRECTION to the entry above, which I wrote before measuring.** That entry stated the
+inversion had two arms: the veto "ACCEPTS a constant-False predicate" AND "REJECTS a
+genuinely discriminating predicate that fires even once too often". The first arm is
+strongly supported -- 21 of 29. **The second arm has ZERO support: there were no false
+rejects at all.** Every discriminating predicate in this population also happened to have
+perfect specificity, so the veto never had to choose between them. The false-reject arm is
+arithmetically possible and was not observed; it should not be repeated as a finding.
+
+So the defect is ONE-SIDED: the veto over-admits, it does not over-reject. That is a
+materially different problem from the one I described, and it changes the fix. Lowering the
+threshold would make it worse, not better -- it only ever admits more. What is needed is an
+ADDITIONAL condition (sensitivity), not a relaxed one.
+
+**Fresh inductions are worse than the stored ones.** Freshly induced: 7 of 8 false accepts,
+0 true accepts. Stored: 14 of 21 false accepts, 5 true accepts. Every predicate the current
+generator produced in exp6256 that the veto would admit is degenerate. The five that work
+are all older stored ones (cd82, r11l, sk48, sp80, and one cn04 arm).
+
+**What this cannot show.** It does not observe the live agent. It shows what the live
+threshold WOULD do to predicates of the kind this project actually produces, on public games
+with development-proxy win grids -- not hidden-game level 1. n=29.
+
+**The operator decision this informs.** The metric now supports a sensitivity term
+(REQ-ARC-WMTE-6257). Wiring the live veto to require it -- accept only if specificity is high
+AND the predicate fires on a known win, where one exists -- would have rejected 21 of the 26
+it currently admits. At level 1 no win grid exists, so the honest options there are narrower:
+accept that the predicate is unverifiable and stop gating on a metric that cannot fail, or
+find a different signal. That is a live-path behaviour change and remains an operator
+decision, not an unattended edit.
