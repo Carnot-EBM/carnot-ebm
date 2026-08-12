@@ -15733,3 +15733,5 @@ code |
 | 2026-08-12 22:39 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |
 | 2026-08-12 22:41 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |
 | 2026-08-12 22:43 UTC | Gated prospective read-only-then-commit certified | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal- |
+| 2026-08-12 22:43 UTC | Gated default-off certified factor future consumer | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6354-prospective-live-certified-factor- |
+| 2026-08-12 22:45 UTC | Gated prospective read-only-then-commit certified | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal- |
