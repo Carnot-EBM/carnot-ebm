@@ -200,6 +200,82 @@ Then every fallback satisfies its contract and every attack fails closed.
 
 **Spec traces:** REQ-KONA-6326
 
+### REQ-KONA-6327: Three-Family Guarded Policy Synthesis
+
+The repository SHALL provide Exp6327 at
+`python/carnot/experiment_6327_three_family_guarded_policy_synthesis.py`.
+It SHALL write
+`results/experiment_6327_three_family_guarded_policy_synthesis.json` after
+generating bounded policy DSL candidates with the three mandatory local GGUF
+models: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+`MODEL_SPECS` SHALL be resolved through the canonical `cached_sota_pair`
+helper pattern with `gpu_indices=(0, 1)`. The workflow SHALL preserve exact
+GGUF file paths, hashes, revisions, quantizations, GPU placements, the native
+llama.cpp CLI path, and embedded-tokenizer receipts for each model. It SHALL
+never call `AutoTokenizer.from_pretrained()` for a GGUF repository.
+
+The workflow SHALL replay the structured gate before generation. The gate SHALL
+check model files, embedded tokenizers, CUDA devices, VRAM, RAM, disk, timeouts,
+seeds, fixture hashes, candidate budgets, fallback hashes, and protected hashes.
+If any required model cell is missing, the artifact SHALL block with an honest
+verdict rather than using a tiny or legacy model for headline rows.
+
+The workflow SHALL freeze prompts, decoder settings, seeds, candidate count,
+token budget, wall-time budget, and fallback accounting before model output is
+read. Raw model outputs SHALL be written atomically and hashed before parsing.
+Every parsed candidate SHALL be normalized by the Exp6326 restricted policy DSL.
+Malformed or parser-failing output SHALL be conserved as a candidate failure.
+
+The workflow SHALL evaluate four matched arms over identical eligible model,
+family, and seed cells: one raw candidate, reject-only filtering, exact guard
+plus hash-pinned fallback, and bounded exact-factor-energy-guided candidate
+search plus the same fallback. Every fallback SHALL count as the fallback
+utility and full fallback cost. The exact guard SHALL be the safety oracle.
+The model SHALL supply only candidate programs and SHALL NOT supply labels,
+hidden states, source model weight updates, or final safety authority.
+
+The terminal artifact SHALL include every required field named in the Exp6327
+task prompt. `source_model_weight_mutation_count`, `generated_label_count`, and
+`hidden_state_access_count` SHALL be bare integer zero. `verifier_is_oracle`
+SHALL be the bare boolean `true`. `guarded_policy_synthesis_ready_score` SHALL
+be `1.0` only when all required model and contract-family cells are complete,
+no accepted candidate has a contract violation, development-family utility for
+bounded exact-factor-energy search improves over exact guard plus fallback under
+the preregistered matched budget, protected files remain unchanged, and every
+required field has a field principle. Otherwise it SHALL be `0.0`.
+
+### SCENARIO-KONA-6327-GATE: Local GGUFs And Embedded Tokenizers Gate The Run
+
+Given Exp6327 starts from the three mandatory local GGUF models,
+When a model file, embedded tokenizer, CUDA offload receipt, native llama.cpp
+path, budget, fallback hash, or protected hash is missing,
+Then the workflow blocks that evidence path and does not substitute
+`AutoTokenizer`, hidden states, generated labels, or tiny legacy models.
+
+**Spec traces:** REQ-KONA-6327
+
+### SCENARIO-KONA-6327-MATCHED-ARMS: Candidate Budgets Are Shared
+
+Given raw rows are frozen for each model, family, and seed,
+When the four arms are scored,
+Then each arm uses the same candidate pool, token budget, time budget, and
+fallback accounting, and malformed output remains visible as a parse failure.
+
+**Spec traces:** REQ-KONA-6327
+
+### SCENARIO-KONA-6327-ORACLE-BOUNDARY: Exact Guard Holds Safety Authority
+
+Given a model candidate is accepted by an arm,
+When the Exp6326 exact factor energy is computed,
+Then accepted contract violations are zero, rejected candidates use the
+hash-pinned fallback when that arm defines one, and readiness never depends on
+model labels, hidden states, source model mutation, or model self-judgment.
+
+**Spec traces:** REQ-KONA-6327
+
 ### REQ-CONSTRAINT-6288: Fail-Closed Partial Atom Evidence Adapter
 
 The repository SHALL provide an Exp6288 adapter that replays only the
