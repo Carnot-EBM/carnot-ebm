@@ -15727,3 +15727,4 @@ code |
 | 2026-08-12 21:28 UTC | Plan milestone 2026.08.547 | OK | 7 tasks proposed |
 | 2026-08-12 21:30 UTC | Milestone 2026.08.547 activated | OK | 7 tasks queued |
 | 2026-08-12 21:49 UTC | Bounded V546 terminal evidence handoff into V547 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-12 22:08 UTC | V547 dated source window and two-lane scope freeze | OK | 88 passed, 1 warning in 10.65s |
