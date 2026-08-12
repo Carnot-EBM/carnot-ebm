@@ -25427,3 +25427,52 @@ before drawing it) and is flagged per game. **Authorizes no generator pin change
 
 Second-draw slowdown (222.4s after 109.7s; 383.6s after 97.8s) and s5i5's 836.6s
 no-candidate outlier are unexplained and were not investigated.
+
+
+### REQ-ARC-WMTE-6255: Win-Exemplar Induction A/B
+
+**Origin:** 2026-08-12, following the correction to the exp6252 root cause. `induce_prompt`
+has dedicated slots for `win_transition` and `previous_level_complete_grid`, and every prior
+offline induction run passed NEITHER, because `collect_transitions` never reaches a level-up
+(measured 0 of 200 steps on dc22 and cn04). Nobody had measured what filling them does.
+
+`carnot.agentic.arc_executable_world_model.replay_win_transition(game, cell)` SHALL recover a
+level-up transition by replaying the banked `solution_labels` from
+`results/arc_loop_solve_<game>.json` through the game's OWN `GameAdapter.apply`, and SHALL
+return None whenever no banked solve, adapter, or level-up exists. Callers SHALL treat None as
+"no exemplar" and SHALL NOT substitute a fabricated one.
+
+`scripts/experiments/experiment_6255_win_exemplar_induction_ab.py` SHALL run one induce call
+per arm per game, paired on an identical split and budget, differing ONLY in whether the
+exemplar is passed, and SHALL delete any prior engine from the store before each arm so one
+arm's output can never be read as the other's.
+
+**Pre-registered gate:** >= 3 of the comparable games improve AND pooled delta > 0.
+
+#### SCENARIO-ARC-WMTE-6255-MISSING-EXEMPLAR-SKIPS-THE-PAIR
+
+Given no banked solve or adapter produces a level-up, the game SHALL be recorded as skipped
+and excluded from the comparison rather than scored against a fabricated exemplar.
+
+#### UPDATE 2026-08-12 — RESULT: gate NOT met; the exemplar HURTS dynamics induction
+
+`complete_win_exemplar_gate_not_met_1_improved_3_worse_of_4_pooled_delta_-0.2476`.
+
+| game | control | treatment | delta |
+|---|---|---|---|
+| dc22 | 0.8571 | 0.4286 | -0.4285 |
+| cn04 | 0.1468 | 0.0373 | -0.1095 |
+| ls20 | 0.9038 | 0.0678 | -0.8360 |
+| s5i5 | 0.5083 | 0.8917 | +0.3834 |
+
+Well-controlled: 4 of 4 comparable, all 8 induce calls ok, and no game at the 0.0 floor or
+1.0 ceiling, so every one could move in either direction.
+
+**The limitation that may invert this.** The metric scores the ENGINE (dynamics fidelity)
+only. The exemplar's purpose is arguably the GOAL predicate, which this did not score at all.
+So: the exemplar hurts dynamics induction; its effect on goal induction is UNMEASURED, and
+that follow-up is the obvious next step.
+
+**Scope limit.** The exemplar is replayed from a banked solve through a `GameAdapter` — a
+development proxy. A hidden game has neither, so this says nothing about the live agent
+obtaining an exemplar on a hidden level 1. n=4.

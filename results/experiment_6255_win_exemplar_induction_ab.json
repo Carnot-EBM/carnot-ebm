@@ -1,0 +1,87 @@
+{
+  "experiment": "experiment_6255_win_exemplar_induction_ab",
+  "title": "Win-exemplar induction A/B: does filling induce_prompt's win slot help?",
+  "run_date": "2026-08-12T11:04:50Z",
+  "roster": [
+    "dc22",
+    "cn04",
+    "ls20",
+    "s5i5"
+  ],
+  "per_game_results": [
+    {
+      "game": "dc22",
+      "win_exemplar_available": true,
+      "control_held": 0.8571,
+      "treatment_held": 0.4286,
+      "control_wall_s": 224.3,
+      "treatment_wall_s": 220.0,
+      "control_ok": true,
+      "treatment_ok": true,
+      "win_level": "0->1",
+      "delta": -0.4285
+    },
+    {
+      "game": "cn04",
+      "win_exemplar_available": true,
+      "control_held": 0.1468,
+      "treatment_held": 0.0373,
+      "control_wall_s": 188.7,
+      "treatment_wall_s": 408.2,
+      "control_ok": true,
+      "treatment_ok": true,
+      "win_level": "0->1",
+      "delta": -0.1095
+    },
+    {
+      "game": "ls20",
+      "win_exemplar_available": true,
+      "control_held": 0.9038,
+      "treatment_held": 0.0678,
+      "control_wall_s": 265.0,
+      "treatment_wall_s": 292.8,
+      "control_ok": true,
+      "treatment_ok": true,
+      "win_level": "0->1",
+      "delta": -0.836
+    },
+    {
+      "game": "s5i5",
+      "win_exemplar_available": true,
+      "control_held": 0.5083,
+      "treatment_held": 0.8917,
+      "control_wall_s": 227.8,
+      "treatment_wall_s": 250.3,
+      "control_ok": true,
+      "treatment_ok": true,
+      "win_level": "0->1",
+      "delta": 0.3834
+    }
+  ],
+  "n_games_comparable": 4,
+  "n_games_improved": 1,
+  "n_games_worse": 3,
+  "pooled_mean_delta": -0.2476,
+  "gate_condition": ">= 3 of the comparable games improve AND pooled delta > 0",
+  "gate_min_games_improved": 3,
+  "gate_met": false,
+  "why_this_was_never_measured": "collect_transitions yields no level-up under a salience-biased random walk (0 of 200 steps on dc22 and cn04), so every prior offline induction run passed neither win_transition nor previous_level_complete_grid",
+  "exemplar_source": "replay_win_transition: banked solve replayed through the game's GameAdapter",
+  "development_proxy_limit": "a hidden game has no banked solve and no adapter, so the LIVE agent cannot obtain an exemplar this way. On the live path it comes from the agent's own play and so exists from level 2 onward, never for level 1. A positive here means the prompt slot is worth filling WHEN an exemplar exists; it does not show the live agent can get one on a hidden level 1.",
+  "sample_size_note": "at most 4 games, far below the project's n>=30 bar for a percentage-point claim. Directional signal only.",
+  "solve_provenance": "development_proxy",
+  "arc_solve_claim": false,
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_principle": "held-out change_fidelity is an oracle-distinct graded dynamics score, not the executable win-condition oracle; no level is claimed",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": {
+    "generator": "unsloth/gemma-4-31B-it-qat-GGUF",
+    "quant": "UD-Q4_K_XL",
+    "kv_cache_quant": "q8_0",
+    "port": 8943
+  },
+  "random_seed": 6255,
+  "honest_verdict": "complete_win_exemplar_gate_not_met_1_improved_3_worse_of_4_pooled_delta_-0.2476",
+  "duration_s": 2103.001,
+  "reproducibility_checksum": "6127271c7ad542d9b26efa59bd8fa91ef70c312ebd501ac4be365f03f9348e68"
+}
