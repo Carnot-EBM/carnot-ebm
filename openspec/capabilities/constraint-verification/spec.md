@@ -276,6 +276,78 @@ model labels, hidden states, source model mutation, or model self-judgment.
 
 **Spec traces:** REQ-KONA-6327
 
+### REQ-KONA-6339: Incremental Prefix Enforcement Substrate
+
+The repository SHALL provide Exp6339 at
+`python/carnot/experiment_6339_incremental_prefix_enforcement_substrate.py`.
+It SHALL write
+`results/experiment_6339_incremental_prefix_enforcement_substrate.json`.
+
+Exp6339 SHALL reuse the Exp6326 restricted policy DSL grammar, parser,
+normalizer, exact finite semantics, fixture families, and readiness receipt.
+It SHALL add a deterministic incremental lexer and parser. Completed programs
+accepted by the incremental parser SHALL parse through Exp6326 and have the
+same canonical source and semantic hash as Exp6326.
+
+The incremental parser SHALL expose only observable parser-state features.
+Those features SHALL include syntax phase, accepted completed line count,
+declared state and action counts, rule count, missing state actions, current
+expectations, prefix hash, and parser error reason when one exists. They SHALL
+NOT read model hidden state, generated labels, LLM self-judgments, logits, or
+natural-language repair text.
+
+Exp6339 SHALL provide a JIT SMT prefix-feasibility checker. The checker SHALL
+return `accept`, `reject`, or `timeout`. It SHALL use a bounded solver timeout.
+It SHALL treat timeout as fail-closed and report timeout counts separately.
+
+The Exp6339 harness SHALL enumerate every prefix in the bounded fixture domain.
+It SHALL prove prefix soundness, feasible-completion recall, parser-state
+determinism, final semantic parity with Exp6326, and adversarial fail-closed
+behavior. Adversarial controls SHALL include invalid UTF-8, token splits,
+whitespace aliases, prefix bombs, solver timeouts, unknown symbols, and
+normalization collisions.
+
+The terminal artifact SHALL include every required field named in the Exp6339
+task prompt. `hidden_state_access_count`, `generated_label_count`, and
+`llm_call_count` SHALL be bare integer zero. `verifier_is_oracle` SHALL be the
+bare boolean `true`. `prefix_enforcement_substrate_ready_score` SHALL be `1.0`
+only when exhaustive soundness, full feasible-completion recall, semantic
+parity, deterministic states, and bounded fail-closed timeouts all pass.
+
+### SCENARIO-KONA-6339-PREFIX-SOUNDNESS: Prefix Rejection Is Exact
+
+Given every bounded fixture-domain prefix,
+When Exp6339 checks prefix feasibility,
+Then no accepted prefix is outside the feasible completion set and timeout
+prefixes are reported as fail-closed.
+
+**Spec traces:** REQ-KONA-6339
+
+### SCENARIO-KONA-6339-FEASIBLE-RECALL: Feasible Prefixes Are Not Rejected
+
+Given every prefix that has at least one fixture-domain completion,
+When Exp6339 runs the JIT SMT feasibility checker without forcing timeout,
+Then the checker does not return `reject`.
+
+**Spec traces:** REQ-KONA-6339
+
+### SCENARIO-KONA-6339-SEMANTIC-PARITY: Completed Programs Match Exp6326
+
+Given every accepted completed fixture-domain program,
+When Exp6339 normalizes and hashes the program,
+Then the canonical source and semantic hash match Exp6326 exactly.
+
+**Spec traces:** REQ-KONA-6339
+
+### SCENARIO-KONA-6339-OBSERVABLE-STATE: Parser State Is Deterministic
+
+Given repeated parses of byte-identical prefixes and whitespace aliases,
+When Exp6339 emits parser-state features,
+Then the features are deterministic and record zero hidden-state, generated
+label, and LLM accesses.
+
+**Spec traces:** REQ-KONA-6339
+
 ### REQ-CONSTRAINT-6288: Fail-Closed Partial Atom Evidence Adapter
 
 The repository SHALL provide an Exp6288 adapter that replays only the
