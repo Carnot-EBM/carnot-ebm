@@ -25177,6 +25177,120 @@ that fails to remove the effect, no-effect fixture mutation that still licenses
 the route, solve claims, registry updates, LLM calls, missing field principles,
 nonterminal verdicts, and checksum drift.
 
+### REQ-ARC-WMTE-6348: Default-Off Fresh Live Action-Influence A/B
+
+Experiment 6348 SHALL replay the Exp6347 structured gate and the ARC registry
+precheck before any model load. The replay SHALL hash the Exp6321 and Exp6347
+inputs, classify their terminal state, require Exp6347 action-influence
+eligibility, record a no-duplicate-solve receipt, and keep the solve registry
+unchanged. The route SHALL stay default-off in the submitted live agent path.
+
+The workflow SHALL seal a prospective registration and a fresh live-window manifest
+before model generation. It SHALL freeze game order, seeds, prompts,
+action budgets, token budgets, route rules, exact transition endpoints, stopping
+rules, forbidden sources, protected hashes, and the route-default rule.
+`MODEL_SPECS` SHALL be built through `cached_sota_pair(gpu_indices=(0, 1))`
+using `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Each model SHALL record concrete file hash,
+revision, quantization, embedded-tokenizer receipt, canonical llama.cpp receipt,
+CUDA offload receipt, and memory-release receipt. Only one model placement SHALL
+be live-loaded at a time.
+
+The A/B SHALL compare `route_off` and `target_licensed_route_on` on matched
+fresh live-agent windows. Arms SHALL match call, token, action, time, and exact
+checker budgets. The route-on arm MAY reorder or annotate actions, but it SHALL
+NOT inject an action absent from the live agent's own candidate receipts. The
+route MAY use only the agent's own prior observations, actions, and runtime
+reverse-engineering state. All raw candidates and action receipts SHALL be
+preserved.
+
+The experiment SHALL measure causal action influence and one-step exact
+transition quality only. It SHALL NOT claim or target a game or level solve. The
+exact checker SHALL be named as the verifier oracle and SHALL be bounded to one
+recorded transition endpoint. It SHALL NOT read hidden game source, run offline
+ground-truth BFS, use a hand adapter, perform per-game calibration, access hidden
+state, generate labels, mutate model weights, or update the solve registry.
+
+`python/carnot/experiment_6348_arc_default_off_action_influence_ab.py` SHALL
+write
+`results/experiment_6348_arc_default_off_action_influence_ab.json` with these
+bare top-level fields: `status`,
+`upstream_path_hash_terminal_class_and_gate_receipt`,
+`arc_registry_precheck_path_hash_and_result`, `solve_provenance`,
+`no_duplicate_solve_receipt`, `MODEL_SPECS`, `models_used`,
+`model_file_hashes_revisions_quantizations_and_tokenizers`,
+`llama_cpp_embedded_tokenizer_receipts`,
+`cuda_gpu_offload_and_memory_release_receipts_by_model`,
+`prospective_registration_path_and_hash`,
+`fresh_live_window_manifest_path_and_hash`,
+`live_evidence_allowed_fields`, `forbidden_source_access_contract`,
+`hidden_game_source_access_count`, `offline_ground_truth_bfs_count`,
+`hand_game_adapter_count`, `per_game_calibration_count`,
+`route_default_off_and_activation_receipts`, `arm_definitions`,
+`matched_call_token_action_time_and_checker_budgets`,
+`raw_model_and_action_paths_hashes_and_counts`,
+`legal_action_order_changes_by_model_game_window_arm_and_seed`,
+`exact_one_step_transition_quality_by_model_game_window_arm_and_seed`,
+`paired_influence_and_quality_deltas_intervals_and_sample_sizes`,
+`route_deletion_permutation_leakage_and_escape_results`,
+`verification_calls_time_cost_and_error_table`,
+`harm_underpowered_missing_and_flagged_cells`,
+`source_model_weight_mutation_count`, `generated_label_count`,
+`hidden_state_access_count`, `solve_claim_count`, `registry_update_count`,
+`exact_oracle_claim_boundary`, `arc_causal_influence_ready_score`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`, `random_seeds`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+`solve_provenance` SHALL equal `live_agent_self_discovery`. The fields
+`hidden_game_source_access_count`, `offline_ground_truth_bfs_count`,
+`hand_game_adapter_count`, `per_game_calibration_count`,
+`source_model_weight_mutation_count`, `generated_label_count`,
+`hidden_state_access_count`, `solve_claim_count`, and `registry_update_count`
+SHALL be bare integer zero values. Readiness SHALL equal `1.0` only when every
+headline model has positive preregistered action-quality influence, matched
+budgets pass, leakage and forbidden access are zero, route deletion removes the
+effect, no registry change occurs, and all checks pass. Every missing, harmful,
+underpowered, or flagged cell SHALL remain visible and SHALL NOT be pooled away.
+`field_principles` SHALL include one principle for every required field.
+
+#### SCENARIO-ARC-WMTE-6348-GATE-AND-SEALS
+
+Given Exp6348 starts, when it runs preconditions, then it replays the Exp6347
+gate, hashes the solve registry, seals prospective registration and fresh
+live-window manifests before model load, and records protected hashes without
+writing the solve registry.
+
+#### SCENARIO-ARC-WMTE-6348-MODEL-RECEIPTS
+
+Given model preflight runs, when `MODEL_SPECS` are built, then all three
+mandated GGUF ids come through cached SOTA pair resolution and each model has a
+file hash, revision, quantization, embedded-tokenizer receipt, llama.cpp receipt,
+CUDA offload receipt, and memory-release receipt.
+
+#### SCENARIO-ARC-WMTE-6348-MATCHED-ARMS
+
+Given a fresh live window, when route-off and route-on arms run, then budgets
+match, the route is default-off until explicitly activated, legal action sets
+are identical, and route-on can only reorder actions already present in the
+live agent's own raw candidate receipt.
+
+#### SCENARIO-ARC-WMTE-6348-CAUSAL-QUALITY-GATE
+
+Given all model-game-window-seed cells complete, when readiness is computed,
+then every headline model must have positive paired action-order and one-step
+quality deltas. Missing, harmful, underpowered, or flagged cells remain listed.
+
+#### SCENARIO-ARC-WMTE-6348-ARTIFACT-GUARDS
+
+Given any 6348 artifact, validation refuses hidden-source access, offline BFS,
+hand adapters, per-game calibration, hidden-state access, generated labels,
+source model-weight mutation, solve claims, registry updates, missing field
+principles, missing route-deletion effects, action injection, budget mismatch,
+model substitution, nonterminal verdicts, and checksum drift.
+
 ## Implementation Status (REQ-ARC-WMTE-6307, REQ-ARC-WMTE-6308)
 
 | REQ | Implementation | Tests |

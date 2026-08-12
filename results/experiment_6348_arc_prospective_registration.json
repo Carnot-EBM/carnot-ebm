@@ -1,0 +1,42 @@
+{
+  "budgets": {
+    "action_budget": 12,
+    "exact_checker_budget_per_cell": 1,
+    "model_load_token_budget": 0,
+    "route_time_budget_s": 2.0
+  },
+  "date": "20260812",
+  "exact_transition_endpoint": "exp6348_exact_one_step_transition_checker",
+  "game_order": [
+    "exp6348_fresh_synthetic_push_l0",
+    "exp6348_fresh_synthetic_toggle_l0"
+  ],
+  "model_ids": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "prompts": {
+    "model_generation_prompt": "not_invoked_for_action_choice",
+    "route_prompt_contract": "no_llm_route_prompt; route reads live observations only"
+  },
+  "route_activation": "explicit_target_licensed_route_on_arm_only",
+  "route_default": "off",
+  "route_rules": {
+    "legal_action_injection_forbidden": true,
+    "max_uncertainty": 0.35,
+    "min_changed": 3,
+    "only_agent_owned_evidence": true
+  },
+  "sealed_before_model_generation": true,
+  "seeds": [
+    6348001,
+    6348002
+  ],
+  "stopping_rules": {
+    "no_level_solve_target": true,
+    "one_pass_per_model_window_seed_arm": true,
+    "stop_after_one_action_choice": true
+  },
+  "task_kind": "causal_action_influence_not_solve"
+}
