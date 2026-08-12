@@ -6129,3 +6129,10 @@ The critical path for milestone .250:
 - theme: coarse timing reconstruction ranked compute work but did not explain its execution path
 - key result: the ARC live-path target-validated mechanic-route causal canary led the compute list, while task-linked GPU and dispatch evidence was unavailable, so utilization efficiency and concurrent multi-model runner engagement could not be judged
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.544
+
+- exp_range: no data available this milestone
+- theme: representation-surface preflight dominated a brief compute-heavy execution window without phase-level attribution
+- key result: the locked classification reports no compute-task GPU idle, but the data cannot grade utilization efficiency or determine whether parallel multi-model work missed DualGPURunner
+- acceptance: no data available this milestone

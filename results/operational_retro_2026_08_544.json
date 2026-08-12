@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.544",
+  "generated_at": "2026-08-12T05:07:27Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 1.4,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 7,
+  "slowest_experiments": [
+    {
+      "experiment": "Three-family model-local representation surface preflight",
+      "duration_minutes": 1.42,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Exact terminal-boundary handoff from V543 into V544",
+      "duration_minutes": 0.01,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Default-off ARC target-licensed route shadow on the live E3 path",
+      "duration_minutes": 0.01,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V544 adversarial capstone, branch promotion, and reconciliation",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Post-marker SOTA receipt and executable V544 scope freeze",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 11 experiments in 1.4 minutes, with 7 classified as compute-bound. The available data ranks execution time but does not provide task-linked GPU samples or phase traces, so it cannot establish causal runtime or utilization efficiency.",
+  "bottlenecks_identified": [
+    "Runtime concentration: Three-family model-local representation surface preflight was the compute-bound leader at 1.42 minutes; no phase breakdown is available to explain why.",
+    "Utilization observability gap: the GPU report provides one 0% snapshot without task linkage, so compute efficiency cannot be graded from it.",
+    "Dispatch observability gap: no data available this milestone records simultaneous model count or runner selection, so a missed DualGPURunner engagement cannot be assessed."
+  ],
+  "improvements_suggested": [
+    "Emit task-scoped GPU utilization and memory samples for every compute-bound task from launch through teardown.",
+    "Record simultaneous model count and selected runner, and select DualGPURunner only when at least 2 models are loaded in parallel.",
+    "Add phase timers to the representation-surface preflight so the source of its 1.42-minute runtime can be localized.",
+    "Keep synthesis-only work outside GPU-utilization alerts."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Join compute-task start and stop timestamps to GPU utilization samples.",
+    "Persist model-count and runner-selection receipts, with conditional DualGPURunner dispatch for parallel multi-model work.",
+    "Instrument phase-level timing inside the slowest representation-surface preflight."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence is sufficient to rank the listed tasks but not to explain the leading runtime, grade compute-task GPU efficiency, or determine whether parallel multi-model dispatch occurred. The next milestone should capture task-correlated utilization, concurrency, runner, and phase telemetry."
+}
