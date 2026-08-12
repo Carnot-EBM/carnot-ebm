@@ -15714,3 +15714,4 @@ code |
 | 2026-08-12 17:31 UTC | Incremental parser-state and JIT prefix-feasibilit | OK | 91 passed, 1 warning in 31.57s |
 | 2026-08-12 17:57 UTC | Three-model parser-state and JIT semantic-diversit | OK | 89 passed, 1 warning in 9.32s |
 | 2026-08-12 17:59 UTC | Gated prospective held-family prefix utility A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6340-parser-jit-semantic-diversity-cana |
+| 2026-08-12 18:01 UTC | Gated prospective held-family prefix utility A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6340-parser-jit-semantic-diversity-cana |
