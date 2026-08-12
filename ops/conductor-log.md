@@ -15700,3 +15700,4 @@ Still active  |
 | 2026-08-12 08:47 UTC | Exact terminal-boundary handoff from V544 into V54 | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: xit code.
 code |
 | 2026-08-12 10:10 UTC | Exact terminal-boundary handoff from V544 into V54 | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: EQ-INFRA-6323  |
+| 2026-08-12 11:29 UTC | Post-marker SOTA receipt and executable V545 scope | OK | 95 passed, 1 warning in 13.74s |
