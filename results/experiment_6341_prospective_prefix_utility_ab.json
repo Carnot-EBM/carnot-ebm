@@ -1,0 +1,24 @@
+{
+  "experiment": 6341,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-12",
+  "started_at": "2026-08-12T17:59:35.471319+00:00",
+  "finished_at": "2026-08-12T17:59:35.471319+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated prospective held-family prefix utility A/B",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6340-parser-jit-semantic-diversity-canary.semantic_diversity_gain_score (actual=0.0 == expected=1.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6340-parser-jit-semantic-diversity-canary",
+      "artifact_field": "semantic_diversity_gain_score",
+      "op": "==",
+      "expected": 1.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 == expected=1.0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
