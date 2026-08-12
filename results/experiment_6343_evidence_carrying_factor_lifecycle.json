@@ -1,0 +1,903 @@
+{
+  "active_and_quarantine_capacity_bounds": {
+    "active_compaction_policy": "oldest unprotected factor, tie-broken by factor id",
+    "active_factor_capacity": 4,
+    "quarantine_factor_capacity": 2,
+    "quarantine_overflow_policy": "reject the transition"
+  },
+  "bounded_memory_growth_results": {
+    "active_capacity": 4,
+    "capacity_eviction_count": 1,
+    "compaction_policy": "oldest unprotected factor, tie-broken by factor id",
+    "deterministic_compaction": true,
+    "max_active_count": 4,
+    "max_quarantine_count": 2,
+    "quarantine_capacity": 2
+  },
+  "catastrophic_remembering_event_definition_and_counts": {
+    "active_factor_count": 3,
+    "catastrophic_remembering_event_count": 0,
+    "definition": "A stale, harmful, or rationale-only factor remains active or quarantined after exact removal evidence exists.",
+    "failed_attack_mutation_count": 0,
+    "quarantined_factor_count": 0,
+    "stale_or_harmful_survivor_count": 0
+  },
+  "duration_s": 0.04390880488790572,
+  "evidence_bundle_schema_path_and_hash": {
+    "path": "results/experiment_6343_evidence_carrying_factor_lifecycle.json.evidence_bundle_schema.json",
+    "present": true,
+    "required_field_count": 13,
+    "schema": "carnot.experiment_6343.evidence_carrying_factor_lifecycle.v1.evidence_bundle",
+    "sha256": "sha256:fa4f93dc0a4b3994ac9f92387d82927c1b95fa1fe83026a51dab92c36ed1de93"
+  },
+  "evidence_factor_lifecycle_ready_score": 1.0,
+  "exact_historical_replay_results": {
+    "all_committed_state_changes_passed": true,
+    "all_state_changes_checked": true,
+    "final_replay": {
+      "checked_factor_count": 3,
+      "failure_count": 0,
+      "failures": [],
+      "passed": true
+    },
+    "state_change_count": 11
+  },
+  "exact_oracle_claim_boundary": {
+    "claim_boundary": "execution-grounded lifecycle state, not model-weight learning or an oracle-distinct verifier moat",
+    "oracle": "deterministic exact historical replay and protected retention over synthetic rows",
+    "verifier_is_oracle": true
+  },
+  "factor_add_merge_delete_quarantine_and_restore_results": {
+    "all_required_operations_executed": true,
+    "final_active_factors": [
+      "accept_guard",
+      "reject_guard",
+      "repair_guard"
+    ],
+    "final_deleted_factors": [
+      "drift_guard",
+      "temp_capacity_guard"
+    ],
+    "final_quarantined_factors": [],
+    "operation_counts": {
+      "add": 5,
+      "capacity_evict": 1,
+      "delete": 1,
+      "merge": 1,
+      "quarantine": 1,
+      "restore": 1,
+      "retain": 1
+    },
+    "valid_operation_receipts": [
+      {
+        "accepted": true,
+        "factor_id": "accept_guard",
+        "operation": "add",
+        "operation_checks": {
+          "byte_identical_rollback_passed": true,
+          "exact_historical_replay_failure_count": 0,
+          "exact_historical_replay_passed": true,
+          "protected_retention_failure_count": 0,
+          "protected_retention_passed": true,
+          "rollback_target": "root:v000",
+          "rollback_target_bytes_sha256": "sha256:20cfec9783af00ae40339574bacd369a1f90bb7f9c701b69a3af26b8adb96e2c"
+        },
+        "sequence": 0
+      },
+      {
+        "accepted": true,
+        "factor_id": "repair_guard",
+        "operation": "add",
+        "operation_checks": {
+          "byte_identical_rollback_passed": true,
+          "exact_historical_replay_failure_count": 0,
+          "exact_historical_replay_passed": true,
+          "protected_retention_failure_count": 0,
+          "protected_retention_passed": true,
+          "rollback_target": "root:v000",
+          "rollback_target_bytes_sha256": "sha256:20cfec9783af00ae40339574bacd369a1f90bb7f9c701b69a3af26b8adb96e2c"
+        },
+        "sequence": 1
+      },
+      {
+        "accepted": true,
+        "factor_id": "reject_guard",
+        "operation": "add",
+        "operation_checks": {
+          "byte_identical_rollback_passed": true,
+          "exact_historical_replay_failure_count": 0,
+          "exact_historical_replay_passed": true,
+          "protected_retention_failure_count": 0,
+          "protected_retention_passed": true,
+          "rollback_target": "root:v000",
+          "rollback_target_bytes_sha256": "sha256:20cfec9783af00ae40339574bacd369a1f90bb7f9c701b69a3af26b8adb96e2c"
+        },
+        "sequence": 2
+      },
+      {
+        "accepted": true,
+        "factor_id": "drift_guard",
+        "operation": "add",
+        "operation_checks": {
+          "byte_identical_rollback_passed": true,
+          "exact_historical_replay_failure_count": 0,
+          "exact_historical_replay_passed": true,
+          "protected_retention_failure_count": 0,
+          "protected_retention_passed": true,
+          "rollback_target": "root:v000",
+          "rollback_target_bytes_sha256": "sha256:20cfec9783af00ae40339574bacd369a1f90bb7f9c701b69a3af26b8adb96e2c"
+        },
+        "sequence": 3
+      },
+      {
+        "accepted": true,
+        "factor_id": "temp_capacity_guard",
+        "operation": "add",
+        "operation_checks": {
+          "byte_identical_rollback_passed": true,
+          "exact_historical_replay_failure_count": 0,
+          "exact_historical_replay_passed": true,
+          "protected_retention_failure_count": 0,
+          "protected_retention_passed": true,
+          "rollback_target": "root:v000",
+          "rollback_target_bytes_sha256": "sha256:20cfec9783af00ae40339574bacd369a1f90bb7f9c701b69a3af26b8adb96e2c"
+        },
+        "sequence": 4
+      },
+      {
+        "accepted": true,
+        "factor_id": "accept_guard",
+        "operation": "retain",
+        "operation_checks": {
+          "byte_identical_rollback_passed": true,
+          "exact_historical_replay_failure_count": 0,
+          "exact_historical_replay_passed": true,
+          "protected_retention_failure_count": 0,
+          "protected_retention_passed": true,
+          "rollback_target": "root:v000",
+          "rollback_target_bytes_sha256": "sha256:20cfec9783af00ae40339574bacd369a1f90bb7f9c701b69a3af26b8adb96e2c"
+        },
+        "sequence": 6
+      },
+      {
+        "accepted": true,
+        "factor_id": "drift_guard",
+        "operation": "merge",
+        "operation_checks": {
+          "byte_identical_rollback_passed": true,
+          "exact_historical_replay_failure_count": 0,
+          "exact_historical_replay_passed": true,
+          "protected_retention_failure_count": 0,
+          "protected_retention_passed": true,
+          "rollback_target": "root:v000",
+          "rollback_target_bytes_sha256": "sha256:20cfec9783af00ae40339574bacd369a1f90bb7f9c701b69a3af26b8adb96e2c"
+        },
+        "sequence": 7
+      },
+      {
+        "accepted": true,
+        "factor_id": "temp_capacity_guard",
+        "operation": "quarantine",
+        "operation_checks": {
+          "byte_identical_rollback_passed": true,
+          "exact_historical_replay_failure_count": 0,
+          "exact_historical_replay_passed": true,
+          "protected_retention_failure_count": 0,
+          "protected_retention_passed": true,
+          "rollback_target": "root:v000",
+          "rollback_target_bytes_sha256": "sha256:20cfec9783af00ae40339574bacd369a1f90bb7f9c701b69a3af26b8adb96e2c"
+        },
+        "sequence": 8
+      },
+      {
+        "accepted": true,
+        "factor_id": "temp_capacity_guard",
+        "operation": "delete",
+        "operation_checks": {
+          "byte_identical_rollback_passed": true,
+          "exact_historical_replay_failure_count": 0,
+          "exact_historical_replay_passed": true,
+          "protected_retention_failure_count": 0,
+          "protected_retention_passed": true,
+          "rollback_target": "root:v000",
+          "rollback_target_bytes_sha256": "sha256:20cfec9783af00ae40339574bacd369a1f90bb7f9c701b69a3af26b8adb96e2c"
+        },
+        "sequence": 9
+      },
+      {
+        "accepted": true,
+        "factor_id": "reject_guard",
+        "operation": "restore",
+        "operation_checks": {
+          "byte_identical_rollback_passed": true,
+          "exact_historical_replay_failure_count": 0,
+          "exact_historical_replay_passed": true,
+          "protected_retention_failure_count": 0,
+          "protected_retention_passed": true,
+          "rollback_target": "root:v000",
+          "rollback_target_bytes_sha256": "sha256:20cfec9783af00ae40339574bacd369a1f90bb7f9c701b69a3af26b8adb96e2c"
+        },
+        "sequence": 10
+      }
+    ]
+  },
+  "factor_lifecycle_schema_path_and_hash": {
+    "path": "results/experiment_6343_evidence_carrying_factor_lifecycle.json.factor_lifecycle_schema.json",
+    "present": true,
+    "required_field_count": 16,
+    "schema": "carnot.experiment_6343.evidence_carrying_factor_lifecycle.v1.lifecycle_registry_row",
+    "sha256": "sha256:4dca59fb97fa8c88bcc59c8507cdd74b367c8bfdf336fc95bcae24010f0fba3e"
+  },
+  "field_principles": {
+    "active_and_quarantine_capacity_bounds": "Bounded counts prevent unbounded remembering.",
+    "bounded_memory_growth_results": "Active and quarantine counts stay within capacity under compaction.",
+    "catastrophic_remembering_event_definition_and_counts": "The event definition counts persistent stale or harmful factors that survive removal evidence.",
+    "duration_s": "Wall time is measured without padding.",
+    "evidence_bundle_schema_path_and_hash": "The evidence schema keeps rationale tied to exact removable evidence.",
+    "evidence_factor_lifecycle_ready_score": "Readiness is one only when lifecycle, replay, retention, bounds, attacks, rollback, protected files, and tests pass.",
+    "exact_historical_replay_results": "Historical replay gates each state change.",
+    "exact_oracle_claim_boundary": "The exact checker is the outcome oracle, so the result is execution-grounded.",
+    "factor_add_merge_delete_quarantine_and_restore_results": "Lifecycle results prove every required operation executed.",
+    "factor_lifecycle_schema_path_and_hash": "The frozen lifecycle schema fixes state and registry row identity.",
+    "field_principles": "Every required field carries its guard principle.",
+    "field_provenance": "Every field maps to spec, upstream artifacts, sidecars, registry rows, attacks, tests, or hashes.",
+    "generated_label_count": "Bare zero proves no generated labels were used.",
+    "honest_verdict": "The verdict starts with a terminal prefix and states whether evidence-carrying lifecycle is ready.",
+    "inference_substrate": "The substrate declares deterministic lifecycle replay with exact oracle checks and no LLM.",
+    "llm_call_count": "Bare zero proves no LLM call was made.",
+    "preconditions_checked": "Upstream readiness, schemas, operations, bounds, replay sets, retention sets, attacks, seeds, limits, and protected hashes freeze first.",
+    "protected_files_unchanged": "Conductor, ops, traceability, and upstream evidence remain byte-identical.",
+    "protected_retention_results": "Protected factors and cases cannot regress.",
+    "random_seeds": "Lifecycle, attack, rollback, and capacity seeds are fixed.",
+    "rationale_counterexample_replay_lineage_and_retention_contract": "Learned factors are removable only because their rationale, counterexample, witness, lineage, retention, and rollback evidence stay linked.",
+    "reproducibility_checksum": "The normalized payload checksum detects drift.",
+    "restart_and_byte_exact_rollback_results": "Restart and rollback compare canonical bytes, not summaries.",
+    "retain_merge_quarantine_delete_and_restore_rules": "Operation rules state the deterministic lifecycle semantics.",
+    "source_model_weight_mutation_count": "Bare zero proves no base model weight changed.",
+    "stale_circular_cross_family_duplicate_and_rationale_laundering_attack_results": "Invalid evidence classes fail closed before mutation.",
+    "status": "Terminal state follows replay, retention, rollback, bounds, attacks, protected files, and tests.",
+    "synthetic_lifecycle_stream_manifest_path_and_hash": "The deterministic stream manifest freezes operations, attacks, seeds, and limits.",
+    "test_commands": "Focused tests, coverage, full pytest, spec coverage, run command, validation, adversarial verification, E2E reading, and root-clutter checks are listed.",
+    "test_exit_codes": "Failed commands prevent readiness.",
+    "upstream_release_ledger_path_hash_and_ready_score": "Exp6342 readiness and ledger bytes are replayed before lifecycle credit.",
+    "verifier_is_oracle": "Bare true states that exact replay and retention checks are the oracle.",
+    "version_registry_path_and_hash": "The append-only registry is the replay source of truth."
+  },
+  "field_provenance": {
+    "active_and_quarantine_capacity_bounds": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "bounded_memory_growth_results": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "catastrophic_remembering_event_definition_and_counts": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "duration_s": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "evidence_bundle_schema_path_and_hash": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "evidence_factor_lifecycle_ready_score": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "exact_historical_replay_results": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "exact_oracle_claim_boundary": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "factor_add_merge_delete_quarantine_and_restore_results": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "factor_lifecycle_schema_path_and_hash": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "field_principles": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "field_provenance": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "generated_label_count": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "honest_verdict": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "inference_substrate": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "llm_call_count": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "preconditions_checked": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "protected_files_unchanged": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "protected_retention_results": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "random_seeds": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "rationale_counterexample_replay_lineage_and_retention_contract": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "reproducibility_checksum": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "restart_and_byte_exact_rollback_results": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "retain_merge_quarantine_delete_and_restore_rules": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "source_model_weight_mutation_count": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "stale_circular_cross_family_duplicate_and_rationale_laundering_attack_results": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "status": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "synthetic_lifecycle_stream_manifest_path_and_hash": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "test_commands": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "test_exit_codes": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "upstream_release_ledger_path_hash_and_ready_score": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "verifier_is_oracle": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ],
+    "version_registry_path_and_hash": [
+      "REQ-LEARN-6343",
+      "Exp6318 version registry and factor schema",
+      "Exp6342 release ledger certificate",
+      "synthetic lifecycle stream and attack fixtures",
+      "Exp6343 focused tests"
+    ]
+  },
+  "generated_label_count": 0,
+  "honest_verdict": "complete_positive: evidence-carrying factor lifecycle passed all exact gates",
+  "inference_substrate": "deterministic_evidence_factor_lifecycle_exact_oracle_no_llm",
+  "llm_call_count": 0,
+  "preconditions_checked": {
+    "attack_streams": [
+      "stale_certificate",
+      "circular_parent",
+      "cross_family_evidence",
+      "duplicate_evidence",
+      "rationale_only_evidence",
+      "witness_swap",
+      "harmful_merge",
+      "harmful_deletion"
+    ],
+    "capacity_bounds": {
+      "active_compaction_policy": "oldest unprotected factor, tie-broken by factor id",
+      "active_factor_capacity": 4,
+      "quarantine_factor_capacity": 2,
+      "quarantine_overflow_policy": "reject the transition"
+    },
+    "evidence_bundle_schema_path": "results/experiment_6343_evidence_carrying_factor_lifecycle.json.evidence_bundle_schema.json",
+    "exact_replay_and_retention_before_state_change": true,
+    "factor_lifecycle_schema_path": "results/experiment_6343_evidence_carrying_factor_lifecycle.json.factor_lifecycle_schema.json",
+    "lifecycle_operations": [
+      "add",
+      "retain",
+      "merge",
+      "quarantine",
+      "delete",
+      "restore"
+    ],
+    "protected_hashes_before_lifecycle": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:a5f9f2fd64ce29d89a261c00af757dff1c5db90397d1da8234063021888e2dac",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6318_versioned_factor_local_online_initializer.json": "sha256:73bd16c659ba770f4da0828c2055d33fd44db6e440510dd22b479bf67b6eff2d",
+      "results/experiment_6319_feedback_directed_online_update_search.json": "sha256:f1de1a506e5cd0ba7d1fdfbeea610b15d4b5980b1c4e6c63d628633b945868d8",
+      "results/experiment_6320_online_self_evolution_safety_audit.json": "sha256:90222d2ab2a43aec33aa99cd4527eda6ac4d9fa17161894b5398b91360b6bb2e",
+      "results/experiment_6342_anytime_evalue_release_ledger.json": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "protected_hashes_frozen_before_operations": true,
+    "random_seeds": {
+      "attack": 634301,
+      "capacity": 634303,
+      "lifecycle": 634300,
+      "rollback": 634302
+    },
+    "replay_sets": {
+      "case_hashes": {
+        "case_accept_01": "sha256:3714e1009caa1c0d571746d93e079ed1ca54e3c613a63cdbeb67f33e6d5f546d",
+        "case_drift_01": "sha256:87fc20b5affa4bb7b41d70b67b9854cbaa4f6124cc7bc375e4114a5a3a90780c",
+        "case_reject_01": "sha256:fe995f205e08a50feb514ef74a45c6c23893c144a65f8599738306cac46e7dcd",
+        "case_repair_01": "sha256:ba779e8b3682dab53e2f82b6180c1034b5e372153448bc9165846e3b43d3ca08"
+      },
+      "historical_case_ids": [
+        "case_accept_01",
+        "case_drift_01",
+        "case_reject_01",
+        "case_repair_01"
+      ]
+    },
+    "resource_limits": {
+      "active_factor_capacity": 4,
+      "generated_label_limit": 0,
+      "llm_call_limit": 0,
+      "max_attack_count": 8,
+      "max_registry_rows": 32,
+      "quarantine_factor_capacity": 2
+    },
+    "result_path": "results/experiment_6343_evidence_carrying_factor_lifecycle.json",
+    "retention_sets": {
+      "accept_guard": [
+        "case_accept_01"
+      ],
+      "cross_family_guard": [
+        "case_accept_01"
+      ],
+      "cycle_guard": [
+        "case_accept_01"
+      ],
+      "drift_guard": [
+        "case_drift_01"
+      ],
+      "rationale_only_guard": [
+        "case_accept_01"
+      ],
+      "reject_guard": [
+        "case_reject_01"
+      ],
+      "repair_guard": [
+        "case_repair_01"
+      ],
+      "stale_certificate_guard": [
+        "case_accept_01"
+      ],
+      "temp_capacity_guard": [
+        "case_accept_01"
+      ],
+      "witness_swap_guard": [
+        "case_accept_01"
+      ]
+    },
+    "run_date": "20260812",
+    "schemas_frozen": {
+      "evidence_bundle_schema": "carnot.experiment_6343.evidence_carrying_factor_lifecycle.v1.evidence_bundle",
+      "factor_lifecycle_schema": "carnot.experiment_6343.evidence_carrying_factor_lifecycle.v1.lifecycle_registry_row"
+    },
+    "source_hashes": {
+      "AGENTS.md": {
+        "path": "AGENTS.md",
+        "present": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CLAUDE.md": {
+        "path": "CLAUDE.md",
+        "present": true,
+        "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+      },
+      "CODEX.md": {
+        "path": "CODEX.md",
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "_bmad/traceability.md": {
+        "path": "_bmad/traceability.md",
+        "present": true,
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "openspec/capabilities/continuous-learning/spec.md": {
+        "path": "openspec/capabilities/continuous-learning/spec.md",
+        "present": true,
+        "sha256": "sha256:c3cb7a8b9b9ef0be241d2c26e0571acbcc63e347a26016c7087812bea1326d61"
+      },
+      "ops/changelog.md": {
+        "path": "ops/changelog.md",
+        "present": true,
+        "sha256": "sha256:a5f9f2fd64ce29d89a261c00af757dff1c5db90397d1da8234063021888e2dac"
+      },
+      "ops/e2e-test-plan.md": {
+        "path": "ops/e2e-test-plan.md",
+        "present": true,
+        "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+      },
+      "ops/status.md": {
+        "path": "ops/status.md",
+        "present": true,
+        "sha256": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180"
+      },
+      "python/carnot/experiment_6343_evidence_carrying_factor_lifecycle.py": {
+        "path": "python/carnot/experiment_6343_evidence_carrying_factor_lifecycle.py",
+        "present": true,
+        "sha256": "sha256:6f8eb0d927439020c59e13e6c95b2865d97f99da5b6003f994b33a345d473dc6"
+      },
+      "research-program.md": {
+        "path": "research-program.md",
+        "present": true,
+        "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+      },
+      "research-references.md": {
+        "path": "research-references.md",
+        "present": true,
+        "sha256": "sha256:a8de0c84d383d4c8bb208829d15f381e738adc58101908a3b2b19c9a08b8346d"
+      },
+      "results/experiment_6318_versioned_factor_local_online_initializer.json": {
+        "path": "results/experiment_6318_versioned_factor_local_online_initializer.json",
+        "present": true,
+        "sha256": "sha256:73bd16c659ba770f4da0828c2055d33fd44db6e440510dd22b479bf67b6eff2d"
+      },
+      "results/experiment_6319_feedback_directed_online_update_search.json": {
+        "path": "results/experiment_6319_feedback_directed_online_update_search.json",
+        "present": true,
+        "sha256": "sha256:f1de1a506e5cd0ba7d1fdfbeea610b15d4b5980b1c4e6c63d628633b945868d8"
+      },
+      "results/experiment_6320_online_self_evolution_safety_audit.json": {
+        "path": "results/experiment_6320_online_self_evolution_safety_audit.json",
+        "present": true,
+        "sha256": "sha256:90222d2ab2a43aec33aa99cd4527eda6ac4d9fa17161894b5398b91360b6bb2e"
+      },
+      "results/experiment_6342_anytime_evalue_release_ledger.json": {
+        "path": "results/experiment_6342_anytime_evalue_release_ledger.json",
+        "present": true,
+        "sha256": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52"
+      },
+      "scripts/research_conductor.py": {
+        "path": "scripts/research_conductor.py",
+        "present": true,
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      },
+      "tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py": {
+        "path": "tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py",
+        "present": true,
+        "sha256": "sha256:6f545fd45261a7926a9c5d3b0dd6ec9c365a7da31d28ea0db29bd9a2199242dd"
+      }
+    },
+    "synthetic_lifecycle_stream_manifest_path": "results/experiment_6343_evidence_carrying_factor_lifecycle.json.synthetic_lifecycle_stream_manifest.json",
+    "upstream_release_ledger": {
+      "artifact_path": "results/experiment_6342_anytime_evalue_release_ledger.json",
+      "artifact_sha256": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+      "artifact_status": "complete_positive",
+      "ledger_path": "results/experiment_6342_anytime_evalue_release_ledger.json.evalue_ledger.jsonl",
+      "ledger_receipt_sha256": "sha256:6c5461f725e7df7eba95457c9e1ef8836ebf1f798fe314eac957d32a433642ac",
+      "ledger_sha256": "sha256:6c5461f725e7df7eba95457c9e1ef8836ebf1f798fe314eac957d32a433642ac",
+      "ledger_state_hash": "sha256:e043d4348832eea49c1b6dfdd9d8690381e6065d2c18272508b539a87569058d",
+      "ready": true,
+      "ready_score": 1.0,
+      "release_count": 1
+    },
+    "version_registry_path": "results/experiment_6343_evidence_carrying_factor_lifecycle.json.version_registry.jsonl"
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:a5f9f2fd64ce29d89a261c00af757dff1c5db90397d1da8234063021888e2dac",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6318_versioned_factor_local_online_initializer.json": "sha256:73bd16c659ba770f4da0828c2055d33fd44db6e440510dd22b479bf67b6eff2d",
+      "results/experiment_6319_feedback_directed_online_update_search.json": "sha256:f1de1a506e5cd0ba7d1fdfbeea610b15d4b5980b1c4e6c63d628633b945868d8",
+      "results/experiment_6320_online_self_evolution_safety_audit.json": "sha256:90222d2ab2a43aec33aa99cd4527eda6ac4d9fa17161894b5398b91360b6bb2e",
+      "results/experiment_6342_anytime_evalue_release_ledger.json": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:a5f9f2fd64ce29d89a261c00af757dff1c5db90397d1da8234063021888e2dac",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6318_versioned_factor_local_online_initializer.json": "sha256:73bd16c659ba770f4da0828c2055d33fd44db6e440510dd22b479bf67b6eff2d",
+      "results/experiment_6319_feedback_directed_online_update_search.json": "sha256:f1de1a506e5cd0ba7d1fdfbeea610b15d4b5980b1c4e6c63d628633b945868d8",
+      "results/experiment_6320_online_self_evolution_safety_audit.json": "sha256:90222d2ab2a43aec33aa99cd4527eda6ac4d9fa17161894b5398b91360b6bb2e",
+      "results/experiment_6342_anytime_evalue_release_ledger.json": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "changed": [],
+    "unchanged": true
+  },
+  "protected_retention_results": {
+    "all_protected_retention_passed": true,
+    "protected_factor_count": 2,
+    "protected_regression_count": 0,
+    "protected_retention_failures": []
+  },
+  "random_seeds": {
+    "attack": 634301,
+    "capacity": 634303,
+    "lifecycle": 634300,
+    "rollback": 634302
+  },
+  "rationale_counterexample_replay_lineage_and_retention_contract": {
+    "counterexample_contract": "case hash must match the minimized exact witness",
+    "lineage_contract": "parent version and rollback target must already exist",
+    "rationale_only_policy": "reject before mutation",
+    "required_factor_fields": [
+      "rationale",
+      "minimized_exact_counterexample",
+      "replay_witness",
+      "parent_version",
+      "affected_variables",
+      "release_certificate",
+      "retention_set",
+      "rollback_target"
+    ],
+    "retention_contract": "protected retention cases must pass after each state change"
+  },
+  "reproducibility_checksum": "sha256:ab3d35b89c40fbab9e4fb1936f539f153234314aa63fd8abf791500e6d23112c",
+  "restart_and_byte_exact_rollback_results": {
+    "all_destructive_rollbacks_byte_identical": true,
+    "destructive_operation_count": 2,
+    "registry_hash": "sha256:3395ba21e21b446551301efd9cc88ba15bda2ebfed9849df254c79f7844e3e3a",
+    "restart_byte_identical": true,
+    "restart_state_bytes_sha256": "sha256:8cfd661b40db6d4ef1946d5af0c1442c5b024cae9262f28514278622cb12a6e4",
+    "restart_state_hash": "sha256:1c22b1f77ae1e00f16bfc4817eaa047d1798a235790e01507056642129e16607",
+    "rollback_receipts": [
+      {
+        "byte_identical": true,
+        "factor_id": "drift_guard",
+        "operation": "merge",
+        "rollback_target": "root:v000",
+        "sequence": 7
+      },
+      {
+        "byte_identical": true,
+        "factor_id": "temp_capacity_guard",
+        "operation": "delete",
+        "rollback_target": "root:v000",
+        "sequence": 9
+      }
+    ]
+  },
+  "retain_merge_quarantine_delete_and_restore_rules": {
+    "attack_policy": "reject stale, circular, cross-family, duplicate, witness-swapped, harmful, or rationale-only evidence",
+    "capacity_evict": "move the oldest unprotected active factor to quarantine",
+    "delete": "remove active or quarantined unprotected evidence only after all gates pass",
+    "merge": "remove a source factor only after replay, retention, and rollback pass",
+    "quarantine": "move active evidence out of active state with a reason",
+    "restore": "move quarantined evidence back to active state after exact checks pass",
+    "retain": "mark a factor and its retention set as protected"
+  },
+  "source_model_weight_mutation_count": 0,
+  "stale_circular_cross_family_duplicate_and_rationale_laundering_attack_results": {
+    "all_attacks_fail_closed": true,
+    "attack_count": 8,
+    "circular_parent": {
+      "accepted": false,
+      "fail_closed": true,
+      "mutated": false,
+      "reason": "circular_lineage"
+    },
+    "cross_family_evidence": {
+      "accepted": false,
+      "fail_closed": true,
+      "mutated": false,
+      "reason": "cross_family_evidence"
+    },
+    "duplicate_evidence": {
+      "accepted": false,
+      "fail_closed": true,
+      "mutated": false,
+      "reason": "duplicate_evidence"
+    },
+    "harmful_deletion": {
+      "accepted": false,
+      "fail_closed": true,
+      "mutated": false,
+      "reason": "operation_gate_failed"
+    },
+    "harmful_merge": {
+      "accepted": false,
+      "fail_closed": true,
+      "mutated": false,
+      "reason": "operation_gate_failed"
+    },
+    "mutated_attack_count": 0,
+    "rationale_only_evidence": {
+      "accepted": false,
+      "fail_closed": true,
+      "mutated": false,
+      "reason": "rationale_only_evidence"
+    },
+    "stale_certificate": {
+      "accepted": false,
+      "fail_closed": true,
+      "mutated": false,
+      "reason": "stale_certificate"
+    },
+    "witness_swap": {
+      "accepted": false,
+      "fail_closed": true,
+      "mutated": false,
+      "reason": "witness_swap"
+    }
+  },
+  "status": "complete_positive",
+  "synthetic_lifecycle_stream_manifest_path_and_hash": {
+    "attack_count": 8,
+    "operation_count": 11,
+    "path": "results/experiment_6343_evidence_carrying_factor_lifecycle.json.synthetic_lifecycle_stream_manifest.json",
+    "present": true,
+    "sha256": "sha256:9636fb78f94f67d3917ed930aef2cfba1343f6d7f681d5bcfd72317f09d44e5f"
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6343_evidence_carrying_factor_lifecycle.py -m pytest tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6343_evidence_carrying_factor_lifecycle.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python -m carnot.experiment_6343_evidence_carrying_factor_lifecycle --date 20260812",
+    ".venv/bin/python -m carnot.experiment_6343_evidence_carrying_factor_lifecycle --date 20260812 --validate",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py",
+    "sed -n '1,240p' ops/e2e-test-plan.md",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6343_evidence_carrying_factor_lifecycle.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6343_evidence_carrying_factor_lifecycle.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6343_evidence_carrying_factor_lifecycle.py -m pytest tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6343_evidence_carrying_factor_lifecycle --date 20260812": 0,
+    ".venv/bin/python -m carnot.experiment_6343_evidence_carrying_factor_lifecycle --date 20260812 --validate": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6343_evidence_carrying_factor_lifecycle.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    "sed -n '1,240p' ops/e2e-test-plan.md": 0
+  },
+  "upstream_release_ledger_path_hash_and_ready_score": {
+    "artifact_path": "results/experiment_6342_anytime_evalue_release_ledger.json",
+    "artifact_sha256": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+    "artifact_status": "complete_positive",
+    "ledger_path": "results/experiment_6342_anytime_evalue_release_ledger.json.evalue_ledger.jsonl",
+    "ledger_receipt_sha256": "sha256:6c5461f725e7df7eba95457c9e1ef8836ebf1f798fe314eac957d32a433642ac",
+    "ledger_sha256": "sha256:6c5461f725e7df7eba95457c9e1ef8836ebf1f798fe314eac957d32a433642ac",
+    "ledger_state_hash": "sha256:e043d4348832eea49c1b6dfdd9d8690381e6065d2c18272508b539a87569058d",
+    "ready": true,
+    "ready_score": 1.0,
+    "release_count": 1
+  },
+  "verifier_is_oracle": true,
+  "version_registry_path_and_hash": {
+    "final_state_hash": "sha256:1c22b1f77ae1e00f16bfc4817eaa047d1798a235790e01507056642129e16607",
+    "path": "results/experiment_6343_evidence_carrying_factor_lifecycle.json.version_registry.jsonl",
+    "present": true,
+    "registry_hash": "sha256:3395ba21e21b446551301efd9cc88ba15bda2ebfed9849df254c79f7844e3e3a",
+    "row_count": 11,
+    "sha256": "sha256:e211219a67c382927d560c71b8a4f084e272fe6dedd818348780c8624b1bc003"
+  }
+}

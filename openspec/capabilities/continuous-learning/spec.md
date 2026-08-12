@@ -1499,3 +1499,144 @@ tampered evidence
 | REQ-LEARN-6342-ATTACKS | Implemented | tests/python/test_experiment_6342_anytime_evalue_release_ledger.py |
 | REQ-LEARN-6342-GUARD | Implemented | tests/python/test_experiment_6342_anytime_evalue_release_ledger.py |
 | REQ-LEARN-6342-PROVENANCE | Implemented | tests/python/test_experiment_6342_anytime_evalue_release_ledger.py |
+
+## REQ-LEARN-6343: Evidence-Carrying Factor Lifecycle
+
+**Given** Exp6342 reports an anytime e-value release ledger with readiness
+`1.0`
+**When** Exp6343 processes learned factor lifecycle events
+**Then** it SHALL write
+`results/experiment_6343_evidence_carrying_factor_lifecycle.json`
+**And** every learned factor SHALL carry a rationale, minimized exact
+counterexample, replay witness, parent version, affected variables, release
+certificate, retention set, and rollback target
+**And** source model weight mutation, generated label count, and LLM call count
+SHALL be bare integer `0`.
+
+## REQ-LEARN-6343-EVIDENCE: Canonical Evidence Bundles
+
+**Given** a factor lifecycle event proposes retain, merge, quarantine, delete,
+or restore
+**When** the event is validated
+**Then** its canonical evidence bundle SHALL bind rationale, counterexample,
+replay witness, lineage, affected variables, release certificate, retention
+set, and rollback target into one hash
+**And** rationale-only evidence SHALL reject before state mutation.
+
+## REQ-LEARN-6343-LIFECYCLE: Deterministic Operations
+
+**Given** active and quarantined factors are stored in versioned state
+**When** retain, merge, quarantine, delete, restore, or capacity eviction runs
+**Then** the operation SHALL be deterministic, append-only, hash-chained, and
+replayable from the version registry bytes.
+
+## REQ-LEARN-6343-GATES: Replay, Retention, And Rollback Gate Merge And Delete
+
+**Given** a merge or delete event has a valid release certificate
+**When** Exp6343 considers the event
+**Then** exact historical replay, protected retention, and byte-identical
+rollback checks SHALL all pass before the state changes
+**And** stale, circular, cross-family, duplicate, witness-swapped, harmful, or
+rationale-laundered evidence SHALL fail closed.
+
+## REQ-LEARN-6343-BOUNDS: Active And Quarantine Counts Are Capped
+
+**Given** lifecycle events exceed the active or quarantine capacity
+**When** compaction runs
+**Then** the oldest unprotected factor SHALL move first by deterministic key
+order
+**And** active and quarantined counts SHALL never exceed the frozen bounds.
+
+## REQ-LEARN-6343-RESTART: Restart And Rollback Are Byte-Exact
+
+**Given** the version registry, lifecycle schemas, stream manifest, and rollback
+targets
+**When** Exp6343 restarts from disk and rolls back each permitted change
+**Then** final state bytes, state hash, registry hash, and rollback target bytes
+SHALL match byte-for-byte.
+
+## REQ-LEARN-6343-PROVENANCE: Required Artifact Fields
+
+Exp6343 SHALL emit these fields with the stated principles:
+
+- `status`: Terminal state follows replay, retention, rollback, bounds, attacks, protected files, and tests.
+- `upstream_release_ledger_path_hash_and_ready_score`: Exp6342 readiness and ledger bytes are replayed before lifecycle credit.
+- `factor_lifecycle_schema_path_and_hash`: The frozen lifecycle schema fixes state and registry row identity.
+- `evidence_bundle_schema_path_and_hash`: The evidence schema keeps rationale tied to exact removable evidence.
+- `rationale_counterexample_replay_lineage_and_retention_contract`: Learned factors are removable only because their rationale, counterexample, witness, lineage, retention, and rollback evidence stay linked.
+- `retain_merge_quarantine_delete_and_restore_rules`: Operation rules state the deterministic lifecycle semantics.
+- `active_and_quarantine_capacity_bounds`: Bounded counts prevent unbounded remembering.
+- `version_registry_path_and_hash`: The append-only registry is the replay source of truth.
+- `synthetic_lifecycle_stream_manifest_path_and_hash`: The deterministic stream manifest freezes operations, attacks, seeds, and limits.
+- `factor_add_merge_delete_quarantine_and_restore_results`: Lifecycle results prove every required operation executed.
+- `exact_historical_replay_results`: Historical replay gates each state change.
+- `protected_retention_results`: Protected factors and cases cannot regress.
+- `bounded_memory_growth_results`: Active and quarantine counts stay within capacity under compaction.
+- `stale_circular_cross_family_duplicate_and_rationale_laundering_attack_results`: Invalid evidence classes fail closed before mutation.
+- `restart_and_byte_exact_rollback_results`: Restart and rollback compare canonical bytes, not summaries.
+- `catastrophic_remembering_event_definition_and_counts`: The event definition counts persistent stale or harmful factors that survive removal evidence.
+- `source_model_weight_mutation_count`: Bare zero proves no base model weight changed.
+- `generated_label_count`: Bare zero proves no generated labels were used.
+- `llm_call_count`: Bare zero proves no LLM call was made.
+- `exact_oracle_claim_boundary`: The exact checker is the outcome oracle, so the result is execution-grounded.
+- `evidence_factor_lifecycle_ready_score`: Readiness is one only when lifecycle, replay, retention, bounds, attacks, rollback, protected files, and tests pass.
+- `protected_files_unchanged`: Conductor, ops, traceability, and upstream evidence remain byte-identical.
+- `preconditions_checked`: Upstream readiness, schemas, operations, bounds, replay sets, retention sets, attacks, seeds, limits, and protected hashes freeze first.
+- `inference_substrate`: The substrate declares deterministic lifecycle replay with exact oracle checks and no LLM.
+- `verifier_is_oracle`: Bare true states that exact replay and retention checks are the oracle.
+- `field_provenance`: Every field maps to spec, upstream artifacts, sidecars, registry rows, attacks, tests, or hashes.
+- `field_principles`: Every required field carries its guard principle.
+- `test_commands`: Focused tests, coverage, full pytest, spec coverage, run command, validation, adversarial verification, E2E reading, and root-clutter checks are listed.
+- `test_exit_codes`: Failed commands prevent readiness.
+- `duration_s`: Wall time is measured without padding.
+- `random_seeds`: Lifecycle, attack, rollback, and capacity seeds are fixed.
+- `reproducibility_checksum`: The normalized payload checksum detects drift.
+- `honest_verdict`: The verdict starts with a terminal prefix and states whether evidence-carrying lifecycle is ready.
+
+## SCENARIO-LEARN-6343-LIFECYCLE: All Operations Replay
+
+**Given** the synthetic lifecycle stream contains add, retain, merge,
+quarantine, delete, restore, and capacity eviction
+**When** the version registry is replayed
+**Then** the final active and quarantined factors SHALL match the original
+state bytes exactly.
+
+## SCENARIO-LEARN-6343-GATED-MERGE-DELETE: Destructive Changes Need Three Gates
+
+**Given** merge and delete events carry release certificates
+**When** exact replay, protected retention, or byte rollback fails
+**Then** the operation SHALL reject without mutating lifecycle state.
+
+## SCENARIO-LEARN-6343-ATTACKS: Evidence Laundering Fails Closed
+
+**Given** stale certificates, parent cycles, cross-family bundles, duplicate
+evidence rows, witness swaps, rationale-only bundles, harmful merge, and
+harmful deletion
+**When** the lifecycle engine validates them
+**Then** every attack SHALL fail closed and no attack SHALL change state.
+
+## SCENARIO-LEARN-6343-BOUNDED: Compaction Is Deterministic
+
+**Given** active or quarantine counts exceed capacity
+**When** compaction chooses a candidate
+**Then** it SHALL choose the oldest unprotected factor, tie-broken by factor id,
+and SHALL preserve protected retention.
+
+## SCENARIO-LEARN-6343-RESTART-ROLLBACK: Bytes Match After Restart
+
+**Given** committed lifecycle registry bytes and rollback targets
+**When** Exp6343 restores from disk and rolls back each destructive event
+**Then** restart bytes and rollback bytes SHALL match the original canonical
+bytes.
+
+## Implementation Status (REQ-LEARN-6343)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6343 | Planned | tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py |
+| REQ-LEARN-6343-EVIDENCE | Planned | tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py |
+| REQ-LEARN-6343-LIFECYCLE | Planned | tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py |
+| REQ-LEARN-6343-GATES | Planned | tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py |
+| REQ-LEARN-6343-BOUNDS | Planned | tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py |
+| REQ-LEARN-6343-RESTART | Planned | tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py |
+| REQ-LEARN-6343-PROVENANCE | Planned | tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py |

@@ -1,0 +1,115 @@
+{
+  "active_capacity": 4,
+  "attack_names": [
+    "stale_certificate",
+    "circular_parent",
+    "cross_family_evidence",
+    "duplicate_evidence",
+    "rationale_only_evidence",
+    "witness_swap",
+    "harmful_merge",
+    "harmful_deletion"
+  ],
+  "events": [
+    {
+      "event_hash": "sha256:fc2d9102bf0505a0e1062a5a6652ac9aa1e48cbf17e91193e4b9b213166b69d5",
+      "event_id": "lifecycle-000",
+      "factor_id": "accept_guard",
+      "operation": "add"
+    },
+    {
+      "event_hash": "sha256:68701f6e3dea4e14257d59a04c71bf00ad52212f805f5a9a17ae9659c0911e2e",
+      "event_id": "lifecycle-001",
+      "factor_id": "repair_guard",
+      "operation": "add"
+    },
+    {
+      "event_hash": "sha256:7a0f748594900771af44aea2be6cd77c338100e14e317cfdfc5f3afd730616e6",
+      "event_id": "lifecycle-002",
+      "factor_id": "reject_guard",
+      "operation": "add"
+    },
+    {
+      "event_hash": "sha256:53db2c20c1ad32defd1350c1d3faa09f820ca37788b1586a2fe654c3e311dab8",
+      "event_id": "lifecycle-003",
+      "factor_id": "drift_guard",
+      "operation": "add"
+    },
+    {
+      "event_hash": "sha256:484cf9c6f1a791ca86503c42c2fd63025dafef339238b511447316d893142e10",
+      "event_id": "lifecycle-004",
+      "factor_id": "temp_capacity_guard",
+      "operation": "add"
+    },
+    {
+      "event_hash": "sha256:33b9c8e4dec537606fb8bfbf2c270e0763adf0c54c7baabf00afc46d4787e794",
+      "event_id": "lifecycle-005",
+      "factor_id": "reject_guard",
+      "operation": "capacity_evict"
+    },
+    {
+      "event_hash": "sha256:8d5ace7dee58dc0752e71668070c6f8c8ac0ec542597252ed99928ed50794fae",
+      "event_id": "lifecycle-006",
+      "factor_id": "accept_guard",
+      "operation": "retain"
+    },
+    {
+      "event_hash": "sha256:ea7ac41995183d349575b6eea2a3795131c8c52619a59fda007ceaf9dd3da868",
+      "event_id": "lifecycle-007",
+      "factor_id": "drift_guard",
+      "operation": "merge"
+    },
+    {
+      "event_hash": "sha256:822ac83f387809163fa6c5ec9c7d0d6deb82130e0a8d93d2470fe02f9b4b58db",
+      "event_id": "lifecycle-008",
+      "factor_id": "temp_capacity_guard",
+      "operation": "quarantine"
+    },
+    {
+      "event_hash": "sha256:2a3e89feb3919a8e0d0201eb32818bb08f9f7063659310c5ee98ea9592a768a3",
+      "event_id": "lifecycle-009",
+      "factor_id": "temp_capacity_guard",
+      "operation": "delete"
+    },
+    {
+      "event_hash": "sha256:c6a6aa768dcf3027f6d0ec27a5f8026056b7464053236a20f540f64ebe5670d3",
+      "event_id": "lifecycle-010",
+      "factor_id": "reject_guard",
+      "operation": "restore"
+    }
+  ],
+  "operation_names": [
+    "add",
+    "retain",
+    "merge",
+    "quarantine",
+    "delete",
+    "restore"
+  ],
+  "quarantine_capacity": 2,
+  "random_seeds": {
+    "attack": 634301,
+    "capacity": 634303,
+    "lifecycle": 634300,
+    "rollback": 634302
+  },
+  "resource_limits": {
+    "active_factor_capacity": 4,
+    "generated_label_limit": 0,
+    "llm_call_limit": 0,
+    "max_attack_count": 8,
+    "max_registry_rows": 32,
+    "quarantine_factor_capacity": 2
+  },
+  "run_date": "20260812",
+  "schema": "carnot.experiment_6343.evidence_carrying_factor_lifecycle.v1.synthetic_lifecycle_stream_manifest",
+  "supported_operation_names": [
+    "add",
+    "retain",
+    "merge",
+    "quarantine",
+    "delete",
+    "restore",
+    "capacity_evict"
+  ]
+}
