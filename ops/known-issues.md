@@ -17239,3 +17239,49 @@ commits. Every one of these guards only fires for a committer who is not exempt.
 asymmetry recorded for `artifact-freshness-lint` yesterday, now demonstrated on a second
 guard and with real data loss narrowly avoided rather than a mere inconvenience. The
 options listed in that entry apply here with more urgency.
+
+## 2026-08-12 REQ-ARC-WMTE-6255 RESULT: the win exemplar makes dynamics induction WORSE
+
+`honest_verdict: complete_win_exemplar_gate_not_met_1_improved_3_worse_of_4_pooled_delta_-0.2476`.
+
+| game | control held | treatment held | delta | exemplar |
+|---|---|---|---|---|
+| dc22 | 0.8571 | 0.4286 | **-0.4285** | L0->L1 |
+| cn04 | 0.1468 | 0.0373 | **-0.1095** | L0->L1 |
+| ls20 | 0.9038 | 0.0678 | **-0.8360** | L0->L1 |
+| s5i5 | 0.5083 | 0.8917 | +0.3834 | L0->L1 |
+
+Pooled delta **-0.2476**. Not inert -- actively harmful. ls20 is the clearest case: a
+near-perfect engine (0.9038) collapsed to 0.0678 when the exemplar was added.
+
+**This one is well-controlled, unlike two earlier runs in this batch.** All four games are
+comparable with no skips. All eight induce calls returned ok=True, so no arm is empty.
+Control values span 0.1468 to 0.9038 and treatments 0.0373 to 0.8917, so NO game sits at the
+0.0 floor or the 1.0 ceiling and every one had room to move in both directions. Paired,
+same TRAIN/VALID/HELD split, same budget, same generator; the only variable is whether
+`win_transition` and `previous_level_complete_grid` were passed.
+
+**THE LIMITATION THAT MATTERS MOST, and it may invert the reading.** The metric is
+`WorldModelVerifier.score(engine)` -- DYNAMICS fidelity only. But the win exemplar's
+purpose is arguably the GOAL predicate (`is_level_complete`), not the transition function.
+This experiment did not score the goal predicate at all. So the honest statement is: the
+exemplar HURTS dynamics induction, and its effect on goal induction is UNMEASURED. It is
+entirely possible it helps the thing it was designed for while degrading the thing measured
+here. That follow-up is cheap and is the obvious next step on this axis.
+
+**Mechanism, hypothesis only, not measured.** The exemplar appends a large grid pair (1125
+to 3988 changed cells on the probed games) to an already-long induce prompt. Attention may
+shift from "learn the transition function" to "explain the win". Untested.
+
+**Scope limit, unchanged and load-bearing.** The exemplar comes from `replay_win_transition`,
+which replays a banked solve through the game's own `GameAdapter`. That is a DEVELOPMENT
+PROXY. A hidden game has no banked solve and no adapter, so this says nothing about whether
+the live agent can obtain an exemplar on a hidden level 1 -- on the live path one exists only
+from level 2 onward, captured from the agent's own play. n=4, far below the n>=30 bar.
+
+**Consequence for the standing diagnosis.** The empty win-exemplar slot was the best
+remaining explanation for why offline induction numbers sit near 0.38-0.5. Filling it does
+not raise them; it lowers them. So that hypothesis is dead as an explanation for the
+induction-quality wall, and the wall stands unexplained. Session tally on induction-adjacent
+levers: search structure null, sampling breadth null, goal gradient null, model architecture
+null, win exemplar NEGATIVE.
