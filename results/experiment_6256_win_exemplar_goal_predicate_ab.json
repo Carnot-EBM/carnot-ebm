@@ -1,0 +1,160 @@
+{
+  "experiment": "experiment_6256_win_exemplar_goal_predicate_ab",
+  "title": "Win-exemplar A/B scored on the GOAL predicate, both sides",
+  "run_date": "2026-08-12T12:26:37Z",
+  "roster": [
+    "dc22",
+    "cn04",
+    "ls20",
+    "s5i5"
+  ],
+  "per_game_results": [
+    {
+      "game": "dc22",
+      "win_exemplar_available": true,
+      "control": {
+        "engine_held_fidelity": 0.75,
+        "goal_specificity_accuracy": 1.0,
+        "goal_false_positives": 0,
+        "goal_fires_on_real_win": false,
+        "goal_predicate_present": true,
+        "load_error": null,
+        "goal_n_scored": 10,
+        "goal_n_real_levelups_in_held": 0,
+        "ok": true,
+        "wall_s": 239.7
+      },
+      "treatment": {
+        "engine_held_fidelity": 0.375,
+        "goal_specificity_accuracy": 1.0,
+        "goal_false_positives": 0,
+        "goal_fires_on_real_win": false,
+        "goal_predicate_present": true,
+        "load_error": null,
+        "goal_n_scored": 10,
+        "goal_n_real_levelups_in_held": 0,
+        "ok": true,
+        "wall_s": 194.4
+      },
+      "control_source": "import numpy as np\n\ndef engine(grid, action, data):\n    \"\"\"\n    World model for ARC-AGI game 'dc22'.\n    The level involves moving a 2x2 block of color 14 within a grid and filling \n    the bottom row (row 63) with color 3 whenever an action modifies the state.\n    \"\"\"\n    grid = grid.copy()\n    h, w = grid.shape\n    changed = False\n\n    # Find current position of the 2x2 block of color 14\n    r_start, c_start = -1, -1\n    for r in range(h - 1):\n        for c in range(w - 1):\n            if grid[r:r+2, c:c+2].all() == 14: # This check is slightly wrong; should be any/all logic\n                pass\n    \n    # Correct way to find top-left corner of the 2x2 block of color 14\n    coords = np.argwhere(grid == 14)\n    if coords.size > 0:\n        r_min, c_min = coords.min(axis=0)\n        r_start, c_start = r_min, c_min\n\n    if r_start != -1:\n        nr, nc = r_start, c_start\n        if action == 1: # Up\n            nr -= 2\n        elif action == 2: # Down\n            nr += 2\n        elif action == 3: # Left\n            nc -= 2\n        elif action == 4: # Right\n            nc += 2\n        \n        # Check if new position is within bounds and doesn't overlap with borders (color 3)\n        if 0 <= nr < h - 1 and 0 <= nc < w - 1:\n            # Ensure we aren't moving into a border area or outside logical constraints\n            # Based on observed data, it moves in steps of 2 pixels.\n            # We swap the 2x2 blocks at (r_start, c_start) and (nr, nc).\n            block_old = grid[r_start:r_start+2, c_start:c_start+2].copy()\n            block_new = grid[nr:nr+2, nc:nc+2].copy()\n            grid[r_start:r_start+2, c_start:c_start+2] = block_new\n            grid[nr:nr+2, nc:nc+2] = block_old\n            changed = True\n\n    # ACTION6 is a click; based on observations, it only triggers row 63 filling.\n    if action == 6:\n        changed = True\n\n    # If any change occurred, fill the next available cell in row 63 with color 3.\n    if changed:\n        for c in range(w):\n            if grid[63, c] == 0:\n                grid[63, c] = 3\n                break\n\n    return grid\n\ndef is_level_complete(grid):\n    \"\"\"\n    The level is complete when the bottom row (row 63) is entirely filled with color 3.\n    \"\"\"\n    if grid.shape[0] < 64:\n        return False\n    return np.all(grid[63, :] == 3)",
+      "treatment_source": "import numpy as np\n\ndef engine(grid, action, data):\n    \"\"\"\n    World model for ARC-AGI game 'dc22'.\n    The core mechanic involves a 2x2 block of color 14 moving within a grid.\n    Actions 1-4 correspond to Up, Down, Left, Right movements of this block.\n    Action 6 is a click that has no effect on the main game state but may affect row 63.\n    \"\"\"\n    next_grid = grid.copy()\n    h, w = next_grid.shape\n    \n    # Find the current position of the 2x2 block of color 14\n    block_pos = None\n    for r in range(h - 1):\n        for c in range(w - 1):\n            if (next_grid[r, c] == 14 and next_grid[r+1, c] == 14 and \n                next_grid[r, c+1] == 14 and next_grid[r+1, c+1] == 14):\n                block_pos = (r, c)\n                break\n        if block_pos:\n            break\n            \n    if block_pos is None:\n        return next_grid\n\n    r, c = block_pos\n    dr, dc = 0, 0\n    if action == 1: # Up\n        dr = -1\n    elif action == 2: # Down\n        dr = 1\n    elif action == 3: # Left\n        dc = -1\n    elif action == 4: # Right\n        dc = 1\n    else:\n        return next_grid\n\n    nr, nc = r + dr, c + dc\n    \n    # Check boundaries for the new position of the 2x2 block\n    if 0 <= nr < h - 1 and 0 <= nc < w - 1:\n        # The moving block replaces whatever was at its destination.\n        # To maintain consistency with observed transitions, we assume it moves within a region.\n        # In this specific game, cells left behind by the block are filled with color 2.\n        \n        # Fill old position with color 2\n        next_grid[r, c] = 2\n        next_grid[r+1, c] = 2\n        next_grid[r, c+1] = 2\n        next_grid[r+1, c+1] = 2\n        \n        # Set new position to color 14\n        next_grid[nr, nc] = 14\n        next_grid[nr+1, nc] = 14\n        next_grid[nr, nc+1] = 14\n        next_grid[nr+1, nc+1] = 14\n        \n    return next_grid\n\ndef is_level_complete(grid):\n    \"\"\"\n    Determines if the level is complete based on the final state of the moving block.\n    Based on provided data, completion occurs when ACTION4 (Right) is applied from (30, 6).\n    This suggests reaching coordinate (30, 8) for the top-left corner of the 2x2 block.\n    \"\"\"\n    h, w = grid.shape\n    for r in range(h - 1):\n        for c in range(w - 1):\n            if (grid[r, c] == 14 and grid[r+1, c] == 14 and \n                grid[r, c+1] == 14 and grid[r+1, c+1] == 14):\n                # The completing action moved the block to (30, 8)\n                return r == 30 and c == 8\n    return False"
+    },
+    {
+      "game": "cn04",
+      "win_exemplar_available": true,
+      "control": {
+        "engine_held_fidelity": 0.5231,
+        "goal_specificity_accuracy": 1.0,
+        "goal_false_positives": 0,
+        "goal_fires_on_real_win": false,
+        "goal_predicate_present": true,
+        "load_error": null,
+        "goal_n_scored": 10,
+        "goal_n_real_levelups_in_held": 0,
+        "ok": true,
+        "wall_s": 289.3
+      },
+      "treatment": {
+        "engine_held_fidelity": 0.1154,
+        "goal_specificity_accuracy": 1.0,
+        "goal_false_positives": 0,
+        "goal_fires_on_real_win": false,
+        "goal_predicate_present": true,
+        "load_error": null,
+        "goal_n_scored": 10,
+        "goal_n_real_levelups_in_held": 0,
+        "ok": true,
+        "wall_s": 297.9
+      },
+      "control_source": "import numpy as np\n\ndef engine(grid, action, data):\n    \"\"\"\n    World model for ARC-AGI game 'cn04'.\n    Actions:\n    1: Shift Up by 3\n    2: Shift Down by 3\n    3: Shift Left by 3\n    4: Shift Right by 3\n    5: Special shift (likely similar to Action 4 or 2 based on deltas)\n    6: Click - marks a cell in the top row r0 with color 0.\n    \"\"\"\n    new_grid = grid.copy()\n    h, w = new_grid.shape\n\n    if action == 1:  # Shift Up by 3\n        shift = 3\n        new_grid[:] = np.roll(new_grid, -shift, axis=0)\n    elif action == 2:  # Shift Down by 3\n        shift = 3\n        new_grid[:] = np.roll(new_grid, shift, axis=0)\n    elif action == 3:  # Shift Left by 3\n        shift = 3\n        new_grid[:] = np.roll(new_grid, -shift, axis=1)\n    elif action == 4:  # Shift Right by 3\n        shift = 3\n        new_grid[:] = np.roll(new_grid, shift, axis=1)\n    elif action == 5:  # Based on observed transitions, ACTION5 often behaves like a right/down shift\n        # In many cases it looks like Action 4 (Right 3), but let's use Right 3 as a general rule.\n        shift = 3\n        new_grid[:] = np.roll(new_grid, shift, axis=1)\n    elif action == 6:  # Click\n        if data is not None and 'x' in data and 'y' in data:\n            px, py = data['x'], data['y']\n            # The click marks a cell in the top row r0 with color 0.\n            # Observed clicks map to columns c16, c17, c18... etc.\n            # It seems to be related to the current state or just sequential marking.\n            # Since we don't have a clear mapping from px,py to col, \n            # we look for the first available slot in the bar [16, 47] that isn't already 0.\n            for col in range(16, 48):\n                if new_grid[0, col] != 0:\n                    new_grid[0, col] = 0\n                    break\n    return new_grid\n\ndef is_level_complete(grid):\n    \"\"\"\n    The level is complete when certain conditions are met.\n    Given no win states were provided, we assume it's based on object alignment.\n    A common goal in these games is moving all objects of one type into another region.\n    For now, return False as no win condition was explicitly observed.\n    \"\"\"\n    return False",
+      "treatment_source": "import numpy as np\n\ndef engine(grid, action, data):\n    \"\"\"\n    World model for ARC-AGI game 'cn04'.\n    The grid contains a 'cursor' or 'hole' represented by color 0.\n    Actions 1-4 move this cursor in directions Up, Down, Left, Right by 3 units.\n    Action 5 and Action 6 clear parts of the top bar (row 0).\n    \"\"\"\n    new_grid = grid.copy()\n    h, w = grid.shape\n    bg_color = 10 # Default background color based on initial grids\n    # In some levels, bg_color might be different (e.g., 12), but we can detect it from the corners.\n    if grid[0, 0] != 0:\n        bg_color = grid[0, 0]\n\n    def shift_row_left(row, start_col, dist):\n        # Shift elements from start_col to the end left by dist, filling the gap at the end with 0s.\n        res = row.copy()\n        segment = row[start_col:]\n        shifted = np.roll(segment, -dist)\n        # Fill the rolled-over part with zeros\n        shifted[-dist:] = 0\n        res[start_col:] = shifted\n        return res\n\n    def shift_row_right(row, start_col, end_col, dist):\n        # To move a hole right, we effectively shift the non-hole content left.\n        # The delta r11c11:10x3 r11c26:0x3 suggests that for a hole [11..25],\n        # moving it right by 3 makes [14..28] the new hole and [11..13] background.\n        res = row.copy()\n        # Find all holes in this row\n        holes = (row == 0).astype(int)\n        if not np.any(holes): return res\n        \n        # For simplicity, let's implement the \"swap\" logic observed in deltas:\n        # A block of 0s from c_start to c_end moves to c_start+dist to c_end+dist.\n        # This means cells from c_start to c_start+dist-1 are filled by whatever was at c_start+dist...\n        # And cells from c_end+1 to c_end+dist become 0.\n        \n        # We find contiguous blocks of zeros\n        i = 0\n        while i < w:\n            if row[i] == 0:\n                start = i\n                while i < w and row[i] == 0:\n                    i += 1\n                end = i - 1\n                # Shift content left starting from 'start'\n                segment = row[start:]\n                shifted = np.roll(segment, -dist)\n                shifted[-dist:] = 0 # The new hole is at the end of the segment\n                res[start:] = shifted\n            else:\n                i += 1\n        return res\n\n    def shift_col_up(grid, start_row, dist):\n        res = grid.copy()\n        for c in range(w):\n            col = grid[:, c]\n            holes = (col == 0).astype(int)\n            if not np.any(holes): continue\n            i = 0\n            while i < h:\n                if col[i] == 0:\n                    start = i\n                    while i < h and col[i] == 0:\n                        i += 1\n                    segment = col[start:]\n                    shifted = np.roll(segment, -dist)\n                    shifted[-dist:] = 0\n                    res[start:, c] = shifted\n                else:\n                    i += 1\n        return res\n\n    def shift_col_down(grid, start_row, dist):\n        # Moving a hole down means shifting content up starting from the top of the hole.\n        # This is similar to shift_col_up but we need to handle indices carefully.\n        # For simplicity, let's use the same logic as shift_row_right for vertical movement.\n        res = grid.copy()\n        for c in range(w):\n            col = grid[:, c]\n            i = 0\n            while i < h:\n                if col[i] == 0:\n                    start = i\n                    while i < h and col[i] == 0:\n                        i += 1\n                    end = i - 1\n                    # To move hole [start..end] down by dist, shift everything above it down?\n                    # No, based on deltas, it's like shifting the segment [start..h-1] up.\n                    segment = col[start:]\n                    shifted = np.roll(segment, -dist)\n                    shifted[-dist:] = 0\n                    res[start:, c] = shifted\n                else:\n                    i += 1\n        return res\n\n    if action == 4: # Right\n        for r in range(h):\n            new_grid[r] = shift_row_right(grid[r], 0, w-1, 3)\n    elif action == 3: # Left\n        # Moving a hole left is like shifting content right starting from the end of the hole.\n        for r in range(h):\n            row = grid[r].copy()\n            holes = (row == 0).astype(int)\n            if not np.any(holes): continue\n            # Find last block of zeros\n            last_hole_idx = np.where(holes)[0][-1]\n            # Shift content right from that point\n            segment = row[:last_hole_idx+1]\n            shifted = np.roll(segment, 3)\n            shifted[:3] = 0\n            new_grid[r, :last_hole_idx+1] = shifted\n    elif action == 1: # Up\n        new_grid = shift_col_up(grid, 0, 3)\n    elif action == 2: # Down\n        new_grid = shift_col_down(grid, 0, 3)\n    elif action == 5: # Clear next cell in top bar\n        # Based on observations, Action 5 clears some cells in row 0.\n        # We'll find the first non-zero cell in row 0 and make it zero.\n        for c in range(w):\n            if new_grid[0, c] != 0:\n                new_grid[0, c] = 0\n                break\n    elif action == 6: # Click to clear specific cell in top bar\n        # data={'x': px, 'y': py}. The observed behavior is clearing a cell in row 0.\n        # Let's assume clicking near the cursor or at a certain offset clears a cell.\n        # For simplicity, we'll just clear the first available cell in row 0.\n        for c in range(w):\n            if new_grid[0, c] != 0:\n                new_grid[0, c] = 0\n                break\n\n    return new_grid\n\ndef is_level_complete(grid):\n    \"\"\"\n    The level is complete when the top bar (row 0) is sufficiently cleared of its original color.\n    \"\"\"\n    # Check if any of the original colors (like 4) remain in row 0.\n    # In the provided examples, the target was to clear color 4 from row 0.\n    # We check for common \"bar\" colors like 4.\n    if np.any(grid[0] == 4):\n        return False\n    # Also consider other potential bar colors seen in different levels.\n    # If most of row 0 is now background or hole, it's likely complete.\n    non_zero_count = np.count_nonzero(grid[0])\n    # This is a heuristic; usually clearing the specific bar color is enough.\n    return True # Defaulting to True if no '4' remains."
+    },
+    {
+      "game": "ls20",
+      "win_exemplar_available": true,
+      "control": {
+        "engine_held_fidelity": 0.7692,
+        "goal_specificity_accuracy": 1.0,
+        "goal_false_positives": 0,
+        "goal_fires_on_real_win": false,
+        "goal_predicate_present": true,
+        "load_error": null,
+        "goal_n_scored": 10,
+        "goal_n_real_levelups_in_held": 0,
+        "ok": true,
+        "wall_s": 269.5
+      },
+      "treatment": {
+        "engine_held_fidelity": 0.0,
+        "goal_specificity_accuracy": 0.0,
+        "goal_false_positives": 10,
+        "goal_fires_on_real_win": false,
+        "goal_predicate_present": true,
+        "load_error": null,
+        "goal_n_scored": 10,
+        "goal_n_real_levelups_in_held": 0,
+        "ok": true,
+        "wall_s": 260.1
+      },
+      "control_source": "import numpy as np\n\ndef engine(grid, action, data):\n    \"\"\"\n    World model for ARC-AGI game 'ls20'.\n    The grid contains a \"block\" (a 5x5 area of colors [12, 12, 9, 9, 9]) and a \"cursor\"\n    that moves right across rows 61 and 62, leaving a trail of color 3.\n    Actions move the block in different directions or do nothing to it.\n    \"\"\"\n    new_grid = grid.copy()\n    h, w = new_grid.shape\n\n    # Identify current cursor position based on the trail of color 3 in row 61/62.\n    # The cursor is at the rightmost cell that has been changed to color 3 in those rows.\n    # Based on observed transitions, the cursor starts moving from c=13 onwards.\n    cc = -1\n    for col in range(w - 1, 12, -1):\n        if new_grid[61, col] == 3:\n            cc = col\n            break\n    \n    # If no trail yet, start before the first observed transition's result.\n    if cc == -1:\n        cc = 12\n\n    # Every action moves the cursor one step to the right.\n    cc += 1\n    if cc < w:\n        new_grid[61, cc] = 3\n        new_grid[62, cc] = 3\n\n    # Identify the \"block\" (5x5 area). It consists of colors [12, 12, 9, 9, 9].\n    # We find its top-left corner (br, bc) by searching for this pattern.\n    br, bc = -1, -1\n    found = False\n    for r in range(h - 4):\n        for c in range(w - 4):\n            match = True\n            pattern = [12, 12, 9, 9, 9]\n            for dr in range(5):\n                for dc in range(5):\n                    if grid[r + dr, c + dc] != pattern[dr]:\n                        match = False\n                        break\n                if not match: break\n            if match:\n                br, bc = r, c\n                found = True\n                break\n        if found: break\n\n    # If block is not found, we can't move it. But based on data, it should be there.\n    if not found:\n        return new_grid\n\n    # Block internal color pattern\n    original_block_color = [12, 12, 9, 9, 9]\n\n    if action == 1: # Move UP by 5 units\n        new_br = br - 5\n        if new_br >= 0:\n            # Clear old position (replace with background color 3)\n            for dr in range(5):\n                for dc in range(5):\n                    if br + dr < h and bc + dc < w:\n                        new_grid[br + dr, bc + dc] = 3\n            # Set new position\n            for dr in range(5):\n                for dc in range(5):\n                    if new_br + dr < h and bc + dc < w:\n                        new_grid[new_br + dr, bc + dc] = original_block_color[dr]\n            br = new_br\n\n    elif action == 3: # Move LEFT by 5 units\n        new_bc = bc - 5\n        if new_bc >= 0:\n            # Clear old position\n            for dr in range(5):\n                for dc in range(5):\n                    if br + dr < h and bc + dc < w:\n                        new_grid[br + dr, bc + dc] = 3\n            # Set new position\n            for dr in range(5):\n                for dc in range(5):\n                    if br + dr < h and new_bc + dc < w:\n                        new_grid[br + dr, new_bc + dc] = original_block_color[dr]\n            bc = new_bc\n\n    elif action == 4: # Move RIGHT by 5 units\n        new_bc = bc + 5\n        if new_bc <= w - 5:\n            # Clear old position\n            for dr in range(5):\n                for dc in range(5):\n                    if br + dr < h and bc + dc < w:\n                        new_grid[br + dr, bc + dc] = 3\n            # Set new position\n            for dr in range(5):\n                for dc in range(5):\n                    if br + dr < h and new_bc + dc < w:\n                        new_grid[br + dr, new_bc + dc] = original_block_color[dr]\n            bc = new_bc\n\n    return new_grid\n\ndef is_level_complete(grid):\n    \"\"\"\n    The level seems to be complete when the cursor reaches a certain point.\n    Based on object structure, obj16 (the path) ends at column 54.\n    \"\"\"\n    # Check if the trail of color 3 has reached column 54 in rows 61/62.\n    if grid.shape[1] > 54:\n        return grid[61, 54] == 3 and grid[62, 54] == 3\n    return False",
+      "treatment_source": "import numpy as np\n\ndef engine(grid, action, data):\n    \"\"\"\n    World model for ARC-AGI game 'ls20'.\n    Rules induced from observed transitions:\n    - A block (composed of colors 9 and 12) moves in steps of 5 cells.\n    - Action 1: Move block UP by 5 rows.\n    - Action 3: Move block LEFT by 5 columns.\n    - Action 4: Move block RIGHT by 5 columns.\n    - Action 2: No block movement.\n    - Every action (1-4) increments a 'cursor' position in rows 61-62, moving it right by 1 column.\n    - The block stays within the bounds of its room (color 3).\n    \"\"\"\n    new_grid = grid.copy()\n    h, w = new_grid.shape\n\n    # Identify the current block position\n    # The block consists of color 12 and color 9.\n    block_cells = np.where((new_grid == 12) | (new_grid == 9))\n    if len(block_cells[0]) == 0:\n        return new_grid\n\n    y_min, y_max = np.min(block_cells[0]), np.max(block_cells[0])\n    x_min, x_max = np.min(block_cells[1]), np.max(block_cells[1])\n    \n    # Block dimensions are typically 5x5 based on observations\n    block_h = y_max - y_min + 1\n    block_w = x_max - x_min + 1\n    \n    # Save original colors to restore them as background (color 3)\n    original_colors = new_grid[y_min:y_max+1, x_min:x_max+1].copy()\n    \n    # Move logic\n    dy, dx = 0, 0\n    if action == 1: # UP\n        dy = -5\n    elif action == 3: # LEFT\n        dx = -5\n    elif action == 4: # RIGHT\n        dx = 5\n    \n    # Calculate potential new position\n    ny_min, nx_min = y_min + dy, x_min + dx\n    ny_max, nx_max = ny_min + block_h - 1, nx_min + block_w - 1\n    \n    # Check bounds and room constraints (must be within color 3 area or existing block)\n    can_move = True\n    if ny_min < 0 or ny_max >= h or nx_min < 0 or nx_max >= w:\n        can_move = False\n    else:\n        # The target region must consist of cells that are either the current block or color 3.\n        target_region = new_grid[ny_min:ny_max+1, nx_min:nx_max+1]\n        for r in range(block_h):\n            for c in range(block_w):\n                val = target_region[r, c]\n                # If it's not part of the original block and not a 'room' cell (color 3), it's an obstacle.\n                if val != 3 and not ((y_min <= ny_min + r <= y_max) and (x_min <= nx_min + c <= x_max)):\n                    can_move = False\n                    break\n            if not can_move: break\n\n    if can_move:\n        # Clear old position to background color 3\n        new_grid[y_min:y_max+1, x_min:x_max+1] = 3\n        # Place block at new position\n        new_grid[ny_min:ny_max+1, nx_min:nx_max+1] = original_colors\n\n    # Cursor movement logic (rows 61-62 move right by 1 each action)\n    # Find current cursor end point in row 61\n    cursor_cols = np.where(new_grid[61] == 3)[0]\n    if len(cursor_cols) > 0:\n        last_col = np.max(cursor_cols)\n        if last_col + 1 < w:\n            new_grid[61, last_col + 1] = 3\n            new_grid[62, last_col + 1] = 3\n\n    return new_grid\n\ndef is_level_complete(grid):\n    \"\"\"\n    The level is complete when the block reaches a target state or the cursor reaches a goal.\n    Based on observed transitions, we check if the block has reached a specific upper region.\n    \"\"\"\n    block_cells = np.where((grid == 12) | (grid == 9))\n    if len(block_cells[0]) == 0:\n        return False\n    y_min = np.min(block_cells[0])\n    # In the final transition, the block moved to rows 35-39.\n    return y_min <= 35"
+    },
+    {
+      "game": "s5i5",
+      "win_exemplar_available": true,
+      "control": {
+        "engine_held_fidelity": 0.0667,
+        "goal_specificity_accuracy": 1.0,
+        "goal_false_positives": 0,
+        "goal_fires_on_real_win": false,
+        "goal_predicate_present": true,
+        "load_error": null,
+        "goal_n_scored": 10,
+        "goal_n_real_levelups_in_held": 0,
+        "ok": true,
+        "wall_s": 260.2
+      },
+      "treatment": {
+        "engine_held_fidelity": 0.0,
+        "goal_specificity_accuracy": 1.0,
+        "goal_false_positives": 0,
+        "goal_fires_on_real_win": false,
+        "goal_predicate_present": true,
+        "load_error": null,
+        "goal_n_scored": 10,
+        "goal_n_real_levelups_in_held": 0,
+        "ok": true,
+        "wall_s": 228.9
+      },
+      "control_source": "import numpy as np\n\ndef engine(grid, action, data):\n    \"\"\"\n    World model for ARC-AGI game 's5i5'.\n    The core mechanic observed is filling row 63 (the bottom row) with color 4\n    from right to left whenever a cell is clicked.\n    Other changes in the grid are sporadic and appear to modify specific objects,\n    but the primary progression is the progress bar on the bottom row.\n    \"\"\"\n    if action != 6:\n        return grid.copy()\n\n    # ACTION6 provides click coordinates {'x': px, 'y': py}\n    px = data['x']\n    py = data['y']\n    \n    new_grid = grid.copy()\n    \n    # Find the current state of the \"progress bar\" at row 63.\n    # Row 63 starts as all color 3 and fills from right to left with color 4.\n    row_63 = new_grid[63, :]\n    \n    # Determine how many cells to fill based on the clicked cell's properties.\n    # Based on observation, most clicks fill 1 or 2 cells.\n    # A simple deterministic rule that approximates this behavior:\n    # Clicks on colors 4 or 14 often fill more than one cell.\n    clicked_color = grid[py, px]\n    fill_amount = 1\n    if clicked_color == 4 or clicked_color == 14:\n        # Use a pseudo-random but deterministic value based on coords for variety\n        if (px + py) % 3 == 0:\n            fill_amount = 2\n    elif clicked_color == 11:\n        if (px * py) % 2 == 0:\n            fill_amount = 2\n\n    # Fill 'fill_amount' cells in row 63 starting from the rightmost available space.\n    cells_filled = 0\n    for col in range(63, -1, -1):\n        if new_grid[63, col] != 4:\n            new_grid[63, col] = 4\n            cells_filled += 1\n            if cells_filled >= fill_amount:\n                break\n                \n    # Handle specific object transformations observed in transitions.\n    # These are rare and highly localized; we implement them as conditional triggers.\n    if py == 38 and px == 24 and grid[py, px] == 4:\n        # Action 2/10 effect: modify obj16 region\n        new_grid[31, 10] = 13\n        new_grid[33:36, 9] = 5\n    elif py == 21 and px == 39 and grid[py, px] == 14:\n        # Action 3 effect: modify obj2/obj1 region\n        new_grid[9, 30] = 5\n        new_grid[10, 28] = 13\n        new_grid[10, 30] = 5\n        new_grid[11, 30] = 5\n    elif py == 43 and px == 24 and grid[py, px] == 4:\n        # Action 8 effect: partially reverse Action 2\n        new_grid[31, 10] = 11\n        new_grid[33, 9] = 11\n        new_grid[34, 9] = 11 # Simplified from [11, 13, 11]\n        new_grid[35, 9] = 11\n\n    return new_grid\n\ndef is_level_complete(grid):\n    \"\"\"\n    The level is complete when the progress bar (row 63) is fully filled with color 4.\n    \"\"\"\n    return np.all(grid[63, :] == 4)",
+      "treatment_source": "import numpy as np\n\ndef engine(grid, action, data):\n    \"\"\"\n    Induces the transition rules for the ARC-AGI-3 game 's5i5'.\n    The observed transitions show that ACTION6 (clicking) fills cells in the \n    bottom row (row 63) with color 4 from right to left.\n    Other changes on the grid appear to be side effects and may not affect \n    the win condition.\n    \"\"\"\n    if action != 6:\n        return grid.copy()\n    \n    new_grid = grid.copy()\n    # The progress bar is located at r63. It fills from right to left with color 4.\n    # We find the leftmost cell that is already color 4 and fill the one to its left.\n    last_row = new_grid[-1, :]\n    \n    # Find the current number of filled cells (color 4) starting from the right.\n    filled_count = 0\n    for col in range(63, -1, -1):\n        if last_row[col] == 4:\n            filled_count += 1\n        else:\n            break\n            \n    # Fill the next available cell to the left with color 4.\n    if filled_count < 64:\n        target_col = 63 - filled_count\n        new_grid[63, target_col] = 4\n        \n    return new_grid\n\ndef is_level_complete(grid):\n    \"\"\"\n    The level is complete when the bottom row (r63) is entirely filled with color 4.\n    Based on observed transitions, filling this row seems to be the primary goal.\n    \"\"\"\n    # Check if all cells in the bottom row are color 4.\n    return np.all(grid[-1, :] == 4)"
+    }
+  ],
+  "n_games_comparable": 4,
+  "n_games_sensitivity_gained": 0,
+  "n_games_sensitivity_lost": 0,
+  "control_predicates_firing_on_real_win": 0,
+  "treatment_predicates_firing_on_real_win": 0,
+  "pooled_specificity_delta": -0.25,
+  "gate_condition": ">= 3 games gain SENSITIVITY (predicate fires on a real win where the control's did not) AND gains exceed losses",
+  "gate_met": false,
+  "why_two_sided": "held-out transitions contain no level-ups, so specificity alone is a false-positive check that a return-False-everywhere predicate passes perfectly. Sensitivity against a real win grid is what makes either number meaningful.",
+  "answers_which_question": "exp6255 found the win exemplar HURTS dynamics fidelity but scored the engine only. This scores the goal predicate, which is what the exemplar is aimed at.",
+  "development_proxy_limit": "the exemplar and the win grid both come from replaying a banked solve through the game's GameAdapter. A hidden game has neither, so nothing here shows the live agent can obtain an exemplar on a hidden level 1; on the live path one exists only from level 2 onward, from the agent's own play.",
+  "sample_size_note": "at most 4 games, far below the n>=30 bar. Directional only.",
+  "solve_provenance": "development_proxy",
+  "arc_solve_claim": false,
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_principle": "goal-predicate sign agreement against observed level_after > level_before is a recorded-ground-truth check on an induced hypothesis, not the executable win-condition oracle driving a solve; no level is claimed",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": {
+    "generator": "unsloth/gemma-4-31B-it-qat-GGUF",
+    "quant": "UD-Q4_K_XL",
+    "kv_cache_quant": "q8_0",
+    "port": 8944
+  },
+  "random_seed": 6256,
+  "honest_verdict": "complete_win_exemplar_goal_gate_not_met_sensitivity_gained_0_lost_0_of_4_fires_0_to_0_spec_delta_-0.25",
+  "duration_s": 2055.91,
+  "reproducibility_checksum": "f7671e05b57302ff02344a6c6896d5a2d9bf6b336e7c3bae332949811772d67c"
+}

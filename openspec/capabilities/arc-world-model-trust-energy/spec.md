@@ -25476,3 +25476,46 @@ that follow-up is the obvious next step.
 **Scope limit.** The exemplar is replayed from a banked solve through a `GameAdapter` — a
 development proxy. A hidden game has neither, so this says nothing about the live agent
 obtaining an exemplar on a hidden level 1. n=4.
+
+
+### REQ-ARC-WMTE-6256 / REQ-ARC-WMTE-6257: The Induced Goal Predicate Is Systemically Degenerate
+
+**Origin:** 2026-08-12. exp6255 found the win exemplar hurts dynamics fidelity but scored the
+ENGINE only; the exemplar is aimed at the GOAL predicate, so the negative needed the other
+half measured.
+
+Goal-predicate scoring SHALL be TWO-SIDED. Specificity alone (false positives over held-out
+transitions) is structurally unable to fail a constant-False predicate, because
+`collect_transitions` yields no level-ups and every held-out state is a non-win. Sensitivity
+-- does the predicate fire on a grid where a level-up REALLY happened, supplied by
+`replay_win_transition` -- is the only side that can. A game with no recoverable win grid SHALL
+be recorded as sensitivity-UNMEASURABLE and excluded from counts, never assumed good.
+
+#### SCENARIO-ARC-WMTE-6257-CONSTANT-FALSE-MUST-NOT-SCORE-PERFECT
+
+Given a predicate that returns False for every input, specificity over held-out non-win
+transitions SHALL be 1.0 and sensitivity SHALL be False, and the pair SHALL classify it as
+degenerate rather than perfect.
+
+#### UPDATE 2026-08-12 — RESULTS
+
+**exp6256 (win exemplar, goal half):** gate NOT met. Sensitivity 0 gained, 0 lost; **0 of 8
+predicates fire on a real win in either arm**. Engine fidelity fell on all four games,
+independently replicating exp6255 on a fresh seed. ls20's specificity collapsed 1.0 -> 0.0
+(constant-False became constant-True) -- the opposite degeneracy, visible only because both
+sides are scored.
+
+**exp6257 (stored sweep):** 14 of 21 measurable stored predicates are degenerate, all scoring
+a perfect 1.0 specificity; 5 discriminate; 3 fire on everything; 4 unmeasurable.
+
+**Planning consequence, verified.** `plan_in_model` terminates on `is_level_complete`. Ten of
+the 14 degenerate games found no plan at the 20000-node cap. Four found one anyway — ls20,
+m0r0, s5i5, vc33 — and replaying each plan inside its own induced model showed the predicate
+fires on the in-model terminal grid and FAILS on the real win grid. Those plans are HOLLOW.
+
+**This qualifies REQ-ARC-WMTE-6252's negative.** Most of that experiment's roster had a
+termination condition that was unreachable or wrong, so a heap-ordering change could not have
+helped. The verdict stands; the interpretation is much weaker than it appeared.
+
+**Scope.** Development proxy throughout: win grids come from replaying banked solves through
+`GameAdapter`s, which a hidden game does not have. n=4 for exp6256, 21 measurable for exp6257.
