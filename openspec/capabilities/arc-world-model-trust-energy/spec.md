@@ -25142,4 +25142,261 @@ arms' individual `llm_calls` (both arms always run to completion).
 
 | REQ | Implementation | Tests |
 |---|---|---|
+#### UPDATE 2026-08-11 — PROSPECTIVE RESULT: selector 3/3, gate failed on coverage only
+
+`complete_ensemble_gate_not_met_3_of_3_matched_held_optimal_ensemble_0.5118_vs_best_pure_0.481`.
+
+| game | linear held | rex held | chosen | matched |
+|---|---|---|---|---|
+| dc22 | 0.5 | 0.5 | linear | yes (tie) |
+| lp85 | 0.1096 | 0.0171 | linear | yes |
+| sc25 | none | none | none | both arms failed |
+| tu93 | 0.0 | 0.9259 | rex | yes |
+
+Pooled: ensemble 0.5118, rex 0.4810, linear 0.2032 — the ensemble beats BOTH pure arms.
+The gate required all four roster games comparable; sc25 produced no candidate from either
+arm, so it failed on COVERAGE, not on selection. On the three scorable games the selector
+matched the held-optimal arm 3 of 3. tu93 is the strongest case: linear returned a
+worthless engine (0.0) and rex an excellent one (0.9259) at equal budget, and the VALID
+score alone identified it. Cumulative 9 of 9 (6 retrospective + 3 prospective), discounted
+by several ties and still far below the n>=30 bar.
+
 | REQ-ARC-WMTE-6250 | `python/carnot/agentic/arc_rex_refinement.py:run_rex_ensemble` (sequential linear-then-rex over the existing `run_rex` path, single shared store, VALID-score argmax selection). | `tests/python/test_arc_rex_refinement.py` (CPU-only, fake proposer: higher-valid-arm selection in both directions, failed-first-arm fallback, budget-doubling accounting; 22/22 passing including the pre-existing 6248 coverage). Retrospective validation against `results/experiment_6248_pinductor_rex_ab.json`: VALID-score selection matches the HELD-optimal arm on 6/6 games; not yet re-validated prospectively (a fresh live A/B on new cells, gated behind operator authorization per the standing refinement-axis hold, remains open follow-up work). |
+
+### REQ-ARC-WMTE-6251: Best-of-N Induction Sampling Selected by VALID Fidelity
+
+**Origin:** 2026-08-11 operator directive "Let's do all of the plans: P1-P6, unattended" (P2 of
+`docs/research-notes/arc-live-agent-lever-evaluation-and-plan-2026-08-11.md`). Generalizes
+REQ-ARC-WMTE-6250 from "2 fixed search shapes" to "N independent samples".
+
+`carnot.agentic.arc_rex_refinement` SHALL provide `select_best_arm(game, arms)` and
+`run_best_of_n(game, arm_runners, *, concurrent=False)`. `select_best_arm` is the ONE selection
+rule shared with `run_rex_ensemble`: keep the arm with the highest `final_valid_fidelity`; filter
+arms with no `final_source` BEFORE scoring, so a failed arm can never win on a stale score field
+and a None-vs-float comparison can never raise; return `chosen_arm=None` when no arm produced a
+candidate. `run_best_of_n` SHALL absorb a raising thunk as an arm with no candidate rather than
+failing the whole set, because tolerating one bad sample out of N is the point of sampling breadth.
+
+`arm_runners` are thunks so the CALLER owns isolation. This is load-bearing, not ceremony:
+`LocalGGUFProposer._write_world_model` writes `E3_DIR / game / world_model.py` where `E3_DIR` is a
+module-level global read at import, so two same-game arms in ONE process race regardless of the
+read/write callables injected into `run_rex`. Safe concurrency requires one process per arm, each
+with its own `CARNOT_ARC_E3_DIR`, all sharing one llama-server.
+
+**This is NOT the retired candidate-ranking lever.** Those A/Bs reordered PERCEPTUAL CLICK
+CANDIDATES with a learned or hand scorer. This selects among GENERATED PROGRAMS by
+execution-grounded VALID fidelity, which is a measurement, not a preference model, and is
+oracle-distinct from the win condition.
+
+**Pre-registered gate** (`scripts/experiments/experiment_6251_best_of_n_induction.py`): pooled
+best-of-N held-out change-fidelity > pooled N=1 baseline across the whole roster. The experiment
+SHALL additionally MEASURE and report `batching_efficiency` (sum of per-sample wall-clock divided
+by parallel wall-clock), because the value claim rests on N samples costing far less than N times
+one sample, and the v14 preview probe proved only that concurrent requests SUCCEED, never how fast.
+
+#### SCENARIO-ARC-WMTE-6251-ARMLESS-ARM-NEVER-WINS
+
+Given one arm with no `final_source` but a high score field and one arm with a candidate and a low
+score, the selector SHALL choose the arm with the candidate.
+
+#### SCENARIO-ARC-WMTE-6251-RAISING-ARM-IS-ABSORBED
+
+Given one thunk raises and another returns a candidate, `run_best_of_n` SHALL return the surviving
+candidate and record the failure on the raising arm, in both sequential and concurrent modes.
+
+#### SCENARIO-ARC-WMTE-6251-CONCURRENT-MATCHES-SEQUENTIAL
+
+Given identical deterministic thunks, concurrent and sequential execution SHALL select the same
+candidate and report the same total call count.
+
+### REQ-ARC-WMTE-6252: Goal-Gradient A/B — Does Any Heap Key Beat Flat BFS?
+
+**Origin:** same 2026-08-11 operator directive (P3). The 2026-08-09 known-issues entry argued a
+flat goal signal is a second gate on the live agent, independent of dynamics-induction quality.
+That argument had never been tested directly.
+
+`scripts/experiments/experiment_6252_goal_gradient_ab.py` SHALL hold the engine, the goal
+predicate, and the start grid FIXED for each public game with a previously-induced engine in the
+tracked store, and vary ONLY `plan_in_model`'s `goal_energy` heap key. It SHALL read
+`results/arc_e3` and never write it. It SHALL run without an LLM and without a GPU.
+
+Arms SHALL include `flat_none` (no gradient, the production default), `uniform_random`
+(`make_uniform_goal_energy` — a deterministic grid hash carrying ZERO goal information),
+`novelty` (distance to nearest observed grid), and `hamming_to_win` (distance to a known win grid,
+SKIPPED per game when no level-up was observed offline, with the skip recorded and never counted
+as a zero).
+
+**Pre-registered gate:** a goal-aware arm beats flat on >= 3 comparable games AND beats the
+`uniform_random` count. The ablation is load-bearing: an arm that only matches the random arm
+gained from search REORDERING, not from goal signal.
+
+#### SCENARIO-ARC-WMTE-6252-ABLATION-SEPARATES-SIGNAL-FROM-REORDERING
+
+Given a graded arm and an information-free random arm, the gate SHALL require the graded arm to
+beat BOTH the flat baseline and the random arm before any gradient claim is made.
+
+#### SCENARIO-ARC-WMTE-6252-DEPTH-ZERO-GAMES-ARE-NOT-COMPARABLE
+
+Given a game whose stored predicate is already true at the start grid, every arm terminates at
+depth 0 and the game SHALL be excluded from the comparable set.
+
+#### UPDATE 2026-08-11 — RESULT: gate MET (first direct evidence the gradient matters)
+
+`novelty` beats flat on **4 of 24** comparable games; `uniform_random` beats flat on **1**.
+`hamming_to_win` ran on **0** games.
+
+| game | flat nodes | novelty nodes | note |
+|---|---|---|---|
+| bp35 | 20017, no plan | 2719, plan FOUND | flat BFS fails; the gradient succeeds |
+| m0r0 | 1636 | 88 | 18.6x cheaper (random got 557, so novelty beats random here too) |
+| s5i5 | 2448 | 453 | 5.4x cheaper |
+| ls20 | 8827 | 2175 | 4.1x cheaper |
+| cn04 | 213 | 1369 | an honest LOSS |
+
+`honest_verdict: complete_goal_gradient_gate_met_novelty_beats_flat_on_4_of_24_vs_random_1`.
+
+#### RETRACTED 2026-08-11 (same day) — the result above is a harness artifact, gate NOT met
+
+Preserved above per never-prune. **Do not cite it.** Adversarial review found three
+independent defects, all confirmed by re-measurement:
+
+1. **The only goal-AWARE arm never ran** (`hamming_to_win`, 0 of 24 games), because
+   `n_win_grids_observed` was 0 everywhere. `novelty` is goal-BLIND by its own definition,
+   but the gate's `goal_aware` tuple listed it, so a goal-gradient verdict was declared in
+   a run containing no goal signal.
+2. **A zero-information control reproduces the whole effect.** An arm scoring only distance
+   from the START grid is BYTE-IDENTICAL to novelty on bp35 (2719 nodes, 74 actions) and
+   cn04 (1369 nodes). The effect is a depth-first traversal bias.
+3. **The ablation was a no-op.** `UniformGoalEnergy` hashed `repr(value)`, and numpy
+   abbreviates the repr of arrays over 1000 elements; a 64x64 ARC frame is 4096 cells, so
+   distinct grids hashed identically (measured: 3 distinct energies over 200 perturbed
+   grids). A constant heap key degenerates to FIFO, i.e. the flat baseline — which is why
+   the "random" arm matched flat on 20 of 25 games and the gate's second clause could
+   never fail. Fixed in `arc_goal_energy_live.py:_stable_repr_for_hash` (179 distinct
+   after), a real defect in shared live control code.
+4. **The win metric was wrong.** `_beats` scored `nodes_expanded`; the benchmark charges
+   real ACTIONS. On ls20 flat found a 7-action plan and the gradient arms found 29/51/71 —
+   counted as a win, actually a 10x regression. Now guarded, and losses are counted.
+
+**Corrected result:** `complete_goal_gradient_gate_not_met_best_hamming_to_win_0_of_24_vs_random_2`.
+Wins/losses vs flat: `uniform_random` 2/2, `dist_from_start` 2/3, `novelty` 3/2,
+`hamming_to_win` never ran. No goal-gradient claim is supportable. One weak lead survives:
+m0r0, where novelty reaches the goal in 88 nodes with an 8-action plan against flat's 1636
+nodes and 7 actions.
+
+**The blocking prerequisite is now the finding.** The goal-aware question cannot be asked
+offline until `collect_transitions` stops discarding win states on level-up.
+
+**Consequence.** A graded branch ALREADY EXISTS in the live path and is default-OFF:
+`_goal_energy_for_plan` in `arc_competition_agent.py` resolves `energy_source` to
+{graded_exemplar, novelty, binary}, gated on `CARNOT_ARC_NOVELTY_GOAL_BIAS=1` /
+`CARNOT_ARC_GRADED_GOAL_BIAS=1`, and the production default `binary` is the flat constant this
+result beats. Turning the novelty branch on is a config change, not a build.
+
+**Second finding — a corpus artifact, not a capability limit.** Every game reported
+`n_win_grids_observed=0`, because `collect_transitions` RESTARTS the episode on level-up and so
+discards the only transitions that show what winning looks like. This is the `n_win_states=0` trap
+CLAUDE.md's ARC framing rule warns about. Offline work needing a win exemplar is blocked until the
+collector keeps collecting past a level-up.
+
+**Honest limits.** Public games are a development proxy for hidden-game planning, not the scored
+metric. 4 of 24 with 1 loss is directional, below the n>=30 bar. The metric is planner
+node-efficiency inside the induced model; no level is claimed.
+
+### REQ-ARC-WMTE-6253: Env Knobs for the Two 96GB-Relevant Generator Constants
+
+**Origin:** same 2026-08-11 operator directive (P4). The scored card is a single 96 GB RTX PRO
+6000, measured that day. Two constants chosen under a 16-24 GB assumption had no env override, so
+the sizing could not be tested on the real hardware without a source edit.
+
+`_llama_server_slots()` SHALL resolve the slot count K from `CARNOT_ARC_LLAMA_SERVER_SLOTS`,
+falling back to `_LLAMA_SERVER_DEFAULT_SLOTS` on unset, empty, non-integer, or out-of-range
+(outside 1..64) values. Both in-module consumers — the VRAM prediction and
+`_default_induce_n_ctx` — SHALL read the resolver, not the constant.
+
+`_kv_quant_for_launch(field_value)` SHALL resolve the KV cache type from `CARNOT_ARC_KV_QUANT`,
+which SHALL OUTRANK the `LocalGGUFProposer.kv_quant` field, because both live construction sites
+pass that field explicitly and a knob that lost to the argument would be unreachable in
+production. The value `none` SHALL drop the `--cache-type-k/v` flags entirely. The proposer SHALL
+record what it actually launched with in `last_kv_quant_used`.
+
+**Defaults SHALL NOT move.** Unset env reproduces the prior behaviour exactly: 4 slots, n_ctx
+106496, `--cache-type-k/v q8_0`.
+
+**Raising K does NOT change real server slots.** `_ensure_server` passes no `--parallel` flag, so
+the knob changes the ARITHMETIC only. A real slot change must also pass `--parallel` and must
+first be measured on the scored card; `_default_induce_n_ctx`'s docstring records that a naive
+`--parallel 4` DIVIDES the pool per slot and was strictly worse.
+
+#### SCENARIO-ARC-WMTE-6253-DEFAULTS-UNCHANGED
+
+Given no knob env var is set, the slot count SHALL be 4, `_default_induce_n_ctx()` SHALL be
+106496, and the launch argv SHALL contain `--cache-type-k q8_0` and `--cache-type-v q8_0`.
+
+#### SCENARIO-ARC-WMTE-6253-SLOTS-KNOB-RESIZES-CONTEXT
+
+Given `CARNOT_ARC_LLAMA_SERVER_SLOTS=8`, the context pool SHALL be exactly twice the K=4 pool. A
+malformed or out-of-range value SHALL fall back to 4 rather than raise.
+
+#### SCENARIO-ARC-WMTE-6253-KV-QUANT-KNOB-REACHES-ARGV
+
+Given `CARNOT_ARC_KV_QUANT=f16`, the argv handed to `subprocess.Popen` SHALL carry
+`--cache-type-k f16`, overriding an explicit `kv_quant="q8_0"` constructor argument. Given
+`none`, the argv SHALL carry neither cache-type flag.
+
+### REQ-ARC-WMTE-6254: MoE-Many vs Dense-Few Induction at Matched Wall-Clock
+
+**Origin:** same 2026-08-11 operator directive (P6). The generator pin (dense gemma-4-31B) was
+settled 2026-07-28 on a per-sample head-to-head (11-0-2). That decision never measured quality per
+SECOND under best-of-N selection, which is the axis a Mixture-of-Experts model competes on.
+
+`scripts/experiments/experiment_6254_moe_matched_wallclock.py` SHALL run dense gemma-4-31B for ONE
+sample per game, record its wall-clock T, then run MoE Qwen3.6-35B-A3B for as many samples as fit
+within T, and keep the MoE best by VALID fidelity. The budget check SHALL happen AFTER each sample,
+so the MoE arm never receives a draw it did not pay for. Servers SHALL run SEQUENTIALLY with an
+explicit teardown between phases, because the two models cannot both be resident on a 24 GB card.
+
+**Reported, NOT gated.** This supplies one missing number for an operator decision. It SHALL NOT
+by itself authorize a generator change, and the artifact SHALL say so.
+
+#### SCENARIO-ARC-WMTE-6254-MATCHED-BUDGET-NOT-MATCHED-COUNT
+
+Given a dense sample costing T seconds, the MoE arm SHALL draw samples until cumulative wall-clock
+reaches T, and the comparison SHALL be reported at that matched wall-clock rather than at a
+matched sample count.
+
+## Implementation Status (REQ-ARC-WMTE-6251, REQ-ARC-WMTE-6252, REQ-ARC-WMTE-6253, REQ-ARC-WMTE-6254)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6251 | `python/carnot/agentic/arc_rex_refinement.py:select_best_arm` + `run_best_of_n`; `scripts/experiments/experiment_6251_best_of_n_induction.py` (per-sample worker subprocesses, one shared llama-server). | `tests/python/test_arc_rex_refinement.py` (46/46 incl. the post-review regressions: None-fidelity arm cannot crash selection, arm names cannot shadow output fields, empty runner list matches across modes). Live run 2026-08-11: **no reliable gain** — see the UPDATE below. |
+
+#### UPDATE 2026-08-11 — RESULT: no reliable gain, and the VALID proxy MISSED once
+
+`complete_best_of_n_gate_met_1_of_4_improved_pooled_0.5304_vs_n1_0.5037_batching_eff_3.604`.
+**The "gate met" in that string is an artifact of an over-permissive gate** (`pooled
+best-of-N > pooled N=1`), the same mistake as exp6252's first pass. Read the rows:
+
+| game | N=1 VALID | chosen VALID | N=1 held | best-of-4 held | reading |
+|---|---|---|---|---|---|
+| cn04 | 0.4690 | 0.7468 | 0.4028 | 0.5265 | real gain, selector correct |
+| g50t | 0.1560 | 0.3450 | 0.6119 | 0.5952 | **selector MISS** |
+| s5i5 | 0.8500 | 0.8500 | 0.0 | 0.0 | no headroom (floor) |
+| ls20 | 0.7847 | 0.7847 | 1.0 | 1.0 | no headroom (ceiling) |
+
+Only two games could discriminate and they split 1-1; the pooled gain is cn04 alone —
+the "pooled positive driven by one outlier" shape exp6248 was retired for.
+
+**g50t argues against REQ-ARC-WMTE-6250's 9-of-9.** The selector chose a candidate whose
+VALID score more than doubled (0.156 → 0.345) and whose HELD fidelity fell (0.6119 →
+0.5952). So choosing among N samples that differ only by sampler noise is NOT the same
+task as choosing between two structurally different search arms, and the 9-of-9 must not
+be generalized into "VALID predicts HELD". Hypothesis, not conclusion.
+
+**Guards worked.** `min_distinct_sources_across_games: 4` and
+`generator_seed_env_set: false` prove a genuine N=4, not a seed-collapsed N=1.
+`mean_batching_efficiency: 3.604` measures OVERLAP, not speed-up — the sequential arm
+never runs — so it must not be quoted as four-for-the-price-of-one.
+| REQ-ARC-WMTE-6252 | `scripts/experiments/experiment_6252_goal_gradient_ab.py` (CPU-only, reads the tracked store, never writes it) + the `UniformGoalEnergy` ndarray-hash fix in `python/carnot/agentic/arc_goal_energy_live.py`. | `results/experiment_6252_goal_gradient_ab.json` — gate **NOT** met after the first run's positive was retracted as a harness artifact. The goal-aware arm never ran on any game; two zero-information controls match the goal-blind arm. See the RETRACTED and CORRECTED subsections above. |
+| REQ-ARC-WMTE-6253 | `python/carnot/agentic/arc_executable_world_model.py:_llama_server_slots` + `_kv_quant_for_launch` + `LocalGGUFProposer.last_kv_quant_used`. | `tests/python/test_arc_generator_config_knobs_6253.py` (11/11) plus `tests/python/test_arc_ffn_cpu_offload.py` unchanged and green (no regression in the shared launch-argv path). |
+| REQ-ARC-WMTE-6254 | `scripts/experiments/experiment_6254_moe_matched_wallclock.py`. | Live run queued behind exp6251. |

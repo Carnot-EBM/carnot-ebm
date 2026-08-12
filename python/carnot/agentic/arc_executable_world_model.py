@@ -1108,9 +1108,7 @@ def induce_prompt_enrichment_enabled() -> bool:
 def mechanic_class_router_enabled() -> bool:
     """REQ-ARC-WMTE-6282 arm selector. CARNOT_ARC_MECHANIC_CLASS_ROUTER=1 turns it on."""
 
-    return _flag_env(
-        "CARNOT_ARC_MECHANIC_CLASS_ROUTER", SUBMITTED_MECHANIC_CLASS_ROUTER_ENABLED
-    )
+    return _flag_env("CARNOT_ARC_MECHANIC_CLASS_ROUTER", SUBMITTED_MECHANIC_CLASS_ROUTER_ENABLED)
 
 
 def logical_hud_mask(frame_mask: Any, cell: int) -> Optional[np.ndarray]:
@@ -3882,6 +3880,63 @@ _VRAM_PER_CPU_FFN_LAYER_MIB = 195.3
 # because the eval framework starts one thread per game with no pool (swarm.py:91) and llama.cpp
 # queues everything past its own slot count.
 _LLAMA_SERVER_DEFAULT_SLOTS = 4
+
+
+def _kv_quant_for_launch(field_value: Optional[str]) -> Optional[str]:
+    """KV cache type the server should launch with. Env wins over the field.
+
+    `CARNOT_ARC_KV_QUANT` (2026-08-11, REQ-ARC-WMTE-6253) exists because q8_0 was chosen
+    when every card held 16-24 GB, and the scored card now holds 96 GB, where f16 KV is
+    affordable. The env must OUTRANK the dataclass field: both live construction sites
+    pass `kv_quant="q8_0"` explicitly, so a knob that lost to the argument could never be
+    reached in production.
+
+    Returns "none" unchanged; the caller drops the flags on that value. Unset env keeps
+    today's behaviour exactly.
+
+    This is a module-level function, not an inline `os.environ` read inside
+    `_ensure_server`. That method has its own local `import os` further down, which makes
+    `os` a function-local name for the WHOLE method, so an earlier `os.environ` read
+    there raises UnboundLocalError and breaks the live launch. Caught by
+    tests/python/test_arc_generator_config_knobs_6253.py before it shipped.
+    """
+    import os as _os
+
+    raw = _os.environ.get("CARNOT_ARC_KV_QUANT", "")
+    return raw.strip() if raw.strip() else field_value
+
+
+def _llama_server_slots() -> int:
+    """Slot count K the shared-pool arithmetic must survive. Env-overridable since
+    2026-08-11 (REQ-ARC-WMTE-6253).
+
+    WHY A KNOB NOW. The constant above is llama-server's own no-`--parallel` default,
+    and it was correct while every card in play held 16-24 GB. The scored card is now a
+    single 96 GB RTX PRO 6000, measured 2026-08-11. K is the multiplier in
+    `_default_induce_n_ctx()`, so it decides the context pool, and there was no way to
+    change it without editing source. That made the sizing untestable on the real card.
+
+    THE DEFAULT DOES NOT MOVE. Unset env == 4 == today's behaviour, byte for byte.
+    Raising K here changes the ARITHMETIC only. It does NOT add `--parallel` to the
+    server launch, so the running server still serves its own default slot count. Any
+    change to the real slot count must also pass `--parallel`, and must first be
+    measured on the scored card through the preview A/B channel -- the
+    `_default_induce_n_ctx` docstring records that a naive `--parallel 4` DIVIDES the
+    pool per slot and was strictly worse.
+    """
+    import os
+
+    raw = os.environ.get("CARNOT_ARC_LLAMA_SERVER_SLOTS")
+    if raw is None or raw.strip() == "":
+        return _LLAMA_SERVER_DEFAULT_SLOTS
+    try:
+        val = int(raw.strip())
+    except ValueError:
+        return _LLAMA_SERVER_DEFAULT_SLOTS
+    # Refuse a nonsense K rather than propagate it into the VRAM and n_ctx arithmetic.
+    return val if 1 <= val <= 64 else _LLAMA_SERVER_DEFAULT_SLOTS
+
+
 # The real `induce_prompt()` for the largest logical grid in ops/arc_solve_registry.yaml (64x64),
 # measured through the model's own tokenizer rather than estimated. The WORST case, not the
 # typical one, because the generated length is unknowable in advance.
@@ -4572,7 +4627,7 @@ def _predicted_generator_vram_mib(
     return (
         _VRAM_GEMMA31B_INTERCEPT_MIB
         + _VRAM_GEMMA31B_PER_CTX_MIB * float(n_ctx)
-        + _VRAM_PER_SLOT_MIB * float(_LLAMA_SERVER_DEFAULT_SLOTS)
+        + _VRAM_PER_SLOT_MIB * float(_llama_server_slots())
         + head
         - _VRAM_PER_CPU_FFN_LAYER_MIB * float(max(0, ffn_cpu_layers))
     )
@@ -5103,7 +5158,7 @@ def _default_induce_n_ctx() -> int:
     max_tokens = int(
         os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", str(_INDUCE_DEFAULT_MAX_TOKENS))
     )
-    need = _LLAMA_SERVER_DEFAULT_SLOTS * (_INDUCE_WORST_CASE_PROMPT_TOKENS + max_tokens)
+    need = _llama_server_slots() * (_INDUCE_WORST_CASE_PROMPT_TOKENS + max_tokens)
     # Round UP to a 4096 multiple: llama.cpp allocates in blocks and a round pool is easier to
     # reason about against the published VRAM envelope, whose n_ctx samples are all multiples.
     return int(-(-need // 4096) * 4096)
@@ -5465,6 +5520,10 @@ class LocalGGUFProposer:
     # private method, a silently-dropped argument looks identical to a working one. Empty until
     # the first launch. Pinned by tests/python/test_arc_ffn_cpu_offload.py.
     last_launch_argv: tuple = ()
+    # The KV cache type THIS launch actually used, or None when the flags were dropped. Recorded
+    # for the same reason as `last_launch_argv`: `CARNOT_ARC_KV_QUANT` can override the field, so
+    # the field alone no longer tells an artifact what the server ran with.
+    last_kv_quant_used: Optional[str] = None
     last_ffn_cpu_override: str = ""
     # The `-sm layer -ts 1,1...` flags THIS launch used, or () for a single card / the scored
     # path. Same rationale as `last_ffn_cpu_override`: without it, "did this run split?" is only
@@ -6269,8 +6328,15 @@ class LocalGGUFProposer:
                     "iancblenke/carnot-gemma4-31b-mtp-head dataset on Kaggle."
                 )
                 _note_generator_selection(self.mtp_disabled_reason)
-        if self.kv_quant:  # 8-bit KV cache doubles usable context, near-lossless
-            args += ["--cache-type-k", self.kv_quant, "--cache-type-v", self.kv_quant]
+        # 8-bit KV cache doubles usable context and is near-lossless. `CARNOT_ARC_KV_QUANT`
+        # (2026-08-11, REQ-ARC-WMTE-6253) lets an operator pick another type without editing
+        # source, because q8_0 was chosen when every card held 16-24 GB and the scored card now
+        # holds 96 GB, where f16 KV is affordable. Set it to "f16" to test that. Set it to "none"
+        # to drop the flags entirely. Unset keeps today's q8_0 behaviour exactly.
+        _kv = _kv_quant_for_launch(self.kv_quant)
+        if _kv and _kv.lower() != "none":
+            args += ["--cache-type-k", _kv, "--cache-type-v", _kv]
+        self.last_kv_quant_used = _kv if (_kv and _kv.lower() != "none") else None
         # OPT-IN dense-FFN offload to system RAM. Appended ONLY when the operator asked for it, so
         # the default launch argv is unchanged. Recorded on the instance because a flag that is
         # accepted and silently ignored is worse than no flag: `last_ffn_cpu_override` lets a test

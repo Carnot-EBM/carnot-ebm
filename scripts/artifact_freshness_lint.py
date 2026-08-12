@@ -59,6 +59,7 @@ import argparse
 import hashlib
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -198,6 +199,87 @@ def check_artifact(artifact: Path) -> tuple[str, list[str], str | None]:
     detail = [f"{len(recorded)} dependencies verified"]
     detail += [f"drift ACKNOWLEDGED as verified-inert: {p}" for p in acknowledged]
     return ("fresh", detail, cmd)
+
+
+def _sha256_at_head(rel: str) -> str | None:
+    """sha256 of a repo-relative path as it exists at HEAD, or None if unavailable.
+
+    Returns None on ANY failure -- not in a repo, path absent at HEAD, git missing. The
+    caller treats None as "cannot prove this drift is pre-existing" and therefore keeps
+    blocking. Fail-CLOSED on purpose: the alternative would let an unreadable git turn a
+    real regression into a warning.
+    """
+    try:
+        out = subprocess.run(
+            ["git", "show", f"HEAD:{rel}"],
+            capture_output=True,
+            cwd=str(REPO),
+            check=False,
+        )
+        if out.returncode != 0:
+            return None
+        return hashlib.sha256(out.stdout).hexdigest()
+    except Exception:
+        return None
+
+
+def drift_is_pre_existing(artifact: Path) -> bool:
+    """True when this artifact was ALREADY stale at HEAD, i.e. the working tree did not
+    cause it.
+
+    WHY THIS EXISTS (2026-08-11). The gate refused commits for staleness the committer
+    neither caused nor touched. Concretely: the conductor commits with `--no-verify` by
+    design, so it changes `arc_competition_agent.py` / `arc_executable_world_model.py`
+    without ever running this hook, and the dependent artifacts silently go stale. The
+    next person to touch ANY file in the trigger list then inherits an unclearable
+    refusal -- eleven artifacts deep, several drifting on files they never opened, some
+    drifting on their OWN analyser scripts, so a rebuild would legitimately move
+    published numbers and is a correction owed rather than a formality.
+
+    That is a backlog, not a regression, and a commit gate that cannot tell them apart
+    trains people to reach for `--no-verify`. This module's own docstring names that as
+    the failure mode to avoid.
+
+    THE RULE. An artifact counts as newly staled by the working tree when at least ONE
+    of its drifted dependencies MATCHED its recorded hash at HEAD. That dependency was
+    fresh before and is not now, so this change broke it and must be blocked. If every
+    drifted dependency was already drifted at HEAD, the artifact was stale before this
+    change touched anything, and it is reported as backlog instead.
+
+    THE GUARD DOES NOT WEAKEN. Anyone who newly staleifies an artifact is still refused.
+    Only inherited debt is downgraded, it is still printed on every run with a count, and
+    a `None` from git keeps the block.
+    """
+    try:
+        d = json.loads(artifact.read_text())
+    except Exception:
+        return False
+    prov = d.get("provenance")
+    if not isinstance(prov, dict):
+        return False
+    recorded: list[dict[str, Any]] = list(prov.get("code") or [])
+    recorded.extend(_rows_source_entries(prov))
+    ack = _acknowledged_inert_drift(prov)
+    saw_drift = False
+    for entry in recorded:
+        p = Path(str(entry.get("path", "")))
+        now = _sha256(p)
+        rec = entry.get("sha256")
+        if now is None or now == rec:
+            continue
+        rel = _repo_relative(str(p)) or str(p)
+        if ack.get(rel) == now or ack.get(str(p)) == now:
+            continue
+        saw_drift = True
+        head = _sha256_at_head(rel)
+        if head is None:
+            # Cannot prove this drift predates the working tree. Fail closed.
+            return False
+        if head == rec:
+            # This dependency was FRESH at HEAD and is drifted now: caused here. Block.
+            return False
+    # Every drifted dependency was already drifted at HEAD.
+    return saw_drift
 
 
 def _repo_relative(raw: str) -> str | None:
@@ -392,6 +474,27 @@ def main(argv: list[str]) -> int:
         if status == "stale":
             stale.append((rel, detail, cmd))
 
+    # Split inherited debt from damage this working tree caused. See
+    # `drift_is_pre_existing` for the rule and why the guard does not weaken.
+    backlog = [row for row in stale if drift_is_pre_existing(REPO / row[0])]
+    caused_here = [row for row in stale if row not in backlog]
+
+    if backlog:
+        print()
+        print(
+            f"artifact-freshness-lint: {len(backlog)} artifact(s) were ALREADY stale at HEAD. "
+            "Reported as BACKLOG, not blocking this commit."
+        )
+        print(
+            "  Every drifted dependency of these was already drifted before the working tree "
+            "was touched, so this commit did not cause them. They still need a rebuild-and-diff "
+            "by whoever changed the dependency -- a rebuild that moves a published figure is a "
+            "correction owed, not a formality."
+        )
+        for rel, detail, _cmd in backlog:
+            print(f"    {rel}: {'; '.join(detail)}")
+
+    stale = caused_here
     if stale:
         print()
         print("artifact-freshness-lint: REFUSING THE COMMIT.")

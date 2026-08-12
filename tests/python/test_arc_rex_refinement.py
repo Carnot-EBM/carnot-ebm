@@ -23,8 +23,10 @@ from carnot.agentic.arc_rex_refinement import (
     committee_entropy,
     load_engine_from_source,
     qbc_order_mismatches,
+    run_best_of_n,
     run_rex,
     run_rex_ensemble,
+    select_best_arm,
     ucb1_pick,
 )
 
@@ -423,3 +425,121 @@ def test_ensemble_sums_llm_calls_across_both_arms() -> None:
     )
     assert result["total_llm_calls"] == result["linear"]["llm_calls"] + result["rex"]["llm_calls"]
     assert result["total_llm_calls"] == 2
+
+
+# ---------------------------------------------------------------------------
+# REQ-ARC-WMTE-6251 -- run_best_of_n / select_best_arm
+# ---------------------------------------------------------------------------
+
+
+def _arm(source: str | None, valid: float | None, calls: int = 1) -> dict:
+    return {"final_source": source, "final_valid_fidelity": valid, "llm_calls": calls}
+
+
+def test_select_best_arm_picks_highest_valid() -> None:
+    arms = {"a": _arm("sa", 0.2), "b": _arm("sb", 0.9), "c": _arm("sc", 0.5)}
+    out = select_best_arm("g", arms)
+    assert out["chosen_arm"] == "b"
+    assert out["chosen_final_source"] == "sb"
+    assert out["n_arms"] == 3
+    assert out["n_arms_produced_candidate"] == 3
+
+
+def test_select_best_arm_ignores_armless_even_with_higher_score_field() -> None:
+    # A failed arm carries no source. It must never win, whatever its score field says --
+    # comparing None against a float would raise, so absent arms are filtered before scoring.
+    arms = {"failed": _arm(None, 0.99), "real": _arm("sr", 0.1)}
+    out = select_best_arm("g", arms)
+    assert out["chosen_arm"] == "real"
+
+
+def test_select_best_arm_all_failed_yields_none() -> None:
+    out = select_best_arm("g", {"a": _arm(None, None), "b": _arm(None, None)})
+    assert out["chosen_arm"] is None
+    assert out["chosen_final_source"] is None
+    assert out["n_arms_produced_candidate"] == 0
+
+
+def test_select_best_arm_sums_calls_across_all_arms() -> None:
+    out = select_best_arm("g", {"a": _arm("sa", 0.1, calls=4), "b": _arm(None, None, calls=3)})
+    assert out["total_llm_calls"] == 7
+
+
+def test_best_of_n_sequential_picks_best_sample() -> None:
+    runners = [lambda: _arm("s0", 0.1), lambda: _arm("s1", 0.8), lambda: _arm("s2", 0.4)]
+    out = run_best_of_n("g", runners)
+    assert out["chosen_arm"] == "sample1"
+    assert out["chosen_final_source"] == "s1"
+
+
+def test_best_of_n_concurrent_matches_sequential() -> None:
+    def mk(src, val):
+        return lambda: _arm(src, val)
+
+    runners = [mk("s0", 0.3), mk("s1", 0.7), mk("s2", 0.5), mk("s3", 0.2)]
+    seq = run_best_of_n("g", runners)
+    con = run_best_of_n("g", runners, concurrent=True)
+    assert seq["chosen_final_source"] == con["chosen_final_source"] == "s1"
+    assert seq["total_llm_calls"] == con["total_llm_calls"]
+
+
+def test_best_of_n_one_raising_arm_does_not_kill_the_set() -> None:
+    def boom():
+        raise RuntimeError("sample crashed")
+
+    runners = [boom, lambda: _arm("s1", 0.6)]
+    out = run_best_of_n("g", runners)
+    assert out["chosen_arm"] == "sample1"
+    assert "error" in out["arms"]["sample0"]
+    assert out["n_arms_produced_candidate"] == 1
+
+
+def test_best_of_n_concurrent_absorbs_a_raising_arm_too() -> None:
+    def boom():
+        raise RuntimeError("sample crashed")
+
+    out = run_best_of_n("g", [boom, lambda: _arm("s1", 0.6)], concurrent=True)
+    assert out["chosen_arm"] == "sample1"
+    assert "error" in out["arms"]["sample0"]
+
+
+# Regressions from the 2026-08-11 adversarial review of REQ-ARC-WMTE-6251.
+
+
+def test_arm_with_source_but_none_fidelity_cannot_crash_selection() -> None:
+    # run_rex never emits this shape, but run_best_of_n takes caller-built arms and
+    # exp6251/exp6254 construct them by hand. Filtering on final_source alone let this
+    # through and then raised TypeError inside max().
+    arms = {"bad": {"final_source": "s", "final_valid_fidelity": None}, "good": _arm("g", 0.3)}
+    out = select_best_arm("g", arms)
+    assert out["chosen_arm"] == "good"
+
+
+def test_all_arms_with_none_fidelity_yield_no_choice_rather_than_raising() -> None:
+    arms = {"a": {"final_source": "s", "final_valid_fidelity": None}}
+    out = select_best_arm("g", arms)
+    assert out["chosen_arm"] is None
+
+
+def test_arm_named_like_an_output_field_cannot_shadow_it() -> None:
+    # Verified defect: out.update(arms) let an arm named "game" replace the game id and an
+    # arm named "chosen_arm" replace the chosen name with a dict.
+    out = select_best_arm("cn04", {"game": _arm("x", 0.9), "chosen_arm": _arm("y", 0.1)})
+    assert out["game"] == "cn04"
+    assert out["chosen_arm"] == "game"
+    assert out["arms"]["game"]["final_source"] == "x"
+
+
+def test_empty_runner_list_behaves_identically_in_both_modes() -> None:
+    seq = run_best_of_n("g", [])
+    con = run_best_of_n("g", [], concurrent=True)
+    assert seq["chosen_arm"] is None and con["chosen_arm"] is None
+    assert seq["n_arms"] == con["n_arms"] == 0
+
+
+def test_ensemble_still_exposes_linear_and_rex_at_top_level() -> None:
+    # Back-compat: existing callers and tests read result["linear"]/["rex"] directly.
+    out = select_best_arm("g", {"linear": _arm("l", 0.2), "rex": _arm("r", 0.8)})
+    assert out["linear"]["final_source"] == "l"
+    assert out["rex"]["final_source"] == "r"
+    assert out["arms"]["rex"]["final_source"] == "r"
