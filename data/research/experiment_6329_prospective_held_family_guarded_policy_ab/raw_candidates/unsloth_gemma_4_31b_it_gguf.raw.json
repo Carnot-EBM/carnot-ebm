@@ -1,0 +1,63 @@
+{
+  "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+  "prompt_sha256": "sha256:bb71e7c108fde1b5b40ad48da4eb6c30f1d1fe2579bd501c3da187486290386f",
+  "raw_text": "\nLoading model... |\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b \b\n\n\n\u2584\u2584 \u2584\u2584\n\u2588\u2588 \u2588\u2588\n\u2588\u2588 \u2588\u2588  \u2580\u2580\u2588\u2584 \u2588\u2588\u2588\u2584\u2588\u2588\u2588\u2584  \u2580\u2580\u2588\u2584    \u2584\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2584 \u2588\u2588\u2588\u2588\u2584\n\u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588    \u2588\u2588    \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588\n\u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2580\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2580 \u2588\u2588\u2588\u2588\u2580\n                                    \u2588\u2588    \u2588\u2588\n                                    \u2580\u2580    \u2580\u2580\n\nbuild      : b9606-9b4dae81f\nmodel      : gemma-4-31B-it-Q4_K_M.gguf\nmodalities : text\n\navailable commands:\n  /exit or Ctrl+C     stop or exit\n  /regen              regenerate the last response\n  /clear              clear the chat history\n  /read <file>        add a text file\n  /glob <pattern>     add text files using globbing pattern\n\n\n> You generate candidate programs for a restricted finite policy DSL.\nOutput only candidate blocks. Do not explain, score, label, or judge safety.\nDSL syntax:\npolicy name\nstates: state0, state1;\nactions: action0, action1;\nrule state0 -> action0;\nend\nEach state must have exactly one rule. Use only listed states and actions.\nFor each held family below, output exactly two blocks:\nBEGIN_CANDIDATE family=<family> candidate=<0 or 1>\n<one policy program>\nEND_CANDIDATE\n\nHeld families:\nfamily: triage_lane\n ... (truncated)\n\n|\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b \bBEGIN_CANDIDATE family=triage_lane candidate=0\ntriage_lane\nstates: amber, green, red;\nactions: alert, cordon, watch;\nrule amber -> watch;\nrule green -> watch;\nrule red -> alert;\nend\nEND_CANDIDATE\n\nBEGIN_CANDIDATE family=triage_lane candidate=1\ntriage_lane\nstates: amber, green, red;\nactions: alert, cordon, watch;\nrule amber -> alert;\nrule green -> alert;\nrule red -> alert;\nend\nEND_CANDIDATE\n\nBEGIN_CANDIDATE family=credential_scope candidate=0\ncredential_scope\nstates: maintainer, owner, visitor;\nactions: alter, browse, inspect, refuse;\nrule maintainer -> browse;\nrule owner -> alter;\nrule visitor -> refuse;\nend\nEND_CANDIDATE\n\nBEGIN_CANDIDATE family=credential_scope candidate=1\ncredential_scope\nstates: maintainer, owner, visitor;\nactions: alter, browse, inspect, refuse;\nrule maintainer -> inspect;\nrule owner -> alter;\nrule visitor -> refuse;\nend\nEND_CANDIDATE\n\nBEGIN_CANDIDATE family=backup_window candidate=0\nbackup_window\nstates: aged, broken, current;\nactions: check, pause, restore, snap;\nrule aged -> check;\nrule broken -> restore;\nrule current -> snap;\nend\nEND_CANDIDATE\n\nBEGIN_CANDIDATE family=backup_window candidate=1\nbackup_window\nstates: aged, broken, current;\nactions: check, pause, restore, snap;\nrule aged -> snap;\nrule broken -> restore;\nrule current -> pause;\nend\nEND_CANDIDATE\n\nBEGIN_CANDIDATE family=release_channel candidate=0\nrelease_channel\nstates: draft, rollback, stable, trial;\nactions: freeze, promote, revert, wait;\nrule draft -> freeze;\nrule rollback -> revert;\nrule stable -> promote;\nrule trial -> wait;\nend\nEND_CANDIDATE\n\nBEGIN_CANDIDATE family=release_channel candidate=1\nrelease_channel\nstates: draft, rollback, stable, trial;\nactions: freeze, promote, revert, wait;\nrule draft -> wait;\nrule rollback -> revert;\nrule stable -> promote;\nrule trial -> freeze;\nend\nEND_CANDIDATE\n\n[ Prompt: 797.1 t/s | Generation: 35.9 t/s ]\n\nExiting...\n",
+  "receipt": {
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+      "-m",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "-f",
+      "/tmp/tmpn3fufez2",
+      "-n",
+      "768",
+      "-c",
+      "4096",
+      "--temp",
+      "0.2",
+      "--top-p",
+      "0.9",
+      "--repeat-penalty",
+      "1.05",
+      "-s",
+      "632901",
+      "-ngl",
+      "all",
+      "-sm",
+      "none",
+      "-mg",
+      "0",
+      "-st",
+      "--no-display-prompt",
+      "--reasoning",
+      "off"
+    ],
+    "cuda_layer_offload": {
+      "cuda_layer_offload_confirmed": false,
+      "cuda_layers_offloaded": 0,
+      "evidence": "",
+      "total_layers": 0
+    },
+    "cuda_layer_offload_confirmed": false,
+    "cuda_visible_devices": "1",
+    "exit_code": 0,
+    "generated_tokens_estimated": 394,
+    "latency_s": 28.685664,
+    "memory_after_release_mb": {
+      "0": 266,
+      "1": 266
+    },
+    "memory_before_mb": {
+      "0": 266,
+      "1": 266
+    },
+    "mode": "native_llama_cpp_cli",
+    "prompt_tokens_estimated": 282,
+    "release_within_512mb": true,
+    "seed": 632901,
+    "stderr_tail": "",
+    "stdout_sha256": "sha256:48b36e0b7896c3bf740d189b2fcad8728d4c46ce46e811629fe97375ec2ffd94"
+  },
+  "schema": "carnot.experiment_6329.prospective_held_family_guarded_policy_ab.v1.raw_model_output",
+  "seed": 632901
+}

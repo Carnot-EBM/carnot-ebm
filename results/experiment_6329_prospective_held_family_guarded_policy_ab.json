@@ -1,0 +1,2687 @@
+{
+  "MODEL_SPECS": [
+    {
+      "cache_policy": "cached_sota_pair(gpu_indices=(0,1))",
+      "contract_model_family": "qwen_moe",
+      "exists": true,
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "size_bytes": 22134528992,
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_status": "embedded GGUF tokenizer OK (7 tokens on probe)"
+    },
+    {
+      "cache_policy": "cached_sota_pair(gpu_indices=(0,1), model_indices=(0,2))",
+      "contract_model_family": "gemma_dense",
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "size_bytes": 18323731456,
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_status": "embedded GGUF tokenizer OK (8 tokens on probe)"
+    },
+    {
+      "cache_policy": "cached_sota_pair(gpu_indices=(0,1))",
+      "contract_model_family": "gemma_moe",
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "size_bytes": 16947539744,
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_status": "embedded GGUF tokenizer OK (8 tokens on probe)"
+    }
+  ],
+  "arm_definitions": {
+    "bounded_exact_factor_energy_search_plus_fallback": {
+      "candidate_source": "lowest exact energy among bounded candidates",
+      "fallback": "same verified held-family fallback",
+      "guard": "selected candidate must have exact energy zero"
+    },
+    "guard_plus_fallback": {
+      "candidate_source": "candidate_index_0",
+      "fallback": "verified held-family fallback",
+      "guard": "Exp6326 exact factor energy must equal zero"
+    },
+    "raw_single_candidate": {
+      "candidate_source": "candidate_index_0",
+      "fallback": "none",
+      "guard": "none"
+    },
+    "reject_only": {
+      "candidate_source": "candidate_index_0",
+      "fallback": "none",
+      "guard": "Exp6326 exact factor energy must equal zero"
+    }
+  },
+  "cuda_gpu_offload_and_memory_release_receipts_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "command": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+        "-m",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "-f",
+        "/tmp/tmpge92taio",
+        "-n",
+        "768",
+        "-c",
+        "4096",
+        "--temp",
+        "0.2",
+        "--top-p",
+        "0.9",
+        "--repeat-penalty",
+        "1.05",
+        "-s",
+        "632900",
+        "-ngl",
+        "all",
+        "-sm",
+        "none",
+        "-mg",
+        "0",
+        "-st",
+        "--no-display-prompt",
+        "--reasoning",
+        "off"
+      ],
+      "cuda_layer_offload": {
+        "cuda_layer_offload_confirmed": false,
+        "cuda_layers_offloaded": 0,
+        "evidence": "",
+        "total_layers": 0
+      },
+      "cuda_layer_offload_confirmed": false,
+      "cuda_visible_devices": "0",
+      "exit_code": 0,
+      "generated_tokens_estimated": 402,
+      "latency_s": 18.465964,
+      "memory_after_release_mb": {
+        "0": 266,
+        "1": 266
+      },
+      "memory_before_mb": {
+        "0": 266,
+        "1": 266
+      },
+      "mode": "native_llama_cpp_cli",
+      "prompt_tokens_estimated": 282,
+      "release_within_512mb": true,
+      "seed": 632900,
+      "stderr_tail": "",
+      "stdout_sha256": "sha256:86771cf432dc6d8df31f65bc7c6e067dbdd9187be3c497468e71f8511bc2803a"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "command": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+        "-m",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "-f",
+        "/tmp/tmpax1vl4dg",
+        "-n",
+        "768",
+        "-c",
+        "4096",
+        "--temp",
+        "0.2",
+        "--top-p",
+        "0.9",
+        "--repeat-penalty",
+        "1.05",
+        "-s",
+        "632902",
+        "-ngl",
+        "all",
+        "-sm",
+        "none",
+        "-mg",
+        "0",
+        "-st",
+        "--no-display-prompt",
+        "--reasoning",
+        "off"
+      ],
+      "cuda_layer_offload": {
+        "cuda_layer_offload_confirmed": false,
+        "cuda_layers_offloaded": 0,
+        "evidence": "",
+        "total_layers": 0
+      },
+      "cuda_layer_offload_confirmed": false,
+      "cuda_visible_devices": "1",
+      "exit_code": 0,
+      "generated_tokens_estimated": 402,
+      "latency_s": 16.603539,
+      "memory_after_release_mb": {
+        "0": 266,
+        "1": 266
+      },
+      "memory_before_mb": {
+        "0": 266,
+        "1": 266
+      },
+      "mode": "native_llama_cpp_cli",
+      "prompt_tokens_estimated": 282,
+      "release_within_512mb": true,
+      "seed": 632902,
+      "stderr_tail": "",
+      "stdout_sha256": "sha256:3f0406543e8e1e7740c7ffe521f6fff2a88760b14bb530593435c573d6f32412"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "command": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+        "-m",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "-f",
+        "/tmp/tmpn3fufez2",
+        "-n",
+        "768",
+        "-c",
+        "4096",
+        "--temp",
+        "0.2",
+        "--top-p",
+        "0.9",
+        "--repeat-penalty",
+        "1.05",
+        "-s",
+        "632901",
+        "-ngl",
+        "all",
+        "-sm",
+        "none",
+        "-mg",
+        "0",
+        "-st",
+        "--no-display-prompt",
+        "--reasoning",
+        "off"
+      ],
+      "cuda_layer_offload": {
+        "cuda_layer_offload_confirmed": false,
+        "cuda_layers_offloaded": 0,
+        "evidence": "",
+        "total_layers": 0
+      },
+      "cuda_layer_offload_confirmed": false,
+      "cuda_visible_devices": "1",
+      "exit_code": 0,
+      "generated_tokens_estimated": 394,
+      "latency_s": 28.685664,
+      "memory_after_release_mb": {
+        "0": 266,
+        "1": 266
+      },
+      "memory_before_mb": {
+        "0": 266,
+        "1": 266
+      },
+      "mode": "native_llama_cpp_cli",
+      "prompt_tokens_estimated": 282,
+      "release_within_512mb": true,
+      "seed": 632901,
+      "stderr_tail": "",
+      "stdout_sha256": "sha256:48b36e0b7896c3bf740d189b2fcad8728d4c46ce46e811629fe97375ec2ffd94"
+    }
+  },
+  "duration_s": 109.57251852191985,
+  "exact_oracle_claim_boundary": {
+    "hidden_states_accessed": false,
+    "model_supplies_candidates_only": true,
+    "model_supplies_labels": false,
+    "model_supplies_safety_authority": false,
+    "source_model_weights_mutated": false,
+    "verifier": "Exp6326 exact finite-domain factor energy",
+    "verifier_is_oracle": true
+  },
+  "exact_utility_contract_violation_fallback_rate_latency_and_cost_by_model_family_arm_and_seed": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "backup_window": {
+        "632900": {
+          "bounded_exact_factor_energy_search_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "backup_window",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "seed": 632900,
+            "split": "held",
+            "utility": 0.92
+          },
+          "guard_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "backup_window",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "seed": 632900,
+            "split": "held",
+            "utility": 0.92
+          },
+          "raw_single_candidate": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "backup_window",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "seed": 632900,
+            "split": "held",
+            "utility": 0.92
+          },
+          "reject_only": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "backup_window",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "seed": 632900,
+            "split": "held",
+            "utility": 0.92
+          }
+        }
+      },
+      "credential_scope": {
+        "632900": {
+          "bounded_exact_factor_energy_search_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "credential_scope",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "seed": 632900,
+            "split": "held",
+            "utility": 0.92
+          },
+          "guard_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "credential_scope",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "seed": 632900,
+            "split": "held",
+            "utility": 0.92
+          },
+          "raw_single_candidate": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "credential_scope",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "seed": 632900,
+            "split": "held",
+            "utility": 0.92
+          },
+          "reject_only": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "credential_scope",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "seed": 632900,
+            "split": "held",
+            "utility": 0.92
+          }
+        }
+      },
+      "release_channel": {
+        "632900": {
+          "bounded_exact_factor_energy_search_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "release_channel",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "seed": 632900,
+            "split": "held",
+            "utility": 0.92
+          },
+          "guard_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "release_channel",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "seed": 632900,
+            "split": "held",
+            "utility": 0.92
+          },
+          "raw_single_candidate": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "release_channel",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "seed": 632900,
+            "split": "held",
+            "utility": 0.92
+          },
+          "reject_only": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "release_channel",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "seed": 632900,
+            "split": "held",
+            "utility": 0.92
+          }
+        }
+      },
+      "triage_lane": {
+        "632900": {
+          "bounded_exact_factor_energy_search_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "triage_lane",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "seed": 632900,
+            "split": "held",
+            "utility": 0.92
+          },
+          "guard_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "triage_lane",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "seed": 632900,
+            "split": "held",
+            "utility": 0.92
+          },
+          "raw_single_candidate": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "triage_lane",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "seed": 632900,
+            "split": "held",
+            "utility": 0.92
+          },
+          "reject_only": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "triage_lane",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "seed": 632900,
+            "split": "held",
+            "utility": 0.92
+          }
+        }
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "backup_window": {
+        "632902": {
+          "bounded_exact_factor_energy_search_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "backup_window",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "seed": 632902,
+            "split": "held",
+            "utility": 0.92
+          },
+          "guard_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "backup_window",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "seed": 632902,
+            "split": "held",
+            "utility": 0.92
+          },
+          "raw_single_candidate": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "backup_window",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "seed": 632902,
+            "split": "held",
+            "utility": 0.92
+          },
+          "reject_only": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "backup_window",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "seed": 632902,
+            "split": "held",
+            "utility": 0.92
+          }
+        }
+      },
+      "credential_scope": {
+        "632902": {
+          "bounded_exact_factor_energy_search_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "credential_scope",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "seed": 632902,
+            "split": "held",
+            "utility": 0.92
+          },
+          "guard_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "credential_scope",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "seed": 632902,
+            "split": "held",
+            "utility": 0.92
+          },
+          "raw_single_candidate": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "credential_scope",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "seed": 632902,
+            "split": "held",
+            "utility": 0.92
+          },
+          "reject_only": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "credential_scope",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "seed": 632902,
+            "split": "held",
+            "utility": 0.92
+          }
+        }
+      },
+      "release_channel": {
+        "632902": {
+          "bounded_exact_factor_energy_search_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "release_channel",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "seed": 632902,
+            "split": "held",
+            "utility": 0.92
+          },
+          "guard_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "release_channel",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "seed": 632902,
+            "split": "held",
+            "utility": 0.92
+          },
+          "raw_single_candidate": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "release_channel",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "seed": 632902,
+            "split": "held",
+            "utility": 0.92
+          },
+          "reject_only": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "release_channel",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "seed": 632902,
+            "split": "held",
+            "utility": 0.92
+          }
+        }
+      },
+      "triage_lane": {
+        "632902": {
+          "bounded_exact_factor_energy_search_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "triage_lane",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "seed": 632902,
+            "split": "held",
+            "utility": 0.92
+          },
+          "guard_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "triage_lane",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "seed": 632902,
+            "split": "held",
+            "utility": 0.92
+          },
+          "raw_single_candidate": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "triage_lane",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "seed": 632902,
+            "split": "held",
+            "utility": 0.92
+          },
+          "reject_only": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.08,
+            "exact_energy": 0,
+            "exact_utility": 0.92,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "triage_lane",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "seed": 632902,
+            "split": "held",
+            "utility": 0.92
+          }
+        }
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "backup_window": {
+        "632901": {
+          "bounded_exact_factor_energy_search_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.18,
+            "exact_energy": null,
+            "exact_utility": 0.52,
+            "fallback_rate": 1.0,
+            "fallback_receipt": {
+              "energy": 0,
+              "family": "backup_window",
+              "semantic_hash": "sha256:6154c5767529722cbad14438221044e320efe3b5ac127176a4fe8a6b5f5df227",
+              "source_sha256": "sha256:1cd8faa8109bfd32e534f5c7abc71744d6247a6440358d215bae082897650ee2",
+              "verified": true
+            },
+            "fallback_used": true,
+            "fallback_utility_charged": 0.7,
+            "family": "backup_window",
+            "full_fallback_cost_charged": 0.1,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "seed": 632901,
+            "split": "held",
+            "utility": 0.52
+          },
+          "guard_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.18,
+            "exact_energy": null,
+            "exact_utility": 0.52,
+            "fallback_rate": 1.0,
+            "fallback_receipt": {
+              "energy": 0,
+              "family": "backup_window",
+              "semantic_hash": "sha256:6154c5767529722cbad14438221044e320efe3b5ac127176a4fe8a6b5f5df227",
+              "source_sha256": "sha256:1cd8faa8109bfd32e534f5c7abc71744d6247a6440358d215bae082897650ee2",
+              "verified": true
+            },
+            "fallback_used": true,
+            "fallback_utility_charged": 0.7,
+            "family": "backup_window",
+            "full_fallback_cost_charged": 0.1,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "seed": 632901,
+            "split": "held",
+            "utility": 0.52
+          },
+          "raw_single_candidate": {
+            "accepted": false,
+            "candidate_index": 0,
+            "contract_violation_count": null,
+            "cost": 0.08,
+            "exact_energy": null,
+            "exact_utility": 0.0,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "backup_window",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "seed": 632901,
+            "split": "held",
+            "utility": 0.0
+          },
+          "reject_only": {
+            "accepted": false,
+            "candidate_index": 0,
+            "contract_violation_count": null,
+            "cost": 0.08,
+            "exact_energy": null,
+            "exact_utility": 0.0,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "backup_window",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "seed": 632901,
+            "split": "held",
+            "utility": 0.0
+          }
+        }
+      },
+      "credential_scope": {
+        "632901": {
+          "bounded_exact_factor_energy_search_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.18,
+            "exact_energy": null,
+            "exact_utility": 0.52,
+            "fallback_rate": 1.0,
+            "fallback_receipt": {
+              "energy": 0,
+              "family": "credential_scope",
+              "semantic_hash": "sha256:2d7b996bc1022319a65f4892ac2d7dc8834e20d88449c873337a38279ee06a87",
+              "source_sha256": "sha256:92acdf9a005fb44efeabdb6744490a9953866180cc3c413fff53df7eca8a8859",
+              "verified": true
+            },
+            "fallback_used": true,
+            "fallback_utility_charged": 0.7,
+            "family": "credential_scope",
+            "full_fallback_cost_charged": 0.1,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "seed": 632901,
+            "split": "held",
+            "utility": 0.52
+          },
+          "guard_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.18,
+            "exact_energy": null,
+            "exact_utility": 0.52,
+            "fallback_rate": 1.0,
+            "fallback_receipt": {
+              "energy": 0,
+              "family": "credential_scope",
+              "semantic_hash": "sha256:2d7b996bc1022319a65f4892ac2d7dc8834e20d88449c873337a38279ee06a87",
+              "source_sha256": "sha256:92acdf9a005fb44efeabdb6744490a9953866180cc3c413fff53df7eca8a8859",
+              "verified": true
+            },
+            "fallback_used": true,
+            "fallback_utility_charged": 0.7,
+            "family": "credential_scope",
+            "full_fallback_cost_charged": 0.1,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "seed": 632901,
+            "split": "held",
+            "utility": 0.52
+          },
+          "raw_single_candidate": {
+            "accepted": false,
+            "candidate_index": 0,
+            "contract_violation_count": null,
+            "cost": 0.08,
+            "exact_energy": null,
+            "exact_utility": 0.0,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "credential_scope",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "seed": 632901,
+            "split": "held",
+            "utility": 0.0
+          },
+          "reject_only": {
+            "accepted": false,
+            "candidate_index": 0,
+            "contract_violation_count": null,
+            "cost": 0.08,
+            "exact_energy": null,
+            "exact_utility": 0.0,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "credential_scope",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "seed": 632901,
+            "split": "held",
+            "utility": 0.0
+          }
+        }
+      },
+      "release_channel": {
+        "632901": {
+          "bounded_exact_factor_energy_search_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.18,
+            "exact_energy": null,
+            "exact_utility": 0.52,
+            "fallback_rate": 1.0,
+            "fallback_receipt": {
+              "energy": 0,
+              "family": "release_channel",
+              "semantic_hash": "sha256:1a2b16d707e7b163d0da3f0c3c12acfa001a4810a468befd36cde517602b5f47",
+              "source_sha256": "sha256:331aa44527d0861bbfa9e5969d042a7f3eb75ca936382770afca4d0d8f51f0a8",
+              "verified": true
+            },
+            "fallback_used": true,
+            "fallback_utility_charged": 0.7,
+            "family": "release_channel",
+            "full_fallback_cost_charged": 0.1,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "seed": 632901,
+            "split": "held",
+            "utility": 0.52
+          },
+          "guard_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.18,
+            "exact_energy": null,
+            "exact_utility": 0.52,
+            "fallback_rate": 1.0,
+            "fallback_receipt": {
+              "energy": 0,
+              "family": "release_channel",
+              "semantic_hash": "sha256:1a2b16d707e7b163d0da3f0c3c12acfa001a4810a468befd36cde517602b5f47",
+              "source_sha256": "sha256:331aa44527d0861bbfa9e5969d042a7f3eb75ca936382770afca4d0d8f51f0a8",
+              "verified": true
+            },
+            "fallback_used": true,
+            "fallback_utility_charged": 0.7,
+            "family": "release_channel",
+            "full_fallback_cost_charged": 0.1,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "seed": 632901,
+            "split": "held",
+            "utility": 0.52
+          },
+          "raw_single_candidate": {
+            "accepted": false,
+            "candidate_index": 0,
+            "contract_violation_count": null,
+            "cost": 0.08,
+            "exact_energy": null,
+            "exact_utility": 0.0,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "release_channel",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "seed": 632901,
+            "split": "held",
+            "utility": 0.0
+          },
+          "reject_only": {
+            "accepted": false,
+            "candidate_index": 0,
+            "contract_violation_count": null,
+            "cost": 0.08,
+            "exact_energy": null,
+            "exact_utility": 0.0,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "release_channel",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "seed": 632901,
+            "split": "held",
+            "utility": 0.0
+          }
+        }
+      },
+      "triage_lane": {
+        "632901": {
+          "bounded_exact_factor_energy_search_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.18,
+            "exact_energy": null,
+            "exact_utility": 0.52,
+            "fallback_rate": 1.0,
+            "fallback_receipt": {
+              "energy": 0,
+              "family": "triage_lane",
+              "semantic_hash": "sha256:5e54166f9049a284acb8fb38ffe755e340b61cf3223e68d30bb981d3c66a9072",
+              "source_sha256": "sha256:0c2db8d8a787f4edfe3723d202b87b6bf7325fcc483845ba3a574f9204db8d21",
+              "verified": true
+            },
+            "fallback_used": true,
+            "fallback_utility_charged": 0.7,
+            "family": "triage_lane",
+            "full_fallback_cost_charged": 0.1,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "seed": 632901,
+            "split": "held",
+            "utility": 0.52
+          },
+          "guard_plus_fallback": {
+            "accepted": true,
+            "candidate_index": 0,
+            "contract_violation_count": 0,
+            "cost": 0.18,
+            "exact_energy": null,
+            "exact_utility": 0.52,
+            "fallback_rate": 1.0,
+            "fallback_receipt": {
+              "energy": 0,
+              "family": "triage_lane",
+              "semantic_hash": "sha256:5e54166f9049a284acb8fb38ffe755e340b61cf3223e68d30bb981d3c66a9072",
+              "source_sha256": "sha256:0c2db8d8a787f4edfe3723d202b87b6bf7325fcc483845ba3a574f9204db8d21",
+              "verified": true
+            },
+            "fallback_used": true,
+            "fallback_utility_charged": 0.7,
+            "family": "triage_lane",
+            "full_fallback_cost_charged": 0.1,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "seed": 632901,
+            "split": "held",
+            "utility": 0.52
+          },
+          "raw_single_candidate": {
+            "accepted": false,
+            "candidate_index": 0,
+            "contract_violation_count": null,
+            "cost": 0.08,
+            "exact_energy": null,
+            "exact_utility": 0.0,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "triage_lane",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "seed": 632901,
+            "split": "held",
+            "utility": 0.0
+          },
+          "reject_only": {
+            "accepted": false,
+            "candidate_index": 0,
+            "contract_violation_count": null,
+            "cost": 0.08,
+            "exact_energy": null,
+            "exact_utility": 0.0,
+            "fallback_rate": 0.0,
+            "fallback_used": false,
+            "fallback_utility_charged": null,
+            "family": "triage_lane",
+            "full_fallback_cost_charged": 0.0,
+            "latency_s": 0.0,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "seed": 632901,
+            "split": "held",
+            "utility": 0.0
+          }
+        }
+      }
+    }
+  },
+  "fallback_adjusted_delta_over_guard_only_by_model_and_family": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "backup_window": {
+        "adequately_powered": true,
+        "delta": 0.0,
+        "positive": false,
+        "sample_size": 1,
+        "values": [
+          0.0
+        ]
+      },
+      "credential_scope": {
+        "adequately_powered": true,
+        "delta": 0.0,
+        "positive": false,
+        "sample_size": 1,
+        "values": [
+          0.0
+        ]
+      },
+      "release_channel": {
+        "adequately_powered": true,
+        "delta": 0.0,
+        "positive": false,
+        "sample_size": 1,
+        "values": [
+          0.0
+        ]
+      },
+      "triage_lane": {
+        "adequately_powered": true,
+        "delta": 0.0,
+        "positive": false,
+        "sample_size": 1,
+        "values": [
+          0.0
+        ]
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "backup_window": {
+        "adequately_powered": true,
+        "delta": 0.0,
+        "positive": false,
+        "sample_size": 1,
+        "values": [
+          0.0
+        ]
+      },
+      "credential_scope": {
+        "adequately_powered": true,
+        "delta": 0.0,
+        "positive": false,
+        "sample_size": 1,
+        "values": [
+          0.0
+        ]
+      },
+      "release_channel": {
+        "adequately_powered": true,
+        "delta": 0.0,
+        "positive": false,
+        "sample_size": 1,
+        "values": [
+          0.0
+        ]
+      },
+      "triage_lane": {
+        "adequately_powered": true,
+        "delta": 0.0,
+        "positive": false,
+        "sample_size": 1,
+        "values": [
+          0.0
+        ]
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "backup_window": {
+        "adequately_powered": true,
+        "delta": 0.0,
+        "positive": false,
+        "sample_size": 1,
+        "values": [
+          0.0
+        ]
+      },
+      "credential_scope": {
+        "adequately_powered": true,
+        "delta": 0.0,
+        "positive": false,
+        "sample_size": 1,
+        "values": [
+          0.0
+        ]
+      },
+      "release_channel": {
+        "adequately_powered": true,
+        "delta": 0.0,
+        "positive": false,
+        "sample_size": 1,
+        "values": [
+          0.0
+        ]
+      },
+      "triage_lane": {
+        "adequately_powered": true,
+        "delta": 0.0,
+        "positive": false,
+        "sample_size": 1,
+        "values": [
+          0.0
+        ]
+      }
+    }
+  },
+  "field_principles": {
+    "MODEL_SPECS": "Records the three mandated local GGUF model rows.",
+    "arm_definitions": "Defines the four preregistered A/B arms.",
+    "cuda_gpu_offload_and_memory_release_receipts_by_model": "Shows each model used GPU offload and released memory.",
+    "duration_s": "Reports measured wall time without padding.",
+    "exact_oracle_claim_boundary": "States that exact finite-domain checking is the oracle boundary.",
+    "exact_utility_contract_violation_fallback_rate_latency_and_cost_by_model_family_arm_and_seed": "Reports held utility and safety per model, family, arm, and seed.",
+    "fallback_adjusted_delta_over_guard_only_by_model_and_family": "Reports search lift over guard plus fallback without pooling rescues.",
+    "field_principles": "Explains why every required field exists.",
+    "field_provenance": "Maps each field to specs, upstream artifacts, sidecars, code, tests, or receipts.",
+    "harm_underpowered_missing_and_flagged_cells": "Keeps missing, harmful, underpowered, and null cells visible.",
+    "hidden_state_access_count": "Bare zero proves hidden activations did not enter the decision.",
+    "honest_verdict": "States the terminal claim boundary.",
+    "immutable_predecision_and_raw_candidate_paths_hashes": "Pins raw outputs and predecision rows before exact outcomes open.",
+    "inference_substrate": "Declares live local GGUF generation plus exact guarded scoring.",
+    "llama_cpp_embedded_tokenizer_receipts": "Proves tokenizer checks used embedded GGUF metadata.",
+    "matched_call_token_candidate_time_and_fallback_budgets": "Keeps calls, tokens, candidates, time, and fallback charges matched.",
+    "model_file_hashes_revisions_quantizations_and_tokenizers": "Pins model files, revisions, quantization, and tokenizer checks.",
+    "models_used": "Names only models that produced raw candidate files.",
+    "outcome_seal_and_open_receipts": "Shows exact outcomes opened only after raw and predecision receipts were immutable.",
+    "overlap_receipts": "Shows held rows do not reuse prior families, templates, semantics, or mutation lineage.",
+    "paired_deltas_intervals_and_sample_sizes": "Shows matched search-minus-guard deltas and cell sample sizes.",
+    "preconditions_checked": "Freezes upstream gates, holdout, overlap rules, outcomes, arms, models, prompts, budgets, seeds, fallbacks, devices, timeouts, and protected files.",
+    "prospective_guarded_policy_ready_score": "Opens only for clean seals, positive cells, zero violations, and passing commands.",
+    "prospective_registration_path_hash_and_timestamp": "Proves the run was registered before raw candidates existed.",
+    "protected_files_unchanged": "Shows conductor and reconciler-owned files stayed byte-identical.",
+    "random_seeds": "Pins deterministic model generation seeds.",
+    "reproducibility_checksum": "Detects artifact drift.",
+    "sealed_holdout_manifest_path_and_hash": "Pins fresh held families and raw task rows before generation.",
+    "source_model_weight_mutation_count": "Bare zero proves the source models were not updated.",
+    "status": "Shows whether the prospective held-family A/B is ready, null, or blocked.",
+    "test_commands": "Lists focused, coverage, global, spec, E2E, run, and adversarial commands.",
+    "test_exit_codes": "Prevents failed commands from becoming readiness.",
+    "upstream_paths_hashes_terminal_classes_and_gate_receipt": "Pins Exp6326, Exp6327, and Exp6328 before generation.",
+    "verifier_is_oracle": "Bare true preserves the exact checker as authority."
+  },
+  "field_provenance": {
+    "MODEL_SPECS": {
+      "principle": "Records the three mandated local GGUF model rows.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "arm_definitions": {
+      "principle": "Defines the four preregistered A/B arms.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "cuda_gpu_offload_and_memory_release_receipts_by_model": {
+      "principle": "Shows each model used GPU offload and released memory.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "duration_s": {
+      "principle": "Reports measured wall time without padding.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "exact_oracle_claim_boundary": {
+      "principle": "States that exact finite-domain checking is the oracle boundary.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "exact_utility_contract_violation_fallback_rate_latency_and_cost_by_model_family_arm_and_seed": {
+      "principle": "Reports held utility and safety per model, family, arm, and seed.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "fallback_adjusted_delta_over_guard_only_by_model_and_family": {
+      "principle": "Reports search lift over guard plus fallback without pooling rescues.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "field_principles": {
+      "principle": "Explains why every required field exists.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Maps each field to specs, upstream artifacts, sidecars, code, tests, or receipts.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "harm_underpowered_missing_and_flagged_cells": {
+      "principle": "Keeps missing, harmful, underpowered, and null cells visible.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "hidden_state_access_count": {
+      "principle": "Bare zero proves hidden activations did not enter the decision.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "States the terminal claim boundary.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "immutable_predecision_and_raw_candidate_paths_hashes": {
+      "principle": "Pins raw outputs and predecision rows before exact outcomes open.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Declares live local GGUF generation plus exact guarded scoring.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "llama_cpp_embedded_tokenizer_receipts": {
+      "principle": "Proves tokenizer checks used embedded GGUF metadata.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "matched_call_token_candidate_time_and_fallback_budgets": {
+      "principle": "Keeps calls, tokens, candidates, time, and fallback charges matched.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "model_file_hashes_revisions_quantizations_and_tokenizers": {
+      "principle": "Pins model files, revisions, quantization, and tokenizer checks.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "models_used": {
+      "principle": "Names only models that produced raw candidate files.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "outcome_seal_and_open_receipts": {
+      "principle": "Shows exact outcomes opened only after raw and predecision receipts were immutable.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "overlap_receipts": {
+      "principle": "Shows held rows do not reuse prior families, templates, semantics, or mutation lineage.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "paired_deltas_intervals_and_sample_sizes": {
+      "principle": "Shows matched search-minus-guard deltas and cell sample sizes.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Freezes upstream gates, holdout, overlap rules, outcomes, arms, models, prompts, budgets, seeds, fallbacks, devices, timeouts, and protected files.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "prospective_guarded_policy_ready_score": {
+      "principle": "Opens only for clean seals, positive cells, zero violations, and passing commands.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "prospective_registration_path_hash_and_timestamp": {
+      "principle": "Proves the run was registered before raw candidates existed.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Shows conductor and reconciler-owned files stayed byte-identical.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "random_seeds": {
+      "principle": "Pins deterministic model generation seeds.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "Detects artifact drift.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "sealed_holdout_manifest_path_and_hash": {
+      "principle": "Pins fresh held families and raw task rows before generation.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "source_model_weight_mutation_count": {
+      "principle": "Bare zero proves the source models were not updated.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "status": {
+      "principle": "Shows whether the prospective held-family A/B is ready, null, or blocked.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "test_commands": {
+      "principle": "Lists focused, coverage, global, spec, E2E, run, and adversarial commands.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Prevents failed commands from becoming readiness.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "upstream_paths_hashes_terminal_classes_and_gate_receipt": {
+      "principle": "Pins Exp6326, Exp6327, and Exp6328 before generation.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "Bare true preserves the exact checker as authority.",
+      "sources": [
+        "REQ-KONA-6329",
+        "Exp6326 exact guard",
+        "Exp6328 blind integrity gate",
+        "Exp6329 sealed held sidecars",
+        "Exp6329 tests"
+      ]
+    }
+  },
+  "harm_underpowered_missing_and_flagged_cells": {
+    "flagged_cell_count": 20,
+    "flagged_cells": [
+      {
+        "family": "triage_lane",
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "credential_scope",
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "backup_window",
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "release_channel",
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "triage_lane",
+        "model": "unsloth/gemma-4-31B-it-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "credential_scope",
+        "model": "unsloth/gemma-4-31B-it-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "backup_window",
+        "model": "unsloth/gemma-4-31B-it-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "release_channel",
+        "model": "unsloth/gemma-4-31B-it-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "triage_lane",
+        "model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "credential_scope",
+        "model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "backup_window",
+        "model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "release_channel",
+        "model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "reason": "non_positive_delta"
+      }
+    ],
+    "guarded_accepted_contract_violation_count": 0,
+    "harmful_or_null_headline_cells": [
+      {
+        "family": "triage_lane",
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "credential_scope",
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "backup_window",
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "release_channel",
+        "model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "triage_lane",
+        "model": "unsloth/gemma-4-31B-it-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "credential_scope",
+        "model": "unsloth/gemma-4-31B-it-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "backup_window",
+        "model": "unsloth/gemma-4-31B-it-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "release_channel",
+        "model": "unsloth/gemma-4-31B-it-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "triage_lane",
+        "model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "credential_scope",
+        "model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "backup_window",
+        "model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "reason": "non_positive_delta"
+      },
+      {
+        "family": "release_channel",
+        "model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "reason": "non_positive_delta"
+      }
+    ],
+    "missing_model_count": 0,
+    "missing_models": [],
+    "parser_failure_count": 8,
+    "schema": "carnot.experiment_6329.prospective_held_family_guarded_policy_ab.v1.harm_missing_underpowered",
+    "underpowered_cells": []
+  },
+  "hidden_state_access_count": 0,
+  "honest_verdict": "complete_null: held search did not clear every preregistered cell gate",
+  "immutable_predecision_and_raw_candidate_paths_hashes": {
+    "predecision_immutable_at": "2026-08-12T13:55:46Z",
+    "predecision_receipt": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6329_prospective_held_family_guarded_policy_ab/immutable_predecision_receipt.json",
+      "sha256": "sha256:ed68aca7509fde20aa84b745f3c6686266a5912189d828138fd341225fe66c66",
+      "timestamp": "2026-08-12T13:55:46Z"
+    },
+    "raw_candidate_paths_hashes": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "candidate_count": 8,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6329_prospective_held_family_guarded_policy_ab/raw_candidates/unsloth_qwen3_6_35b_a3b_gguf.raw.json",
+        "raw_block_count": 8,
+        "seed": 632900,
+        "sha256": "sha256:e41e0e4948b79b1f9160951ded69e9b5681cfcd6bcfec9cfa52ce29c85a5c436",
+        "written_atomically": true
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "candidate_count": 8,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6329_prospective_held_family_guarded_policy_ab/raw_candidates/unsloth_gemma_4_26b_a4b_it_gguf.raw.json",
+        "raw_block_count": 8,
+        "seed": 632902,
+        "sha256": "sha256:ddaf3b2b03461d4f6659f308256ef48c089b8ebb60948f7a4d376a0d00850fde",
+        "written_atomically": true
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "candidate_count": 8,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6329_prospective_held_family_guarded_policy_ab/raw_candidates/unsloth_gemma_4_31b_it_gguf.raw.json",
+        "raw_block_count": 8,
+        "seed": 632901,
+        "sha256": "sha256:ef1df27b71631ce8a51b6fc5c588f97e7444fc5164c3c6c9ce8cc678e43e078e",
+        "written_atomically": true
+      }
+    },
+    "raw_candidates_immutable_at": "2026-08-12T13:55:46Z"
+  },
+  "inference_substrate": "local_three_model_llama_cpp_cuda_prospective_held_policy_ab",
+  "llama_cpp_embedded_tokenizer_receipts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+    }
+  },
+  "matched_call_token_candidate_time_and_fallback_budgets": {
+    "by_arm": {
+      "bounded_exact_factor_energy_search_plus_fallback": {
+        "candidate_count": 2,
+        "fallback_cost": 0.1,
+        "fallback_utility": 0.7,
+        "generation_cost": 0.08,
+        "max_tokens": 768,
+        "time_budget_s": 480
+      },
+      "guard_plus_fallback": {
+        "candidate_count": 2,
+        "fallback_cost": 0.1,
+        "fallback_utility": 0.7,
+        "generation_cost": 0.08,
+        "max_tokens": 768,
+        "time_budget_s": 480
+      },
+      "raw_single_candidate": {
+        "candidate_count": 2,
+        "fallback_cost": 0.1,
+        "fallback_utility": 0.7,
+        "generation_cost": 0.08,
+        "max_tokens": 768,
+        "time_budget_s": 480
+      },
+      "reject_only": {
+        "candidate_count": 2,
+        "fallback_cost": 0.1,
+        "fallback_utility": 0.7,
+        "generation_cost": 0.08,
+        "max_tokens": 768,
+        "time_budget_s": 480
+      }
+    },
+    "calls_per_model": 1,
+    "candidate_count": 2,
+    "candidate_utility": 1.0,
+    "fallback_cost": 0.1,
+    "fallback_utility": 0.7,
+    "max_tokens": 768,
+    "schema": "carnot.experiment_6329.prospective_held_family_guarded_policy_ab.v1.matched_budgets",
+    "time_budget_s": 480
+  },
+  "model_file_hashes_revisions_quantizations_and_tokenizers": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_status": "embedded GGUF tokenizer OK (7 tokens on probe)"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_status": "embedded GGUF tokenizer OK (8 tokens on probe)"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_status": "embedded GGUF tokenizer OK (8 tokens on probe)"
+    }
+  },
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "outcome_seal_and_open_receipts": {
+    "chronology": {
+      "exact_outcomes_opened_at": "2026-08-12T13:55:46Z",
+      "holdout_sealed_at": "2026-08-12T13:54:42Z",
+      "predecision_immutable_at": "2026-08-12T13:55:46Z",
+      "raw_candidates_immutable_at": "2026-08-12T13:55:46Z",
+      "registration_at": "2026-08-12T13:54:42Z"
+    },
+    "open_receipt": {
+      "chronology": {
+        "exact_outcomes_opened_at": "2026-08-12T13:55:46Z",
+        "holdout_sealed_at": "2026-08-12T13:54:42Z",
+        "predecision_immutable_at": "2026-08-12T13:55:46Z",
+        "raw_candidates_immutable_at": "2026-08-12T13:55:46Z",
+        "registration_at": "2026-08-12T13:54:42Z"
+      },
+      "opened_after_predecision_immutable": false,
+      "opened_against_predecision_sha256": "sha256:ed68aca7509fde20aa84b745f3c6686266a5912189d828138fd341225fe66c66",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6329_prospective_held_family_guarded_policy_ab/exact_outcomes_open.json",
+      "sha256": "sha256:896b5825dd62fddf3c3536e5789e3c73522ace2a495d96b68de6660b17eb6452",
+      "timestamp": "2026-08-12T13:55:46Z"
+    },
+    "opened_after_predecision_immutable": false,
+    "seal_receipt": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6329_prospective_held_family_guarded_policy_ab/exact_outcome_seal.json",
+      "sha256": "sha256:468e0a3202d7f575438df2a55a6b9f969a31c98c2a60491f388edbb46f7e9555",
+      "timestamp": "2026-08-12T13:54:42Z"
+    }
+  },
+  "overlap_receipts": {
+    "counts": {
+      "family_name_overlap_count": 0,
+      "grammar_template_overlap_count": 0,
+      "identifier_overlap_count": 0,
+      "mutation_lineage_overlap_count": 0,
+      "normalized_program_semantic_overlap_count": 0,
+      "semantic_signature_overlap_count": 0,
+      "task_generator_id_overlap_count": 0
+    },
+    "declared_no_overlap": true,
+    "new_families": [
+      "backup_window",
+      "credential_scope",
+      "release_channel",
+      "triage_lane"
+    ],
+    "old_families": [
+      "access_gate",
+      "incident_response",
+      "quota_control",
+      "routing_policy"
+    ],
+    "overlap_rules": {
+      "grammar_template_rule": "new held family text is not copied from prior fixture rows",
+      "mutation_rule": "no prior family is mutated into a held row",
+      "new_generator_id": "exp6329_independent_manual_held_family_builder_v1",
+      "old_generator_id": "exp6326_restricted_policy_fixture_manifest_v1",
+      "prior_source": "results/experiment_6326_restricted_policy_contract_compiler.json"
+    },
+    "schema": "carnot.experiment_6329.prospective_held_family_guarded_policy_ab.v1.overlap",
+    "total_overlap_count": 0
+  },
+  "paired_deltas_intervals_and_sample_sizes": {
+    "all_headline_cells_search_minus_guard": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "mean_delta": 0.0,
+      "sample_size": 12,
+      "values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "held_all_families_search_minus_guard": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 4,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "held_all_families_search_minus_guard": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 4,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "held_all_families_search_minus_guard": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 4,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "by_model_family": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "backup_window": {
+          "adequately_powered": true,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1,
+          "values": [
+            0.0
+          ]
+        },
+        "credential_scope": {
+          "adequately_powered": true,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1,
+          "values": [
+            0.0
+          ]
+        },
+        "release_channel": {
+          "adequately_powered": true,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1,
+          "values": [
+            0.0
+          ]
+        },
+        "triage_lane": {
+          "adequately_powered": true,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1,
+          "values": [
+            0.0
+          ]
+        }
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "backup_window": {
+          "adequately_powered": true,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1,
+          "values": [
+            0.0
+          ]
+        },
+        "credential_scope": {
+          "adequately_powered": true,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1,
+          "values": [
+            0.0
+          ]
+        },
+        "release_channel": {
+          "adequately_powered": true,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1,
+          "values": [
+            0.0
+          ]
+        },
+        "triage_lane": {
+          "adequately_powered": true,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1,
+          "values": [
+            0.0
+          ]
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "backup_window": {
+          "adequately_powered": true,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1,
+          "values": [
+            0.0
+          ]
+        },
+        "credential_scope": {
+          "adequately_powered": true,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1,
+          "values": [
+            0.0
+          ]
+        },
+        "release_channel": {
+          "adequately_powered": true,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1,
+          "values": [
+            0.0
+          ]
+        },
+        "triage_lane": {
+          "adequately_powered": true,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean_delta": 0.0,
+          "sample_size": 1,
+          "values": [
+            0.0
+          ]
+        }
+      }
+    },
+    "minimum_headline_cell_seeds": 1,
+    "schema": "carnot.experiment_6329.prospective_held_family_guarded_policy_ab.v1.paired_deltas"
+  },
+  "preconditions_checked": {
+    "all_passed": true,
+    "arms_frozen": {
+      "bounded_exact_factor_energy_search_plus_fallback": {
+        "candidate_source": "lowest exact energy among bounded candidates",
+        "fallback": "same verified held-family fallback",
+        "guard": "selected candidate must have exact energy zero"
+      },
+      "guard_plus_fallback": {
+        "candidate_source": "candidate_index_0",
+        "fallback": "verified held-family fallback",
+        "guard": "Exp6326 exact factor energy must equal zero"
+      },
+      "raw_single_candidate": {
+        "candidate_source": "candidate_index_0",
+        "fallback": "none",
+        "guard": "none"
+      },
+      "reject_only": {
+        "candidate_source": "candidate_index_0",
+        "fallback": "none",
+        "guard": "Exp6326 exact factor energy must equal zero"
+      }
+    },
+    "budgets_frozen": {
+      "by_arm": {
+        "bounded_exact_factor_energy_search_plus_fallback": {
+          "candidate_count": 2,
+          "fallback_cost": 0.1,
+          "fallback_utility": 0.7,
+          "generation_cost": 0.08,
+          "max_tokens": 768,
+          "time_budget_s": 480
+        },
+        "guard_plus_fallback": {
+          "candidate_count": 2,
+          "fallback_cost": 0.1,
+          "fallback_utility": 0.7,
+          "generation_cost": 0.08,
+          "max_tokens": 768,
+          "time_budget_s": 480
+        },
+        "raw_single_candidate": {
+          "candidate_count": 2,
+          "fallback_cost": 0.1,
+          "fallback_utility": 0.7,
+          "generation_cost": 0.08,
+          "max_tokens": 768,
+          "time_budget_s": 480
+        },
+        "reject_only": {
+          "candidate_count": 2,
+          "fallback_cost": 0.1,
+          "fallback_utility": 0.7,
+          "generation_cost": 0.08,
+          "max_tokens": 768,
+          "time_budget_s": 480
+        }
+      },
+      "calls_per_model": 1,
+      "candidate_count": 2,
+      "candidate_utility": 1.0,
+      "fallback_cost": 0.1,
+      "fallback_utility": 0.7,
+      "max_tokens": 768,
+      "schema": "carnot.experiment_6329.prospective_held_family_guarded_policy_ab.v1.matched_budgets",
+      "time_budget_s": 480
+    },
+    "data_dir": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6329_prospective_held_family_guarded_policy_ab",
+    "date": "20260812",
+    "devices_frozen": {
+      "cuda_devices": {
+        "available": true,
+        "count": 2,
+        "devices": [
+          {
+            "index": 0,
+            "memory_free_mb": 23859,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 266,
+            "name": "NVIDIA GeForce RTX 3090"
+          },
+          {
+            "index": 1,
+            "memory_free_mb": 23859,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 266,
+            "name": "NVIDIA GeForce RTX 3090"
+          }
+        ]
+      },
+      "disk": {
+        "available_gb": 1109.339
+      },
+      "llama_cpp_cli": {
+        "exists": true,
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli"
+      },
+      "llama_cpp_gpu_offload": {
+        "available": true,
+        "detail": "python binding reports gpu offload support"
+      },
+      "ram": {
+        "available_gb": 112.339
+      },
+      "vram": {
+        "0": {
+          "index": 0,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        "1": {
+          "index": 1,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      }
+    },
+    "exact_outcome_seal_frozen": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6329_prospective_held_family_guarded_policy_ab/exact_outcome_seal.json",
+      "sha256": "sha256:468e0a3202d7f575438df2a55a6b9f969a31c98c2a60491f388edbb46f7e9555",
+      "timestamp": "2026-08-12T13:54:42Z"
+    },
+    "fallbacks_frozen": {
+      "backup_window": {
+        "energy": 0,
+        "family": "backup_window",
+        "semantic_hash": "sha256:6154c5767529722cbad14438221044e320efe3b5ac127176a4fe8a6b5f5df227",
+        "source_sha256": "sha256:1cd8faa8109bfd32e534f5c7abc71744d6247a6440358d215bae082897650ee2",
+        "verified": true
+      },
+      "credential_scope": {
+        "energy": 0,
+        "family": "credential_scope",
+        "semantic_hash": "sha256:2d7b996bc1022319a65f4892ac2d7dc8834e20d88449c873337a38279ee06a87",
+        "source_sha256": "sha256:92acdf9a005fb44efeabdb6744490a9953866180cc3c413fff53df7eca8a8859",
+        "verified": true
+      },
+      "release_channel": {
+        "energy": 0,
+        "family": "release_channel",
+        "semantic_hash": "sha256:1a2b16d707e7b163d0da3f0c3c12acfa001a4810a468befd36cde517602b5f47",
+        "source_sha256": "sha256:331aa44527d0861bbfa9e5969d042a7f3eb75ca936382770afca4d0d8f51f0a8",
+        "verified": true
+      },
+      "triage_lane": {
+        "energy": 0,
+        "family": "triage_lane",
+        "semantic_hash": "sha256:5e54166f9049a284acb8fb38ffe755e340b61cf3223e68d30bb981d3c66a9072",
+        "source_sha256": "sha256:0c2db8d8a787f4edfe3723d202b87b6bf7325fcc483845ba3a574f9204db8d21",
+        "verified": true
+      }
+    },
+    "holdout_manifest_frozen": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6329_prospective_held_family_guarded_policy_ab/sealed_holdout_manifest.json",
+      "sha256": "sha256:fe345e6ff8664ae66c29fead5c00695db4425cd98fc70f8de09152414a3923e0",
+      "timestamp": "2026-08-12T13:54:42Z"
+    },
+    "models_frozen": {
+      "MODEL_SPECS": [
+        {
+          "cache_policy": "cached_sota_pair(gpu_indices=(0,1))",
+          "contract_model_family": "qwen_moe",
+          "exists": true,
+          "gpu": 0,
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "name": "Qwen3.6-35B-A3B",
+          "quantization": "UD-Q4_K_M",
+          "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+          "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "size_bytes": 22134528992,
+          "tokenizer_loadable": true,
+          "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+          "tokenizer_status": "embedded GGUF tokenizer OK (7 tokens on probe)"
+        },
+        {
+          "cache_policy": "cached_sota_pair(gpu_indices=(0,1), model_indices=(0,2))",
+          "contract_model_family": "gemma_dense",
+          "exists": true,
+          "gpu": 1,
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "name": "Gemma4-31B-it",
+          "quantization": "Q4_K_M",
+          "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+          "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "size_bytes": 18323731456,
+          "tokenizer_loadable": true,
+          "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+          "tokenizer_status": "embedded GGUF tokenizer OK (8 tokens on probe)"
+        },
+        {
+          "cache_policy": "cached_sota_pair(gpu_indices=(0,1))",
+          "contract_model_family": "gemma_moe",
+          "exists": true,
+          "gpu": 1,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it",
+          "quantization": "UD-Q4_K_M",
+          "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+          "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "size_bytes": 16947539744,
+          "tokenizer_loadable": true,
+          "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+          "tokenizer_status": "embedded GGUF tokenizer OK (8 tokens on probe)"
+        }
+      ],
+      "all_resolved": true,
+      "blocked_reasons": [],
+      "cached_sota_pair_calls": [
+        "cached_sota_pair(gpu_indices=(0,1))",
+        "cached_sota_pair(gpu_indices=(0,1), model_indices=(0,2))"
+      ]
+    },
+    "overlap_receipt_hash": "sha256:be2b946e6b0ce58ddb2865ca51de5c5a93e13326b4da0d268cc5fc330a07bc85",
+    "overlap_rules_frozen": {
+      "grammar_template_rule": "new held family text is not copied from prior fixture rows",
+      "mutation_rule": "no prior family is mutated into a held row",
+      "new_generator_id": "exp6329_independent_manual_held_family_builder_v1",
+      "old_generator_id": "exp6326_restricted_policy_fixture_manifest_v1",
+      "prior_source": "results/experiment_6326_restricted_policy_contract_compiler.json"
+    },
+    "prompts_frozen": {
+      "candidate_block_contract": "BEGIN_CANDIDATE family=<family> candidate=<0|1>",
+      "candidate_count_per_family": 2,
+      "context_tokens": 4096,
+      "embedded_gguf_tokenizer_only": true,
+      "hf_tokenizer_loader_forbidden": true,
+      "max_tokens": 768,
+      "native_llama_cpp_cli_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+      "prompt_sha256": "sha256:bb71e7c108fde1b5b40ad48da4eb6c30f1d1fe2579bd501c3da187486290386f",
+      "repeat_penalty": 1.05,
+      "schema": "carnot.experiment_6329.prospective_held_family_guarded_policy_ab.v1.prompt_decoder",
+      "temperature": 0.2,
+      "time_budget_s": 480,
+      "top_p": 0.9
+    },
+    "prospective_registration_frozen": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6329_prospective_held_family_guarded_policy_ab/prospective_registration.json",
+      "sha256": "sha256:7bbacb5c18925058295e04005035c4517a33369d110547b76125a83d73d7c5f5",
+      "timestamp": "2026-08-12T13:54:42Z"
+    },
+    "protected_hashes_frozen": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:a1c4cfd63210a5f1e839267da79b29bf131e9319b3a023be04559a089c9d07ce",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6329_prospective_held_family_guarded_policy_ab.json",
+    "schema": "carnot.experiment_6329.prospective_held_family_guarded_policy_ab.v1.preconditions",
+    "seeds_frozen": [
+      632900,
+      632901,
+      632902
+    ],
+    "timeouts_frozen": {
+      "per_model_generation_timeout_s": 480
+    },
+    "upstream": {
+      "all_required_gates_passed": true,
+      "artifacts": {
+        "exp6326": {
+          "exists": true,
+          "gate_field": "contract_guard_ready_score",
+          "gate_ready_score": 1.0,
+          "path": "results/experiment_6326_restricted_policy_contract_compiler.json",
+          "sha256": "sha256:15c492faec99f2cb77b64b6782a95743c3f5b484f9f071c2c4586254252b0fe9",
+          "status": "complete_ready",
+          "terminal_class": "ready",
+          "verifier_is_oracle": true
+        },
+        "exp6327": {
+          "exists": true,
+          "gate_field": "guarded_policy_synthesis_ready_score",
+          "gate_ready_score": 0.0,
+          "path": "results/experiment_6327_three_family_guarded_policy_synthesis.json",
+          "sha256": "sha256:5b664a843c44724ac6d6302d8d87351bdc76aa305457c74ec6a3cea39ebe8729",
+          "status": "complete_no_value",
+          "terminal_class": "complete_null",
+          "verifier_is_oracle": true
+        },
+        "exp6328": {
+          "exists": true,
+          "gate_field": "guard_integrity_ready_score",
+          "gate_ready_score": 1.0,
+          "path": "results/experiment_6328_blind_guard_integrity_audit.json",
+          "sha256": "sha256:57b3544960ecb72bff637be127732ad221776b4678bcebcc5ad8864a43b23efd",
+          "status": "complete_ready",
+          "terminal_class": "complete_ready",
+          "verifier_is_oracle": true
+        }
+      },
+      "exp6326_exact_guard_gate_passed": true,
+      "exp6328_blind_integrity_gate_passed": true,
+      "schema": "carnot.experiment_6329.prospective_held_family_guarded_policy_ab.v1.upstream_gate"
+    }
+  },
+  "prospective_guarded_policy_ready_score": 0.0,
+  "prospective_registration_path_hash_and_timestamp": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6329_prospective_held_family_guarded_policy_ab/prospective_registration.json",
+    "sha256": "sha256:7bbacb5c18925058295e04005035c4517a33369d110547b76125a83d73d7c5f5",
+    "timestamp": "2026-08-12T13:54:42Z"
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "files": {
+      "_bmad/traceability.md": {
+        "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "after": "sha256:a1c4cfd63210a5f1e839267da79b29bf131e9319b3a023be04559a089c9d07ce",
+        "before": "sha256:a1c4cfd63210a5f1e839267da79b29bf131e9319b3a023be04559a089c9d07ce",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "before": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "unchanged": true
+      }
+    }
+  },
+  "random_seeds": [
+    632900,
+    632901,
+    632902
+  ],
+  "reproducibility_checksum": "sha256:1dd5122d5d6facf3580fd17d3bd6ad9b94eea99392e67d83bd68c297dbb7e625",
+  "sealed_holdout_manifest_path_and_hash": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6329_prospective_held_family_guarded_policy_ab/sealed_holdout_manifest.json",
+    "sha256": "sha256:fe345e6ff8664ae66c29fead5c00695db4425cd98fc70f8de09152414a3923e0",
+    "timestamp": "2026-08-12T13:54:42Z"
+  },
+  "source_model_weight_mutation_count": 0,
+  "status": "complete_no_value",
+  "test_commands": [
+    ".venv/bin/python -m carnot.experiment_6329_prospective_held_family_guarded_policy_ab --date 20260812",
+    ".venv/bin/pytest tests/python/test_experiment_6329_prospective_held_family_guarded_policy_ab.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6329_prospective_held_family_guarded_policy_ab.py -m pytest tests/python/test_experiment_6329_prospective_held_family_guarded_policy_ab.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6329_prospective_held_family_guarded_policy_ab.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6329_prospective_held_family_guarded_policy_ab.py",
+    "sed -n '1,170p' ops/e2e-test-plan.md",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6329_prospective_held_family_guarded_policy_ab.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6329_prospective_held_family_guarded_policy_ab.py -m pytest tests/python/test_experiment_6329_prospective_held_family_guarded_policy_ab.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6329_prospective_held_family_guarded_policy_ab.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6329_prospective_held_family_guarded_policy_ab.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6329_prospective_held_family_guarded_policy_ab --date 20260812": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6329_prospective_held_family_guarded_policy_ab.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6329_prospective_held_family_guarded_policy_ab.py": 0,
+    "sed -n '1,170p' ops/e2e-test-plan.md": 0
+  },
+  "upstream_paths_hashes_terminal_classes_and_gate_receipt": {
+    "all_required_gates_passed": true,
+    "artifacts": {
+      "exp6326": {
+        "exists": true,
+        "gate_field": "contract_guard_ready_score",
+        "gate_ready_score": 1.0,
+        "path": "results/experiment_6326_restricted_policy_contract_compiler.json",
+        "sha256": "sha256:15c492faec99f2cb77b64b6782a95743c3f5b484f9f071c2c4586254252b0fe9",
+        "status": "complete_ready",
+        "terminal_class": "ready",
+        "verifier_is_oracle": true
+      },
+      "exp6327": {
+        "exists": true,
+        "gate_field": "guarded_policy_synthesis_ready_score",
+        "gate_ready_score": 0.0,
+        "path": "results/experiment_6327_three_family_guarded_policy_synthesis.json",
+        "sha256": "sha256:5b664a843c44724ac6d6302d8d87351bdc76aa305457c74ec6a3cea39ebe8729",
+        "status": "complete_no_value",
+        "terminal_class": "complete_null",
+        "verifier_is_oracle": true
+      },
+      "exp6328": {
+        "exists": true,
+        "gate_field": "guard_integrity_ready_score",
+        "gate_ready_score": 1.0,
+        "path": "results/experiment_6328_blind_guard_integrity_audit.json",
+        "sha256": "sha256:57b3544960ecb72bff637be127732ad221776b4678bcebcc5ad8864a43b23efd",
+        "status": "complete_ready",
+        "terminal_class": "complete_ready",
+        "verifier_is_oracle": true
+      }
+    },
+    "exp6326_exact_guard_gate_passed": true,
+    "exp6328_blind_integrity_gate_passed": true,
+    "schema": "carnot.experiment_6329.prospective_held_family_guarded_policy_ab.v1.upstream_gate"
+  },
+  "verifier_is_oracle": true
+}

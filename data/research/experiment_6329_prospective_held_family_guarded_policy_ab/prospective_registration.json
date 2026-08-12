@@ -1,0 +1,116 @@
+{
+  "MODEL_SPECS": [
+    {
+      "cache_policy": "cached_sota_pair(gpu_indices=(0,1))",
+      "contract_model_family": "qwen_moe",
+      "exists": true,
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "size_bytes": 22134528992,
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_status": "embedded GGUF tokenizer OK (7 tokens on probe)"
+    },
+    {
+      "cache_policy": "cached_sota_pair(gpu_indices=(0,1), model_indices=(0,2))",
+      "contract_model_family": "gemma_dense",
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "size_bytes": 18323731456,
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_status": "embedded GGUF tokenizer OK (8 tokens on probe)"
+    },
+    {
+      "cache_policy": "cached_sota_pair(gpu_indices=(0,1))",
+      "contract_model_family": "gemma_moe",
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "size_bytes": 16947539744,
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_status": "embedded GGUF tokenizer OK (8 tokens on probe)"
+    }
+  ],
+  "arm_ids": [
+    "raw_single_candidate",
+    "reject_only",
+    "guard_plus_fallback",
+    "bounded_exact_factor_energy_search_plus_fallback"
+  ],
+  "budget_hash": "sha256:9be3c1357625056b4a5dff49a5a39fd6ae5bef4c4dd17aebed9975f86081c5cc",
+  "cached_sota_pair_calls": [
+    "cached_sota_pair(gpu_indices=(0,1))",
+    "cached_sota_pair(gpu_indices=(0,1), model_indices=(0,2))"
+  ],
+  "date": "20260812",
+  "prompt_hash": "sha256:bb71e7c108fde1b5b40ad48da4eb6c30f1d1fe2579bd501c3da187486290386f",
+  "protected_hashes_before": {
+    "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+    "ops/changelog.md": "sha256:a1c4cfd63210a5f1e839267da79b29bf131e9319b3a023be04559a089c9d07ce",
+    "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+    "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+  },
+  "random_seeds": [
+    632900,
+    632901,
+    632902
+  ],
+  "schema": "carnot.experiment_6329.prospective_held_family_guarded_policy_ab.v1.prospective_registration",
+  "timestamp": "2026-08-12T13:54:42Z",
+  "upstream": {
+    "all_required_gates_passed": true,
+    "artifacts": {
+      "exp6326": {
+        "exists": true,
+        "gate_field": "contract_guard_ready_score",
+        "gate_ready_score": 1.0,
+        "path": "results/experiment_6326_restricted_policy_contract_compiler.json",
+        "sha256": "sha256:15c492faec99f2cb77b64b6782a95743c3f5b484f9f071c2c4586254252b0fe9",
+        "status": "complete_ready",
+        "terminal_class": "ready",
+        "verifier_is_oracle": true
+      },
+      "exp6327": {
+        "exists": true,
+        "gate_field": "guarded_policy_synthesis_ready_score",
+        "gate_ready_score": 0.0,
+        "path": "results/experiment_6327_three_family_guarded_policy_synthesis.json",
+        "sha256": "sha256:5b664a843c44724ac6d6302d8d87351bdc76aa305457c74ec6a3cea39ebe8729",
+        "status": "complete_no_value",
+        "terminal_class": "complete_null",
+        "verifier_is_oracle": true
+      },
+      "exp6328": {
+        "exists": true,
+        "gate_field": "guard_integrity_ready_score",
+        "gate_ready_score": 1.0,
+        "path": "results/experiment_6328_blind_guard_integrity_audit.json",
+        "sha256": "sha256:57b3544960ecb72bff637be127732ad221776b4678bcebcc5ad8864a43b23efd",
+        "status": "complete_ready",
+        "terminal_class": "complete_ready",
+        "verifier_is_oracle": true
+      }
+    },
+    "exp6326_exact_guard_gate_passed": true,
+    "exp6328_blind_integrity_gate_passed": true,
+    "schema": "carnot.experiment_6329.prospective_held_family_guarded_policy_ab.v1.upstream_gate"
+  }
+}

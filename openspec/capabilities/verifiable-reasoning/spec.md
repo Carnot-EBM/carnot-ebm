@@ -22863,3 +22863,106 @@ readiness is zero if any attack is accepted.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAFE-6328 | Planned (`python/carnot/experiment_6328_blind_guard_integrity_audit.py`, `results/experiment_6328_blind_guard_integrity_audit.json`) | Planned (`tests/python/test_experiment_6328_blind_guard_integrity_audit.py`) |
+
+### REQ-KONA-6329: Prospective Held-Family Guarded Policy A/B
+
+The repository SHALL provide an Exp6329 prospective held-family A/B run for
+observable contract-guard policy synthesis. Exp6329 SHALL replay the Exp6328
+blind integrity gate before model generation. It SHALL seal fresh held contract
+families and raw task rows before generation. The held families SHALL declare
+no overlap with prior family names, task-generator identifiers, normalized
+program semantics, semantic signatures, grammar templates, or mutation
+lineage.
+
+Exp6329 SHALL load headline models through the canonical cached GGUF path.
+`MODEL_SPECS` SHALL come from `cached_sota_pair(gpu_indices=(0, 1))` receipts
+and include `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Tokenizer preflight SHALL use the
+llama.cpp embedded GGUF tokenizer path. It SHALL NOT use
+`AutoTokenizer`.
+
+Exp6329 SHALL persist raw candidates and immutable predecision receipts before
+opening exact candidate outcomes. It SHALL evaluate the same held rows with
+four matched arms: raw single candidate, reject-only, guard plus fallback, and
+bounded exact-factor-energy search plus fallback. Calls, token budgets,
+candidate budgets, time budgets, and fallback accounting SHALL match across
+arms.
+
+The terminal artifact SHALL be
+`results/experiment_6329_prospective_held_family_guarded_policy_ab.json`. It
+SHALL include `status`,
+`upstream_paths_hashes_terminal_classes_and_gate_receipt`,
+`prospective_registration_path_hash_and_timestamp`,
+`sealed_holdout_manifest_path_and_hash`, `overlap_receipts`,
+`outcome_seal_and_open_receipts`, `MODEL_SPECS`, `models_used`,
+`model_file_hashes_revisions_quantizations_and_tokenizers`,
+`llama_cpp_embedded_tokenizer_receipts`,
+`cuda_gpu_offload_and_memory_release_receipts_by_model`, `arm_definitions`,
+`matched_call_token_candidate_time_and_fallback_budgets`,
+`immutable_predecision_and_raw_candidate_paths_hashes`,
+`exact_utility_contract_violation_fallback_rate_latency_and_cost_by_model_family_arm_and_seed`,
+`paired_deltas_intervals_and_sample_sizes`,
+`fallback_adjusted_delta_over_guard_only_by_model_and_family`,
+`harm_underpowered_missing_and_flagged_cells`,
+`source_model_weight_mutation_count`, `hidden_state_access_count`,
+`exact_oracle_claim_boundary`, `prospective_guarded_policy_ready_score`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`, `random_seeds`,
+`reproducibility_checksum`, and `honest_verdict`.
+`source_model_weight_mutation_count` and `hidden_state_access_count` SHALL be
+the bare integer `0`. `verifier_is_oracle` SHALL be bare `true`.
+
+Readiness SHALL be bare `1.0` only when the Exp6328 gate passes, held overlap
+receipts are clean, raw and predecision receipts are immutable before exact
+outcome opening, every adequately powered model-family headline cell has a
+positive preregistered fallback-adjusted delta over guard plus fallback, exact
+guarded contract violations are zero, every required command exits zero, and
+protected files remain unchanged. Otherwise readiness SHALL be bare `0.0`, and
+`honest_verdict` SHALL use a terminal prefix that names the blocking reason.
+
+### SCENARIO-KONA-6329-GATE-REPLAY: Upstream And Model Preconditions Are Frozen
+
+Given Exp6326, Exp6327, and Exp6328 artifacts and the three mandated GGUF
+models,
+When Exp6329 registers a prospective run,
+Then it records upstream path hashes, terminal classes, the Exp6328 ready
+gate, the `cached_sota_pair(gpu_indices=(0, 1))` receipts, model file hashes,
+embedded-tokenizer receipts, devices, budgets, seeds, fallbacks, timeouts, and
+protected file hashes before generation.
+
+**Spec traces:** REQ-KONA-6329
+
+### SCENARIO-KONA-6329-SEAL-CHRONOLOGY: Exact Outcomes Open Last
+
+Given fresh held families and raw model candidates,
+When Exp6329 writes its sidecar receipts,
+Then the prospective registration and sealed holdout manifest exist before
+generation, raw candidate and predecision receipts are immutable before exact
+outcomes open, and the outcome-open receipt cites the predecision hash it
+opened against.
+
+**Spec traces:** REQ-KONA-6329
+
+### SCENARIO-KONA-6329-MATCHED-ARMS: Fallback Accounting Is Shared
+
+Given the same model, family, seed, and raw candidate rows,
+When Exp6329 evaluates the raw, reject-only, guard-plus-fallback, and bounded
+search-plus-fallback arms,
+Then each arm has the same call, token, candidate, and time budget, fallback
+utility and cost are charged exactly once when fallback is used, and model and
+family cells are reported separately.
+
+**Spec traces:** REQ-KONA-6329
+
+### SCENARIO-KONA-6329-ORACLE-BOUNDARY: The Exact Guard Remains The Oracle
+
+Given a candidate selected by any Exp6329 arm,
+When Exp6329 computes readiness,
+Then only the Exp6326 exact finite-domain checker supplies safety authority,
+source model weight mutation count is bare zero, hidden-state access count is
+bare zero, and false readiness with non-zero violations or failed commands is
+rejected.
+
+**Spec traces:** REQ-KONA-6329
