@@ -3992,6 +3992,106 @@ verdict, and the checksum matches the normalized payload.
 |---|---|---|
 | REQ-INFRA-6349 | Pending implementation: `python/carnot/experiment_6349_v546_adversarial_capstone.py`; terminal artifact `results/experiment_6349_v546_adversarial_capstone.json`. | Pending focused tests: `tests/python/test_experiment_6349_v546_adversarial_capstone.py`. |
 
+## REQ-INFRA-6350: V547 Handoff SHALL Preserve V546 Evidence Boundaries
+
+Carnot SHALL build Exp6350 as a bounded V546-to-V547 evidence handoff over
+exactly Exp6337 through Exp6349. The handoff SHALL parse the active V547
+roadmap, the V547 proposal document, the conductor log, and the exact V546
+artifact paths. It SHALL not edit `research-roadmap.yaml`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`, or
+`scripts/research_conductor.py`.
+
+Exp6350 SHALL preserve the Exp6337 adversarial flag as a flag. It SHALL copy
+the conductor and artifact flag text into the result. It SHALL not promote that
+artifact to a clean terminal record. It SHALL keep explicit gate blocks,
+including Exp6341, separate from missing artifacts.
+
+Exp6350 SHALL classify each V546 task by inference substrate. The classes SHALL
+separate live autoregressive generation, tokenizer-only model access,
+deterministic replay, synthetic replay, exact-oracle deterministic checking,
+web or bibliographic search, and artifact aggregation. Exp6344 and Exp6345
+SHALL be marked as no-live-autoregressive-generation evidence.
+
+Exp6350 SHALL record the closed parser/JIT lane, the qualified certified
+factor-learning evidence, the open live-generation and consumer gaps, and the
+ARC no-solve boundary. It SHALL validate all 13 V547 task identities,
+deliverables, dependencies, structured gates, prior-failure entries, model
+obligations, and prompt endings.
+
+The Exp6350 artifact SHALL be written atomically to
+`results/experiment_6350_v547_bounded_terminal_handoff.json` and SHALL include
+these required fields: `status`, `v546_milestone_and_queue_hash`,
+`queued_v546_task_ids`, `terminal_v546_artifacts_by_task`,
+`blocked_v546_tasks`, `flagged_v546_artifacts_and_reasons`,
+`inference_substrate_classification_by_task`,
+`live_autoregressive_generation_by_task`, `v546_scientific_terminal_states`,
+`closed_parser_jit_receipt`, `qualified_certified_learning_receipt`,
+`open_live_generation_and_consumer_gaps`, `arc_no_solve_receipt`,
+`v547_milestone_and_doc_hash`, `v547_task_ids`,
+`v547_id_collision_check`, `v547_deliverable_checks`,
+`v547_dependency_checks`, `v547_structured_gate_checks`,
+`v547_prior_failure_checks`, `v547_llm_model_policy_checks`,
+`prompt_contract_checks`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`llm_call_count`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`, `random_seeds`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INFRA-6350-1: V546 Denominator Is Exact
+
+GIVEN the active V546 evidence set is Exp6337 through Exp6349
+WHEN Exp6350 builds its terminal matrix
+THEN each task maps to one exact artifact or an explicit gate block. Missing or
+extra experiment numbers are reported as failures.
+
+### SCENARIO-INFRA-6350-2: Exp6337 Flag Is Never Promoted Clean
+
+GIVEN Exp6337 has a terminal artifact and adversarial flag text
+WHEN Exp6350 writes flagged evidence
+THEN the flag text is preserved, `clean_promotion_attempted` is false, and the
+task terminal class remains flagged.
+
+### SCENARIO-INFRA-6350-3: Substrate Classes Separate Model Access
+
+GIVEN V546 artifacts contain live inference, tokenizer-only, deterministic
+replay, synthetic replay, and aggregation receipts
+WHEN Exp6350 classifies substrates
+THEN Exp6344 and Exp6345 record
+`live_autoregressive_generation_invoked=false`, and wrong classifications fail
+validation.
+
+### SCENARIO-INFRA-6350-4: V547 Roadmap Checks Fail Closed
+
+GIVEN the active V547 roadmap declares 13 tasks
+WHEN Exp6350 validates identities, deliverables, dependencies, gates,
+prior-failure entries, model obligations, and prompt endings
+THEN duplicate ids, bad gates, missing model obligations, and malformed prompt
+endings are reported as failed checks.
+
+### SCENARIO-INFRA-6350-5: Boundary Receipts Do Not Overclaim
+
+GIVEN Exp6340, Exp6341, Exp6342 through Exp6346, and Exp6348 define V546
+scientific states
+WHEN Exp6350 summarizes boundaries
+THEN parser/JIT is closed, factor-learning evidence is qualified by replay and
+tokenizer-only limits, live generation and consumer value remain open, and ARC
+has no solve claim.
+
+### SCENARIO-INFRA-6350-6: Output Is Principle Annotated And Non-Mutating
+
+GIVEN field principles, command receipts, protected hashes, and random seeds
+WHEN Exp6350 validates its report
+THEN every required field has provenance and a one-line principle,
+`llm_call_count` is bare `0`, `verifier_is_oracle` is false, the checksum
+matches, protected files remain unchanged, and the honest verdict has a
+terminal prefix.
+
+## Implementation Status (REQ-INFRA-6350)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6350 | Planned: `python/carnot/experiment_6350_v547_bounded_terminal_handoff.py`; terminal artifact `results/experiment_6350_v547_bounded_terminal_handoff.json`. | Planned: `tests/python/test_experiment_6350_v547_bounded_terminal_handoff.py`. |
+
 ## Implementation Status (REQ-INFRA-6322)
 
 | REQ | Implementation | Tests |
