@@ -33933,3 +33933,87 @@ locally.
   EBT pretraining, TSU execution, and unchanged board probes out of V545.
 
 <!-- V545-PLANNER-REFRESH-20260812-END -->
+
+## V546 Planner Refresh (2026-08-12, after milestone 2026.08.545)
+
+This refresh searched arXiv, OpenReview, Hugging Face Papers, Semantic
+Scholar citation records, GitHub, Extropic, and Logical Intelligence. It used
+the V545 terminal artifacts as the evidence boundary. Exp6327 and Exp6329
+found no utility from post-hoc energy search over exact-guarded programs.
+Exp6325 also failed the new GateMate detect. These results close unchanged
+retries in both lanes.
+
+### Promoted methods
+
+- **The Parser Already Knows: Lightweight Bias Correction in Constrained
+  Decoding** - arXiv:2608.10137,
+  https://arxiv.org/abs/2608.10137; submitted 2026-08-10. The method learns a
+  small correction from parser and lexer states while the base language model
+  stays frozen. It targets the probability distortion caused by hard grammar
+  masking. Carnot hook: test incremental parser-state correction before exact
+  execution. Measure valid semantic diversity before any utility A/B. This is
+  materially different from the failed V545 post-hoc candidate search.
+- **LeJIT: Just-in-Time Logic Enforcement** - HotNets 2025,
+  https://hhy.ee.princeton.edu/papers/2025_hotnets_lejit.pdf; code at
+  https://github.com/HongyuHe/LeJIT. LeJIT interleaves generation with SMT
+  checks. It rejects infeasible prefixes before a full answer is produced.
+  Carnot hook: add an incremental prefix-feasibility route to the restricted
+  policy DSL. Keep the exact compiler and checker as final authority.
+- **NxN E-valuation: Hypothesis Certification via a Conformal CRT Null** -
+  arXiv:2608.06621, https://arxiv.org/abs/2608.06621; submitted 2026-08-06.
+  The paper uses e-values to certify hypotheses that were generated from the
+  same broad data source. It is designed to resist circular self-verification
+  and optional stopping. Carnot hook: build an anytime-valid release ledger
+  for factor updates. Bind every release to immutable evidence identities,
+  fixed nulls, and an auditable e-process state.
+- **Why Does CLAUDE.md Keep Growing? Catastrophic Remembering in Agentic
+  Coding** - arXiv:2608.11095, https://arxiv.org/abs/2608.11095; submitted
+  2026-08-11. The study reports persistent instruction growth across agentic
+  coding repositories. It also finds that rationale-bearing instructions are
+  easier to remove when they stop applying. Carnot hook: make learned factors
+  evidence-carrying. Require a rationale, exact counterexample, replay witness,
+  and retention test before merge or deletion.
+
+### Measurement control
+
+- **AI Evaluation Should Measure Verification Cost, Not Correctness Alone** -
+  arXiv:2608.08709, https://arxiv.org/abs/2608.08709; submitted 2026-08-09.
+  The paper argues that a correct result can still impose excessive checking
+  cost. Carnot hook: report verifier calls, exact-check time, and
+  verification-cost errors beside validity and utility. This is a measurement
+  control, not a new correctness authority.
+
+### Secondary-source and product status
+
+- **Semantic Scholar:** the citation records for EBT (`2507.02092`) and
+  ARM-EBM (`2512.15605`) had no new citation-derived method that cleared the
+  retired external-text or hidden-state boundaries. Do not reopen either lane.
+- **OpenReview and Hugging Face Papers:** recent verifier and EBM entries did
+  not provide a stronger local, exact-authority route than the promoted
+  parser-state, JIT, and e-value methods.
+- **GitHub:** LeJIT is the one promoted repository. Other discovered EBM and
+  constrained-generation repositories either require model training or do not
+  expose a local GGUF-compatible path.
+- **Extropic:** the public writing index still exposes no authenticated local
+  TSU route. Product availability statements do not satisfy Carnot's hardware
+  receipt rule.
+- **Logical Intelligence:** public Kona material still exposes no weights,
+  local API, or reproducible architecture. Keep it as product context only.
+- **UniProbe** - arXiv:2608.10835. This visual hidden-state probe falls inside
+  Carnot's closed model-local representation lane. It is out of scope.
+
+### V546 planning impact
+
+- Give constrained generation one final, pre-declared attempt. Use incremental
+  parser state and JIT prefix feasibility. Gate the held utility A/B on a real
+  semantic-diversity gain. Retire the scope if it repeats the V545 null.
+- Convert the positive V544 factor-local learner into an anytime-certified
+  continuous learner. Add evidence-carrying factor merge and deletion.
+- Measure exact-check cost and verification-cost errors in every prospective
+  learning and constrained-generation result.
+- Advance ARC only through a default-off causal action-influence test. Use the
+  live agent's own attempts. Make no game or level solve claim.
+- Schedule no GateMate, KV260, TSU, or Kona execution. V545 supplied no new
+  authenticated physical state that could support another hardware task.
+
+<!-- V546-PLANNER-REFRESH-20260812-END -->
