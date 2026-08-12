@@ -17093,3 +17093,55 @@ debt this change is careful to keep visible. They go green when the backlog is r
 **The root cause is still open.** The conductor still commits with `--no-verify`, so the
 backlog will keep growing. The options listed in the entry above stand; the best is to have
 whoever creates the drift resolve it.
+
+## 2026-08-11 REQ-ARC-WMTE-6254 RESULT: MoE-many does NOT beat dense-few at matched wall-clock
+
+P6, the last of the "do all of P1-P6" directive.
+`honest_verdict: complete_moe_matched_wallclock_measured_moe_wins_0_of_2_pooled_moe_0.1167_vs_dense_0.7595_mean_samples_2.0`.
+
+| game | dense held | dense wall | MoE best | MoE n | MoE wall | overspent |
+|---|---|---|---|---|---|---|
+| cn04 | **0.519** | 240.4s | 0.0797 | 2 | 332.1s | yes |
+| ls20 | **1.0** | 283.9s | 0.1538 | 2 | 481.4s | yes |
+| s5i5 | 0.0 | 263.9s | no candidate | 1 | 836.6s | yes |
+
+Pooled over the 2 comparable games: dense **0.7595**, MoE best-of-N **0.1167**. MoE wins 0
+of 2.
+
+**The premise was half right, and it did not matter.** The MoE's FIRST sample really is
+faster: 109.7s and 97.8s against dense's 240.4s and 283.9s, roughly 2.4x. So "a
+Mixture-of-Experts model draws more samples per second" held on the first draw. But the
+QUALITY gap swamped it -- 0.0797 against 0.519, and 0.1538 against 1.0. Two cheap bad
+samples do not beat one good one. That is a direct answer to the question the 2026-07-28
+generator pin never asked, and it CONFIRMS the pin rather than challenging it.
+
+**Second-draw slowdown, unexplained.** Every MoE second sample was much slower than its
+first (222.4s after 109.7s; 383.6s after 97.8s), and s5i5's single sample took 836.6s and
+returned nothing. Not investigated. Candidate causes: prompt-cache interaction across
+sequential draws on one server, or think-mode output length varying by prompt.
+
+**Caveats, and they are load-bearing -- do not read this as a clean model comparison.**
+1. **Think mode is default-ON** (`ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT = "1"` since
+   2026-08-08) and Qwen3.6 may emit far more reasoning tokens than gemma-4-31B. Some of
+   the measured wall-clock, and possibly the s5i5 outlier, may be think-verbosity rather
+   than a property of the MoE architecture. Unmeasured.
+2. **n = 2 comparable games.** s5i5 is excluded because dense scored 0.0 and MoE returned
+   nothing, so there was nothing to compare. Two games is far below the n>=30 bar.
+3. **It conflates two effects.** The MoE arm is MoE-per-second AND best-of-N selection.
+   exp6251 showed best-of-N is not reliable, so a MoE *win* could not have been cleanly
+   attributed anyway. The loss is easier to read than a win would have been.
+4. **Every MoE cell overspent its budget.** That is inherent, not a bug: a sample's cost is
+   unknowable before drawing it, so the first draw always lands. The budget check now runs
+   BEFORE each subsequent draw (fixed earlier today), and every overspend is flagged.
+
+**Operator decision this supports: none on its own.** It authorizes no generator pin
+change. It supplies one number the pin decision lacked, and that number points the same way
+the pin already does.
+
+**A bug in this script was caught and fixed mid-run.** The first launch read
+`scratch/dense_<game>/world_model.py` while the proposer writes
+`E3_DIR/<game>/world_model.py`, so every arm returned no candidate -- three dense games and
+one MoE game, about 16 minutes of GPU, all `held=None`. Fixed with a `_store_path()` helper
+that points at the path the proposer actually writes. Caught by reading the per-game rows,
+not the verdict string; the run would otherwise have reported a plausible-looking
+zero-comparable-games null.

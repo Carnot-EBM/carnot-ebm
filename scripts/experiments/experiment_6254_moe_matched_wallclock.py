@@ -132,6 +132,22 @@ def _score_held(source, held, hud_mask) -> float | None:
     return round(float(vr.change_fidelity), 4)
 
 
+def _store_path(game: str) -> Path:
+    """The engine store path the PROPOSER actually writes.
+
+    `LocalGGUFProposer._write_world_model` writes `E3_DIR / game / "world_model.py"`, and
+    `E3_DIR` is a module global fixed at import. An earlier version of this script invented
+    per-phase subdirectories (`dense_<game>`, `moe_<game>_s<i>`) to keep the two phases
+    apart. The proposer never wrote there, so `read_store()` always found nothing and every
+    arm reported no candidate -- three dense games and one MoE game burned about 16 minutes
+    of GPU time producing `held=None` across the board before this was caught.
+
+    No per-phase isolation is needed anyway: the phases run SEQUENTIALLY, and every
+    `run_rex` call starts with an induce that overwrites the store.
+    """
+    return Path(os.environ["CARNOT_ARC_E3_DIR"]) / game / "world_model.py"
+
+
 def _make_proposer(repo_substr: str, port: int):
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 
@@ -224,7 +240,7 @@ def build_artifact() -> dict:
             p["valid"],
             p["cell"],
             p["hud_mask"],
-            scratch / f"dense_{game}" / "world_model.py",
+            _store_path(game),
         )
         rows.setdefault(game, {"game": game}).update(
             {
@@ -276,7 +292,7 @@ def build_artifact() -> dict:
                     p["valid"],
                     p["cell"],
                     p["hud_mask"],
-                    scratch / f"moe_{game}_s{i}" / "world_model.py",
+                    _store_path(game),
                 )
                 arms[f"sample{i}"] = s
                 spent += s["wall_s"]

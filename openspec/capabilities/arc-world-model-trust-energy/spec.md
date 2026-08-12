@@ -25399,4 +25399,31 @@ be generalized into "VALID predicts HELD". Hypothesis, not conclusion.
 never runs — so it must not be quoted as four-for-the-price-of-one.
 | REQ-ARC-WMTE-6252 | `scripts/experiments/experiment_6252_goal_gradient_ab.py` (CPU-only, reads the tracked store, never writes it) + the `UniformGoalEnergy` ndarray-hash fix in `python/carnot/agentic/arc_goal_energy_live.py`. | `results/experiment_6252_goal_gradient_ab.json` — gate **NOT** met after the first run's positive was retracted as a harness artifact. The goal-aware arm never ran on any game; two zero-information controls match the goal-blind arm. See the RETRACTED and CORRECTED subsections above. |
 | REQ-ARC-WMTE-6253 | `python/carnot/agentic/arc_executable_world_model.py:_llama_server_slots` + `_kv_quant_for_launch` + `LocalGGUFProposer.last_kv_quant_used`. | `tests/python/test_arc_generator_config_knobs_6253.py` (11/11) plus `tests/python/test_arc_ffn_cpu_offload.py` unchanged and green (no regression in the shared launch-argv path). |
-| REQ-ARC-WMTE-6254 | `scripts/experiments/experiment_6254_moe_matched_wallclock.py`. | Live run queued behind exp6251. |
+| REQ-ARC-WMTE-6254 | `scripts/experiments/experiment_6254_moe_matched_wallclock.py` (+ `_store_path()`, added mid-run after a real bug made every arm return no candidate). | `results/experiment_6254_moe_matched_wallclock.json` — MoE loses 0 of 2; see the UPDATE below. |
+
+#### UPDATE 2026-08-11 — RESULT: MoE-many does NOT beat dense-few at matched wall-clock
+
+`complete_moe_matched_wallclock_measured_moe_wins_0_of_2_pooled_moe_0.1167_vs_dense_0.7595_mean_samples_2.0`.
+
+| game | dense held | dense wall | MoE best | MoE n | MoE wall | overspent |
+|---|---|---|---|---|---|---|
+| cn04 | 0.519 | 240.4s | 0.0797 | 2 | 332.1s | yes |
+| ls20 | 1.0 | 283.9s | 0.1538 | 2 | 481.4s | yes |
+| s5i5 | 0.0 | 263.9s | none | 1 | 836.6s | yes |
+
+Pooled over the 2 comparable games: dense 0.7595 vs MoE 0.1167.
+
+**The speed premise held; it did not matter.** The MoE's first sample was ~2.4x faster
+(109.7s / 97.8s vs 240.4s / 283.9s), so "more samples per second" was real. The quality gap
+swamped it. This CONFIRMS the 2026-07-28 generator pin under the one frame that pin never
+measured, rather than challenging it.
+
+**Caveats, load-bearing.** (1) Think mode is default-ON and Qwen3.6 may emit far more
+reasoning tokens than gemma-4-31B, so part of the wall-clock may be think-verbosity rather
+than architecture — unmeasured. (2) n=2 comparable games. (3) The MoE arm conflates
+MoE-per-second with best-of-N selection, which REQ-ARC-WMTE-6251 showed is unreliable. (4)
+Every MoE cell overspent its budget, which is inherent (a sample's cost is unknowable
+before drawing it) and is flagged per game. **Authorizes no generator pin change.**
+
+Second-draw slowdown (222.4s after 109.7s; 383.6s after 97.8s) and s5i5's 836.6s
+no-candidate outlier are unexplained and were not investigated.
