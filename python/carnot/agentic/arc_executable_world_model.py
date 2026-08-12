@@ -870,6 +870,90 @@ def collect_transitions(
     return trans, cell
 
 
+def replay_win_transition(game: str, cell: Optional[int] = None):
+    """Replay a BANKED solve to recover one level-up transition, or None.
+
+    WHY THIS EXISTS. `induce_prompt` has dedicated slots for `win_transition` and
+    `previous_level_complete_grid` -- it is built to show the model what winning looks
+    like. `collect_transitions` supplies neither, and the reason is NOT that it discards
+    them (it appends the level-up row before restarting; that earlier diagnosis was wrong
+    and is corrected in ops/known-issues.md 2026-08-12). The reason is that a
+    salience-biased RANDOM walk essentially never reaches a level-up: measured 0 of 200
+    steps on dc22 and 0 of 200 on cn04. So a win exemplar has to come from something that
+    already knows one.
+
+    This replays the banked `solution_labels` from `results/arc_loop_solve_<game>.json`
+    through the game's OWN `GameAdapter.apply`, and returns the first transition where the
+    level counter increments. Using the adapter's apply rather than a local re-implementation
+    matters: label dialects differ per game (dc22's ACTION6 rows carry `grid`/`x`/`y`
+    instead of `data`), and a fourth copy of that logic would drift.
+
+    DEVELOPMENT PROXY ONLY -- read this before using it in any claim. A hidden game has no
+    registry entry, no banked solution and no adapter, so the live agent CANNOT obtain a win
+    exemplar this way. On the live path the exemplar comes from the agent's own play and is
+    therefore available from level 2 onward, never for level 1. An offline measurement built
+    on this answers "does the exemplar improve induction quality?" It does NOT show the live
+    agent can get one on a hidden level 1. See the ARC Live-Path Reachability Discipline.
+
+    Returns None whenever anything is missing or the replay never levels up. Callers treat
+    None as "no exemplar available" and must not substitute a fabricated one.
+    """
+    import json as _json
+
+    from carnot.agentic import arc_game_adapters as _adapters
+    from carnot.agentic import arc_solver_kit as _kit
+    from carnot.agentic.arc_agi3_live_adapter import _levels_completed
+    from carnot.agentic.arc_agi3_world_model import grid_of
+
+    banked = REPO / "results" / f"arc_loop_solve_{game}.json"
+    adapter = _adapters.get_adapter(game)
+    if adapter is None or not banked.exists():
+        return None
+    try:
+        labels = _json.loads(banked.read_text()).get("solution_labels") or []
+    except Exception:
+        return None
+    if not labels:
+        return None
+
+    arc = _kit.offline_arcade()
+    env = arc.make(game, scorecard_id=arc.open_scorecard())
+    f = env.reset()
+    if cell is None:
+        cell = detect_cell(grid_of(f))
+    for label in labels:
+        l0 = _levels_completed(f)
+        g0 = to_logical(grid_of(f), cell)
+        try:
+            nf = adapter.apply(env, label, f)
+        except Exception:
+            return None
+        if nf is None:
+            return None
+        l1 = _levels_completed(nf)
+        if l1 > l0:
+            action, data = _action_and_data_from_label(label)
+            return Transition(g0, action, data, to_logical(grid_of(nf), cell), l0, l1)
+        f = nf
+    return None
+
+
+def _action_and_data_from_label(label: str) -> tuple[int, Any]:
+    """Best-effort (action_id, data) from a banked solution label.
+
+    Only the action id is reliably present across dialects. `data` is returned when the
+    label carries it and None otherwise; a Transition with `data=None` still records the
+    grids and the level change, which is what the win exemplar is for.
+    """
+    import json as _json
+
+    try:
+        step = _json.loads(label)
+        return int(step.get("action", 0)), step.get("data")
+    except Exception:
+        return 0, None
+
+
 # ---------------------------------------------------------------------------
 # THE CARNOT VERIFIER — grounds the LLM-induced model against reality
 # ---------------------------------------------------------------------------
