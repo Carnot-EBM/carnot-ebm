@@ -2220,6 +2220,19 @@ class GoalPredicateConsistency:
     # was compared against, so the decision is reconstructible from the artifact alone.
     engine_fidelity_used_for_counterfactual_decision: Optional[float] = None
     min_engine_fidelity_for_counterfactual: Optional[float] = None
+    # SENSITIVITY (REQ-ARC-WMTE-6257, 2026-08-12). `accuracy` above is a SPECIFICITY score:
+    # held-out transitions from `collect_transitions` contain no level-ups, so every row is a
+    # non-win and a predicate returning False for everything is 100% correct. Measured: 14 of
+    # 21 stored predicates scored a perfect 1.0 that way while never firing on a real win. That
+    # matters because `plan_in_model` terminates on this predicate -- 10 of them made planning
+    # impossible and 4 more produced hollow plans ending on an in-model false win.
+    #
+    # These three are the other side. They stay 0/None unless the caller supplies `win_grids`,
+    # because "nobody checked" and "checked and fine" must never look alike.
+    sensitivity_win_grids_tested: int = 0
+    sensitivity_win_grids_fired: int = 0
+    # True = specific-looking but fires on no real win. None = UNMEASURABLE (no win grid given).
+    is_degenerate_constant_false: Optional[bool] = None
 
 
 def score_goal_predicate_consistency(
@@ -2230,6 +2243,7 @@ def score_goal_predicate_consistency(
     engine: Optional[Callable[[np.ndarray, int, Any], np.ndarray]] = None,
     engine_change_fidelity: Optional[float] = None,
     min_engine_fidelity_for_counterfactual: float = 0.5,
+    win_grids: Optional[Sequence[Any]] = None,
 ) -> GoalPredicateConsistency:
     """REQ-ARC-WMTE-5593: does `is_level_complete`'s sign match real observed level-ups?
 
@@ -2431,6 +2445,24 @@ def score_goal_predicate_consistency(
     # transitions" and "your transitions were all ungradeable" are distinct claims, and collapsing
     # them would silently change a documented return value for every existing caller.
     all_rows_excluded = bool(len(transitions) > 0 and n == 0)
+    # SENSITIVITY. Measurable only when the caller supplies grids on which a level-up REALLY
+    # happened (`replay_win_transition` produces them). Absent those, the fields stay unmeasured
+    # rather than defaulting to a pass -- a metric that cannot fail is not a metric, which is
+    # the entire reason this side exists.
+    _sens_tested = 0
+    _sens_fired = 0
+    for _wg in win_grids or []:
+        _sens_tested += 1
+        try:
+            if bool(is_level_complete(np.asarray(_wg))):
+                _sens_fired += 1
+        except Exception:  # noqa: BLE001
+            # A predicate that RAISES on a real win state has not fired on it. Counting the
+            # test but not the fire matches how a caller experiences it: the planner would not
+            # terminate here either.
+            pass
+    _spec = 1.0 if all_rows_excluded else float(n_correct / max(1, n))
+    _degenerate = None if _sens_tested == 0 else bool(_sens_fired == 0 and _spec >= 0.9)
     return GoalPredicateConsistency(
         n=n,
         n_correct=n_correct,
@@ -2447,6 +2479,9 @@ def score_goal_predicate_consistency(
         min_engine_fidelity_for_counterfactual=(
             float(min_engine_fidelity_for_counterfactual) if engine is not None else None
         ),
+        sensitivity_win_grids_tested=_sens_tested,
+        sensitivity_win_grids_fired=_sens_fired,
+        is_degenerate_constant_false=_degenerate,
     )
 
 
