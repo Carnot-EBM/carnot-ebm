@@ -1,6 +1,6 @@
 # Exp6322 V544 Operational Retro
 
-Date: 20260811
+Date: 20260812
 
 V544 closed model-local verification without promotion. The representation preflight ended null, the corpus gate blocked, the probe artifact was missing, and the integrity audit flagged failed cells.
 
