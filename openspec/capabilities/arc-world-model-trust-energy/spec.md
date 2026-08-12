@@ -25731,3 +25731,50 @@ helped. The verdict stands; the interpretation is much weaker than it appeared.
 
 **Scope.** Development proxy throughout: win grids come from replaying banked solves through
 `GameAdapter`s, which a hidden game does not have. n=4 for exp6256, 21 measurable for exp6257.
+
+
+### REQ-ARC-WMTE-6258 / REQ-ARC-WMTE-6259: The Goal Veto Is Not The Lever
+
+**Origin:** 2026-08-12 operator directive "run the veto sensitivity A/B", following the
+finding that the live veto (`min_goal_predicate_consistency=1.0`) is pure specificity on a
+level-up-free window.
+
+`scripts/experiments/experiment_6258_goal_veto_confusion_matrix.py` SHALL build the veto's
+confusion matrix against ground truth from artifacts already on disk, classifying each
+predicate as false-accept, true-accept, false-reject or true-reject, and SHALL report
+acceptance precision. `scripts/experiments/experiment_6259_veto_sensitivity_ab.py` SHALL
+compare the live rule against live-plus-sensitivity over one shared candidate pool per game,
+and SHALL record `arm_b_no_admissible_candidate` explicitly rather than silently backfilling
+arm B from arm A.
+
+The metric SHALL be end-to-end: for each arm's selected candidate, plan and then test whether
+the plan is HOLLOW (the predicate accepts the in-model terminal grid but rejects the real win
+grid). A gate change is only worth making if it converts hollow or absent plans into real
+ones.
+
+#### SCENARIO-ARC-WMTE-6259-EMPTY-TREATMENT-ARM-IS-A-RESULT
+
+Given no candidate satisfies the added condition, the treatment arm SHALL be recorded as
+having no admissible candidate, and that SHALL be reported as a finding rather than as a tie.
+
+#### UPDATE 2026-08-12 — RESULTS: the pool has nothing good in it
+
+**exp6258:** at the live threshold, 21 false accepts, 5 true accepts, 3 true rejects, **0
+false rejects**. Acceptance precision **0.1923**. The defect is ONE-SIDED — the veto
+over-admits and does not over-reject, so lowering the threshold would make it strictly worse.
+(This retracted a prior claim that the veto also rejects discriminating predicates; that arm
+is arithmetically possible and was never observed.)
+
+**exp6259:** 16 candidates across 4 games, **14 admitted by the live veto, 0 sensitive, arm B
+empty on 4 of 4**. Arm A's selected candidate found no plan on any game — all hit the 20000
+node cap. Non-hollow plans: 0 for both arms.
+`complete_veto_sensitivity_unusable_arm_b_empty_on_all_4_games_gate_is_not_the_lever`.
+
+**Consequence.** Combined with exp6256, **22 of 22 freshly induced goal predicates fail to
+fire on a real win.** The gate is not selecting badly from a good pool; the pool has nothing
+good in it. The defect is upstream in how the predicate is PRODUCED, and
+`min_goal_predicate_consistency` cannot help in either direction. The live threshold is
+unchanged and there is now no measured reason to change it.
+
+Full synthesis across exp6248-exp6259:
+`docs/research-notes/arc-induction-wall-consolidated-2026-08-12.md`.
