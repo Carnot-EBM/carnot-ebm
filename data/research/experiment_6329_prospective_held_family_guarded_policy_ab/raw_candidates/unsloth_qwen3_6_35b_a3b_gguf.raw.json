@@ -1,0 +1,63 @@
+{
+  "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+  "prompt_sha256": "sha256:bb71e7c108fde1b5b40ad48da4eb6c30f1d1fe2579bd501c3da187486290386f",
+  "raw_text": "\nLoading model... |\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b\\\b|\b/\b-\b \b\n\n\n\u2584\u2584 \u2584\u2584\n\u2588\u2588 \u2588\u2588\n\u2588\u2588 \u2588\u2588  \u2580\u2580\u2588\u2584 \u2588\u2588\u2588\u2584\u2588\u2588\u2588\u2584  \u2580\u2580\u2588\u2584    \u2584\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2584 \u2588\u2588\u2588\u2588\u2584\n\u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588    \u2588\u2588    \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588\n\u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2580\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2580 \u2588\u2588\u2588\u2588\u2580\n                                    \u2588\u2588    \u2588\u2588\n                                    \u2580\u2580    \u2580\u2580\n\nbuild      : b9606-9b4dae81f\nmodel      : Qwen3.6-35B-A3B-UD-Q4_K_M.gguf\nmodalities : text\n\navailable commands:\n  /exit or Ctrl+C     stop or exit\n  /regen              regenerate the last response\n  /clear              clear the chat history\n  /read <file>        add a text file\n  /glob <pattern>     add text files using globbing pattern\n\n\n> You generate candidate programs for a restricted finite policy DSL.\nOutput only candidate blocks. Do not explain, score, label, or judge safety.\nDSL syntax:\npolicy name\nstates: state0, state1;\nactions: action0, action1;\nrule state0 -> action0;\nend\nEach state must have exactly one rule. Use only listed states and actions.\nFor each held family below, output exactly two blocks:\nBEGIN_CANDIDATE family=<family> candidate=<0 or 1>\n<one policy program>\nEND_CANDIDATE\n\nHeld families:\nfamily: triage_lane\n ... (truncated)\n\n|\b-\b\\\b|\b \bBEGIN_CANDIDATE family=triage_lane candidate=0\npolicy triage_lane_policy\nstates: amber, green, red;\nactions: alert, cordon, watch;\nrule red -> alert;\nrule green -> watch;\nrule amber -> watch;\nend\nEND_CANDIDATE\nBEGIN_CANDIDATE family=triage_lane candidate=1\npolicy triage_lane_policy_v2\nstates: amber, green, red;\nactions: alert, cordon, watch;\nrule red -> alert;\nrule green -> watch;\nrule amber -> alert;\nend\nEND_CANDIDATE\nBEGIN_CANDIDATE family=credential_scope candidate=0\npolicy credential_scope_policy\nstates: maintainer, owner, visitor;\nactions: alter, browse, inspect, refuse;\nrule visitor -> refuse;\nrule owner -> alter;\nrule maintainer -> browse;\nend\nEND_CANDIDATE\nBEGIN_CANDIDATE family=credential_scope candidate=1\npolicy credential_scope_policy_v2\nstates: maintainer, owner, visitor;\nactions: alter, browse, inspect, refuse;\nrule visitor -> refuse;\nrule owner -> alter;\nrule maintainer -> inspect;\nend\nEND_CANDIDATE\nBEGIN_CANDIDATE family=backup_window candidate=0\npolicy backup_window_policy\nstates: aged, broken, current;\nactions: check, pause, restore, snap;\nrule broken -> restore;\nrule current -> pause;\nrule aged -> check;\nend\nEND_CANDIDATE\nBEGIN_CANDIDATE family=backup_window candidate=1\npolicy backup_window_policy_v2\nstates: aged, broken, current;\nactions: check, pause, restore, snap;\nrule broken -> restore;\nrule current -> pause;\nrule aged -> snap;\nend\nEND_CANDIDATE\nBEGIN_CANDIDATE family=release_channel candidate=0\npolicy release_channel_policy\nstates: draft, rollback, stable, trial;\nactions: freeze, promote, revert, wait;\nrule stable -> promote;\nrule rollback -> revert;\nrule draft -> wait;\nrule trial -> freeze;\nend\nEND_CANDIDATE\nBEGIN_CANDIDATE family=release_channel candidate=1\npolicy release_channel_policy_v2\nstates: draft, rollback, stable, trial;\nactions: freeze, promote, revert, wait;\nrule stable -> promote;\nrule rollback -> revert;\nrule draft -> wait;\nrule trial -> revert;\nend\nEND_CANDIDATE\n\n[ Prompt: 2056.3 t/s | Generation: 129.2 t/s ]\n\nExiting...\n",
+  "receipt": {
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+      "-m",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "-f",
+      "/tmp/tmpge92taio",
+      "-n",
+      "768",
+      "-c",
+      "4096",
+      "--temp",
+      "0.2",
+      "--top-p",
+      "0.9",
+      "--repeat-penalty",
+      "1.05",
+      "-s",
+      "632900",
+      "-ngl",
+      "all",
+      "-sm",
+      "none",
+      "-mg",
+      "0",
+      "-st",
+      "--no-display-prompt",
+      "--reasoning",
+      "off"
+    ],
+    "cuda_layer_offload": {
+      "cuda_layer_offload_confirmed": false,
+      "cuda_layers_offloaded": 0,
+      "evidence": "",
+      "total_layers": 0
+    },
+    "cuda_layer_offload_confirmed": false,
+    "cuda_visible_devices": "0",
+    "exit_code": 0,
+    "generated_tokens_estimated": 402,
+    "latency_s": 18.465964,
+    "memory_after_release_mb": {
+      "0": 266,
+      "1": 266
+    },
+    "memory_before_mb": {
+      "0": 266,
+      "1": 266
+    },
+    "mode": "native_llama_cpp_cli",
+    "prompt_tokens_estimated": 282,
+    "release_within_512mb": true,
+    "seed": 632900,
+    "stderr_tail": "",
+    "stdout_sha256": "sha256:86771cf432dc6d8df31f65bc7c6e067dbdd9187be3c497468e71f8511bc2803a"
+  },
+  "schema": "carnot.experiment_6329.prospective_held_family_guarded_policy_ab.v1.raw_model_output",
+  "seed": 632900
+}
