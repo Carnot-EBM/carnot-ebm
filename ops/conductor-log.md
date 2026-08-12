@@ -15717,3 +15717,4 @@ code |
 | 2026-08-12 18:01 UTC | Gated prospective held-family prefix utility A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6340-parser-jit-semantic-diversity-cana |
 | 2026-08-12 18:03 UTC | Gated prospective held-family prefix utility A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6340-parser-jit-semantic-diversity-cana |
 | 2026-08-12 18:22 UTC | Immutable anytime e-value ledger for factor releas | OK | 87 passed, 1 warning in 9.17s |
+| 2026-08-12 18:42 UTC | Bounded evidence-carrying factor merge and deletio | OK | 87 passed, 1 warning in 9.99s |
