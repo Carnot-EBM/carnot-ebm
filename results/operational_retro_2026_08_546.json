@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.546",
+  "generated_at": "2026-08-12T20:38:46Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 8.2,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 8,
+  "slowest_experiments": [
+    {
+      "experiment": "Three-model parser-state and JIT semantic-diversity canary",
+      "duration_minutes": 5.23,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated default-off live ARC action-influence A/B",
+      "duration_minutes": 1.25,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated chronological e-process factor evolution trial",
+      "duration_minutes": 0.76,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Three-model minimized-counterexample factor proposal calibration",
+      "duration_minutes": 0.74,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bounded V545 terminal evidence handoff into V546",
+      "duration_minutes": 0.19,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 13 experiments in 8.2 minutes, with 8 classified as compute-bound. The 5.23-minute Three-model parser-state and JIT semantic-diversity canary led the recorded compute tail, but the supplied data does not resolve its internal cause, task-time GPU efficiency, or concurrent-model runner behavior.",
+  "bottlenecks_identified": [
+    "The Three-model parser-state and JIT semantic-diversity canary was the longest compute-bound entry, but no phase breakdown is available to locate the cause of its runtime.",
+    "Disk-mtime reconstruction ranks elapsed durations but does not provide task-linked stage timing or GPU samples, so the supplied GPU state cannot establish compute-task utilization efficiency.",
+    "The data does not establish simultaneous model loading or record runner selection, so it cannot show whether any eligible parallel multi-model task missed DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "Emit monotonic per-phase timings for compute-bound experiments, including setup, model loading, inference, and teardown, to localize the longest task's runtime.",
+    "Capture GPU utilization and memory samples tagged with the active experiment and phase so end-state idle readings are not mistaken for task-time behavior.",
+    "Record concurrent loaded-model count and runner choice, and select DualGPURunner only when at least two models are loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add phase-level monotonic timing receipts to every compute-bound experiment.",
+    "Join GPU telemetry to experiment and phase identifiers for the full compute interval.",
+    "Emit model-concurrency and runner-selection receipts, with conditional DualGPURunner dispatch for parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The reconstructed timings identify where runtime concentrated but not why it concentrated. No measured before-and-after comparison is available, so the retrospective makes no numerical savings claim and prioritizes observability that can support one next milestone."
+}

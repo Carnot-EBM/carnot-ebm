@@ -6143,3 +6143,10 @@ The critical path for milestone .250:
 - theme: readiness- and integrity-gated policy work concentrated the reconstructed compute tail
 - key result: honest operational limitation -- the two longest compute tasks account for the full window, but causal phases, task-linked GPU efficiency, and parallel-model runner evidence are unavailable
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.546
+
+- exp_range: no data available this milestone
+- theme: a multi-model parser and JIT canary concentrated the compute-bound operational tail under coarse timing reconstruction
+- key result: the locked classification reports no compute-task GPU-idle fault, while missing task-linked telemetry and model-concurrency receipts prevent an efficiency grade or a DualGPURunner finding
+- acceptance: 4/4 requested operational determinations addressed
