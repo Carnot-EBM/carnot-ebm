@@ -3889,6 +3889,109 @@ and the honest verdict has a terminal prefix.
 |---|---|---|
 | REQ-INFRA-6338 | Implemented: `python/carnot/experiment_6338_v546_post_marker_source_scope_freeze.py`; terminal artifact `results/experiment_6338_v546_post_marker_source_scope_freeze.json`. | Implemented: `tests/python/test_experiment_6338_v546_post_marker_source_scope_freeze.py`. |
 
+## REQ-INFRA-6349: V546 Capstone SHALL Recompute Terminal Evidence Without Claim Laundering
+
+Carnot SHALL build Exp6349 as a deterministic V546 adversarial capstone over
+the 13 declared tasks in milestone `2026.08.546`. The capstone SHALL parse the
+active roadmap task specs. It SHALL match each declared deliverable to its exact
+artifact path or to an explicit conductor failure or structured gate skip. It
+SHALL accept complete, null, blocked, failed, flagged, retired, and skipped
+states as evidence classes. It SHALL not rewrite those states.
+
+Exp6349 SHALL recompute every dependency and structured gate from upstream
+artifact fields. A failed gate SHALL preserve the skipped downstream artifact.
+It SHALL not promote a skipped task through conductor receipts. It SHALL not
+turn exact-oracle checks into learned verifiers. It SHALL not count safety-only
+evidence as utility. It SHALL not count ARC route reachability as action
+influence. It SHALL not count action influence as an ARC solve.
+
+Exp6349 SHALL audit mandatory local GGUF use, embedded llama.cpp tokenizer
+receipts, GPU memory release receipts, source-model weight immutability,
+generated-label counts, hidden-state access counts, verification-cost
+accounting, certified-learning chronology, e-process validity, factor lifecycle
+bounds, rollback identity, ARC solve provenance, ARC registry immutability, and
+hardware non-use. The capstone itself SHALL use
+`inference_substrate=aggregation_from_upstream_artifacts_no_llm`,
+`verifier_is_oracle=false`, and bare integer `llm_call_count=0`.
+
+The Exp6349 artifact SHALL be written atomically to
+`results/experiment_6349_v546_adversarial_capstone.json` and SHALL include
+these required fields: `status`, `milestone_and_roadmap_hash`,
+`declared_task_ids_and_deliverables`,
+`conductor_terminal_receipts_by_task`,
+`artifact_existence_hash_schema_status_and_honest_verdict_by_task`,
+`dependency_recomputation`, `structured_gate_recomputation`,
+`skipped_task_handling`, `prior_failure_and_retirement_audit`,
+`exclusion_manifest_audit`, `prompt_contract_audit`,
+`required_field_and_field_principle_audit`,
+`model_policy_and_MODEL_SPECS_audit`,
+`llama_cpp_embedded_tokenizer_audit`,
+`gpu_offload_and_memory_release_audit`,
+`source_model_weight_mutation_audit`,
+`generated_label_and_hidden_state_audit`,
+`exact_oracle_and_learned_claim_boundary_audit`,
+`prefix_generation_determination`,
+`certified_continuous_learning_determination`,
+`eprocess_and_factor_lifecycle_determination`,
+`safety_audit_determination`, `arc_action_influence_determination`,
+`solve_provenance_audit`, `arc_registry_immutability_audit`,
+`hardware_nonuse_and_inference_substrate_audit`,
+`verification_cost_accounting_audit`, `three_gap_closure_matrix`,
+`prd_requirement_mapping`, `protected_files_changed_with_reasons`,
+`docs_and_archive_reconciliation`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `llm_call_count`,
+`field_provenance`, `field_principles`, `test_commands`, `test_exit_codes`,
+`duration_s`, `reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INFRA-6349-1: Exact Artifacts And Receipts Define The Terminal Matrix
+
+GIVEN the active V546 roadmap declares Exp6337 through Exp6349
+WHEN Exp6349 builds the terminal matrix
+THEN each task row records the exact deliverable path, hash state, schema
+state, status, honest verdict, terminal class, and conductor receipts. The
+capstone row records that its own output hash is self-referential and excluded.
+
+### SCENARIO-INFRA-6349-2: Structured Gates Are Recomputed From Raw Fields
+
+GIVEN the roadmap declares gates for Exp6340, Exp6341, Exp6345, and Exp6348
+WHEN Exp6349 evaluates those gates
+THEN each gate row records the upstream task, artifact field, expected value,
+actual value, pass state, and skip effect. Exp6341 remains a structured skip
+when Exp6340 `semantic_diversity_gain_score` is `0.0`.
+
+### SCENARIO-INFRA-6349-3: Model, Oracle, And Mutation Boundaries Stay Separate
+
+GIVEN local-GGUF tasks and exact-oracle tasks exist upstream
+WHEN Exp6349 audits the evidence
+THEN mandatory GGUF ids, embedded tokenizer receipts, GPU release receipts,
+zero source-weight mutation, zero generated labels, zero hidden-state access,
+and upstream oracle identities are reported without setting the capstone's
+`verifier_is_oracle` to true.
+
+### SCENARIO-INFRA-6349-4: Three Gap Closure Matrix Does Not Overclaim
+
+GIVEN V546 has a prefix-generation branch, certified-learning branch, and ARC
+action-influence branch
+WHEN Exp6349 writes the closure matrix
+THEN prefix generation remains null or skipped after the failed canary gate,
+certified learning closes only inside the exact-release boundary, ARC action
+influence closes only as no-solve action influence, and every hardware
+boundary remains non-use.
+
+### SCENARIO-INFRA-6349-5: Output Is Principle Annotated And Failure Aware
+
+GIVEN command receipts and protected-file hashes are available
+WHEN Exp6349 validates the report
+THEN every required field has provenance and a principle, `llm_call_count` is
+bare `0`, `verifier_is_oracle` is false, nonzero command exits force a blocked
+verdict, and the checksum matches the normalized payload.
+
+## Implementation Status (REQ-INFRA-6349)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6349 | Pending implementation: `python/carnot/experiment_6349_v546_adversarial_capstone.py`; terminal artifact `results/experiment_6349_v546_adversarial_capstone.json`. | Pending focused tests: `tests/python/test_experiment_6349_v546_adversarial_capstone.py`. |
+
 ## Implementation Status (REQ-INFRA-6322)
 
 | REQ | Implementation | Tests |
