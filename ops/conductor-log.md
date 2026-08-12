@@ -15695,3 +15695,8 @@ Still active  |
 | 2026-08-12 05:00 UTC | V544 adversarial capstone, branch promotion, and r | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6322_v544_ad |
 | 2026-08-12 05:57 UTC | Plan milestone 2026.08.545 | OK | 7 tasks proposed |
 | 2026-08-12 05:59 UTC | Milestone 2026.08.545 activated | OK | 7 tasks queued |
+| 2026-08-12 07:22 UTC | Exact terminal-boundary handoff from V544 into V54 | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:    root=REPO,
+ |
+| 2026-08-12 08:47 UTC | Exact terminal-boundary handoff from V544 into V54 | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: xit code.
+code |
+| 2026-08-12 10:10 UTC | Exact terminal-boundary handoff from V544 into V54 | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: EQ-INFRA-6323  |
