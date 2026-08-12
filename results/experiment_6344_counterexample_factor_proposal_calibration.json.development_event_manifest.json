@@ -1,0 +1,128 @@
+{
+  "budgets_hash": "sha256:5f1023b5d19b639ae55b2fa9f62241cb77d288f51de9dd097b0b10a1bdeae7c4",
+  "event_count": 4,
+  "events_exposed_to_proposer": [
+    {
+      "allowed_variables": [
+        "accept_bias"
+      ],
+      "changed_factor": "accept_factor",
+      "edit_bounds": {
+        "max": 1.0,
+        "max_abs_movement": 1.0,
+        "min": -1.0
+      },
+      "event_id": "dev-000",
+      "minimized_exact_counterexample": {
+        "case_id": "case_accept_min",
+        "exact": true,
+        "expected": "accept",
+        "minimal": true,
+        "observed_before_edit": "reject",
+        "removing_any_variable_repairs": false,
+        "variables": {
+          "accept_bias": 1.0
+        },
+        "violated_factor": "accept_factor"
+      }
+    },
+    {
+      "allowed_variables": [
+        "repair_bias"
+      ],
+      "changed_factor": "repair_factor",
+      "edit_bounds": {
+        "max": 1.0,
+        "max_abs_movement": 1.0,
+        "min": -1.0
+      },
+      "event_id": "dev-001",
+      "minimized_exact_counterexample": {
+        "case_id": "case_repair_min",
+        "exact": true,
+        "expected": "repair",
+        "minimal": true,
+        "observed_before_edit": "accept",
+        "removing_any_variable_repairs": false,
+        "variables": {
+          "repair_bias": 1.0
+        },
+        "violated_factor": "repair_factor"
+      }
+    },
+    {
+      "allowed_variables": [
+        "reject_bias"
+      ],
+      "changed_factor": "reject_factor",
+      "edit_bounds": {
+        "max": 1.0,
+        "max_abs_movement": 1.0,
+        "min": -1.0
+      },
+      "event_id": "dev-002",
+      "minimized_exact_counterexample": {
+        "case_id": "case_reject_min",
+        "exact": true,
+        "expected": "reject",
+        "minimal": true,
+        "observed_before_edit": "repair",
+        "removing_any_variable_repairs": false,
+        "variables": {
+          "reject_bias": 1.0
+        },
+        "violated_factor": "reject_factor"
+      }
+    },
+    {
+      "allowed_variables": [
+        "drift_bias"
+      ],
+      "changed_factor": "drift_factor",
+      "edit_bounds": {
+        "max": 1.0,
+        "max_abs_movement": 1.0,
+        "min": -1.0
+      },
+      "event_id": "dev-003",
+      "minimized_exact_counterexample": {
+        "case_id": "case_drift_min",
+        "exact": true,
+        "expected": "repair",
+        "minimal": true,
+        "observed_before_edit": "reject",
+        "removing_any_variable_repairs": false,
+        "variables": {
+          "drift_bias": 1.0
+        },
+        "violated_factor": "drift_factor"
+      }
+    }
+  ],
+  "protected_outcome_hashes": [
+    {
+      "event_id": "dev-000",
+      "protected_outcome_hash": "sha256:9b193d34e5051b02e9e4be22dc02a705ee31adb7e4fac9c281c1991726c66c97"
+    },
+    {
+      "event_id": "dev-001",
+      "protected_outcome_hash": "sha256:da29caca7e6f04c8582eb17b3181d5c0a126fc8c257c8ec7b05bd8781521e4e6"
+    },
+    {
+      "event_id": "dev-002",
+      "protected_outcome_hash": "sha256:db53ba9f934b3fbde45e5be8f4a7d4572fb879fbe4a86bf72903c7f5bc561d0d"
+    },
+    {
+      "event_id": "dev-003",
+      "protected_outcome_hash": "sha256:2bc5c2e1156618ad4551dc23245b6de5ef7345759fe8f120ddf61a0b9159980f"
+    }
+  ],
+  "random_seeds": {
+    "invalid_fixtures": 634403,
+    "model_schedule": 634400,
+    "proposal_replay": 634401,
+    "protected_seal": 634402
+  },
+  "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.development_event_manifest",
+  "split": "development"
+}

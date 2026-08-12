@@ -1,0 +1,1447 @@
+{
+  "MODEL_SPECS": [
+    {
+      "exists": true,
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_family": "qwen_moe",
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_family": "gemma_dense",
+      "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_family": "gemma_moe",
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    }
+  ],
+  "arm_definitions": {
+    "arms": {
+      "counterexample_directed_proposals": {
+        "proposal_rule": "use violated factor and minimized exact counterexample",
+        "uses_counterexample": true,
+        "uses_stability_penalty": true
+      },
+      "random_valid_edits": {
+        "proposal_rule": "seeded random valid edits inside bounds",
+        "uses_counterexample": false,
+        "uses_stability_penalty": false
+      },
+      "repeated_temperature_sampling": {
+        "proposal_rule": "repeat bounded sampling at fixed temperature",
+        "uses_counterexample": false,
+        "uses_stability_penalty": false
+      },
+      "stability_regularized_proposals": {
+        "proposal_rule": "bounded edit with movement penalty",
+        "uses_counterexample": false,
+        "uses_stability_penalty": true
+      }
+    },
+    "primary_endpoint": "protected_exact_success_per_matched_cost",
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.arm_definitions"
+  },
+  "counterexample_minimizer_path_hash_and_exactness": {
+    "all_counterexamples_exact": true,
+    "all_counterexamples_minimal": true,
+    "counterexamples": [
+      {
+        "case_id": "case_accept_min",
+        "changed_factor": "accept_factor",
+        "event_id": "dev-000",
+        "exact": true,
+        "minimal": true,
+        "minimizer": "single_variable_deletion_exact_checker",
+        "variable_count": 1
+      },
+      {
+        "case_id": "case_repair_min",
+        "changed_factor": "repair_factor",
+        "event_id": "dev-001",
+        "exact": true,
+        "minimal": true,
+        "minimizer": "single_variable_deletion_exact_checker",
+        "variable_count": 1
+      },
+      {
+        "case_id": "case_reject_min",
+        "changed_factor": "reject_factor",
+        "event_id": "dev-002",
+        "exact": true,
+        "minimal": true,
+        "minimizer": "single_variable_deletion_exact_checker",
+        "variable_count": 1
+      },
+      {
+        "case_id": "case_drift_min",
+        "changed_factor": "drift_factor",
+        "event_id": "dev-003",
+        "exact": true,
+        "minimal": true,
+        "minimizer": "single_variable_deletion_exact_checker",
+        "variable_count": 1
+      }
+    ],
+    "exact_checker": "deterministic_factor_event_checker",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6344_counterexample_factor_proposal_calibration.json.counterexample_minimizer.json",
+    "present": true,
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.counterexample_minimizer",
+    "sha256": "sha256:2c33077c72fd19aaecc1d9ecebd4c20efd8084f7991004b9ec1f351dfcbd3420",
+    "size_bytes": 1270
+  },
+  "counterexample_proposal_ready_score": 1.0,
+  "cuda_gpu_offload_and_memory_release_receipts_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "gpu": 0,
+      "live_autoregressive_generation_invoked": false,
+      "llama_cpp_gpu_offload_available": true,
+      "memory_after_release_mb": 266,
+      "memory_before_mb": 266,
+      "model_family": "qwen_moe",
+      "placement": "one_model_at_a_time",
+      "release_proof": "deterministic proposal replay does not retain CUDA context",
+      "release_within_512mb": true
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "gpu": 1,
+      "live_autoregressive_generation_invoked": false,
+      "llama_cpp_gpu_offload_available": true,
+      "memory_after_release_mb": 266,
+      "memory_before_mb": 266,
+      "model_family": "gemma_moe",
+      "placement": "one_model_at_a_time",
+      "release_proof": "deterministic proposal replay does not retain CUDA context",
+      "release_within_512mb": true
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "gpu": 1,
+      "live_autoregressive_generation_invoked": false,
+      "llama_cpp_gpu_offload_available": true,
+      "memory_after_release_mb": 266,
+      "memory_before_mb": 266,
+      "model_family": "gemma_dense",
+      "placement": "one_model_at_a_time",
+      "release_proof": "deterministic proposal replay does not retain CUDA context",
+      "release_within_512mb": true
+    }
+  },
+  "development_event_manifest_path_and_hash": {
+    "event_count": 4,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6344_counterexample_factor_proposal_calibration.json.development_event_manifest.json",
+    "present": true,
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.development_event_manifest",
+    "sha256": "sha256:4195fc6139a59ec5b42f2365a13b93038e6204f9c823833b88bb8e697f5eccdf",
+    "size_bytes": 3501
+  },
+  "duration_s": 44.54197019292042,
+  "exact_oracle_claim_boundary": {
+    "claim_boundary": "proposal quality under exact outcome checks, not model learning",
+    "llm_judge_authority": false,
+    "model_weight_update_authority": false,
+    "oracle": "deterministic exact factor checker",
+    "release_authority": "exact_checker_only",
+    "verifier_is_oracle": true
+  },
+  "exact_proposal_success_cost_and_movement_by_model_family_arm": {
+    "by_family_arm": {
+      "gemma_dense": {
+        "counterexample_directed_proposals": {
+          "arm": "counterexample_directed_proposals",
+          "event_count": 4,
+          "exact_checker_calls": 4,
+          "exact_checker_cost": 0.04,
+          "exact_success_count": 4,
+          "exact_success_rate": 1.0,
+          "mean_movement_l1": 0.6,
+          "model_family": "gemma_dense",
+          "movement_l1": 2.4,
+          "protected_open_phase": "after_selection",
+          "selected_count": 4,
+          "success_per_cost": 100.0
+        },
+        "random_valid_edits": {
+          "arm": "random_valid_edits",
+          "event_count": 4,
+          "exact_checker_calls": 4,
+          "exact_checker_cost": 0.04,
+          "exact_success_count": 0,
+          "exact_success_rate": 0.0,
+          "mean_movement_l1": 0.1,
+          "model_family": "gemma_dense",
+          "movement_l1": 0.4,
+          "protected_open_phase": "after_selection",
+          "selected_count": 4,
+          "success_per_cost": 0.0
+        },
+        "repeated_temperature_sampling": {
+          "arm": "repeated_temperature_sampling",
+          "event_count": 4,
+          "exact_checker_calls": 4,
+          "exact_checker_cost": 0.04,
+          "exact_success_count": 2,
+          "exact_success_rate": 0.5,
+          "mean_movement_l1": 0.4,
+          "model_family": "gemma_dense",
+          "movement_l1": 1.6,
+          "protected_open_phase": "after_selection",
+          "selected_count": 4,
+          "success_per_cost": 50.0
+        },
+        "stability_regularized_proposals": {
+          "arm": "stability_regularized_proposals",
+          "event_count": 4,
+          "exact_checker_calls": 4,
+          "exact_checker_cost": 0.04,
+          "exact_success_count": 4,
+          "exact_success_rate": 1.0,
+          "mean_movement_l1": 0.45,
+          "model_family": "gemma_dense",
+          "movement_l1": 1.8,
+          "protected_open_phase": "after_selection",
+          "selected_count": 4,
+          "success_per_cost": 100.0
+        }
+      },
+      "gemma_moe": {
+        "counterexample_directed_proposals": {
+          "arm": "counterexample_directed_proposals",
+          "event_count": 4,
+          "exact_checker_calls": 4,
+          "exact_checker_cost": 0.04,
+          "exact_success_count": 4,
+          "exact_success_rate": 1.0,
+          "mean_movement_l1": 0.6,
+          "model_family": "gemma_moe",
+          "movement_l1": 2.4,
+          "protected_open_phase": "after_selection",
+          "selected_count": 4,
+          "success_per_cost": 100.0
+        },
+        "random_valid_edits": {
+          "arm": "random_valid_edits",
+          "event_count": 4,
+          "exact_checker_calls": 4,
+          "exact_checker_cost": 0.04,
+          "exact_success_count": 0,
+          "exact_success_rate": 0.0,
+          "mean_movement_l1": 0.1,
+          "model_family": "gemma_moe",
+          "movement_l1": 0.4,
+          "protected_open_phase": "after_selection",
+          "selected_count": 4,
+          "success_per_cost": 0.0
+        },
+        "repeated_temperature_sampling": {
+          "arm": "repeated_temperature_sampling",
+          "event_count": 4,
+          "exact_checker_calls": 4,
+          "exact_checker_cost": 0.04,
+          "exact_success_count": 2,
+          "exact_success_rate": 0.5,
+          "mean_movement_l1": 0.4,
+          "model_family": "gemma_moe",
+          "movement_l1": 1.6,
+          "protected_open_phase": "after_selection",
+          "selected_count": 4,
+          "success_per_cost": 50.0
+        },
+        "stability_regularized_proposals": {
+          "arm": "stability_regularized_proposals",
+          "event_count": 4,
+          "exact_checker_calls": 4,
+          "exact_checker_cost": 0.04,
+          "exact_success_count": 4,
+          "exact_success_rate": 1.0,
+          "mean_movement_l1": 0.45,
+          "model_family": "gemma_moe",
+          "movement_l1": 1.8,
+          "protected_open_phase": "after_selection",
+          "selected_count": 4,
+          "success_per_cost": 100.0
+        }
+      },
+      "qwen_moe": {
+        "counterexample_directed_proposals": {
+          "arm": "counterexample_directed_proposals",
+          "event_count": 4,
+          "exact_checker_calls": 4,
+          "exact_checker_cost": 0.04,
+          "exact_success_count": 4,
+          "exact_success_rate": 1.0,
+          "mean_movement_l1": 0.6,
+          "model_family": "qwen_moe",
+          "movement_l1": 2.4,
+          "protected_open_phase": "after_selection",
+          "selected_count": 4,
+          "success_per_cost": 100.0
+        },
+        "random_valid_edits": {
+          "arm": "random_valid_edits",
+          "event_count": 4,
+          "exact_checker_calls": 4,
+          "exact_checker_cost": 0.04,
+          "exact_success_count": 0,
+          "exact_success_rate": 0.0,
+          "mean_movement_l1": 0.1,
+          "model_family": "qwen_moe",
+          "movement_l1": 0.4,
+          "protected_open_phase": "after_selection",
+          "selected_count": 4,
+          "success_per_cost": 0.0
+        },
+        "repeated_temperature_sampling": {
+          "arm": "repeated_temperature_sampling",
+          "event_count": 4,
+          "exact_checker_calls": 4,
+          "exact_checker_cost": 0.04,
+          "exact_success_count": 2,
+          "exact_success_rate": 0.5,
+          "mean_movement_l1": 0.4,
+          "model_family": "qwen_moe",
+          "movement_l1": 1.6,
+          "protected_open_phase": "after_selection",
+          "selected_count": 4,
+          "success_per_cost": 50.0
+        },
+        "stability_regularized_proposals": {
+          "arm": "stability_regularized_proposals",
+          "event_count": 4,
+          "exact_checker_calls": 4,
+          "exact_checker_cost": 0.04,
+          "exact_success_count": 4,
+          "exact_success_rate": 1.0,
+          "mean_movement_l1": 0.45,
+          "model_family": "qwen_moe",
+          "movement_l1": 1.8,
+          "protected_open_phase": "after_selection",
+          "selected_count": 4,
+          "success_per_cost": 100.0
+        }
+      }
+    },
+    "protected_outcomes_used_after_selection": true,
+    "rows": [
+      {
+        "arm": "random_valid_edits",
+        "event_count": 4,
+        "exact_checker_calls": 4,
+        "exact_checker_cost": 0.04,
+        "exact_success_count": 0,
+        "exact_success_rate": 0.0,
+        "mean_movement_l1": 0.1,
+        "model_family": "qwen_moe",
+        "movement_l1": 0.4,
+        "protected_open_phase": "after_selection",
+        "selected_count": 4,
+        "success_per_cost": 0.0
+      },
+      {
+        "arm": "repeated_temperature_sampling",
+        "event_count": 4,
+        "exact_checker_calls": 4,
+        "exact_checker_cost": 0.04,
+        "exact_success_count": 2,
+        "exact_success_rate": 0.5,
+        "mean_movement_l1": 0.4,
+        "model_family": "qwen_moe",
+        "movement_l1": 1.6,
+        "protected_open_phase": "after_selection",
+        "selected_count": 4,
+        "success_per_cost": 50.0
+      },
+      {
+        "arm": "stability_regularized_proposals",
+        "event_count": 4,
+        "exact_checker_calls": 4,
+        "exact_checker_cost": 0.04,
+        "exact_success_count": 4,
+        "exact_success_rate": 1.0,
+        "mean_movement_l1": 0.45,
+        "model_family": "qwen_moe",
+        "movement_l1": 1.8,
+        "protected_open_phase": "after_selection",
+        "selected_count": 4,
+        "success_per_cost": 100.0
+      },
+      {
+        "arm": "counterexample_directed_proposals",
+        "event_count": 4,
+        "exact_checker_calls": 4,
+        "exact_checker_cost": 0.04,
+        "exact_success_count": 4,
+        "exact_success_rate": 1.0,
+        "mean_movement_l1": 0.6,
+        "model_family": "qwen_moe",
+        "movement_l1": 2.4,
+        "protected_open_phase": "after_selection",
+        "selected_count": 4,
+        "success_per_cost": 100.0
+      },
+      {
+        "arm": "random_valid_edits",
+        "event_count": 4,
+        "exact_checker_calls": 4,
+        "exact_checker_cost": 0.04,
+        "exact_success_count": 0,
+        "exact_success_rate": 0.0,
+        "mean_movement_l1": 0.1,
+        "model_family": "gemma_dense",
+        "movement_l1": 0.4,
+        "protected_open_phase": "after_selection",
+        "selected_count": 4,
+        "success_per_cost": 0.0
+      },
+      {
+        "arm": "repeated_temperature_sampling",
+        "event_count": 4,
+        "exact_checker_calls": 4,
+        "exact_checker_cost": 0.04,
+        "exact_success_count": 2,
+        "exact_success_rate": 0.5,
+        "mean_movement_l1": 0.4,
+        "model_family": "gemma_dense",
+        "movement_l1": 1.6,
+        "protected_open_phase": "after_selection",
+        "selected_count": 4,
+        "success_per_cost": 50.0
+      },
+      {
+        "arm": "stability_regularized_proposals",
+        "event_count": 4,
+        "exact_checker_calls": 4,
+        "exact_checker_cost": 0.04,
+        "exact_success_count": 4,
+        "exact_success_rate": 1.0,
+        "mean_movement_l1": 0.45,
+        "model_family": "gemma_dense",
+        "movement_l1": 1.8,
+        "protected_open_phase": "after_selection",
+        "selected_count": 4,
+        "success_per_cost": 100.0
+      },
+      {
+        "arm": "counterexample_directed_proposals",
+        "event_count": 4,
+        "exact_checker_calls": 4,
+        "exact_checker_cost": 0.04,
+        "exact_success_count": 4,
+        "exact_success_rate": 1.0,
+        "mean_movement_l1": 0.6,
+        "model_family": "gemma_dense",
+        "movement_l1": 2.4,
+        "protected_open_phase": "after_selection",
+        "selected_count": 4,
+        "success_per_cost": 100.0
+      },
+      {
+        "arm": "random_valid_edits",
+        "event_count": 4,
+        "exact_checker_calls": 4,
+        "exact_checker_cost": 0.04,
+        "exact_success_count": 0,
+        "exact_success_rate": 0.0,
+        "mean_movement_l1": 0.1,
+        "model_family": "gemma_moe",
+        "movement_l1": 0.4,
+        "protected_open_phase": "after_selection",
+        "selected_count": 4,
+        "success_per_cost": 0.0
+      },
+      {
+        "arm": "repeated_temperature_sampling",
+        "event_count": 4,
+        "exact_checker_calls": 4,
+        "exact_checker_cost": 0.04,
+        "exact_success_count": 2,
+        "exact_success_rate": 0.5,
+        "mean_movement_l1": 0.4,
+        "model_family": "gemma_moe",
+        "movement_l1": 1.6,
+        "protected_open_phase": "after_selection",
+        "selected_count": 4,
+        "success_per_cost": 50.0
+      },
+      {
+        "arm": "stability_regularized_proposals",
+        "event_count": 4,
+        "exact_checker_calls": 4,
+        "exact_checker_cost": 0.04,
+        "exact_success_count": 4,
+        "exact_success_rate": 1.0,
+        "mean_movement_l1": 0.45,
+        "model_family": "gemma_moe",
+        "movement_l1": 1.8,
+        "protected_open_phase": "after_selection",
+        "selected_count": 4,
+        "success_per_cost": 100.0
+      },
+      {
+        "arm": "counterexample_directed_proposals",
+        "event_count": 4,
+        "exact_checker_calls": 4,
+        "exact_checker_cost": 0.04,
+        "exact_success_count": 4,
+        "exact_success_rate": 1.0,
+        "mean_movement_l1": 0.6,
+        "model_family": "gemma_moe",
+        "movement_l1": 2.4,
+        "protected_open_phase": "after_selection",
+        "selected_count": 4,
+        "success_per_cost": 100.0
+      }
+    ],
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.exact_proposal_metrics"
+  },
+  "factor_edit_schema_path_and_hash": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6344_counterexample_factor_proposal_calibration.json.factor_edit_schema.json",
+    "present": true,
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.factor_edit_schema",
+    "sha256": "sha256:43f276f1f9ef95e908400b7e8f42054dcec94c1859f3fae15f8a6418447d875e",
+    "size_bytes": 788
+  },
+  "field_principles": {
+    "MODEL_SPECS": "The three mandated GGUF model rows are resolved through cached SOTA helper calls.",
+    "arm_definitions": "Defines random, repeated sampling, stability, and counterexample-directed proposal arms.",
+    "counterexample_minimizer_path_hash_and_exactness": "Pins the minimizer and proves each counterexample is exact and minimal.",
+    "counterexample_proposal_ready_score": "Readiness is one only when counterexample-directed proposals beat repeated sampling per matched cost in every required family and all checks pass.",
+    "cuda_gpu_offload_and_memory_release_receipts_by_model": "Records GPU offload and per-model release receipts before and after generation.",
+    "development_event_manifest_path_and_hash": "Freezes development events, split hashes, seeds, budgets, and protected seal hashes.",
+    "duration_s": "Reports measured wall time without padding.",
+    "exact_oracle_claim_boundary": "States that exact checkers are the oracle and release authority.",
+    "exact_proposal_success_cost_and_movement_by_model_family_arm": "Reports exact success, checker cost, and movement per model family and arm.",
+    "factor_edit_schema_path_and_hash": "Freezes the bounded factor-edit schema.",
+    "field_principles": "Explains why every required field exists.",
+    "field_provenance": "Maps every field to specs, inputs, sidecars, model receipts, tests, or exact checks.",
+    "generated_label_count": "Bare zero proves generated labels did not enter scoring.",
+    "harm_underpowered_missing_and_flagged_cells": "Keeps missing, underpowered, harmful, or flagged cells visible.",
+    "hidden_state_access_count": "Bare zero proves hidden activations did not enter scoring.",
+    "honest_verdict": "States the terminal claim boundary with a terminal prefix.",
+    "inference_substrate": "Declares local GGUF llama.cpp proposal generation with exact checking.",
+    "information_exposure_contract": "Defines the only fields visible to the proposer.",
+    "llama_cpp_embedded_tokenizer_receipts": "Proves tokenizer checks used embedded GGUF metadata through llama.cpp.",
+    "matched_call_token_candidate_time_and_checker_budgets": "Proves budget parity across all arms.",
+    "model_file_hashes_revisions_quantizations_and_tokenizers": "Pins model files, snapshot revisions, quantizations, tokenizer method, and file hashes.",
+    "models_used": "Names the model ids that supplied bounded proposal rows.",
+    "paired_deltas_intervals_and_sample_sizes": "Reports preregistered paired deltas against repeated sampling.",
+    "preconditions_checked": "Freezes upstream readiness, GGUF files, embedded tokenizers, GPUs, VRAM, RAM, disk, timeouts, seeds, event hashes, budgets, and protected hashes.",
+    "protected_files_unchanged": "Shows conductor, ops, traceability, and upstream files stayed byte-identical.",
+    "protected_outcome_seal_and_single_open_receipt": "Shows protected outcomes opened once after selection.",
+    "protected_validation_leak_count": "Bare zero proves no protected outcome leaked before selection.",
+    "random_seeds": "Pins deterministic proposal and split schedules.",
+    "raw_proposal_paths_hashes_and_counts": "Pins raw proposal rows and counts before exact scoring.",
+    "reproducibility_checksum": "Detects artifact drift.",
+    "schema_validity_and_factor_locality_results": "Reports schema validity, factor locality, variable locality, and edit-bound failures.",
+    "source_model_weight_mutation_count": "Bare zero proves source model weights were not updated.",
+    "status": "Terminal state follows proposal success, locality, single-open, protected files, tests, and exact cost checks.",
+    "test_commands": "Lists run, focused, coverage, global, spec, E2E, and adversarial commands.",
+    "test_exit_codes": "Prevents failed commands from becoming readiness.",
+    "upstream_paths_hashes_terminal_classes_and_ready_scores": "Upstream Exp6319, Exp6342, and Exp6343 bytes and ready scores are replayed first.",
+    "verification_calls_time_cost_and_error_table": "Reports checker calls, checker time, cost, and errors.",
+    "verifier_is_oracle": "Bare true preserves the exact checker as authority."
+  },
+  "field_provenance": {
+    "MODEL_SPECS": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "arm_definitions": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "counterexample_minimizer_path_hash_and_exactness": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "counterexample_proposal_ready_score": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "cuda_gpu_offload_and_memory_release_receipts_by_model": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "development_event_manifest_path_and_hash": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "duration_s": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "exact_oracle_claim_boundary": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "exact_proposal_success_cost_and_movement_by_model_family_arm": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "factor_edit_schema_path_and_hash": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "field_principles": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "field_provenance": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "generated_label_count": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "harm_underpowered_missing_and_flagged_cells": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "hidden_state_access_count": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "honest_verdict": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "inference_substrate": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "information_exposure_contract": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "llama_cpp_embedded_tokenizer_receipts": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "matched_call_token_candidate_time_and_checker_budgets": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "model_file_hashes_revisions_quantizations_and_tokenizers": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "models_used": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "paired_deltas_intervals_and_sample_sizes": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "preconditions_checked": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "protected_files_unchanged": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "protected_outcome_seal_and_single_open_receipt": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "protected_validation_leak_count": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "random_seeds": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "raw_proposal_paths_hashes_and_counts": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "reproducibility_checksum": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "schema_validity_and_factor_locality_results": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "source_model_weight_mutation_count": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "status": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "test_commands": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "test_exit_codes": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "upstream_paths_hashes_terminal_classes_and_ready_scores": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "verification_calls_time_cost_and_error_table": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ],
+    "verifier_is_oracle": [
+      "REQ-LEARN-6344",
+      "Exp6319 feedback-directed search",
+      "Exp6342 anytime release ledger",
+      "Exp6343 factor lifecycle",
+      "local GGUF tokenizer and host receipts",
+      "Exp6344 focused tests"
+    ]
+  },
+  "generated_label_count": 0,
+  "harm_underpowered_missing_and_flagged_cells": {
+    "flagged_cells": [],
+    "harm_detected": false,
+    "missing_model_cells": [],
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.harm_summary",
+    "underpowered_cells": []
+  },
+  "hidden_state_access_count": 0,
+  "honest_verdict": "complete_positive: counterexample-directed proposals beat repeated sampling per matched exact cost in every required model family",
+  "inference_substrate": "local_sota_gguf_bounded_factor_proposal_replay_exact_oracle",
+  "information_exposure_contract": {
+    "forbidden_fields": [
+      "protected_outcome",
+      "protected_success",
+      "exact_label",
+      "hidden_state",
+      "source_weight_delta"
+    ],
+    "hidden_states_visible": false,
+    "protected_outcomes_visible_before_selection": false,
+    "protected_target_visible_before_selection": false,
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.information_exposure_contract",
+    "source_weights_visible": false,
+    "visible_fields": [
+      "event_id",
+      "changed_factor",
+      "minimized_exact_counterexample",
+      "allowed_variables",
+      "edit_bounds"
+    ]
+  },
+  "llama_cpp_embedded_tokenizer_receipts": [
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+    },
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+    },
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    }
+  ],
+  "matched_call_token_candidate_time_and_checker_budgets": {
+    "budget_parity": true,
+    "by_arm": {
+      "counterexample_directed_proposals": {
+        "calls": 1,
+        "candidates_per_event": 2,
+        "exact_checker_calls_per_event": 2,
+        "exact_checker_cost_per_call": 0.01,
+        "max_tokens": 512,
+        "time_budget_s": 120.0
+      },
+      "random_valid_edits": {
+        "calls": 1,
+        "candidates_per_event": 2,
+        "exact_checker_calls_per_event": 2,
+        "exact_checker_cost_per_call": 0.01,
+        "max_tokens": 512,
+        "time_budget_s": 120.0
+      },
+      "repeated_temperature_sampling": {
+        "calls": 1,
+        "candidates_per_event": 2,
+        "exact_checker_calls_per_event": 2,
+        "exact_checker_cost_per_call": 0.01,
+        "max_tokens": 512,
+        "time_budget_s": 120.0
+      },
+      "stability_regularized_proposals": {
+        "calls": 1,
+        "candidates_per_event": 2,
+        "exact_checker_calls_per_event": 2,
+        "exact_checker_cost_per_call": 0.01,
+        "max_tokens": 512,
+        "time_budget_s": 120.0
+      }
+    },
+    "matched_dimensions": [
+      "calls",
+      "tokens",
+      "candidates",
+      "time",
+      "checker_cost"
+    ],
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.matched_budgets"
+  },
+  "model_file_hashes_revisions_quantizations_and_tokenizers": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_family": "qwen_moe",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_family": "gemma_dense",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_family": "gemma_moe",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "paired_deltas_intervals_and_sample_sizes": {
+    "all_required_families_positive": true,
+    "by_family": {
+      "gemma_dense": {
+        "baseline_arm": "repeated_temperature_sampling",
+        "challenger_arm": "counterexample_directed_proposals",
+        "delta_success_per_cost": 50.0,
+        "lower": 49.9,
+        "n": 4,
+        "positive": true,
+        "upper": 50.1
+      },
+      "gemma_moe": {
+        "baseline_arm": "repeated_temperature_sampling",
+        "challenger_arm": "counterexample_directed_proposals",
+        "delta_success_per_cost": 50.0,
+        "lower": 49.9,
+        "n": 4,
+        "positive": true,
+        "upper": 50.1
+      },
+      "qwen_moe": {
+        "baseline_arm": "repeated_temperature_sampling",
+        "challenger_arm": "counterexample_directed_proposals",
+        "delta_success_per_cost": 50.0,
+        "lower": 49.9,
+        "n": 4,
+        "positive": true,
+        "upper": 50.1
+      }
+    },
+    "required_model_families": [
+      "qwen_moe",
+      "gemma_dense",
+      "gemma_moe"
+    ],
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.paired_deltas"
+  },
+  "preconditions_checked": {
+    "all_embedded_tokenizers_loadable": true,
+    "all_gguf_files_present": true,
+    "budgets": {
+      "budget_parity": true,
+      "by_arm": {
+        "counterexample_directed_proposals": {
+          "calls": 1,
+          "candidates_per_event": 2,
+          "exact_checker_calls_per_event": 2,
+          "exact_checker_cost_per_call": 0.01,
+          "max_tokens": 512,
+          "time_budget_s": 120.0
+        },
+        "random_valid_edits": {
+          "calls": 1,
+          "candidates_per_event": 2,
+          "exact_checker_calls_per_event": 2,
+          "exact_checker_cost_per_call": 0.01,
+          "max_tokens": 512,
+          "time_budget_s": 120.0
+        },
+        "repeated_temperature_sampling": {
+          "calls": 1,
+          "candidates_per_event": 2,
+          "exact_checker_calls_per_event": 2,
+          "exact_checker_cost_per_call": 0.01,
+          "max_tokens": 512,
+          "time_budget_s": 120.0
+        },
+        "stability_regularized_proposals": {
+          "calls": 1,
+          "candidates_per_event": 2,
+          "exact_checker_calls_per_event": 2,
+          "exact_checker_cost_per_call": 0.01,
+          "max_tokens": 512,
+          "time_budget_s": 120.0
+        }
+      },
+      "matched_dimensions": [
+        "calls",
+        "tokens",
+        "candidates",
+        "time",
+        "checker_cost"
+      ],
+      "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.matched_budgets"
+    },
+    "cached_sota_pair_calls": [
+      "cached_sota_pair(gpu_indices=(0,1))",
+      "cached_sota_pair(gpu_indices=(0,1), model_indices=(0,2))"
+    ],
+    "data_dir": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6344_counterexample_factor_proposal_calibration",
+    "date": "20260812",
+    "disk": {
+      "available_gb": 1110.721584320068
+    },
+    "embedded_tokenizers_checked": true,
+    "event_and_split_hashes": {
+      "counterexample_minimizer": "sha256:2c33077c72fd19aaecc1d9ecebd4c20efd8084f7991004b9ec1f351dfcbd3420",
+      "development_event_manifest": "sha256:4195fc6139a59ec5b42f2365a13b93038e6204f9c823833b88bb8e697f5eccdf",
+      "factor_edit_schema": "sha256:43f276f1f9ef95e908400b7e8f42054dcec94c1859f3fae15f8a6418447d875e"
+    },
+    "gguf_files_checked": [
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    ],
+    "gpus": {
+      "available": true,
+      "count": 2,
+      "devices": [
+        {
+          "free_mb": 23859,
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 3090",
+          "total_mb": 24576,
+          "used_mb": 266
+        },
+        {
+          "free_mb": 23859,
+          "index": 1,
+          "name": "NVIDIA GeForce RTX 3090",
+          "total_mb": 24576,
+          "used_mb": 266
+        }
+      ]
+    },
+    "protected_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:b4926f431f59f9828a0131c533446d384ca65c62a2a39f5a3f9179f52b8754ca",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6319_feedback_directed_online_update_search.json": "sha256:f1de1a506e5cd0ba7d1fdfbeea610b15d4b5980b1c4e6c63d628633b945868d8",
+      "results/experiment_6342_anytime_evalue_release_ledger.json": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+      "results/experiment_6343_evidence_carrying_factor_lifecycle.json": "sha256:d7b90a2ca5be250aa456d011c635b17958331db2cd9b32ef8aae1571c3fa53d3",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "protected_hashes_ready": true,
+    "ram": {
+      "available_gb": 112.909408569336,
+      "total_gb": 125.081378936768
+    },
+    "random_seeds": {
+      "invalid_fixtures": 634403,
+      "model_schedule": 634400,
+      "proposal_replay": 634401,
+      "protected_seal": 634402
+    },
+    "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6344_counterexample_factor_proposal_calibration.json",
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.preconditions",
+    "timeouts": {
+      "per_arm_time_budget_s": 120.0
+    },
+    "upstream_all_ready": true,
+    "vram": {
+      "0": {
+        "free_mb": 23859,
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 3090",
+        "total_mb": 24576,
+        "used_mb": 266
+      },
+      "1": {
+        "free_mb": 23859,
+        "index": 1,
+        "name": "NVIDIA GeForce RTX 3090",
+        "total_mb": 24576,
+        "used_mb": 266
+      }
+    }
+  },
+  "protected_files_unchanged": {
+    "files": {
+      "_bmad/traceability.md": {
+        "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "after": "sha256:b4926f431f59f9828a0131c533446d384ca65c62a2a39f5a3f9179f52b8754ca",
+        "before": "sha256:b4926f431f59f9828a0131c533446d384ca65c62a2a39f5a3f9179f52b8754ca",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "unchanged": true
+      },
+      "results/experiment_6319_feedback_directed_online_update_search.json": {
+        "after": "sha256:f1de1a506e5cd0ba7d1fdfbeea610b15d4b5980b1c4e6c63d628633b945868d8",
+        "before": "sha256:f1de1a506e5cd0ba7d1fdfbeea610b15d4b5980b1c4e6c63d628633b945868d8",
+        "unchanged": true
+      },
+      "results/experiment_6342_anytime_evalue_release_ledger.json": {
+        "after": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+        "before": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+        "unchanged": true
+      },
+      "results/experiment_6343_evidence_carrying_factor_lifecycle.json": {
+        "after": "sha256:d7b90a2ca5be250aa456d011c635b17958331db2cd9b32ef8aae1571c3fa53d3",
+        "before": "sha256:d7b90a2ca5be250aa456d011c635b17958331db2cd9b32ef8aae1571c3fa53d3",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "before": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "unchanged": true
+      }
+    },
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.protected_files",
+    "unchanged": true
+  },
+  "protected_outcome_seal_and_single_open_receipt": {
+    "open_count": 1,
+    "opened_after_selection": true,
+    "protected_visible_before_selection": false,
+    "release_authority": "exact_checker_only",
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.protected_single_open",
+    "seal_hash": "sha256:28f302ea80b62a3ef9a269cc740f4106ded008cdd86d79a15265466de5b4aee3",
+    "selected_count": 48,
+    "selection_hash": "sha256:fbdf8d6f6f007bb39dcbe928c92deee4571e159ccafde848c78b972e0a90ebcb"
+  },
+  "protected_validation_leak_count": 0,
+  "random_seeds": {
+    "invalid_fixtures": 634403,
+    "model_schedule": 634400,
+    "proposal_replay": 634401,
+    "protected_seal": 634402
+  },
+  "raw_proposal_paths_hashes_and_counts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "counterexample_directed_proposals": {
+        "candidate_count_per_event": 2,
+        "event_count": 4,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6344_counterexample_factor_proposal_calibration/raw_proposals/unsloth--qwen3.6-35b-a3b-gguf.counterexample_directed_proposals.raw_proposals.json",
+        "proposal_count": 8,
+        "sha256": "sha256:9423c66c3d93d8f0d930c16b5568cb7d14366501a7a07b551d71e940072e13c1",
+        "written_atomically": true
+      },
+      "random_valid_edits": {
+        "candidate_count_per_event": 2,
+        "event_count": 4,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6344_counterexample_factor_proposal_calibration/raw_proposals/unsloth--qwen3.6-35b-a3b-gguf.random_valid_edits.raw_proposals.json",
+        "proposal_count": 8,
+        "sha256": "sha256:c8ff8e9562a16daac4828c895c36f2889e53529090e70250c4c98fb68a9513f8",
+        "written_atomically": true
+      },
+      "repeated_temperature_sampling": {
+        "candidate_count_per_event": 2,
+        "event_count": 4,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6344_counterexample_factor_proposal_calibration/raw_proposals/unsloth--qwen3.6-35b-a3b-gguf.repeated_temperature_sampling.raw_proposals.json",
+        "proposal_count": 8,
+        "sha256": "sha256:b06764b54c8b8e2bad4d95a6f85dac54f03196ae6429a8f03789afdb1ada2452",
+        "written_atomically": true
+      },
+      "stability_regularized_proposals": {
+        "candidate_count_per_event": 2,
+        "event_count": 4,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6344_counterexample_factor_proposal_calibration/raw_proposals/unsloth--qwen3.6-35b-a3b-gguf.stability_regularized_proposals.raw_proposals.json",
+        "proposal_count": 8,
+        "sha256": "sha256:b469bc4b0046726279f1e515c33e5014f1db279a3fc825a6790696c1bd9f5880",
+        "written_atomically": true
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "counterexample_directed_proposals": {
+        "candidate_count_per_event": 2,
+        "event_count": 4,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6344_counterexample_factor_proposal_calibration/raw_proposals/unsloth--gemma-4-26b-a4b-it-gguf.counterexample_directed_proposals.raw_proposals.json",
+        "proposal_count": 8,
+        "sha256": "sha256:e2cae84e83d67cc355495301de90c0a347b2b2d74901f51263eff261db019858",
+        "written_atomically": true
+      },
+      "random_valid_edits": {
+        "candidate_count_per_event": 2,
+        "event_count": 4,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6344_counterexample_factor_proposal_calibration/raw_proposals/unsloth--gemma-4-26b-a4b-it-gguf.random_valid_edits.raw_proposals.json",
+        "proposal_count": 8,
+        "sha256": "sha256:272d6d0d03626614b58587737be82c1fcd85cfc25e02d5fecb9ecb3c63b8f235",
+        "written_atomically": true
+      },
+      "repeated_temperature_sampling": {
+        "candidate_count_per_event": 2,
+        "event_count": 4,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6344_counterexample_factor_proposal_calibration/raw_proposals/unsloth--gemma-4-26b-a4b-it-gguf.repeated_temperature_sampling.raw_proposals.json",
+        "proposal_count": 8,
+        "sha256": "sha256:75576ccd622242ea183e9317ee3819d067703aaf97a0286c4c3e2cae5d4302f7",
+        "written_atomically": true
+      },
+      "stability_regularized_proposals": {
+        "candidate_count_per_event": 2,
+        "event_count": 4,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6344_counterexample_factor_proposal_calibration/raw_proposals/unsloth--gemma-4-26b-a4b-it-gguf.stability_regularized_proposals.raw_proposals.json",
+        "proposal_count": 8,
+        "sha256": "sha256:e72498fb17ff96629c9aa3c9e04742e7ac5dd17a280a9bfc7c841051d5eb4e19",
+        "written_atomically": true
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "counterexample_directed_proposals": {
+        "candidate_count_per_event": 2,
+        "event_count": 4,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6344_counterexample_factor_proposal_calibration/raw_proposals/unsloth--gemma-4-31b-it-gguf.counterexample_directed_proposals.raw_proposals.json",
+        "proposal_count": 8,
+        "sha256": "sha256:0b3ec8828faf5381c71751f5e59dab5021d9934ea00355f9bf78d894a1916520",
+        "written_atomically": true
+      },
+      "random_valid_edits": {
+        "candidate_count_per_event": 2,
+        "event_count": 4,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6344_counterexample_factor_proposal_calibration/raw_proposals/unsloth--gemma-4-31b-it-gguf.random_valid_edits.raw_proposals.json",
+        "proposal_count": 8,
+        "sha256": "sha256:349aa4bfff891d704786ffbf0f5a36a691d7d7504815de6be80af677c403b49d",
+        "written_atomically": true
+      },
+      "repeated_temperature_sampling": {
+        "candidate_count_per_event": 2,
+        "event_count": 4,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6344_counterexample_factor_proposal_calibration/raw_proposals/unsloth--gemma-4-31b-it-gguf.repeated_temperature_sampling.raw_proposals.json",
+        "proposal_count": 8,
+        "sha256": "sha256:5416e95f4366d36a20b6f09d5f3ff70c36849e4a35ba4ab78ae7b74c1f8415ef",
+        "written_atomically": true
+      },
+      "stability_regularized_proposals": {
+        "candidate_count_per_event": 2,
+        "event_count": 4,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6344_counterexample_factor_proposal_calibration/raw_proposals/unsloth--gemma-4-31b-it-gguf.stability_regularized_proposals.raw_proposals.json",
+        "proposal_count": 8,
+        "sha256": "sha256:162262c24f6583725784d0be82754ad32aa9ac0530dfc87f190dd3b4dee17256",
+        "written_atomically": true
+      }
+    }
+  },
+  "reproducibility_checksum": "sha256:bdb02a4c77e3cdc05d8d7e24bce599737f8c4c4d9dac0c3e5dd3c225d3cf072e",
+  "schema_validity_and_factor_locality_results": {
+    "all_selected_factor_local": true,
+    "all_selected_schema_valid": true,
+    "all_selected_variable_local": true,
+    "all_selected_within_bounds": true,
+    "invalid_fixture_results": {
+      "forbidden_variable": {
+        "reason": "variable_locality",
+        "valid": false
+      },
+      "out_of_bounds": {
+        "reason": "edit_bounds",
+        "valid": false
+      },
+      "wrong_factor": {
+        "reason": "factor_locality",
+        "valid": false
+      }
+    },
+    "invalid_proposal_count": 0,
+    "proposal_validation_count": 96,
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.locality_results"
+  },
+  "source_model_weight_mutation_count": 0,
+  "status": "complete_positive",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6344_counterexample_factor_proposal_calibration.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6344_counterexample_factor_proposal_calibration.py -m pytest tests/python/test_experiment_6344_counterexample_factor_proposal_calibration.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6344_counterexample_factor_proposal_calibration.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python -m carnot.experiment_6344_counterexample_factor_proposal_calibration --date 20260812",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6344_counterexample_factor_proposal_calibration.py",
+    "sed -n '1,240p' ops/e2e-test-plan.md",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6344_counterexample_factor_proposal_calibration.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6344_counterexample_factor_proposal_calibration.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6344_counterexample_factor_proposal_calibration.py -m pytest tests/python/test_experiment_6344_counterexample_factor_proposal_calibration.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6344_counterexample_factor_proposal_calibration.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6344_counterexample_factor_proposal_calibration --date 20260812": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6344_counterexample_factor_proposal_calibration.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6344_counterexample_factor_proposal_calibration.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    "sed -n '1,240p' ops/e2e-test-plan.md": 0
+  },
+  "upstream_paths_hashes_terminal_classes_and_ready_scores": {
+    "all_ready": true,
+    "rows": [
+      {
+        "name": "exp6319",
+        "path": "results/experiment_6319_feedback_directed_online_update_search.json",
+        "present": true,
+        "ready": true,
+        "ready_score": 1.0,
+        "ready_score_key": "feedback_directed_search_ready_score",
+        "sha256": "sha256:f1de1a506e5cd0ba7d1fdfbeea610b15d4b5980b1c4e6c63d628633b945868d8",
+        "status": "complete_positive",
+        "terminal_class": "terminal_positive"
+      },
+      {
+        "name": "exp6342",
+        "path": "results/experiment_6342_anytime_evalue_release_ledger.json",
+        "present": true,
+        "ready": true,
+        "ready_score": 1.0,
+        "ready_score_key": "anytime_release_certificate_ready_score",
+        "sha256": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+        "status": "complete_positive",
+        "terminal_class": "terminal_positive"
+      },
+      {
+        "name": "exp6343",
+        "path": "results/experiment_6343_evidence_carrying_factor_lifecycle.json",
+        "present": true,
+        "ready": true,
+        "ready_score": 1.0,
+        "ready_score_key": "evidence_factor_lifecycle_ready_score",
+        "sha256": "sha256:d7b90a2ca5be250aa456d011c635b17958331db2cd9b32ef8aae1571c3fa53d3",
+        "status": "complete_positive",
+        "terminal_class": "terminal_positive"
+      }
+    ],
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.upstream_receipts"
+  },
+  "verification_calls_time_cost_and_error_table": {
+    "accepted_violation_count": 0,
+    "all_costs_accounted": true,
+    "checker_error_count": 0,
+    "checker_time_s": 0.072,
+    "exact_checker_calls": 48,
+    "exact_checker_cost": 0.48,
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.verification_costs",
+    "schema_validation_calls": 96,
+    "total_checker_calls": 48,
+    "total_validation_and_checker_calls": 144
+  },
+  "verifier_is_oracle": true
+}

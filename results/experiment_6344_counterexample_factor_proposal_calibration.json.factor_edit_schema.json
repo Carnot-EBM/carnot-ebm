@@ -1,0 +1,41 @@
+{
+  "candidate_count_per_event": 2,
+  "edit_bounds": {
+    "max": 1.0,
+    "max_abs_movement": 1.0,
+    "min": -1.0
+  },
+  "factor_variables": {
+    "accept_factor": [
+      "accept_bias"
+    ],
+    "drift_factor": [
+      "drift_bias"
+    ],
+    "reject_factor": [
+      "reject_bias"
+    ],
+    "repair_factor": [
+      "repair_bias"
+    ]
+  },
+  "forbidden_fields": [
+    "protected_outcome",
+    "protected_success",
+    "exact_label",
+    "hidden_state",
+    "source_weight_delta"
+  ],
+  "required_fields": [
+    "proposal_id",
+    "event_id",
+    "model_hf_id",
+    "arm",
+    "candidate_index",
+    "changed_factor",
+    "edits",
+    "selection_score"
+  ],
+  "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.factor_edit_schema",
+  "type": "object"
+}
