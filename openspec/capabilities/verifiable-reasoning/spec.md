@@ -22966,3 +22966,107 @@ bare zero, and false readiness with non-zero violations or failed commands is
 rejected.
 
 **Spec traces:** REQ-KONA-6329
+
+### REQ-KONA-6340: Parser-JIT Semantic Diversity Canary
+
+The repository SHALL provide an Exp6340 canary that tests one fail-fast
+question: whether during-decoding constraint methods produce more unique valid
+normalized policy semantics at matched cost than unconstrained sampling.
+Exp6340 SHALL use development families only. It SHALL NOT reopen V545
+post-hoc energy search.
+
+Exp6340 SHALL build `MODEL_SPECS` through `cached_sota_pair(gpu_indices=(0,
+1))` receipts and include all three mandated local GGUFs:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL use the canonical llama.cpp
+runtime and each GGUF embedded tokenizer. It SHALL NOT use `AutoTokenizer`.
+
+Exp6340 SHALL freeze prompts, decoder settings, prefix contracts, calls,
+tokens, candidates, wall time, and checker budgets before raw output is
+opened. It SHALL compare four matched arms on identical eligible development
+tasks: unconstrained sampling, grammar masking, deterministic parser-state
+correction, and JIT SMT prefix enforcement. It SHALL write raw generation rows
+atomically. It SHALL keep model and family cells separate. It SHALL preserve
+rejected prefix receipts and final candidate receipts.
+
+Exp6340 SHALL deduplicate semantics only after Exp6326 canonical
+normalization. It SHALL report unique valid normalized semantics, validity,
+parser failures, utility, fallback, and verification cost by model, family,
+and arm. The exact compiler SHALL remain the oracle. It SHALL NOT count as
+model verification.
+
+The terminal artifact SHALL be
+`results/experiment_6340_parser_jit_semantic_diversity_canary.json`. It SHALL
+include `status`, `upstream_path_hash_terminal_class_and_gate_receipt`,
+`MODEL_SPECS`, `models_used`,
+`model_file_hashes_revisions_quantizations_and_tokenizers`,
+`llama_cpp_embedded_tokenizer_receipts`,
+`cuda_gpu_offload_and_memory_release_receipts_by_model`,
+`fixture_and_split_paths_hashes`, `prompt_decoder_and_prefix_contract`,
+`arm_definitions`,
+`matched_call_token_candidate_time_and_checker_budgets`,
+`raw_generation_paths_hashes_and_counts`,
+`parser_state_and_jit_intervention_logs`,
+`parse_normalization_and_contract_results`,
+`unique_valid_normalized_semantics_by_model_family_arm`,
+`semantic_diversity_paired_deltas_intervals_and_sample_sizes`,
+`exact_utility_fallback_latency_and_cost_by_model_family_arm`,
+`verification_calls_time_cost_and_error_table`,
+`harm_underpowered_missing_and_flagged_cells`,
+`source_model_weight_mutation_count`, `generated_label_count`,
+`hidden_state_access_count`, `exact_oracle_claim_boundary`,
+`semantic_diversity_gain_score`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `random_seeds`,
+`reproducibility_checksum`, and `honest_verdict`.
+`source_model_weight_mutation_count`, `generated_label_count`, and
+`hidden_state_access_count` SHALL be the bare integer `0`.
+`verifier_is_oracle` SHALL be bare `true`.
+
+`semantic_diversity_gain_score` SHALL be bare `1.0` only when a
+pre-declared prefix arm beats both unconstrained and grammar arms in every
+required model-family cell, accepted contract violations are zero, budget
+parity is complete, and every required check exits zero. Otherwise it SHALL be
+bare `0.0`, and `honest_verdict` SHALL use a terminal prefix that states the
+blocking reason.
+
+### SCENARIO-KONA-6340-GATE-REPLAY: Preconditions Are Frozen
+
+Given Exp6339 and the three mandated local GGUF models,
+When Exp6340 replays the structured gate,
+Then it records upstream hashes, embedded tokenizer receipts, CUDA devices,
+VRAM, RAM, disk, timeouts, seeds, fixture hashes, budgets, and protected-file
+hashes before raw outputs are evaluated.
+
+**Spec traces:** REQ-KONA-6340
+
+### SCENARIO-KONA-6340-MATCHED-ARMS: Decoder Budgets Are Shared
+
+Given the same model, development family, seed, and eligible task,
+When Exp6340 evaluates unconstrained sampling, grammar masking,
+parser-state correction, and JIT SMT prefix enforcement,
+Then each arm uses the same call, token, candidate, wall-time, and checker
+budgets, and fallback cost is charged by the same rule.
+
+**Spec traces:** REQ-KONA-6340
+
+### SCENARIO-KONA-6340-SEMANTIC-DEDUP: Diversity Uses Canonical Semantics
+
+Given accepted candidates from any Exp6340 arm,
+When Exp6340 computes semantic diversity,
+Then it deduplicates only after Exp6326 canonical normalization and keeps each
+model and family cell visible.
+
+**Spec traces:** REQ-KONA-6340
+
+### SCENARIO-KONA-6340-ORACLE-BOUNDARY: The Verifier Is An Oracle
+
+Given any Exp6340 candidate or prefix intervention,
+When Exp6340 reports safety, validity, or readiness,
+Then only exact parsing and contract checks supply authority, source model
+weight mutation count is bare zero, generated label count is bare zero,
+hidden-state access count is bare zero, and false readiness with non-zero
+violations or failed commands is rejected.
+
+**Spec traces:** REQ-KONA-6340
