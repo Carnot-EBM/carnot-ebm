@@ -4092,6 +4092,118 @@ terminal prefix.
 |---|---|---|
 | REQ-INFRA-6350 | Planned: `python/carnot/experiment_6350_v547_bounded_terminal_handoff.py`; terminal artifact `results/experiment_6350_v547_bounded_terminal_handoff.json`. | Planned: `tests/python/test_experiment_6350_v547_bounded_terminal_handoff.py`. |
 
+## REQ-INFRA-6351: V547 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
+
+Carnot SHALL build Exp6351 as a deterministic V547 post-marker source sweep
+and scope freeze. The sweep SHALL hash the exact
+`<!-- V547-PLANNER-REFRESH-20260812-END -->` marker in
+`research-references.md`. It SHALL record the marker line. It SHALL use the
+marker commit time as the exclusive lower bound for post-marker novelty.
+
+Exp6351 SHALL validate the six V547 planner-promoted source families with
+direct primary URLs, first-publication dates, access times, claim boundaries,
+and Carnot executable consequences. The source families are active reward
+machine inference, zero-shot goal recognition, read-only memory, solver
+hardness controls, distributional EBMs with abstention, and verification
+horizon controls. The receipts SHALL remain separate from any post-marker
+acceptance count.
+
+Exp6351 SHALL repeat arXiv, OpenReview, Hugging Face Papers, Semantic Scholar
+EBT and ARM-EBM routes, Extropic, Logical Intelligence, and GitHub searches
+only for the post-marker window. Empty endpoints, secondary mirrors, rate
+limits, product pages, and inaccessible pages SHALL be recorded as receipts.
+They SHALL not become promoted findings.
+
+Exp6351 SHALL deduplicate by work identity, repository identity, mechanism,
+content hash, URL, title, and already-retired Carnot scope. It SHALL accept
+only stable, non-duplicate, reproducible, primary or first-party evidence that
+is strictly later than the V547 marker and that changes a local executable
+contract. A zero-source delta SHALL be terminal. In that case `accepted_count`
+SHALL be the bare integer `0`, `llm_call_count` SHALL be the bare integer `0`,
+and `honest_verdict` SHALL start with `complete_null:`.
+
+Exp6351 SHALL freeze exactly two V547 scientific lanes: prospective certified
+factor learning and falsifiable live ARC goal discovery. It SHALL also freeze
+exact-oracle boundaries, required local GGUF models, active ARC provenance
+rules, fail-fast gates, the closed parser/JIT lane, and the no-hardware rule.
+The task SHALL not execute GateMate, KV260, PolarFire, NPU, TSU, Kona, or
+board commands. The task SHALL not modify `scripts/research_conductor.py`.
+
+The Exp6351 artifact SHALL be written atomically to
+`results/experiment_6351_v547_post_marker_source_scope_freeze.json` with
+`inference_substrate=web_and_bibliographic_search_only`,
+`verifier_is_oracle=false`, and `llm_call_count=0`.
+
+The Exp6351 artifact SHALL include these required fields: `status`,
+`v547_marker_text_line_and_hash`, `search_window_start_utc`,
+`search_completed_utc`, `source_queries_by_channel`, `source_receipts`,
+`promoted_findings`, `accepted_count`, `duplicate_findings`,
+`watch_only_findings`, `inaccessible_sources`,
+`excluded_findings_and_reasons`, `active_reward_machine_receipt`,
+`zero_shot_goal_recognition_receipt`, `memoir_receipt`,
+`solver_hardness_control_receipt`, `distributional_ebm_receipt`,
+`verification_horizon_receipt`,
+`semantic_scholar_ebt_and_arm_ebm_receipts`,
+`openreview_and_huggingface_status`, `github_status`, `extropic_status`,
+`logical_intelligence_status`, `frozen_live_factor_learning_contract`,
+`frozen_arc_goal_contract`, `frozen_model_policy`,
+`frozen_closed_parser_jit_contract`, `frozen_hardware_nonuse_contract`,
+`roadmap_scope_delta`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`llm_call_count`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`, `random_seeds`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INFRA-6351-1: Marker Bound Is Exclusive
+
+GIVEN the sealed V547 planner refresh marker in `research-references.md`
+WHEN Exp6351 classifies a candidate at or before the marker commit time
+THEN the candidate is rejected, and a bare same-day date is rejected unless a
+strictly later timestamp is present.
+
+### SCENARIO-INFRA-6351-2: Promoted Source Dates Are Direct Receipts
+
+GIVEN the V547 marker promoted active reward-machine inference, zero-shot goal
+recognition, Memoir, solver-hardness control, distributional EBM, and
+verification-horizon work
+WHEN Exp6351 builds its artifact
+THEN each promoted source has a direct primary URL, first-publication date,
+access time, bounded source claim, and local executable consequence.
+
+### SCENARIO-INFRA-6351-3: Dedupe And Source Dispositions Fail Closed
+
+GIVEN a candidate repeats an older work identity, repository identity,
+mechanism, content hash, URL, title, or retired Carnot scope
+WHEN Exp6351 partitions the sweep
+THEN the row is not accepted, and its duplicate, watch-only, inaccessible, or
+excluded disposition records the exact reason.
+
+### SCENARIO-INFRA-6351-4: Frozen V547 Contracts Preserve Boundaries
+
+GIVEN V547 has two scientific lanes plus exact-oracle, local-GGUF,
+active-ARC, fail-fast, closed parser/JIT, and no-hardware boundaries
+WHEN Exp6351 serializes frozen contracts
+THEN the artifact admits only prospective certified factor learning and
+falsifiable live ARC goal discovery. It SHALL reject solver-only difficulty
+proxies, learned approval, hidden-source ARC evidence, parser/JIT reopening,
+GGUF weight updates, and hardware execution.
+
+### SCENARIO-INFRA-6351-5: Output Is Principle Annotated And Non-Mutating
+
+GIVEN source receipts, protected hashes, field principles, and command
+receipts
+WHEN Exp6351 validates the report before writing
+THEN every required field is present, every field has provenance and a
+principle, `accepted_count` and `llm_call_count` are bare integers, the
+checksum matches the normalized payload, protected hashes remain unchanged,
+and the honest verdict has a terminal prefix.
+
+## Implementation Status (REQ-INFRA-6351)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6351 | Planned: `python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py`; terminal artifact `results/experiment_6351_v547_post_marker_source_scope_freeze.json`. | Planned: `tests/python/test_experiment_6351_v547_post_marker_source_scope_freeze.py`. |
+
 ## Implementation Status (REQ-INFRA-6322)
 
 | REQ | Implementation | Tests |
