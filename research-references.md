@@ -34017,3 +34017,111 @@ retries in both lanes.
   authenticated physical state that could support another hardware task.
 
 <!-- V546-PLANNER-REFRESH-20260812-END -->
+
+## V547 Planner Refresh (2026-08-12, after milestone 2026.08.546)
+
+This refresh searched arXiv, OpenReview, Hugging Face Papers, Semantic
+Scholar citation records, GitHub, Extropic, and Logical Intelligence. It used
+the V546 terminal artifacts as the evidence boundary. Exp6344 did not invoke
+live autoregressive generation. Exp6345 used local tokenizers and exact replay,
+not a prospective stream of model-generated factor edits. Exp6348 measured
+default-off action influence without solve credit, but the current goal gate
+still accepts predicates that never fire.
+
+### Promoted methods
+
+- **Active Reward Machine Inference From Raw State Trajectories** -
+  arXiv:2604.07480, https://arxiv.org/abs/2604.07480; submitted 2026-04-08.
+  The paper identifies an automaton-like reward machine from raw state and
+  policy trajectories. It does not assume observed rewards, semantic labels,
+  or known reward-machine nodes. Its active extension chooses trajectory
+  continuations that reduce ambiguity. Carnot hook: infer a small set of
+  competing goal automata from the live agent's own transitions. Choose legal
+  discriminating actions. Keep a goal hypothesis unverifiable until both
+  firing and non-firing evidence exist. The exact game transition remains an
+  evaluation oracle and is never exposed to the live agent.
+- **Zero-Shot Goal Recognition with Large Language Models** -
+  arXiv:2605.15333, https://arxiv.org/abs/2605.15333; submitted 2026-05-14.
+  The paper finds that goal-recognition accuracy is uneven across models. Some
+  models improve as observations accumulate. Others remain anchored to prior
+  knowledge. Carnot hook: measure evidence-response curves, not one final goal
+  guess. Compare frozen-prior, accumulating-evidence, and exact
+  counterexample-gated hypotheses on matched trajectory prefixes.
+- **Memoir: Should a Model Write to Its Memory While It Thinks?** -
+  arXiv:2607.20792, https://arxiv.org/abs/2607.20792. Coupled read-and-write
+  fast memory learned more slowly than a read-only pondering control at a
+  fixed budget, although the gap closed at saturation. Carnot hook: keep the
+  active factor version read-only during proposal generation. Commit a new
+  version only after exact outcome evidence and the e-value release decision.
+  Do not let a proposal read its own unapproved write.
+
+### Measurement and safety controls
+
+- **Solver-Hard Is Not Model-Hard** - arXiv:2607.17047,
+  https://arxiv.org/abs/2607.17047. Solver conflict counts did not predict LLM
+  constraint-reasoning difficulty under matched formula density. Surface
+  relabeling also caused large model-specific changes. Carnot hook: balance
+  live factor-learning streams by executable structure and surface form. Do
+  not use solver effort as a proxy for model difficulty.
+- **Distributional Energy-Based Models for Uncertainty-Aware Structured LLM
+  Reasoning** - arXiv:2605.18871,
+  https://arxiv.org/abs/2605.18871. The paper combines learned quality energy,
+  deterministic constraint penalties, and abstention. It also reports a
+  model-identity shortcut on code. Carnot hook: separate exact penalties from
+  learned proposal rank. Add family-blind controls and an explicit
+  `unverifiable` state. Learned uncertainty cannot approve a factor or goal.
+- **The Verification Horizon: No Silver Bullet for Coding Agent Rewards** -
+  arXiv:2606.26300, https://arxiv.org/abs/2606.26300. The paper argues that
+  verification must co-evolve with the generator because fixed reward proxies
+  can saturate or be exploited. Carnot hook: audit each released factor
+  against new counterexamples and protected replay. Exact checks retain veto
+  authority while the proposal distribution changes.
+
+### Secondary-source and product status
+
+- **Semantic Scholar:** the EBT (`2507.02092`) record had 33 citing works and
+  ARM-EBM (`2512.15605`) had 8 in the queried public API response. The most
+  relevant ARM-EBM citation was distributional EBM reasoning. The most
+  relevant EBT citations covered constraint-hardness controls, memory, and
+  world-model use. None provides a local GGUF-compatible learned verifier with
+  exact release authority. Do not reopen hidden-state scoring or EBT
+  pretraining.
+- **OpenReview and Hugging Face Papers:** recent verifier work emphasizes
+  continuous model-derived scores, repeated evaluation, uncertainty, and
+  adaptive routing. These are useful proposal or abstention signals. They do
+  not replace exact outcome checks and do not reopen the retired external-text
+  verifier lane.
+- **GitHub:** the current search found CCTU and paper-specific EBM repositories
+  but no new local GGUF drop-in that supersedes Carnot's exact validator,
+  factor registry, or live ARC path. CCTU remains a useful executable-constraint
+  reference, not a reason to rerun its retired product lane.
+- **Extropic:** the first-party writing index still exposes the October 2025
+  XTR-0, TSU, DTM, and `thrml` material. It exposes no authenticated local
+  device or new 2026 execution route. Schedule no TSU claim.
+- **Logical Intelligence:** the current Kona 1.0 page still presents a
+  constraint layer below language models. June 2026 material describes formal
+  verification and Aleph results, but it exposes no public weights, local API,
+  or reproducible Kona architecture. Treat it as product direction only.
+- **KAN and hardware search:** KAN-CL and FPGA spline-local online learning
+  remain relevant future controls. No new physical receipt supports another
+  GateMate, KV260, PolarFire, or NPU task in V547.
+
+### V547 planning impact
+
+- Close the parser/JIT constrained-generation lane after the V546 null. Do not
+  schedule another decoding or post-hoc repair retry.
+- Run real local GGUF generation for factor proposals. Separate proposal,
+  exact outcome, release, and commit. Use future events that were not replayed
+  during proposal generation.
+- Add a family-blind, hardness-balanced stream and an explicit abstention path.
+  Require exact protected replay before a factor version can be promoted.
+- Replace ARC's specificity-only goal gate with a two-sided evidence contract.
+  Use active, legal trajectory extensions to distinguish candidate reward
+  machines. If no firing evidence exists, return `unverifiable` rather than
+  accept a constant-false predicate.
+- Keep ARC work on the live agent's own attempt path. Make no public-game or
+  hidden-level solve claim. Keep all new behavior default-off.
+- Schedule no unchanged hardware task. Dual RTX 3090 GPUs are the only required
+  accelerator for this milestone.
+
+<!-- V547-PLANNER-REFRESH-20260812-END -->
