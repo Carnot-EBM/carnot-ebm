@@ -17285,3 +17285,38 @@ not raise them; it lowers them. So that hypothesis is dead as an explanation for
 induction-quality wall, and the wall stands unexplained. Session tally on induction-adjacent
 levers: search structure null, sampling breadth null, goal gradient null, model architecture
 null, win exemplar NEGATIVE.
+
+## 2026-08-12 FINDING (pre-run, from a smoke test): a stored goal predicate scores PERFECT while being useless
+
+Found while smoke-testing exp6256's scorer against an engine already in the tracked store,
+before any LLM call. dc22's stored `is_level_complete`:
+
+| metric | value |
+|---|---|
+| `goal_specificity_accuracy` | **1.0** |
+| `goal_false_positives` | 0 |
+| `goal_n_real_levelups_in_held` | 0 |
+| `goal_fires_on_real_win` | **False** |
+
+The predicate is perfect on every one-sided measure and does not fire on the actual win
+state. It is the degenerate return-False-everywhere predicate.
+
+**Why it scores perfectly.** `collect_transitions` yields no level-ups, so held-out data
+contains only non-winning states. Against that data a predicate that never returns True is
+100% correct. Specificity alone cannot distinguish a good predicate from a constant False.
+
+**Why this matters beyond one game.** `score_goal_predicate_consistency` is the project's
+own goal-hypothesis checker, and scoring it on random-walk transitions is structurally
+one-sided for every game, not just dc22. Any pipeline gating on that accuracy alone will
+accept constant-False predicates. `arc_llm_reinduction.py` already carries
+`degenerate_goal_predicate` rejection and a `_goal_satisfiability_check`, so the project
+knows this failure mode exists -- what is new here is that the CONSISTENCY score gives a
+degenerate predicate a perfect mark, so the two mechanisms are not interchangeable.
+
+**The cheap fix, now in use.** Score sensitivity too: does the predicate fire on a grid
+where a level-up really happened? `replay_win_transition` supplies that grid. exp6256
+reports both sides for exactly this reason. This is the same lesson as exp6252's retracted
+ablation earlier in the batch -- a control or metric that cannot fail is not a measurement.
+
+Not yet swept across all 25 stored engines. That sweep is cheap (CPU-only, no LLM) and would
+say how many stored goal predicates are degenerate.
