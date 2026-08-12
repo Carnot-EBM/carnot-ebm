@@ -25079,6 +25079,104 @@ credit, registry updates, duration padding, unsupported model substitution,
 action parity drift, default-on shadow drift, missing field principles, and
 checksum drift.
 
+### REQ-ARC-WMTE-6347: Target-Licensed Route Action-Influence Preflight
+
+Experiment 6347 SHALL test whether the Exp6321 target-licensed route can change
+the ordering of legal next actions before the live agent acts. The experiment
+SHALL use only recorded Exp6321 live-agent windows. It SHALL NOT call an LLM,
+read hidden game source, run offline ground-truth BFS, use a hand `GameAdapter`,
+perform per-game calibration, claim a solve, or update the solve registry.
+
+The workflow SHALL hash the ARC solve registry, the Exp6294, Exp6307, and
+Exp6321 artifacts, the Exp6321 transition manifest, the live E3 policy source,
+the target-license route code, the exclusion manifest, and protected files
+before replay. It SHALL run the registry precheck as an influence task, not as a
+solve task. It SHALL record a no-duplicate-solve receipt and SHALL keep the
+solve registry unchanged.
+
+The workflow SHALL reconstruct the Exp6321 live-agent windows from the agent's
+own observation/action rows, runtime route evidence, and exact transition
+receipts. Legal action sets SHALL be reconstructed separately from route
+features. Exact one-step transition quality SHALL be checked only by the named
+Exp6347 exact transition receipt checker. That checker MAY confirm whether a
+candidate action has an exact recorded one-step transition and changed-cell
+value. It SHALL NOT be treated as a game-solve oracle.
+
+For each independent live window and seed, the workflow SHALL replay two
+counterfactual route states before the recorded action: `route_off` and
+`target_licensed_route_on`. It SHALL measure whether route evidence changes
+the legal-action ordering, whether the changed top action has exact one-step
+transition value, and whether deleting the route removes the effect. It SHALL
+also test no-effect fixture mutation, evidence permutation, target-leakage
+traps, hidden-source traps, and off-path adapter traps.
+
+Experiment 6347 SHALL pre-register a default-off A/B eligibility rule. The
+`arc_action_influence_eligible_score` SHALL equal `1.0` only when at least the
+pre-registered number of independent live windows show a legal route-caused
+action-order change, leakage is zero, route deletion removes the effect, fixture
+mutation fails closed, all checks pass, and all forbidden access and solve
+counters are bare integer zero values. Otherwise the score SHALL be `0.0`.
+
+`python/carnot/experiment_6347_arc_action_influence_preflight.py` SHALL write
+`results/experiment_6347_arc_action_influence_preflight.json` with these bare
+top-level fields: `status`,
+`upstream_path_hash_terminal_class_and_ready_score`,
+`arc_registry_precheck_path_hash_and_result`, `solve_provenance`,
+`no_duplicate_solve_receipt`, `live_attempt_window_manifest_path_and_hash`,
+`live_evidence_allowed_fields`, `forbidden_source_access_contract`,
+`hidden_game_source_access_count`, `offline_ground_truth_bfs_count`,
+`hand_game_adapter_count`, `per_game_calibration_count`,
+`route_on_off_counterfactual_contract`,
+`legal_action_set_reconstruction_results`,
+`action_order_change_results_by_game_window_and_seed`,
+`one_step_exact_transition_quality_by_route_state`,
+`influence_eligible_window_ids_and_counts`,
+`leakage_overlap_and_escape_tests`,
+`fixture_mutation_and_route_deletion_results`,
+`verification_calls_time_cost_and_error_table`, `solve_claim_count`,
+`registry_update_count`, `llm_call_count`, `exact_oracle_claim_boundary`,
+`arc_action_influence_eligible_score`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`, `test_exit_codes`,
+`duration_s`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+`solve_provenance` SHALL equal `live_agent_self_discovery`. The fields
+`hidden_game_source_access_count`, `offline_ground_truth_bfs_count`,
+`hand_game_adapter_count`, `per_game_calibration_count`, `solve_claim_count`,
+`registry_update_count`, and `llm_call_count` SHALL be bare integer zero values.
+`verifier_is_oracle` SHALL name the exact one-step transition checker.
+`field_principles` SHALL include one principle for every required field.
+
+#### SCENARIO-ARC-WMTE-6347-REGISTRY-PRECHECK
+
+Given the preflight starts, when it reads the solve registry, then it records
+the registry path, hash, influence-task classification, no duplicate solve
+proposal, and zero registry updates before reconstructing any window.
+
+#### SCENARIO-ARC-WMTE-6347-WINDOW-RECONSTRUCTION
+
+Given the Exp6321 artifact and transition manifest, when windows are
+reconstructed, then each window is derived from recorded observations, actions,
+runtime route evidence, and exact transition receipts. No hidden source, offline
+BFS, hand adapter, or per-game calibration source is used.
+
+#### SCENARIO-ARC-WMTE-6347-COUNTERFACTUAL-ORDERING
+
+Given a reconstructed live window, when route-off and target-licensed-route-on
+counterfactuals are replayed before the recorded action, then legal action sets
+remain identical, route features are separate from legal-action reconstruction,
+and route evidence may count only if it changes the action ordering and the
+changed top action has exact one-step transition value.
+
+#### SCENARIO-ARC-WMTE-6347-ADVERSARIAL-CONTROLS
+
+Given a completed 6347 artifact, validation refuses hidden-source access,
+offline BFS, hand adapters, per-game calibration, target leakage, route deletion
+that fails to remove the effect, no-effect fixture mutation that still licenses
+the route, solve claims, registry updates, LLM calls, missing field principles,
+nonterminal verdicts, and checksum drift.
+
 ## Implementation Status (REQ-ARC-WMTE-6307, REQ-ARC-WMTE-6308)
 
 | REQ | Implementation | Tests |
