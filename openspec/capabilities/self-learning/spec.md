@@ -27998,3 +27998,124 @@ release, rollback, model-weight, generated-label, and hidden-state violations.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-6345 | Planned (`python/carnot/experiment_6345_prospective_certified_factor_evolution_ab.py`, `results/experiment_6345_prospective_certified_factor_evolution_ab.json`) | Planned (`tests/python/test_experiment_6345_prospective_certified_factor_evolution_ab.py`) |
+
+## REQ-LEARN-6346: Certified Factor Evolution Safety Audit
+
+Exp6346 SHALL build an information-independent attack manifest before reading
+outcome-sensitive upstream fields. It SHALL audit the reusable certificate and
+lifecycle attack surface over Exp6320, Exp6342, Exp6343, Exp6344, and Exp6345.
+It SHALL evaluate clean, missing, skipped, and corrupted upstream classes.
+Missing or skipped evidence SHALL block or mark utility as skipped. It SHALL
+NOT count missing evidence as safety success.
+
+- REQ-LEARN-6346-1: The artifact SHALL contain the exact required field set
+  listed below. `unsafe_commit_count`, `undetected_harmful_attack_count`,
+  `protected_validation_leak_count`, `source_model_weight_mutation_count`,
+  `utility_promotion_count`, `generated_label_count`, and `llm_call_count`
+  SHALL be bare integer zero.
+- REQ-LEARN-6346-2: The attack manifest SHALL freeze upstream path hashes,
+  terminal classes, attack classes, expected decisions, seeds, corruption
+  locations, rollback identities, resource limits, and protected hashes before
+  any outcome-sensitive field is read.
+- REQ-LEARN-6346-3: Optional stopping, repeated peeking, e-value reset,
+  duplicate evidence, cross-factor reuse, selected nulls, and forged evidence
+  identity SHALL fail closed with no release or commit.
+- REQ-LEARN-6346-4: Rationale laundering, counterexample swaps, lineage
+  cycles, stale certificates, unsafe merge, harmful deletion, and capacity
+  eviction SHALL fail closed with no active harmful state.
+- REQ-LEARN-6346-5: Protected validation read or reuse, challenger budget
+  asymmetry, source-model mutation, restart corruption, and rollback failure
+  SHALL fail closed. Rollback SHALL restore parent bytes exactly.
+- REQ-LEARN-6346-6: `safety_ready_score` SHALL be the bare scalar `1.0` only
+  when every attack fails closed, rollback is byte-identical, missing evidence
+  is not counted as success, protected files are unchanged, and all claimed
+  checks pass. Safety-only success SHALL NOT promote utility.
+
+### SCENARIO-LEARN-6346-MANIFEST: Attacks Freeze Before Outcome Reads
+
+**Given** the upstream artifacts and protected files
+**When** Exp6346 starts
+**Then** it hashes paths, terminal classes, attack classes, expected decisions,
+seeds, corruption locations, rollback identities, resource limits, and
+protected hashes before reading outcome-sensitive fields.
+
+### SCENARIO-LEARN-6346-EPROCESS: E-Process Abuse Fails Closed
+
+**Given** optional stopping, repeated peeking, reset, duplicate evidence,
+cross-factor reuse, selected nulls, and forged evidence identity attacks
+**When** Exp6346 evaluates copied upstream state
+**Then** each attack rejects, aborts, quarantines, or rolls back with zero
+unsafe commits.
+
+### SCENARIO-LEARN-6346-LIFECYCLE: Lifecycle Abuse Fails Closed
+
+**Given** rationale laundering, counterexample swaps, lineage cycles, stale
+certificates, unsafe merge, harmful deletion, and capacity eviction attacks
+**When** Exp6346 validates the reusable certificate lifecycle
+**Then** each attack fails closed and no harmful factor becomes active.
+
+### SCENARIO-LEARN-6346-PROTECTED: Protected Evidence Cannot Steer Selection
+
+**Given** protected validation read, protected validation reuse, and challenger
+budget asymmetry attacks
+**When** Exp6346 audits clean, missing, skipped, and corrupted upstream classes
+**Then** protected leak counts remain zero and missing or skipped evidence does
+not count as safety success.
+
+### SCENARIO-LEARN-6346-ROLLBACK: Restart And Rollback Are Byte-Exact
+
+**Given** source-model mutation, restart corruption, and rollback failure
+attacks
+**When** Exp6346 reconstructs parent state after restart
+**Then** model-weight mutation count remains zero and parent bytes match
+byte-for-byte after rollback.
+
+### SCENARIO-LEARN-6346-BOUNDARY: Safety Does Not Promote Utility
+
+**Given** every safety attack fails closed
+**When** Exp6346 computes readiness
+**Then** `safety_ready_score` can be `1.0`, but `utility_promotion_count`,
+`generated_label_count`, and `llm_call_count` remain bare integer zero.
+
+### Required Artifact Fields and Principles
+
+- `status`: Terminal status follows manifest isolation, attacks, rollback, protected files, missing evidence, and tests.
+- `upstream_paths_hashes_and_terminal_classes`: Upstream bytes and terminal classes are recorded before semantic reads.
+- `attack_manifest_path_hash_and_preoutcome_receipt`: The manifest path and hash prove attacks were frozen before outcome-sensitive reads.
+- `information_isolation_contract`: The audit declares the allowed read order and forbidden outcome leaks.
+- `attack_classes`: The full attack list is explicit and data-independent.
+- `optional_stopping_peeking_reset_duplicate_cross_factor_selected_null_and_identity_attack_results`: E-process and identity attacks fail closed.
+- `rationale_counterexample_lineage_certificate_merge_delete_and_eviction_attack_results`: Lifecycle and destructive-state attacks fail closed.
+- `protected_validation_read_reuse_and_budget_asymmetry_results`: Protected validation and budget attacks fail closed.
+- `source_model_mutation_results`: Source model mutation attempts fail closed.
+- `restart_corruption_and_rollback_failure_results`: Restart and rollback attacks restore parent bytes.
+- `unsafe_commit_count`: Bare zero proves no unsafe attacked candidate committed.
+- `undetected_harmful_attack_count`: Bare zero proves no harmful attack escaped detection.
+- `protected_validation_leak_count`: Bare zero proves protected validation did not leak into selection.
+- `source_model_weight_mutation_count`: Bare zero proves base model weights stayed unchanged.
+- `rollback_byte_identity`: Parent rollback receipts compare canonical bytes and hashes.
+- `fail_closed_count_by_attack_class`: Each attack class records its fail-closed count and decision.
+- `missing_upstream_and_skipped_utility_handling`: Missing, skipped, and corrupted upstream classes block or skip utility without becoming safety success.
+- `safety_ready_score`: Readiness is one only when all safety, rollback, missing-evidence, protected-file, and test gates pass.
+- `utility_promotion_count`: Bare zero proves safety-only success did not promote utility.
+- `generated_label_count`: Bare zero proves no generated labels were used.
+- `llm_call_count`: Bare zero proves no LLM call was made.
+- `exact_oracle_claim_boundary`: Exact checks are named, while statistical and lifecycle audit checks are not all-oracle.
+- `protected_files_unchanged`: Protected repo files and upstream artifacts remain byte-identical.
+- `preconditions_checked`: Preconditions state which hashes, seeds, attacks, rollback identities, limits, and protected files froze first.
+- `inference_substrate`: The substrate declares deterministic artifact replay with no LLM and no model load.
+- `verifier_is_oracle`: This field reports the mixed boundary and names exact-oracle checks.
+- `field_provenance`: Every field maps to spec, upstream bytes, manifest, attacks, tests, or hashes.
+- `field_principles`: Every required field has a reason.
+- `test_commands`: Focused, coverage, full pytest, spec, E2E, adversarial, run, and clutter commands are named.
+- `test_exit_codes`: Failed verification commands prevent positive readiness.
+- `duration_s`: Wall time is measured without padding.
+- `random_seeds`: Manifest, attack, corruption, and rollback seeds are pinned.
+- `reproducibility_checksum`: A stable checksum detects drift.
+- `honest_verdict`: The verdict uses a terminal prefix and separates safety readiness from utility promotion.
+
+## Implementation Status (REQ-LEARN-6346)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-6346 | Planned (`python/carnot/experiment_6346_certified_factor_evolution_safety_audit.py`, `results/experiment_6346_certified_factor_evolution_safety_audit.json`) | Planned (`tests/python/test_experiment_6346_certified_factor_evolution_safety_audit.py`) |
