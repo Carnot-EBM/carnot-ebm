@@ -17429,3 +17429,61 @@ planner's termination condition depends on it. The win exemplar is now ruled out
 The remaining candidates are unchanged from exp6257: make the metric two-sided so a
 constant-False predicate cannot score perfect, then attack induction of the predicate itself
 with something other than a prompt exemplar.
+
+## 2026-08-12 THE LIVE GOAL-PREDICATE VETO IS INVERTED AT LEVEL 1 (code-path analysis)
+
+Found while fixing the metric hole from exp6257. This is a CODE-PATH ANALYSIS, not a live
+observation -- no live run was made to confirm it. Every step below was verified in source
+or by test; the conclusion follows by construction.
+
+**The chain.**
+
+1. The live agent sets `min_goal_predicate_consistency=1.0` at BOTH reinduction call sites
+   (`arc_competition_agent.py:7164` and `:7309`). Verified in source.
+2. `arc_llm_reinduction.py` rejects a candidate when
+   `consistency.accuracy < goal_consistency_threshold`, setting
+   `row["skipped"] = "goal_predicate_consistency_failed"`. So a candidate must score EXACTLY
+   1.0 to survive. Verified in source.
+3. The window scored is `consistency_window = list(transitions)` -- the agent's OWN observed
+   transitions. Verified in source.
+4. Before the agent's first level-up, NO transition in that window can have
+   `level_after > level_before`. True by construction, not by measurement.
+5. On a window with no level-ups, `accuracy` is pure specificity, and a predicate that
+   returns False for everything scores exactly **1.0**. Verified by test
+   (`test_goal_predicate_sensitivity_6257.py`).
+
+**The consequence.** At level 1 on a hidden game -- the exact moment the agent must break
+through, and the case where no exemplar can exist -- a veto set to 1.0:
+
+- **ACCEPTS** a constant-False predicate, because it scores a perfect 1.0.
+- **REJECTS** a genuinely discriminating predicate that fires even once too often, because
+  any false positive puts it below 1.0.
+
+The gate selects FOR the useless predicate and AGAINST the imperfect-but-real one, at the
+only moment that matters. `plan_in_model` then terminates on that predicate, so the planner
+either cannot terminate at all or terminates on an in-model false win -- which is exactly the
+pattern exp6257 measured: 10 of 14 degenerate games found no plan, and 4 produced verified
+hollow plans.
+
+**It is consistent with everything measured in this batch.** exp6257: 14 of 21 STORED
+predicates degenerate. exp6256: 8 of 8 FRESHLY induced predicates never fire on a real win.
+A gate that admits only perfect-specificity predicates on level-up-free data is a sufficient
+explanation for both.
+
+**Once the agent HAS won a level the inversion relaxes.** From level 2 the window can contain
+a real level-up, and then a constant-False predicate scores below 1.0 and is correctly
+rejected. So this is a level-1 / cold-start defect specifically, which is also where the live
+agent's scored performance is stuck.
+
+**Fix shipped for the metric, NOT for the gate.** `score_goal_predicate_consistency` now
+takes an optional `win_grids` and returns `sensitivity_win_grids_tested`,
+`sensitivity_win_grids_fired` and `is_degenerate_constant_false`, so a constant-False
+predicate can no longer be indistinguishable from a good one. Defaults are unchanged and
+`win_grids` is optional, so no existing caller's behaviour moves; when no win grid is
+supplied the flag is None (UNMEASURABLE) rather than a pass. 11 tests, including the
+constant-True opposite degeneracy and a backward-compatibility case.
+
+**Deliberately NOT changed: the live threshold.** Lowering `min_goal_predicate_consistency`
+from 1.0, or rewiring the veto to consult the new flag, is a live-path behaviour change on
+the scored agent. It should be a measured A/B and an operator decision, not a quiet edit at
+the end of an unattended session. The analysis above is the case for running that A/B.
