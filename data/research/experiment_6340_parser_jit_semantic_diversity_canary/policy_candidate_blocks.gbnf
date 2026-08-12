@@ -1,0 +1,9 @@
+root ::= block+
+family ::= "access_gate" | "incident_response"
+block ::= "BEGIN_CANDIDATE family=" family " candidate=" digit "\n" program "END_CANDIDATE" "\n"?
+program ::= "policy " ident "\n" states actions rule+ "end" "\n"?
+states ::= "states: " ident (", " ident)* ";" "\n"
+actions ::= "actions: " ident (", " ident)* ";" "\n"
+rule ::= "rule " ident " -> " ident ";" "\n"
+digit ::= "0" | "1"
+ident ::= [a-z] [a-z0-9_]{0,23}
