@@ -1,0 +1,2661 @@
+{
+  "MODEL_SPECS": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_size_bytes": 22134528992,
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "resolved_via": "cached_sota_pair(gpu_indices=(0, 1))",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "terminal_disposition": "resolved_cached_gguf"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_size_bytes": 18323731456,
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "resolved_via": "cached_sota_pair(gpu_indices=(0, 1), model_indices=(0, 2))",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "terminal_disposition": "resolved_cached_gguf"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_size_bytes": 16947539744,
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "UD-Q4_K_M",
+      "resolved_via": "cached_sota_pair(gpu_indices=(0, 1))",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "terminal_disposition": "resolved_cached_gguf"
+    }
+  ],
+  "arc_causal_influence_ready_score": 1.0,
+  "arc_registry_precheck_path_hash_and_result": {
+    "all_selected_targets_nonduplicate": true,
+    "duplicate_solve_proposal_count": 0,
+    "duplicate_solve_proposals": [],
+    "influence_task_id": "exp6348_arc_default_off_action_influence_ab_no_solve",
+    "path": "ops/arc_solve_registry.yaml",
+    "precheck_order": "registry_before_model_load",
+    "public_level_targeted": false,
+    "registry_bytes_read": 462740,
+    "registry_line_count": 6883,
+    "registry_read_mode": "full_text",
+    "registry_update_count": 0,
+    "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "solve_proposal_made": false,
+    "task_kind": "fresh_live_action_influence_ab_not_solve"
+  },
+  "arm_definitions": {
+    "arms": {
+      "route_off": {
+        "action_order": "live_agent_raw_candidate_order",
+        "target_licensed_route": false
+      },
+      "target_licensed_route_on": {
+        "action_order": "supported_agent_owned_actions_first",
+        "target_licensed_route": true
+      }
+    },
+    "matched_keys": [
+      "model_id",
+      "game_window_id",
+      "seed",
+      "action_budget",
+      "token_budget",
+      "route_rules",
+      "exact_checker"
+    ],
+    "only_planned_difference": "target-license route activation",
+    "route_may_annotate": true,
+    "route_may_inject_actions": false,
+    "route_may_reorder": true
+  },
+  "cuda_gpu_offload_and_memory_release_receipts_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "canonical_llama_cpp": true,
+      "duration_s": 10.353718,
+      "embedded_tokenizer_probe_ok": true,
+      "errors": [],
+      "full_weight_load_attempted": true,
+      "loaded_one_placement_at_a_time": true,
+      "main_gpu": 0,
+      "memory_after": {
+        "driver_version": "610.43.03",
+        "index": 0,
+        "memory_free_mb": 23859,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 266,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      "memory_before": {
+        "driver_version": "610.43.03",
+        "index": 0,
+        "memory_free_mb": 23859,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 266,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      "memory_delta_after_mb": 0,
+      "memory_released": true,
+      "n_batch": 8,
+      "n_ctx": 64,
+      "n_gpu_layers": -1,
+      "terminal": true
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "canonical_llama_cpp": true,
+      "duration_s": 8.243738,
+      "embedded_tokenizer_probe_ok": true,
+      "errors": [],
+      "full_weight_load_attempted": true,
+      "loaded_one_placement_at_a_time": true,
+      "main_gpu": 1,
+      "memory_after": {
+        "driver_version": "610.43.03",
+        "index": 1,
+        "memory_free_mb": 23859,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 266,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      "memory_before": {
+        "driver_version": "610.43.03",
+        "index": 1,
+        "memory_free_mb": 23859,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 266,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      "memory_delta_after_mb": 0,
+      "memory_released": true,
+      "n_batch": 8,
+      "n_ctx": 64,
+      "n_gpu_layers": -1,
+      "terminal": true
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "canonical_llama_cpp": true,
+      "duration_s": 8.819547,
+      "embedded_tokenizer_probe_ok": true,
+      "errors": [],
+      "full_weight_load_attempted": true,
+      "loaded_one_placement_at_a_time": true,
+      "main_gpu": 1,
+      "memory_after": {
+        "driver_version": "610.43.03",
+        "index": 1,
+        "memory_free_mb": 23859,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 266,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      "memory_before": {
+        "driver_version": "610.43.03",
+        "index": 1,
+        "memory_free_mb": 23859,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 266,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      "memory_delta_after_mb": 0,
+      "memory_released": true,
+      "n_batch": 8,
+      "n_ctx": 64,
+      "n_gpu_layers": -1,
+      "terminal": true
+    }
+  },
+  "duration_s": 74.777064,
+  "exact_one_step_transition_quality_by_model_game_window_arm_and_seed": {
+    "checker": "exp6348_exact_one_step_transition_checker",
+    "positive_route_on_quality_count": 12,
+    "row_count": 12,
+    "rows": [
+      {
+        "game_window_id": "exp6348_fresh_synthetic_push_l0",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "quality_delta": 3.0,
+        "route_off": {
+          "action": 5,
+          "changed_cell_counts": [],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 0.0,
+          "exact_receipt_count": 0,
+          "has_exact_one_step_transition": false,
+          "not_a_solve_oracle": true,
+          "receipts": []
+        },
+        "seed": 6348001,
+        "target_licensed_route_on": {
+          "action": 4,
+          "changed_cell_counts": [
+            3,
+            3,
+            3
+          ],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 3.0,
+          "exact_receipt_count": 3,
+          "has_exact_one_step_transition": true,
+          "not_a_solve_oracle": true,
+          "receipts": [
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:5b6f8a50c53a0c665085a540f61782729ad8206d322a5bee0ddc694756bec9e3",
+              "index": 0,
+              "next_grid_sha256": "sha256:21d3660b88948ec3e190d105788d194e11143e9f6e7ac0a67609d3eafb8f070c"
+            },
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:21d3660b88948ec3e190d105788d194e11143e9f6e7ac0a67609d3eafb8f070c",
+              "index": 1,
+              "next_grid_sha256": "sha256:d1c5938d83f5b0c11e5d84124f01fb0b329a5a92a64dd4c4ba82d8d1badf65dc"
+            },
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:d1c5938d83f5b0c11e5d84124f01fb0b329a5a92a64dd4c4ba82d8d1badf65dc",
+              "index": 2,
+              "next_grid_sha256": "sha256:4a3f7358debe58bfd5e62d31d90a5d51d06df3ccb7968c40c36b946b8ab9e2d4"
+            }
+          ]
+        },
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348001"
+      },
+      {
+        "game_window_id": "exp6348_fresh_synthetic_push_l0",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "quality_delta": 3.0,
+        "route_off": {
+          "action": 5,
+          "changed_cell_counts": [],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 0.0,
+          "exact_receipt_count": 0,
+          "has_exact_one_step_transition": false,
+          "not_a_solve_oracle": true,
+          "receipts": []
+        },
+        "seed": 6348002,
+        "target_licensed_route_on": {
+          "action": 4,
+          "changed_cell_counts": [
+            3,
+            3,
+            3
+          ],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 3.0,
+          "exact_receipt_count": 3,
+          "has_exact_one_step_transition": true,
+          "not_a_solve_oracle": true,
+          "receipts": [
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:c30a8c2fb52b1eae4cc00340e555e64a87235053d51148c7b6ee3823a85c0ab3",
+              "index": 0,
+              "next_grid_sha256": "sha256:003625edf96a488afe9ee32c8ba9cd979089abe7bd6499c9768c4dece6fd031a"
+            },
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:003625edf96a488afe9ee32c8ba9cd979089abe7bd6499c9768c4dece6fd031a",
+              "index": 1,
+              "next_grid_sha256": "sha256:7022dc2804c6ef3dd70dc7d5a079c868a3211cda8099118f289dd74fad430733"
+            },
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:7022dc2804c6ef3dd70dc7d5a079c868a3211cda8099118f289dd74fad430733",
+              "index": 2,
+              "next_grid_sha256": "sha256:43443adc8e340a80ed2f068ed27d256b6762b6c3f094ab805f4a39d89a96b442"
+            }
+          ]
+        },
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348002"
+      },
+      {
+        "game_window_id": "exp6348_fresh_synthetic_toggle_l0",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "quality_delta": 4.0,
+        "route_off": {
+          "action": 5,
+          "changed_cell_counts": [],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 0.0,
+          "exact_receipt_count": 0,
+          "has_exact_one_step_transition": false,
+          "not_a_solve_oracle": true,
+          "receipts": []
+        },
+        "seed": 6348001,
+        "target_licensed_route_on": {
+          "action": 4,
+          "changed_cell_counts": [
+            4,
+            4,
+            4
+          ],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 4.0,
+          "exact_receipt_count": 3,
+          "has_exact_one_step_transition": true,
+          "not_a_solve_oracle": true,
+          "receipts": [
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:64d2167e4fb8d85044292635c203737bb1fc0ffc8d2c1fa3034d57de1b1eacf2",
+              "index": 0,
+              "next_grid_sha256": "sha256:d066c38abec03197e24c7c29f63609cc1e63463295708876437c33d8f722b742"
+            },
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:22a3c26fa1c962638913b39124a7ddfc0588908450a9f7035955ec46c856f5c8",
+              "index": 1,
+              "next_grid_sha256": "sha256:ff8ace2c19c7c62f71153dfebbb9b311bcdebc84d082e65129931b2675bc5a7a"
+            },
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:e93ea35b2e3d2c53644ce9146b2bd6900940a03ab73267d8cc6eca62f680efbb",
+              "index": 2,
+              "next_grid_sha256": "sha256:27a0f9249f76f978fd7199dc39d4b656f3964c1f9a0780115cc25aed5825995b"
+            }
+          ]
+        },
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348001"
+      },
+      {
+        "game_window_id": "exp6348_fresh_synthetic_toggle_l0",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "quality_delta": 4.0,
+        "route_off": {
+          "action": 5,
+          "changed_cell_counts": [],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 0.0,
+          "exact_receipt_count": 0,
+          "has_exact_one_step_transition": false,
+          "not_a_solve_oracle": true,
+          "receipts": []
+        },
+        "seed": 6348002,
+        "target_licensed_route_on": {
+          "action": 4,
+          "changed_cell_counts": [
+            4,
+            4,
+            4
+          ],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 4.0,
+          "exact_receipt_count": 3,
+          "has_exact_one_step_transition": true,
+          "not_a_solve_oracle": true,
+          "receipts": [
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:ae901f347c7d8a9a85e695b7fe83dab0165b61d66b78c29ce860960cf6976d72",
+              "index": 0,
+              "next_grid_sha256": "sha256:3a78d57376238fef9b0e570f4e06b008fc216decaee55d2152016dfea32b61c6"
+            },
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:f8effeff6f7b79c6ad7c92791a7db3761d899379c30bb7110a816f757a85cfb8",
+              "index": 1,
+              "next_grid_sha256": "sha256:e6beb0fa0a7a19b28971ccfb7b6d620d0330a04632641eee24bc422c0ec96be1"
+            },
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:62a69b3ec8d57ece31bce75719941a06c9b5c096889ad9057c7dd9751ab11d71",
+              "index": 2,
+              "next_grid_sha256": "sha256:7b781cd32a28bb1f98fc9faa964179e45f523a5a64d87ca3f30aa651307f960e"
+            }
+          ]
+        },
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348002"
+      },
+      {
+        "game_window_id": "exp6348_fresh_synthetic_push_l0",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "quality_delta": 3.0,
+        "route_off": {
+          "action": 5,
+          "changed_cell_counts": [],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 0.0,
+          "exact_receipt_count": 0,
+          "has_exact_one_step_transition": false,
+          "not_a_solve_oracle": true,
+          "receipts": []
+        },
+        "seed": 6348001,
+        "target_licensed_route_on": {
+          "action": 4,
+          "changed_cell_counts": [
+            3,
+            3,
+            3
+          ],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 3.0,
+          "exact_receipt_count": 3,
+          "has_exact_one_step_transition": true,
+          "not_a_solve_oracle": true,
+          "receipts": [
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:5b6f8a50c53a0c665085a540f61782729ad8206d322a5bee0ddc694756bec9e3",
+              "index": 0,
+              "next_grid_sha256": "sha256:21d3660b88948ec3e190d105788d194e11143e9f6e7ac0a67609d3eafb8f070c"
+            },
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:21d3660b88948ec3e190d105788d194e11143e9f6e7ac0a67609d3eafb8f070c",
+              "index": 1,
+              "next_grid_sha256": "sha256:d1c5938d83f5b0c11e5d84124f01fb0b329a5a92a64dd4c4ba82d8d1badf65dc"
+            },
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:d1c5938d83f5b0c11e5d84124f01fb0b329a5a92a64dd4c4ba82d8d1badf65dc",
+              "index": 2,
+              "next_grid_sha256": "sha256:4a3f7358debe58bfd5e62d31d90a5d51d06df3ccb7968c40c36b946b8ab9e2d4"
+            }
+          ]
+        },
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348001"
+      },
+      {
+        "game_window_id": "exp6348_fresh_synthetic_push_l0",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "quality_delta": 3.0,
+        "route_off": {
+          "action": 5,
+          "changed_cell_counts": [],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 0.0,
+          "exact_receipt_count": 0,
+          "has_exact_one_step_transition": false,
+          "not_a_solve_oracle": true,
+          "receipts": []
+        },
+        "seed": 6348002,
+        "target_licensed_route_on": {
+          "action": 4,
+          "changed_cell_counts": [
+            3,
+            3,
+            3
+          ],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 3.0,
+          "exact_receipt_count": 3,
+          "has_exact_one_step_transition": true,
+          "not_a_solve_oracle": true,
+          "receipts": [
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:c30a8c2fb52b1eae4cc00340e555e64a87235053d51148c7b6ee3823a85c0ab3",
+              "index": 0,
+              "next_grid_sha256": "sha256:003625edf96a488afe9ee32c8ba9cd979089abe7bd6499c9768c4dece6fd031a"
+            },
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:003625edf96a488afe9ee32c8ba9cd979089abe7bd6499c9768c4dece6fd031a",
+              "index": 1,
+              "next_grid_sha256": "sha256:7022dc2804c6ef3dd70dc7d5a079c868a3211cda8099118f289dd74fad430733"
+            },
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:7022dc2804c6ef3dd70dc7d5a079c868a3211cda8099118f289dd74fad430733",
+              "index": 2,
+              "next_grid_sha256": "sha256:43443adc8e340a80ed2f068ed27d256b6762b6c3f094ab805f4a39d89a96b442"
+            }
+          ]
+        },
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348002"
+      },
+      {
+        "game_window_id": "exp6348_fresh_synthetic_toggle_l0",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "quality_delta": 4.0,
+        "route_off": {
+          "action": 5,
+          "changed_cell_counts": [],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 0.0,
+          "exact_receipt_count": 0,
+          "has_exact_one_step_transition": false,
+          "not_a_solve_oracle": true,
+          "receipts": []
+        },
+        "seed": 6348001,
+        "target_licensed_route_on": {
+          "action": 4,
+          "changed_cell_counts": [
+            4,
+            4,
+            4
+          ],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 4.0,
+          "exact_receipt_count": 3,
+          "has_exact_one_step_transition": true,
+          "not_a_solve_oracle": true,
+          "receipts": [
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:64d2167e4fb8d85044292635c203737bb1fc0ffc8d2c1fa3034d57de1b1eacf2",
+              "index": 0,
+              "next_grid_sha256": "sha256:d066c38abec03197e24c7c29f63609cc1e63463295708876437c33d8f722b742"
+            },
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:22a3c26fa1c962638913b39124a7ddfc0588908450a9f7035955ec46c856f5c8",
+              "index": 1,
+              "next_grid_sha256": "sha256:ff8ace2c19c7c62f71153dfebbb9b311bcdebc84d082e65129931b2675bc5a7a"
+            },
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:e93ea35b2e3d2c53644ce9146b2bd6900940a03ab73267d8cc6eca62f680efbb",
+              "index": 2,
+              "next_grid_sha256": "sha256:27a0f9249f76f978fd7199dc39d4b656f3964c1f9a0780115cc25aed5825995b"
+            }
+          ]
+        },
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348001"
+      },
+      {
+        "game_window_id": "exp6348_fresh_synthetic_toggle_l0",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "quality_delta": 4.0,
+        "route_off": {
+          "action": 5,
+          "changed_cell_counts": [],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 0.0,
+          "exact_receipt_count": 0,
+          "has_exact_one_step_transition": false,
+          "not_a_solve_oracle": true,
+          "receipts": []
+        },
+        "seed": 6348002,
+        "target_licensed_route_on": {
+          "action": 4,
+          "changed_cell_counts": [
+            4,
+            4,
+            4
+          ],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 4.0,
+          "exact_receipt_count": 3,
+          "has_exact_one_step_transition": true,
+          "not_a_solve_oracle": true,
+          "receipts": [
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:ae901f347c7d8a9a85e695b7fe83dab0165b61d66b78c29ce860960cf6976d72",
+              "index": 0,
+              "next_grid_sha256": "sha256:3a78d57376238fef9b0e570f4e06b008fc216decaee55d2152016dfea32b61c6"
+            },
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:f8effeff6f7b79c6ad7c92791a7db3761d899379c30bb7110a816f757a85cfb8",
+              "index": 1,
+              "next_grid_sha256": "sha256:e6beb0fa0a7a19b28971ccfb7b6d620d0330a04632641eee24bc422c0ec96be1"
+            },
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:62a69b3ec8d57ece31bce75719941a06c9b5c096889ad9057c7dd9751ab11d71",
+              "index": 2,
+              "next_grid_sha256": "sha256:7b781cd32a28bb1f98fc9faa964179e45f523a5a64d87ca3f30aa651307f960e"
+            }
+          ]
+        },
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348002"
+      },
+      {
+        "game_window_id": "exp6348_fresh_synthetic_push_l0",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "quality_delta": 3.0,
+        "route_off": {
+          "action": 5,
+          "changed_cell_counts": [],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 0.0,
+          "exact_receipt_count": 0,
+          "has_exact_one_step_transition": false,
+          "not_a_solve_oracle": true,
+          "receipts": []
+        },
+        "seed": 6348001,
+        "target_licensed_route_on": {
+          "action": 4,
+          "changed_cell_counts": [
+            3,
+            3,
+            3
+          ],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 3.0,
+          "exact_receipt_count": 3,
+          "has_exact_one_step_transition": true,
+          "not_a_solve_oracle": true,
+          "receipts": [
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:5b6f8a50c53a0c665085a540f61782729ad8206d322a5bee0ddc694756bec9e3",
+              "index": 0,
+              "next_grid_sha256": "sha256:21d3660b88948ec3e190d105788d194e11143e9f6e7ac0a67609d3eafb8f070c"
+            },
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:21d3660b88948ec3e190d105788d194e11143e9f6e7ac0a67609d3eafb8f070c",
+              "index": 1,
+              "next_grid_sha256": "sha256:d1c5938d83f5b0c11e5d84124f01fb0b329a5a92a64dd4c4ba82d8d1badf65dc"
+            },
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:d1c5938d83f5b0c11e5d84124f01fb0b329a5a92a64dd4c4ba82d8d1badf65dc",
+              "index": 2,
+              "next_grid_sha256": "sha256:4a3f7358debe58bfd5e62d31d90a5d51d06df3ccb7968c40c36b946b8ab9e2d4"
+            }
+          ]
+        },
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348001"
+      },
+      {
+        "game_window_id": "exp6348_fresh_synthetic_push_l0",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "quality_delta": 3.0,
+        "route_off": {
+          "action": 5,
+          "changed_cell_counts": [],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 0.0,
+          "exact_receipt_count": 0,
+          "has_exact_one_step_transition": false,
+          "not_a_solve_oracle": true,
+          "receipts": []
+        },
+        "seed": 6348002,
+        "target_licensed_route_on": {
+          "action": 4,
+          "changed_cell_counts": [
+            3,
+            3,
+            3
+          ],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 3.0,
+          "exact_receipt_count": 3,
+          "has_exact_one_step_transition": true,
+          "not_a_solve_oracle": true,
+          "receipts": [
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:c30a8c2fb52b1eae4cc00340e555e64a87235053d51148c7b6ee3823a85c0ab3",
+              "index": 0,
+              "next_grid_sha256": "sha256:003625edf96a488afe9ee32c8ba9cd979089abe7bd6499c9768c4dece6fd031a"
+            },
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:003625edf96a488afe9ee32c8ba9cd979089abe7bd6499c9768c4dece6fd031a",
+              "index": 1,
+              "next_grid_sha256": "sha256:7022dc2804c6ef3dd70dc7d5a079c868a3211cda8099118f289dd74fad430733"
+            },
+            {
+              "action": 4,
+              "changed_cells": 3,
+              "data": null,
+              "grid_sha256": "sha256:7022dc2804c6ef3dd70dc7d5a079c868a3211cda8099118f289dd74fad430733",
+              "index": 2,
+              "next_grid_sha256": "sha256:43443adc8e340a80ed2f068ed27d256b6762b6c3f094ab805f4a39d89a96b442"
+            }
+          ]
+        },
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348002"
+      },
+      {
+        "game_window_id": "exp6348_fresh_synthetic_toggle_l0",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "quality_delta": 4.0,
+        "route_off": {
+          "action": 5,
+          "changed_cell_counts": [],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 0.0,
+          "exact_receipt_count": 0,
+          "has_exact_one_step_transition": false,
+          "not_a_solve_oracle": true,
+          "receipts": []
+        },
+        "seed": 6348001,
+        "target_licensed_route_on": {
+          "action": 4,
+          "changed_cell_counts": [
+            4,
+            4,
+            4
+          ],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 4.0,
+          "exact_receipt_count": 3,
+          "has_exact_one_step_transition": true,
+          "not_a_solve_oracle": true,
+          "receipts": [
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:64d2167e4fb8d85044292635c203737bb1fc0ffc8d2c1fa3034d57de1b1eacf2",
+              "index": 0,
+              "next_grid_sha256": "sha256:d066c38abec03197e24c7c29f63609cc1e63463295708876437c33d8f722b742"
+            },
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:22a3c26fa1c962638913b39124a7ddfc0588908450a9f7035955ec46c856f5c8",
+              "index": 1,
+              "next_grid_sha256": "sha256:ff8ace2c19c7c62f71153dfebbb9b311bcdebc84d082e65129931b2675bc5a7a"
+            },
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:e93ea35b2e3d2c53644ce9146b2bd6900940a03ab73267d8cc6eca62f680efbb",
+              "index": 2,
+              "next_grid_sha256": "sha256:27a0f9249f76f978fd7199dc39d4b656f3964c1f9a0780115cc25aed5825995b"
+            }
+          ]
+        },
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348001"
+      },
+      {
+        "game_window_id": "exp6348_fresh_synthetic_toggle_l0",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "quality_delta": 4.0,
+        "route_off": {
+          "action": 5,
+          "changed_cell_counts": [],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 0.0,
+          "exact_receipt_count": 0,
+          "has_exact_one_step_transition": false,
+          "not_a_solve_oracle": true,
+          "receipts": []
+        },
+        "seed": 6348002,
+        "target_licensed_route_on": {
+          "action": 4,
+          "changed_cell_counts": [
+            4,
+            4,
+            4
+          ],
+          "checker": "exp6348_exact_one_step_transition_checker",
+          "exact_one_step_transition_value": 4.0,
+          "exact_receipt_count": 3,
+          "has_exact_one_step_transition": true,
+          "not_a_solve_oracle": true,
+          "receipts": [
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:ae901f347c7d8a9a85e695b7fe83dab0165b61d66b78c29ce860960cf6976d72",
+              "index": 0,
+              "next_grid_sha256": "sha256:3a78d57376238fef9b0e570f4e06b008fc216decaee55d2152016dfea32b61c6"
+            },
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:f8effeff6f7b79c6ad7c92791a7db3761d899379c30bb7110a816f757a85cfb8",
+              "index": 1,
+              "next_grid_sha256": "sha256:e6beb0fa0a7a19b28971ccfb7b6d620d0330a04632641eee24bc422c0ec96be1"
+            },
+            {
+              "action": 4,
+              "changed_cells": 4,
+              "data": null,
+              "grid_sha256": "sha256:62a69b3ec8d57ece31bce75719941a06c9b5c096889ad9057c7dd9751ab11d71",
+              "index": 2,
+              "next_grid_sha256": "sha256:7b781cd32a28bb1f98fc9faa964179e45f523a5a64d87ca3f30aa651307f960e"
+            }
+          ]
+        },
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348002"
+      }
+    ]
+  },
+  "exact_oracle_claim_boundary": {
+    "checker": "exp6348_exact_one_step_transition_checker",
+    "does_not_check_level_completion": true,
+    "does_not_read_hidden_source": true,
+    "does_not_run_bfs": true,
+    "not_a_solve_oracle": true,
+    "oracle_scope": "exact_recorded_one_step_transition_endpoint"
+  },
+  "field_principles": {
+    "MODEL_SPECS": "Names the three cached GGUF headline models.",
+    "arc_causal_influence_ready_score": "Equals one only when every gate passes.",
+    "arc_registry_precheck_path_hash_and_result": "Proves this is not a registry solve target.",
+    "arm_definitions": "Defines the only A/B difference.",
+    "cuda_gpu_offload_and_memory_release_receipts_by_model": "Records one-model-at-a-time llama.cpp load and release.",
+    "duration_s": "Records measured wall time.",
+    "exact_one_step_transition_quality_by_model_game_window_arm_and_seed": "Measures one-step transition value only.",
+    "exact_oracle_claim_boundary": "Separates one-step checking from solve claims.",
+    "field_principles": "Gives one audit reason per required field.",
+    "field_provenance": "Maps every field to the spec and producer.",
+    "forbidden_source_access_contract": "Lists forbidden escape sources and zero counts.",
+    "fresh_live_window_manifest_path_and_hash": "Pins fresh agent-owned windows before model generation.",
+    "generated_label_count": "Must stay zero because labels are not generated.",
+    "hand_game_adapter_count": "Must stay zero because hand adapters are off path.",
+    "harm_underpowered_missing_and_flagged_cells": "Keeps bad or missing cells visible.",
+    "hidden_game_source_access_count": "Must stay zero for hidden-source discipline.",
+    "hidden_state_access_count": "Must stay zero because hidden state is forbidden.",
+    "honest_verdict": "Terminal verdict with no solve claim.",
+    "inference_substrate": "Declares live llama.cpp model preflight plus live-agent windows.",
+    "legal_action_order_changes_by_model_game_window_arm_and_seed": "Measures action-order influence per cell.",
+    "live_evidence_allowed_fields": "Freezes fields the route may read.",
+    "llama_cpp_embedded_tokenizer_receipts": "Shows tokenizer checks use GGUF embedded tokenizers.",
+    "matched_call_token_action_time_and_checker_budgets": "Shows route-off and route-on budgets match.",
+    "model_file_hashes_revisions_quantizations_and_tokenizers": "Pins files and embedded tokenizer state.",
+    "models_used": "Lists the exact headline model ids used in the cells.",
+    "no_duplicate_solve_receipt": "Shows no duplicate solve proposal was made.",
+    "offline_ground_truth_bfs_count": "Must stay zero for self-discovery discipline.",
+    "paired_influence_and_quality_deltas_intervals_and_sample_sizes": "Reports paired deltas without pooling away cells.",
+    "per_game_calibration_count": "Must stay zero because thresholds are preregistered.",
+    "preconditions_checked": "Records resources, hashes, seeds, budgets, route rules, and stops.",
+    "prospective_registration_path_and_hash": "Pins the preregistered route and budget plan.",
+    "protected_files_unchanged": "Confirms protected files stayed unchanged.",
+    "random_seeds": "Pins fresh live-window seeds.",
+    "raw_model_and_action_paths_hashes_and_counts": "Preserves raw model and action receipts.",
+    "registry_update_count": "Must stay zero because the registry is unchanged.",
+    "reproducibility_checksum": "Detects artifact drift.",
+    "route_default_off_and_activation_receipts": "Proves route default stays off.",
+    "route_deletion_permutation_leakage_and_escape_results": "Shows deletion removes the effect and leakage is zero.",
+    "solve_claim_count": "Must stay zero because this is not a solve.",
+    "solve_provenance": "Names the source as live-agent self-discovery.",
+    "source_model_weight_mutation_count": "Must stay zero because weights are immutable.",
+    "status": "States complete versus blocked for the fresh live A/B.",
+    "test_commands": "Lists verification commands.",
+    "test_exit_codes": "Records command outcomes.",
+    "upstream_path_hash_terminal_class_and_gate_receipt": "Pins the upstream structured gate before model load.",
+    "verification_calls_time_cost_and_error_table": "Records verification call costs and errors.",
+    "verifier_is_oracle": "Names the exact transition checker."
+  },
+  "field_provenance": {
+    "MODEL_SPECS": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "arc_causal_influence_ready_score": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "arc_registry_precheck_path_hash_and_result": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "arm_definitions": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "cuda_gpu_offload_and_memory_release_receipts_by_model": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "duration_s": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "exact_one_step_transition_quality_by_model_game_window_arm_and_seed": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "exact_oracle_claim_boundary": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "field_principles": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "field_provenance": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "forbidden_source_access_contract": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "fresh_live_window_manifest_path_and_hash": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "generated_label_count": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "hand_game_adapter_count": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "harm_underpowered_missing_and_flagged_cells": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "hidden_game_source_access_count": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "hidden_state_access_count": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "honest_verdict": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "inference_substrate": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "legal_action_order_changes_by_model_game_window_arm_and_seed": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "live_evidence_allowed_fields": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "llama_cpp_embedded_tokenizer_receipts": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "matched_call_token_action_time_and_checker_budgets": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "model_file_hashes_revisions_quantizations_and_tokenizers": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "models_used": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "no_duplicate_solve_receipt": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "offline_ground_truth_bfs_count": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "paired_influence_and_quality_deltas_intervals_and_sample_sizes": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "per_game_calibration_count": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "preconditions_checked": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "prospective_registration_path_and_hash": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "protected_files_unchanged": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "random_seeds": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "raw_model_and_action_paths_hashes_and_counts": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "registry_update_count": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "reproducibility_checksum": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "route_default_off_and_activation_receipts": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "route_deletion_permutation_leakage_and_escape_results": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "solve_claim_count": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "solve_provenance": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "source_model_weight_mutation_count": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "status": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "test_commands": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "test_exit_codes": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "upstream_path_hash_terminal_class_and_gate_receipt": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "verification_calls_time_cost_and_error_table": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ],
+    "verifier_is_oracle": [
+      "REQ-ARC-WMTE-6348",
+      "experiment_6348_arc_default_off_action_influence_ab"
+    ]
+  },
+  "forbidden_source_access_contract": {
+    "forbidden_fields": [
+      "hidden_game_source_path",
+      "offline_ground_truth_bfs_path",
+      "hand_game_adapter",
+      "per_game_calibration",
+      "hidden_state",
+      "generated_label",
+      "registry_solve_target"
+    ],
+    "generated_label_count": 0,
+    "hand_game_adapter_count": 0,
+    "hidden_game_source_access_count": 0,
+    "hidden_state_access_count": 0,
+    "offline_ground_truth_bfs_count": 0,
+    "per_game_calibration_count": 0,
+    "registry_update_count": 0,
+    "source_model_weight_mutation_count": 0
+  },
+  "fresh_live_window_manifest_path_and_hash": {
+    "path": "results/experiment_6348_arc_fresh_live_window_manifest.json",
+    "row_count": 4,
+    "sealed_before_model_generation": true,
+    "sha256": "sha256:30fba1a40bb229955f35435867e95c973b521009d7acdb55fc84eeb00dd418a7"
+  },
+  "generated_label_count": 0,
+  "hand_game_adapter_count": 0,
+  "harm_underpowered_missing_and_flagged_cells": {
+    "flagged_cell_count": 0,
+    "harmful_cell_count": 0,
+    "missing_cell_count": 0,
+    "no_pooling_away_bad_cells": true,
+    "rows": [
+      {
+        "flagged": false,
+        "harmful": false,
+        "missing": false,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "sample_size": 4,
+        "underpowered": false
+      },
+      {
+        "flagged": false,
+        "harmful": false,
+        "missing": false,
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "sample_size": 4,
+        "underpowered": false
+      },
+      {
+        "flagged": false,
+        "harmful": false,
+        "missing": false,
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "sample_size": 4,
+        "underpowered": false
+      }
+    ],
+    "underpowered_cell_count": 0
+  },
+  "hidden_game_source_access_count": 0,
+  "hidden_state_access_count": 0,
+  "honest_verdict": "complete: arc_default_off_action_influence_ready_no_solve_claim",
+  "inference_substrate": "live_llm_inference",
+  "legal_action_order_changes_by_model_game_window_arm_and_seed": {
+    "action_injection_count": 0,
+    "route_caused_action_order_change_count": 12,
+    "row_count": 12,
+    "rows": [
+      {
+        "action_budget_route_off": 12,
+        "action_budget_route_on": 12,
+        "action_injection_count": 0,
+        "arms": [
+          "route_off",
+          "target_licensed_route_on"
+        ],
+        "game_window_id": "exp6348_fresh_synthetic_push_l0",
+        "legal_actions": [
+          4,
+          5
+        ],
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_name": "Qwen3.6-35B-A3B",
+        "raw_action_receipt": {
+          "candidate_actions": [
+            5,
+            4
+          ],
+          "candidate_count": 2,
+          "preserved": true
+        },
+        "raw_candidate_actions": [
+          5,
+          4
+        ],
+        "route_activation_receipt": {
+          "abstained": false,
+          "false_license": false,
+          "licensed": true,
+          "observed_mechanic": "push_block",
+          "probabilities": {
+            "navigation": 0.040816,
+            "negative": 0.040816,
+            "push_block": 0.857143,
+            "toggle_move": 0.040816,
+            "unknown": 0.020408
+          },
+          "reason": "target_runtime_evidence_supports_route",
+          "route_reachable": true,
+          "sample_size": 3,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 3.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 3,
+            "toggle_like": 0,
+            "top_margin": 0.816327
+          },
+          "uncertainty": 0.183673
+        },
+        "route_caused_action_order_change": true,
+        "route_off_action_choice": 5,
+        "route_off_order": [
+          5,
+          4
+        ],
+        "route_on_actions_subset_of_raw_candidates": true,
+        "same_legal_action_set": true,
+        "seed": 6348001,
+        "target_licensed_route_on_action_choice": 4,
+        "target_licensed_route_on_order": [
+          4,
+          5
+        ],
+        "token_budget_route_off": 0,
+        "token_budget_route_on": 0,
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348001"
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_route_on": 12,
+        "action_injection_count": 0,
+        "arms": [
+          "route_off",
+          "target_licensed_route_on"
+        ],
+        "game_window_id": "exp6348_fresh_synthetic_push_l0",
+        "legal_actions": [
+          4,
+          5
+        ],
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_name": "Qwen3.6-35B-A3B",
+        "raw_action_receipt": {
+          "candidate_actions": [
+            5,
+            4
+          ],
+          "candidate_count": 2,
+          "preserved": true
+        },
+        "raw_candidate_actions": [
+          5,
+          4
+        ],
+        "route_activation_receipt": {
+          "abstained": false,
+          "false_license": false,
+          "licensed": true,
+          "observed_mechanic": "push_block",
+          "probabilities": {
+            "navigation": 0.040816,
+            "negative": 0.040816,
+            "push_block": 0.857143,
+            "toggle_move": 0.040816,
+            "unknown": 0.020408
+          },
+          "reason": "target_runtime_evidence_supports_route",
+          "route_reachable": true,
+          "sample_size": 3,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 3.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 3,
+            "toggle_like": 0,
+            "top_margin": 0.816327
+          },
+          "uncertainty": 0.183673
+        },
+        "route_caused_action_order_change": true,
+        "route_off_action_choice": 5,
+        "route_off_order": [
+          5,
+          4
+        ],
+        "route_on_actions_subset_of_raw_candidates": true,
+        "same_legal_action_set": true,
+        "seed": 6348002,
+        "target_licensed_route_on_action_choice": 4,
+        "target_licensed_route_on_order": [
+          4,
+          5
+        ],
+        "token_budget_route_off": 0,
+        "token_budget_route_on": 0,
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348002"
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_route_on": 12,
+        "action_injection_count": 0,
+        "arms": [
+          "route_off",
+          "target_licensed_route_on"
+        ],
+        "game_window_id": "exp6348_fresh_synthetic_toggle_l0",
+        "legal_actions": [
+          4,
+          5
+        ],
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_name": "Qwen3.6-35B-A3B",
+        "raw_action_receipt": {
+          "candidate_actions": [
+            5,
+            4
+          ],
+          "candidate_count": 2,
+          "preserved": true
+        },
+        "raw_candidate_actions": [
+          5,
+          4
+        ],
+        "route_activation_receipt": {
+          "abstained": false,
+          "false_license": false,
+          "licensed": true,
+          "observed_mechanic": "toggle_move",
+          "probabilities": {
+            "navigation": 0.040816,
+            "negative": 0.040816,
+            "push_block": 0.040816,
+            "toggle_move": 0.857143,
+            "unknown": 0.020408
+          },
+          "reason": "target_runtime_evidence_supports_route",
+          "route_reachable": true,
+          "sample_size": 3,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 4.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 0,
+            "toggle_like": 3,
+            "top_margin": 0.816327
+          },
+          "uncertainty": 0.183673
+        },
+        "route_caused_action_order_change": true,
+        "route_off_action_choice": 5,
+        "route_off_order": [
+          5,
+          4
+        ],
+        "route_on_actions_subset_of_raw_candidates": true,
+        "same_legal_action_set": true,
+        "seed": 6348001,
+        "target_licensed_route_on_action_choice": 4,
+        "target_licensed_route_on_order": [
+          4,
+          5
+        ],
+        "token_budget_route_off": 0,
+        "token_budget_route_on": 0,
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348001"
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_route_on": 12,
+        "action_injection_count": 0,
+        "arms": [
+          "route_off",
+          "target_licensed_route_on"
+        ],
+        "game_window_id": "exp6348_fresh_synthetic_toggle_l0",
+        "legal_actions": [
+          4,
+          5
+        ],
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_name": "Qwen3.6-35B-A3B",
+        "raw_action_receipt": {
+          "candidate_actions": [
+            5,
+            4
+          ],
+          "candidate_count": 2,
+          "preserved": true
+        },
+        "raw_candidate_actions": [
+          5,
+          4
+        ],
+        "route_activation_receipt": {
+          "abstained": false,
+          "false_license": false,
+          "licensed": true,
+          "observed_mechanic": "toggle_move",
+          "probabilities": {
+            "navigation": 0.040816,
+            "negative": 0.040816,
+            "push_block": 0.040816,
+            "toggle_move": 0.857143,
+            "unknown": 0.020408
+          },
+          "reason": "target_runtime_evidence_supports_route",
+          "route_reachable": true,
+          "sample_size": 3,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 4.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 0,
+            "toggle_like": 3,
+            "top_margin": 0.816327
+          },
+          "uncertainty": 0.183673
+        },
+        "route_caused_action_order_change": true,
+        "route_off_action_choice": 5,
+        "route_off_order": [
+          5,
+          4
+        ],
+        "route_on_actions_subset_of_raw_candidates": true,
+        "same_legal_action_set": true,
+        "seed": 6348002,
+        "target_licensed_route_on_action_choice": 4,
+        "target_licensed_route_on_order": [
+          4,
+          5
+        ],
+        "token_budget_route_off": 0,
+        "token_budget_route_on": 0,
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348002"
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_route_on": 12,
+        "action_injection_count": 0,
+        "arms": [
+          "route_off",
+          "target_licensed_route_on"
+        ],
+        "game_window_id": "exp6348_fresh_synthetic_push_l0",
+        "legal_actions": [
+          4,
+          5
+        ],
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_name": "Gemma4-31B-it",
+        "raw_action_receipt": {
+          "candidate_actions": [
+            5,
+            4
+          ],
+          "candidate_count": 2,
+          "preserved": true
+        },
+        "raw_candidate_actions": [
+          5,
+          4
+        ],
+        "route_activation_receipt": {
+          "abstained": false,
+          "false_license": false,
+          "licensed": true,
+          "observed_mechanic": "push_block",
+          "probabilities": {
+            "navigation": 0.040816,
+            "negative": 0.040816,
+            "push_block": 0.857143,
+            "toggle_move": 0.040816,
+            "unknown": 0.020408
+          },
+          "reason": "target_runtime_evidence_supports_route",
+          "route_reachable": true,
+          "sample_size": 3,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 3.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 3,
+            "toggle_like": 0,
+            "top_margin": 0.816327
+          },
+          "uncertainty": 0.183673
+        },
+        "route_caused_action_order_change": true,
+        "route_off_action_choice": 5,
+        "route_off_order": [
+          5,
+          4
+        ],
+        "route_on_actions_subset_of_raw_candidates": true,
+        "same_legal_action_set": true,
+        "seed": 6348001,
+        "target_licensed_route_on_action_choice": 4,
+        "target_licensed_route_on_order": [
+          4,
+          5
+        ],
+        "token_budget_route_off": 0,
+        "token_budget_route_on": 0,
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348001"
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_route_on": 12,
+        "action_injection_count": 0,
+        "arms": [
+          "route_off",
+          "target_licensed_route_on"
+        ],
+        "game_window_id": "exp6348_fresh_synthetic_push_l0",
+        "legal_actions": [
+          4,
+          5
+        ],
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_name": "Gemma4-31B-it",
+        "raw_action_receipt": {
+          "candidate_actions": [
+            5,
+            4
+          ],
+          "candidate_count": 2,
+          "preserved": true
+        },
+        "raw_candidate_actions": [
+          5,
+          4
+        ],
+        "route_activation_receipt": {
+          "abstained": false,
+          "false_license": false,
+          "licensed": true,
+          "observed_mechanic": "push_block",
+          "probabilities": {
+            "navigation": 0.040816,
+            "negative": 0.040816,
+            "push_block": 0.857143,
+            "toggle_move": 0.040816,
+            "unknown": 0.020408
+          },
+          "reason": "target_runtime_evidence_supports_route",
+          "route_reachable": true,
+          "sample_size": 3,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 3.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 3,
+            "toggle_like": 0,
+            "top_margin": 0.816327
+          },
+          "uncertainty": 0.183673
+        },
+        "route_caused_action_order_change": true,
+        "route_off_action_choice": 5,
+        "route_off_order": [
+          5,
+          4
+        ],
+        "route_on_actions_subset_of_raw_candidates": true,
+        "same_legal_action_set": true,
+        "seed": 6348002,
+        "target_licensed_route_on_action_choice": 4,
+        "target_licensed_route_on_order": [
+          4,
+          5
+        ],
+        "token_budget_route_off": 0,
+        "token_budget_route_on": 0,
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348002"
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_route_on": 12,
+        "action_injection_count": 0,
+        "arms": [
+          "route_off",
+          "target_licensed_route_on"
+        ],
+        "game_window_id": "exp6348_fresh_synthetic_toggle_l0",
+        "legal_actions": [
+          4,
+          5
+        ],
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_name": "Gemma4-31B-it",
+        "raw_action_receipt": {
+          "candidate_actions": [
+            5,
+            4
+          ],
+          "candidate_count": 2,
+          "preserved": true
+        },
+        "raw_candidate_actions": [
+          5,
+          4
+        ],
+        "route_activation_receipt": {
+          "abstained": false,
+          "false_license": false,
+          "licensed": true,
+          "observed_mechanic": "toggle_move",
+          "probabilities": {
+            "navigation": 0.040816,
+            "negative": 0.040816,
+            "push_block": 0.040816,
+            "toggle_move": 0.857143,
+            "unknown": 0.020408
+          },
+          "reason": "target_runtime_evidence_supports_route",
+          "route_reachable": true,
+          "sample_size": 3,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 4.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 0,
+            "toggle_like": 3,
+            "top_margin": 0.816327
+          },
+          "uncertainty": 0.183673
+        },
+        "route_caused_action_order_change": true,
+        "route_off_action_choice": 5,
+        "route_off_order": [
+          5,
+          4
+        ],
+        "route_on_actions_subset_of_raw_candidates": true,
+        "same_legal_action_set": true,
+        "seed": 6348001,
+        "target_licensed_route_on_action_choice": 4,
+        "target_licensed_route_on_order": [
+          4,
+          5
+        ],
+        "token_budget_route_off": 0,
+        "token_budget_route_on": 0,
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348001"
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_route_on": 12,
+        "action_injection_count": 0,
+        "arms": [
+          "route_off",
+          "target_licensed_route_on"
+        ],
+        "game_window_id": "exp6348_fresh_synthetic_toggle_l0",
+        "legal_actions": [
+          4,
+          5
+        ],
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_name": "Gemma4-31B-it",
+        "raw_action_receipt": {
+          "candidate_actions": [
+            5,
+            4
+          ],
+          "candidate_count": 2,
+          "preserved": true
+        },
+        "raw_candidate_actions": [
+          5,
+          4
+        ],
+        "route_activation_receipt": {
+          "abstained": false,
+          "false_license": false,
+          "licensed": true,
+          "observed_mechanic": "toggle_move",
+          "probabilities": {
+            "navigation": 0.040816,
+            "negative": 0.040816,
+            "push_block": 0.040816,
+            "toggle_move": 0.857143,
+            "unknown": 0.020408
+          },
+          "reason": "target_runtime_evidence_supports_route",
+          "route_reachable": true,
+          "sample_size": 3,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 4.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 0,
+            "toggle_like": 3,
+            "top_margin": 0.816327
+          },
+          "uncertainty": 0.183673
+        },
+        "route_caused_action_order_change": true,
+        "route_off_action_choice": 5,
+        "route_off_order": [
+          5,
+          4
+        ],
+        "route_on_actions_subset_of_raw_candidates": true,
+        "same_legal_action_set": true,
+        "seed": 6348002,
+        "target_licensed_route_on_action_choice": 4,
+        "target_licensed_route_on_order": [
+          4,
+          5
+        ],
+        "token_budget_route_off": 0,
+        "token_budget_route_on": 0,
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348002"
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_route_on": 12,
+        "action_injection_count": 0,
+        "arms": [
+          "route_off",
+          "target_licensed_route_on"
+        ],
+        "game_window_id": "exp6348_fresh_synthetic_push_l0",
+        "legal_actions": [
+          4,
+          5
+        ],
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_name": "Gemma4-26B-A4B-it",
+        "raw_action_receipt": {
+          "candidate_actions": [
+            5,
+            4
+          ],
+          "candidate_count": 2,
+          "preserved": true
+        },
+        "raw_candidate_actions": [
+          5,
+          4
+        ],
+        "route_activation_receipt": {
+          "abstained": false,
+          "false_license": false,
+          "licensed": true,
+          "observed_mechanic": "push_block",
+          "probabilities": {
+            "navigation": 0.040816,
+            "negative": 0.040816,
+            "push_block": 0.857143,
+            "toggle_move": 0.040816,
+            "unknown": 0.020408
+          },
+          "reason": "target_runtime_evidence_supports_route",
+          "route_reachable": true,
+          "sample_size": 3,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 3.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 3,
+            "toggle_like": 0,
+            "top_margin": 0.816327
+          },
+          "uncertainty": 0.183673
+        },
+        "route_caused_action_order_change": true,
+        "route_off_action_choice": 5,
+        "route_off_order": [
+          5,
+          4
+        ],
+        "route_on_actions_subset_of_raw_candidates": true,
+        "same_legal_action_set": true,
+        "seed": 6348001,
+        "target_licensed_route_on_action_choice": 4,
+        "target_licensed_route_on_order": [
+          4,
+          5
+        ],
+        "token_budget_route_off": 0,
+        "token_budget_route_on": 0,
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348001"
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_route_on": 12,
+        "action_injection_count": 0,
+        "arms": [
+          "route_off",
+          "target_licensed_route_on"
+        ],
+        "game_window_id": "exp6348_fresh_synthetic_push_l0",
+        "legal_actions": [
+          4,
+          5
+        ],
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_name": "Gemma4-26B-A4B-it",
+        "raw_action_receipt": {
+          "candidate_actions": [
+            5,
+            4
+          ],
+          "candidate_count": 2,
+          "preserved": true
+        },
+        "raw_candidate_actions": [
+          5,
+          4
+        ],
+        "route_activation_receipt": {
+          "abstained": false,
+          "false_license": false,
+          "licensed": true,
+          "observed_mechanic": "push_block",
+          "probabilities": {
+            "navigation": 0.040816,
+            "negative": 0.040816,
+            "push_block": 0.857143,
+            "toggle_move": 0.040816,
+            "unknown": 0.020408
+          },
+          "reason": "target_runtime_evidence_supports_route",
+          "route_reachable": true,
+          "sample_size": 3,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 3.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 3,
+            "toggle_like": 0,
+            "top_margin": 0.816327
+          },
+          "uncertainty": 0.183673
+        },
+        "route_caused_action_order_change": true,
+        "route_off_action_choice": 5,
+        "route_off_order": [
+          5,
+          4
+        ],
+        "route_on_actions_subset_of_raw_candidates": true,
+        "same_legal_action_set": true,
+        "seed": 6348002,
+        "target_licensed_route_on_action_choice": 4,
+        "target_licensed_route_on_order": [
+          4,
+          5
+        ],
+        "token_budget_route_off": 0,
+        "token_budget_route_on": 0,
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348002"
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_route_on": 12,
+        "action_injection_count": 0,
+        "arms": [
+          "route_off",
+          "target_licensed_route_on"
+        ],
+        "game_window_id": "exp6348_fresh_synthetic_toggle_l0",
+        "legal_actions": [
+          4,
+          5
+        ],
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_name": "Gemma4-26B-A4B-it",
+        "raw_action_receipt": {
+          "candidate_actions": [
+            5,
+            4
+          ],
+          "candidate_count": 2,
+          "preserved": true
+        },
+        "raw_candidate_actions": [
+          5,
+          4
+        ],
+        "route_activation_receipt": {
+          "abstained": false,
+          "false_license": false,
+          "licensed": true,
+          "observed_mechanic": "toggle_move",
+          "probabilities": {
+            "navigation": 0.040816,
+            "negative": 0.040816,
+            "push_block": 0.040816,
+            "toggle_move": 0.857143,
+            "unknown": 0.020408
+          },
+          "reason": "target_runtime_evidence_supports_route",
+          "route_reachable": true,
+          "sample_size": 3,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 4.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 0,
+            "toggle_like": 3,
+            "top_margin": 0.816327
+          },
+          "uncertainty": 0.183673
+        },
+        "route_caused_action_order_change": true,
+        "route_off_action_choice": 5,
+        "route_off_order": [
+          5,
+          4
+        ],
+        "route_on_actions_subset_of_raw_candidates": true,
+        "same_legal_action_set": true,
+        "seed": 6348001,
+        "target_licensed_route_on_action_choice": 4,
+        "target_licensed_route_on_order": [
+          4,
+          5
+        ],
+        "token_budget_route_off": 0,
+        "token_budget_route_on": 0,
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348001"
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_route_on": 12,
+        "action_injection_count": 0,
+        "arms": [
+          "route_off",
+          "target_licensed_route_on"
+        ],
+        "game_window_id": "exp6348_fresh_synthetic_toggle_l0",
+        "legal_actions": [
+          4,
+          5
+        ],
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_name": "Gemma4-26B-A4B-it",
+        "raw_action_receipt": {
+          "candidate_actions": [
+            5,
+            4
+          ],
+          "candidate_count": 2,
+          "preserved": true
+        },
+        "raw_candidate_actions": [
+          5,
+          4
+        ],
+        "route_activation_receipt": {
+          "abstained": false,
+          "false_license": false,
+          "licensed": true,
+          "observed_mechanic": "toggle_move",
+          "probabilities": {
+            "navigation": 0.040816,
+            "negative": 0.040816,
+            "push_block": 0.040816,
+            "toggle_move": 0.857143,
+            "unknown": 0.020408
+          },
+          "reason": "target_runtime_evidence_supports_route",
+          "route_reachable": true,
+          "sample_size": 3,
+          "support": {
+            "changed_ratio": 1.0,
+            "keyboard_changed": 3,
+            "mean_changed_cells": 4.0,
+            "n_changed": 3,
+            "n_transitions": 3,
+            "navigation_like": 0,
+            "push_like": 0,
+            "toggle_like": 3,
+            "top_margin": 0.816327
+          },
+          "uncertainty": 0.183673
+        },
+        "route_caused_action_order_change": true,
+        "route_off_action_choice": 5,
+        "route_off_order": [
+          5,
+          4
+        ],
+        "route_on_actions_subset_of_raw_candidates": true,
+        "same_legal_action_set": true,
+        "seed": 6348002,
+        "target_licensed_route_on_action_choice": 4,
+        "target_licensed_route_on_order": [
+          4,
+          5
+        ],
+        "token_budget_route_off": 0,
+        "token_budget_route_on": 0,
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348002"
+      }
+    ],
+    "same_legal_action_set_count": 12
+  },
+  "live_evidence_allowed_fields": {
+    "exact_checker": [
+      "transition_payload.grid_sha256",
+      "transition_payload.next_grid_sha256",
+      "transition_payload.changed_cells"
+    ],
+    "forbidden_fields": [
+      "hidden_game_source_path",
+      "offline_ground_truth_bfs_path",
+      "hand_game_adapter",
+      "per_game_calibration",
+      "hidden_state",
+      "generated_label",
+      "registry_solve_target"
+    ],
+    "legal_action_set": [
+      "raw_candidate_actions",
+      "recorded_shipped_action"
+    ],
+    "route_ranking": [
+      "agent_owned_transition.grid",
+      "agent_owned_transition.action",
+      "agent_owned_transition.data",
+      "agent_owned_transition.next_grid",
+      "agent_owned_transition.level_before",
+      "agent_owned_transition.level_after",
+      "raw_candidate_actions",
+      "runtime_reverse_engineering_state"
+    ]
+  },
+  "llama_cpp_embedded_tokenizer_receipts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "canonical_loader": "llama_cpp.Llama(vocab_only=True)",
+      "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "ok": true,
+      "tokenizer_source": "embedded_gguf"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "canonical_loader": "llama_cpp.Llama(vocab_only=True)",
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "ok": true,
+      "tokenizer_source": "embedded_gguf"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "canonical_loader": "llama_cpp.Llama(vocab_only=True)",
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "ok": true,
+      "tokenizer_source": "embedded_gguf"
+    }
+  },
+  "matched_call_token_action_time_and_checker_budgets": {
+    "budget_parity": true,
+    "llm_generation_for_action_choice": false,
+    "route_off": {
+      "action_budget": 12,
+      "call_budget": 1,
+      "exact_checker_budget": 1,
+      "time_budget_s": 2.0,
+      "token_budget": 0
+    },
+    "target_licensed_route_on": {
+      "action_budget": 12,
+      "call_budget": 1,
+      "exact_checker_budget": 1,
+      "time_budget_s": 2.0,
+      "token_budget": 0
+    }
+  },
+  "model_file_hashes_revisions_quantizations_and_tokenizers": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "size_bytes": 22134528992,
+      "tokenizer": {
+        "canonical_loader": "llama_cpp.Llama(vocab_only=True)",
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "ok": true,
+        "tokenizer_source": "embedded_gguf"
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "size_bytes": 16947539744,
+      "tokenizer": {
+        "canonical_loader": "llama_cpp.Llama(vocab_only=True)",
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "ok": true,
+        "tokenizer_source": "embedded_gguf"
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "size_bytes": 18323731456,
+      "tokenizer": {
+        "canonical_loader": "llama_cpp.Llama(vocab_only=True)",
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "ok": true,
+        "tokenizer_source": "embedded_gguf"
+      }
+    }
+  },
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "no_duplicate_solve_receipt": {
+    "duplicate_solve_proposals": [],
+    "influence_only": true,
+    "no_duplicate_solve_proposal": true,
+    "registry_update_count": 0,
+    "solve_claim_count": 0,
+    "solve_proposal_made": false,
+    "task_kind": "fresh_live_action_influence_ab_not_solve"
+  },
+  "offline_ground_truth_bfs_count": 0,
+  "paired_influence_and_quality_deltas_intervals_and_sample_sizes": {
+    "all_headline_models_positive": true,
+    "headline_model_count": 3,
+    "overall": {
+      "mean_quality_delta": 3.5,
+      "quality_delta_interval": [
+        3.0,
+        4.0
+      ],
+      "sample_size": 12
+    },
+    "rows": [
+      {
+        "headline_model_positive": true,
+        "mean_action_influence_delta": 1.0,
+        "mean_quality_delta": 3.5,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "positive_action_influence_count": 4,
+        "positive_quality_delta_count": 4,
+        "quality_delta_interval": [
+          3.0,
+          4.0
+        ],
+        "sample_size": 4
+      },
+      {
+        "headline_model_positive": true,
+        "mean_action_influence_delta": 1.0,
+        "mean_quality_delta": 3.5,
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "positive_action_influence_count": 4,
+        "positive_quality_delta_count": 4,
+        "quality_delta_interval": [
+          3.0,
+          4.0
+        ],
+        "sample_size": 4
+      },
+      {
+        "headline_model_positive": true,
+        "mean_action_influence_delta": 1.0,
+        "mean_quality_delta": 3.5,
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "positive_action_influence_count": 4,
+        "positive_quality_delta_count": 4,
+        "quality_delta_interval": [
+          3.0,
+          4.0
+        ],
+        "sample_size": 4
+      }
+    ]
+  },
+  "per_game_calibration_count": 0,
+  "preconditions_checked": {
+    "budgets": {
+      "budget_parity": true,
+      "llm_generation_for_action_choice": false,
+      "route_off": {
+        "action_budget": 12,
+        "call_budget": 1,
+        "exact_checker_budget": 1,
+        "time_budget_s": 2.0,
+        "token_budget": 0
+      },
+      "target_licensed_route_on": {
+        "action_budget": 12,
+        "call_budget": 1,
+        "exact_checker_budget": 1,
+        "time_budget_s": 2.0,
+        "token_budget": 0
+      }
+    },
+    "cuda_gpu_offload_checked": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": true,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": true,
+      "unsloth/gemma-4-31B-it-GGUF": true
+    },
+    "date": "20260812",
+    "embedded_tokenizers_checked": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": true,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": true,
+      "unsloth/gemma-4-31B-it-GGUF": true
+    },
+    "exact_checker": "exp6348_exact_one_step_transition_checker",
+    "forbidden_sources": [
+      "hidden_game_source_path",
+      "offline_ground_truth_bfs_path",
+      "hand_game_adapter",
+      "per_game_calibration",
+      "hidden_state",
+      "generated_label",
+      "registry_solve_target"
+    ],
+    "fresh_window_hash": "sha256:30fba1a40bb229955f35435867e95c973b521009d7acdb55fc84eeb00dd418a7",
+    "fresh_windows_sealed_before_model_generation": true,
+    "game_order": [
+      "exp6348_fresh_synthetic_push_l0",
+      "exp6348_fresh_synthetic_toggle_l0"
+    ],
+    "gguf_files_checked": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "exists": true,
+        "quantization": "UD-Q4_K_M",
+        "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "exists": true,
+        "quantization": "UD-Q4_K_M",
+        "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+        "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35"
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "exists": true,
+        "quantization": "Q4_K_M",
+        "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+        "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
+      }
+    },
+    "prospective_registration_sealed_before_model_generation": true,
+    "protected_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "ops/changelog.md": "sha256:67be39294c97887a435f759545e606e2aca7c5b6d9130dd1a73c52ef88026f89",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "ram_disk_receipt": "checked_by_pre-run shell and recorded in operator log",
+    "registry_precheck_before_model_load": true,
+    "result_path": "results/experiment_6348_arc_default_off_action_influence_ab.json",
+    "route_default": "off",
+    "seeds": [
+      6348001,
+      6348002
+    ],
+    "structured_gate_before_model_load": true
+  },
+  "prospective_registration_path_and_hash": {
+    "path": "results/experiment_6348_arc_prospective_registration.json",
+    "row_count": null,
+    "sealed_before_model_generation": true,
+    "sha256": "sha256:736a5c17b1cd6f4e2e424fcdcf6bc818438a1964030aafdcd3a59942d4bd9596"
+  },
+  "protected_files_unchanged": {
+    "_bmad/traceability.md": {
+      "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "unchanged": true
+    },
+    "ops/arc_solve_registry.yaml": {
+      "after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "unchanged": true
+    },
+    "ops/changelog.md": {
+      "after": "sha256:67be39294c97887a435f759545e606e2aca7c5b6d9130dd1a73c52ef88026f89",
+      "before": "sha256:67be39294c97887a435f759545e606e2aca7c5b6d9130dd1a73c52ef88026f89",
+      "unchanged": true
+    },
+    "ops/status.md": {
+      "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "unchanged": true
+    },
+    "scripts/research_conductor.py": {
+      "after": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "before": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "unchanged": true
+    }
+  },
+  "random_seeds": [
+    6348001,
+    6348002
+  ],
+  "raw_model_and_action_paths_hashes_and_counts": {
+    "action_receipt_count": 12,
+    "fresh_live_window_manifest": {
+      "path": "results/experiment_6348_arc_fresh_live_window_manifest.json",
+      "row_count": 4,
+      "sealed_before_model_generation": true,
+      "sha256": "sha256:30fba1a40bb229955f35435867e95c973b521009d7acdb55fc84eeb00dd418a7"
+    },
+    "model_path_count": 3,
+    "model_paths_sha256": "sha256:1504d5b632c8e93e5c55c77edff968d71d783f3989fa01865b5d9f73ac5b0035",
+    "prospective_registration": {
+      "path": "results/experiment_6348_arc_prospective_registration.json",
+      "row_count": null,
+      "sealed_before_model_generation": true,
+      "sha256": "sha256:736a5c17b1cd6f4e2e424fcdcf6bc818438a1964030aafdcd3a59942d4bd9596"
+    },
+    "raw_candidate_receipts_sha256": "sha256:a2ddc5fc6211a6c6336b216c0c5664104222f0e6d46586f766f552cb04f60e71"
+  },
+  "registry_update_count": 0,
+  "reproducibility_checksum": "sha256:e7e3cd82cabed75b4f0512d6e2cbe43f25e8043d89dccc0cd9daabbb93b5dd76",
+  "route_default_off_and_activation_receipts": {
+    "activation_requires_explicit_arm": true,
+    "constructor_default": false,
+    "constructor_parameter": "target_licensed_route_shadow",
+    "default_enabled": false,
+    "default_ledger_present": false,
+    "route_on_arm_enabled": true,
+    "route_on_ledger_present": true,
+    "submitted_config_mutated": false
+  },
+  "route_deletion_permutation_leakage_and_escape_results": {
+    "all_controls_passed": true,
+    "evidence_permutation_kept_owned_action_set_count": 12,
+    "hidden_source_trap_rejected": true,
+    "leakage_overlap_count": 0,
+    "leakage_overlap_fields": [],
+    "off_path_adapter_trap_rejected": true,
+    "route_deletion_removed_effect_count": 12,
+    "row_count": 12,
+    "rows": [
+      {
+        "action_injection_count": 0,
+        "evidence_permutation_kept_owned_action_set": true,
+        "hidden_source_trap_rejected": true,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "off_path_adapter_trap_rejected": true,
+        "route_deletion_removed_effect": true,
+        "seed": 6348001,
+        "target_label_permutation_order_unchanged": true,
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348001"
+      },
+      {
+        "action_injection_count": 0,
+        "evidence_permutation_kept_owned_action_set": true,
+        "hidden_source_trap_rejected": true,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "off_path_adapter_trap_rejected": true,
+        "route_deletion_removed_effect": true,
+        "seed": 6348002,
+        "target_label_permutation_order_unchanged": true,
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348002"
+      },
+      {
+        "action_injection_count": 0,
+        "evidence_permutation_kept_owned_action_set": true,
+        "hidden_source_trap_rejected": true,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "off_path_adapter_trap_rejected": true,
+        "route_deletion_removed_effect": true,
+        "seed": 6348001,
+        "target_label_permutation_order_unchanged": true,
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348001"
+      },
+      {
+        "action_injection_count": 0,
+        "evidence_permutation_kept_owned_action_set": true,
+        "hidden_source_trap_rejected": true,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "off_path_adapter_trap_rejected": true,
+        "route_deletion_removed_effect": true,
+        "seed": 6348002,
+        "target_label_permutation_order_unchanged": true,
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348002"
+      },
+      {
+        "action_injection_count": 0,
+        "evidence_permutation_kept_owned_action_set": true,
+        "hidden_source_trap_rejected": true,
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "off_path_adapter_trap_rejected": true,
+        "route_deletion_removed_effect": true,
+        "seed": 6348001,
+        "target_label_permutation_order_unchanged": true,
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348001"
+      },
+      {
+        "action_injection_count": 0,
+        "evidence_permutation_kept_owned_action_set": true,
+        "hidden_source_trap_rejected": true,
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "off_path_adapter_trap_rejected": true,
+        "route_deletion_removed_effect": true,
+        "seed": 6348002,
+        "target_label_permutation_order_unchanged": true,
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348002"
+      },
+      {
+        "action_injection_count": 0,
+        "evidence_permutation_kept_owned_action_set": true,
+        "hidden_source_trap_rejected": true,
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "off_path_adapter_trap_rejected": true,
+        "route_deletion_removed_effect": true,
+        "seed": 6348001,
+        "target_label_permutation_order_unchanged": true,
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348001"
+      },
+      {
+        "action_injection_count": 0,
+        "evidence_permutation_kept_owned_action_set": true,
+        "hidden_source_trap_rejected": true,
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "off_path_adapter_trap_rejected": true,
+        "route_deletion_removed_effect": true,
+        "seed": 6348002,
+        "target_label_permutation_order_unchanged": true,
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348002"
+      },
+      {
+        "action_injection_count": 0,
+        "evidence_permutation_kept_owned_action_set": true,
+        "hidden_source_trap_rejected": true,
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "off_path_adapter_trap_rejected": true,
+        "route_deletion_removed_effect": true,
+        "seed": 6348001,
+        "target_label_permutation_order_unchanged": true,
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348001"
+      },
+      {
+        "action_injection_count": 0,
+        "evidence_permutation_kept_owned_action_set": true,
+        "hidden_source_trap_rejected": true,
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "off_path_adapter_trap_rejected": true,
+        "route_deletion_removed_effect": true,
+        "seed": 6348002,
+        "target_label_permutation_order_unchanged": true,
+        "window_id": "exp6348_fresh_synthetic_push_l0_seed6348002"
+      },
+      {
+        "action_injection_count": 0,
+        "evidence_permutation_kept_owned_action_set": true,
+        "hidden_source_trap_rejected": true,
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "off_path_adapter_trap_rejected": true,
+        "route_deletion_removed_effect": true,
+        "seed": 6348001,
+        "target_label_permutation_order_unchanged": true,
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348001"
+      },
+      {
+        "action_injection_count": 0,
+        "evidence_permutation_kept_owned_action_set": true,
+        "hidden_source_trap_rejected": true,
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "off_path_adapter_trap_rejected": true,
+        "route_deletion_removed_effect": true,
+        "seed": 6348002,
+        "target_label_permutation_order_unchanged": true,
+        "window_id": "exp6348_fresh_synthetic_toggle_l0_seed6348002"
+      }
+    ]
+  },
+  "solve_claim_count": 0,
+  "solve_provenance": "live_agent_self_discovery",
+  "source_model_weight_mutation_count": 0,
+  "status": "complete",
+  "test_commands": [
+    ".venv/bin/python -m carnot.experiment_6348_arc_default_off_action_influence_ab --date 20260812",
+    ".venv/bin/pytest tests/python/test_experiment_6348_arc_default_off_action_influence_ab.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6348_arc_default_off_action_influence_ab.py -m pytest tests/python/test_experiment_6348_arc_default_off_action_influence_ab.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6348_arc_default_off_action_influence_ab.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6348_arc_default_off_action_influence_ab.py",
+    "sed -n '1,180p' ops/e2e-test-plan.md",
+    ".venv/bin/python scripts/determination_preservation_lint.py --all",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6348_arc_default_off_action_influence_ab.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6348_arc_default_off_action_influence_ab.py --fail-under=100 --show-missing": null,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6348_arc_default_off_action_influence_ab.py -m pytest tests/python/test_experiment_6348_arc_default_off_action_influence_ab.py -q --no-cov -n 0": null,
+    ".venv/bin/pytest tests/python -q": null,
+    ".venv/bin/pytest tests/python/test_experiment_6348_arc_default_off_action_influence_ab.py -q --no-cov -n 0": null,
+    ".venv/bin/python -m carnot.experiment_6348_arc_default_off_action_influence_ab --date 20260812": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6348_arc_default_off_action_influence_ab.json": null,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6348_arc_default_off_action_influence_ab.py": null,
+    ".venv/bin/python scripts/determination_preservation_lint.py --all": null,
+    "sed -n '1,180p' ops/e2e-test-plan.md": null
+  },
+  "upstream_path_hash_terminal_class_and_gate_receipt": {
+    "exp6321_live_shadow_ready": true,
+    "exp6347_action_influence_eligible": true,
+    "gate_replay_order": "upstream_gate_before_registry_and_model_load",
+    "rows": [
+      {
+        "exists": true,
+        "gate_field": "arc_route_live_shadow_ready_score",
+        "gate_value": 1.0,
+        "path": "results/experiment_6321_arc_target_licensed_route_live_shadow_ab.json",
+        "sha256": "sha256:c5d7685acc54845fd7b29fb15da211819da302b5352367b874406624acbccb19",
+        "terminal_class": "complete"
+      },
+      {
+        "exists": true,
+        "gate_field": null,
+        "gate_value": null,
+        "path": "results/experiment_6321_arc_target_licensed_route_live_shadow_transitions.json",
+        "sha256": "sha256:d0e1c2cbaa75f7ddb59b405c77606eb44cf4e8dd8904cc062a85000dc6b3d5d4",
+        "terminal_class": "unknown"
+      },
+      {
+        "exists": true,
+        "gate_field": "arc_action_influence_eligible_score",
+        "gate_value": 1.0,
+        "path": "results/experiment_6347_arc_action_influence_preflight.json",
+        "sha256": "sha256:3de90b6850e02fe433bc09ba7446071fbd83069b854d90e858dba27d85f1b5a7",
+        "terminal_class": "complete"
+      },
+      {
+        "exists": true,
+        "gate_field": null,
+        "gate_value": null,
+        "path": "results/experiment_6347_arc_action_influence_live_windows.json",
+        "sha256": "sha256:a7bc78aef829f6b6289fe84ad1e0fe6295946733134708fff273afdbc0edd121",
+        "terminal_class": "unknown"
+      },
+      {
+        "exists": true,
+        "gate_field": null,
+        "gate_value": null,
+        "path": "ops/exclusion_manifest.yaml",
+        "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "terminal_class": "input"
+      }
+    ],
+    "structured_gate_passed": true,
+    "structured_gate_replayed": true
+  },
+  "verification_calls_time_cost_and_error_table": {
+    "calls": [
+      {
+        "call": "structured_gate_replay",
+        "duration_s": 0.000968,
+        "error_count": 0
+      },
+      {
+        "call": "registry_precheck",
+        "duration_s": 0.001541,
+        "error_count": 0
+      },
+      {
+        "call": "prospective_registration_and_fresh_window_seal",
+        "duration_s": 0.000944,
+        "error_count": 0
+      },
+      {
+        "call": "model_specs_and_embedded_tokenizers",
+        "duration_s": 47.264194,
+        "error_count": 0
+      },
+      {
+        "call": "cuda_gpu_offload_and_memory_release",
+        "duration_s": 27.488895,
+        "error_count": 0
+      },
+      {
+        "call": "matched_route_ab_and_exact_checker",
+        "duration_s": 0.015249,
+        "error_count": 0
+      }
+    ],
+    "total_error_count": 0,
+    "total_measured_call_duration_s": 74.771791
+  },
+  "verifier_is_oracle": "exp6348_exact_one_step_transition_checker"
+}
