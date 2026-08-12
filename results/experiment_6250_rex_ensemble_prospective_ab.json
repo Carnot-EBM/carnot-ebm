@@ -1,0 +1,118 @@
+{
+  "experiment": "experiment_6250_rex_ensemble_prospective_ab",
+  "title": "REx ensemble prospective A/B: VALID-score arm selection on a held-out roster",
+  "run_date": "2026-08-12T02:27:39Z",
+  "roster": [
+    "dc22",
+    "lp85",
+    "sc25",
+    "tu93"
+  ],
+  "prior_roster_deliberately_excluded": [
+    "ft09",
+    "tr87",
+    "cn04",
+    "ar25",
+    "ka59",
+    "re86"
+  ],
+  "budget_llm_calls_per_arm_cell": 4,
+  "n_collect": 60,
+  "n_valid": 10,
+  "n_held": 10,
+  "per_game_results": [
+    {
+      "game": "dc22",
+      "chosen_arm": "linear",
+      "chosen_final_valid_fidelity": 0.6667,
+      "total_llm_calls": 8,
+      "wall_s": 8284.1,
+      "generator_healthy_after": true,
+      "linear_final_valid_fidelity": 0.6667,
+      "rex_final_valid_fidelity": 0.6667,
+      "linear_held_change_fidelity": 0.5,
+      "rex_held_change_fidelity": 0.5,
+      "ensemble_held_change_fidelity": 0.5,
+      "held_optimal_arm": "tie",
+      "ensemble_matched_held_optimal": true
+    },
+    {
+      "game": "lp85",
+      "chosen_arm": "linear",
+      "chosen_final_valid_fidelity": 0.1096,
+      "total_llm_calls": 8,
+      "wall_s": 5026.9,
+      "generator_healthy_after": true,
+      "linear_final_valid_fidelity": 0.1096,
+      "rex_final_valid_fidelity": 0.0171,
+      "linear_held_change_fidelity": 0.1096,
+      "rex_held_change_fidelity": 0.0171,
+      "ensemble_held_change_fidelity": 0.1096,
+      "held_optimal_arm": "linear",
+      "ensemble_matched_held_optimal": true
+    },
+    {
+      "game": "sc25",
+      "chosen_arm": null,
+      "chosen_final_valid_fidelity": null,
+      "total_llm_calls": 2,
+      "wall_s": 6000.6,
+      "generator_healthy_after": true,
+      "linear_final_valid_fidelity": null,
+      "rex_final_valid_fidelity": null,
+      "linear_held_change_fidelity": null,
+      "rex_held_change_fidelity": null,
+      "ensemble_held_change_fidelity": null
+    },
+    {
+      "game": "tu93",
+      "chosen_arm": "rex",
+      "chosen_final_valid_fidelity": 0.8889,
+      "total_llm_calls": 8,
+      "wall_s": 5691.0,
+      "generator_healthy_after": true,
+      "linear_final_valid_fidelity": 0.0,
+      "rex_final_valid_fidelity": 0.8889,
+      "linear_held_change_fidelity": 0.0,
+      "rex_held_change_fidelity": 0.9259,
+      "ensemble_held_change_fidelity": 0.9259,
+      "held_optimal_arm": "rex",
+      "ensemble_matched_held_optimal": true
+    }
+  ],
+  "n_games_comparable": 3,
+  "n_games_ensemble_matched_held_optimal": 3,
+  "linear_pooled_mean_held": 0.2032,
+  "rex_pooled_mean_held": 0.481,
+  "ensemble_pooled_mean_held": 0.5118,
+  "best_pure_arm_pooled_mean_held": 0.481,
+  "gate_condition": "ensemble_pooled_mean_held >= best_pure_arm_pooled_mean_held",
+  "gate_met": false,
+  "sample_size_note": "n=4 games, far below the project's n>=30 threshold for a percentage-point claim (CLAUDE.md Adversarial Artifact Verification + Sample-Size Rigor). This result is a directional signal on a genuinely held-out roster, not a statistically powered claim -- read n_games_ensemble_matched_held_optimal as a small, real data point alongside exp6248's retrospective 6/6, not as independent confirmation at scale.",
+  "surprising_result_acknowledgment": "If ensemble_pooled_mean_held exceeds best_pure_arm_pooled_mean_held by a wide margin on n=4, that is preliminary, not headline-eligible until replicated on more games -- flagged per CLAUDE.md's cross-check-surprising-results rule.",
+  "engine_visible_refactor_prompt": true,
+  "operator_authorization": "2026-08-11 operator directive 'build a fresh prospective A/B for the ensemble' -- the explicit operator decision the standing refinement-axis hold requires, matching the bar exp6248's own 2026-08-09 directive satisfied.",
+  "prior_failures": [
+    {
+      "experiment_id": "exp6248",
+      "verdict": "complete_rex_gate_not_met_2_of_6_games_pooled_delta_0.0602_variant_retired",
+      "addressed_by": "exp6248 retired REx as a BLANKET replacement for linear -- this experiment does not re-propose that claim. It tests a DIFFERENT mechanism (per-game VALID-score selection between the two already-built arms) that exp6248's own retirement note explicitly flagged as unanswered, on a roster disjoint from the one that motivated the retrospective check."
+    }
+  ],
+  "retire_if_same_verdict": false,
+  "solve_provenance": "development_proxy",
+  "arc_solve_claim": false,
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_principle": "held-out change_fidelity is an oracle-distinct graded dynamics score, not the executable win-condition oracle.",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": {
+    "generator": "unsloth/gemma-4-31B-it-qat-GGUF",
+    "quant": "UD-Q4_K_XL",
+    "kv_cache_quant": "q8_0",
+    "port": 8940
+  },
+  "random_seed": 6250,
+  "honest_verdict": "complete_ensemble_gate_not_met_3_of_3_matched_held_optimal_ensemble_0.5118_vs_best_pure_0.481",
+  "duration_s": 25016.827,
+  "reproducibility_checksum": "7a62af9bf6d53d7ad7a1fb24a74015a1aaaff1f860ec2a1a5a33a5309f6e943e"
+}

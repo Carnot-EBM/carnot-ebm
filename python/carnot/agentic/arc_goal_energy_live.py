@@ -280,7 +280,12 @@ class GoalEnergyCandidateGuidance:
         return float(self.goal_energy(state))
 
     def rank_candidates(self, frame: Any, candidates: Sequence[Any]) -> list[dict[str, Any]]:
-        rows = [dict(row) if isinstance(row, Mapping) else {"action": _candidate_action(row), "data": _candidate_data(row)} for row in candidates]
+        rows = [
+            dict(row)
+            if isinstance(row, Mapping)
+            else {"action": _candidate_action(row), "data": _candidate_data(row)}
+            for row in candidates
+        ]
         baseline_signatures = [_candidate_signature(row) for row in rows]
         scored_rows: list[tuple[float, float, int, dict[str, Any]]] = []
         scores: list[float] = []
@@ -319,10 +324,17 @@ class GoalEnergyCandidateGuidance:
 
         variance = _score_variance(scores)
         real_state_evidence = bool(scored_rows and len(set(state_hashes)) > 1)
-        ranked_rows = [row for _combined, _nav, _index, row in sorted(scored_rows, key=lambda item: (item[0], item[2]))]
+        ranked_rows = [
+            row
+            for _combined, _nav, _index, row in sorted(
+                scored_rows, key=lambda item: (item[0], item[2])
+            )
+        ]
         if len(ranked_rows) < len(rows):
             scored_indexes = {index for _combined, _nav, index, _row in scored_rows}
-            ranked_rows.extend(dict(row) for index, row in enumerate(rows) if index not in scored_indexes)
+            ranked_rows.extend(
+                dict(row) for index, row in enumerate(rows) if index not in scored_indexes
+            )
         ranked_signatures = [_candidate_signature(row) for row in ranked_rows]
         pool_differs = baseline_signatures != ranked_signatures
         arms_non_degenerate = bool(real_state_evidence and variance > 1e-12 and pool_differs)
@@ -330,11 +342,7 @@ class GoalEnergyCandidateGuidance:
         self._candidate_states_scored_total += len(scored_rows)
         self._prediction_errors_total += prediction_errors
         self._scoring_errors_total += scoring_errors
-        cpu_ms = (
-            (score_elapsed_s * 1000.0) / float(len(scored_rows))
-            if scored_rows
-            else 0.0
-        )
+        cpu_ms = (score_elapsed_s * 1000.0) / float(len(scored_rows)) if scored_rows else 0.0
         self._last_diagnostics = {
             "enabled": True,
             "source": self.source,
@@ -348,7 +356,9 @@ class GoalEnergyCandidateGuidance:
             "scoring_errors_total": int(self._scoring_errors_total),
             "real_candidate_state_evidence": bool(real_state_evidence),
             "goal_energy_score_variance": float(variance),
-            "candidate_pool_differs_from_baseline": bool(pool_differs if variance > 1e-12 else False),
+            "candidate_pool_differs_from_baseline": bool(
+                pool_differs if variance > 1e-12 else False
+            ),
             "arms_non_degenerate": bool(arms_non_degenerate),
             "cpu_scoring_ms_per_candidate": float(cpu_ms),
             "score_min": min(scores) if scores else None,
@@ -479,7 +489,9 @@ class RelationalGoalEnergy:
             "last_routed": False,
             "last_route_class": None,
             "last_fallback_reason": (
-                "legacy_goal_satisfaction" if used_legacy and _state_from_visible(value) is not None else reason
+                "legacy_goal_satisfaction"
+                if used_legacy and _state_from_visible(value) is not None
+                else reason
             ),
             "last_score": float(score),
         }
@@ -617,6 +629,36 @@ class RelationalGoalEnergy:
         }
 
 
+def _stable_repr_for_hash(value: Any) -> str:
+    """A hash input that actually distinguishes two different grids.
+
+    FIXED 2026-08-11 (REQ-ARC-WMTE-6252 incident). This used plain `repr(value)`. numpy
+    ABBREVIATES the repr of any array with more than 1000 elements, printing an ellipsis
+    instead of the middle. An ARC frame is 64x64 = 4096 cells, so thousands of different
+    grids produced the SAME repr and therefore the SAME energy.
+
+    A constant energy is not a random control. `plan_in_model` pushes
+    `(energy, counter, ...)` onto a heap, so a constant first element makes the counter
+    the sort key, which is plain FIFO -- exactly the flat-BFS baseline the ablation is
+    supposed to be compared AGAINST. Measured before the fix: 3 distinct energies across
+    200 singly-perturbed 64x64 grids, and the ablation arm was byte-identical to the
+    baseline on 20 of 25 games.
+
+    That silently voided the control in exp6252's first run: its gate required the graded
+    arm to beat the random arm, and the random arm WAS the baseline, so the clause could
+    never fail. Small grids (8x8) were unaffected, which is why this survived earlier use.
+    """
+    try:
+        import numpy as _np
+
+        if isinstance(value, _np.ndarray):
+            arr = _np.ascontiguousarray(value)
+            return f"ndarray:{arr.shape}:{arr.dtype}:{hashlib.sha256(arr.tobytes()).hexdigest()}"
+    except Exception:  # noqa: BLE001
+        pass
+    return repr(value)
+
+
 @dataclass(frozen=True)
 class UniformGoalEnergy:
     """Deterministic uniform/random energy used only as the ablation control."""
@@ -625,8 +667,10 @@ class UniformGoalEnergy:
 
     def __call__(self, value: Any) -> float:
         state = _state_from_visible(value)
-        payload = state if state is not None else repr(value)
-        encoded = json.dumps(payload, sort_keys=True, default=str, separators=(",", ":"))
+        if state is not None:
+            encoded = json.dumps(state, sort_keys=True, default=str, separators=(",", ":"))
+        else:
+            encoded = _stable_repr_for_hash(value)
         digest = hashlib.sha256(f"{int(self.seed)}:{encoded}".encode()).hexdigest()
         return int(digest[:12], 16) / float(16**12 - 1)
 

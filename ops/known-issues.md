@@ -16726,3 +16726,370 @@ data) proving the ensemble live, and wiring it into `scripts/experiments/experim
 harness or a successor script. The retrospective check is real evidence but is not a
 substitute for a live run under the Phase Prototype + Empirical Validation discipline --
 flagging this explicitly so it is not later mistaken for a completed live gate.
+
+## 2026-08-11 REQ-ARC-WMTE-6252 POSITIVE: a goal gradient beats flat BFS in the induced model
+
+Operator directive 2026-08-11 ("do all of the plans: P1-P6, unattended"). This is P3, and
+it landed a clean positive on the first measurement.
+
+**What was measured.** For each of 25 public games with a previously-induced engine in the
+tracked store, hold the engine, the goal predicate, and the start grid FIXED, and vary ONLY
+`plan_in_model`'s `goal_energy` heap key. Any difference is therefore the gradient alone.
+Arms: `flat_none` (production default, plain BFS, no gradient), `uniform_random` (the
+mandated ablation -- a deterministic grid hash carrying ZERO goal information),
+`novelty` (distance to nearest observed grid), `hamming_to_win` (distance to a known win
+grid).
+
+**Result: gate MET.** `novelty` beats flat on 4 of 24 comparable games. `uniform_random`
+beats flat on 1. The gap between those two numbers is the finding: the gain is goal-search
+signal, not search-reordering noise. Pre-registered gate was ">= 3 games AND beats the
+random ablation", set before any data was seen.
+
+| game | flat nodes | novelty nodes | note |
+|---|---|---|---|
+| bp35 | 20017, NO plan | 2719, plan FOUND | the strongest case: flat BFS fails, novelty succeeds |
+| m0r0 | 1636 | 88 | 18.6x cheaper; random got 557, so novelty beats random here too |
+| s5i5 | 2448 | 453 | 5.4x cheaper |
+| ls20 | 8827 | 2175 | 4.1x cheaper |
+| cn04 | 213 | 1369 | an honest LOSS, recorded not hidden |
+
+**Why this matters.** The 2026-08-09 zero-gradient wall entry argued a flat goal signal is
+a second gate on the live agent, independent of dynamics-induction quality. That argument
+was never tested directly. It is now, and it holds in the induced-model planner.
+
+**The cheapest available action.** A graded branch ALREADY EXISTS in the live path,
+default-OFF: `_goal_energy_for_plan` in `arc_competition_agent.py` has
+`energy_source` in {graded_exemplar, novelty, binary}, gated behind
+`CARNOT_ARC_NOVELTY_GOAL_BIAS=1` and `CARNOT_ARC_GRADED_GOAL_BIAS=1`. The production
+default is `binary`, which is the flat constant this experiment just showed is beaten.
+Turning the novelty branch on is a config change, not a build.
+
+**A second finding, and it is a corpus artifact of exactly the documented kind.** The
+goal-AWARE arm (`hamming_to_win`) ran on ZERO of 24 games. Every game reported
+`n_win_grids_observed=0`, because `collect_transitions` RESTARTS the episode on level-up
+and therefore discards the only transitions that show what winning looks like. This is the
+same `n_win_states=0` trap CLAUDE.md's ARC framing rule warns about. Any offline work that
+needs a win exemplar is blocked until the collector keeps collecting past a level-up.
+
+**Honest limits.** 25 public games are a DEVELOPMENT PROXY for hidden-game planning, not
+the scored metric. 4 of 24 with 1 loss is a directional signal, below the project's n>=30
+bar for a percentage-point claim. The measurement is planner node-efficiency INSIDE the
+induced model; it is not a live level-up and no level is claimed.
+
+Artifact: `results/experiment_6252_goal_gradient_ab.json`. Script:
+`scripts/experiments/experiment_6252_goal_gradient_ab.py`. CPU-only, no LLM, no GPU.
+
+## 2026-08-11 REQ-ARC-WMTE-6253: env knobs for the two 96GB-relevant generator constants
+
+P4 of the same operator directive. The scored card is a single 96 GB RTX PRO 6000
+(measured 2026-08-11). Two constants chosen for a 16-24 GB card had NO env override, so
+the sizing could not be tested on the real hardware without a source edit:
+
+- `_LLAMA_SERVER_DEFAULT_SLOTS = 4` -- the K in `_default_induce_n_ctx`'s
+  `K * (worst_prompt + max_tokens)`, so it decides the context pool. Now resolved through
+  `_llama_server_slots()`, override `CARNOT_ARC_LLAMA_SERVER_SLOTS`.
+- `LocalGGUFProposer.kv_quant = "q8_0"` -- both live construction sites pass it
+  explicitly, so a knob had to OUTRANK the argument to be reachable. Now resolved through
+  `_kv_quant_for_launch()`, override `CARNOT_ARC_KV_QUANT` (set `f16` to test full
+  precision on the big card, `none` to drop the flags).
+
+**Defaults did not move.** Unset env reproduces today's behaviour byte for byte: 4 slots,
+n_ctx 106496, `--cache-type-k/v q8_0`. Pinned by
+`tests/python/test_arc_generator_config_knobs_6253.py` (11 tests).
+
+**A real bug was caught by writing the argv test.** The first version read
+`os.environ` inline inside `_ensure_server`. That method has its own local `import os`
+further down, which makes `os` function-local for the WHOLE method, so the read raised
+`UnboundLocalError` and would have broken every live generator launch. The knob is now a
+module-level helper. This is why the launch-argv test exists: a knob that is read but
+never reaches `subprocess.Popen` is indistinguishable from one that is ignored.
+
+**Raising slots does NOT yet change real server slots.** `_ensure_server` passes no
+`--parallel` flag, so the running server keeps its own default. The knob changes the
+ARITHMETIC only. Any real slot change must also pass `--parallel` and must first be
+measured on the scored card -- `_default_induce_n_ctx`'s own docstring records that a
+naive `--parallel 4` DIVIDES the pool per slot and was strictly worse.
+
+**Correction to the 2026-08-11 plan note.** That note proposed "re-test /think on the
+scored hardware". `/think` is ALREADY ON by default in the scored path
+(`ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT = "1"`, flipped 2026-08-08 on exp6199
+evidence). The 0.09 score was earned WITH think on. The prior /think nulls (exp5594,
+exp5714 on Qwen3.5-9B, exp5726 on ThinkingCap-27B) are other models, and the one
+gemma-31B think determination (exp6229) was `blocked_gate_check_failed` -- never
+measured. So there is no /think null on the current generator, and there is also nothing
+to "turn on".
+
+## 2026-08-11 RETRACTION: the REQ-ARC-WMTE-6252 "goal gradient" positive was a harness artifact
+
+The entry above ("a goal gradient beats flat BFS in the induced model", gate MET, novelty
+4/24 vs random 1/24) is **RETRACTED**. It is preserved above per never-prune. Do not cite
+it. An adversarial review of the run found three independent reasons the gate could not
+have measured what it claimed.
+
+**1. The only goal-AWARE arm never ran.** `hamming_to_win` was skipped on all 24 games
+(`n_win_grids_observed: 0` everywhere). The surviving arm, `novelty`, is goal-BLIND -- its
+own docstring in the script says so, and calls itself "the honest floor a goal-AWARE
+gradient has to beat". The gate's `goal_aware` tuple listed `novelty` anyway, so the floor
+was promoted to the measurement and a goal-gradient verdict was declared in a run with no
+goal signal in it. This is the `n_win_states=0` corpus trap CLAUDE.md's ARC framing rule
+names, firing again, and this time flipping a gate.
+
+**2. A zero-information control reproduces the entire effect.** The reviewer re-ran the 4
+wins and 1 loss with an arm scoring only distance from the START grid -- no observed
+corpus, no goal, nothing the search does not already hold. It beats flat on the SAME 4
+games, and is byte-identical to novelty on bp35 (2719 nodes) and cn04 (1369 nodes). On
+ls20 it is better than novelty (1599 vs 2175). The measured effect is a depth-first
+traversal bias, not goal search.
+
+**3. The mandated ablation was a no-op -- it WAS the baseline.** `UniformGoalEnergy`
+hashed `repr(value)`, and numpy ABBREVIATES the repr of any array over 1000 elements. An
+ARC frame is 64x64 = 4096 cells, so thousands of distinct grids hashed identically.
+Measured: 3 distinct energies across 200 singly-perturbed 64x64 grids. A constant heap key
+makes `heapq`'s tie-break counter the sort key, which is FIFO, which is plain BFS. That is
+why the "random" arm matched flat exactly on 20 of 25 games. The gate clause "graded beats
+random" therefore restated "graded beats flat" and could never fail.
+
+**4. The win metric was the wrong one.** `_beats` scored `nodes_expanded`, justified in a
+comment as "the efficiency metric the scored benchmark actually rewards". False --
+`nodes_expanded` is in-model CPU cost; the benchmark charges REAL ACTIONS, i.e. plan
+length. On ls20 the arm traded a 7-action plan for a 71-action plan and that was recorded
+as a win. Losses were never counted at all, so cn04's 6.4x node regression was invisible.
+
+**What was fixed, all four.**
+- `UniformGoalEnergy` now hashes array bytes for ndarray inputs
+  (`arc_goal_energy_live.py:_stable_repr_for_hash`). Measured after: 179 distinct energies
+  over the same 200 grids, still deterministic. This was a REAL defect in shared live code
+  used as the mandated control elsewhere, not only in this experiment.
+- A `dist_from_start` control arm was added -- the reviewer's zero-information control.
+- `goal_aware` now lists only `hamming_to_win`, and the gate additionally requires the arm
+  to have actually RUN and to beat BOTH controls.
+- `_beats` refuses a candidate whose plan is more than 1.5x the baseline's length, and a
+  `_loses` counter now reports regressions beside wins.
+
+The corrected experiment is re-running. Its result supersedes the retracted one, whatever
+it says. The retracted artifact is preserved outside `results/` as evidence of the failure
+mode, not as a finding.
+
+**The lesson worth keeping.** The experiment's own stated principle was right: "a graded
+arm that only matches the random arm gained from search REORDERING, not from goal signal."
+The control that was supposed to enforce it was silently broken, so the principle could
+not bite. A control that never fires is indistinguishable from a control that passes --
+the same class of failure as the Test-Run Record Integrity guard that was green while the
+record was being rewritten.
+
+## 2026-08-11 REQ-ARC-WMTE-6252 CORRECTED RESULT: gate NOT met, no goal-gradient evidence
+
+The re-run with fixed controls supersedes both entries above.
+`honest_verdict: complete_goal_gradient_gate_not_met_best_hamming_to_win_0_of_24_vs_random_2`.
+
+| arm | information it carries | beats flat | loses to flat |
+|---|---|---|---|
+| `uniform_random` (ablation, now working) | none | 2 | 2 |
+| `dist_from_start` (control) | none | 2 | 3 |
+| `novelty` | observed corpus, still goal-BLIND | 3 | 2 |
+| `hamming_to_win` | the only goal-AWARE arm | **never ran (0 of 24)** | 0 |
+
+**No goal-gradient claim is supportable.** The one arm carrying goal information could not
+be built on any game, because `collect_transitions` restarts on level-up and so never
+yields a win state. Everything that did run is goal-blind, and the best of them (3 wins,
+2 losses out of 24) is not separable from two zero-information controls at 2 wins each.
+
+**The retracted headline is explained exactly.** On bp35 the zero-information
+`dist_from_start` arm is BYTE-IDENTICAL to novelty: both find a plan in 2719 nodes with 74
+actions where flat BFS fails. So "the gradient succeeds where flat BFS fails" was a
+depth-first traversal bias, reproducible with no information at all. On cn04 the two are
+again identical (1369 nodes) and both LOSE to flat's 213.
+
+**The plan-length guard changed the sign of the biggest "win".** On ls20 flat BFS finds a
+**7-action** plan; the gradient arms find 29, 51 and 71 actions. The first run counted
+ls20 as a win because it expanded fewer nodes. The benchmark charges actions, not nodes,
+so a 10x longer plan is a loss. It is now scored as one.
+
+**One arm survives as interesting, weakly.** On m0r0 novelty reaches the goal in 88 nodes
+with an 8-action plan where flat needs 1636 nodes for 7 actions -- a real efficiency win at
+near-equal plan length. But the working random ablation also got there in 172 nodes, so
+even this is a small margin over noise. It is a lead, not a result.
+
+**Blocked follow-up, and it is the real finding.** Testing whether a GOAL gradient helps
+requires win exemplars, and the offline collector destroys them. Until
+`collect_transitions` keeps collecting past a level-up, the question cannot be asked
+offline at all. That collector change is the prerequisite for any future work on this axis,
+and it is a smaller and better-defined task than building another goal inducer.
+
+## 2026-08-11 PROCESS DEFECT: the conductor's --no-verify exemption blocks every other committer
+
+Found while trying to land the P1-P6 work. Not caused by that work.
+
+**The asymmetry.** `scripts/research_conductor.py` commits with `--no-verify` by design
+(operator directive, documented at that file's own line ~1625: "Conductor commits use
+--no-verify by design"). So when the conductor edits
+`python/carnot/agentic/arc_executable_world_model.py` or `arc_competition_agent.py`, the
+`artifact-freshness-lint` pre-commit hook never runs, and every results artifact that
+declares those files as a source dependency silently goes stale.
+
+**The consequence.** The lint then REFUSES any commit from a non-exempt committer that
+touches the same files. Verified directly: for both
+`results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json` and
+`results/experiment_6011_world_model_change_gate_four_arm.json`, the recorded dependency
+sha256 does not match even the CURRENT HEAD version of
+`arc_executable_world_model.py` -- i.e. those artifacts were already stale before this
+session made any edit. Eleven artifacts are affected; several are stale on
+`arc_competition_agent.py` alone, a file this session never touched.
+
+**Why this is worth recording rather than working around.** The lint is correct: those
+artifacts' numbers ARE of unknown provenance. The defect is that the party creating the
+staleness is exempt from detecting it, while the party who must clear it has neither the
+authority nor the context to rebuild eleven of someone else's artifacts -- and the lint's
+own text says a rebuild that moves a published number is "a correction owed, not a
+formality." So the honest states are "blocked" or "bypass", and bypassing is what the
+conductor already does.
+
+**Not fixed here.** Options for the operator, in rough order of cost:
+1. Drop `--no-verify` from the conductor's commit path for the freshness hook only, so
+   whoever creates the drift is the one who resolves it.
+2. Have the conductor run `artifact_freshness_lint.py` after its own commits and either
+   rebuild or record a `freshness_acknowledgements` entry.
+3. Accept the asymmetry and give the outer loop a documented, narrow exemption.
+
+**Current state:** 14 files for the P1-P6 work are STAGED and uncommitted. Every other
+pre-commit hook passes (ruff, mypy, spec coverage, determination preservation, test-suite
+mutation, ARC live-path reachability, canonical URL, torch CUDA). `--no-verify` was NOT
+used, per the standing rule against skipping hooks without explicit authorization.
+
+## 2026-08-11 REQ-ARC-WMTE-6250 PROSPECTIVE RESULT: selector 3/3, ensemble beats both pure arms
+
+P1 of the "do all of P1-P6" directive. The prospective A/B on a held-out roster
+(dc22, lp85, sc25, tu93 -- disjoint from exp6248's six) has finished.
+`honest_verdict: complete_ensemble_gate_not_met_3_of_3_matched_held_optimal_ensemble_0.5118_vs_best_pure_0.481`.
+
+| game | linear held | rex held | chosen | matched held-optimal |
+|---|---|---|---|---|
+| dc22 | 0.5 | 0.5 | linear | yes (tie, uninformative) |
+| lp85 | 0.1096 | 0.0171 | linear | yes |
+| sc25 | none | none | none | BOTH ARMS FAILED |
+| tu93 | 0.0 | **0.9259** | rex | yes |
+
+Pooled held-out change-fidelity: **ensemble 0.5118**, rex 0.4810, linear 0.2032. The
+ensemble beats BOTH pure arms, not just the weaker one.
+
+**Read the gate honestly: it failed on COVERAGE, not on the selector.** The pre-registered
+gate required all four roster games to be comparable. sc25 produced no candidate from
+EITHER arm, so only three games could be scored. On those three the selector matched the
+held-optimal arm 3 out of 3. Reporting this as "gate not met" without that sentence would
+be misleading in the opposite direction from the exp6252 retraction earlier today -- there
+the framing was too generous, here it would be too harsh.
+
+**tu93 is the single strongest data point in this whole batch.** The linear arm produced a
+WORTHLESS engine (held-out fidelity 0.0) and the rex arm produced an excellent one
+(0.9259), at the SAME LLM-call budget. The selector picked rex using only the VALID score,
+which is available online before any held-out number exists. That is exactly the failure
+mode a per-game selector is for: not "one arm is better on average", but "the arms fail on
+different games, and you can tell which in advance".
+
+**Cumulative evidence for VALID-score arm selection: 9 of 9.** Six retrospective on
+exp6248's data plus three prospective here. Honest discount: dc22 is a tie and several of
+the retrospective six were near-ties, so the number of genuinely informative decisions is
+smaller than nine. Still below the project's n>=30 bar for a percentage-point claim.
+
+**What is NOT shown.** This measures held-out dynamics fidelity offline, on public games.
+It is not a live level-up and no level is claimed. sc25's double failure is also a real
+signal worth its own look: whatever made both arms fail there is upstream of the selector
+and the selector cannot help with it.
+
+## 2026-08-11 REQ-ARC-WMTE-6251 RESULT: best-of-N shows no reliable gain, and the VALID proxy MISSED once
+
+P2 of the "do all of P1-P6" directive. Ran dual-GPU layer-split, no CPU offload, 40 minutes
+for 4 games x 4 concurrent samples.
+`honest_verdict: complete_best_of_n_gate_met_1_of_4_improved_pooled_0.5304_vs_n1_0.5037_batching_eff_3.604`.
+
+**The verdict string says "gate met". Do not read it that way.** The gate was
+`pooled best-of-N > pooled N=1`, and that is too weak -- the same over-permissive gate
+mistake made in exp6252 earlier today, caught this time by reading the per-game rows
+instead of the headline.
+
+| game | N=1 VALID | chosen VALID | N=1 held | best-of-4 held | reading |
+|---|---|---|---|---|---|
+| cn04 | 0.4690 | 0.7468 | 0.4028 | **0.5265** | real gain, selector correct |
+| g50t | 0.1560 | 0.3450 | 0.6119 | **0.5952** | **selector MISS** |
+| s5i5 | 0.8500 | 0.8500 | 0.0 | 0.0 | no headroom (floor) |
+| ls20 | 0.7847 | 0.7847 | 1.0 | 1.0 | no headroom (ceiling) |
+
+**Only two games could discriminate, and they split one win, one loss.** s5i5 sits at the
+0.0 floor and ls20 at the 1.0 ceiling, so neither can show a difference in either
+direction. The pooled improvement (0.5304 vs 0.5037) is cn04 alone. That is the identical
+shape the project refused to headline for exp6248 -- "pooled positive driven by one
+outlier" -- and it should not be headlined here either.
+
+**g50t is the important row, and it argues AGAINST the P1 story.** The selector picked
+sample2 because its VALID score was more than double the baseline's (0.345 vs 0.156). Its
+held-out fidelity was WORSE (0.5952 vs 0.6119). VALID and HELD moved in opposite
+directions. So on the two games where a real (non-tie) choice was made, the VALID-score
+selector was 1 right and 1 wrong.
+
+**Tension with REQ-ARC-WMTE-6250, stated plainly.** P1 reported the VALID-score selector at
+9 of 9 (6 retrospective + 3 prospective) choosing between TWO SEARCH SHAPES. Here the same
+proxy, choosing among FOUR INDEPENDENT SAMPLES, missed one of two real decisions. Those are
+different tasks and the sample counts are tiny in both, so this does not refute P1 -- but it
+does mean the 9-of-9 must not be generalized into "VALID predicts HELD". It predicted well
+when picking between two arms that differ structurally, and it failed here when picking
+among samples that differ only by sampler noise. That distinction is a hypothesis worth
+testing, not a conclusion.
+
+**The diversity guard did its job.** `min_distinct_sources_across_games: 4` -- all four
+samples were genuinely different programs on every game, and
+`generator_seed_env_set: false` confirms the seed-collapse failure mode did not fire. So
+this is a real N=4 measurement, not a disguised N=1. That guard was added the same day
+after adversarial review flagged the collapse risk.
+
+**Batching: 3.604x mean, and read the caveat.** Four concurrent samples completed in about
+the time of the slowest one (532-645s per game). But this ratio measures OVERLAP, not
+speed-up: it approaches N whenever samples run concurrently, even if continuous batching
+made each one N times slower than a lone sample. The sequential arm never runs, so a true
+speed-up figure is still unmeasured. Do not quote 3.6x as "four samples for the price of
+one".
+
+**Net:** best-of-N is not demonstrated. It cost 4x the LLM calls for one win, one loss, and
+two games with no room to move.
+
+## 2026-08-11 FIXED: artifact-freshness-lint no longer refuses a commit for INHERITED staleness
+
+Follows the process-defect entry above. Operator directive: "fix blockage".
+
+**What was wrong.** The gate compared every registered artifact against the WORKING TREE
+and refused on any staleness, regardless of who caused it. Because the conductor commits
+with `--no-verify` by design, it changes shared agent modules without ever running the
+hook, and dependent artifacts silently rot. By 2026-08-11 twelve artifacts were stale, and
+the next person to touch ANY file in the trigger list inherited a refusal they could not
+clear. Several had drifted on their OWN analyser or build scripts
+(`build_artifact_6021.py`, `analyze_arc_gateway_rescore.py`, exp6011's own experiment
+script), so a rebuild would legitimately move published numbers -- a correction owed, not
+something to do unattended to unblock an unrelated commit.
+
+**The fix, and the exact rule.** `drift_is_pre_existing()` re-checks each drifted
+dependency against its content at HEAD. An artifact BLOCKS only when at least one drifted
+dependency MATCHED its recorded hash at HEAD -- that dependency was fresh before and is not
+now, so this working tree broke it. When every drifted dependency was already drifted at
+HEAD, the artifact is reported as BACKLOG with a count and does not block.
+
+**The guard does not weaken, and that is tested both ways.**
+`tests/python/test_artifact_freshness_pre_existing_backlog_20260811.py` pins the
+block direction as the load-bearing case: it dirties one dependency of a currently-fresh
+artifact, asserts exit 1 and "REFUSING THE COMMIT", then restores the file and verifies
+byte-identity against HEAD. Verified manually first: 12 backlog artifacts pass at exit 0,
+and a single newly-staled dependency still produces exit 1. `_sha256_at_head` returns None
+on any git failure and the caller treats None as "cannot prove pre-existing", so the
+fallback is to keep blocking -- fail-closed, stated in the docstring per the QA-Layer
+Authenticity Discipline's rule for guard files.
+
+**Two pre-existing test failures are NOT fixed, deliberately.**
+`test_artifact_freshness_lint.py::test_the_live_repo_artifact_is_registered_and_fresh` and
+`test_artifact_freshness_acknowledgement_2026_07_30.py::test_the_three_real_acknowledgements_are_complete_and_current`
+both assert that every registered artifact is fresh, and both fail on the backlog. Verified
+they fail identically using HEAD's own `check_artifact` (which this change does not touch --
+it adds two new functions and edits `main`), so they were already red on main. They are
+CORRECTLY reporting the backlog and must not be relaxed to pass; that would launder the
+debt this change is careful to keep visible. They go green when the backlog is rebuilt.
+
+**The root cause is still open.** The conductor still commits with `--no-verify`, so the
+backlog will keep growing. The options listed in the entry above stand; the best is to have
+whoever creates the drift resolve it.

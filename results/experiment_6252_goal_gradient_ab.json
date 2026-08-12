@@ -1,0 +1,1412 @@
+{
+  "experiment": "experiment_6252_goal_gradient_ab",
+  "title": "Goal-gradient A/B: does any heap-key gradient beat flat BFS in the induced model?",
+  "run_date": "2026-08-12T01:13:39Z",
+  "roster": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "dc22",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sc25",
+    "sk48",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33",
+    "wa30"
+  ],
+  "n_games_total": 25,
+  "n_games_comparable": 24,
+  "per_game_results": [
+    {
+      "game": "ar25",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20020,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 37.299,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20024,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 8.023712154781066e-05,
+          "used_goal_energy_search": true,
+          "wall_s": 35.078,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20026,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.921875,
+          "used_goal_energy_search": true,
+          "wall_s": 35.479,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20009,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.93701171875,
+          "used_goal_energy_search": true,
+          "wall_s": 41.56,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "bp35",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 4.955,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.0006549416810415232,
+          "used_goal_energy_search": true,
+          "wall_s": 4.622,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": true,
+          "plan_length": 74,
+          "nodes_expanded": 2719,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.982177734375,
+          "used_goal_energy_search": true,
+          "wall_s": 1.196,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": true,
+          "plan_length": 74,
+          "nodes_expanded": 2719,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.982177734375,
+          "used_goal_energy_search": true,
+          "wall_s": 1.524,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "cd82",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": true,
+          "plan_length": 1,
+          "nodes_expanded": 5,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 0.001,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": true,
+          "plan_length": 1,
+          "nodes_expanded": 5,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.05883113269672101,
+          "used_goal_energy_search": true,
+          "wall_s": 0.001,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": true,
+          "plan_length": 1,
+          "nodes_expanded": 5,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.990234375,
+          "used_goal_energy_search": true,
+          "wall_s": 0.001,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": true,
+          "plan_length": 1,
+          "nodes_expanded": 5,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.990234375,
+          "used_goal_energy_search": true,
+          "wall_s": 0.004,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "cn04",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": true,
+          "plan_length": 6,
+          "nodes_expanded": 213,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 0.028,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": true,
+          "plan_length": 6,
+          "nodes_expanded": 229,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.015661123749129813,
+          "used_goal_energy_search": true,
+          "wall_s": 0.033,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": true,
+          "plan_length": 6,
+          "nodes_expanded": 1369,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.94140625,
+          "used_goal_energy_search": true,
+          "wall_s": 0.18,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": true,
+          "plan_length": 6,
+          "nodes_expanded": 1369,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.941650390625,
+          "used_goal_energy_search": true,
+          "wall_s": 0.295,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "dc22",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 1.491,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.00018426521677028583,
+          "used_goal_energy_search": true,
+          "wall_s": 1.485,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.996337890625,
+          "used_goal_energy_search": true,
+          "wall_s": 1.464,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.996337890625,
+          "used_goal_energy_search": true,
+          "wall_s": 2.194,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "ft09",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 3.632,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 9.097249857958933e-05,
+          "used_goal_energy_search": true,
+          "wall_s": 6.09,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.553466796875,
+          "used_goal_energy_search": true,
+          "wall_s": 2.581,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.553466796875,
+          "used_goal_energy_search": true,
+          "wall_s": 8.649,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "g50t",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20026,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 5.086,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20020,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.0006426032958692952,
+          "used_goal_energy_search": true,
+          "wall_s": 4.873,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20018,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.479736328125,
+          "used_goal_energy_search": true,
+          "wall_s": 4.279,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20000,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.478271484375,
+          "used_goal_energy_search": true,
+          "wall_s": 7.024,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "ka59",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20000,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 32.099,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20007,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.001197970644465589,
+          "used_goal_energy_search": true,
+          "wall_s": 32.334,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20023,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.9482421875,
+          "used_goal_energy_search": true,
+          "wall_s": 31.444,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20002,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.9521484375,
+          "used_goal_energy_search": true,
+          "wall_s": 32.152,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "lf52",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 1.543,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.00021935156089725262,
+          "used_goal_energy_search": true,
+          "wall_s": 1.863,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.99267578125,
+          "used_goal_energy_search": true,
+          "wall_s": 1.488,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.99267578125,
+          "used_goal_energy_search": true,
+          "wall_s": 2.879,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "lp85",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 37,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 0.003,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 37,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 0.9289031992078731,
+          "used_goal_energy_search": true,
+          "wall_s": 0.003,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 37,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 1.0,
+          "used_goal_energy_search": true,
+          "wall_s": 0.002,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 37,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 1.0,
+          "used_goal_energy_search": true,
+          "wall_s": 0.006,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "ls20",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": true,
+          "plan_length": 7,
+          "nodes_expanded": 8827,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 9.031,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": true,
+          "plan_length": 29,
+          "nodes_expanded": 4165,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.0021198638458877,
+          "used_goal_energy_search": true,
+          "wall_s": 2.339,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": true,
+          "plan_length": 51,
+          "nodes_expanded": 1599,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.727294921875,
+          "used_goal_energy_search": true,
+          "wall_s": 1.537,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": true,
+          "plan_length": 71,
+          "nodes_expanded": 2175,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.634521484375,
+          "used_goal_energy_search": true,
+          "wall_s": 2.344,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "m0r0",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": true,
+          "plan_length": 7,
+          "nodes_expanded": 1636,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 1.715,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": true,
+          "plan_length": 8,
+          "nodes_expanded": 172,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.010070186722654065,
+          "used_goal_energy_search": true,
+          "wall_s": 0.2,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": true,
+          "plan_length": 64,
+          "nodes_expanded": 876,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.890625,
+          "used_goal_energy_search": true,
+          "wall_s": 0.967,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": true,
+          "plan_length": 8,
+          "nodes_expanded": 88,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.932861328125,
+          "used_goal_energy_search": true,
+          "wall_s": 0.098,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "r11l",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": true,
+          "plan_length": 1,
+          "nodes_expanded": 14,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 0.002,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": true,
+          "plan_length": 1,
+          "nodes_expanded": 14,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.4855906881132856,
+          "used_goal_energy_search": true,
+          "wall_s": 0.004,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": true,
+          "plan_length": 1,
+          "nodes_expanded": 14,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.999755859375,
+          "used_goal_energy_search": true,
+          "wall_s": 0.002,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": true,
+          "plan_length": 1,
+          "nodes_expanded": 14,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.999755859375,
+          "used_goal_energy_search": true,
+          "wall_s": 0.006,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "re86",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 28,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 0.003,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 28,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 0.688718027651755,
+          "used_goal_energy_search": true,
+          "wall_s": 0.003,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 28,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 1.0,
+          "used_goal_energy_search": true,
+          "wall_s": 0.002,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 28,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 1.0,
+          "used_goal_energy_search": true,
+          "wall_s": 0.005,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "s5i5",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": true,
+          "plan_length": 13,
+          "nodes_expanded": 2448,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 0.158,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": true,
+          "plan_length": 15,
+          "nodes_expanded": 550,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.02088055699611509,
+          "used_goal_energy_search": true,
+          "wall_s": 0.028,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": true,
+          "plan_length": 16,
+          "nodes_expanded": 458,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.96630859375,
+          "used_goal_energy_search": true,
+          "wall_s": 0.041,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": true,
+          "plan_length": 16,
+          "nodes_expanded": 453,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.9677734375,
+          "used_goal_energy_search": true,
+          "wall_s": 0.09,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "sb26",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20009,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 1.717,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20010,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 1.4201483676146205e-05,
+          "used_goal_energy_search": true,
+          "wall_s": 2.385,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20009,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.738525390625,
+          "used_goal_energy_search": true,
+          "wall_s": 1.866,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20009,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.738525390625,
+          "used_goal_energy_search": true,
+          "wall_s": 3.902,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "sc25",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20007,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 2.846,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20003,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.0008821687451146008,
+          "used_goal_energy_search": true,
+          "wall_s": 3.563,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20033,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.86767578125,
+          "used_goal_energy_search": true,
+          "wall_s": 4.158,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20033,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.861083984375,
+          "used_goal_energy_search": true,
+          "wall_s": 5.218,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "sk48",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 592,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 0.054,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 592,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 0.049133013146203726,
+          "used_goal_energy_search": true,
+          "wall_s": 0.052,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 592,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 0.946533203125,
+          "used_goal_energy_search": true,
+          "wall_s": 0.05,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 592,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 0.946533203125,
+          "used_goal_energy_search": true,
+          "wall_s": 0.055,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "sp80",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": true,
+          "plan_length": 4,
+          "nodes_expanded": 43,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 0.005,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": true,
+          "plan_length": 4,
+          "nodes_expanded": 43,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.3167348122468472,
+          "used_goal_energy_search": true,
+          "wall_s": 0.008,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": true,
+          "plan_length": 4,
+          "nodes_expanded": 43,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.966796875,
+          "used_goal_energy_search": true,
+          "wall_s": 0.005,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": true,
+          "plan_length": 4,
+          "nodes_expanded": 43,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.976318359375,
+          "used_goal_energy_search": true,
+          "wall_s": 0.006,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "su15",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": null,
+      "goal_eval_error": "ValueError('The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()')",
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20016,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 1.257,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20008,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 5.904142164681069e-05,
+          "used_goal_energy_search": true,
+          "wall_s": 1.986,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20005,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.983154296875,
+          "used_goal_energy_search": true,
+          "wall_s": 1.388,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20005,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.983154296875,
+          "used_goal_energy_search": true,
+          "wall_s": 2.816,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "tn36",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 1.587,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 5.714315431859538e-05,
+          "used_goal_energy_search": true,
+          "wall_s": 2.036,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.990478515625,
+          "used_goal_energy_search": true,
+          "wall_s": 1.928,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 20017,
+          "termination_reason": "max_nodes_reached",
+          "min_goal_energy_observed": 0.990478515625,
+          "used_goal_energy_search": true,
+          "wall_s": 3.098,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "tr87",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 37,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 0.003,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 37,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 0.6747680693934857,
+          "used_goal_energy_search": true,
+          "wall_s": 0.002,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 37,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 1.0,
+          "used_goal_energy_search": true,
+          "wall_s": 0.002,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 37,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 1.0,
+          "used_goal_energy_search": true,
+          "wall_s": 0.003,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "tu93",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 144,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 0.01,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 144,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 0.32554884120237776,
+          "used_goal_energy_search": true,
+          "wall_s": 0.011,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 144,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 0.996337890625,
+          "used_goal_energy_search": true,
+          "wall_s": 0.01,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 144,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 0.99658203125,
+          "used_goal_energy_search": true,
+          "wall_s": 0.016,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "vc33",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": true,
+          "plan_length": 3,
+          "nodes_expanded": 42,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 0.006,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": true,
+          "plan_length": 3,
+          "nodes_expanded": 42,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.030567785704033065,
+          "used_goal_energy_search": true,
+          "wall_s": 0.006,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": true,
+          "plan_length": 3,
+          "nodes_expanded": 42,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.882080078125,
+          "used_goal_energy_search": true,
+          "wall_s": 0.006,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": true,
+          "plan_length": 3,
+          "nodes_expanded": 42,
+          "termination_reason": "plan_found",
+          "min_goal_energy_observed": 0.882080078125,
+          "used_goal_energy_search": true,
+          "wall_s": 0.011,
+          "error": null
+        }
+      }
+    },
+    {
+      "game": "wa30",
+      "n_transitions": 40,
+      "n_win_grids_observed": 0,
+      "goal_true_at_start": false,
+      "hamming_to_win_skipped": "no level-up transition observed offline",
+      "arms": {
+        "flat_none": {
+          "arm": "flat_none",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 32,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": null,
+          "used_goal_energy_search": false,
+          "wall_s": 0.006,
+          "error": null
+        },
+        "uniform_random": {
+          "arm": "uniform_random",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 32,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 0.10403054604796973,
+          "used_goal_energy_search": true,
+          "wall_s": 0.005,
+          "error": null
+        },
+        "dist_from_start": {
+          "arm": "dist_from_start",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 32,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 0.9462890625,
+          "used_goal_energy_search": true,
+          "wall_s": 0.004,
+          "error": null
+        },
+        "novelty": {
+          "arm": "novelty",
+          "plan_found": false,
+          "plan_length": null,
+          "nodes_expanded": 32,
+          "termination_reason": "queue_exhausted",
+          "min_goal_energy_observed": 0.9462890625,
+          "used_goal_energy_search": true,
+          "wall_s": 0.008,
+          "error": null
+        }
+      }
+    }
+  ],
+  "n_games_arm_beats_flat": {
+    "uniform_random": 2,
+    "dist_from_start": 2,
+    "novelty": 3,
+    "hamming_to_win": 0
+  },
+  "n_games_arm_loses_to_flat": {
+    "uniform_random": 2,
+    "dist_from_start": 3,
+    "novelty": 2,
+    "hamming_to_win": 0
+  },
+  "n_games_arm_ran": {
+    "uniform_random": 24,
+    "dist_from_start": 24,
+    "novelty": 24,
+    "hamming_to_win": 0
+  },
+  "best_goal_aware_arm": "hamming_to_win",
+  "gate_condition": "a goal-aware arm beats flat BFS on >= 3 comparable games AND beats the uniform-random ablation count",
+  "gate_min_games_beaten": 3,
+  "gate_met": false,
+  "max_nodes_per_plan": 20000,
+  "ablation_control": "uniform_random (deterministic grid hash, zero goal information)",
+  "ablation_principle": "a graded arm that only matches the random arm gained from search REORDERING, not from goal signal; the project's goal-induction doctrine requires this control",
+  "sample_size_note": "25 public games with previously-induced engines. Public games are a DEVELOPMENT PROXY for hidden-game planning, not the scored metric. A per-arm count out of ~25 is a directional signal, below the project's n>=30 bar for a percentage-point claim.",
+  "known_limitation_win_grids": "the offline collector restarts the episode on level-up, so observed win grids are rare and the hamming_to_win arm is skipped on games that produced none; a skip is recorded per game and never counted as a zero",
+  "solve_provenance": "development_proxy",
+  "arc_solve_claim": false,
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_principle": "the metric is planner node-efficiency inside the induced model, not the executable win-condition oracle; no level is claimed",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "random_seed": 6252,
+  "preconditions_checked": [
+    {
+      "resource": "tracked_e3_store_readable",
+      "available": true
+    },
+    {
+      "resource": "no_llm_required",
+      "available": true
+    },
+    {
+      "resource": "no_gpu_required",
+      "available": true
+    }
+  ],
+  "honest_verdict": "complete_goal_gradient_gate_not_met_best_hamming_to_win_0_of_24_vs_random_2",
+  "duration_s": 417.937,
+  "reproducibility_checksum": "6e87c2e7a91d1f476f33b52546b4cba5013c7f131bdbad62423d2de063fb84ae"
+}

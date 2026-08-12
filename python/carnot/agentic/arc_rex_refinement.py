@@ -47,6 +47,8 @@ __all__ = [
     "load_engine_from_source",
     "run_rex",
     "run_rex_ensemble",
+    "select_best_arm",
+    "run_best_of_n",
 ]
 
 
@@ -381,7 +383,38 @@ def run_rex_ensemble(
         ucb1_c=ucb1_c,
     )
     arms = {"linear": linear, "rex": rex}
-    available = {name: r for name, r in arms.items() if r.get("final_source")}
+    return select_best_arm(game, arms)
+
+
+def select_best_arm(game: str, arms: dict[str, dict]) -> dict:
+    """Pick the arm whose final candidate has the highest VALID fidelity.
+
+    Shared by `run_rex_ensemble` (2 search shapes) and `run_best_of_n` (N independent
+    samples) so both use ONE selection rule. VALID only -- HELD stays selection-blind at
+    run time, matching every other REQ-ARC-WMTE-62xx selection rule.
+
+    An arm is eligible only when it has BOTH a `final_source` and a numeric
+    `final_valid_fidelity`. Requiring both is deliberate, and the fidelity half was added
+    2026-08-11 after adversarial review: an earlier version filtered on `final_source`
+    alone, so a caller-built arm carrying a source with a None score survived the filter
+    and then raised `TypeError: '>' not supported between float and NoneType` inside
+    `max`. `run_rex` never produces that shape, but `run_best_of_n` takes arms from the
+    caller, and exp6251/exp6254 both build them by hand.
+
+    Ties go to the first eligible arm in insertion order, so the result is deterministic
+    for a fixed arm ordering.
+
+    Arms are nested under `arms` rather than merged into the top level. Merging let an
+    arm named `game` or `chosen_arm` silently overwrite a real output field -- verified,
+    not theoretical.
+    """
+
+    def _eligible(r: dict) -> bool:
+        return bool(r.get("final_source")) and isinstance(
+            r.get("final_valid_fidelity"), (int, float)
+        )
+
+    available = {name: r for name, r in arms.items() if _eligible(r)}
     if not available:
         chosen_arm = None
     elif len(available) == 1:
@@ -389,12 +422,78 @@ def run_rex_ensemble(
     else:
         chosen_arm = max(available, key=lambda name: available[name]["final_valid_fidelity"])
     chosen = arms[chosen_arm] if chosen_arm else None
-    return {
+    out = {
         "game": game,
-        "linear": linear,
-        "rex": rex,
         "chosen_arm": chosen_arm,
         "chosen_final_source": chosen.get("final_source") if chosen else None,
         "chosen_final_valid_fidelity": chosen.get("final_valid_fidelity") if chosen else None,
-        "total_llm_calls": linear.get("llm_calls", 0) + rex.get("llm_calls", 0),
+        "total_llm_calls": sum(int(r.get("llm_calls", 0) or 0) for r in arms.values()),
+        "n_arms": len(arms),
+        "n_arms_produced_candidate": len(available),
+        "arms": dict(arms),
     }
+    # Back-compat for `run_rex_ensemble`'s two documented keys, which callers and the
+    # existing tests read at the top level. Only these two, and only when they cannot
+    # shadow an output field.
+    for legacy in ("linear", "rex"):
+        if legacy in arms and legacy not in out:
+            out[legacy] = arms[legacy]
+    return out
+
+
+def run_best_of_n(
+    game: str,
+    arm_runners: "Sequence[Callable[[], dict]]",
+    *,
+    concurrent: bool = False,
+) -> dict:
+    """Run N induction arms and keep whichever scores highest on VALID.
+
+    REQ-ARC-WMTE-6251. Generalizes `run_rex_ensemble` from "2 fixed search shapes" to
+    "N independent samples". The value claim is that a stronger candidate can be BOUGHT
+    with parallel samples rather than with a bigger model -- exp5722 showed a bigger
+    dense generator alone moved zero live levels, so sampling breadth is a different
+    axis, not a retry of that one.
+
+    THIS IS NOT THE RETIRED CANDIDATE-RANKING LEVER. Those A/Bs reordered PERCEPTUAL
+    CLICK CANDIDATES using a learned or hand scorer. This picks among GENERATED
+    PROGRAMS using execution-grounded VALID fidelity -- an oracle-distinct measurement
+    of how well each program reproduces observed dynamics, not a preference model.
+
+    `arm_runners` are thunks so the CALLER owns every isolation decision. That is not
+    ceremony: `LocalGGUFProposer._write_world_model` writes `E3_DIR / game /
+    world_model.py`, where `E3_DIR` is a module-level global read at import. Two arms
+    for the same game inside ONE process therefore write the SAME file and race, no
+    matter what read/write callables the caller injects into `run_rex`. Safe
+    concurrency needs one process per arm, each with its own `CARNOT_ARC_E3_DIR`, all
+    talking to one shared llama-server. `concurrent=True` only threads the thunks; it
+    trusts the caller to have made them independent, and a caller that passes
+    same-process same-game thunks will corrupt its own run.
+
+    Each thunk returns a `run_rex`-shaped summary. A thunk that raises contributes an
+    arm with no candidate rather than killing the whole set -- one bad sample out of N
+    is exactly the case sampling breadth exists to absorb.
+    """
+    arms: dict[str, dict] = {}
+    if not arm_runners:
+        # An empty list is a legitimate no-op, and it must behave the SAME in both modes.
+        # ThreadPoolExecutor(max_workers=0) raises, so the concurrent path used to diverge
+        # from the sequential path on this input.
+        return select_best_arm(game, arms)
+    if concurrent:
+        from concurrent.futures import ThreadPoolExecutor
+
+        with ThreadPoolExecutor(max_workers=len(arm_runners)) as pool:
+            futures = {i: pool.submit(r) for i, r in enumerate(arm_runners)}
+            for i, fut in futures.items():
+                try:
+                    arms[f"sample{i}"] = fut.result()
+                except Exception as exc:  # noqa: BLE001
+                    arms[f"sample{i}"] = {"error": repr(exc)[:200], "llm_calls": 0}
+    else:
+        for i, runner in enumerate(arm_runners):
+            try:
+                arms[f"sample{i}"] = runner()
+            except Exception as exc:  # noqa: BLE001
+                arms[f"sample{i}"] = {"error": repr(exc)[:200], "llm_calls": 0}
+    return select_best_arm(game, arms)

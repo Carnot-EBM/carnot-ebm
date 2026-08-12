@@ -351,6 +351,7 @@ if server and gguf:
     from carnot.agentic.arc_executable_world_model import (
         _INDUCE_WORST_CASE_PROMPT_TOKENS,
         _LLAMA_SERVER_DEFAULT_SLOTS,
+        _llama_server_slots,
         _default_induce_n_ctx,
     )
     _ctx = str(_default_induce_n_ctx())
@@ -422,7 +423,7 @@ if server and gguf:
     except Exception as _ve:
         print(f"LLM TIER VRAM FIT: could not evaluate ({_ve!r})", flush=True)
     print(f"LLM TIER RESOLVED: server={run_server} gguf={gguf.name} mtp={_mtp} ctx={_ctx} "
-          f"max_tokens={_maxtok} slots_expected={_LLAMA_SERVER_DEFAULT_SLOTS} "
+          f"max_tokens={_maxtok} slots_expected={_llama_server_slots()} "
           f"worst_prompt_tokens={_INDUCE_WORST_CASE_PROMPT_TOKENS} kv=q8_0", flush=True)
     # one-shot health probe: spawn the generator with the SAME args the agent uses and confirm it
     # actually LOADS on this GPU (stderr CAPTURED, not swallowed like the agent's DEVNULL launch),
@@ -483,7 +484,11 @@ if server and gguf:
                 import json as _json
                 from concurrent.futures import ThreadPoolExecutor as _TPE
 
-                _K = int(_LLAMA_SERVER_DEFAULT_SLOTS)
+                # Read the RESOLVER, not the constant. `_default_induce_n_ctx()` sizes
+                # the pool from the resolver, so a probe reading the raw constant would
+                # validate K=4 while the pool was built for K=8 -- the exact
+                # probe-one-thing-ship-another gap the comment above forbids.
+                _K = int(_llama_server_slots())
 
                 def _ntok(_text):
                     _r = urllib.request.Request(
@@ -660,6 +665,446 @@ CarnotAgent = make_carnot_agent(Agent)
 """
 Path("/kaggle/working/my_agent.py").write_text(AGENT_SRC + AGENT_BIND_TAIL)
 
+# PREVIEW-MODE GENERATOR CONFIG A/B (2026-08-11). This source runs ONLY in the preview
+# branch below. It never runs on the scored path, so it cannot change a scored result.
+# It measures three server levers on the real scored hardware at zero submission cost.
+PREVIEW_AB_SRC = r'''
+"""Generator config A/B harness. Preview (Save and Run) branch only.
+
+WHY THIS EXISTS. The scored rerun log is not readable. The preview log is readable
+through `kaggle kernels output`. Preview runs on the same machine shape, with the same
+datasets and the same GPU. So a config A/B here measures the real scored hardware.
+
+WHAT IT MEASURES. Three levers, one line per arm:
+  1. slots      -- the server slot count (a server relaunch, `--parallel N`).
+  2. concurrency -- K simultaneous requests to one server (a request-side change).
+  3. n_ctx      -- the shared context pool size (a server relaunch, `-c N`).
+The concurrency ladder is the important one. The project ASSUMES N samples cost about
+one sample's wall clock under continuous batching. Nobody has measured that. K=1 vs
+K=4 vs K=8 on an identical prompt measures it directly.
+
+THE PROMPTS ARE SYNTHETIC, AND THAT IS A REAL LIMIT. `kernel-metadata.json` attaches
+three datasets: the carnot code package, the llama.cpp binary, and the GGUF weights.
+None of them carries an ARC transition corpus, and this harness never reads game
+source. So the prompts are fixed synthetic digit rows, trimmed to the measured
+worst-case induce prompt length. These numbers describe SERVING BEHAVIOUR at a
+realistic prompt size. They do NOT describe induction quality.
+"""
+
+import json
+import os
+import shutil
+import subprocess
+import sys
+import time
+import urllib.request
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+
+# Soft budget. Every step checks it before starting. The outer kernel also hard-kills
+# this process a little later, so a wedged server load can never brick the preview run.
+AB_BUDGET_S = float(os.environ.get("CARNOT_AB_BUDGET_S", "2400"))
+DEADLINE = time.time() + AB_BUDGET_S
+# Do not start a session that cannot finish. A cold load of the weights costs minutes,
+# so an aborted session spends the budget and returns nothing. Scaled from the budget,
+# not a fixed number: a fixed 300s reserve blocks every session at a small budget.
+SESSION_MIN_RESERVE_S = min(300.0, AB_BUDGET_S * 0.125)
+
+# Short completions keep the budget for the arms themselves. We compare arms against
+# each other, so an identical small budget is enough. Raise it to study long decodes.
+N_PREDICT = int(os.environ.get("CARNOT_AB_N_PREDICT", "256"))
+
+inp = Path("/kaggle/input")
+_hits = list(inp.rglob("carnot/agentic/arc_competition_agent.py"))
+if _hits:
+    sys.path.insert(0, str(_hits[0].parents[2]))
+
+# Read the shipped defaults from the code the agent runs. Re-typed literals drift, and
+# then the A/B measures a configuration nothing ships. The fallback keeps the harness
+# alive if the code dataset is missing, and the START line names which path was taken.
+SLOTS = 4
+WORST_PROMPT_TOKENS = 22352
+MTP_SCORED = "1"
+HEAD_SUBSTR = "mtp-gemma-4-31B-it"
+CONSTS_SOURCE = "shipped"
+try:
+    from carnot.agentic.arc_executable_world_model import (
+        ARC_LIVE_GENERATOR_MTP_HEAD_SUBSTR as HEAD_SUBSTR,
+    )
+    from carnot.agentic.arc_executable_world_model import (
+        ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT as MTP_SCORED,
+    )
+    from carnot.agentic.arc_executable_world_model import (
+        _INDUCE_WORST_CASE_PROMPT_TOKENS as WORST_PROMPT_TOKENS,
+    )
+    from carnot.agentic.arc_executable_world_model import (
+        _llama_server_slots as _slots_resolver,
+    )
+    from carnot.agentic.arc_executable_world_model import _default_induce_n_ctx
+
+    BASE_CTX = int(_default_induce_n_ctx())
+    # Slots come from the RESOLVER, not the raw constant, so an operator who sets
+    # CARNOT_ARC_LLAMA_SERVER_SLOTS gets a harness that measures the K the pool was
+    # actually sized for. Reading the constant here while `_default_induce_n_ctx()`
+    # reads the resolver is the probe-one-thing-ship-another gap this file already
+    # records having hit once.
+    SLOTS = int(_slots_resolver())
+except Exception as _ce:
+    # The fallback values above are a GUESS at the shipped configuration. They match it
+    # as of 2026-08-11, but nothing keeps them in step. The START line says so out loud,
+    # because an A/B that measures a configuration nothing ships is worse than no A/B.
+    CONSTS_SOURCE = "fallback:" + repr(_ce)
+    BASE_CTX = int(-(-(SLOTS * (WORST_PROMPT_TOKENS + 4096)) // 4096) * 4096)
+
+# Resolve the weights the same way the agent does. The MTP draft head and the main
+# weights both end in `.gguf`, so the head is identified first and then excluded.
+_all_ggufs = list(inp.rglob("*.gguf"))
+_heads = [g for g in _all_ggufs if HEAD_SUBSTR in g.name]
+_mains = [g for g in _all_ggufs if HEAD_SUBSTR not in g.name and "gemma-4-31B" in g.name] or [
+    g for g in _all_ggufs if HEAD_SUBSTR not in g.name
+]
+GGUF = _mains[0] if _mains else None
+MTP_HEAD = _heads[0] if _heads else None
+SERVER_BIN = next(iter(inp.rglob("llama-server")), None)
+
+# Mirror the scored MTP decision: operator intent AND a present head. The A/B must run
+# the configuration the scored path runs, or it measures the wrong server.
+MTP_ON = bool(str(MTP_SCORED) != "0" and MTP_HEAD)
+
+# A short synthetic prompt. It never fills the pool, so the concurrency ladder on this
+# prompt isolates batching throughput from context-pool admission.
+SMALL_PROMPT = ("Row: " + " ".join("1234567890" for _ in range(20)) + "\n") * 2
+
+
+def remaining():
+    return DEADLINE - time.time()
+
+
+def post_json(url, payload, timeout):
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode(),
+        headers={"Content-Type": "application/json"},
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        return resp.status, json.load(resp)
+
+
+def health(port, timeout=5):
+    try:
+        with urllib.request.urlopen(f"http://127.0.0.1:{port}/health", timeout=timeout) as resp:
+            return resp.status == 200
+    except Exception:
+        return False
+
+
+def stop(proc):
+    try:
+        proc.terminate()
+        proc.wait(timeout=20)
+    except Exception:
+        try:
+            proc.kill()
+        except Exception:
+            pass
+
+
+def vram_note(n_ctx, parallel):
+    """Predicted VRAM against measured free VRAM. Reports, never aborts.
+
+    A relaunch that cannot fit still runs. It then fails to become healthy and the
+    session records that. This line tells the reader which of the two happened.
+    """
+    try:
+        from carnot.agentic.arc_executable_world_model import (
+            _VRAM_PER_SLOT_MIB,
+            _predicted_generator_vram_mib,
+        )
+
+        need = _predicted_generator_vram_mib(n_ctx, 0, MTP_ON)
+        if parallel:
+            need += _VRAM_PER_SLOT_MIB * (int(parallel) - int(SLOTS))
+        smi = subprocess.run(
+            ["nvidia-smi", "--query-gpu=memory.free", "--format=csv,noheader,nounits"],
+            capture_output=True,
+            text=True,
+            timeout=20,
+        )
+        free_mb = int((smi.stdout.strip().splitlines() or ["0"])[0].strip())
+        return f"vram_need_mib={need:.0f} vram_free_mib={free_mb} fits={need <= free_mb}"
+    except Exception as exc:
+        return f"vram_check_unavailable={exc!r}"
+
+
+def launch(port, n_ctx, parallel):
+    """Start one llama-server and wait for /health. Return (proc, log) or (None, None)."""
+    args = [
+        str(RUN_SERVER),
+        "-m",
+        str(GGUF),
+        "-ngl",
+        os.environ.get("CARNOT_ARC_NGL", "999"),
+        "-c",
+        str(n_ctx),
+        "--port",
+        str(port),
+        "--host",
+        "127.0.0.1",
+        "--cache-type-k",
+        "q8_0",
+        "--cache-type-v",
+        "q8_0",
+    ]
+    if parallel:
+        args += ["--parallel", str(parallel)]
+    if MTP_ON:
+        args += ["--spec-type", "draft-mtp", "--model-draft", str(MTP_HEAD)]
+    log = open(f"/kaggle/working/ab_server_{port}.err", "w")
+    proc = subprocess.Popen(args, stdout=log, stderr=log)
+    # Cap the wait. One slow cold load must not eat the budget of the later sessions.
+    wait_s = min(420.0, max(30.0, remaining() - 120.0))
+    end = time.time() + wait_s
+    while time.time() < end:
+        if proc.poll() is not None:
+            break
+        if health(port, timeout=3):
+            return proc, log
+        time.sleep(2)
+    stop(proc)
+    try:
+        log.close()
+    except Exception:
+        pass
+    return None, None
+
+
+def n_tokens(port, text):
+    _s, body = post_json(f"http://127.0.0.1:{port}/tokenize", {"content": text}, 180)
+    return len(body.get("tokens") or [])
+
+
+def build_worst_prompt(port):
+    """Synthetic text trimmed to the measured worst-case induce prompt length.
+
+    We trim against the server's own tokenizer. A guessed prompt size tests the wrong
+    thing: a prompt larger than the pool admits fails for a reason we did not choose.
+    """
+    row = "Row: " + " ".join("1234567890" for _ in range(60)) + "\n"
+    text = row * 40
+    count = None
+    try:
+        count = n_tokens(port, text)
+        while count > WORST_PROMPT_TOKENS and len(text) > len(row):
+            text = text[: -len(row)]
+            count = n_tokens(port, text)
+    except Exception as exc:
+        print(f"PREVIEW AB NOTE | tokenize failed, prompt left untrimmed ({exc!r})", flush=True)
+    return text, count
+
+
+def run_arm(name, port, k, prompt):
+    """Fire k identical requests at once. Print one fixed-format result line."""
+    # cache_prompt is OFF on purpose. With it on, a later arm reuses an earlier arm's
+    # prefill and looks faster than it is. Every arm must pay the same prefill cost.
+    payload = {
+        "prompt": prompt,
+        "n_predict": N_PREDICT,
+        "temperature": 0.3,
+        "cache_prompt": False,
+    }
+
+    def one(_i):
+        try:
+            status, body = post_json(f"http://127.0.0.1:{port}/completion", payload, 900)
+            timings = body.get("timings") or {}
+            gen = timings.get("predicted_n")
+            if not isinstance(gen, int):
+                gen = (body.get("usage") or {}).get("completion_tokens")
+            return {
+                "status": status,
+                "stop_type": body.get("stop_type"),
+                "generated": gen,
+            }
+        except Exception as exc:
+            # Read the body. The 500 says the context size was exceeded, which is the
+            # answer. Earlier probes threw that text away and left the cause unknown.
+            try:
+                detail = exc.read().decode("utf-8", "replace")[:160]
+            except Exception:
+                detail = str(exc)[:160]
+            return {
+                "status": f"{type(exc).__name__}:{getattr(exc, 'code', '')}",
+                "generated": 0,
+                "error": detail,
+            }
+
+    t0 = time.time()
+    with ThreadPoolExecutor(max_workers=k) as pool:
+        results = list(pool.map(one, range(k)))
+    wall = time.time() - t0
+    tok = sum((r.get("generated") or 0) for r in results)
+    tok_s = (tok / wall) if wall > 0 else 0.0
+    # Truncation means HTTP 200 that stopped on the token limit well short of the
+    # budget. The shared pool ran out. An HTTP status check cannot see this.
+    truncated = any(
+        r.get("status") == 200
+        and r.get("stop_type") == "limit"
+        and isinstance(r.get("generated"), int)
+        and r["generated"] < N_PREDICT - 8
+        for r in results
+    )
+    # A 200 with no token count reads as tok=0 in the fixed line, which looks like a
+    # failure and is not one. Count those separately so the fixed line is never the
+    # only evidence, and truncation cannot be judged for them either.
+    unknown = sum(
+        1
+        for r in results
+        if r.get("status") == 200 and not isinstance(r.get("generated"), int)
+    )
+    alive = health(port)
+    print(
+        f"PREVIEW AB | arm={name} | wall_s={wall:.2f} | tok={tok} | tok_s={tok_s:.2f} | "
+        f"truncated={truncated} | alive={alive}",
+        flush=True,
+    )
+    print(
+        f"PREVIEW AB DETAIL | arm={name} | k={k} | n_predict={N_PREDICT} | "
+        f"unknown_token_count={unknown} | results={results}",
+        flush=True,
+    )
+    return alive
+
+
+def session(label, port, n_ctx, parallel, ladder):
+    """Launch one server, run its arms in order, then stop it."""
+    if remaining() < SESSION_MIN_RESERVE_S:
+        print(
+            f"PREVIEW AB SKIP | session={label} | reason=budget_exhausted | "
+            f"remaining_s={remaining():.0f} | needed_s={SESSION_MIN_RESERVE_S:.0f}",
+            flush=True,
+        )
+        return
+    print(
+        f"PREVIEW AB SESSION | label={label} | n_ctx={n_ctx} | "
+        f"parallel={parallel if parallel else 'default'} | mtp={MTP_ON} | "
+        f"{vram_note(n_ctx, parallel)}",
+        flush=True,
+    )
+    t0 = time.time()
+    proc, log = launch(port, n_ctx, parallel)
+    if proc is None:
+        print(
+            f"PREVIEW AB SKIP | session={label} | reason=server_never_became_healthy | "
+            f"load_s={time.time() - t0:.0f} | log=/kaggle/working/ab_server_{port}.err",
+            flush=True,
+        )
+        return
+    print(
+        f"PREVIEW AB SESSION READY | label={label} | load_s={time.time() - t0:.0f}",
+        flush=True,
+    )
+    try:
+        worst, worst_tok = build_worst_prompt(port)
+        try:
+            small_tok = n_tokens(port, SMALL_PROMPT)
+        except Exception:
+            small_tok = None
+        print(
+            f"PREVIEW AB PROMPT | label={label} | synthetic_worst_tokens={worst_tok} | "
+            f"target={WORST_PROMPT_TOKENS} | synthetic_small_tokens={small_tok}",
+            flush=True,
+        )
+        for kind, k in ladder:
+            if remaining() < 60:
+                print(
+                    f"PREVIEW AB TIMEOUT | session={label} | reason=budget_exhausted_mid_session",
+                    flush=True,
+                )
+                break
+            alive = run_arm(
+                f"{label}_k{k}_{kind}", port, k, worst if kind == "worst" else SMALL_PROMPT
+            )
+            if not alive:
+                print(
+                    f"PREVIEW AB SESSION DIED | label={label} | last_arm=k{k}_{kind} | "
+                    f"log=/kaggle/working/ab_server_{port}.err",
+                    flush=True,
+                )
+                break
+    finally:
+        stop(proc)
+        try:
+            log.close()
+        except Exception:
+            pass
+
+
+def main():
+    print(
+        f"PREVIEW AB START | budget_s={AB_BUDGET_S:.0f} | constants={CONSTS_SOURCE} | "
+        f"base_n_ctx={BASE_CTX} | default_slots={SLOTS} | "
+        f"worst_prompt_tokens={WORST_PROMPT_TOKENS} | n_predict={N_PREDICT} | "
+        f"mtp={MTP_ON} | gguf={GGUF.name}",
+        flush=True,
+    )
+    print(
+        "PREVIEW AB PROMPT SOURCE | synthetic. No ARC transition corpus is mounted, and "
+        "this harness reads no game source. The numbers below describe serving behaviour "
+        "at a realistic prompt size. They do not describe induction quality.",
+        flush=True,
+    )
+    if CONSTS_SOURCE != "shipped":
+        print(
+            "PREVIEW AB CONFIG WARNING | the carnot code package did not import, so the "
+            "slot count, worst-case prompt size, context pool size and MTP state above are "
+            "HARDCODED GUESSES, not the shipped values. Treat every arm below as measuring "
+            "the hardware, not the shipped configuration.",
+            flush=True,
+        )
+    # Session 1 is the shipped configuration. It carries the full concurrency ladder.
+    # The small-prompt arms isolate batching. The worst-prompt arms add pool pressure.
+    session(
+        "base",
+        8946,
+        BASE_CTX,
+        None,
+        [("small", 1), ("small", 4), ("small", 8), ("worst", 1), ("worst", 4), ("worst", 8)],
+    )
+    # Session 2 raises the slot count. Read this result with care: an explicit
+    # `--parallel N` also DIVIDES the shared pool into N slices, so each slot gets far
+    # fewer cells. A worst-prompt failure here is the divided pool, not the slot count.
+    session(
+        "slots8",
+        8947,
+        BASE_CTX,
+        8,
+        [("small", 1), ("small", 8), ("worst", 1), ("worst", 8)],
+    )
+    # Session 3 doubles the pool at the default slot count. It answers whether pool size
+    # alone removes the worst-prompt pressure seen in session 1.
+    session("ctx2x", 8948, BASE_CTX * 2, None, [("worst", 4), ("worst", 8)])
+    print(f"PREVIEW AB DONE | elapsed_s={AB_BUDGET_S - remaining():.0f}", flush=True)
+
+
+if SERVER_BIN and GGUF:
+    RUN_SERVER = Path("/kaggle/working/llama-server-ab")
+    try:
+        shutil.copy2(SERVER_BIN, RUN_SERVER)
+        os.chmod(RUN_SERVER, 0o755)
+        os.environ["LD_LIBRARY_PATH"] = f"{SERVER_BIN.parent}:" + os.environ.get(
+            "LD_LIBRARY_PATH", ""
+        )
+        main()
+    except Exception as _exc:
+        print(f"PREVIEW AB ERROR | {_exc!r}", flush=True)
+else:
+    print(
+        f"PREVIEW AB ABORT | reason=binary_or_weights_missing | server={SERVER_BIN} | "
+        f"gguf={GGUF}",
+        flush=True,
+    )
+'''
+
 if os.getenv("KAGGLE_IS_COMPETITION_RERUN"):
     # 3) wait for the internal game gateway to come up (canonical pattern)
     subprocess.run(
@@ -785,5 +1230,39 @@ else:
             "FAILED health signal for the scored hardware.",
             flush=True,
         )
+
+    # PREVIEW-MODE GENERATOR CONFIG A/B (2026-08-11). The diagnostics above answer
+    # "does the generator load?". This answers "which server configuration is best?".
+    # It runs AFTER them, so the two never share a port or contend for VRAM.
+    #
+    # WHY IT IS SAFE. The placeholder submission is already on disk, written at the top
+    # of this branch. A/B failure cannot cost a valid submission entry. The harness runs
+    # in its own process with a soft 2400s budget. The hard timeout below is 2580s, so
+    # the harness gets 180s to print its own summary before the kernel kills it.
+    #
+    # RESIDUAL, NAMED ON PURPOSE. The hard kill below stops the harness, not any
+    # llama-server it started. That is acceptable only because this is the LAST step of
+    # the preview run. Add work after this block and you must kill the process group.
+    _ab_t0 = time.time()
+    try:
+        Path("/kaggle/working/preview_ab_harness.py").write_text(PREVIEW_AB_SRC)
+        _ab = subprocess.run(
+            [sys.executable, "/kaggle/working/preview_ab_harness.py"],
+            timeout=2580,
+            check=False,
+        )
+        print(
+            f"PREVIEW AB HARNESS EXITED rc={_ab.returncode} after {time.time() - _ab_t0:.0f}s",
+            flush=True,
+        )
+    except subprocess.TimeoutExpired:
+        print(
+            f"PREVIEW AB HARNESS TIMED OUT after {time.time() - _ab_t0:.0f}s "
+            "(2580s hard kill, 2400s soft budget) -- a server load or an arm wedged. Read "
+            "the PREVIEW AB lines already printed; the arms that completed are still valid.",
+            flush=True,
+        )
+    except Exception as _abe:
+        print(f"PREVIEW AB HARNESS ERROR (non-fatal): {_abe!r}", flush=True)
 
 print("CarnotAgent submission notebook complete.")

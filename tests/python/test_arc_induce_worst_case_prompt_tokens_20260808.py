@@ -45,12 +45,28 @@ def test_default_n_ctx_derives_correctly_from_the_new_worst_case() -> None:
     """The admission arithmetic itself is unchanged code -- this pins that it still derives the
     right pool size from the new constant, so a future refactor of `_default_induce_n_ctx()`
     cannot silently decouple the two."""
-    max_tokens = wm._INDUCE_DEFAULT_MAX_TOKENS
-    slots = wm._LLAMA_SERVER_DEFAULT_SLOTS
-    need = slots * (wm._INDUCE_WORST_CASE_PROMPT_TOKENS + max_tokens)
-    expected_n_ctx = ((need + 4095) // 4096) * 4096
-    assert expected_n_ctx == 106496
-    assert wm._default_induce_n_ctx() == expected_n_ctx
+    # Read the RESOLVER, not the raw constant (2026-08-11, REQ-ARC-WMTE-6253). K became
+    # env-overridable via CARNOT_ARC_LLAMA_SERVER_SLOTS. Against the constant this test
+    # asserted 212992 == 106496 and FAILED the moment an operator used the documented
+    # knob -- a test that punishes the feature it is meant to protect. The env is cleared
+    # here so the assertion pins the SHIPPED default regardless of the caller's shell.
+    monkeypatch = None  # noqa: F841  (documented below: os-level clear, no fixture needed)
+    import os
+
+    prior = os.environ.pop("CARNOT_ARC_LLAMA_SERVER_SLOTS", None)
+    prior_ctx = os.environ.pop("CARNOT_ARC_INDUCE_N_CTX", None)
+    try:
+        max_tokens = wm._INDUCE_DEFAULT_MAX_TOKENS
+        slots = wm._llama_server_slots()
+        need = slots * (wm._INDUCE_WORST_CASE_PROMPT_TOKENS + max_tokens)
+        expected_n_ctx = ((need + 4095) // 4096) * 4096
+        assert expected_n_ctx == 106496
+        assert wm._default_induce_n_ctx() == expected_n_ctx
+    finally:
+        if prior is not None:
+            os.environ["CARNOT_ARC_LLAMA_SERVER_SLOTS"] = prior
+        if prior_ctx is not None:
+            os.environ["CARNOT_ARC_INDUCE_N_CTX"] = prior_ctx
 
 
 def test_new_worst_case_exceeds_the_old_per_slot_budget() -> None:

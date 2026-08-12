@@ -1,0 +1,141 @@
+{
+  "experiment": "experiment_6251_best_of_n_induction",
+  "title": "Best-of-N induction sampling selected by VALID fidelity",
+  "run_date": "2026-08-12T03:19:44Z",
+  "roster": [
+    "cn04",
+    "s5i5",
+    "g50t",
+    "ls20"
+  ],
+  "n_samples_per_game": 4,
+  "budget_llm_calls_per_sample": 1,
+  "per_game_results": [
+    {
+      "game": "cn04",
+      "n_samples": 4,
+      "parallel_wall_s": 562.0,
+      "per_sample_wall_s": [
+        465.5,
+        454.1,
+        501.0,
+        560.7
+      ],
+      "slowest_sample_wall_s": 560.7,
+      "sum_sample_wall_s": 1981.3000000000002,
+      "chosen_arm": "sample3",
+      "chosen_final_valid_fidelity": 0.7468,
+      "baseline_n1_valid_fidelity": 0.469,
+      "n_samples_produced_candidate": 4,
+      "sample_errors": [],
+      "n_distinct_sources": 4,
+      "generator_seed_env_set": false,
+      "best_of_n_held": 0.5265,
+      "baseline_n1_held": 0.4028,
+      "batching_efficiency": 3.525
+    },
+    {
+      "game": "s5i5",
+      "n_samples": 4,
+      "parallel_wall_s": 637.4,
+      "per_sample_wall_s": [
+        574.3,
+        636.2,
+        559.0,
+        434.1
+      ],
+      "slowest_sample_wall_s": 636.2,
+      "sum_sample_wall_s": 2203.6,
+      "chosen_arm": "sample0",
+      "chosen_final_valid_fidelity": 0.85,
+      "baseline_n1_valid_fidelity": 0.85,
+      "n_samples_produced_candidate": 4,
+      "sample_errors": [],
+      "n_distinct_sources": 4,
+      "generator_seed_env_set": false,
+      "best_of_n_held": 0.0,
+      "baseline_n1_held": 0.0,
+      "batching_efficiency": 3.457
+    },
+    {
+      "game": "g50t",
+      "n_samples": 4,
+      "parallel_wall_s": 532.7,
+      "per_sample_wall_s": [
+        513.9,
+        463.0,
+        498.4,
+        531.5
+      ],
+      "slowest_sample_wall_s": 531.5,
+      "sum_sample_wall_s": 2006.8,
+      "chosen_arm": "sample2",
+      "chosen_final_valid_fidelity": 0.345,
+      "baseline_n1_valid_fidelity": 0.156,
+      "n_samples_produced_candidate": 4,
+      "sample_errors": [],
+      "n_distinct_sources": 4,
+      "generator_seed_env_set": false,
+      "best_of_n_held": 0.5952,
+      "baseline_n1_held": 0.6119,
+      "batching_efficiency": 3.767
+    },
+    {
+      "game": "ls20",
+      "n_samples": 4,
+      "parallel_wall_s": 644.7,
+      "per_sample_wall_s": [
+        630.7,
+        569.1,
+        643.6,
+        520.8
+      ],
+      "slowest_sample_wall_s": 643.6,
+      "sum_sample_wall_s": 2364.2,
+      "chosen_arm": "sample0",
+      "chosen_final_valid_fidelity": 0.7847,
+      "baseline_n1_valid_fidelity": 0.7847,
+      "n_samples_produced_candidate": 4,
+      "sample_errors": [],
+      "n_distinct_sources": 4,
+      "generator_seed_env_set": false,
+      "best_of_n_held": 1.0,
+      "baseline_n1_held": 1.0,
+      "batching_efficiency": 3.667
+    }
+  ],
+  "n_games_comparable": 4,
+  "n_games_best_of_n_improved": 1,
+  "pooled_best_of_n_held": 0.5304,
+  "pooled_n1_baseline_held": 0.5037,
+  "mean_batching_efficiency": 3.604,
+  "min_distinct_sources_across_games": 4,
+  "batching_efficiency_note": "sum of CONCURRENTLY-measured per-sample wall-clock divided by the concurrent wall-clock. CAVEAT from adversarial review: this ratio approaches N whenever the samples merely OVERLAP in time, even if continuous batching made each one N times slower than a lone sample. It measures overlap, NOT speed-up against a true one-at-a-time baseline. A real speed-up figure needs a sequential arm, which this run does not execute. Do not read it as N-for-the-price-of-one.",
+  "gate_condition": "pooled best-of-N held fidelity > pooled N=1 baseline on all roster games",
+  "gate_met": true,
+  "sample_size_note": "4 games. Far below the project's n>=30 bar for a percentage-point claim. A directional signal only.",
+  "not_the_retired_ranking_lever": "the retired A/Bs reordered perceptual click candidates with a learned or hand scorer; this selects among generated PROGRAMS by execution-grounded VALID fidelity, which is a measurement rather than a preference model",
+  "prior_failures": [
+    {
+      "experiment_id": "exp5722",
+      "verdict": "floor_persists_stronger_generator_no_movement_delta_0.0",
+      "addressed_by": "that tested a BIGGER model at one sample. This tests MORE samples at the same model, which is a different axis and is untested."
+    }
+  ],
+  "retire_if_same_verdict": false,
+  "solve_provenance": "development_proxy",
+  "arc_solve_claim": false,
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_principle": "held-out change_fidelity is an oracle-distinct graded dynamics score, not the executable win-condition oracle",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": {
+    "generator": "unsloth/gemma-4-31B-it-qat-GGUF",
+    "quant": "UD-Q4_K_XL",
+    "kv_cache_quant": "q8_0",
+    "port": 8940
+  },
+  "random_seed": 6251,
+  "honest_verdict": "complete_best_of_n_gate_met_1_of_4_improved_pooled_0.5304_vs_n1_0.5037_batching_eff_3.604",
+  "duration_s": 2393.275,
+  "reproducibility_checksum": "2e19b904bf426472ce1579197866e4510285c3853387d8d0df3a542a5d8bda67"
+}
