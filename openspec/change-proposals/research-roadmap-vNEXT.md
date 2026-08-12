@@ -1,360 +1,364 @@
-# Research Roadmap vNEXT: Contract-Guarded Energy and Certified Self-Learning
+# Research Roadmap V546: Certified Constraint Evolution and Causal Influence
 
-**Milestone:** `2026.08.545`
+**Milestone:** `2026.08.546`
 **Date:** 2026-08-12
-**Experiments:** Exp6323-Exp6336
-**Phases:** 4
-**Primary requirements:** FR7, FR11, FR12
-**North-star constraint:** use exact observable contracts to guard real local-model work, then improve a versioned factor policy online with a certificate and rollback
+**Status:** Proposed
+**Task range:** Exp6337-Exp6349
+**Execution file:** `research-roadmap-next.yaml`
 
 ## Milestone thesis
 
-V544 closed the model-local representation branch. All three required GGUF
-models failed the causal surface controls. Carnot must not retry hidden-state,
-activation, prefix-state, or pooled representation scoring. V545 moves the
-energy boundary to an observable restricted policy program. An exact compiler
-turns each policy and contract into local factors. The energy is the number
-and weight of unsatisfied contract clauses. A verified fallback handles every
-rejected or invalid policy. The exact guard is an oracle and is reported as
-such. The research question is whether bounded energy-guided candidate search
-adds utility over raw generation, reject-only filtering, and fallback alone.
+Carnot has an exact constraint substrate and a positive factor-local learning
+result. It does not yet have a useful constrained generator, an anytime-valid
+release process, or evidence that its ARC route changes live actions. V546
+tests these three boundaries.
 
-V544 also produced a positive same-domain learner. It versions factor-local
-state, proposes updates from exact feedback, and rolls back safely. V545 adds
-two missing release controls. Exact minimized counterexamples become candidate
-factor changes. An anytime-valid certificate controls optional stopping,
-restarts, and repeated release decisions. The GGUF weights remain frozen. The
-protected final partition is opened once.
+The milestone gives constrained generation one final, changed-technique
+attempt. The attempt acts during decoding. It uses parser state and SMT prefix
+feasibility. A semantic-diversity canary must pass before a held utility run.
+The branch retires if it repeats the V545 null.
 
-The ARC branch remains a no-solve branch. V544 proved that a target-licensed
-route can run as a live shadow. It did not show that the route changes a legal
-action. V545 first measures counterfactual influence on the agent's own
-candidates. It then permits one default-off A/B test that can reorder only
-candidates already produced by the live E3 policy. It cannot inspect game
-source, hidden state, an offline breadth-first search, or a per-game adapter.
-It cannot claim or register a level solve.
+The main scientific line is continuous self-learning. V546 adds an e-value
+release ledger and evidence-carrying factor lifecycle. It then runs one sealed,
+chronological learning trial. The base GGUF weights stay frozen. Exact factors
+keep release authority.
 
-One hardware task is allowed. A dated 2026-08-11 receipt records a physical
-GateMate power cycle. That receipt permits exactly one non-destructive
-`openFPGALoader -c dirtyJtag --detect` command. The milestone permits no flash,
-synthesis, place and route, or timing task. KV260 is terminal. PolarFire stays
-opportunistic. No other hardware task is scheduled.
+The ARC line stays narrow. It measures whether a target-licensed route changes
+the live agent's own action order. It does not solve a game for the agent. It
+makes no game or level solve claim.
 
-## What V544 proved
+## What V545 proved
 
-| Branch | V544 evidence | V545 consequence |
+| Evidence | Result | V546 consequence |
 |---|---|---|
-| Milestone boundary | Exp6322 closed the declared scientific branches. It also recorded a broad `pytest` exit 3 and determination-lint exit 1. | Exp6323 preserves both the scientific terminal states and the command failures. It does not rewrite them as success. |
-| Source refresh | Exp6311 ended `complete_null` with zero accepted post-marker sources. | Exp6324 scans only after the V545 planner marker. A zero accepted delta is valid. |
-| Model-local representation | Exp6312 set readiness to 0.0. Every required model failed at least one causal or shortcut control. Exp6314, Exp6315, and Exp6317 did not run. | Close the entire hidden/model-local state lane. No hidden states, activations, embeddings, prefix trajectories, text-energy scorers, or pooled rescue appear in V545. |
-| Exact fixture | Exp6313 shipped an exact code-safety fixture and exact oracle. | Reuse its exactness patterns for a new bounded policy DSL and contract compiler. Do not treat an exact oracle as a learned verifier. |
-| Continuous self-learning | Exp6318 and Exp6319 ended positive. They shipped versioned factor-local state, feedback-directed search, protected validation, and exact rollback. | Add exact counterexample proposals and anytime-valid release certificates on a fresh stream. Stay same-domain and keep model weights frozen. |
-| Learning safety | Exp6320 passed safety attacks. It made no utility claim. | Preserve restart, poison, reversal, lineage, and rollback attacks. Add alpha-spending and certificate-reset attacks. |
-| ARC live path | Exp6321 set readiness to 1.0 for a target-licensed live shadow. It used live-agent self-discovery, claimed no solve, and made no registry update. | Test causal action influence in a default-off sandbox. Do not solve a public game or reuse the retired provenance patch. |
+| Exp6324 post-marker source freeze | `complete_null`; no accepted source delta in its window | Start a new dated source window. Do not widen scope from old product claims. |
+| Exp6325 GateMate detect | `blocked_detect_failed`; one command failed and no retry ran | Run no unchanged GateMate task. Require a new physical receipt before any future board command. |
+| Exp6326 restricted policy compiler | Ready score `1.0`; bounded semantics and verified fallbacks passed | Reuse the DSL, exact compiler, and fallback. Do not replace them. |
+| Exp6327 guarded synthesis | `complete_null`; exact-factor search did not add value | Close post-hoc energy search. Test only an incremental decoding method with a fail-fast canary. |
+| Exp6328 blind integrity audit | `complete_ready`; safety passed but utility promotion stayed zero | Keep the blind checker. Do not count exact-oracle safety as model utility. |
+| Exp6329 held-family A/B | `complete_null`; every search delta over guard-only was zero | Require a new causal mechanism and retire it if the held result is again null. |
+| Exp6318 and Exp6319 carry-forward | Positive factor-local learning and feedback-directed search | Add release statistics, lifecycle control, and prospective chronology. |
+| Exp6320 carry-forward | Safety audit passed while utility promotion stayed blocked | Reuse rollback and protected-validation attacks. Add e-process and compaction attacks. |
+| Exp6321 carry-forward | Target-licensed live ARC shadow reached the live route without solve credit | Test action influence only. Keep the route default-off. |
 
-## The three largest gaps to the PRD vision
+Exp6323 did not produce an artifact after three hard wall-clock failures. The
+transition work is therefore split and bounded in Exp6337. Exp6330-Exp6336
+were proposal-only identifiers in the old design. They did not enter the V545
+conductor queue. V546 starts at Exp6337 so those identities are not reused.
 
-### Gap 1: no useful live correctness boundary after the state lane closed
+## The three largest gaps
 
-FR7 and FR12 require deterministic verification around real model behavior.
-The learned model-state route is now closed. Carnot needs an observable object
-that a model can propose and an exact verifier can check. V545 uses a bounded,
-typed policy DSL over finite domains. The exact factor energy gives a clear
-reason for rejection. A hash-pinned verified fallback keeps the system safe.
+### Gap 1: Exact guards do not yet improve generation
 
-### Gap 2: the positive learner lacks a sequential release certificate
+The exact policy compiler is sound. The V545 search method did not improve a
+single held cell. Carnot still needs evidence that constraints can change the
+generator before a complete candidate exists.
 
-FR11 requires continuous improvement without silent regression. Exp6318 and
-Exp6319 proved a bounded same-domain update mechanism. They did not prove that
-repeated peeking, optional stopping, restarts, or many candidate releases keep
-the declared error rate. V545 adds an anytime-valid release ledger, alpha
-spending, immutable predecision receipts, retention tests, and byte-exact
-rollback.
+V546 builds incremental parser state and JIT SMT prefix checks. It first asks
+whether they create more unique, valid program semantics at a matched budget.
+Only a positive canary opens the held utility trial.
 
-### Gap 3: the ARC shadow is reachable but has no measured action influence
+### Gap 2: Positive self-learning lacks a release process and lifecycle
 
-The live ARC agent can compute the target-licensed route, but the route has not
-caused a legal action difference. V545 measures influence before it measures
-utility. A clean null result is valuable. It tells us that the route is present
-but behaviorally inert. Any A/B test stays default-off and uses only the live
-agent's own attempts and candidates.
+The V544 learner can update factor-local state. It lacks an anytime-valid
+certificate under repeated looks. It also lacks a safe method to merge or
+delete stale factors. Without lifecycle control, constraint memory can grow
+without bound and preserve obsolete rules.
 
-## Research delta used by this roadmap
+V546 binds each factor to evidence, rationale, exact replay, and lineage. An
+e-process controls release under optional stopping. A prospective trial then
+tests useful, safe evolution over chronological events.
 
-- Self-Evolving Agents with Anytime-Valid Certificates (`arXiv:2607.00871`)
-  motivates a versioned learner, an explicit error budget, and release gates
-  that remain valid under optional stopping. V545 keeps the foundation model
-  frozen and treats the paper's limited empirical scale as a caveat.
-- SEVerA (`arXiv:2603.25111`) motivates first-order output contracts,
-  rejection sampling, and a verified fallback. V545 uses a smaller bounded DSL
-  and exact local contracts. It does not copy a paper result into a Carnot
-  claim.
-- VASO (`arXiv:2606.05395`) motivates converting exact model-checker
-  counterexamples into update proposals while the foundation model stays
-  frozen. V545 accepts only minimized exact counterexamples.
-- MARCH (`arXiv:2603.24579`) motivates information asymmetry between a solver
-  and a blind checker. The checker receives the canonical contract, normalized
-  candidate semantics, and exact evidence. It never receives the solver's
-  rationale or claimed verdict.
-- Loss Smoothing for Continual Adaptation (OpenReview `pUqcOkV69j`) motivates a
-  stability control. It is a baseline, not the release authority.
-- Optimal KAN abstractions, energy-guided text sampling, pairwise text
-  verifiers, and external learned energy remain deferred. They match retired
-  KAN, masked-model, best-of-N text scorer, or external-scorer lanes.
+### Gap 3: ARC routing is reachable but not causally useful
 
-The full source disposition is in `research-references.md` under the V545
+The target-licensed route can run on live-agent evidence. Carnot has not shown
+that the route changes which action the live agent takes next. Reachability is
+not influence.
+
+V546 first uses counterfactual replay to pre-register eligible windows. It then
+runs a default-off A/B on fresh live attempts. The endpoint is action-order and
+exact transition quality. Solve credit remains out of scope.
+
+## Research findings used in V546
+
+The full dated search record is in `research-references.md` under the V546
 planner marker.
 
-## Target architecture
+| Finding | Experiment use |
+|---|---|
+| Parser-state bias correction, arXiv:2608.10137 | Exp6339 and Exp6340 use incremental parser state. |
+| LeJIT, HotNets 2025 | Exp6339 adds JIT SMT prefix feasibility. |
+| NxN E-valuation, arXiv:2608.06621 | Exp6342 builds the anytime release ledger. |
+| Catastrophic Remembering, arXiv:2608.11095 | Exp6343 adds evidence and rationale to factor lifecycle decisions. |
+| Verification-cost evaluation, arXiv:2608.08709 | Exp6340, Exp6341, Exp6345, and Exp6348 report exact-check cost. |
+
+## Architecture
 
 ```text
-finite task + canonical contract
-              │
-              ▼
-     restricted typed policy DSL ◄──── local GGUF candidate generator
-              │                         Qwen3.6 / Gemma-31B / Gemma-26B
-              ▼
-      parser + normalized semantics
-              │
-       ┌──────┴───────────────────┐
-       ▼                          ▼
- exact clause factors       blind integrity checker
- E = weighted violations    contract + semantics + evidence only
-       │                          │
-       └──────────┬───────────────┘
-                  ▼
-        accept policy or invoke
-        hash-pinned verified fallback
-                  │
-        held-family prospective A/B
-
-continuous self-learning:
-fresh event ─► immutable predecision ─► exact outcome/counterexample
-    │                                         │
-    │                              minimized factor proposal
-    │                                         │
-    └──── frozen champion ◄── candidate version + parent hash
-                                  │
-                       anytime-valid release ledger
-                       alpha spend + retention gate
-                                  │
-                         next-boundary release
-                                  │
-                        monitor ─► exact rollback
-
-ARC no-solve branch:
-live E3 own attempts ─► existing candidate set ─► default-off route reorder
-        │                                              │
-        └──── control action unchanged ─► legal influence A/B ─► no solve
+                       frozen local GGUF model
+                      /         |          \
+          Qwen3.6-35B-A3B   Gemma-4-31B   Gemma-4-26B-A4B
+                      \         |          /
+                       token / action proposals
+                                  |
+                 +----------------+----------------+
+                 |                                 |
+       restricted policy path               live ARC path
+                 |                                 |
+       parser and lexer state               own attempt history
+                 |                                 |
+       JIT SMT prefix feasibility          target-licensed route
+                 |                                 |
+       exact policy contract guard         counterfactual action order
+                 |                                 |
+       verified fallback                    default-off action A/B
+                 |                                 |
+                 +---------------+-----------------+
+                                 |
+                         exact outcome evidence
+                                 |
+                     minimized counterexample
+                                 |
+              evidence-carrying factor proposal
+                                 |
+           versioned factor graph and rollback state
+                                 |
+              anytime e-value release certificate
+                                 |
+                 release / retain / merge / delete
 ```
 
-## Phase 0: exact transition, source freeze, and hardware continuity
+The exact compiler, exact outcome checker, and ARC transition checker are
+oracles. They can prove contract results. They do not count as learned
+verification. The GGUF models can propose programs, factors, and actions. They
+cannot approve their own output.
 
-### Exp6323: V544-to-V545 terminal transition
+## Phase 0: Evidence boundary and transition
 
-Consume Exp6322 and every V544 artifact. Preserve the failed broad validation
-commands. Validate 14 task IDs, deliverables, dependencies, structured gates,
-prior-failure entries, Codex routing, model policy, prompt endings, and
-protected files. Do not activate the staged roadmap.
+### Exp6337 - Bounded V545 terminal handoff
 
-**Deliverable:** `results/experiment_6323_v545_terminal_transition.json`
+Classify the seven queued V545 tasks and their terminal records. Preserve the
+missing Exp6323 artifact as a failure receipt. Record that Exp6330-Exp6336 were
+never queued. Validate the 13 V546 task identities, gates, and deliverables.
 
-### Exp6324: post-marker source and scope freeze
+**Deliverable:** `results/experiment_6337_v546_bounded_terminal_handoff.json`
 
-Search only after the V545 reference marker. Freeze the restricted-policy,
-exact-contract, blind-checker, anytime-certificate, counterexample-update, ARC
-no-solve, and hardware contracts. A zero accepted source delta is terminal.
+### Exp6338 - New source-window scope freeze
 
-**Deliverable:** `results/experiment_6324_v545_post_marker_source_scope_freeze.json`
+Search only after the V546 marker. Record accepted, duplicate, watch-only,
+inaccessible, and excluded sources. Freeze the three scientific lanes and the
+no-hardware boundary.
 
-### Exp6325: GateMate dated-receipt single detect
+**Deliverable:** `results/experiment_6338_v546_post_marker_source_scope_freeze.json`
 
-Validate the 2026-08-11 physical power-cycle receipt. Run exactly one
-non-destructive DirtyJTAG detect. Record stdout, stderr, exit code, USB/JTAG
-identity, and before/after state. Stop after the detect for every outcome.
+## Phase 1: Prefix-constrained generation
 
-**Deliverable:** `results/experiment_6325_gatemate_dated_receipt_single_detect.json`
+### Exp6339 - Incremental prefix enforcement substrate
 
-## Phase 1: exact contract-guarded policy energy
+Extend the restricted policy DSL with deterministic parser states. Add a JIT
+SMT prefix-feasibility interface. Prove prefix soundness and completion
+parity against the existing exact compiler. This task makes no LLM call.
 
-### Exp6326: restricted policy DSL and exact contract compiler
+**Deliverable:** `results/experiment_6339_incremental_prefix_enforcement_substrate.json`
 
-Build a bounded typed policy language for finite state-action tasks. Normalize
-every program. Compile the canonical contract into exact local factors. Check
-the full finite domain with enumeration or Z3. Ship a hash-pinned verified
-fallback and adversarial fixtures for vacuous contracts, parser defaults,
-fallback laundering, validator mutation, and hash swaps.
+### Exp6340 - Parser and JIT semantic-diversity canary
 
-**Deliverable:** `results/experiment_6326_restricted_policy_contract_compiler.json`
+Use all three mandatory local GGUF models. Compare unconstrained decoding,
+grammar masking, parser-state correction, and JIT prefix enforcement. Freeze
+the token, call, wall-time, and checker budgets. The endpoint is the count of
+unique valid normalized semantics. Utility is secondary and cannot open the
+next task by itself.
 
-### Exp6327: three-family guarded policy synthesis, gated on Exp6326 readiness=1
+**Deliverable:** `results/experiment_6340_parser_jit_semantic_diversity_canary.json`
 
-Use all three required local GGUF models to propose restricted policies. Keep
-calls and tokens matched. Compare raw single generation, reject-only filtering,
-guard plus fallback, and bounded exact-factor-energy candidate search. The
-exact guard is an oracle. Utility is held exact task reward after all fallback
-costs.
+### Exp6341 - Prospective held-family prefix utility A/B
 
-**Deliverable:** `results/experiment_6327_three_family_guarded_policy_synthesis.json`
+Run only if Exp6340 reports `semantic_diversity_gain_score == 1.0`. Seal new
+held families before generation. Compare exact guard plus fallback against
+the best pre-declared prefix method. Require positive fallback-adjusted utility
+with zero accepted violations. Retire this constrained-generation scope if it
+repeats the V545 null.
 
-### Exp6328: blind-obligation integrity audit
+**Deliverable:** `results/experiment_6341_prospective_prefix_utility_ab.json`
 
-Rebuild contract and policy evidence independently. The checker receives no
-solver narrative or claimed label. Attack vacuous specifications, parser
-defaults, fallback laundering, spec or validator mutation, test deletion,
-hash swaps, label swaps, pair swaps, evaluator swaps, and budget mismatches.
-Safety-only success cannot promote utility.
+## Phase 2: Anytime-certified continuous self-learning
 
-**Deliverable:** `results/experiment_6328_blind_guard_integrity_audit.json`
+### Exp6342 - Anytime e-value release ledger
 
-### Exp6329: prospective held-family guarded-policy A/B, gated on Exp6328 integrity=1
+Implement an immutable e-process for repeated factor-update decisions. Test
+the null, alternatives, optional stopping, restarts, duplicate evidence, and
+selection after observation. Keep the exact outcome checker as the oracle.
+This task makes no LLM call.
 
-Seal new contract families before generation. Run all three local GGUF models.
-Compare the four preregistered arms with matched budgets. Report every model
-and family separately. Headline value requires higher held exact utility than
-guard plus fallback, no contract violation, and no failed required command.
+**Deliverable:** `results/experiment_6342_anytime_evalue_release_ledger.json`
 
-**Deliverable:** `results/experiment_6329_prospective_held_family_guarded_policy_ab.json`
+### Exp6343 - Evidence-carrying factor lifecycle
 
-## Phase 2: certified continuous self-learning
+Give each learned factor a rationale, exact counterexample, replay witness,
+lineage, and retention set. Permit merge or deletion only when exact replay,
+protected retention, and rollback checks pass. Bound memory growth. This is a
+Tier 4 structural self-learning task. It makes no LLM call.
 
-### Exp6330: anytime-valid release certificate engine
+**Deliverable:** `results/experiment_6343_evidence_carrying_factor_lifecycle.json`
 
-Add an independent sequential release ledger to the versioned factor policy.
-Test null streams, optional stopping, repeated candidates, alpha spending,
-restart identity, retention, degradation, and exact rollback. This task does
-not need an LLM and can run even if Phase 1 is null.
+### Exp6344 - Counterexample-to-factor proposal calibration
 
-**Deliverable:** `results/experiment_6330_anytime_valid_release_certificate_engine.json`
+Use all three mandatory local GGUF models. Give each model only the changed
+factor, minimized counterexample, and permitted edit schema. Compare random
+valid edits, repeated sampling, stability-regularized proposals, and
+counterexample-directed proposals. The exact checker supplies all labels.
 
-### Exp6331: exact counterexample-to-factor update calibration
+**Deliverable:** `results/experiment_6344_counterexample_factor_proposal_calibration.json`
 
-Use all three local GGUF models on a development stream. For rejected bounded
-policies, minimize exact counterexamples and convert them into candidate factor
-changes. Compare counterexample proposals with repeated sampling and a smoothed
-update control under matched budgets. Do not expose protected validation.
+### Exp6345 - Prospective chronological certified evolution trial
 
-**Deliverable:** `results/experiment_6331_counterexample_factor_update_calibration.json`
+Run only if the e-value ledger, lifecycle, and proposal calibration are ready.
+Seal the event order and protected validation once. Compare a frozen champion,
+the V544 fixed lifecycle, and certified evidence-carrying evolution. Report
+future exact yield, rollback, factor growth, verification cost, and
+catastrophic-remembering events.
 
-### Exp6332: prospective certified continuous self-learning A/B, gated on Exp6330 and Exp6331 readiness=1
+**Deliverable:** `results/experiment_6345_prospective_certified_factor_evolution_ab.json`
 
-Run a fresh sealed chronological stream. Compare a frozen champion, the fixed
-Exp6318/Exp6319 learner, and the counterexample-guided learner with the
-anytime-valid release certificate. Persist predictions before outcomes. Open
-the final protected partition once. Measure future utility, retention, release
-rate, false release, cost, and rollback. Keep GGUF weights frozen.
+### Exp6346 - Independent certificate and lifecycle safety audit
 
-**Deliverable:** `results/experiment_6332_prospective_certified_continuous_learning_ab.json`
+Attack optional stopping, e-value reset, duplicated evidence, selected nulls,
+rationale laundering, witness swaps, unsafe factor merge, harmful deletion,
+protected-set reuse, restart faults, and rollback failure. Safety success
+cannot promote utility. This task makes no LLM call.
 
-### Exp6333: independent certificate and learning safety audit
+**Deliverable:** `results/experiment_6346_certified_factor_evolution_safety_audit.json`
 
-Audit the certificate engine and the calibrated proposer. Inspect Exp6332 if
-it ran. Attack optional stopping, alpha reset, restart, duplicate evidence,
-future leakage, protected-set reuse, counterexample fabrication, factor
-misattribution, lineage swaps, poison, reversal, forgetting, and rollback.
-This is a safety audit and cannot promote utility.
+## Phase 3: ARC causal influence and reconciliation
 
-**Deliverable:** `results/experiment_6333_certified_learning_safety_audit.json`
+### Exp6347 - ARC counterfactual action-influence preflight
 
-## Phase 3: live ARC influence and capstone
+Replay the live agent's own Exp6321 attempts. Compare action rankings with the
+target-licensed route on and off. Pre-register only windows where the route can
+change a legal next action without hidden game source, offline BFS, or a
+per-game adapter. Make no solve claim.
 
-### Exp6334: ARC counterfactual action-influence preflight
+**Deliverable:** `results/experiment_6347_arc_action_influence_preflight.json`
 
-Start from Exp6321's target-licensed live shadow. Use only the live agent's own
-attempts and already-generated candidates. Measure whether a legal route score
-can cause a nontrivial candidate ordering change above the A/A noise floor.
-Make no shipped action change. Claim no solve and update no registry entry.
+### Exp6348 - Default-off live ARC action-influence A/B
 
-**Deliverable:** `results/experiment_6334_arc_counterfactual_action_influence_preflight.json`
+Run only if Exp6347 reports `arc_action_influence_eligible_score == 1.0`. Use
+fresh live attempts from mandatory local GGUF models. Compare route off and
+route on at matched budgets. Measure legal action-order changes, exact
+transition quality, and verification cost. Do not update the solve registry.
 
-### Exp6335: default-off live E3 causal-influence A/B, gated on Exp6334 eligibility=1
+**Deliverable:** `results/experiment_6348_arc_default_off_action_influence_ab.json`
 
-Run a prospective control/shadow A/B on fresh live-agent windows. The shadow
-may reorder only existing E3 candidates. It cannot create actions, inspect
-hidden state or game source, run an offline solver, or use a per-game adapter.
-Measure legal action support and first-useful-action efficiency. Do not claim a
-level solve. Do not update the solve registry.
+### Exp6349 - V546 adversarial capstone
 
-**Deliverable:** `results/experiment_6335_arc_default_off_live_causal_influence_ab.json`
+Recompute every dependency and structured gate from terminal artifacts. Check
+model receipts, oracle boundaries, prior-failure retirement, ARC provenance,
+hardware non-use, tests, spec coverage, and operations documents. Reconcile
+the roadmap, archive, status, changelog, and traceability record.
 
-### Exp6336: V545 adversarial capstone and reconciliation
-
-Classify every branch exactly. Recheck retired-scope discipline, contract and
-certificate hashes, model receipts, ARC provenance, hardware command count,
-protected files, tests, and documentation. Update OpenSpec, traceability,
-status, changelog, conductor log, and the next architecture state. Do not hide
-null, skipped, blocked, flagged, or failed commands.
-
-**Deliverable:** `results/experiment_6336_v545_adversarial_capstone.json`
+**Deliverable:** `results/experiment_6349_v546_adversarial_capstone.json`
 
 ## Dependency graph
 
 ```text
-Exp6323 transition
-  ├── Exp6324 source/scope freeze
-  │     ├── Exp6326 contract compiler
-  │     │     └── Exp6327 guarded synthesis [6326 ready]
-  │     │             └── Exp6328 blind integrity audit
-  │     │                     └── Exp6329 prospective A/B [6328 ready]
-  │     ├── Exp6330 anytime certificate
-  │     ├── Exp6331 counterexample calibration
-  │     │     └── Exp6332 certified CSL A/B [6330 ready AND 6331 ready]
-  │     └── Exp6334 ARC influence preflight
-  │             └── Exp6335 live influence A/B [6334 eligible]
-  ├── Exp6325 GateMate single detect
-  └── Exp6336 capstone depends on every declared task
-
-Exp6333 safety audit depends on Exp6330 and Exp6331.
-It inspects Exp6332 if the gated task ran.
+Exp6337 bounded handoff
+   |
+Exp6338 source freeze
+   |--------------------------|--------------------------|
+   v                          v                          v
+Exp6339 prefix substrate   Exp6342 e-value ledger    Exp6347 ARC preflight
+   |                          |                          |
+Exp6340 diversity canary   Exp6343 factor lifecycle     | gate = 1.0
+   | gate = 1.0                |                          v
+Exp6341 held utility A/B   Exp6344 proposal test     Exp6348 live A/B
+                              |
+                    all three readiness gates = 1.0
+                              |
+                           Exp6345
+                              |
+                           Exp6346
+                              |
+        Exp6341 ----------- Exp6349 <----------- Exp6348
 ```
 
-## Hardware and model requirements
+Exp6349 consumes terminal or structured skip artifacts. A failed gate is an
+expected scientific result. It must not trigger an ungated replacement task.
 
-| Resource | Requirement | Fail-closed behavior |
+## Pre-registered gates and retirement rules
+
+| Downstream task | Gate | Meaning |
 |---|---|---|
-| Local models | `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF` in every LLM experiment | A missing required model blocks that declared model cell. No legacy model may replace a headline cell. |
-| Tokenizer and runtime | Canonical llama.cpp GGUF path with each file's embedded tokenizer | Do not use Hugging Face `AutoTokenizer`. Record file, revision, quantization, tokenizer, placement, and memory receipts. |
-| GPUs | Two local NVIDIA GPUs for bounded sequential model cells | Load one declared model placement at a time when needed. Prove memory release. CPU tiny-model runs are smoke tests only. |
-| GateMate | Dated 2026-08-11 power-cycle receipt and one DirtyJTAG detect | Run exactly one `openFPGALoader -c dirtyJtag --detect`. Stop after the command. No flash, synthesis, place and route, or timing. |
-| KV260 | None | Terminal. Do not schedule a probe or bring-up task. |
-| PolarFire | None | Opportunistic only. Do not make it a milestone dependency. |
-| Extropic or other thermodynamic hardware | None | No authenticated local substrate exists. Software results cannot become hardware claims. |
+| Exp6340 | Exp6339 `prefix_enforcement_substrate_ready_score == 1.0` | Prefix checks are sound and complete before model use. |
+| Exp6341 | Exp6340 `semantic_diversity_gain_score == 1.0` | A prefix method improved unique valid semantics at matched cost. |
+| Exp6345 | Exp6342, Exp6343, and Exp6344 readiness scores all equal `1.0` | Release statistics, lifecycle, and proposals are independently ready. |
+| Exp6348 | Exp6347 `arc_action_influence_eligible_score == 1.0` | The live route can affect a legal action before fresh A/B work. |
 
-## Promotion rules
+Exp6341 declares Exp6327 and Exp6329 as prior nulls. If Exp6341 reaches the
+same terminal null, the scope must enter `ops/exclusion_manifest.yaml`. Future
+work must change the model substrate or receive an operator override.
 
-- The exact contract guard can promote safety only. It is an oracle.
-- Guarded synthesis promotes utility only on fresh held contract families after
-  all fallback costs, with every required model cell reported separately.
-- No model or family mean can rescue a failed disaggregated cell.
-- The continuous learner promotes only with immutable chronology, a passing
-  anytime-valid certificate, future utility, retention, and exact rollback.
-- The protected final partition is opened once. It never guides an update.
-- ARC promotion means legal causal action influence only. It does not mean a
-  game or level solve.
-- A missing artifact, failed required command, provenance violation, protected
-  file change, unapproved hardware action, or retired-scope recurrence blocks
-  promotion.
+Exp6337 declares Exp6323 as a failed transition. If the bounded replacement
+again ends without an artifact, retire this transition shape and move terminal
+classification into the capstone only.
 
-## Explicit exclusions
+## Model policy
 
-- No hidden-state, activation, embedding, prefix-state, shared-bus, or pooled
-  model-local representation retry.
-- No external generated-text scorer, masked-model energy, best-of-N verifier,
-  or teacher-label side channel.
-- No KAN experiment.
-- No natural-language ConstraintIR reprompt or finite-ID answer transport.
-- No cross-family, cross-domain, or cross-game transfer.
-- No GGUF weight update.
-- No public ARC game re-solve, hidden source access, exhaustive offline BFS,
-  hand-built game adapter, outer-loop reverse engineering, or solve-registry
-  mutation.
-- No hardware command beyond the one authorized GateMate detect.
+Every LLM experiment uses the canonical local llama.cpp route and each GGUF's
+embedded tokenizer. `MODEL_SPECS` must use `cached_sota_pair(gpu_indices=(0,
+1))` or the canonical helper that supersedes it. No task may use
+`AutoTokenizer` for these GGUFs.
 
-## Expected milestone outcomes
+The required model set is:
 
-V545 can end positively in parts. The contract compiler and certificate engine
-are valuable exact infrastructure even if model utility is null. A clean null
-guarded-policy result closes one observable candidate-search strategy. A clean
-null ARC influence result proves that the shadow is reachable but inert. The
-milestone succeeds operationally when every branch is classified honestly and
-the next roadmap preserves those boundaries.
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
+
+Exp6340, Exp6341, Exp6344, and Exp6345 use all three. Exp6348 uses at least
+Qwen3.6-35B-A3B and Gemma-4-31B. Legacy small models may run CPU smoke tests
+only. They cannot support a headline claim.
+
+## Hardware requirements
+
+### Required local compute
+
+- Two RTX 3090 GPUs with 24 GB VRAM each.
+- Working CUDA llama.cpp offload.
+- Cached files for all three mandatory GGUF families.
+- Enough local disk for raw generation rows, sealed manifests, and model
+  hashes.
+- CPU and RAM for exact enumeration, Z3, e-process replay, and tests.
+
+GPU tasks must load one placement at a time unless a precondition receipt
+proves a safe dual placement. Each task must record VRAM before load, after
+load, and after release. A failed model cell remains visible. CPU replay cannot
+stand in for a missing headline model.
+
+### Explicitly not required
+
+- GateMate: Exp6325 exhausted the dated receipt with one failed detect.
+- KV260: the current line is terminal and has no V546 workload delta.
+- Extropic TSU: no authenticated local access exists.
+- Kona: no public local weights or API exist.
+- AMD eGPU, NPU, and other FPGA boards: none has a new receipt tied to a V546
+  question.
+
+No V546 task may claim hardware speed, power, or sampling results.
+
+## Acceptance boundary
+
+V546 succeeds as a research milestone if all 13 tasks reach honest terminal or
+structured skipped artifacts and the capstone reconciles the record. The
+scientific branches can still end null.
+
+The strongest possible claim is narrow:
+
+1. prefix enforcement improves held exact utility after a positive diversity
+   canary, or the constrained-generation branch retires;
+2. evidence-carrying factor updates pass an anytime-valid chronological trial
+   and independent safety audit, or certified self-learning remains blocked;
+3. the target-licensed ARC route causally changes live action quality, or it
+   remains a reachable shadow only.
+
+V546 does not claim AGI, broad hallucination elimination, learned-verifier
+soundness, ARC game solves, or hardware acceleration.
