@@ -17320,3 +17320,67 @@ ablation earlier in the batch -- a control or metric that cannot fail is not a m
 
 Not yet swept across all 25 stored engines. That sweep is cheap (CPU-only, no LLM) and would
 say how many stored goal predicates are degenerate.
+
+## 2026-08-12 SYSTEMIC: 14 of 21 stored goal predicates never fire on a real win
+
+REQ-ARC-WMTE-6257, CPU-only sweep of every engine in the tracked store.
+`honest_verdict: complete_stored_goal_predicate_sweep_14_of_21_degenerate_14_look_perfect_but_never_fire`.
+
+| classification | count | games |
+|---|---|---|
+| DEGENERATE: perfect specificity, never fires on the real win | **14** | ar25 bp35 dc22 ft09 g50t ka59 lf52 ls20 m0r0 re86 s5i5 sb26 tu93 vc33 |
+| DISCRIMINATING: fires on the win and not elsewhere | 5 | cd82 cn04 r11l sk48 sp80 |
+| unclear (specificity 0.0 -- fires on everything) | 3 | lp85 su15 tr87 |
+| sensitivity UNMEASURABLE (no banked win grid) | 4 | sc25 tn36 wa30 + 1 |
+
+Every one of the 14 scores **1.0** on `score_goal_predicate_consistency`. They look perfect
+because held-out data contains no level-ups, so a constant-False predicate is 100% correct.
+Only the sensitivity side can fail them.
+
+**This has a direct, measured consequence for planning.** `plan_in_model` terminates on
+`is_level_complete(next_grid)`. Cross-referencing this sweep against exp6252's planning runs
+on the same 25 games:
+
+- **10 of the 14 degenerate games found NO plan** at the 20000-node cap. The termination
+  condition can never be true, so the search cannot succeed no matter how it is ordered.
+- **4 found a plan anyway** -- ls20, m0r0, s5i5, vc33 -- and that looked like a
+  contradiction, so it was checked rather than explained away. Replaying each plan inside its
+  own induced model and testing the predicate on the terminal grid:
+
+  | game | plan len | fires on IN-MODEL terminal grid | fires on REAL win grid |
+  |---|---|---|---|
+  | ls20 | 7 | True | **False** |
+  | m0r0 | 7 | True | **False** |
+  | s5i5 | 13 | True | **False** |
+  | vc33 | 3 | True | **False** |
+
+  All four plans are HOLLOW. The planner reached a state the induced model calls a win,
+  which is not a real win. A "plan found" on these games was never evidence of a solve.
+
+- 4 of the 5 discriminating games did find a plan (cd82, cn04, r11l, sp80).
+
+**This qualifies exp6252's negative result substantially.** That experiment asked whether a
+goal gradient improves planning, and answered no. It now appears most of its games had a
+termination condition that was either unreachable (10) or wrong (4). A heap-ordering change
+cannot help a search that cannot terminate correctly, so the null was over-determined. The
+exp6252 verdict stands as written, but its INTERPRETATION -- "gradients do not help planning"
+-- is much weaker than it looked: the experiment could not have detected a benefit on most of
+its roster.
+
+**Why this is the session's most substantive finding.** Everything else tested this session
+(search structure, sampling breadth, goal gradient, model architecture, win exemplar) probed
+the DYNAMICS half of induction and came back null or negative. This is a defect in the GOAL
+half, it is systemic (two thirds of the store), it is invisible to the project's own
+goal-consistency metric, and it directly breaks the planner's termination condition.
+
+**Relationship to existing machinery.** `arc_llm_reinduction.py` already has
+`degenerate_goal_predicate` rejection and `_goal_satisfiability_check`, so the project knows
+this failure mode. What is new: `score_goal_predicate_consistency` gives these predicates a
+PERFECT mark, so the consistency score and the degeneracy check are not interchangeable, and
+anything gating on the former alone admits constant-False predicates.
+
+**Not done.** No fix is attempted here. The obvious candidates, in order of cost: (1) add a
+sensitivity term to `score_goal_predicate_consistency` whenever a win grid is available, so
+the metric cannot pass a constant-False predicate; (2) re-induce goal predicates for the 14
+degenerate games; (3) check whether the LIVE path's predicates share the defect -- this swept
+the STORED ones, and the live agent induces its own at runtime.
