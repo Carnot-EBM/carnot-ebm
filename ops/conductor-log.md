@@ -15692,3 +15692,4 @@ Still active  |
 | 2026-08-11 16:51 UTC | Default-off ARC target-licensed route shadow on th | OK | 160 passed, 1 warning in 16.89s |
 | 2026-08-11 18:14 UTC | V544 adversarial capstone, branch promotion, and r | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: t["operational |
 | 2026-08-11 18:50 UTC | V544 adversarial capstone, branch promotion, and r | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6322_v544_ad |
+| 2026-08-12 05:00 UTC | V544 adversarial capstone, branch promotion, and r | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6322_v544_ad |
