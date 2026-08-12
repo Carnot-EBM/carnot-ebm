@@ -1640,3 +1640,148 @@ bytes.
 | REQ-LEARN-6343-BOUNDS | Planned | tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py |
 | REQ-LEARN-6343-RESTART | Planned | tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py |
 | REQ-LEARN-6343-PROVENANCE | Planned | tests/python/test_experiment_6343_evidence_carrying_factor_lifecycle.py |
+
+## REQ-LEARN-6344: Counterexample Factor Proposal Calibration
+
+**Given** Exp6319 reports protected improvement from feedback-directed search
+and Exp6342 and Exp6343 report ready exact release and lifecycle gates
+**When** Exp6344 compares bounded factor-edit proposal arms
+**Then** it SHALL write
+`results/experiment_6344_counterexample_factor_proposal_calibration.json`
+**And** it SHALL build `MODEL_SPECS` from
+`cached_sota_pair(gpu_indices=(0, 1))` plus the dense Gemma pair
+**And** source model weight mutation, generated label count, protected
+validation leak count, and hidden-state access count SHALL be bare integer
+`0`
+**And** `verifier_is_oracle` SHALL be bare `true`.
+
+## REQ-LEARN-6344-SCHEMA: Bounded Factor Edits Are Frozen
+
+**Given** the factor-edit schema, event manifest, minimized counterexamples,
+allowed variables, edit bounds, arms, budgets, and primary endpoint
+**When** proposals are generated or replayed
+**Then** every proposal SHALL validate against the frozen schema
+**And** a proposal that touches another factor, a forbidden variable, or an
+out-of-bound step SHALL reject before selection.
+
+## REQ-LEARN-6344-ISOLATION: Only Counterexample Feedback Is Visible
+
+**Given** a development event has an exact violated factor
+**When** a model-family arm proposes candidate edits
+**Then** the exposed prompt payload SHALL include only the changed factor,
+minimized exact counterexample, allowed variables, and edit bounds
+**And** protected exact outcomes SHALL stay sealed until after selection.
+
+## REQ-LEARN-6344-MATCHING: Proposal Arms Use Matched Budgets
+
+**Given** random valid edits, repeated temperature sampling,
+stability-regularized proposals, and counterexample-directed proposals
+**When** Exp6344 compares arms
+**Then** calls, token budgets, candidate counts, time budgets, and exact-check
+cost budgets SHALL match across arms for every model family.
+
+## REQ-LEARN-6344-SINGLE-OPEN: Protected Outcomes Open Once
+
+**Given** selected candidates are chosen only from development-visible
+information
+**When** Exp6344 evaluates protected outcomes
+**Then** it SHALL open the protected exact outcome seal once
+**And** every model-family arm SHALL report protected exact success, movement,
+and exact-check cost from that single open.
+
+## REQ-LEARN-6344-ORACLE-BOUNDARY: Exact Checkers Keep Authority
+
+**Given** local SOTA models propose bounded edits
+**When** proposal quality is scored
+**Then** exact checkers SHALL supply all labels and release authority
+**And** model outputs, generated labels, hidden states, and model-weight
+updates SHALL NOT become an oracle.
+
+## REQ-LEARN-6344-PROVENANCE: Required Artifact Fields
+
+Exp6344 SHALL emit these fields with the stated principles:
+
+- `status`: Terminal state follows proposal success, locality, single-open, protected files, tests, and exact cost checks.
+- `upstream_paths_hashes_terminal_classes_and_ready_scores`: Upstream Exp6319, Exp6342, and Exp6343 bytes and ready scores are replayed first.
+- `MODEL_SPECS`: The three mandated GGUF model rows are resolved through cached SOTA helper calls.
+- `models_used`: Names the model ids that supplied bounded proposal rows.
+- `model_file_hashes_revisions_quantizations_and_tokenizers`: Pins model files, snapshot revisions, quantizations, tokenizer method, and file hashes.
+- `llama_cpp_embedded_tokenizer_receipts`: Proves tokenizer checks used embedded GGUF metadata through llama.cpp.
+- `cuda_gpu_offload_and_memory_release_receipts_by_model`: Records GPU offload and per-model release receipts before and after generation.
+- `factor_edit_schema_path_and_hash`: Freezes the bounded factor-edit schema.
+- `development_event_manifest_path_and_hash`: Freezes development events, split hashes, seeds, budgets, and protected seal hashes.
+- `counterexample_minimizer_path_hash_and_exactness`: Pins the minimizer and proves each counterexample is exact and minimal.
+- `information_exposure_contract`: Defines the only fields visible to the proposer.
+- `arm_definitions`: Defines random, repeated sampling, stability, and counterexample-directed proposal arms.
+- `matched_call_token_candidate_time_and_checker_budgets`: Proves budget parity across all arms.
+- `raw_proposal_paths_hashes_and_counts`: Pins raw proposal rows and counts before exact scoring.
+- `schema_validity_and_factor_locality_results`: Reports schema validity, factor locality, variable locality, and edit-bound failures.
+- `exact_proposal_success_cost_and_movement_by_model_family_arm`: Reports exact success, checker cost, and movement per model family and arm.
+- `protected_outcome_seal_and_single_open_receipt`: Shows protected outcomes opened once after selection.
+- `paired_deltas_intervals_and_sample_sizes`: Reports preregistered paired deltas against repeated sampling.
+- `verification_calls_time_cost_and_error_table`: Reports checker calls, checker time, cost, and errors.
+- `harm_underpowered_missing_and_flagged_cells`: Keeps missing, underpowered, harmful, or flagged cells visible.
+- `protected_validation_leak_count`: Bare zero proves no protected outcome leaked before selection.
+- `source_model_weight_mutation_count`: Bare zero proves source model weights were not updated.
+- `generated_label_count`: Bare zero proves generated labels did not enter scoring.
+- `hidden_state_access_count`: Bare zero proves hidden activations did not enter scoring.
+- `exact_oracle_claim_boundary`: States that exact checkers are the oracle and release authority.
+- `counterexample_proposal_ready_score`: Readiness is one only when counterexample-directed proposals beat repeated sampling per matched cost in every required family and all checks pass.
+- `protected_files_unchanged`: Shows conductor, ops, traceability, and upstream files stayed byte-identical.
+- `preconditions_checked`: Freezes upstream readiness, GGUF files, embedded tokenizers, GPUs, VRAM, RAM, disk, timeouts, seeds, event hashes, budgets, and protected hashes.
+- `inference_substrate`: Declares local GGUF llama.cpp proposal generation with exact checking.
+- `verifier_is_oracle`: Bare true preserves the exact checker as authority.
+- `field_provenance`: Maps every field to specs, inputs, sidecars, model receipts, tests, or exact checks.
+- `field_principles`: Explains why every required field exists.
+- `test_commands`: Lists run, focused, coverage, global, spec, E2E, and adversarial commands.
+- `test_exit_codes`: Prevents failed commands from becoming readiness.
+- `duration_s`: Reports measured wall time without padding.
+- `random_seeds`: Pins deterministic proposal and split schedules.
+- `reproducibility_checksum`: Detects artifact drift.
+- `honest_verdict`: States the terminal claim boundary with a terminal prefix.
+
+## SCENARIO-LEARN-6344-LOCALITY: Invalid Factor Edits Reject
+
+**Given** a proposal changes the wrong factor, an unlisted variable, or an
+out-of-bound edit
+**When** the schema validator checks the proposal
+**Then** the proposal SHALL be invalid and SHALL NOT be selected.
+
+## SCENARIO-LEARN-6344-ISOLATION: Protected Outcomes Stay Sealed
+
+**Given** a development event is rendered for a proposer
+**When** the information exposure contract is applied
+**Then** only changed factor, minimized counterexample, allowed variables, and
+edit bounds are present.
+
+## SCENARIO-LEARN-6344-MATCHED-BUDGETS: Arms Are Budget Matched
+
+**Given** every model family runs every arm
+**When** budget receipts are computed
+**Then** call, token, candidate, time, and checker budgets SHALL be identical.
+
+## SCENARIO-LEARN-6344-SINGLE-OPEN: Selection Precedes Protected Validation
+
+**Given** selected proposals are fixed
+**When** protected outcomes open
+**Then** the open count SHALL be one and no selected row SHALL cite protected
+outcomes before selection.
+
+## SCENARIO-LEARN-6344-READY: Counterexamples Beat Repeated Sampling
+
+**Given** all checks pass
+**When** counterexample-directed proposals improve exact protected success per
+matched cost over repeated sampling for every required model family
+**Then** `counterexample_proposal_ready_score` SHALL be `1.0`.
+
+## Implementation Status (REQ-LEARN-6344)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6344 | Planned | tests/python/test_experiment_6344_counterexample_factor_proposal_calibration.py |
+| REQ-LEARN-6344-SCHEMA | Planned | tests/python/test_experiment_6344_counterexample_factor_proposal_calibration.py |
+| REQ-LEARN-6344-ISOLATION | Planned | tests/python/test_experiment_6344_counterexample_factor_proposal_calibration.py |
+| REQ-LEARN-6344-MATCHING | Planned | tests/python/test_experiment_6344_counterexample_factor_proposal_calibration.py |
+| REQ-LEARN-6344-SINGLE-OPEN | Planned | tests/python/test_experiment_6344_counterexample_factor_proposal_calibration.py |
+| REQ-LEARN-6344-ORACLE-BOUNDARY | Planned | tests/python/test_experiment_6344_counterexample_factor_proposal_calibration.py |
+| REQ-LEARN-6344-PROVENANCE | Planned | tests/python/test_experiment_6344_counterexample_factor_proposal_calibration.py |
