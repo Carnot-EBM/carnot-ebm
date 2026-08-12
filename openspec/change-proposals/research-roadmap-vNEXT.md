@@ -1,364 +1,301 @@
-# Research Roadmap V546: Certified Constraint Evolution and Causal Influence
+# Research Roadmap V547: Prospective Factor Learning and Falsifiable Goals
 
-**Milestone:** `2026.08.546`
+**Milestone:** `2026.08.547`
 **Date:** 2026-08-12
 **Status:** Proposed
-**Task range:** Exp6337-Exp6349
+**Task range:** Exp6350-Exp6362
 **Execution file:** `research-roadmap-next.yaml`
 
 ## Milestone thesis
 
-Carnot has an exact constraint substrate and a positive factor-local learning
-result. It does not yet have a useful constrained generator, an anytime-valid
-release process, or evidence that its ARC route changes live actions. V546
-tests these three boundaries.
+V546 proved that Carnot can certify factor updates in a bounded replay. It did
+not prove that a local model can make the proposals in a real generation loop.
+It also did not prove that released factors help a later consumer.
 
-The milestone gives constrained generation one final, changed-technique
-attempt. The attempt acts during decoding. It uses parser state and SMT prefix
-feasibility. A semantic-diversity canary must pass before a held utility run.
-The branch retires if it repeats the V545 null.
+V547 turns the replay result into a prospective, local-GGUF experiment. The
+model reads one approved factor version. It proposes an edit from an exact
+counterexample. The exact checker labels the outcome. The e-process decides
+whether to release. The next event can read only a released version. Base model
+weights stay frozen.
 
-The main scientific line is continuous self-learning. V546 adds an e-value
-release ledger and evidence-carrying factor lifecycle. It then runs one sealed,
-chronological learning trial. The base GGUF weights stay frozen. Exact factors
-keep release authority.
+The ARC phase fixes a separate verifier defect. The current live goal gate is
+mostly a specificity test. A predicate that is always false can pass when no
+win appears in the attempt window. V547 adds a two-sided evidence contract and
+an explicit `unverifiable` state. It then tests active reward-machine
+hypotheses on the live agent's own trajectory path. It makes no solve claim.
 
-The ARC line stays narrow. It measures whether a target-licensed route changes
-the live agent's own action order. It does not solve a game for the agent. It
-makes no game or level solve claim.
+## What V546 proved
 
-## What V545 proved
-
-| Evidence | Result | V546 consequence |
+| Evidence | Result | V547 consequence |
 |---|---|---|
-| Exp6324 post-marker source freeze | `complete_null`; no accepted source delta in its window | Start a new dated source window. Do not widen scope from old product claims. |
-| Exp6325 GateMate detect | `blocked_detect_failed`; one command failed and no retry ran | Run no unchanged GateMate task. Require a new physical receipt before any future board command. |
-| Exp6326 restricted policy compiler | Ready score `1.0`; bounded semantics and verified fallbacks passed | Reuse the DSL, exact compiler, and fallback. Do not replace them. |
-| Exp6327 guarded synthesis | `complete_null`; exact-factor search did not add value | Close post-hoc energy search. Test only an incremental decoding method with a fail-fast canary. |
-| Exp6328 blind integrity audit | `complete_ready`; safety passed but utility promotion stayed zero | Keep the blind checker. Do not count exact-oracle safety as model utility. |
-| Exp6329 held-family A/B | `complete_null`; every search delta over guard-only was zero | Require a new causal mechanism and retire it if the held result is again null. |
-| Exp6318 and Exp6319 carry-forward | Positive factor-local learning and feedback-directed search | Add release statistics, lifecycle control, and prospective chronology. |
-| Exp6320 carry-forward | Safety audit passed while utility promotion stayed blocked | Reuse rollback and protected-validation attacks. Add e-process and compaction attacks. |
-| Exp6321 carry-forward | Target-licensed live ARC shadow reached the live route without solve credit | Test action influence only. Keep the route default-off. |
-
-Exp6323 did not produce an artifact after three hard wall-clock failures. The
-transition work is therefore split and bounded in Exp6337. Exp6330-Exp6336
-were proposal-only identifiers in the old design. They did not enter the V545
-conductor queue. V546 starts at Exp6337 so those identities are not reused.
+| Exp6337 terminal handoff | Artifact exists, but the conductor flagged short duration and missing method evidence | Preserve the flag. Use a bounded transition task. Do not promote the artifact as clean evidence. |
+| Exp6338 source freeze | `complete_null`; no strict post-marker source changed scope | Start a new dated window after the V547 marker. |
+| Exp6339 prefix substrate | Exact bounded prefix checks passed | Keep the substrate as a utility-null component. Do not extend it. |
+| Exp6340 parser/JIT canary | No semantic-diversity gain at matched cost | Close parser/JIT constrained generation. Exp6341 stayed gate-blocked. |
+| Exp6342 e-value ledger | Anytime release logic passed bounded synthetic checks | Reuse it as the release authority in a real chronological stream. |
+| Exp6343 factor lifecycle | Evidence, retention, rollback, and bounded growth passed exact checks | Reuse the registry. Keep proposal and commit separated. |
+| Exp6344 proposal calibration | Counterexample-directed rows beat repeated sampling in deterministic replay | Repeat only with real autoregressive calls and raw-output receipts. |
+| Exp6345 certified evolution | Positive on six replay events with tokenizer-only model access | Replace replay outcomes with fresh executable events and real proposals. |
+| Exp6346 safety audit | Synthetic attack replay failed closed | Attack the real generation, parsing, release, restart, and consumer path. |
+| Exp6347 and Exp6348 ARC influence | Route reached the live path and changed action order without solve credit | Fix the goal-admission defect before asking for more route influence. |
+| Exp6349 capstone | Certified learning closed only inside exact replay boundaries; ARC closed with no solve | Keep both claim boundaries explicit. |
 
 ## The three largest gaps
 
-### Gap 1: Exact guards do not yet improve generation
+### Gap 1: Continuous learning has no real proposal evidence
 
-The exact policy compiler is sound. The V545 search method did not improve a
-single held cell. Carnot still needs evidence that constraints can change the
-generator before a complete candidate exists.
+The positive V546 learning result used deterministic proposal replay. The
+artifacts loaded local tokenizers, but they did not run live autoregressive
+generation for factor edits. Model-family comparisons therefore do not yet
+measure model behavior.
 
-V546 builds incremental parser state and JIT SMT prefix checks. It first asks
-whether they create more unique, valid program semantics at a matched budget.
-Only a positive canary opens the held utility trial.
+V547 requires raw generation receipts from Qwen3.6-35B-A3B, Gemma-4-31B, and
+Gemma-4-26B-A4B. It uses fresh executable events. It records parse failures,
+invalid edits, exact outcomes, and the full release chronology.
 
-### Gap 2: Positive self-learning lacks a release process and lifecycle
+### Gap 2: Certified factors have no prospective consumer value
 
-The V544 learner can update factor-local state. It lacks an anytime-valid
-certificate under repeated looks. It also lacks a safe method to merge or
-delete stale factors. Without lifecycle control, constraint memory can grow
-without bound and preserve obsolete rules.
+The factor registry, rollback, and e-process are mechanisms. They have not
+improved a later local-model consumer on events that were unavailable when the
+factor was proposed. A safe memory with no downstream value does not close
+FR-11.
 
-V546 binds each factor to evidence, rationale, exact replay, and lineage. An
-e-process controls release under optional stopping. A prospective trial then
-tests useful, safe evolution over chronological events.
+V547 freezes future same-family and held-family events before learning. A
+default-off consumer compares frozen memory, replay learning, and certified
+live learning at matched generation and exact-check budgets. Exact validators
+retain veto authority.
 
-### Gap 3: ARC routing is reachable but not causally useful
+### Gap 3: ARC goal admission is one-sided and over-admits vacuous goals
 
-The target-licensed route can run on live-agent evidence. Carnot has not shown
-that the route changes which action the live agent takes next. Reachability is
-not influence.
+Exp6258 found 21 false accepts, 5 true accepts, 3 true rejects, and no false
+rejects among 29 measurable predicates. Acceptance precision was 0.1923. The
+problem is not a loose threshold. The gate lacks sensitivity evidence when a
+level-1 attempt contains no win.
 
-V546 first uses counterfactual replay to pre-register eligible windows. It then
-runs a default-off A/B on fresh live attempts. The endpoint is action-order and
-exact transition quality. Solve credit remains out of scope.
+V547 separates an exploratory goal hypothesis from a verified termination
+predicate. A goal without positive evidence is `unverifiable`, not accepted.
+Active reward-machine hypotheses select legal actions that distinguish
+competing explanations. The work stays default-off and on the live agent path.
 
-## Research findings used in V546
+## Research findings used in V547
 
-The full dated search record is in `research-references.md` under the V546
-planner marker.
+The full search record is in `research-references.md` under the V547 planner
+marker.
 
 | Finding | Experiment use |
 |---|---|
-| Parser-state bias correction, arXiv:2608.10137 | Exp6339 and Exp6340 use incremental parser state. |
-| LeJIT, HotNets 2025 | Exp6339 adds JIT SMT prefix feasibility. |
-| NxN E-valuation, arXiv:2608.06621 | Exp6342 builds the anytime release ledger. |
-| Catastrophic Remembering, arXiv:2608.11095 | Exp6343 adds evidence and rationale to factor lifecycle decisions. |
-| Verification-cost evaluation, arXiv:2608.08709 | Exp6340, Exp6341, Exp6345, and Exp6348 report exact-check cost. |
+| Active Reward Machine Inference From Raw State Trajectories, arXiv:2604.07480 | Exp6357-Exp6360 infer competing goal automata from raw visible transitions and choose discriminating legal actions. |
+| Zero-Shot Goal Recognition with Large Language Models, arXiv:2605.15333 | Exp6359 measures how goal quality changes as evidence prefixes grow. |
+| Memoir, arXiv:2607.20792 | Exp6352-Exp6355 keep the active factor version read-only during proposal generation and commit only after release. |
+| Solver-Hard Is Not Model-Hard, arXiv:2607.17047 | Exp6353 and Exp6354 balance executable structure and surface form instead of using solver effort as model difficulty. |
+| Distributional EBMs for Structured LLM Reasoning, arXiv:2605.18871 | Exp6355 uses exact penalties, family-blind controls, and abstention. Learned scores cannot approve output. |
+| The Verification Horizon, arXiv:2606.26300 | Exp6356 attacks reward saturation, replay leakage, and a changing proposal distribution. |
 
 ## Architecture
 
 ```text
-                       frozen local GGUF model
-                      /         |          \
-          Qwen3.6-35B-A3B   Gemma-4-31B   Gemma-4-26B-A4B
-                      \         |          /
-                       token / action proposals
-                                  |
-                 +----------------+----------------+
-                 |                                 |
-       restricted policy path               live ARC path
-                 |                                 |
-       parser and lexer state               own attempt history
-                 |                                 |
-       JIT SMT prefix feasibility          target-licensed route
-                 |                                 |
-       exact policy contract guard         counterfactual action order
-                 |                                 |
-       verified fallback                    default-off action A/B
-                 |                                 |
-                 +---------------+-----------------+
-                                 |
-                         exact outcome evidence
-                                 |
-                     minimized counterexample
-                                 |
-              evidence-carrying factor proposal
-                                 |
-           versioned factor graph and rollback state
-                                 |
-              anytime e-value release certificate
-                                 |
-                 release / retain / merge / delete
+                         frozen local GGUF generators
+                  Qwen3.6-35B   Gemma-4-31B   Gemma-4-26B
+                              |           |
+                              +-----+-----+
+                                    |
+                           raw proposal or goal text
+                                    |
+                    +---------------+----------------+
+                    |                                |
+          certified factor path               live ARC goal path
+                    |                                |
+       read released factor version       own frames and actions only
+                    |                                |
+       minimized exact counterexample      competing reward automata
+                    |                                |
+       bounded factor-edit proposal        legal disagreement probe
+                    |                                |
+       schema parse and exact outcome      more visible transitions
+                    |                                |
+       immutable e-process release         two-sided evidence contract
+                    |                                |
+       commit, quarantine, or rollback     accept / reject / unverifiable
+                    |                                |
+       default-off future consumer         default-off action shadow
+                    |                                |
+                    +---------------+----------------+
+                                    |
+                     exact audit and protected replay
 ```
 
-The exact compiler, exact outcome checker, and ARC transition checker are
-oracles. They can prove contract results. They do not count as learned
-verification. The GGUF models can propose programs, factors, and actions. They
-cannot approve their own output.
+The exact task checker is the correctness oracle for factor experiments. The
+observable ARC level counter is evaluation evidence. A learned factor or goal
+hypothesis is never an oracle. It may propose or rank. It may not approve its
+own output.
 
-## Phase 0: Evidence boundary and transition
+## Phase 0: Evidence boundary and source freeze
 
-### Exp6337 - Bounded V545 terminal handoff
+### Exp6350 - Bounded V546 terminal handoff
 
-Classify the seven queued V545 tasks and their terminal records. Preserve the
-missing Exp6323 artifact as a failure receipt. Record that Exp6330-Exp6336 were
-never queued. Validate the 13 V546 task identities, gates, and deliverables.
+Reconcile Exp6337-Exp6349. Preserve the Exp6337 conductor flag. Record that the
+prefix utility task was gate-blocked. Separate real inference, tokenizer-only
+access, deterministic replay, and aggregation substrates.
 
-**Deliverable:** `results/experiment_6337_v546_bounded_terminal_handoff.json`
+**Deliverable:** `results/experiment_6350_v547_bounded_terminal_handoff.json`
 
-### Exp6338 - New source-window scope freeze
+### Exp6351 - V547 source and scope freeze
 
-Search only after the V546 marker. Record accepted, duplicate, watch-only,
-inaccessible, and excluded sources. Freeze the three scientific lanes and the
-no-hardware boundary.
+Validate the new planner marker and direct sources. Freeze the two scientific
+lanes: prospective factor learning and falsifiable ARC goal discovery. Freeze
+the no-hardware rule and the closed parser/JIT lane.
 
-**Deliverable:** `results/experiment_6338_v546_post_marker_source_scope_freeze.json`
+**Deliverable:** `results/experiment_6351_v547_post_marker_source_scope_freeze.json`
 
-## Phase 1: Prefix-constrained generation
+## Phase 1: Real-generation certified continuous learning
 
-### Exp6339 - Incremental prefix enforcement substrate
+### Exp6352 - Local-GGUF factor proposal authenticity preflight
 
-Extend the restricted policy DSL with deterministic parser states. Add a JIT
-SMT prefix-feasibility interface. Prove prefix soundness and completion
-parity against the existing exact compiler. This task makes no LLM call.
+Use all three mandatory local GGUF models through `cached_sota_pair()`. Run
+small, real autoregressive calls against fresh executable failure events. Prove
+that raw outputs come from the model process, parse through the bounded edit
+schema, and do not read an unapproved write.
 
-**Deliverable:** `results/experiment_6339_incremental_prefix_enforcement_substrate.json`
+**Deliverable:** `results/experiment_6352_live_factor_proposal_authenticity_preflight.json`
 
-### Exp6340 - Parser and JIT semantic-diversity canary
+### Exp6353 - Real counterexample-directed proposal A/B
 
-Use all three mandatory local GGUF models. Compare unconstrained decoding,
-grammar masking, parser-state correction, and JIT prefix enforcement. Freeze
-the token, call, wall-time, and checker budgets. The endpoint is the count of
-unique valid normalized semantics. Utility is secondary and cannot open the
-next task by itself.
+Run only after the authenticity preflight passes. Compare repeated sampling,
+stability-only proposals, and minimized-counterexample proposals. Use matched
+calls, tokens, candidates, exact checks, and time. Balance formula structure
+and surface form. The endpoint is future exact success per matched cost.
 
-**Deliverable:** `results/experiment_6340_parser_jit_semantic_diversity_canary.json`
+**Deliverable:** `results/experiment_6353_live_counterexample_factor_proposal_ab.json`
 
-### Exp6341 - Prospective held-family prefix utility A/B
+### Exp6354 - Prospective read-only-then-commit learning stream
 
-Run only if Exp6340 reports `semantic_diversity_gain_score == 1.0`. Seal new
-held families before generation. Compare exact guard plus fallback against
-the best pre-declared prefix method. Require positive fallback-adjusted utility
-with zero accepted violations. Retire this constrained-generation scope if it
-repeats the V545 null.
+Run only if live counterexample proposals beat the matched control. Seal a
+chronological stream and protected future events. Compare frozen factors,
+the V546 replay rule, and real certified evolution. A proposal reads only the
+last released version. Exact outcomes and the e-process control every commit.
 
-**Deliverable:** `results/experiment_6341_prospective_prefix_utility_ab.json`
+**Deliverable:** `results/experiment_6354_prospective_live_certified_factor_learning.json`
 
-## Phase 2: Anytime-certified continuous self-learning
+### Exp6355 - Default-off future consumer A/B
 
-### Exp6342 - Anytime e-value release ledger
+Run only if Exp6354 is ready. Apply the released registry to fresh future
+events without further writes. Compare exact yield, abstention, false accepts,
+checker cost, and latency across same-family and held-family cells. Keep the
+consumer default-off.
 
-Implement an immutable e-process for repeated factor-update decisions. Test
-the null, alternatives, optional stopping, restarts, duplicate evidence, and
-selection after observation. Keep the exact outcome checker as the oracle.
-This task makes no LLM call.
+**Deliverable:** `results/experiment_6355_default_off_certified_factor_consumer_ab.json`
 
-**Deliverable:** `results/experiment_6342_anytime_evalue_release_ledger.json`
+### Exp6356 - Independent live-learning safety audit
 
-### Exp6343 - Evidence-carrying factor lifecycle
+Attack raw-output substitution, deterministic-replay laundering, same-step
+read/write coupling, duplicated evidence, optional-stopping reset, model-family
+identity shortcuts, parser ambiguity, protected-event leaks, unsafe release,
+restart corruption, registry growth, and rollback. Safety cannot promote a
+null utility result.
 
-Give each learned factor a rationale, exact counterexample, replay witness,
-lineage, and retention set. Permit merge or deletion only when exact replay,
-protected retention, and rollback checks pass. Bound memory growth. This is a
-Tier 4 structural self-learning task. It makes no LLM call.
+**Deliverable:** `results/experiment_6356_live_certified_learning_safety_audit.json`
 
-**Deliverable:** `results/experiment_6343_evidence_carrying_factor_lifecycle.json`
+## Phase 2: Falsifiable live ARC goal discovery
 
-### Exp6344 - Counterexample-to-factor proposal calibration
+### Exp6357 - Two-sided goal evidence contract
 
-Use all three mandatory local GGUF models. Give each model only the changed
-factor, minimized counterexample, and permitted edit schema. Compare random
-valid edits, repeated sampling, stability-regularized proposals, and
-counterexample-directed proposals. The exact checker supplies all labels.
+Implement accepted, rejected, and unverifiable states. Require sensitivity and
+specificity evidence for verified termination. Permit an unverified goal only
+as a probe hypothesis. Keep the new contract default-off.
 
-**Deliverable:** `results/experiment_6344_counterexample_factor_proposal_calibration.json`
+**Deliverable:** `results/experiment_6357_arc_two_sided_goal_evidence_contract.json`
 
-### Exp6345 - Prospective chronological certified evolution trial
+### Exp6358 - Active reward-machine discriminator
 
-Run only if the e-value ledger, lifecycle, and proposal calibration are ready.
-Seal the event order and protected validation once. Compare a frozen champion,
-the V544 fixed lifecycle, and certified evidence-carrying evolution. Report
-future exact yield, rollback, factor growth, verification cost, and
-catastrophic-remembering events.
+Represent competing goal explanations as small reward automata over visible
+events. Select a legal next action only when predicted observations distinguish
+hypotheses. Use no hidden game source, offline ground-truth search, or per-game
+adapter. Prove that the operator is reachable from the live agent path.
 
-**Deliverable:** `results/experiment_6345_prospective_certified_factor_evolution_ab.json`
+**Deliverable:** `results/experiment_6358_arc_active_reward_machine_discriminator.json`
 
-### Exp6346 - Independent certificate and lifecycle safety audit
+### Exp6359 - Three-model evidence-response calibration
 
-Attack optional stopping, e-value reset, duplicated evidence, selected nulls,
-rationale laundering, witness swaps, unsafe factor merge, harmful deletion,
-protected-set reuse, restart faults, and rollback failure. Safety success
-cannot promote utility. This task makes no LLM call.
+Run all three mandatory local GGUF models on matched, target-licensed
+trajectory prefixes. Compare the current specificity-only gate, a frozen-prior
+control, and two-sided active evidence. Measure false accepts, admission
+precision, abstention, and response to added evidence. Use development-proxy
+win evidence only after each prediction is frozen. Make no solve claim.
 
-**Deliverable:** `results/experiment_6346_certified_factor_evolution_safety_audit.json`
+**Deliverable:** `results/experiment_6359_arc_goal_evidence_response_calibration.json`
 
-## Phase 3: ARC causal influence and reconciliation
+### Exp6360 - Default-off live ARC active-goal shadow
 
-### Exp6347 - ARC counterfactual action-influence preflight
+Run only if calibration improves admission precision without a false-accept
+increase. Use the normal live agent entrypoint and fresh own-attempt windows.
+Compare route off and active-goal shadow at matched budgets. Measure hypothesis
+elimination, legal action changes, exact observed transition quality, and cost.
+Do not update the solve registry.
 
-Replay the live agent's own Exp6321 attempts. Compare action rankings with the
-target-licensed route on and off. Pre-register only windows where the route can
-change a legal next action without hidden game source, offline BFS, or a
-per-game adapter. Make no solve claim.
+**Deliverable:** `results/experiment_6360_arc_default_off_active_goal_shadow.json`
 
-**Deliverable:** `results/experiment_6347_arc_action_influence_preflight.json`
+### Exp6361 - ARC provenance and oracle audit
 
-### Exp6348 - Default-off live ARC action-influence A/B
+Attack hidden-source access, source-code reads, offline BFS, hand adapters,
+per-game calibration, evaluator leakage, synthetic-window substitution,
+off-path solvers, duplicate solve credit, and registry mutation. Recompute the
+live-path and no-solve receipts.
 
-Run only if Exp6347 reports `arc_action_influence_eligible_score == 1.0`. Use
-fresh live attempts from mandatory local GGUF models. Compare route off and
-route on at matched budgets. Measure legal action-order changes, exact
-transition quality, and verification cost. Do not update the solve registry.
+**Deliverable:** `results/experiment_6361_arc_active_goal_provenance_audit.json`
 
-**Deliverable:** `results/experiment_6348_arc_default_off_action_influence_ab.json`
+## Phase 3: Reconciliation
 
-### Exp6349 - V546 adversarial capstone
+### Exp6362 - V547 adversarial capstone
 
-Recompute every dependency and structured gate from terminal artifacts. Check
-model receipts, oracle boundaries, prior-failure retirement, ARC provenance,
-hardware non-use, tests, spec coverage, and operations documents. Reconcile
-the roadmap, archive, status, changelog, and traceability record.
+Recompute all dependencies and gates. Separate clean, null, blocked, flagged,
+and retired outcomes. Confirm real generation receipts, factor chronology,
+oracle boundaries, ARC provenance, tests, spec coverage, hardware non-use, and
+operations reconciliation.
 
-**Deliverable:** `results/experiment_6349_v546_adversarial_capstone.json`
+**Deliverable:** `results/experiment_6362_v547_adversarial_capstone.json`
 
 ## Dependency graph
 
 ```text
-Exp6337 bounded handoff
-   |
-Exp6338 source freeze
-   |--------------------------|--------------------------|
-   v                          v                          v
-Exp6339 prefix substrate   Exp6342 e-value ledger    Exp6347 ARC preflight
-   |                          |                          |
-Exp6340 diversity canary   Exp6343 factor lifecycle     | gate = 1.0
-   | gate = 1.0                |                          v
-Exp6341 held utility A/B   Exp6344 proposal test     Exp6348 live A/B
-                              |
-                    all three readiness gates = 1.0
-                              |
-                           Exp6345
-                              |
-                           Exp6346
-                              |
-        Exp6341 ----------- Exp6349 <----------- Exp6348
+Exp6350 -> Exp6351
+               |
+               +-> Exp6352 -> Exp6353 -> Exp6354 -> Exp6355 -> Exp6356
+               |
+               +-> Exp6357 -> Exp6358 -> Exp6359 -> Exp6360 -> Exp6361
+                                      \----------------------/
+                                               |
+                                           Exp6362
 ```
 
-Exp6349 consumes terminal or structured skip artifacts. A failed gate is an
-expected scientific result. It must not trigger an ungated replacement task.
-
-## Pre-registered gates and retirement rules
-
-| Downstream task | Gate | Meaning |
-|---|---|---|
-| Exp6340 | Exp6339 `prefix_enforcement_substrate_ready_score == 1.0` | Prefix checks are sound and complete before model use. |
-| Exp6341 | Exp6340 `semantic_diversity_gain_score == 1.0` | A prefix method improved unique valid semantics at matched cost. |
-| Exp6345 | Exp6342, Exp6343, and Exp6344 readiness scores all equal `1.0` | Release statistics, lifecycle, and proposals are independently ready. |
-| Exp6348 | Exp6347 `arc_action_influence_eligible_score == 1.0` | The live route can affect a legal action before fresh A/B work. |
-
-Exp6341 declares Exp6327 and Exp6329 as prior nulls. If Exp6341 reaches the
-same terminal null, the scope must enter `ops/exclusion_manifest.yaml`. Future
-work must change the model substrate or receive an operator override.
-
-Exp6337 declares Exp6323 as a failed transition. If the bounded replacement
-again ends without an artifact, retire this transition shape and move terminal
-classification into the capstone only.
-
-## Model policy
-
-Every LLM experiment uses the canonical local llama.cpp route and each GGUF's
-embedded tokenizer. `MODEL_SPECS` must use `cached_sota_pair(gpu_indices=(0,
-1))` or the canonical helper that supersedes it. No task may use
-`AutoTokenizer` for these GGUFs.
-
-The required model set is:
-
-- `unsloth/Qwen3.6-35B-A3B-GGUF`
-- `unsloth/gemma-4-31B-it-GGUF`
-- `unsloth/gemma-4-26B-A4B-it-GGUF`
-
-Exp6340, Exp6341, Exp6344, and Exp6345 use all three. Exp6348 uses at least
-Qwen3.6-35B-A3B and Gemma-4-31B. Legacy small models may run CPU smoke tests
-only. They cannot support a headline claim.
+Exp6353 is gated on the Exp6352 authenticity score. Exp6354 is gated on a
+positive live proposal delta. Exp6355 is gated on certified live-learning
+readiness. Exp6358 is gated on the two-sided contract. Exp6359 is gated on both
+ARC substrates. Exp6360 is gated on calibrated admission precision and zero
+false-accept increase. Audits run even when utility tasks are blocked.
 
 ## Hardware requirements
 
-### Required local compute
+| Resource | Use | Rule |
+|---|---|---|
+| Two local RTX 3090 GPUs | Sequential loading and inference for the three mandatory GGUF models | Record placement, offload, peak memory, unload, and per-model file hashes. Block measured cells if a required model is unavailable. |
+| Host CPU and RAM | Exact validators, e-process, lifecycle, artifact replay, and ARC audits | Record exact-check wall time and errors. |
+| Local disk | Raw generations, sealed manifests, registry versions, and rollback snapshots | Check capacity before generation. Hash every protected sidecar. |
+| Network | Source validation in Exp6351 and normal ARC SDK access when used in Exp6360 | Block the affected task if the required endpoint is unavailable. Never invent a receipt. |
+| GateMate, KV260, PolarFire, NPU, or TSU | Not used | V546 supplied no new authenticated physical state. Run no unchanged hardware probe. |
 
-- Two RTX 3090 GPUs with 24 GB VRAM each.
-- Working CUDA llama.cpp offload.
-- Cached files for all three mandatory GGUF families.
-- Enough local disk for raw generation rows, sealed manifests, and model
-  hashes.
-- CPU and RAM for exact enumeration, Z3, e-process replay, and tests.
+The legacy Qwen3.5-0.8B and Gemma-4-E4B models may appear only in CPU unit
+tests. They cannot populate a measured or headline cell.
 
-GPU tasks must load one placement at a time unless a precondition receipt
-proves a safe dual placement. Each task must record VRAM before load, after
-load, and after release. A failed model cell remains visible. CPU replay cannot
-stand in for a missing headline model.
+## Milestone success conditions
 
-### Explicitly not required
+V547 succeeds scientifically if it gives an honest answer to both questions:
 
-- GateMate: Exp6325 exhausted the dated receipt with one failed detect.
-- KV260: the current line is terminal and has no V546 workload delta.
-- Extropic TSU: no authenticated local access exists.
-- Kona: no public local weights or API exist.
-- AMD eGPU, NPU, and other FPGA boards: none has a new receipt tied to a V546
-  question.
+1. Can real local-model factor proposals, released by exact evidence, improve a
+   protected future consumer at matched cost without unsafe commits?
+2. Can a two-sided, active-evidence goal contract reduce vacuous ARC goal
+   admissions on the live agent path without hidden information or solve
+   laundering?
 
-No V546 task may claim hardware speed, power, or sampling results.
-
-## Acceptance boundary
-
-V546 succeeds as a research milestone if all 13 tasks reach honest terminal or
-structured skipped artifacts and the capstone reconciles the record. The
-scientific branches can still end null.
-
-The strongest possible claim is narrow:
-
-1. prefix enforcement improves held exact utility after a positive diversity
-   canary, or the constrained-generation branch retires;
-2. evidence-carrying factor updates pass an anytime-valid chronological trial
-   and independent safety audit, or certified self-learning remains blocked;
-3. the target-licensed ARC route causally changes live action quality, or it
-   remains a reachable shadow only.
-
-V546 does not claim AGI, broad hallucination elimination, learned-verifier
-soundness, ARC game solves, or hardware acceleration.
+A null or blocked answer is terminal evidence. It must not be rewritten as
+readiness. Parser/JIT constrained generation remains closed. Hardware remains
+out of scope until a new physical receipt exists.
