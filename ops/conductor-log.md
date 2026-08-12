@@ -15711,3 +15711,4 @@ code |
 | 2026-08-12 15:28 UTC | Bounded V545 terminal evidence handoff into V546 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-12 16:52 UTC | V546 dated source-window and three-lane scope free | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output:   assert write |
 | 2026-08-12 17:08 UTC | V546 dated source-window and three-lane scope free | OK | 88 passed, 1 warning in 9.12s |
+| 2026-08-12 17:31 UTC | Incremental parser-state and JIT prefix-feasibilit | OK | 91 passed, 1 warning in 31.57s |
