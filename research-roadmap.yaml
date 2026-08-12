@@ -1,65 +1,59 @@
-milestone: "2026.08.546"
-milestone_title: "Certified Constraint Evolution and Causal Influence"
+milestone: "2026.08.547"
+milestone_title: "Prospective Factor Learning and Falsifiable Goals"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp6337-v546-bounded-terminal-handoff
-    milestone: "2026.08.546"
-    deliverable: results/experiment_6337_v546_bounded_terminal_handoff.json
-    title: "Bounded V545 terminal evidence handoff into V546"
+  - id: exp6350-v547-bounded-terminal-handoff
+    milestone: "2026.08.547"
+    deliverable: results/experiment_6350_v547_bounded_terminal_handoff.json
+    title: "Bounded V546 terminal evidence handoff into V547"
     priority: critical
     track: infrastructure
     requires_gpu: false
     max_turns: 30
-    estimated_wall_time_min: 45
+    estimated_wall_time_min: 60
     agent_type: codex
     model: gpt-5.5
     prior_failures:
-      - experiment_id: exp6323-v545-terminal-transition
-        verdict: "failed: Codex CLI hard wall-clock cap after 4802s; no result artifact was produced"
-        addressed_by: "This replacement handles only the seven queued V545 tasks, preserves the missing-artifact receipt, and validates 13 V546 identities. It does not repeat the broad 14-task transition synthesis."
+      - experiment_id: exp6337-v546-bounded-terminal-handoff
+        verdict: "complete_with_missing: V545 handoff preserved missing Exp6323, six terminal artifacts, proposal-only Exp6330-Exp6336, and V546 checks"
+        addressed_by: "The V547 handoff is limited to Exp6337-Exp6349 and explicitly preserves the conductor's DURATION_TOO_SHORT and METHODOLOGY_EVIDENCE_MISSING flag on Exp6337. It does not treat the prior handoff as clean."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Milestone 2026.08.545 is terminal. The active queue contained Exp6323-Exp6329. Exp6323 failed three times at the hard wall-clock cap and produced no artifact. Exp6324-Exp6329 produced terminal or blocked records. Exp6330-Exp6336 appeared only in the old proposal and were never queued. V546 starts at Exp6337 to avoid identity reuse. This task must preserve the evidence boundary. It must not turn a missing artifact into a success.
+      Milestone 2026.08.546 is terminal. Exp6337-Exp6349 all have terminal or gate-blocked records. The conductor flagged Exp6337 for short duration and missing methodology evidence even though its result file has a terminal verdict. Exp6340 found no parser/JIT semantic-diversity gain, so Exp6341 was gate-blocked. Exp6342-Exp6346 closed a certified factor lifecycle inside synthetic or deterministic replay boundaries. Exp6344 did not invoke autoregressive generation. Exp6345 used GGUF tokenizers and exact replay, not live model proposals. Exp6348 made no solve claim. This task preserves those boundaries before V547 starts.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/research-program.md
-      - {project_root}/research-roadmap.yaml and {project_root}/research-roadmap-next.yaml
+      - {project_root}/research-program.md and {project_root}/research-roadmap.yaml
       - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
       - {project_root}/ops/conductor-log.md, {project_root}/ops/status.md, and {project_root}/ops/changelog.md
-      - {project_root}/results/experiment_6324_v545_post_marker_source_scope_freeze.json
-      - {project_root}/results/experiment_6325_gatemate_dated_receipt_single_detect.json
-      - {project_root}/results/experiment_6326_restricted_policy_contract_compiler.json
-      - {project_root}/results/experiment_6327_three_family_guarded_policy_synthesis.json
-      - {project_root}/results/experiment_6328_blind_guard_integrity_audit.json
-      - {project_root}/results/experiment_6329_prospective_held_family_guarded_policy_ab.json
-      - {project_root}/research-complete.yaml and {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/results/experiment_6337_v546_bounded_terminal_handoff.json through {project_root}/results/experiment_6349_v546_adversarial_capstone.json
+      - {project_root}/research-complete.yaml, {project_root}/ops/exclusion_manifest.yaml, and {project_root}/ops/known-issues.md
       - {project_root}/scripts/roadmap_schema.py, {project_root}/scripts/validate_prior_failures.py, {project_root}/scripts/audit_roadmap_gates.py, and {project_root}/scripts/exclusion_manifest_lint.py
 
       TASK
-      Create a bounded V545-to-V546 terminal handoff. Reconcile the seven queued task identities against conductor records and result paths. Record the Exp6323 missing artifact and all three wall-clock receipts. Prove that Exp6330-Exp6336 were proposal-only and not conductor tasks. Validate every V546 task ID, deliverable, dependency, structured gate, MODEL_SPECS obligation, prior_failures entry, and prompt ending. Do not edit the active roadmap or the conductor.
+      Create a bounded V546-to-V547 evidence handoff. Reconcile exactly Exp6337-Exp6349 against the active roadmap, conductor log, artifact files, and adversarial records. Preserve the Exp6337 flag as a flag. Separate real autoregressive inference, tokenizer-only model access, deterministic replay, synthetic replay, and artifact aggregation. Record the closed parser/JIT lane, the qualified factor-learning evidence, the open live-generation and consumer gaps, and the ARC no-solve boundary. Validate all 13 V547 identities, deliverables, dependencies, structured gates, model obligations, prior-failure entries, and prompt endings. Do not edit the active roadmap or conductor.
 
-      Required deliverable: {project_root}/results/experiment_6337_v546_bounded_terminal_handoff.json.
-      REQUIRED ARTIFACT FIELDS: status, v545_milestone_and_queue_hash, queued_v545_task_ids, terminal_v545_artifacts_by_task, missing_artifacts_by_task, exp6323_failure_receipts, proposal_only_exp6330_through_exp6336_receipt, v545_scientific_terminal_states, v545_hardware_terminal_state, v546_milestone_and_doc_hash, v546_task_ids, v546_id_collision_check, v546_deliverable_checks, v546_dependency_checks, v546_structured_gate_checks, v546_prior_failure_checks, v546_llm_model_policy_checks, prompt_contract_checks, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, llm_call_count, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, reproducibility_checksum, honest_verdict. llm_call_count must be bare 0. verifier_is_oracle must be false. field_principles must cover every required field.
+      Required deliverable: {project_root}/results/experiment_6350_v547_bounded_terminal_handoff.json.
+      REQUIRED ARTIFACT FIELDS: status, v546_milestone_and_queue_hash, queued_v546_task_ids, terminal_v546_artifacts_by_task, blocked_v546_tasks, flagged_v546_artifacts_and_reasons, inference_substrate_classification_by_task, live_autoregressive_generation_by_task, v546_scientific_terminal_states, closed_parser_jit_receipt, qualified_certified_learning_receipt, open_live_generation_and_consumer_gaps, arc_no_solve_receipt, v547_milestone_and_doc_hash, v547_task_ids, v547_id_collision_check, v547_deliverable_checks, v547_dependency_checks, v547_structured_gate_checks, v547_prior_failure_checks, v547_llm_model_policy_checks, prompt_contract_checks, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, llm_call_count, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. llm_call_count must be bare 0. verifier_is_oracle must be false. honest_verdict must use a terminal prefix. field_principles must give every required field a one-line reason.
 
       CONCRETE STEPS
-      0. Hash both roadmap files, the proposal, conductor log, result directory listing, exclusion manifest, and protected files. Record disk, command, and YAML parser availability in preconditions_checked.
-      1. Add REQ-INFRA-6337 and scenarios before implementation. Update traceability.
-      2. Parse the active V545 queue. Match only Exp6323-Exp6329. Treat an absent file as absent.
-      3. Extract all three Exp6323 wall-clock failures from the conductor log. Record no invented honest_verdict.
-      4. Search the conductor queue and archive for Exp6330-Exp6336. Record their proposal-only state.
-      5. Validate the 13 V546 tasks with the repository schema, prior-failure linter, gate audit, exclusion lint, and deterministic custom checks.
-      6. Add tests for missing artifacts, ghost IDs, duplicate IDs, bad gates, missing model obligations, and malformed prompt endings.
-      7. Run focused tests, spec coverage, applicable e2e checks, and adversarial verification.
+      0. Hash both roadmap files, the V547 proposal, conductor log, V546 artifacts, exclusion manifest, and protected files. Record disk, YAML parser, and command availability in preconditions_checked.
+      1. Add REQ-INFRA-6350 and scenarios before implementation. Update traceability.
+      2. Parse only Exp6337-Exp6349. Match every task to a conductor terminal class and an artifact or explicit gate block.
+      3. Preserve all Exp6337 flag text. Do not convert a flagged artifact to clean.
+      4. Inspect model and substrate receipts. Mark Exp6344 and Exp6345 as no-live-autoregressive-generation evidence.
+      5. Validate the V547 draft with the roadmap schema, prior-failure validator, gate audit, and exclusion lint.
+      6. Add tests for missing artifacts, false clean promotion, wrong substrate classification, duplicate IDs, bad gates, missing model obligations, and malformed prompt endings.
+      7. Run focused tests, spec coverage, applicable e2e checks, adversarial verification, and root-clutter checks.
 
-      Run command: .venv/bin/python -m carnot.experiment_6337_v546_bounded_terminal_handoff --date {date}
+      Run command: .venv/bin/python -m carnot.experiment_6350_v547_bounded_terminal_handoff --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6338-v546-post-marker-source-scope-freeze
-    milestone: "2026.08.546"
-    deliverable: results/experiment_6338_v546_post_marker_source_scope_freeze.json
-    title: "V546 dated source-window and three-lane scope freeze"
+  - id: exp6351-v547-post-marker-source-scope-freeze
+    milestone: "2026.08.547"
+    deliverable: results/experiment_6351_v547_post_marker_source_scope_freeze.json
+    title: "V547 dated source window and two-lane scope freeze"
     priority: high
     track: infrastructure
     requires_gpu: false
@@ -68,686 +62,334 @@ tasks:
     agent_type: codex
     model: gpt-5.5
     requires:
-      - exp6337-v546-bounded-terminal-handoff
+      - exp6350-v547-bounded-terminal-handoff
     prior_failures:
-      - experiment_id: exp6324-v545-post-marker-source-scope-freeze
-        verdict: "complete_null: accepted_count=0; no reproducible post-V545-marker findings; references unchanged; V545 contracts frozen"
-        addressed_by: "The search window starts after the new V546 marker and includes five dated 2026-08 sources that were not inside the V545 artifact window. Scope still changes only for executable local consequences."
+      - experiment_id: exp6338-v546-post-marker-source-scope-freeze
+        verdict: "complete_null: no strict post-marker source changed V546 scope"
+        addressed_by: "The new window starts after the V547 marker and validates two sources not present in the earlier ledger: active reward-machine inference from raw trajectories and evidence-sensitive zero-shot goal recognition."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      The planner added a V546 source marker to research-references.md on 2026-08-12. It promoted parser-state correction, LeJIT prefix enforcement, NxN e-values, evidence-carrying factor lifecycle, and verification-cost reporting. V545's source task was honestly null for its earlier window. This task records the new window and freezes exactly three V546 lanes: prefix-constrained policy generation, certified factor evolution, and ARC action influence. No board execution is authorized.
+      The planner added a V547 marker to research-references.md after V546 completed. The marker promotes active reward-machine inference from raw trajectories and evidence-sensitive goal recognition. It also applies read-only-then-commit memory, hardness controls, exact penalties, abstention, and co-evolving verification to a real-generation factor stream. The milestone has exactly two scientific lanes: prospective certified factor learning and falsifiable live ARC goal discovery. Parser/JIT generation is closed. No hardware execution is authorized.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md and {project_root}/CLAUDE.md
       - {project_root}/research-program.md and {project_root}/research-references.md
       - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
-      - {project_root}/results/experiment_6337_v546_bounded_terminal_handoff.json
-      - {project_root}/results/experiment_6324_v545_post_marker_source_scope_freeze.json
-      - {project_root}/results/experiment_6325_gatemate_dated_receipt_single_detect.json
-      - {project_root}/results/experiment_6327_three_family_guarded_policy_synthesis.json
-      - {project_root}/results/experiment_6329_prospective_held_family_guarded_policy_ab.json
+      - {project_root}/results/experiment_6350_v547_bounded_terminal_handoff.json
+      - {project_root}/results/experiment_6338_v546_post_marker_source_scope_freeze.json
+      - {project_root}/results/experiment_6340_parser_jit_semantic_diversity_canary.json
+      - {project_root}/results/experiment_6345_prospective_certified_factor_evolution_ab.json
+      - {project_root}/results/experiment_6258_goal_veto_confusion_matrix.json
       - {project_root}/ops/exclusion_manifest.yaml, {project_root}/research-hardware-wishlist.md, and {project_root}/ops/e2e-test-plan.md
 
       TASK
-      Validate the V546 planner marker and its publication dates. Record direct source receipts and local executable consequences. Deduplicate against all older markers. Freeze the three V546 lanes, the exact-oracle boundary, the mandatory GGUF policy, the fail-fast gates, and the no-hardware rule. Search any material published after the marker and report it without silently widening the roadmap.
+      Validate the V547 planner marker, direct source URLs, publication dates, source claims, and local consequences. Search only material published after the marker. Deduplicate against all earlier ledger entries and retired scopes. Freeze the two V547 lanes, exact-oracle boundaries, required local GGUF models, active ARC provenance rules, fail-fast gates, closed parser/JIT lane, and no-hardware boundary. Report an honest zero delta if no post-marker source qualifies.
 
-      Required deliverable: {project_root}/results/experiment_6338_v546_post_marker_source_scope_freeze.json.
-      REQUIRED ARTIFACT FIELDS: status, v546_marker_text_line_and_hash, search_window_start_utc, search_completed_utc, source_queries_by_channel, source_receipts, promoted_findings, accepted_count, duplicate_findings, watch_only_findings, inaccessible_sources, excluded_findings_and_reasons, parser_bias_receipt, lejit_receipt, nxn_evalue_receipt, catastrophic_remembering_receipt, verification_cost_receipt, semantic_scholar_ebt_and_arm_ebm_receipts, openreview_and_huggingface_status, github_status, extropic_status, logical_intelligence_status, frozen_prefix_generation_contract, frozen_certified_learning_contract, frozen_arc_influence_contract, frozen_model_policy, frozen_hardware_nonuse_contract, roadmap_scope_delta, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, llm_call_count, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, reproducibility_checksum, honest_verdict. accepted_count and llm_call_count must be bare integers. llm_call_count must be 0. field_principles must cover every required field.
+      Required deliverable: {project_root}/results/experiment_6351_v547_post_marker_source_scope_freeze.json.
+      REQUIRED ARTIFACT FIELDS: status, v547_marker_text_line_and_hash, search_window_start_utc, search_completed_utc, source_queries_by_channel, source_receipts, promoted_findings, accepted_count, duplicate_findings, watch_only_findings, inaccessible_sources, excluded_findings_and_reasons, active_reward_machine_receipt, zero_shot_goal_recognition_receipt, memoir_receipt, solver_hardness_control_receipt, distributional_ebm_receipt, verification_horizon_receipt, semantic_scholar_ebt_and_arm_ebm_receipts, openreview_and_huggingface_status, github_status, extropic_status, logical_intelligence_status, frozen_live_factor_learning_contract, frozen_arc_goal_contract, frozen_model_policy, frozen_closed_parser_jit_contract, frozen_hardware_nonuse_contract, roadmap_scope_delta, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, llm_call_count, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. accepted_count and llm_call_count must be bare integers. llm_call_count must be 0. verifier_is_oracle must be false. honest_verdict must use a terminal prefix. field_principles must cover every required field.
 
       CONCRETE STEPS
-      0. Hash the marker, roadmap, references, prior source artifact, exclusion manifest, hardware wishlist, and protected files. Record network, UTC, disk, and required command state in preconditions_checked.
-      1. Add REQ-INFRA-6338 and scenarios before implementation. Update traceability.
-      2. Validate each promoted source with a direct URL, first-publication date, access time, and local consequence.
-      3. Repeat the required channel searches only for the post-marker window. Keep inaccessible pages explicit.
-      4. Deduplicate by paper identity, repository identity, mechanism, and already-retired Carnot scope.
-      5. Freeze all three lanes and the hardware non-use rule. Record a zero delta honestly if no newer source qualifies.
-      6. Add tests for marker boundaries, date parsing, duplicate handling, source dispositions, and scope hashes.
-      7. Run focused tests, spec coverage, applicable e2e checks, and adversarial verification.
+      0. Hash the V547 marker, roadmap, references, prior source artifact, exclusion manifest, hardware wishlist, and protected files. Record network, UTC, disk, and required command state in preconditions_checked.
+      1. Add REQ-INFRA-6351 and scenarios before implementation. Update traceability.
+      2. Validate each promoted source with a direct primary URL, first-publication date, access time, claim boundary, and executable Carnot consequence.
+      3. Repeat arXiv, OpenReview, Hugging Face Papers, Semantic Scholar citation, GitHub, Extropic, and Logical Intelligence searches only for the post-marker window.
+      4. Deduplicate by work identity, repository identity, mechanism, and retired Carnot scope.
+      5. Freeze both lanes and all negative boundaries. Do not widen the milestone from product claims.
+      6. Add tests for marker boundaries, dates, duplicate handling, source dispositions, and scope hashes.
+      7. Run focused tests, spec coverage, applicable e2e checks, adversarial verification, and root-clutter checks.
 
-      Run command: .venv/bin/python -m carnot.experiment_6338_v546_post_marker_source_scope_freeze --date {date}
+      Run command: .venv/bin/python -m carnot.experiment_6351_v547_post_marker_source_scope_freeze --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6339-incremental-prefix-enforcement-substrate
-    milestone: "2026.08.546"
-    deliverable: results/experiment_6339_incremental_prefix_enforcement_substrate.json
-    title: "Incremental parser-state and JIT prefix-feasibility substrate"
+  - id: exp6352-live-factor-proposal-authenticity-preflight
+    milestone: "2026.08.547"
+    deliverable: results/experiment_6352_live_factor_proposal_authenticity_preflight.json
+    title: "Three-model live factor proposal authenticity preflight"
     priority: critical
-    track: energy_reasoning
-    requires_gpu: false
+    track: self_learning
+    requires_gpu: true
     max_turns: 50
     estimated_wall_time_min: 180
     agent_type: codex
     model: gpt-5.5
     requires:
-      - exp6338-v546-post-marker-source-scope-freeze
+      - exp6351-v547-post-marker-source-scope-freeze
     prior_failures:
-      - experiment_id: exp5923-sota-schema-supported-constraintir-ab
-        verdict: "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates"
-        addressed_by: "This substrate uses a bounded executable policy DSL, deterministic incremental parser states, and exact SMT prefix feasibility. It does not reprompt natural-language ConstraintIR."
+      - experiment_id: exp6344-counterexample-factor-proposal-calibration
+        verdict: "complete_positive: counterexample-directed proposals beat repeated sampling per matched exact cost in every required model family"
+        addressed_by: "Exp6344 produced deterministic replay rows and did not invoke autoregressive generation. This preflight requires process-level generation receipts, raw model bytes, timing, and parse outcomes from all three cached GGUFs."
         retire_if_same_verdict: true
-      - experiment_id: exp6327-three-family-guarded-policy-synthesis
-        verdict: "complete_null: bounded exact-factor search did not clear the preregistered readiness gate"
-        addressed_by: "The changed mechanism acts on each prefix before candidate completion. It does not rank complete candidates with the failed post-hoc energy search."
-        retire_if_same_verdict: true
-      - experiment_id: exp6329-prospective-held-family-guarded-policy-ab
-        verdict: "complete_null: held search did not clear every preregistered cell gate"
-        addressed_by: "This task proves only incremental soundness and completion parity. A later diversity canary must pass before any new held utility test."
+      - experiment_id: exp6345-prospective-certified-factor-evolution-ab
+        verdict: "complete_positive: certified evidence-carrying evolution beat frozen and fixed controls with bounded exact release"
+        addressed_by: "Exp6345 used tokenizer-only model access and exact replay. This task tests only whether real local generation can produce bounded factor edits without replay laundering or same-step memory writes."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Exp6326 proved a bounded policy DSL, canonical semantics, exact factor compilation, and hash-pinned fallbacks. Exp6327 and Exp6329 proved that post-hoc exact-energy search added no value. New work on parser-state bias correction and LeJIT suggests a different intervention point: reject or correct an infeasible token prefix before the model completes a candidate. This task builds the deterministic substrate only. It makes no LLM call and no utility claim.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/research-references.md V546 parser and LeJIT entries
-      - {project_root}/results/experiment_6326_restricted_policy_contract_compiler.json
-      - {project_root}/results/experiment_6327_three_family_guarded_policy_synthesis.json
-      - {project_root}/results/experiment_6329_prospective_held_family_guarded_policy_ab.json
-      - {project_root}/python/carnot/experiment_6326_restricted_policy_contract_compiler.py
-      - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md
-      - {project_root}/openspec/capabilities/constraint-verification/spec.md
-      - {project_root}/ops/exclusion_manifest.yaml and {project_root}/ops/e2e-test-plan.md
-
-      TASK
-      Implement a deterministic incremental lexer and parser for the existing restricted policy DSL. Expose canonical parser-state features without reading model hidden state. Implement a JIT SMT prefix-feasibility checker with bounded timeouts and fail-closed results. Prove that every accepted completed program matches Exp6326 canonical semantics. Prove that no feasible completion is rejected on the exhaustive fixture domain. Record checker cost and a verification-cost-error table. Do not implement learned scoring, natural-language repair, or post-hoc candidate ranking.
-
-      Required deliverable: {project_root}/results/experiment_6339_incremental_prefix_enforcement_substrate.json.
-      REQUIRED ARTIFACT FIELDS: status, upstream_contract_path_hash_and_ready_score, source_claim_boundary, incremental_lexer_path_and_hash, incremental_parser_path_and_hash, parser_state_schema_path_and_hash, parser_state_observable_only_receipt, jit_smt_prefix_checker_path_and_hash, timeout_and_fail_closed_contract, prefix_fixture_manifest_path_and_hash, exhaustive_prefix_count, feasible_infeasible_and_timeout_counts, prefix_soundness_results, feasible_completion_recall_results, completed_program_semantic_parity_results, parser_state_determinism_results, adversarial_prefix_results, verification_calls_time_and_cost_distribution, verification_cost_error_table, hidden_state_access_count, generated_label_count, llm_call_count, exact_oracle_claim_boundary, prefix_enforcement_substrate_ready_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. hidden_state_access_count, generated_label_count, and llm_call_count must be bare 0. verifier_is_oracle must be true. Readiness is 1.0 only for exhaustive soundness, full feasible-completion recall, semantic parity, deterministic states, and bounded fail-closed timeouts. field_principles must cover every required field.
-
-      CONCRETE STEPS
-      0. Replay Exp6326 readiness. Freeze grammar and semantic hashes, finite bounds, timeout budgets, exhaustive fixtures, seeds, Z3 version, resource limits, and protected hashes in preconditions_checked.
-      1. Add REQ-KONA-6339 and scenarios before implementation. Update traceability.
-      2. Reuse the Exp6326 lexer, parser, normalizer, and exact semantics. Add incremental state without changing completed-program meaning.
-      3. Build the JIT SMT interface. Return accept, reject, or timeout. Treat timeout as fail-closed and report it separately.
-      4. Enumerate every prefix in the bounded fixture domain. Check soundness, feasible-completion recall, determinism, and final semantic parity.
-      5. Attack invalid UTF-8, token splits, whitespace aliases, prefix bombs, solver timeouts, unknown symbols, and normalization collisions.
-      6. Add property tests for all invariants and cost accounting.
-      7. Run focused tests, full relevant tests, spec coverage, applicable e2e checks, and adversarial verification.
-
-      Run command: .venv/bin/python -m carnot.experiment_6339_incremental_prefix_enforcement_substrate --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6340-parser-jit-semantic-diversity-canary
-    milestone: "2026.08.546"
-    deliverable: results/experiment_6340_parser_jit_semantic_diversity_canary.json
-    title: "Three-model parser-state and JIT semantic-diversity canary"
-    priority: critical
-    track: energy_reasoning
-    requires_gpu: true
-    max_turns: 50
-    estimated_wall_time_min: 300
-    agent_type: codex
-    model: gpt-5.5
-    requires:
-      - exp6339-incremental-prefix-enforcement-substrate
-    gated_on:
-      - upstream: exp6339-incremental-prefix-enforcement-substrate
-        artifact_field: prefix_enforcement_substrate_ready_score
-        op: '=='
-        value: 1.0
-    prior_failures:
-      - experiment_id: exp5923-sota-schema-supported-constraintir-ab
-        verdict: "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates"
-        addressed_by: "The model emits only the executable policy DSL through deterministic prefix controls. There is no natural-language ConstraintIR repair loop."
-        retire_if_same_verdict: true
-      - experiment_id: exp6327-three-family-guarded-policy-synthesis
-        verdict: "complete_null: bounded exact-factor search did not clear the preregistered readiness gate"
-        addressed_by: "The primary endpoint is unique valid semantics caused by parser-state or JIT intervention during decoding, not utility from ranking completed candidates."
-        retire_if_same_verdict: true
-      - experiment_id: exp6329-prospective-held-family-guarded-policy-ab
-        verdict: "complete_null: held search did not clear every preregistered cell gate"
-        addressed_by: "This is a small development canary. A zero semantic-diversity gain mechanically skips the prospective held-family task."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Exp6339 must prove an exact incremental prefix substrate. This task asks one fail-fast question: does a during-decoding constraint method produce more unique valid normalized policy semantics at matched cost? It does not reopen V545 post-hoc energy search. It uses all three mandatory local GGUFs. The exact compiler remains an oracle and cannot count as model verification.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/scripts/experiment_template.py cached_sota_pair() guidance
-      - {project_root}/python/carnot/inference/sota_models.py
-      - {project_root}/research-references.md V546 parser, LeJIT, and verification-cost entries
-      - {project_root}/results/experiment_6339_incremental_prefix_enforcement_substrate.json
-      - {project_root}/results/experiment_6327_three_family_guarded_policy_synthesis.json
-      - {project_root}/results/experiment_6329_prospective_held_family_guarded_policy_ab.json
-      - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md and {project_root}/ops/e2e-test-plan.md
-
-      TASK
-      Build MODEL_SPECS from cached_sota_pair(gpu_indices=(0, 1)). It must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use canonical llama.cpp and each GGUF embedded tokenizer. Do not use AutoTokenizer. Compare four matched arms: unconstrained sampling, grammar masking, deterministic parser-state correction, and JIT SMT prefix enforcement. Freeze call, token, candidate, wall-time, and checker budgets. Use development families only. Report unique valid normalized semantics, validity, parser failures, utility, fallback, and verification cost by model and family. Set semantic_diversity_gain_score to 1.0 only if a pre-declared prefix arm beats both unconstrained and grammar arms without any accepted contract violation.
-
-      Required deliverable: {project_root}/results/experiment_6340_parser_jit_semantic_diversity_canary.json.
-      REQUIRED ARTIFACT FIELDS: status, upstream_path_hash_terminal_class_and_gate_receipt, MODEL_SPECS, models_used, model_file_hashes_revisions_quantizations_and_tokenizers, llama_cpp_embedded_tokenizer_receipts, cuda_gpu_offload_and_memory_release_receipts_by_model, fixture_and_split_paths_hashes, prompt_decoder_and_prefix_contract, arm_definitions, matched_call_token_candidate_time_and_checker_budgets, raw_generation_paths_hashes_and_counts, parser_state_and_jit_intervention_logs, parse_normalization_and_contract_results, unique_valid_normalized_semantics_by_model_family_arm, semantic_diversity_paired_deltas_intervals_and_sample_sizes, exact_utility_fallback_latency_and_cost_by_model_family_arm, verification_calls_time_cost_and_error_table, harm_underpowered_missing_and_flagged_cells, source_model_weight_mutation_count, generated_label_count, hidden_state_access_count, exact_oracle_claim_boundary, semantic_diversity_gain_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. source_model_weight_mutation_count, generated_label_count, and hidden_state_access_count must be bare 0. verifier_is_oracle must be true. semantic_diversity_gain_score is a bare 1.0 only for a positive preregistered paired gain in every required model family, zero accepted violations, full budget parity, and passing checks. field_principles must cover every required field.
-
-      CONCRETE STEPS
-      0. Replay the structured gate. Check all GGUF files, embedded tokenizers, CUDA devices, VRAM, RAM, disk, timeouts, seeds, fixture hashes, budgets, and protected hashes in preconditions_checked.
-      1. Add REQ-KONA-6340 and scenarios before implementation. Update traceability.
-      2. Build MODEL_SPECS with the canonical helper. Record model and tokenizer receipts before generation.
-      3. Seal prompts, arm rules, budgets, and the primary semantic-diversity endpoint. Generate raw rows atomically. Load one placement at a time and prove memory release.
-      4. Run all four arms on identical eligible tasks. Preserve every rejected prefix and final candidate receipt.
-      5. Deduplicate only after canonical normalization. Keep each model and family visible. Do not pool away a failed cell.
-      6. Add tests for gate replay, tokenizer use, intervention logs, budget parity, semantic deduplication, fallback accounting, and oracle boundaries.
-      7. Run focused tests, spec coverage, applicable e2e checks, and adversarial verification.
-
-      Run command: .venv/bin/python -m carnot.experiment_6340_parser_jit_semantic_diversity_canary --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6341-prospective-prefix-utility-ab
-    milestone: "2026.08.546"
-    deliverable: results/experiment_6341_prospective_prefix_utility_ab.json
-    title: "Gated prospective held-family prefix utility A/B"
-    priority: critical
-    track: energy_reasoning
-    requires_gpu: true
-    max_turns: 50
-    estimated_wall_time_min: 360
-    agent_type: codex
-    model: gpt-5.5
-    requires:
-      - exp6339-incremental-prefix-enforcement-substrate
-      - exp6340-parser-jit-semantic-diversity-canary
-    gated_on:
-      - upstream: exp6340-parser-jit-semantic-diversity-canary
-        artifact_field: semantic_diversity_gain_score
-        op: '=='
-        value: 1.0
-    prior_failures:
-      - experiment_id: exp5923-sota-schema-supported-constraintir-ab
-        verdict: "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates"
-        addressed_by: "The held task uses a bounded executable policy DSL and exact prefix enforcement. It does not use natural-language ConstraintIR or repair reprompting."
-        retire_if_same_verdict: true
-      - experiment_id: exp6327-three-family-guarded-policy-synthesis
-        verdict: "complete_null: bounded exact-factor search did not clear the preregistered readiness gate"
-        addressed_by: "A positive semantic-diversity canary is a mechanical prerequisite. The held arm uses the best during-decoding prefix method and excludes post-hoc energy ranking."
-        retire_if_same_verdict: true
-      - experiment_id: exp6329-prospective-held-family-guarded-policy-ab
-        verdict: "complete_null: held search did not clear every preregistered cell gate"
-        addressed_by: "New held families are sealed before generation, and the method changes from complete-candidate search to parser-state or JIT prefix intervention. The scope retires if utility is null again."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Exp6327 and Exp6329 found no value from post-hoc energy search. Exp6340 can open this task only by showing that a different during-decoding method improves unique valid semantics. This is the final planned constrained-generation utility attempt on the current policy DSL. A repeated null must trigger retirement through the declared prior failures. Exact checks and verified fallbacks preserve safety but do not count as model utility.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/scripts/experiment_template.py cached_sota_pair() guidance
-      - {project_root}/python/carnot/inference/sota_models.py
-      - {project_root}/results/experiment_6339_incremental_prefix_enforcement_substrate.json
-      - {project_root}/results/experiment_6340_parser_jit_semantic_diversity_canary.json
-      - {project_root}/results/experiment_6329_prospective_held_family_guarded_policy_ab.json
-      - {project_root}/results/experiment_6328_blind_guard_integrity_audit.json
-      - {project_root}/ops/exclusion_manifest.yaml
-      - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md and {project_root}/ops/e2e-test-plan.md
-
-      TASK
-      Replay the structured gate before opening any held data. Independently generate and seal new policy contract families with no overlap in normalized programs, templates, constants, or prompts. Build MODEL_SPECS through cached_sota_pair(gpu_indices=(0, 1)) with unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use canonical llama.cpp and embedded tokenizers only. Compare exact guard plus verified fallback against the best preregistered prefix method plus the same guard and fallback. Match calls, tokens, candidates, time, checker calls, and fallback cost. Open exact outcomes once. Require positive fallback-adjusted utility and zero accepted violations in every headline cell.
-
-      Required deliverable: {project_root}/results/experiment_6341_prospective_prefix_utility_ab.json.
-      REQUIRED ARTIFACT FIELDS: status, upstream_paths_hashes_terminal_classes_and_gate_receipt, MODEL_SPECS, models_used, model_file_hashes_revisions_quantizations_and_tokenizers, llama_cpp_embedded_tokenizer_receipts, cuda_gpu_offload_and_memory_release_receipts_by_model, prospective_registration_path_and_hash, sealed_held_family_manifest_path_and_hash, independent_family_generator_identity, development_overlap_checks, prompt_and_decoder_freeze, selected_prefix_method_and_predecision_receipt, arm_definitions, matched_call_token_candidate_time_checker_and_fallback_budgets, raw_generation_paths_hashes_and_counts, exact_outcome_seal_and_single_open_receipt, parse_contract_fallback_utility_latency_and_cost_by_model_family_arm, fallback_adjusted_paired_utility_deltas_intervals_and_sample_sizes, verification_calls_time_cost_and_error_table, accepted_contract_violation_count, harm_underpowered_missing_and_flagged_cells, source_model_weight_mutation_count, generated_label_count, hidden_state_access_count, exact_oracle_claim_boundary, prospective_prefix_utility_ready_score, retire_scope_if_same_verdict_receipt, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. source_model_weight_mutation_count, generated_label_count, hidden_state_access_count, and accepted_contract_violation_count must be bare 0. verifier_is_oracle must be true. Readiness is 1.0 only for complete required cells, zero overlap, one outcome open, positive preregistered fallback-adjusted utility in every headline cell, zero accepted violations, matched budgets, and passing checks. field_principles must cover every required field.
-
-      CONCRETE STEPS
-      0. Replay the structured gate before held access. Check model files, embedded tokenizers, both GPUs, VRAM, RAM, disk, timeouts, seeds, proposed held generator, fallback hashes, and protected hashes in preconditions_checked.
-      1. Add REQ-KONA-6341 and scenarios before implementation. Update traceability.
-      2. Write the prospective registration and held manifest before generation. Prove no overlap with Exp6327, Exp6329, or Exp6340.
-      3. Build MODEL_SPECS with the canonical helper. Record all receipts. Load one placement at a time and prove memory release.
-      4. Run both matched arms. Preserve all raw rows and charge fallback utility, time, and checker cost.
-      5. Open exact outcomes once after both arms finish. Report every model-family cell. Do not rescue a null with pooled means.
-      6. Add tests for gate replay, seals, overlap, tokenizer path, budget parity, single-open rules, fallback charging, retirement receipt, and oracle boundaries.
-      7. Run focused tests, spec coverage, applicable e2e checks, adversarial verification, and the exclusion-manifest retirement check.
-
-      Run command: .venv/bin/python -m carnot.experiment_6341_prospective_prefix_utility_ab --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6342-anytime-evalue-release-ledger
-    milestone: "2026.08.546"
-    deliverable: results/experiment_6342_anytime_evalue_release_ledger.json
-    title: "Immutable anytime e-value ledger for factor releases"
-    priority: critical
-    track: self_learning
-    requires_gpu: false
-    max_turns: 50
-    estimated_wall_time_min: 180
-    agent_type: codex
-    model: gpt-5.5
-    requires:
-      - exp6338-v546-post-marker-source-scope-freeze
-    prompt: |
-      CONTEXT
-      Exp6318 and Exp6319 showed positive factor-local online learning. Their release gate is fixed-boundary protected validation. Carnot needs a release process that remains valid under repeated looks, optional stopping, restarts, and many proposed factors. NxN E-valuation motivates e-values for data-dependent hypotheses. This task builds a local deterministic ledger. It makes no LLM call. The exact outcome checker remains the oracle.
+      Exp6342 and Exp6343 provide an exact e-value release ledger and an evidence-carrying factor lifecycle. Exp6344 and Exp6345 reported positive factor results, but their inference substrates show deterministic proposal replay and tokenizer-only model access. V547 must first prove that the three required local GGUF models can make real bounded factor proposals. This task is an authenticity and feasibility preflight. It makes no utility or continuous-learning claim.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md and {project_root}/CLAUDE.md
       - {project_root}/research-program.md Continuous Self-Learning section
-      - {project_root}/research-references.md V546 NxN E-valuation entry
-      - {project_root}/results/experiment_6318_versioned_factor_local_online_initializer.json
-      - {project_root}/results/experiment_6319_feedback_directed_online_update_search.json
-      - {project_root}/results/experiment_6320_online_self_evolution_safety_audit.json
-      - {project_root}/python/carnot/experiment_6318_versioned_factor_local_online_initializer.py
-      - {project_root}/openspec/capabilities/continual-learning/spec.md
-      - {project_root}/ops/e2e-test-plan.md
-
-      TASK
-      Design and implement an immutable e-value release ledger for factor-local hypotheses. Freeze the null family, evidence identity, filtration, betting rule, alpha budget, multiplicity policy, and release threshold before outcomes. Support append-only updates, restart reconstruction, and exact audit replay. Use deterministic synthetic null and alternative streams plus the Exp6318/Exp6319 evidence schema. Test optional stopping, repeated looks, duplicate evidence, hypothesis selection, cross-factor reuse, reordered events, and e-value reset attacks. The ledger may release only when its threshold and the exact safety guard both pass.
-
-      Required deliverable: {project_root}/results/experiment_6342_anytime_evalue_release_ledger.json.
-      REQUIRED ARTIFACT FIELDS: status, source_claim_boundary, evalue_ledger_path_and_hash, ledger_schema_path_and_hash, null_family_and_assumptions, filtration_and_evidence_identity_contract, betting_rule_and_predecision_hash, alpha_multiplicity_and_release_policy, exact_safety_guard_contract, synthetic_stream_manifest_path_and_hash, null_stream_results, alternative_stream_results, optional_stopping_results, repeated_look_results, duplicate_cross_factor_reorder_and_selection_attack_results, restart_reconstruction_results, append_only_tamper_results, type_i_error_interval_and_sample_size, power_interval_and_sample_size, release_delay_distribution, eprocess_state_examples, exact_oracle_claim_boundary, generated_label_count, llm_call_count, anytime_release_certificate_ready_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. generated_label_count and llm_call_count must be bare 0. verifier_is_oracle must be true. Readiness is 1.0 only if empirical null error is inside the preregistered bound, attacks fail closed, restart replay is byte-identical, alternative power clears its threshold, and all checks pass. field_principles must cover every required field.
-
-      CONCRETE STEPS
-      0. Freeze the null, alternatives, evidence identity, filtration, betting rule, alpha, threshold, stream sizes, seeds, resource limits, exact guard, and protected hashes in preconditions_checked.
-      1. Add REQ-LEARN-6342 and scenarios before implementation. Update traceability.
-      2. Implement a small append-only ledger with canonical event hashes and deterministic replay.
-      3. Generate preregistered null and alternative streams without LLM labels. Measure error, power, and release delay.
-      4. Attack optional stopping, peeking, duplicated rows, cross-factor evidence reuse, selected hypotheses, event reorder, reset, truncation, and restart corruption.
-      5. Prove that a statistical release cannot bypass the exact safety guard.
-      6. Add property tests for nonnegative e-values, supermartingale fixtures, replay identity, tamper evidence, and fail-closed release.
-      7. Run focused tests, full relevant tests, spec coverage, applicable e2e checks, and adversarial verification.
-
-      Run command: .venv/bin/python -m carnot.experiment_6342_anytime_evalue_release_ledger --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6343-evidence-carrying-factor-lifecycle
-    milestone: "2026.08.546"
-    deliverable: results/experiment_6343_evidence_carrying_factor_lifecycle.json
-    title: "Bounded evidence-carrying factor merge and deletion lifecycle"
-    priority: critical
-    track: self_learning
-    requires_gpu: false
-    max_turns: 50
-    estimated_wall_time_min: 210
-    agent_type: codex
-    model: gpt-5.5
-    prior_failures:
-      - experiment_id: exp5839-v519-evidence-qualification
-        verdict: "mixed: constraint_stream_and_structural_qualified_lifecycle_and_replay_disqualified"
-        addressed_by: "Exp6342 first supplies an immutable anytime release ledger. This lifecycle also requires exact replay, protected retention, bounded capacity, and byte-identical rollback before merge or deletion."
-        retire_if_same_verdict: true
-    requires:
-      - exp6338-v546-post-marker-source-scope-freeze
-      - exp6342-anytime-evalue-release-ledger
-    prompt: |
-      CONTEXT
-      Carnot can add factor-local state, but repeated learning can grow constraint memory without bound. Recent work on catastrophic remembering shows that persistent instructions need removal evidence, not only addition logic. Carnot factors can do better because their outcomes are exactly checkable. This task creates a Tier 4 structural self-learning lifecycle. It makes no LLM call. It does not alter base GGUF weights.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/research-program.md Continuous Self-Learning section
-      - {project_root}/research-references.md V546 catastrophic remembering entry
-      - {project_root}/results/experiment_6318_versioned_factor_local_online_initializer.json
-      - {project_root}/results/experiment_6319_feedback_directed_online_update_search.json
-      - {project_root}/results/experiment_6320_online_self_evolution_safety_audit.json
-      - {project_root}/results/experiment_6342_anytime_evalue_release_ledger.json
-      - {project_root}/openspec/capabilities/continual-learning/spec.md and {project_root}/ops/e2e-test-plan.md
-
-      TASK
-      Extend the versioned factor graph with evidence-carrying lifecycle records. Each learned factor must name its rationale, minimized exact counterexample, replay witness, parent version, affected variables, release certificate, retention set, and rollback target. Define deterministic retain, merge, quarantine, delete, and restore operations. Bound active and quarantined factor counts. Permit merge or deletion only after exact historical replay, protected retention, and byte-identical rollback checks. Reject stale, circular, cross-family, or rationale-only evidence.
-
-      Required deliverable: {project_root}/results/experiment_6343_evidence_carrying_factor_lifecycle.json.
-      REQUIRED ARTIFACT FIELDS: status, upstream_release_ledger_path_hash_and_ready_score, factor_lifecycle_schema_path_and_hash, evidence_bundle_schema_path_and_hash, rationale_counterexample_replay_lineage_and_retention_contract, retain_merge_quarantine_delete_and_restore_rules, active_and_quarantine_capacity_bounds, version_registry_path_and_hash, synthetic_lifecycle_stream_manifest_path_and_hash, factor_add_merge_delete_quarantine_and_restore_results, exact_historical_replay_results, protected_retention_results, bounded_memory_growth_results, stale_circular_cross_family_duplicate_and_rationale_laundering_attack_results, restart_and_byte_exact_rollback_results, catastrophic_remembering_event_definition_and_counts, source_model_weight_mutation_count, generated_label_count, llm_call_count, exact_oracle_claim_boundary, evidence_factor_lifecycle_ready_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. source_model_weight_mutation_count, generated_label_count, and llm_call_count must be bare 0. verifier_is_oracle must be true. Readiness is 1.0 only if memory stays bounded, every valid lifecycle operation preserves exact replay and retention, every attack fails closed, and rollback is byte-identical after restart. field_principles must cover every required field.
-
-      CONCRETE STEPS
-      0. Replay Exp6342 readiness. Freeze schemas, lifecycle operations, capacity bounds, replay and retention sets, attack streams, seeds, resource limits, and protected hashes in preconditions_checked.
-      1. Add REQ-LEARN-6343 and scenarios before implementation. Update traceability.
-      2. Extend the factor graph and registry with canonical evidence bundles and lifecycle events.
-      3. Build deterministic streams that require add, merge, quarantine, deletion, restoration, and capacity eviction.
-      4. Check exact replay and protected retention before every state change. Link permitted changes to an e-value release receipt.
-      5. Attack rationale laundering, witness swaps, stale certificates, cycles, cross-family evidence, duplicate rows, harmful merge, harmful deletion, and restart corruption.
-      6. Add property tests for bounded capacity, append-only lineage, deterministic compaction, retention, and byte-identical rollback.
-      7. Run focused tests, full relevant tests, spec coverage, applicable e2e checks, and adversarial verification.
-
-      Run command: .venv/bin/python -m carnot.experiment_6343_evidence_carrying_factor_lifecycle --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6344-counterexample-factor-proposal-calibration
-    milestone: "2026.08.546"
-    deliverable: results/experiment_6344_counterexample_factor_proposal_calibration.json
-    title: "Three-model minimized-counterexample factor proposal calibration"
-    priority: critical
-    track: self_learning
-    requires_gpu: true
-    max_turns: 50
-    estimated_wall_time_min: 300
-    agent_type: codex
-    model: gpt-5.5
-    prior_failures:
-      - experiment_id: exp5923-sota-schema-supported-constraintir-ab
-        verdict: "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates"
-        addressed_by: "The model proposes a bounded factor-local edit from an exact counterexample. It does not generate or repair natural-language ConstraintIR, and exact outcomes retain all labels and release authority."
-        retire_if_same_verdict: true
-    requires:
-      - exp6342-anytime-evalue-release-ledger
-      - exp6343-evidence-carrying-factor-lifecycle
-    prompt: |
-      CONTEXT
-      Exp6319 showed that feedback-directed search can improve protected yield. VASO and related verifier-feedback work suggest giving an update proposer the violated factor and a minimized exact counterexample. This task measures proposal quality only. The local SOTA models can propose bounded factor edits. Exact checkers supply all labels and release authority. Base model weights stay frozen.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/research-references.md V547 planner marker
       - {project_root}/scripts/experiment_template.py cached_sota_pair() guidance
       - {project_root}/python/carnot/inference/sota_models.py
-      - {project_root}/research-references.md V545 VASO entry and V546 lifecycle entries
-      - {project_root}/results/experiment_6319_feedback_directed_online_update_search.json
-      - {project_root}/results/experiment_6342_anytime_evalue_release_ledger.json
-      - {project_root}/results/experiment_6343_evidence_carrying_factor_lifecycle.json
-      - {project_root}/openspec/capabilities/continual-learning/spec.md and {project_root}/ops/e2e-test-plan.md
-
-      TASK
-      Build MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF through cached_sota_pair(gpu_indices=(0, 1)). Use canonical llama.cpp and embedded tokenizers. Freeze a bounded factor-edit schema. For each development event, expose only the changed factor, minimized exact counterexample, allowed variables, and edit bounds. Compare random valid edits, repeated temperature sampling, stability-regularized proposals, and counterexample-directed proposals. Match calls, tokens, candidates, time, and exact-check cost. Use protected exact outcomes once after selection.
-
-      Required deliverable: {project_root}/results/experiment_6344_counterexample_factor_proposal_calibration.json.
-      REQUIRED ARTIFACT FIELDS: status, upstream_paths_hashes_terminal_classes_and_ready_scores, MODEL_SPECS, models_used, model_file_hashes_revisions_quantizations_and_tokenizers, llama_cpp_embedded_tokenizer_receipts, cuda_gpu_offload_and_memory_release_receipts_by_model, factor_edit_schema_path_and_hash, development_event_manifest_path_and_hash, counterexample_minimizer_path_hash_and_exactness, information_exposure_contract, arm_definitions, matched_call_token_candidate_time_and_checker_budgets, raw_proposal_paths_hashes_and_counts, schema_validity_and_factor_locality_results, exact_proposal_success_cost_and_movement_by_model_family_arm, protected_outcome_seal_and_single_open_receipt, paired_deltas_intervals_and_sample_sizes, verification_calls_time_cost_and_error_table, harm_underpowered_missing_and_flagged_cells, protected_validation_leak_count, source_model_weight_mutation_count, generated_label_count, hidden_state_access_count, exact_oracle_claim_boundary, counterexample_proposal_ready_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. protected_validation_leak_count, source_model_weight_mutation_count, generated_label_count, and hidden_state_access_count must be bare 0. verifier_is_oracle must be true. Readiness is 1.0 only if counterexample-directed proposals improve preregistered exact success per matched cost over repeated sampling in every required model family, stay factor-local, and pass all checks. field_principles must cover every required field.
-
-      CONCRETE STEPS
-      0. Replay both upstream readiness scores. Check all GGUF files, embedded tokenizers, GPUs, VRAM, RAM, disk, timeouts, seeds, event and split hashes, budgets, and protected hashes in preconditions_checked.
-      1. Add REQ-LEARN-6344 and scenarios before implementation. Update traceability.
-      2. Build MODEL_SPECS with the canonical helper. Record receipts before generation. Load one placement at a time and prove memory release.
-      3. Seal the factor-edit schema, events, information exposure, arms, budgets, and primary endpoint.
-      4. Generate and store raw proposals atomically. Reject edits outside the permitted factor and variable set.
-      5. Select without protected outcomes. Open protected outcomes once and report every model-family arm.
-      6. Add tests for counterexample minimality, information isolation, tokenizer path, budget parity, factor locality, single-open rules, cost accounting, and oracle boundaries.
-      7. Run focused tests, spec coverage, applicable e2e checks, and adversarial verification.
-
-      Run command: .venv/bin/python -m carnot.experiment_6344_counterexample_factor_proposal_calibration --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6345-prospective-certified-factor-evolution-ab
-    milestone: "2026.08.546"
-    deliverable: results/experiment_6345_prospective_certified_factor_evolution_ab.json
-    title: "Gated chronological e-process factor evolution trial"
-    priority: critical
-    track: self_learning
-    requires_gpu: true
-    max_turns: 50
-    estimated_wall_time_min: 420
-    agent_type: codex
-    model: gpt-5.5
-    prior_failures:
-      - experiment_id: exp5867-prospective-certified-continuous-learning
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Three explicit upstream gates now require a ready e-value ledger, bounded evidence lifecycle, and calibrated counterexample proposals before any chronological model call."
-        retire_if_same_verdict: true
-    requires:
-      - exp6342-anytime-evalue-release-ledger
-      - exp6343-evidence-carrying-factor-lifecycle
-      - exp6344-counterexample-factor-proposal-calibration
-    gated_on:
-      - upstream: exp6342-anytime-evalue-release-ledger
-        artifact_field: anytime_release_certificate_ready_score
-        op: '=='
-        value: 1.0
-      - upstream: exp6343-evidence-carrying-factor-lifecycle
-        artifact_field: evidence_factor_lifecycle_ready_score
-        op: '=='
-        value: 1.0
-      - upstream: exp6344-counterexample-factor-proposal-calibration
-        artifact_field: counterexample_proposal_ready_score
-        op: '=='
-        value: 1.0
-    prompt: |
-      CONTEXT
-      This is the milestone's continuous self-learning trial. Exp6318 and Exp6319 showed useful factor-local adaptation. Exp6342, Exp6343, and Exp6344 must independently prove release validity, bounded lifecycle, and useful counterexample-directed proposals. The trial is chronological and prospective. Base model weights stay frozen. Exact checkers and the e-process control release. No LLM can approve its own update.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/research-program.md Continuous Self-Learning section
-      - {project_root}/scripts/experiment_template.py cached_sota_pair() guidance
-      - {project_root}/python/carnot/inference/sota_models.py
-      - {project_root}/results/experiment_6318_versioned_factor_local_online_initializer.json
-      - {project_root}/results/experiment_6319_feedback_directed_online_update_search.json
-      - {project_root}/results/experiment_6320_online_self_evolution_safety_audit.json
-      - {project_root}/results/experiment_6342_anytime_evalue_release_ledger.json
-      - {project_root}/results/experiment_6343_evidence_carrying_factor_lifecycle.json
-      - {project_root}/results/experiment_6344_counterexample_factor_proposal_calibration.json
-      - {project_root}/openspec/capabilities/continual-learning/spec.md and {project_root}/ops/e2e-test-plan.md
-
-      TASK
-      Replay all three structured gates before opening the chronological stream. Build MODEL_SPECS through cached_sota_pair(gpu_indices=(0, 1)) with unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use canonical llama.cpp and embedded tokenizers. Seal event order, task-family boundaries, update opportunities, evidence identities, protected validation, factor capacities, e-value policy, release thresholds, and rollback rules. Compare three matched arms: frozen champion, the fixed V544 factor-local learner, and certified evidence-carrying evolution with counterexample-directed proposals. Reveal each event outcome only after the corresponding decision. Open protected validation once after all arms stop. Report future exact yield, false release, rollback, factor growth, catastrophic-remembering events, and verification cost.
-
-      Required deliverable: {project_root}/results/experiment_6345_prospective_certified_factor_evolution_ab.json.
-      REQUIRED ARTIFACT FIELDS: status, upstream_paths_hashes_terminal_classes_and_gate_receipts, MODEL_SPECS, models_used, model_file_hashes_revisions_quantizations_and_tokenizers, llama_cpp_embedded_tokenizer_receipts, cuda_gpu_offload_and_memory_release_receipts_by_model, prospective_registration_path_and_hash, sealed_chronological_stream_manifest_path_and_hash, sealed_protected_validation_manifest_path_and_hash, event_family_and_update_opportunity_contract, arm_definitions, matched_call_token_candidate_time_checker_state_and_memory_budgets, predecision_snapshot_paths_hashes_and_counts, raw_proposal_paths_hashes_and_counts, postdecision_outcome_paths_hashes_and_counts, version_and_lifecycle_registry_paths_hashes, eprocess_release_ledger_path_and_hash, exact_yield_false_release_rollback_factor_growth_and_latency_by_model_family_arm_and_time, future_same_family_and_held_family_paired_deltas_intervals_and_sample_sizes, verification_calls_time_cost_and_error_table, catastrophic_remembering_event_counts_and_examples, protected_outcome_seal_and_single_open_receipt, protected_validation_leak_count, unsafe_commit_count, rollback_byte_identity, harm_underpowered_missing_and_flagged_cells, source_model_weight_mutation_count, generated_label_count, hidden_state_access_count, exact_oracle_claim_boundary, certified_continuous_learning_ready_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. protected_validation_leak_count, unsafe_commit_count, source_model_weight_mutation_count, generated_label_count, and hidden_state_access_count must be bare 0. verifier_is_oracle must be true. Readiness is 1.0 only for positive preregistered future exact-yield gain over both controls, zero unsafe commits and false releases, bounded factor growth, byte-identical rollback, one protected open, complete required model cells, and passing checks. field_principles must cover every required field.
-
-      CONCRETE STEPS
-      0. Replay all structured gates. Check GGUF files, embedded tokenizers, both GPUs, VRAM, RAM, disk, stream and split hashes, event chronology, capacities, e-value rules, budgets, seeds, rollback targets, and protected hashes in preconditions_checked.
-      1. Add REQ-LEARN-6345 and scenarios before implementation. Update traceability.
-      2. Write the prospective registration and seal chronological and protected manifests before any event outcome is read.
-      3. Build MODEL_SPECS with the canonical helper. Record receipts. Load one placement at a time and prove memory release.
-      4. Run all three arms through the same ordered events. Write a predecision snapshot before every outcome. Permit only factor-local versioned updates.
-      5. Use exact evidence and the e-process for release. Apply lifecycle capacity and retention rules. Charge every verifier call and rollback.
-      6. Open protected validation once after all arms stop. Report every model-family-time cell and all missing or harmful cells.
-      7. Add tests for gate replay, seals, chronology, no-peeking, tokenizer use, matched budgets, e-value release, lifecycle bounds, rollback, cost accounting, and oracle boundaries.
-      8. Run focused tests, spec coverage, applicable e2e checks, and adversarial verification.
-
-      Run command: .venv/bin/python -m carnot.experiment_6345_prospective_certified_factor_evolution_ab --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6346-certified-factor-evolution-safety-audit
-    milestone: "2026.08.546"
-    deliverable: results/experiment_6346_certified_factor_evolution_safety_audit.json
-    title: "Independent e-process and factor-lifecycle safety attack audit"
-    priority: critical
-    track: safety
-    requires_gpu: false
-    max_turns: 50
-    estimated_wall_time_min: 240
-    agent_type: codex
-    model: gpt-5.5
-    prior_failures:
-      - experiment_id: exp6320-online-self-evolution-safety-audit
-        verdict: "complete_positive: safety audit passed fail-closed V544 replay checks while utility promotion stayed blocked"
-        addressed_by: "This audit targets new e-process reset, duplicated evidence, rationale laundering, factor merge, deletion, and capacity-eviction surfaces. It keeps utility promotion blocked."
-        retire_if_same_verdict: true
-    requires:
-      - exp6342-anytime-evalue-release-ledger
-      - exp6343-evidence-carrying-factor-lifecycle
-      - exp6344-counterexample-factor-proposal-calibration
-      - exp6345-prospective-certified-factor-evolution-ab
-    prompt: |
-      CONTEXT
-      The certified learner combines statistics, exact constraints, model proposals, mutable factor state, and rollback. Each part creates a separate attack surface. This audit receives terminal or structured skipped upstream artifacts. It must test the reusable certificate and lifecycle even if the prospective utility task was skipped. Safety-only success cannot promote utility. This task makes no LLM call.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/results/experiment_6320_online_self_evolution_safety_audit.json
+      - {project_root}/python/carnot/experiment_6344_counterexample_factor_proposal_calibration.py
+      - {project_root}/python/carnot/experiment_6345_prospective_certified_factor_evolution_ab.py
       - {project_root}/results/experiment_6342_anytime_evalue_release_ledger.json
       - {project_root}/results/experiment_6343_evidence_carrying_factor_lifecycle.json
       - {project_root}/results/experiment_6344_counterexample_factor_proposal_calibration.json
       - {project_root}/results/experiment_6345_prospective_certified_factor_evolution_ab.json
-      - {project_root}/python/carnot/experiment_6320_online_self_evolution_safety_audit.py
-      - {project_root}/openspec/capabilities/continual-learning/spec.md
-      - {project_root}/ops/exclusion_manifest.yaml and {project_root}/ops/e2e-test-plan.md
+      - {project_root}/openspec/capabilities/self-learning/spec.md and {project_root}/ops/e2e-test-plan.md
 
       TASK
-      Build an information-independent attack manifest before reading outcome-sensitive fields. Attack optional stopping, repeated peeking, e-value reset, duplicate and cross-factor evidence, selected nulls, forged evidence identities, rationale laundering, counterexample swaps, lineage cycles, stale release certificates, unsafe merge, harmful deletion, capacity eviction, protected-set read or reuse, challenger budget asymmetry, source-model mutation, restart corruption, and rollback failure. Require fail-closed decisions, zero unsafe commits, and byte-identical parent restoration. Keep utility promotion count zero.
+      Build a small authenticity preflight for real factor proposals. Use `cached_sota_pair()` and require all three measured MODEL_SPECS: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use llama.cpp-backed GGUF loading and embedded tokenizers. Do not use AutoTokenizer. Generate fresh executable failure events from deterministic instance generators in at least two exact-checkable families. Give each model only the released factor version, a minimized exact counterexample, allowed variables, and edit bounds. Run real autoregressive generation. Save raw outputs before parsing. Prove that the proposal did not read its own unapproved write. Legacy small models may run unit smoke tests only and cannot fill measured cells.
 
-      Required deliverable: {project_root}/results/experiment_6346_certified_factor_evolution_safety_audit.json.
-      REQUIRED ARTIFACT FIELDS: status, upstream_paths_hashes_and_terminal_classes, attack_manifest_path_hash_and_preoutcome_receipt, information_isolation_contract, attack_classes, optional_stopping_peeking_reset_duplicate_cross_factor_selected_null_and_identity_attack_results, rationale_counterexample_lineage_certificate_merge_delete_and_eviction_attack_results, protected_validation_read_reuse_and_budget_asymmetry_results, source_model_mutation_results, restart_corruption_and_rollback_failure_results, unsafe_commit_count, undetected_harmful_attack_count, protected_validation_leak_count, source_model_weight_mutation_count, rollback_byte_identity, fail_closed_count_by_attack_class, missing_upstream_and_skipped_utility_handling, safety_ready_score, utility_promotion_count, generated_label_count, llm_call_count, exact_oracle_claim_boundary, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. unsafe_commit_count, undetected_harmful_attack_count, protected_validation_leak_count, source_model_weight_mutation_count, utility_promotion_count, generated_label_count, and llm_call_count must be bare 0. verifier_is_oracle must report the mixed boundary and name exact-oracle checks. safety_ready_score is 1.0 only if every attack fails closed, rollback is byte-identical, missing evidence is not counted as success, and all checks pass. field_principles must cover every required field.
-
-      CONCRETE STEPS
-      0. Hash upstream artifacts and code. Freeze attacks, expected decisions, seeds, corruption locations, rollback identities, resource limits, and protected hashes before reading outcome-sensitive fields.
-      1. Add REQ-LEARN-6346 and scenarios before implementation. Update traceability.
-      2. Reuse Exp6320 attack machinery where its assumptions still hold. Add e-process and lifecycle attacks as independent cases.
-      3. Write and hash the attack manifest before executing or reading protected outcomes.
-      4. Run each attack against clean, missing, skipped, and corrupted upstream states. Treat missing evidence as blocked, not safe success.
-      5. Reconstruct state after restart and compare parent bytes. Assert zero utility promotions.
-      6. Add tests for every attack, manifest ordering, information isolation, fail-closed behavior, and exact boundary labels.
-      7. Run focused tests, full relevant tests, spec coverage, applicable e2e checks, and adversarial verification.
-
-      Run command: .venv/bin/python -m carnot.experiment_6346_certified_factor_evolution_safety_audit --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6347-arc-action-influence-preflight
-    milestone: "2026.08.546"
-    deliverable: results/experiment_6347_arc_action_influence_preflight.json
-    title: "ARC target-licensed counterfactual action-order preflight"
-    priority: high
-    track: arc_live_path
-    requires_gpu: false
-    max_turns: 50
-    estimated_wall_time_min: 180
-    agent_type: codex
-    model: gpt-5.5
-    requires:
-      - exp6338-v546-post-marker-source-scope-freeze
-    prior_failures:
-      - experiment_id: exp6294-arc-mechanic-router-causal-canary
-        verdict: "complete: arc_mechanic_router_causal_canary_ready_no_solve_claim"
-        addressed_by: "The old mechanic-class route scored 0.91 and did not open its holdout. Exp6321 later shipped a target-licensed live shadow. This task changes the endpoint to legal next-action ordering on that reachable path."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Exp6294's mechanic-class router did not clear its causal readiness threshold. Exp6321 later proved that a target-licensed route can shadow the live agent's own attempts with no escape access and no solve claim. The open question is causal influence: can the reachable route change a legal next action before the agent acts? This preflight uses recorded live attempts only. It does not call an LLM. It does not claim a game or level solve.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/research-program.md ARC and Continuous Self-Learning sections
-      - {project_root}/results/experiment_6294_arc_mechanic_router_causal_canary.json
-      - {project_root}/results/experiment_6307_arc_target_validated_route_canary.json
-      - {project_root}/results/experiment_6321_arc_target_licensed_route_live_shadow_ab.json
-      - {project_root}/python/carnot/experiment_6321_arc_target_licensed_route_live_shadow_ab.py
-      - {project_root}/ops/arc_solve_registry.yaml and {project_root}/ops/exclusion_manifest.yaml
-      - {project_root}/openspec/capabilities/arc-world-model-trust-energy/spec.md
-      - {project_root}/ops/e2e-test-plan.md
-
-      TASK
-      Run the ARC registry precheck. Make no duplicate solve proposal. Reconstruct the Exp6321 live-agent windows from the agent's own observations, actions, runtime reverse-engineering state, and exact transition receipts. Do not read hidden game source, offline ground-truth BFS, or a hand GameAdapter. Counterfactually replay the target-licensed route on and off before each recorded action. Measure whether route evidence changes the ordering of legal next actions and whether the changed action has exact one-step transition value. Pre-register an eligibility rule for a fresh default-off A/B. Do not modify the solve registry.
-
-      Required deliverable: {project_root}/results/experiment_6347_arc_action_influence_preflight.json.
-      REQUIRED ARTIFACT FIELDS: status, upstream_path_hash_terminal_class_and_ready_score, arc_registry_precheck_path_hash_and_result, solve_provenance, no_duplicate_solve_receipt, live_attempt_window_manifest_path_and_hash, live_evidence_allowed_fields, forbidden_source_access_contract, hidden_game_source_access_count, offline_ground_truth_bfs_count, hand_game_adapter_count, per_game_calibration_count, route_on_off_counterfactual_contract, legal_action_set_reconstruction_results, action_order_change_results_by_game_window_and_seed, one_step_exact_transition_quality_by_route_state, influence_eligible_window_ids_and_counts, leakage_overlap_and_escape_tests, fixture_mutation_and_route_deletion_results, verification_calls_time_cost_and_error_table, solve_claim_count, registry_update_count, llm_call_count, exact_oracle_claim_boundary, arc_action_influence_eligible_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. solve_provenance must be live_agent_self_discovery. hidden_game_source_access_count, offline_ground_truth_bfs_count, hand_game_adapter_count, per_game_calibration_count, solve_claim_count, registry_update_count, and llm_call_count must be bare 0. verifier_is_oracle must name the exact transition checker. Eligibility is 1.0 only if at least the preregistered number of independent live windows show a legal route-caused action-order change, leakage is zero, route deletion removes the effect, and checks pass. field_principles must cover every required field.
+      Required deliverable: {project_root}/results/experiment_6352_live_factor_proposal_authenticity_preflight.json.
+      REQUIRED ARTIFACT FIELDS: status, upstream_paths_hashes_and_terminal_classes, MODEL_SPECS, models_used, model_file_hashes_revisions_quantizations_and_tokenizers, llama_cpp_embedded_tokenizer_receipts, cuda_gpu_offload_and_memory_release_receipts_by_model, generated_event_manifest_path_and_hash, event_generator_paths_hashes_and_license_receipts, event_family_structure_and_surface_balance, released_factor_snapshot_path_and_hash, information_exposure_contract, live_autoregressive_generation_invoked, generation_process_receipts_by_model, generation_call_token_time_and_exit_receipts, raw_model_output_paths_hashes_and_counts, raw_output_before_parse_receipts, factor_edit_schema_path_and_hash, parse_valid_invalid_and_timeout_counts_by_model, same_step_read_write_isolation_results, deterministic_replay_laundering_checks, exact_checker_paths_hashes_and_versions, exact_checker_calls_time_cost_and_error_table, source_model_weight_mutation_count, generated_label_count, hidden_state_access_count, protected_validation_leak_count, live_factor_proposal_authenticity_ready_score, harm_underpowered_missing_and_flagged_cells, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. MODEL_SPECS must contain all three mandated IDs. live_autoregressive_generation_invoked must be bare true for readiness. source_model_weight_mutation_count, generated_label_count, hidden_state_access_count, and protected_validation_leak_count must be bare 0. verifier_is_oracle must be true only for exact task outcomes, not proposal quality. Readiness is 1.0 only when every required model completes real generation with authentic raw-output and process receipts. honest_verdict must use a terminal prefix. field_principles must cover every required field.
 
       CONCRETE STEPS
-      0. Hash the ARC registry, Exp6321 artifacts and transition rows, live loop code, route code, exclusion manifest, and protected files. Freeze allowed fields, forbidden sources, eligibility threshold, seeds, timeouts, and exact checker in preconditions_checked.
-      1. Add REQ-ARC-6347 and scenarios before implementation. Update traceability.
-      2. Run the registry precheck. Record that this is an influence task and not a solve task.
-      3. Reconstruct only windows that the live agent reached from its own attempts and runtime evidence.
-      4. Replay route on and off before the action. Keep legal action sets and exact one-step outcomes separate from route features.
-      5. Test route deletion, evidence permutation, target leakage, fixture mutation, hidden-source traps, and off-path adapter traps.
-      6. Add tests for provenance, forbidden access counts, counterfactual ordering, exact transitions, eligibility, no registry write, and no solve claim.
-      7. Run focused tests, spec coverage, applicable live-path e2e checks, and adversarial verification.
+      0. Before writing implementation, call `cached_sota_pair()`. Verify all three GGUF files, hashes, embedded tokenizers, two GPUs, free VRAM, disk, llama.cpp, seeds, event generators, exact checkers, and protected hashes. If a required model or GPU path is unavailable, write an honest blocked artifact and stop. Do not substitute a legacy model into a measured cell.
+      1. Add REQ-LEARN-6352 and scenarios before implementation. Update traceability.
+      2. Reuse the Exp6344 bounded factor-edit schema and Exp6343 released-version registry contract. Do not reuse Exp6344 raw proposal values.
+      3. Generate fresh events from deterministic seeds. Balance family, executable structure, and surface relabeling before any model call.
+      4. Load one model at a time. Record CUDA placement. Run real generation. Persist raw bytes, timing, process ID, command path, seed, sampling parameters, and exit state before parsing.
+      5. Parse the bounded edit schema. Run exact checks only after the proposal is frozen. Record every invalid, timeout, and exception.
+      6. Mutate replay files, clocks, model IDs, output hashes, parser inputs, and active registry state. Prove fail-closed authenticity and read-only proposal behavior.
+      7. Unload each model and record memory release. Add focused tests, 100% changed-module coverage, spec coverage, applicable e2e checks, adversarial verification, and root-clutter checks.
 
-      Run command: .venv/bin/python -m carnot.experiment_6347_arc_action_influence_preflight --date {date}
+      Run command: .venv/bin/python -m carnot.experiment_6352_live_factor_proposal_authenticity_preflight --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6348-arc-default-off-action-influence-ab
-    milestone: "2026.08.546"
-    deliverable: results/experiment_6348_arc_default_off_action_influence_ab.json
-    title: "Gated default-off live ARC action-influence A/B"
+  - id: exp6353-live-counterexample-factor-proposal-ab
+    milestone: "2026.08.547"
+    deliverable: results/experiment_6353_live_counterexample_factor_proposal_ab.json
+    title: "Gated real counterexample-directed factor proposal A/B"
     priority: critical
-    track: arc_live_path
+    track: self_learning
     requires_gpu: true
     max_turns: 50
     estimated_wall_time_min: 360
     agent_type: codex
     model: gpt-5.5
     requires:
-      - exp6347-arc-action-influence-preflight
+      - exp6352-live-factor-proposal-authenticity-preflight
     gated_on:
-      - upstream: exp6347-arc-action-influence-preflight
-        artifact_field: arc_action_influence_eligible_score
-        op: '=='
+      - upstream: exp6352-live-factor-proposal-authenticity-preflight
+        artifact_field: live_factor_proposal_authenticity_ready_score
+        op: "=="
         value: 1.0
     prior_failures:
-      - experiment_id: exp6294-arc-mechanic-router-causal-canary
-        verdict: "complete: arc_mechanic_router_causal_canary_ready_no_solve_claim"
-        addressed_by: "The new route is the Exp6321 target-licensed live shadow, and Exp6347 must first prove counterfactual action-order eligibility. The endpoint is fresh legal action influence, not mechanic-class prediction."
-        retire_if_same_verdict: true
-      - experiment_id: exp6295-arc-mechanic-router-holdout-audit
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "This task has a new structured gate on Exp6347 action influence. The conductor will skip the model call unless the target-licensed route reaches the new eligibility threshold."
+      - experiment_id: exp6344-counterexample-factor-proposal-calibration
+        verdict: "complete_positive: counterexample-directed proposals beat repeated sampling per matched exact cost in every required model family"
+        addressed_by: "The prior A/B replayed deterministic proposal rows over four events. This A/B uses fresh balanced events, real autoregressive calls, raw-output receipts, parse failures, and a protected future exact endpoint."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Exp6347 must first show that the target-licensed route can change legal next-action order on the live agent's own evidence. This task then tests fresh live windows. The route stays default-off. It may reorder or annotate actions but cannot inject an action that the live agent did not produce. The experiment measures causal action influence and one-step exact transition quality. It does not claim or target a game or level solve.
+      Exp6352 must prove real proposal generation from all three mandatory local GGUF models. Exp6344's deterministic replay suggested that minimized counterexamples can focus factor edits, but it did not measure model behavior. This task asks the same scientific question with a different evidence source. It uses real generation, balanced fresh events, and a future exact endpoint. Exact validators supply labels. The models cannot approve their own proposals.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/scripts/experiment_template.py cached_sota_pair() guidance
-      - {project_root}/python/carnot/inference/sota_models.py
-      - {project_root}/results/experiment_6321_arc_target_licensed_route_live_shadow_ab.json
-      - {project_root}/results/experiment_6347_arc_action_influence_preflight.json
-      - {project_root}/python/carnot/experiment_6321_arc_target_licensed_route_live_shadow_ab.py
-      - {project_root}/ops/arc_solve_registry.yaml and {project_root}/ops/exclusion_manifest.yaml
-      - {project_root}/openspec/capabilities/arc-world-model-trust-energy/spec.md
-      - {project_root}/ops/e2e-test-plan.md
+      - {project_root}/research-program.md and {project_root}/research-references.md V547 section
+      - {project_root}/scripts/experiment_template.py and {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/results/experiment_6352_live_factor_proposal_authenticity_preflight.json
+      - {project_root}/python/carnot/experiment_6344_counterexample_factor_proposal_calibration.py
+      - {project_root}/results/experiment_6344_counterexample_factor_proposal_calibration.json
+      - {project_root}/results/experiment_6342_anytime_evalue_release_ledger.json
+      - {project_root}/results/experiment_6343_evidence_carrying_factor_lifecycle.json
+      - {project_root}/openspec/capabilities/self-learning/spec.md and {project_root}/ops/e2e-test-plan.md
 
       TASK
-      Replay the structured gate and ARC registry precheck before model load. Build MODEL_SPECS through cached_sota_pair(gpu_indices=(0, 1)) with unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use canonical llama.cpp and embedded tokenizers. Seal fresh live-agent windows, game order, seeds, prompts, action budgets, route rules, exact transition endpoints, and stopping rules. Compare route off and route on at matched budgets. The route may use only the agent's own prior observations, actions, and runtime reverse-engineering state. Preserve every raw candidate and action receipt. Do not update the solve registry.
+      Run a preregistered matched A/B of real factor proposals. Use all three mandatory MODEL_SPECS through `cached_sota_pair()`: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Compare repeated temperature sampling, stability-only bounded edits, and minimized-counterexample-directed edits. Use the same released factor version and the same fresh event in every arm. Match calls, tokens, candidates, exact-check count, and wall-time cap. Balance executable structure and surface relabeling. Freeze development and future partitions before generation. Select without future outcomes, then open the future exact endpoint once. Report exact success per matched cost, invalid edit rate, movement, and model-family interactions.
 
-      Required deliverable: {project_root}/results/experiment_6348_arc_default_off_action_influence_ab.json.
-      REQUIRED ARTIFACT FIELDS: status, upstream_path_hash_terminal_class_and_gate_receipt, arc_registry_precheck_path_hash_and_result, solve_provenance, no_duplicate_solve_receipt, MODEL_SPECS, models_used, model_file_hashes_revisions_quantizations_and_tokenizers, llama_cpp_embedded_tokenizer_receipts, cuda_gpu_offload_and_memory_release_receipts_by_model, prospective_registration_path_and_hash, fresh_live_window_manifest_path_and_hash, live_evidence_allowed_fields, forbidden_source_access_contract, hidden_game_source_access_count, offline_ground_truth_bfs_count, hand_game_adapter_count, per_game_calibration_count, route_default_off_and_activation_receipts, arm_definitions, matched_call_token_action_time_and_checker_budgets, raw_model_and_action_paths_hashes_and_counts, legal_action_order_changes_by_model_game_window_arm_and_seed, exact_one_step_transition_quality_by_model_game_window_arm_and_seed, paired_influence_and_quality_deltas_intervals_and_sample_sizes, route_deletion_permutation_leakage_and_escape_results, verification_calls_time_cost_and_error_table, harm_underpowered_missing_and_flagged_cells, source_model_weight_mutation_count, generated_label_count, hidden_state_access_count, solve_claim_count, registry_update_count, exact_oracle_claim_boundary, arc_causal_influence_ready_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. solve_provenance must be live_agent_self_discovery. hidden_game_source_access_count, offline_ground_truth_bfs_count, hand_game_adapter_count, per_game_calibration_count, source_model_weight_mutation_count, generated_label_count, hidden_state_access_count, solve_claim_count, and registry_update_count must be bare 0. verifier_is_oracle must name the exact transition checker. Readiness is 1.0 only for positive preregistered action-quality influence in every headline model, matched budgets, zero leakage and forbidden access, a route-deletion effect, no registry change, and passing checks. field_principles must cover every required field.
+      Required deliverable: {project_root}/results/experiment_6353_live_counterexample_factor_proposal_ab.json.
+      REQUIRED ARTIFACT FIELDS: status, upstream_path_hash_terminal_class_and_gate_receipt, MODEL_SPECS, models_used, model_file_hashes_revisions_quantizations_and_tokenizers, llama_cpp_embedded_tokenizer_receipts, cuda_gpu_offload_and_memory_release_receipts_by_model, prospective_registration_path_and_hash, development_and_future_event_manifests_paths_hashes_and_counts, event_family_structure_surface_and_difficulty_balance, factor_snapshot_path_and_hash, arm_definitions, information_exposure_contract, matched_call_token_candidate_time_and_checker_budgets, live_autoregressive_generation_invoked, generation_process_receipts_by_model_arm, raw_model_output_paths_hashes_and_counts, parse_valid_invalid_timeout_and_schema_locality_by_model_arm, proposal_selection_receipts, protected_future_seal_and_single_open_receipt, exact_future_success_cost_movement_and_latency_by_model_family_arm, paired_deltas_intervals_and_sample_sizes, live_counterexample_proposal_delta, live_counterexample_proposal_gain_score, model_identity_shortcut_controls, verification_calls_time_cost_and_error_table, source_model_weight_mutation_count, generated_label_count, hidden_state_access_count, protected_validation_leak_count, harm_underpowered_missing_and_flagged_cells, exact_oracle_claim_boundary, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. MODEL_SPECS must contain all three mandated IDs. live_autoregressive_generation_invoked must be true. live_counterexample_proposal_delta must be the preregistered pooled future exact-success-per-cost delta over repeated sampling. Gain is 1.0 only for delta greater than 0, no protected leak, no unsafe edit acceptance, complete required cells, and clean tests. All count fields must be bare values. honest_verdict must use a terminal prefix. field_principles must cover every required field.
 
       CONCRETE STEPS
-      0. Replay the structured gate and registry precheck. Check all GGUF files, embedded tokenizers, GPUs, VRAM, RAM, disk, fresh window hashes, game order, seeds, budgets, route default, forbidden sources, exact checker, and protected hashes in preconditions_checked.
-      1. Add REQ-ARC-6348 and scenarios before implementation. Update traceability.
-      2. Seal the prospective registration and fresh live-window manifest before model generation.
-      3. Build MODEL_SPECS with the canonical helper. Record receipts. Load one placement at a time and prove memory release.
-      4. Run matched route-off and route-on windows. Permit route activation only where the live agent produced eligible actions from its own evidence.
-      5. Record exact one-step outcomes after action choice. Run route deletion and evidence permutation without giving new information to the agent.
-      6. Report each model-game-window cell. Do not pool away a missing or harmful cell. Assert no solve claim and no registry write.
-      7. Add tests for gate replay, provenance, seals, tokenizer use, budget parity, route default, action ownership, forbidden access, deletion effects, and registry immutability.
-      8. Run focused tests, spec coverage, applicable live-path e2e checks, and adversarial verification.
+      0. Replay the structured Exp6352 gate. Check all three GGUFs, two GPUs, VRAM, disk, llama.cpp, event generators, exact validators, sealed manifests, budgets, seeds, and protected hashes. If the gate or a required model fails, write a gate-blocked artifact without generation.
+      1. Add REQ-LEARN-6353 and scenarios before implementation. Update traceability.
+      2. Preregister event families, surface relabelings, arms, primary delta, sample floor, intervals, underpower rule, budgets, and single-open sequence.
+      3. Generate fresh events. Hash development and future partitions before model calls. Solver conflict counts may be reported but cannot define model difficulty.
+      4. Load one model at a time. Run all arms with matched settings. Save raw outputs before parsing and exact checking.
+      5. Select proposals using only development evidence. Open the future outcomes once. Compute disaggregated and pooled paired results.
+      6. Attack prompt-arm leakage, future leakage, model identity shortcuts, output substitution, duplicated candidates, budget drift, parse ambiguity, and exact-check asymmetry.
+      7. Unload models. Run focused tests, coverage, relevant full tests, spec coverage, applicable e2e checks, adversarial verification, and root-clutter checks.
 
-      Run command: .venv/bin/python -m carnot.experiment_6348_arc_default_off_action_influence_ab --date {date}
+      Run command: .venv/bin/python -m carnot.experiment_6353_live_counterexample_factor_proposal_ab --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6349-v546-adversarial-capstone
-    milestone: "2026.08.546"
-    deliverable: results/experiment_6349_v546_adversarial_capstone.json
-    title: "V546 terminal evidence reconciliation and adversarial capstone"
+  - id: exp6354-prospective-live-certified-factor-learning
+    milestone: "2026.08.547"
+    deliverable: results/experiment_6354_prospective_live_certified_factor_learning.json
+    title: "Gated prospective read-only-then-commit certified factor learning"
     priority: critical
-    track: infrastructure
+    track: self_learning
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 480
+    agent_type: codex
+    model: gpt-5.5
+    requires:
+      - exp6353-live-counterexample-factor-proposal-ab
+    gated_on:
+      - upstream: exp6353-live-counterexample-factor-proposal-ab
+        artifact_field: live_counterexample_proposal_delta
+        op: ">"
+        value: 0.0
+      - upstream: exp6353-live-counterexample-factor-proposal-ab
+        artifact_field: live_counterexample_proposal_gain_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp6345-prospective-certified-factor-evolution-ab
+        verdict: "complete_positive: certified evidence-carrying evolution beat frozen and fixed controls with bounded exact release"
+        addressed_by: "Exp6345 replayed six predetermined outcomes and used tokenizer-only access. This trial uses real model proposals, fresh executable outcomes, immutable chronology, a read-only proposal snapshot, and an exact release-before-commit sequence."
+        retire_if_same_verdict: true
+      - experiment_id: exp5867-prospective-certified-continuous-learning
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The required e-value ledger, lifecycle registry, live proposal authenticity preflight, and positive real-proposal A/B are now explicit prerequisites with structured gates."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Carnot now has a bounded e-value release ledger, evidence-carrying factor lifecycle, and rollback. Exp6353 must show that real minimized-counterexample proposals beat repeated sampling on protected future outcomes. This task is the milestone's continuous self-learning experiment. It tests Tier 2 and Tier 4 learning: constraint memory changes online while base GGUF weights stay frozen. The proposal phase reads only the last released factor version. It cannot observe or read back its own pending edit. Exact outcomes arrive after the decision. The e-process controls release. Only a released version can become active for the next event.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/research-program.md Continuous Self-Learning section and {project_root}/_bmad/prd.md FR-11
+      - {project_root}/scripts/experiment_template.py and {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/results/experiment_6353_live_counterexample_factor_proposal_ab.json
+      - {project_root}/python/carnot/experiment_6342_anytime_evalue_release_ledger.py
+      - {project_root}/python/carnot/experiment_6343_evidence_carrying_factor_lifecycle.py
+      - {project_root}/python/carnot/experiment_6345_prospective_certified_factor_evolution_ab.py
+      - {project_root}/results/experiment_6342_anytime_evalue_release_ledger.json
+      - {project_root}/results/experiment_6343_evidence_carrying_factor_lifecycle.json
+      - {project_root}/results/experiment_6345_prospective_certified_factor_evolution_ab.json
+      - {project_root}/openspec/capabilities/self-learning/spec.md and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Run a sealed chronological continuous-learning trial with all three mandatory local GGUF models. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF through `cached_sota_pair()`. Compare frozen factors, the deterministic V546 replay rule, and real certified evolution. Use fresh executable events across at least three exact-checkable families. Seal training-prefix, future same-family, and held-family events before generation. For each event: snapshot released state, generate a proposal, freeze it, reveal the exact outcome, update the immutable e-process, then release and commit, quarantine, or rollback. Match budgets and base-model calls. Keep model weights frozen.
+
+      Required deliverable: {project_root}/results/experiment_6354_prospective_live_certified_factor_learning.json.
+      REQUIRED ARTIFACT FIELDS: status, upstream_paths_hashes_terminal_classes_and_gate_receipts, MODEL_SPECS, models_used, model_file_hashes_revisions_quantizations_and_tokenizers, llama_cpp_embedded_tokenizer_receipts, cuda_gpu_offload_and_memory_release_receipts_by_model, prospective_registration_path_and_hash, sealed_chronological_stream_manifest_path_and_hash, sealed_protected_future_manifest_path_and_hash, event_family_structure_surface_and_update_opportunity_contract, arm_definitions, matched_call_token_candidate_time_checker_state_and_memory_budgets, live_autoregressive_generation_invoked, predecision_released_snapshot_paths_hashes_and_counts, pending_proposal_paths_hashes_and_counts, same_step_read_write_isolation_receipts, postdecision_exact_outcome_paths_hashes_and_counts, eprocess_release_ledger_path_and_hash, version_lifecycle_and_quarantine_registry_paths_hashes, release_before_commit_receipts, exact_yield_false_release_rollback_factor_growth_abstention_and_latency_by_model_family_arm_and_time, future_same_family_and_held_family_paired_deltas_intervals_and_sample_sizes, prospective_live_certified_learning_delta, catastrophic_forgetting_and_remembering_counts, verification_calls_time_cost_and_error_table, protected_future_seal_and_single_open_receipt, protected_validation_leak_count, unsafe_commit_count, rollback_byte_identity, source_model_weight_mutation_count, generated_label_count, hidden_state_access_count, prospective_live_certified_learning_ready_score, harm_underpowered_missing_and_flagged_cells, continuous_self_learning_task, exact_oracle_claim_boundary, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. continuous_self_learning_task and live_autoregressive_generation_invoked must be bare true. MODEL_SPECS must contain all three mandated IDs. protected_validation_leak_count, unsafe_commit_count, source_model_weight_mutation_count, generated_label_count, and hidden_state_access_count must be bare 0 for readiness. Readiness requires positive future delta over frozen and V546 replay controls, exact release chronology, bounded growth, byte-exact rollback, no unsafe commit, complete cells, and clean tests. honest_verdict must use a terminal prefix. field_principles must cover every required field.
+
+      CONCRETE STEPS
+      0. Replay both Exp6353 structured gates and all Exp6342/Exp6343 readiness fields. Check three GGUFs, two GPUs, VRAM, disk, exact validators, registry state, rollback targets, e-process restart, seeds, stream seals, budgets, and protected hashes. Write an honest gate-blocked artifact if any required condition fails.
+      1. Add REQ-LEARN-6354 and scenarios before implementation. Update traceability.
+      2. Preregister chronology, partitions, arms, release rule, primary delta, sample floor, intervals, capacity, abstention, underpower, and failure policies.
+      3. Generate and seal fresh events before model calls. Keep protected future outcomes inaccessible until all learning arms stop.
+      4. Run one event at a time. Enforce snapshot -> propose -> freeze -> exact outcome -> e-process -> release -> commit. Hash each state transition.
+      5. Test process restart between proposal and outcome, between outcome and release, and after commit. Require exact reconstruction and byte-identical rollback.
+      6. Open protected future outcomes once. Compute all paired results without pooling away model or family failures.
+      7. Attack same-step self-read, duplicate evidence, optional-stopping reset, selected nulls, factor growth, protected leaks, and budget asymmetry. Unload models. Run focused tests, coverage, relevant full tests, spec coverage, E2E-007 plus applicable checks, adversarial verification, and root-clutter checks.
+
+      Run command: .venv/bin/python -m carnot.experiment_6354_prospective_live_certified_factor_learning --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6355-default-off-certified-factor-consumer-ab
+    milestone: "2026.08.547"
+    deliverable: results/experiment_6355_default_off_certified_factor_consumer_ab.json
+    title: "Gated default-off certified factor future consumer A/B"
+    priority: critical
+    track: self_learning
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 360
+    agent_type: codex
+    model: gpt-5.5
+    requires:
+      - exp6354-prospective-live-certified-factor-learning
+    gated_on:
+      - upstream: exp6354-prospective-live-certified-factor-learning
+        artifact_field: prospective_live_certified_learning_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp6345-prospective-certified-factor-evolution-ab
+        verdict: "complete_positive: certified evidence-carrying evolution beat frozen and fixed controls with bounded exact release"
+        addressed_by: "Exp6345 evaluated the learner inside its six-event replay. This task freezes the registry, disables writes, and measures a separate future consumer on newly generated same-family and held-family events."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      A certified learning mechanism is useful only if a later consumer benefits from the released state. Exp6354 must first complete a real chronological learning stream with no unsafe commits. This task freezes the resulting registry and tests it as a default-off consumer. No arm may write during evaluation. Exact validators remain the only acceptance authority. The factor registry may rank proposals, choose a counterexample focus, or abstain. It may not bypass exact checking.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/_bmad/prd.md FR-11 and FR-12
+      - {project_root}/scripts/experiment_template.py and {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/results/experiment_6354_prospective_live_certified_factor_learning.json
+      - {project_root}/results/experiment_6343_evidence_carrying_factor_lifecycle.json
+      - {project_root}/results/experiment_6346_certified_factor_evolution_safety_audit.json
+      - {project_root}/python/carnot/experiment_6343_evidence_carrying_factor_lifecycle.py
+      - {project_root}/openspec/capabilities/self-learning/spec.md, {project_root}/openspec/capabilities/verifiable-reasoning/spec.md, and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Run a write-disabled, default-off consumer A/B on newly generated future events. Use all three mandatory local GGUF MODEL_SPECS through `cached_sota_pair()`: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Compare no memory, the fixed V546 replay registry, and the released Exp6354 registry. Match prompts, calls, tokens, candidates, exact checks, and time. Predeclare same-family and held-family cells. Measure exact accepted yield, unsafe false accepts, correct abstention, invalid proposals, exact-check cost, and latency. Use family-blind prompt and path aliases to detect model-identity shortcuts. Keep the consumer and all behavior default-off.
+
+      Required deliverable: {project_root}/results/experiment_6355_default_off_certified_factor_consumer_ab.json.
+      REQUIRED ARTIFACT FIELDS: status, upstream_path_hash_terminal_class_and_gate_receipt, MODEL_SPECS, models_used, model_file_hashes_revisions_quantizations_and_tokenizers, llama_cpp_embedded_tokenizer_receipts, cuda_gpu_offload_and_memory_release_receipts_by_model, frozen_registry_paths_hashes_and_write_protection_receipts, prospective_registration_path_and_hash, fresh_future_event_manifest_path_and_hash, same_family_and_held_family_contract, arm_definitions, family_blind_alias_and_model_identity_controls, matched_call_token_candidate_time_and_checker_budgets, live_autoregressive_generation_invoked, generation_process_receipts_by_model_arm, raw_model_output_paths_hashes_and_counts, exact_yield_false_accept_abstention_invalid_and_latency_by_model_family_arm, paired_consumer_deltas_intervals_and_sample_sizes, certified_factor_consumer_delta, verifier_calls_time_cost_and_error_table, registry_write_attempt_count, source_model_weight_mutation_count, generated_label_count, hidden_state_access_count, protected_validation_leak_count, default_off_activation_receipts, certified_factor_consumer_ready_score, harm_underpowered_missing_and_flagged_cells, exact_oracle_claim_boundary, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. MODEL_SPECS must contain all three mandated IDs. live_autoregressive_generation_invoked must be true. registry_write_attempt_count, source_model_weight_mutation_count, generated_label_count, hidden_state_access_count, protected_validation_leak_count, and unsafe false accepts must be bare 0 for readiness. Readiness requires positive protected exact-yield delta, no safety regression, complete cells, and clean tests. honest_verdict must use a terminal prefix. field_principles must cover every required field.
+
+      CONCRETE STEPS
+      0. Replay the Exp6354 gate. Verify all three GGUFs, two GPUs, disk, fresh event generators, exact validators, registry hashes, filesystem write protection, budgets, seeds, and protected files. Gate-block honestly if any precondition fails.
+      1. Add REQ-LEARN-6355 and scenarios before implementation. Update traceability.
+      2. Freeze all registries. Seal future families, aliases, arms, primary delta, sample floor, intervals, and safety gates before generation.
+      3. Generate fresh events not present in Exp6353 or Exp6354. Verify zero event and outcome hash overlap.
+      4. Load one model at a time and run matched arms. Save raw generations before parsing and exact validation.
+      5. Compute exact yield and abstention. Keep exact safety separate from learned ranking utility. Disaggregate all model and family cells.
+      6. Attack registry writes, family-name leakage, model-path leakage, exact-check bypass, output substitution, budget drift, and abstention laundering.
+      7. Unload models. Run focused tests, coverage, relevant full tests, spec coverage, E2E-007 plus applicable checks, adversarial verification, and root-clutter checks.
+
+      Run command: .venv/bin/python -m carnot.experiment_6355_default_off_certified_factor_consumer_ab --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6356-live-certified-learning-safety-audit
+    milestone: "2026.08.547"
+    deliverable: results/experiment_6356_live_certified_learning_safety_audit.json
+    title: "Independent live certified learning and consumer safety audit"
+    priority: critical
+    track: verification
     requires_gpu: false
     max_turns: 50
     estimated_wall_time_min: 180
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing): routine milestone capstone false-positive scope matches are allowed when terminal evidence and new task identities are reconciled."
-    prior_failures:
-      - experiment_id: exp6322-v544-adversarial-capstone
-        verdict: "complete: Exp6322 artifact written with one or more validation command failures recorded"
-        addressed_by: "The V546 capstone audits new Exp6337-Exp6348 evidence, recomputes structured skips, and preserves every command exit. It does not promote the V544 determination or hide its failed checks."
-        retire_if_same_verdict: true
     requires:
-      - exp6337-v546-bounded-terminal-handoff
-      - exp6338-v546-post-marker-source-scope-freeze
-      - exp6339-incremental-prefix-enforcement-substrate
-      - exp6340-parser-jit-semantic-diversity-canary
-      - exp6341-prospective-prefix-utility-ab
-      - exp6342-anytime-evalue-release-ledger
-      - exp6343-evidence-carrying-factor-lifecycle
-      - exp6344-counterexample-factor-proposal-calibration
-      - exp6345-prospective-certified-factor-evolution-ab
-      - exp6346-certified-factor-evolution-safety-audit
-      - exp6347-arc-action-influence-preflight
-      - exp6348-arc-default-off-action-influence-ab
+      - exp6354-prospective-live-certified-factor-learning
+      - exp6355-default-off-certified-factor-consumer-ab
+    prior_failures:
+      - experiment_id: exp6346-certified-factor-evolution-safety-audit
+        verdict: "complete_positive: certified factor evolution safety audit passed while utility promotion stayed zero"
+        addressed_by: "Exp6346 attacked deterministic artifact replay. This audit targets real generation processes, raw-output provenance, same-step read/write coupling, family identity shortcuts, protected future events, and the write-disabled consumer."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      V546 has 13 tasks across evidence, prefix generation, certified self-learning, and ARC action influence. Structured gate failures are valid scientific outcomes and can create skipped artifacts. The capstone must recompute all claims from terminal files. It must not treat exact oracles as learned verifiers, safety as utility, a reachable ARC route as influence, or action influence as a solve. It must preserve the GateMate, KV260, TSU, Kona, hidden-state, external-text-scorer, and post-hoc search boundaries.
+      Exp6346 proved that the bounded replay lifecycle failed closed under synthetic attacks. V547 adds real autoregressive proposal processes, raw output parsing, a chronological release loop, and a future consumer. Those surfaces create new authenticity and leakage risks. This audit runs even if Exp6355 is blocked or null. Safety success cannot promote utility. Missing upstream evidence is a finding, not a reason to invent test rows.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/research-program.md, {project_root}/_bmad/prd.md, and {project_root}/_bmad/architecture.md
-      - {project_root}/research-roadmap.yaml and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
-      - all declared V546 result artifacts under {project_root}/results/
-      - {project_root}/research-complete.yaml, {project_root}/ops/conductor-log.md, and {project_root}/ops/exclusion_manifest.yaml
-      - {project_root}/ops/arc_solve_registry.yaml and {project_root}/research-hardware-wishlist.md
-      - {project_root}/ops/status.md, {project_root}/ops/changelog.md, {project_root}/_bmad/traceability.md, and {project_root}/ops/e2e-test-plan.md
-      - {project_root}/scripts/roadmap_schema.py, {project_root}/scripts/audit_roadmap_gates.py, {project_root}/scripts/validate_prior_failures.py, {project_root}/scripts/exclusion_manifest_lint.py, and {project_root}/scripts/adversarial_verify.py
+      - {project_root}/results/experiment_6352_live_factor_proposal_authenticity_preflight.json
+      - {project_root}/results/experiment_6353_live_counterexample_factor_proposal_ab.json
+      - {project_root}/results/experiment_6354_prospective_live_certified_factor_learning.json
+      - {project_root}/results/experiment_6355_default_off_certified_factor_consumer_ab.json if present
+      - {project_root}/python/carnot/experiment_6342_anytime_evalue_release_ledger.py
+      - {project_root}/python/carnot/experiment_6343_evidence_carrying_factor_lifecycle.py
+      - {project_root}/python/carnot/experiment_6346_certified_factor_evolution_safety_audit.py
+      - {project_root}/ops/exclusion_manifest.yaml, {project_root}/openspec/capabilities/self-learning/spec.md, and {project_root}/ops/e2e-test-plan.md
 
       TASK
-      Recompute the V546 terminal record from declared deliverables and conductor receipts. Accept complete, null, blocked, failed, and structured skipped states without rewriting them. Recompute every dependency and gate. Audit all prior_failures retirement signals. Check mandatory GGUF use, embedded tokenizer receipts, GPU memory release, base-weight immutability, exact-oracle labels, no generated labels, verification-cost accounting, continuous-learning chronology, e-process validity, factor lifecycle bounds, rollback identity, ARC solve_provenance, registry immutability, and hardware non-use. Run the relevant repository checks. Reconcile research-complete.yaml, ops/status.md, ops/changelog.md, _bmad/traceability.md, and the next-action record with the evidence. Do not invent a positive capstone verdict when a command fails.
+      Independently replay and attack the V547 live-learning evidence. Verify model process receipts and raw-output hashes. Replace outputs, replay deterministic rows, join a proposal to the wrong model, expose a pending write to the same call, duplicate or reorder evidence, reset optional-stopping state, select null streams, exploit parser aliases, leak future outcomes, encode model identity, mutate exact validators, release without a certificate, corrupt restart state, exceed factor capacity, disable quarantine, fail rollback, write during consumer evaluation, and bypass exact acceptance. Recompute every readiness score. Keep utility and safety determinations separate.
 
-      Required deliverable: {project_root}/results/experiment_6349_v546_adversarial_capstone.json.
-      REQUIRED ARTIFACT FIELDS: status, milestone_and_roadmap_hash, declared_task_ids_and_deliverables, conductor_terminal_receipts_by_task, artifact_existence_hash_schema_status_and_honest_verdict_by_task, dependency_recomputation, structured_gate_recomputation, skipped_task_handling, prior_failure_and_retirement_audit, exclusion_manifest_audit, prompt_contract_audit, required_field_and_field_principle_audit, model_policy_and_MODEL_SPECS_audit, llama_cpp_embedded_tokenizer_audit, gpu_offload_and_memory_release_audit, source_model_weight_mutation_audit, generated_label_and_hidden_state_audit, exact_oracle_and_learned_claim_boundary_audit, prefix_generation_determination, certified_continuous_learning_determination, eprocess_and_factor_lifecycle_determination, safety_audit_determination, arc_action_influence_determination, solve_provenance_audit, arc_registry_immutability_audit, hardware_nonuse_and_inference_substrate_audit, verification_cost_accounting_audit, three_gap_closure_matrix, prd_requirement_mapping, protected_files_changed_with_reasons, docs_and_archive_reconciliation, preconditions_checked, inference_substrate, verifier_is_oracle, llm_call_count, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, reproducibility_checksum, honest_verdict. llm_call_count must be bare 0. verifier_is_oracle must be false for the capstone itself while the audit names every upstream oracle. field_principles must cover every required field.
+      Required deliverable: {project_root}/results/experiment_6356_live_certified_learning_safety_audit.json.
+      REQUIRED ARTIFACT FIELDS: status, upstream_paths_hashes_and_terminal_classes, audit_registration_path_hash_and_preoutcome_receipt, attack_manifest_path_and_hash, attack_classes, model_process_and_raw_output_authenticity_results, output_substitution_replay_laundering_wrong_model_and_wrong_event_results, same_step_read_write_and_pending_state_results, duplicate_reorder_optional_stopping_reset_selected_null_and_identity_results, parser_alias_schema_escape_and_timeout_results, protected_future_read_reuse_and_budget_asymmetry_results, exact_validator_mutation_and_acceptance_bypass_results, certificate_release_quarantine_capacity_merge_delete_and_eviction_results, restart_corruption_rollback_and_consumer_write_results, fail_closed_count_by_attack_class, undetected_harmful_attack_count, unsafe_commit_count, registry_write_during_consumer_count, rollback_byte_identity, utility_promotion_count, recomputed_live_learning_and_consumer_scores, missing_upstream_and_skipped_utility_handling, source_model_weight_mutation_count, generated_label_count, hidden_state_access_count, protected_validation_leak_count, live_certified_learning_safety_ready_score, exact_oracle_claim_boundary, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, llm_call_count, field_provenance, field_principles, test_commands, test_exit_codes, duration_s, random_seeds, reproducibility_checksum, honest_verdict. llm_call_count must be bare 0. undetected_harmful_attack_count, unsafe_commit_count, registry_write_during_consumer_count, source_model_weight_mutation_count, generated_label_count, hidden_state_access_count, protected_validation_leak_count, and utility_promotion_count must be bare 0 for readiness. verifier_is_oracle must be true only for exact replay checks. honest_verdict must use a terminal prefix. field_principles must cover every required field.
 
       CONCRETE STEPS
-      0. Hash the roadmap, proposal, every declared artifact, conductor log, exclusion manifest, ARC registry, specs, tests, and operations documents. Record disk, command availability, and protected state in preconditions_checked.
-      1. Add REQ-INFRA-6349 and scenarios before implementation. Update traceability.
-      2. Parse all 13 task specs. Match each to a terminal artifact or explicit conductor failure. Validate schemas and terminal honest verdicts.
-      3. Recompute dependencies and gates from raw upstream fields. Confirm that skipped tasks had no agent execution and no hidden utility claim.
-      4. Audit prior failures, retirement signals, model receipts, tokenizers, GPU placement, source-weight immutability, generated labels, hidden-state access, oracle boundaries, and verification cost.
-      5. Reconstruct the certified-learning chronology and ARC provenance. Assert no protected leakage, unsafe release, off-path solve, registry mutation, or hardware claim.
-      6. Run focused capstone tests, all relevant experiment tests, roadmap schema, gate audit, prior-failure lint, exclusion lint, spec coverage, applicable e2e checks, determination lint, and adversarial verification.
-      7. Reconcile research-complete.yaml, ops/status.md, ops/changelog.md, _bmad/traceability.md, and any required capability specs. Preserve every failed command and null result.
-      8. Write a terminal verdict that states which of the three gaps closed, remained null, was skipped, or was blocked.
+      0. Hash upstream artifacts and sidecars. Record terminal classes, missing files, disk, commands, exact checker versions, immutable copies, seeds, attack budgets, and protected hashes. Do not require a positive utility verdict to run safety attacks.
+      1. Add REQ-LEARN-6356 and scenarios before implementation. Update traceability.
+      2. Freeze the attack manifest before reading utility outcomes. Include at least one attack per listed class.
+      3. Replay process receipts and raw outputs independently. Reject missing or mismatched provenance.
+      4. Attack proposal, release, lifecycle, restart, and consumer phases separately and in combination.
+      5. Recompute readiness from attacked bytes. Keep blocked, null, and missing cells visible.
+      6. Add mutation-sensitive tests for every attack and a test that safety cannot set utility readiness.
+      7. Run focused tests, 100% changed-module coverage, relevant full tests, spec coverage, E2E-007 plus applicable checks, adversarial verification, and root-clutter checks.
 
-      Run command: .venv/bin/python -m carnot.experiment_6349_v546_adversarial_capstone --date {date}
+      Run command: .venv/bin/python -m carnot.experiment_6356_live_certified_learning_safety_audit --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
