@@ -15731,3 +15731,5 @@ code |
 | 2026-08-12 22:34 UTC | Three-model live factor proposal authenticity pref | OK | 88 passed, 1 warning in 10.97s |
 | 2026-08-12 22:37 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |
 | 2026-08-12 22:39 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |
+| 2026-08-12 22:41 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |
+| 2026-08-12 22:43 UTC | Gated prospective read-only-then-commit certified | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal- |
