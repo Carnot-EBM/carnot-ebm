@@ -33809,3 +33809,127 @@ locally.
   of V544.
 
 <!-- V544-PLANNER-REFRESH-20260811-END -->
+
+## V545 Planner Refresh (2026-08-12, after milestone 2026.08.544)
+
+This refresh was completed before drafting milestone `2026.08.545`. It
+searched arXiv first for 2025-2026 work on energy reasoning, neural constraint
+solving, Ising sampling, hallucination verification, KANs, constrained
+generation, sampling hardware, and continual learning. It then checked
+OpenReview, Hugging Face Papers, Semantic Scholar routes for EBT
+(`2507.02092`) and ARM-EBM (`2512.15605`), Extropic, Logical Intelligence, and
+GitHub discovery. Source claims remain hypotheses until Carnot reproduces them
+locally.
+
+### Promoted: formally guarded generation and released self-learning
+
+- **Self-Evolving Agents with Anytime-Valid Certificates** -
+  arXiv:2607.00871, https://arxiv.org/abs/2607.00871; submitted 2026-07-01.
+  SEA keeps the base model frozen, limits change to a small steering adapter and
+  versioned harness, and admits a change through an anytime-valid gate with a
+  fixed error budget. Its SWE-bench results are single-run, and the paper says
+  base capability is the dominant effect. Carnot hook: replace the fixed
+  champion--challenger threshold from Exp6318 with a streaming certificate.
+  Test null streams, optional stopping, repeated looks, alpha spending,
+  restart identity, and rollback. Do not infer broad utility from the paper.
+- **SEVerA: Verified Synthesis of Self-Evolving Agents** -
+  arXiv:2603.25111v2, https://arxiv.org/abs/2603.25111; revised 2026-04-24.
+  SEVerA wraps each generative call in a first-order output contract, rejection
+  sampler, and verified fallback. It separates Search, Verification, and
+  Learning so parameter updates cannot weaken the hard guarantee. Carnot hook:
+  synthesize bounded policy programs in a restricted DSL, prove the behavioral
+  contract independently, and route every rejected or malformed candidate to a
+  hash-pinned fallback. Exact safety is a guard result, not a learned-verifier
+  win. Utility must beat the same fallback on held contract families.
+- **VASO: Formally Verifiable Self-Evolving Skills for Physical AI Agents** -
+  arXiv:2606.05395, https://arxiv.org/abs/2606.05395; submitted 2026-06-03.
+  VASO converts model-checker counterexamples into update feedback for a
+  reusable skill contract while keeping foundation-model weights frozen.
+  Carnot hook: expose only the violated factor and a minimized exact
+  counterexample to a local SOTA update proposer. The proposer may suggest a
+  factor-local policy delta, but a protected exact checker and the anytime
+  certificate retain all release authority.
+- **MARCH: Multi-Agent Reinforced Self-Check for LLM Hallucination** -
+  arXiv:2603.24579, https://arxiv.org/abs/2603.24579; submitted 2026-03-25.
+  MARCH isolates its checker from the solver response and gives it only atomic
+  claims plus retrieved evidence. The public code is at
+  https://github.com/Qwen-Applications/MARCH. Carnot hook: use information
+  asymmetry in the integrity audit. The obligation checker receives canonical
+  contract clauses, candidate semantics, and exact evidence, but not the
+  solver's rationale or claimed verdict. Do not copy the multi-node PPO stack
+  or replace exact checking with an LLM judge.
+
+### Controls and deferred directions
+
+- **Loss Smoothing for Continual Adaptation** - OpenReview CAO 2026,
+  https://openreview.net/forum?id=pUqcOkV69j. The method preserves shared
+  features while changing task-inconsistent ones. Carnot hook: use stability
+  regularization as a matched control for factor-local updates. It does not
+  authorize base-model fine-tuning or cross-family transfer.
+- **Optimal Abstractions for Verifying Properties of Kolmogorov--Arnold
+  Networks** - arXiv:2602.06737, https://arxiv.org/abs/2602.06737. The method
+  builds piecewise-affine KAN abstractions and proves properties through MILP.
+  Carnot disposition: the verification method is sound research context, but
+  the completed KAN lane did not show a useful verifier or learning advantage.
+  Do not reopen KAN training or hardware mapping in V545.
+- **ETS: Energy-Guided Test-Time Scaling for Training-Free RL Alignment** -
+  arXiv:2601.21484, https://arxiv.org/abs/2601.21484. ETS estimates an energy
+  term online to guide sampling. Carnot disposition: its masked-model and
+  learned-energy setting does not clear the retired external generated-text
+  scorer boundary. Do not schedule it without a new local non-text energy
+  surface and an operator override.
+- **V_1: Unifying Generation and Self-Verification for Parallel Reasoners** -
+  arXiv:2603.04304, https://arxiv.org/abs/2603.04304. Pairwise verification and
+  uncertainty-guided tournaments are useful test-time-compute references.
+  Carnot disposition: Exp6251 found no reliable best-of-N gain, and the
+  external text-verifier line is retired. V545 uses exact contract guards and
+  does not schedule pairwise self-judging or PairRL.
+- **REASON: Accelerating Probabilistic Logical Reasoning for Scalable
+  Neuro-Symbolic Intelligence** - arXiv:2601.20784,
+  https://arxiv.org/abs/2601.20784. The custom accelerator reports an end-to-end
+  probabilistic-logic workload, but it is not a local board or reproducible
+  Carnot substrate. Keep it as a future hardware-workload reference.
+
+### Secondary-source and product status
+
+- **Hugging Face Papers:** LLM-as-a-Verifier (`2607.05391`) and V_1 remain
+  strong verifier references, but both center model-derived scoring. They do
+  not supersede exact contract authority or reopen Phase D. SEVerA is the
+  stronger match for V545 because its fallback preserves a hard guarantee.
+- **Semantic Scholar:** the public records for EBT and ARM-EBM were reachable,
+  but this refresh found no new citation-derived mechanism that clears
+  Carnot's retired external-text, hidden-state, or cross-family lanes. The EBT
+  code remains at https://github.com/alexiglad/EBT and still targets new model
+  training rather than local GGUF sidecars.
+- **Extropic:** the first-party writing index surfaced TSU and X0/XTR-0 product
+  material but no authenticated Carnot device or simulator route. No speed,
+  power, sampling, or availability claim is schedulable.
+- **Logical Intelligence:** the current Kona 1.0 page describes a constraint
+  enforcement layer beneath language models, and its Sudoku post reports a
+  vendor benchmark. The pages expose no public weights, local API, or
+  reproducible architecture. Treat Kona as product direction, not a runnable
+  baseline.
+- **GitHub discovery:** MARCH is runnable only through a large
+  Transformers/vLLM/PPO stack and is not a local GGUF drop-in. The EBT repo is
+  a pretraining codebase. No new repository supersedes Carnot's exact
+  validators, restricted program compiler, version registry, or live ARC path.
+
+### V545 planning impact
+
+- Close model-local activation work after Exp6312 and Exp6316. Move the
+  correctness boundary to observable restricted programs plus exact contracts.
+- Build a guarded local-SOTA policy synthesizer with a verified fallback.
+  Require held-family utility beyond fallback before any product claim.
+- Turn Exp6318 and Exp6319 into a certified continuous learner. Use minimized
+  exact counterexamples for factor-local proposals and an anytime-valid release
+  certificate under optional stopping.
+- Isolate the integrity checker from solver rationales and attack vacuous
+  contracts, fallback laundering, validator mutation, and protected-set reuse.
+- Advance the Exp6321 ARC shadow only to a default-off causal influence A/B on
+  the live agent's own attempts. Make no game or level solve claim.
+- Consume the 2026-08-11 GateMate power-cycle receipt with exactly one
+  non-destructive detect. Make no flash, timing, speed, or sampling claim.
+- Keep KAN, external text scorers, hidden-state probes, cross-family transfer,
+  EBT pretraining, TSU execution, and unchanged board probes out of V545.
+
+<!-- V545-PLANNER-REFRESH-20260812-END -->
