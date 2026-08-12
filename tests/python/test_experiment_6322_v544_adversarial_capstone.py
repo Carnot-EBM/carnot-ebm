@@ -49,7 +49,7 @@ def test_scenarios_infra_6322_counts_and_exact_matrix_preserve_states() -> None:
 
     report = mod.build_report(
         REPO,
-        date="20260811",
+        date="20260812",
         command_receipts=[{"command": "focused", "exit_code": 0}],
         before_hashes=mod.protected_hashes(REPO),
         started_at=0.0,
@@ -98,7 +98,7 @@ def test_scenarios_infra_6322_branch_gates_and_laundering_guards() -> None:
 
     report = mod.build_report(
         REPO,
-        date="20260811",
+        date="20260812",
         command_receipts=[{"command": "focused", "exit_code": 0}],
         before_hashes=mod.protected_hashes(REPO),
         started_at=0.0,
@@ -135,7 +135,7 @@ def test_scenarios_infra_6322_retirements_schema_and_write(tmp_path: Path) -> No
 
     report = mod.build_report(
         REPO,
-        date="20260811",
+        date="20260812",
         command_receipts=[{"command": "focused", "exit_code": 0}],
         before_hashes=mod.protected_hashes(REPO),
         started_at=0.0,
@@ -209,7 +209,7 @@ def test_validate_report_rejects_claim_laundering_and_schema_breaks(
 
     report = mod.build_report(
         REPO,
-        date="20260811",
+        date="20260812",
         command_receipts=[{"command": "focused", "exit_code": 0}],
         before_hashes=mod.protected_hashes(REPO),
         started_at=0.0,
@@ -285,7 +285,7 @@ def test_external_receipts_and_cli_edges(
     assert mod._read_external_test_receipts() == [{"command": mod.RUN_COMMAND, "exit_code": 0}]
 
     monkeypatch.setattr(mod, "run", lambda *, date: {"status": f"complete-{date}"})
-    assert mod.main(["--date", "20260811"]) == 0
+    assert mod.main(["--date", "20260812"]) == 0
     assert "experiment_6322_v544_adversarial_capstone.json" in capsys.readouterr().out
 
 
@@ -296,7 +296,7 @@ def test_validate_report_edge_failures_and_retro_run_paths(
 
     base = mod.build_report(
         REPO,
-        date="20260811",
+        date="20260812",
         command_receipts=[{"command": "focused", "exit_code": 0}],
         before_hashes=mod.protected_hashes(REPO),
         started_at=0.0,
@@ -312,7 +312,7 @@ def test_validate_report_edge_failures_and_retro_run_paths(
 
     blocked = mod.build_report(
         REPO,
-        date="20260811",
+        date="20260812",
         command_receipts=[{"command": mod.FULL_PYTEST_COMMAND, "exit_code": 2}],
         before_hashes=mod.protected_hashes(REPO),
         started_at=0.0,
@@ -359,7 +359,7 @@ def test_validate_report_edge_failures_and_retro_run_paths(
     retro_root = tmp_path / "retro-root"
     (retro_root / "ops").mkdir(parents=True)
     retro = mod.write_operational_retro(
-        retro_root, {"run_date": "20260811", "branch_promotion_matrix": {"x": True}}
+        retro_root, {"run_date": "20260812", "branch_promotion_matrix": {"x": True}}
     )
     assert retro["present"] is True
     assert retro["sha256"]
@@ -388,11 +388,11 @@ def test_validate_report_edge_failures_and_retro_run_paths(
         return tmp_path / mod.RESULT_RELATIVE_PATH.name
 
     monkeypatch.setattr(mod, "write_report", fake_write_report)
-    run_report = mod.run(date="20260811", root=REPO, write=True)
+    run_report = mod.run(date="20260812", root=REPO, write=True)
     assert writes and run_report["operational_retro_path_and_hash"]["sha256"] == "sha256:retro"
 
     no_write_report = mod.run(
-        date="20260811",
+        date="20260812",
         root=REPO,
         write=False,
         command_receipts=[{"command": "focused", "exit_code": 0}],

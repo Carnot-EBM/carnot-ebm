@@ -92,7 +92,7 @@ LAUNDERING_GUARD_FIELDS = (
     "arc_solve_claim_allowed",
 )
 
-RUN_COMMAND = ".venv/bin/python -m carnot.experiment_6322_v544_adversarial_capstone --date 20260811"
+RUN_COMMAND = ".venv/bin/python -m carnot.experiment_6322_v544_adversarial_capstone --date 20260812"
 FOCUSED_TEST_COMMAND = (
     ".venv/bin/pytest tests/python/test_experiment_6322_v544_adversarial_capstone.py "
     "-q --no-cov -n 0"
