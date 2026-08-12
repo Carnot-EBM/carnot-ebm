@@ -1,0 +1,84 @@
+{
+  "experiment": "experiment_6254_moe_matched_wallclock",
+  "title": "MoE-many vs dense-few induction at matched wall-clock",
+  "run_date": "2026-08-12T04:26:42Z",
+  "roster": [
+    "cn04",
+    "s5i5",
+    "ls20"
+  ],
+  "per_game_results": [
+    {
+      "game": "cn04",
+      "dense_wall_s": 240.4,
+      "dense_valid": 0.323,
+      "dense_held": 0.519,
+      "moe_n_samples": 2,
+      "moe_wall_s": 332.1,
+      "moe_overspent_budget": true,
+      "moe_budget_s": 240.4,
+      "moe_best_valid": 0.1642,
+      "moe_best_held": 0.0797,
+      "moe_per_sample_wall_s": [
+        109.7,
+        222.4
+      ]
+    },
+    {
+      "game": "s5i5",
+      "dense_wall_s": 263.9,
+      "dense_valid": 0.0,
+      "dense_held": 0.0,
+      "moe_n_samples": 1,
+      "moe_wall_s": 836.6,
+      "moe_overspent_budget": true,
+      "moe_budget_s": 263.9,
+      "moe_best_valid": null,
+      "moe_best_held": null,
+      "moe_per_sample_wall_s": [
+        836.6
+      ]
+    },
+    {
+      "game": "ls20",
+      "dense_wall_s": 283.9,
+      "dense_valid": 0.9153,
+      "dense_held": 1.0,
+      "moe_n_samples": 2,
+      "moe_wall_s": 481.4,
+      "moe_overspent_budget": true,
+      "moe_budget_s": 283.9,
+      "moe_best_valid": 0.1734,
+      "moe_best_held": 0.1538,
+      "moe_per_sample_wall_s": [
+        97.8,
+        383.6
+      ]
+    }
+  ],
+  "n_games_comparable": 2,
+  "n_games_moe_wins": 0,
+  "pooled_dense_held": 0.7595,
+  "pooled_moe_best_of_n_held": 0.1167,
+  "mean_moe_samples_within_dense_budget": 2.0,
+  "moe_wins_pooled": false,
+  "gate_condition": "reported, NOT gated. This experiment supplies one missing number for an operator decision. It does not by itself authorize a generator change.",
+  "does_not_reopen_generator_pin": "the 2026-07-28 pin was decided on PER-SAMPLE quality (11-0-2). This measures quality per SECOND under best-of-N selection, which that decision never had. Any pin change needs a separate operator decision.",
+  "sample_size_note": "3 games. Far below the project's n>=30 bar for a percentage-point claim. Read this as one data point for a decision, not as a result.",
+  "solve_provenance": "development_proxy",
+  "arc_solve_claim": false,
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_principle": "held-out change_fidelity is an oracle-distinct graded dynamics score, not the executable win-condition oracle",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": {
+    "dense": "unsloth/gemma-4-31B-it-qat-GGUF (UD-Q4_K_XL)",
+    "moe": "unsloth/Qwen3.6-35B-A3B-GGUF (UD-Q4_K_M)",
+    "kv_cache_quant": "q8_0",
+    "dense_port": 8941,
+    "moe_port": 8942
+  },
+  "random_seed": 6254,
+  "honest_verdict": "complete_moe_matched_wallclock_measured_moe_wins_0_of_2_pooled_moe_0.1167_vs_dense_0.7595_mean_samples_2.0",
+  "duration_s": 2472.27,
+  "reproducibility_checksum": "bbcbc0a76b2669c9938bfcef0279ce2d575f8b04faa768b8f44b8d243c005ac9"
+}
