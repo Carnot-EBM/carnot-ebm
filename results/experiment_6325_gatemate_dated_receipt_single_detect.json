@@ -1,0 +1,497 @@
+{
+  "board_and_cable_target": {
+    "board_ok": true,
+    "dirtyjtag_vidpid_ok": true,
+    "expected_board": "Cologne Chip GateMate A1-EVB-2M",
+    "expected_dirtyjtag_vidpid": "1209:c0ca",
+    "receipt_board": "Cologne Chip GateMate A1-EVB-2M",
+    "receipt_usb_dirtyjtag": "1209:c0ca, bus 3, path 2.3 (re-enumerated after power cycle -- device number changed from the last recorded bus 003 device 006; SAME shared hub path 2.3, confirming the physical connection was not moved, only power-cycled)",
+    "target_ok": true
+  },
+  "dated_physical_receipt_path_hash_date_and_text": {
+    "parsed_receipt": {
+      "board": "Cologne Chip GateMate A1-EVB-2M",
+      "changes": [
+        {
+          "description": "operator power-cycled all attached FPGA boards, including GateMate",
+          "field": "power"
+        }
+      ],
+      "exists": true,
+      "power": "power-cycled 2026-08-11 per operator directive (was: cached physical power unresolved; raw all-ones TDO suggested open or unpowered target)",
+      "receipt_date": "20260811",
+      "source": "operator directive 2026-08-11T12:58:49Z: \"I have just power cycled all of the FPGA hardware\"",
+      "usb_dirtyjtag": "1209:c0ca, bus 3, path 2.3 (re-enumerated after power cycle -- device number changed from the last recorded bus 003 device 006; SAME shared hub path 2.3, confirming the physical connection was not moved, only power-cycled)",
+      "verified_read_only": "lsusb (2026-08-11T12:58:49Z): 1209:c0ca present, bus 3 device 11, path 2.3 -- no JTAG command run, no detect attempted; that single non-destructive detect is reserved for the gated script per the operator_action_packet's do_not_do list"
+    },
+    "path": "ops/known-issues.md",
+    "path_hash": {
+      "bytes": 1208520,
+      "path": "ops/known-issues.md",
+      "present": true,
+      "sha256": "sha256:b29273b63ae6a8cac9253bc6bde1326fc0911637a0524c6c9f492a73b970ccbb"
+    },
+    "receipt_date": "20260811",
+    "source": "ops_known_issues_structured_json_block",
+    "text": "{\n  \"exists\": true,\n  \"receipt_date\": \"20260811\",\n  \"source\": \"operator directive 2026-08-11T12:58:49Z: \\\"I have just power cycled all of the FPGA hardware\\\"\",\n  \"changes\": [\n    {\"field\": \"power\", \"description\": \"operator power-cycled all attached FPGA boards, including GateMate\"}\n  ],\n  \"board\": \"Cologne Chip GateMate A1-EVB-2M\",\n  \"power\": \"power-cycled 2026-08-11 per operator directive (was: cached physical power unresolved; raw all-ones TDO suggested open or unpowered target)\",\n  \"usb_dirtyjtag\": \"1209:c0ca, bus 3, path 2.3 (re-enumerated after power cycle -- device number changed from the last recorded bus 003 device 006; SAME shared hub path 2.3, confirming the physical connection was not moved, only power-cycled)\",\n  \"verified_read_only\": \"lsusb (2026-08-11T12:58:49Z): 1209:c0ca present, bus 3 device 11, path 2.3 -- no JTAG command run, no detect attempted; that single non-destructive detect is reserved for the gated script per the operator_action_packet's do_not_do list\"\n}",
+    "text_sha256": "sha256:98556e7280f29ae8be4a32907c197d3c1d5c58560244c1da0776006c196b0788"
+  },
+  "detect_command_count": 1,
+  "detect_exit_code": 1,
+  "detect_finished_utc": "2026-08-12T11:42:40.935346Z",
+  "detect_started_utc": "2026-08-12T11:42:40.920756Z",
+  "detect_stderr": "JTAG init failed with: DirtyJtag: libusb error while claiming interface\n",
+  "detect_stdout": "",
+  "detect_timeout": false,
+  "detected_chain_and_device_ids": {
+    "chain_empty": true,
+    "device_count": 0,
+    "devices": [],
+    "expected_gatemate_idcode_seen": false,
+    "expected_idcode": "0x20000001",
+    "idcodes": [],
+    "parser": "regex_idcode_and_index_blocks_from_raw_openfpgaloader_output"
+  },
+  "duration_s": 0.057274,
+  "erase_command_count": 0,
+  "exact_authorized_command": "openFPGALoader -c dirtyJtag --detect",
+  "experiment": "experiment_6325_gatemate_dated_receipt_single_detect",
+  "experiment_id": "exp6325-gatemate-dated-receipt-single-detect",
+  "field_principles": {
+    "board_and_cable_target": "The one command is scoped to GateMate plus DirtyJTAG only.",
+    "dated_physical_receipt_path_hash_date_and_text": "The operator receipt is the only physical-change authority.",
+    "detect_command_count": "A bare integer enforces the single-attempt budget.",
+    "detect_exit_code": "Exit code prevents failed detects becoming success.",
+    "detect_finished_utc": "UTC finish time bounds the attempt.",
+    "detect_started_utc": "UTC start time orders the hardware receipt.",
+    "detect_stderr": "Raw stderr preserves tool failures.",
+    "detect_stdout": "Raw stdout preserves the detection result.",
+    "detect_timeout": "Timeout is a terminal outcome, not a retry trigger.",
+    "detected_chain_and_device_ids": "Parsed chain data is derived only from raw detect output.",
+    "duration_s": "Measured wall time is reported without padding.",
+    "erase_command_count": "Erase commands are forbidden.",
+    "exact_authorized_command": "Only one exact non-destructive command is allowed.",
+    "field_principles": "Every required field declares why it exists.",
+    "field_provenance": "Every field traces to a receipt, command output, parser, or test.",
+    "flash_command_count": "Flash commands are forbidden.",
+    "hardware_state_changed_from_prior_attempts": "Changed power state, not software repetition, authorizes this attempt.",
+    "honest_verdict": "Verdict names the raw outcome without inferring execution.",
+    "inference_substrate": "Use read-only host receipts plus one DirtyJTAG detect.",
+    "kv260_command_count": "KV260 commands are forbidden in this GateMate task.",
+    "openfpgaloader_version_receipt": "Tool version is recorded without addressing a board.",
+    "place_route_command_count": "Place and route commands are forbidden.",
+    "polarfire_command_count": "PolarFire commands are forbidden in this GateMate task.",
+    "post_command_usb_receipt": "Read-only USB state is captured after the attempt.",
+    "pre_command_usb_receipt": "Read-only USB state is captured before the board command.",
+    "preconditions_checked": "Hashes, USB, tool path, disk, permissions, timeout, and budget are checked first.",
+    "protected_files_unchanged": "Operator and conductor files remain byte-identical.",
+    "receipt_newer_than_prior_attempts": "Receipt date must be newer than prior failed attempts.",
+    "reproducibility_checksum": "Checksum detects receipt or artifact drift.",
+    "reset_command_count": "Reset commands are forbidden.",
+    "status": "Terminal state separates blocked preconditions from a completed single detect.",
+    "stop_after_single_attempt_receipt": "All outcomes stop after one attempt.",
+    "synthesis_command_count": "Synthesis commands are forbidden.",
+    "test_commands": "Verification commands are recorded.",
+    "test_exit_codes": "Verification exit codes are recorded.",
+    "timing_command_count": "Timing commands are forbidden.",
+    "verifier_is_oracle": "Raw receipts and command output are authoritative only for visibility."
+  },
+  "field_provenance": {
+    "board_and_cable_target": {
+      "principle": "The one command is scoped to GateMate plus DirtyJTAG only.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "dated_physical_receipt_path_hash_date_and_text": {
+      "principle": "The operator receipt is the only physical-change authority.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "detect_command_count": {
+      "principle": "A bare integer enforces the single-attempt budget.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "detect_exit_code": {
+      "principle": "Exit code prevents failed detects becoming success.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "detect_finished_utc": {
+      "principle": "UTC finish time bounds the attempt.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "detect_started_utc": {
+      "principle": "UTC start time orders the hardware receipt.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "detect_stderr": {
+      "principle": "Raw stderr preserves tool failures.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "detect_stdout": {
+      "principle": "Raw stdout preserves the detection result.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "detect_timeout": {
+      "principle": "Timeout is a terminal outcome, not a retry trigger.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "detected_chain_and_device_ids": {
+      "principle": "Parsed chain data is derived only from raw detect output.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "duration_s": {
+      "principle": "Measured wall time is reported without padding.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "erase_command_count": {
+      "principle": "Erase commands are forbidden.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "exact_authorized_command": {
+      "principle": "Only one exact non-destructive command is allowed.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "field_principles": {
+      "principle": "Every required field declares why it exists.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "field_provenance": {
+      "principle": "Every field traces to a receipt, command output, parser, or test.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "flash_command_count": {
+      "principle": "Flash commands are forbidden.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "hardware_state_changed_from_prior_attempts": {
+      "principle": "Changed power state, not software repetition, authorizes this attempt.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "honest_verdict": {
+      "principle": "Verdict names the raw outcome without inferring execution.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "inference_substrate": {
+      "principle": "Use read-only host receipts plus one DirtyJTAG detect.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "kv260_command_count": {
+      "principle": "KV260 commands are forbidden in this GateMate task.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "openfpgaloader_version_receipt": {
+      "principle": "Tool version is recorded without addressing a board.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "place_route_command_count": {
+      "principle": "Place and route commands are forbidden.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "polarfire_command_count": {
+      "principle": "PolarFire commands are forbidden in this GateMate task.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "post_command_usb_receipt": {
+      "principle": "Read-only USB state is captured after the attempt.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "pre_command_usb_receipt": {
+      "principle": "Read-only USB state is captured before the board command.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "preconditions_checked": {
+      "principle": "Hashes, USB, tool path, disk, permissions, timeout, and budget are checked first.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "protected_files_unchanged": {
+      "principle": "Operator and conductor files remain byte-identical.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "receipt_newer_than_prior_attempts": {
+      "principle": "Receipt date must be newer than prior failed attempts.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "reproducibility_checksum": {
+      "principle": "Checksum detects receipt or artifact drift.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "reset_command_count": {
+      "principle": "Reset commands are forbidden.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "status": {
+      "principle": "Terminal state separates blocked preconditions from a completed single detect.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "stop_after_single_attempt_receipt": {
+      "principle": "All outcomes stop after one attempt.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "synthesis_command_count": {
+      "principle": "Synthesis commands are forbidden.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "test_commands": {
+      "principle": "Verification commands are recorded.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "test_exit_codes": {
+      "principle": "Verification exit codes are recorded.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "timing_command_count": {
+      "principle": "Timing commands are forbidden.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    },
+    "verifier_is_oracle": {
+      "principle": "Raw receipts and command output are authoritative only for visibility.",
+      "source": "REQ-HW-6325 / SCENARIO-HW-6325-* plus local receipts and command output"
+    }
+  },
+  "flash_command_count": 0,
+  "hardware_state_changed_from_prior_attempts": {
+    "basis": "Exp6121 physical-state parser plus 2026-08-11 power field receipt.",
+    "changed": true,
+    "changed_fields": [
+      "power"
+    ],
+    "current_state_hash": "sha256:f07fca69f56fc445f9fe20aaa36ee42ebcbf48fd054b5f6247f1e40ded0e5d84",
+    "exp6121_parser_authorizes_changed_state": true,
+    "prior_state_hash": "sha256:aaa2e5c20ead56578a309a9fc40af8b3c01861784c6829e53ac38e15c0a6c917"
+  },
+  "honest_verdict": "blocked_detect_failed: one authorized DirtyJTAG detect returned a tool failure; stopped without retry",
+  "inference_substrate": "read_only_usb_tool_receipts_plus_single_dirtyjtag_detect",
+  "kv260_command_count": 0,
+  "milestone": "2026.08.6325",
+  "openfpgaloader_version_receipt": {
+    "addresses_board": false,
+    "binary_path": "/opt/oss-cad-suite/bin/openFPGALoader",
+    "binary_path_resolved": true,
+    "command": "openFPGALoader --help",
+    "duration_s": 0.010289,
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "Usage: /opt/oss-cad-suite/libexec/openFPGALoader [OPTION...] BIT_FILE\nopenFPGALoader -- a program to flash FPGA\n\n      --altsetting arg          DFU interface altsetting (only for DFU mode)\n      --bitstream arg           bitstream\n      --secondary-bitstream arg\n                                secondary bitstream (some Xilinx UltraScale\n                                boards)\n  -b, --board arg               board name, may be used instead of cable\n  -B, --bridge arg              disable spiOverJtag model detection by\n                                providing bitstream(intel/xilinx)\n  -c, --cable arg               jtag interface\n      --status-pin arg          JTAG mode / FTDI: GPIO pin number to use as a\n                                status indicator (active low)\n      --invert-read-edge        JTAG mode / FTDI: read on negative edge\n                                instead of positive\n      --vid arg                 probe Vendor ID\n      --pid arg                 probe Product ID\n      --cable-index arg         probe index (FTDI and cmsisDAP)\n      --busdev-num arg          select a probe by it bus and device number\n                                (bus_num:device_addr)\n      --ftdi-serial arg         FTDI chip serial number\n      --ftdi-channel arg        FTDI chip channel number (channels 0-3 map to\n                                A-D)\n  -d, --device arg              device to use (/dev/ttyUSBx)\n      --detect                  detect FPGA, add -f to show connected flash\n      --dfu                     DFU mode\n      --dump-flash              Dump flash mode\n      --bulk-erase              Bulk erase flash\n      --enable-quad             Enable quad mode for SPI Flash\n      --disable-quad            Disable quad mode for SPI Flash\n      --target-flash arg        for boards with multiple flash chips (some\n                                Xilinx UltraScale boards), select the target\n                                flash: primary (default), secondary or both\n      --external-flash          select ext flash for device with internal and\n                                external storage\n      --file-size arg           provides size in Byte to dump, must be used\n                                with dump-flash\n      --file-type arg           provides file type instead of let's deduced\n                                by using extension\n      --flash-sector arg        flash sector (Lattice and Altera MAX10 parts\n                                only)\n      --fpga-part arg           fpga model flavor + package\n      --freq arg                jtag frequency (Hz)\n  -f, --write-flash             write bitstream in flash (default: false)\n      --index-chain arg         device index in JTAG-chain\n      --misc-device arg         add JTAG non-FPGA devices <idcode,irlen,name>\n      --ip arg                  IP address (XVC and remote bitbang client)\n      --list-boards             list all supported boards\n      --list-cables             list all supported cables\n      --list-fpga               list all supported FPGA\n  -m, --write-sram              write bitstream in SRAM (default: true)\n  -o, --offset arg              Start address (in bytes) for read/write into\n                                non volatile memory (default: 0)\n      --pins arg                pin config TDI:TDO:TCK:TMS or\n                                MOSI:MISO:SCK:CS[:HOLDN:WPN]\n      --probe-firmware arg      firmware for JTAG probe (usbBlasterII)\n      --protect-flash arg       protect SPI flash area\n      --quiet                   Produce quiet output (no progress bar)\n  -r, --reset                   reset FPGA after operations\n      --scan-usb                scan USB to display connected probes\n      --skip-load-bridge        skip writing bridge to SRAM when in\n                                write-flash mode\n      --skip-reset              skip resetting the device when in write-flash\n                                mode\n      --spi                     SPI mode (only for FTDI in serial mode)\n      --unprotect-flash         Unprotect flash blocks\n  -v, --verbose                 Produce verbose output\n      --verbose-level arg       verbose level -1: quiet, 0: normal,\n                                1:verbose, 2:debug\n      --force-terminal-mode     force progress bar output as if connected to\n                                a terminal\n  -h, --help                    Give this help list\n      --verify                  Verify write operation (SPI Flash only)\n      --xvc                     Xilinx Virtual Cable Functions\n      --port arg                Xilinx Virtual Cable and remote bitbang Port\n                                (default 3721)\n      --mcufw arg               Microcontroller firmware\n      --conmcu                  Connect JTAG to MCU\n  -D, --read-dna                Read DNA (Xilinx FPGA only)\n  -X, --read-xadc               Read XADC (Xilinx FPGA only)\n      --read-register arg       Read Status Register(Xilinx FPGA only)\n      --user-flash arg          User flash file (Gowin LittleBee FPGA only)\n  -V, --Version                 Print program version\n\nMandatory or optional arguments to long options are also mandatory or optional\nfor any corresponding short options.\n\nReport bugs to <gwenhael.goavec-merou@trabucayre.com>.\n",
+    "timeout": false,
+    "timeout_s": 10.0,
+    "tool_identity_first_line": "Usage: /opt/oss-cad-suite/libexec/openFPGALoader [OPTION...] BIT_FILE",
+    "version_command_addresses_board": false
+  },
+  "place_route_command_count": 0,
+  "polarfire_command_count": 0,
+  "post_command_usb_receipt": {
+    "addresses_board": false,
+    "command": "lsusb",
+    "dirtyjtag_present": true,
+    "duration_s": 0.00966,
+    "executed": true,
+    "exit_code": 0,
+    "phase": "post",
+    "read_only": true,
+    "stderr": "",
+    "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 8) path: 2.4\n1209:c0ca (bus 3, device 11) path: 2.3\n1514:2008 (bus 3, device 12) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)\n",
+    "timeout": false,
+    "timeout_s": 10.0
+  },
+  "pre_command_usb_receipt": {
+    "addresses_board": false,
+    "command": "lsusb",
+    "dirtyjtag_present": true,
+    "duration_s": 0.011619,
+    "executed": true,
+    "exit_code": 0,
+    "phase": "pre",
+    "read_only": true,
+    "stderr": "",
+    "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 8) path: 2.4\n1209:c0ca (bus 3, device 11) path: 2.3\n1514:2008 (bus 3, device 12) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)\n",
+    "timeout": false,
+    "timeout_s": 10.0
+  },
+  "preconditions_checked": {
+    "disk_and_permissions": {
+      "disk_usage": {
+        "free": 1191167381504,
+        "total": 3953289023488,
+        "used": 2762121641984
+      },
+      "permissions": {
+        "output_parent_exists": true,
+        "output_parent_writable": true,
+        "root_executable": true,
+        "root_readable": true
+      },
+      "root": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    "hashed_input_paths": {
+      "ops/e2e-test-plan.md": {
+        "bytes": 5975,
+        "path": "ops/e2e-test-plan.md",
+        "present": true,
+        "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "bytes": 47866,
+        "path": "ops/exclusion_manifest.yaml",
+        "present": true,
+        "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "ops/known-issues.md": {
+        "bytes": 1208520,
+        "path": "ops/known-issues.md",
+        "present": true,
+        "sha256": "sha256:b29273b63ae6a8cac9253bc6bde1326fc0911637a0524c6c9f492a73b970ccbb"
+      },
+      "research-hardware-wishlist.md": {
+        "bytes": 29009,
+        "path": "research-hardware-wishlist.md",
+        "present": true,
+        "sha256": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a"
+      },
+      "results/experiment_6121_gatemate_changed_state_gate_v530.json": {
+        "bytes": 21692,
+        "path": "results/experiment_6121_gatemate_changed_state_gate_v530.json",
+        "present": true,
+        "sha256": "sha256:9639a11e3f357bc74ade009cf7e8ed025ccc2bc3b8edddfa5ad90b0b732391ed"
+      },
+      "results/experiment_6199_gatemate_dated_receipt_gate.json": {
+        "bytes": 0,
+        "path": "results/experiment_6199_gatemate_dated_receipt_gate.json",
+        "present": false,
+        "sha256": null
+      },
+      "results/experiment_6199_gatemate_terminal_action_audit_v537.json": {
+        "bytes": 20067,
+        "path": "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "present": true,
+        "sha256": "sha256:30f1ee494c0e2bb9bb30536941e61d674a79420bf6999967becd7954e70b5658"
+      }
+    },
+    "one_command_budget": {
+      "detect_command_budget": 1,
+      "exact_authorized_command": "openFPGALoader -c dirtyJtag --detect",
+      "forbidden_actions": [
+        "flash",
+        "erase",
+        "reset",
+        "synthesis",
+        "place",
+        "route",
+        "timing"
+      ],
+      "forbidden_boards": [
+        "KV260",
+        "PolarFire"
+      ]
+    },
+    "openfpgaloader_binary": {
+      "version_command": "openFPGALoader --help",
+      "version_exit_code": 0,
+      "which_path": "/opt/oss-cad-suite/bin/openFPGALoader"
+    },
+    "pre_command_usb_receipt": {
+      "addresses_board": false,
+      "command": "lsusb",
+      "dirtyjtag_present": true,
+      "duration_s": 0.011619,
+      "executed": true,
+      "exit_code": 0,
+      "phase": "pre",
+      "read_only": true,
+      "stderr": "",
+      "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 8) path: 2.4\n1209:c0ca (bus 3, device 11) path: 2.3\n1514:2008 (bus 3, device 12) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)\n",
+      "timeout": false,
+      "timeout_s": 10.0
+    },
+    "protected_file_hashes_before_detect": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:544c926bc5de22c4959db5e1c896ba7c0a8690cdc357e3883b4976f0faf6e9ff",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "receipt_authorization": {
+      "exists": true,
+      "exp6121_parser_authorizes_changed_state": true,
+      "newer_than_prior_attempts": true,
+      "receipt_date": "20260811",
+      "target_ok": true
+    },
+    "receipt_date_and_target_checked_before_detect": true,
+    "timeout_policy": {
+      "detect_timeout_s": 30.0,
+      "read_only_timeout_s": 10.0,
+      "retry_on_timeout": false
+    }
+  },
+  "protected_files_unchanged": {
+    "after_hashes": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:544c926bc5de22c4959db5e1c896ba7c0a8690cdc357e3883b4976f0faf6e9ff",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "all_unchanged": true,
+    "before_hashes": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:544c926bc5de22c4959db5e1c896ba7c0a8690cdc357e3883b4976f0faf6e9ff",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "changed_paths": []
+  },
+  "random_seed": 6325,
+  "receipt_newer_than_prior_attempts": {
+    "newer_than_all_prior_attempts": true,
+    "newer_than_each_prior_attempt": {
+      "results/experiment_6121_gatemate_changed_state_gate_v530.json": true,
+      "results/experiment_6199_gatemate_terminal_action_audit_v537.json": true
+    },
+    "prior_attempt_dates": {
+      "results/experiment_6121_gatemate_changed_state_gate_v530.json": "20260804",
+      "results/experiment_6199_gatemate_terminal_action_audit_v537.json": "20260807"
+    },
+    "receipt_date": "20260811",
+    "user_named_prior_attempt_receipt": {
+      "bytes": 0,
+      "path": "results/experiment_6199_gatemate_dated_receipt_gate.json",
+      "present": false,
+      "sha256": null
+    }
+  },
+  "reproducibility_checksum": "f84f1e1a9c0a8aff95bac03b859bcdcff651766dcefda9516324c68e7c8c7aa1",
+  "reset_command_count": 0,
+  "result_path": "results/experiment_6325_gatemate_dated_receipt_single_detect.json",
+  "run_date": "20260812",
+  "schema": "carnot.experiment_6325.gatemate_dated_receipt_single_detect.v1",
+  "spec_refs": [
+    "REQ-HW-6325",
+    "SCENARIO-HW-6325-1",
+    "SCENARIO-HW-6325-2",
+    "SCENARIO-HW-6325-3",
+    "SCENARIO-HW-6325-4",
+    "SCENARIO-HW-6325-5",
+    "SCENARIO-HW-6325-6"
+  ],
+  "status": "blocked_detect_failed",
+  "stop_after_single_attempt_receipt": {
+    "applies_to_success_empty_chain_failure_and_timeout": true,
+    "no_flash_erase_reset_synthesis_place_route_timing_kv260_or_polarfire": true,
+    "retry_count": 0,
+    "stop_reason": "blocked_detect_failed",
+    "stopped_after_single_attempt": true
+  },
+  "synthesis_command_count": 0,
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6325_gatemate_dated_receipt_single_detect.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6325_gatemate_dated_receipt_single_detect.py -m pytest tests/python/test_experiment_6325_gatemate_dated_receipt_single_detect.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6325_gatemate_dated_receipt_single_detect.py --fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6325_gatemate_dated_receipt_single_detect.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6325_gatemate_dated_receipt_single_detect.py --fail-under=100": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6325_gatemate_dated_receipt_single_detect.py -m pytest tests/python/test_experiment_6325_gatemate_dated_receipt_single_detect.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6325_gatemate_dated_receipt_single_detect.py -q --no-cov -n 0": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6325_gatemate_dated_receipt_single_detect.py": 0
+  },
+  "timing_command_count": 0,
+  "verifier_is_oracle": true
+}
