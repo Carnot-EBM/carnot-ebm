@@ -1,0 +1,8 @@
+policy incident_response_fallback
+states: critical, normal, offline, warning;
+actions: monitor, repair, shutdown, throttle;
+rule critical -> shutdown;
+rule normal -> monitor;
+rule offline -> repair;
+rule warning -> throttle;
+end

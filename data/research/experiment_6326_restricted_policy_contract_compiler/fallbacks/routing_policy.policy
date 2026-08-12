@@ -1,0 +1,8 @@
+policy routing_policy_fallback
+states: error, external, local, partner;
+actions: block, proxy, retry, serve;
+rule error -> retry;
+rule external -> block;
+rule local -> serve;
+rule partner -> proxy;
+end

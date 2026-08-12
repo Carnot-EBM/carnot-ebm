@@ -1,0 +1,51 @@
+{
+  "bounds": {
+    "max_actions": 4,
+    "max_identifier_length": 24,
+    "max_states": 4
+  },
+  "clause_kinds": {
+    "allow_actions": [
+      "state",
+      "actions",
+      "weight"
+    ],
+    "different_action": [
+      "state",
+      "other_state",
+      "weight"
+    ],
+    "forbid_action": [
+      "state",
+      "action",
+      "weight"
+    ],
+    "if_action_then": [
+      "state",
+      "action",
+      "then_state",
+      "then_action",
+      "weight"
+    ],
+    "require_action": [
+      "state",
+      "action",
+      "weight"
+    ],
+    "same_action": [
+      "state",
+      "other_state",
+      "weight"
+    ]
+  },
+  "natural_language_constraint_ir_allowed": false,
+  "required_fields": [
+    "family",
+    "split",
+    "states",
+    "actions",
+    "clauses"
+  ],
+  "schema": "carnot.experiment_6326.restricted_policy_contract_compiler.v1.contract",
+  "vacuous_contracts_allowed": false
+}
