@@ -3469,6 +3469,219 @@ field-principle entry, the checksum matches the normalized payload, protected
 files are compared by hash, reconciliation paths are exact, and
 `honest_verdict` starts with a terminal prefix.
 
+## REQ-INFRA-6323: V545 Transition SHALL Preserve V544 Terminal Evidence And Validate The Next Contract
+
+Carnot SHALL build Exp6323 as the exact V544-to-V545 terminal transition.
+The transition SHALL consume the Exp6322 capstone and the exact declared V544
+deliverables. It SHALL classify each V544 artifact with
+`python/carnot/terminal_artifacts.py`. It SHALL preserve missing,
+nonterminal, blocked, skipped, null, flagged, retired, ready, positive,
+safety-only, shadow-only, and failed-command states without promotion.
+
+Exp6323 SHALL validate the V545 roadmap contract without activating
+`research-roadmap-next.yaml` and without editing `research-roadmap.yaml`.
+The validation SHALL confirm exactly 14 tasks in Exp6323 through Exp6336
+order, JSON deliverables under `results/`, same-milestone dependencies,
+structured gates whose fields appear in upstream required-artifact blocks,
+all four `prior_failures` subfields, `agent_type=codex`, and
+`model=gpt-5.5`.
+
+Exp6323 SHALL reject scheduled hidden/model-local state retries, external
+generated-text scoring, KAN experiments, cross-family transfer, public ARC
+re-solves, and unapproved hardware work. LLM prompts SHALL name the mandated
+GGUF identities where the prompt requires all local models. All prompt
+contracts SHALL end with the required protected-conductor warning.
+
+The Exp6323 artifact SHALL be written atomically to
+`results/experiment_6323_v545_terminal_transition.json`. It SHALL include
+these required fields: `status`, `v544_roadmap_path_and_hash`,
+`v544_task_terminal_matrix`, `v544_capstone_path_hash_and_summary`,
+`v544_validation_failure_receipts`,
+`missing_nonterminal_blocked_skipped_null_flagged_retired_ready_and_positive_counts`,
+`v545_roadmap_path_and_hash`, `v545_task_ids_and_deliverables`,
+`task_count`, `phase_counts`, `dependency_validation`,
+`gated_on_validation`, `prior_failure_validation`,
+`retired_dependency_count`, `id_collision_count`,
+`agent_routing_validation`, `model_policy_validation`,
+`prompt_contract_validation`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `reproducibility_checksum`, and
+`honest_verdict`. `task_count` SHALL be bare integer `14`.
+`retired_dependency_count` and `id_collision_count` SHALL be bare integer
+`0`. `honest_verdict` SHALL begin with a terminal prefix.
+`field_principles` SHALL cover every required field.
+
+### SCENARIO-INFRA-6323-1: V544 Exact Artifact Classes Stay Visible
+
+GIVEN the Exp6322 capstone declares the V544 task deliverables
+WHEN Exp6323 builds its V544 task matrix
+THEN every row is classified from its exact path, and missing, skipped, null,
+flagged, blocked, safety-only, shadow-only, ready, and positive states remain
+distinct.
+
+### SCENARIO-INFRA-6323-2: Failed Required Commands Are Preserved
+
+GIVEN Exp6322 recorded `.venv/bin/pytest tests/python -q` exit `3` and
+`scripts/determination_preservation_lint.py --all` exit `1`
+WHEN Exp6323 summarizes V544 validation
+THEN both nonzero command receipts remain visible and do not become passing
+validation.
+
+### SCENARIO-INFRA-6323-3: V545 Roadmap Shape Is Exact
+
+GIVEN the V545 roadmap contract reserves Exp6323 through Exp6336
+WHEN Exp6323 validates the roadmap
+THEN the roadmap has exactly 14 tasks in order, no duplicate task ids, no
+duplicate deliverables, and every deliverable is a JSON path under `results/`.
+
+### SCENARIO-INFRA-6323-4: Dependencies And Gates Stay In Milestone
+
+GIVEN V545 tasks declare `requires` and `gated_on` metadata
+WHEN Exp6323 validates the graph
+THEN each dependency names a V545 task, no dependency points to a retired
+experiment, and each gate field appears in the upstream prompt's required
+artifact field block.
+
+### SCENARIO-INFRA-6323-5: Routing, Model Policy, And Exclusions Are Enforced
+
+GIVEN V545 tasks include Codex routing, model ids, prompt text, and hardware
+constraints
+WHEN Exp6323 validates each task
+THEN every task has `agent_type=codex` and `model=gpt-5.5`, each LLM task
+names the required GGUF identities, and retired model-local, KAN,
+cross-family, public-ARC-resolve, external-scorer, and unapproved-hardware
+work is not scheduled.
+
+### SCENARIO-INFRA-6323-6: Output Is Atomic, Checksummed, And Non-Activating
+
+GIVEN Exp6323 has classified V544 and validated V545 in memory
+WHEN it writes the result artifact
+THEN every required field is present, `field_principles` and
+`field_provenance` cover all required fields, protected files are compared by
+hash, the checksum matches the normalized payload, and the staged and active
+roadmap files are not rewritten.
+
+## Implementation Status (REQ-INFRA-6323)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6323 | Implemented: `python/carnot/experiment_6323_v545_terminal_transition.py`; terminal artifact `results/experiment_6323_v545_terminal_transition.json`. | Implemented: `tests/python/test_experiment_6323_v545_terminal_transition.py`. |
+
+## REQ-INFRA-6324: V545 Post-Marker Source Freeze SHALL Be Strict, Null-Safe, And Contract-Complete
+
+Carnot SHALL build Exp6324 as a deterministic V545 post-marker source sweep
+and execution-scope freeze. The sweep SHALL hash the exact
+`<!-- V545-PLANNER-REFRESH-20260812-END -->` marker in
+`research-references.md`. It SHALL record the marker line. It SHALL use the
+marker commit time as the exclusive lower bound for novelty.
+
+Exp6324 SHALL search arXiv first. It SHALL then search OpenReview, Hugging
+Face Papers, Semantic Scholar citation routes for EBT and ARM-EBM, Extropic,
+Logical Intelligence, and GitHub. Each channel SHALL record direct URLs, query
+timestamps, publication or update dates, raw endpoint status, and a
+disposition. HTTP failures, browser challenges, empty endpoints, rate limits,
+and inaccessible pages SHALL be recorded as receipts, not promoted findings.
+
+Exp6324 SHALL deduplicate candidates against all earlier
+`research-references.md` planner markers and against repeated source ids,
+URLs, titles, and content hashes in the current sweep. Exp6324 SHALL accept
+only stable, non-duplicate, reproducible, primary or first-party evidence that
+is strictly later than the V545 marker and that changes a local executable
+contract. A zero-source delta SHALL be terminal. In that case
+`accepted_count` SHALL be the bare integer `0`, `accepted_findings` SHALL be
+empty, `research-references.md` SHALL remain byte-identical, and
+`honest_verdict` SHALL start with `complete_null:`.
+
+Exp6324 SHALL freeze contracts for the restricted policy DSL, exact factor
+guard, verified fallback, blind checker, anytime-valid certificate, exact
+counterexample update, protected validation, ARC influence no-solve path, and
+hardware boundary. The contracts SHALL explicitly exclude hidden states,
+activations, embeddings, prefix trajectories, pooled representation rescue,
+external generated-text scorers, masked-model energy, best-of-N text judges,
+KAN experiments, cross-family transfer, GGUF weight updates, public ARC
+re-solves, TSU execution, KV260 tasks, PolarFire dependencies, flash,
+synthesis, place and route, timing, and any GateMate command beyond one
+non-destructive detect.
+
+The Exp6324 artifact SHALL be written atomically to
+`results/experiment_6324_v545_post_marker_source_scope_freeze.json` with
+`inference_substrate=web_and_bibliographic_search_only` and
+`verifier_is_oracle=false`. It SHALL not modify `scripts/research_conductor.py`.
+
+The Exp6324 artifact SHALL include these required fields: `status`,
+`v545_marker_text_and_line`, `search_window_start_utc`,
+`search_completed_utc`, `source_queries_by_channel`, `source_receipts`,
+`accepted_findings`, `accepted_count`, `duplicate_findings`,
+`watch_only_findings`, `inaccessible_sources`,
+`excluded_findings_and_reasons`,
+`semantic_scholar_ebt_and_arm_ebm_receipts`, `extropic_status`,
+`logical_intelligence_status`, `github_status`,
+`frozen_restricted_policy_contract`,
+`frozen_exact_factor_guard_contract`,
+`frozen_verified_fallback_contract`, `frozen_blind_checker_contract`,
+`frozen_anytime_certificate_contract`,
+`frozen_counterexample_update_contract`,
+`frozen_protected_validation_contract`,
+`frozen_arc_influence_no_solve_contract`,
+`frozen_hardware_contract`, `roadmap_scope_delta`,
+`protected_files_unchanged`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INFRA-6324-1: Marker Bound Is Exclusive
+
+GIVEN the sealed V545 planner refresh marker in `research-references.md`
+WHEN Exp6324 classifies a candidate at or before the marker commit time
+THEN the candidate is rejected, and a bare same-day date is rejected unless a
+strictly later timestamp is present.
+
+### SCENARIO-INFRA-6324-2: Zero Findings Preserve References
+
+GIVEN every source channel returns no strictly later stable evidence,
+duplicate evidence, inaccessible evidence, pre-marker evidence, or watch-only
+evidence
+WHEN Exp6324 writes its artifact
+THEN `accepted_count` is the bare integer `0`, `accepted_findings` is empty,
+`research-references.md` is byte-identical, and `honest_verdict` starts with
+`complete_null:`.
+
+### SCENARIO-INFRA-6324-3: Dedupe And Scope Hashes Fail Closed
+
+GIVEN a candidate has no stable URL, repeats an earlier source id, repeats an
+existing reference block, repeats a current-sweep content hash, lacks a local
+executable consequence, or changes protected input hashes
+WHEN Exp6324 deduplicates and validates the sweep
+THEN the row is not accepted and the protected hash ledger records the exact
+before and after state.
+
+### SCENARIO-INFRA-6324-4: Frozen Contracts Preserve V545 Boundaries
+
+GIVEN V545 depends on observable restricted programs, exact factors, fallback,
+blind checking, anytime certificates, exact counterexamples, protected
+validation, ARC influence without solve credit, and one GateMate detect
+WHEN Exp6324 serializes frozen contracts
+THEN each contract has a stable version, required boundary fields, explicit
+retired-mechanism exclusions, and no hidden-state, external-scorer, KAN,
+cross-family, ARC-solve, TSU, KV260, PolarFire, flash, synthesis, timing, or
+extra-board-command promotion path.
+
+### SCENARIO-INFRA-6324-5: Artifact Schema Is Principle Annotated
+
+GIVEN source receipts, protected hashes, field principles, and command
+receipts
+WHEN Exp6324 validates the report before writing
+THEN every required field is present, every field has provenance and a
+principle, `verifier_is_oracle=false`, the checksum matches the normalized
+payload, and the honest verdict has a terminal prefix.
+
+## Implementation Status (REQ-INFRA-6324)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6324 | Pending implementation: `python/carnot/experiment_6324_v545_post_marker_source_scope_freeze.py`; terminal artifact `results/experiment_6324_v545_post_marker_source_scope_freeze.json`. | Pending focused tests: `tests/python/test_experiment_6324_v545_post_marker_source_scope_freeze.py`. |
+
 ## Implementation Status (REQ-INFRA-6322)
 
 | REQ | Implementation | Tests |
