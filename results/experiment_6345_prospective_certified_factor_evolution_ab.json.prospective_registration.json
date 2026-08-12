@@ -1,0 +1,43 @@
+{
+  "arms": [
+    "frozen_champion",
+    "fixed_v544_factor_local_learner",
+    "certified_evidence_carrying_evolution"
+  ],
+  "date": "20260812",
+  "event_count": 6,
+  "event_order_hash": "sha256:55b7d42cf1748533c93111aaa20039a3db1f3ba248f54872e8561760867e594b",
+  "factor_capacity": 4,
+  "freeze_before_any_event_outcome_read": true,
+  "mandated_model_ids": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "protected_validation_open_rule": "single_open_after_all_arms_stop",
+  "random_seeds": {
+    "eprocess": 634503,
+    "proposal": 634502,
+    "protected_validation": 634504,
+    "registration": 634500,
+    "stream": 634501
+  },
+  "readiness_formula": "positive_future_gain_and_zero_safety_lifecycle_violations",
+  "release_policy": {
+    "approver": "exact_checker_eprocess",
+    "false_release_allowed": false,
+    "llm_self_approval_allowed": false,
+    "method": "anytime_eprocess",
+    "threshold": 1.7
+  },
+  "required_upstream_gates": [
+    "exp6318",
+    "exp6319",
+    "exp6320",
+    "exp6342",
+    "exp6343",
+    "exp6344"
+  ],
+  "rollback_rule": "restore_previous_canonical_state_bytes",
+  "schema": "carnot.experiment_6345.prospective_certified_factor_evolution_ab.v1.prospective_registration"
+}
