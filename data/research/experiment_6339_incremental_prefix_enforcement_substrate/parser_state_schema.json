@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "accepted_completed_line_count": "count of visible complete DSL lines",
+    "declared_action_count": "count from the visible actions line",
+    "declared_state_count": "count from the visible states line",
+    "error_reason": "structured parser error when status is rejected",
+    "expected_next": "visible grammar symbols that can extend the prefix",
+    "missing_state_actions": "declared states that do not yet have rules",
+    "phase": "coarse syntactic phase from visible DSL text",
+    "prefix_sha256": "hash of the bytes supplied to the parser",
+    "rule_count": "count of visible complete rule lines",
+    "status": "viable, complete, or rejected"
+  },
+  "forbidden_inputs": [
+    "model hidden state",
+    "logits",
+    "generated labels",
+    "LLM self-judgment",
+    "natural-language repair text"
+  ],
+  "observable_only": true,
+  "schema": "carnot.experiment_6339.incremental_prefix_enforcement_substrate.v1.parser_state"
+}
