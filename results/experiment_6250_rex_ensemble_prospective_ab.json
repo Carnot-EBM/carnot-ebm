@@ -114,5 +114,14 @@
   "random_seed": 6250,
   "honest_verdict": "complete_ensemble_gate_not_met_3_of_3_matched_held_optimal_ensemble_0.5118_vs_best_pure_0.481",
   "duration_s": 25016.827,
-  "reproducibility_checksum": "7a62af9bf6d53d7ad7a1fb24a74015a1aaaff1f860ec2a1a5a33a5309f6e943e"
+  "reproducibility_checksum": "7a62af9bf6d53d7ad7a1fb24a74015a1aaaff1f860ec2a1a5a33a5309f6e943e",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "rex_pooled_mean_held=0.481 and best_pure_arm_pooled_mean_held=0.481 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }
