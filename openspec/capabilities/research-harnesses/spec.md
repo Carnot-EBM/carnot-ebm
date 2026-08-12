@@ -3782,6 +3782,113 @@ not edited.
 |---|---|---|
 | REQ-INFRA-6337 | Implemented: `python/carnot/experiment_6337_v546_bounded_terminal_handoff.py`; terminal artifact `results/experiment_6337_v546_bounded_terminal_handoff.json`. | Implemented: `tests/python/test_experiment_6337_v546_bounded_terminal_handoff.py`. |
 
+## REQ-INFRA-6338: V546 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
+
+Carnot SHALL build Exp6338 as a deterministic V546 post-marker source sweep
+and scope freeze. The sweep SHALL hash the exact
+`<!-- V546-PLANNER-REFRESH-20260812-END -->` marker in
+`research-references.md`. It SHALL record the marker line. It SHALL use the
+marker commit time as the exclusive lower bound for post-marker novelty.
+
+Exp6338 SHALL validate the five V546 planner-promoted source families with
+direct receipts, first-publication dates, access times, and local executable
+consequences. The source families are parser-state bias correction, LeJIT
+prefix enforcement, NxN e-values, catastrophic remembering, and verification
+cost. The receipts SHALL remain separate from any post-marker acceptance count.
+
+Exp6338 SHALL repeat arXiv, OpenReview, Hugging Face Papers, Semantic Scholar
+EBT and ARM-EBM routes, Extropic, Logical Intelligence, and GitHub searches
+only for the post-marker window. HTTP failures, browser challenges, empty
+endpoints, rate limits, and inaccessible pages SHALL be recorded as receipts.
+They SHALL not become promoted findings.
+
+Exp6338 SHALL deduplicate by paper identity, repository identity, mechanism,
+content hash, URL, title, and already-retired Carnot scope. It SHALL accept
+only stable, non-duplicate, reproducible, primary or first-party evidence that
+is strictly later than the V546 marker and that changes a local executable
+contract. A zero-source delta SHALL be terminal. In that case `accepted_count`
+SHALL be the bare integer `0`, `promoted_findings` SHALL preserve only the
+planner-promoted receipts, and `honest_verdict` SHALL start with
+`complete_null:`.
+
+Exp6338 SHALL freeze exactly three V546 lanes: prefix-constrained policy
+generation, certified factor evolution, and ARC action influence. It SHALL also
+freeze the exact-oracle boundary, mandatory local GGUF policy, fail-fast gates,
+and no-hardware rule. The task SHALL not execute GateMate, KV260, TSU, Kona, or
+board commands. The task SHALL not modify `scripts/research_conductor.py`.
+
+The Exp6338 artifact SHALL be written atomically to
+`results/experiment_6338_v546_post_marker_source_scope_freeze.json` with
+`inference_substrate=web_and_bibliographic_search_only`,
+`verifier_is_oracle=false`, and `llm_call_count=0`.
+
+The Exp6338 artifact SHALL include these required fields: `status`,
+`v546_marker_text_line_and_hash`, `search_window_start_utc`,
+`search_completed_utc`, `source_queries_by_channel`, `source_receipts`,
+`promoted_findings`, `accepted_count`, `duplicate_findings`,
+`watch_only_findings`, `inaccessible_sources`,
+`excluded_findings_and_reasons`, `parser_bias_receipt`, `lejit_receipt`,
+`nxn_evalue_receipt`, `catastrophic_remembering_receipt`,
+`verification_cost_receipt`,
+`semantic_scholar_ebt_and_arm_ebm_receipts`,
+`openreview_and_huggingface_status`, `github_status`, `extropic_status`,
+`logical_intelligence_status`, `frozen_prefix_generation_contract`,
+`frozen_certified_learning_contract`, `frozen_arc_influence_contract`,
+`frozen_model_policy`, `frozen_hardware_nonuse_contract`,
+`roadmap_scope_delta`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`llm_call_count`, `field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+### SCENARIO-INFRA-6338-1: Marker Bound Is Exclusive
+
+GIVEN the sealed V546 planner refresh marker in `research-references.md`
+WHEN Exp6338 classifies a candidate at or before the marker commit time
+THEN the candidate is rejected, and a bare same-day date is rejected unless a
+strictly later timestamp is present.
+
+### SCENARIO-INFRA-6338-2: Promoted Source Dates Are Direct Receipts
+
+GIVEN the V546 marker promoted parser-state correction, LeJIT, NxN e-values,
+catastrophic remembering, and verification-cost reporting
+WHEN Exp6338 builds its artifact
+THEN each promoted source has a direct URL, first-publication date, access
+time, and local executable consequence.
+
+### SCENARIO-INFRA-6338-3: Dedupe And Source Dispositions Fail Closed
+
+GIVEN a candidate repeats an older paper identity, repository identity,
+mechanism, content hash, URL, title, or retired Carnot scope
+WHEN Exp6338 partitions the sweep
+THEN the row is not accepted, and its duplicate, watch-only, inaccessible, or
+excluded disposition records the exact reason.
+
+### SCENARIO-INFRA-6338-4: Frozen V546 Contracts Preserve Boundaries
+
+GIVEN V546 has three scientific lanes plus exact-oracle, local-GGUF,
+fail-fast, and no-hardware boundaries
+WHEN Exp6338 serializes frozen contracts
+THEN the artifact admits only prefix-constrained generation, certified factor
+evolution, and ARC action influence. It SHALL reject solve credit, hidden
+state probes, external scorers, GGUF weight updates, and hardware execution.
+
+### SCENARIO-INFRA-6338-5: Output Is Principle Annotated And Non-Mutating
+
+GIVEN source receipts, protected hashes, field principles, and command
+receipts
+WHEN Exp6338 validates the report before writing
+THEN every required field is present, every field has provenance and a
+principle, `accepted_count` and `llm_call_count` are bare integers, the
+checksum matches the normalized payload, protected hashes remain unchanged,
+and the honest verdict has a terminal prefix.
+
+## Implementation Status (REQ-INFRA-6338)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6338 | Implemented: `python/carnot/experiment_6338_v546_post_marker_source_scope_freeze.py`; terminal artifact `results/experiment_6338_v546_post_marker_source_scope_freeze.json`. | Implemented: `tests/python/test_experiment_6338_v546_post_marker_source_scope_freeze.py`. |
+
 ## Implementation Status (REQ-INFRA-6322)
 
 | REQ | Implementation | Tests |
