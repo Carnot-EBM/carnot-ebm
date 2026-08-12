@@ -17534,3 +17534,43 @@ it currently admits. At level 1 no win grid exists, so the honest options there 
 accept that the predicate is unverifiable and stop gating on a metric that cannot fail, or
 find a different signal. That is a live-path behaviour change and remains an operator
 decision, not an unattended edit.
+
+## 2026-08-12 REQ-ARC-WMTE-6259: the veto is NOT the lever -- there is no better candidate to pick
+
+The pre-registered kill condition fired.
+`honest_verdict: complete_veto_sensitivity_unusable_arm_b_empty_on_all_4_games_gate_is_not_the_lever`.
+
+| game | candidates | admitted by live veto | ALSO sensitive | arm A plan |
+|---|---|---|---|---|
+| dc22 | 4 | 4 | **0** | none (20017 nodes) |
+| cn04 | 4 | 3 | **0** | none (20011 nodes) |
+| ls20 | 4 | 3 | **0** | none (20010 nodes) |
+| s5i5 | 4 | 4 | **0** | none (20005 nodes) |
+
+**14 admitted, 0 sensitive, arm B empty on 4 of 4.** Adding a sensitivity condition to the
+veto rejects everything and leaves nothing to select. Arm A's chosen candidate found no plan
+on any game -- all four hit the node cap, because the termination condition is never true.
+Non-hollow plans: 0 for both arms. There was no difference to measure.
+
+**This closes the goal-predicate axis, and it closes it in the useful direction.** exp6258
+showed the veto admits 21 of 26 useless predicates and the obvious fix was to require
+sensitivity as well. This says that fix is worthless in practice: the generator does not
+produce a sensitive predicate to fall back on. Across this run and exp6256, **22 of 22
+freshly induced predicates fail to fire on a real win.** The gate is not selecting badly from
+a good pool; the pool has nothing good in it.
+
+So the defect is UPSTREAM, in induction of the goal predicate itself, not in any gate or
+selector wrapped around it. Changing `min_goal_predicate_consistency` -- in either direction
+-- cannot help, and this is now measured rather than argued.
+
+**Deliberately not attempted: a fifth lever.** Search structure, sampling breadth, goal
+gradient, model architecture, and the win exemplar were all tested this session and all came
+back null or negative. Gate tuning would be the fifth thing tried around the same wall. The
+finding is that the wall is induction quality, on both halves of the world model, and the
+next real attempt has to change how the predicate is PRODUCED -- not how it is filtered,
+ranked, sampled, or searched over.
+
+**Limits.** 4 games, 16 candidates. Win grids are development proxies from replayed banked
+solves, so arm B is unconstructible at hidden-game level 1 regardless -- this measured the
+BEST case for the fix and it still failed. The live threshold remains unchanged; there is now
+no reason to change it.
