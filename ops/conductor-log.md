@@ -15720,3 +15720,4 @@ code |
 | 2026-08-12 18:42 UTC | Bounded evidence-carrying factor merge and deletio | OK | 87 passed, 1 warning in 9.99s |
 | 2026-08-12 19:02 UTC | Three-model minimized-counterexample factor propos | OK | 88 passed, 1 warning in 9.31s |
 | 2026-08-12 19:21 UTC | Gated chronological e-process factor evolution tri | OK | 88 passed, 1 warning in 9.40s |
+| 2026-08-12 19:36 UTC | Independent e-process and factor-lifecycle safety  | OK | 88 passed, 1 warning in 10.04s |
