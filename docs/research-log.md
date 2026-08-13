@@ -6171,3 +6171,10 @@ The critical path for milestone .250:
 - theme: readiness-gated canonical transport work concentrated a brief compute-heavy milestone under coarse timing reconstruction
 - key result: the locked classification reports no compute-task GPU-idle fault, while the supplied data does not establish concurrent model loading or runner selection
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.550
+
+- exp_range: exp6393-exp6400 (bounds derive only from identifiers embedded in supplied timing labels; full milestone bounds were not supplied)
+- theme: factor-harness construction and dependency-gated compute formed the reconstructed execution tail
+- key result: the available evidence identifies no compute-task GPU-idle defect, while phase causes and parallel-model runner behavior remain unobservable
+- acceptance: no data available this milestone
