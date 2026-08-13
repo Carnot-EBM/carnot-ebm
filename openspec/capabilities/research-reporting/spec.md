@@ -217,6 +217,118 @@ deliverables explicitly recorded by Exp6157.
 |---|---|---|
 | REQ-REPORT-6157 | Planned (`python/carnot/experiment_6157_repo_wide_artifact_isolation_closure.py`, `python/carnot/experiment_artifacts.py`, `python/carnot/testing/tracked_results_guard.py`, `python/carnot/pipeline/atomic_writer.py`, `tests/python/conftest.py`, `results/experiment_6157_repo_wide_artifact_isolation_closure.json`) | Planned (`tests/python/test_experiment_artifact_isolation.py`) |
 
+### REQ-REPORT-6364: V548 Source Freeze And Scope Boundary Report
+
+Carnot SHALL build Exp6364 as a dated V548 source and executable-scope
+freeze. The report SHALL locate the
+`<!-- V548-PLANNER-REFRESH-20260812-END -->` marker in
+`research-references.md`. It SHALL hash the full V548 section, record the
+marker path and line, and use the marker commit time as the exclusive
+post-marker lower bound.
+
+Exp6364 SHALL confirm network reachability before any live source request. If
+network reachability or a source endpoint fails, it SHALL record the failure
+and use only the already dated planner receipt for that source. It SHALL not
+invent source content or treat a failed endpoint as evidence quality.
+
+Exp6364 SHALL validate direct arXiv metadata for the V548 promoted papers:
+Hypothesis Frontier (`2608.10843`), Dependency-Guided Rollback Repair
+(`2608.10502`), ReTree (`2608.10676`), Decomposition-Induced Context-Memory
+Conflict (`2608.10627`), and Optimal Stopping of Self-Refining Foundation
+Models (`2608.10729`). It SHALL also preserve Active Reward Machine Inference
+(`2604.07480`) and Zero-Shot Goal Recognition (`2605.15333`) as ARC-lane
+context. Each receipt SHALL record the arXiv ID, title, submission date,
+direct URL, endpoint outcome, and fallback state.
+
+Exp6364 SHALL recheck OpenReview, Hugging Face Papers, Semantic Scholar
+citation records for EBT and ARM-EBM, GitHub discovery, Extropic first-party
+writing, and Logical Intelligence first-party Kona material. It SHALL record
+dated endpoint outcomes and rate-limit headers when available.
+
+Exp6364 SHALL classify each finding as `executable_now`, `control_only`,
+`deferred`, `retired_scope`, or `unavailable`. Each classification SHALL have
+one sentence that explains the reason. A topical match to a retired mechanism
+SHALL not reopen that mechanism.
+
+Exp6364 SHALL freeze exactly three active lanes: observable local GGUF proposal
+generation, verified-frontier certified factor learning with dependency
+rollback, and live-path ARC two-sided goal evidence. It SHALL freeze parser/JIT
+decoding, finite-ID or parser-only generated-answer transport, external
+generated-text scoring, external logprob scoring, hidden-state scoring, KAN
+training, EBT pretraining, unchanged local-board probes, TSU execution, and
+Kona execution as closed or deferred scopes.
+
+The Exp6364 artifact SHALL be written atomically to
+`results/experiment_6364_v548_post_marker_source_scope_freeze.json` with
+`inference_substrate=web_and_bibliographic_search_only` and
+`verifier_is_oracle=false`.
+
+The Exp6364 artifact SHALL include these required fields: `status`,
+`planner_marker_path_and_hash`, `source_window_start_and_end_utc`,
+`direct_arxiv_source_receipts`, `openreview_receipts`,
+`huggingface_papers_receipts`,
+`semantic_scholar_ebt_and_arm_ebm_receipts`, `github_discovery_receipts`,
+`extropic_first_party_receipt`, `logical_intelligence_first_party_receipt`,
+`new_actionable_findings`, `post_marker_findings_count`,
+`executable_scope_change_required`, `active_lane_freeze`,
+`closed_and_deferred_scope_freeze`, `unavailable_or_rate_limited_sources`,
+`retired_scope_reopened`, `source_claim_boundaries`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+#### SCENARIO-REPORT-6364-1: V548 Marker Section Is Hash-Pinned
+
+**Given** the V548 planner marker is present in `research-references.md`
+**When** Exp6364 builds the marker receipt
+**Then** it records one marker, its line, the full-section SHA-256 hash, and
+the marker commit time as the exclusive source lower bound.
+
+#### SCENARIO-REPORT-6364-2: Direct arXiv Receipts Validate Or Fall Back
+
+**Given** the V548 paper IDs and ARC preserved IDs are known
+**When** Exp6364 queries arXiv metadata
+**Then** each paper receipt records title, submission date, direct URL,
+endpoint outcome, and whether it used live metadata or planner fallback.
+
+#### SCENARIO-REPORT-6364-3: Unavailable Sources Do Not Create Claims
+
+**Given** network reachability or a required endpoint is unavailable
+**When** Exp6364 classifies the source result
+**Then** it records an `unavailable` row, preserves the dated planner receipt,
+and does not add a new actionable finding.
+
+#### SCENARIO-REPORT-6364-4: Source Classes Control Scope
+
+**Given** source rows from arXiv, OpenReview, Hugging Face Papers, Semantic
+Scholar, GitHub, Extropic, and Logical Intelligence
+**When** Exp6364 classifies them
+**Then** executable rows can change scope only when they are post-marker,
+primary or first-party, public, stable, not retired, and locally executable.
+
+#### SCENARIO-REPORT-6364-5: Closed Scope Stays Closed
+
+**Given** a row is topically similar to parser/JIT, external scoring,
+hidden-state scoring, KAN, EBT pretraining, local-board probes, TSU, or Kona
+**When** Exp6364 freezes scope
+**Then** that row is recorded only as a closed or deferred exclusion unless a
+new authenticated local executable route exists.
+
+#### SCENARIO-REPORT-6364-6: Artifact Is Annotated And Non-Mutating
+
+**Given** source receipts, protected hashes, command receipts, and field
+principles are assembled
+**When** Exp6364 validates the report before writing
+**Then** every required field has provenance and a principle, protected files
+remain byte-identical, the checksum matches, and `verifier_is_oracle` is
+false.
+
+## Implementation Status (REQ-REPORT-6364)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6364 | Planned (`python/carnot/experiment_6364_v548_post_marker_source_scope_freeze.py`, terminal artifact `results/experiment_6364_v548_post_marker_source_scope_freeze.json`) | Planned (`tests/python/test_experiment_6364_v548_post_marker_source_scope_freeze.py`) |
+
 ### REQ-REPORT-5335: Archive .486 And Record .487 Activation Preconditions
 
 The Exp 5335 workflow SHALL read `results/experiment_5334_capstone_v486.json`,
