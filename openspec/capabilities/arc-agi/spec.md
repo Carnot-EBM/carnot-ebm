@@ -315,3 +315,130 @@ leakage
 `delta_shadow_false_accept_count` are bare integers, protected files are
 unchanged, `solve_claim_count` is zero, the solve registry hash is unchanged,
 and no solve claim is made.
+
+### REQ-ARC-ARM-6401: Held Active-Goal Causal Route Test
+
+Experiment 6401 SHALL run only after Exp6400 proves the active-goal shadow is
+reachable, fires, stays default-off, and does not increase false accepts. It
+SHALL compare passive two-sided evidence against active legal disagreement
+probes on held live ARC attempt windows. Environment outcomes SHALL remain
+hidden until each candidate goal, evidence disposition, selected probe or
+passive rank, and action is frozen.
+
+The model set SHALL include `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, resolved through `cached_sota_pair()`. The
+producer SHALL use only GGUF-embedded tokenizers and report zero
+`AutoTokenizer` usage. It SHALL revalidate model files, GPU offload receipts,
+live entrypoint hashes, policy hashes, reward-machine hashes, evaluator hashes,
+route-disable defaults, and ARC registry and claims hashes before evaluation.
+
+The producer SHALL seal at least eight fresh held live attempt windows and at
+least 48 visible transitions. It SHALL exclude every Exp6400 window and hash a
+disjointness proof before arm evaluation. Passive and active arms SHALL match
+model ids, windows, seeds, action budgets, prompt budgets, evidence prefix
+lengths, legal action sets, and post-action exact checks.
+
+For every model-window cell, the producer SHALL report goal admission
+precision, false accepts, false rejects, unverifiable rate, action influence,
+exact progress proxies, regressions, latency, verification cost, treatment
+firing, missing treatment cells, paired tests, confidence intervals, and
+effective sample sizes. It SHALL not pool missing cells or abstentions as
+successes.
+
+The producer SHALL attack window reuse, action-order changes, oracle timing,
+model-row swaps, goal-state carryover, unequal legal sets, unequal budgets,
+duplicate transitions, and solve-label leakage. Each attack SHALL fail closed
+before readiness can be set.
+
+Experiment 6401 SHALL write
+`results/experiment_6401_arc_active_goal_causal_holdout.json` with the required
+top-level fields named by the task. It SHALL set `verifier_is_oracle=true` only
+for post-action environment transition checks. It SHALL not read hidden source,
+use offline ground-truth search, use per-game adapters, read oracle outcomes
+before action freeze, update `ops/arc_solve_registry.yaml`, or claim a game or
+level solve.
+
+The artifact SHALL include `status`, `exp6400_gate_receipts`, `MODEL_SPECS`,
+`models_used`, `cached_sota_pair_receipts`,
+`model_file_hashes_revisions_quantizations_and_tokenizers`,
+`embedded_gguf_tokenizer_receipts`, `autotokenizer_usage_count`,
+`cuda_offload_and_runtime_receipts_by_model`,
+`live_entrypoint_policy_reward_machine_and_evaluator_hashes`,
+`arc_registry_and_claims_hashes`,
+`held_live_window_manifest_path_hash_counts_and_exp6400_disjointness`,
+`live_attempt_provenance`,
+`preregistered_passive_and_active_arm_contract`,
+`matched_work_and_legal_action_receipts`,
+`pre_action_goal_probe_and_action_freeze_records`,
+`oracle_timing_receipts`,
+`per_arm_model_window_admission_abstention_action_influence_progress_harm_and_cost_results`,
+`treatment_fired_counts`, `delta_admission_precision`,
+`delta_false_accept_count`, `delta_exact_progress_proxy`,
+`paired_tests_confidence_intervals_and_effective_sample_sizes`,
+`window_action_oracle_model_state_legal_set_budget_duplicate_and_label_attack_matrix`,
+`hidden_source_access_count`, `offline_ground_truth_search_count`,
+`per_game_adapter_count`, `oracle_before_action_count`, `solve_claim_count`,
+`solve_registry_modified`, `arc_active_goal_causal_ready_score`,
+`route_promotion_eligible`, `harm_underpowered_missing_and_flagged_cells`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+`arc_active_goal_causal_ready_score` SHALL equal 1.0 only when matched work
+executes, the active treatment fires, all actions are frozen before outcomes,
+provenance is clean, false accepts do not increase, and no solve or registry
+claim occurs. `delta_false_accept_count` and `delta_exact_progress_proxy` SHALL
+be bare numbers. `route_promotion_eligible` SHALL be true only when the causal
+contract is ready and `delta_exact_progress_proxy` is positive.
+
+### SCENARIO-ARC-ARM-6401-GATE-AND-HOLDOUTS
+
+**Given** Exp6400 has terminal ready-score, treatment-fire, and false-accept
+gate fields
+**When** Exp6401 starts
+**Then** it replays those gates, pins model, runtime, evaluator, policy,
+registry, and claims hashes, seals at least eight held windows and 48 visible
+transitions, and proves no held window reuses an Exp6400 window.
+
+### SCENARIO-ARC-ARM-6401-MATCHED-CAUSAL-ARMS
+
+**Given** passive two-sided and active-disagreement arms
+**When** model-window cells are evaluated
+**Then** both arms use the same model ids, windows, seeds, action budgets,
+prompt budgets, evidence prefix lengths, legal action sets, and post-action
+exact checks.
+
+### SCENARIO-ARC-ARM-6401-FROZEN-ACTIONS
+
+**Given** a model, held window, and live transition prefix
+**When** a passive rank or active legal probe is selected
+**Then** candidate goals, evidence disposition, selected rank or probe, and
+action are sealed before the next environment transition is read.
+
+### SCENARIO-ARC-ARM-6401-PAIRED-METRICS
+
+**Given** paired passive and active rows
+**When** Exp6401 computes admission, harm, action influence, and progress
+metrics
+**Then** it reports paired deltas, confidence intervals, effective sample
+sizes, missing treatment-fire cells, and promotion eligibility without treating
+missing cells or abstentions as successes.
+
+### SCENARIO-ARC-ARM-6401-ATTACKS-FAIL-CLOSED
+
+**Given** window reuse, action-order changes, oracle timing, model-row swaps,
+goal-state carryover, unequal legal sets, unequal budgets, duplicate
+transitions, and solve-label leakage
+**When** the producer validates causal evidence
+**Then** each attack fails closed before `arc_active_goal_causal_ready_score`
+can be set.
+
+### SCENARIO-ARC-ARM-6401-ARTIFACT-NO-SOLVE
+
+**Given** the solve registry and claims ledger are hashed before the run
+**When** Exp6401 writes its artifact
+**Then** all required fields are present, forbidden access counts are zero,
+`delta_false_accept_count` and `delta_exact_progress_proxy` are bare numbers,
+protected files are unchanged, `solve_claim_count` is zero, the solve registry
+hash is unchanged, and no solve claim is made.
