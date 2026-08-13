@@ -1,0 +1,93 @@
+{
+  "acyclic": true,
+  "allowed_edges": [
+    {
+      "edge_type": "declares_obligation",
+      "from_type": "source_event",
+      "to_type": "obligation"
+    },
+    {
+      "edge_type": "emits_evidence",
+      "from_type": "source_event",
+      "to_type": "exact_evidence"
+    },
+    {
+      "edge_type": "checked_by",
+      "from_type": "obligation",
+      "to_type": "exact_evidence"
+    },
+    {
+      "edge_type": "supports_version",
+      "from_type": "exact_evidence",
+      "to_type": "factor_version"
+    },
+    {
+      "edge_type": "revises_to",
+      "from_type": "factor_version",
+      "to_type": "factor_version"
+    },
+    {
+      "edge_type": "materializes_factor",
+      "from_type": "factor_version",
+      "to_type": "factor"
+    },
+    {
+      "edge_type": "influences_decision",
+      "from_type": "factor",
+      "to_type": "consumer_decision"
+    },
+    {
+      "edge_type": "version_used_by_decision",
+      "from_type": "factor_version",
+      "to_type": "consumer_decision"
+    },
+    {
+      "edge_type": "diagnosed_by_rollback",
+      "from_type": "source_event",
+      "to_type": "rollback_action"
+    },
+    {
+      "edge_type": "invalidated_by_rollback",
+      "from_type": "factor_version",
+      "to_type": "rollback_action"
+    },
+    {
+      "edge_type": "invalidated_by_rollback",
+      "from_type": "factor",
+      "to_type": "rollback_action"
+    },
+    {
+      "edge_type": "invalidated_by_rollback",
+      "from_type": "consumer_decision",
+      "to_type": "rollback_action"
+    }
+  ],
+  "edge_types": [
+    "declares_obligation",
+    "emits_evidence",
+    "checked_by",
+    "supports_version",
+    "revises_to",
+    "materializes_factor",
+    "influences_decision",
+    "version_used_by_decision",
+    "diagnosed_by_rollback",
+    "invalidated_by_rollback"
+  ],
+  "node_types": [
+    "source_event",
+    "obligation",
+    "exact_evidence",
+    "factor_version",
+    "factor",
+    "consumer_decision",
+    "rollback_action"
+  ],
+  "schema": "carnot.experiment_6383.dependency_guided_factor_rollback_stress.v1.typed_dependency_schema",
+  "schema_version": "v1",
+  "state_node_types": [
+    "factor_version",
+    "factor",
+    "consumer_decision"
+  ]
+}
