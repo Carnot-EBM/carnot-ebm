@@ -15765,3 +15765,4 @@ code |
 | 2026-08-13 08:19 UTC | Independent canonical-transport learning rollback  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: 
 +    ] = Fals |
 | 2026-08-13 08:26 UTC | Independent canonical-transport learning rollback  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-13 08:50 UTC | Two-sided live ARC goal-evidence admission contrac | OK | 111 passed, 1 warning in 11.22s |
