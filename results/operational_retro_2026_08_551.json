@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.551",
+  "generated_at": "2026-08-13T23:43:54Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.0,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "V551 dated source delta and executable scope freeze",
+      "duration_minutes": 0.04,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V550 terminal evidence handoff and V551 queue preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Clean V550-only factor evidence boundary and claim ledger",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Provenance-linked typed factor memory and contamination protocol",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp6406/6407 readiness: fresh powered write-time factor admission A/B",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Six experiments completed in 0.0 minutes at the report's resolution; three were compute-bound. The listed compute-bound entries — V550 terminal evidence handoff and V551 queue preflight, and the readiness-gated fresh powered write-time factor admission A/B — both report 0 minutes, with no causal phase data. Task-time GPU efficiency and a missed parallel-model runner dispatch cannot be established.",
+  "bottlenecks_identified": [
+    "Disk-mtime reconstruction gives the named compute-bound entries 0-minute durations, so their timing and causal phases cannot be distinguished.",
+    "The GPU report is not linked to task execution, so it cannot grade compute-bound GPU efficiency.",
+    "The timing data does not record simultaneous model count or runner selection, so DualGPURunner compliance cannot be checked."
+  ],
+  "improvements_suggested": [
+    "Record monotonic start, end, and phase timestamps at sub-minute resolution for each experiment.",
+    "Capture task-linked GPU utilization samples for each compute-bound experiment.",
+    "Write loaded-model count and runner-selection receipts, and use DualGPURunner when two or more models run in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add sub-minute monotonic phase timing to the milestone timing collector.",
+    "Join GPU samples to compute-bound experiment and phase identifiers.",
+    "Record model concurrency and runner dispatch for every compute-bound task."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Coarse reconstructed timing and a GPU snapshot without task linkage limit this retrospective more than execution time. Task-scoped telemetry is the best next step; no measured counterfactual supports a nonzero savings estimate."
+}

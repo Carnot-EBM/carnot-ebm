@@ -6178,3 +6178,10 @@ The critical path for milestone .250:
 - theme: factor-harness construction and dependency-gated compute formed the reconstructed execution tail
 - key result: the available evidence identifies no compute-task GPU-idle defect, while phase causes and parallel-model runner behavior remain unobservable
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.551
+
+- exp_range: no data available this milestone
+- theme: zero-resolution compute ties exposed missing task-period instrumentation
+- key result: the operational record supports neither a causal compute ranking nor a multi-model dispatch failure; its locked task-idle indicator does not mark a fault
+- acceptance: no data available this milestone
