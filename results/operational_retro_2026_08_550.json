@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.550",
+  "generated_at": "2026-08-13T19:11:09Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 4.1,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 10,
+  "slowest_experiments": [
+    {
+      "experiment": "Model-family factor harness development and held-split freeze",
+      "duration_minutes": 1.39,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp6393 scalar improvement: default-off ARC active-goal shadow",
+      "duration_minutes": 0.91,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp6394 freeze: held factor-transport capability license matrix",
+      "duration_minutes": 0.9,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp6400 reachability: held ARC active-goal causal route test",
+      "duration_minutes": 0.87,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V550 dated source delta and executable scope freeze",
+      "duration_minutes": 0.03,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 13 experiments in 4.1 minutes, with 10 classified as compute-bound. No compute-task GPU-idle fault was established; fallback timing reconstruction and missing task-linked phase and concurrency telemetry limit the efficiency diagnosis.",
+  "bottlenecks_identified": [
+    "Live git-log timing found no commits, so disk modification times had to reconstruct the milestone and could not attribute elapsed time to execution phases.",
+    "Model-family factor harness development and held-split freeze was the longest compute-bound entry at 1.39 minutes, but the supplied data provides no phase breakdown that explains why.",
+    "The GPU snapshot is not correlated with an active experiment, execution phase, model count, or runner dispatch, preventing a task-time utilization and concurrency assessment."
+  ],
+  "improvements_suggested": [
+    "Persist monotonic start, stop, and phase timestamps for every experiment so live records replace disk-mtime reconstruction.",
+    "Attach GPU utilization samples to the active experiment and phase, together with model-count, concurrency-window, and runner-dispatch receipts.",
+    "Add a gate-aware ready queue that evaluates prerequisites before launch and dispatches independent eligible compute work concurrently; select DualGPURunner only when multiple models are actually loaded in parallel.",
+    "Retain the existing failure-ledger pre-launch check and continue treating its fast doomed-rerun blocks as saved time rather than runtime bottlenecks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Replace fallback reconstruction with durable per-experiment and per-phase monotonic timing.",
+    "Correlate GPU samples with task identity, compute phase, model concurrency, and runner selection.",
+    "Schedule gate-ready independent compute work concurrently and route only genuine parallel multi-model work through DualGPURunner."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The record ranks the operational tail but does not support causal attribution for the longest task, a compute-time GPU efficiency grade, or a parallel-model runner finding. The next retrospective should distinguish measured execution defects from missing observability at task and phase boundaries."
+}
