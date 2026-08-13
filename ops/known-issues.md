@@ -17787,3 +17787,44 @@ so the preview A/B's `CONFIG WARNING` should clear on the next kernel run and it
 finally measure the shipped configuration rather than the hardware. It changes no default: the
 P4 knobs are env-gated and unset. **No submission was made** and the live goal-veto threshold is
 untouched.
+
+## 2026-08-13 REQ-OPS-MILESTONE-LEDGER-6262: the substantive-work share is now visible
+
+Operator directive: "let's make that more visible". `ops/north-star.md` §1 already states the
+test -- "a milestone that produces a new version of an existing artifact without moving the
+headline is noise" -- and nothing computed it. `scripts/milestone_progress_ledger.py` does.
+
+**Measured over the last 10 milestones (.540-.549), 108 tasks:**
+
+| category | count | share |
+|---|---|---|
+| BLOCKED / pre-gated | **34** | **31%** |
+| scaffolding (readiness, shadow, audit, transition, capstone) | 31 | 29% |
+| null (honest negatives) | 17 | 16% |
+| **substantive measurements** | **16** | **15%** |
+| unclassified / artifact missing | 10 | 9% |
+
+`reproducible_total_levels` 183 and `reproducible_total_games` 25 -- unchanged across all ten.
+
+**The biggest category is BLOCKED, and that is the actionable finding.** Nearly a third of all
+tasks never ran: "validation commands failed or timed out", "accepted_count=0", "readiness
+controls did not all pass", `blocked_gate_check_failed`. Three milestones (.540, .545, .547)
+produced ZERO substantive artifacts. That is a process problem, not a research problem, and it
+is the cheapest thing on this list to fix.
+
+**Deliberately NOT a gate.** Scaffolding, blocked tasks and honest nulls are all legitimate
+work -- a milestone of nulls that closes a real question beats a milestone of positives that
+re-measures a solved one. Gating on this number would reward relabelling verdicts, which is the
+failure `verdict_row_consistency_lint.py` exists to catch. It reports; a human judges.
+
+**The classifier is deliberately ungenerous, and was corrected once during the build.**
+Milestone-TRANSITION tasks were landing in "substantive" because their verdicts read like
+results ("V540 exact states and V541 roadmap contracts validated") while measuring nothing.
+Reclassifying them dropped the share from 19% to 15%. An unrecognised verdict counts as
+UNCLASSIFIED, never as substantive -- the fail-safe direction, because a visibility tool that
+drifts generous becomes reassurance. 7 tests pin the classifier for exactly that reason.
+
+**Caveat on the 15%.** It counts artifacts by verdict shape, not by value. A single substantive
+measurement that closes a real question is worth more than five. The number is a prompt to ask
+"did this milestone move the headline, and if not was that the plan?" -- not a target to
+optimise.

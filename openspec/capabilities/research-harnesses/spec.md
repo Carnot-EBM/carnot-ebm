@@ -4962,3 +4962,35 @@ coverage line SHALL report it, so "could not check" is distinguishable from "che
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-OPS-VERDICT-ROW-6261 | `scripts/verdict_row_consistency_lint.py`. | `tests/python/test_verdict_row_consistency_lint.py` (11/11), plus verification against the original exp6251/exp6252 artifacts and a synthetic exp6254 shape. **Coverage caveat, measured:** over the 60 most recent artifacts it checks 3 and skips 57, because most carry no per-unit rows. |
+
+### REQ-OPS-MILESTONE-LEDGER-6262: The Substantive-Work Share Is Computed, Not Assumed
+
+**Origin:** 2026-08-13 operator directive "let's make that more visible", following the
+observation that seven milestones produced 193 commits and 93 artifacts with zero headline
+movement. `ops/north-star.md` §1 already defines churn; nothing computed it.
+
+`scripts/milestone_progress_ledger.py` SHALL classify each completed milestone's task artifacts
+by verdict shape into substantive / scaffolding / blocked / null, report the substantive share,
+and print the current headline metrics so "did anything move" is answerable in one line.
+
+It SHALL NOT be a gate. Gating on the share would reward relabelling verdicts, which is the
+failure `verdict_row_consistency_lint.py` exists to catch.
+
+The classifier SHALL be ungenerous: an unrecognised verdict counts as UNCLASSIFIED, never as
+substantive, and ambiguous verdicts resolve toward scaffolding.
+
+#### SCENARIO-OPS-MILESTONE-LEDGER-6262-AMBIGUOUS-COUNTS-AS-SCAFFOLDING
+
+Given a milestone-transition verdict that reads like a result ("exact states and roadmap
+contracts validated") but measures nothing, it SHALL classify as scaffolding, not substantive.
+
+#### SCENARIO-OPS-MILESTONE-LEDGER-6262-UNKNOWN-IS-NOT-A-WIN
+
+Given a verdict matching no known shape, it SHALL classify as unclassified rather than
+substantive, so the reported share can never drift generous.
+
+## Implementation Status (REQ-OPS-MILESTONE-LEDGER-6262)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-OPS-MILESTONE-LEDGER-6262 | `scripts/milestone_progress_ledger.py`. | `tests/python/test_milestone_progress_ledger.py` (7/7). First measurement, .540-.549: 34 blocked, 31 scaffolding, 17 null, **16 substantive of 108 (15%)**, headline unchanged at 183 levels / 25 games. |
