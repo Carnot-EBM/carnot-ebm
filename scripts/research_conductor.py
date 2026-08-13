@@ -4188,6 +4188,29 @@ def _plan_next_milestone(push: bool = True) -> bool:
         f"    from HARD to WARNING. REQUIRES_RETIRED_EXP (a `requires:` chain\n"
         f"    referencing a retired upstream exp_id) has NO override path —\n"
         f"    rewrite the chain instead.\n\n"
+        f"  per_unit_rows: [REQUIRED on any task making a COMPARATIVE claim]\n"
+        f"    Measured 2026-08-13: of the 60 most recent artifacts, 57 carry NO\n"
+        f"    per-unit rows -- only aggregates, receipts and gate tallies. A\n"
+        f"    headline computed from aggregates alone is UNFALSIFIABLE from the\n"
+        f"    artifact: nobody can check it later without re-running the task,\n"
+        f"    and three artifacts in two days had headlines their own rows\n"
+        f"    contradicted (a control identical to its baseline on 20 of 25\n"
+        f"    rows; a gate met on 1 win, 1 loss and 2 rows with no headroom;\n"
+        f"    every row null from a store-path bug). Any task comparing arms,\n"
+        f"    games, seeds or conditions MUST emit a per-unit list (the corpus\n"
+        f"    convention is `per_game_results` or `rows`) carrying the metric\n"
+        f"    for EACH unit, not only the pooled number. See\n"
+        f"    scripts/verdict_row_consistency_lint.py.\n"
+        f"  blocked_reason: [REQUIRED whenever honest_verdict starts blocked_*]\n"
+        f"    Measured 2026-08-13: 37 of 58 blocked artifacts record no reason\n"
+        f"    at all, and all 31 carrying `blocked_gate_check_failed` record\n"
+        f"    NOTHING about which gate failed or why. That single blocker\n"
+        f"    stopped 31 tasks across 14 milestones and could not be\n"
+        f"    investigated without re-running them -- which is exactly how a\n"
+        f"    blocker recurs indefinitely under unattended operation. A blocked\n"
+        f"    verdict MUST record which check failed and the observed value, in\n"
+        f"    `blocked_reason` or `failed_gates`. See\n"
+        f"    scripts/recurring_blocker_ledger.py.\n"
         f"  solve_provenance: [REQUIRED in REQUIRED ARTIFACT FIELDS on any ARC\n"
         f"    task that claims a game LEVEL solve]\n"
         f"    Per CLAUDE.md 'ARC Live-Path Reachability Discipline' (the\n"
@@ -4779,6 +4802,37 @@ def research_step(
                     )
                 except Exception as _e:
                     logger.warning("QA-layer authenticity audit failed (non-fatal): %s", _e)
+
+            # Artifact convention audit (2026-08-13). The four audits above review CODE and
+            # DOCS; none reviews the ARTIFACTS, which ARE the research record. Asks one
+            # question per artifact: could a stranger CHECK this claim, or must they trust it?
+            # Two conventions, both measured -- a comparative claim records per-unit rows (57 of
+            # 60 recent artifacts did not), and a blocked verdict records why (37 of 58 did
+            # not, and one undiagnosable blocker stopped 31 tasks across 14 milestones).
+            #
+            # Adversarial rather than a lint on purpose: verdict_row_consistency_lint.py tried
+            # the pattern-matching route and needed five rounds of widening while still missing
+            # cases, because "is this claim checkable" is semantic. Bounded with --recent so a
+            # milestone close stays cheap. Never edits, never blocks; the operator decides.
+            if not dry_run:
+                try:
+                    subprocess.run(
+                        [
+                            sys.executable,
+                            str(PROJECT_ROOT / "scripts" / "artifact_convention_audit.py"),
+                            "--recent",
+                            "8",
+                            "--agent-type",
+                            AGENT_TYPE_AUDIT,
+                            "--model-name",
+                            AGENT_MODEL_AUDIT,
+                        ],
+                        cwd=PROJECT_ROOT,
+                        timeout=900,
+                        check=False,
+                    )
+                except Exception as _e:
+                    logger.warning("Artifact convention audit failed (non-fatal): %s", _e)
 
             # ARC live-agent self-solve audit (2026-06-22 operator directive, 2nd
             # recurrence: "aggressively caught and stopped"). Hostile review that the

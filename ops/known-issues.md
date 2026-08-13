@@ -17840,3 +17840,57 @@ the unattended failure mode: a failure nobody reads never gets fixed.
 
 Investigate the highest-count blocker first: diagnose the root cause, then either fix it
 or record why the block is correct and expected. Do NOT simply re-run the task.
+
+## 2026-08-13 REQ-OPS-ARTIFACT-CONVENTION-6264: conventions enforced by the adversarial agent
+
+Operator: "it sounds like we need to enforce conventions with our adversarial agent." Correct,
+and the placement matters, so this shipped in two halves.
+
+**PREVENTION (planner-side, no LLM).** Two conventions added to the planner's REQUIRED ARTIFACT
+FIELDS guidance in `research_conductor.py`, alongside `solve_provenance`:
+
+- `per_unit_rows` on any task making a COMPARATIVE claim. Measured: 57 of the 60 most recent
+  artifacts carry none, only aggregates and receipts.
+- `blocked_reason` whenever `honest_verdict` starts `blocked_*`. Measured: 37 of 58 blocked
+  artifacts record no reason, and all 31 carrying `blocked_gate_check_failed` say nothing about
+  which gate failed.
+
+This is the cheap half. A convention in the task spec changes what gets WRITTEN; an audit can
+only notice afterwards that it was not.
+
+**DETECTION (adversarial, milestone close).** `scripts/artifact_convention_audit.py` is the
+FIFTH adversarial audit, wired beside the four that already run. The existing four review
+landing-page copy, verifier code, QA-layer guards and ARC solve provenance -- **all four review
+CODE or DOCS. None reviewed the ARTIFACTS**, which are the research record and the thing every
+downstream claim rests on. That was the gap.
+
+It asks one question per artifact: *could a stranger CHECK this claim, or must they trust it?*
+Verdicts: `CHECKABLE | AGGREGATE_ONLY | BLOCKED_WITHOUT_DIAGNOSTIC | CANNOT_DETERMINE`. It reuses
+the siblings' audit-integrity guard (Layer 1.5): a flagged verdict quoting evidence absent from
+the artifact is downgraded rather than acted on. It never edits and never blocks.
+
+**Why adversarial and not another lint -- this is the evidence, not a preference.**
+`verdict_row_consistency_lint.py` tried the pattern-matching route on the same problem and
+needed FIVE rounds of widening, each round a real gap, and still misses cases and emits noise.
+The pattern-narrower-than-its-concept failure recurred five times inside the tool built to catch
+that failure. "Is this claim checkable" is a semantic question; a reviewer does not need to be
+taught every artifact shape, only the question.
+
+**First real run, 3 artifacts, and it earned its place.** It flagged
+`experiment_3392_archive_v311_activate_v312.json` AGGREGATE_ONLY: the artifact claims the
+archive is complete and v312 activation is ready, backed by counts
+(`completed_artifacts`, `blocked_artifacts`, `missing_artifacts`) but records nothing about
+WHICH upstream artifacts were checked or what each produced. Its stated missing check --
+*"Which upstream artifacts were actually checked, and what result did each one produce before
+declaring the archive complete?"* -- is exactly right, and no pattern list would have produced
+it. The quoted fields are genuinely present, so the integrity guard passed it as real evidence.
+It correctly marked exp6260 and exp833 CHECKABLE, so it is not simply flagging everything.
+
+**Bounded on purpose.** `--recent 8` at milestone close, one call per artifact. The siblings are
+bounded the same way; an unbounded audit over a 6300-file corpus would be its own kind of churn.
+
+**One bug worth recording.** The first wiring gated on `AUDIT_ENABLED`, a name I invented that
+exists nowhere in the file. It compiled, because the guard is only evaluated at runtime — it
+would have raised `NameError` at the first milestone close and taken the retrospective path with
+it. Now gated on `not dry_run`, the same condition as its four siblings. Reading what the
+neighbours do beats assuming a symbol exists.
