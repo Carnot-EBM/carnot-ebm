@@ -34356,3 +34356,107 @@ hypotheses until Carnot reproduces them.
   EBT pretraining, or parser/JIT retry.
 
 <!-- V549-PLANNER-REFRESH-20260813-END -->
+
+## V550 Planner Refresh (2026-08-13, after milestone 2026.08.549)
+
+This refresh used Exp6377 through Exp6390 as the evidence boundary. It searched
+arXiv first for recent EBM reasoning, constraint solving, hallucination control,
+constrained generation, continual learning, Ising hardware, and KAN work. It
+then checked OpenReview, Hugging Face Papers, Semantic Scholar citation records,
+GitHub, Extropic, and Logical Intelligence. Source claims stay hypotheses until
+Carnot reproduces them.
+
+### Promoted methods
+
+- **AI4AI at Test-Time: Strong-to-Weak Capability Transfer via Harnesses** -
+  arXiv:2608.12307, https://arxiv.org/abs/2608.12307; submitted 2026-08-12.
+  A stronger model builds a fixed test-time harness for a weaker model. The
+  reported gains came mainly from deterministic code, task routing, and strict
+  answer-format enforcement. The target model was not retrained. Carnot hook:
+  build bounded factor-edit harness variants on a sealed development split.
+  Freeze one variant per model family. Test each frozen harness once on held
+  events. Keep exact checkers as the only semantic authority.
+- **Retry, Switch, or Abstain? Learning Strategy-Aware Tool-Use Policies via
+  Controlled Error Injection** - arXiv:2608.11977,
+  https://arxiv.org/abs/2608.11977; submitted 2026-08-12. The paper separates
+  retry, route switching, and terminal abstention under controlled failures.
+  Carnot hook: replace the all-family transport veto with an exact capability
+  license per model and constraint family. A failed model-family cell must
+  abstain. It must not block licensed cells or silently fall back.
+- **Beyond Memory: A Transactional Continuity Kernel for Long-Lived AI Agents**
+  - arXiv:2608.11632, https://arxiv.org/abs/2608.11632; submitted 2026-08-12.
+  The proposed kernel evaluates typed changes off-commit. It then atomically
+  records Commit, Reject, Quarantine, or Defer against an exact predecessor
+  head. Carnot hook: give every prospective factor update a predecessor hash,
+  exact release receipt, and atomic disposition. A proposal cannot authorize
+  its own activation. Stale-head and duplicate-effect attacks must fail closed.
+- **When Offline Evaluation Misleads: A Diagnostic Protocol for Reward and
+  Policy Selection in Delayed-Feedback Contextual Bandits** - arXiv:2608.11560,
+  https://arxiv.org/abs/2608.11560; submitted 2026-08-12. The protocol checks
+  reward alignment and policy learnability before trusting an offline lift.
+  Carnot hook: separate proposal learnability from future-event utility. Report
+  both axes before a factor-learning or consumer promotion claim.
+
+### Controls and deferred methods
+
+- **An Agentic Workflow for Legacy HPC Modernization** - arXiv:2608.12249,
+  https://arxiv.org/abs/2608.12249; submitted 2026-08-12. The case study found
+  that safe delegation ended where its exact test oracle ended. Carnot use:
+  keep transport, routing, and learned energy outside the exact authority
+  boundary. This is a control, not a new experiment lane.
+- **Commitment Before Realization** - arXiv:2608.08082,
+  https://arxiv.org/abs/2608.08082. It studies when masked-diffusion guidance
+  can stop without reducing final constraint satisfaction. Carnot uses local
+  autoregressive GGUF models, so this remains deferred.
+- **Robust Ambiguity Detection** - arXiv:2608.11541,
+  https://arxiv.org/abs/2608.11541. It uses model-space and feature-space
+  consistency to drive abstention. The feature-space route is outside Carnot's
+  closed model-local representation lane. V550 uses exact observed failures
+  for abstention instead.
+- **Thermodynamic Matrix Inversion** - arXiv:2608.09743,
+  https://arxiv.org/abs/2608.09743. The analysis relates analog dynamics to
+  preconditioned gradient descent. It provides no authenticated Carnot device
+  or simulator path. Schedule no hardware execution from this result.
+- **Embedded RISC-V KAN Evaluation** - arXiv:2608.00737,
+  https://arxiv.org/abs/2608.00737. Its embedded hard-constrained KAN result is
+  useful hardware context. It does not clear Carnot's closed KAN utility lane.
+
+### Secondary-source and product status
+
+- **Semantic Scholar:** the public API returned 33 EBT (`2507.02092`) citations
+  and eight ARM-EBM (`2512.15605`) citations. The newest relevant methods were
+  already indexed. No citation supplies a new local GGUF verifier with exact
+  release authority.
+- **OpenReview:** recent EBM and continual-learning results repeated
+  composable learned energies, task-to-task poisoning checks, and bounded
+  generator-executor-verifier loops. They support exact vetoes and protected
+  replay. They do not reopen learned-verifier authority.
+- **Hugging Face Papers:** the current structured-output record repeated the
+  format-versus-value gap and constrained-decoding costs. V550 does not reopen
+  grammar decoding or parser/JIT repair.
+- **GitHub:** targeted searches found no new local GGUF-compatible EBM,
+  constraint, KAN, or sampler package that supersedes Carnot's exact checkers
+  and factor registry. Paper code is optional context only.
+- **Extropic:** the public writing index still provides no authenticated local
+  TSU route. The Z1 tapeout and 2027 early-access statement remain product
+  status, not a hardware receipt.
+- **Logical Intelligence:** public Kona material still provides no weights,
+  reproducible architecture, or documented local API. Kona remains product
+  direction only.
+
+### V550 planning impact
+
+- Replace one global three-family factor gate with held, model-family-specific
+  transport licenses. Add explicit abstention and no-silent-fallback tests.
+- Use a bounded development harness search, then freeze and test the selected
+  harness on held events. This is a new mechanism after the V549 transport
+  null. It is not a grammar, parser/JIT, or token-budget-only retry.
+- Run the verified frontier and continuous self-learning only on licensed
+  cells. Separate learnability from future utility. Activate factors through
+  an exact predecessor-bound transaction.
+- Repair the ARC gate metric at the producer boundary. Then run the deferred
+  default-off shadow. Make no game or level solve claim.
+- Schedule no unchanged board probe, TSU task, Kona task, KAN training,
+  hidden-state scorer, external-text scorer, or EBT pretraining.
+
+<!-- V550-PLANNER-REFRESH-20260813-END -->
