@@ -209,10 +209,37 @@ def _restore_dropped_determinations() -> None:
                 cur = _json.loads(path.read_text())
                 if not isinstance(head, dict) or not isinstance(cur, dict):
                     continue
+                # RESTORE TWO DAMAGE SHAPES, not one (widened 2026-08-13).
+                #
+                # The original test was `k not in cur`, which only catches a DELETED key. The
+                # 2026-08-12 incident was the other shape: `flagged_adversarial` was still
+                # PRESENT and had been set to None, so `k not in cur` was False and this helper
+                # restored nothing on the very case it exists for. Five artifacts reached the
+                # index with their quarantine lifted; only determination-preservation-lint
+                # refusing a HUMAN commit caught it, and that lint never runs here because the
+                # conductor commits --no-verify.
+                #
+                # A determination is meaningful only when TRUTHY: `flagged_adversarial: False`
+                # and `flagged_adversarial: None` both re-admit a quarantined artifact to
+                # headline aggregation. So a truthy value in HEAD that is falsy or absent now is
+                # damage, and is restored.
+                #
+                # STILL STRICTLY ADDITIVE, so it cannot lose a legitimate edit: a deliberate
+                # clear is expressed as a falsy value PLUS a `*_cleared_note` (the documented
+                # route in determination_preservation_lint's docstring), and that note is itself
+                # a determination token, so a cleared artifact carries a key HEAD lacks and is
+                # left alone.
+                def _damaged(key: str, head_val: object) -> bool:
+                    if not head_val:
+                        return False  # nothing meaningful in HEAD to protect
+                    if f"{key}_cleared_note" in cur:
+                        return False  # deliberately cleared through the sanctioned route
+                    return not cur.get(key)
+
                 missing = {
                     k: v
                     for k, v in head.items()
-                    if any(t in k for t in _DETERMINATION_TOKENS) and k not in cur
+                    if any(t in k for t in _DETERMINATION_TOKENS) and _damaged(k, v)
                 }
                 if not missing:
                     continue

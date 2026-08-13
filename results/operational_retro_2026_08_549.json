@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.549",
+  "generated_at": "2026-08-13T10:12:32Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 5.8,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 7,
+  "slowest_experiments": [
+    {
+      "experiment": "Gated on Exp6379 readiness: three-family canonical factor transport canary",
+      "duration_minutes": 3.75,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Canonical factor-edit instruction and capacity transport contract",
+      "duration_minutes": 1.72,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V549 adversarial capstone and PRD-gap reconciliation",
+      "duration_minutes": 0.12,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V549 dated source delta and three-lane scope freeze",
+      "duration_minutes": 0.06,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp6387 readiness: three-family ARC goal evidence-response calibration",
+      "duration_minutes": 0.06,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 13 experiments in 5.8 minutes, including 7 compute-bound experiments. The 3.75-minute readiness-gated canonical factor transport canary and the 1.72-minute canonical factor-edit contract led the compute tail. The locked task classification found no GPU-idle fault on compute-bound work, and the supplied data does not establish parallel model loading or runner selection.",
+  "bottlenecks_identified": [
+    "The Exp6379-readiness-gated canonical factor transport canary was the longest compute-bound entry at 3.75 minutes. Its label identifies readiness gating, but the supplied timing data has no phase breakdown for a finer cause.",
+    "The canonical factor-edit instruction and capacity transport contract was the next-longest compute-bound entry at 1.72 minutes. The supplied timing data does not identify why it took that long.",
+    "Disk-mtime reconstruction ranks the work but does not separate readiness wait, setup, inference, and teardown time."
+  ],
+  "improvements_suggested": [
+    "Add a readiness-aware preflight before scheduling gated compute work, and record gate-wait and compute-phase timestamps.",
+    "Attach GPU utilization samples to the active task and phase so a task-untied idle snapshot cannot be mistaken for in-task utilization.",
+    "Record model-count and runner-dispatch receipts for every compute task. Require DualGPURunner only when at least two models load in parallel.",
+    "Schedule independent synthesis work while a compute task waits on readiness."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add readiness preflight and separate gate-wait timing for gated compute tasks.",
+    "Capture task-linked GPU utilization from compute start through compute end.",
+    "Emit model-count and runner-dispatch receipts, with DualGPURunner selected only for parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The reconstructed timing can rank experiments, but it cannot distinguish gate wait from active compute. The savings estimate remains 0 because the supplied evidence contains no measured counterfactual; better task-linked telemetry should make the next estimate evidence-based."
+}
