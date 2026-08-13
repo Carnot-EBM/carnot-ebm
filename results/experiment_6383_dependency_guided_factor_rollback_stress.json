@@ -1,0 +1,945 @@
+{
+  "allowed_node_and_edge_types": {
+    "acyclic_required": true,
+    "allowed_edges": [
+      [
+        "source_event",
+        "obligation",
+        "declares_obligation"
+      ],
+      [
+        "source_event",
+        "exact_evidence",
+        "emits_evidence"
+      ],
+      [
+        "obligation",
+        "exact_evidence",
+        "checked_by"
+      ],
+      [
+        "exact_evidence",
+        "factor_version",
+        "supports_version"
+      ],
+      [
+        "factor_version",
+        "factor_version",
+        "revises_to"
+      ],
+      [
+        "factor_version",
+        "factor",
+        "materializes_factor"
+      ],
+      [
+        "factor",
+        "consumer_decision",
+        "influences_decision"
+      ],
+      [
+        "factor_version",
+        "consumer_decision",
+        "version_used_by_decision"
+      ],
+      [
+        "source_event",
+        "rollback_action",
+        "diagnosed_by_rollback"
+      ],
+      [
+        "factor_version",
+        "rollback_action",
+        "invalidated_by_rollback"
+      ],
+      [
+        "factor",
+        "rollback_action",
+        "invalidated_by_rollback"
+      ],
+      [
+        "consumer_decision",
+        "rollback_action",
+        "invalidated_by_rollback"
+      ]
+    ],
+    "edge_types": [
+      "declares_obligation",
+      "emits_evidence",
+      "checked_by",
+      "supports_version",
+      "revises_to",
+      "materializes_factor",
+      "influences_decision",
+      "version_used_by_decision",
+      "diagnosed_by_rollback",
+      "invalidated_by_rollback"
+    ],
+    "node_types": [
+      "source_event",
+      "obligation",
+      "exact_evidence",
+      "factor_version",
+      "factor",
+      "consumer_decision",
+      "rollback_action"
+    ]
+  },
+  "cycle_missing_edge_corruption_and_interruption_results": {
+    "all_fail_closed": true,
+    "fixture_results": {
+      "corrupted_lineage": {
+        "accepted": false,
+        "fail_closed": true,
+        "fixture": "corrupted_lineage",
+        "reason": "corrupted_lineage"
+      },
+      "cyclic": {
+        "accepted": false,
+        "fail_closed": true,
+        "fixture": "cyclic",
+        "reason": "cycle_detected"
+      },
+      "duplicated": {
+        "accepted": false,
+        "fail_closed": true,
+        "fixture": "duplicated",
+        "reason": "duplicate_node_id"
+      },
+      "edge_tampering": {
+        "accepted": false,
+        "fail_closed": true,
+        "fixture": "edge_tampering",
+        "reason": "unsupported_edge"
+      },
+      "misattributed": {
+        "accepted": false,
+        "fail_closed": true,
+        "fixture": "misattributed",
+        "reason": "misattributed_evidence"
+      },
+      "missing_evidence": {
+        "accepted": false,
+        "fail_closed": true,
+        "fixture": "missing_evidence",
+        "reason": "missing_evidence"
+      },
+      "orphaned_nodes": {
+        "accepted": false,
+        "fail_closed": true,
+        "fixture": "orphaned_nodes",
+        "reason": "missing_node"
+      }
+    },
+    "incomplete_invalidation": {
+      "fail_closed": true,
+      "unsafe_survivor_count": 9
+    },
+    "journal_interruption": {
+      "restart_completed": true,
+      "terminal_root": "sha256:55803c3f5b7dec78d6d295ce5019304dcb60c073c946e65567fa457f69500ba1"
+    }
+  },
+  "dependency_guided_rollback_ready_score": 1.0,
+  "deterministic_fixture_manifest": {
+    "bad_source_node_id": "source_bad_stale_poison",
+    "deterministic": true,
+    "expected_harmful_state_nodes": [
+      "fv_repair_bad_v2",
+      "factor_repair_bad",
+      "decision_repair_bad",
+      "fv_poison_guard_v1",
+      "factor_poison_guard",
+      "decision_poison_guard",
+      "fv_partial_guard_v1",
+      "factor_partial_guard",
+      "decision_partial_guard",
+      "decision_mixed_active"
+    ],
+    "expected_preserved_state_nodes": [
+      "fv_route_v1",
+      "factor_route_guard",
+      "decision_route_guard",
+      "fv_shared_v1",
+      "factor_shared_guard",
+      "decision_shared_guard"
+    ],
+    "fixture_order": [
+      "clean",
+      "stale",
+      "poisoned",
+      "duplicated",
+      "misattributed",
+      "partially_supported",
+      "shared_support",
+      "cyclic",
+      "missing_evidence"
+    ],
+    "random_seed": 6383,
+    "schema": "carnot.experiment_6383.dependency_guided_factor_rollback_stress.v1.fixture_manifest"
+  },
+  "diagnosis_receipts": {
+    "bad_evidence_node_ids": [
+      "evidence_bad_poison",
+      "evidence_bad_stale"
+    ],
+    "bad_source_found": true,
+    "bad_source_node_id": "source_bad_stale_poison",
+    "descendant_node_ids": [
+      "decision_mixed_active",
+      "decision_partial_guard",
+      "decision_poison_guard",
+      "decision_repair_bad",
+      "decision_shared_guard",
+      "evidence_bad_poison",
+      "evidence_bad_stale",
+      "factor_partial_guard",
+      "factor_poison_guard",
+      "factor_repair_bad",
+      "factor_shared_guard",
+      "fv_partial_guard_v1",
+      "fv_poison_guard_v1",
+      "fv_repair_bad_v2",
+      "fv_shared_v1",
+      "obligation_bad_poison",
+      "obligation_bad_stale"
+    ],
+    "exact_replay_work": {
+      "checked_node_ids": [
+        "fv_partial_guard_v1",
+        "fv_poison_guard_v1",
+        "fv_repair_bad_v2",
+        "fv_route_v1",
+        "fv_shared_v1",
+        "decision_mixed_active",
+        "decision_partial_guard",
+        "decision_poison_guard",
+        "decision_repair_bad",
+        "decision_route_guard",
+        "decision_shared_guard"
+      ],
+      "decision_support": {
+        "decision_mixed_active": false,
+        "decision_partial_guard": false,
+        "decision_poison_guard": false,
+        "decision_repair_bad": false,
+        "decision_route_guard": true,
+        "decision_shared_guard": true
+      },
+      "deterministic_latency_s": 0.0055,
+      "exact_check_cost_units": 0.11,
+      "exact_replay_call_count": 11,
+      "exact_replay_work_hash": "sha256:2c26347d06758e29d2b7c7d47f74ff3194134eb843b4e1d90b7b1825e06eb18b",
+      "factor_version_support": {
+        "fv_partial_guard_v1": false,
+        "fv_poison_guard_v1": false,
+        "fv_repair_bad_v2": false,
+        "fv_route_v1": true,
+        "fv_shared_v1": true
+      },
+      "graph_memory_bytes": 8376
+    },
+    "independently_supported_descendant_node_ids": [
+      "decision_shared_guard",
+      "factor_shared_guard",
+      "fv_shared_v1"
+    ],
+    "unsupported_descendant_node_ids": [
+      "decision_mixed_active",
+      "decision_partial_guard",
+      "decision_poison_guard",
+      "decision_repair_bad",
+      "factor_partial_guard",
+      "factor_poison_guard",
+      "factor_repair_bad",
+      "fv_partial_guard_v1",
+      "fv_poison_guard_v1",
+      "fv_repair_bad_v2"
+    ]
+  },
+  "duration_s": 0.02153410017490387,
+  "exact_replay_cost_latency_and_memory": {
+    "deterministic_latency_s": 0.0055,
+    "exact_check_cost_units": 0.11,
+    "exact_replay_call_count": 11,
+    "graph_memory_bytes": 8376,
+    "verifier_is_oracle_only_for_exact_replay": true
+  },
+  "field_principles": {
+    "allowed_node_and_edge_types": "Typed nodes and allowed edge pairs define the only legal lineage surface.",
+    "cycle_missing_edge_corruption_and_interruption_results": "Cycles, missing evidence, corruption, incomplete invalidation, and interruption fail closed.",
+    "dependency_guided_rollback_ready_score": "Readiness is a conjunctive safety and preservation gate.",
+    "deterministic_fixture_manifest": "Clean, stale, poisoned, duplicated, misattributed, partially supported, shared-support, cyclic, and missing-evidence fixtures are named and seeded.",
+    "diagnosis_receipts": "The diagnosed bad source and exact replay evidence explain the invalidation frontier.",
+    "duration_s": "Wall time is measured without padding.",
+    "exact_replay_cost_latency_and_memory": "Checker calls, deterministic cost, latency, and graph memory bytes are measured.",
+    "field_principles": "Every required field states its guard.",
+    "field_provenance": "Every required field maps to specs, source hashes, fixtures, exact checks, rollback receipts, tests, or roots.",
+    "harmful_descendants_removed": "Selective rollback must remove all unsupported harmful descendants.",
+    "honest_verdict": "The verdict starts with a terminal prefix and states that no live utility was claimed.",
+    "independently_supported_state_preserved": "Exact-valid independent support paths must survive selective rollback.",
+    "inference_substrate": "The substrate declares deterministic exact replay and typed lineage analysis with no LLM.",
+    "journal_restart_and_idempotence_receipts": "Restart, double rollback, root mismatch, edge tampering, orphan nodes, and active decision rollback are recorded.",
+    "lineage_graphs_before_and_after_injection": "Graph roots, node counts, edge counts, and state roots are recorded before and after injection.",
+    "no_live_utility_claim": "Bare true states that this stress test does not promote live learning utility.",
+    "overrollback_underrollback_and_unsafe_survivor_counts": "Over-removal, missed rollback, and unsafe survivors stay visible.",
+    "preconditions_checked": "Date, source hashes, protected hashes, schema, fixtures, controls, seeds, and upstream context freeze before replay.",
+    "preregistered_injection_and_arm_contract": "Bad-source injection order and the selective, full reset, and no-rollback controls are fixed before replay.",
+    "protected_files_unchanged": "Conductor, ops, traceability, prior factor code, and upstream artifacts remain byte-identical.",
+    "random_seed": "Fixed seed pins fixture order.",
+    "registry_release_ledger_and_checker_hashes": "Factor registry, release ledger, exact checker sources, and Exp6382 when present are hashed before fixture replay.",
+    "reproducibility_checksum": "A normalized checksum detects artifact drift.",
+    "selective_full_reset_and_no_rollback_results": "All three controls report the same metrics on the same replay work.",
+    "status": "Terminal status follows rollback safety, preservation, corruption checks, protected files, and tests.",
+    "terminal_registry_roots": "Terminal roots prove selective rollback is stable and exact-valid.",
+    "tests_run": "Verification commands and exit codes are recorded.",
+    "typed_dependency_schema_path_hash_and_version": "The node, edge, and acyclicity schema is frozen as a sidecar.",
+    "upstream_learning_context_class": "Exp6382 absence, blocked state, or terminal class is context only, not a readiness gate.",
+    "verifier_is_oracle": "Bare true applies only to deterministic exact replay checkers, not lineage or rollback policy."
+  },
+  "field_provenance": {
+    "allowed_node_and_edge_types": {
+      "principle": "Typed nodes and allowed edge pairs define the only legal lineage surface.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "cycle_missing_edge_corruption_and_interruption_results": {
+      "principle": "Cycles, missing evidence, corruption, incomplete invalidation, and interruption fail closed.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "dependency_guided_rollback_ready_score": {
+      "principle": "Readiness is a conjunctive safety and preservation gate.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "deterministic_fixture_manifest": {
+      "principle": "Clean, stale, poisoned, duplicated, misattributed, partially supported, shared-support, cyclic, and missing-evidence fixtures are named and seeded.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "diagnosis_receipts": {
+      "principle": "The diagnosed bad source and exact replay evidence explain the invalidation frontier.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "duration_s": {
+      "principle": "Wall time is measured without padding.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "exact_replay_cost_latency_and_memory": {
+      "principle": "Checker calls, deterministic cost, latency, and graph memory bytes are measured.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "field_principles": {
+      "principle": "Every required field states its guard.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "field_provenance": {
+      "principle": "Every required field maps to specs, source hashes, fixtures, exact checks, rollback receipts, tests, or roots.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "harmful_descendants_removed": {
+      "principle": "Selective rollback must remove all unsupported harmful descendants.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "honest_verdict": {
+      "principle": "The verdict starts with a terminal prefix and states that no live utility was claimed.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "independently_supported_state_preserved": {
+      "principle": "Exact-valid independent support paths must survive selective rollback.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "inference_substrate": {
+      "principle": "The substrate declares deterministic exact replay and typed lineage analysis with no LLM.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "journal_restart_and_idempotence_receipts": {
+      "principle": "Restart, double rollback, root mismatch, edge tampering, orphan nodes, and active decision rollback are recorded.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "lineage_graphs_before_and_after_injection": {
+      "principle": "Graph roots, node counts, edge counts, and state roots are recorded before and after injection.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "no_live_utility_claim": {
+      "principle": "Bare true states that this stress test does not promote live learning utility.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "overrollback_underrollback_and_unsafe_survivor_counts": {
+      "principle": "Over-removal, missed rollback, and unsafe survivors stay visible.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "preconditions_checked": {
+      "principle": "Date, source hashes, protected hashes, schema, fixtures, controls, seeds, and upstream context freeze before replay.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "preregistered_injection_and_arm_contract": {
+      "principle": "Bad-source injection order and the selective, full reset, and no-rollback controls are fixed before replay.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "protected_files_unchanged": {
+      "principle": "Conductor, ops, traceability, prior factor code, and upstream artifacts remain byte-identical.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "random_seed": {
+      "principle": "Fixed seed pins fixture order.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "registry_release_ledger_and_checker_hashes": {
+      "principle": "Factor registry, release ledger, exact checker sources, and Exp6382 when present are hashed before fixture replay.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "reproducibility_checksum": {
+      "principle": "A normalized checksum detects artifact drift.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "selective_full_reset_and_no_rollback_results": {
+      "principle": "All three controls report the same metrics on the same replay work.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "status": {
+      "principle": "Terminal status follows rollback safety, preservation, corruption checks, protected files, and tests.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "terminal_registry_roots": {
+      "principle": "Terminal roots prove selective rollback is stable and exact-valid.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "tests_run": {
+      "principle": "Verification commands and exit codes are recorded.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "typed_dependency_schema_path_hash_and_version": {
+      "principle": "The node, edge, and acyclicity schema is frozen as a sidecar.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "upstream_learning_context_class": {
+      "principle": "Exp6382 absence, blocked state, or terminal class is context only, not a readiness gate.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    },
+    "verifier_is_oracle": {
+      "principle": "Bare true applies only to deterministic exact replay checkers, not lineage or rollback policy.",
+      "satisfied_by": "Exp6383 deterministic replay"
+    }
+  },
+  "harmful_descendants_removed": {
+    "expected_count": 10,
+    "expected_harmful_node_ids": [
+      "fv_repair_bad_v2",
+      "factor_repair_bad",
+      "decision_repair_bad",
+      "fv_poison_guard_v1",
+      "factor_poison_guard",
+      "decision_poison_guard",
+      "fv_partial_guard_v1",
+      "factor_partial_guard",
+      "decision_partial_guard",
+      "decision_mixed_active"
+    ],
+    "removed_all_harmful_descendants": true,
+    "removed_count": 10,
+    "removed_node_ids": [
+      "decision_mixed_active",
+      "decision_partial_guard",
+      "decision_poison_guard",
+      "decision_repair_bad",
+      "factor_partial_guard",
+      "factor_poison_guard",
+      "factor_repair_bad",
+      "fv_partial_guard_v1",
+      "fv_poison_guard_v1",
+      "fv_repair_bad_v2"
+    ]
+  },
+  "honest_verdict": "complete_positive: dependency-guided rollback removed harmful descendants, preserved independent exact support, and claims no live utility",
+  "independently_supported_state_preserved": {
+    "all_independently_supported_state_preserved": true,
+    "expected_count": 6,
+    "expected_preserved_node_ids": [
+      "fv_route_v1",
+      "factor_route_guard",
+      "decision_route_guard",
+      "fv_shared_v1",
+      "factor_shared_guard",
+      "decision_shared_guard"
+    ],
+    "preserved_count": 6,
+    "preserved_node_ids": [
+      "decision_route_guard",
+      "decision_shared_guard",
+      "factor_route_guard",
+      "factor_shared_guard",
+      "fv_route_v1",
+      "fv_shared_v1"
+    ]
+  },
+  "inference_substrate": "deterministic_verifier_plus_replay",
+  "journal_restart_and_idempotence_receipts": {
+    "double_rollback": {
+      "first_terminal_root": "sha256:55803c3f5b7dec78d6d295ce5019304dcb60c073c946e65567fa457f69500ba1",
+      "idempotent": true,
+      "second_terminal_root": "sha256:55803c3f5b7dec78d6d295ce5019304dcb60c073c946e65567fa457f69500ba1"
+    },
+    "edge_tampering": {
+      "accepted": false,
+      "fail_closed": true,
+      "fixture": "edge_tampering",
+      "reason": "unsupported_edge"
+    },
+    "interrupted_journal_restart": {
+      "restart_completed": true,
+      "terminal_root": "sha256:55803c3f5b7dec78d6d295ce5019304dcb60c073c946e65567fa457f69500ba1"
+    },
+    "orphaned_nodes": {
+      "accepted": false,
+      "fail_closed": true,
+      "fixture": "orphaned_nodes",
+      "reason": "missing_node"
+    },
+    "rollback_of_active_consumer_decision": {
+      "decision_id": "decision_mixed_active",
+      "invalidated": true
+    },
+    "root_mismatch": {
+      "fail_closed": true,
+      "reason": "journal_root_mismatch"
+    }
+  },
+  "lineage_graphs_before_and_after_injection": {
+    "after_injection": {
+      "active_state_count": 16,
+      "edge_count": 26,
+      "node_count": 27,
+      "state_root": "sha256:a5b8204476ec01aa866e3aaa7f34fb47031e2dd4194e15a3702b95b12cae0d02"
+    },
+    "before_injection": {
+      "active_state_count": 6,
+      "edge_count": 10,
+      "node_count": 12,
+      "state_root": "sha256:c7f9f9b790b0efa6ebc6e3b537b9f6575a20f9ccbd9835ac236c51a5477548bf"
+    },
+    "injection_changed_graph": true
+  },
+  "no_live_utility_claim": true,
+  "overrollback_underrollback_and_unsafe_survivor_counts": {
+    "full_reset_overrollback_count": 6,
+    "no_rollback_underrollback_count": 10,
+    "no_rollback_unsafe_survivor_count": 10,
+    "selective_overrollback_count": 0,
+    "selective_underrollback_count": 0,
+    "selective_unsafe_survivor_count": 0
+  },
+  "preconditions_checked": {
+    "all_preconditions_checked": true,
+    "arm_contract_hash": "sha256:fc7bb471c0ab01cedd74a5e9b8e02aa942964ad1384d4ad72d96e49b26a0080c",
+    "context_hashes_frozen": true,
+    "date": "20260813",
+    "fixture_manifest_hash": "sha256:245ab92ecc45d0cb431d8e92cab6e11c9f64a8145fef436e25ff34c24c207439",
+    "live_utility_promotion_limit": 0,
+    "llm_invocation_limit": 0,
+    "planning_date": "20260813",
+    "protected_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:c6dbc4e4981462f015343d4cdfdba271edd86db279cd9818e68fe93f8b468082",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "python/carnot/experiment_6290_revocable_atomic_repair_memory.py": "sha256:3f6a5c7ffc1c01278139823277718b1ef59c2a7b47ae485452ad9057941f045d",
+      "results/experiment_6342_anytime_evalue_release_ledger.json": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+      "results/experiment_6343_evidence_carrying_factor_lifecycle.json": "sha256:d7b90a2ca5be250aa456d011c635b17958331db2cd9b32ef8aae1571c3fa53d3",
+      "results/experiment_6344_counterexample_factor_proposal_calibration.json": "sha256:76e219594ba2bddd08f2eabcdfe3073e32e2c5aea64e3e7b9eb6e56d30777aa0",
+      "results/experiment_6345_prospective_certified_factor_evolution_ab.json": "sha256:eeff87561945d0d50ce1d83e5278c94ac5b759ca06c3ab69262c165687c63f23",
+      "results/experiment_6346_certified_factor_evolution_safety_audit.json": "sha256:80883d32fe092b47c59636283d4cb5d502d1a571df34d2e89c32e995192f0e34",
+      "results/experiment_6382_chronological_verified_factor_self_learning.json": null,
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "random_seed": 6383,
+    "schema_sha256": "sha256:ba4e71d2fa0cbfdce13b1d81b25441db5eff5be1f5af2fa72d94986638ae2110",
+    "source_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/continuous-learning/spec.md": "sha256:24a081508343fb19c330ef0ffe5fd3aeb71d2c5a7f9b1449903d9fdfe3d11cd4",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py": "sha256:69fc95b152d9748f3030e77adcf894f8fa135c48fc3897cedc6873d35be1f36d",
+      "research-references.md": "sha256:c534adbaea0a81a1b4f48afcce5bc291685b111921b3882a452d2b5a22f8f8a7",
+      "tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py": "sha256:7027e8168faf1d2cd3ede3c799c67ef24a8a31c85fbc755a8c2f1958571fa0c3"
+    },
+    "upstream_context_is_task_gate": false,
+    "upstream_learning_context_class": "absent"
+  },
+  "preregistered_injection_and_arm_contract": {
+    "arms": [
+      "selective_descendant_rollback",
+      "full_registry_reset",
+      "no_rollback"
+    ],
+    "bad_source_node_id": "source_bad_stale_poison",
+    "injection_order": [
+      "clean",
+      "stale",
+      "poisoned",
+      "duplicated",
+      "misattributed",
+      "partially_supported",
+      "shared_support",
+      "cyclic",
+      "missing_evidence"
+    ],
+    "matched_exact_replay_work": true,
+    "matched_initial_graph": true,
+    "matched_injection_order": true
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:c6dbc4e4981462f015343d4cdfdba271edd86db279cd9818e68fe93f8b468082",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "python/carnot/experiment_6290_revocable_atomic_repair_memory.py": "sha256:3f6a5c7ffc1c01278139823277718b1ef59c2a7b47ae485452ad9057941f045d",
+      "results/experiment_6342_anytime_evalue_release_ledger.json": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+      "results/experiment_6343_evidence_carrying_factor_lifecycle.json": "sha256:d7b90a2ca5be250aa456d011c635b17958331db2cd9b32ef8aae1571c3fa53d3",
+      "results/experiment_6344_counterexample_factor_proposal_calibration.json": "sha256:76e219594ba2bddd08f2eabcdfe3073e32e2c5aea64e3e7b9eb6e56d30777aa0",
+      "results/experiment_6345_prospective_certified_factor_evolution_ab.json": "sha256:eeff87561945d0d50ce1d83e5278c94ac5b759ca06c3ab69262c165687c63f23",
+      "results/experiment_6346_certified_factor_evolution_safety_audit.json": "sha256:80883d32fe092b47c59636283d4cb5d502d1a571df34d2e89c32e995192f0e34",
+      "results/experiment_6382_chronological_verified_factor_self_learning.json": null,
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:c6dbc4e4981462f015343d4cdfdba271edd86db279cd9818e68fe93f8b468082",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "python/carnot/experiment_6290_revocable_atomic_repair_memory.py": "sha256:3f6a5c7ffc1c01278139823277718b1ef59c2a7b47ae485452ad9057941f045d",
+      "results/experiment_6342_anytime_evalue_release_ledger.json": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+      "results/experiment_6343_evidence_carrying_factor_lifecycle.json": "sha256:d7b90a2ca5be250aa456d011c635b17958331db2cd9b32ef8aae1571c3fa53d3",
+      "results/experiment_6344_counterexample_factor_proposal_calibration.json": "sha256:76e219594ba2bddd08f2eabcdfe3073e32e2c5aea64e3e7b9eb6e56d30777aa0",
+      "results/experiment_6345_prospective_certified_factor_evolution_ab.json": "sha256:eeff87561945d0d50ce1d83e5278c94ac5b759ca06c3ab69262c165687c63f23",
+      "results/experiment_6346_certified_factor_evolution_safety_audit.json": "sha256:80883d32fe092b47c59636283d4cb5d502d1a571df34d2e89c32e995192f0e34",
+      "results/experiment_6382_chronological_verified_factor_self_learning.json": null,
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "changed": [],
+    "unchanged": true
+  },
+  "random_seed": 6383,
+  "registry_release_ledger_and_checker_hashes": {
+    "atomic_repair_memory_exp6290": {
+      "path": "python/carnot/experiment_6290_revocable_atomic_repair_memory.py",
+      "present": true,
+      "sha256": "sha256:3f6a5c7ffc1c01278139823277718b1ef59c2a7b47ae485452ad9057941f045d",
+      "size_bytes": 48642
+    },
+    "exact_checker_exp6342": {
+      "path": "python/carnot/experiment_6342_anytime_evalue_release_ledger.py",
+      "present": true,
+      "sha256": "sha256:25577454da38e6193771abe5005d294d249c52135e3dd57eb811f9eeb845dc32",
+      "size_bytes": 51109
+    },
+    "exact_checker_exp6343": {
+      "path": "python/carnot/experiment_6343_evidence_carrying_factor_lifecycle.py",
+      "present": true,
+      "sha256": "sha256:6f8eb0d927439020c59e13e6c95b2865d97f99da5b6003f994b33a345d473dc6",
+      "size_bytes": 68663
+    },
+    "exact_checker_exp6346": {
+      "path": "python/carnot/experiment_6346_certified_factor_evolution_safety_audit.py",
+      "present": true,
+      "sha256": "sha256:bf70fbfffbddd873824701d675f085cfda9b5307b634cabcf08c585fcbde14a2",
+      "size_bytes": 46909
+    },
+    "factor_registry_artifact": {
+      "path": "results/experiment_6343_evidence_carrying_factor_lifecycle.json",
+      "present": true,
+      "sha256": "sha256:d7b90a2ca5be250aa456d011c635b17958331db2cd9b32ef8aae1571c3fa53d3",
+      "size_bytes": 40343
+    },
+    "factor_registry_jsonl": {
+      "path": "results/experiment_6343_evidence_carrying_factor_lifecycle.json.version_registry.jsonl",
+      "present": true,
+      "sha256": "sha256:e211219a67c382927d560c71b8a4f084e272fe6dedd818348780c8624b1bc003",
+      "size_bytes": 31428
+    },
+    "release_ledger_artifact": {
+      "path": "results/experiment_6342_anytime_evalue_release_ledger.json",
+      "present": true,
+      "sha256": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+      "size_bytes": 37999
+    },
+    "release_ledger_jsonl": {
+      "path": "results/experiment_6342_anytime_evalue_release_ledger.json.evalue_ledger.jsonl",
+      "present": true,
+      "sha256": "sha256:6c5461f725e7df7eba95457c9e1ef8836ebf1f798fe314eac957d32a433642ac",
+      "size_bytes": 24348
+    },
+    "upstream_exp6382": {
+      "path": "results/experiment_6382_chronological_verified_factor_self_learning.json",
+      "present": false,
+      "sha256": null,
+      "size_bytes": 0
+    }
+  },
+  "reproducibility_checksum": "sha256:7b2aad87293168def2f81e965edc8e185d8974a3085113f45dc09f604f08037d",
+  "selective_full_reset_and_no_rollback_results": {
+    "full_registry_reset": {
+      "active_node_ids_after": [],
+      "active_node_ids_before": [
+        "decision_mixed_active",
+        "decision_partial_guard",
+        "decision_poison_guard",
+        "decision_repair_bad",
+        "decision_route_guard",
+        "decision_shared_guard",
+        "factor_partial_guard",
+        "factor_poison_guard",
+        "factor_repair_bad",
+        "factor_route_guard",
+        "factor_shared_guard",
+        "fv_partial_guard_v1",
+        "fv_poison_guard_v1",
+        "fv_repair_bad_v2",
+        "fv_route_v1",
+        "fv_shared_v1"
+      ],
+      "arm": "full_registry_reset",
+      "exact_replay_call_count": 11,
+      "exact_replay_work_hash": "sha256:2c26347d06758e29d2b7c7d47f74ff3194134eb843b4e1d90b7b1825e06eb18b",
+      "initial_graph_root": "sha256:a5b8204476ec01aa866e3aaa7f34fb47031e2dd4194e15a3702b95b12cae0d02",
+      "injection_order_hash": "sha256:e5732a60c78f1c4d15d96adf1955963b670a6debe8933889224d8f4d2eda28fa",
+      "invalidated_active_consumer_decisions": [
+        "decision_mixed_active",
+        "decision_partial_guard",
+        "decision_poison_guard",
+        "decision_repair_bad",
+        "decision_route_guard",
+        "decision_shared_guard"
+      ],
+      "invalidated_node_ids": [
+        "decision_mixed_active",
+        "decision_partial_guard",
+        "decision_poison_guard",
+        "decision_repair_bad",
+        "decision_route_guard",
+        "decision_shared_guard",
+        "factor_partial_guard",
+        "factor_poison_guard",
+        "factor_repair_bad",
+        "factor_route_guard",
+        "factor_shared_guard",
+        "fv_partial_guard_v1",
+        "fv_poison_guard_v1",
+        "fv_repair_bad_v2",
+        "fv_route_v1",
+        "fv_shared_v1"
+      ],
+      "overrollback_count": 6,
+      "preserved_node_ids": [],
+      "supported_state_before": [
+        "decision_route_guard",
+        "decision_shared_guard",
+        "factor_route_guard",
+        "factor_shared_guard",
+        "fv_route_v1",
+        "fv_shared_v1"
+      ],
+      "terminal_root": "sha256:851fc0c0031272c9f407ee7a7e42f63ccefa7dbffed1e02defc03cb2f9ebb708",
+      "underrollback_count": 0,
+      "unsafe_survivor_count": 0,
+      "unsafe_survivor_node_ids": [],
+      "valid_state_preserved_count": 0
+    },
+    "no_rollback": {
+      "active_node_ids_after": [
+        "decision_mixed_active",
+        "decision_partial_guard",
+        "decision_poison_guard",
+        "decision_repair_bad",
+        "decision_route_guard",
+        "decision_shared_guard",
+        "factor_partial_guard",
+        "factor_poison_guard",
+        "factor_repair_bad",
+        "factor_route_guard",
+        "factor_shared_guard",
+        "fv_partial_guard_v1",
+        "fv_poison_guard_v1",
+        "fv_repair_bad_v2",
+        "fv_route_v1",
+        "fv_shared_v1"
+      ],
+      "active_node_ids_before": [
+        "decision_mixed_active",
+        "decision_partial_guard",
+        "decision_poison_guard",
+        "decision_repair_bad",
+        "decision_route_guard",
+        "decision_shared_guard",
+        "factor_partial_guard",
+        "factor_poison_guard",
+        "factor_repair_bad",
+        "factor_route_guard",
+        "factor_shared_guard",
+        "fv_partial_guard_v1",
+        "fv_poison_guard_v1",
+        "fv_repair_bad_v2",
+        "fv_route_v1",
+        "fv_shared_v1"
+      ],
+      "arm": "no_rollback",
+      "exact_replay_call_count": 11,
+      "exact_replay_work_hash": "sha256:2c26347d06758e29d2b7c7d47f74ff3194134eb843b4e1d90b7b1825e06eb18b",
+      "initial_graph_root": "sha256:a5b8204476ec01aa866e3aaa7f34fb47031e2dd4194e15a3702b95b12cae0d02",
+      "injection_order_hash": "sha256:e5732a60c78f1c4d15d96adf1955963b670a6debe8933889224d8f4d2eda28fa",
+      "invalidated_active_consumer_decisions": [],
+      "invalidated_node_ids": [],
+      "overrollback_count": 0,
+      "preserved_node_ids": [
+        "decision_route_guard",
+        "decision_shared_guard",
+        "factor_route_guard",
+        "factor_shared_guard",
+        "fv_route_v1",
+        "fv_shared_v1"
+      ],
+      "supported_state_before": [
+        "decision_route_guard",
+        "decision_shared_guard",
+        "factor_route_guard",
+        "factor_shared_guard",
+        "fv_route_v1",
+        "fv_shared_v1"
+      ],
+      "terminal_root": "sha256:a5b8204476ec01aa866e3aaa7f34fb47031e2dd4194e15a3702b95b12cae0d02",
+      "underrollback_count": 10,
+      "unsafe_survivor_count": 10,
+      "unsafe_survivor_node_ids": [
+        "decision_mixed_active",
+        "decision_partial_guard",
+        "decision_poison_guard",
+        "decision_repair_bad",
+        "factor_partial_guard",
+        "factor_poison_guard",
+        "factor_repair_bad",
+        "fv_partial_guard_v1",
+        "fv_poison_guard_v1",
+        "fv_repair_bad_v2"
+      ],
+      "valid_state_preserved_count": 6
+    },
+    "selective_descendant_rollback": {
+      "active_node_ids_after": [
+        "decision_route_guard",
+        "decision_shared_guard",
+        "factor_route_guard",
+        "factor_shared_guard",
+        "fv_route_v1",
+        "fv_shared_v1"
+      ],
+      "active_node_ids_before": [
+        "decision_mixed_active",
+        "decision_partial_guard",
+        "decision_poison_guard",
+        "decision_repair_bad",
+        "decision_route_guard",
+        "decision_shared_guard",
+        "factor_partial_guard",
+        "factor_poison_guard",
+        "factor_repair_bad",
+        "factor_route_guard",
+        "factor_shared_guard",
+        "fv_partial_guard_v1",
+        "fv_poison_guard_v1",
+        "fv_repair_bad_v2",
+        "fv_route_v1",
+        "fv_shared_v1"
+      ],
+      "arm": "selective_descendant_rollback",
+      "exact_replay_call_count": 11,
+      "exact_replay_work_hash": "sha256:2c26347d06758e29d2b7c7d47f74ff3194134eb843b4e1d90b7b1825e06eb18b",
+      "initial_graph_root": "sha256:a5b8204476ec01aa866e3aaa7f34fb47031e2dd4194e15a3702b95b12cae0d02",
+      "injection_order_hash": "sha256:e5732a60c78f1c4d15d96adf1955963b670a6debe8933889224d8f4d2eda28fa",
+      "invalidated_active_consumer_decisions": [
+        "decision_mixed_active",
+        "decision_partial_guard",
+        "decision_poison_guard",
+        "decision_repair_bad"
+      ],
+      "invalidated_node_ids": [
+        "decision_mixed_active",
+        "decision_partial_guard",
+        "decision_poison_guard",
+        "decision_repair_bad",
+        "factor_partial_guard",
+        "factor_poison_guard",
+        "factor_repair_bad",
+        "fv_partial_guard_v1",
+        "fv_poison_guard_v1",
+        "fv_repair_bad_v2"
+      ],
+      "overrollback_count": 0,
+      "preserved_node_ids": [
+        "decision_route_guard",
+        "decision_shared_guard",
+        "factor_route_guard",
+        "factor_shared_guard",
+        "fv_route_v1",
+        "fv_shared_v1"
+      ],
+      "supported_state_before": [
+        "decision_route_guard",
+        "decision_shared_guard",
+        "factor_route_guard",
+        "factor_shared_guard",
+        "fv_route_v1",
+        "fv_shared_v1"
+      ],
+      "terminal_root": "sha256:55803c3f5b7dec78d6d295ce5019304dcb60c073c946e65567fa457f69500ba1",
+      "underrollback_count": 0,
+      "unsafe_survivor_count": 0,
+      "unsafe_survivor_node_ids": [],
+      "valid_state_preserved_count": 6
+    }
+  },
+  "status": "complete_positive",
+  "terminal_registry_roots": {
+    "double_rollback_terminal_root": "sha256:55803c3f5b7dec78d6d295ce5019304dcb60c073c946e65567fa457f69500ba1",
+    "full_reset_terminal_root": "sha256:851fc0c0031272c9f407ee7a7e42f63ccefa7dbffed1e02defc03cb2f9ebb708",
+    "idempotent_exact_valid_terminal_root": true,
+    "initial_graph_root": "sha256:a5b8204476ec01aa866e3aaa7f34fb47031e2dd4194e15a3702b95b12cae0d02",
+    "no_rollback_terminal_root": "sha256:a5b8204476ec01aa866e3aaa7f34fb47031e2dd4194e15a3702b95b12cae0d02",
+    "selective_terminal_root": "sha256:55803c3f5b7dec78d6d295ce5019304dcb60c073c946e65567fa457f69500ba1"
+  },
+  "tests_run": {
+    "commands": [
+      ".venv/bin/pytest tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py -q --no-cov -n 0",
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py -m pytest tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py -q --no-cov -n 0",
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py --fail-under=100 --show-missing",
+      ".venv/bin/pytest tests/python -q",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py",
+      "sed -n '1,220p' ops/e2e-test-plan.md",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6383_dependency_guided_factor_rollback_stress.json",
+      ".venv/bin/python scripts/root_clutter_sweep.py",
+      ".venv/bin/python -m carnot.experiment_6383_dependency_guided_factor_rollback_stress --date 20260813"
+    ],
+    "exit_codes": {
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py --fail-under=100 --show-missing": 0,
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py -m pytest tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py -q --no-cov -n 0": 0,
+      ".venv/bin/pytest tests/python -q": 0,
+      ".venv/bin/pytest tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py -q --no-cov -n 0": 0,
+      ".venv/bin/python -m carnot.experiment_6383_dependency_guided_factor_rollback_stress --date 20260813": 0,
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6383_dependency_guided_factor_rollback_stress.json": 0,
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py": 0,
+      ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+      "sed -n '1,220p' ops/e2e-test-plan.md": 0
+    }
+  },
+  "typed_dependency_schema_path_hash_and_version": {
+    "path": "results/experiment_6383_dependency_guided_factor_rollback_stress.json.typed_dependency_schema.json",
+    "present": true,
+    "schema_version": "v1",
+    "sha256": "sha256:ba4e71d2fa0cbfdce13b1d81b25441db5eff5be1f5af2fa72d94986638ae2110",
+    "size_bytes": 2191
+  },
+  "upstream_learning_context_class": {
+    "context_class": "absent",
+    "path": "results/experiment_6382_chronological_verified_factor_self_learning.json",
+    "present": false,
+    "sha256": null,
+    "size_bytes": 0,
+    "task_gate": false
+  },
+  "verifier_is_oracle": true
+}

@@ -1917,3 +1917,116 @@ and passing tests.
 | SCENARIO-LEARN-6380-RAW | Implemented: `python/carnot/experiment_6380_three_family_canonical_factor_transport_canary.py`. | Implemented: `tests/python/test_experiment_6380_three_family_canonical_factor_transport_canary.py`. |
 | SCENARIO-LEARN-6380-ORACLE | Implemented: `python/carnot/experiment_6380_three_family_canonical_factor_transport_canary.py`. | Implemented: `tests/python/test_experiment_6380_three_family_canonical_factor_transport_canary.py`. |
 | SCENARIO-LEARN-6380-READY | Implemented: `python/carnot/experiment_6380_three_family_canonical_factor_transport_canary.py`. | Implemented: `tests/python/test_experiment_6380_three_family_canonical_factor_transport_canary.py`. |
+
+## REQ-LEARN-6383: Dependency-Guided Factor Rollback Stress
+
+**Given** versioned factor release and whole-version rollback already exist
+**When** Exp6383 runs on planning date 20260813
+**Then** it SHALL write
+`results/experiment_6383_dependency_guided_factor_rollback_stress.json`
+**And** it SHALL compare selective descendant rollback, full registry reset,
+and no rollback on the same frozen exact fixtures, injection order, replay
+work, and initial lineage graph.
+
+Exp6383 SHALL define typed dependency nodes for source events, obligations,
+exact evidence, factor versions, factors, consumer decisions, and rollback
+actions. It SHALL define allowed edge types and acyclicity rules. Cycles,
+missing evidence, corrupted lineage, edge tampering, orphan nodes, incomplete
+invalidation, root mismatch, and interrupted journals SHALL fail closed.
+
+Exp6383 SHALL build deterministic clean, stale, poisoned, duplicated,
+misattributed, partially supported, shared-support, cyclic, and
+missing-evidence fixtures. It SHALL diagnose the bad source node, invalidate
+only unsupported descendants, and preserve state with an independent
+exact-valid support path. Consumer decisions that depend on unsupported active
+factors SHALL roll back even when they also cite valid factors.
+
+Exp6383 SHALL set `dependency_guided_rollback_ready_score=1.0` only when
+selective rollback removes every harmful descendant, preserves every
+independently supported node, beats full reset on preservation, leaves zero
+unsafe survivors, and all recorded tests pass. It SHALL not invoke an LLM. It
+SHALL not claim live learning utility.
+
+Exp6383 SHALL emit these fields with explicit principles:
+
+- `status`: Terminal status follows rollback safety, preservation, corruption checks, protected files, and tests.
+- `upstream_learning_context_class`: Exp6382 absence, blocked state, or terminal class is context only, not a readiness gate.
+- `registry_release_ledger_and_checker_hashes`: Factor registry, release ledger, exact checker sources, and Exp6382 when present are hashed before fixture replay.
+- `typed_dependency_schema_path_hash_and_version`: The node, edge, and acyclicity schema is frozen as a sidecar.
+- `allowed_node_and_edge_types`: Typed nodes and allowed edge pairs define the only legal lineage surface.
+- `preregistered_injection_and_arm_contract`: Bad-source injection order and the selective, full reset, and no-rollback controls are fixed before replay.
+- `deterministic_fixture_manifest`: Clean, stale, poisoned, duplicated, misattributed, partially supported, shared-support, cyclic, and missing-evidence fixtures are named and seeded.
+- `lineage_graphs_before_and_after_injection`: Graph roots, node counts, edge counts, and state roots are recorded before and after injection.
+- `diagnosis_receipts`: The diagnosed bad source and exact replay evidence explain the invalidation frontier.
+- `selective_full_reset_and_no_rollback_results`: All three controls report the same metrics on the same replay work.
+- `harmful_descendants_removed`: Selective rollback must remove all unsupported harmful descendants.
+- `independently_supported_state_preserved`: Exact-valid independent support paths must survive selective rollback.
+- `overrollback_underrollback_and_unsafe_survivor_counts`: Over-removal, missed rollback, and unsafe survivors stay visible.
+- `exact_replay_cost_latency_and_memory`: Checker calls, deterministic cost, latency, and graph memory bytes are measured.
+- `cycle_missing_edge_corruption_and_interruption_results`: Cycles, missing evidence, corruption, incomplete invalidation, and interruption fail closed.
+- `journal_restart_and_idempotence_receipts`: Restart, double rollback, root mismatch, edge tampering, orphan nodes, and active decision rollback are recorded.
+- `terminal_registry_roots`: Terminal roots prove selective rollback is stable and exact-valid.
+- `dependency_guided_rollback_ready_score`: Readiness is a conjunctive safety and preservation gate.
+- `no_live_utility_claim`: Bare true states that this stress test does not promote live learning utility.
+- `protected_files_unchanged`: Conductor, ops, traceability, prior factor code, and upstream artifacts remain byte-identical.
+- `preconditions_checked`: Date, source hashes, protected hashes, schema, fixtures, controls, seeds, and upstream context freeze before replay.
+- `inference_substrate`: The substrate declares deterministic exact replay and typed lineage analysis with no LLM.
+- `verifier_is_oracle`: Bare true applies only to deterministic exact replay checkers, not lineage or rollback policy.
+- `field_principles`: Every required field states its guard.
+- `field_provenance`: Every required field maps to specs, source hashes, fixtures, exact checks, rollback receipts, tests, or roots.
+- `random_seed`: Fixed seed pins fixture order.
+- `duration_s`: Wall time is measured without padding.
+- `tests_run`: Verification commands and exit codes are recorded.
+- `reproducibility_checksum`: A normalized checksum detects artifact drift.
+- `honest_verdict`: The verdict starts with a terminal prefix and states that no live utility was claimed.
+
+## SCENARIO-LEARN-6383-SCHEMA: Typed Lineage Fails Closed
+
+**Given** a graph with an illegal edge, cycle, missing evidence, orphan node,
+or corrupted lineage hash
+**When** Exp6383 validates it
+**Then** the graph SHALL reject before rollback state can be promoted.
+
+## SCENARIO-LEARN-6383-SELECTIVE: Unsupported Descendants Roll Back
+
+**Given** a bad source has stale, poisoned, and partially supported
+descendants
+**When** selective rollback runs
+**Then** every harmful factor version, factor, and consumer decision SHALL be
+inactive
+**And** nodes with independent exact-valid support SHALL remain active.
+
+## SCENARIO-LEARN-6383-CONTROLS: Control Arms Share Replay Work
+
+**Given** selective rollback, full reset, and no rollback controls
+**When** the arms run
+**Then** they SHALL share the same initial graph, injection order, exact
+checks, and replay work
+**And** selective rollback SHALL preserve more valid state than full reset
+while no rollback leaves unsafe survivors.
+
+## SCENARIO-LEARN-6383-JOURNAL: Restart And Idempotence Are Exact
+
+**Given** a rollback journal is interrupted, replayed, replayed again, or
+started from the wrong root
+**When** Exp6383 restarts it
+**Then** the valid journal SHALL converge to one exact-valid terminal root
+**And** root mismatch SHALL fail closed.
+
+## SCENARIO-LEARN-6383-READY: Readiness Requires Zero Unsafe Survivors
+
+**Given** any harmful descendant survives, independently supported state is
+lost, protected files change, tests fail, or live utility is claimed
+**When** readiness is computed
+**Then** `dependency_guided_rollback_ready_score` SHALL be `0.0`.
+
+## Implementation Status (REQ-LEARN-6383)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6383 | Planned: `python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py`; terminal artifact `results/experiment_6383_dependency_guided_factor_rollback_stress.json`. | Planned: `tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py`. |
+| SCENARIO-LEARN-6383-SCHEMA | Planned: `python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py`. | Planned: `tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py`. |
+| SCENARIO-LEARN-6383-SELECTIVE | Planned: `python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py`. | Planned: `tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py`. |
+| SCENARIO-LEARN-6383-CONTROLS | Planned: `python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py`. | Planned: `tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py`. |
+| SCENARIO-LEARN-6383-JOURNAL | Planned: `python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py`. | Planned: `tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py`. |
+| SCENARIO-LEARN-6383-READY | Planned: `python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py`. | Planned: `tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py`. |
