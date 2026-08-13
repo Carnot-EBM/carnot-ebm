@@ -1,0 +1,14 @@
+
+
+<think>
+Here's a thinking process:
+
+1.  **Analyze User Input:**
+   - The user provides a JSON payload containing a "bounded factor edit proposal".
+   - The instruction says: "You produce one bounded factor edit proposal as JSON only. Copy source spans and hashes exactly from this payload."
+   - The payload includes:
+     - `compact_valid_shape`: Contains the proposal structure with `arm`, `candidate_index`, `changed_factor`, `edit_source_spans`, `edits`, `event_id`, `model_family`, `model_hf_id`, `obligations`, `proposal_id`, `schema`, `selection_score`.
+     - `instruction`: "Return exactly one JSON object. Copy ids, source spans, and source hashes exactly. Do not include markdown."
+     - `proposal_schema`: Defines constraints and required fields.
+     - `released_factor_snapshot`: Metadata about active factors.
+    
