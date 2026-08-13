@@ -123,3 +123,9 @@ CHECK_TIMED_OUT
 
 CHECK_TIMED_OUT
 
+## 2026-08-13 13:35 UTC -- NEW
+
+- **New top-five entrant:** **cstl** (`gatamaz`, `tehnar`) is **#1 at 2.70**. No public ARC-AGI-3 notebook, dataset, repository, discussion, or writeup was found. **Exploit/general-purpose classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [gatamaz code](https://www.kaggle.com/gatamaz/code), [tehnar code](https://www.kaggle.com/tehnar/code)
+
+- **New top-five entrant:** **BambooCopter Analytics** (`cky666`, `kilin173`, `oliverwp`, `paradox23`, `ronglinlu`) is **#5 at 1.64**. No submission-linked ARC-AGI-3 code or technique disclosure was found. **Exploit/general-purpose classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [member code](https://www.kaggle.com/cky666/code), [member code](https://www.kaggle.com/kilin173/code), [member code](https://www.kaggle.com/oliverwp/code), [member code](https://www.kaggle.com/paradox23/code), [member code](https://www.kaggle.com/ronglinlu/code)
+
