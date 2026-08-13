@@ -1,0 +1,1830 @@
+{
+  "active_roadmap_modified": false,
+  "conductor_modified": false,
+  "duration_s": 0.010487825843,
+  "field_principles": {
+    "active_roadmap_modified": "The active roadmap must stay byte-identical during this run.",
+    "conductor_modified": "The conductor source must stay byte-identical during this run.",
+    "duration_s": "Wall time is measured without padding.",
+    "field_principles": "Every required field and structured gate expression has a reason.",
+    "field_provenance": "Every required field identifies its source kind.",
+    "gate:exp6395-held-factor-transport-license-matrix:exp6394-model-family-factor-harness-freeze.model_family_harness_freeze_ready_score==1.0": "This structured V550 gate expression must remain auditable.",
+    "gate:exp6396-capability-qualified-verified-frontier-ab:exp6395-held-factor-transport-license-matrix.held_factor_transport_license_ready_score==1.0": "This structured V550 gate expression must remain auditable.",
+    "gate:exp6396-capability-qualified-verified-frontier-ab:exp6395-held-factor-transport-license-matrix.licensed_constraint_family_count>=2": "This structured V550 gate expression must remain auditable.",
+    "gate:exp6396-capability-qualified-verified-frontier-ab:exp6395-held-factor-transport-license-matrix.licensed_model_count>=2": "This structured V550 gate expression must remain auditable.",
+    "gate:exp6397-transactional-continuous-factor-learning:exp6396-capability-qualified-verified-frontier-ab.capability_qualified_frontier_ready_score==1.0": "This structured V550 gate expression must remain auditable.",
+    "gate:exp6397-transactional-continuous-factor-learning:exp6396-capability-qualified-verified-frontier-ab.delta_verified_future_exact_yield>0.0": "This structured V550 gate expression must remain auditable.",
+    "gate:exp6398-default-off-transactional-factor-consumer:exp6397-transactional-continuous-factor-learning.selective_rollback_control_ready_score==1.0": "This structured V550 gate expression must remain auditable.",
+    "gate:exp6398-default-off-transactional-factor-consumer:exp6397-transactional-continuous-factor-learning.transactional_continuous_self_learning_ready_score==1.0": "This structured V550 gate expression must remain auditable.",
+    "gate:exp6400-arc-default-off-active-goal-shadow:exp6393-arc-scalar-gate-metric-contract.arc_gate_metric_contract_ready_score==1.0": "This structured V550 gate expression must remain auditable.",
+    "gate:exp6400-arc-default-off-active-goal-shadow:exp6393-arc-scalar-gate-metric-contract.delta_admission_precision_scalar>0.0": "This structured V550 gate expression must remain auditable.",
+    "gate:exp6400-arc-default-off-active-goal-shadow:exp6393-arc-scalar-gate-metric-contract.delta_false_accept_count_scalar<=0": "This structured V550 gate expression must remain auditable.",
+    "gate:exp6401-arc-active-goal-causal-holdout:exp6400-arc-default-off-active-goal-shadow.active_shadow_treatment_fired_count>0": "This structured V550 gate expression must remain auditable.",
+    "gate:exp6401-arc-active-goal-causal-holdout:exp6400-arc-default-off-active-goal-shadow.arc_active_goal_shadow_ready_score==1.0": "This structured V550 gate expression must remain auditable.",
+    "gate:exp6401-arc-active-goal-causal-holdout:exp6400-arc-default-off-active-goal-shadow.delta_shadow_false_accept_count<=0": "This structured V550 gate expression must remain auditable.",
+    "honest_verdict": "The verdict uses a terminal prefix and names the queue boundary.",
+    "inference_substrate": "This task uses repository evidence with no model call.",
+    "preconditions_checked": "Input hashes and artifact classifications are frozen before field reads.",
+    "prompt_contract_checks": "Rendered prompts must contain the operational contract the agent receives.",
+    "protected_files_unchanged": "Protected hashes prove no handoff-side rewrite occurred.",
+    "random_seed": "No random sampling is used by this deterministic handoff.",
+    "reproducibility_checksum": "The normalized payload is content-addressed.",
+    "status": "The status states whether the V550 queue is preflight-safe.",
+    "tests_run": "Verification commands and exit codes are recorded.",
+    "v549_active_roadmap_path_and_hash": "The prior V549 active roadmap hash comes from the terminal handoff artifact.",
+    "v549_adversarial_flags": "Stamped and live adversarial flags stay visible.",
+    "v549_arc_boundary": "The ARC boundary preserves ready evidence and the nested scalar-gate failure.",
+    "v549_artifact_verdicts": "Artifact honest verdicts stay separate from conductor and verifier facts.",
+    "v549_conductor_outcomes": "Conductor outcomes stay separate from artifact verdicts.",
+    "v549_duration_receipts_by_task": "Each task duration comes from its own artifact receipt.",
+    "v549_factor_boundary": "The factor boundary preserves ready, null, blocked, absent, and control facts.",
+    "v549_task_ids": "The fixed V549 task denominator prevents same-number aliasing.",
+    "v549_terminal_artifacts_by_task": "Each V549 task keeps its exact terminal class.",
+    "v550_agent_model_and_llm_policy_checks": "Agent routing and local GGUF policy are checked before live work.",
+    "v550_dependency_and_gate_checks": "Dependencies and structured gates must be ordered and valid.",
+    "v550_exclusion_manifest_checks": "Retired task reuse and retired upstream chains fail before execution.",
+    "v550_gate_field_cross_reference_checks": "Gate fields must appear in upstream required artifact fields.",
+    "v550_id_and_deliverable_checks": "The queue must contain thirteen unique ordered IDs and result JSON deliverables.",
+    "v550_milestone_doc_and_queue_hashes": "The V550 roadmap and planning sources are hash-pinned.",
+    "v550_prior_failure_checks": "Prior failures must name the old verdict, changed mechanism, and retirement rule.",
+    "v550_task_ids": "The audited V550 queue identity is explicit.",
+    "verifier_is_oracle": "The handoff reconciles records and is not a correctness oracle."
+  },
+  "field_provenance": {
+    "active_roadmap_modified": "measured",
+    "conductor_modified": "measured",
+    "duration_s": "measured",
+    "field_principles": "constant",
+    "field_provenance": "constant",
+    "honest_verdict": "derived",
+    "inference_substrate": "constant",
+    "preconditions_checked": "measured",
+    "prompt_contract_checks": "derived",
+    "protected_files_unchanged": "measured",
+    "random_seed": "constant",
+    "reproducibility_checksum": "derived",
+    "status": "derived",
+    "tests_run": "measured",
+    "v549_active_roadmap_path_and_hash": "upstream",
+    "v549_adversarial_flags": "measured",
+    "v549_arc_boundary": "derived",
+    "v549_artifact_verdicts": "upstream",
+    "v549_conductor_outcomes": "measured",
+    "v549_duration_receipts_by_task": "upstream",
+    "v549_factor_boundary": "derived",
+    "v549_task_ids": "constant",
+    "v549_terminal_artifacts_by_task": "derived",
+    "v550_agent_model_and_llm_policy_checks": "derived",
+    "v550_dependency_and_gate_checks": "derived",
+    "v550_exclusion_manifest_checks": "derived",
+    "v550_gate_field_cross_reference_checks": "derived",
+    "v550_id_and_deliverable_checks": "derived",
+    "v550_milestone_doc_and_queue_hashes": "measured",
+    "v550_prior_failure_checks": "derived",
+    "v550_task_ids": "upstream",
+    "verifier_is_oracle": "constant"
+  },
+  "honest_verdict": "complete_v550_queue_preflight_passed: V549 evidence is bounded and the thirteen-task V550 queue validates",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "active_roadmap_sha256": "sha256:9e95395293d59655d63f421fcf46de2b8cfa626fe48df4b157a55246725c7354",
+    "conductor_log_sha256": "sha256:26694bfd70c5f8ddb3115adf9bc99d0389653e92905479b6d8e59049e33e1727",
+    "conductor_source_sha256": "sha256:458ec2966f40918581381a8895875ab86664e14c8f69ea21afe5be71e4348509",
+    "date": "20260813",
+    "exclusion_manifest_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+    "git_status_before": [
+      "M  openspec/capabilities/research-harnesses/spec.md",
+      "M  ops/conductor-heartbeat.json",
+      "M  ops/conductor-log.md",
+      "M  ops/conductor-state.json",
+      "A  python/carnot/experiment_6391_v550_terminal_handoff_and_queue_preflight.py",
+      "M  results/experiment_1736_kanele_synth.json",
+      "M  results/experiment_1822_rtl_synth.log",
+      "M  results/experiment_2031.json",
+      "M  results/experiment_2427_kv260_yosys_v4.json",
+      "M  results/experiment_2510_ensemble_v7.json",
+      "M  results/experiment_2824_cross_corpus_verifier_matrix.json",
+      "M  results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json",
+      "M  results/experiment_3361_archive_v309_activate_v310.json",
+      "M  results/experiment_3377_archive_v310_activate_v311.json",
+      "M  results/experiment_3392_archive_v311_activate_v312.json",
+      "M  results/experiment_3581_g_gate_status_synthesis_v329.json",
+      "M  results/experiment_3582_capstone_v329.json",
+      "M  results/experiment_833_constraint_delta_root_cause.json",
+      "A  tests/python/test_experiment_6391_v550_terminal_handoff_and_queue_preflight.py"
+    ],
+    "known_issues_sha256": "sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895",
+    "milestone_doc_sha256": "sha256:1cf4f754cfbbde99f15939fdb1f716b0e67071f9535e993af9529f5f538694bc",
+    "next_roadmap_present": false,
+    "next_roadmap_sha256": null,
+    "protected_hashes_before": {
+      "openspec/capabilities/research-harnesses/spec.md": "sha256:a9fcece5489c49e380967bf6a3d15f9ad47c2484ac78ada63b7d6aa5fd76f6f1",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:1cf4f754cfbbde99f15939fdb1f716b0e67071f9535e993af9529f5f538694bc",
+      "ops/changelog.md": "sha256:8c6d8b7a9a51dcc129a90fbcc2875f4dab792c5fc3453dbf22e1b85bc9cfa133",
+      "ops/conductor-log.md": "sha256:26694bfd70c5f8ddb3115adf9bc99d0389653e92905479b6d8e59049e33e1727",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "ops/known-issues.md": "sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "research-roadmap-next.yaml": null,
+      "research-roadmap.yaml": "sha256:9e95395293d59655d63f421fcf46de2b8cfa626fe48df4b157a55246725c7354",
+      "results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json": "sha256:be74384b2f3ab71de84f529b4f5c057f417ea6bc38ee9aab5389d2b4410188b0",
+      "results/experiment_6378_v549_post_marker_source_scope_freeze.json": "sha256:869e1c98ac6b2525173e531dbdad1c26f24c42aa040e3f67a5da72754bf46e83",
+      "results/experiment_6379_canonical_factor_edit_transport_contract.json": "sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406",
+      "results/experiment_6380_three_family_canonical_factor_transport_canary.json": "sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613",
+      "results/experiment_6381_verified_frontier_live_factor_proposal_ab.json": "sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8",
+      "results/experiment_6382_chronological_verified_factor_self_learning.json": null,
+      "results/experiment_6383_dependency_guided_factor_rollback_stress.json": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c",
+      "results/experiment_6384_default_off_certified_factor_consumer_ab.json": "sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf",
+      "results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json": "sha256:f7d116c8c544935c6e0524d207048469766c00b5d1a09746579087fac0ce958a",
+      "results/experiment_6386_arc_two_sided_goal_evidence_contract.json": "sha256:c2e0e3c362dd6a1a3c02592b4ffd9891eb9a4a7697ba90f915e3e341b651351e",
+      "results/experiment_6387_arc_active_reward_machine_discriminator.json": "sha256:35bb20897a566468afb1659c5416d54c3fca81aafad4c2e5bb93ec661144ecda",
+      "results/experiment_6388_arc_goal_evidence_response_calibration.json": "sha256:f2285216e0b17b178dc14a033843be01f286bbda8834904bc2a7786eccff8a98",
+      "results/experiment_6389_arc_default_off_active_goal_shadow.json": "sha256:fde8d48a0677fa6b858e66d6779a470e2af47a8d71c97453fd7437dcebee7da9",
+      "results/experiment_6390_v549_adversarial_capstone.json": "sha256:c36746fbfc899c688e875788857b346f042cce0e315b0acb0dc927e9aed8963f",
+      "scripts/research_conductor.py": "sha256:458ec2966f40918581381a8895875ab86664e14c8f69ea21afe5be71e4348509",
+      "scripts/summarize_artifact.py": "sha256:62bf92bd99b7325ae841e4d93270ccd53338c9d54765e14acadbb7f5c35d1c7d"
+    },
+    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "v549_expected_artifact_hashes": {
+      "exp6377-v549-terminal-handoff-and-queue-preflight": {
+        "path": "results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json",
+        "present": true,
+        "sha256": "sha256:be74384b2f3ab71de84f529b4f5c057f417ea6bc38ee9aab5389d2b4410188b0"
+      },
+      "exp6378-v549-post-marker-source-scope-freeze": {
+        "path": "results/experiment_6378_v549_post_marker_source_scope_freeze.json",
+        "present": true,
+        "sha256": "sha256:869e1c98ac6b2525173e531dbdad1c26f24c42aa040e3f67a5da72754bf46e83"
+      },
+      "exp6379-canonical-factor-edit-transport-contract": {
+        "path": "results/experiment_6379_canonical_factor_edit_transport_contract.json",
+        "present": true,
+        "sha256": "sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406"
+      },
+      "exp6380-three-family-canonical-factor-transport-canary": {
+        "path": "results/experiment_6380_three_family_canonical_factor_transport_canary.json",
+        "present": true,
+        "sha256": "sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613"
+      },
+      "exp6381-verified-frontier-live-factor-proposal-ab": {
+        "path": "results/experiment_6381_verified_frontier_live_factor_proposal_ab.json",
+        "present": true,
+        "sha256": "sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8"
+      },
+      "exp6382-chronological-verified-factor-self-learning": {
+        "path": "results/experiment_6382_chronological_verified_factor_self_learning.json",
+        "present": false,
+        "sha256": null
+      },
+      "exp6383-dependency-guided-factor-rollback-stress": {
+        "path": "results/experiment_6383_dependency_guided_factor_rollback_stress.json",
+        "present": true,
+        "sha256": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c"
+      },
+      "exp6384-default-off-certified-factor-consumer-ab": {
+        "path": "results/experiment_6384_default_off_certified_factor_consumer_ab.json",
+        "present": true,
+        "sha256": "sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf"
+      },
+      "exp6385-live-factor-learning-and-rollback-safety-audit": {
+        "path": "results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json",
+        "present": true,
+        "sha256": "sha256:f7d116c8c544935c6e0524d207048469766c00b5d1a09746579087fac0ce958a"
+      },
+      "exp6386-arc-two-sided-goal-evidence-contract": {
+        "path": "results/experiment_6386_arc_two_sided_goal_evidence_contract.json",
+        "present": true,
+        "sha256": "sha256:c2e0e3c362dd6a1a3c02592b4ffd9891eb9a4a7697ba90f915e3e341b651351e"
+      },
+      "exp6387-arc-active-reward-machine-discriminator": {
+        "path": "results/experiment_6387_arc_active_reward_machine_discriminator.json",
+        "present": true,
+        "sha256": "sha256:35bb20897a566468afb1659c5416d54c3fca81aafad4c2e5bb93ec661144ecda"
+      },
+      "exp6388-arc-goal-evidence-response-calibration": {
+        "path": "results/experiment_6388_arc_goal_evidence_response_calibration.json",
+        "present": true,
+        "sha256": "sha256:f2285216e0b17b178dc14a033843be01f286bbda8834904bc2a7786eccff8a98"
+      },
+      "exp6389-arc-default-off-active-goal-shadow": {
+        "path": "results/experiment_6389_arc_default_off_active_goal_shadow.json",
+        "present": true,
+        "sha256": "sha256:fde8d48a0677fa6b858e66d6779a470e2af47a8d71c97453fd7437dcebee7da9"
+      },
+      "exp6390-v549-adversarial-capstone": {
+        "path": "results/experiment_6390_v549_adversarial_capstone.json",
+        "present": true,
+        "sha256": "sha256:c36746fbfc899c688e875788857b346f042cce0e315b0acb0dc927e9aed8963f"
+      }
+    }
+  },
+  "prompt_contract_checks": {
+    "checked_task_count": 13,
+    "failures": [],
+    "ok": true,
+    "raw_placeholder_contract_ok": true,
+    "raw_placeholder_failures": [],
+    "render_receipts": {
+      "exp6391-v550-terminal-handoff-and-queue-preflight": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6392-v550-post-marker-source-scope-freeze": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6393-arc-scalar-gate-metric-contract": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6394-model-family-factor-harness-freeze": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6395-held-factor-transport-license-matrix": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6396-capability-qualified-verified-frontier-ab": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6397-transactional-continuous-factor-learning": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6398-default-off-transactional-factor-consumer": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6399-capability-learning-safety-audit": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6400-arc-default-off-active-goal-shadow": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6401-arc-active-goal-causal-holdout": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6402-arc-active-goal-safety-audit": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6403-v550-adversarial-capstone": {
+        "error": null,
+        "format_ok": true
+      }
+    },
+    "rendered_prompt_count": 13
+  },
+  "protected_files_unchanged": {
+    "ok": true,
+    "rows": {
+      "openspec/capabilities/research-harnesses/spec.md": {
+        "after": "sha256:a9fcece5489c49e380967bf6a3d15f9ad47c2484ac78ada63b7d6aa5fd76f6f1",
+        "before": "sha256:a9fcece5489c49e380967bf6a3d15f9ad47c2484ac78ada63b7d6aa5fd76f6f1",
+        "unchanged": true
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "after": "sha256:1cf4f754cfbbde99f15939fdb1f716b0e67071f9535e993af9529f5f538694bc",
+        "before": "sha256:1cf4f754cfbbde99f15939fdb1f716b0e67071f9535e993af9529f5f538694bc",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "after": "sha256:8c6d8b7a9a51dcc129a90fbcc2875f4dab792c5fc3453dbf22e1b85bc9cfa133",
+        "before": "sha256:8c6d8b7a9a51dcc129a90fbcc2875f4dab792c5fc3453dbf22e1b85bc9cfa133",
+        "unchanged": true
+      },
+      "ops/conductor-log.md": {
+        "after": "sha256:26694bfd70c5f8ddb3115adf9bc99d0389653e92905479b6d8e59049e33e1727",
+        "before": "sha256:26694bfd70c5f8ddb3115adf9bc99d0389653e92905479b6d8e59049e33e1727",
+        "unchanged": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "after": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "before": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "unchanged": true
+      },
+      "ops/known-issues.md": {
+        "after": "sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895",
+        "before": "sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "unchanged": true
+      },
+      "research-roadmap-next.yaml": {
+        "after": null,
+        "before": null,
+        "unchanged": true
+      },
+      "research-roadmap.yaml": {
+        "after": "sha256:9e95395293d59655d63f421fcf46de2b8cfa626fe48df4b157a55246725c7354",
+        "before": "sha256:9e95395293d59655d63f421fcf46de2b8cfa626fe48df4b157a55246725c7354",
+        "unchanged": true
+      },
+      "results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json": {
+        "after": "sha256:be74384b2f3ab71de84f529b4f5c057f417ea6bc38ee9aab5389d2b4410188b0",
+        "before": "sha256:be74384b2f3ab71de84f529b4f5c057f417ea6bc38ee9aab5389d2b4410188b0",
+        "unchanged": true
+      },
+      "results/experiment_6378_v549_post_marker_source_scope_freeze.json": {
+        "after": "sha256:869e1c98ac6b2525173e531dbdad1c26f24c42aa040e3f67a5da72754bf46e83",
+        "before": "sha256:869e1c98ac6b2525173e531dbdad1c26f24c42aa040e3f67a5da72754bf46e83",
+        "unchanged": true
+      },
+      "results/experiment_6379_canonical_factor_edit_transport_contract.json": {
+        "after": "sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406",
+        "before": "sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406",
+        "unchanged": true
+      },
+      "results/experiment_6380_three_family_canonical_factor_transport_canary.json": {
+        "after": "sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613",
+        "before": "sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613",
+        "unchanged": true
+      },
+      "results/experiment_6381_verified_frontier_live_factor_proposal_ab.json": {
+        "after": "sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8",
+        "before": "sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8",
+        "unchanged": true
+      },
+      "results/experiment_6382_chronological_verified_factor_self_learning.json": {
+        "after": null,
+        "before": null,
+        "unchanged": true
+      },
+      "results/experiment_6383_dependency_guided_factor_rollback_stress.json": {
+        "after": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c",
+        "before": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c",
+        "unchanged": true
+      },
+      "results/experiment_6384_default_off_certified_factor_consumer_ab.json": {
+        "after": "sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf",
+        "before": "sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf",
+        "unchanged": true
+      },
+      "results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json": {
+        "after": "sha256:f7d116c8c544935c6e0524d207048469766c00b5d1a09746579087fac0ce958a",
+        "before": "sha256:f7d116c8c544935c6e0524d207048469766c00b5d1a09746579087fac0ce958a",
+        "unchanged": true
+      },
+      "results/experiment_6386_arc_two_sided_goal_evidence_contract.json": {
+        "after": "sha256:c2e0e3c362dd6a1a3c02592b4ffd9891eb9a4a7697ba90f915e3e341b651351e",
+        "before": "sha256:c2e0e3c362dd6a1a3c02592b4ffd9891eb9a4a7697ba90f915e3e341b651351e",
+        "unchanged": true
+      },
+      "results/experiment_6387_arc_active_reward_machine_discriminator.json": {
+        "after": "sha256:35bb20897a566468afb1659c5416d54c3fca81aafad4c2e5bb93ec661144ecda",
+        "before": "sha256:35bb20897a566468afb1659c5416d54c3fca81aafad4c2e5bb93ec661144ecda",
+        "unchanged": true
+      },
+      "results/experiment_6388_arc_goal_evidence_response_calibration.json": {
+        "after": "sha256:f2285216e0b17b178dc14a033843be01f286bbda8834904bc2a7786eccff8a98",
+        "before": "sha256:f2285216e0b17b178dc14a033843be01f286bbda8834904bc2a7786eccff8a98",
+        "unchanged": true
+      },
+      "results/experiment_6389_arc_default_off_active_goal_shadow.json": {
+        "after": "sha256:fde8d48a0677fa6b858e66d6779a470e2af47a8d71c97453fd7437dcebee7da9",
+        "before": "sha256:fde8d48a0677fa6b858e66d6779a470e2af47a8d71c97453fd7437dcebee7da9",
+        "unchanged": true
+      },
+      "results/experiment_6390_v549_adversarial_capstone.json": {
+        "after": "sha256:c36746fbfc899c688e875788857b346f042cce0e315b0acb0dc927e9aed8963f",
+        "before": "sha256:c36746fbfc899c688e875788857b346f042cce0e315b0acb0dc927e9aed8963f",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after": "sha256:458ec2966f40918581381a8895875ab86664e14c8f69ea21afe5be71e4348509",
+        "before": "sha256:458ec2966f40918581381a8895875ab86664e14c8f69ea21afe5be71e4348509",
+        "unchanged": true
+      },
+      "scripts/summarize_artifact.py": {
+        "after": "sha256:62bf92bd99b7325ae841e4d93270ccd53338c9d54765e14acadbb7f5c35d1c7d",
+        "before": "sha256:62bf92bd99b7325ae841e4d93270ccd53338c9d54765e14acadbb7f5c35d1c7d",
+        "unchanged": true
+      }
+    }
+  },
+  "random_seed": null,
+  "reproducibility_checksum": "sha256:52f14ea2a1ff98f22338850703366b0219868d934f7bcaaf0db7884da9263054",
+  "status": "complete_v550_queue_preflight_passed",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6391_v550_terminal_handoff_and_queue_preflight.py -q --no-cov -n 0",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6391_v550_terminal_handoff_and_queue_preflight.py -m pytest tests/python/test_experiment_6391_v550_terminal_handoff_and_queue_preflight.py -q --no-cov -n 0",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6391_v550_terminal_handoff_and_queue_preflight.py --fail-under=100 --show-missing",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6391_v550_terminal_handoff_and_queue_preflight.py",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/python -c 'import yaml; from pathlib import Path; from scripts.roadmap_schema import Roadmap; Roadmap.model_validate(yaml.safe_load(Path(\"research-roadmap.yaml\").read_text()))'",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6391_v550_terminal_handoff_and_queue_preflight.json",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/python scripts/determination_preservation_lint.py",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/python scripts/root_clutter_sweep.py",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6391_v550_terminal_handoff_and_queue_preflight --date 20260813",
+      "exit_code": null,
+      "source": "declared"
+    }
+  ],
+  "v549_active_roadmap_path_and_hash": {
+    "boundary_note": "The V549 active roadmap has been consumed; Exp6377 supplies the V549 active hash.",
+    "current_active_roadmap": {
+      "milestone": "2026.08.550",
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:9e95395293d59655d63f421fcf46de2b8cfa626fe48df4b157a55246725c7354"
+    },
+    "milestone_at_exp6377": "2026.08.549",
+    "path": "research-roadmap.yaml",
+    "same_as_current_active": false,
+    "sha256_at_exp6377": "sha256:7b403902a0794a3e2ce15a62694dbd20ae59b5811c5f90787e872e3c1123de7c",
+    "source": "results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json"
+  },
+  "v549_adversarial_flags": {
+    "exp6377-v549-terminal-handoff-and-queue-preflight": {
+      "live_flag_count": 2,
+      "live_flags": [
+        {
+          "detail": "duration_s=0.017283038935 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "live_has_critical": true,
+      "live_verdict": "critical",
+      "path": "results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json",
+      "present": true,
+      "stamped_corrigendum_pending": true,
+      "stamped_flagged_adversarial": true,
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json",
+        "exit_code": 2,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [
+          "[critical] DURATION_TOO_SHORT: duration_s=0.017283038935 but artifact references compute-bound markers (GGUF / CUDA / live mode",
+          "[warn    ] METHODOLOGY_MISSING: Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable."
+        ],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:8598bffe18c526f102222f4641d6a191312c9b369584108fea0f056a678c377a"
+      }
+    },
+    "exp6378-v549-post-marker-source-scope-freeze": {
+      "live_flag_count": 0,
+      "live_flags": [],
+      "live_has_critical": false,
+      "live_verdict": "clean",
+      "path": "results/experiment_6378_v549_post_marker_source_scope_freeze.json",
+      "present": true,
+      "stamped_corrigendum_pending": false,
+      "stamped_flagged_adversarial": null,
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6378_v549_post_marker_source_scope_freeze.json",
+        "exit_code": 0,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:d5e4e7043796e5269018ad59be57b8e064ba0433ece93f86e5478fdd10be2182"
+      }
+    },
+    "exp6379-canonical-factor-edit-transport-contract": {
+      "live_flag_count": 0,
+      "live_flags": [],
+      "live_has_critical": false,
+      "live_verdict": "clean",
+      "path": "results/experiment_6379_canonical_factor_edit_transport_contract.json",
+      "present": true,
+      "stamped_corrigendum_pending": false,
+      "stamped_flagged_adversarial": null,
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6379_canonical_factor_edit_transport_contract.json",
+        "exit_code": 0,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:00792d7fe5cf796c5edbff4afae664bf57061e1a4194501a3cfb8767f30db455"
+      }
+    },
+    "exp6380-three-family-canonical-factor-transport-canary": {
+      "live_flag_count": 0,
+      "live_flags": [],
+      "live_has_critical": false,
+      "live_verdict": "clean",
+      "path": "results/experiment_6380_three_family_canonical_factor_transport_canary.json",
+      "present": true,
+      "stamped_corrigendum_pending": false,
+      "stamped_flagged_adversarial": null,
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6380_three_family_canonical_factor_transport_canary.json",
+        "exit_code": 0,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:aa4dbdf338348356279a5b07bf881a11d212f6ae864b64efbcc080cccc9dd68d"
+      }
+    },
+    "exp6381-verified-frontier-live-factor-proposal-ab": {
+      "live_flag_count": 0,
+      "live_flags": [],
+      "live_has_critical": false,
+      "live_verdict": "clean",
+      "path": "results/experiment_6381_verified_frontier_live_factor_proposal_ab.json",
+      "present": true,
+      "stamped_corrigendum_pending": false,
+      "stamped_flagged_adversarial": null,
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6381_verified_frontier_live_factor_proposal_ab.json",
+        "exit_code": 0,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [
+          "[?   ] gate_check_summary = '1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-transport-canary.three_family_factor_transport_ready_score (actual=0.0 == expected=1.0)'"
+        ],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:ed1b5eb33d06d3311f3933119504804bfe00abbe6b383f44b9ba68cb8b497d84"
+      }
+    },
+    "exp6382-chronological-verified-factor-self-learning": {
+      "live_flag_count": 0,
+      "live_flags": [],
+      "live_has_critical": false,
+      "live_verdict": "absent",
+      "path": "results/experiment_6382_chronological_verified_factor_self_learning.json",
+      "present": false,
+      "stamped_corrigendum_pending": false,
+      "stamped_flagged_adversarial": null,
+      "summary_receipt": {
+        "exit_code": null,
+        "invoked_before_field_import": false,
+        "live_adversarial_findings": [],
+        "reason": "artifact_absent"
+      }
+    },
+    "exp6383-dependency-guided-factor-rollback-stress": {
+      "live_flag_count": 0,
+      "live_flags": [],
+      "live_has_critical": false,
+      "live_verdict": "clean",
+      "path": "results/experiment_6383_dependency_guided_factor_rollback_stress.json",
+      "present": true,
+      "stamped_corrigendum_pending": false,
+      "stamped_flagged_adversarial": null,
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6383_dependency_guided_factor_rollback_stress.json",
+        "exit_code": 0,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:1cb24b95619a49621f190e56703fe8b13de7596a468a106e2645c8bdc9ec39bf"
+      }
+    },
+    "exp6384-default-off-certified-factor-consumer-ab": {
+      "live_flag_count": 0,
+      "live_flags": [],
+      "live_has_critical": false,
+      "live_verdict": "clean",
+      "path": "results/experiment_6384_default_off_certified_factor_consumer_ab.json",
+      "present": true,
+      "stamped_corrigendum_pending": false,
+      "stamped_flagged_adversarial": null,
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6384_default_off_certified_factor_consumer_ab.json",
+        "exit_code": 0,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [
+          "[?   ] gate_check_summary = \"1 of 2 gate(s) failed; first failure: exp6382-chronological-verified-factor-self-learning.prospective_verified_factor_self_learning_ready_score (upstream artifact not found for task id 'exp6382-chronological-verified-factor-self-learning')\""
+        ],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:b0f66c4fa89a56f44a67e2241a59711993e3aae2c3488a913d3055a92ab1b8bb"
+      }
+    },
+    "exp6385-live-factor-learning-and-rollback-safety-audit": {
+      "live_flag_count": 2,
+      "live_flags": [
+        {
+          "detail": "duration_s=0.03463278501294553 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "live_has_critical": true,
+      "live_verdict": "critical",
+      "path": "results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json",
+      "present": true,
+      "stamped_corrigendum_pending": true,
+      "stamped_flagged_adversarial": true,
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json",
+        "exit_code": 2,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [
+          "[critical] DURATION_TOO_SHORT: duration_s=0.03463278501294553 but artifact references compute-bound markers (GGUF / CUDA / live",
+          "[warn    ] METHODOLOGY_MISSING: Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+        ],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:d17210f84750629681a07b169d5373dd53bca263a27302da94b697f688c5d913"
+      }
+    },
+    "exp6386-arc-two-sided-goal-evidence-contract": {
+      "live_flag_count": 0,
+      "live_flags": [],
+      "live_has_critical": false,
+      "live_verdict": "clean",
+      "path": "results/experiment_6386_arc_two_sided_goal_evidence_contract.json",
+      "present": true,
+      "stamped_corrigendum_pending": false,
+      "stamped_flagged_adversarial": null,
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6386_arc_two_sided_goal_evidence_contract.json",
+        "exit_code": 0,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:51647b8ebfc9cd69e9ba9a4e8db27d965cbf71a44e6ac3272a30432e73cfebe8"
+      }
+    },
+    "exp6387-arc-active-reward-machine-discriminator": {
+      "live_flag_count": 0,
+      "live_flags": [],
+      "live_has_critical": false,
+      "live_verdict": "clean",
+      "path": "results/experiment_6387_arc_active_reward_machine_discriminator.json",
+      "present": true,
+      "stamped_corrigendum_pending": false,
+      "stamped_flagged_adversarial": null,
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6387_arc_active_reward_machine_discriminator.json",
+        "exit_code": 0,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:2f16d4f399c1a0c1df4ecb816f3b4dd60647d77121b267311764df6287867f0a"
+      }
+    },
+    "exp6388-arc-goal-evidence-response-calibration": {
+      "live_flag_count": 0,
+      "live_flags": [],
+      "live_has_critical": false,
+      "live_verdict": "clean",
+      "path": "results/experiment_6388_arc_goal_evidence_response_calibration.json",
+      "present": true,
+      "stamped_corrigendum_pending": false,
+      "stamped_flagged_adversarial": null,
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6388_arc_goal_evidence_response_calibration.json",
+        "exit_code": 0,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:1f60ea949f439edd9239c0dd060bc273c56366de8bb4d2c83179bcb9a74bd0f1"
+      }
+    },
+    "exp6389-arc-default-off-active-goal-shadow": {
+      "live_flag_count": 0,
+      "live_flags": [],
+      "live_has_critical": false,
+      "live_verdict": "clean",
+      "path": "results/experiment_6389_arc_default_off_active_goal_shadow.json",
+      "present": true,
+      "stamped_corrigendum_pending": false,
+      "stamped_flagged_adversarial": null,
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6389_arc_default_off_active_goal_shadow.json",
+        "exit_code": 0,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [
+          "[?   ] gate_check_summary = '1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibration.delta_admission_precision (numeric comparison rejected because values are not comparable (actual_type=dict, expected_type=float))'"
+        ],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:8863c2d6fe19a486477a32d7bd64be70c1a14575b92caa929b5f37aac23c18b6"
+      }
+    },
+    "exp6390-v549-adversarial-capstone": {
+      "live_flag_count": 0,
+      "live_flags": [],
+      "live_has_critical": false,
+      "live_verdict": "clean",
+      "path": "results/experiment_6390_v549_adversarial_capstone.json",
+      "present": true,
+      "stamped_corrigendum_pending": false,
+      "stamped_flagged_adversarial": null,
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6390_v549_adversarial_capstone.json",
+        "exit_code": 0,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:14415c4b3e2d6d95530de8c581b6d6eccad71b77db31667c3c6c69ba27fb3856"
+      }
+    }
+  },
+  "v549_arc_boundary": {
+    "arc_solve_claimed": false,
+    "exp6386_ready": true,
+    "exp6387_ready": true,
+    "exp6388_delta_admission_precision_pooled_unrounded": 0.75,
+    "exp6388_delta_admission_precision_shape": "dict",
+    "exp6388_delta_false_accept_count": -9,
+    "exp6388_ready": true,
+    "exp6389_blocked_gate_check_failed": true,
+    "exp6389_honest_verdict": "blocked_gate_check_failed",
+    "exp6389_terminal_class": "blocked"
+  },
+  "v549_artifact_verdicts": {
+    "exp6377-v549-terminal-handoff-and-queue-preflight": "complete_v549_queue_preflight_passed: V548 evidence is bounded and the fourteen-task V549 queue validates",
+    "exp6378-v549-post-marker-source-scope-freeze": "complete_no_scope_change: no strict post-marker source changed V549 executable scope",
+    "exp6379-canonical-factor-edit-transport-contract": "complete_positive: deterministic factor-edit transport contract is ready; no model quality or utility claim is made",
+    "exp6380-three-family-canonical-factor-transport-canary": "complete_null: live calls ran but three-family canonical transport gates did not all pass",
+    "exp6381-verified-frontier-live-factor-proposal-ab": "blocked_gate_check_failed",
+    "exp6382-chronological-verified-factor-self-learning": null,
+    "exp6383-dependency-guided-factor-rollback-stress": "complete_positive: dependency-guided rollback removed harmful descendants, preserved independent exact support, and claims no live utility",
+    "exp6384-default-off-certified-factor-consumer-ab": "blocked_gate_check_failed",
+    "exp6385-live-factor-learning-and-rollback-safety-audit": "complete_positive: V549 safety attacks failed closed; blocked, null, and absent utility evidence stayed terminal; utility promotion remains zero",
+    "exp6386-arc-two-sided-goal-evidence-contract": "complete_two_sided_goal_contract_false_accepts_fixed_default_off_no_solve_claim",
+    "exp6387-arc-active-reward-machine-discriminator": "complete_active_reward_machine_default_off_live_reachable_no_solve_claim",
+    "exp6388-arc-goal-evidence-response-calibration": "complete_goal_evidence_response_calibration_no_solve_claim",
+    "exp6389-arc-default-off-active-goal-shadow": "blocked_gate_check_failed",
+    "exp6390-v549-adversarial-capstone": "complete_v549_adversarial_capstone_blocks_preserved: public_claim_eligibility_false; factor_transport_null; fr11_blocked; arc_goal_evidence_advanced_default_off_no_solve"
+  },
+  "v549_conductor_outcomes": {
+    "exp6377-v549-terminal-handoff-and-queue-preflight": {
+      "FLAGGED": 1,
+      "attempt_count": 1,
+      "rows": [
+        {
+          "line": 16250,
+          "message": "adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea",
+          "raw": "| 2026-08-13 05:25 UTC | V548 terminal evidence handoff and V549 queue pref | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
+          "status": "FLAGGED",
+          "timestamp_utc": "2026-08-13 05:25 UTC",
+          "title_truncated": "V548 terminal evidence handoff and V549 queue pref"
+        }
+      ]
+    },
+    "exp6378-v549-post-marker-source-scope-freeze": {
+      "OK": 1,
+      "attempt_count": 1,
+      "rows": [
+        {
+          "line": 16251,
+          "message": "87 passed, 1 warning in 9.11s",
+          "raw": "| 2026-08-13 05:42 UTC | V549 dated source delta and three-lane scope freez | OK | 87 passed, 1 warning in 9.11s |",
+          "status": "OK",
+          "timestamp_utc": "2026-08-13 05:42 UTC",
+          "title_truncated": "V549 dated source delta and three-lane scope freez"
+        }
+      ]
+    },
+    "exp6379-canonical-factor-edit-transport-contract": {
+      "OK": 1,
+      "attempt_count": 1,
+      "rows": [
+        {
+          "line": 16252,
+          "message": "89 passed, 1 warning in 9.28s",
+          "raw": "| 2026-08-13 06:00 UTC | Canonical factor-edit instruction and capacity tra | OK | 89 passed, 1 warning in 9.28s |",
+          "status": "OK",
+          "timestamp_utc": "2026-08-13 06:00 UTC",
+          "title_truncated": "Canonical factor-edit instruction and capacity tra"
+        }
+      ]
+    },
+    "exp6380-three-family-canonical-factor-transport-canary": {
+      "OK": 1,
+      "attempt_count": 1,
+      "rows": [
+        {
+          "line": 16253,
+          "message": "86 passed, 1 warning in 8.75s",
+          "raw": "| 2026-08-13 06:27 UTC | Gated on Exp6379 readiness: three-family canonical | OK | 86 passed, 1 warning in 8.75s |",
+          "status": "OK",
+          "timestamp_utc": "2026-08-13 06:27 UTC",
+          "title_truncated": "Gated on Exp6379 readiness: three-family canonical"
+        }
+      ]
+    },
+    "exp6381-verified-frontier-live-factor-proposal-ab": {
+      "GATE_BLOCK": 3,
+      "attempt_count": 3,
+      "rows": [
+        {
+          "line": 16254,
+          "message": "1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran",
+          "raw": "| 2026-08-13 06:29 UTC | Gated on Exp6380 readiness: verified-frontier live | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran |",
+          "status": "GATE_BLOCK",
+          "timestamp_utc": "2026-08-13 06:29 UTC",
+          "title_truncated": "Gated on Exp6380 readiness: verified-frontier live"
+        },
+        {
+          "line": 16255,
+          "message": "1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran",
+          "raw": "| 2026-08-13 06:31 UTC | Gated on Exp6380 readiness: verified-frontier live | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran |",
+          "status": "GATE_BLOCK",
+          "timestamp_utc": "2026-08-13 06:31 UTC",
+          "title_truncated": "Gated on Exp6380 readiness: verified-frontier live"
+        },
+        {
+          "line": 16256,
+          "message": "1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran",
+          "raw": "| 2026-08-13 06:33 UTC | Gated on Exp6380 readiness: verified-frontier live | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran |",
+          "status": "GATE_BLOCK",
+          "timestamp_utc": "2026-08-13 06:33 UTC",
+          "title_truncated": "Gated on Exp6380 readiness: verified-frontier live"
+        }
+      ]
+    },
+    "exp6382-chronological-verified-factor-self-learning": {
+      "GATE_BLOCK": 3,
+      "attempt_count": 3,
+      "rows": [
+        {
+          "line": 16257,
+          "message": "Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos",
+          "raw": "| 2026-08-13 06:35 UTC | Gated on Exp6381 positive delta: chronological ver | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos |",
+          "status": "GATE_BLOCK",
+          "timestamp_utc": "2026-08-13 06:35 UTC",
+          "title_truncated": "Gated on Exp6381 positive delta: chronological ver"
+        },
+        {
+          "line": 16259,
+          "message": "Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos",
+          "raw": "| 2026-08-13 06:54 UTC | Gated on Exp6381 positive delta: chronological ver | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos |",
+          "status": "GATE_BLOCK",
+          "timestamp_utc": "2026-08-13 06:54 UTC",
+          "title_truncated": "Gated on Exp6381 positive delta: chronological ver"
+        },
+        {
+          "line": 16261,
+          "message": "Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos",
+          "raw": "| 2026-08-13 06:56 UTC | Gated on Exp6381 positive delta: chronological ver | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos |",
+          "status": "GATE_BLOCK",
+          "timestamp_utc": "2026-08-13 06:56 UTC",
+          "title_truncated": "Gated on Exp6381 positive delta: chronological ver"
+        }
+      ]
+    },
+    "exp6383-dependency-guided-factor-rollback-stress": {
+      "OK": 1,
+      "attempt_count": 1,
+      "rows": [
+        {
+          "line": 16258,
+          "message": "88 passed, 1 warning in 10.15s",
+          "raw": "| 2026-08-13 06:52 UTC | Dependency-guided certified-factor descendant roll | OK | 88 passed, 1 warning in 10.15s |",
+          "status": "OK",
+          "timestamp_utc": "2026-08-13 06:52 UTC",
+          "title_truncated": "Dependency-guided certified-factor descendant roll"
+        }
+      ]
+    },
+    "exp6384-default-off-certified-factor-consumer-ab": {
+      "GATE_BLOCK": 3,
+      "attempt_count": 3,
+      "rows": [
+        {
+          "line": 16260,
+          "message": "1 of 2 gate(s) failed; first failure: exp6382-chronological-verified-factor-self",
+          "raw": "| 2026-08-13 06:54 UTC | Gated on Exp6382 and Exp6383 readiness: default-of | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6382-chronological-verified-factor-self |",
+          "status": "GATE_BLOCK",
+          "timestamp_utc": "2026-08-13 06:54 UTC",
+          "title_truncated": "Gated on Exp6382 and Exp6383 readiness: default-of"
+        },
+        {
+          "line": 16262,
+          "message": "1 of 2 gate(s) failed; first failure: exp6382-chronological-verified-factor-self",
+          "raw": "| 2026-08-13 06:56 UTC | Gated on Exp6382 and Exp6383 readiness: default-of | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6382-chronological-verified-factor-self |",
+          "status": "GATE_BLOCK",
+          "timestamp_utc": "2026-08-13 06:56 UTC",
+          "title_truncated": "Gated on Exp6382 and Exp6383 readiness: default-of"
+        },
+        {
+          "line": 16263,
+          "message": "Pre-emptive skip: upstream retired (exp6382-chronological-verified-factor-self-l",
+          "raw": "| 2026-08-13 06:58 UTC | Gated on Exp6382 and Exp6383 readiness: default-of | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6382-chronological-verified-factor-self-l |",
+          "status": "GATE_BLOCK",
+          "timestamp_utc": "2026-08-13 06:58 UTC",
+          "title_truncated": "Gated on Exp6382 and Exp6383 readiness: default-of"
+        }
+      ]
+    },
+    "exp6385-live-factor-learning-and-rollback-safety-audit": {
+      "FAIL": 1,
+      "FLAGGED": 1,
+      "attempt_count": 2,
+      "rows": [
+        {
+          "line": 16264,
+          "message": "Codex CLI error: Hard wall-clock cap after 4800s. Last output:",
+          "raw": "| 2026-08-13 08:19 UTC | Independent canonical-transport learning rollback  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output:",
+          "status": "FAIL",
+          "timestamp_utc": "2026-08-13 08:19 UTC",
+          "title_truncated": "Independent canonical-transport learning rollback"
+        },
+        {
+          "line": 16266,
+          "message": "adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea",
+          "raw": "| 2026-08-13 08:26 UTC | Independent canonical-transport learning rollback  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
+          "status": "FLAGGED",
+          "timestamp_utc": "2026-08-13 08:26 UTC",
+          "title_truncated": "Independent canonical-transport learning rollback"
+        }
+      ]
+    },
+    "exp6386-arc-two-sided-goal-evidence-contract": {
+      "OK": 1,
+      "attempt_count": 1,
+      "rows": [
+        {
+          "line": 16267,
+          "message": "111 passed, 1 warning in 11.22s",
+          "raw": "| 2026-08-13 08:50 UTC | Two-sided live ARC goal-evidence admission contrac | OK | 111 passed, 1 warning in 11.22s |",
+          "status": "OK",
+          "timestamp_utc": "2026-08-13 08:50 UTC",
+          "title_truncated": "Two-sided live ARC goal-evidence admission contrac"
+        }
+      ]
+    },
+    "exp6387-arc-active-reward-machine-discriminator": {
+      "OK": 1,
+      "attempt_count": 1,
+      "rows": [
+        {
+          "line": 16268,
+          "message": "109 passed, 1 warning in 10.51s",
+          "raw": "| 2026-08-13 09:13 UTC | Gated on Exp6386 readiness: live-path active rewar | OK | 109 passed, 1 warning in 10.51s |",
+          "status": "OK",
+          "timestamp_utc": "2026-08-13 09:13 UTC",
+          "title_truncated": "Gated on Exp6386 readiness: live-path active rewar"
+        }
+      ]
+    },
+    "exp6388-arc-goal-evidence-response-calibration": {
+      "OK": 1,
+      "attempt_count": 1,
+      "rows": [
+        {
+          "line": 16269,
+          "message": "86 passed, 1 warning in 8.79s",
+          "raw": "| 2026-08-13 09:32 UTC | Gated on Exp6387 readiness: three-family ARC goal  | OK | 86 passed, 1 warning in 8.79s |",
+          "status": "OK",
+          "timestamp_utc": "2026-08-13 09:32 UTC",
+          "title_truncated": "Gated on Exp6387 readiness: three-family ARC goal"
+        }
+      ]
+    },
+    "exp6389-arc-default-off-active-goal-shadow": {
+      "GATE_BLOCK": 3,
+      "attempt_count": 3,
+      "rows": [
+        {
+          "line": 16270,
+          "message": "1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra",
+          "raw": "| 2026-08-13 09:34 UTC | Gated on Exp6388 improvement: default-off live ARC | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra |",
+          "status": "GATE_BLOCK",
+          "timestamp_utc": "2026-08-13 09:34 UTC",
+          "title_truncated": "Gated on Exp6388 improvement: default-off live ARC"
+        },
+        {
+          "line": 16271,
+          "message": "1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra",
+          "raw": "| 2026-08-13 09:36 UTC | Gated on Exp6388 improvement: default-off live ARC | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra |",
+          "status": "GATE_BLOCK",
+          "timestamp_utc": "2026-08-13 09:36 UTC",
+          "title_truncated": "Gated on Exp6388 improvement: default-off live ARC"
+        },
+        {
+          "line": 16272,
+          "message": "1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra",
+          "raw": "| 2026-08-13 09:38 UTC | Gated on Exp6388 improvement: default-off live ARC | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra |",
+          "status": "GATE_BLOCK",
+          "timestamp_utc": "2026-08-13 09:38 UTC",
+          "title_truncated": "Gated on Exp6388 improvement: default-off live ARC"
+        }
+      ]
+    },
+    "exp6390-v549-adversarial-capstone": {
+      "OK": 1,
+      "attempt_count": 1,
+      "rows": [
+        {
+          "line": 16273,
+          "message": "87 passed, 1 warning in 41.65s",
+          "raw": "| 2026-08-13 10:07 UTC | V549 adversarial capstone and PRD-gap reconciliati | OK | 87 passed, 1 warning in 41.65s |",
+          "status": "OK",
+          "timestamp_utc": "2026-08-13 10:07 UTC",
+          "title_truncated": "V549 adversarial capstone and PRD-gap reconciliati"
+        }
+      ]
+    }
+  },
+  "v549_duration_receipts_by_task": {
+    "exp6377-v549-terminal-handoff-and-queue-preflight": {
+      "artifact_path": "results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json",
+      "duration_s": 0.017283038935,
+      "source": "artifact.duration_s",
+      "task_id": "exp6377-v549-terminal-handoff-and-queue-preflight"
+    },
+    "exp6378-v549-post-marker-source-scope-freeze": {
+      "artifact_path": "results/experiment_6378_v549_post_marker_source_scope_freeze.json",
+      "duration_s": 3.4186105839908123,
+      "source": "artifact.duration_s",
+      "task_id": "exp6378-v549-post-marker-source-scope-freeze"
+    },
+    "exp6379-canonical-factor-edit-transport-contract": {
+      "artifact_path": "results/experiment_6379_canonical_factor_edit_transport_contract.json",
+      "duration_s": 103.10167181119323,
+      "source": "artifact.duration_s",
+      "task_id": "exp6379-canonical-factor-edit-transport-contract"
+    },
+    "exp6380-three-family-canonical-factor-transport-canary": {
+      "artifact_path": "results/experiment_6380_three_family_canonical_factor_transport_canary.json",
+      "duration_s": 225.21800398197956,
+      "source": "artifact.duration_s",
+      "task_id": "exp6380-three-family-canonical-factor-transport-canary"
+    },
+    "exp6381-verified-frontier-live-factor-proposal-ab": {
+      "artifact_path": "results/experiment_6381_verified_frontier_live_factor_proposal_ab.json",
+      "duration_s": 0.0,
+      "source": "artifact.duration_s",
+      "task_id": "exp6381-verified-frontier-live-factor-proposal-ab"
+    },
+    "exp6382-chronological-verified-factor-self-learning": {
+      "artifact_path": "results/experiment_6382_chronological_verified_factor_self_learning.json",
+      "duration_s": null,
+      "source": "artifact_absent",
+      "task_id": "exp6382-chronological-verified-factor-self-learning"
+    },
+    "exp6383-dependency-guided-factor-rollback-stress": {
+      "artifact_path": "results/experiment_6383_dependency_guided_factor_rollback_stress.json",
+      "duration_s": 0.02153410017490387,
+      "source": "artifact.duration_s",
+      "task_id": "exp6383-dependency-guided-factor-rollback-stress"
+    },
+    "exp6384-default-off-certified-factor-consumer-ab": {
+      "artifact_path": "results/experiment_6384_default_off_certified_factor_consumer_ab.json",
+      "duration_s": 0.0,
+      "source": "artifact.duration_s",
+      "task_id": "exp6384-default-off-certified-factor-consumer-ab"
+    },
+    "exp6385-live-factor-learning-and-rollback-safety-audit": {
+      "artifact_path": "results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json",
+      "duration_s": 0.03463278501294553,
+      "source": "artifact.duration_s",
+      "task_id": "exp6385-live-factor-learning-and-rollback-safety-audit"
+    },
+    "exp6386-arc-two-sided-goal-evidence-contract": {
+      "artifact_path": "results/experiment_6386_arc_two_sided_goal_evidence_contract.json",
+      "duration_s": 1.0908,
+      "source": "artifact.duration_s",
+      "task_id": "exp6386-arc-two-sided-goal-evidence-contract"
+    },
+    "exp6387-arc-active-reward-machine-discriminator": {
+      "artifact_path": "results/experiment_6387_arc_active_reward_machine_discriminator.json",
+      "duration_s": 1.5452,
+      "source": "artifact.duration_s",
+      "task_id": "exp6387-arc-active-reward-machine-discriminator"
+    },
+    "exp6388-arc-goal-evidence-response-calibration": {
+      "artifact_path": "results/experiment_6388_arc_goal_evidence_response_calibration.json",
+      "duration_s": 3.7233,
+      "source": "artifact.duration_s",
+      "task_id": "exp6388-arc-goal-evidence-response-calibration"
+    },
+    "exp6389-arc-default-off-active-goal-shadow": {
+      "artifact_path": "results/experiment_6389_arc_default_off_active_goal_shadow.json",
+      "duration_s": 0.0,
+      "source": "artifact.duration_s",
+      "task_id": "exp6389-arc-default-off-active-goal-shadow"
+    },
+    "exp6390-v549-adversarial-capstone": {
+      "artifact_path": "results/experiment_6390_v549_adversarial_capstone.json",
+      "duration_s": 7.295859219972044,
+      "source": "artifact.duration_s",
+      "task_id": "exp6390-v549-adversarial-capstone"
+    }
+  },
+  "v549_factor_boundary": {
+    "exact_checker_call_count": 2,
+    "exp6379_ready": true,
+    "exp6380_global_null": true,
+    "exp6381_blocked": true,
+    "exp6382_blocked_or_absent": true,
+    "exp6383_positive_control": true,
+    "exp6384_blocked": true,
+    "global_transport_promoted": false,
+    "parse_valid_count": 2,
+    "qualified_gemma_models": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "qualified_gemma_observation_count": 2,
+    "qwen_invalid": true,
+    "qwen_model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "three_family_factor_transport_ready_score": 0.0
+  },
+  "v549_task_ids": [
+    "exp6377-v549-terminal-handoff-and-queue-preflight",
+    "exp6378-v549-post-marker-source-scope-freeze",
+    "exp6379-canonical-factor-edit-transport-contract",
+    "exp6380-three-family-canonical-factor-transport-canary",
+    "exp6381-verified-frontier-live-factor-proposal-ab",
+    "exp6382-chronological-verified-factor-self-learning",
+    "exp6383-dependency-guided-factor-rollback-stress",
+    "exp6384-default-off-certified-factor-consumer-ab",
+    "exp6385-live-factor-learning-and-rollback-safety-audit",
+    "exp6386-arc-two-sided-goal-evidence-contract",
+    "exp6387-arc-active-reward-machine-discriminator",
+    "exp6388-arc-goal-evidence-response-calibration",
+    "exp6389-arc-default-off-active-goal-shadow",
+    "exp6390-v549-adversarial-capstone"
+  ],
+  "v549_terminal_artifacts_by_task": {
+    "exp6377-v549-terminal-handoff-and-queue-preflight": {
+      "conductor_receipt": {
+        "FLAGGED": 1,
+        "attempt_count": 1,
+        "rows": [
+          {
+            "line": 16250,
+            "message": "adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea",
+            "raw": "| 2026-08-13 05:25 UTC | V548 terminal evidence handoff and V549 queue pref | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
+            "status": "FLAGGED",
+            "timestamp_utc": "2026-08-13 05:25 UTC",
+            "title_truncated": "V548 terminal evidence handoff and V549 queue pref"
+          }
+        ]
+      },
+      "corrigendum_pending": [
+        {
+          "detail": "duration_s=0.017283038935 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "declared_deliverable": "results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json",
+      "flagged_adversarial": true,
+      "honest_verdict_raw": "complete_v549_queue_preflight_passed: V548 evidence is bounded and the fourteen-task V549 queue validates",
+      "loadable": true,
+      "present": true,
+      "sha256": "sha256:be74384b2f3ab71de84f529b4f5c057f417ea6bc38ee9aab5389d2b4410188b0",
+      "status_raw": "complete_v549_queue_preflight_passed",
+      "task_id": "exp6377-v549-terminal-handoff-and-queue-preflight",
+      "terminal_class": "flagged"
+    },
+    "exp6378-v549-post-marker-source-scope-freeze": {
+      "conductor_receipt": {
+        "OK": 1,
+        "attempt_count": 1,
+        "rows": [
+          {
+            "line": 16251,
+            "message": "87 passed, 1 warning in 9.11s",
+            "raw": "| 2026-08-13 05:42 UTC | V549 dated source delta and three-lane scope freez | OK | 87 passed, 1 warning in 9.11s |",
+            "status": "OK",
+            "timestamp_utc": "2026-08-13 05:42 UTC",
+            "title_truncated": "V549 dated source delta and three-lane scope freez"
+          }
+        ]
+      },
+      "corrigendum_pending": null,
+      "declared_deliverable": "results/experiment_6378_v549_post_marker_source_scope_freeze.json",
+      "flagged_adversarial": null,
+      "honest_verdict_raw": "complete_no_scope_change: no strict post-marker source changed V549 executable scope",
+      "loadable": true,
+      "present": true,
+      "sha256": "sha256:869e1c98ac6b2525173e531dbdad1c26f24c42aa040e3f67a5da72754bf46e83",
+      "status_raw": "complete_no_scope_change",
+      "task_id": "exp6378-v549-post-marker-source-scope-freeze",
+      "terminal_class": "complete"
+    },
+    "exp6379-canonical-factor-edit-transport-contract": {
+      "conductor_receipt": {
+        "OK": 1,
+        "attempt_count": 1,
+        "rows": [
+          {
+            "line": 16252,
+            "message": "89 passed, 1 warning in 9.28s",
+            "raw": "| 2026-08-13 06:00 UTC | Canonical factor-edit instruction and capacity tra | OK | 89 passed, 1 warning in 9.28s |",
+            "status": "OK",
+            "timestamp_utc": "2026-08-13 06:00 UTC",
+            "title_truncated": "Canonical factor-edit instruction and capacity tra"
+          }
+        ]
+      },
+      "corrigendum_pending": null,
+      "declared_deliverable": "results/experiment_6379_canonical_factor_edit_transport_contract.json",
+      "flagged_adversarial": null,
+      "honest_verdict_raw": "complete_positive: deterministic factor-edit transport contract is ready; no model quality or utility claim is made",
+      "loadable": true,
+      "present": true,
+      "sha256": "sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406",
+      "status_raw": "complete_positive",
+      "task_id": "exp6379-canonical-factor-edit-transport-contract",
+      "terminal_class": "positive"
+    },
+    "exp6380-three-family-canonical-factor-transport-canary": {
+      "conductor_receipt": {
+        "OK": 1,
+        "attempt_count": 1,
+        "rows": [
+          {
+            "line": 16253,
+            "message": "86 passed, 1 warning in 8.75s",
+            "raw": "| 2026-08-13 06:27 UTC | Gated on Exp6379 readiness: three-family canonical | OK | 86 passed, 1 warning in 8.75s |",
+            "status": "OK",
+            "timestamp_utc": "2026-08-13 06:27 UTC",
+            "title_truncated": "Gated on Exp6379 readiness: three-family canonical"
+          }
+        ]
+      },
+      "corrigendum_pending": null,
+      "declared_deliverable": "results/experiment_6380_three_family_canonical_factor_transport_canary.json",
+      "flagged_adversarial": null,
+      "honest_verdict_raw": "complete_null: live calls ran but three-family canonical transport gates did not all pass",
+      "loadable": true,
+      "present": true,
+      "sha256": "sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613",
+      "status_raw": "complete_null",
+      "task_id": "exp6380-three-family-canonical-factor-transport-canary",
+      "terminal_class": "null"
+    },
+    "exp6381-verified-frontier-live-factor-proposal-ab": {
+      "conductor_receipt": {
+        "GATE_BLOCK": 3,
+        "attempt_count": 3,
+        "rows": [
+          {
+            "line": 16254,
+            "message": "1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran",
+            "raw": "| 2026-08-13 06:29 UTC | Gated on Exp6380 readiness: verified-frontier live | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran |",
+            "status": "GATE_BLOCK",
+            "timestamp_utc": "2026-08-13 06:29 UTC",
+            "title_truncated": "Gated on Exp6380 readiness: verified-frontier live"
+          },
+          {
+            "line": 16255,
+            "message": "1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran",
+            "raw": "| 2026-08-13 06:31 UTC | Gated on Exp6380 readiness: verified-frontier live | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran |",
+            "status": "GATE_BLOCK",
+            "timestamp_utc": "2026-08-13 06:31 UTC",
+            "title_truncated": "Gated on Exp6380 readiness: verified-frontier live"
+          },
+          {
+            "line": 16256,
+            "message": "1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran",
+            "raw": "| 2026-08-13 06:33 UTC | Gated on Exp6380 readiness: verified-frontier live | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran |",
+            "status": "GATE_BLOCK",
+            "timestamp_utc": "2026-08-13 06:33 UTC",
+            "title_truncated": "Gated on Exp6380 readiness: verified-frontier live"
+          }
+        ]
+      },
+      "corrigendum_pending": null,
+      "declared_deliverable": "results/experiment_6381_verified_frontier_live_factor_proposal_ab.json",
+      "flagged_adversarial": null,
+      "honest_verdict_raw": "blocked_gate_check_failed",
+      "loadable": true,
+      "present": true,
+      "sha256": "sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8",
+      "status_raw": "blocked",
+      "task_id": "exp6381-verified-frontier-live-factor-proposal-ab",
+      "terminal_class": "blocked"
+    },
+    "exp6382-chronological-verified-factor-self-learning": {
+      "conductor_receipt": {
+        "GATE_BLOCK": 3,
+        "attempt_count": 3,
+        "rows": [
+          {
+            "line": 16257,
+            "message": "Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos",
+            "raw": "| 2026-08-13 06:35 UTC | Gated on Exp6381 positive delta: chronological ver | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos |",
+            "status": "GATE_BLOCK",
+            "timestamp_utc": "2026-08-13 06:35 UTC",
+            "title_truncated": "Gated on Exp6381 positive delta: chronological ver"
+          },
+          {
+            "line": 16259,
+            "message": "Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos",
+            "raw": "| 2026-08-13 06:54 UTC | Gated on Exp6381 positive delta: chronological ver | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos |",
+            "status": "GATE_BLOCK",
+            "timestamp_utc": "2026-08-13 06:54 UTC",
+            "title_truncated": "Gated on Exp6381 positive delta: chronological ver"
+          },
+          {
+            "line": 16261,
+            "message": "Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos",
+            "raw": "| 2026-08-13 06:56 UTC | Gated on Exp6381 positive delta: chronological ver | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos |",
+            "status": "GATE_BLOCK",
+            "timestamp_utc": "2026-08-13 06:56 UTC",
+            "title_truncated": "Gated on Exp6381 positive delta: chronological ver"
+          }
+        ]
+      },
+      "corrigendum_pending": null,
+      "declared_deliverable": "results/experiment_6382_chronological_verified_factor_self_learning.json",
+      "flagged_adversarial": null,
+      "honest_verdict_raw": null,
+      "loadable": false,
+      "present": false,
+      "sha256": null,
+      "status_raw": null,
+      "task_id": "exp6382-chronological-verified-factor-self-learning",
+      "terminal_class": "absent"
+    },
+    "exp6383-dependency-guided-factor-rollback-stress": {
+      "conductor_receipt": {
+        "OK": 1,
+        "attempt_count": 1,
+        "rows": [
+          {
+            "line": 16258,
+            "message": "88 passed, 1 warning in 10.15s",
+            "raw": "| 2026-08-13 06:52 UTC | Dependency-guided certified-factor descendant roll | OK | 88 passed, 1 warning in 10.15s |",
+            "status": "OK",
+            "timestamp_utc": "2026-08-13 06:52 UTC",
+            "title_truncated": "Dependency-guided certified-factor descendant roll"
+          }
+        ]
+      },
+      "corrigendum_pending": null,
+      "declared_deliverable": "results/experiment_6383_dependency_guided_factor_rollback_stress.json",
+      "flagged_adversarial": null,
+      "honest_verdict_raw": "complete_positive: dependency-guided rollback removed harmful descendants, preserved independent exact support, and claims no live utility",
+      "loadable": true,
+      "present": true,
+      "sha256": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c",
+      "status_raw": "complete_positive",
+      "task_id": "exp6383-dependency-guided-factor-rollback-stress",
+      "terminal_class": "positive"
+    },
+    "exp6384-default-off-certified-factor-consumer-ab": {
+      "conductor_receipt": {
+        "GATE_BLOCK": 3,
+        "attempt_count": 3,
+        "rows": [
+          {
+            "line": 16260,
+            "message": "1 of 2 gate(s) failed; first failure: exp6382-chronological-verified-factor-self",
+            "raw": "| 2026-08-13 06:54 UTC | Gated on Exp6382 and Exp6383 readiness: default-of | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6382-chronological-verified-factor-self |",
+            "status": "GATE_BLOCK",
+            "timestamp_utc": "2026-08-13 06:54 UTC",
+            "title_truncated": "Gated on Exp6382 and Exp6383 readiness: default-of"
+          },
+          {
+            "line": 16262,
+            "message": "1 of 2 gate(s) failed; first failure: exp6382-chronological-verified-factor-self",
+            "raw": "| 2026-08-13 06:56 UTC | Gated on Exp6382 and Exp6383 readiness: default-of | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6382-chronological-verified-factor-self |",
+            "status": "GATE_BLOCK",
+            "timestamp_utc": "2026-08-13 06:56 UTC",
+            "title_truncated": "Gated on Exp6382 and Exp6383 readiness: default-of"
+          },
+          {
+            "line": 16263,
+            "message": "Pre-emptive skip: upstream retired (exp6382-chronological-verified-factor-self-l",
+            "raw": "| 2026-08-13 06:58 UTC | Gated on Exp6382 and Exp6383 readiness: default-of | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6382-chronological-verified-factor-self-l |",
+            "status": "GATE_BLOCK",
+            "timestamp_utc": "2026-08-13 06:58 UTC",
+            "title_truncated": "Gated on Exp6382 and Exp6383 readiness: default-of"
+          }
+        ]
+      },
+      "corrigendum_pending": null,
+      "declared_deliverable": "results/experiment_6384_default_off_certified_factor_consumer_ab.json",
+      "flagged_adversarial": null,
+      "honest_verdict_raw": "blocked_gate_check_failed",
+      "loadable": true,
+      "present": true,
+      "sha256": "sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf",
+      "status_raw": "blocked",
+      "task_id": "exp6384-default-off-certified-factor-consumer-ab",
+      "terminal_class": "blocked"
+    },
+    "exp6385-live-factor-learning-and-rollback-safety-audit": {
+      "conductor_receipt": {
+        "FAIL": 1,
+        "FLAGGED": 1,
+        "attempt_count": 2,
+        "rows": [
+          {
+            "line": 16264,
+            "message": "Codex CLI error: Hard wall-clock cap after 4800s. Last output:",
+            "raw": "| 2026-08-13 08:19 UTC | Independent canonical-transport learning rollback  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output:",
+            "status": "FAIL",
+            "timestamp_utc": "2026-08-13 08:19 UTC",
+            "title_truncated": "Independent canonical-transport learning rollback"
+          },
+          {
+            "line": 16266,
+            "message": "adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea",
+            "raw": "| 2026-08-13 08:26 UTC | Independent canonical-transport learning rollback  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
+            "status": "FLAGGED",
+            "timestamp_utc": "2026-08-13 08:26 UTC",
+            "title_truncated": "Independent canonical-transport learning rollback"
+          }
+        ]
+      },
+      "corrigendum_pending": [
+        {
+          "detail": "duration_s=0.03463278501294553 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "declared_deliverable": "results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json",
+      "flagged_adversarial": true,
+      "honest_verdict_raw": "complete_positive: V549 safety attacks failed closed; blocked, null, and absent utility evidence stayed terminal; utility promotion remains zero",
+      "loadable": true,
+      "present": true,
+      "sha256": "sha256:f7d116c8c544935c6e0524d207048469766c00b5d1a09746579087fac0ce958a",
+      "status_raw": "complete_positive",
+      "task_id": "exp6385-live-factor-learning-and-rollback-safety-audit",
+      "terminal_class": "flagged"
+    },
+    "exp6386-arc-two-sided-goal-evidence-contract": {
+      "conductor_receipt": {
+        "OK": 1,
+        "attempt_count": 1,
+        "rows": [
+          {
+            "line": 16267,
+            "message": "111 passed, 1 warning in 11.22s",
+            "raw": "| 2026-08-13 08:50 UTC | Two-sided live ARC goal-evidence admission contrac | OK | 111 passed, 1 warning in 11.22s |",
+            "status": "OK",
+            "timestamp_utc": "2026-08-13 08:50 UTC",
+            "title_truncated": "Two-sided live ARC goal-evidence admission contrac"
+          }
+        ]
+      },
+      "corrigendum_pending": null,
+      "declared_deliverable": "results/experiment_6386_arc_two_sided_goal_evidence_contract.json",
+      "flagged_adversarial": null,
+      "honest_verdict_raw": "complete_two_sided_goal_contract_false_accepts_fixed_default_off_no_solve_claim",
+      "loadable": true,
+      "present": true,
+      "sha256": "sha256:c2e0e3c362dd6a1a3c02592b4ffd9891eb9a4a7697ba90f915e3e341b651351e",
+      "status_raw": "complete",
+      "task_id": "exp6386-arc-two-sided-goal-evidence-contract",
+      "terminal_class": "complete"
+    },
+    "exp6387-arc-active-reward-machine-discriminator": {
+      "conductor_receipt": {
+        "OK": 1,
+        "attempt_count": 1,
+        "rows": [
+          {
+            "line": 16268,
+            "message": "109 passed, 1 warning in 10.51s",
+            "raw": "| 2026-08-13 09:13 UTC | Gated on Exp6386 readiness: live-path active rewar | OK | 109 passed, 1 warning in 10.51s |",
+            "status": "OK",
+            "timestamp_utc": "2026-08-13 09:13 UTC",
+            "title_truncated": "Gated on Exp6386 readiness: live-path active rewar"
+          }
+        ]
+      },
+      "corrigendum_pending": null,
+      "declared_deliverable": "results/experiment_6387_arc_active_reward_machine_discriminator.json",
+      "flagged_adversarial": null,
+      "honest_verdict_raw": "complete_active_reward_machine_default_off_live_reachable_no_solve_claim",
+      "loadable": true,
+      "present": true,
+      "sha256": "sha256:35bb20897a566468afb1659c5416d54c3fca81aafad4c2e5bb93ec661144ecda",
+      "status_raw": "complete",
+      "task_id": "exp6387-arc-active-reward-machine-discriminator",
+      "terminal_class": "complete"
+    },
+    "exp6388-arc-goal-evidence-response-calibration": {
+      "conductor_receipt": {
+        "OK": 1,
+        "attempt_count": 1,
+        "rows": [
+          {
+            "line": 16269,
+            "message": "86 passed, 1 warning in 8.79s",
+            "raw": "| 2026-08-13 09:32 UTC | Gated on Exp6387 readiness: three-family ARC goal  | OK | 86 passed, 1 warning in 8.79s |",
+            "status": "OK",
+            "timestamp_utc": "2026-08-13 09:32 UTC",
+            "title_truncated": "Gated on Exp6387 readiness: three-family ARC goal"
+          }
+        ]
+      },
+      "corrigendum_pending": null,
+      "declared_deliverable": "results/experiment_6388_arc_goal_evidence_response_calibration.json",
+      "flagged_adversarial": null,
+      "honest_verdict_raw": "complete_goal_evidence_response_calibration_no_solve_claim",
+      "loadable": true,
+      "present": true,
+      "sha256": "sha256:f2285216e0b17b178dc14a033843be01f286bbda8834904bc2a7786eccff8a98",
+      "status_raw": "complete",
+      "task_id": "exp6388-arc-goal-evidence-response-calibration",
+      "terminal_class": "complete"
+    },
+    "exp6389-arc-default-off-active-goal-shadow": {
+      "conductor_receipt": {
+        "GATE_BLOCK": 3,
+        "attempt_count": 3,
+        "rows": [
+          {
+            "line": 16270,
+            "message": "1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra",
+            "raw": "| 2026-08-13 09:34 UTC | Gated on Exp6388 improvement: default-off live ARC | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra |",
+            "status": "GATE_BLOCK",
+            "timestamp_utc": "2026-08-13 09:34 UTC",
+            "title_truncated": "Gated on Exp6388 improvement: default-off live ARC"
+          },
+          {
+            "line": 16271,
+            "message": "1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra",
+            "raw": "| 2026-08-13 09:36 UTC | Gated on Exp6388 improvement: default-off live ARC | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra |",
+            "status": "GATE_BLOCK",
+            "timestamp_utc": "2026-08-13 09:36 UTC",
+            "title_truncated": "Gated on Exp6388 improvement: default-off live ARC"
+          },
+          {
+            "line": 16272,
+            "message": "1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra",
+            "raw": "| 2026-08-13 09:38 UTC | Gated on Exp6388 improvement: default-off live ARC | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra |",
+            "status": "GATE_BLOCK",
+            "timestamp_utc": "2026-08-13 09:38 UTC",
+            "title_truncated": "Gated on Exp6388 improvement: default-off live ARC"
+          }
+        ]
+      },
+      "corrigendum_pending": null,
+      "declared_deliverable": "results/experiment_6389_arc_default_off_active_goal_shadow.json",
+      "flagged_adversarial": null,
+      "honest_verdict_raw": "blocked_gate_check_failed",
+      "loadable": true,
+      "present": true,
+      "sha256": "sha256:fde8d48a0677fa6b858e66d6779a470e2af47a8d71c97453fd7437dcebee7da9",
+      "status_raw": "blocked",
+      "task_id": "exp6389-arc-default-off-active-goal-shadow",
+      "terminal_class": "blocked"
+    },
+    "exp6390-v549-adversarial-capstone": {
+      "conductor_receipt": {
+        "OK": 1,
+        "attempt_count": 1,
+        "rows": [
+          {
+            "line": 16273,
+            "message": "87 passed, 1 warning in 41.65s",
+            "raw": "| 2026-08-13 10:07 UTC | V549 adversarial capstone and PRD-gap reconciliati | OK | 87 passed, 1 warning in 41.65s |",
+            "status": "OK",
+            "timestamp_utc": "2026-08-13 10:07 UTC",
+            "title_truncated": "V549 adversarial capstone and PRD-gap reconciliati"
+          }
+        ]
+      },
+      "corrigendum_pending": null,
+      "declared_deliverable": "results/experiment_6390_v549_adversarial_capstone.json",
+      "flagged_adversarial": null,
+      "honest_verdict_raw": "complete_v549_adversarial_capstone_blocks_preserved: public_claim_eligibility_false; factor_transport_null; fr11_blocked; arc_goal_evidence_advanced_default_off_no_solve",
+      "loadable": true,
+      "present": true,
+      "sha256": "sha256:c36746fbfc899c688e875788857b346f042cce0e315b0acb0dc927e9aed8963f",
+      "status_raw": "complete_v549_adversarial_capstone_blocks_preserved",
+      "task_id": "exp6390-v549-adversarial-capstone",
+      "terminal_class": "complete"
+    }
+  },
+  "v550_agent_model_and_llm_policy_checks": {
+    "all_tasks_codex_gpt55": true,
+    "llm_task_ids": [
+      "exp6394-model-family-factor-harness-freeze",
+      "exp6395-held-factor-transport-license-matrix",
+      "exp6396-capability-qualified-verified-frontier-ab",
+      "exp6397-transactional-continuous-factor-learning",
+      "exp6398-default-off-transactional-factor-consumer",
+      "exp6400-arc-default-off-active-goal-shadow",
+      "exp6401-arc-active-goal-causal-holdout"
+    ],
+    "mandated_gguf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "model_policy_failures": [],
+    "ok": true,
+    "route_failures": []
+  },
+  "v550_dependency_and_gate_checks": {
+    "arc_metric_gate_fields": [
+      "arc_gate_metric_contract_ready_score",
+      "delta_admission_precision_scalar",
+      "delta_false_accept_count_scalar"
+    ],
+    "capability_license_gate_fields": [
+      "model_family_harness_freeze_ready_score",
+      "held_factor_transport_license_ready_score",
+      "licensed_model_count",
+      "licensed_constraint_family_count"
+    ],
+    "dependency_failures": [],
+    "gate_count": 14,
+    "gate_failures": [],
+    "ok": true,
+    "structured_gate_expressions": [
+      "gate:exp6395-held-factor-transport-license-matrix:exp6394-model-family-factor-harness-freeze.model_family_harness_freeze_ready_score==1.0",
+      "gate:exp6396-capability-qualified-verified-frontier-ab:exp6395-held-factor-transport-license-matrix.held_factor_transport_license_ready_score==1.0",
+      "gate:exp6396-capability-qualified-verified-frontier-ab:exp6395-held-factor-transport-license-matrix.licensed_model_count>=2",
+      "gate:exp6396-capability-qualified-verified-frontier-ab:exp6395-held-factor-transport-license-matrix.licensed_constraint_family_count>=2",
+      "gate:exp6397-transactional-continuous-factor-learning:exp6396-capability-qualified-verified-frontier-ab.capability_qualified_frontier_ready_score==1.0",
+      "gate:exp6397-transactional-continuous-factor-learning:exp6396-capability-qualified-verified-frontier-ab.delta_verified_future_exact_yield>0.0",
+      "gate:exp6398-default-off-transactional-factor-consumer:exp6397-transactional-continuous-factor-learning.transactional_continuous_self_learning_ready_score==1.0",
+      "gate:exp6398-default-off-transactional-factor-consumer:exp6397-transactional-continuous-factor-learning.selective_rollback_control_ready_score==1.0",
+      "gate:exp6400-arc-default-off-active-goal-shadow:exp6393-arc-scalar-gate-metric-contract.arc_gate_metric_contract_ready_score==1.0",
+      "gate:exp6400-arc-default-off-active-goal-shadow:exp6393-arc-scalar-gate-metric-contract.delta_admission_precision_scalar>0.0",
+      "gate:exp6400-arc-default-off-active-goal-shadow:exp6393-arc-scalar-gate-metric-contract.delta_false_accept_count_scalar<=0",
+      "gate:exp6401-arc-active-goal-causal-holdout:exp6400-arc-default-off-active-goal-shadow.arc_active_goal_shadow_ready_score==1.0",
+      "gate:exp6401-arc-active-goal-causal-holdout:exp6400-arc-default-off-active-goal-shadow.active_shadow_treatment_fired_count>0",
+      "gate:exp6401-arc-active-goal-causal-holdout:exp6400-arc-default-off-active-goal-shadow.delta_shadow_false_accept_count<=0"
+    ]
+  },
+  "v550_exclusion_manifest_checks": {
+    "hard_risk_count": 0,
+    "ok": true,
+    "retired_task_ids": [],
+    "retired_upstream_references": [],
+    "risk_count": 0,
+    "risks": []
+  },
+  "v550_gate_field_cross_reference_checks": {
+    "checked_gate_count": 14,
+    "failures": [],
+    "ok": true
+  },
+  "v550_id_and_deliverable_checks": {
+    "deliverable_failures": [],
+    "duplicate_deliverables": [],
+    "duplicate_task_ids": [],
+    "execution_order_ok": true,
+    "expected_task_count": 13,
+    "expected_task_ids": [
+      "exp6391-v550-terminal-handoff-and-queue-preflight",
+      "exp6392-v550-post-marker-source-scope-freeze",
+      "exp6393-arc-scalar-gate-metric-contract",
+      "exp6394-model-family-factor-harness-freeze",
+      "exp6395-held-factor-transport-license-matrix",
+      "exp6396-capability-qualified-verified-frontier-ab",
+      "exp6397-transactional-continuous-factor-learning",
+      "exp6398-default-off-transactional-factor-consumer",
+      "exp6399-capability-learning-safety-audit",
+      "exp6400-arc-default-off-active-goal-shadow",
+      "exp6401-arc-active-goal-causal-holdout",
+      "exp6402-arc-active-goal-safety-audit",
+      "exp6403-v550-adversarial-capstone"
+    ],
+    "extra_task_ids": [],
+    "missing_expected_task_ids": [],
+    "ok": true,
+    "retired_task_ids": [],
+    "task_count": 13,
+    "unique_deliverables": true
+  },
+  "v550_milestone_doc_and_queue_hashes": {
+    "active_roadmap": {
+      "milestone": "2026.08.550",
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "sha256": "sha256:9e95395293d59655d63f421fcf46de2b8cfa626fe48df4b157a55246725c7354"
+    },
+    "audited_queue": {
+      "milestone": "2026.08.550",
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "selection_note": "active research-roadmap.yaml contains V550 and was audited",
+      "sha256": "sha256:9e95395293d59655d63f421fcf46de2b8cfa626fe48df4b157a55246725c7354"
+    },
+    "conductor_log": {
+      "path": "ops/conductor-log.md",
+      "present": true,
+      "sha256": "sha256:26694bfd70c5f8ddb3115adf9bc99d0389653e92905479b6d8e59049e33e1727"
+    },
+    "conductor_source": {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "sha256": "sha256:458ec2966f40918581381a8895875ab86664e14c8f69ea21afe5be71e4348509"
+    },
+    "exclusion_manifest": {
+      "path": "ops/exclusion_manifest.yaml",
+      "present": true,
+      "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+    },
+    "known_issues": {
+      "path": "ops/known-issues.md",
+      "present": true,
+      "sha256": "sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895"
+    },
+    "milestone_doc": {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "sha256": "sha256:1cf4f754cfbbde99f15939fdb1f716b0e67071f9535e993af9529f5f538694bc"
+    },
+    "requested_next_roadmap": {
+      "milestone": null,
+      "path": "research-roadmap-next.yaml",
+      "present": false,
+      "sha256": null
+    }
+  },
+  "v550_prior_failure_checks": {
+    "failures": [],
+    "gate_audit_passed": true,
+    "gate_audit_prior_missing": 0,
+    "ok": true,
+    "prior_entry_count": 19,
+    "validate_prior_failures": {
+      "prior_failure_violations": [],
+      "schema_errors": []
+    }
+  },
+  "v550_task_ids": [
+    "exp6391-v550-terminal-handoff-and-queue-preflight",
+    "exp6392-v550-post-marker-source-scope-freeze",
+    "exp6393-arc-scalar-gate-metric-contract",
+    "exp6394-model-family-factor-harness-freeze",
+    "exp6395-held-factor-transport-license-matrix",
+    "exp6396-capability-qualified-verified-frontier-ab",
+    "exp6397-transactional-continuous-factor-learning",
+    "exp6398-default-off-transactional-factor-consumer",
+    "exp6399-capability-learning-safety-audit",
+    "exp6400-arc-default-off-active-goal-shadow",
+    "exp6401-arc-active-goal-causal-holdout",
+    "exp6402-arc-active-goal-safety-audit",
+    "exp6403-v550-adversarial-capstone"
+  ],
+  "verifier_is_oracle": false
+}
