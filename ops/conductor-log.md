@@ -15779,3 +15779,4 @@ code |
 | 2026-08-13 13:10 UTC | V550 dated source delta and executable scope freez | OK | 87 passed, 1 warning in 8.15s |
 | 2026-08-13 13:24 UTC | ARC scalar gate-metric producer contract and V549  | OK | 88 passed, 1 warning in 10.19s |
 | 2026-08-13 13:44 UTC | Model-family factor harness development and held-s | OK | 86 passed, 1 warning in 11.04s |
+| 2026-08-13 14:08 UTC | Gated on Exp6394 freeze: held factor-transport cap | OK | 86 passed, 1 warning in 9.35s |
