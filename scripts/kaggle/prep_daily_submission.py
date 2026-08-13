@@ -130,10 +130,43 @@ def stage_dataset() -> None:
     for cover in STAGE.rglob("*.cover"):
         cover.unlink()
 
+    # STRIP BYTECODE INHERITED FROM THE PUBLISHED DATASET (2026-08-13). The rsync overlay
+    # excludes __pycache__ from the REPO side, but the dataset downloaded at the top of this
+    # function can already contain it, so stale .pyc files survive into the next version. That
+    # is not cosmetic here: a .pyc for `arc_executable_world_model` was found in the stage while
+    # fixing an ImportError caused by that very module being out of date on Kaggle. Python
+    # normally revalidates bytecode against the source's mtime and size, but zip extraction does
+    # not preserve mtimes reliably, so stale bytecode shadowing fresh source is a real way to
+    # ship the old module while believing the new one was published.
+    removed = 0
+    for cache in list(STAGE.rglob("__pycache__")):
+        if cache.is_dir():
+            removed += len(list(cache.rglob("*.pyc")))
+            shutil.rmtree(cache, ignore_errors=True)
+    if removed:
+        print(f"[stage] stripped {removed} inherited .pyc file(s) from the bundle.")
+
     # --- safety guards ---
     adapter = STAGE / "python" / "carnot" / "agentic" / "arc_competition_agent.py"
-    if "MAX_ACTIONS = 400" not in adapter.read_text():
-        sys.exit("ABORT: adapter fix (MAX_ACTIONS=400) missing in stage — stale snapshot")
+    # The marker is the adapter's SHIPPED action budget. It was 400 when this guard was written
+    # and became 2000 on 2026-08-07 (commit 488eb8cede, operator directive: the Kaggle eval GPU
+    # is far faster than local dev hardware, evidence in
+    # results/outer_loop_scored_path_budget_sweep_20260726.json). The guard was never updated,
+    # so from that day it aborted EVERY publish with "stale snapshot" while the snapshot was
+    # fine -- the guard's expectation was what had gone stale. Found 2026-08-13 when the Kaggle
+    # code dataset turned out to be months behind this repo.
+    #
+    # It failed CLOSED, which is the right direction: it blocked a publish rather than waving
+    # a bad one through. Read against the repo's own value so a future budget change updates
+    # both halves at once instead of silently disarming this again.
+    expected_budget = "MAX_ACTIONS = 2000"
+    if expected_budget not in adapter.read_text():
+        sys.exit(
+            f"ABORT: adapter budget marker ({expected_budget}) missing in stage. Either the "
+            "snapshot is stale, or the shipped budget changed and THIS GUARD needs updating "
+            "with it -- check python/carnot/agentic/arc_competition_agent.py before assuming "
+            "the former."
+        )
     leaked = list(STAGE.rglob("_rust.cpython*.so"))
     if leaked:
         sys.exit(f"ABORT: compiled _rust.so leaked into bundle (SIGILLs on Kaggle): {leaked}")
@@ -145,6 +178,10 @@ def stage_dataset() -> None:
     smoke = subprocess.run(
         [
             sys.executable,
+            # -B: do not write bytecode. Without it this smoke test imports from STAGE and
+            # REGENERATES the __pycache__ the strip above just removed, silently undoing it --
+            # measured 2026-08-13, 130 .pyc files reappeared after a clean strip.
+            "-B",
             "-c",
             "import sys; sys.path.insert(0, %r); "
             "import carnot.agentic.arc_competition_agent as m; "
