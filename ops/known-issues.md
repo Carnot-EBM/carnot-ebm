@@ -17629,3 +17629,64 @@ loop is to be self-improving, per-unit rows should be a REQUIRED ARTIFACT FIELD 
 experiment making a comparative claim, the same way `random_seed` and
 `reproducibility_checksum` already are. That is a planner-side convention change, not a lint,
 and it is the higher-leverage half of the answer.
+
+## 2026-08-13 REQ-ARC-WMTE-6260 RESULT: the focused goal prompt trades constant-False for constant-True
+
+`honest_verdict: complete_goal_only_induction_gate_met_fires_0_to_1_of_4_gained_on_ls20`.
+**The "gate met" is a FALSE POSITIVE from a gate I wrote too weakly.** Read the rows:
+
+| game | combined: fires / spec | goal-only: fires / spec / fires-on-START |
+|---|---|---|
+| dc22 | False / 1.0 | False / **0.0** / **True** |
+| cn04 | False / 1.0 | False / 1.0 / False |
+| ls20 | False / 1.0 | **True** / **0.0** / **True** |
+| s5i5 | False / 1.0 | False / 1.0 / False |
+
+ls20's focused predicate does fire on the real win -- and also on the opening board, with
+specificity 0.0, i.e. on everything. The model wrote "the win condition is the complete removal
+of color 42", which is true of the start grid too. That is the OPPOSITE degeneracy, not a win.
+dc22's is the same shape without even firing on the win.
+
+**So: 0 of 4 non-degenerate predicates.** The focused, evidence-carrying prompt did not fix the
+goal predicate; it swapped constant-False for constant-True. My gate required only a sensitivity
+GAIN and never consulted the paired specificity -- the third time this session one of my own
+gates was too permissive, and this time the two-sided data was sitting in the same artifact.
+
+**Per the pre-registration, prompt-level work on the goal predicate is now exhausted.** Framing
+(exp6255/6256), filtering (exp6258/6259), and focus-plus-evidence (exp6260) have all been
+tried. A sixth prompt variant is not the next move. What remains is non-prompt: a different
+REPRESENTATION of the win condition, or a non-LLM inducer that generalises beyond exp4020's
+structured-state single game.
+
+## 2026-08-13 The verdict-row lint took FIVE rounds and still has poor signal -- an honest note
+
+Building `verdict_row_consistency_lint.py` (REQ-OPS-VERDICT-ROW-6261) is itself evidence about
+whether this approach scales. Each round was a real gap found by testing it against real
+artifacts:
+
+1. v1 scanned only top-level row keys -> missed exp6252, whose arms are nested. Its founding case.
+2. `_metric_like` excluded any name containing `_n` -> discarded `best_of_n_held`, exp6251's
+   headline metric. Unanchored-substring bug, same as "meta" in "meta_tensor".
+3. It printed a bare "OK" while skipping 57 of 60 artifacts. Guard-green-while-blind.
+4. PAIRED_METRIC_COLLAPSE, added for exp6260, did not fire -- booleans were dropped by the
+   flattener, so it could not see the `fires=True / specificity=0.0` pair it was written for.
+5. Coercing booleans then made NO_HEADROOM fire on every flag field, because a binary field is
+   always "pinned at 0/1". Noise manufactured by a fix for a different check.
+
+Plus one process failure worth naming: the vocabulary edit in round 4 used `s.replace()` with
+NO assert, so it silently did nothing and the check appeared broken for a further round. Every
+patch in this file should have asserted its match count; two did not.
+
+**Current state, stated plainly.** It catches its three founding cases. PAIRED_METRIC_COLLAPSE
+now fires on exp6260 but emits five findings where one is informative, and points at the
+COMBINED arm rather than at ls20's constant-True predicate. Signal-to-noise on that check is
+poor and it should be treated as a hint, not a verdict.
+
+**The conclusion I would draw.** Generic verdict-vs-rows contradiction detection over free-form
+artifacts requires teaching the tool every artifact shape -- which is the same maintenance
+burden as the guards it was meant to backstop, and the same failure mode (a pattern list
+narrower than its concept) recurred five times inside the tool built to catch it. The cheaper
+and more durable half of the answer is the convention change, not the lint: make PER-UNIT ROWS
+a required artifact field for any comparative claim. A claim whose evidence is written down can
+be checked by a human in seconds; a claim whose evidence was never recorded cannot be checked
+by any tool. 57 of 60 recent artifacts are in the second category.

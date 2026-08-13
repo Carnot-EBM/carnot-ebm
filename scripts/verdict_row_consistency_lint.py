@@ -108,7 +108,12 @@ def _flatten_row(row: dict, prefix: str = "", depth: int = 0) -> dict:
     out: dict = {}
     for k, v in row.items():
         key = f"{prefix}{k}"
-        if isinstance(v, (int, float)) and not isinstance(v, bool):
+        if isinstance(v, bool):
+            # Booleans are real per-row outcomes (`fires_on_real_win`, `plan_found`), not
+            # bookkeeping. Dropping them is why PAIRED_METRIC_COLLAPSE could not see exp6260's
+            # fires=True / specificity=0.0 pair. Coerced so numeric checks can compare them.
+            out[key] = 1.0 if v else 0.0
+        elif isinstance(v, (int, float)):
             out[key] = v
         elif isinstance(v, dict) and depth < 2:
             out.update(_flatten_row(v, prefix=f"{key}.", depth=depth + 1))
@@ -152,6 +157,14 @@ def _metric_like(name: str) -> bool:
             "delta",
             "rate",
             "mean",
+            # Added 2026-08-13: the two-sided vocabulary this project uses for goal predicates.
+            # Their absence is why PAIRED_METRIC_COLLAPSE could not see exp6260's
+            # fires_on_real_win / specificity pair -- the check ran and matched nothing.
+            "specificity",
+            "sensitivity",
+            "fires",
+            "plan_found",
+            "hollow",
         )
     )
 
@@ -237,6 +250,11 @@ def check_no_headroom(d: dict, rows: list[dict]) -> list[str]:
         ]
         if len(vals) < 3:
             continue
+        # A BINARY-valued field is 0/1 by nature, so "pinned at 0/1" says nothing about it.
+        # Coercing booleans into the numeric view -- needed by PAIRED_METRIC_COLLAPSE -- made
+        # this check fire on every flag field: noise manufactured by a fix for another check.
+        if set(vals) <= {0, 1}:
+            continue
         pinned = sum(1 for v in vals if v in (0.0, 0, 1.0, 1))
         if pinned / len(vals) >= 0.5:
             out.append(
@@ -288,12 +306,55 @@ def check_coverage_shortfall(d: dict, rows: list[dict]) -> list[str]:
     return []
 
 
+def check_paired_metric_collapse(d: dict, rows: list[dict]) -> list[str]:
+    """A claimed gain on one axis while the SAME row collapses on its paired axis.
+
+    ADDED 2026-08-13 after this lint failed to catch exp6260, which is the honest test of any
+    guard. That artifact reported `gate_met: True` because one goal predicate finally fired on
+    a real win -- while that same predicate's specificity was 0.0, meaning it fired on
+    everything, including the opening board. It had traded constant-False for constant-True.
+    The gain was real on the axis measured and worthless on the axis that makes it meaningful.
+
+    THE GENERAL SHAPE, which is not ARC-specific: a two-sided measurement where an arm wins on
+    side A and bottoms out on side B. Any pair of fields sharing a row prefix where one is at
+    an extreme while its sibling improves is worth a human look. Reported when the verdict
+    claims a positive outcome, since an honest negative is not over-claiming.
+    """
+    if not _claims_positive(d):
+        return []
+    out = []
+    fields = [f for f in _numeric_fields(rows) if _metric_like(f)]
+    # Pair fields that share a prefix, e.g. arm_b.fires / arm_b.specificity.
+    for f in fields:
+        prefix = f.rsplit(".", 1)[0] if "." in f else None
+        if not prefix:
+            continue
+        sibs = [g for g in fields if g != f and g.startswith(f"{prefix}.")]
+        for g in sibs:
+            bad = [
+                r
+                for r in rows
+                if isinstance(r.get(f), (int, float))
+                and isinstance(r.get(g), (int, float))
+                and r[f] > 0
+                and r[g] == 0.0
+            ]
+            if bad:
+                out.append(
+                    f"PAIRED_METRIC_COLLAPSE: on {len(bad)} row(s) `{f}` is positive while its "
+                    f"sibling `{g}` is 0.0 -- a gain on one side of a two-sided measurement "
+                    "with the other side bottomed out is usually the opposite degeneracy, not a win"
+                )
+    return out
+
+
 CHECKS = (
     check_all_rows_null,
     check_degenerate_control,
     check_no_headroom,
     check_wins_vs_losses,
     check_coverage_shortfall,
+    check_paired_metric_collapse,
 )
 # Unambiguous enough to block on its own: every row empty is never a real result.
 HARD_CLASSES = ("ALL_ROWS_NULL",)
