@@ -34125,3 +34125,131 @@ still accepts predicates that never fire.
   accelerator for this milestone.
 
 <!-- V547-PLANNER-REFRESH-20260812-END -->
+
+## V548 Planner Refresh (2026-08-12, after milestone 2026.08.547)
+
+This refresh used the V547 terminal artifacts as the evidence boundary. It
+queried the arXiv API for the 2026-08-10 through 2026-08-12 submission window.
+It also searched earlier 2025-2026 work on EBMs, neural constraint solving,
+Ising systems, hallucination control, KANs, constrained generation, sampling
+hardware, and continual learning. It then checked OpenReview, Hugging Face
+Papers, Semantic Scholar citation records, GitHub, Extropic, and Logical
+Intelligence. Source claims remain hypotheses until Carnot reproduces them.
+
+### Promoted methods
+
+- **Hypothesis Frontier: Verifier Guided LLM and Symbolic Search for
+  First-Order Induction** - arXiv:2608.10843,
+  https://arxiv.org/abs/2608.10843; submitted 2026-08-11. The method keeps the
+  strongest exactly verified formula across rounds. It uses the remaining
+  errors to guide the next LLM proposal. Symbolic repair stays anchored to the
+  proposed formula, and exact simplification preserves every training
+  prediction. Carnot hook: compare independent live factor proposals with a
+  verified-incumbent frontier. Feed only immutable residual counterexamples to
+  the next round. Keep the exact checker as release authority. Measure future
+  held-event utility, not training consistency alone.
+- **From Faulty Memories to Corrected Actions: Dependency-Guided Rollback
+  Repair for Memory-Augmented Agents** - arXiv:2608.10502,
+  https://arxiv.org/abs/2608.10502; submitted 2026-08-11. The method records a
+  typed memory-to-action dependency graph. It removes unsupported descendants
+  of a diagnosed bad memory and preserves state with independent trusted
+  support. Carnot hook: attach lineage to every certified factor and every
+  consumer decision. Inject stale and poisoned factors after release. Compare
+  selective rollback with full reset and no rollback. Require exact replay to
+  prove that harmful descendants were removed while unrelated factors stayed
+  active.
+- **Self-Correcting Long-Horizon Search Agents via Tree-Structured Memory** -
+  arXiv:2608.10676, https://arxiv.org/abs/2608.10676; submitted 2026-08-11.
+  ReTree stores source-linked evidence and revision histories. A contradiction
+  invalidates the affected branch instead of rewriting the whole trace.
+  Carnot hook: use immutable evidence identities and branch-local invalidation
+  as a control for the dependency-guided factor rollback. Do not copy prose
+  summaries into the exact authority path.
+
+### Safety controls and deferred directions
+
+- **Decomposition-Induced Context-Memory Conflict: When Fact-Checking
+  Pipelines Contradict Their Own Source Text** - arXiv:2608.10627,
+  https://arxiv.org/abs/2608.10627; submitted 2026-08-11. The paper shows that
+  a claim decomposer can replace source content with its own stable prior.
+  Self-consistency does not detect the error. Carnot hook: hash raw event text
+  before factor parsing and compare each parsed obligation with the source
+  event. Treat a decomposition mismatch as harm. Do not reopen the retired
+  hidden-state probe lane or use self-consistency as an oracle.
+- **How to Verify Consistency of Probabilistic Claims** - arXiv:2608.11181,
+  https://arxiv.org/abs/2608.11181; submitted 2026-08-11. The paper gives a
+  complexity-theoretic route to approximate consistency certificates for many
+  conditional probability claims. Carnot disposition: useful future context
+  for distributional factor confidence, but the interactive proof system is
+  not a local runtime dependency. V548 keeps exact event checks and anytime
+  e-values as the release boundary.
+- **Optimal Stopping of Self-Refining Foundation Models** - arXiv:2608.10729,
+  https://arxiv.org/abs/2608.10729; submitted 2026-08-11. The paper treats
+  verifier-driven refinement as an optimal stopping problem. Carnot hook:
+  record marginal verified gain and exact-check cost by proposal round. Stop
+  when the fixed budget or preregistered no-gain rule fires. This controls
+  compute; it does not authorize a learned verifier or another parser-only
+  decoding retry.
+- **Learning the Inverse Temperature of Ising Models under Hard Constraints
+  Using One Sample** - ICLR 2026 poster,
+  https://openreview.net/forum?id=DyDTtBUBEd. The estimator combines a
+  truncated Ising model with a hard k-CNF support set. Carnot disposition: this
+  is a promising future temperature-calibration method for constraint
+  samplers. V548 has no changed local sampler or hardware prerequisite, so it
+  does not schedule a beta-estimation or hardware claim.
+- **On the Emergence of Reasoning** - ICLR 2026 withdrawn submission,
+  https://openreview.net/forum?id=bYkfHTcR1v. The paper frames reasoning as
+  movement over an implicit energy landscape and identifies putative decision
+  tokens. It is watch-only because the submission is withdrawn and Carnot's
+  model-local activation lane is closed.
+
+### Secondary-source and product status
+
+- **Semantic Scholar:** a direct API query on 2026-08-12 returned 33 EBT
+  (`2507.02092`) citations and eight ARM-EBM (`2512.15605`) citations. The
+  newest relevant entries were already indexed: Explorative Modeling,
+  Memoir, Solver-Hard, Fixed-Point Reasoners, LoopUS, and Distributional EBMs.
+  Citation counts are dated discovery receipts, not evidence quality.
+- **Hugging Face Papers:** current verification results repeated
+  LLM-as-a-Verifier (`2607.05391`), SEVRA (`2606.19808`), Spilled Energy
+  (`2602.18671`), and VeRA (`2602.13217`). They reinforce harmful-intervention,
+  cost, and executable-fixture controls. Model judges and logit energy do not
+  replace Carnot's exact validators or reopen retired Phase D scoring.
+- **GitHub:** targeted repository searches found no new local GGUF-compatible
+  EBM, KAN, constraint, or sampler package that supersedes Carnot's exact
+  validators, certified factor registry, or live ARC entrypoint. New paper
+  code is optional research context, not an architectural dependency.
+- **Extropic:** the first-party writing index still ends with the October 2025
+  X0/XTR-0, TSU, DTM, and `thrml` material. Carnot has no authenticated device
+  route. No TSU execution, latency, energy, availability, or speed claim is
+  eligible.
+- **Logical Intelligence:** current Kona 1.0 pages describe continuous,
+  globally scored, editable reasoning traces and a constraint layer below
+  language models. They still expose no public weights, reproducible
+  architecture specification, or documented local API. Kona remains product
+  direction, not a runnable baseline.
+- **KAN and hardware:** the search repeated optimal piecewise-affine KAN
+  verification and FPGA/thermodynamic sampling work. No new result clears the
+  closed KAN utility lane or supplies changed physical state for a local board.
+
+### V548 planning impact
+
+- Diagnose the V547 GGUF child-process failures before another quality claim.
+  Preserve stderr, prompt-token counts, context capacity, phase timing,
+  task-linked GPU samples, model counts, and dispatcher receipts.
+- Re-run factor proposal authenticity only on the repaired observable
+  substrate. Use all three mandated GGUF families and fail closed on any child
+  exit, empty raw output, source-artifact drift, or decomposition mismatch.
+- Use a verified-incumbent frontier for the real proposal A/B. Feed residual
+  exact counterexamples into later rounds. Measure effective proposal
+  diversity, marginal verified gain, exact-check cost, and held-event utility.
+- Run a chronological certified factor stream. Keep the active factor version
+  read-only during proposal generation. Add dependency-guided rollback and a
+  full-reset control before any consumer promotion.
+- Complete the unexecuted ARC two-sided goal-evidence direction. Use active
+  legal trajectory extensions and evidence-response curves on the live agent's
+  own attempts. Make no game or level solve claim. Keep behavior default-off.
+- Schedule no parser/JIT retry, hidden-state scorer, KAN retraining, unchanged
+  physical-board probe, TSU execution, or hardware-speed claim.
+
+<!-- V548-PLANNER-REFRESH-20260812-END -->
