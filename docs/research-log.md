@@ -6157,3 +6157,10 @@ The critical path for milestone .250:
 - theme: live factor-proposal preflight led a brief compute-heavy milestone under reconstructed timing
 - key result: the compute leader took 1.64 minutes, and the locked classification reports no compute-bound GPU-idle fault; no data available this milestone establishes parallel model loading or runner selection
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.548
+
+- exp_range: no data available this milestone
+- theme: repaired multi-model runtime checks concentrated a short compute-only milestone under coarse timing reconstruction
+- key result: the compute tail is ranked, but phase-level causes, task-time GPU efficiency, parallel model loading, and runner engagement are not established by the supplied evidence
+- acceptance: no data available this milestone
