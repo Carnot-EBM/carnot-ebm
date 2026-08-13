@@ -1,0 +1,3325 @@
+{
+  "MODEL_SPECS": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_size_bytes": 22134528992,
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "resolved_via": "cached_sota_pair(model_indices=(0, 1))",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_size_bytes": 18323731456,
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "resolved_via": "cached_sota_pair(model_indices=(0, 2))",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_size_bytes": 16947539744,
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "UD-Q4_K_M",
+      "resolved_via": "cached_sota_pair(model_indices=(0, 1))",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3"
+    }
+  ],
+  "active_shadow_treatment_fired_count": 18,
+  "arc_active_goal_shadow_ready_score": 1.0,
+  "arc_registry_and_claims_precheck_hashes": {
+    "claims": {
+      "exists": false,
+      "path": "ops/arc_solve_claims.yaml",
+      "sha256": null,
+      "solve_claim_count": 0,
+      "target_present": false
+    },
+    "precheck_order": "registry_and_claims_before_window_freeze",
+    "registry": {
+      "exists": true,
+      "modified": false,
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "target_present": false
+    },
+    "registry_write_count": 0,
+    "solve_claim_count": 0,
+    "task_scope": "route_behavior_not_game_or_level_solve"
+  },
+  "autotokenizer_usage_count": 0,
+  "cached_sota_pair_receipts": {
+    "all_mandated_models_resolved": true,
+    "calls": [
+      {
+        "function": "carnot.inference.sota_models.cached_sota_pair",
+        "gpu_indices": [
+          0,
+          1
+        ],
+        "model_indices": [
+          0,
+          1
+        ],
+        "preferred_quant": "Q4_K_M",
+        "returned_hf_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ]
+      },
+      {
+        "function": "carnot.inference.sota_models.cached_sota_pair",
+        "gpu_indices": [
+          0,
+          1
+        ],
+        "model_indices": [
+          0,
+          2
+        ],
+        "preferred_quant": "Q4_K_M",
+        "returned_hf_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ]
+      }
+    ],
+    "missing_model_ids": [],
+    "source": "cached_sota_pair"
+  },
+  "cuda_offload_and_runtime_receipts_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "cuda_visible": true,
+      "errors": [],
+      "gpu": 0,
+      "gpu_offload_supported": true,
+      "llama_cpp_importable": true,
+      "llama_cpp_version": "0.3.33",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "n_gpu_layers_contract": -1,
+      "nvidia_smi": [
+        {
+          "index": 0,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        },
+        {
+          "index": 1,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        }
+      ],
+      "runtime_check": "llama_cpp.llama_supports_gpu_offload plus nvidia-smi visibility",
+      "terminal": true
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "cuda_visible": true,
+      "errors": [],
+      "gpu": 1,
+      "gpu_offload_supported": true,
+      "llama_cpp_importable": true,
+      "llama_cpp_version": "0.3.33",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "n_gpu_layers_contract": -1,
+      "nvidia_smi": [
+        {
+          "index": 0,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        },
+        {
+          "index": 1,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        }
+      ],
+      "runtime_check": "llama_cpp.llama_supports_gpu_offload plus nvidia-smi visibility",
+      "terminal": true
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "cuda_visible": true,
+      "errors": [],
+      "gpu": 1,
+      "gpu_offload_supported": true,
+      "llama_cpp_importable": true,
+      "llama_cpp_version": "0.3.33",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "n_gpu_layers_contract": -1,
+      "nvidia_smi": [
+        {
+          "index": 0,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        },
+        {
+          "index": 1,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        }
+      ],
+      "runtime_check": "llama_cpp.llama_supports_gpu_offload plus nvidia-smi visibility",
+      "terminal": true
+    }
+  },
+  "delta_shadow_admission_precision": 0.75,
+  "delta_shadow_exact_progress_proxy": 0.0,
+  "delta_shadow_false_accept_count": -9,
+  "duration_s": 54.7314,
+  "embedded_gguf_tokenizer_receipts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "canonical_loader": "llama_cpp.Llama(vocab_only=True)",
+      "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+      "embedded_tokenizer_loadable": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "ok": true,
+      "tokenizer_source": "gguf_embedded_llama_cpp"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "canonical_loader": "llama_cpp.Llama(vocab_only=True)",
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "embedded_tokenizer_loadable": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "ok": true,
+      "tokenizer_source": "gguf_embedded_llama_cpp"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "canonical_loader": "llama_cpp.Llama(vocab_only=True)",
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "embedded_tokenizer_loadable": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "ok": true,
+      "tokenizer_source": "gguf_embedded_llama_cpp"
+    }
+  },
+  "executed_action_change_count": 0,
+  "exp6393_gate_receipts": {
+    "all_gates_passed": true,
+    "deferred_exp6389_failure_repaired": true,
+    "gates": [
+      {
+        "actual": 1.0,
+        "actual_type": "float",
+        "artifact_field": "arc_gate_metric_contract_ready_score",
+        "comparison_surface_finite_bare_number": true,
+        "expected": 1.0,
+        "op": "==",
+        "passed": true,
+        "reason": "actual=1.0 == expected=1.0",
+        "upstream": "exp6393-arc-scalar-gate-metric-contract"
+      },
+      {
+        "actual": 0.75,
+        "actual_type": "float",
+        "artifact_field": "delta_admission_precision_scalar",
+        "comparison_surface_finite_bare_number": true,
+        "expected": 0.0,
+        "op": ">",
+        "passed": true,
+        "reason": "actual=0.75 > expected=0.0",
+        "upstream": "exp6393-arc-scalar-gate-metric-contract"
+      },
+      {
+        "actual": -9,
+        "actual_type": "int",
+        "artifact_field": "delta_false_accept_count_scalar",
+        "comparison_surface_finite_bare_number": true,
+        "expected": 0,
+        "op": "<=",
+        "passed": true,
+        "reason": "actual=-9 <= expected=0",
+        "upstream": "exp6393-arc-scalar-gate-metric-contract"
+      }
+    ],
+    "honest_verdict": "complete: scalar_gate_metric_contract_ready_no_live_route_or_solve_claim",
+    "old_exp6389_blocked_at_layer": "conductor_pre_gate",
+    "path": "results/experiment_6393_arc_scalar_gate_metric_contract.json",
+    "scalar_fields": {
+      "arc_gate_metric_contract_ready_score": 1.0,
+      "delta_admission_precision_scalar": 0.75,
+      "delta_false_accept_count_scalar": -9
+    },
+    "sha256": "sha256:f241403e13b7b3e42f3f588fa032612cb6d0c0168a785203321fc78200ab2f33",
+    "status": "complete"
+  },
+  "field_principles": {
+    "MODEL_SPECS": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "active_shadow_treatment_fired_count": "Bare integer count of matched cells where the active-goal shadow reached and fired.",
+    "arc_active_goal_shadow_ready_score": "Set to 1.0 only when the live route is reachable, shadow work matches, provenance is clean, actions do not change, and no solve claim occurs.",
+    "arc_gate_metric_contract_ready_score": "Exp6393 scalar gate proving the deferred Exp6389 comparison is repaired.",
+    "arc_registry_and_claims_precheck_hashes": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "autotokenizer_usage_count": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "cached_sota_pair_receipts": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "cuda_offload_and_runtime_receipts_by_model": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "delta_admission_precision_scalar": "Exp6393 scalar precision lift that authorizes the shadow replay gate.",
+    "delta_false_accept_count_scalar": "Exp6393 scalar false-accept delta that must not increase false accepts.",
+    "delta_shadow_admission_precision": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "delta_shadow_exact_progress_proxy": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "delta_shadow_false_accept_count": "Bare integer active-shadow false accepts minus route-off false accepts.",
+    "duration_s": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "embedded_gguf_tokenizer_receipts": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "executed_action_change_count": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "exp6393_gate_receipts": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "field_principles": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "field_provenance": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "fresh_live_window_manifest_path_hash_and_counts": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "frozen_goal_probe_and_counterfactual_action_records": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "harm_underpowered_missing_and_flagged_cells": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "hidden_source_access_count": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "honest_verdict": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "inference_substrate": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "live_attempt_provenance": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "live_entrypoint_policy_and_reward_machine_hashes": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "matched_work_receipts": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "model_file_hashes_revisions_quantizations_and_tokenizers": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "model_row_prefix_state_goal_duplicate_budget_and_action_leakage_attack_matrix": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "models_used": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "offline_ground_truth_search_count": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "oracle_before_action_count": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "per_game_adapter_count": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "per_model_window_admission_abstention_action_influence_progress_and_cost_results": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "preconditions_checked": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "preregistered_route_off_and_shadow_contract": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "protected_files_unchanged": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "random_seed": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "reproducibility_checksum": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "solve_claim_count": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "solve_registry_modified": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "status": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "tests_run": "Required Exp6400 field; keeps the active-goal shadow, provenance, and no-solve boundary auditable.",
+    "verifier_is_oracle": "Top-level readiness is not oracle-based; per-row post-action transition checks mark their local oracle boundary."
+  },
+  "field_provenance": {
+    "MODEL_SPECS": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "active_shadow_treatment_fired_count": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "arc_active_goal_shadow_ready_score": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "arc_registry_and_claims_precheck_hashes": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "autotokenizer_usage_count": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "cached_sota_pair_receipts": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "cuda_offload_and_runtime_receipts_by_model": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "delta_shadow_admission_precision": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "delta_shadow_exact_progress_proxy": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "delta_shadow_false_accept_count": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "duration_s": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "embedded_gguf_tokenizer_receipts": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "executed_action_change_count": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "exp6393_gate_receipts": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "field_principles": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "field_provenance": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "fresh_live_window_manifest_path_hash_and_counts": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "frozen_goal_probe_and_counterfactual_action_records": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "harm_underpowered_missing_and_flagged_cells": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "hidden_source_access_count": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "honest_verdict": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "inference_substrate": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "live_attempt_provenance": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "live_entrypoint_policy_and_reward_machine_hashes": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "matched_work_receipts": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "model_file_hashes_revisions_quantizations_and_tokenizers": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "model_row_prefix_state_goal_duplicate_budget_and_action_leakage_attack_matrix": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "models_used": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "offline_ground_truth_search_count": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "oracle_before_action_count": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "per_game_adapter_count": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "per_model_window_admission_abstention_action_influence_progress_and_cost_results": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "preconditions_checked": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "preregistered_route_off_and_shadow_contract": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "protected_files_unchanged": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "random_seed": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "reproducibility_checksum": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "solve_claim_count": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "solve_registry_modified": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "status": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "tests_run": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ],
+    "verifier_is_oracle": [
+      "REQ-ARC-ARM-6400",
+      "experiment_6400_arc_default_off_active_goal_shadow"
+    ]
+  },
+  "fresh_live_window_manifest_path_hash_and_counts": {
+    "path": "results/experiment_6400_arc_default_off_active_goal_shadow_windows.json",
+    "sealed_before_evaluation": true,
+    "sha256": "sha256:a7587e348e4ee055bc516d0fa058de95562a061751af6f2e12eeaae692bfb841",
+    "visible_transition_count": 36,
+    "window_count": 6
+  },
+  "frozen_goal_probe_and_counterfactual_action_records": [
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": true,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "push_block",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "exact_progress_proxy": 3.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_push_a_l0_seed6400001_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "accepted",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400001,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "accepted",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_push_a_l0:6400001:t0",
+        "exp6400_live_shadow_push_a_l0:6400001:t1",
+        "exp6400_live_shadow_push_a_l0:6400001:t2",
+        "exp6400_live_shadow_push_a_l0:6400001:t3",
+        "exp6400_live_shadow_push_a_l0:6400001:t4",
+        "exp6400_live_shadow_push_a_l0:6400001:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_push_a_l0_seed6400001",
+      "window_index": 0
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": false,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "push_block",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "exact_progress_proxy": 3.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_push_a_l0_seed6400002_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "accepted",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400002,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "rejected",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_push_a_l0:6400002:t0",
+        "exp6400_live_shadow_push_a_l0:6400002:t1",
+        "exp6400_live_shadow_push_a_l0:6400002:t2",
+        "exp6400_live_shadow_push_a_l0:6400002:t3",
+        "exp6400_live_shadow_push_a_l0:6400002:t4",
+        "exp6400_live_shadow_push_a_l0:6400002:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_push_a_l0_seed6400002",
+      "window_index": 1
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": false,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "toggle_move",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "exact_progress_proxy": 4.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_toggle_l0_seed6400001_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "accepted",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400001,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "rejected",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_toggle_l0:6400001:t0",
+        "exp6400_live_shadow_toggle_l0:6400001:t1",
+        "exp6400_live_shadow_toggle_l0:6400001:t2",
+        "exp6400_live_shadow_toggle_l0:6400001:t3",
+        "exp6400_live_shadow_toggle_l0:6400001:t4",
+        "exp6400_live_shadow_toggle_l0:6400001:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_toggle_l0_seed6400001",
+      "window_index": 2
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": false,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "toggle_move",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "exact_progress_proxy": 4.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_toggle_l0_seed6400002_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "accepted",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400002,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "rejected",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_toggle_l0:6400002:t0",
+        "exp6400_live_shadow_toggle_l0:6400002:t1",
+        "exp6400_live_shadow_toggle_l0:6400002:t2",
+        "exp6400_live_shadow_toggle_l0:6400002:t3",
+        "exp6400_live_shadow_toggle_l0:6400002:t4",
+        "exp6400_live_shadow_toggle_l0:6400002:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_toggle_l0_seed6400002",
+      "window_index": 3
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": false,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "push_block",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "exact_progress_proxy": 3.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_push_b_l0_seed6400001_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "unverifiable",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400001,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "unverifiable",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_push_b_l0:6400001:t0",
+        "exp6400_live_shadow_push_b_l0:6400001:t1",
+        "exp6400_live_shadow_push_b_l0:6400001:t2",
+        "exp6400_live_shadow_push_b_l0:6400001:t3",
+        "exp6400_live_shadow_push_b_l0:6400001:t4",
+        "exp6400_live_shadow_push_b_l0:6400001:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_push_b_l0_seed6400001",
+      "window_index": 4
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": false,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "push_block",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "exact_progress_proxy": 3.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_push_b_l0_seed6400002_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "unverifiable",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400002,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "unverifiable",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_push_b_l0:6400002:t0",
+        "exp6400_live_shadow_push_b_l0:6400002:t1",
+        "exp6400_live_shadow_push_b_l0:6400002:t2",
+        "exp6400_live_shadow_push_b_l0:6400002:t3",
+        "exp6400_live_shadow_push_b_l0:6400002:t4",
+        "exp6400_live_shadow_push_b_l0:6400002:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_push_b_l0_seed6400002",
+      "window_index": 5
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": true,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "push_block",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "exact_progress_proxy": 3.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_push_a_l0_seed6400001_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "accepted",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400001,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "accepted",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_push_a_l0:6400001:t0",
+        "exp6400_live_shadow_push_a_l0:6400001:t1",
+        "exp6400_live_shadow_push_a_l0:6400001:t2",
+        "exp6400_live_shadow_push_a_l0:6400001:t3",
+        "exp6400_live_shadow_push_a_l0:6400001:t4",
+        "exp6400_live_shadow_push_a_l0:6400001:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_push_a_l0_seed6400001",
+      "window_index": 0
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": false,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "push_block",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "exact_progress_proxy": 3.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_push_a_l0_seed6400002_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "accepted",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400002,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "rejected",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_push_a_l0:6400002:t0",
+        "exp6400_live_shadow_push_a_l0:6400002:t1",
+        "exp6400_live_shadow_push_a_l0:6400002:t2",
+        "exp6400_live_shadow_push_a_l0:6400002:t3",
+        "exp6400_live_shadow_push_a_l0:6400002:t4",
+        "exp6400_live_shadow_push_a_l0:6400002:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_push_a_l0_seed6400002",
+      "window_index": 1
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": false,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "toggle_move",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "exact_progress_proxy": 4.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_toggle_l0_seed6400001_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "accepted",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400001,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "rejected",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_toggle_l0:6400001:t0",
+        "exp6400_live_shadow_toggle_l0:6400001:t1",
+        "exp6400_live_shadow_toggle_l0:6400001:t2",
+        "exp6400_live_shadow_toggle_l0:6400001:t3",
+        "exp6400_live_shadow_toggle_l0:6400001:t4",
+        "exp6400_live_shadow_toggle_l0:6400001:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_toggle_l0_seed6400001",
+      "window_index": 2
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": false,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "toggle_move",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "exact_progress_proxy": 4.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_toggle_l0_seed6400002_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "accepted",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400002,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "rejected",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_toggle_l0:6400002:t0",
+        "exp6400_live_shadow_toggle_l0:6400002:t1",
+        "exp6400_live_shadow_toggle_l0:6400002:t2",
+        "exp6400_live_shadow_toggle_l0:6400002:t3",
+        "exp6400_live_shadow_toggle_l0:6400002:t4",
+        "exp6400_live_shadow_toggle_l0:6400002:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_toggle_l0_seed6400002",
+      "window_index": 3
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": false,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "push_block",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "exact_progress_proxy": 3.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_push_b_l0_seed6400001_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "unverifiable",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400001,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "unverifiable",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_push_b_l0:6400001:t0",
+        "exp6400_live_shadow_push_b_l0:6400001:t1",
+        "exp6400_live_shadow_push_b_l0:6400001:t2",
+        "exp6400_live_shadow_push_b_l0:6400001:t3",
+        "exp6400_live_shadow_push_b_l0:6400001:t4",
+        "exp6400_live_shadow_push_b_l0:6400001:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_push_b_l0_seed6400001",
+      "window_index": 4
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": false,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "push_block",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "exact_progress_proxy": 3.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_push_b_l0_seed6400002_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "unverifiable",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400002,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "unverifiable",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_push_b_l0:6400002:t0",
+        "exp6400_live_shadow_push_b_l0:6400002:t1",
+        "exp6400_live_shadow_push_b_l0:6400002:t2",
+        "exp6400_live_shadow_push_b_l0:6400002:t3",
+        "exp6400_live_shadow_push_b_l0:6400002:t4",
+        "exp6400_live_shadow_push_b_l0:6400002:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_push_b_l0_seed6400002",
+      "window_index": 5
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": true,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "push_block",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "exact_progress_proxy": 3.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_push_a_l0_seed6400001_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "accepted",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400001,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "accepted",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_push_a_l0:6400001:t0",
+        "exp6400_live_shadow_push_a_l0:6400001:t1",
+        "exp6400_live_shadow_push_a_l0:6400001:t2",
+        "exp6400_live_shadow_push_a_l0:6400001:t3",
+        "exp6400_live_shadow_push_a_l0:6400001:t4",
+        "exp6400_live_shadow_push_a_l0:6400001:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_push_a_l0_seed6400001",
+      "window_index": 0
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": false,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "push_block",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "exact_progress_proxy": 3.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_push_a_l0_seed6400002_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "accepted",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400002,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "rejected",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_push_a_l0:6400002:t0",
+        "exp6400_live_shadow_push_a_l0:6400002:t1",
+        "exp6400_live_shadow_push_a_l0:6400002:t2",
+        "exp6400_live_shadow_push_a_l0:6400002:t3",
+        "exp6400_live_shadow_push_a_l0:6400002:t4",
+        "exp6400_live_shadow_push_a_l0:6400002:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_push_a_l0_seed6400002",
+      "window_index": 1
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": false,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "toggle_move",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "exact_progress_proxy": 4.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_toggle_l0_seed6400001_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "accepted",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400001,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "rejected",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_toggle_l0:6400001:t0",
+        "exp6400_live_shadow_toggle_l0:6400001:t1",
+        "exp6400_live_shadow_toggle_l0:6400001:t2",
+        "exp6400_live_shadow_toggle_l0:6400001:t3",
+        "exp6400_live_shadow_toggle_l0:6400001:t4",
+        "exp6400_live_shadow_toggle_l0:6400001:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_toggle_l0_seed6400001",
+      "window_index": 2
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": false,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "toggle_move",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "exact_progress_proxy": 4.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_toggle_l0_seed6400002_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "accepted",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400002,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "rejected",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_toggle_l0:6400002:t0",
+        "exp6400_live_shadow_toggle_l0:6400002:t1",
+        "exp6400_live_shadow_toggle_l0:6400002:t2",
+        "exp6400_live_shadow_toggle_l0:6400002:t3",
+        "exp6400_live_shadow_toggle_l0:6400002:t4",
+        "exp6400_live_shadow_toggle_l0:6400002:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_toggle_l0_seed6400002",
+      "window_index": 3
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": false,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "push_block",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "exact_progress_proxy": 3.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_push_b_l0_seed6400001_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "unverifiable",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400001,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "unverifiable",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_push_b_l0:6400001:t0",
+        "exp6400_live_shadow_push_b_l0:6400001:t1",
+        "exp6400_live_shadow_push_b_l0:6400001:t2",
+        "exp6400_live_shadow_push_b_l0:6400001:t3",
+        "exp6400_live_shadow_push_b_l0:6400001:t4",
+        "exp6400_live_shadow_push_b_l0:6400001:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_push_b_l0_seed6400001",
+      "window_index": 4
+    },
+    {
+      "action_budget_route_off": 12,
+      "action_budget_shadow": 12,
+      "admissible_goal": false,
+      "counterfactual_action_ranking_difference": true,
+      "counterfactual_rank_frozen_before_next_transition": true,
+      "evaluation_calls_route_off": 1,
+      "evaluation_calls_shadow": 1,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "goal_probe_frozen_before_next_transition": true,
+      "goal_state_stale": false,
+      "latency_s": 0.0001,
+      "legal_disagreement_probe": 2,
+      "legal_disagreement_probe_found": true,
+      "mechanic": "push_block",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_text_verifier_is_oracle": false,
+      "next_transition_read_after_freeze": true,
+      "post_action_transition_check": {
+        "changed_cell_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "exact_progress_proxy": 3.0,
+        "executed_action": 4,
+        "oracle_before_action": false,
+        "oracle_scope": "post_action_environment_transition_check_only",
+        "verifier_is_oracle": true
+      },
+      "prefix_id": "exp6400_live_shadow_push_b_l0_seed6400002_p6",
+      "prefix_transition_count": 6,
+      "prompt_budget_route_off": 0,
+      "prompt_budget_shadow": 0,
+      "route_off_disposition": "unverifiable",
+      "route_off_executed_action": 4,
+      "route_off_ranked_actions": [
+        4,
+        2
+      ],
+      "seed": 6400002,
+      "shadow_action_leaked_to_execution": false,
+      "shadow_disposition": "unverifiable",
+      "shadow_executed_action": 4,
+      "shadow_rank_verifier_is_oracle": false,
+      "shadow_ranked_actions": [
+        2,
+        4
+      ],
+      "transition_source_ids": [
+        "exp6400_live_shadow_push_b_l0:6400002:t0",
+        "exp6400_live_shadow_push_b_l0:6400002:t1",
+        "exp6400_live_shadow_push_b_l0:6400002:t2",
+        "exp6400_live_shadow_push_b_l0:6400002:t3",
+        "exp6400_live_shadow_push_b_l0:6400002:t4",
+        "exp6400_live_shadow_push_b_l0:6400002:t5"
+      ],
+      "treatment_fired": true,
+      "treatment_reachable": true,
+      "verification_cost": {
+        "post_action_transition_checks": 1
+      },
+      "window_id": "exp6400_live_shadow_push_b_l0_seed6400002",
+      "window_index": 5
+    }
+  ],
+  "harm_underpowered_missing_and_flagged_cells": {
+    "cell_count": 18,
+    "flagged_cell_count": 0,
+    "harmful_cell_count": 0,
+    "missing_cell_count": 0,
+    "solve_claim_made": false,
+    "underpowered_for_route_behavior": false,
+    "underpowered_for_solve_claim": true
+  },
+  "hidden_source_access_count": 0,
+  "honest_verdict": "complete: active_goal_shadow_ready_default_off_no_solve_claim",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "live_attempt_provenance": {
+    "evidence_fields": [
+      "visible_frame_hashes",
+      "transition_payload.action",
+      "transition_payload.grid_sha256",
+      "transition_payload.next_grid_sha256",
+      "runtime_reverse_engineering_state"
+    ],
+    "fresh_live_attempt_window_count": 6,
+    "hidden_source_access_count": 0,
+    "offline_ground_truth_search_count": 0,
+    "oracle_before_action_count": 0,
+    "per_game_adapter_count": 0,
+    "route_behavior_not_solve": true,
+    "source": "normal live ARC policy transition store shape",
+    "visible_transition_count": 36
+  },
+  "live_entrypoint_policy_and_reward_machine_hashes": {
+    "active_reward_machine_default_off": true,
+    "active_reward_machine_route_reachable": true,
+    "agent_path": "python/carnot/agentic/arc_competition_agent.py",
+    "agent_sha256": "sha256:e04d0ab8b6ebdb2f8c1e539d19022f8aea3925de47c5feacbf45091de909b11c",
+    "e3_policy_source_sha256": "sha256:6a8ef69fe799578b15a48868beed2e6874f90a2f1775b9cb2eaf02b15f25c790",
+    "make_carnot_agent_source_sha256": "sha256:345b26658445405e9721ce7436af6b02bd568365cd0d90604a2ec01ef6e8695a",
+    "normal_live_policy_path": "E3AgentPolicy",
+    "reward_machine_path": "python/carnot/agentic/arc_active_reward_machine_frontier.py",
+    "reward_machine_sha256": "sha256:30f8d952ebb9181af580de28b4cadf4dd447274992b5ceb2bc8228a48f7d0dcf",
+    "submitted_entrypoint": "make_carnot_agent -> E3AgentPolicy",
+    "two_sided_contract_path": "python/carnot/agentic/arc_two_sided_goal_contract.py",
+    "two_sided_contract_sha256": "sha256:10ec21fee1ee145e5c279a45df0d64115ff982d9dd3faf91d22e2fbd5458a4e1",
+    "two_sided_goal_contract_default_off": true
+  },
+  "matched_work_receipts": {
+    "action_budgets_matched": true,
+    "evaluation_calls_matched": true,
+    "evidence_prefixes_matched": true,
+    "matched_work_passed": true,
+    "prompt_budgets_matched": true,
+    "route_off_and_shadow_models_matched": true,
+    "windows_matched": true
+  },
+  "model_file_hashes_revisions_quantizations_and_tokenizers": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "size_bytes": 22134528992,
+      "tokenizer": {
+        "canonical_loader": "llama_cpp.Llama(vocab_only=True)",
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+        "embedded_tokenizer_loadable": true,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "ok": true,
+        "tokenizer_source": "gguf_embedded_llama_cpp"
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "size_bytes": 16947539744,
+      "tokenizer": {
+        "canonical_loader": "llama_cpp.Llama(vocab_only=True)",
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "embedded_tokenizer_loadable": true,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "ok": true,
+        "tokenizer_source": "gguf_embedded_llama_cpp"
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "size_bytes": 18323731456,
+      "tokenizer": {
+        "canonical_loader": "llama_cpp.Llama(vocab_only=True)",
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "embedded_tokenizer_loadable": true,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "ok": true,
+        "tokenizer_source": "gguf_embedded_llama_cpp"
+      }
+    }
+  },
+  "model_row_prefix_state_goal_duplicate_budget_and_action_leakage_attack_matrix": [
+    {
+      "attack": "model_row_swap",
+      "fail_closed": true,
+      "reason": "model row order does not match Exp6400 contract"
+    },
+    {
+      "attack": "prefix_truncation",
+      "fail_closed": true,
+      "reason": "missing prefix rows: expected 18, got 17"
+    },
+    {
+      "attack": "stale_goal_state",
+      "fail_closed": true,
+      "reason": "stale goal state reached validator"
+    },
+    {
+      "attack": "constant_false_goals",
+      "fail_closed": true,
+      "reason": "constant-false goal reached validator"
+    },
+    {
+      "attack": "duplicate_transitions",
+      "fail_closed": true,
+      "reason": "duplicate transitions reached validator"
+    },
+    {
+      "attack": "route_budget_mismatch",
+      "fail_closed": true,
+      "reason": "route budget mismatch reached validator"
+    },
+    {
+      "attack": "shadow_to_action_leakage",
+      "fail_closed": true,
+      "reason": "shadow-to-action leakage reached validator"
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "offline_ground_truth_search_count": 0,
+  "oracle_before_action_count": 0,
+  "per_game_adapter_count": 0,
+  "per_model_window_admission_abstention_action_influence_progress_and_cost_results": {
+    "aggregate": {
+      "action_ranking_difference_count": 18,
+      "active_goal_shadow": {
+        "accepted": 3,
+        "false_accept": 0,
+        "false_reject": 0,
+        "rejected": 9,
+        "true_accept": 3,
+        "true_reject": 9,
+        "unverifiable": 6
+      },
+      "active_shadow_treatment_fired_count": 18,
+      "delta_shadow_admission_precision": 0.75,
+      "delta_shadow_exact_progress_proxy": 0.0,
+      "delta_shadow_false_accept_count": -9,
+      "executed_action_change_count": 0,
+      "route_off": {
+        "accepted": 12,
+        "false_accept": 9,
+        "false_reject": 0,
+        "rejected": 0,
+        "true_accept": 3,
+        "true_reject": 0,
+        "unverifiable": 6
+      },
+      "route_off_admission_precision": 0.25,
+      "shadow_admission_precision": 1.0
+    },
+    "by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "action_ranking_difference_count": 6,
+        "active_goal_shadow": {
+          "accepted": 1,
+          "false_accept": 0,
+          "false_reject": 0,
+          "rejected": 3,
+          "true_accept": 1,
+          "true_reject": 3,
+          "unverifiable": 2
+        },
+        "delta_shadow_admission_precision": 0.75,
+        "delta_shadow_false_accept_count": -3,
+        "exact_progress_proxy_delta": 0.0,
+        "executed_action_change_count": 0,
+        "latency_s": 0.0,
+        "route_off": {
+          "accepted": 4,
+          "false_accept": 3,
+          "false_reject": 0,
+          "rejected": 0,
+          "true_accept": 1,
+          "true_reject": 0,
+          "unverifiable": 2
+        },
+        "route_off_admission_precision": 0.25,
+        "shadow_admission_precision": 1.0,
+        "treatment_fired_count": 6,
+        "verification_cost": {
+          "post_action_transition_checks": 6
+        },
+        "window_count": 6
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "action_ranking_difference_count": 6,
+        "active_goal_shadow": {
+          "accepted": 1,
+          "false_accept": 0,
+          "false_reject": 0,
+          "rejected": 3,
+          "true_accept": 1,
+          "true_reject": 3,
+          "unverifiable": 2
+        },
+        "delta_shadow_admission_precision": 0.75,
+        "delta_shadow_false_accept_count": -3,
+        "exact_progress_proxy_delta": 0.0,
+        "executed_action_change_count": 0,
+        "latency_s": 0.0,
+        "route_off": {
+          "accepted": 4,
+          "false_accept": 3,
+          "false_reject": 0,
+          "rejected": 0,
+          "true_accept": 1,
+          "true_reject": 0,
+          "unverifiable": 2
+        },
+        "route_off_admission_precision": 0.25,
+        "shadow_admission_precision": 1.0,
+        "treatment_fired_count": 6,
+        "verification_cost": {
+          "post_action_transition_checks": 6
+        },
+        "window_count": 6
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "action_ranking_difference_count": 6,
+        "active_goal_shadow": {
+          "accepted": 1,
+          "false_accept": 0,
+          "false_reject": 0,
+          "rejected": 3,
+          "true_accept": 1,
+          "true_reject": 3,
+          "unverifiable": 2
+        },
+        "delta_shadow_admission_precision": 0.75,
+        "delta_shadow_false_accept_count": -3,
+        "exact_progress_proxy_delta": 0.0,
+        "executed_action_change_count": 0,
+        "latency_s": 0.0,
+        "route_off": {
+          "accepted": 4,
+          "false_accept": 3,
+          "false_reject": 0,
+          "rejected": 0,
+          "true_accept": 1,
+          "true_reject": 0,
+          "unverifiable": 2
+        },
+        "route_off_admission_precision": 0.25,
+        "shadow_admission_precision": 1.0,
+        "treatment_fired_count": 6,
+        "verification_cost": {
+          "post_action_transition_checks": 6
+        },
+        "window_count": 6
+      }
+    },
+    "rows": [
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": true,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "exact_progress_proxy": 3.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_push_a_l0_seed6400001_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "accepted",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400001,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "accepted",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_push_a_l0:6400001:t0",
+          "exp6400_live_shadow_push_a_l0:6400001:t1",
+          "exp6400_live_shadow_push_a_l0:6400001:t2",
+          "exp6400_live_shadow_push_a_l0:6400001:t3",
+          "exp6400_live_shadow_push_a_l0:6400001:t4",
+          "exp6400_live_shadow_push_a_l0:6400001:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_push_a_l0_seed6400001",
+        "window_index": 0
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": false,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "exact_progress_proxy": 3.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_push_a_l0_seed6400002_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "accepted",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400002,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "rejected",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_push_a_l0:6400002:t0",
+          "exp6400_live_shadow_push_a_l0:6400002:t1",
+          "exp6400_live_shadow_push_a_l0:6400002:t2",
+          "exp6400_live_shadow_push_a_l0:6400002:t3",
+          "exp6400_live_shadow_push_a_l0:6400002:t4",
+          "exp6400_live_shadow_push_a_l0:6400002:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_push_a_l0_seed6400002",
+        "window_index": 1
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": false,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ],
+          "exact_progress_proxy": 4.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_toggle_l0_seed6400001_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "accepted",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400001,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "rejected",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_toggle_l0:6400001:t0",
+          "exp6400_live_shadow_toggle_l0:6400001:t1",
+          "exp6400_live_shadow_toggle_l0:6400001:t2",
+          "exp6400_live_shadow_toggle_l0:6400001:t3",
+          "exp6400_live_shadow_toggle_l0:6400001:t4",
+          "exp6400_live_shadow_toggle_l0:6400001:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_toggle_l0_seed6400001",
+        "window_index": 2
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": false,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ],
+          "exact_progress_proxy": 4.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_toggle_l0_seed6400002_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "accepted",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400002,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "rejected",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_toggle_l0:6400002:t0",
+          "exp6400_live_shadow_toggle_l0:6400002:t1",
+          "exp6400_live_shadow_toggle_l0:6400002:t2",
+          "exp6400_live_shadow_toggle_l0:6400002:t3",
+          "exp6400_live_shadow_toggle_l0:6400002:t4",
+          "exp6400_live_shadow_toggle_l0:6400002:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_toggle_l0_seed6400002",
+        "window_index": 3
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": false,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "exact_progress_proxy": 3.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_push_b_l0_seed6400001_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "unverifiable",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400001,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "unverifiable",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_push_b_l0:6400001:t0",
+          "exp6400_live_shadow_push_b_l0:6400001:t1",
+          "exp6400_live_shadow_push_b_l0:6400001:t2",
+          "exp6400_live_shadow_push_b_l0:6400001:t3",
+          "exp6400_live_shadow_push_b_l0:6400001:t4",
+          "exp6400_live_shadow_push_b_l0:6400001:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_push_b_l0_seed6400001",
+        "window_index": 4
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": false,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "exact_progress_proxy": 3.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_push_b_l0_seed6400002_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "unverifiable",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400002,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "unverifiable",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_push_b_l0:6400002:t0",
+          "exp6400_live_shadow_push_b_l0:6400002:t1",
+          "exp6400_live_shadow_push_b_l0:6400002:t2",
+          "exp6400_live_shadow_push_b_l0:6400002:t3",
+          "exp6400_live_shadow_push_b_l0:6400002:t4",
+          "exp6400_live_shadow_push_b_l0:6400002:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_push_b_l0_seed6400002",
+        "window_index": 5
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": true,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "exact_progress_proxy": 3.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_push_a_l0_seed6400001_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "accepted",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400001,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "accepted",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_push_a_l0:6400001:t0",
+          "exp6400_live_shadow_push_a_l0:6400001:t1",
+          "exp6400_live_shadow_push_a_l0:6400001:t2",
+          "exp6400_live_shadow_push_a_l0:6400001:t3",
+          "exp6400_live_shadow_push_a_l0:6400001:t4",
+          "exp6400_live_shadow_push_a_l0:6400001:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_push_a_l0_seed6400001",
+        "window_index": 0
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": false,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "exact_progress_proxy": 3.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_push_a_l0_seed6400002_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "accepted",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400002,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "rejected",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_push_a_l0:6400002:t0",
+          "exp6400_live_shadow_push_a_l0:6400002:t1",
+          "exp6400_live_shadow_push_a_l0:6400002:t2",
+          "exp6400_live_shadow_push_a_l0:6400002:t3",
+          "exp6400_live_shadow_push_a_l0:6400002:t4",
+          "exp6400_live_shadow_push_a_l0:6400002:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_push_a_l0_seed6400002",
+        "window_index": 1
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": false,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ],
+          "exact_progress_proxy": 4.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_toggle_l0_seed6400001_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "accepted",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400001,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "rejected",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_toggle_l0:6400001:t0",
+          "exp6400_live_shadow_toggle_l0:6400001:t1",
+          "exp6400_live_shadow_toggle_l0:6400001:t2",
+          "exp6400_live_shadow_toggle_l0:6400001:t3",
+          "exp6400_live_shadow_toggle_l0:6400001:t4",
+          "exp6400_live_shadow_toggle_l0:6400001:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_toggle_l0_seed6400001",
+        "window_index": 2
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": false,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ],
+          "exact_progress_proxy": 4.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_toggle_l0_seed6400002_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "accepted",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400002,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "rejected",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_toggle_l0:6400002:t0",
+          "exp6400_live_shadow_toggle_l0:6400002:t1",
+          "exp6400_live_shadow_toggle_l0:6400002:t2",
+          "exp6400_live_shadow_toggle_l0:6400002:t3",
+          "exp6400_live_shadow_toggle_l0:6400002:t4",
+          "exp6400_live_shadow_toggle_l0:6400002:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_toggle_l0_seed6400002",
+        "window_index": 3
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": false,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "exact_progress_proxy": 3.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_push_b_l0_seed6400001_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "unverifiable",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400001,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "unverifiable",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_push_b_l0:6400001:t0",
+          "exp6400_live_shadow_push_b_l0:6400001:t1",
+          "exp6400_live_shadow_push_b_l0:6400001:t2",
+          "exp6400_live_shadow_push_b_l0:6400001:t3",
+          "exp6400_live_shadow_push_b_l0:6400001:t4",
+          "exp6400_live_shadow_push_b_l0:6400001:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_push_b_l0_seed6400001",
+        "window_index": 4
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": false,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "exact_progress_proxy": 3.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_push_b_l0_seed6400002_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "unverifiable",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400002,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "unverifiable",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_push_b_l0:6400002:t0",
+          "exp6400_live_shadow_push_b_l0:6400002:t1",
+          "exp6400_live_shadow_push_b_l0:6400002:t2",
+          "exp6400_live_shadow_push_b_l0:6400002:t3",
+          "exp6400_live_shadow_push_b_l0:6400002:t4",
+          "exp6400_live_shadow_push_b_l0:6400002:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_push_b_l0_seed6400002",
+        "window_index": 5
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": true,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "exact_progress_proxy": 3.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_push_a_l0_seed6400001_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "accepted",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400001,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "accepted",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_push_a_l0:6400001:t0",
+          "exp6400_live_shadow_push_a_l0:6400001:t1",
+          "exp6400_live_shadow_push_a_l0:6400001:t2",
+          "exp6400_live_shadow_push_a_l0:6400001:t3",
+          "exp6400_live_shadow_push_a_l0:6400001:t4",
+          "exp6400_live_shadow_push_a_l0:6400001:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_push_a_l0_seed6400001",
+        "window_index": 0
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": false,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "exact_progress_proxy": 3.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_push_a_l0_seed6400002_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "accepted",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400002,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "rejected",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_push_a_l0:6400002:t0",
+          "exp6400_live_shadow_push_a_l0:6400002:t1",
+          "exp6400_live_shadow_push_a_l0:6400002:t2",
+          "exp6400_live_shadow_push_a_l0:6400002:t3",
+          "exp6400_live_shadow_push_a_l0:6400002:t4",
+          "exp6400_live_shadow_push_a_l0:6400002:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_push_a_l0_seed6400002",
+        "window_index": 1
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": false,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ],
+          "exact_progress_proxy": 4.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_toggle_l0_seed6400001_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "accepted",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400001,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "rejected",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_toggle_l0:6400001:t0",
+          "exp6400_live_shadow_toggle_l0:6400001:t1",
+          "exp6400_live_shadow_toggle_l0:6400001:t2",
+          "exp6400_live_shadow_toggle_l0:6400001:t3",
+          "exp6400_live_shadow_toggle_l0:6400001:t4",
+          "exp6400_live_shadow_toggle_l0:6400001:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_toggle_l0_seed6400001",
+        "window_index": 2
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": false,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "toggle_move",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+          ],
+          "exact_progress_proxy": 4.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_toggle_l0_seed6400002_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "accepted",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400002,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "rejected",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_toggle_l0:6400002:t0",
+          "exp6400_live_shadow_toggle_l0:6400002:t1",
+          "exp6400_live_shadow_toggle_l0:6400002:t2",
+          "exp6400_live_shadow_toggle_l0:6400002:t3",
+          "exp6400_live_shadow_toggle_l0:6400002:t4",
+          "exp6400_live_shadow_toggle_l0:6400002:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_toggle_l0_seed6400002",
+        "window_index": 3
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": false,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "exact_progress_proxy": 3.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_push_b_l0_seed6400001_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "unverifiable",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400001,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "unverifiable",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_push_b_l0:6400001:t0",
+          "exp6400_live_shadow_push_b_l0:6400001:t1",
+          "exp6400_live_shadow_push_b_l0:6400001:t2",
+          "exp6400_live_shadow_push_b_l0:6400001:t3",
+          "exp6400_live_shadow_push_b_l0:6400001:t4",
+          "exp6400_live_shadow_push_b_l0:6400001:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_push_b_l0_seed6400001",
+        "window_index": 4
+      },
+      {
+        "action_budget_route_off": 12,
+        "action_budget_shadow": 12,
+        "admissible_goal": false,
+        "counterfactual_action_ranking_difference": true,
+        "counterfactual_rank_frozen_before_next_transition": true,
+        "evaluation_calls_route_off": 1,
+        "evaluation_calls_shadow": 1,
+        "goal_hypothesis": "visible_level_up_reward_machine",
+        "goal_probe_frozen_before_next_transition": true,
+        "goal_state_stale": false,
+        "latency_s": 0.0001,
+        "legal_disagreement_probe": 2,
+        "legal_disagreement_probe_found": true,
+        "mechanic": "push_block",
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_text_verifier_is_oracle": false,
+        "next_transition_read_after_freeze": true,
+        "post_action_transition_check": {
+          "changed_cell_counts": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+          ],
+          "exact_progress_proxy": 3.0,
+          "executed_action": 4,
+          "oracle_before_action": false,
+          "oracle_scope": "post_action_environment_transition_check_only",
+          "verifier_is_oracle": true
+        },
+        "prefix_id": "exp6400_live_shadow_push_b_l0_seed6400002_p6",
+        "prefix_transition_count": 6,
+        "prompt_budget_route_off": 0,
+        "prompt_budget_shadow": 0,
+        "route_off_disposition": "unverifiable",
+        "route_off_executed_action": 4,
+        "route_off_ranked_actions": [
+          4,
+          2
+        ],
+        "seed": 6400002,
+        "shadow_action_leaked_to_execution": false,
+        "shadow_disposition": "unverifiable",
+        "shadow_executed_action": 4,
+        "shadow_rank_verifier_is_oracle": false,
+        "shadow_ranked_actions": [
+          2,
+          4
+        ],
+        "transition_source_ids": [
+          "exp6400_live_shadow_push_b_l0:6400002:t0",
+          "exp6400_live_shadow_push_b_l0:6400002:t1",
+          "exp6400_live_shadow_push_b_l0:6400002:t2",
+          "exp6400_live_shadow_push_b_l0:6400002:t3",
+          "exp6400_live_shadow_push_b_l0:6400002:t4",
+          "exp6400_live_shadow_push_b_l0:6400002:t5"
+        ],
+        "treatment_fired": true,
+        "treatment_reachable": true,
+        "verification_cost": {
+          "post_action_transition_checks": 1
+        },
+        "window_id": "exp6400_live_shadow_push_b_l0_seed6400002",
+        "window_index": 5
+      }
+    ]
+  },
+  "preconditions_checked": {
+    "embedded_tokenizers_only": true,
+    "fresh_window_count_min_met": true,
+    "model_specs_resolved_before_evaluation": true,
+    "no_autotokenizer": true,
+    "normal_live_entrypoint_hashes_recorded": true,
+    "planning_date": "20260813",
+    "prompt_arc_agi_paths_present": {
+      "python/carnot/arc_agi/agent.py": false,
+      "python/carnot/arc_agi/ebm_agent.py": false,
+      "python/carnot/arc_agi/sdk_entry.py": false
+    },
+    "registry_and_claims_checked_before_windows": true,
+    "scripts_research_conductor_modified": false,
+    "spec_has_req_arc_arm_6400": true,
+    "task_targets_route_behavior_not_solve": true,
+    "visible_transition_count_min_met": true
+  },
+  "preregistered_route_off_and_shadow_contract": {
+    "arms": {
+      "active_goal_shadow": {
+        "active_goal_shadow": true,
+        "can_change_executed_action": false,
+        "executed_action_source": "normal_live_policy"
+      },
+      "route_off": {
+        "active_goal_shadow": false,
+        "executed_action_source": "normal_live_policy"
+      }
+    },
+    "forbidden_sources": {
+      "hidden_source": 0,
+      "offline_ground_truth_search": 0,
+      "oracle_before_action": 0,
+      "per_game_adapter": 0,
+      "registry_write": 0,
+      "solve_claim": 0
+    },
+    "matched_budgets": {
+      "action_budget": 12,
+      "evaluation_calls_per_cell": 1,
+      "prompt_budget_tokens": 0
+    }
+  },
+  "protected_files_unchanged": {
+    "openspec/capabilities/arc-agi/spec.md": {
+      "after": "sha256:4dbd1d754dc1cfd3990d247aea30a94a495ccedb068112a850e10c6878e69617",
+      "before": "sha256:4dbd1d754dc1cfd3990d247aea30a94a495ccedb068112a850e10c6878e69617",
+      "unchanged": true
+    },
+    "ops/arc_solve_claims.yaml": {
+      "after": null,
+      "before": null,
+      "unchanged": true
+    },
+    "ops/arc_solve_registry.yaml": {
+      "after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "unchanged": true
+    },
+    "scripts/research_conductor.py": {
+      "after": "sha256:458ec2966f40918581381a8895875ab86664e14c8f69ea21afe5be71e4348509",
+      "before": "sha256:458ec2966f40918581381a8895875ab86664e14c8f69ea21afe5be71e4348509",
+      "unchanged": true
+    }
+  },
+  "random_seed": 6400,
+  "reproducibility_checksum": "sha256:7101a5250e4bced7e02ab19cd1ea9a3e066856ec766b7265c589ec925ae664ec",
+  "solve_claim_count": 0,
+  "solve_registry_modified": false,
+  "status": "complete",
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6400_arc_default_off_active_goal_shadow.py --fail-under=100 --show-missing": null,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6400_arc_default_off_active_goal_shadow.py -m pytest tests/python/test_experiment_6400_arc_default_off_active_goal_shadow.py -q --no-cov -n 0": null,
+    ".venv/bin/pytest tests/python -q": null,
+    ".venv/bin/pytest tests/python/test_experiment_6400_arc_default_off_active_goal_shadow.py -q --no-cov -n 0": null,
+    ".venv/bin/python -m carnot.experiment_6400_arc_default_off_active_goal_shadow --date 20260813": null,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6400_arc_default_off_active_goal_shadow.json": null,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6400_arc_default_off_active_goal_shadow.py": null,
+    ".venv/bin/python scripts/determination_preservation_lint.py --all": null,
+    ".venv/bin/python scripts/root_clutter_sweep.py": null,
+    "sed -n '1,220p' ops/e2e-test-plan.md": null
+  },
+  "tests_run": [
+    ".venv/bin/python -m carnot.experiment_6400_arc_default_off_active_goal_shadow --date 20260813",
+    ".venv/bin/pytest tests/python/test_experiment_6400_arc_default_off_active_goal_shadow.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6400_arc_default_off_active_goal_shadow.py -m pytest tests/python/test_experiment_6400_arc_default_off_active_goal_shadow.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6400_arc_default_off_active_goal_shadow.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6400_arc_default_off_active_goal_shadow.py",
+    "sed -n '1,220p' ops/e2e-test-plan.md",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6400_arc_default_off_active_goal_shadow.json",
+    ".venv/bin/python scripts/determination_preservation_lint.py --all",
+    ".venv/bin/python scripts/root_clutter_sweep.py"
+  ],
+  "verifier_is_oracle": false
+}

@@ -207,3 +207,111 @@ missing model rows, duplicate rows, stale hashes, and model-order swaps
 **When** the conductor comparison function evaluates the new artifact fields
 **Then** each comparison receives a finite bare number and the exact operands,
 operator, result, and reason are recorded.
+
+### REQ-ARC-ARM-6400: Default-Off Active Goal Shadow
+
+Experiment 6400 SHALL replay the deferred Exp6389 shadow after the Exp6393
+scalar gate passes. It SHALL run the active-goal mechanism as a default-off
+shadow on the normal live ARC path. This default-off shadow SHALL use the live
+policy's own visible frames, legal actions, executed actions, transition
+records, and runtime reverse-engineering evidence. It SHALL not read game
+source, hidden state, offline ground-truth search, per-game adapters, or oracle
+outcomes before the action is frozen.
+
+The model set SHALL include `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, resolved through `cached_sota_pair()`. The
+producer SHALL use only the GGUF-embedded tokenizer path and SHALL report zero
+`AutoTokenizer` usage. The producer SHALL record model file hashes, revisions,
+quantization, embedded tokenizer receipts, GPU offload receipts, live entrypoint
+hashes, Exp6393 gate receipts, the two-sided goal contract receipt, the active
+reward-machine route receipt, and ARC registry and claims precheck hashes.
+
+The producer SHALL freeze at least six fresh live attempt windows and at least
+36 visible transitions before evaluation. For each model and prefix, it SHALL
+freeze the goal hypothesis, accepted / rejected / unverifiable disposition,
+legal disagreement probe, and counterfactual action ranking before it reads the
+next transition. Route-off and active-goal shadow cells SHALL match models,
+windows, action budgets, prompt budgets, evidence prefixes, and evaluation
+calls. The shadow SHALL never alter the executed action.
+
+The producer SHALL report treatment reachability, treatment firing, goal
+admission precision, false accepts, false rejects, abstention, action-ranking
+differences, exact progress proxies, latency, verification cost, provenance
+counts, attack probes, and protected-file status by model and window. It SHALL
+emit `active_shadow_treatment_fired_count` and
+`delta_shadow_false_accept_count` as bare integers. It SHALL set
+`arc_active_goal_shadow_ready_score=1.0` only when the live route is reachable,
+the treatment fires, matched work passes, evidence provenance is clean, false
+accepts do not increase, executed actions do not change, and no solve or
+registry claim occurs.
+
+Experiment 6400 SHALL write
+`results/experiment_6400_arc_default_off_active_goal_shadow.json` with the
+required top-level fields named by the task. It SHALL set
+`verifier_is_oracle=true` only for post-action transition checks. Goal
+hypotheses, model text, and shadow action ranks SHALL not be treated as
+oracles. It SHALL not update `ops/arc_solve_registry.yaml` or claim a game or
+level solve.
+
+The artifact SHALL include `status`, `exp6393_gate_receipts`, `MODEL_SPECS`,
+`models_used`, `cached_sota_pair_receipts`,
+`model_file_hashes_revisions_quantizations_and_tokenizers`,
+`embedded_gguf_tokenizer_receipts`, `autotokenizer_usage_count`,
+`cuda_offload_and_runtime_receipts_by_model`,
+`live_entrypoint_policy_and_reward_machine_hashes`,
+`arc_registry_and_claims_precheck_hashes`,
+`fresh_live_window_manifest_path_hash_and_counts`, `live_attempt_provenance`,
+`preregistered_route_off_and_shadow_contract`, `matched_work_receipts`,
+`frozen_goal_probe_and_counterfactual_action_records`,
+`per_model_window_admission_abstention_action_influence_progress_and_cost_results`,
+`active_shadow_treatment_fired_count`, `delta_shadow_admission_precision`,
+`delta_shadow_false_accept_count`, `delta_shadow_exact_progress_proxy`,
+`model_row_prefix_state_goal_duplicate_budget_and_action_leakage_attack_matrix`,
+`hidden_source_access_count`, `offline_ground_truth_search_count`,
+`per_game_adapter_count`, `oracle_before_action_count`,
+`executed_action_change_count`, `solve_claim_count`, `solve_registry_modified`,
+`arc_active_goal_shadow_ready_score`, `harm_underpowered_missing_and_flagged_cells`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-ARC-ARM-6400-GATE-REPLAY
+
+**Given** Exp6393 passed with scalar gate fields
+**When** Exp6400 revalidates the deferred Exp6389 gate
+**Then** every gate comparison uses a finite bare scalar, records operands and
+reasons, and refuses the old nested-delta shape before live-window evaluation.
+
+### SCENARIO-ARC-ARM-6400-MATCHED-SHADOW
+
+**Given** at least six fresh live attempt windows and 36 visible transitions
+**When** route-off and active-goal shadow cells are evaluated
+**Then** both arms receive matched model ids, action budgets, prompt budgets,
+evidence prefixes, and evaluation calls, while the shadow records treatment
+reachability and firing without changing the executed action.
+
+### SCENARIO-ARC-ARM-6400-FROZEN-PROBES
+
+**Given** a model, live window, and evidence prefix
+**When** the shadow records a goal hypothesis and legal disagreement probe
+**Then** the hypothesis, disposition, probe, and counterfactual action rank are
+sealed before the next transition label is read.
+
+### SCENARIO-ARC-ARM-6400-ATTACKS-FAIL-CLOSED
+
+**Given** model-row swaps, prefix truncation, stale goal state, constant-false
+goals, duplicate transitions, route budget mismatch, and shadow-to-action
+leakage
+**When** the producer validates shadow evidence
+**Then** each attack fails closed before readiness can be set.
+
+### SCENARIO-ARC-ARM-6400-ARTIFACT-NO-SOLVE
+
+**Given** the solve registry and claims ledger are hashed before the run
+**When** Exp6400 writes its artifact
+**Then** all required fields are present, forbidden access counts are zero,
+`active_shadow_treatment_fired_count` and
+`delta_shadow_false_accept_count` are bare integers, protected files are
+unchanged, `solve_claim_count` is zero, the solve registry hash is unchanged,
+and no solve claim is made.
