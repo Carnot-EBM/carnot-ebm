@@ -15751,3 +15751,4 @@ code |
 | 2026-08-13 05:25 UTC | V548 terminal evidence handoff and V549 queue pref | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-13 05:42 UTC | V549 dated source delta and three-lane scope freez | OK | 87 passed, 1 warning in 9.11s |
 | 2026-08-13 06:00 UTC | Canonical factor-edit instruction and capacity tra | OK | 89 passed, 1 warning in 9.28s |
+| 2026-08-13 06:27 UTC | Gated on Exp6379 readiness: three-family canonical | OK | 86 passed, 1 warning in 8.75s |
