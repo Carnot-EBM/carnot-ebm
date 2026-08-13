@@ -3257,6 +3257,177 @@ over frozen
 | SCENARIO-LEARN-6408-ATTACKS | Planned: `python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py`. | Planned: `tests/python/test_experiment_6408_powered_write_time_factor_admission_ab.py`. |
 | SCENARIO-LEARN-6408-READY | Planned: `python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py`. | Planned: `tests/python/test_experiment_6408_powered_write_time_factor_admission_ab.py`. |
 
+## REQ-LEARN-6409: Graph-Local Multisession Continuous Learning
+
+**Given** Exp6408 first shows positive future exact yield with non-increased
+contamination, Exp6407 defines a raw and compiled memory protocol, and Exp6383
+defines selective rollback
+**When** Exp6409 runs on planning date 20260813
+**Then** it SHALL write
+`results/experiment_6409_graph_local_multisession_continuous_learning.json`
+**And** it SHALL compare frozen, flat predecessor-bound transactional, and
+graph-local two-tier learners across multiple sessions and drift regimes.
+
+Exp6409 SHALL revalidate Exp6408 gates, licenses, frozen harnesses, raw and
+compiled schemas, factor-head hashes, exact checkers, rollback receipt, model
+files, GPU offload, and protected partitions before any event is sealed. It
+SHALL invoke only Exp6395 licensed cells. Every other cell SHALL abstain.
+
+Exp6409 SHALL use the three mandated local GGUF model ids from
+`cached_sota_pair()`: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Token counts SHALL use embedded GGUF
+tokenizers only. Exp6409 SHALL not call `AutoTokenizer`.
+
+Exp6409 SHALL seal at least 72 chronological events across four sessions,
+three declared drift regimes, at least six update opportunities, four process
+restarts, two license-expiry boundaries, and two source-supersession
+boundaries. Events SHALL be balanced across licensed cells. Protected future
+events SHALL open once after heads are frozen.
+
+Exp6409 SHALL match event order, LLM calls, token budgets, exact checks, and
+consumer work for all three arms. Candidate proposals SHALL evaluate off-commit
+and bind raw event hashes, source spans, model, harness, license, exact support,
+predecessor head, affected neighborhood, diagnostics, expiry, and supersession.
+
+Exp6409 SHALL atomically record Commit, Reject, Quarantine, or Defer for each
+proposal. Commits SHALL pass exact support, local/full replay equivalence,
+protected retention, unique effects, predecessor freshness, and license
+validity. Raw escalation SHALL trigger on implicit support, graph/raw
+disagreement, checker drift, stale cache, unresolved supersession, and missing
+provenance.
+
+Exp6409 SHALL inject contamination, stale heads, duplicate effects, concurrent
+proposals, interrupted writes, expired licenses, superseded evidence, cache
+resurrection, model-row swaps, and restart corruption. Every attack SHALL fail
+closed. Selective rollback SHALL remove harmful descendants on affected
+neighborhoods only.
+
+Exp6409 SHALL report prequential exact yield, forward transfer, backward
+retention, forgetting, negative transfer, contamination propagation, factor
+growth, raw escalation, verification cost, restart recovery, and local-vs-full
+replay work. It SHALL emit `delta_future_exact_yield_over_frozen`,
+`contamination_propagation_rate`, and `forgetting_delta` as finite bare numbers.
+
+Exp6409 SHALL set `graph_local_multisession_csl_ready_score=1.0` only when at
+least two sessions commit, graph-local future exact yield beats frozen,
+contamination propagation is zero, no harmful retention regression survives
+rollback, growth is bounded, local/full replay decisions agree, every attack
+fails closed, protected leakage is zero, tests pass, and no model weights
+change.
+
+Exp6409 SHALL emit these fields:
+
+- `status`
+- `exp6408_gate_receipts`
+- `MODEL_SPECS`
+- `models_used`
+- `cached_sota_pair_receipts`
+- `embedded_gguf_tokenizer_receipts`
+- `autotokenizer_usage_count`
+- `license_and_harness_bindings`
+- `unlicensed_cell_abstention_records`
+- `cuda_offload_runtime_peak_memory_and_duration_receipts_by_model`
+- `chronological_manifest_path_hash_session_drift_update_restart_expiry_supersession_counts_balance_and_partition_seals`
+- `preregistered_frozen_flat_and_graph_local_arm_contract`
+- `matched_work_receipts`
+- `initial_raw_ledger_graph_and_factor_head_hashes`
+- `typed_candidate_and_raw_evidence_records`
+- `predecessor_license_checker_neighborhood_expiry_and_supersession_bindings`
+- `atomic_disposition_records`
+- `factor_head_and_graph_transition_history`
+- `commit_reject_quarantine_and_defer_counts_by_session`
+- `raw_escalation_trigger_accuracy_and_cost_results`
+- `local_vs_full_replay_decision_and_work_results`
+- `stale_duplicate_concurrency_interrupt_expiry_supersession_cache_model_and_restart_attack_matrix`
+- `prequential_exact_yield_by_arm_and_session`
+- `forward_transfer_results`
+- `backward_retention_forgetting_and_negative_transfer_results`
+- `contamination_propagation_rate`
+- `factor_growth_and_capacity_results`
+- `restart_recovery_results`
+- `selective_rollback_results`
+- `untouched_future_evaluation_receipts`
+- `delta_future_exact_yield_over_frozen`
+- `forgetting_delta`
+- `graph_local_multisession_csl_ready_score`
+- `protected_leakage_count`
+- `same_step_write_count`
+- `model_weight_change_count`
+- `universal_support_claimed`
+- `public_factor_claim_eligibility`
+- `harm_underpowered_missing_and_flagged_cells`
+- `protected_files_unchanged`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map every Exp6408 gate,
+`delta_future_exact_yield_over_frozen`, `contamination_propagation_rate`,
+`forgetting_delta`, and `graph_local_multisession_csl_ready_score` to their
+purposes. `verifier_is_oracle` SHALL be true only for exact task checkers and
+deterministic replay or retention tests.
+
+## SCENARIO-LEARN-6409-MULTISESSION: Manifest Covers Sessions And Drift
+
+**Given** Exp6408 has a positive gate and licensed cells
+**When** Exp6409 seals its chronological manifest
+**Then** the manifest SHALL contain at least 72 events, four sessions, three
+drift regimes, six update opportunities, four restarts, two expiry boundaries,
+and two supersession boundaries
+**And** licensed cells SHALL be balanced.
+
+## SCENARIO-LEARN-6409-GRAPH-COMMIT: Commits Are Graph-Local And Provenance-Bound
+
+**Given** a graph-local proposal with raw evidence
+**When** Exp6409 evaluates it off-commit
+**Then** the proposal SHALL bind predecessor, license, checker, affected
+neighborhood, expiry, supersession, diagnostics, and raw hashes
+**And** Commit SHALL occur only when exact support and local/full replay agree.
+
+## SCENARIO-LEARN-6409-ESCALATION: Raw Tier Resolves Ambiguity
+
+**Given** implicit support, graph/raw disagreement, checker drift, stale cache,
+unresolved supersession, or missing provenance
+**When** Exp6409 evaluates the proposal
+**Then** it SHALL escalate to raw evidence
+**And** the compiled graph SHALL not authorize the commit.
+
+## SCENARIO-LEARN-6409-ATTACKS: Multi-Session Attacks Fail Closed
+
+**Given** contamination, stale head, duplicate effect, concurrent proposal,
+interrupted write, expired license, superseded evidence, cache resurrection,
+model-row swap, or restart corruption
+**When** Exp6409 evaluates the attack matrix
+**Then** every attack SHALL fail closed
+**And** harmful descendants SHALL be removed by selective rollback.
+
+## SCENARIO-LEARN-6409-READY: Readiness Requires Transfer Without Contamination
+
+**Given** at least two sessions commit and all tests pass
+**When** graph-local future exact yield beats frozen, contamination propagation
+is zero, forgetting does not increase, growth is bounded, replay decisions
+agree, attacks fail closed, and protected files stay unchanged
+**Then** `graph_local_multisession_csl_ready_score` SHALL be `1.0`.
+
+## Implementation Status (REQ-LEARN-6409)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6409 | Implemented: `python/carnot/experiment_6409_graph_local_multisession_continuous_learning.py`; terminal artifact `results/experiment_6409_graph_local_multisession_continuous_learning.json`. | Implemented: `tests/python/test_experiment_6409_graph_local_multisession_continuous_learning.py`. |
+| SCENARIO-LEARN-6409-MULTISESSION | Implemented: `python/carnot/experiment_6409_graph_local_multisession_continuous_learning.py`. | Implemented: `tests/python/test_experiment_6409_graph_local_multisession_continuous_learning.py`. |
+| SCENARIO-LEARN-6409-GRAPH-COMMIT | Implemented: `python/carnot/experiment_6409_graph_local_multisession_continuous_learning.py`. | Implemented: `tests/python/test_experiment_6409_graph_local_multisession_continuous_learning.py`. |
+| SCENARIO-LEARN-6409-ESCALATION | Implemented: `python/carnot/experiment_6409_graph_local_multisession_continuous_learning.py`. | Implemented: `tests/python/test_experiment_6409_graph_local_multisession_continuous_learning.py`. |
+| SCENARIO-LEARN-6409-ATTACKS | Implemented: `python/carnot/experiment_6409_graph_local_multisession_continuous_learning.py`. | Implemented: `tests/python/test_experiment_6409_graph_local_multisession_continuous_learning.py`. |
+| SCENARIO-LEARN-6409-READY | Implemented: `python/carnot/experiment_6409_graph_local_multisession_continuous_learning.py`. | Implemented: `tests/python/test_experiment_6409_graph_local_multisession_continuous_learning.py`. |
+
 ## REQ-LEARN-6383: Dependency-Guided Factor Rollback Stress
 
 **Given** versioned factor release and whole-version rollback already exist
