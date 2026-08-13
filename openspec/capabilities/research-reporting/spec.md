@@ -217,6 +217,124 @@ deliverables explicitly recorded by Exp6157.
 |---|---|---|
 | REQ-REPORT-6157 | Planned (`python/carnot/experiment_6157_repo_wide_artifact_isolation_closure.py`, `python/carnot/experiment_artifacts.py`, `python/carnot/testing/tracked_results_guard.py`, `python/carnot/pipeline/atomic_writer.py`, `tests/python/conftest.py`, `results/experiment_6157_repo_wide_artifact_isolation_closure.json`) | Planned (`tests/python/test_experiment_artifact_isolation.py`) |
 
+### REQ-REPORT-6392: V550 Source Marker And Executable Scope Freeze
+
+Carnot SHALL build Exp6392 as a dated V550 source-marker validation and
+scope-freeze report. The report SHALL locate the exact
+`<!-- V550-PLANNER-REFRESH-20260813-END -->` marker in
+`research-references.md`. It SHALL hash the full V550 planner section, record
+the marker path and line, and use the marker commit time as the exclusive
+strict post-marker source lower bound.
+
+Exp6392 SHALL check network reachability before live source requests. If
+network reachability or a source endpoint fails, it SHALL record the failure.
+It SHALL not invent source content. It SHALL record rate-limit headers when an
+endpoint supplies them.
+
+Exp6392 SHALL validate direct arXiv metadata and public URLs for the V550
+marker sources: AI4AI at Test-Time (`2608.12307`), Retry, Switch, or Abstain
+(`2608.11977`), Beyond Memory (`2608.11632`), When Offline Evaluation Misleads
+(`2608.11560`), Agentic Workflow for Legacy HPC Modernization (`2608.12249`),
+Commitment Before Realization (`2608.08082`), Robust Ambiguity Detection
+(`2608.11541`), Thermodynamic Matrix Inversion (`2608.09743`), and Embedded
+RISC-V KAN Evaluation (`2608.00737`). Each receipt SHALL record the arXiv ID,
+title, submitted date, direct URL, endpoint outcome, source class, and fallback
+state.
+
+Exp6392 SHALL recheck OpenReview, Hugging Face Papers, Semantic Scholar EBT
+and ARM-EBM citation records, GitHub discovery, Extropic first-party pages, and
+Logical Intelligence first-party pages. It SHALL classify each finding as
+`executable_now`, `measurement_control`, `deferred`, `retired_scope`,
+`product_status`, or `unavailable`.
+
+Exp6392 SHALL freeze held model-family transport licensing,
+capability-qualified verified-frontier learning, predecessor-bound continuous
+self-learning, and live default-off active-goal evidence as the active lanes.
+It SHALL freeze grammar retries, parser retries, JSON repair, external text
+scoring, hidden-state scoring, KAN training, EBT pretraining, offline ARC
+solvers, per-game adapters, unchanged board probes, TSU execution, and Kona
+execution as closed or deferred scopes. A topical match to a retired mechanism
+SHALL not reopen that mechanism.
+
+The Exp6392 artifact SHALL be written atomically to
+`results/experiment_6392_v550_post_marker_source_scope_freeze.json` with
+`inference_substrate=web_and_bibliographic_search_only` and
+`verifier_is_oracle=false`.
+
+The Exp6392 artifact SHALL include these required fields: `status`,
+`planner_marker_path_and_hash`, `source_window_start_and_end_utc`,
+`direct_arxiv_source_receipts`, `openreview_receipts`,
+`huggingface_papers_receipts`,
+`semantic_scholar_ebt_and_arm_ebm_receipts`, `github_discovery_receipts`,
+`extropic_first_party_receipt`, `logical_intelligence_first_party_receipt`,
+`new_actionable_findings`, `post_marker_findings_count`,
+`executable_scope_change_required`, `active_lane_freeze`,
+`control_only_findings`, `closed_and_deferred_scope_freeze`,
+`unavailable_or_rate_limited_sources`, `retired_scope_reopened`,
+`hardware_state_change_found`, `source_claim_boundaries`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`. `field_principles` SHALL cover every required field.
+`field_provenance` SHALL cover every required field with measured, derived,
+constant, or upstream provenance.
+
+#### SCENARIO-REPORT-6392-1: V550 Marker Section Is Hash-Pinned
+
+**Given** the V550 planner marker is present in `research-references.md`
+**When** Exp6392 builds the marker receipt
+**Then** it records one marker, its line, the full-section SHA-256 hash, and
+the marker commit time as the exclusive source lower bound.
+
+#### SCENARIO-REPORT-6392-2: V550 arXiv Receipts Validate Or Fall Back
+
+**Given** the V550 marker paper IDs are known
+**When** Exp6392 queries arXiv metadata
+**Then** each paper receipt records title, submitted date, direct URL, source
+class, endpoint outcome, and whether live metadata or planner fallback was
+used.
+
+#### SCENARIO-REPORT-6392-3: Source Classes Keep Scope Separate
+
+**Given** source rows from primary, secondary, product, repository, or failed
+routes
+**When** Exp6392 classifies them
+**Then** only strict post-marker, stable, primary or first-party, public,
+locally executable rows can become new actionable findings.
+
+#### SCENARIO-REPORT-6392-4: Active Lanes Are Frozen Without Scope Expansion
+
+**Given** the V550 marker names harness construction, retry-switch-abstain
+control, transactional activation, and alignment or learnability checks
+**When** Exp6392 freezes executable scope
+**Then** those mechanisms stay inside the four active lanes and
+`executable_scope_change_required` stays false when no strict post-marker
+finding exists.
+
+#### SCENARIO-REPORT-6392-5: Closed Scope Stays Closed
+
+**Given** a source uses terms related to grammar retries, parser retries,
+repair, hidden states, external scorers, KAN, EBT, offline ARC solving, board
+probes, TSU, or Kona
+**When** Exp6392 classifies that source
+**Then** it records the row only as a control, deferred, retired, product, or
+unavailable source unless a new authenticated local executable route exists.
+
+#### SCENARIO-REPORT-6392-6: Artifact Is Annotated And Non-Mutating
+
+**Given** source receipts, protected hashes, command receipts, and field maps
+are assembled
+**When** Exp6392 validates the report before writing
+**Then** every required field has a principle and provenance, protected files
+remain byte-identical, the checksum matches, and `verifier_is_oracle` is
+false.
+
+## Implementation Status (REQ-REPORT-6392)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6392 | Planned (`python/carnot/experiment_6392_v550_post_marker_source_scope_freeze.py`, terminal artifact `results/experiment_6392_v550_post_marker_source_scope_freeze.json`) | Planned (`tests/python/test_experiment_6392_v550_post_marker_source_scope_freeze.py`) |
+
 ### REQ-REPORT-6378: V549 Source Freeze And Executable Scope Report
 
 Carnot SHALL build Exp6378 as a dated V549 source and executable-scope
