@@ -15786,3 +15786,4 @@ code |
 | 2026-08-13 15:26 UTC | Independent capability-license transaction and con | OK | 89 passed, 1 warning in 11.05s |
 | 2026-08-13 15:47 UTC | Gated on Exp6393 scalar improvement: default-off A | OK | 103 passed, 1 warning in 10.44s |
 | 2026-08-13 16:09 UTC | Gated on Exp6400 reachability: held ARC active-goa | OK | 103 passed, 1 warning in 13.85s |
+| 2026-08-13 16:25 UTC | Independent ARC active-goal provenance and causal  | OK | 98 passed, 1 warning in 7.83s |
