@@ -1,1 +1,2241 @@
-{"attack_manifest_path_hash":{"attack_count":33,"manifest_written_before_outcome_sensitive_reads":true,"path":"results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json.attack_manifest.json","present":true,"registration_sha256":"sha256:03898f7515a9ead615ddb1f6678e0fe380999e77d31a47dbf89e9fef4db7d1ee","sha256":"sha256:00e6fcab5731ebabbcb3a92d386631a467f590da669d2256630f08c58a4bef9e","size_bytes":10254},"audit_registration_path_hash_and_preoutcome_receipt":{"checker_versions_sha256":"sha256:51c23c7c9785e207d5a34dcacd7ec01d9f311702877370bad39e7487316cd9bb","commands_sha256":"sha256:a24324d631809e59d966748578e5c0211386853ce8b550f8c6a09a3b8d9a56f5","immutable_copy_count":9,"path":"results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json.audit_registration.json","present":true,"registration_written_before_outcome_sensitive_reads":true,"sha256":"sha256:03898f7515a9ead615ddb1f6678e0fe380999e77d31a47dbf89e9fef4db7d1ee","size_bytes":11672},"chronological_learning_attack_results":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_attack_count":0,"attack_classes":["same_step_writes","future_outcome_leakage","duplicate_evidence","event_reorder"],"by_attack":{"duplicate_evidence":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":0,"attack_class":"duplicate_evidence","detected_count":0,"expected_clean_terminal_decision":"reject","fail_closed_count":0,"false_alarm_count":0,"group":"chronological_learning_attack_results","inapplicable_count":1,"seed":638617,"target_results":[{"applicable":false,"copy_available":false,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"absent","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6382"}],"unsafe_survivor_count":0},"event_reorder":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":0,"attack_class":"event_reorder","detected_count":0,"expected_clean_terminal_decision":"reject","fail_closed_count":0,"false_alarm_count":0,"group":"chronological_learning_attack_results","inapplicable_count":1,"seed":638618,"target_results":[{"applicable":false,"copy_available":false,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"absent","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6382"}],"unsafe_survivor_count":0},"future_outcome_leakage":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":0,"attack_class":"future_outcome_leakage","detected_count":0,"expected_clean_terminal_decision":"abort","fail_closed_count":0,"false_alarm_count":0,"group":"chronological_learning_attack_results","inapplicable_count":1,"seed":638616,"target_results":[{"applicable":false,"copy_available":false,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"absent","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6382"}],"unsafe_survivor_count":0},"same_step_writes":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":0,"attack_class":"same_step_writes","detected_count":0,"expected_clean_terminal_decision":"read_only_block","fail_closed_count":0,"false_alarm_count":0,"group":"chronological_learning_attack_results","inapplicable_count":1,"seed":638615,"target_results":[{"applicable":false,"copy_available":false,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"absent","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6382"}],"unsafe_survivor_count":0}},"detected_count":0,"fail_closed_count":0,"false_alarm_count":0,"inapplicable_count":4,"schema":"carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.chronological_learning_attack_results","unsafe_survivor_count":0},"consumer_attack_results":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_attack_count":0,"attack_classes":["registry_writes_during_evaluation","version_swaps","quarantine_bypass","capacity_overflow","model_weight_changes","unsafe_feature_enablement"],"by_attack":{"capacity_overflow":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":0,"attack_class":"capacity_overflow","detected_count":0,"expected_clean_terminal_decision":"quarantine","fail_closed_count":0,"false_alarm_count":0,"group":"consumer_attack_results","inapplicable_count":1,"seed":638630,"target_results":[{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"blocked","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6384"}],"unsafe_survivor_count":0},"model_weight_changes":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":0,"attack_class":"model_weight_changes","detected_count":0,"expected_clean_terminal_decision":"abort","fail_closed_count":0,"false_alarm_count":0,"group":"consumer_attack_results","inapplicable_count":1,"seed":638631,"target_results":[{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"blocked","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6384"}],"unsafe_survivor_count":0},"quarantine_bypass":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":0,"attack_class":"quarantine_bypass","detected_count":0,"expected_clean_terminal_decision":"quarantine","fail_closed_count":0,"false_alarm_count":0,"group":"consumer_attack_results","inapplicable_count":1,"seed":638629,"target_results":[{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"blocked","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6384"}],"unsafe_survivor_count":0},"registry_writes_during_evaluation":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":0,"attack_class":"registry_writes_during_evaluation","detected_count":0,"expected_clean_terminal_decision":"read_only_block","fail_closed_count":0,"false_alarm_count":0,"group":"consumer_attack_results","inapplicable_count":1,"seed":638627,"target_results":[{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"blocked","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6384"}],"unsafe_survivor_count":0},"unsafe_feature_enablement":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":0,"attack_class":"unsafe_feature_enablement","detected_count":0,"expected_clean_terminal_decision":"reject","fail_closed_count":0,"false_alarm_count":0,"group":"consumer_attack_results","inapplicable_count":1,"seed":638632,"target_results":[{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"blocked","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6384"}],"unsafe_survivor_count":0},"version_swaps":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":0,"attack_class":"version_swaps","detected_count":0,"expected_clean_terminal_decision":"reject","fail_closed_count":0,"false_alarm_count":0,"group":"consumer_attack_results","inapplicable_count":1,"seed":638628,"target_results":[{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"blocked","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6384"}],"unsafe_survivor_count":0}},"detected_count":0,"fail_closed_count":0,"false_alarm_count":0,"inapplicable_count":6,"schema":"carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.consumer_attack_results","unsafe_survivor_count":0},"dependency_rollback_attack_results":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_attack_count":8,"attack_classes":["false_lineage","missing_edges","cycles","shared_support_deletion","incomplete_descendant_invalidation","journal_interruption","rollback_root_mismatch","stale_consumer_decisions"],"by_attack":{"cycles":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"cycles","detected_count":1,"expected_clean_terminal_decision":"reject","fail_closed_count":1,"false_alarm_count":0,"group":"dependency_rollback_attack_results","inapplicable_count":0,"seed":638621,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"reject","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6383"}],"unsafe_survivor_count":0},"false_lineage":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"false_lineage","detected_count":1,"expected_clean_terminal_decision":"reject","fail_closed_count":1,"false_alarm_count":0,"group":"dependency_rollback_attack_results","inapplicable_count":0,"seed":638619,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"reject","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6383"}],"unsafe_survivor_count":0},"incomplete_descendant_invalidation":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"incomplete_descendant_invalidation","detected_count":1,"expected_clean_terminal_decision":"rollback","fail_closed_count":1,"false_alarm_count":0,"group":"dependency_rollback_attack_results","inapplicable_count":0,"seed":638623,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"rollback","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6383"}],"unsafe_survivor_count":0},"journal_interruption":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"journal_interruption","detected_count":1,"expected_clean_terminal_decision":"rollback","fail_closed_count":1,"false_alarm_count":0,"group":"dependency_rollback_attack_results","inapplicable_count":0,"seed":638624,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"rollback","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6383"}],"unsafe_survivor_count":0},"missing_edges":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"missing_edges","detected_count":1,"expected_clean_terminal_decision":"reject","fail_closed_count":1,"false_alarm_count":0,"group":"dependency_rollback_attack_results","inapplicable_count":0,"seed":638620,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"reject","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6383"}],"unsafe_survivor_count":0},"rollback_root_mismatch":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"rollback_root_mismatch","detected_count":1,"expected_clean_terminal_decision":"abort","fail_closed_count":1,"false_alarm_count":0,"group":"dependency_rollback_attack_results","inapplicable_count":0,"seed":638625,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"abort","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6383"}],"unsafe_survivor_count":0},"shared_support_deletion":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"shared_support_deletion","detected_count":1,"expected_clean_terminal_decision":"reject","fail_closed_count":1,"false_alarm_count":0,"group":"dependency_rollback_attack_results","inapplicable_count":0,"seed":638622,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"reject","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6383"}],"unsafe_survivor_count":0},"stale_consumer_decisions":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"stale_consumer_decisions","detected_count":1,"expected_clean_terminal_decision":"invalidate","fail_closed_count":1,"false_alarm_count":0,"group":"dependency_rollback_attack_results","inapplicable_count":0,"seed":638626,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"invalidate","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6383"}],"unsafe_survivor_count":0}},"detected_count":8,"fail_closed_count":8,"false_alarm_count":0,"inapplicable_count":0,"schema":"carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.dependency_rollback_attack_results","unsafe_survivor_count":0},"detected_fail_closed_unsafe_survivor_false_alarm_and_inapplicable_counts":{"all_applicable_harmful_attacks_fail_closed":true,"by_upstream_terminal_class":{"absent":{"detected":0,"fail_closed":0,"false_alarm":0,"inapplicable":4,"unsafe_survivor":0},"blocked":{"detected":0,"fail_closed":0,"false_alarm":0,"inapplicable":11,"unsafe_survivor":0},"clean":{"detected":18,"fail_closed":18,"false_alarm":0,"inapplicable":0,"unsafe_survivor":0},"flagged":{"detected":0,"fail_closed":0,"false_alarm":0,"inapplicable":0,"unsafe_survivor":0},"malformed":{"detected":0,"fail_closed":0,"false_alarm":0,"inapplicable":0,"unsafe_survivor":0},"null":{"detected":0,"fail_closed":0,"false_alarm":0,"inapplicable":10,"unsafe_survivor":0}},"totals":{"detected":18,"fail_closed":18,"false_alarm":0,"inapplicable":25,"unsafe_survivor":0}},"duration_s":0.03463278501294553,"factor_learning_rollback_safety_ready_score":1.0,"field_principles":{"attack_manifest_path_hash":"The attack manifest is hash-bound before outcome-sensitive reads.","audit_registration_path_hash_and_preoutcome_receipt":"Registration proves read order, copies, hashes, seeds, commands, and pre-read guards.","chronological_learning_attack_results":"Chronology attacks cover same-step writes, future leakage, duplicate evidence, and event reorder.","consumer_attack_results":"Consumer attacks cover registry writes, version swaps, quarantine bypass, capacity overflow, weight changes, and unsafe feature enablement.","dependency_rollback_attack_results":"Rollback attacks cover false lineage, missing edges, cycles, shared-support deletion, incomplete invalidation, journal interruption, root mismatch, and stale consumer decisions.","detected_fail_closed_unsafe_survivor_false_alarm_and_inapplicable_counts":"Counts are grouped by upstream terminal class.","duration_s":"Wall time is measured without padding.","factor_learning_rollback_safety_ready_score":"Readiness is conjunctive over attack closure, zero counters, protected files, tests, and class preservation.","field_principles":"Every required field states its guard.","field_provenance":"Every required field maps to specs, inputs, attacks, checks, tests, or hashes.","harm_underpowered_missing_and_flagged_cells":"Harm, missing, underpowered, blocked, and flagged cells stay visible.","honest_verdict":"The verdict starts with a terminal prefix and states that safety does not promote utility.","inference_substrate":"The substrate declares deterministic artifact audit with no new upstream run.","preconditions_checked":"Preconditions bind date, hashes, copies, terminal classes, exclusions, protected files, seeds, and commands.","proposal_frontier_attack_results":"Proposal attacks cover residual mutation, incumbent laundering, optional-stopping reset, family shortcuts, and unequal work.","protected_files_unchanged":"Protected repo files and upstream artifacts stay byte-identical.","protected_validation_leak_count":"Bare zero proves protected validation data did not leak.","random_seed":"Fixed seed pins manifest order.","readiness_recomputation":"Readiness fields are recomputed from primary data and separated from safety readiness.","registry_write_during_consumer_count":"Bare zero proves consumer evaluation stayed read-only.","reproducibility_checksum":"A normalized checksum detects artifact drift.","source_model_weight_mutation_count":"Bare zero proves source weights did not change.","status":"Terminal status follows safety audit gates, not utility promotion.","tests_run":"Verification commands and exit codes are recorded.","transport_attack_results":"Transport attacks cover process substitution, schema drift, capacity undercount, thinking prefixes, repeated tokens, truncation laundering, parser retry, post-hoc repair, source substitution, and exact-check bypass.","unsafe_commit_count":"Bare zero proves attacked state did not commit.","upstream_artifact_and_sidecar_hashes":"Upstream artifacts, sidecars, source files, exact checkers, protected manifests, and exclusion state are frozen before semantic reads.","upstream_terminal_classification":"Absent, blocked, null, clean, flagged, and malformed evidence classes are explicit.","utility_promotion_count":"Bare zero proves safety did not become utility evidence.","verifier_is_oracle":"Oracle scope is limited to immutable exact-checker replay outputs."},"field_provenance":{"attack_manifest_path_hash":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"audit_registration_path_hash_and_preoutcome_receipt":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"chronological_learning_attack_results":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"consumer_attack_results":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"dependency_rollback_attack_results":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"detected_fail_closed_unsafe_survivor_false_alarm_and_inapplicable_counts":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"duration_s":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"factor_learning_rollback_safety_ready_score":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"field_principles":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"field_provenance":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"harm_underpowered_missing_and_flagged_cells":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"honest_verdict":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"inference_substrate":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"preconditions_checked":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"proposal_frontier_attack_results":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"protected_files_unchanged":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"protected_validation_leak_count":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"random_seed":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"readiness_recomputation":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"registry_write_during_consumer_count":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"reproducibility_checksum":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"source_model_weight_mutation_count":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"status":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"tests_run":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"transport_attack_results":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"unsafe_commit_count":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"upstream_artifact_and_sidecar_hashes":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"upstream_terminal_classification":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"utility_promotion_count":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"],"verifier_is_oracle":["REQ-LEARN-6385","V549 upstream artifact bytes","preoutcome registration","preoutcome attack manifest","immutable-copy replay","Exp6385 focused tests"]},"harm_underpowered_missing_and_flagged_cells":{"blocked_upstreams":["exp6381","exp6384"],"flagged_cells":["invalid_parse:unsloth/Qwen3.6-35B-A3B-GGUF:canonical_prompt_192","invalid_parse:unsloth/Qwen3.6-35B-A3B-GGUF:canonical_prompt_computed_allowance","invalid_parse:unsloth/Qwen3.6-35B-A3B-GGUF:frozen_exp6366_prompt_192","invalid_parse:unsloth/gemma-4-26B-A4B-it-GGUF:canonical_prompt_192","invalid_parse:unsloth/gemma-4-26B-A4B-it-GGUF:frozen_exp6366_prompt_192","invalid_parse:unsloth/gemma-4-31B-it-GGUF:canonical_prompt_192","invalid_parse:unsloth/gemma-4-31B-it-GGUF:frozen_exp6366_prompt_192","missing_canonical_capacity_family:threshold_guard","missing_exact_family:threshold_guard"],"flagged_upstreams":[],"malformed_upstreams":[],"missing_model_cells":[],"missing_or_blocked_remain_terminal_evidence_class":true,"missing_upstreams":["exp6382"],"null_upstreams":["exp6380"],"schema":"carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.harm_cells","underpowered_cells":[]},"honest_verdict":"complete_positive: V549 safety attacks failed closed; blocked, null, and absent utility evidence stayed terminal; utility promotion remains zero","inference_substrate":"deterministic_v549_artifact_safety_audit_no_upstream_rerun","preconditions_checked":{"checker_versions_sha256":"sha256:51c23c7c9785e207d5a34dcacd7ec01d9f311702877370bad39e7487316cd9bb","classification_sha256":"sha256:00b15491c9c7d3c39e747df6e50bb6f45cab9abe0ac893c9a0afbc37276a3140","commands_sha256":"sha256:a24324d631809e59d966748578e5c0211386853ce8b550f8c6a09a3b8d9a56f5","date":"20260813","immutable_copies_ready":true,"immutable_copy_count":9,"llm_call_count":0,"manifest_path":"results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json.attack_manifest.json","manifest_sha256":"sha256:00e6fcab5731ebabbcb3a92d386631a467f590da669d2256630f08c58a4bef9e","manifest_written_before_outcome_sensitive_reads":true,"outcome_sensitive_reads_after_manifest_hash":true,"planning_date":"20260813","protected_hashes_before":{"_bmad/traceability.md":"sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c","ops/changelog.md":"sha256:7a0e0644fbe46752641dc44efa37680ec52c54c5a3a42c4ea3797ba36c53bfcd","ops/exclusion_manifest.yaml":"sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423","ops/known-issues.md":"sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895","ops/status.md":"sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180","results/experiment_6379_canonical_factor_edit_transport_contract.json":"sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406","results/experiment_6380_three_family_canonical_factor_transport_canary.json":"sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613","results/experiment_6381_verified_frontier_live_factor_proposal_ab.json":"sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8","results/experiment_6382_chronological_verified_factor_self_learning.json":null,"results/experiment_6383_dependency_guided_factor_rollback_stress.json":"sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c","results/experiment_6384_default_off_certified_factor_consumer_ab.json":"sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf","scripts/research_conductor.py":"sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757","sidecar:exp6379:experiment_6379_canonical_factor_edit_transport_contract.json.canonical_schema.json":"sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036","sidecar:exp6380:experiment_6380_three_family_canonical_factor_transport_canary.json.canonical_schema.json":"sha256:ddf7e1d3923240a95ca39e791e5be899ad3063f06025dba4a7eeb92e30847b08","sidecar:exp6380:experiment_6380_three_family_canonical_factor_transport_canary.json.sealed_event_manifest.json":"sha256:8fad6c547fe549fe0c50e04e2fbca218ed40b3af5fb341aad7a6c9b69ac6355c","sidecar:exp6383:experiment_6383_dependency_guided_factor_rollback_stress.json.typed_dependency_schema.json":"sha256:ba4e71d2fa0cbfdce13b1d81b25441db5eff5be1f5af2fa72d94986638ae2110","upstream:exp6379":"sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406","upstream:exp6380":"sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613","upstream:exp6381":"sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8","upstream:exp6382":null,"upstream:exp6383":"sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c","upstream:exp6384":"sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf"},"protected_hashes_frozen_before_semantic_reads":true,"random_seed":6385,"registration_path":"results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json.audit_registration.json","registration_sha256":"sha256:03898f7515a9ead615ddb1f6678e0fe380999e77d31a47dbf89e9fef4db7d1ee","registration_written_before_outcome_sensitive_reads":true,"schema":"carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.preconditions","terminal_classes_frozen_before_semantic_reads":true,"upstream_hashes_frozen_before_semantic_reads":true,"upstream_hashes_sha256":"sha256:3005ed44d7d14b48ed0cbc09fff55f5f50df97fd64a3769fcabbfd1ae7d3e450","upstream_rerun_count":0},"proposal_frontier_attack_results":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_attack_count":0,"attack_classes":["residual_set_mutation","incumbent_laundering","optional_stopping_reset","family_identity_shortcuts","unequal_work"],"by_attack":{"family_identity_shortcuts":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":0,"attack_class":"family_identity_shortcuts","detected_count":0,"expected_clean_terminal_decision":"reject","fail_closed_count":0,"false_alarm_count":0,"group":"proposal_frontier_attack_results","inapplicable_count":1,"seed":638613,"target_results":[{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"blocked","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6381"}],"unsafe_survivor_count":0},"incumbent_laundering":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":0,"attack_class":"incumbent_laundering","detected_count":0,"expected_clean_terminal_decision":"reject","fail_closed_count":0,"false_alarm_count":0,"group":"proposal_frontier_attack_results","inapplicable_count":1,"seed":638611,"target_results":[{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"blocked","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6381"}],"unsafe_survivor_count":0},"optional_stopping_reset":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":0,"attack_class":"optional_stopping_reset","detected_count":0,"expected_clean_terminal_decision":"abort","fail_closed_count":0,"false_alarm_count":0,"group":"proposal_frontier_attack_results","inapplicable_count":1,"seed":638612,"target_results":[{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"blocked","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6381"}],"unsafe_survivor_count":0},"residual_set_mutation":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":0,"attack_class":"residual_set_mutation","detected_count":0,"expected_clean_terminal_decision":"reject","fail_closed_count":0,"false_alarm_count":0,"group":"proposal_frontier_attack_results","inapplicable_count":1,"seed":638610,"target_results":[{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"blocked","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6381"}],"unsafe_survivor_count":0},"unequal_work":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":0,"attack_class":"unequal_work","detected_count":0,"expected_clean_terminal_decision":"abort","fail_closed_count":0,"false_alarm_count":0,"group":"proposal_frontier_attack_results","inapplicable_count":1,"seed":638614,"target_results":[{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"blocked","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6381"}],"unsafe_survivor_count":0}},"detected_count":0,"fail_closed_count":0,"false_alarm_count":0,"inapplicable_count":5,"schema":"carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.proposal_frontier_attack_results","unsafe_survivor_count":0},"protected_files_unchanged":{"after":{"_bmad/traceability.md":"sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c","ops/changelog.md":"sha256:7a0e0644fbe46752641dc44efa37680ec52c54c5a3a42c4ea3797ba36c53bfcd","ops/exclusion_manifest.yaml":"sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423","ops/known-issues.md":"sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895","ops/status.md":"sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180","results/experiment_6379_canonical_factor_edit_transport_contract.json":"sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406","results/experiment_6380_three_family_canonical_factor_transport_canary.json":"sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613","results/experiment_6381_verified_frontier_live_factor_proposal_ab.json":"sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8","results/experiment_6382_chronological_verified_factor_self_learning.json":null,"results/experiment_6383_dependency_guided_factor_rollback_stress.json":"sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c","results/experiment_6384_default_off_certified_factor_consumer_ab.json":"sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf","scripts/research_conductor.py":"sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757","sidecar:exp6379:experiment_6379_canonical_factor_edit_transport_contract.json.canonical_schema.json":"sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036","sidecar:exp6380:experiment_6380_three_family_canonical_factor_transport_canary.json.canonical_schema.json":"sha256:ddf7e1d3923240a95ca39e791e5be899ad3063f06025dba4a7eeb92e30847b08","sidecar:exp6380:experiment_6380_three_family_canonical_factor_transport_canary.json.sealed_event_manifest.json":"sha256:8fad6c547fe549fe0c50e04e2fbca218ed40b3af5fb341aad7a6c9b69ac6355c","sidecar:exp6383:experiment_6383_dependency_guided_factor_rollback_stress.json.typed_dependency_schema.json":"sha256:ba4e71d2fa0cbfdce13b1d81b25441db5eff5be1f5af2fa72d94986638ae2110","upstream:exp6379":"sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406","upstream:exp6380":"sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613","upstream:exp6381":"sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8","upstream:exp6382":null,"upstream:exp6383":"sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c","upstream:exp6384":"sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf"},"before":{"_bmad/traceability.md":"sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c","ops/changelog.md":"sha256:7a0e0644fbe46752641dc44efa37680ec52c54c5a3a42c4ea3797ba36c53bfcd","ops/exclusion_manifest.yaml":"sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423","ops/known-issues.md":"sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895","ops/status.md":"sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180","results/experiment_6379_canonical_factor_edit_transport_contract.json":"sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406","results/experiment_6380_three_family_canonical_factor_transport_canary.json":"sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613","results/experiment_6381_verified_frontier_live_factor_proposal_ab.json":"sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8","results/experiment_6382_chronological_verified_factor_self_learning.json":null,"results/experiment_6383_dependency_guided_factor_rollback_stress.json":"sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c","results/experiment_6384_default_off_certified_factor_consumer_ab.json":"sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf","scripts/research_conductor.py":"sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757","sidecar:exp6379:experiment_6379_canonical_factor_edit_transport_contract.json.canonical_schema.json":"sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036","sidecar:exp6380:experiment_6380_three_family_canonical_factor_transport_canary.json.canonical_schema.json":"sha256:ddf7e1d3923240a95ca39e791e5be899ad3063f06025dba4a7eeb92e30847b08","sidecar:exp6380:experiment_6380_three_family_canonical_factor_transport_canary.json.sealed_event_manifest.json":"sha256:8fad6c547fe549fe0c50e04e2fbca218ed40b3af5fb341aad7a6c9b69ac6355c","sidecar:exp6383:experiment_6383_dependency_guided_factor_rollback_stress.json.typed_dependency_schema.json":"sha256:ba4e71d2fa0cbfdce13b1d81b25441db5eff5be1f5af2fa72d94986638ae2110","upstream:exp6379":"sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406","upstream:exp6380":"sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613","upstream:exp6381":"sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8","upstream:exp6382":null,"upstream:exp6383":"sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c","upstream:exp6384":"sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf"},"changed":[],"unchanged":true},"protected_validation_leak_count":0,"random_seed":6385,"readiness_recomputation":{"chronological_learning_ready_score":0.0,"consumer_ready_score":0.0,"dependency_rollback_ready_score":1.0,"future_factor_learning_utility_ready_score":0.0,"proposal_frontier_ready_score":0.0,"rows":[{"clean_ready":true,"input_class":"clean","recomputed_score":1.0,"score_key":"canonical_factor_transport_contract_ready_score","surface":"transport_contract","upstream":"exp6379","utility_required":false},{"clean_ready":false,"input_class":"null","recomputed_score":0.0,"score_key":"three_family_factor_transport_ready_score","surface":"transport_canary","upstream":"exp6380","utility_required":true},{"clean_ready":false,"input_class":"blocked","recomputed_score":0.0,"score_key":"verified_frontier_live_factor_proposal_ready_score","surface":"proposal_frontier","upstream":"exp6381","utility_required":true},{"clean_ready":false,"input_class":"absent","recomputed_score":0.0,"score_key":"prospective_verified_factor_self_learning_ready_score","surface":"chronological_learning","upstream":"exp6382","utility_required":true},{"clean_ready":true,"input_class":"clean","recomputed_score":1.0,"score_key":"dependency_guided_rollback_ready_score","surface":"dependency_rollback","upstream":"exp6383","utility_required":false},{"clean_ready":false,"input_class":"blocked","recomputed_score":0.0,"score_key":"default_off_certified_factor_consumer_ready_score","surface":"consumer","upstream":"exp6384","utility_required":true}],"safety_success_substitutes_for_utility":false,"schema":"carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.readiness_recomputation","separate_clean_utility_artifact_qualifies":false,"transport_canary_ready_score":0.0,"transport_contract_ready_score":1.0,"utility_promotion_count":0},"registry_write_during_consumer_count":0,"reproducibility_checksum":"sha256:45d5bab10b63b922c35d9b3f891b77ccc629062c33d2d8f9d3aab6e0791acd7a","source_model_weight_mutation_count":0,"status":"complete_positive","tests_run":{"commands":[".venv/bin/pytest tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py -q --no-cov -n 0",".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py -m pytest tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py -q --no-cov -n 0",".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py --fail-under=100 --show-missing",".venv/bin/pytest tests/python -q",".venv/bin/python -m carnot.experiment_6385_live_factor_learning_and_rollback_safety_audit --date 20260813",".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py","sed -n '1,220p' ops/e2e-test-plan.md",".venv/bin/python scripts/adversarial_verify.py results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json",".venv/bin/python scripts/determination_preservation_lint.py",".venv/bin/python scripts/root_clutter_sweep.py"],"exit_codes":{".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py --fail-under=100 --show-missing":0,".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py -m pytest tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py -q --no-cov -n 0":0,".venv/bin/pytest tests/python -q":0,".venv/bin/pytest tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py -q --no-cov -n 0":0,".venv/bin/python -m carnot.experiment_6385_live_factor_learning_and_rollback_safety_audit --date 20260813":0,".venv/bin/python scripts/adversarial_verify.py results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json":0,".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py":0,".venv/bin/python scripts/determination_preservation_lint.py":0,".venv/bin/python scripts/root_clutter_sweep.py":0,"sed -n '1,220p' ops/e2e-test-plan.md":0}},"transport_attack_results":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_attack_count":10,"attack_classes":["process_substitution","prompt_schema_drift","capacity_undercount","thinking_prefix_acceptance","repeated_token_acceptance","truncation_laundering","parser_retry","post_hoc_repair","source_substitution","exact_check_bypass"],"by_attack":{"capacity_undercount":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"capacity_undercount","detected_count":1,"expected_clean_terminal_decision":"abort","fail_closed_count":1,"false_alarm_count":0,"group":"transport_attack_results","inapplicable_count":1,"seed":638602,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"abort","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6379"},{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"null","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6380"}],"unsafe_survivor_count":0},"exact_check_bypass":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"exact_check_bypass","detected_count":1,"expected_clean_terminal_decision":"reject","fail_closed_count":1,"false_alarm_count":0,"group":"transport_attack_results","inapplicable_count":1,"seed":638609,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"reject","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6379"},{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"null","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6380"}],"unsafe_survivor_count":0},"parser_retry":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"parser_retry","detected_count":1,"expected_clean_terminal_decision":"abort","fail_closed_count":1,"false_alarm_count":0,"group":"transport_attack_results","inapplicable_count":1,"seed":638606,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"abort","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6379"},{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"null","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6380"}],"unsafe_survivor_count":0},"post_hoc_repair":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"post_hoc_repair","detected_count":1,"expected_clean_terminal_decision":"reject","fail_closed_count":1,"false_alarm_count":0,"group":"transport_attack_results","inapplicable_count":1,"seed":638607,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"reject","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6379"},{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"null","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6380"}],"unsafe_survivor_count":0},"process_substitution":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"process_substitution","detected_count":1,"expected_clean_terminal_decision":"reject","fail_closed_count":1,"false_alarm_count":0,"group":"transport_attack_results","inapplicable_count":1,"seed":638600,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"reject","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6379"},{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"null","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6380"}],"unsafe_survivor_count":0},"prompt_schema_drift":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"prompt_schema_drift","detected_count":1,"expected_clean_terminal_decision":"reject","fail_closed_count":1,"false_alarm_count":0,"group":"transport_attack_results","inapplicable_count":1,"seed":638601,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"reject","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6379"},{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"null","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6380"}],"unsafe_survivor_count":0},"repeated_token_acceptance":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"repeated_token_acceptance","detected_count":1,"expected_clean_terminal_decision":"abstain","fail_closed_count":1,"false_alarm_count":0,"group":"transport_attack_results","inapplicable_count":1,"seed":638604,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"abstain","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6379"},{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"null","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6380"}],"unsafe_survivor_count":0},"source_substitution":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"source_substitution","detected_count":1,"expected_clean_terminal_decision":"reject","fail_closed_count":1,"false_alarm_count":0,"group":"transport_attack_results","inapplicable_count":1,"seed":638608,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"reject","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6379"},{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"null","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6380"}],"unsafe_survivor_count":0},"thinking_prefix_acceptance":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"thinking_prefix_acceptance","detected_count":1,"expected_clean_terminal_decision":"reject","fail_closed_count":1,"false_alarm_count":0,"group":"transport_attack_results","inapplicable_count":1,"seed":638603,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"reject","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6379"},{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"null","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6380"}],"unsafe_survivor_count":0},"truncation_laundering":{"all_applicable_harmful_attacks_fail_closed":true,"applicable_target_count":1,"attack_class":"truncation_laundering","detected_count":1,"expected_clean_terminal_decision":"reject","fail_closed_count":1,"false_alarm_count":0,"group":"transport_attack_results","inapplicable_count":1,"seed":638605,"target_results":[{"applicable":true,"copy_available":true,"detected":true,"fail_closed":true,"false_alarm":false,"inapplicable":false,"input_class":"clean","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"reject","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6379"},{"applicable":false,"copy_available":true,"detected":false,"fail_closed":false,"false_alarm":false,"inapplicable":true,"input_class":"null","protected_validation_leak_count":0,"registry_write_during_consumer_count":0,"source_model_weight_mutation_count":0,"terminal_decision":"inapplicable_terminal_evidence_class","unsafe_commit_count":0,"unsafe_survivor":false,"upstream":"exp6380"}],"unsafe_survivor_count":0}},"detected_count":10,"fail_closed_count":10,"false_alarm_count":0,"inapplicable_count":10,"schema":"carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.transport_attack_results","unsafe_survivor_count":0},"unsafe_commit_count":0,"upstream_artifact_and_sidecar_hashes":{"all_hashes_sha256":"sha256:a214025032576cade7fd75066889d2ea2a0725340f8fd7b12bb408fe6853c8e6","artifacts":{"exp6379":{"honest_verdict_raw":"complete_positive: deterministic factor-edit transport contract is ready; no model quality or utility claim is made","loadable":true,"path":"results/experiment_6379_canonical_factor_edit_transport_contract.json","present":true,"reason":"status=positive verdict=positive","sha256":"sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406","size_bytes":46636,"status_raw":"complete_positive","terminal":true,"terminal_class":"positive"},"exp6380":{"honest_verdict_raw":"complete_null: live calls ran but three-family canonical transport gates did not all pass","loadable":true,"path":"results/experiment_6380_three_family_canonical_factor_transport_canary.json","present":true,"reason":"status=null verdict=null","sha256":"sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613","size_bytes":188963,"status_raw":"complete_null","terminal":true,"terminal_class":"null"},"exp6381":{"honest_verdict_raw":"blocked_gate_check_failed","loadable":true,"path":"results/experiment_6381_verified_frontier_live_factor_proposal_ab.json","present":true,"reason":"blocked artifact records a gate skip","sha256":"sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8","size_bytes":923,"status_raw":"blocked","terminal":true,"terminal_class":"skipped"},"exp6382":{"honest_verdict_raw":null,"loadable":false,"path":"results/experiment_6382_chronological_verified_factor_self_learning.json","present":false,"reason":"artifact path is missing","sha256":null,"size_bytes":0,"status_raw":null,"terminal":false,"terminal_class":"missing"},"exp6383":{"honest_verdict_raw":"complete_positive: dependency-guided rollback removed harmful descendants, preserved independent exact support, and claims no live utility","loadable":true,"path":"results/experiment_6383_dependency_guided_factor_rollback_stress.json","present":true,"reason":"status=positive verdict=positive","sha256":"sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c","size_bytes":39959,"status_raw":"complete_positive","terminal":true,"terminal_class":"positive"},"exp6384":{"honest_verdict_raw":"blocked_gate_check_failed","loadable":true,"path":"results/experiment_6384_default_off_certified_factor_consumer_ab.json","present":true,"reason":"blocked artifact records a gate skip","sha256":"sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf","size_bytes":1365,"status_raw":"blocked","terminal":true,"terminal_class":"skipped"}},"protected_manifest_and_exclusion_state_sha256":"sha256:ebac80a34a1f4af3f4f252a2cc5a6f90b6fecb028e577907f2aabee295944290","sidecars":{"exp6379":[{"path":"results/experiment_6379_canonical_factor_edit_transport_contract.json.canonical_schema.json","present":true,"sha256":"sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036","size_bytes":2528}],"exp6380":[{"path":"results/experiment_6380_three_family_canonical_factor_transport_canary.json.canonical_schema.json","present":true,"sha256":"sha256:ddf7e1d3923240a95ca39e791e5be899ad3063f06025dba4a7eeb92e30847b08","size_bytes":13151},{"path":"results/experiment_6380_three_family_canonical_factor_transport_canary.json.sealed_event_manifest.json","present":true,"sha256":"sha256:8fad6c547fe549fe0c50e04e2fbca218ed40b3af5fb341aad7a6c9b69ac6355c","size_bytes":27927}],"exp6381":[],"exp6382":[],"exp6383":[{"path":"results/experiment_6383_dependency_guided_factor_rollback_stress.json.typed_dependency_schema.json","present":true,"sha256":"sha256:ba4e71d2fa0cbfdce13b1d81b25441db5eff5be1f5af2fa72d94986638ae2110","size_bytes":2191}],"exp6384":[]},"source_files":{"exclusion_state":{"ops/exclusion_manifest.yaml":{"path":"ops/exclusion_manifest.yaml","present":true,"sha256":"sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423","size_bytes":47866},"ops/known-issues.md":{"path":"ops/known-issues.md","present":true,"sha256":"sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895","size_bytes":1226109}},"files":{"AGENTS.md":{"path":"AGENTS.md","present":true,"sha256":"sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a","size_bytes":1165},"CLAUDE.md":{"path":"CLAUDE.md","present":true,"sha256":"sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59","size_bytes":287937},"CODEX.md":{"path":"CODEX.md","present":true,"sha256":"sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe","size_bytes":2396},"openspec/capabilities/continuous-learning/spec.md":{"path":"openspec/capabilities/continuous-learning/spec.md","present":true,"sha256":"sha256:6014f6bcf2d8f856464d3d746a3ed7ebb957a5c63c7c4633df265cd3712044a7","size_bytes":134488},"openspec/capabilities/research-harnesses/spec.md":{"path":"openspec/capabilities/research-harnesses/spec.md","present":true,"sha256":"sha256:ff5d06095b4d137e42cba8c91ca9e880dccd02dd6f789b38a274e581241313d5","size_bytes":265233},"ops/e2e-test-plan.md":{"path":"ops/e2e-test-plan.md","present":true,"sha256":"sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b","size_bytes":5975},"ops/exclusion_manifest.yaml":{"path":"ops/exclusion_manifest.yaml","present":true,"sha256":"sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423","size_bytes":47866},"ops/known-issues.md":{"path":"ops/known-issues.md","present":true,"sha256":"sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895","size_bytes":1226109},"python/carnot/experiment_6342_anytime_evalue_release_ledger.py":{"path":"python/carnot/experiment_6342_anytime_evalue_release_ledger.py","present":true,"sha256":"sha256:25577454da38e6193771abe5005d294d249c52135e3dd57eb811f9eeb845dc32","size_bytes":51109},"python/carnot/experiment_6343_evidence_carrying_factor_lifecycle.py":{"path":"python/carnot/experiment_6343_evidence_carrying_factor_lifecycle.py","present":true,"sha256":"sha256:6f8eb0d927439020c59e13e6c95b2865d97f99da5b6003f994b33a345d473dc6","size_bytes":68663},"python/carnot/experiment_6346_certified_factor_evolution_safety_audit.py":{"path":"python/carnot/experiment_6346_certified_factor_evolution_safety_audit.py","present":true,"sha256":"sha256:bf70fbfffbddd873824701d675f085cfda9b5307b634cabcf08c585fcbde14a2","size_bytes":46909},"python/carnot/experiment_6379_canonical_factor_edit_transport_contract.py":{"path":"python/carnot/experiment_6379_canonical_factor_edit_transport_contract.py","present":true,"sha256":"sha256:3920e9d6ab0f6ddceab995df1ef9447236d54c73a0592097d51896f5333f77a4","size_bytes":57950},"python/carnot/experiment_6380_three_family_canonical_factor_transport_canary.py":{"path":"python/carnot/experiment_6380_three_family_canonical_factor_transport_canary.py","present":true,"sha256":"sha256:b57428f1612f64aeba4ef24d56b30c27cb98ef6720d36005bce66a42475aed14","size_bytes":94855},"python/carnot/experiment_6381_verified_frontier_live_factor_proposal_ab.py":{"path":"python/carnot/experiment_6381_verified_frontier_live_factor_proposal_ab.py","present":false,"sha256":null,"size_bytes":0},"python/carnot/experiment_6382_chronological_verified_factor_self_learning.py":{"path":"python/carnot/experiment_6382_chronological_verified_factor_self_learning.py","present":false,"sha256":null,"size_bytes":0},"python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py":{"path":"python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py","present":true,"sha256":"sha256:69fc95b152d9748f3030e77adcf894f8fa135c48fc3897cedc6873d35be1f36d","size_bytes":58227},"python/carnot/experiment_6384_default_off_certified_factor_consumer_ab.py":{"path":"python/carnot/experiment_6384_default_off_certified_factor_consumer_ab.py","present":false,"sha256":null,"size_bytes":0},"python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py":{"path":"python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py","present":true,"sha256":"sha256:66bd1df74eeea61533673f6e268a41402f4f4d77732f2faf8e740a1df87b8f9e","size_bytes":56813},"python/carnot/terminal_artifacts.py":{"path":"python/carnot/terminal_artifacts.py","present":true,"sha256":"sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471","size_bytes":17831},"tests/python/test_experiment_6379_canonical_factor_edit_transport_contract.py":{"path":"tests/python/test_experiment_6379_canonical_factor_edit_transport_contract.py","present":true,"sha256":"sha256:2f9ea3f8fec15cd483503dad2ed3dcdb5774a9175685304e9d414898e71e9d88","size_bytes":17495},"tests/python/test_experiment_6380_three_family_canonical_factor_transport_canary.py":{"path":"tests/python/test_experiment_6380_three_family_canonical_factor_transport_canary.py","present":true,"sha256":"sha256:07fd59f1a0a3d01597d03c4e71c47d9405be9de1f8f91d02b5c5bdb1400a5c78","size_bytes":25493},"tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py":{"path":"tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py","present":true,"sha256":"sha256:7027e8168faf1d2cd3ede3c799c67ef24a8a31c85fbc755a8c2f1958571fa0c3","size_bytes":14086},"tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py":{"path":"tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py","present":true,"sha256":"sha256:09c9862e9d6d5a2f39eca50aaf680b7c1e58a1bda038e1e77a4105e8b9932a99","size_bytes":16411}},"source_files_sha256":"sha256:e216e802f6e46ce3c02d851adbe7a79951831ec7b37297d159c4da277586f128"}},"upstream_terminal_classification":{"by_upstream":{"exp6379":{"input_class":"clean","loadable":true,"present":true,"relabeled_clean":false,"semantic_fields_read":false,"sha256":"sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406","terminal_class_presemantic":"positive"},"exp6380":{"input_class":"null","loadable":true,"present":true,"relabeled_clean":false,"semantic_fields_read":false,"sha256":"sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613","terminal_class_presemantic":"null"},"exp6381":{"input_class":"blocked","loadable":true,"present":true,"relabeled_clean":false,"semantic_fields_read":false,"sha256":"sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8","terminal_class_presemantic":"skipped"},"exp6382":{"input_class":"absent","loadable":false,"present":false,"relabeled_clean":false,"semantic_fields_read":false,"sha256":null,"terminal_class_presemantic":"missing"},"exp6383":{"input_class":"clean","loadable":true,"present":true,"relabeled_clean":false,"semantic_fields_read":false,"sha256":"sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c","terminal_class_presemantic":"positive"},"exp6384":{"input_class":"blocked","loadable":true,"present":true,"relabeled_clean":false,"semantic_fields_read":false,"sha256":"sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf","terminal_class_presemantic":"skipped"}},"class_counts":{"absent":1,"blocked":2,"clean":2,"flagged":0,"malformed":0,"null":1},"classification_before_semantic_reads":true,"missing_or_blocked_relabelled_clean_count":0,"schema":"carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.terminal_classification"},"utility_promotion_count":0,"verifier_is_oracle":{"audit_creates_correctness_labels":false,"non_oracle_checks":["transport_shape_attack_policy","proposal_frontier_attack_policy","chronological_learning_attack_policy","consumer_attack_policy","utility_readiness_interpretation"],"oracle_scoped_checks":["exp6383_dependency_rollback_exact_replay_rows","immutable_copy_hash_identity","protected_file_hash_identity","reproducibility_checksum_recompute"],"overall_verifier_is_oracle":false,"true_only_for_immutable_exact_checker_replays":true}}
+{
+  "attack_manifest_path_hash": {
+    "attack_count": 33,
+    "manifest_written_before_outcome_sensitive_reads": true,
+    "path": "results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json.attack_manifest.json",
+    "present": true,
+    "registration_sha256": "sha256:03898f7515a9ead615ddb1f6678e0fe380999e77d31a47dbf89e9fef4db7d1ee",
+    "sha256": "sha256:00e6fcab5731ebabbcb3a92d386631a467f590da669d2256630f08c58a4bef9e",
+    "size_bytes": 10254
+  },
+  "audit_registration_path_hash_and_preoutcome_receipt": {
+    "checker_versions_sha256": "sha256:51c23c7c9785e207d5a34dcacd7ec01d9f311702877370bad39e7487316cd9bb",
+    "commands_sha256": "sha256:a24324d631809e59d966748578e5c0211386853ce8b550f8c6a09a3b8d9a56f5",
+    "immutable_copy_count": 9,
+    "path": "results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json.audit_registration.json",
+    "present": true,
+    "registration_written_before_outcome_sensitive_reads": true,
+    "sha256": "sha256:03898f7515a9ead615ddb1f6678e0fe380999e77d31a47dbf89e9fef4db7d1ee",
+    "size_bytes": 11672
+  },
+  "chronological_learning_attack_results": {
+    "all_applicable_harmful_attacks_fail_closed": true,
+    "applicable_attack_count": 0,
+    "attack_classes": [
+      "same_step_writes",
+      "future_outcome_leakage",
+      "duplicate_evidence",
+      "event_reorder"
+    ],
+    "by_attack": {
+      "duplicate_evidence": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 0,
+        "attack_class": "duplicate_evidence",
+        "detected_count": 0,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 0,
+        "false_alarm_count": 0,
+        "group": "chronological_learning_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638617,
+        "target_results": [
+          {
+            "applicable": false,
+            "copy_available": false,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "absent",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6382"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "event_reorder": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 0,
+        "attack_class": "event_reorder",
+        "detected_count": 0,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 0,
+        "false_alarm_count": 0,
+        "group": "chronological_learning_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638618,
+        "target_results": [
+          {
+            "applicable": false,
+            "copy_available": false,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "absent",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6382"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "future_outcome_leakage": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 0,
+        "attack_class": "future_outcome_leakage",
+        "detected_count": 0,
+        "expected_clean_terminal_decision": "abort",
+        "fail_closed_count": 0,
+        "false_alarm_count": 0,
+        "group": "chronological_learning_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638616,
+        "target_results": [
+          {
+            "applicable": false,
+            "copy_available": false,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "absent",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6382"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "same_step_writes": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 0,
+        "attack_class": "same_step_writes",
+        "detected_count": 0,
+        "expected_clean_terminal_decision": "read_only_block",
+        "fail_closed_count": 0,
+        "false_alarm_count": 0,
+        "group": "chronological_learning_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638615,
+        "target_results": [
+          {
+            "applicable": false,
+            "copy_available": false,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "absent",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6382"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      }
+    },
+    "detected_count": 0,
+    "fail_closed_count": 0,
+    "false_alarm_count": 0,
+    "inapplicable_count": 4,
+    "schema": "carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.chronological_learning_attack_results",
+    "unsafe_survivor_count": 0
+  },
+  "consumer_attack_results": {
+    "all_applicable_harmful_attacks_fail_closed": true,
+    "applicable_attack_count": 0,
+    "attack_classes": [
+      "registry_writes_during_evaluation",
+      "version_swaps",
+      "quarantine_bypass",
+      "capacity_overflow",
+      "model_weight_changes",
+      "unsafe_feature_enablement"
+    ],
+    "by_attack": {
+      "capacity_overflow": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 0,
+        "attack_class": "capacity_overflow",
+        "detected_count": 0,
+        "expected_clean_terminal_decision": "quarantine",
+        "fail_closed_count": 0,
+        "false_alarm_count": 0,
+        "group": "consumer_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638630,
+        "target_results": [
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "blocked",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6384"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "model_weight_changes": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 0,
+        "attack_class": "model_weight_changes",
+        "detected_count": 0,
+        "expected_clean_terminal_decision": "abort",
+        "fail_closed_count": 0,
+        "false_alarm_count": 0,
+        "group": "consumer_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638631,
+        "target_results": [
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "blocked",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6384"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "quarantine_bypass": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 0,
+        "attack_class": "quarantine_bypass",
+        "detected_count": 0,
+        "expected_clean_terminal_decision": "quarantine",
+        "fail_closed_count": 0,
+        "false_alarm_count": 0,
+        "group": "consumer_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638629,
+        "target_results": [
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "blocked",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6384"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "registry_writes_during_evaluation": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 0,
+        "attack_class": "registry_writes_during_evaluation",
+        "detected_count": 0,
+        "expected_clean_terminal_decision": "read_only_block",
+        "fail_closed_count": 0,
+        "false_alarm_count": 0,
+        "group": "consumer_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638627,
+        "target_results": [
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "blocked",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6384"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "unsafe_feature_enablement": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 0,
+        "attack_class": "unsafe_feature_enablement",
+        "detected_count": 0,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 0,
+        "false_alarm_count": 0,
+        "group": "consumer_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638632,
+        "target_results": [
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "blocked",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6384"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "version_swaps": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 0,
+        "attack_class": "version_swaps",
+        "detected_count": 0,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 0,
+        "false_alarm_count": 0,
+        "group": "consumer_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638628,
+        "target_results": [
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "blocked",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6384"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      }
+    },
+    "detected_count": 0,
+    "fail_closed_count": 0,
+    "false_alarm_count": 0,
+    "inapplicable_count": 6,
+    "schema": "carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.consumer_attack_results",
+    "unsafe_survivor_count": 0
+  },
+  "dependency_rollback_attack_results": {
+    "all_applicable_harmful_attacks_fail_closed": true,
+    "applicable_attack_count": 8,
+    "attack_classes": [
+      "false_lineage",
+      "missing_edges",
+      "cycles",
+      "shared_support_deletion",
+      "incomplete_descendant_invalidation",
+      "journal_interruption",
+      "rollback_root_mismatch",
+      "stale_consumer_decisions"
+    ],
+    "by_attack": {
+      "cycles": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "cycles",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "dependency_rollback_attack_results",
+        "inapplicable_count": 0,
+        "seed": 638621,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "reject",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6383"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "false_lineage": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "false_lineage",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "dependency_rollback_attack_results",
+        "inapplicable_count": 0,
+        "seed": 638619,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "reject",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6383"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "incomplete_descendant_invalidation": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "incomplete_descendant_invalidation",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "rollback",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "dependency_rollback_attack_results",
+        "inapplicable_count": 0,
+        "seed": 638623,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "rollback",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6383"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "journal_interruption": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "journal_interruption",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "rollback",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "dependency_rollback_attack_results",
+        "inapplicable_count": 0,
+        "seed": 638624,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "rollback",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6383"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "missing_edges": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "missing_edges",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "dependency_rollback_attack_results",
+        "inapplicable_count": 0,
+        "seed": 638620,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "reject",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6383"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "rollback_root_mismatch": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "rollback_root_mismatch",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "abort",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "dependency_rollback_attack_results",
+        "inapplicable_count": 0,
+        "seed": 638625,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "abort",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6383"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "shared_support_deletion": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "shared_support_deletion",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "dependency_rollback_attack_results",
+        "inapplicable_count": 0,
+        "seed": 638622,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "reject",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6383"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "stale_consumer_decisions": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "stale_consumer_decisions",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "invalidate",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "dependency_rollback_attack_results",
+        "inapplicable_count": 0,
+        "seed": 638626,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "invalidate",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6383"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      }
+    },
+    "detected_count": 8,
+    "fail_closed_count": 8,
+    "false_alarm_count": 0,
+    "inapplicable_count": 0,
+    "schema": "carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.dependency_rollback_attack_results",
+    "unsafe_survivor_count": 0
+  },
+  "detected_fail_closed_unsafe_survivor_false_alarm_and_inapplicable_counts": {
+    "all_applicable_harmful_attacks_fail_closed": true,
+    "by_upstream_terminal_class": {
+      "absent": {
+        "detected": 0,
+        "fail_closed": 0,
+        "false_alarm": 0,
+        "inapplicable": 4,
+        "unsafe_survivor": 0
+      },
+      "blocked": {
+        "detected": 0,
+        "fail_closed": 0,
+        "false_alarm": 0,
+        "inapplicable": 11,
+        "unsafe_survivor": 0
+      },
+      "clean": {
+        "detected": 18,
+        "fail_closed": 18,
+        "false_alarm": 0,
+        "inapplicable": 0,
+        "unsafe_survivor": 0
+      },
+      "flagged": {
+        "detected": 0,
+        "fail_closed": 0,
+        "false_alarm": 0,
+        "inapplicable": 0,
+        "unsafe_survivor": 0
+      },
+      "malformed": {
+        "detected": 0,
+        "fail_closed": 0,
+        "false_alarm": 0,
+        "inapplicable": 0,
+        "unsafe_survivor": 0
+      },
+      "null": {
+        "detected": 0,
+        "fail_closed": 0,
+        "false_alarm": 0,
+        "inapplicable": 10,
+        "unsafe_survivor": 0
+      }
+    },
+    "totals": {
+      "detected": 18,
+      "fail_closed": 18,
+      "false_alarm": 0,
+      "inapplicable": 25,
+      "unsafe_survivor": 0
+    }
+  },
+  "duration_s": 0.03463278501294553,
+  "factor_learning_rollback_safety_ready_score": 1.0,
+  "field_principles": {
+    "attack_manifest_path_hash": "The attack manifest is hash-bound before outcome-sensitive reads.",
+    "audit_registration_path_hash_and_preoutcome_receipt": "Registration proves read order, copies, hashes, seeds, commands, and pre-read guards.",
+    "chronological_learning_attack_results": "Chronology attacks cover same-step writes, future leakage, duplicate evidence, and event reorder.",
+    "consumer_attack_results": "Consumer attacks cover registry writes, version swaps, quarantine bypass, capacity overflow, weight changes, and unsafe feature enablement.",
+    "dependency_rollback_attack_results": "Rollback attacks cover false lineage, missing edges, cycles, shared-support deletion, incomplete invalidation, journal interruption, root mismatch, and stale consumer decisions.",
+    "detected_fail_closed_unsafe_survivor_false_alarm_and_inapplicable_counts": "Counts are grouped by upstream terminal class.",
+    "duration_s": "Wall time is measured without padding.",
+    "factor_learning_rollback_safety_ready_score": "Readiness is conjunctive over attack closure, zero counters, protected files, tests, and class preservation.",
+    "field_principles": "Every required field states its guard.",
+    "field_provenance": "Every required field maps to specs, inputs, attacks, checks, tests, or hashes.",
+    "harm_underpowered_missing_and_flagged_cells": "Harm, missing, underpowered, blocked, and flagged cells stay visible.",
+    "honest_verdict": "The verdict starts with a terminal prefix and states that safety does not promote utility.",
+    "inference_substrate": "The substrate declares deterministic artifact audit with no new upstream run.",
+    "preconditions_checked": "Preconditions bind date, hashes, copies, terminal classes, exclusions, protected files, seeds, and commands.",
+    "proposal_frontier_attack_results": "Proposal attacks cover residual mutation, incumbent laundering, optional-stopping reset, family shortcuts, and unequal work.",
+    "protected_files_unchanged": "Protected repo files and upstream artifacts stay byte-identical.",
+    "protected_validation_leak_count": "Bare zero proves protected validation data did not leak.",
+    "random_seed": "Fixed seed pins manifest order.",
+    "readiness_recomputation": "Readiness fields are recomputed from primary data and separated from safety readiness.",
+    "registry_write_during_consumer_count": "Bare zero proves consumer evaluation stayed read-only.",
+    "reproducibility_checksum": "A normalized checksum detects artifact drift.",
+    "source_model_weight_mutation_count": "Bare zero proves source weights did not change.",
+    "status": "Terminal status follows safety audit gates, not utility promotion.",
+    "tests_run": "Verification commands and exit codes are recorded.",
+    "transport_attack_results": "Transport attacks cover process substitution, schema drift, capacity undercount, thinking prefixes, repeated tokens, truncation laundering, parser retry, post-hoc repair, source substitution, and exact-check bypass.",
+    "unsafe_commit_count": "Bare zero proves attacked state did not commit.",
+    "upstream_artifact_and_sidecar_hashes": "Upstream artifacts, sidecars, source files, exact checkers, protected manifests, and exclusion state are frozen before semantic reads.",
+    "upstream_terminal_classification": "Absent, blocked, null, clean, flagged, and malformed evidence classes are explicit.",
+    "utility_promotion_count": "Bare zero proves safety did not become utility evidence.",
+    "verifier_is_oracle": "Oracle scope is limited to immutable exact-checker replay outputs."
+  },
+  "field_provenance": {
+    "attack_manifest_path_hash": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "audit_registration_path_hash_and_preoutcome_receipt": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "chronological_learning_attack_results": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "consumer_attack_results": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "dependency_rollback_attack_results": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "detected_fail_closed_unsafe_survivor_false_alarm_and_inapplicable_counts": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "duration_s": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "factor_learning_rollback_safety_ready_score": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "field_principles": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "field_provenance": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "harm_underpowered_missing_and_flagged_cells": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "honest_verdict": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "inference_substrate": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "preconditions_checked": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "proposal_frontier_attack_results": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "protected_files_unchanged": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "protected_validation_leak_count": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "random_seed": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "readiness_recomputation": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "registry_write_during_consumer_count": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "reproducibility_checksum": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "source_model_weight_mutation_count": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "status": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "tests_run": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "transport_attack_results": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "unsafe_commit_count": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "upstream_artifact_and_sidecar_hashes": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "upstream_terminal_classification": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "utility_promotion_count": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ],
+    "verifier_is_oracle": [
+      "REQ-LEARN-6385",
+      "V549 upstream artifact bytes",
+      "preoutcome registration",
+      "preoutcome attack manifest",
+      "immutable-copy replay",
+      "Exp6385 focused tests"
+    ]
+  },
+  "harm_underpowered_missing_and_flagged_cells": {
+    "blocked_upstreams": [
+      "exp6381",
+      "exp6384"
+    ],
+    "flagged_cells": [
+      "invalid_parse:unsloth/Qwen3.6-35B-A3B-GGUF:canonical_prompt_192",
+      "invalid_parse:unsloth/Qwen3.6-35B-A3B-GGUF:canonical_prompt_computed_allowance",
+      "invalid_parse:unsloth/Qwen3.6-35B-A3B-GGUF:frozen_exp6366_prompt_192",
+      "invalid_parse:unsloth/gemma-4-26B-A4B-it-GGUF:canonical_prompt_192",
+      "invalid_parse:unsloth/gemma-4-26B-A4B-it-GGUF:frozen_exp6366_prompt_192",
+      "invalid_parse:unsloth/gemma-4-31B-it-GGUF:canonical_prompt_192",
+      "invalid_parse:unsloth/gemma-4-31B-it-GGUF:frozen_exp6366_prompt_192",
+      "missing_canonical_capacity_family:threshold_guard",
+      "missing_exact_family:threshold_guard"
+    ],
+    "flagged_upstreams": [],
+    "malformed_upstreams": [],
+    "missing_model_cells": [],
+    "missing_or_blocked_remain_terminal_evidence_class": true,
+    "missing_upstreams": [
+      "exp6382"
+    ],
+    "null_upstreams": [
+      "exp6380"
+    ],
+    "schema": "carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.harm_cells",
+    "underpowered_cells": []
+  },
+  "honest_verdict": "complete_positive: V549 safety attacks failed closed; blocked, null, and absent utility evidence stayed terminal; utility promotion remains zero",
+  "inference_substrate": "deterministic_v549_artifact_safety_audit_no_upstream_rerun",
+  "preconditions_checked": {
+    "checker_versions_sha256": "sha256:51c23c7c9785e207d5a34dcacd7ec01d9f311702877370bad39e7487316cd9bb",
+    "classification_sha256": "sha256:00b15491c9c7d3c39e747df6e50bb6f45cab9abe0ac893c9a0afbc37276a3140",
+    "commands_sha256": "sha256:a24324d631809e59d966748578e5c0211386853ce8b550f8c6a09a3b8d9a56f5",
+    "date": "20260813",
+    "immutable_copies_ready": true,
+    "immutable_copy_count": 9,
+    "llm_call_count": 0,
+    "manifest_path": "results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json.attack_manifest.json",
+    "manifest_sha256": "sha256:00e6fcab5731ebabbcb3a92d386631a467f590da669d2256630f08c58a4bef9e",
+    "manifest_written_before_outcome_sensitive_reads": true,
+    "outcome_sensitive_reads_after_manifest_hash": true,
+    "planning_date": "20260813",
+    "protected_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:7a0e0644fbe46752641dc44efa37680ec52c54c5a3a42c4ea3797ba36c53bfcd",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "ops/known-issues.md": "sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6379_canonical_factor_edit_transport_contract.json": "sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406",
+      "results/experiment_6380_three_family_canonical_factor_transport_canary.json": "sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613",
+      "results/experiment_6381_verified_frontier_live_factor_proposal_ab.json": "sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8",
+      "results/experiment_6382_chronological_verified_factor_self_learning.json": null,
+      "results/experiment_6383_dependency_guided_factor_rollback_stress.json": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c",
+      "results/experiment_6384_default_off_certified_factor_consumer_ab.json": "sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "sidecar:exp6379:experiment_6379_canonical_factor_edit_transport_contract.json.canonical_schema.json": "sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036",
+      "sidecar:exp6380:experiment_6380_three_family_canonical_factor_transport_canary.json.canonical_schema.json": "sha256:ddf7e1d3923240a95ca39e791e5be899ad3063f06025dba4a7eeb92e30847b08",
+      "sidecar:exp6380:experiment_6380_three_family_canonical_factor_transport_canary.json.sealed_event_manifest.json": "sha256:8fad6c547fe549fe0c50e04e2fbca218ed40b3af5fb341aad7a6c9b69ac6355c",
+      "sidecar:exp6383:experiment_6383_dependency_guided_factor_rollback_stress.json.typed_dependency_schema.json": "sha256:ba4e71d2fa0cbfdce13b1d81b25441db5eff5be1f5af2fa72d94986638ae2110",
+      "upstream:exp6379": "sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406",
+      "upstream:exp6380": "sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613",
+      "upstream:exp6381": "sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8",
+      "upstream:exp6382": null,
+      "upstream:exp6383": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c",
+      "upstream:exp6384": "sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf"
+    },
+    "protected_hashes_frozen_before_semantic_reads": true,
+    "random_seed": 6385,
+    "registration_path": "results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json.audit_registration.json",
+    "registration_sha256": "sha256:03898f7515a9ead615ddb1f6678e0fe380999e77d31a47dbf89e9fef4db7d1ee",
+    "registration_written_before_outcome_sensitive_reads": true,
+    "schema": "carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.preconditions",
+    "terminal_classes_frozen_before_semantic_reads": true,
+    "upstream_hashes_frozen_before_semantic_reads": true,
+    "upstream_hashes_sha256": "sha256:3005ed44d7d14b48ed0cbc09fff55f5f50df97fd64a3769fcabbfd1ae7d3e450",
+    "upstream_rerun_count": 0
+  },
+  "proposal_frontier_attack_results": {
+    "all_applicable_harmful_attacks_fail_closed": true,
+    "applicable_attack_count": 0,
+    "attack_classes": [
+      "residual_set_mutation",
+      "incumbent_laundering",
+      "optional_stopping_reset",
+      "family_identity_shortcuts",
+      "unequal_work"
+    ],
+    "by_attack": {
+      "family_identity_shortcuts": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 0,
+        "attack_class": "family_identity_shortcuts",
+        "detected_count": 0,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 0,
+        "false_alarm_count": 0,
+        "group": "proposal_frontier_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638613,
+        "target_results": [
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "blocked",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6381"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "incumbent_laundering": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 0,
+        "attack_class": "incumbent_laundering",
+        "detected_count": 0,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 0,
+        "false_alarm_count": 0,
+        "group": "proposal_frontier_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638611,
+        "target_results": [
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "blocked",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6381"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "optional_stopping_reset": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 0,
+        "attack_class": "optional_stopping_reset",
+        "detected_count": 0,
+        "expected_clean_terminal_decision": "abort",
+        "fail_closed_count": 0,
+        "false_alarm_count": 0,
+        "group": "proposal_frontier_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638612,
+        "target_results": [
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "blocked",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6381"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "residual_set_mutation": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 0,
+        "attack_class": "residual_set_mutation",
+        "detected_count": 0,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 0,
+        "false_alarm_count": 0,
+        "group": "proposal_frontier_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638610,
+        "target_results": [
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "blocked",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6381"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "unequal_work": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 0,
+        "attack_class": "unequal_work",
+        "detected_count": 0,
+        "expected_clean_terminal_decision": "abort",
+        "fail_closed_count": 0,
+        "false_alarm_count": 0,
+        "group": "proposal_frontier_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638614,
+        "target_results": [
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "blocked",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6381"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      }
+    },
+    "detected_count": 0,
+    "fail_closed_count": 0,
+    "false_alarm_count": 0,
+    "inapplicable_count": 5,
+    "schema": "carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.proposal_frontier_attack_results",
+    "unsafe_survivor_count": 0
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:7a0e0644fbe46752641dc44efa37680ec52c54c5a3a42c4ea3797ba36c53bfcd",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "ops/known-issues.md": "sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6379_canonical_factor_edit_transport_contract.json": "sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406",
+      "results/experiment_6380_three_family_canonical_factor_transport_canary.json": "sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613",
+      "results/experiment_6381_verified_frontier_live_factor_proposal_ab.json": "sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8",
+      "results/experiment_6382_chronological_verified_factor_self_learning.json": null,
+      "results/experiment_6383_dependency_guided_factor_rollback_stress.json": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c",
+      "results/experiment_6384_default_off_certified_factor_consumer_ab.json": "sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "sidecar:exp6379:experiment_6379_canonical_factor_edit_transport_contract.json.canonical_schema.json": "sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036",
+      "sidecar:exp6380:experiment_6380_three_family_canonical_factor_transport_canary.json.canonical_schema.json": "sha256:ddf7e1d3923240a95ca39e791e5be899ad3063f06025dba4a7eeb92e30847b08",
+      "sidecar:exp6380:experiment_6380_three_family_canonical_factor_transport_canary.json.sealed_event_manifest.json": "sha256:8fad6c547fe549fe0c50e04e2fbca218ed40b3af5fb341aad7a6c9b69ac6355c",
+      "sidecar:exp6383:experiment_6383_dependency_guided_factor_rollback_stress.json.typed_dependency_schema.json": "sha256:ba4e71d2fa0cbfdce13b1d81b25441db5eff5be1f5af2fa72d94986638ae2110",
+      "upstream:exp6379": "sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406",
+      "upstream:exp6380": "sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613",
+      "upstream:exp6381": "sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8",
+      "upstream:exp6382": null,
+      "upstream:exp6383": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c",
+      "upstream:exp6384": "sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf"
+    },
+    "before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:7a0e0644fbe46752641dc44efa37680ec52c54c5a3a42c4ea3797ba36c53bfcd",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "ops/known-issues.md": "sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6379_canonical_factor_edit_transport_contract.json": "sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406",
+      "results/experiment_6380_three_family_canonical_factor_transport_canary.json": "sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613",
+      "results/experiment_6381_verified_frontier_live_factor_proposal_ab.json": "sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8",
+      "results/experiment_6382_chronological_verified_factor_self_learning.json": null,
+      "results/experiment_6383_dependency_guided_factor_rollback_stress.json": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c",
+      "results/experiment_6384_default_off_certified_factor_consumer_ab.json": "sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+      "sidecar:exp6379:experiment_6379_canonical_factor_edit_transport_contract.json.canonical_schema.json": "sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036",
+      "sidecar:exp6380:experiment_6380_three_family_canonical_factor_transport_canary.json.canonical_schema.json": "sha256:ddf7e1d3923240a95ca39e791e5be899ad3063f06025dba4a7eeb92e30847b08",
+      "sidecar:exp6380:experiment_6380_three_family_canonical_factor_transport_canary.json.sealed_event_manifest.json": "sha256:8fad6c547fe549fe0c50e04e2fbca218ed40b3af5fb341aad7a6c9b69ac6355c",
+      "sidecar:exp6383:experiment_6383_dependency_guided_factor_rollback_stress.json.typed_dependency_schema.json": "sha256:ba4e71d2fa0cbfdce13b1d81b25441db5eff5be1f5af2fa72d94986638ae2110",
+      "upstream:exp6379": "sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406",
+      "upstream:exp6380": "sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613",
+      "upstream:exp6381": "sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8",
+      "upstream:exp6382": null,
+      "upstream:exp6383": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c",
+      "upstream:exp6384": "sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf"
+    },
+    "changed": [],
+    "unchanged": true
+  },
+  "protected_validation_leak_count": 0,
+  "random_seed": 6385,
+  "readiness_recomputation": {
+    "chronological_learning_ready_score": 0.0,
+    "consumer_ready_score": 0.0,
+    "dependency_rollback_ready_score": 1.0,
+    "future_factor_learning_utility_ready_score": 0.0,
+    "proposal_frontier_ready_score": 0.0,
+    "rows": [
+      {
+        "clean_ready": true,
+        "input_class": "clean",
+        "recomputed_score": 1.0,
+        "score_key": "canonical_factor_transport_contract_ready_score",
+        "surface": "transport_contract",
+        "upstream": "exp6379",
+        "utility_required": false
+      },
+      {
+        "clean_ready": false,
+        "input_class": "null",
+        "recomputed_score": 0.0,
+        "score_key": "three_family_factor_transport_ready_score",
+        "surface": "transport_canary",
+        "upstream": "exp6380",
+        "utility_required": true
+      },
+      {
+        "clean_ready": false,
+        "input_class": "blocked",
+        "recomputed_score": 0.0,
+        "score_key": "verified_frontier_live_factor_proposal_ready_score",
+        "surface": "proposal_frontier",
+        "upstream": "exp6381",
+        "utility_required": true
+      },
+      {
+        "clean_ready": false,
+        "input_class": "absent",
+        "recomputed_score": 0.0,
+        "score_key": "prospective_verified_factor_self_learning_ready_score",
+        "surface": "chronological_learning",
+        "upstream": "exp6382",
+        "utility_required": true
+      },
+      {
+        "clean_ready": true,
+        "input_class": "clean",
+        "recomputed_score": 1.0,
+        "score_key": "dependency_guided_rollback_ready_score",
+        "surface": "dependency_rollback",
+        "upstream": "exp6383",
+        "utility_required": false
+      },
+      {
+        "clean_ready": false,
+        "input_class": "blocked",
+        "recomputed_score": 0.0,
+        "score_key": "default_off_certified_factor_consumer_ready_score",
+        "surface": "consumer",
+        "upstream": "exp6384",
+        "utility_required": true
+      }
+    ],
+    "safety_success_substitutes_for_utility": false,
+    "schema": "carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.readiness_recomputation",
+    "separate_clean_utility_artifact_qualifies": false,
+    "transport_canary_ready_score": 0.0,
+    "transport_contract_ready_score": 1.0,
+    "utility_promotion_count": 0
+  },
+  "registry_write_during_consumer_count": 0,
+  "reproducibility_checksum": "sha256:45d5bab10b63b922c35d9b3f891b77ccc629062c33d2d8f9d3aab6e0791acd7a",
+  "source_model_weight_mutation_count": 0,
+  "status": "complete_positive",
+  "tests_run": {
+    "commands": [
+      ".venv/bin/pytest tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py -q --no-cov -n 0",
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py -m pytest tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py -q --no-cov -n 0",
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py --fail-under=100 --show-missing",
+      ".venv/bin/pytest tests/python -q",
+      ".venv/bin/python -m carnot.experiment_6385_live_factor_learning_and_rollback_safety_audit --date 20260813",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py",
+      "sed -n '1,220p' ops/e2e-test-plan.md",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json",
+      ".venv/bin/python scripts/determination_preservation_lint.py",
+      ".venv/bin/python scripts/root_clutter_sweep.py"
+    ],
+    "exit_codes": {
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py --fail-under=100 --show-missing": 0,
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py -m pytest tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py -q --no-cov -n 0": 0,
+      ".venv/bin/pytest tests/python -q": 0,
+      ".venv/bin/pytest tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py -q --no-cov -n 0": 0,
+      ".venv/bin/python -m carnot.experiment_6385_live_factor_learning_and_rollback_safety_audit --date 20260813": 0,
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json": 0,
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py": 0,
+      ".venv/bin/python scripts/determination_preservation_lint.py": 0,
+      ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+      "sed -n '1,220p' ops/e2e-test-plan.md": 0
+    }
+  },
+  "transport_attack_results": {
+    "all_applicable_harmful_attacks_fail_closed": true,
+    "applicable_attack_count": 10,
+    "attack_classes": [
+      "process_substitution",
+      "prompt_schema_drift",
+      "capacity_undercount",
+      "thinking_prefix_acceptance",
+      "repeated_token_acceptance",
+      "truncation_laundering",
+      "parser_retry",
+      "post_hoc_repair",
+      "source_substitution",
+      "exact_check_bypass"
+    ],
+    "by_attack": {
+      "capacity_undercount": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "capacity_undercount",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "abort",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "transport_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638602,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "abort",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6379"
+          },
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "null",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6380"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "exact_check_bypass": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "exact_check_bypass",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "transport_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638609,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "reject",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6379"
+          },
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "null",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6380"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "parser_retry": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "parser_retry",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "abort",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "transport_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638606,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "abort",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6379"
+          },
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "null",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6380"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "post_hoc_repair": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "post_hoc_repair",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "transport_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638607,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "reject",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6379"
+          },
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "null",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6380"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "process_substitution": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "process_substitution",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "transport_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638600,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "reject",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6379"
+          },
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "null",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6380"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "prompt_schema_drift": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "prompt_schema_drift",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "transport_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638601,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "reject",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6379"
+          },
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "null",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6380"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "repeated_token_acceptance": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "repeated_token_acceptance",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "abstain",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "transport_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638604,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "abstain",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6379"
+          },
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "null",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6380"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "source_substitution": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "source_substitution",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "transport_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638608,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "reject",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6379"
+          },
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "null",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6380"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "thinking_prefix_acceptance": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "thinking_prefix_acceptance",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "transport_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638603,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "reject",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6379"
+          },
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "null",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6380"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      },
+      "truncation_laundering": {
+        "all_applicable_harmful_attacks_fail_closed": true,
+        "applicable_target_count": 1,
+        "attack_class": "truncation_laundering",
+        "detected_count": 1,
+        "expected_clean_terminal_decision": "reject",
+        "fail_closed_count": 1,
+        "false_alarm_count": 0,
+        "group": "transport_attack_results",
+        "inapplicable_count": 1,
+        "seed": 638605,
+        "target_results": [
+          {
+            "applicable": true,
+            "copy_available": true,
+            "detected": true,
+            "fail_closed": true,
+            "false_alarm": false,
+            "inapplicable": false,
+            "input_class": "clean",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "reject",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6379"
+          },
+          {
+            "applicable": false,
+            "copy_available": true,
+            "detected": false,
+            "fail_closed": false,
+            "false_alarm": false,
+            "inapplicable": true,
+            "input_class": "null",
+            "protected_validation_leak_count": 0,
+            "registry_write_during_consumer_count": 0,
+            "source_model_weight_mutation_count": 0,
+            "terminal_decision": "inapplicable_terminal_evidence_class",
+            "unsafe_commit_count": 0,
+            "unsafe_survivor": false,
+            "upstream": "exp6380"
+          }
+        ],
+        "unsafe_survivor_count": 0
+      }
+    },
+    "detected_count": 10,
+    "fail_closed_count": 10,
+    "false_alarm_count": 0,
+    "inapplicable_count": 10,
+    "schema": "carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.transport_attack_results",
+    "unsafe_survivor_count": 0
+  },
+  "unsafe_commit_count": 0,
+  "upstream_artifact_and_sidecar_hashes": {
+    "all_hashes_sha256": "sha256:a214025032576cade7fd75066889d2ea2a0725340f8fd7b12bb408fe6853c8e6",
+    "artifacts": {
+      "exp6379": {
+        "honest_verdict_raw": "complete_positive: deterministic factor-edit transport contract is ready; no model quality or utility claim is made",
+        "loadable": true,
+        "path": "results/experiment_6379_canonical_factor_edit_transport_contract.json",
+        "present": true,
+        "reason": "status=positive verdict=positive",
+        "sha256": "sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406",
+        "size_bytes": 46636,
+        "status_raw": "complete_positive",
+        "terminal": true,
+        "terminal_class": "positive"
+      },
+      "exp6380": {
+        "honest_verdict_raw": "complete_null: live calls ran but three-family canonical transport gates did not all pass",
+        "loadable": true,
+        "path": "results/experiment_6380_three_family_canonical_factor_transport_canary.json",
+        "present": true,
+        "reason": "status=null verdict=null",
+        "sha256": "sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613",
+        "size_bytes": 188963,
+        "status_raw": "complete_null",
+        "terminal": true,
+        "terminal_class": "null"
+      },
+      "exp6381": {
+        "honest_verdict_raw": "blocked_gate_check_failed",
+        "loadable": true,
+        "path": "results/experiment_6381_verified_frontier_live_factor_proposal_ab.json",
+        "present": true,
+        "reason": "blocked artifact records a gate skip",
+        "sha256": "sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8",
+        "size_bytes": 923,
+        "status_raw": "blocked",
+        "terminal": true,
+        "terminal_class": "skipped"
+      },
+      "exp6382": {
+        "honest_verdict_raw": null,
+        "loadable": false,
+        "path": "results/experiment_6382_chronological_verified_factor_self_learning.json",
+        "present": false,
+        "reason": "artifact path is missing",
+        "sha256": null,
+        "size_bytes": 0,
+        "status_raw": null,
+        "terminal": false,
+        "terminal_class": "missing"
+      },
+      "exp6383": {
+        "honest_verdict_raw": "complete_positive: dependency-guided rollback removed harmful descendants, preserved independent exact support, and claims no live utility",
+        "loadable": true,
+        "path": "results/experiment_6383_dependency_guided_factor_rollback_stress.json",
+        "present": true,
+        "reason": "status=positive verdict=positive",
+        "sha256": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c",
+        "size_bytes": 39959,
+        "status_raw": "complete_positive",
+        "terminal": true,
+        "terminal_class": "positive"
+      },
+      "exp6384": {
+        "honest_verdict_raw": "blocked_gate_check_failed",
+        "loadable": true,
+        "path": "results/experiment_6384_default_off_certified_factor_consumer_ab.json",
+        "present": true,
+        "reason": "blocked artifact records a gate skip",
+        "sha256": "sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf",
+        "size_bytes": 1365,
+        "status_raw": "blocked",
+        "terminal": true,
+        "terminal_class": "skipped"
+      }
+    },
+    "protected_manifest_and_exclusion_state_sha256": "sha256:ebac80a34a1f4af3f4f252a2cc5a6f90b6fecb028e577907f2aabee295944290",
+    "sidecars": {
+      "exp6379": [
+        {
+          "path": "results/experiment_6379_canonical_factor_edit_transport_contract.json.canonical_schema.json",
+          "present": true,
+          "sha256": "sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036",
+          "size_bytes": 2528
+        }
+      ],
+      "exp6380": [
+        {
+          "path": "results/experiment_6380_three_family_canonical_factor_transport_canary.json.canonical_schema.json",
+          "present": true,
+          "sha256": "sha256:ddf7e1d3923240a95ca39e791e5be899ad3063f06025dba4a7eeb92e30847b08",
+          "size_bytes": 13151
+        },
+        {
+          "path": "results/experiment_6380_three_family_canonical_factor_transport_canary.json.sealed_event_manifest.json",
+          "present": true,
+          "sha256": "sha256:8fad6c547fe549fe0c50e04e2fbca218ed40b3af5fb341aad7a6c9b69ac6355c",
+          "size_bytes": 27927
+        }
+      ],
+      "exp6381": [],
+      "exp6382": [],
+      "exp6383": [
+        {
+          "path": "results/experiment_6383_dependency_guided_factor_rollback_stress.json.typed_dependency_schema.json",
+          "present": true,
+          "sha256": "sha256:ba4e71d2fa0cbfdce13b1d81b25441db5eff5be1f5af2fa72d94986638ae2110",
+          "size_bytes": 2191
+        }
+      ],
+      "exp6384": []
+    },
+    "source_files": {
+      "exclusion_state": {
+        "ops/exclusion_manifest.yaml": {
+          "path": "ops/exclusion_manifest.yaml",
+          "present": true,
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+          "size_bytes": 47866
+        },
+        "ops/known-issues.md": {
+          "path": "ops/known-issues.md",
+          "present": true,
+          "sha256": "sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895",
+          "size_bytes": 1226109
+        }
+      },
+      "files": {
+        "AGENTS.md": {
+          "path": "AGENTS.md",
+          "present": true,
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+          "size_bytes": 1165
+        },
+        "CLAUDE.md": {
+          "path": "CLAUDE.md",
+          "present": true,
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+          "size_bytes": 287937
+        },
+        "CODEX.md": {
+          "path": "CODEX.md",
+          "present": true,
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+          "size_bytes": 2396
+        },
+        "openspec/capabilities/continuous-learning/spec.md": {
+          "path": "openspec/capabilities/continuous-learning/spec.md",
+          "present": true,
+          "sha256": "sha256:6014f6bcf2d8f856464d3d746a3ed7ebb957a5c63c7c4633df265cd3712044a7",
+          "size_bytes": 134488
+        },
+        "openspec/capabilities/research-harnesses/spec.md": {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "present": true,
+          "sha256": "sha256:ff5d06095b4d137e42cba8c91ca9e880dccd02dd6f789b38a274e581241313d5",
+          "size_bytes": 265233
+        },
+        "ops/e2e-test-plan.md": {
+          "path": "ops/e2e-test-plan.md",
+          "present": true,
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+          "size_bytes": 5975
+        },
+        "ops/exclusion_manifest.yaml": {
+          "path": "ops/exclusion_manifest.yaml",
+          "present": true,
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+          "size_bytes": 47866
+        },
+        "ops/known-issues.md": {
+          "path": "ops/known-issues.md",
+          "present": true,
+          "sha256": "sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895",
+          "size_bytes": 1226109
+        },
+        "python/carnot/experiment_6342_anytime_evalue_release_ledger.py": {
+          "path": "python/carnot/experiment_6342_anytime_evalue_release_ledger.py",
+          "present": true,
+          "sha256": "sha256:25577454da38e6193771abe5005d294d249c52135e3dd57eb811f9eeb845dc32",
+          "size_bytes": 51109
+        },
+        "python/carnot/experiment_6343_evidence_carrying_factor_lifecycle.py": {
+          "path": "python/carnot/experiment_6343_evidence_carrying_factor_lifecycle.py",
+          "present": true,
+          "sha256": "sha256:6f8eb0d927439020c59e13e6c95b2865d97f99da5b6003f994b33a345d473dc6",
+          "size_bytes": 68663
+        },
+        "python/carnot/experiment_6346_certified_factor_evolution_safety_audit.py": {
+          "path": "python/carnot/experiment_6346_certified_factor_evolution_safety_audit.py",
+          "present": true,
+          "sha256": "sha256:bf70fbfffbddd873824701d675f085cfda9b5307b634cabcf08c585fcbde14a2",
+          "size_bytes": 46909
+        },
+        "python/carnot/experiment_6379_canonical_factor_edit_transport_contract.py": {
+          "path": "python/carnot/experiment_6379_canonical_factor_edit_transport_contract.py",
+          "present": true,
+          "sha256": "sha256:3920e9d6ab0f6ddceab995df1ef9447236d54c73a0592097d51896f5333f77a4",
+          "size_bytes": 57950
+        },
+        "python/carnot/experiment_6380_three_family_canonical_factor_transport_canary.py": {
+          "path": "python/carnot/experiment_6380_three_family_canonical_factor_transport_canary.py",
+          "present": true,
+          "sha256": "sha256:b57428f1612f64aeba4ef24d56b30c27cb98ef6720d36005bce66a42475aed14",
+          "size_bytes": 94855
+        },
+        "python/carnot/experiment_6381_verified_frontier_live_factor_proposal_ab.py": {
+          "path": "python/carnot/experiment_6381_verified_frontier_live_factor_proposal_ab.py",
+          "present": false,
+          "sha256": null,
+          "size_bytes": 0
+        },
+        "python/carnot/experiment_6382_chronological_verified_factor_self_learning.py": {
+          "path": "python/carnot/experiment_6382_chronological_verified_factor_self_learning.py",
+          "present": false,
+          "sha256": null,
+          "size_bytes": 0
+        },
+        "python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py": {
+          "path": "python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py",
+          "present": true,
+          "sha256": "sha256:69fc95b152d9748f3030e77adcf894f8fa135c48fc3897cedc6873d35be1f36d",
+          "size_bytes": 58227
+        },
+        "python/carnot/experiment_6384_default_off_certified_factor_consumer_ab.py": {
+          "path": "python/carnot/experiment_6384_default_off_certified_factor_consumer_ab.py",
+          "present": false,
+          "sha256": null,
+          "size_bytes": 0
+        },
+        "python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py": {
+          "path": "python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py",
+          "present": true,
+          "sha256": "sha256:66bd1df74eeea61533673f6e268a41402f4f4d77732f2faf8e740a1df87b8f9e",
+          "size_bytes": 56813
+        },
+        "python/carnot/terminal_artifacts.py": {
+          "path": "python/carnot/terminal_artifacts.py",
+          "present": true,
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+          "size_bytes": 17831
+        },
+        "tests/python/test_experiment_6379_canonical_factor_edit_transport_contract.py": {
+          "path": "tests/python/test_experiment_6379_canonical_factor_edit_transport_contract.py",
+          "present": true,
+          "sha256": "sha256:2f9ea3f8fec15cd483503dad2ed3dcdb5774a9175685304e9d414898e71e9d88",
+          "size_bytes": 17495
+        },
+        "tests/python/test_experiment_6380_three_family_canonical_factor_transport_canary.py": {
+          "path": "tests/python/test_experiment_6380_three_family_canonical_factor_transport_canary.py",
+          "present": true,
+          "sha256": "sha256:07fd59f1a0a3d01597d03c4e71c47d9405be9de1f8f91d02b5c5bdb1400a5c78",
+          "size_bytes": 25493
+        },
+        "tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py": {
+          "path": "tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py",
+          "present": true,
+          "sha256": "sha256:7027e8168faf1d2cd3ede3c799c67ef24a8a31c85fbc755a8c2f1958571fa0c3",
+          "size_bytes": 14086
+        },
+        "tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py": {
+          "path": "tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py",
+          "present": true,
+          "sha256": "sha256:09c9862e9d6d5a2f39eca50aaf680b7c1e58a1bda038e1e77a4105e8b9932a99",
+          "size_bytes": 16411
+        }
+      },
+      "source_files_sha256": "sha256:e216e802f6e46ce3c02d851adbe7a79951831ec7b37297d159c4da277586f128"
+    }
+  },
+  "upstream_terminal_classification": {
+    "by_upstream": {
+      "exp6379": {
+        "input_class": "clean",
+        "loadable": true,
+        "present": true,
+        "relabeled_clean": false,
+        "semantic_fields_read": false,
+        "sha256": "sha256:cffa4502abc21735ad0d85068a8e8d1e4b7ceae0b6db8111b4585ca38d4e4406",
+        "terminal_class_presemantic": "positive"
+      },
+      "exp6380": {
+        "input_class": "null",
+        "loadable": true,
+        "present": true,
+        "relabeled_clean": false,
+        "semantic_fields_read": false,
+        "sha256": "sha256:327fc398fdd91558615c850e47372db72abc3b73068b9c8d4e91b46859c57613",
+        "terminal_class_presemantic": "null"
+      },
+      "exp6381": {
+        "input_class": "blocked",
+        "loadable": true,
+        "present": true,
+        "relabeled_clean": false,
+        "semantic_fields_read": false,
+        "sha256": "sha256:bd462043f08457e225d73202b2a926b1f4cde1e2b5accc717e6ab4fbbc65dbf8",
+        "terminal_class_presemantic": "skipped"
+      },
+      "exp6382": {
+        "input_class": "absent",
+        "loadable": false,
+        "present": false,
+        "relabeled_clean": false,
+        "semantic_fields_read": false,
+        "sha256": null,
+        "terminal_class_presemantic": "missing"
+      },
+      "exp6383": {
+        "input_class": "clean",
+        "loadable": true,
+        "present": true,
+        "relabeled_clean": false,
+        "semantic_fields_read": false,
+        "sha256": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c",
+        "terminal_class_presemantic": "positive"
+      },
+      "exp6384": {
+        "input_class": "blocked",
+        "loadable": true,
+        "present": true,
+        "relabeled_clean": false,
+        "semantic_fields_read": false,
+        "sha256": "sha256:d39cd3fd7bad668328ad9aafc6dec289246888ec2a89df7a2e356606f4e8cedf",
+        "terminal_class_presemantic": "skipped"
+      }
+    },
+    "class_counts": {
+      "absent": 1,
+      "blocked": 2,
+      "clean": 2,
+      "flagged": 0,
+      "malformed": 0,
+      "null": 1
+    },
+    "classification_before_semantic_reads": true,
+    "missing_or_blocked_relabelled_clean_count": 0,
+    "schema": "carnot.experiment_6385.live_factor_learning_and_rollback_safety_audit.v1.terminal_classification"
+  },
+  "utility_promotion_count": 0,
+  "verifier_is_oracle": {
+    "audit_creates_correctness_labels": false,
+    "non_oracle_checks": [
+      "transport_shape_attack_policy",
+      "proposal_frontier_attack_policy",
+      "chronological_learning_attack_policy",
+      "consumer_attack_policy",
+      "utility_readiness_interpretation"
+    ],
+    "oracle_scoped_checks": [
+      "exp6383_dependency_rollback_exact_replay_rows",
+      "immutable_copy_hash_identity",
+      "protected_file_hash_identity",
+      "reproducibility_checksum_recompute"
+    ],
+    "overall_verifier_is_oracle": false,
+    "true_only_for_immutable_exact_checker_replays": true
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.03463278501294553 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    }
+  ]
+}
