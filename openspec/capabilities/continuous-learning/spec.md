@@ -2202,6 +2202,153 @@ have a valid license
 | SCENARIO-LEARN-6395-ATTACKS | Planned: `python/carnot/experiment_6395_held_factor_transport_license_matrix.py`. | Planned: `tests/python/test_experiment_6395_held_factor_transport_license_matrix.py`. |
 | SCENARIO-LEARN-6395-READY | Planned: `python/carnot/experiment_6395_held_factor_transport_license_matrix.py`. | Planned: `tests/python/test_experiment_6395_held_factor_transport_license_matrix.py`. |
 
+## REQ-LEARN-6396: Capability-Qualified Verified Frontier A/B
+
+**Given** Exp6395 issued held factor transport licenses
+**When** Exp6396 starts on planning date 20260813
+**Then** it SHALL write
+`results/experiment_6396_capability_qualified_verified_frontier_ab.json`
+**And** it SHALL compare independent proposals with a verified-incumbent
+frontier only inside licensed model-family cells.
+
+Exp6396 SHALL use the three mandated local GGUF model ids from
+`cached_sota_pair()`: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Token counts SHALL use the embedded GGUF
+tokenizer named by each license. The experiment SHALL not call
+`AutoTokenizer`.
+
+Exp6396 SHALL revalidate every structured gate, license binding, model hash,
+harness hash, schema hash, CUDA offload receipt, exact checker, and protected
+future partition before an arm runs. Unlicensed cells SHALL emit a frozen
+abstention. They SHALL not call a model and SHALL not receive a substitute
+model, harness, family, or event result.
+
+Exp6396 SHALL seal at least 24 train-counterexample events and at least 24
+untouched future events across the licensed families. It SHALL balance
+executable structure, source labels, and solver difficulty. Solver effort
+SHALL not be used as model difficulty.
+
+Exp6396 SHALL preregister two matched arms: independent restart and
+verified frontier. The arms SHALL match licensed cells, model order, seeds,
+event order, call count, harness capacity, candidate count, exact-check
+budget, and wall-clock cap.
+
+In the verified-frontier arm, Exp6396 SHALL retain only the strongest exactly
+verified incumbent. Later rounds SHALL receive immutable residual failures
+only. The active registry SHALL stay read-only.
+
+Exp6396 SHALL record transport validity, source binding, exact pass rate,
+incumbent changes, residual changes, effective proposal diversity, marginal
+verified gain, stop reason, latency, and exact-check cost for every licensed
+cell. It SHALL freeze one selected factor per arm before future access. It
+SHALL evaluate untouched future exact outcomes once.
+
+Exp6396 SHALL report proposal learnability, exact alignment, future utility,
+confidence intervals, and model-family effects as separate fields. It SHALL
+also run placebo labels, event-order perturbation, identity-blind joins,
+license swaps, equal-work checks, no-gain stopping attacks, and protected
+future leakage checks.
+
+Exp6396 SHALL emit `delta_verified_future_exact_yield` as a finite bare
+number. It SHALL set `capability_qualified_frontier_ready_score=1.0` only when
+the verified-frontier treatment fired in every licensed model, work matched,
+no protected leak occurred, all unlicensed cells abstained, and future
+outcomes were read once. Readiness SHALL not require a positive delta.
+
+Exp6396 SHALL emit these fields with explicit principles:
+
+- `status`: Terminal status separates positive, null, blocked, and retired frontier evidence.
+- `exp6395_gate_receipts`: Exp6395 readiness, licenses, and cell abstentions gate this experiment.
+- `MODEL_SPECS`: The three mandated GGUF model rows come from cached SOTA helper calls.
+- `models_used`: Only licensed mandated models with matched frontier work count as used.
+- `cached_sota_pair_receipts`: Helper-call receipts prevent manual model substitution.
+- `embedded_gguf_tokenizer_receipts`: Tokenizer receipts use only embedded GGUF tokenizers.
+- `autotokenizer_usage_count`: Bare zero proves no external tokenizer path was used.
+- `license_records_used_and_hashes`: Licenses bind model, tokenizer, harness, schema, family, manifest, and expiry.
+- `unlicensed_cell_abstention_records`: Unlicensed cells remain visible and abstain without substitution.
+- `model_harness_schema_and_checker_bindings`: Model files, harnesses, schemas, and exact checkers are bound before arms run.
+- `cuda_offload_and_runtime_receipts_by_model`: CUDA offload and cleanup are reported for mandated models.
+- `train_and_future_manifest_paths_hashes_licenses_balance_and_disjointness`: Train and future manifests are sealed, balanced, licensed, and disjoint.
+- `preregistered_arm_contract`: The independent and frontier arms are frozen before scoring.
+- `matched_work_receipts`: Calls, candidates, event order, exact checks, and caps match across arms.
+- `raw_output_before_parse_paths_hashes_and_counts`: Raw proposal bytes are frozen before parse.
+- `per_cell_transport_source_binding_exact_and_cost_results`: Licensed cells report transport, source binding, exact outcomes, latency, and cost.
+- `incumbent_and_residual_histories`: Frontier state stores only verified incumbents and immutable residual failures.
+- `proposal_learnability_results`: Training counterexample response is separate from future utility.
+- `exact_alignment_results`: Exact checker agreement is separate from proposal learnability and future utility.
+- `frozen_selected_factors_by_arm`: One factor per arm is frozen before future access.
+- `untouched_future_evaluation_receipts`: Protected future outcomes open once after factor freeze.
+- `future_exact_yield_by_arm_and_model`: Future exact utility is reported per arm and model before pooling.
+- `delta_verified_future_exact_yield`: The paired future yield delta is a finite bare number.
+- `confidence_intervals_and_effective_sample_sizes`: Intervals and effective sample sizes are reported separately from point estimates.
+- `identity_license_order_placebo_work_stopping_and_leakage_attack_matrix`: Identity, license, order, placebo, work, stopping, and leakage attacks fail closed.
+- `capability_qualified_frontier_ready_score`: Readiness checks treatment firing, work parity, abstention, leak-free future access, and single future open.
+- `registry_write_count`: Bare zero proves the active registry stayed read-only.
+- `protected_leakage_count`: Bare zero proves protected future labels did not leak.
+- `model_weight_change_count`: Bare zero proves no model weights changed.
+- `harm_underpowered_missing_and_flagged_cells`: Missing, unlicensed, underpowered, and attacked cells stay visible.
+- `protected_files_unchanged`: Protected files remain byte-identical.
+- `preconditions_checked`: Preconditions bind gates, licenses, models, tokenizers, GPUs, schema, manifests, sources, and protected files.
+- `inference_substrate`: The substrate declares deterministic replay over licensed local GGUF receipts.
+- `verifier_is_oracle`: Bare true applies only to exact task checkers.
+- `field_principles`: Every required field states its guard and scientific purpose.
+- `field_provenance`: Every required field maps to specs, upstream artifacts, manifests, tests, or exact checks.
+- `random_seed`: Fixed seeds pin split, arm, and event order.
+- `duration_s`: Wall time is measured without padding.
+- `tests_run`: Verification commands and exit codes are recorded.
+- `reproducibility_checksum`: A normalized checksum detects artifact drift.
+- `honest_verdict`: The verdict starts with a terminal prefix and states the frontier boundary.
+
+## SCENARIO-LEARN-6396-LICENSED-CELLS: Frontier Runs Only On Licensed Cells
+
+**Given** Exp6395 licenses a subset of model-family cells
+**When** Exp6396 runs the two arms
+**Then** only those licensed cells SHALL receive model calls
+**And** every other cell SHALL emit a frozen abstention record.
+
+## SCENARIO-LEARN-6396-FRONTIER: Residuals Follow The Verified Incumbent
+
+**Given** the verified-frontier arm has a current exact incumbent
+**When** the next round starts
+**Then** it SHALL expose only immutable residual failures
+**And** it SHALL not write to the active registry.
+
+## SCENARIO-LEARN-6396-FUTURE: Future Outcomes Open Once
+
+**Given** both arms freeze one selected factor per licensed cell
+**When** Exp6396 evaluates future utility
+**Then** the untouched future exact outcomes SHALL be read once
+**And** proposal learnability, exact alignment, and future utility SHALL be
+reported separately.
+
+## SCENARIO-LEARN-6396-ATTACKS: Qualification Attacks Fail Closed
+
+**Given** placebo labels, event-order perturbation, identity-blind joins,
+license swaps, unequal work, no-gain stopping, or protected-future leakage
+**When** Exp6396 evaluates the attack matrix
+**Then** no attack SHALL promote readiness.
+
+## SCENARIO-LEARN-6396-READY: Readiness Does Not Require Positive Utility
+
+**Given** the frontier treatment fires in every licensed model, work matches,
+protected leakage is zero, all unlicensed cells abstain, and future outcomes
+open once
+**When** `delta_verified_future_exact_yield` is finite
+**Then** `capability_qualified_frontier_ready_score` SHALL be `1.0` even if
+the delta is not positive.
+
+## Implementation Status (REQ-LEARN-6396)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6396 | Planned: `python/carnot/experiment_6396_capability_qualified_verified_frontier_ab.py`; terminal artifact `results/experiment_6396_capability_qualified_verified_frontier_ab.json`. | Planned: `tests/python/test_experiment_6396_capability_qualified_verified_frontier_ab.py`. |
+| SCENARIO-LEARN-6396-LICENSED-CELLS | Planned: `python/carnot/experiment_6396_capability_qualified_verified_frontier_ab.py`. | Planned: `tests/python/test_experiment_6396_capability_qualified_verified_frontier_ab.py`. |
+| SCENARIO-LEARN-6396-FRONTIER | Planned: `python/carnot/experiment_6396_capability_qualified_verified_frontier_ab.py`. | Planned: `tests/python/test_experiment_6396_capability_qualified_verified_frontier_ab.py`. |
+| SCENARIO-LEARN-6396-FUTURE | Planned: `python/carnot/experiment_6396_capability_qualified_verified_frontier_ab.py`. | Planned: `tests/python/test_experiment_6396_capability_qualified_verified_frontier_ab.py`. |
+| SCENARIO-LEARN-6396-ATTACKS | Planned: `python/carnot/experiment_6396_capability_qualified_verified_frontier_ab.py`. | Planned: `tests/python/test_experiment_6396_capability_qualified_verified_frontier_ab.py`. |
+| SCENARIO-LEARN-6396-READY | Planned: `python/carnot/experiment_6396_capability_qualified_verified_frontier_ab.py`. | Planned: `tests/python/test_experiment_6396_capability_qualified_verified_frontier_ab.py`. |
+
 ## REQ-LEARN-6383: Dependency-Guided Factor Rollback Stress
 
 **Given** versioned factor release and whole-version rollback already exist
