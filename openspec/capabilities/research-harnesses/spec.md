@@ -4922,3 +4922,43 @@ SHALL NOT be restored.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-OPS-DETERMINATION-RESTORE-6260 | `scripts/research_conductor.py:determination_damage` (pure decision rule) consumed by `_restore_dropped_determinations`. | `tests/python/test_conductor_determination_restore_downgrade_20260813.py` (8/8: both damage shapes, deliberate-clear carve-out, falsy-in-HEAD, non-determination keys, fresh measurements alongside a lost determination). |
+
+### REQ-OPS-VERDICT-ROW-6261: A Verdict Must Survive Contact With Its Own Rows
+
+**Origin:** 2026-08-13 operator question, "how do we make this process self improving?" Three
+artifacts in the preceding two days carried headlines their own per-row data contradicted, and
+each was caught only by a human reading rows instead of the verdict string. The conductor plans
+from `honest_verdict`, so a wrong verdict propagates into the retro, the planner and the
+exclusion decisions rather than staying local.
+
+`scripts/verdict_row_consistency_lint.py` SHALL check an artifact's headline against its own
+per-unit rows with checks derived from real incidents: ALL_ROWS_NULL (exp6254),
+DEGENERATE_CONTROL (exp6252), NO_HEADROOM_MAJORITY and WINS_NOT_EXCEEDING_LOSSES (exp6251), and
+COVERAGE_SHORTFALL.
+
+It SHALL be advisory by default. Only ALL_ROWS_NULL SHALL exit non-zero, because "every row
+empty" is unambiguous; `--strict` escalates the rest. A hard block on a fuzzy match over
+free-form artifacts is how a guard begins punishing one author for another's data.
+
+An artifact with no recognised row container SHALL be reported as `skipped`, never as clean, and
+the tool SHALL ALWAYS print its coverage counts — a bare "OK" while silently skipping most
+inputs is the guard-is-green-while-blind state this discipline exists to prevent.
+
+Field-name exclusions SHALL be suffix-anchored, never bare substring.
+
+#### SCENARIO-OPS-VERDICT-ROW-6261-DEGENERATE-CONTROL
+
+Given a control arm whose values equal the baseline arm's on at least 80% of rows — including
+when both are NESTED under a per-arm dict — the artifact SHALL be flagged, because a control
+that cannot differ cannot fail and any gate requiring it to be beaten is vacuous.
+
+#### SCENARIO-OPS-VERDICT-ROW-6261-NO-ROWS-IS-NOT-CLEAN
+
+Given an artifact with no per-unit row container, the result SHALL be `skipped` and the
+coverage line SHALL report it, so "could not check" is distinguishable from "checked and clean".
+
+## Implementation Status (REQ-OPS-VERDICT-ROW-6261)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-OPS-VERDICT-ROW-6261 | `scripts/verdict_row_consistency_lint.py`. | `tests/python/test_verdict_row_consistency_lint.py` (11/11), plus verification against the original exp6251/exp6252 artifacts and a synthetic exp6254 shape. **Coverage caveat, measured:** over the 60 most recent artifacts it checks 3 and skips 57, because most carry no per-unit rows. |
