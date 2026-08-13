@@ -15752,3 +15752,4 @@ code |
 | 2026-08-13 05:42 UTC | V549 dated source delta and three-lane scope freez | OK | 87 passed, 1 warning in 9.11s |
 | 2026-08-13 06:00 UTC | Canonical factor-edit instruction and capacity tra | OK | 89 passed, 1 warning in 9.28s |
 | 2026-08-13 06:27 UTC | Gated on Exp6379 readiness: three-family canonical | OK | 86 passed, 1 warning in 8.75s |
+| 2026-08-13 06:29 UTC | Gated on Exp6380 readiness: verified-frontier live | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran |
