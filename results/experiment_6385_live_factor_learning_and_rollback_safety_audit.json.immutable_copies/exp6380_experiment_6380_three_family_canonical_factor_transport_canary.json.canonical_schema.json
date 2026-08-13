@@ -1,0 +1,372 @@
+{
+  "event_contracts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "allowed_variables": [
+        "accept_bias"
+      ],
+      "evidence_summary": {
+        "hidden_reasoning_forbidden": true,
+        "max_chars": 160,
+        "required": true,
+        "visible_evidence_only": true
+      },
+      "field_order": [
+        "schema",
+        "proposal_id",
+        "event_id",
+        "model_hf_id",
+        "model_family",
+        "arm",
+        "candidate_index",
+        "changed_factor",
+        "edits",
+        "selection_score",
+        "obligations",
+        "edit_source_spans",
+        "evidence_summary"
+      ],
+      "fixed_fields": {
+        "arm": "canonical_prompt_computed_allowance",
+        "candidate_index": 0,
+        "changed_factor": "accept_factor",
+        "event_id": "live-6366-000",
+        "schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit"
+      },
+      "forbidden_fields": [
+        "protected_outcome",
+        "protected_success",
+        "exact_label",
+        "hidden_state",
+        "source_weight_delta",
+        "analysis",
+        "thinking"
+      ],
+      "model_bound_fields": [
+        "proposal_id",
+        "model_hf_id",
+        "model_family"
+      ],
+      "numeric_bounds": {
+        "edits": {
+          "max": 1.0,
+          "max_abs_movement": 1.0,
+          "min": -1.0
+        },
+        "selection_score": {
+          "max": 1.0,
+          "min": 0.0
+        }
+      },
+      "output_schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit",
+      "schema": "carnot.experiment_6380.three_family_canonical_factor_transport_canary.v1.canonical_contract",
+      "source_event": {
+        "changed_factor": "accept_factor",
+        "edit_bounds": {
+          "max": 1.0,
+          "max_abs_movement": 1.0,
+          "min": -1.0
+        },
+        "edit_source_span": {
+          "source_end": 119,
+          "source_sha256": "sha256:4710cba0bac843a3f05d2f2190b3ece5b3f2097f5b2bd651c536787d731da5da",
+          "source_start": 108
+        },
+        "event_id": "live-6366-000",
+        "obligation": {
+          "obligation_id": "obl-live-6366-000-0",
+          "source_end": 183,
+          "source_sha256": "sha256:8db064f857527e5971bf69fed8c3b382fc5316247b59682651b54abd62a27326",
+          "source_start": 103,
+          "source_text": "Edit accept_bias for accept_factor within [-1.0, 1.0] to repair threshold_guard."
+        },
+        "source_text": "EVENT live-6366-000. FAMILY threshold_guard. STRUCTURE single_assertion. SURFACE symbolic. OBLIGATION: Edit accept_bias for accept_factor within [-1.0, 1.0] to repair threshold_guard. Counterexample live-6366-000: accept_bias=0.0, expected=accept, observed=reject.",
+        "source_text_sha256": "sha256:7be89372c926ce78de4907a573b14186f3edf3fafb98b9a2aa50b1845a2e2ed4",
+        "variable": "accept_bias"
+      },
+      "version": "v1"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "allowed_variables": [
+        "reject_bias"
+      ],
+      "evidence_summary": {
+        "hidden_reasoning_forbidden": true,
+        "max_chars": 160,
+        "required": true,
+        "visible_evidence_only": true
+      },
+      "field_order": [
+        "schema",
+        "proposal_id",
+        "event_id",
+        "model_hf_id",
+        "model_family",
+        "arm",
+        "candidate_index",
+        "changed_factor",
+        "edits",
+        "selection_score",
+        "obligations",
+        "edit_source_spans",
+        "evidence_summary"
+      ],
+      "fixed_fields": {
+        "arm": "canonical_prompt_computed_allowance",
+        "candidate_index": 0,
+        "changed_factor": "reject_factor",
+        "event_id": "live-6366-008",
+        "schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit"
+      },
+      "forbidden_fields": [
+        "protected_outcome",
+        "protected_success",
+        "exact_label",
+        "hidden_state",
+        "source_weight_delta",
+        "analysis",
+        "thinking"
+      ],
+      "model_bound_fields": [
+        "proposal_id",
+        "model_hf_id",
+        "model_family"
+      ],
+      "numeric_bounds": {
+        "edits": {
+          "max": 1.0,
+          "max_abs_movement": 1.0,
+          "min": -1.0
+        },
+        "selection_score": {
+          "max": 1.0,
+          "min": 0.0
+        }
+      },
+      "output_schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit",
+      "schema": "carnot.experiment_6380.three_family_canonical_factor_transport_canary.v1.canonical_contract",
+      "source_event": {
+        "changed_factor": "reject_factor",
+        "edit_bounds": {
+          "max": 1.0,
+          "max_abs_movement": 1.0,
+          "min": -1.0
+        },
+        "edit_source_span": {
+          "source_end": 122,
+          "source_sha256": "sha256:f0b63973229e2c83d0f974e5abca7430484b48f83ed2dbf1fd2a763737ce98e6",
+          "source_start": 111
+        },
+        "event_id": "live-6366-008",
+        "obligation": {
+          "obligation_id": "obl-live-6366-008-0",
+          "source_end": 189,
+          "source_sha256": "sha256:d7c2dbee861b8f5b5a30896787fbd2e2c1621b1cb52b727d13aeb0508023c69c",
+          "source_start": 106,
+          "source_text": "Edit reject_bias for reject_factor within [-1.0, 1.0] to repair conservation_guard."
+        },
+        "source_text": "EVENT live-6366-008. FAMILY conservation_guard. STRUCTURE single_assertion. SURFACE symbolic. OBLIGATION: Edit reject_bias for reject_factor within [-1.0, 1.0] to repair conservation_guard. Counterexample live-6366-008: reject_bias=0.0, expected=reject, observed=repair.",
+        "source_text_sha256": "sha256:31f64469c5f643cbe0725cb39817eaa44bf9d0fb03637f7682fccfc2a9a75532",
+        "variable": "reject_bias"
+      },
+      "version": "v1"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "allowed_variables": [
+        "repair_bias"
+      ],
+      "evidence_summary": {
+        "hidden_reasoning_forbidden": true,
+        "max_chars": 160,
+        "required": true,
+        "visible_evidence_only": true
+      },
+      "field_order": [
+        "schema",
+        "proposal_id",
+        "event_id",
+        "model_hf_id",
+        "model_family",
+        "arm",
+        "candidate_index",
+        "changed_factor",
+        "edits",
+        "selection_score",
+        "obligations",
+        "edit_source_spans",
+        "evidence_summary"
+      ],
+      "fixed_fields": {
+        "arm": "canonical_prompt_computed_allowance",
+        "candidate_index": 0,
+        "changed_factor": "repair_factor",
+        "event_id": "live-6366-004",
+        "schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit"
+      },
+      "forbidden_fields": [
+        "protected_outcome",
+        "protected_success",
+        "exact_label",
+        "hidden_state",
+        "source_weight_delta",
+        "analysis",
+        "thinking"
+      ],
+      "model_bound_fields": [
+        "proposal_id",
+        "model_hf_id",
+        "model_family"
+      ],
+      "numeric_bounds": {
+        "edits": {
+          "max": 1.0,
+          "max_abs_movement": 1.0,
+          "min": -1.0
+        },
+        "selection_score": {
+          "max": 1.0,
+          "min": 0.0
+        }
+      },
+      "output_schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit",
+      "schema": "carnot.experiment_6380.three_family_canonical_factor_transport_canary.v1.canonical_contract",
+      "source_event": {
+        "changed_factor": "repair_factor",
+        "edit_bounds": {
+          "max": 1.0,
+          "max_abs_movement": 1.0,
+          "min": -1.0
+        },
+        "edit_source_span": {
+          "source_end": 115,
+          "source_sha256": "sha256:fce2bd0f56fe939c19638ee79f98adc568a8e724307defb9ab9b98762ff505e5",
+          "source_start": 104
+        },
+        "event_id": "live-6366-004",
+        "obligation": {
+          "obligation_id": "obl-live-6366-004-0",
+          "source_end": 175,
+          "source_sha256": "sha256:6e1142660cb663929ce1c748a631b748713a7b8f5f8d08ea001b7a8c1da1522c",
+          "source_start": 99,
+          "source_text": "Edit repair_bias for repair_factor within [-1.0, 1.0] to repair route_guard."
+        },
+        "source_text": "EVENT live-6366-004. FAMILY route_guard. STRUCTURE single_assertion. SURFACE symbolic. OBLIGATION: Edit repair_bias for repair_factor within [-1.0, 1.0] to repair route_guard. Counterexample live-6366-004: repair_bias=0.0, expected=repair, observed=accept.",
+        "source_text_sha256": "sha256:296cc3a261e11d603ad2fedaff2f2e43a699c63addfc9815b44fbea9c1aab073",
+        "variable": "repair_bias"
+      },
+      "version": "v1"
+    }
+  },
+  "field_order": [
+    "schema",
+    "proposal_id",
+    "event_id",
+    "model_hf_id",
+    "model_family",
+    "arm",
+    "candidate_index",
+    "changed_factor",
+    "edits",
+    "selection_score",
+    "obligations",
+    "edit_source_spans",
+    "evidence_summary"
+  ],
+  "minimum_examples": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "arm": "canonical_prompt_computed_allowance",
+      "candidate_index": 0,
+      "changed_factor": "accept_factor",
+      "edit_source_spans": {
+        "accept_bias": {
+          "source_end": 119,
+          "source_sha256": "sha256:4710cba0bac843a3f05d2f2190b3ece5b3f2097f5b2bd651c536787d731da5da",
+          "source_start": 108
+        }
+      },
+      "edits": {
+        "accept_bias": 0.5
+      },
+      "event_id": "live-6366-000",
+      "evidence_summary": "Visible obligation obl-live-6366-000-0 supports editing accept_bias.",
+      "model_family": "qwen_moe",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "obligations": [
+        {
+          "obligation_id": "obl-live-6366-000-0",
+          "source_end": 183,
+          "source_sha256": "sha256:8db064f857527e5971bf69fed8c3b382fc5316247b59682651b54abd62a27326",
+          "source_start": 103,
+          "source_text": "Edit accept_bias for accept_factor within [-1.0, 1.0] to repair threshold_guard."
+        }
+      ],
+      "proposal_id": "unsloth--qwen3.6-35b-a3b-gguf:live-6366-000:0",
+      "schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit",
+      "selection_score": 0.5
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "arm": "canonical_prompt_computed_allowance",
+      "candidate_index": 0,
+      "changed_factor": "reject_factor",
+      "edit_source_spans": {
+        "reject_bias": {
+          "source_end": 122,
+          "source_sha256": "sha256:f0b63973229e2c83d0f974e5abca7430484b48f83ed2dbf1fd2a763737ce98e6",
+          "source_start": 111
+        }
+      },
+      "edits": {
+        "reject_bias": 0.5
+      },
+      "event_id": "live-6366-008",
+      "evidence_summary": "Visible obligation obl-live-6366-008-0 supports editing reject_bias.",
+      "model_family": "gemma_moe",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "obligations": [
+        {
+          "obligation_id": "obl-live-6366-008-0",
+          "source_end": 189,
+          "source_sha256": "sha256:d7c2dbee861b8f5b5a30896787fbd2e2c1621b1cb52b727d13aeb0508023c69c",
+          "source_start": 106,
+          "source_text": "Edit reject_bias for reject_factor within [-1.0, 1.0] to repair conservation_guard."
+        }
+      ],
+      "proposal_id": "unsloth--gemma-4-26b-a4b-it-gguf:live-6366-008:0",
+      "schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit",
+      "selection_score": 0.5
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "arm": "canonical_prompt_computed_allowance",
+      "candidate_index": 0,
+      "changed_factor": "repair_factor",
+      "edit_source_spans": {
+        "repair_bias": {
+          "source_end": 115,
+          "source_sha256": "sha256:fce2bd0f56fe939c19638ee79f98adc568a8e724307defb9ab9b98762ff505e5",
+          "source_start": 104
+        }
+      },
+      "edits": {
+        "repair_bias": 0.5
+      },
+      "event_id": "live-6366-004",
+      "evidence_summary": "Visible obligation obl-live-6366-004-0 supports editing repair_bias.",
+      "model_family": "gemma_dense",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "obligations": [
+        {
+          "obligation_id": "obl-live-6366-004-0",
+          "source_end": 175,
+          "source_sha256": "sha256:6e1142660cb663929ce1c748a631b748713a7b8f5f8d08ea001b7a8c1da1522c",
+          "source_start": 99,
+          "source_text": "Edit repair_bias for repair_factor within [-1.0, 1.0] to repair route_guard."
+        }
+      ],
+      "proposal_id": "unsloth--gemma-4-31b-it-gguf:live-6366-004:0",
+      "schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit",
+      "selection_score": 0.5
+    }
+  },
+  "output_schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit",
+  "schema": "carnot.experiment_6380.three_family_canonical_factor_transport_canary.v1.canonical_schema_source",
+  "source_exp6379_schema_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6379_canonical_factor_edit_transport_contract.json.canonical_schema.json"
+}

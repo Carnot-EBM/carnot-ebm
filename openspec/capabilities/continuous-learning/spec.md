@@ -2030,3 +2030,125 @@ lost, protected files change, tests fail, or live utility is claimed
 | SCENARIO-LEARN-6383-CONTROLS | Planned: `python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py`. | Planned: `tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py`. |
 | SCENARIO-LEARN-6383-JOURNAL | Planned: `python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py`. | Planned: `tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py`. |
 | SCENARIO-LEARN-6383-READY | Planned: `python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py`. | Planned: `tests/python/test_experiment_6383_dependency_guided_factor_rollback_stress.py`. |
+
+## REQ-LEARN-6385: Live Factor Learning And Rollback Safety Audit
+
+**Given** V549 factor transport, proposal search, chronological learning,
+selective rollback, and default-off consumer artifacts may be positive, null,
+blocked, flagged, malformed, or absent
+**When** Exp6385 runs on planning date 20260813
+**Then** it SHALL write
+`results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json`
+**And** it SHALL hash all present upstream artifacts, sidecars, source files,
+exact checker files, protected manifests, and exclusion state before semantic
+reads
+**And** it SHALL classify absent, blocked, null, clean, and flagged inputs
+before outcome-sensitive reads.
+
+Exp6385 SHALL freeze audit registration and an attack manifest before reading
+readiness or utility fields. The manifest SHALL cover transport attacks,
+proposal-frontier attacks, chronological-learning attacks, dependency-rollback
+attacks, and consumer attacks. Missing, blocked, null, flagged, malformed, and
+underpowered cells SHALL remain visible. They SHALL not be relabeled clean.
+
+Exp6385 SHALL not rerun upstream experiments. It SHALL replay applicable
+attacks against immutable copies only. It SHALL report detected, fail-closed,
+unsafe-survivor, false-alarm, and inapplicable counts by upstream terminal
+class. It SHALL not create correctness labels. It SHALL state verifier-oracle
+scope only for immutable exact-checker replay outputs.
+
+Exp6385 SHALL recompute readiness fields from primary bytes. Safety success
+SHALL not promote utility. `utility_promotion_count` SHALL remain zero unless a
+separate clean utility artifact qualifies. Clean attacks, blocked tasks, null
+tasks, absent artifacts, and protected safety evidence SHALL not count as
+utility evidence.
+
+Exp6385 SHALL set `factor_learning_rollback_safety_ready_score=1.0` only when
+every applicable harmful attack fails closed, protected validation leaks are
+zero, source model weight mutations are zero, registry writes during consumer
+evaluation are zero, unsafe commits are zero, protected files are unchanged,
+tests pass, and no missing or blocked input is relabeled clean.
+
+Exp6385 SHALL emit these fields with explicit principles:
+
+- `status`: Terminal status follows safety audit gates, not utility promotion.
+- `upstream_artifact_and_sidecar_hashes`: Upstream artifacts, sidecars, source files, exact checkers, protected manifests, and exclusion state are frozen before semantic reads.
+- `upstream_terminal_classification`: Absent, blocked, null, clean, flagged, and malformed evidence classes are explicit.
+- `audit_registration_path_hash_and_preoutcome_receipt`: Registration proves read order, copies, hashes, seeds, commands, and pre-read guards.
+- `attack_manifest_path_hash`: The attack manifest is hash-bound before outcome-sensitive reads.
+- `transport_attack_results`: Transport attacks cover process substitution, schema drift, capacity undercount, thinking prefixes, repeated tokens, truncation laundering, parser retry, post-hoc repair, source substitution, and exact-check bypass.
+- `proposal_frontier_attack_results`: Proposal attacks cover residual mutation, incumbent laundering, optional-stopping reset, family shortcuts, and unequal work.
+- `chronological_learning_attack_results`: Chronology attacks cover same-step writes, future leakage, duplicate evidence, and event reorder.
+- `dependency_rollback_attack_results`: Rollback attacks cover false lineage, missing edges, cycles, shared-support deletion, incomplete invalidation, journal interruption, root mismatch, and stale consumer decisions.
+- `consumer_attack_results`: Consumer attacks cover registry writes, version swaps, quarantine bypass, capacity overflow, weight changes, and unsafe feature enablement.
+- `detected_fail_closed_unsafe_survivor_false_alarm_and_inapplicable_counts`: Counts are grouped by upstream terminal class.
+- `readiness_recomputation`: Readiness fields are recomputed from primary data and separated from safety readiness.
+- `protected_validation_leak_count`: Bare zero proves protected validation data did not leak.
+- `source_model_weight_mutation_count`: Bare zero proves source weights did not change.
+- `registry_write_during_consumer_count`: Bare zero proves consumer evaluation stayed read-only.
+- `unsafe_commit_count`: Bare zero proves attacked state did not commit.
+- `utility_promotion_count`: Bare zero proves safety did not become utility evidence.
+- `factor_learning_rollback_safety_ready_score`: Readiness is conjunctive over attack closure, zero counters, protected files, tests, and class preservation.
+- `harm_underpowered_missing_and_flagged_cells`: Harm, missing, underpowered, blocked, and flagged cells stay visible.
+- `protected_files_unchanged`: Protected repo files and upstream artifacts stay byte-identical.
+- `preconditions_checked`: Preconditions bind date, hashes, copies, terminal classes, exclusions, protected files, seeds, and commands.
+- `inference_substrate`: The substrate declares deterministic artifact audit with no new upstream run.
+- `verifier_is_oracle`: Oracle scope is limited to immutable exact-checker replay outputs.
+- `field_principles`: Every required field states its guard.
+- `field_provenance`: Every required field maps to specs, inputs, attacks, checks, tests, or hashes.
+- `random_seed`: Fixed seed pins manifest order.
+- `duration_s`: Wall time is measured without padding.
+- `tests_run`: Verification commands and exit codes are recorded.
+- `reproducibility_checksum`: A normalized checksum detects artifact drift.
+- `honest_verdict`: The verdict starts with a terminal prefix and states that safety does not promote utility.
+
+## SCENARIO-LEARN-6385-REGISTRATION: Hashes Freeze Before Semantic Reads
+
+**Given** V549 upstream artifact paths and sidecars
+**When** Exp6385 starts
+**Then** it SHALL write registration and attack-manifest sidecars before
+reading readiness, utility, harm, or consumer fields.
+
+## SCENARIO-LEARN-6385-ATTACKS: Applicable Attacks Fail Closed
+
+**Given** the frozen attack manifest
+**When** Exp6385 replays transport, proposal, chronology, rollback, and
+consumer attacks against immutable copies
+**Then** every applicable harmful attack SHALL detect and fail closed
+**And** unsafe survivors, unsafe commits, false alarms, protected leaks,
+registry writes, and model-weight mutations SHALL remain zero.
+
+## SCENARIO-LEARN-6385-TERMINAL-CLASSES: Blocked And Missing Stay Visible
+
+**Given** a blocked, null, flagged, malformed, or absent upstream artifact
+**When** readiness is recomputed
+**Then** the class SHALL remain visible in
+`upstream_terminal_classification`
+**And** the artifact SHALL not relabel it as clean.
+
+## SCENARIO-LEARN-6385-UTILITY-BOUNDARY: Safety Does Not Promote Utility
+
+**Given** safety attacks all fail closed but utility artifacts are null,
+blocked, or absent
+**When** Exp6385 computes `readiness_recomputation`
+**Then** utility promotion SHALL remain zero
+**And** clean safety results SHALL not become utility evidence.
+
+## SCENARIO-LEARN-6385-READY: Readiness Is Conjunctive
+
+**Given** an unsafe survivor, protected leak, consumer registry write, source
+weight mutation, unsafe commit, protected-file mutation, failed test, or
+relabeling of missing or blocked evidence as clean
+**When** Exp6385 refreshes terminal fields
+**Then** `factor_learning_rollback_safety_ready_score` SHALL be `0.0`.
+
+## Implementation Status (REQ-LEARN-6385)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6385 | Planned: `python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py`; terminal artifact `results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json`. | Planned: `tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. |
+| SCENARIO-LEARN-6385-REGISTRATION | Planned: `python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. | Planned: `tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. |
+| SCENARIO-LEARN-6385-ATTACKS | Planned: `python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. | Planned: `tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. |
+| SCENARIO-LEARN-6385-TERMINAL-CLASSES | Planned: `python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. | Planned: `tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. |
+| SCENARIO-LEARN-6385-UTILITY-BOUNDARY | Planned: `python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. | Planned: `tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. |
+| SCENARIO-LEARN-6385-READY | Planned: `python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. | Planned: `tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. |
