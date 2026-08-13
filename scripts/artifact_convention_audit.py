@@ -20,13 +20,21 @@ An adversarial reviewer does not need to be taught every artifact shape. It need
 WHAT IT CHECKS. Two conventions, both measured, both already in the planner's REQUIRED ARTIFACT
 FIELDS guidance (prevention) -- this is the detection half:
 
-  1. A COMPARATIVE claim must record PER-UNIT ROWS. Measured 2026-08-13: 57 of the 60 most
-     recent artifacts carry no per-unit rows at all, only aggregates and receipts. A headline
-     computed from a pooled mean alone cannot be rechecked without re-running the task.
-  2. A BLOCKED verdict must record WHY. Measured: 37 of 58 blocked artifacts record no reason,
-     and all 31 carrying `blocked_gate_check_failed` say nothing about which gate failed. That
-     one blocker stopped 31 tasks across 14 milestones precisely because it could not be
-     diagnosed from the record.
+  1. A COMPARATIVE claim must record PER-UNIT ROWS. Measured 2026-08-13: 39 of the 60 most
+     recent artifacts carry rows, 21 do not. A headline computed from a pooled mean alone cannot
+     be rechecked without re-running the task.
+  2. A BLOCKED verdict must record WHY, in `gate_check_summary`. Measured: 48 of 54 blocked
+     artifacts already do, and only 6 record nothing.
+
+BOTH NUMBERS ARE CORRECTIONS, and the corrections are the point. The first pass reported 3 of 60
+for rows and 37 of 58 for reasons. Both were measurement bugs of exactly the kind this audit
+hunts: the row check read only top-level keys while most rows sit nested one or two levels down,
+and the reason check omitted `gate_check_summary`, the field the conductor's own pre-gate writes.
+Two detectors, both blind, both reporting a corpus far worse than it is. Nothing was re-run on
+the strength of those numbers, which is the only reason this is a correction and not an incident.
+
+Keep the corrected numbers here. A reviewer primed with "57 of 60 are unfalsifiable" will hunt
+for a crisis that is not there, and will find one.
 
 WHAT IT NEVER DOES. It never edits an artifact, never blocks a commit, and never fails the
 conductor. Same contract as its four siblings: it surfaces, the operator decides. A convention
@@ -77,8 +85,10 @@ Two specific failures to hunt for.
 
 2. BLOCKED_WITHOUT_DIAGNOSTIC. The verdict says the task was blocked or gated, but the artifact
    does not record WHICH check failed and what value it saw. Such a blocker cannot be
-   investigated without re-running the task, so it recurs. One message in this corpus blocked 31
-   tasks across 14 milestones for exactly this reason.
+   investigated without re-running the task, so it recurs.
+   Most blocked artifacts in this corpus DO record a reason, usually in `gate_check_summary`. If
+   you find one, the artifact passes this check -- do not flag it because the reason is terse.
+   Flag only an artifact that says it was blocked and says nothing at all about what blocked it.
 
 An artifact that records NO comparative claim and is NOT blocked is CHECKABLE by default -- do
 not invent a problem. An honest null with per-unit rows is CHECKABLE. A scaffolding or receipt

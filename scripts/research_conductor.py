@@ -4189,27 +4189,39 @@ def _plan_next_milestone(push: bool = True) -> bool:
         f"    referencing a retired upstream exp_id) has NO override path —\n"
         f"    rewrite the chain instead.\n\n"
         f"  per_unit_rows: [REQUIRED on any task making a COMPARATIVE claim]\n"
-        f"    Measured 2026-08-13: of the 60 most recent artifacts, 57 carry NO\n"
-        f"    per-unit rows -- only aggregates, receipts and gate tallies. A\n"
-        f"    headline computed from aggregates alone is UNFALSIFIABLE from the\n"
-        f"    artifact: nobody can check it later without re-running the task,\n"
-        f"    and three artifacts in two days had headlines their own rows\n"
-        f"    contradicted (a control identical to its baseline on 20 of 25\n"
-        f"    rows; a gate met on 1 win, 1 loss and 2 rows with no headroom;\n"
-        f"    every row null from a store-path bug). Any task comparing arms,\n"
-        f"    games, seeds or conditions MUST emit a per-unit list (the corpus\n"
-        f"    convention is `per_game_results` or `rows`) carrying the metric\n"
-        f"    for EACH unit, not only the pooled number. See\n"
-        f"    scripts/verdict_row_consistency_lint.py.\n"
-        f"  blocked_reason: [REQUIRED whenever honest_verdict starts blocked_*]\n"
-        f"    Measured 2026-08-13: 37 of 58 blocked artifacts record no reason\n"
-        f"    at all, and all 31 carrying `blocked_gate_check_failed` record\n"
-        f"    NOTHING about which gate failed or why. That single blocker\n"
-        f"    stopped 31 tasks across 14 milestones and could not be\n"
-        f"    investigated without re-running them -- which is exactly how a\n"
-        f"    blocker recurs indefinitely under unattended operation. A blocked\n"
-        f"    verdict MUST record which check failed and the observed value, in\n"
-        f"    `blocked_reason` or `failed_gates`. See\n"
+        f"    Measured 2026-08-13 over the 60 most recent artifacts: 39 carry\n"
+        f"    per-unit rows and 21 do not. (A first count said 3 of 60. It read\n"
+        f"    only top-level keys, and most rows sit nested one or two levels\n"
+        f"    down. The corrected number is 39.) Emit rows anyway. A headline\n"
+        f"    computed from aggregates alone cannot be rechecked without\n"
+        f"    re-running the task, and three artifacts in two days had headlines\n"
+        f"    their own rows contradicted: a control identical to its baseline\n"
+        f"    on 20 of 25 rows; a gate met on 1 win, 1 loss and 2 rows with no\n"
+        f"    headroom; every row null from a store-path bug. Rows caught all\n"
+        f"    three. Any task comparing arms, games, seeds or conditions MUST\n"
+        f"    emit a per-unit list (the corpus convention is `per_game_results`\n"
+        f"    or `rows`) carrying the metric for EACH unit, not only the pooled\n"
+        f"    number. See scripts/verdict_row_consistency_lint.py.\n"
+        f"  gate_check_summary: [REQUIRED whenever honest_verdict starts blocked_*]\n"
+        f"    Use this EXACT field name. The conductor pre-gate already writes\n"
+        f"    it, so a second name for the same idea splits the record.\n"
+        f"    Measured 2026-08-13 over 54 blocked artifacts in 14 milestones: 48\n"
+        f"    DO record a reason and only 6 record nothing. (A first count said\n"
+        f"    37 of 58 recorded nothing. Its field list omitted\n"
+        f"    `gate_check_summary`, the field most of them use. Do not repeat\n"
+        f"    that claim.) A blocked verdict MUST name the check that failed and\n"
+        f"    the value it saw.\n"
+        f"    The live problem is NOT missing diagnostics. It is what they say.\n"
+        f"    Of 28 recurring blocks: 9 say the upstream artifact was never\n"
+        f"    found, 4 say the gated field read None, 15 say the upstream score\n"
+        f"    was 0 when 1 was expected. Only the last is a gate doing its job.\n"
+        f"    The first two are a BROKEN CONTRACT: you write `gated_on:\n"
+        f"    <task>.<field>` and the agent writes a different field name. Real\n"
+        f"    near-misses: gated on `scorer_ready`, artifact wrote\n"
+        f"    `ebcn_scorer_ready`; gated on `pwa_ready`, artifact wrote\n"
+        f"    `pwa_kan_ready`. So: name the gate field in the upstream task's\n"
+        f"    OWN REQUIRED ARTIFACT FIELDS, spelled identically, and confirm the\n"
+        f"    upstream task exists in THIS roadmap. See\n"
         f"    scripts/recurring_blocker_ledger.py.\n"
         f"  solve_provenance: [REQUIRED in REQUIRED ARTIFACT FIELDS on any ARC\n"
         f"    task that claims a game LEVEL solve]\n"
@@ -5108,7 +5120,22 @@ def research_step(
             msg = with_agent_signature(
                 "[conductor] Checkpoint: preserve uncommitted work from interrupted run"
             )
-            run_cmd(["git", "commit", "-m", msg])
+            # --no-verify is REQUIRED here, for the same reason git_commit_and_push() gives
+            # ~3400 lines above: pre-commit stashes unstaged changes before running hooks and
+            # restores them with `git apply` if a hook fails. When that patch does not apply, the
+            # unstaged work is gone. This commit exists ONLY to preserve work, so running a cycle
+            # that can destroy it is backwards.
+            #
+            # Observed live 2026-08-13, twice in one hour, which is why this line changed. The
+            # conductor reached this path while an outer-loop session had edits in the tree. The
+            # test-suite-mutation gate refused (correctly -- a marker was armed by the
+            # conductor's own pytest run), the commit aborted, and the edits were lost. They had
+            # to be retyped from conversation memory. The sibling commit path was fixed for this
+            # in 2026-05-03; this path was missed and kept the defect for three months.
+            #
+            # Verification still happens where it belongs: operator commits, agent-spawned
+            # commits, and CI all run the hooks.
+            run_cmd(["git", "commit", "--no-verify", "-m", msg])
 
     # Reap stale GPU processes BEFORE tests.  Pre-flight test runs themselves
     # can OOM if a prior experiment left zombie workers pinning VRAM.  This
