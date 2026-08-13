@@ -96,3 +96,71 @@ registry write or a solve claim.
 forbidden access counts are zero, `arc_solve_claim` is false,
 `verifier_is_oracle` is false, `solve_provenance` is absent, and the registry
 hash is unchanged.
+
+### REQ-ARC-ARM-6388: Goal-Evidence Response Calibration
+
+Experiment 6388 SHALL calibrate goal-evidence response on matched visible ARC
+trajectory prefixes after the Exp6387 gate passes. The harness SHALL compare
+the current gate, a frozen-prior control, passive two-sided evidence, and active
+reward-machine evidence. Each arm SHALL receive matched model calls, token
+capacity, trajectory exposure, deadlines, and evaluation opportunities.
+
+The model set SHALL include `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, resolved through the cached SOTA GGUF path.
+The harness SHALL use the GGUF-embedded tokenizer path. It SHALL report zero
+AutoTokenizer usage.
+
+For each model and prefix, the harness SHALL freeze the goal hypothesis,
+confidence or abstention, evidence references, and next legal probe before it
+reads later transitions. Later transitions SHALL label calibration only. No arm
+SHALL terminate a level, update solve credit, write the solve registry, read
+hidden source, use offline search, use a GameAdapter, use an external scorer, or
+read hidden state.
+
+Experiment 6388 SHALL write
+`results/experiment_6388_arc_goal_evidence_response_calibration.json` with the
+required top-level fields named by the task. The artifact SHALL set
+`arc_solve_claim=false`, SHALL omit `solve_provenance`, SHALL set
+`verifier_is_oracle=false`, and SHALL set
+`arc_evidence_calibration_ready_score=1.0` only when all models and arms have
+complete receipts, all controls pass, the active treatment fires, forbidden
+access counts are zero, and the registry hash is unchanged.
+
+### SCENARIO-ARC-ARM-6388-MATCHED-PREFIXES
+
+**Given** sealed visible frames, actions, legal sets, evidence identities,
+prefix boundaries, and evaluation labels
+**When** Exp6388 preregisters the current-gate, frozen-prior, passive
+two-sided, and active reward-machine arms
+**Then** every arm receives matched token capacity, trajectory exposure,
+deadlines, and evaluation opportunities without duplicate solve targets.
+
+### SCENARIO-ARC-ARM-6388-FROZEN-PREDICTIONS
+
+**Given** a model, arm, and live trajectory prefix
+**When** the harness records a goal hypothesis, confidence or abstention,
+evidence references, and next legal probe
+**Then** the prediction receipt is sealed before the later transition label is
+read, and the later transition is used only for calibration.
+
+### SCENARIO-ARC-ARM-6388-METRICS-AND-CONTROLS
+
+**Given** accepted, rejected, unverifiable, false accept, false reject, true
+accept, and true reject outcomes
+**When** Exp6388 compares active evidence with the current gate
+**Then** it reports precision, coverage, calibration error, monotonicity,
+hypothesis elimination, response to added evidence, unrounded deltas, and the
+shuffled-evidence, duplicate-evidence, surface-relabeled, no-win-window,
+model-identity-blind, action-order, deadline, and result-before-prediction
+controls.
+
+### SCENARIO-ARC-ARM-6388-ARTIFACT-NO-SOLVE
+
+**Given** the Exp6387 gate passes and the registry hash is captured before the
+run
+**When** Exp6388 writes its artifact
+**Then** all required fields are present, `solve_provenance` is absent,
+protected files are unchanged, forbidden access counts are zero,
+`arc_solve_claim` is false, `verifier_is_oracle` is false, and the registry hash
+is unchanged.
