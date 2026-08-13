@@ -4994,3 +4994,42 @@ substantive, so the reported share can never drift generous.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-OPS-MILESTONE-LEDGER-6262 | `scripts/milestone_progress_ledger.py`. | `tests/python/test_milestone_progress_ledger.py` (7/7). First measurement, .540-.549: 34 blocked, 31 scaffolding, 17 null, **16 substantive of 108 (15%)**, headline unchanged at 183 levels / 25 games. |
+
+### REQ-OPS-RECURRING-BLOCKER-6263: A Blocker That Recurs Is A Task Nobody Is Doing
+
+**Origin:** 2026-08-13 operator question, "how do we make the unattended operation more self
+improving?" Unattended operation fails differently: a failure nobody reads never gets fixed, so
+it recurs indefinitely. Measured over 14 milestones: 58 blocked tasks, **31 carrying the
+identical verdict `blocked_gate_check_failed`**, nothing escalating. Blocked is the single
+largest category of all work (31% of 108 tasks, REQ-OPS-MILESTONE-LEDGER-6262). The same shape
+appeared in the publish path the same day: a stale marker aborted every dataset publish for six
+days while blaming the wrong cause.
+
+`scripts/recurring_blocker_ledger.py` SHALL group blocked verdicts across completed milestones
+by NORMALISED message — stripping experiment ids, milestone versions and embedded counts, so
+per-task identifiers cannot hide a recurrence — and report any blocker at or above a threshold.
+
+`--emit-known-issue` SHALL APPEND one dated MANDATORY-NEXT-MILESTONE entry to
+`ops/known-issues.md`, reusing the Overdue-Priority Forcing Function rather than adding a new
+enforcement path. It SHALL append, never rewrite (never-prune), and SHALL write a single entry
+covering all over-threshold blockers so a mechanical process cannot flood the priorities list.
+
+It SHALL NOT block anything. A recurring blocker may be correct; what is unacceptable is that
+nothing looked.
+
+It SHALL report DIAGNOSTIC COVERAGE — how many blocked artifacts record any reason at all.
+First measurement: **37 of 58 record nothing**, and all 31 `blocked_gate_check_failed`
+artifacts carry no `gate_reason` or equivalent. A blocked verdict with no diagnostic cannot be
+investigated without re-running the task, which guarantees repetition.
+
+#### SCENARIO-OPS-RECURRING-BLOCKER-6263-PER-TASK-IDS-DO-NOT-HIDE-RECURRENCE
+
+Given two blocked verdicts differing only by experiment id or milestone version, they SHALL
+normalise to the same blocker and count as one recurrence, while genuinely different blocker
+messages SHALL remain separate.
+
+## Implementation Status (REQ-OPS-RECURRING-BLOCKER-6263)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-OPS-RECURRING-BLOCKER-6263 | `scripts/recurring_blocker_ledger.py`. | `tests/python/test_recurring_blocker_ledger.py` (6/6, pinning both under- and over-collapse of the normaliser). First run escalated `blocked_gate_check_failed` x31 into `ops/known-issues.md`. |
