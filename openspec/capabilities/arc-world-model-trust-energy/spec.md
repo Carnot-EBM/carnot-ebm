@@ -25778,3 +25778,65 @@ unchanged and there is now no measured reason to change it.
 
 Full synthesis across exp6248-exp6259:
 `docs/research-notes/arc-induction-wall-consolidated-2026-08-12.md`.
+
+
+### REQ-ARC-WMTE-6386: Default-Off Two-Sided Live Goal Evidence Contract
+
+**Origin:** 2026-08-13. exp6258 found 21 false accepts, 5 true accepts, 3 true
+rejects, and 0 false rejects. The live veto could accept a predicate that never
+fired because the observed window contained no win.
+
+The live ARC goal-evidence verifier SHALL return one of exactly three states:
+`accepted`, `rejected`, or `unverifiable`. Verified acceptance SHALL require at
+least one pre-registered firing witness where the predicate fires on an observed
+level-up, and at least one pre-registered non-firing contrast where the predicate
+does not fire on an observed non-level-up. Missing evidence SHALL return
+`unverifiable`, never `accepted`.
+
+Evidence windows SHALL be bounded by event identity, tick, deadline, and a
+maximum event count. Duplicate identical event IDs SHALL collapse to one event.
+Duplicate IDs with contradictory payloads SHALL reject the hypothesis. Reversal
+events SHALL remove the reversed evidence from the admissible window. Timeouts,
+missed deadlines, no-win windows, and incomplete witness sets SHALL return
+`unverifiable`.
+
+The contract SHALL stay separate from search. An `unverifiable` hypothesis MAY
+rank at most one legal probe from the live agent's own legal action set. It
+SHALL NOT terminate a level, claim a solve, update solve credit, read hidden
+source, or call offline ground-truth search. The shipped submitted-agent default
+SHALL stay off, and enabling the flag SHALL make the contract reachable from
+`make_carnot_agent -> E3AgentPolicy`.
+
+Experiment 6386 SHALL write
+`results/experiment_6386_arc_two_sided_goal_evidence_contract.json` with
+`arc_solve_claim=false`, no `solve_provenance`, and `verifier_is_oracle=false`.
+The artifact SHALL replay the 29 exp6258 predicates and the constant-false,
+constant-true, delayed-trigger, duplicate, contradictory, and no-win-window
+fixtures. It SHALL set `arc_two_sided_goal_contract_ready_score=1.0` only if all
+21 prior false accepts are now rejected or unverifiable, no prior true accept
+becomes a false accept, no unverified hypothesis terminates, and the solve
+registry hash is unchanged.
+
+#### SCENARIO-ARC-WMTE-6386-TWO-SIDED-ACCEPTANCE
+
+Given a hypothesis has one pre-registered firing witness on a level-up and one
+pre-registered non-firing contrast on a non-level-up, the verifier SHALL return
+`accepted` and permit termination by that predicate.
+
+#### SCENARIO-ARC-WMTE-6386-MISSING-WIN-IS-UNVERIFIABLE
+
+Given a hypothesis has no bounded firing witness, including a no-win evidence
+window, the verifier SHALL return `unverifiable` and SHALL NOT terminate.
+
+#### SCENARIO-ARC-WMTE-6386-CONTRADICTIONS-REJECT
+
+Given duplicate event identities with contradictory predicate or level-up
+payloads, or a non-firing contrast where the predicate fires, the verifier SHALL
+return `rejected`.
+
+#### SCENARIO-ARC-WMTE-6386-LIVE-DEFAULT-OFF
+
+Given the submitted live agent is constructed without the new flag, the two-sided
+contract SHALL be absent. Given the flag is enabled, the contract SHALL be present
+in `E3AgentPolicy` and `StepwiseExplorer`, while unverified predicates still
+cannot terminate or update solve credit.

@@ -1,0 +1,694 @@
+{
+  "accepted_rejected_and_unverifiable_rules": {
+    "accepted": "pre-registered firing witness plus pre-registered non-firing contrast",
+    "rejected": "contradiction, failed firing witness, or fired non-firing contrast",
+    "unverifiable": "missing evidence, no-win window, timeout, or incomplete witness set"
+  },
+  "admission_precision_and_coverage": {
+    "admission_coverage": 0.1724137931034483,
+    "admission_precision": 1.0
+  },
+  "arc_solve_claim": false,
+  "arc_two_sided_goal_contract_ready_score": 1.0,
+  "default_off_receipt": {
+    "env_default": "0",
+    "env_var": "CARNOT_ARC_TWO_SIDED_GOAL_CONTRACT",
+    "submitted_agent_default_off": true,
+    "submitted_config_default": false
+  },
+  "duration_s": 1.0908,
+  "evidence_window_duplicate_timeout_reversal_and_deadline_rules": {
+    "bounded_by": [
+      "event_id",
+      "tick",
+      "deadline_tick",
+      "max_window_events"
+    ],
+    "deadline": "events after deadline are missing evidence",
+    "duplicate_contradictory": "rejected",
+    "duplicate_identical": "collapsed",
+    "reversal": "removes reversed event from the admissible window",
+    "timeout": "missing witness after the bounded window is unverifiable"
+  },
+  "exp6258_path_hash_and_confusion_boundary": {
+    "acceptance_precision": 0.1923,
+    "confusion_boundary": "old live veto accepted specificity==1.0 even when fires_on_real_win was false",
+    "counts": {
+      "false_accept": 21,
+      "false_reject": 0,
+      "true_accept": 5,
+      "true_reject": 3
+    },
+    "n_predicates": 29,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6258_goal_veto_confusion_matrix.json",
+    "path_sha256": "1a2df53becd4bb24e7db5abb9062a6fe0e4a7759f42842cca7e81e22f5457fef"
+  },
+  "false_accept_false_reject_true_accept_true_reject_and_unverifiable_counts": {
+    "new_accepted": 5,
+    "new_false_accept": 0,
+    "new_false_reject": 0,
+    "new_rejected": 24,
+    "new_unverifiable": 0,
+    "old_false_accept": 21,
+    "old_false_reject": 0,
+    "old_true_accept": 5,
+    "old_true_reject": 3
+  },
+  "field_principles": {
+    "accepted_rejected_and_unverifiable_rules": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "admission_precision_and_coverage": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "arc_solve_claim": "false because this task verifies a contract and claims no level solve",
+    "arc_two_sided_goal_contract_ready_score": "1.0 only when all prior false accepts are rejected or unverifiable and defaults stay off",
+    "default_off_receipt": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "duration_s": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "evidence_window_duplicate_timeout_reversal_and_deadline_rules": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "exp6258_path_hash_and_confusion_boundary": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "false_accept_false_reject_true_accept_true_reject_and_unverifiable_counts": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "field_principles": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "field_provenance": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "firing_and_nonfiring_evidence_requirements": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "honest_verdict": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "inference_substrate": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "live_entrypoint_reachability_receipts": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "no_duplicate_solve_target_receipt": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "old_and_new_confusion_matrices": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "preconditions_checked": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "protected_files_unchanged": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "random_seed": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "registry_precheck_and_hash": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "regression_and_adversarial_fixture_manifest": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "reproducibility_checksum": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "status": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "termination_and_registry_write_counts": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "tests_run": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "two_sided_contract_path_hash_and_version": "required Exp6386 artifact field; keeps the no-solve, no-oracle claim boundary auditable",
+    "verifier_is_oracle": "false because evidence admission does not know hidden game truth"
+  },
+  "field_provenance": {
+    "exp6258_path_hash_and_confusion_boundary": "results/experiment_6258_goal_veto_confusion_matrix.json",
+    "live_entrypoint_reachability_receipts": "inspect source for make_carnot_agent and E3AgentPolicy",
+    "protected_files_unchanged": "sha256 comparison with run-start and HEAD where available",
+    "registry_precheck_and_hash": "ops/arc_solve_registry.yaml sha256",
+    "two_sided_contract_path_hash_and_version": "python/carnot/agentic/arc_two_sided_goal_contract.py"
+  },
+  "firing_and_nonfiring_evidence_requirements": {
+    "firing_witness": "predicate_fired=true and observed level counter increased",
+    "nonfiring_contrast": "predicate_fired=false and observed level counter did not increase",
+    "preregistered_ids_required": true
+  },
+  "honest_verdict": "complete_two_sided_goal_contract_false_accepts_fixed_default_off_no_solve_claim",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "live_entrypoint_reachability_receipts": {
+    "contract_forwarded_to_explorer": true,
+    "contract_kwarg_in_e3_policy": true,
+    "e3_agent_policy_importable": true,
+    "entrypoint": "make_carnot_agent -> E3AgentPolicy -> StepwiseExplorer",
+    "env_flag_supported": false,
+    "make_carnot_agent_constructs_e3_policy": true,
+    "make_carnot_agent_importable": true,
+    "submitted_default_off": true
+  },
+  "no_duplicate_solve_target_receipt": {
+    "arc_solve_claim": false,
+    "duplicate_solve_target": false,
+    "public_solve_target_selected": false,
+    "registry_record_change_requested": false
+  },
+  "old_and_new_confusion_matrices": {
+    "new": {
+      "accepted": 5,
+      "rejected": 24,
+      "unverifiable": 0
+    },
+    "old": {
+      "false_accept": 21,
+      "false_reject": 0,
+      "true_accept": 5,
+      "true_reject": 3
+    }
+  },
+  "preconditions_checked": {
+    "agents_and_codex_instructions_read": true,
+    "exp6258_fixture_present": true,
+    "no_solve_registry_write_attempted": true,
+    "planning_date": "20260813",
+    "registry_hash_checked_before_and_after": true,
+    "scripts_research_conductor_unmodified": true
+  },
+  "protected_files_unchanged": {
+    "ops/arc_solve_registry.yaml": true,
+    "scripts/research_conductor.py": true
+  },
+  "random_seed": 6386,
+  "registry_precheck_and_hash": {
+    "checked_before_contract_replay": true,
+    "current_live_mechanism": "make_carnot_agent/E3AgentPolicy",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+    "sha256": "071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947"
+  },
+  "regression_and_adversarial_fixture_manifest": {
+    "adversarial_fixtures": {
+      "constant_false": {
+        "accepted_firing_witness_ids": [],
+        "accepted_nonfiring_contrast_ids": [
+          "contrast"
+        ],
+        "contradiction_event_ids": [],
+        "duplicate_event_count": 0,
+        "firing_witness_ids": [
+          "win"
+        ],
+        "hypothesis_id": "constant_false",
+        "nonfiring_contrast_ids": [
+          "contrast"
+        ],
+        "reasons": [
+          "missing_firing_witness"
+        ],
+        "reversed_event_ids": [],
+        "solve_credit_allowed": false,
+        "state": "rejected",
+        "termination_allowed": false,
+        "window_event_ids": [
+          "win",
+          "contrast"
+        ]
+      },
+      "constant_true": {
+        "accepted_firing_witness_ids": [
+          "win"
+        ],
+        "accepted_nonfiring_contrast_ids": [],
+        "contradiction_event_ids": [],
+        "duplicate_event_count": 0,
+        "firing_witness_ids": [
+          "win"
+        ],
+        "hypothesis_id": "constant_true",
+        "nonfiring_contrast_ids": [
+          "contrast"
+        ],
+        "reasons": [
+          "contrast_fired",
+          "missing_nonfiring_contrast"
+        ],
+        "reversed_event_ids": [],
+        "solve_credit_allowed": false,
+        "state": "rejected",
+        "termination_allowed": false,
+        "window_event_ids": [
+          "win",
+          "contrast"
+        ]
+      },
+      "contradictory_duplicate": {
+        "accepted_firing_witness_ids": [
+          "win"
+        ],
+        "accepted_nonfiring_contrast_ids": [
+          "contrast"
+        ],
+        "contradiction_event_ids": [
+          "win"
+        ],
+        "duplicate_event_count": 0,
+        "firing_witness_ids": [
+          "win"
+        ],
+        "hypothesis_id": "contradictory_duplicate",
+        "nonfiring_contrast_ids": [
+          "contrast"
+        ],
+        "reasons": [
+          "contradictory_duplicate"
+        ],
+        "reversed_event_ids": [],
+        "solve_credit_allowed": false,
+        "state": "rejected",
+        "termination_allowed": false,
+        "window_event_ids": [
+          "win",
+          "contrast"
+        ]
+      },
+      "delayed_trigger_before_deadline": {
+        "accepted_firing_witness_ids": [
+          "win"
+        ],
+        "accepted_nonfiring_contrast_ids": [
+          "contrast"
+        ],
+        "contradiction_event_ids": [],
+        "duplicate_event_count": 0,
+        "firing_witness_ids": [
+          "win"
+        ],
+        "hypothesis_id": "delayed_trigger_before_deadline",
+        "nonfiring_contrast_ids": [
+          "contrast"
+        ],
+        "reasons": [
+          "bounded_two_sided_evidence"
+        ],
+        "reversed_event_ids": [],
+        "solve_credit_allowed": true,
+        "state": "accepted",
+        "termination_allowed": true,
+        "window_event_ids": [
+          "contrast",
+          "win"
+        ]
+      },
+      "duplicate_identical": {
+        "accepted_firing_witness_ids": [
+          "win"
+        ],
+        "accepted_nonfiring_contrast_ids": [
+          "contrast"
+        ],
+        "contradiction_event_ids": [],
+        "duplicate_event_count": 1,
+        "firing_witness_ids": [
+          "win"
+        ],
+        "hypothesis_id": "duplicate_identical",
+        "nonfiring_contrast_ids": [
+          "contrast"
+        ],
+        "reasons": [
+          "bounded_two_sided_evidence"
+        ],
+        "reversed_event_ids": [],
+        "solve_credit_allowed": true,
+        "state": "accepted",
+        "termination_allowed": true,
+        "window_event_ids": [
+          "win",
+          "contrast"
+        ]
+      },
+      "no_win_window": {
+        "accepted_firing_witness_ids": [],
+        "accepted_nonfiring_contrast_ids": [
+          "contrast"
+        ],
+        "contradiction_event_ids": [],
+        "duplicate_event_count": 0,
+        "firing_witness_ids": [
+          "win"
+        ],
+        "hypothesis_id": "no_win_window",
+        "nonfiring_contrast_ids": [
+          "contrast"
+        ],
+        "reasons": [
+          "missing_firing_witness"
+        ],
+        "reversed_event_ids": [],
+        "solve_credit_allowed": false,
+        "state": "unverifiable",
+        "termination_allowed": false,
+        "window_event_ids": [
+          "contrast"
+        ]
+      }
+    },
+    "exp6258_predicates": [
+      {
+        "arm": "stored",
+        "fires_on_real_win": false,
+        "game": "ar25",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": false,
+        "game": "bp35",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": true,
+        "game": "cd82",
+        "new_reasons": [
+          "bounded_two_sided_evidence"
+        ],
+        "new_state": "accepted",
+        "old_label": "true_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": true,
+        "game": "cn04",
+        "new_reasons": [
+          "bounded_two_sided_evidence"
+        ],
+        "new_state": "accepted",
+        "old_label": "true_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": false,
+        "game": "dc22",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": false,
+        "game": "ft09",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": false,
+        "game": "g50t",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": false,
+        "game": "ka59",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": false,
+        "game": "lf52",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": false,
+        "game": "lp85",
+        "new_reasons": [
+          "missing_firing_witness",
+          "contrast_fired",
+          "missing_nonfiring_contrast"
+        ],
+        "new_state": "rejected",
+        "old_label": "true_reject",
+        "source": "stored",
+        "specificity": 0.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": false,
+        "game": "ls20",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": false,
+        "game": "m0r0",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": true,
+        "game": "r11l",
+        "new_reasons": [
+          "bounded_two_sided_evidence"
+        ],
+        "new_state": "accepted",
+        "old_label": "true_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": false,
+        "game": "re86",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": false,
+        "game": "s5i5",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": false,
+        "game": "sb26",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": true,
+        "game": "sk48",
+        "new_reasons": [
+          "bounded_two_sided_evidence"
+        ],
+        "new_state": "accepted",
+        "old_label": "true_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": true,
+        "game": "sp80",
+        "new_reasons": [
+          "bounded_two_sided_evidence"
+        ],
+        "new_state": "accepted",
+        "old_label": "true_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": false,
+        "game": "tr87",
+        "new_reasons": [
+          "missing_firing_witness",
+          "contrast_fired",
+          "missing_nonfiring_contrast"
+        ],
+        "new_state": "rejected",
+        "old_label": "true_reject",
+        "source": "stored",
+        "specificity": 0.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": false,
+        "game": "tu93",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "stored",
+        "fires_on_real_win": false,
+        "game": "vc33",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "stored",
+        "specificity": 1.0
+      },
+      {
+        "arm": "control",
+        "fires_on_real_win": false,
+        "game": "dc22",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "freshly_induced",
+        "specificity": 1.0
+      },
+      {
+        "arm": "treatment",
+        "fires_on_real_win": false,
+        "game": "dc22",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "freshly_induced",
+        "specificity": 1.0
+      },
+      {
+        "arm": "control",
+        "fires_on_real_win": false,
+        "game": "cn04",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "freshly_induced",
+        "specificity": 1.0
+      },
+      {
+        "arm": "treatment",
+        "fires_on_real_win": false,
+        "game": "cn04",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "freshly_induced",
+        "specificity": 1.0
+      },
+      {
+        "arm": "control",
+        "fires_on_real_win": false,
+        "game": "ls20",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "freshly_induced",
+        "specificity": 1.0
+      },
+      {
+        "arm": "treatment",
+        "fires_on_real_win": false,
+        "game": "ls20",
+        "new_reasons": [
+          "missing_firing_witness",
+          "contrast_fired",
+          "missing_nonfiring_contrast"
+        ],
+        "new_state": "rejected",
+        "old_label": "true_reject",
+        "source": "freshly_induced",
+        "specificity": 0.0
+      },
+      {
+        "arm": "control",
+        "fires_on_real_win": false,
+        "game": "s5i5",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "freshly_induced",
+        "specificity": 1.0
+      },
+      {
+        "arm": "treatment",
+        "fires_on_real_win": false,
+        "game": "s5i5",
+        "new_reasons": [
+          "missing_firing_witness"
+        ],
+        "new_state": "rejected",
+        "old_label": "false_accept",
+        "source": "freshly_induced",
+        "specificity": 1.0
+      }
+    ]
+  },
+  "reproducibility_checksum": "44fc49d357b46b0d25ed7db3d07da19930711a9d0ce1d0015fa271b060988fd7",
+  "status": "complete",
+  "termination_and_registry_write_counts": {
+    "registry_hash_unchanged": true,
+    "registry_write_count": 0,
+    "solve_credit_update_count": 0,
+    "unverified_hypothesis_termination_count": 0
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_arc_two_sided_goal_contract.py -q",
+    ".venv/bin/pytest tests/python -q",
+    "python scripts/check_spec_coverage.py",
+    "python scripts/adversarial_verify.py results/experiment_6386_arc_two_sided_goal_evidence_contract.json",
+    "python scripts/root_clutter_sweep.py --check"
+  ],
+  "two_sided_contract_path_hash_and_version": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_two_sided_goal_contract.py",
+    "sha256": "10ec21fee1ee145e5c279a45df0d64115ff982d9dd3faf91d22e2fbd5458a4e1",
+    "version": "6386.1"
+  },
+  "verifier_is_oracle": false
+}
