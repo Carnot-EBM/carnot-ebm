@@ -15782,3 +15782,4 @@ code |
 | 2026-08-13 14:08 UTC | Gated on Exp6394 freeze: held factor-transport cap | OK | 86 passed, 1 warning in 9.35s |
 | 2026-08-13 14:28 UTC | Gated on Exp6395 licenses: capability-qualified ve | OK | 86 passed, 1 warning in 9.95s |
 | 2026-08-13 14:46 UTC | Gated on Exp6396 positive delta: transactional con | OK | 88 passed, 1 warning in 9.98s |
+| 2026-08-13 15:05 UTC | Gated on Exp6397 readiness: default-off transactio | OK | 89 passed, 1 warning in 9.87s |
