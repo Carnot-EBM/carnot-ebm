@@ -1,0 +1,1714 @@
+{
+  "MODEL_SPECS": [
+    {
+      "autotokenizer_used": false,
+      "exists": true,
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "min_free_vram_mb": 20000,
+      "model_family": "qwen_moe",
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "prompt_tokens_for_tokenizer_precheck": 10,
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (10 tokens)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "autotokenizer_used": false,
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "min_free_vram_mb": 20000,
+      "model_family": "gemma_dense",
+      "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "prompt_tokens_for_tokenizer_precheck": 11,
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (11 tokens)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "autotokenizer_used": false,
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "min_free_vram_mb": 16000,
+      "model_family": "gemma_moe",
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "prompt_tokens_for_tokenizer_precheck": 11,
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (11 tokens)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    }
+  ],
+  "autotokenizer_usage_count": 0,
+  "bounded_factor_edit_schema_path_and_hash": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6366_repaired_live_factor_proposal_authenticity.json.bounded_factor_edit_schema.json",
+    "present": true,
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.factor_edit_schema",
+    "sha256": "sha256:43f276f1f9ef95e908400b7e8f42054dcec94c1859f3fae15f8a6418447d875e",
+    "size_bytes": 788
+  },
+  "cached_sota_pair_receipts": {
+    "all_calls_made": true,
+    "calls": [
+      {
+        "gpu_indices": [
+          0,
+          1
+        ],
+        "model_indices": null,
+        "preferred_quant": "Q4_K_M"
+      },
+      {
+        "gpu_indices": [
+          0,
+          1
+        ],
+        "model_indices": [
+          0,
+          2
+        ],
+        "preferred_quant": "Q4_K_M"
+      }
+    ],
+    "helper": "cached_sota_pair"
+  },
+  "child_process_observability_receipts_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "command": {
+        "argv_sanitized": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-c",
+          "\nimport gc\nimport json\nimport os\nimport subprocess\nimport sys\nimport time\n\n\ndef emit(name, payload):\n    sys.stderr.writ...<truncated>... \"authenticated_gpu_offload\": supports and int(sampling[\"n_gpu_layers\"]) != 0})\n",
+          "{\"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"model_path\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth--Q...<truncated>...x\": 4096, \"n_gpu_layers\": -1, \"temperature\": 0.2, \"top_p\": 0.9}, \"seed\": 636602}"
+        ],
+        "argv_sha256": "sha256:ef701230a8480261853caee440caf1b40877e2888e1f6de0128123e707f01e5f",
+        "command_hash": "sha256:ef701230a8480261853caee440caf1b40877e2888e1f6de0128123e707f01e5f"
+      },
+      "dispatcher": {
+        "dispatcher": "exp6365_observable_child_factor_proposal",
+        "environment_allowlist_hash": "sha256:08e9213566be83657538645776419c6e97186ae466bab985f6f686ab52fc785d",
+        "pid": 1456585,
+        "process_identity": {
+          "cmdline": "",
+          "exists": true,
+          "pid": 1456585,
+          "ppid": 1456426,
+          "process_group_id": 1456585,
+          "session_id": 1456585
+        }
+      },
+      "exit": {
+        "contract_ok": true,
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu": {
+        "after_cleanup": [
+          {
+            "gpu_index": 0,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "phase": "after_cleanup",
+            "process_identity": {
+              "exists": false,
+              "pid": 1456585
+            },
+            "timestamp_utc": "2026-08-13T03:54:22Z",
+            "utilization_pct": 100
+          },
+          {
+            "gpu_index": 1,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "phase": "after_cleanup",
+            "process_identity": {
+              "exists": false,
+              "pid": 1456585
+            },
+            "timestamp_utc": "2026-08-13T03:54:22Z",
+            "utilization_pct": 0
+          }
+        ],
+        "after_load": [
+          {
+            "gpu_index": 0,
+            "memory_free_mb": 2807,
+            "memory_used_mb": 21317,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "phase": "after_load",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456585,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:19Z",
+            "utilization_pct": 100
+          },
+          {
+            "gpu_index": 1,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "phase": "after_load",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456585,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:19Z",
+            "utilization_pct": 0
+          }
+        ],
+        "after_unload": [
+          {
+            "gpu_index": 0,
+            "memory_free_mb": 23549,
+            "memory_used_mb": 575,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "phase": "after_unload",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456585,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:22Z",
+            "utilization_pct": 93
+          },
+          {
+            "gpu_index": 1,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "phase": "after_unload",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456585,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:22Z",
+            "utilization_pct": 0
+          }
+        ],
+        "before_load": [
+          {
+            "gpu_index": 0,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "phase": "before_load",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456585,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:04Z",
+            "utilization_pct": 0
+          },
+          {
+            "gpu_index": 1,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "phase": "before_load",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456585,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:04Z",
+            "utilization_pct": 0
+          }
+        ],
+        "during_generation": [
+          {
+            "gpu_index": 0,
+            "memory_free_mb": 2807,
+            "memory_used_mb": 21317,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "phase": "during_generation",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456585,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:19Z",
+            "utilization_pct": 100
+          },
+          {
+            "gpu_index": 1,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "phase": "during_generation",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456585,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:19Z",
+            "utilization_pct": 0
+          }
+        ]
+      },
+      "prompt": {
+        "prompt_sha256": "sha256:f97bb0ba11e272bcdd0640977320a60a1a7bbed99fcb5f50fad820fef05802bf"
+      },
+      "source": {
+        "source_hash": "sha256:1620105f27597ebdffc16ce949f3e5ec1440bac25aab0960f0e4766454fa0ad3",
+        "source_hash_ok": true
+      },
+      "stderr": {
+        "byte_count": 3579,
+        "excerpt": "\nCARNOT_GPU_SAMPLE:{\"phase\": \"before_load\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"phase\": \"before_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456585, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:04Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"phase\": \"before_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456585, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:04Z\", \"utilization_pct\": 0}]}\nggml_cuda_init: found 1 CUDA devices (Total VRAM: 24123 MiB):\n  Device 0: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24123 MiB\n\nCARNOT_PHASE:{\"duration_s\": 13.957844399, \"ended_ns\": 1786593259116912743, \"phase\": \"load\", \"started_ns\": 1786593245159068344}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"after_load\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 2807, \"memory_used_mb\": 21317, \"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"phase\": \"after_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456585, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:19Z\", \"utilization_pct\": 100}, {\"gpu_index\": 1, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"phase\": \"after_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456585, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:19Z\", \"utilization_pct\": 0}]}\n\nCARNOT_PHASE:{\"duration_s\": 0.002475361, \"ended_ns\": 1786593259150018044, \"phase\": \"prompt\", \"started_ns\": 1786593259147542683}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"during_generation\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 2807, \"memory_used_mb\": 21317, \"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"phase\": \"during_generation\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456585, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:19Z\", \"utilization_pct\": 100}, {\"gpu_index\": 1, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"phase\": \"during_generation\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456585, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:19Z\", \"utilization_pct\": 0}]}\n\nCARNOT_USAGE:{\"completion_tokens\": 192, \"prompt_tokens\": 1649, \"total_tokens\": 1841}\n\nCARNOT_PHASE:{\"duration_s\": 2.828254974, \"ended_ns\": 1786593261978290171, \"phase\": \"generate\", \"started_ns\": 1786593259150035197}\n\nCARNOT_PHASE:{\"duration_s\": 0.084764043, \"ended_ns\": 1786593262063098688, \"phase\": \"unload\", \"started_ns\": 1786593261978334645}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"after_unload\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23549, \"memory_used_mb\": 575, \"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"phase\": \"after_unload\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456585, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:22Z\", \"utilization_pct\": 93}, {\"gpu_index\": 1, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"phase\": \"after_unload\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456585, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:22Z\", \"utilization_pct\": 0}]}\n\nCARNOT_PHASE:{\"duration_s\": 0.007204958, \"ended_ns\": 1786593262099997568, \"phase\": \"cleanup\", \"started_ns\": 1786593262092792610}\n\nCARNOT_OFFLOAD:{\"authenticated_gpu_offload\": true, \"llama_supports_gpu_offload\": true}\n",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6366_repaired_live_factor_proposal_authenticity/sidecars/unsloth--qwen3.6-35b-a3b-gguf.stderr.txt",
+        "sha256": "sha256:f88f868169ca162d73fc244d2d934de22d45bb162c3b51cafa423c01517cf7a7"
+      },
+      "stdout": {
+        "byte_count": 832,
+        "excerpt": "\n\n<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - The user provides a JSON payload containing a \"bounded factor edit proposal\".\n   - The instruction says: \"You produce one bounded factor edit proposal as JSON only. Copy source spans and hashes exactly from this payload.\"\n   - The payload includes:\n     - `compact_valid_shape`: Contains the proposal structure with `arm`, `candidate_index`, `changed_factor`, `edit_source_spans`, `edits`, `event_id`, `model_family`, `model_hf_id`, `obligations`, `proposal_id`, `schema`, `selection_score`.\n     - `instruction`: \"Return exactly one JSON object. Copy ids, source spans, and source hashes exactly. Do not include markdown.\"\n     - `proposal_schema`: Defines constraints and required fields.\n     - `released_factor_snapshot`: Metadata about active factors.\n    ",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6366_repaired_live_factor_proposal_authenticity/sidecars/unsloth--qwen3.6-35b-a3b-gguf.stdout.txt",
+        "sha256": "sha256:d95a4c6bae55c7e77dd530996c4fba7731a6aa94a0864cd236a91c9866b1ef7d"
+      },
+      "timing": {
+        "child_process": {
+          "duration_s": 18.066563502,
+          "ended_ns": 1786593262715770077,
+          "started_ns": 1786593244649206575
+        },
+        "cleanup": {
+          "duration_s": 0.007204958,
+          "ended_ns": 1786593262099997568,
+          "started_ns": 1786593262092792610
+        },
+        "generate": {
+          "duration_s": 2.828254974,
+          "ended_ns": 1786593261978290171,
+          "started_ns": 1786593259150035197
+        },
+        "load": {
+          "duration_s": 13.957844399,
+          "ended_ns": 1786593259116912743,
+          "started_ns": 1786593245159068344
+        },
+        "prompt": {
+          "duration_s": 0.002475361,
+          "ended_ns": 1786593259150018044,
+          "started_ns": 1786593259147542683
+        },
+        "unload": {
+          "duration_s": 0.084764043,
+          "ended_ns": 1786593262063098688,
+          "started_ns": 1786593261978334645
+        }
+      },
+      "token": {
+        "completion_tokens": 192,
+        "prompt_tokens": 1649,
+        "total_tokens": 1841
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "command": {
+        "argv_sanitized": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-c",
+          "\nimport gc\nimport json\nimport os\nimport subprocess\nimport sys\nimport time\n\n\ndef emit(name, payload):\n    sys.stderr.writ...<truncated>... \"authenticated_gpu_offload\": supports and int(sampling[\"n_gpu_layers\"]) != 0})\n",
+          "{\"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"model_path\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth...<truncated>...x\": 4096, \"n_gpu_layers\": -1, \"temperature\": 0.2, \"top_p\": 0.9}, \"seed\": 636604}"
+        ],
+        "argv_sha256": "sha256:30348c96e7376c97770d559c7bde68139500715b1281b4d4a6a5b2d7f65616b1",
+        "command_hash": "sha256:30348c96e7376c97770d559c7bde68139500715b1281b4d4a6a5b2d7f65616b1"
+      },
+      "dispatcher": {
+        "dispatcher": "exp6365_observable_child_factor_proposal",
+        "environment_allowlist_hash": "sha256:3e631fe1ac83f5515a616179632df64e637f5fe9178a579b73e28b6e1dded77a",
+        "pid": 1456733,
+        "process_identity": {
+          "cmdline": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c \nimport gc\nimport json\nimport os\nimport subprocess\nimport sys\nimport time\n\n\ndef emit(name, payload):\n    sys.stderr.write(\"\\nCARNOT_%s:%s\\n\" % (name, json.dumps(payload, sort_keys=True)))\n    sys.stderr.flush()\n\n\ndef sample(model_id, phase):\n    try:\n        out = subprocess.check_output(\n            [\n                \"nvidia-smi\",\n                \"--query-gpu=index,memory.used,memory.free,utilization.gpu\",\n                \"--format=csv,noheader,nounits\",\n            ],\n            text=True,\n            timeout=5,\n        )\n        rows = []\n        for line in out.splitlines():\n            parts = [part.strip() for part in line.split(\",\")]\n            if len(parts) >= 4:\n                rows.append(\n                    {\n                        \"model_hf_id\": model_id,\n                        \"phase\": phase,\n                        \"gpu_index\": int(parts[0]),\n                        \"timestamp_utc\": time.strftime(\"%Y-%m-%dT%H:%M:%SZ\", time.gmtime()),\n                        \"memory_used_mb\": int(float(parts[1])),\n                        \"memory_free_mb\": int(float(parts[2])),\n                        \"utilization_pct\": int(float(parts[3])),\n                        \"process_identity\": {\n                            \"pid\": os.getpid(),\n                            \"ppid\": os.getppid(),\n                            \"cmdline\": \"llama_cpp observable child\",\n                        },\n                    }\n                )\n        emit(\"GPU_SAMPLE\", {\"phase\": phase, \"rows\": rows})\n    except Exception as exc:\n        emit(\"GPU_SAMPLE\", {\"phase\": phase, \"rows\": [], \"error\": \"%s: %s\" % (type(exc).__name__, exc)})\n\n\ndef timing(phase, started, ended):\n    emit(\"PHASE\", {\"phase\": phase, \"started_ns\": started, \"ended_ns\": ended, \"duration_s\": (ended - started) / 1000000000})\n\n\nargs = json.loads(sys.argv[1])\nmodel_id = args[\"model_hf_id\"]\nprompt = args[\"prompt\"]\nsampling = args[\"sampling\"]\nsample(model_id, \"before_load\")\n\nfrom llama_cpp import Llama, llama_cpp\n\nsupports = bool(llama_cpp.llama_supports_gpu_offload())\nload_start = time.time_ns()\nllm = Llama(\n    model_path=args[\"model_path\"],\n    n_ctx=int(sampling[\"n_ctx\"]),\n    n_gpu_layers=int(sampling[\"n_gpu_layers\"]),\n    main_gpu=0,\n    n_batch=64,\n    n_ubatch=64,\n    seed=int(args[\"seed\"]),\n    verbose=False,\n)\nload_end = time.time_ns()\ntiming(\"load\", load_start, load_end)\nsample(model_id, \"after_load\")\n\nprompt_start = time.time_ns()\nprompt_tokens = len(llm.tokenize(prompt.encode(\"utf-8\")))\nprompt_end = time.time_ns()\ntiming(\"prompt\", prompt_start, prompt_end)\n\ngen_start = time.time_ns()\nsample(model_id, \"during_generation\")\nresult = llm.create_completion(\n    prompt,\n    max_tokens=int(sampling[\"max_tokens\"]),\n    temperature=float(sampling[\"temperature\"]),\n    top_p=float(sampling[\"top_p\"]),\n    echo=False,\n)\ntext = str(result.get(\"choices\", [{}])[0].get(\"text\", \"\"))\nsys.stdout.buffer.write(text.encode(\"utf-8\", \"replace\"))\nsys.stdout.flush()\nusage = dict(result.get(\"usage\", {}))\nif int(usage.get(\"prompt_tokens\", 0) or 0) <= 0:\n    usage[\"prompt_tokens\"] = prompt_tokens\nif int(usage.get(\"completion_tokens\", 0) or 0) <= 0:\n    usage[\"completion_tokens\"] = max(1, len(llm.tokenize(text.encode(\"utf-8\"))))\nusage[\"total_tokens\"] = int(usage[\"prompt_tokens\"]) + int(usage[\"completion_tokens\"])\nemit(\"USAGE\", usage)\ngen_end = time.time_ns()\ntiming(\"generate\", gen_start, gen_end)\n\nunload_start = time.time_ns()\nclose = getattr(llm, \"close\", None)\nif callable(close):\n    close()\ndel llm\ngc.collect()\nunload_end = time.time_ns()\ntiming(\"unload\", unload_start, unload_end)\nsample(model_id, \"after_unload\")\ncleanup_start = time.time_ns()\ngc.collect()\ncleanup_end = time.time_ns()\ntiming(\"cleanup\", cleanup_start, cleanup_end)\nemit(\"OFFLOAD\", {\"llama_supports_gpu_offload\": supports, \"authenticated_gpu_offload\": supports and int(sampling[\"n_gpu_layers\"]) != 0})\n {\"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"model_path\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf\", \"prompt\": \"You produce one bounded factor edit proposal as JSON only.\\nCopy source spans and hashes exactly from this payload.\\n{\\\"compact_valid_shape\\\": {\\\"arm\\\": \\\"repaired_live_factor_proposal_authenticity\\\", \\\"candidate_index\\\": 0, \\\"changed_factor\\\": \\\"accept_factor\\\", \\\"edit_source_spans\\\": {\\\"accept_bias\\\": {\\\"source_end\\\": 119, \\\"source_sha256\\\": \\\"sha256:4710cba0bac843a3f05d2f2190b3ece5b3f2097f5b2bd651c536787d731da5da\\\", \\\"source_start\\\": 108}}, \\\"edits\\\": {\\\"accept_bias\\\": 0.5}, \\\"event_id\\\": \\\"live-6366-000\\\", \\\"model_family\\\": \\\"gemma_moe\\\", \\\"model_hf_id\\\": \\\"unsloth/gemma-4-26B-A4B-it-GGUF\\\", \\\"obligations\\\": [{\\\"obligation_id\\\": \\\"obl-live-6366-000-0\\\", \\\"source_end\\\": 183, \\\"source_sha256\\\": \\\"sha256:8db064f857527e5971bf69fed8c3b382fc5316247b59682651b54abd62a27326\\\", \\\"source_start\\\": 103, \\\"source_text\\\": \\\"Edit accept_bias for accept_factor within [-1.0, 1.0] to repair threshold_guard.\\\"}], \\\"proposal_id\\\": \\\"unsloth--gemma-4-26b-a4b-it-gguf:live-6366-000:0\\\", \\\"schema\\\": \\\"carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.factor_edit_schema\\\", \\\"selection_score\\\": 0.5}, \\\"instruction\\\": \\\"Return exactly one JSON object. Copy ids, source spans, and source hashes exactly. Do not include markdown.\\\", \\\"proposal_schema\\\": {\\\"edit_bounds\\\": {\\\"max\\\": 1.0, \\\"max_abs_movement\\\": 1.0, \\\"min\\\": -1.0}, \\\"edits_allowed_only_for\\\": [\\\"accept_bias\\\"], \\\"fixed_fields\\\": {\\\"arm\\\": \\\"repaired_live_factor_proposal_authenticity\\\", \\\"candidate_index\\\": 0, \\\"changed_factor\\\": \\\"accept_factor\\\", \\\"event_id\\\": \\\"live-6366-000\\\", \\\"model_family\\\": \\\"gemma_moe\\\", \\\"model_hf_id\\\": \\\"unsloth/gemma-4-26B-A4B-it-GGUF\\\"}, \\\"required_fields\\\": [\\\"proposal_id\\\", \\\"event_id\\\", \\\"model_hf_id\\\", \\\"arm\\\", \\\"candidate_index\\\", \\\"changed_factor\\\", \\\"edits\\\", \\\"selection_score\\\"], \\\"schema\\\": \\\"carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.factor_edit_schema\\\", \\\"source_binding_required\\\": {\\\"edit_source_end\\\": 119, \\\"edit_source_sha256\\\": \\\"sha256:4710cba0bac843a3f05d2f2190b3ece5b3f2097f5b2bd651c536787d731da5da\\\", \\\"edit_source_start\\\": 108, \\\"edit_variable\\\": \\\"accept_bias\\\", \\\"obligation_id\\\": \\\"obl-live-6366-000-0\\\", \\\"obligation_source_end\\\": 183, \\\"obligation_source_sha256\\\": \\\"sha256:8db064f857527e5971bf69fed8c3b382fc5316247b59682651b54abd62a27326\\\", \\\"obligation_source_start\\\": 103}}, \\\"released_factor_snapshot\\\": {\\\"active_factor_ids\\\": [\\\"accept_guard\\\", \\\"reject_guard\\\", \\\"repair_guard\\\"], \\\"read_only_during_proposal\\\": true, \\\"released_root_sha256\\\": \\\"sha256:1c22b1f77ae1e00f16bfc4817eaa047d1798a235790e01507056642129e16607\\\", \\\"released_version_id\\\": \\\"exp6343-final-active\\\"}, \\\"source_event\\\": {\\\"allowed_variables\\\": [\\\"accept_bias\\\"], \\\"changed_factor\\\": \\\"accept_factor\\\", \\\"edit_bounds\\\": {\\\"max\\\": 1.0, \\\"max_abs_movement\\\": 1.0, \\\"min\\\": -1.0}, \\\"edit_source_spans\\\": {\\\"accept_bias\\\": {\\\"end\\\": 119, \\\"sha256\\\": \\\"sha256:4710cba0bac843a3f05d2f2190b3ece5b3f2097f5b2bd651c536787d731da5da\\\", \\\"start\\\": 108}}, \\\"event_id\\\": \\\"live-6366-000\\\", \\\"executable_structure\\\": \\\"single_assertion\\\", \\\"family\\\": \\\"threshold_guard\\\", \\\"minimized_exact_counterexample\\\": {\\\"case_id\\\": \\\"exp6366-threshold_guard-single_assertion-symbolic-00\\\", \\\"exact\\\": true, \\\"executable_structure\\\": \\\"single_assertion\\\", \\\"expected\\\": \\\"accept\\\", \\\"family\\\": \\\"threshold_guard\\\", \\\"generator_seed\\\": 636600, \\\"minimal\\\": true, \\\"observed_before_edit\\\": \\\"reject\\\", \\\"source_text_sha256\\\": \\\"sha256:7be89372c926ce78de4907a573b14186f3edf3fafb98b9a2aa50b1845a2e2ed4\\\", \\\"surface_relabel\\\": \\\"symbolic\\\", \\\"variables\\\": {\\\"accept_bias\\\": 0.0}}, \\\"source_obligations\\\": [{\\\"obligation_id\\\": \\\"obl-live-6366-000-0\\\", \\\"span\\\": {\\\"end\\\": 183, \\\"sha256\\\": \\\"sha256:8db064f857527e5971bf69fed8c3b382fc5316247b59682651b54abd62a27326\\\", \\\"start\\\": 103}, \\\"text\\\": \\\"Edit accept_bias for accept_factor within [-1.0, 1.0] to repair threshold_guard.\\\"}], \\\"source_text\\\": \\\"EVENT live-6366-000. FAMILY threshold_guard. STRUCTURE single_assertion. SURFACE symbolic. OBLIGATION: Edit accept_bias for accept_factor within [-1.0, 1.0] to repair threshold_guard. Counterexample live-6366-000: accept_bias=0.0, expected=accept, observed=reject.\\\", \\\"source_text_sha256\\\": \\\"sha256:7be89372c926ce78de4907a573b14186f3edf3fafb98b9a2aa50b1845a2e2ed4\\\", \\\"surface_relabel\\\": \\\"symbolic\\\"}}\\nJSON:\", \"sampling\": {\"max_tokens\": 192, \"n_ctx\": 4096, \"n_gpu_layers\": -1, \"temperature\": 0.2, \"top_p\": 0.9}, \"seed\": 636604}",
+          "exists": true,
+          "pid": 1456733,
+          "ppid": 1456426,
+          "process_group_id": 1456733,
+          "session_id": 1456733
+        }
+      },
+      "exit": {
+        "contract_ok": true,
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu": {
+        "after_cleanup": [
+          {
+            "gpu_index": 0,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "phase": "after_cleanup",
+            "process_identity": {
+              "exists": false,
+              "pid": 1456733
+            },
+            "timestamp_utc": "2026-08-13T03:54:52Z",
+            "utilization_pct": 0
+          },
+          {
+            "gpu_index": 1,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "phase": "after_cleanup",
+            "process_identity": {
+              "exists": false,
+              "pid": 1456733
+            },
+            "timestamp_utc": "2026-08-13T03:54:52Z",
+            "utilization_pct": 100
+          }
+        ],
+        "after_load": [
+          {
+            "gpu_index": 0,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "phase": "after_load",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456733,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:49Z",
+            "utilization_pct": 0
+          },
+          {
+            "gpu_index": 1,
+            "memory_free_mb": 6463,
+            "memory_used_mb": 17661,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "phase": "after_load",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456733,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:49Z",
+            "utilization_pct": 99
+          }
+        ],
+        "after_unload": [
+          {
+            "gpu_index": 0,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "phase": "after_unload",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456733,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:52Z",
+            "utilization_pct": 0
+          },
+          {
+            "gpu_index": 1,
+            "memory_free_mb": 23551,
+            "memory_used_mb": 573,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "phase": "after_unload",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456733,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:52Z",
+            "utilization_pct": 93
+          }
+        ],
+        "before_load": [
+          {
+            "gpu_index": 0,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "phase": "before_load",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456733,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:41Z",
+            "utilization_pct": 0
+          },
+          {
+            "gpu_index": 1,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "phase": "before_load",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456733,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:41Z",
+            "utilization_pct": 0
+          }
+        ],
+        "during_generation": [
+          {
+            "gpu_index": 0,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "phase": "during_generation",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456733,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:49Z",
+            "utilization_pct": 0
+          },
+          {
+            "gpu_index": 1,
+            "memory_free_mb": 6463,
+            "memory_used_mb": 17661,
+            "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "phase": "during_generation",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456733,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:49Z",
+            "utilization_pct": 99
+          }
+        ]
+      },
+      "prompt": {
+        "prompt_sha256": "sha256:24683ef52bd06e1640ef453030ff1c6ac08fee8ca6f52d4770966c94f054fe61"
+      },
+      "source": {
+        "source_hash": "sha256:1620105f27597ebdffc16ce949f3e5ec1440bac25aab0960f0e4766454fa0ad3",
+        "source_hash_ok": true
+      },
+      "stderr": {
+        "byte_count": 3959,
+        "excerpt": "\nCARNOT_GPU_SAMPLE:{\"phase\": \"before_load\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"phase\": \"before_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456733, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:41Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"phase\": \"before_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456733, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:41Z\", \"utilization_pct\": 0}]}\nggml_cuda_init: found 1 CUDA devices (Total VRAM: 24123 MiB):\n  Device 0: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24123 MiB\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\n\nCARNOT_PHASE:{\"duration_s\": 7.443719783, \"ended_ns\": 1786593289534573340, \"phase\": \"load\", \"started_ns\": 1786593282090853557}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"after_load\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"phase\": \"after_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456733, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:49Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 6463, \"memory_used_mb\": 17661, \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"phase\": \"after_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456733, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:49Z\", \"utilization_pct\": 99}]}\n\nCARNOT_PHASE:{\"duration_s\": 0.002462025, \"ended_ns\": 1786593289566424183, \"phase\": \"prompt\", \"started_ns\": 1786593289563962158}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"during_generation\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"phase\": \"during_generation\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456733, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:49Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 6463, \"memory_used_mb\": 17661, \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"phase\": \"during_generation\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456733, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:49Z\", \"utilization_pct\": 99}]}\n\nCARNOT_USAGE:{\"completion_tokens\": 192, \"prompt_tokens\": 1794, \"total_tokens\": 1986}\n\nCARNOT_PHASE:{\"duration_s\": 2.886329108, \"ended_ns\": 1786593292452767578, \"phase\": \"generate\", \"started_ns\": 1786593289566438470}\n\nCARNOT_PHASE:{\"duration_s\": 0.093500493, \"ended_ns\": 1786593292546283009, \"phase\": \"unload\", \"started_ns\": 1786593292452782516}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"after_unload\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"phase\": \"after_unload\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456733, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:52Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 23551, \"memory_used_mb\": 573, \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"phase\": \"after_unload\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456733, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:52Z\", \"utilization_pct\": 93}]}\n\nCARNOT_PHASE:{\"duration_s\": 0.004709789, \"ended_ns\": 1786593292581308948, \"phase\": \"cleanup\", \"started_ns\": 1786593292576599159}\n\nCARNOT_OFFLOAD:{\"authenticated_gpu_offload\": true, \"llama_supports_gpu_offload\": true}\n",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6366_repaired_live_factor_proposal_authenticity/sidecars/unsloth--gemma-4-26b-a4b-it-gguf.stderr.txt",
+        "sha256": "sha256:42c472b9388325f43b0d37819e3373579921358f33ab534cd7105d61623fb34a"
+      },
+      "stdout": {
+        "byte_count": 391,
+        "excerpt": "\n{\n  \"proposal_id\": \"unsloth--gemma-4-26b-a4b-it-gguf:live-6366-000:0\",\n  \"event_id\": \"live-6366-000\",\n  \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\",\n  \"arm\": \"repaired_live_factor_proposal_authenticity\",\n  \"candidate_index\": 0,\n  \"changed_factor\": \"accept_factor\",\n  \"edits\": {\n    \"accept_bias\": 0.5\n  },\n  \"selection_score\": 0.5,\n  \"edit_source_spans\": {\n    \"accept_bias\": {\n      \"",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6366_repaired_live_factor_proposal_authenticity/sidecars/unsloth--gemma-4-26b-a4b-it-gguf.stdout.txt",
+        "sha256": "sha256:cb19db43689267c6ff70872e1dd708c89cde58fc2b5d3bcfbd472a0acd2528de"
+      },
+      "timing": {
+        "child_process": {
+          "duration_s": 11.080124215,
+          "ended_ns": 1786593292881123043,
+          "started_ns": 1786593281800998828
+        },
+        "cleanup": {
+          "duration_s": 0.004709789,
+          "ended_ns": 1786593292581308948,
+          "started_ns": 1786593292576599159
+        },
+        "generate": {
+          "duration_s": 2.886329108,
+          "ended_ns": 1786593292452767578,
+          "started_ns": 1786593289566438470
+        },
+        "load": {
+          "duration_s": 7.443719783,
+          "ended_ns": 1786593289534573340,
+          "started_ns": 1786593282090853557
+        },
+        "prompt": {
+          "duration_s": 0.002462025,
+          "ended_ns": 1786593289566424183,
+          "started_ns": 1786593289563962158
+        },
+        "unload": {
+          "duration_s": 0.093500493,
+          "ended_ns": 1786593292546283009,
+          "started_ns": 1786593292452782516
+        }
+      },
+      "token": {
+        "completion_tokens": 192,
+        "prompt_tokens": 1794,
+        "total_tokens": 1986
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "command": {
+        "argv_sanitized": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-c",
+          "\nimport gc\nimport json\nimport os\nimport subprocess\nimport sys\nimport time\n\n\ndef emit(name, payload):\n    sys.stderr.writ...<truncated>... \"authenticated_gpu_offload\": supports and int(sampling[\"n_gpu_layers\"]) != 0})\n",
+          "{\"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"model_path\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth--ge...<truncated>...x\": 4096, \"n_gpu_layers\": -1, \"temperature\": 0.2, \"top_p\": 0.9}, \"seed\": 636603}"
+        ],
+        "argv_sha256": "sha256:ba607b4c93bf8cb08afa836d85bfac8a2811829d4d140f114bc1f82c2719c4cb",
+        "command_hash": "sha256:ba607b4c93bf8cb08afa836d85bfac8a2811829d4d140f114bc1f82c2719c4cb"
+      },
+      "dispatcher": {
+        "dispatcher": "exp6365_observable_child_factor_proposal",
+        "environment_allowlist_hash": "sha256:3e631fe1ac83f5515a616179632df64e637f5fe9178a579b73e28b6e1dded77a",
+        "pid": 1456659,
+        "process_identity": {
+          "cmdline": "",
+          "exists": true,
+          "pid": 1456659,
+          "ppid": 1456426,
+          "process_group_id": 1456659,
+          "session_id": 1456659
+        }
+      },
+      "exit": {
+        "contract_ok": true,
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu": {
+        "after_cleanup": [
+          {
+            "gpu_index": 0,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "phase": "after_cleanup",
+            "process_identity": {
+              "exists": false,
+              "pid": 1456659
+            },
+            "timestamp_utc": "2026-08-13T03:54:41Z",
+            "utilization_pct": 0
+          },
+          {
+            "gpu_index": 1,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "phase": "after_cleanup",
+            "process_identity": {
+              "exists": false,
+              "pid": 1456659
+            },
+            "timestamp_utc": "2026-08-13T03:54:41Z",
+            "utilization_pct": 84
+          }
+        ],
+        "after_load": [
+          {
+            "gpu_index": 0,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "phase": "after_load",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456659,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:32Z",
+            "utilization_pct": 0
+          },
+          {
+            "gpu_index": 1,
+            "memory_free_mb": 2389,
+            "memory_used_mb": 21735,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "phase": "after_load",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456659,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:32Z",
+            "utilization_pct": 100
+          }
+        ],
+        "after_unload": [
+          {
+            "gpu_index": 0,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "phase": "after_unload",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456659,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:40Z",
+            "utilization_pct": 0
+          },
+          {
+            "gpu_index": 1,
+            "memory_free_mb": 23543,
+            "memory_used_mb": 581,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "phase": "after_unload",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456659,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:40Z",
+            "utilization_pct": 97
+          }
+        ],
+        "before_load": [
+          {
+            "gpu_index": 0,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "phase": "before_load",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456659,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:23Z",
+            "utilization_pct": 0
+          },
+          {
+            "gpu_index": 1,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "phase": "before_load",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456659,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:23Z",
+            "utilization_pct": 0
+          }
+        ],
+        "during_generation": [
+          {
+            "gpu_index": 0,
+            "memory_free_mb": 23859,
+            "memory_used_mb": 266,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "phase": "during_generation",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456659,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:32Z",
+            "utilization_pct": 0
+          },
+          {
+            "gpu_index": 1,
+            "memory_free_mb": 2389,
+            "memory_used_mb": 21735,
+            "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+            "phase": "during_generation",
+            "process_identity": {
+              "cmdline": "llama_cpp observable child",
+              "pid": 1456659,
+              "ppid": 1456426
+            },
+            "timestamp_utc": "2026-08-13T03:54:32Z",
+            "utilization_pct": 100
+          }
+        ]
+      },
+      "prompt": {
+        "prompt_sha256": "sha256:a85aecb1f1a654544cc35f16d6bef37a401b135c290e54d5cd3b86657519cf61"
+      },
+      "source": {
+        "source_hash": "sha256:1620105f27597ebdffc16ce949f3e5ec1440bac25aab0960f0e4766454fa0ad3",
+        "source_hash_ok": true
+      },
+      "stderr": {
+        "byte_count": 3928,
+        "excerpt": "\nCARNOT_GPU_SAMPLE:{\"phase\": \"before_load\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"phase\": \"before_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456659, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:23Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"phase\": \"before_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456659, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:23Z\", \"utilization_pct\": 0}]}\nggml_cuda_init: found 1 CUDA devices (Total VRAM: 24123 MiB):\n  Device 0: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24123 MiB\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 4096\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 4096\n\nCARNOT_PHASE:{\"duration_s\": 9.278571431, \"ended_ns\": 1786593272735174011, \"phase\": \"load\", \"started_ns\": 1786593263456602580}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"after_load\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"phase\": \"after_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456659, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:32Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 2389, \"memory_used_mb\": 21735, \"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"phase\": \"after_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456659, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:32Z\", \"utilization_pct\": 100}]}\n\nCARNOT_PHASE:{\"duration_s\": 0.002974299, \"ended_ns\": 1786593272769124961, \"phase\": \"prompt\", \"started_ns\": 1786593272766150662}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"during_generation\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"phase\": \"during_generation\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456659, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:32Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 2389, \"memory_used_mb\": 21735, \"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"phase\": \"during_generation\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456659, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:32Z\", \"utilization_pct\": 100}]}\n\nCARNOT_USAGE:{\"completion_tokens\": 192, \"prompt_tokens\": 1780, \"total_tokens\": 1972}\n\nCARNOT_PHASE:{\"duration_s\": 7.894334358, \"ended_ns\": 1786593280663477503, \"phase\": \"generate\", \"started_ns\": 1786593272769143145}\n\nCARNOT_PHASE:{\"duration_s\": 0.113052952, \"ended_ns\": 1786593280776551214, \"phase\": \"unload\", \"started_ns\": 1786593280663498262}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"after_unload\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"phase\": \"after_unload\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456659, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:40Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 23543, \"memory_used_mb\": 581, \"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"phase\": \"after_unload\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1456659, \"ppid\": 1456426}, \"timestamp_utc\": \"2026-08-13T03:54:40Z\", \"utilization_pct\": 97}]}\n\nCARNOT_PHASE:{\"duration_s\": 0.00643992, \"ended_ns\": 1786593280814332891, \"phase\": \"cleanup\", \"started_ns\": 1786593280807892971}\n\nCARNOT_OFFLOAD:{\"authenticated_gpu_offload\": true, \"llama_supports_gpu_offload\": true}\n",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6366_repaired_live_factor_proposal_authenticity/sidecars/unsloth--gemma-4-31b-it-gguf.stderr.txt",
+        "sha256": "sha256:1b32f9f9df0f1a64cd354717f279c4fa248010cc654a881bb420e4dc271a2d00"
+      },
+      "stdout": {
+        "byte_count": 768,
+        "excerpt": " own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own own",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6366_repaired_live_factor_proposal_authenticity/sidecars/unsloth--gemma-4-31b-it-gguf.stdout.txt",
+        "sha256": "sha256:8ee3724c20185785d900a6f7c86f1392290f87e926710d70497c9cd06ddd283c"
+      },
+      "timing": {
+        "child_process": {
+          "duration_s": 17.876809519,
+          "ended_ns": 1786593281166766147,
+          "started_ns": 1786593263289956628
+        },
+        "cleanup": {
+          "duration_s": 0.00643992,
+          "ended_ns": 1786593280814332891,
+          "started_ns": 1786593280807892971
+        },
+        "generate": {
+          "duration_s": 7.894334358,
+          "ended_ns": 1786593280663477503,
+          "started_ns": 1786593272769143145
+        },
+        "load": {
+          "duration_s": 9.278571431,
+          "ended_ns": 1786593272735174011,
+          "started_ns": 1786593263456602580
+        },
+        "prompt": {
+          "duration_s": 0.002974299,
+          "ended_ns": 1786593272769124961,
+          "started_ns": 1786593272766150662
+        },
+        "unload": {
+          "duration_s": 0.113052952,
+          "ended_ns": 1786593280776551214,
+          "started_ns": 1786593280663498262
+        }
+      },
+      "token": {
+        "completion_tokens": 192,
+        "prompt_tokens": 1780,
+        "total_tokens": 1972
+      }
+    }
+  },
+  "cuda_offload_vram_and_runtime_receipts_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "authenticated_gpu_offload": true,
+      "missing_gpu_phases": [],
+      "required_gpu_phases": [
+        "before_load",
+        "after_load",
+        "during_generation",
+        "after_unload",
+        "after_cleanup"
+      ],
+      "runtime_contract_ok": true,
+      "vram_rise_and_release": {
+        "memory_used_mb_by_phase": {
+          "after_cleanup": 266,
+          "after_load": 21317,
+          "after_unload": 575,
+          "before_load": 266,
+          "during_generation": 21317
+        },
+        "min_vram_rise_mb": 64,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "peak_memory_used_mb": 21317,
+        "proved_release": true,
+        "proved_rise": true,
+        "proved_rise_and_release": true,
+        "release_tolerance_mb": 128
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "authenticated_gpu_offload": true,
+      "missing_gpu_phases": [],
+      "required_gpu_phases": [
+        "before_load",
+        "after_load",
+        "during_generation",
+        "after_unload",
+        "after_cleanup"
+      ],
+      "runtime_contract_ok": true,
+      "vram_rise_and_release": {
+        "memory_used_mb_by_phase": {
+          "after_cleanup": 266,
+          "after_load": 17661,
+          "after_unload": 573,
+          "before_load": 266,
+          "during_generation": 17661
+        },
+        "min_vram_rise_mb": 64,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "peak_memory_used_mb": 17661,
+        "proved_release": true,
+        "proved_rise": true,
+        "proved_rise_and_release": true,
+        "release_tolerance_mb": 128
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "authenticated_gpu_offload": true,
+      "missing_gpu_phases": [],
+      "required_gpu_phases": [
+        "before_load",
+        "after_load",
+        "during_generation",
+        "after_unload",
+        "after_cleanup"
+      ],
+      "runtime_contract_ok": true,
+      "vram_rise_and_release": {
+        "memory_used_mb_by_phase": {
+          "after_cleanup": 266,
+          "after_load": 21735,
+          "after_unload": 581,
+          "before_load": 266,
+          "during_generation": 21735
+        },
+        "min_vram_rise_mb": 64,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "peak_memory_used_mb": 21735,
+        "proved_release": true,
+        "proved_rise": true,
+        "proved_rise_and_release": true,
+        "release_tolerance_mb": 128
+      }
+    }
+  },
+  "duration_s": 116.04851679201238,
+  "embedded_gguf_tokenizer_receipts": [
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (10 tokens)",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "prompt_context": {
+        "autotokenizer_used": false,
+        "capacity_margin": 2255,
+        "fits": true,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "n_ctx": 4096,
+        "prompt_sha256": "sha256:f97bb0ba11e272bcdd0640977320a60a1a7bbed99fcb5f50fad820fef05802bf",
+        "prompt_tokens": 1649,
+        "requested_output_tokens": 192,
+        "tokenizer_loadable": true,
+        "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+      }
+    },
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (11 tokens)",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "prompt_context": {
+        "autotokenizer_used": false,
+        "capacity_margin": 2124,
+        "fits": true,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "n_ctx": 4096,
+        "prompt_sha256": "sha256:a85aecb1f1a654544cc35f16d6bef37a401b135c290e54d5cd3b86657519cf61",
+        "prompt_tokens": 1780,
+        "requested_output_tokens": 192,
+        "tokenizer_loadable": true,
+        "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+      }
+    },
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (11 tokens)",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "prompt_context": {
+        "autotokenizer_used": false,
+        "capacity_margin": 2110,
+        "fits": true,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "n_ctx": 4096,
+        "prompt_sha256": "sha256:24683ef52bd06e1640ef453030ff1c6ac08fee8ca6f52d4770966c94f054fe61",
+        "prompt_tokens": 1794,
+        "requested_output_tokens": 192,
+        "tokenizer_loadable": true,
+        "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+      }
+    }
+  ],
+  "exact_checker_paths_hashes_versions_calls_costs_and_errors": {
+    "all_calls_after_raw_freeze": true,
+    "checker_cost": 0.0,
+    "checker_error_count": 0,
+    "checker_errors": [],
+    "checker_time_s": 0.0,
+    "checkers": [
+      {
+        "name": "exp6344_validate_proposal",
+        "oracle_for": "bounded_schema_factor_locality_and_edit_bounds",
+        "path": "python/carnot/experiment_6344_counterexample_factor_proposal_calibration.py",
+        "sha256": "sha256:5d87b097fb16c474427f272a70e60937a14554355ebcfcb09a70b336f27c246d",
+        "version": "exp6344_bounded_factor_edit_schema_v1"
+      },
+      {
+        "name": "exp6366_exact_factor_event_checker",
+        "oracle_for": "protected exact task checkers",
+        "path": "python/carnot/experiment_6366_repaired_live_factor_proposal_authenticity.py",
+        "sha256": "sha256:1620105f27597ebdffc16ce949f3e5ec1440bac25aab0960f0e4766454fa0ad3",
+        "version": "carnot.experiment_6366.repaired_live_factor_proposal_authenticity.v1"
+      }
+    ],
+    "exact_checker_calls": 0,
+    "learned_scores_are_oracles": false,
+    "model_proposals_are_oracles": false,
+    "parsing_is_oracle": false,
+    "protected_exact_task_checkers_are_oracle": true,
+    "rows": [],
+    "schema": "carnot.experiment_6366.repaired_live_factor_proposal_authenticity.v1.exact_checker_receipts"
+  },
+  "exact_pass_fail_counts_by_model": {
+    "by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "exact_calls": 0,
+        "exact_fail": 0,
+        "exact_pass": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "exact_calls": 0,
+        "exact_fail": 0,
+        "exact_pass": 0
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "exact_calls": 0,
+        "exact_fail": 0,
+        "exact_pass": 0
+      }
+    },
+    "comparative_utility_claim": false,
+    "schema": "carnot.experiment_6366.repaired_live_factor_proposal_authenticity.v1.exact_pass_fail_counts",
+    "total_exact_calls": 0,
+    "total_exact_fail": 0,
+    "total_exact_pass": 0
+  },
+  "exp6365_gate_receipt": {
+    "gate_passed": true,
+    "gguf_runtime_observability_ready_score": 1.0,
+    "honest_verdict": "complete: all three GGUF child-process runtime contracts passed",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json",
+    "present": true,
+    "sha256": "sha256:ddcb05da7e9ea8fd9365810bdefa983bac9c72d0e7eb49a71ede59a5840d684c",
+    "size_bytes": 73603,
+    "status": "complete",
+    "summarize_artifact_revalidated_before_generation": true,
+    "summary_command": ".venv/bin/python scripts/summarize_artifact.py results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json"
+  },
+  "field_principles": {
+    "MODEL_SPECS": "The three mandated GGUF model rows are resolved through `cached_sota_pair()`.",
+    "autotokenizer_usage_count": "Bare zero proves no Hugging Face tokenizer side channel was used.",
+    "bounded_factor_edit_schema_path_and_hash": "The bounded factor-edit schema is frozen before parsing.",
+    "cached_sota_pair_receipts": "Helper-call receipts prevent manual model substitution.",
+    "child_process_observability_receipts_by_model": "Child stdout, stderr, exit, token, timing, GPU, source, command, prompt, and dispatcher receipts are preserved.",
+    "cuda_offload_vram_and_runtime_receipts_by_model": "CUDA offload, VRAM rise, release, and runtime contract results are recorded per model.",
+    "duration_s": "Wall time is measured without padding.",
+    "embedded_gguf_tokenizer_receipts": "Tokenizer checks use embedded GGUF metadata, not AutoTokenizer.",
+    "exact_checker_paths_hashes_versions_calls_costs_and_errors": "Exact checker identity, calls, costs, and errors are recorded after raw freeze.",
+    "exact_pass_fail_counts_by_model": "Exact outcomes are counted by model without utility claims.",
+    "exp6365_gate_receipt": "The repaired child-process prerequisite is replayed before generation.",
+    "field_principles": "Every required field states the guard it provides.",
+    "field_provenance": "Every required field maps to measured model output, exact checker data, source hash, derived check, or constant.",
+    "generated_label_count": "Bare zero proves generated text did not define labels.",
+    "harm_underpowered_missing_and_flagged_cells": "Missing, underpowered, invalid, timeout, abstain, and substitution cells remain visible.",
+    "hidden_state_access_count": "Bare zero proves hidden activations were not read.",
+    "honest_verdict": "The verdict uses a terminal prefix and states the authenticity boundary.",
+    "inference_substrate": "The artifact declares local llama.cpp GGUF child-process generation with embedded tokenizers.",
+    "information_exposure_contract": "The proposer-visible fields exclude protected labels, hidden states, weights, and pending writes.",
+    "live_autoregressive_generation_invoked_by_model": "Each model row states whether a real local completion was invoked.",
+    "model_file_hashes_revisions_quantizations_and_tokenizers": "Model files, revisions, quantizations, hashes, and tokenizer methods are pinned.",
+    "models_used": "Only authenticated nonempty required model calls count as used models.",
+    "parse_valid_invalid_timeout_and_abstain_counts_by_model": "Parse outcomes count invalid output, timeouts, and abstentions as failures.",
+    "preconditions_checked": "Preconditions cover Exp6365, models, tokenizers, GPU offload, VRAM, disk, context capacity, sidecars, seeds, and protected hashes.",
+    "protected_files_unchanged": "Conductor, ops, traceability, upstream artifacts, and exact checker files remain byte-identical.",
+    "protected_validation_leak_count": "Bare zero proves protected validation did not steer proposals.",
+    "random_seed": "A fixed seed makes manifest and generation schedules reproducible.",
+    "raw_output_before_parse_paths_hashes_and_counts": "Raw output paths, hashes, byte counts, and parse-start ordering are pinned.",
+    "released_factor_snapshot_path_hash_and_read_only_receipt": "The released snapshot is hash-bound and read-only during proposal calls.",
+    "repaired_live_factor_proposal_authenticity_ready_score": "Readiness is conjunctive over authenticated calls, source binding, isolation, exact receipts, protected files, and tests.",
+    "reproducibility_checksum": "A normalized checksum detects artifact drift.",
+    "same_step_read_write_isolation_results": "Mutation tests prove pending writes and protected mutations fail closed.",
+    "sealed_event_manifest_path_hash_license_and_balance": "The fresh balanced event manifest is sealed before generation.",
+    "source_model_weight_mutation_count": "Bare zero proves source model weights stayed frozen.",
+    "source_span_alignment_and_decomposition_conflict_counts": "Source-span checks expose substitutions and unsupported obligations.",
+    "status": "Terminal status separates blocked, positive, and null authenticity evidence.",
+    "tests_run": "Verification commands and exit codes are recorded.",
+    "verifier_is_oracle": "Bare true applies only to protected exact task checkers."
+  },
+  "field_provenance": {
+    "MODEL_SPECS": "source hash",
+    "autotokenizer_usage_count": "constant",
+    "bounded_factor_edit_schema_path_and_hash": "source hash",
+    "cached_sota_pair_receipts": "source hash",
+    "child_process_observability_receipts_by_model": "measured model output",
+    "cuda_offload_vram_and_runtime_receipts_by_model": "measured model output",
+    "duration_s": "measured model output",
+    "embedded_gguf_tokenizer_receipts": "source hash",
+    "exact_checker_paths_hashes_versions_calls_costs_and_errors": "exact checker data",
+    "exact_pass_fail_counts_by_model": "exact checker data",
+    "exp6365_gate_receipt": "source hash",
+    "field_principles": "constant",
+    "field_provenance": "constant",
+    "generated_label_count": "constant",
+    "harm_underpowered_missing_and_flagged_cells": "derived check",
+    "hidden_state_access_count": "constant",
+    "honest_verdict": "derived check",
+    "inference_substrate": "constant",
+    "information_exposure_contract": "constant",
+    "live_autoregressive_generation_invoked_by_model": "measured model output",
+    "model_file_hashes_revisions_quantizations_and_tokenizers": "source hash",
+    "models_used": "measured model output",
+    "parse_valid_invalid_timeout_and_abstain_counts_by_model": "derived check",
+    "preconditions_checked": "derived check",
+    "protected_files_unchanged": "source hash",
+    "protected_validation_leak_count": "constant",
+    "random_seed": "constant",
+    "raw_output_before_parse_paths_hashes_and_counts": "measured model output",
+    "released_factor_snapshot_path_hash_and_read_only_receipt": "source hash",
+    "repaired_live_factor_proposal_authenticity_ready_score": "derived check",
+    "reproducibility_checksum": "derived check",
+    "same_step_read_write_isolation_results": "derived check",
+    "sealed_event_manifest_path_hash_license_and_balance": "source hash",
+    "source_model_weight_mutation_count": "constant",
+    "source_span_alignment_and_decomposition_conflict_counts": "derived check",
+    "status": "derived check",
+    "tests_run": "derived check",
+    "verifier_is_oracle": "constant"
+  },
+  "generated_label_count": 0,
+  "harm_underpowered_missing_and_flagged_cells": {
+    "flagged_cells": [
+      "invalid_parse:unsloth/Qwen3.6-35B-A3B-GGUF",
+      "invalid_parse:unsloth/gemma-4-31B-it-GGUF",
+      "invalid_parse:unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "harm_detected": true,
+    "missing_model_cells": [],
+    "schema": "carnot.experiment_6366.repaired_live_factor_proposal_authenticity.v1.harm_summary",
+    "underpowered_cells": []
+  },
+  "hidden_state_access_count": 0,
+  "honest_verdict": "complete_null: repaired live calls ran but authenticity gates did not all pass",
+  "inference_substrate": "local_llama_cpp_gguf_child_contract_source_bound_factor_proposals",
+  "information_exposure_contract": {
+    "forbidden_fields": [
+      "protected_outcome",
+      "protected_success",
+      "exact_label",
+      "hidden_state",
+      "source_weight_delta"
+    ],
+    "hidden_states_visible": false,
+    "pending_writes_visible": false,
+    "protected_outcomes_visible_before_parse": false,
+    "protected_validation_visible": false,
+    "same_source_event_for_all_models": true,
+    "schema": "carnot.experiment_6366.repaired_live_factor_proposal_authenticity.v1.information_exposure_contract",
+    "source_weights_visible": false,
+    "visible_fields": [
+      "released_factor_snapshot",
+      "source_event",
+      "source_obligations",
+      "source_spans",
+      "minimized_exact_counterexample",
+      "allowed_variables",
+      "edit_bounds",
+      "bounded_factor_edit_schema"
+    ]
+  },
+  "live_autoregressive_generation_invoked_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": true,
+    "unsloth/gemma-4-26B-A4B-it-GGUF": true,
+    "unsloth/gemma-4-31B-it-GGUF": true
+  },
+  "model_file_hashes_revisions_quantizations_and_tokenizers": [
+    {
+      "exists": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_family": "qwen_moe",
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "exists": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_family": "gemma_dense",
+      "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "exists": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_family": "gemma_moe",
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "parse_valid_invalid_timeout_and_abstain_counts_by_model": {
+    "by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "abstain": 0,
+        "invalid": 1,
+        "timeouts": 0,
+        "valid": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "abstain": 0,
+        "invalid": 1,
+        "timeouts": 0,
+        "valid": 0
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "abstain": 0,
+        "invalid": 1,
+        "timeouts": 0,
+        "valid": 0
+      }
+    }
+  },
+  "preconditions_checked": {
+    "all_embedded_tokenizers_loadable": true,
+    "all_preconditions_passed": true,
+    "all_required_gguf_files_present": true,
+    "autotokenizer_usage_count": 0,
+    "blocked_reasons": [],
+    "both_gpus_available": true,
+    "cached_sota_pair_receipts": {
+      "all_calls_made": true,
+      "calls": [
+        {
+          "gpu_indices": [
+            0,
+            1
+          ],
+          "model_indices": null,
+          "preferred_quant": "Q4_K_M"
+        },
+        {
+          "gpu_indices": [
+            0,
+            1
+          ],
+          "model_indices": [
+            0,
+            2
+          ],
+          "preferred_quant": "Q4_K_M"
+        }
+      ],
+      "helper": "cached_sota_pair"
+    },
+    "context_capacity_receipts_by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "autotokenizer_used": false,
+        "capacity_margin": 2255,
+        "fits": true,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "n_ctx": 4096,
+        "prompt_sha256": "sha256:f97bb0ba11e272bcdd0640977320a60a1a7bbed99fcb5f50fad820fef05802bf",
+        "prompt_tokens": 1649,
+        "requested_output_tokens": 192,
+        "tokenizer_loadable": true,
+        "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "autotokenizer_used": false,
+        "capacity_margin": 2110,
+        "fits": true,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "n_ctx": 4096,
+        "prompt_sha256": "sha256:24683ef52bd06e1640ef453030ff1c6ac08fee8ca6f52d4770966c94f054fe61",
+        "prompt_tokens": 1794,
+        "requested_output_tokens": 192,
+        "tokenizer_loadable": true,
+        "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "autotokenizer_used": false,
+        "capacity_margin": 2124,
+        "fits": true,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "n_ctx": 4096,
+        "prompt_sha256": "sha256:a85aecb1f1a654544cc35f16d6bef37a401b135c290e54d5cd3b86657519cf61",
+        "prompt_tokens": 1780,
+        "requested_output_tokens": 192,
+        "tokenizer_loadable": true,
+        "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+      }
+    },
+    "cuda": {
+      "available": true,
+      "count": 2,
+      "devices": [
+        {
+          "free_mb": 23859,
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 3090",
+          "total_mb": 24576,
+          "used_mb": 266
+        },
+        {
+          "free_mb": 23859,
+          "index": 1,
+          "name": "NVIDIA GeForce RTX 3090",
+          "total_mb": 24576,
+          "used_mb": 266
+        }
+      ]
+    },
+    "date": "20260813",
+    "disk": {
+      "available_gb": 1111.02424621582
+    },
+    "disk_ready": true,
+    "event_manifest_sha256": "sha256:da7f0c5f46c8a13d44b9afec969068cbbbfdb4fe216b9c00c4b820f60b1a41e6",
+    "exp6365_gate_passed": true,
+    "factor_edit_schema_sha256": "sha256:43f276f1f9ef95e908400b7e8f42054dcec94c1859f3fae15f8a6418447d875e",
+    "llama_cpp": {
+      "gpu_offload_receipt": true,
+      "python_binding_available": true,
+      "support": {
+        "llama_supports_gpu_offload": true,
+        "system_info_excerpt": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
+        "system_info_sha256": "sha256:959e16c2eadaf9b8856c780a0fa8d811ad90ce2b48559d357857efbe8049b261"
+      }
+    },
+    "output_sidecar_paths": {
+      "data_dir": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6366_repaired_live_factor_proposal_authenticity",
+      "prompt_dir_ready": true,
+      "prompts": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6366_repaired_live_factor_proposal_authenticity/prompts",
+      "raw_dir_ready": true,
+      "raw_model_outputs": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6366_repaired_live_factor_proposal_authenticity/raw_model_outputs"
+    },
+    "protected_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:04f8394f3d3f3960a562201cf02c96bc11719a8cb73a215ff39f4ba4542bb6c9",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "python/carnot/experiment_6344_counterexample_factor_proposal_calibration.py": "sha256:5d87b097fb16c474427f272a70e60937a14554355ebcfcb09a70b336f27c246d",
+      "results/experiment_6342_anytime_evalue_release_ledger.json": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+      "results/experiment_6343_evidence_carrying_factor_lifecycle.json": "sha256:d7b90a2ca5be250aa456d011c635b17958331db2cd9b32ef8aae1571c3fa53d3",
+      "results/experiment_6344_counterexample_factor_proposal_calibration.json": "sha256:76e219594ba2bddd08f2eabcdfe3073e32e2c5aea64e3e7b9eb6e56d30777aa0",
+      "results/experiment_6345_prospective_certified_factor_evolution_ab.json": "sha256:eeff87561945d0d50ce1d83e5278c94ac5b759ca06c3ab69262c165687c63f23",
+      "results/experiment_6346_certified_factor_evolution_safety_audit.json": "sha256:80883d32fe092b47c59636283d4cb5d502d1a571df34d2e89c32e995192f0e34",
+      "results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json": "sha256:ddcb05da7e9ea8fd9365810bdefa983bac9c72d0e7eb49a71ede59a5840d684c",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "protected_hashes_ready": true,
+    "released_factor_snapshot_read_only": {
+      "mode_octal": "0o444",
+      "owner_write_bit_set": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6366_repaired_live_factor_proposal_authenticity.json.released_factor_snapshot.json",
+      "present": true,
+      "read_only": true
+    },
+    "released_factor_snapshot_sha256": "sha256:06753bb1074cddb91c81239151616beab222aec871678de03dddc53e8269242d",
+    "schema": "carnot.experiment_6366.repaired_live_factor_proposal_authenticity.v1.preconditions",
+    "seeds": {
+      "exact_checker": 636605,
+      "generation": 636602,
+      "isolation": 636604,
+      "manifest": 636600,
+      "parser": 636603,
+      "surface_relabel": 636601
+    },
+    "vram_ready_by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": true,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": true,
+      "unsloth/gemma-4-31B-it-GGUF": true
+    }
+  },
+  "protected_files_unchanged": {
+    "changed_paths": [],
+    "files": {
+      "_bmad/traceability.md": {
+        "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "after": "sha256:04f8394f3d3f3960a562201cf02c96bc11719a8cb73a215ff39f4ba4542bb6c9",
+        "before": "sha256:04f8394f3d3f3960a562201cf02c96bc11719a8cb73a215ff39f4ba4542bb6c9",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "unchanged": true
+      },
+      "python/carnot/experiment_6344_counterexample_factor_proposal_calibration.py": {
+        "after": "sha256:5d87b097fb16c474427f272a70e60937a14554355ebcfcb09a70b336f27c246d",
+        "before": "sha256:5d87b097fb16c474427f272a70e60937a14554355ebcfcb09a70b336f27c246d",
+        "unchanged": true
+      },
+      "results/experiment_6342_anytime_evalue_release_ledger.json": {
+        "after": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+        "before": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+        "unchanged": true
+      },
+      "results/experiment_6343_evidence_carrying_factor_lifecycle.json": {
+        "after": "sha256:d7b90a2ca5be250aa456d011c635b17958331db2cd9b32ef8aae1571c3fa53d3",
+        "before": "sha256:d7b90a2ca5be250aa456d011c635b17958331db2cd9b32ef8aae1571c3fa53d3",
+        "unchanged": true
+      },
+      "results/experiment_6344_counterexample_factor_proposal_calibration.json": {
+        "after": "sha256:76e219594ba2bddd08f2eabcdfe3073e32e2c5aea64e3e7b9eb6e56d30777aa0",
+        "before": "sha256:76e219594ba2bddd08f2eabcdfe3073e32e2c5aea64e3e7b9eb6e56d30777aa0",
+        "unchanged": true
+      },
+      "results/experiment_6345_prospective_certified_factor_evolution_ab.json": {
+        "after": "sha256:eeff87561945d0d50ce1d83e5278c94ac5b759ca06c3ab69262c165687c63f23",
+        "before": "sha256:eeff87561945d0d50ce1d83e5278c94ac5b759ca06c3ab69262c165687c63f23",
+        "unchanged": true
+      },
+      "results/experiment_6346_certified_factor_evolution_safety_audit.json": {
+        "after": "sha256:80883d32fe092b47c59636283d4cb5d502d1a571df34d2e89c32e995192f0e34",
+        "before": "sha256:80883d32fe092b47c59636283d4cb5d502d1a571df34d2e89c32e995192f0e34",
+        "unchanged": true
+      },
+      "results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json": {
+        "after": "sha256:ddcb05da7e9ea8fd9365810bdefa983bac9c72d0e7eb49a71ede59a5840d684c",
+        "before": "sha256:ddcb05da7e9ea8fd9365810bdefa983bac9c72d0e7eb49a71ede59a5840d684c",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "before": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "unchanged": true
+      }
+    },
+    "schema": "carnot.experiment_6366.repaired_live_factor_proposal_authenticity.v1.protected_files",
+    "unchanged": true
+  },
+  "protected_validation_leak_count": 0,
+  "random_seed": 6366,
+  "raw_output_before_parse_paths_hashes_and_counts": {
+    "all_raw_outputs_frozen_before_parse": true,
+    "all_raw_outputs_nonempty_before_parse": true,
+    "by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "byte_count": 832,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6366_repaired_live_factor_proposal_authenticity/sidecars/unsloth--qwen3.6-35b-a3b-gguf.stdout.txt",
+        "raw_written_before_parse": true,
+        "sha256": "sha256:d95a4c6bae55c7e77dd530996c4fba7731a6aa94a0864cd236a91c9866b1ef7d"
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "byte_count": 391,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6366_repaired_live_factor_proposal_authenticity/sidecars/unsloth--gemma-4-26b-a4b-it-gguf.stdout.txt",
+        "raw_written_before_parse": true,
+        "sha256": "sha256:cb19db43689267c6ff70872e1dd708c89cde58fc2b5d3bcfbd472a0acd2528de"
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "byte_count": 768,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6366_repaired_live_factor_proposal_authenticity/sidecars/unsloth--gemma-4-31b-it-gguf.stdout.txt",
+        "raw_written_before_parse": true,
+        "sha256": "sha256:8ee3724c20185785d900a6f7c86f1392290f87e926710d70497c9cd06ddd283c"
+      }
+    },
+    "model_count": 3,
+    "rows": [
+      {
+        "byte_count": 832,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "parse_input_sha256": "sha256:d95a4c6bae55c7e77dd530996c4fba7731a6aa94a0864cd236a91c9866b1ef7d",
+        "parse_started_ns": 1786593292912140691,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6366_repaired_live_factor_proposal_authenticity/sidecars/unsloth--qwen3.6-35b-a3b-gguf.stdout.txt",
+        "raw_mtime_ns": 1786593262716843612,
+        "raw_output_sha256": "sha256:d95a4c6bae55c7e77dd530996c4fba7731a6aa94a0864cd236a91c9866b1ef7d",
+        "raw_written_before_parse": true
+      },
+      {
+        "byte_count": 768,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "parse_input_sha256": "sha256:8ee3724c20185785d900a6f7c86f1392290f87e926710d70497c9cd06ddd283c",
+        "parse_started_ns": 1786593292912959269,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6366_repaired_live_factor_proposal_authenticity/sidecars/unsloth--gemma-4-31b-it-gguf.stdout.txt",
+        "raw_mtime_ns": 1786593281167270054,
+        "raw_output_sha256": "sha256:8ee3724c20185785d900a6f7c86f1392290f87e926710d70497c9cd06ddd283c",
+        "raw_written_before_parse": true
+      },
+      {
+        "byte_count": 391,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "parse_input_sha256": "sha256:cb19db43689267c6ff70872e1dd708c89cde58fc2b5d3bcfbd472a0acd2528de",
+        "parse_started_ns": 1786593292913029160,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6366_repaired_live_factor_proposal_authenticity/sidecars/unsloth--gemma-4-26b-a4b-it-gguf.stdout.txt",
+        "raw_mtime_ns": 1786593292882131558,
+        "raw_output_sha256": "sha256:cb19db43689267c6ff70872e1dd708c89cde58fc2b5d3bcfbd472a0acd2528de",
+        "raw_written_before_parse": true
+      }
+    ],
+    "schema": "carnot.experiment_6366.repaired_live_factor_proposal_authenticity.v1.raw_before_parse",
+    "total_byte_count": 1991,
+    "total_raw_output_count": 3
+  },
+  "released_factor_snapshot_path_hash_and_read_only_receipt": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6366_repaired_live_factor_proposal_authenticity.json.released_factor_snapshot.json",
+    "present": true,
+    "read_only_receipt": {
+      "mode_octal": "0o444",
+      "owner_write_bit_set": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6366_repaired_live_factor_proposal_authenticity.json.released_factor_snapshot.json",
+      "present": true,
+      "read_only": true
+    },
+    "schema": "carnot.experiment_6366.repaired_live_factor_proposal_authenticity.v1.released_factor_snapshot",
+    "sha256": "sha256:06753bb1074cddb91c81239151616beab222aec871678de03dddc53e8269242d",
+    "size_bytes": 1069
+  },
+  "repaired_live_factor_proposal_authenticity_ready_score": 0.0,
+  "reproducibility_checksum": "sha256:e960ffae06f5bf6c8ca92111132a478adfc29a3063ac153ba847aff5c6f5ad2d",
+  "same_step_read_write_isolation_results": {
+    "event_manifest_unchanged": true,
+    "exact_checker_unchanged": true,
+    "mutation_tests": [
+      {
+        "attack_class": "pending_factor_write",
+        "decision": "reject",
+        "detected": true,
+        "fail_closed": true
+      },
+      {
+        "attack_class": "released_snapshot_mutation",
+        "decision": "reject",
+        "detected": true,
+        "fail_closed": true
+      },
+      {
+        "attack_class": "exact_checker_mutation",
+        "decision": "reject",
+        "detected": true,
+        "fail_closed": true
+      },
+      {
+        "attack_class": "event_manifest_mutation",
+        "decision": "reject",
+        "detected": true,
+        "fail_closed": true
+      },
+      {
+        "attack_class": "protected_validation_set_mutation",
+        "decision": "reject",
+        "detected": true,
+        "fail_closed": true
+      }
+    ],
+    "pending_write_hash": "sha256:ff2f3a11dac9676a01d053d9ad6b81326ee93429ab9a52b5d325d9c185bc71ef",
+    "pending_write_visible_to_proposal": false,
+    "proposal_read_root_unchanged": true,
+    "protected_validation_set_unchanged": true,
+    "released_read_root": "sha256:06753bb1074cddb91c81239151616beab222aec871678de03dddc53e8269242d",
+    "released_snapshot_unchanged": true,
+    "same_step_write_count": 0,
+    "schema": "carnot.experiment_6366.repaired_live_factor_proposal_authenticity.v1.same_step_isolation"
+  },
+  "sealed_event_manifest_path_hash_license_and_balance": {
+    "balance": {
+      "balanced": true,
+      "event_count": 12,
+      "events_by_family": {
+        "conservation_guard": 4,
+        "route_guard": 4,
+        "threshold_guard": 4
+      },
+      "family_count": 3,
+      "schema": "carnot.experiment_6366.repaired_live_factor_proposal_authenticity.v1.event_balance",
+      "structures_by_family": {
+        "conservation_guard": [
+          "paired_assertion",
+          "paired_assertion",
+          "single_assertion",
+          "single_assertion"
+        ],
+        "route_guard": [
+          "paired_assertion",
+          "paired_assertion",
+          "single_assertion",
+          "single_assertion"
+        ],
+        "threshold_guard": [
+          "paired_assertion",
+          "paired_assertion",
+          "single_assertion",
+          "single_assertion"
+        ]
+      },
+      "surfaces_by_family": {
+        "conservation_guard": [
+          "symbolic",
+          "symbolic",
+          "verbal",
+          "verbal"
+        ],
+        "route_guard": [
+          "symbolic",
+          "symbolic",
+          "verbal",
+          "verbal"
+        ],
+        "threshold_guard": [
+          "symbolic",
+          "symbolic",
+          "verbal",
+          "verbal"
+        ]
+      }
+    },
+    "event_count": 12,
+    "license": {
+      "all_paths_present": true,
+      "exact_checkers": [
+        {
+          "license_path": "LICENSE",
+          "license_receipt": "repository_license_applies",
+          "license_sha256": "sha256:7d5e950cbe0079f5da22de8510277dbca16c7a23287c981b3a1ed4ae59aebd98",
+          "name": "exp6344_bounded_factor_edit_checker",
+          "path": "python/carnot/experiment_6344_counterexample_factor_proposal_calibration.py",
+          "sha256": "sha256:5d87b097fb16c474427f272a70e60937a14554355ebcfcb09a70b336f27c246d"
+        }
+      ],
+      "generators": [
+        {
+          "license_path": "LICENSE",
+          "license_receipt": "repository_license_applies",
+          "license_sha256": "sha256:7d5e950cbe0079f5da22de8510277dbca16c7a23287c981b3a1ed4ae59aebd98",
+          "name": "exp6366_deterministic_executable_failure_generators",
+          "path": "python/carnot/experiment_6366_repaired_live_factor_proposal_authenticity.py",
+          "sha256": "sha256:1620105f27597ebdffc16ce949f3e5ec1440bac25aab0960f0e4766454fa0ad3"
+        }
+      ],
+      "schema": "carnot.experiment_6366.repaired_live_factor_proposal_authenticity.v1.event_generator_license"
+    },
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6366_repaired_live_factor_proposal_authenticity.json.sealed_event_manifest.json",
+    "present": true,
+    "schema": "carnot.experiment_6366.repaired_live_factor_proposal_authenticity.v1.sealed_event_manifest",
+    "sha256": "sha256:da7f0c5f46c8a13d44b9afec969068cbbbfdb4fe216b9c00c4b820f60b1a41e6",
+    "size_bytes": 27519
+  },
+  "source_model_weight_mutation_count": 0,
+  "source_span_alignment_and_decomposition_conflict_counts": {
+    "aligned_edit_count": 0,
+    "aligned_obligation_count": 0,
+    "context_memory_substitution_count": 0,
+    "decomposition_conflict_count": 0,
+    "edit_count": 0,
+    "invalid_edit_count": 0,
+    "obligation_count": 0,
+    "rows": [
+      {
+        "aligned": false,
+        "aligned_edit_count": 0,
+        "aligned_obligation_count": 0,
+        "context_memory_substitution_count": 0,
+        "decomposition_conflict_count": 0,
+        "edit_count": 0,
+        "edit_rows": [],
+        "event_id": null,
+        "invalid_edit_span_count": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "obligation_count": 0,
+        "obligation_rows": [],
+        "unsupported_obligation_count": 0
+      },
+      {
+        "aligned": false,
+        "aligned_edit_count": 0,
+        "aligned_obligation_count": 0,
+        "context_memory_substitution_count": 0,
+        "decomposition_conflict_count": 0,
+        "edit_count": 0,
+        "edit_rows": [],
+        "event_id": null,
+        "invalid_edit_span_count": 0,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "obligation_count": 0,
+        "obligation_rows": [],
+        "unsupported_obligation_count": 0
+      },
+      {
+        "aligned": false,
+        "aligned_edit_count": 0,
+        "aligned_obligation_count": 0,
+        "context_memory_substitution_count": 0,
+        "decomposition_conflict_count": 0,
+        "edit_count": 0,
+        "edit_rows": [],
+        "event_id": null,
+        "invalid_edit_span_count": 0,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "obligation_count": 0,
+        "obligation_rows": [],
+        "unsupported_obligation_count": 0
+      }
+    ],
+    "schema": "carnot.experiment_6366.repaired_live_factor_proposal_authenticity.v1.source_span_conflict_counts",
+    "unsupported_obligation_count": 0,
+    "zero_source_substitutions": true
+  },
+  "status": "complete_null",
+  "tests_run": {
+    "all_passed": true,
+    "commands": [
+      ".venv/bin/pytest tests/python/test_experiment_6366_repaired_live_factor_proposal_authenticity.py -q --no-cov -n 0",
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6366_repaired_live_factor_proposal_authenticity.py -m pytest tests/python/test_experiment_6366_repaired_live_factor_proposal_authenticity.py -q --no-cov -n 0",
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6366_repaired_live_factor_proposal_authenticity.py --fail-under=100 --show-missing",
+      ".venv/bin/pytest tests/python -q",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6366_repaired_live_factor_proposal_authenticity.py",
+      "sed -n '90,140p' ops/e2e-test-plan.md",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6366_repaired_live_factor_proposal_authenticity.json",
+      ".venv/bin/python scripts/determination_preservation_lint.py",
+      ".venv/bin/python scripts/root_clutter_sweep.py",
+      ".venv/bin/python -m carnot.experiment_6366_repaired_live_factor_proposal_authenticity --date 20260813"
+    ],
+    "exit_codes": {
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6366_repaired_live_factor_proposal_authenticity.py --fail-under=100 --show-missing": 0,
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6366_repaired_live_factor_proposal_authenticity.py -m pytest tests/python/test_experiment_6366_repaired_live_factor_proposal_authenticity.py -q --no-cov -n 0": 0,
+      ".venv/bin/pytest tests/python -q": 0,
+      ".venv/bin/pytest tests/python/test_experiment_6366_repaired_live_factor_proposal_authenticity.py -q --no-cov -n 0": 0,
+      ".venv/bin/python -m carnot.experiment_6366_repaired_live_factor_proposal_authenticity --date 20260813": 0,
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6366_repaired_live_factor_proposal_authenticity.json": 0,
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6366_repaired_live_factor_proposal_authenticity.py": 0,
+      ".venv/bin/python scripts/determination_preservation_lint.py": 0,
+      ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+      "sed -n '90,140p' ops/e2e-test-plan.md": 0
+    }
+  },
+  "verifier_is_oracle": true
+}

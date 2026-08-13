@@ -1,0 +1,132 @@
+{
+  "compact_valid_shape": {
+    "arm": "repaired_live_factor_proposal_authenticity",
+    "candidate_index": 0,
+    "changed_factor": "accept_factor",
+    "edit_source_spans": {
+      "accept_bias": {
+        "source_end": 119,
+        "source_sha256": "sha256:4710cba0bac843a3f05d2f2190b3ece5b3f2097f5b2bd651c536787d731da5da",
+        "source_start": 108
+      }
+    },
+    "edits": {
+      "accept_bias": 0.5
+    },
+    "event_id": "live-6366-000",
+    "model_family": "qwen_moe",
+    "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "obligations": [
+      {
+        "obligation_id": "obl-live-6366-000-0",
+        "source_end": 183,
+        "source_sha256": "sha256:8db064f857527e5971bf69fed8c3b382fc5316247b59682651b54abd62a27326",
+        "source_start": 103,
+        "source_text": "Edit accept_bias for accept_factor within [-1.0, 1.0] to repair threshold_guard."
+      }
+    ],
+    "proposal_id": "unsloth--qwen3.6-35b-a3b-gguf:live-6366-000:0",
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.factor_edit_schema",
+    "selection_score": 0.5
+  },
+  "instruction": "Return exactly one JSON object. Copy ids, source spans, and source hashes exactly. Do not include markdown.",
+  "proposal_schema": {
+    "edit_bounds": {
+      "max": 1.0,
+      "max_abs_movement": 1.0,
+      "min": -1.0
+    },
+    "edits_allowed_only_for": [
+      "accept_bias"
+    ],
+    "fixed_fields": {
+      "arm": "repaired_live_factor_proposal_authenticity",
+      "candidate_index": 0,
+      "changed_factor": "accept_factor",
+      "event_id": "live-6366-000",
+      "model_family": "qwen_moe",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
+    },
+    "required_fields": [
+      "proposal_id",
+      "event_id",
+      "model_hf_id",
+      "arm",
+      "candidate_index",
+      "changed_factor",
+      "edits",
+      "selection_score"
+    ],
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.factor_edit_schema",
+    "source_binding_required": {
+      "edit_source_end": 119,
+      "edit_source_sha256": "sha256:4710cba0bac843a3f05d2f2190b3ece5b3f2097f5b2bd651c536787d731da5da",
+      "edit_source_start": 108,
+      "edit_variable": "accept_bias",
+      "obligation_id": "obl-live-6366-000-0",
+      "obligation_source_end": 183,
+      "obligation_source_sha256": "sha256:8db064f857527e5971bf69fed8c3b382fc5316247b59682651b54abd62a27326",
+      "obligation_source_start": 103
+    }
+  },
+  "released_factor_snapshot": {
+    "active_factor_ids": [
+      "accept_guard",
+      "reject_guard",
+      "repair_guard"
+    ],
+    "read_only_during_proposal": true,
+    "released_root_sha256": "sha256:1c22b1f77ae1e00f16bfc4817eaa047d1798a235790e01507056642129e16607",
+    "released_version_id": "exp6343-final-active"
+  },
+  "source_event": {
+    "allowed_variables": [
+      "accept_bias"
+    ],
+    "changed_factor": "accept_factor",
+    "edit_bounds": {
+      "max": 1.0,
+      "max_abs_movement": 1.0,
+      "min": -1.0
+    },
+    "edit_source_spans": {
+      "accept_bias": {
+        "end": 119,
+        "sha256": "sha256:4710cba0bac843a3f05d2f2190b3ece5b3f2097f5b2bd651c536787d731da5da",
+        "start": 108
+      }
+    },
+    "event_id": "live-6366-000",
+    "executable_structure": "single_assertion",
+    "family": "threshold_guard",
+    "minimized_exact_counterexample": {
+      "case_id": "exp6366-threshold_guard-single_assertion-symbolic-00",
+      "exact": true,
+      "executable_structure": "single_assertion",
+      "expected": "accept",
+      "family": "threshold_guard",
+      "generator_seed": 636600,
+      "minimal": true,
+      "observed_before_edit": "reject",
+      "source_text_sha256": "sha256:7be89372c926ce78de4907a573b14186f3edf3fafb98b9a2aa50b1845a2e2ed4",
+      "surface_relabel": "symbolic",
+      "variables": {
+        "accept_bias": 0.0
+      }
+    },
+    "source_obligations": [
+      {
+        "obligation_id": "obl-live-6366-000-0",
+        "span": {
+          "end": 183,
+          "sha256": "sha256:8db064f857527e5971bf69fed8c3b382fc5316247b59682651b54abd62a27326",
+          "start": 103
+        },
+        "text": "Edit accept_bias for accept_factor within [-1.0, 1.0] to repair threshold_guard."
+      }
+    ],
+    "source_text": "EVENT live-6366-000. FAMILY threshold_guard. STRUCTURE single_assertion. SURFACE symbolic. OBLIGATION: Edit accept_bias for accept_factor within [-1.0, 1.0] to repair threshold_guard. Counterexample live-6366-000: accept_bias=0.0, expected=accept, observed=reject.",
+    "source_text_sha256": "sha256:7be89372c926ce78de4907a573b14186f3edf3fafb98b9a2aa50b1845a2e2ed4",
+    "surface_relabel": "symbolic"
+  }
+}

@@ -28394,3 +28394,147 @@ success cannot set utility readiness or consumer readiness.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-6356 | Planned (`python/carnot/experiment_6356_live_certified_learning_safety_audit.py`, `results/experiment_6356_live_certified_learning_safety_audit.json`) | Planned (`tests/python/test_experiment_6356_live_certified_learning_safety_audit.py`) |
+
+---
+
+## REQ-LEARN-6366: Repaired Live Factor Proposal Authenticity
+
+Exp6366 SHALL rerun the live factor proposal authenticity canary on the
+repaired Exp6365 child-process substrate. It SHALL use all three required local
+GGUF model families. It SHALL resolve model paths through `cached_sota_pair()`.
+It SHALL use only embedded GGUF tokenizers. It SHALL seal at least 12 fresh
+executable events before any model call. It SHALL preserve raw model bytes
+before parsing. It SHALL bind every parsed obligation and edit to exact source
+spans. It SHALL keep the released factor snapshot read-only during proposal
+calls. It SHALL use protected exact task checkers as the only correctness
+oracle.
+
+`results/experiment_6366_repaired_live_factor_proposal_authenticity.json`
+SHALL be written by
+`.venv/bin/python -m carnot.experiment_6366_repaired_live_factor_proposal_authenticity --date 20260813`.
+
+### REQ-LEARN-6366 Sub-requirements
+
+- REQ-LEARN-6366-1: The artifact SHALL contain every field named in the
+  Required Artifact Fields and Principles list below.
+- REQ-LEARN-6366-2: Exp6366 SHALL recompute the Exp6365 gate before generation.
+  The gate SHALL require
+  `gguf_runtime_observability_ready_score == 1.0`.
+- REQ-LEARN-6366-3: `MODEL_SPECS` SHALL contain exactly
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- REQ-LEARN-6366-4: The event manifest SHALL contain at least 12 fresh events
+  across at least three executable constraint families. It SHALL balance
+  family, structure, and surface relabels.
+- REQ-LEARN-6366-5: Every live model call SHALL record stdout, stderr, exit,
+  token, timing, GPU, source, command, prompt, dispatcher, and raw-output
+  receipts.
+- REQ-LEARN-6366-6: Parsing SHALL reject empty output, timeouts, abstentions,
+  invalid bounded edits, unsupported obligations, and source substitutions as
+  failures. It SHALL NOT convert those failures into proposals.
+- REQ-LEARN-6366-7: Same-step mutation tests SHALL prove that a proposal cannot
+  read a pending write or mutate the released snapshot, exact checker, event
+  manifest, or protected validation set.
+- REQ-LEARN-6366-8:
+  `repaired_live_factor_proposal_authenticity_ready_score` SHALL be `1.0` only
+  when all three model families have authenticated nonempty calls, at least one
+  proposal is source-bound and parse-valid, source substitutions are zero,
+  same-step writes are zero, exact-check receipts are complete, protected files
+  are unchanged, and claimed tests pass.
+- REQ-LEARN-6366-9: `verifier_is_oracle` SHALL be true only for protected exact
+  task checkers. Model proposals, parsing, and learned scores SHALL be stated
+  as non-oracles.
+
+### SCENARIO-LEARN-6366-GATE: Exp6365 Gate Blocks Generation
+
+**Given** the Exp6365 artifact is missing, blocked, null, corrupt, or has a
+ready score below one
+**When** Exp6366 checks preconditions
+**Then** it writes the Exp6366 artifact with a `blocked:` verdict, zero
+readiness, and no model substitution.
+
+### SCENARIO-LEARN-6366-MANIFEST: Fresh Balanced Events Are Sealed
+
+**Given** local licensed deterministic generators
+**When** Exp6366 creates its canary manifest
+**Then** the manifest contains at least 12 events, at least three executable
+families, balanced structures, balanced surface relabels, generator licenses,
+source hashes, and no protected labels in proposer-visible event payloads.
+
+### SCENARIO-LEARN-6366-RAW: Raw Bytes Freeze Before Parse
+
+**Given** all three required GGUF models and the same source event
+**When** Exp6366 invokes the Exp6365 child contract
+**Then** each model has nonempty raw bytes, stdout and stderr sidecars, process
+receipts, token receipts, GPU receipts, and a parse start after the raw hash is
+frozen.
+
+### SCENARIO-LEARN-6366-SOURCE-BINDING: Parsed Content Must Match Source Spans
+
+**Given** a raw model output contains a bounded edit proposal
+**When** Exp6366 parses it
+**Then** each obligation and edit must cite exact source spans whose text hash
+matches the sealed event. Context-memory substitutions and unsupported
+obligations count as failures.
+
+### SCENARIO-LEARN-6366-ISOLATION: Pending Writes Stay Invisible
+
+**Given** a proposal and a pending same-step write
+**When** Exp6366 runs mutation tests
+**Then** the released snapshot, exact checker, event manifest, protected
+validation set, and proposal read root remain unchanged.
+
+### SCENARIO-LEARN-6366-ORACLE: Exact Checkers Alone Judge Outcomes
+
+**Given** raw output and parse results are frozen
+**When** Exp6366 evaluates proposal outcomes
+**Then** protected exact task checkers produce valid, invalid, exact-pass, and
+exact-fail counts. Model proposals, parsing, and learned scores do not become
+oracles.
+
+### Required Artifact Fields and Principles
+
+- `status`: Terminal status separates blocked, positive, and null authenticity evidence.
+- `exp6365_gate_receipt`: The repaired child-process prerequisite is replayed before generation.
+- `MODEL_SPECS`: The three mandated GGUF model rows are resolved through `cached_sota_pair()`.
+- `models_used`: Only authenticated nonempty required model calls count as used models.
+- `cached_sota_pair_receipts`: Helper-call receipts prevent manual model substitution.
+- `model_file_hashes_revisions_quantizations_and_tokenizers`: Model files, revisions, quantizations, hashes, and tokenizer methods are pinned.
+- `embedded_gguf_tokenizer_receipts`: Tokenizer checks use embedded GGUF metadata, not AutoTokenizer.
+- `autotokenizer_usage_count`: Bare zero proves no Hugging Face tokenizer side channel was used.
+- `cuda_offload_vram_and_runtime_receipts_by_model`: CUDA offload, VRAM rise, release, and runtime contract results are recorded per model.
+- `sealed_event_manifest_path_hash_license_and_balance`: The fresh balanced event manifest is sealed before generation.
+- `released_factor_snapshot_path_hash_and_read_only_receipt`: The released snapshot is hash-bound and read-only during proposal calls.
+- `information_exposure_contract`: The proposer-visible fields exclude protected labels, hidden states, weights, and pending writes.
+- `live_autoregressive_generation_invoked_by_model`: Each model row states whether a real local completion was invoked.
+- `child_process_observability_receipts_by_model`: Child stdout, stderr, exit, token, timing, GPU, source, command, prompt, and dispatcher receipts are preserved.
+- `raw_output_before_parse_paths_hashes_and_counts`: Raw output paths, hashes, byte counts, and parse-start ordering are pinned.
+- `bounded_factor_edit_schema_path_and_hash`: The bounded factor-edit schema is frozen before parsing.
+- `parse_valid_invalid_timeout_and_abstain_counts_by_model`: Parse outcomes count invalid output, timeouts, and abstentions as failures.
+- `source_span_alignment_and_decomposition_conflict_counts`: Source-span checks expose substitutions and unsupported obligations.
+- `same_step_read_write_isolation_results`: Mutation tests prove pending writes and protected mutations fail closed.
+- `exact_checker_paths_hashes_versions_calls_costs_and_errors`: Exact checker identity, calls, costs, and errors are recorded after raw freeze.
+- `exact_pass_fail_counts_by_model`: Exact outcomes are counted by model without utility claims.
+- `source_model_weight_mutation_count`: Bare zero proves source model weights stayed frozen.
+- `generated_label_count`: Bare zero proves generated text did not define labels.
+- `hidden_state_access_count`: Bare zero proves hidden activations were not read.
+- `protected_validation_leak_count`: Bare zero proves protected validation did not steer proposals.
+- `repaired_live_factor_proposal_authenticity_ready_score`: Readiness is conjunctive over authenticated calls, source binding, isolation, exact receipts, protected files, and tests.
+- `harm_underpowered_missing_and_flagged_cells`: Missing, underpowered, invalid, timeout, abstain, and substitution cells remain visible.
+- `protected_files_unchanged`: Conductor, ops, traceability, upstream artifacts, and exact checker files remain byte-identical.
+- `preconditions_checked`: Preconditions cover Exp6365, models, tokenizers, GPU offload, VRAM, disk, context capacity, sidecars, seeds, and protected hashes.
+- `inference_substrate`: The artifact declares local llama.cpp GGUF child-process generation with embedded tokenizers.
+- `verifier_is_oracle`: Bare true applies only to protected exact task checkers.
+- `field_principles`: Every required field states the guard it provides.
+- `field_provenance`: Every required field maps to measured model output, exact checker data, source hash, derived check, or constant.
+- `random_seed`: A fixed seed makes manifest and generation schedules reproducible.
+- `duration_s`: Wall time is measured without padding.
+- `tests_run`: Verification commands and exit codes are recorded.
+- `reproducibility_checksum`: A normalized checksum detects artifact drift.
+- `honest_verdict`: The verdict uses a terminal prefix and states the authenticity boundary.
+
+## Implementation Status (REQ-LEARN-6366)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-6366 | Planned (`python/carnot/experiment_6366_repaired_live_factor_proposal_authenticity.py`, `results/experiment_6366_repaired_live_factor_proposal_authenticity.json`) | Planned (`tests/python/test_experiment_6366_repaired_live_factor_proposal_authenticity.py`) |
