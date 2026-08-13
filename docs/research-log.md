@@ -6150,3 +6150,10 @@ The critical path for milestone .250:
 - theme: a multi-model parser and JIT canary concentrated the compute-bound operational tail under coarse timing reconstruction
 - key result: the locked classification reports no compute-task GPU-idle fault, while missing task-linked telemetry and model-concurrency receipts prevent an efficiency grade or a DualGPURunner finding
 - acceptance: 4/4 requested operational determinations addressed
+
+### Milestone 2026.08.547
+
+- exp_range: no data available this milestone
+- theme: live factor-proposal preflight led a brief compute-heavy milestone under reconstructed timing
+- key result: the compute leader took 1.64 minutes, and the locked classification reports no compute-bound GPU-idle fault; no data available this milestone establishes parallel model loading or runner selection
+- acceptance: no data available this milestone

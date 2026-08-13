@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.547",
+  "generated_at": "2026-08-13T00:09:03Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 1.8,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 5,
+  "slowest_experiments": [
+    {
+      "experiment": "Three-model live factor proposal authenticity preflight",
+      "duration_minutes": 1.64,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bounded V546 terminal evidence handoff into V547",
+      "duration_minutes": 0.18,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V547 dated source window and two-lane scope freeze",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated real counterexample-directed factor proposal A/B",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated default-off certified factor future consumer A/B",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Six experiments completed in 1.8 minutes, and five were compute-bound. The 1.64-minute Three-model live factor proposal authenticity preflight was the longest listed task, but the reconstructed timing does not show why it took longest.",
+  "bottlenecks_identified": [
+    "Disk-mtime reconstruction ranks the tasks but provides no phase-level cause for the 1.64-minute compute leader.",
+    "The GPU snapshot is not linked to experiment boundaries or processes, so it cannot grade utilization across the compute-bound tasks; the locked classification reports no compute-bound GPU-idle fault.",
+    "No loaded-model concurrency or runner-selection record is available, so the data cannot determine whether any task with at least two models loaded in parallel missed DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "Emit monotonic start and stop times for model load, inference, validation, and artifact-write phases from the conductor.",
+    "Sample GPU utilization with experiment and process identifiers while each compute-bound task is active.",
+    "Record loaded-model count and selected runner for every compute task, and select DualGPURunner only when at least two models are loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Replace disk-mtime reconstruction with a live per-phase execution ledger.",
+    "Join GPU samples to active experiment and process identifiers.",
+    "Add loaded-model-count and runner-selection fields to each compute-task receipt."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The data can rank elapsed time but cannot attribute the runtime or quantify a faster path. The next retrospective needs task-linked phase, device, model-count, and dispatcher evidence."
+}
