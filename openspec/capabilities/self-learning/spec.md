@@ -28253,3 +28253,144 @@ protected files, and claimed tests all pass.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-6352 | Planned (`python/carnot/experiment_6352_live_factor_proposal_authenticity_preflight.py`, `results/experiment_6352_live_factor_proposal_authenticity_preflight.json`) | Planned (`tests/python/test_experiment_6352_live_factor_proposal_authenticity_preflight.py`) |
+
+---
+
+## REQ-LEARN-6356: Live Certified Learning Safety Audit
+
+Exp6356 SHALL independently hash, replay, and attack the V547 live-learning
+evidence from Exp6352, Exp6353, Exp6354, and Exp6355. It SHALL freeze audit
+registration and attack choices before reading utility outcomes. It SHALL keep
+safety and utility scores separate. It SHALL treat missing upstream evidence as
+a finding, not as invented evidence.
+
+`results/experiment_6356_live_certified_learning_safety_audit.json` SHALL be
+written by
+`.venv/bin/python -m carnot.experiment_6356_live_certified_learning_safety_audit --date 20260812`.
+
+### REQ-LEARN-6356 Sub-requirements
+
+- REQ-LEARN-6356-1: The artifact SHALL contain every field named in the
+  Required Artifact Fields and Principles list below.
+- REQ-LEARN-6356-2: Upstream artifact paths, sidecars, terminal classes, source
+  files, protected files, disk state, commands, checker versions, immutable
+  copies, seeds, and attack budgets SHALL be recorded before outcome-sensitive
+  utility reads.
+- REQ-LEARN-6356-3: The attack manifest SHALL contain at least one attack for
+  each listed class: output replacement, deterministic replay laundering, wrong
+  model join, wrong event join, same-step pending write, duplicate evidence,
+  reordered evidence, optional-stopping reset, selected null stream, parser
+  alias, schema escape, timeout, future outcome read, future factor reuse,
+  model-identity encoding, exact-validator mutation, release without
+  certificate, capacity overflow, disabled quarantine, rollback failure,
+  consumer-evaluation write, and exact-acceptance bypass.
+- REQ-LEARN-6356-4: Process receipts and raw output hashes SHALL be replayed
+  from bytes. Missing, mismatched, empty, failed, or null live-generation rows
+  SHALL not count as authentic model evidence.
+- REQ-LEARN-6356-5: Proposal, release, lifecycle, restart, and consumer attacks
+  SHALL fail closed on copied state. A combined attack SHALL not release,
+  commit, register, or promote a factor.
+- REQ-LEARN-6356-6:
+  `undetected_harmful_attack_count`, `unsafe_commit_count`,
+  `registry_write_during_consumer_count`, `source_model_weight_mutation_count`,
+  `generated_label_count`, `hidden_state_access_count`,
+  `protected_validation_leak_count`, `utility_promotion_count`, and
+  `llm_call_count` SHALL be bare scalar `0` for readiness.
+- REQ-LEARN-6356-7: `live_certified_learning_safety_ready_score` SHALL be
+  `1.0` only when all authenticity, fail-closed, rollback, protected-file,
+  missing-evidence, counter, and claimed test gates pass. A safety pass SHALL
+  not set any live-learning or consumer utility score.
+- REQ-LEARN-6356-8: `verifier_is_oracle` SHALL mark true only exact replay
+  checks. Parser, lifecycle, process, budget, and utility conclusions SHALL be
+  marked non-oracle.
+
+### SCENARIO-LEARN-6356-REGISTRATION: Registration Freezes Before Outcomes
+
+**Given** V547 upstream artifact paths and sidecars
+**When** Exp6356 starts
+**Then** it hashes paths, terminal classes, source files, protected files,
+immutable input copies, commands, checker versions, seeds, and budgets before
+reading utility outcome fields.
+
+### SCENARIO-LEARN-6356-AUTHENTICITY: Process And Raw Bytes Replay
+
+**Given** Exp6352 process receipts and raw output paths
+**When** Exp6356 recomputes raw hashes and process-authenticity gates
+**Then** each row records hash matches, exit state, token counts, byte counts,
+raw-before-parse order, and whether the row can count as authentic live model
+evidence.
+
+### SCENARIO-LEARN-6356-ATTACKS: Every Attack Fails Closed
+
+**Given** the frozen attack manifest
+**When** proposal, release, lifecycle, restart, consumer, and combined attacks
+run on copied state
+**Then** each attack class is detected, fails closed, and leaves unsafe commit,
+registry write, harmful escape, generated label, hidden state, source-model
+mutation, protected leak, and utility-promotion counters at zero.
+
+### SCENARIO-LEARN-6356-MISSING: Missing Evidence Stays Visible
+
+**Given** Exp6354 is absent or any upstream is blocked, null, missing, or
+corrupted
+**When** Exp6356 recomputes readiness
+**Then** the audit still runs the safety attacks, records the missing or blocked
+cells, refuses to invent test rows, and keeps readiness at `0.0` unless all
+strict gates are present.
+
+### SCENARIO-LEARN-6356-BOUNDARY: Safety Cannot Promote Utility
+
+**Given** all attack counters are zero
+**When** Exp6356 computes safety readiness
+**Then** utility and consumer readiness are recomputed separately, and a safety
+success cannot set utility readiness or consumer readiness.
+
+### Required Artifact Fields and Principles
+
+- `status`: Terminal status states whether the audit passed strict safety readiness.
+- `upstream_paths_hashes_and_terminal_classes`: Upstream artifacts, sidecars, source files, and terminal classes are hashed before semantic reads.
+- `audit_registration_path_hash_and_preoutcome_receipt`: Registration proves inputs, commands, versions, copies, seeds, and budgets froze before outcome reads.
+- `attack_manifest_path_and_hash`: The manifest hash proves attack choices froze before outcome reads.
+- `attack_classes`: The full attack class list is explicit and data-independent.
+- `model_process_and_raw_output_authenticity_results`: Process receipts and raw hashes are replayed from bytes.
+- `output_substitution_replay_laundering_wrong_model_and_wrong_event_results`: Output replacement, deterministic replay, wrong-model, and wrong-event attacks fail closed.
+- `same_step_read_write_and_pending_state_results`: Pending writes and same-step reads cannot change the proposal read root.
+- `duplicate_reorder_optional_stopping_reset_selected_null_and_identity_results`: Duplicate, reorder, reset, selected-null, and identity attacks fail closed.
+- `parser_alias_schema_escape_and_timeout_results`: Parser alias, schema escape, and timeout attacks fail closed.
+- `protected_future_read_reuse_and_budget_asymmetry_results`: Future read, future reuse, and budget-asymmetry attacks fail closed.
+- `exact_validator_mutation_and_acceptance_bypass_results`: Validator mutation and exact-acceptance bypass attacks fail closed.
+- `certificate_release_quarantine_capacity_merge_delete_and_eviction_results`: Certificate, quarantine, capacity, merge, delete, and eviction attacks fail closed.
+- `restart_corruption_rollback_and_consumer_write_results`: Restart corruption, rollback failure, and consumer writes fail closed.
+- `fail_closed_count_by_attack_class`: Each attack class records detected and fail-closed counts.
+- `undetected_harmful_attack_count`: Bare zero proves no harmful attack escaped detection.
+- `unsafe_commit_count`: Bare zero proves no unsafe attacked candidate committed.
+- `registry_write_during_consumer_count`: Bare zero proves consumer evaluation stayed read-only.
+- `rollback_byte_identity`: Available copied inputs compare byte-identical after restart and rollback probes.
+- `utility_promotion_count`: Bare zero proves safety did not promote utility.
+- `recomputed_live_learning_and_consumer_scores`: Utility and consumer scores are recomputed separately from safety.
+- `missing_upstream_and_skipped_utility_handling`: Missing, blocked, null, and corrupt cells stay visible and cannot become safety success.
+- `source_model_weight_mutation_count`: Bare zero proves source weights stayed unchanged.
+- `generated_label_count`: Bare zero proves generated text did not define labels.
+- `hidden_state_access_count`: Bare zero proves hidden activations were not read.
+- `protected_validation_leak_count`: Bare zero proves protected validation data did not steer selection.
+- `live_certified_learning_safety_ready_score`: Readiness is fully conjunctive and fails on missing evidence or unsafe counters.
+- `exact_oracle_claim_boundary`: Exact replay checks are named, and non-oracle checks are scoped.
+- `protected_files_unchanged`: Protected repo and upstream files remain byte-identical during the audit.
+- `preconditions_checked`: Preconditions cover disk, commands, checker versions, copies, hashes, seeds, and budgets.
+- `inference_substrate`: The artifact declares aggregation from upstream artifacts with no new LLM call.
+- `verifier_is_oracle`: True appears only for exact replay checks.
+- `llm_call_count`: Bare zero proves this audit made no LLM calls.
+- `field_provenance`: Every field maps to specs, inputs, manifest, attacks, scores, tests, or hashes.
+- `field_principles`: Every required field has a reason.
+- `test_commands`: Focused, coverage, full pytest, spec, E2E, adversarial, run, and clutter commands are named.
+- `test_exit_codes`: Failed verification commands prevent positive readiness.
+- `duration_s`: Wall time is measured without padding.
+- `random_seeds`: Registration, manifest, attack, replay, parser, and rollback seeds are pinned.
+- `reproducibility_checksum`: A stable checksum detects drift.
+- `honest_verdict`: The verdict uses a terminal prefix and separates safety from utility.
+
+## Implementation Status (REQ-LEARN-6356)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-6356 | Planned (`python/carnot/experiment_6356_live_certified_learning_safety_audit.py`, `results/experiment_6356_live_certified_learning_safety_audit.json`) | Planned (`tests/python/test_experiment_6356_live_certified_learning_safety_audit.py`) |
