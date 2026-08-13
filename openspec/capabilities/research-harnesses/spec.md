@@ -4196,6 +4196,123 @@ the checksum matches, and `verifier_is_oracle` is false.
 |---|---|---|
 | REQ-INFRA-6363 | Implemented: `python/carnot/experiment_6363_v548_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json`. | Implemented: `tests/python/test_experiment_6363_v548_terminal_handoff_and_queue_preflight.py`. |
 
+## REQ-INFRA-6365: GGUF Child Failure Forensics SHALL Preserve Runtime Diagnostics
+
+Carnot SHALL build Exp6365 as a reusable observable child-process contract for
+local llama.cpp GGUF generation. The contract SHALL diagnose Exp6352 without
+claiming a factor proposal, model accuracy, or utility result. It SHALL
+reconstruct Exp6352 command, source, prompt, sampling, environment, exit, raw
+byte, and terminal-class receipts from the committed source, the committed
+artifact, and git history before any new full three-model rerun.
+
+Exp6365 SHALL use `cached_sota_pair()` helper calls and exactly these measured
+GGUF model ids: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL use only the GGUF-embedded
+llama.cpp tokenizer in vocab-only mode. It SHALL never call
+`AutoTokenizer`. Prompt token counting SHALL happen before model load. A call
+SHALL fail closed when `prompt_tokens + max_tokens > n_ctx`.
+
+Each child call SHALL record sanitized argv, PID, dispatcher, allowed
+environment hash, source hash, command hash, prompt hash, prompt token count,
+requested output tokens, `n_ctx`, capacity margin, stdout and stderr sidecar
+paths and hashes, bounded stdout and stderr excerpts, return code, signal,
+timeout state, usage receipt, phase timestamps, and raw byte count. Full
+stdout and stderr SHALL be stored as sidecars addressed by their hashes.
+
+Exp6365 SHALL record task-linked GPU samples before load, after load, during
+generation, after unload, and after cleanup. Each sample SHALL include GPU
+index, memory, utilization, process identity, timestamp, model id, and phase.
+Readiness SHALL require authenticated GPU offload and a proved VRAM rise and
+release for each completed model row. CUDA readiness SHALL not be accepted from
+`nvidia-smi` visibility alone.
+
+Exp6365 SHALL inject deterministic failures for nonzero exit, timeout, empty
+stdout, malformed usage receipt, context overflow, source drift, and missing
+GPU sample. Each injection SHALL fail closed and preserve diagnostics. A live
+row SHALL count as successful only when return code is zero, timeout is false,
+raw bytes are nonempty before parsing, prompt and completion token counts are
+positive, GPU offload is authenticated, context capacity is sufficient, and no
+required GPU sample is missing.
+
+The Exp6365 artifact SHALL be written atomically to
+`results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json`
+with `inference_substrate=local_llama_cpp_gguf_observable_child_process_contract`
+and `verifier_is_oracle=false`. It SHALL include these required fields:
+`status`, `upstream_exp6352_path_hash_and_terminal_class`,
+`reconstructed_exp6352_command_and_source_receipt`,
+`exp6352_source_artifact_sampling_drift`, `MODEL_SPECS`, `models_used`,
+`cached_sota_pair_receipts`,
+`model_file_hashes_revisions_quantizations_and_tokenizers`,
+`embedded_gguf_tokenizer_receipts`, `autotokenizer_usage_count`,
+`llama_cpp_gpu_offload_support_receipt`,
+`task_linked_gpu_samples_by_model_and_phase`,
+`dispatcher_and_process_identity_receipts`,
+`source_command_prompt_and_environment_hashes_by_call`,
+`prompt_token_context_capacity_receipts_by_model`,
+`stdout_stderr_sidecar_paths_hashes_and_bounded_excerpts`,
+`child_exit_signal_timeout_and_usage_receipts_by_model`,
+`load_prompt_generate_unload_cleanup_timings_by_model`,
+`raw_output_paths_hashes_and_byte_counts`,
+`live_autoregressive_generation_invoked_by_model`,
+`failure_injection_matrix`, `vram_rise_and_release_receipts_by_model`,
+`gguf_runtime_observability_ready_score`,
+`no_proposal_quality_or_utility_claim`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INFRA-6365-1: Exp6352 Is Reconstructed Before Rerun
+
+GIVEN the committed Exp6352 source and artifact
+WHEN Exp6365 starts
+THEN it records the committed source hash, artifact hash, reconstructed child
+command, prompt hashes, sampling values, child return codes, empty raw bytes,
+missing stderr diagnostics, terminal class, and source-versus-artifact
+sampling drift before any new full three-model rerun.
+
+### SCENARIO-INFRA-6365-2: Embedded Tokenizer Enforces Context Capacity
+
+GIVEN one exact prompt and one exact GGUF file
+WHEN Exp6365 counts tokens
+THEN it uses the embedded GGUF tokenizer in vocab-only mode, records the
+prompt count and capacity margin, keeps `autotokenizer_usage_count=0`, and
+blocks before model load if prompt plus requested output exceeds `n_ctx`.
+
+### SCENARIO-INFRA-6365-3: Observable Child Runner Preserves Diagnostics
+
+GIVEN a child exits nonzero, times out, emits empty stdout, or emits malformed
+usage
+WHEN the observable child runner normalizes the receipt
+THEN the row fails closed, preserves full stdout and stderr sidecars by hash,
+records bounded excerpts, records PID, command, environment, source, signal,
+timeout, token, context, and phase receipts, and does not infer a root cause.
+
+### SCENARIO-INFRA-6365-4: GPU Samples Are Task Linked And Required
+
+GIVEN a child claims live llama.cpp generation
+WHEN readiness is computed
+THEN samples for before load, after load, during generation, after unload, and
+after cleanup must be present for that model. Missing samples, missing process
+identity, missing GPU offload, or missing VRAM rise and release force the row
+to fail closed.
+
+### SCENARIO-INFRA-6365-5: Runtime Score Does Not Claim Proposal Quality
+
+GIVEN three mandatory model rows and deterministic failure injections
+WHEN Exp6365 validates the artifact
+THEN `gguf_runtime_observability_ready_score` is `1.0` only when all three live
+rows meet the child-process contract, every injection fails closed, protected
+files are unchanged, field principles and provenance cover every required
+field, `verifier_is_oracle=false`, and the artifact makes no proposal,
+accuracy, or utility claim.
+
+## Implementation Status (REQ-INFRA-6365)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6365 | Planned: `python/carnot/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.py`; terminal artifact `results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json`. | Planned: `tests/python/test_experiment_6365_gguf_child_failure_forensics_and_runtime_contract.py`. |
+
 ## REQ-INFRA-6351: V547 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
 
 Carnot SHALL build Exp6351 as a deterministic V547 post-marker source sweep
