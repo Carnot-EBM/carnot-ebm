@@ -2800,6 +2800,144 @@ declared license scope
 | SCENARIO-LEARN-6399-TRANSACTION-BOUNDARY | Implemented: `python/carnot/experiment_6399_capability_learning_safety_audit.py`. | Implemented: `tests/python/test_experiment_6399_capability_learning_safety_audit.py`. |
 | SCENARIO-LEARN-6399-READY | Implemented: `python/carnot/experiment_6399_capability_learning_safety_audit.py`. | Implemented: `tests/python/test_experiment_6399_capability_learning_safety_audit.py`. |
 
+## REQ-LEARN-6406: Clean V550 Factor Evidence Boundary
+
+**Given** Exp6394 through Exp6398 produced narrow internal V550 factor
+evidence, Exp6399 preserved public ineligibility as a null audit, and Exp6385
+remains quarantined
+**When** Exp6406 runs on planning date 20260813
+**Then** it SHALL write
+`results/experiment_6406_clean_v550_factor_evidence_boundary.json`
+**And** it SHALL build an immutable V550-only clean evidence boundary without
+invoking an LLM, regenerating upstream evidence, modifying upstream artifacts,
+repairing Exp6385, rerunning Exp6399, or creating a public claim.
+
+Exp6406 SHALL register expected V550 artifacts, sidecars, source files, model
+IDs, license records, exact checker hashes, transaction heads, and conductor
+outcomes before reading conclusion fields. It SHALL hash and summarize Exp6394
+through Exp6399, Exp6403, and Exp6385. It SHALL keep artifact verdicts,
+conductor outcomes, duration receipts, and adversarial flags as separate facts.
+
+Exp6406 SHALL include a row only when it is V550-produced, task-linked,
+terminal, unflagged, hash-complete, source-bound, and inside its declared
+model-family and constraint-family license. It SHALL exclude Exp6385, Exp6399,
+blocked, null, absent, unlicensed, rejected, flagged, missing-sidecar, and
+unproven-duration rows. Excluded rows SHALL remain visible as excluded facts.
+
+Exp6406 SHALL recompute only narrow internal harness, license, frontier,
+transactional-learning, consumer, and safety states. It SHALL NOT recompute
+universal support or public eligibility from partial cells.
+
+Exp6406 SHALL attack artifact substitution, lineage laundering, date relabeling,
+model and family swaps, license overreach, missing sidecars, conductor-result
+suppression, and flagged-input omission. Every attack SHALL fail closed.
+
+Exp6406 SHALL write an append-only claim ledger with included and excluded
+artifact hashes, reasons, allowed internal claims, forbidden claims, and the
+exact evidence boundary hash. It SHALL set
+`clean_factor_evidence_boundary_ready_score=1.0` only when every included row is
+clean, every excluded row remains excluded, only narrow internal V550 claims
+reproduce, and `public_factor_claim_eligibility=false`.
+
+Exp6406 SHALL emit these fields:
+
+- `status`
+- `audit_registration_path_hash_and_expected_scope`
+- `v550_artifact_hash_verdict_conductor_duration_and_flag_matrix`
+- `clean_inclusion_rule`
+- `explicit_exclusion_rule`
+- `included_clean_artifact_records`
+- `excluded_nonclean_blocked_null_absent_unlicensed_rejected_and_flagged_records`
+- `exp6385_preservation_receipt`
+- `exp6399_preservation_receipt`
+- `recomputed_narrow_harness_license_frontier_learning_consumer_and_safety_states`
+- `universal_support_claimed`
+- `public_factor_claim_eligibility`
+- `allowed_internal_claims`
+- `forbidden_claims`
+- `claim_ledger_path_hash_and_rows`
+- `substitution_laundering_date_model_family_license_sidecar_conductor_and_flag_attack_matrix`
+- `clean_factor_evidence_boundary_ready_score`
+- `upstream_artifacts_modified`
+- `protected_files_unchanged`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+## SCENARIO-LEARN-6406-REGISTRATION: Scope Freezes Before Conclusions
+
+**Given** the expected V550 factor artifacts, sidecars, source files, licenses,
+checker hashes, transaction heads, and conductor rows
+**When** Exp6406 starts
+**Then** it SHALL hash and register that scope before it reads upstream
+readiness, utility, public-claim, or safety conclusion fields.
+
+## SCENARIO-LEARN-6406-INCLUSION: Only Clean V550 Rows Enter The Boundary
+
+**Given** positive V550 artifacts, Exp6385, Exp6399, Exp6403, unlicensed cells,
+rejected cells, missing sidecars, and flagged inputs
+**When** Exp6406 applies the inclusion and exclusion rules
+**Then** only clean V550 factor evidence rows SHALL be included
+**And** all nonclean, null, context-only, unlicensed, rejected, missing, and
+flagged rows SHALL remain excluded with reasons and hashes.
+
+## SCENARIO-LEARN-6406-RECOMPUTE: Claims Stay Narrow And Internal
+
+**Given** Exp6394 through Exp6398 provide positive internal factor evidence
+inside four licensed cells
+**When** Exp6406 recomputes harness, license, frontier, learning, consumer, and
+safety states
+**Then** it SHALL reproduce only narrow internal V550 claims
+**And** `universal_support_claimed` and `public_factor_claim_eligibility` SHALL
+remain `false`.
+
+## SCENARIO-LEARN-6406-ATTACKS: Boundary Attacks Fail Closed
+
+**Given** substitution, lineage laundering, date relabeling, model swap, family
+swap, license overreach, missing sidecar, conductor suppression, or flagged
+input omission
+**When** Exp6406 evaluates the attack matrix
+**Then** each attack SHALL fail closed
+**And** no attack SHALL add an included row, suppress an excluded row, or enable
+a public claim.
+
+## SCENARIO-LEARN-6406-LEDGER: Claim Ledger Binds The Boundary
+
+**Given** included and excluded rows have hashes and reasons
+**When** Exp6406 writes the claim ledger
+**Then** the ledger SHALL record allowed internal claims, forbidden claims, and
+the exact evidence boundary hash
+**And** the terminal artifact SHALL record the ledger path, hash, row count, and
+rows.
+
+## SCENARIO-LEARN-6406-READY: Readiness Is Conjunctive
+
+**Given** any included row is nonclean, any excluded row becomes included, any
+required sidecar or provenance is missing, any attack succeeds, universal
+support is claimed, public eligibility is true, an upstream artifact changed, a
+protected file changed, or a recorded test fails
+**When** Exp6406 recomputes readiness
+**Then** `clean_factor_evidence_boundary_ready_score` SHALL be `0.0`.
+
+## Implementation Status (REQ-LEARN-6406)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6406 | Planned: `python/carnot/experiment_6406_clean_v550_factor_evidence_boundary.py`; terminal artifact `results/experiment_6406_clean_v550_factor_evidence_boundary.json`. | Planned: `tests/python/test_experiment_6406_clean_v550_factor_evidence_boundary.py`. |
+| SCENARIO-LEARN-6406-REGISTRATION | Planned: `python/carnot/experiment_6406_clean_v550_factor_evidence_boundary.py`. | Planned: `tests/python/test_experiment_6406_clean_v550_factor_evidence_boundary.py`. |
+| SCENARIO-LEARN-6406-INCLUSION | Planned: `python/carnot/experiment_6406_clean_v550_factor_evidence_boundary.py`. | Planned: `tests/python/test_experiment_6406_clean_v550_factor_evidence_boundary.py`. |
+| SCENARIO-LEARN-6406-RECOMPUTE | Planned: `python/carnot/experiment_6406_clean_v550_factor_evidence_boundary.py`. | Planned: `tests/python/test_experiment_6406_clean_v550_factor_evidence_boundary.py`. |
+| SCENARIO-LEARN-6406-ATTACKS | Planned: `python/carnot/experiment_6406_clean_v550_factor_evidence_boundary.py`. | Planned: `tests/python/test_experiment_6406_clean_v550_factor_evidence_boundary.py`. |
+| SCENARIO-LEARN-6406-LEDGER | Planned: `python/carnot/experiment_6406_clean_v550_factor_evidence_boundary.py`. | Planned: `tests/python/test_experiment_6406_clean_v550_factor_evidence_boundary.py`. |
+| SCENARIO-LEARN-6406-READY | Planned: `python/carnot/experiment_6406_clean_v550_factor_evidence_boundary.py`. | Planned: `tests/python/test_experiment_6406_clean_v550_factor_evidence_boundary.py`. |
+
 ## REQ-LEARN-6383: Dependency-Guided Factor Rollback Stress
 
 **Given** versioned factor release and whole-version rollback already exist
