@@ -4420,6 +4420,128 @@ null, and `verifier_is_oracle` is false.
 |---|---|---|
 | REQ-INFRA-6391 | Planned: `python/carnot/experiment_6391_v550_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6391_v550_terminal_handoff_and_queue_preflight.json`. | Planned: `tests/python/test_experiment_6391_v550_terminal_handoff_and_queue_preflight.py`. |
 
+## REQ-INFRA-6404: V551 Handoff SHALL Preserve V550 Evidence And Fail Closed On Queue Mismatch
+
+Carnot SHALL build Exp6404 as a bounded V550-to-V551 evidence handoff over
+Exp6391 through Exp6403. The handoff SHALL hash the active roadmap, optional
+next roadmap, milestone document, conductor log, conductor source, exclusion
+manifest, known issues, ARC solve registry, claims ledger, and every expected
+V550 terminal artifact before it imports artifact fields. It SHALL invoke
+`scripts/summarize_artifact.py` for Exp6391 through Exp6403 and preserve clean,
+partial, null, blocked, skipped, absent, flagged, and retired states without
+filling gaps.
+
+Exp6404 SHALL keep artifact verdicts, conductor outcomes, adversarial findings,
+public-claim decisions, and per-task durations as separate facts. It SHALL
+derive each duration from the matching terminal artifact receipt. It SHALL not
+copy one aggregate milestone duration onto tasks. If a repeated unresolved
+handoff mismatch is present, the handoff SHALL record the retirement trigger
+instead of resolving it silently.
+
+Exp6404 SHALL record the factor boundary exactly: four Exp6395 licenses, Qwen
+abstention, two rejected Gemma cells, Exp6396 through Exp6398 positive internal
+factor results, Exp6399 public-factor block, and no universal support. It SHALL
+record the ARC boundary exactly: Exp6400 shadow readiness, Exp6401 positive
+causal progress, Exp6402 clean provenance audit with public ineligibility, no
+solve, and zero actual route promotion.
+
+Exp6404 SHALL validate the V551 queue without changing the active roadmap or
+the conductor. It SHALL require twelve unique V551 task IDs, unique result JSON
+deliverables, ascending execution order, structured gates, required upstream
+gate fields, complete prior-failure entries, no retired-ID reuse, no retired
+dependency chain, valid exclusion-manifest state, valid memory gates, and valid
+ARC gates before activation. If the audited queue contains fewer than the
+twelve proposal tasks, Exp6404 SHALL fail closed in its status and verdict
+while preserving all evidence facts.
+
+Exp6404 SHALL render each prompt with the conductor-compatible `{project_root}`
+and `{date}` values before checking it. Every rendered prompt SHALL include
+`CONTEXT`, `EXISTING CODE TO READ FIRST`, `TASK`, `CONCRETE STEPS`, the project
+root, planning date `20260813`, a `Run command:` line, and the final line
+`Do NOT push. Do NOT modify scripts/research_conductor.py.`. Every task SHALL
+use `agent_type=codex` and `model=gpt-5.5`. Every LLM task SHALL name
+`MODEL_SPECS`, `cached_sota_pair()`, at least one mandated GGUF ID, embedded
+GGUF tokenizers, no `AutoTokenizer`, real GPU receipts, and no legacy headline
+cell.
+
+The Exp6404 artifact SHALL be written atomically to
+`results/experiment_6404_v551_terminal_handoff_and_queue_preflight.json` with
+`inference_substrate=aggregation_from_upstream_artifacts` and
+`verifier_is_oracle=false`. The artifact SHALL include these required fields:
+`status`, `v550_active_roadmap_path_and_hash`, `v550_task_ids`,
+`v550_terminal_artifacts_by_task`, `v550_artifact_verdicts`,
+`v550_conductor_outcomes`, `v550_adversarial_findings`,
+`v550_duration_receipts_by_task`, `v550_factor_boundary`,
+`v550_arc_boundary`, `v551_milestone_doc_and_queue_hashes`,
+`v551_task_ids`, `v551_id_and_deliverable_checks`,
+`v551_dependency_and_gate_checks`,
+`v551_gate_field_cross_reference_checks`, `v551_prior_failure_checks`,
+`v551_exclusion_manifest_checks`,
+`v551_agent_model_and_llm_policy_checks`, `prompt_contract_checks`,
+`active_roadmap_modified`, `conductor_modified`, `solve_registry_modified`,
+`claims_ledger_modified`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INFRA-6404-1: V550 Evidence Classes Stay Separate
+
+GIVEN V550 produced positive, null, complete, clean, flagged, skipped, blocked,
+absent, retired, and partial-capability evidence classes
+WHEN Exp6404 builds its terminal matrix
+THEN artifact verdicts, conductor outcomes, adversarial findings, public-claim
+decisions, and per-task durations are recorded in separate fields and no
+missing artifact is invented.
+
+### SCENARIO-INFRA-6404-2: Factor Boundary Preserves Partial Capability
+
+GIVEN Exp6395 issued four narrow licenses while Qwen abstained
+WHEN Exp6404 summarizes factor evidence
+THEN the four licensed cells, the two rejected Gemma cells, the three Qwen
+abstentions, Exp6396 through Exp6398 positive internal results, Exp6399 public
+block, and the absence of universal support remain explicit.
+
+### SCENARIO-INFRA-6404-3: ARC Boundary Preserves Internal Progress Only
+
+GIVEN Exp6400 through Exp6402 produced internal ARC readiness and causal
+progress evidence
+WHEN Exp6404 summarizes ARC evidence
+THEN shadow readiness, positive causal progress, clean provenance, public
+ineligibility, no solve, and zero actual route promotion remain explicit.
+
+### SCENARIO-INFRA-6404-4: V551 Queue Mismatch Fails Closed
+
+GIVEN the V551 proposal contains twelve tasks
+WHEN the audited roadmap contains fewer than twelve V551 task IDs
+THEN Exp6404 records the missing IDs, leaves the roadmap and conductor
+unchanged, and emits a terminal fail-closed handoff verdict.
+
+### SCENARIO-INFRA-6404-5: Prompt And LLM Policy Contracts Validate
+
+GIVEN V551 prompts use `{project_root}` and `{date}` placeholders
+WHEN Exp6404 validates rendered prompt contracts
+THEN it checks all required prompt sections, run commands, final prohibition,
+agent/model pairs, model specs, cached SOTA access, mandated GGUF IDs,
+embedded-tokenizer rules, no-`AutoTokenizer` rules, real GPU receipts, and no
+legacy headline cell.
+
+### SCENARIO-INFRA-6404-6: Artifact Is Annotated, Checksummed, And Non-Mutating
+
+GIVEN precondition hashes, summary receipts, queue checks, and command receipts
+are assembled
+WHEN Exp6404 writes its artifact
+THEN every required field and structured gate has a principle, every required
+field has provenance classified as measured, derived, constant, or upstream,
+the solve registry and claims ledger remain byte-identical, protected files
+remain byte-identical, the checksum matches, `random_seed` is null, and
+`verifier_is_oracle` is false.
+
+## Implementation Status (REQ-INFRA-6404)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6404 | Planned: `python/carnot/experiment_6404_v551_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6404_v551_terminal_handoff_and_queue_preflight.json`. | Planned: `tests/python/test_experiment_6404_v551_terminal_handoff_and_queue_preflight.py`. |
+
 ## REQ-INFRA-6379: Canonical Factor-Edit Transport Contract SHALL Use One Source
 
 Carnot SHALL build Exp6379 as deterministic transport infrastructure for the
@@ -5033,3 +5155,39 @@ messages SHALL remain separate.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-OPS-RECURRING-BLOCKER-6263 | `scripts/recurring_blocker_ledger.py`. | `tests/python/test_recurring_blocker_ledger.py` (6/6, pinning both under- and over-collapse of the normaliser). First run escalated `blocked_gate_check_failed` x31 into `ops/known-issues.md`. |
+
+### REQ-OPS-ARTIFACT-CONVENTION-6264: Recording Conventions Are Enforced Adversarially
+
+**Origin:** 2026-08-13 operator directive, "it sounds like we need to enforce conventions with
+our adversarial agent." Four adversarial audits already ran at milestone close and all four
+reviewed CODE or DOCS; none reviewed the ARTIFACTS.
+
+Two conventions SHALL be stated in the planner's REQUIRED ARTIFACT FIELDS guidance
+(prevention): `per_unit_rows` for any comparative claim, and `blocked_reason` for any
+`blocked_*` verdict.
+
+`scripts/artifact_convention_audit.py` SHALL review recent artifacts adversarially and return
+one of `CHECKABLE | AGGREGATE_ONLY | BLOCKED_WITHOUT_DIAGNOSTIC | CANNOT_DETERMINE`, asking
+whether a reader who was not present could CHECK the claim from what is recorded.
+
+It SHALL apply the audit-integrity guard: a flagged verdict whose quoted evidence does not
+appear in the artifact SHALL be downgraded to `CANNOT_DETERMINE`. It SHALL never edit an
+artifact and SHALL never block. It SHALL be bounded (`--recent`) so a milestone close stays
+cheap.
+
+#### SCENARIO-OPS-ARTIFACT-CONVENTION-6264-AGGREGATE-ONLY-IS-FLAGGED
+
+Given an artifact asserting a comparative or readiness claim backed only by counts, with no
+per-unit record of which units were checked or what each produced, the verdict SHALL be
+`AGGREGATE_ONLY`.
+
+#### SCENARIO-OPS-ARTIFACT-CONVENTION-6264-NO-CLAIM-IS-NOT-A-PROBLEM
+
+Given an artifact that makes no comparative claim and is not blocked, the verdict SHALL be
+`CHECKABLE`; the audit SHALL NOT invent a problem.
+
+## Implementation Status (REQ-OPS-ARTIFACT-CONVENTION-6264)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-OPS-ARTIFACT-CONVENTION-6264 | `scripts/artifact_convention_audit.py`, wired as the fifth milestone-close audit in `research_conductor.py`; conventions added to the planner's REQUIRED ARTIFACT FIELDS guidance. | First live run flagged `experiment_3392_archive_v311_activate_v312.json` AGGREGATE_ONLY with a correct missing-check statement, and correctly passed two others as CHECKABLE. |
