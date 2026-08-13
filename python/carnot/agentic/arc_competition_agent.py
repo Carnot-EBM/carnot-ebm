@@ -102,6 +102,7 @@ from carnot.agentic.arc_frame_change_predictor import (
     load_live_action_effect_scorer,
 )
 from carnot.agentic.arc_goal_energy_live import GOAL_ENERGY_SOURCE
+from carnot.agentic.arc_two_sided_goal_contract import coerce_two_sided_goal_contract
 from carnot.agentic.arc_value_learner import coerce_object_centric_proposal_policy
 from carnot.agentic.arc_value_net import load_live_spatial_value_head
 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
@@ -203,6 +204,10 @@ SUBMITTED_GOAL_GUIDANCE_LAMBDA = 1.0
 SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ENABLED = True
 SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ALPHA = 0.0
 SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_BETA = 1.0
+# REQ-ARC-WMTE-6386: default OFF. When enabled, an induced goal needs two-sided
+# runtime evidence before it can terminate search. Unverified goals can only
+# affect probe ordering.
+SUBMITTED_TWO_SIDED_GOAL_CONTRACT_ENABLED = False
 SUBMITTED_QD_GENERATION_ENABLED = False
 SUBMITTED_QD_GENERATION_MODE = "energy_fitness_map_elites_sequence_generator"
 SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED = False
@@ -1531,6 +1536,7 @@ class StepwiseExplorer:
         generic_causal_primitive: Any | None = None,
         epistemic_ledger: Any | bool | None = None,
         structured_evidence_memory: Any | bool | None = None,
+        two_sided_goal_contract: Any | bool | None = None,
         # REQ-ARC-WMTE-6180 (lever #5, 2026-08-07): default None (not the SUBMITTED_*/kit value)
         # for the same reason as `hazard_move_pruner` above -- GATED, resolved through the
         # `_fd_gate` ladder below (explicit kwarg -> env override -> the kit's own
@@ -1892,6 +1898,7 @@ class StepwiseExplorer:
         self._goal_bias_score_min: float | None = None
         self._goal_bias_score_max: float | None = None
         self.goal_candidate_guidance = goal_candidate_guidance
+        self.two_sided_goal_contract = coerce_two_sided_goal_contract(two_sided_goal_contract)
         self.qd_generator = coerce_qd_generator(
             qd_generator,
             action_effect_scorer=self.frame_change_scorer,
@@ -2866,6 +2873,11 @@ class StepwiseExplorer:
         if self.goal_candidate_guidance is not None and rows:
             try:
                 rows = self.goal_candidate_guidance.rank_candidates(frame, rows)
+            except Exception:
+                pass
+        if self.two_sided_goal_contract is not None and rows:
+            try:
+                rows = self.two_sided_goal_contract.rank_candidates(frame, rows)
             except Exception:
                 pass
         if (
@@ -5153,6 +5165,7 @@ class E3AgentPolicy:
         generic_causal_primitive: Any | None = None,
         epistemic_ledger: Any = _DEFAULT_EPISTEMIC_LEDGER,
         structured_evidence_memory: Any = _DEFAULT_STRUCTURED_EVIDENCE_MEMORY,
+        two_sided_goal_contract: Any | bool | None = None,
         target_licensed_route_shadow: Any | bool | None = False,
     ) -> None:
         import os
@@ -5237,6 +5250,7 @@ class E3AgentPolicy:
             if self.target_licensed_route_shadow_enabled
             else None
         )
+        self.two_sided_goal_contract = coerce_two_sided_goal_contract(two_sided_goal_contract)
         self.approach_recommendation["strategy"] = self.strategy_route
         self._route_from_frame_checked = False
         self._feature_router_checked = False
@@ -5314,6 +5328,7 @@ class E3AgentPolicy:
             generic_causal_primitive=generic_causal_primitive,
             epistemic_ledger=self.epistemic_ledger,
             structured_evidence_memory=self.structured_evidence_memory,
+            two_sided_goal_contract=self.two_sided_goal_contract,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
@@ -5951,6 +5966,15 @@ class E3AgentPolicy:
         goal_energy_override=None,
     ):
         import os
+
+        if self.two_sided_goal_contract is not None and callable(is_done):
+            contract_decision = self.two_sided_goal_contract.termination_decision()
+            if diagnostics is not None:
+                diagnostics["two_sided_goal_contract_state"] = contract_decision.state
+                diagnostics["two_sided_goal_contract_termination_allowed"] = (
+                    contract_decision.termination_allowed
+                )
+            is_done = self.two_sided_goal_contract.guard_predicate(is_done)
 
         # goal_energy_override (REQ-ARC-WMTE-5845): a caller-supplied, model-specific energy (e.g. the
         # structured nav model's player->goal Manhattan) takes precedence over the generic exemplar/novelty
@@ -8088,6 +8112,8 @@ SUBMITTED_AGENT_CONFIG = {
     "goal_energy_candidate_guidance_enabled": (SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ENABLED),
     "goal_energy_candidate_guidance_alpha": (SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ALPHA),
     "goal_energy_candidate_guidance_beta": SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_BETA,
+    "two_sided_goal_contract_enabled": SUBMITTED_TWO_SIDED_GOAL_CONTRACT_ENABLED,
+    "two_sided_goal_contract_wired": True,
     "qd_generation_enabled": SUBMITTED_QD_GENERATION_ENABLED,
     "qd_generation_mode": SUBMITTED_QD_GENERATION_MODE,
     "controllable_novelty_proposal_enabled": SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,
