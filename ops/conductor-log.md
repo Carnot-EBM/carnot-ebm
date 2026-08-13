@@ -15795,3 +15795,4 @@ code |
 | 2026-08-13 22:16 UTC | V551 dated source delta and executable scope freez | OK | 87 passed, 1 warning in 7.89s |
 | 2026-08-13 22:35 UTC | Clean V550-only factor evidence boundary and claim | OK | 89 passed, 1 warning in 10.08s |
 | 2026-08-13 22:51 UTC | Provenance-linked typed factor memory and contamin | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-13 23:20 UTC | Gated on Exp6406/6407 readiness: fresh powered wri | OK | 128 passed, 1 warning in 12.32s |
