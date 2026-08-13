@@ -25840,3 +25840,56 @@ Given the submitted live agent is constructed without the new flag, the two-side
 contract SHALL be absent. Given the flag is enabled, the contract SHALL be present
 in `E3AgentPolicy` and `StepwiseExplorer`, while unverified predicates still
 cannot terminate or update solve credit.
+
+### REQ-ARC-WMTE-6260: Focused Goal-Only Induction — Prompt-Level Work Is Exhausted
+
+**Origin:** 2026-08-13. exp6255/6256 showed a win exemplar does not fix the goal predicate, and
+exp6258/6259 showed filtering cannot fix it either because nothing admissible exists to select.
+Both changed FRAMING or SELECTION. Neither changed how the predicate is PRODUCED. `induce()`
+asks for `engine` and `is_level_complete` in one code block, so the model splits its budget
+between dynamics and the win condition; `_goal_only_prompt` already existed, documented as
+letting the model "spend its whole budget on the win condition", and fired only as a fallback.
+
+`scripts/experiments/experiment_6260_goal_only_induction_ab.py` SHALL compare the combined call
+against a focused goal-only call carrying the agent's own transitions
+(`CARNOT_ARC_GOAL_PROMPT_TRANSITIONS=1`, since the prompt is evidence-free by default and the
+2026-08-01 taxonomy traced 12 of 13 whole-board predicates to the cells it produced).
+
+The focused prompt SHALL receive `previous_level_complete_grid=None`. Passing the win grid that
+sensitivity is scored against would let the model fire on it by memorisation, measuring leakage
+rather than induction; None is also the honest hidden-game level-1 state.
+
+Scoring SHALL be two-sided per REQ-ARC-WMTE-6257, and `fires_on_start_grid` SHALL be recorded so
+constant-TRUE is distinguishable from a discriminating predicate.
+
+#### SCENARIO-ARC-WMTE-6260-CONSTANT-TRUE-IS-NOT-A-GAIN
+
+Given a predicate that fires on the real win AND on the opening board with specificity 0.0, it
+SHALL NOT count as a non-degenerate predicate; firing on everything is the opposite degeneracy.
+
+#### UPDATE 2026-08-13 — RESULT: 0 of 4 non-degenerate; the verdict string is a FALSE POSITIVE
+
+| game | combined fires / spec | goal-only fires / spec / fires-on-START |
+|---|---|---|
+| dc22 | False / 1.0 | False / **0.0** / **True** |
+| cn04 | False / 1.0 | False / 1.0 / False |
+| ls20 | False / 1.0 | **True** / **0.0** / **True** |
+| s5i5 | False / 1.0 | False / 1.0 / False |
+
+The artifact reads `gate_met: True` because ls20's predicate finally fired on a real win. It
+also fires on the opening board, at specificity 0.0 — the model wrote "the win condition is the
+complete removal of color 42", which is true of the start grid. **Constant-False was traded for
+constant-True.** The gate required only a sensitivity GAIN and never consulted the paired
+specificity that sat in the same artifact — the third over-permissive gate of the session.
+
+**Consequence, pre-registered before the run: prompt-level work on the goal predicate is
+EXHAUSTED.** Framing (6255/6256), filtering (6258/6259) and focus-plus-evidence (6260) have all
+been tried. A sixth prompt variant is not the next move. What remains is non-prompt: a different
+REPRESENTATION of the win condition, or a non-LLM inducer generalising beyond exp4020's
+structured-state single game (`state["unsatisfied_targets"] == 0`, one game, n=6).
+
+## Implementation Status (REQ-ARC-WMTE-6260)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6260 | `scripts/experiments/experiment_6260_goal_only_induction_ab.py`; consumes `replay_win_transition` and the two-sided scorer from REQ-ARC-WMTE-6257. | `results/experiment_6260_goal_only_induction_ab.json` — 0 of 4 non-degenerate; the leak control (`previous_level_complete_grid=None`) is recorded in the artifact as `leakage_control`. |

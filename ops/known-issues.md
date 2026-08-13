@@ -17744,3 +17744,46 @@ it, so the "loud fallback" design in the v15 harness earned its place on first c
 **Not fixed here.** Re-uploading the `carnot-agent-code` dataset is an external publishing
 action and stays operator-gated. It is the single cheapest thing that would make the scored run
 match this repo.
+
+## 2026-08-13 Kaggle code dataset re-published; two publish-path guards were themselves stale
+
+Operator directive: "close the gaps". Closing the stale-dataset gap found by the v15 preview
+A/B (which reported `ImportError: cannot import name '_llama_server_slots'`) required fixing
+two defects in the publish path first. Both are recorded because both were silent.
+
+**DEFECT 1: the staleness guard was the stale thing.** `prep_daily_submission.py` aborted with
+"ABORT: adapter fix (MAX_ACTIONS=400) missing in stage -- stale snapshot". The snapshot was
+fine. `MAX_ACTIONS` went 400 -> 2000 on 2026-08-07 (commit 488eb8cede, operator directive: the
+Kaggle eval GPU is far faster than local dev hardware; evidence in
+`results/outer_loop_scored_path_budget_sweep_20260726.json`, median wins 4@400 -> 11@2000). The
+guard was never updated with it, so from that day it aborted EVERY publish while blaming the
+snapshot.
+
+That is very likely WHY the dataset drifted months behind the repo: the daily prep path has
+been failing closed since 2026-08-07 and the abort message pointed at the wrong culprit. It
+failed in the SAFE direction -- it blocked a publish rather than waving a bad one through -- but
+a guard whose error message misdirects is a guard that does not get fixed. The marker now
+carries a comment saying to check the shipped value before assuming the snapshot is at fault.
+
+**DEFECT 2: stale bytecode could have shipped the old module anyway.** The staged bundle carried
+130 inherited `.pyc` files, including one for `arc_executable_world_model` -- the exact module
+whose staleness caused the ImportError being fixed. The rsync overlay excludes `__pycache__`
+from the REPO side but nothing removed what the DOWNLOADED dataset already contained. Python
+normally revalidates bytecode against source mtime and size, but zip extraction does not
+preserve mtimes reliably, so stale bytecode shadowing fresh source is a real way to publish the
+new module and still run the old one. Now stripped.
+
+**And the strip was silently undone.** The first version stripped correctly and 130 `.pyc`
+reappeared, because the import+build smoke test runs Python against the staged tree and
+regenerates them. The smoke now runs with `-B`. Verified: 0 `.pyc` in the bundle.
+
+**Published.** `iancblenke/carnot-agent-code` versioned with the repo's current
+`python/carnot`, carrying `_llama_server_slots` / `_kv_quant_for_launch`
+(REQ-ARC-WMTE-6253), `replay_win_transition`, and the two-sided goal-predicate scorer
+(REQ-ARC-WMTE-6257). All existing guards passed, including the import+build smoke.
+
+**What this does and does not change.** The scored path will now run code matching this repo,
+so the preview A/B's `CONFIG WARNING` should clear on the next kernel run and its arms will
+finally measure the shipped configuration rather than the hardware. It changes no default: the
+P4 knobs are env-gated and unset. **No submission was made** and the live goal-veto threshold is
+untouched.
