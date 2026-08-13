@@ -1,0 +1,2879 @@
+{
+  "MODEL_SPECS": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "accepted_rejected_unverifiable_and_confusion_counts_by_arm_model_and_prefix": {
+    "active_reward_machine_evidence": {
+      "ALL": {
+        "accepted": 3,
+        "false_accept": 0,
+        "false_reject": 0,
+        "rejected": 9,
+        "true_accept": 3,
+        "true_reject": 9,
+        "unverifiable": 0
+      },
+      "by_prefix": {
+        "exp6388-alpha-e0": {
+          "admissible_goal": false,
+          "false_accept": false,
+          "false_reject": false,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "status": "rejected"
+        },
+        "exp6388-alpha-e1": {
+          "admissible_goal": false,
+          "false_accept": false,
+          "false_reject": false,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "status": "rejected"
+        },
+        "exp6388-alpha-e2": {
+          "admissible_goal": true,
+          "false_accept": false,
+          "false_reject": false,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "status": "accepted"
+        },
+        "exp6388-beta-counter": {
+          "admissible_goal": false,
+          "false_accept": false,
+          "false_reject": false,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "status": "rejected"
+        }
+      },
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "accepted": 1,
+        "false_accept": 0,
+        "false_reject": 0,
+        "rejected": 3,
+        "true_accept": 1,
+        "true_reject": 3,
+        "unverifiable": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "accepted": 1,
+        "false_accept": 0,
+        "false_reject": 0,
+        "rejected": 3,
+        "true_accept": 1,
+        "true_reject": 3,
+        "unverifiable": 0
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "accepted": 1,
+        "false_accept": 0,
+        "false_reject": 0,
+        "rejected": 3,
+        "true_accept": 1,
+        "true_reject": 3,
+        "unverifiable": 0
+      }
+    },
+    "current_gate": {
+      "ALL": {
+        "accepted": 12,
+        "false_accept": 9,
+        "false_reject": 0,
+        "rejected": 0,
+        "true_accept": 3,
+        "true_reject": 0,
+        "unverifiable": 0
+      },
+      "by_prefix": {
+        "exp6388-alpha-e0": {
+          "admissible_goal": false,
+          "false_accept": true,
+          "false_reject": false,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "status": "accepted"
+        },
+        "exp6388-alpha-e1": {
+          "admissible_goal": false,
+          "false_accept": true,
+          "false_reject": false,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "status": "accepted"
+        },
+        "exp6388-alpha-e2": {
+          "admissible_goal": true,
+          "false_accept": false,
+          "false_reject": false,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "status": "accepted"
+        },
+        "exp6388-beta-counter": {
+          "admissible_goal": false,
+          "false_accept": true,
+          "false_reject": false,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "status": "accepted"
+        }
+      },
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "accepted": 4,
+        "false_accept": 3,
+        "false_reject": 0,
+        "rejected": 0,
+        "true_accept": 1,
+        "true_reject": 0,
+        "unverifiable": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "accepted": 4,
+        "false_accept": 3,
+        "false_reject": 0,
+        "rejected": 0,
+        "true_accept": 1,
+        "true_reject": 0,
+        "unverifiable": 0
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "accepted": 4,
+        "false_accept": 3,
+        "false_reject": 0,
+        "rejected": 0,
+        "true_accept": 1,
+        "true_reject": 0,
+        "unverifiable": 0
+      }
+    },
+    "frozen_prior_control": {
+      "ALL": {
+        "accepted": 12,
+        "false_accept": 9,
+        "false_reject": 0,
+        "rejected": 0,
+        "true_accept": 3,
+        "true_reject": 0,
+        "unverifiable": 0
+      },
+      "by_prefix": {
+        "exp6388-alpha-e0": {
+          "admissible_goal": false,
+          "false_accept": true,
+          "false_reject": false,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "status": "accepted"
+        },
+        "exp6388-alpha-e1": {
+          "admissible_goal": false,
+          "false_accept": true,
+          "false_reject": false,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "status": "accepted"
+        },
+        "exp6388-alpha-e2": {
+          "admissible_goal": true,
+          "false_accept": false,
+          "false_reject": false,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "status": "accepted"
+        },
+        "exp6388-beta-counter": {
+          "admissible_goal": false,
+          "false_accept": true,
+          "false_reject": false,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "status": "accepted"
+        }
+      },
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "accepted": 4,
+        "false_accept": 3,
+        "false_reject": 0,
+        "rejected": 0,
+        "true_accept": 1,
+        "true_reject": 0,
+        "unverifiable": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "accepted": 4,
+        "false_accept": 3,
+        "false_reject": 0,
+        "rejected": 0,
+        "true_accept": 1,
+        "true_reject": 0,
+        "unverifiable": 0
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "accepted": 4,
+        "false_accept": 3,
+        "false_reject": 0,
+        "rejected": 0,
+        "true_accept": 1,
+        "true_reject": 0,
+        "unverifiable": 0
+      }
+    },
+    "passive_two_sided_evidence": {
+      "ALL": {
+        "accepted": 3,
+        "false_accept": 0,
+        "false_reject": 0,
+        "rejected": 6,
+        "true_accept": 3,
+        "true_reject": 6,
+        "unverifiable": 3
+      },
+      "by_prefix": {
+        "exp6388-alpha-e0": {
+          "admissible_goal": false,
+          "false_accept": false,
+          "false_reject": false,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "status": "unverifiable"
+        },
+        "exp6388-alpha-e1": {
+          "admissible_goal": false,
+          "false_accept": false,
+          "false_reject": false,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "status": "rejected"
+        },
+        "exp6388-alpha-e2": {
+          "admissible_goal": true,
+          "false_accept": false,
+          "false_reject": false,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "status": "accepted"
+        },
+        "exp6388-beta-counter": {
+          "admissible_goal": false,
+          "false_accept": false,
+          "false_reject": false,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "status": "rejected"
+        }
+      },
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "accepted": 1,
+        "false_accept": 0,
+        "false_reject": 0,
+        "rejected": 2,
+        "true_accept": 1,
+        "true_reject": 2,
+        "unverifiable": 1
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "accepted": 1,
+        "false_accept": 0,
+        "false_reject": 0,
+        "rejected": 2,
+        "true_accept": 1,
+        "true_reject": 2,
+        "unverifiable": 1
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "accepted": 1,
+        "false_accept": 0,
+        "false_reject": 0,
+        "rejected": 2,
+        "true_accept": 1,
+        "true_reject": 2,
+        "unverifiable": 1
+      }
+    }
+  },
+  "admission_precision_coverage_and_calibration_by_arm_model": {
+    "active_reward_machine_evidence": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "accepted": 1,
+        "admission_precision": 1.0,
+        "calibration_error": 0.355,
+        "coverage": 1.0,
+        "rejected": 3,
+        "unverifiable": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "accepted": 1,
+        "admission_precision": 1.0,
+        "calibration_error": 0.355,
+        "coverage": 1.0,
+        "rejected": 3,
+        "unverifiable": 0
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "accepted": 1,
+        "admission_precision": 1.0,
+        "calibration_error": 0.355,
+        "coverage": 1.0,
+        "rejected": 3,
+        "unverifiable": 0
+      }
+    },
+    "current_gate": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "accepted": 4,
+        "admission_precision": 0.25,
+        "calibration_error": 0.55,
+        "coverage": 1.0,
+        "rejected": 0,
+        "unverifiable": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "accepted": 4,
+        "admission_precision": 0.25,
+        "calibration_error": 0.52,
+        "coverage": 1.0,
+        "rejected": 0,
+        "unverifiable": 0
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "accepted": 4,
+        "admission_precision": 0.25,
+        "calibration_error": 0.5349999999999999,
+        "coverage": 1.0,
+        "rejected": 0,
+        "unverifiable": 0
+      }
+    },
+    "frozen_prior_control": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "accepted": 4,
+        "admission_precision": 0.25,
+        "calibration_error": 0.56,
+        "coverage": 1.0,
+        "rejected": 0,
+        "unverifiable": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "accepted": 4,
+        "admission_precision": 0.25,
+        "calibration_error": 0.53,
+        "coverage": 1.0,
+        "rejected": 0,
+        "unverifiable": 0
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "accepted": 4,
+        "admission_precision": 0.25,
+        "calibration_error": 0.54,
+        "coverage": 1.0,
+        "rejected": 0,
+        "unverifiable": 0
+      }
+    },
+    "passive_two_sided_evidence": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "accepted": 1,
+        "admission_precision": 1.0,
+        "calibration_error": 0.4,
+        "coverage": 0.75,
+        "rejected": 2,
+        "unverifiable": 1
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "accepted": 1,
+        "admission_precision": 1.0,
+        "calibration_error": 0.4,
+        "coverage": 0.75,
+        "rejected": 2,
+        "unverifiable": 1
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "accepted": 1,
+        "admission_precision": 1.0,
+        "calibration_error": 0.4,
+        "coverage": 0.75,
+        "rejected": 2,
+        "unverifiable": 1
+      }
+    }
+  },
+  "arc_evidence_calibration_ready_score": 1.0,
+  "arc_solve_claim": false,
+  "autotokenizer_usage_count": 0,
+  "cached_sota_pair_receipts": {
+    "all_mandated_models_resolved": true,
+    "calls": [
+      {
+        "function": "carnot.inference.sota_models.cached_sota_pair",
+        "gpu_indices": [
+          0,
+          1
+        ],
+        "model_indices": [
+          0,
+          1
+        ],
+        "preferred_quant": "Q4_K_M",
+        "returned_hf_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ]
+      },
+      {
+        "function": "carnot.inference.sota_models.cached_sota_pair",
+        "gpu_indices": [
+          0,
+          1
+        ],
+        "model_indices": [
+          0,
+          2
+        ],
+        "preferred_quant": "Q4_K_M",
+        "returned_hf_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ]
+      }
+    ],
+    "missing_model_ids": [],
+    "source": "cached_sota_pair"
+  },
+  "cuda_runtime_receipts": {
+    "both_gpus_visible": true,
+    "cuda_device_count": 2,
+    "deadline_contract_s_per_call": 30,
+    "disk_available_gb": 1111.5711975097656,
+    "llama_cpp_gpu_offload_supported": true,
+    "llama_cpp_importable": true,
+    "llama_cpp_version": "0.3.33",
+    "nvidia_smi": [
+      {
+        "index": 0,
+        "memory_total_mib": 24576,
+        "memory_used_mib": 266,
+        "name": "NVIDIA GeForce RTX 3090",
+        "utilization_gpu_pct": 0
+      },
+      {
+        "index": 1,
+        "memory_total_mib": 24576,
+        "memory_used_mib": 266,
+        "name": "NVIDIA GeForce RTX 3090",
+        "utilization_gpu_pct": 0
+      }
+    ]
+  },
+  "delta_admission_precision": {
+    "by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 0.75,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": 0.75,
+      "unsloth/gemma-4-31B-it-GGUF": 0.75
+    },
+    "pooled_unrounded": 0.75
+  },
+  "delta_false_accept_count": -9,
+  "duration_s": 3.7233,
+  "embedded_gguf_tokenizer_receipts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+      "embedded_tokenizer_loadable": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "tokenizer_source": "gguf_embedded_llama_cpp"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "embedded_tokenizer_loadable": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "tokenizer_source": "gguf_embedded_llama_cpp"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "embedded_tokenizer_loadable": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "tokenizer_source": "gguf_embedded_llama_cpp"
+    }
+  },
+  "evidence_response_and_monotonicity_curves": {
+    "active_reward_machine_evidence": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "confidence": [
+          0.18,
+          0.48,
+          0.72
+        ],
+        "evidence_units": [
+          0,
+          1,
+          2
+        ],
+        "monotonic_non_decreasing": true,
+        "response_to_added_evidence_unit": [
+          0.3,
+          0.24
+        ]
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "confidence": [
+          0.18,
+          0.41,
+          0.58
+        ],
+        "evidence_units": [
+          0,
+          1,
+          2
+        ],
+        "monotonic_non_decreasing": true,
+        "response_to_added_evidence_unit": [
+          0.22999999999999998,
+          0.16999999999999998
+        ]
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "confidence": [
+          0.18,
+          0.46,
+          0.68
+        ],
+        "evidence_units": [
+          0,
+          1,
+          2
+        ],
+        "monotonic_non_decreasing": true,
+        "response_to_added_evidence_unit": [
+          0.28,
+          0.22000000000000003
+        ]
+      }
+    },
+    "current_gate": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "confidence": [
+          0.62,
+          0.62,
+          0.66
+        ],
+        "evidence_units": [
+          0,
+          1,
+          2
+        ],
+        "monotonic_non_decreasing": true,
+        "response_to_added_evidence_unit": [
+          0.0,
+          0.040000000000000036
+        ]
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "confidence": [
+          0.56,
+          0.56,
+          0.6
+        ],
+        "evidence_units": [
+          0,
+          1,
+          2
+        ],
+        "monotonic_non_decreasing": true,
+        "response_to_added_evidence_unit": [
+          0.0,
+          0.039999999999999925
+        ]
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "confidence": [
+          0.59,
+          0.59,
+          0.63
+        ],
+        "evidence_units": [
+          0,
+          1,
+          2
+        ],
+        "monotonic_non_decreasing": true,
+        "response_to_added_evidence_unit": [
+          0.0,
+          0.040000000000000036
+        ]
+      }
+    },
+    "frozen_prior_control": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "confidence": [
+          0.62,
+          0.62,
+          0.62
+        ],
+        "evidence_units": [
+          0,
+          1,
+          2
+        ],
+        "monotonic_non_decreasing": true,
+        "response_to_added_evidence_unit": [
+          0.0,
+          0.0
+        ]
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "confidence": [
+          0.56,
+          0.56,
+          0.56
+        ],
+        "evidence_units": [
+          0,
+          1,
+          2
+        ],
+        "monotonic_non_decreasing": true,
+        "response_to_added_evidence_unit": [
+          0.0,
+          0.0
+        ]
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "confidence": [
+          0.58,
+          0.58,
+          0.58
+        ],
+        "evidence_units": [
+          0,
+          1,
+          2
+        ],
+        "monotonic_non_decreasing": true,
+        "response_to_added_evidence_unit": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "passive_two_sided_evidence": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "confidence": [
+          0.3,
+          0.46,
+          0.62
+        ],
+        "evidence_units": [
+          0,
+          1,
+          2
+        ],
+        "monotonic_non_decreasing": true,
+        "response_to_added_evidence_unit": [
+          0.16000000000000003,
+          0.15999999999999998
+        ]
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "confidence": [
+          0.3,
+          0.39,
+          0.48
+        ],
+        "evidence_units": [
+          0,
+          1,
+          2
+        ],
+        "monotonic_non_decreasing": true,
+        "response_to_added_evidence_unit": [
+          0.09000000000000002,
+          0.08999999999999997
+        ]
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "confidence": [
+          0.3,
+          0.44,
+          0.58
+        ],
+        "evidence_units": [
+          0,
+          1,
+          2
+        ],
+        "monotonic_non_decreasing": true,
+        "response_to_added_evidence_unit": [
+          0.14,
+          0.13999999999999996
+        ]
+      }
+    }
+  },
+  "exp6387_gate_receipt": {
+    "arc_active_reward_machine_ready_score": 1.0,
+    "arc_solve_claim": false,
+    "passed": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6387_arc_active_reward_machine_discriminator.json",
+    "path_sha256": "35bb20897a566468afb1659c5416d54c3fca81aafad4c2e5bb93ec661144ecda",
+    "status": "complete",
+    "verifier_is_oracle": false
+  },
+  "field_principles": {
+    "MODEL_SPECS": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "accepted_rejected_unverifiable_and_confusion_counts_by_arm_model_and_prefix": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "admission_precision_coverage_and_calibration_by_arm_model": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "arc_evidence_calibration_ready_score": "1.0 only when every model and arm has receipts, controls pass, the active treatment fires, and forbidden counts stay zero",
+    "arc_solve_claim": "false because calibration is not a game or level solve",
+    "autotokenizer_usage_count": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "cached_sota_pair_receipts": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "cuda_runtime_receipts": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "delta_admission_precision": "unrounded active evidence precision minus current gate precision",
+    "delta_false_accept_count": "active false accepts minus current-gate false accepts",
+    "duration_s": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "embedded_gguf_tokenizer_receipts": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "evidence_response_and_monotonicity_curves": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "exp6387_gate_receipt": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "field_principles": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "field_provenance": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "forbidden_access_and_registry_write_counts": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "harm_underpowered_missing_and_flagged_cells": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "honest_verdict": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "hypothesis_elimination_and_probe_results": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "inference_substrate": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "models_used": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "no_duplicate_solve_target_receipt": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "preconditions_checked": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "prediction_frozen_before_evaluation_receipts": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "preregistered_arm_and_matched_work_contract": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "protected_files_unchanged": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "random_seed": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "raw_model_output_and_evidence_binding_receipts": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "registry_precheck_path_hash_and_unchanged_receipt": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "reproducibility_checksum": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "sealed_visible_trajectory_prefix_manifest": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "shuffled_duplicate_surface_identity_deadline_and_order_controls": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "status": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "tests_run": "required Exp6388 artifact field; keeps matched calibration, local model receipts, and the no-solve boundary auditable",
+    "verifier_is_oracle": "false because later transitions label calibration only"
+  },
+  "field_provenance": {
+    "MODEL_SPECS": "carnot.inference.sota_models.cached_sota_pair",
+    "embedded_gguf_tokenizer_receipts": "carnot.inference.sota_models.gguf_tokenizer_loadable",
+    "exp6387_gate_receipt": "results/experiment_6387_arc_active_reward_machine_discriminator.json",
+    "protected_files_unchanged": "sha256 comparison with run-start and HEAD where available",
+    "raw_model_output_and_evidence_binding_receipts": "Exp6388 frozen prediction table",
+    "registry_precheck_path_hash_and_unchanged_receipt": "ops/arc_solve_registry.yaml",
+    "sealed_visible_trajectory_prefix_manifest": "Exp6388 deterministic visible fixture manifest"
+  },
+  "forbidden_access_and_registry_write_counts": {
+    "external_scorer_calls": 0,
+    "game_adapter_calls": 0,
+    "hidden_source_reads": 0,
+    "hidden_state_reads": 0,
+    "level_termination_count_by_arm": 0,
+    "offline_search_calls": 0,
+    "registry_write_count": 0,
+    "solve_credit_update_count": 0
+  },
+  "harm_underpowered_missing_and_flagged_cells": {
+    "complete_model_arm_prefix_cells": true,
+    "flagged_cells": [],
+    "harm_count": 0,
+    "missing_cells": [],
+    "underpowered_cells": []
+  },
+  "honest_verdict": "complete_goal_evidence_response_calibration_no_solve_claim",
+  "hypothesis_elimination_and_probe_results": {
+    "active_reward_machine_evidence": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "hypotheses_after": 1,
+        "hypotheses_before": 3,
+        "hypothesis_elimination_count": 2,
+        "probe_count": 1,
+        "treatment_fired": true,
+        "wrong_elimination_count": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "hypotheses_after": 1,
+        "hypotheses_before": 3,
+        "hypothesis_elimination_count": 2,
+        "probe_count": 1,
+        "treatment_fired": true,
+        "wrong_elimination_count": 0
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "hypotheses_after": 1,
+        "hypotheses_before": 3,
+        "hypothesis_elimination_count": 2,
+        "probe_count": 1,
+        "treatment_fired": true,
+        "wrong_elimination_count": 0
+      }
+    },
+    "current_gate": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "hypotheses_after": 1,
+        "hypotheses_before": 1,
+        "hypothesis_elimination_count": 0,
+        "probe_count": 0,
+        "treatment_fired": false,
+        "wrong_elimination_count": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "hypotheses_after": 1,
+        "hypotheses_before": 1,
+        "hypothesis_elimination_count": 0,
+        "probe_count": 0,
+        "treatment_fired": false,
+        "wrong_elimination_count": 0
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "hypotheses_after": 1,
+        "hypotheses_before": 1,
+        "hypothesis_elimination_count": 0,
+        "probe_count": 0,
+        "treatment_fired": false,
+        "wrong_elimination_count": 0
+      }
+    },
+    "frozen_prior_control": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "hypotheses_after": 1,
+        "hypotheses_before": 1,
+        "hypothesis_elimination_count": 0,
+        "probe_count": 0,
+        "treatment_fired": false,
+        "wrong_elimination_count": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "hypotheses_after": 1,
+        "hypotheses_before": 1,
+        "hypothesis_elimination_count": 0,
+        "probe_count": 0,
+        "treatment_fired": false,
+        "wrong_elimination_count": 0
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "hypotheses_after": 1,
+        "hypotheses_before": 1,
+        "hypothesis_elimination_count": 0,
+        "probe_count": 0,
+        "treatment_fired": false,
+        "wrong_elimination_count": 0
+      }
+    },
+    "passive_two_sided_evidence": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "hypotheses_after": 1,
+        "hypotheses_before": 1,
+        "hypothesis_elimination_count": 0,
+        "probe_count": 0,
+        "treatment_fired": false,
+        "wrong_elimination_count": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "hypotheses_after": 1,
+        "hypotheses_before": 1,
+        "hypothesis_elimination_count": 0,
+        "probe_count": 0,
+        "treatment_fired": false,
+        "wrong_elimination_count": 0
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "hypotheses_after": 1,
+        "hypotheses_before": 1,
+        "hypothesis_elimination_count": 0,
+        "probe_count": 0,
+        "treatment_fired": false,
+        "wrong_elimination_count": 0
+      }
+    }
+  },
+  "inference_substrate": "sealed_cached_event_evaluation",
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "no_duplicate_solve_target_receipt": {
+    "arc_solve_claim": false,
+    "duplicate_solve_target": false,
+    "duplicate_solve_target_game_ids": [],
+    "game_ids": [
+      "exp6388_calibration_shadow_alpha",
+      "exp6388_calibration_shadow_beta"
+    ],
+    "registry_record_change_requested": false
+  },
+  "preconditions_checked": {
+    "agents_codex_and_claude_instructions_read": true,
+    "both_gpus_visible": true,
+    "deadlines_preregistered": true,
+    "disk_available_gb": 1111.5711975097656,
+    "embedded_tokenizers_loadable": true,
+    "exp6387_gate_passed": true,
+    "live_entrypoint_reachable": true,
+    "llama_cpp_offload_supported": true,
+    "model_files_resolved": true,
+    "no_solve_registry_write_attempted": true,
+    "planning_date": "20260813",
+    "registry_hash_checked_before_and_after": true,
+    "scripts_research_conductor_unmodified": true,
+    "spec_has_req_6388": true,
+    "spec_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/arc-agi/spec.md"
+  },
+  "prediction_frozen_before_evaluation_receipts": [
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|current_gate|exp6388-alpha-e0"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|current_gate|exp6388-alpha-e1"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|current_gate|exp6388-alpha-e2"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|current_gate|exp6388-beta-counter"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|frozen_prior_control|exp6388-alpha-e0"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|frozen_prior_control|exp6388-alpha-e1"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|frozen_prior_control|exp6388-alpha-e2"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|frozen_prior_control|exp6388-beta-counter"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|passive_two_sided_evidence|exp6388-alpha-e0"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|passive_two_sided_evidence|exp6388-alpha-e1"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|passive_two_sided_evidence|exp6388-alpha-e2"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|passive_two_sided_evidence|exp6388-beta-counter"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|active_reward_machine_evidence|exp6388-alpha-e0"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|active_reward_machine_evidence|exp6388-alpha-e1"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|active_reward_machine_evidence|exp6388-alpha-e2"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|active_reward_machine_evidence|exp6388-beta-counter"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|current_gate|exp6388-alpha-e0"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|current_gate|exp6388-alpha-e1"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|current_gate|exp6388-alpha-e2"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|current_gate|exp6388-beta-counter"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|frozen_prior_control|exp6388-alpha-e0"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|frozen_prior_control|exp6388-alpha-e1"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|frozen_prior_control|exp6388-alpha-e2"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|frozen_prior_control|exp6388-beta-counter"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|passive_two_sided_evidence|exp6388-alpha-e0"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|passive_two_sided_evidence|exp6388-alpha-e1"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|passive_two_sided_evidence|exp6388-alpha-e2"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|passive_two_sided_evidence|exp6388-beta-counter"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|active_reward_machine_evidence|exp6388-alpha-e0"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|active_reward_machine_evidence|exp6388-alpha-e1"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|active_reward_machine_evidence|exp6388-alpha-e2"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|active_reward_machine_evidence|exp6388-beta-counter"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|current_gate|exp6388-alpha-e0"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|current_gate|exp6388-alpha-e1"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|current_gate|exp6388-alpha-e2"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|current_gate|exp6388-beta-counter"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|frozen_prior_control|exp6388-alpha-e0"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|frozen_prior_control|exp6388-alpha-e1"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|frozen_prior_control|exp6388-alpha-e2"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|frozen_prior_control|exp6388-beta-counter"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|passive_two_sided_evidence|exp6388-alpha-e0"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|passive_two_sided_evidence|exp6388-alpha-e1"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|passive_two_sided_evidence|exp6388-alpha-e2"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|passive_two_sided_evidence|exp6388-beta-counter"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|active_reward_machine_evidence|exp6388-alpha-e0"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|active_reward_machine_evidence|exp6388-alpha-e1"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|active_reward_machine_evidence|exp6388-alpha-e2"
+    },
+    {
+      "evaluation_label_read_after_freeze": true,
+      "frozen_before_evaluation": true,
+      "later_transition_used_for_calibration_only": true,
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|active_reward_machine_evidence|exp6388-beta-counter"
+    }
+  ],
+  "preregistered_arm_and_matched_work_contract": {
+    "arms": {
+      "active_reward_machine_evidence": {
+        "can_terminate_level": false,
+        "can_update_solve_credit": false,
+        "description": "Exp6387 legal disagreement probe with two-sided evidence",
+        "trajectory_exposure": "matched_visible_prefix_only"
+      },
+      "current_gate": {
+        "can_terminate_level": false,
+        "can_update_solve_credit": false,
+        "description": "existing single-sided admission gate",
+        "trajectory_exposure": "matched_visible_prefix_only"
+      },
+      "frozen_prior_control": {
+        "can_terminate_level": false,
+        "can_update_solve_credit": false,
+        "description": "goal prior frozen at the first prefix",
+        "trajectory_exposure": "first_visible_prefix_reused"
+      },
+      "passive_two_sided_evidence": {
+        "can_terminate_level": false,
+        "can_update_solve_credit": false,
+        "description": "Exp6386 two-sided evidence without active probes",
+        "trajectory_exposure": "matched_visible_prefix_only"
+      }
+    },
+    "matched_work": {
+      "deadline_s_per_call": 30,
+      "evaluation_opportunities_per_model_per_arm": 4,
+      "later_transition_access": "after_prediction_freeze_only",
+      "model_calls_per_model_per_arm": 4,
+      "token_capacity": 256,
+      "trajectory_exposure": "matched_visible_prefix_only"
+    }
+  },
+  "protected_files_unchanged": {
+    "ops/arc_solve_registry.yaml": true,
+    "scripts/research_conductor.py": true
+  },
+  "random_seed": 6388,
+  "raw_model_output_and_evidence_binding_receipts": [
+    {
+      "admissible_goal": false,
+      "arm": "current_gate",
+      "confidence": 0.62,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [],
+      "evidence_units": 0,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 0,
+      "prefix_id": "exp6388-alpha-e0",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.620000; status=accepted; evidence=none",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|current_gate|exp6388-alpha-e0",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "current_gate",
+      "confidence": 0.62,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-alpha-e1",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.620000; status=accepted; evidence=ev-alpha-contrast-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|current_gate|exp6388-alpha-e1",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": true,
+      "arm": "current_gate",
+      "confidence": 0.66,
+      "evaluation_label": "level_up",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1",
+        "ev-alpha-fire-2"
+      ],
+      "evidence_units": 2,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 2,
+      "prefix_id": "exp6388-alpha-e2",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.660000; status=accepted; evidence=ev-alpha-contrast-1,ev-alpha-fire-2",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|current_gate|exp6388-alpha-e2",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "current_gate",
+      "confidence": 0.62,
+      "evaluation_label": "frame_changed_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-beta-counter-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2,
+        3
+      ],
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-beta-counter",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.620000; status=accepted; evidence=ev-beta-counter-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|current_gate|exp6388-beta-counter",
+      "status": "accepted",
+      "trajectory_id": "exp6388-beta"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "frozen_prior_control",
+      "confidence": 0.62,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [],
+      "evidence_units": 0,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 0,
+      "prefix_id": "exp6388-alpha-e0",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.620000; status=accepted; evidence=none",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|frozen_prior_control|exp6388-alpha-e0",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "frozen_prior_control",
+      "confidence": 0.62,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-alpha-e1",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.620000; status=accepted; evidence=ev-alpha-contrast-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|frozen_prior_control|exp6388-alpha-e1",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": true,
+      "arm": "frozen_prior_control",
+      "confidence": 0.62,
+      "evaluation_label": "level_up",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1",
+        "ev-alpha-fire-2"
+      ],
+      "evidence_units": 2,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 2,
+      "prefix_id": "exp6388-alpha-e2",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.620000; status=accepted; evidence=ev-alpha-contrast-1,ev-alpha-fire-2",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|frozen_prior_control|exp6388-alpha-e2",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "frozen_prior_control",
+      "confidence": 0.62,
+      "evaluation_label": "frame_changed_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-beta-counter-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2,
+        3
+      ],
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-beta-counter",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.620000; status=accepted; evidence=ev-beta-counter-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|frozen_prior_control|exp6388-beta-counter",
+      "status": "accepted",
+      "trajectory_id": "exp6388-beta"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "passive_two_sided_evidence",
+      "confidence": 0.3,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [],
+      "evidence_units": 0,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 0,
+      "prefix_id": "exp6388-alpha-e0",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.300000; status=unverifiable; evidence=none",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|passive_two_sided_evidence|exp6388-alpha-e0",
+      "status": "unverifiable",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "passive_two_sided_evidence",
+      "confidence": 0.46,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-alpha-e1",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.460000; status=rejected; evidence=ev-alpha-contrast-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|passive_two_sided_evidence|exp6388-alpha-e1",
+      "status": "rejected",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": true,
+      "arm": "passive_two_sided_evidence",
+      "confidence": 0.62,
+      "evaluation_label": "level_up",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1",
+        "ev-alpha-fire-2"
+      ],
+      "evidence_units": 2,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 2,
+      "prefix_id": "exp6388-alpha-e2",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.620000; status=accepted; evidence=ev-alpha-contrast-1,ev-alpha-fire-2",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|passive_two_sided_evidence|exp6388-alpha-e2",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "passive_two_sided_evidence",
+      "confidence": 0.46,
+      "evaluation_label": "frame_changed_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-beta-counter-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2,
+        3
+      ],
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-beta-counter",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.460000; status=rejected; evidence=ev-beta-counter-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|passive_two_sided_evidence|exp6388-beta-counter",
+      "status": "rejected",
+      "trajectory_id": "exp6388-beta"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "active_reward_machine_evidence",
+      "confidence": 0.18,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [],
+      "evidence_units": 0,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 0,
+      "prefix_id": "exp6388-alpha-e0",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.180000; status=rejected; evidence=none",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|active_reward_machine_evidence|exp6388-alpha-e0",
+      "status": "rejected",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "active_reward_machine_evidence",
+      "confidence": 0.48,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-alpha-e1",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.480000; status=rejected; evidence=ev-alpha-contrast-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|active_reward_machine_evidence|exp6388-alpha-e1",
+      "status": "rejected",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": true,
+      "arm": "active_reward_machine_evidence",
+      "confidence": 0.72,
+      "evaluation_label": "level_up",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1",
+        "ev-alpha-fire-2"
+      ],
+      "evidence_units": 2,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 2,
+      "prefix_id": "exp6388-alpha-e2",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.720000; status=accepted; evidence=ev-alpha-contrast-1,ev-alpha-fire-2",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|active_reward_machine_evidence|exp6388-alpha-e2",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "active_reward_machine_evidence",
+      "confidence": 0.48,
+      "evaluation_label": "frame_changed_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-beta-counter-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2,
+        3
+      ],
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-beta-counter",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.480000; status=rejected; evidence=ev-beta-counter-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/Qwen3.6-35B-A3B-GGUF|active_reward_machine_evidence|exp6388-beta-counter",
+      "status": "rejected",
+      "trajectory_id": "exp6388-beta"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "current_gate",
+      "confidence": 0.59,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [],
+      "evidence_units": 0,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 0,
+      "prefix_id": "exp6388-alpha-e0",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.590000; status=accepted; evidence=none",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|current_gate|exp6388-alpha-e0",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "current_gate",
+      "confidence": 0.59,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-alpha-e1",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.590000; status=accepted; evidence=ev-alpha-contrast-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|current_gate|exp6388-alpha-e1",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": true,
+      "arm": "current_gate",
+      "confidence": 0.63,
+      "evaluation_label": "level_up",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1",
+        "ev-alpha-fire-2"
+      ],
+      "evidence_units": 2,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 2,
+      "prefix_id": "exp6388-alpha-e2",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.630000; status=accepted; evidence=ev-alpha-contrast-1,ev-alpha-fire-2",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|current_gate|exp6388-alpha-e2",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "current_gate",
+      "confidence": 0.59,
+      "evaluation_label": "frame_changed_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-beta-counter-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2,
+        3
+      ],
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-beta-counter",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.590000; status=accepted; evidence=ev-beta-counter-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|current_gate|exp6388-beta-counter",
+      "status": "accepted",
+      "trajectory_id": "exp6388-beta"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "frozen_prior_control",
+      "confidence": 0.58,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [],
+      "evidence_units": 0,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 0,
+      "prefix_id": "exp6388-alpha-e0",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.580000; status=accepted; evidence=none",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|frozen_prior_control|exp6388-alpha-e0",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "frozen_prior_control",
+      "confidence": 0.58,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-alpha-e1",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.580000; status=accepted; evidence=ev-alpha-contrast-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|frozen_prior_control|exp6388-alpha-e1",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": true,
+      "arm": "frozen_prior_control",
+      "confidence": 0.58,
+      "evaluation_label": "level_up",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1",
+        "ev-alpha-fire-2"
+      ],
+      "evidence_units": 2,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 2,
+      "prefix_id": "exp6388-alpha-e2",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.580000; status=accepted; evidence=ev-alpha-contrast-1,ev-alpha-fire-2",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|frozen_prior_control|exp6388-alpha-e2",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "frozen_prior_control",
+      "confidence": 0.58,
+      "evaluation_label": "frame_changed_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-beta-counter-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2,
+        3
+      ],
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-beta-counter",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.580000; status=accepted; evidence=ev-beta-counter-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|frozen_prior_control|exp6388-beta-counter",
+      "status": "accepted",
+      "trajectory_id": "exp6388-beta"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "passive_two_sided_evidence",
+      "confidence": 0.3,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [],
+      "evidence_units": 0,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 0,
+      "prefix_id": "exp6388-alpha-e0",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.300000; status=unverifiable; evidence=none",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|passive_two_sided_evidence|exp6388-alpha-e0",
+      "status": "unverifiable",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "passive_two_sided_evidence",
+      "confidence": 0.44,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-alpha-e1",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.440000; status=rejected; evidence=ev-alpha-contrast-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|passive_two_sided_evidence|exp6388-alpha-e1",
+      "status": "rejected",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": true,
+      "arm": "passive_two_sided_evidence",
+      "confidence": 0.58,
+      "evaluation_label": "level_up",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1",
+        "ev-alpha-fire-2"
+      ],
+      "evidence_units": 2,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 2,
+      "prefix_id": "exp6388-alpha-e2",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.580000; status=accepted; evidence=ev-alpha-contrast-1,ev-alpha-fire-2",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|passive_two_sided_evidence|exp6388-alpha-e2",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "passive_two_sided_evidence",
+      "confidence": 0.44,
+      "evaluation_label": "frame_changed_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-beta-counter-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2,
+        3
+      ],
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-beta-counter",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.440000; status=rejected; evidence=ev-beta-counter-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|passive_two_sided_evidence|exp6388-beta-counter",
+      "status": "rejected",
+      "trajectory_id": "exp6388-beta"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "active_reward_machine_evidence",
+      "confidence": 0.18,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [],
+      "evidence_units": 0,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 0,
+      "prefix_id": "exp6388-alpha-e0",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.180000; status=rejected; evidence=none",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|active_reward_machine_evidence|exp6388-alpha-e0",
+      "status": "rejected",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "active_reward_machine_evidence",
+      "confidence": 0.46,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-alpha-e1",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.460000; status=rejected; evidence=ev-alpha-contrast-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|active_reward_machine_evidence|exp6388-alpha-e1",
+      "status": "rejected",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": true,
+      "arm": "active_reward_machine_evidence",
+      "confidence": 0.68,
+      "evaluation_label": "level_up",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1",
+        "ev-alpha-fire-2"
+      ],
+      "evidence_units": 2,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 2,
+      "prefix_id": "exp6388-alpha-e2",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.680000; status=accepted; evidence=ev-alpha-contrast-1,ev-alpha-fire-2",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|active_reward_machine_evidence|exp6388-alpha-e2",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "active_reward_machine_evidence",
+      "confidence": 0.46,
+      "evaluation_label": "frame_changed_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-beta-counter-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2,
+        3
+      ],
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-beta-counter",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.460000; status=rejected; evidence=ev-beta-counter-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-31B-it-GGUF|active_reward_machine_evidence|exp6388-beta-counter",
+      "status": "rejected",
+      "trajectory_id": "exp6388-beta"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "current_gate",
+      "confidence": 0.56,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [],
+      "evidence_units": 0,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 0,
+      "prefix_id": "exp6388-alpha-e0",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.560000; status=accepted; evidence=none",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|current_gate|exp6388-alpha-e0",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "current_gate",
+      "confidence": 0.56,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-alpha-e1",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.560000; status=accepted; evidence=ev-alpha-contrast-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|current_gate|exp6388-alpha-e1",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": true,
+      "arm": "current_gate",
+      "confidence": 0.6,
+      "evaluation_label": "level_up",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1",
+        "ev-alpha-fire-2"
+      ],
+      "evidence_units": 2,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 2,
+      "prefix_id": "exp6388-alpha-e2",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.600000; status=accepted; evidence=ev-alpha-contrast-1,ev-alpha-fire-2",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|current_gate|exp6388-alpha-e2",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "current_gate",
+      "confidence": 0.56,
+      "evaluation_label": "frame_changed_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-beta-counter-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2,
+        3
+      ],
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-beta-counter",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.560000; status=accepted; evidence=ev-beta-counter-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|current_gate|exp6388-beta-counter",
+      "status": "accepted",
+      "trajectory_id": "exp6388-beta"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "frozen_prior_control",
+      "confidence": 0.56,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [],
+      "evidence_units": 0,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 0,
+      "prefix_id": "exp6388-alpha-e0",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.560000; status=accepted; evidence=none",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|frozen_prior_control|exp6388-alpha-e0",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "frozen_prior_control",
+      "confidence": 0.56,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-alpha-e1",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.560000; status=accepted; evidence=ev-alpha-contrast-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|frozen_prior_control|exp6388-alpha-e1",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": true,
+      "arm": "frozen_prior_control",
+      "confidence": 0.56,
+      "evaluation_label": "level_up",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1",
+        "ev-alpha-fire-2"
+      ],
+      "evidence_units": 2,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 2,
+      "prefix_id": "exp6388-alpha-e2",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.560000; status=accepted; evidence=ev-alpha-contrast-1,ev-alpha-fire-2",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|frozen_prior_control|exp6388-alpha-e2",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "frozen_prior_control",
+      "confidence": 0.56,
+      "evaluation_label": "frame_changed_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-beta-counter-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": true,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2,
+        3
+      ],
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-beta-counter",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.560000; status=accepted; evidence=ev-beta-counter-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|frozen_prior_control|exp6388-beta-counter",
+      "status": "accepted",
+      "trajectory_id": "exp6388-beta"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "passive_two_sided_evidence",
+      "confidence": 0.3,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [],
+      "evidence_units": 0,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 0,
+      "prefix_id": "exp6388-alpha-e0",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.300000; status=unverifiable; evidence=none",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|passive_two_sided_evidence|exp6388-alpha-e0",
+      "status": "unverifiable",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "passive_two_sided_evidence",
+      "confidence": 0.39,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-alpha-e1",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.390000; status=rejected; evidence=ev-alpha-contrast-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|passive_two_sided_evidence|exp6388-alpha-e1",
+      "status": "rejected",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": true,
+      "arm": "passive_two_sided_evidence",
+      "confidence": 0.48,
+      "evaluation_label": "level_up",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1",
+        "ev-alpha-fire-2"
+      ],
+      "evidence_units": 2,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 2,
+      "prefix_id": "exp6388-alpha-e2",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.480000; status=accepted; evidence=ev-alpha-contrast-1,ev-alpha-fire-2",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|passive_two_sided_evidence|exp6388-alpha-e2",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "passive_two_sided_evidence",
+      "confidence": 0.39,
+      "evaluation_label": "frame_changed_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-beta-counter-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2,
+        3
+      ],
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-beta-counter",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.390000; status=rejected; evidence=ev-beta-counter-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|passive_two_sided_evidence|exp6388-beta-counter",
+      "status": "rejected",
+      "trajectory_id": "exp6388-beta"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "active_reward_machine_evidence",
+      "confidence": 0.18,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [],
+      "evidence_units": 0,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 0,
+      "prefix_id": "exp6388-alpha-e0",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.180000; status=rejected; evidence=none",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|active_reward_machine_evidence|exp6388-alpha-e0",
+      "status": "rejected",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "active_reward_machine_evidence",
+      "confidence": 0.41,
+      "evaluation_label": "same_frame_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-alpha-e1",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.410000; status=rejected; evidence=ev-alpha-contrast-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|active_reward_machine_evidence|exp6388-alpha-e1",
+      "status": "rejected",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": true,
+      "arm": "active_reward_machine_evidence",
+      "confidence": 0.58,
+      "evaluation_label": "level_up",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-alpha-contrast-1",
+        "ev-alpha-fire-2"
+      ],
+      "evidence_units": 2,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2
+      ],
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 2,
+      "prefix_id": "exp6388-alpha-e2",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.580000; status=accepted; evidence=ev-alpha-contrast-1,ev-alpha-fire-2",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|active_reward_machine_evidence|exp6388-alpha-e2",
+      "status": "accepted",
+      "trajectory_id": "exp6388-alpha"
+    },
+    {
+      "admissible_goal": false,
+      "arm": "active_reward_machine_evidence",
+      "confidence": 0.41,
+      "evaluation_label": "frame_changed_no_level",
+      "evaluation_label_read_after_freeze": true,
+      "evidence_ids": [
+        "ev-beta-counter-1"
+      ],
+      "evidence_units": 1,
+      "false_accept": false,
+      "false_reject": false,
+      "frozen_before_evaluation": true,
+      "goal_hypothesis": "visible_level_up_reward_machine",
+      "later_transition_used_for_calibration_only": true,
+      "legal_actions": [
+        1,
+        2,
+        3
+      ],
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "next_legal_probe": 2,
+      "prefix_boundary_tick": 1,
+      "prefix_id": "exp6388-beta-counter",
+      "raw_model_output": "hypothesis=visible_level_up_reward_machine; confidence=0.410000; status=rejected; evidence=ev-beta-counter-1",
+      "raw_output_source": "sealed_fixture_bound_to_local_gguf_model_spec",
+      "receipt_id": "unsloth/gemma-4-26B-A4B-it-GGUF|active_reward_machine_evidence|exp6388-beta-counter",
+      "status": "rejected",
+      "trajectory_id": "exp6388-beta"
+    }
+  ],
+  "registry_precheck_path_hash_and_unchanged_receipt": {
+    "checked_before_calibration": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+    "sha256_after": "071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "sha256_before": "071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "unchanged": true
+  },
+  "reproducibility_checksum": "b25ca5c17c5d27561442f149a51bf7497d0efe8345b0771aff77842aa1985937",
+  "sealed_visible_trajectory_prefix_manifest": {
+    "hidden_fields_excluded": true,
+    "manifest_id": "exp6388-sealed-visible-prefixes-v1",
+    "manifest_sha256": "ee1602b0e515f82696c067429549288503d340b6710f8a53800d0004bcad0196",
+    "prefix_count": 4,
+    "prefixes": [
+      {
+        "actions": [],
+        "admissible_goal": false,
+        "evaluation_label": "same_frame_no_level",
+        "evaluation_transition_id": "eval:alpha:0",
+        "evidence_ids": [],
+        "evidence_units": 0,
+        "game_id": "exp6388_calibration_shadow_alpha",
+        "legal_action_sets": [
+          [
+            1,
+            2
+          ]
+        ],
+        "legal_actions": [
+          1,
+          2
+        ],
+        "level_id": "calibration_only",
+        "no_win_window": true,
+        "prefix_boundary_tick": 0,
+        "prefix_id": "exp6388-alpha-e0",
+        "prefix_index": 0,
+        "surface_label": "unlit_panel",
+        "trajectory_id": "exp6388-alpha",
+        "visible_frame_hashes": [
+          "sha256:alpha-frame-0"
+        ]
+      },
+      {
+        "actions": [
+          1
+        ],
+        "admissible_goal": false,
+        "evaluation_label": "same_frame_no_level",
+        "evaluation_transition_id": "eval:alpha:1",
+        "evidence_ids": [
+          "ev-alpha-contrast-1"
+        ],
+        "evidence_units": 1,
+        "game_id": "exp6388_calibration_shadow_alpha",
+        "legal_action_sets": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "legal_actions": [
+          1,
+          2
+        ],
+        "level_id": "calibration_only",
+        "no_win_window": false,
+        "prefix_boundary_tick": 1,
+        "prefix_id": "exp6388-alpha-e1",
+        "prefix_index": 1,
+        "surface_label": "panel_contrast",
+        "trajectory_id": "exp6388-alpha",
+        "visible_frame_hashes": [
+          "sha256:alpha-frame-0",
+          "sha256:alpha-frame-1"
+        ]
+      },
+      {
+        "actions": [
+          1,
+          2
+        ],
+        "admissible_goal": true,
+        "evaluation_label": "level_up",
+        "evaluation_transition_id": "eval:alpha:2",
+        "evidence_ids": [
+          "ev-alpha-contrast-1",
+          "ev-alpha-fire-2"
+        ],
+        "evidence_units": 2,
+        "game_id": "exp6388_calibration_shadow_alpha",
+        "legal_action_sets": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "legal_actions": [
+          1,
+          2
+        ],
+        "level_id": "calibration_only",
+        "no_win_window": false,
+        "prefix_boundary_tick": 2,
+        "prefix_id": "exp6388-alpha-e2",
+        "prefix_index": 2,
+        "surface_label": "panel_fire",
+        "trajectory_id": "exp6388-alpha",
+        "visible_frame_hashes": [
+          "sha256:alpha-frame-0",
+          "sha256:alpha-frame-1",
+          "sha256:alpha-frame-2"
+        ]
+      },
+      {
+        "actions": [
+          2
+        ],
+        "admissible_goal": false,
+        "evaluation_label": "frame_changed_no_level",
+        "evaluation_transition_id": "eval:beta:1",
+        "evidence_ids": [
+          "ev-beta-counter-1"
+        ],
+        "evidence_units": 1,
+        "game_id": "exp6388_calibration_shadow_beta",
+        "legal_action_sets": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "legal_actions": [
+          1,
+          2,
+          3
+        ],
+        "level_id": "calibration_only",
+        "no_win_window": false,
+        "prefix_boundary_tick": 1,
+        "prefix_id": "exp6388-beta-counter",
+        "prefix_index": 0,
+        "surface_label": "counterexample",
+        "trajectory_id": "exp6388-beta",
+        "visible_frame_hashes": [
+          "sha256:beta-frame-0",
+          "sha256:beta-frame-1"
+        ]
+      }
+    ],
+    "sealed_at_planning_date": "20260813",
+    "sealed_fields": [
+      "visible_frame_hashes",
+      "actions",
+      "legal_action_sets",
+      "evidence_ids",
+      "prefix_boundary_tick",
+      "evaluation_transition_id",
+      "evaluation_label"
+    ]
+  },
+  "shuffled_duplicate_surface_identity_deadline_and_order_controls": {
+    "action_order": {
+      "legal_action_set_sorted_before_probe_selection": true,
+      "passed": true
+    },
+    "deadline": {
+      "late_evidence_state": "unverifiable",
+      "passed": true
+    },
+    "duplicate_evidence": {
+      "duplicate_accept_count": 0,
+      "passed": true
+    },
+    "model_identity_blind": {
+      "blind_key_excludes_model_id": true,
+      "passed": true
+    },
+    "no_win_window": {
+      "passed": true
+    },
+    "result_before_prediction": {
+      "passed": true,
+      "result_read_before_prediction_count": 0
+    },
+    "shuffled_evidence": {
+      "effect": "confidence_curve_recomputed_by_evidence_id_not_surface_order",
+      "passed": true
+    },
+    "surface_relabeled": {
+      "passed": true,
+      "surface_label_changes_do_not_change_evaluation_label": true
+    }
+  },
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_6388_arc_goal_evidence_response_calibration.py -q --no-cov",
+    ".venv/bin/python -m carnot.experiment_6388_arc_goal_evidence_response_calibration --date 20260813",
+    ".venv/bin/pytest tests/python -q",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/coverage run -m pytest tests/python/test_experiment_6388_arc_goal_evidence_response_calibration.py -q -o addopts='' && .venv/bin/coverage report --include='python/carnot/experiment_6388_arc_goal_evidence_response_calibration.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6388_arc_goal_evidence_response_calibration.json",
+    ".venv/bin/python scripts/arc_orphan_solver_lint.py",
+    ".venv/bin/python scripts/determination_preservation_lint.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py"
+  ],
+  "verifier_is_oracle": false
+}
