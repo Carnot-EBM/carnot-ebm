@@ -1,0 +1,85 @@
+{
+  "schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.canonical_contract",
+  "version": "v1",
+  "output_schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit",
+  "field_order": [
+    "schema",
+    "proposal_id",
+    "event_id",
+    "model_hf_id",
+    "model_family",
+    "arm",
+    "candidate_index",
+    "changed_factor",
+    "edits",
+    "selection_score",
+    "obligations",
+    "edit_source_spans",
+    "evidence_summary"
+  ],
+  "fixed_fields": {
+    "schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit",
+    "event_id": "live-6366-000",
+    "arm": "canonical_factor_edit_transport_contract",
+    "candidate_index": 0,
+    "changed_factor": "accept_factor"
+  },
+  "model_bound_fields": [
+    "proposal_id",
+    "model_hf_id",
+    "model_family"
+  ],
+  "numeric_bounds": {
+    "selection_score": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "edits": {
+      "min": -1.0,
+      "max": 1.0,
+      "max_abs_movement": 1.0
+    }
+  },
+  "allowed_variables": [
+    "accept_bias"
+  ],
+  "source_event": {
+    "event_id": "live-6366-000",
+    "changed_factor": "accept_factor",
+    "source_text": "EVENT live-6366-000. FAMILY threshold_guard. STRUCTURE single_assertion. SURFACE symbolic. OBLIGATION: Edit accept_bias for accept_factor within [-1.0, 1.0] to repair threshold_guard. Counterexample live-6366-000: accept_bias=0.0, expected=accept, observed=reject.",
+    "source_text_sha256": "sha256:7be89372c926ce78de4907a573b14186f3edf3fafb98b9a2aa50b1845a2e2ed4",
+    "variable": "accept_bias",
+    "edit_bounds": {
+      "min": -1.0,
+      "max": 1.0,
+      "max_abs_movement": 1.0
+    },
+    "obligation": {
+      "obligation_id": "obl-live-6366-000-0",
+      "source_start": 103,
+      "source_end": 183,
+      "source_sha256": "sha256:8db064f857527e5971bf69fed8c3b382fc5316247b59682651b54abd62a27326",
+      "source_text": "Edit accept_bias for accept_factor within [-1.0, 1.0] to repair threshold_guard."
+    },
+    "edit_source_span": {
+      "source_start": 108,
+      "source_end": 119,
+      "source_sha256": "sha256:4710cba0bac843a3f05d2f2190b3ece5b3f2097f5b2bd651c536787d731da5da"
+    }
+  },
+  "evidence_summary": {
+    "required": true,
+    "max_chars": 160,
+    "visible_evidence_only": true,
+    "hidden_reasoning_forbidden": true
+  },
+  "forbidden_fields": [
+    "protected_outcome",
+    "protected_success",
+    "exact_label",
+    "hidden_state",
+    "source_weight_delta",
+    "analysis",
+    "thinking"
+  ]
+}
