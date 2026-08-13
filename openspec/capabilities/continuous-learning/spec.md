@@ -2049,6 +2049,159 @@ tests all pass
 | SCENARIO-LEARN-6394-NON-ORACLE | Implemented: `python/carnot/experiment_6394_model_family_factor_harness_freeze.py`. | Implemented: `tests/python/test_experiment_6394_model_family_factor_harness_freeze.py`. |
 | SCENARIO-LEARN-6394-READY | Implemented: `python/carnot/experiment_6394_model_family_factor_harness_freeze.py`. | Implemented: `tests/python/test_experiment_6394_model_family_factor_harness_freeze.py`. |
 
+## REQ-LEARN-6395: Held Factor Transport License Matrix
+
+**Given** Exp6394 reports
+`model_family_harness_freeze_ready_score=1.0`
+**When** Exp6395 starts on planning date 20260813
+**Then** it SHALL write
+`results/experiment_6395_held_factor_transport_license_matrix.json`
+**And** it SHALL replace the universal V549 gate with a capability matrix by
+exact model id and executable constraint family.
+
+Exp6395 SHALL use exactly these local GGUF model ids from
+`cached_sota_pair()`: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Token counts SHALL use embedded GGUF
+tokenizers only. The experiment SHALL not call `AutoTokenizer`. A missing
+mandated model SHALL block only that model's cells. Legacy models SHALL not
+populate the matrix.
+
+Exp6395 SHALL revalidate the Exp6394 gate, frozen harness sidecar hashes,
+held manifest seal, model file hashes, revisions, quantizations, embedded
+tokenizer hashes, CUDA offload receipts, canonical schema hash, exact checker
+identity, and zero held-content access before the Exp6394 freeze. It SHALL use
+at least 18 held events. At least six held events SHALL come from each of
+three executable constraint families.
+
+Exp6395 SHALL run every mandated model on every applicable held event with the
+model family's frozen harness and controls. It SHALL preserve raw output
+before one parse. It SHALL not retry, repair, select another harness, tune on
+held rows, substitute another family, or silently fall back to another model.
+
+Exp6395 SHALL report nonempty output, syntax, structure, source binding,
+exact-check calls, exact pass or fail, abstention, timeout, latency, and
+verification cost for each model-family cell. Exact task checkers are the only
+correctness oracle. Transport, parser output, harness selection, and model
+text are not oracles.
+
+Exp6395 SHALL preregister the license rule before evaluating held outcomes. A
+cell earns a license only when it has at least six held trials, at least four
+source-bound exact-evaluable proposals, zero false accepts, zero protected
+leakage, complete runtime receipts, and no prohibited mechanism use.
+Otherwise the cell SHALL end as rejected or abstained with a reason.
+
+Each license SHALL bind to one model file hash, one quantization, one embedded
+tokenizer hash, one frozen harness hash, one canonical schema hash, one
+constraint family, one held event-manifest hash, and one expiration rule. An
+unlicensed cell SHALL abstain. It SHALL not inherit another family result.
+
+Exp6395 SHALL attack model-row swaps, family-label swaps, harness drift, stale
+schema, source substitution, missing rows, fallback laundering, abstention
+suppression, repeated output, and exact-fail promotion. Each attack SHALL fail
+closed before a license can be promoted.
+
+Exp6395 SHALL emit `licensed_model_count` and
+`licensed_constraint_family_count` as bare integers. It SHALL set
+`held_factor_transport_license_ready_score=1.0` only when at least two
+mandated models and at least two constraint families have at least one valid
+license, every other cell has an explicit terminal disposition, and universal
+support is not claimed.
+
+Exp6395 SHALL emit these fields with explicit principles:
+
+- `status`: Terminal status separates positive, null, blocked, and retired held-license evidence.
+- `exp6394_gate_receipt`: The Exp6394 freeze gate and frozen sidecars are revalidated before held evaluation.
+- `MODEL_SPECS`: The three mandated GGUF model rows come from cached SOTA helper calls.
+- `models_used`: Only mandated models with authenticated runtime receipts count as used.
+- `cached_sota_pair_receipts`: Helper-call receipts prevent manual model substitution.
+- `model_file_hashes_revisions_quantizations_and_tokenizers`: Model file identity and tokenizer method are pinned.
+- `embedded_gguf_tokenizer_receipts`: Tokenizer receipts use only embedded GGUF tokenizers.
+- `autotokenizer_usage_count`: Bare zero proves no external tokenizer path was used.
+- `cuda_offload_and_runtime_receipts_by_model`: CUDA offload, timing, raw streams, and cleanup are reported per model.
+- `frozen_harness_and_schema_hashes`: Harness sidecars and canonical schema are hash-bound.
+- `held_manifest_path_hash_license_balance_and_prior_access_receipt`: Held events are licensed, balanced, sealed, and not read before freeze.
+- `preregistered_license_rule`: The exact licensing thresholds are frozen before held outcomes are scored.
+- `raw_output_before_parse_paths_hashes_and_counts`: Raw bytes are frozen before one parse.
+- `per_model_constraint_family_trial_transport_source_binding_exact_abstention_and_cost_matrix`: Every model-family cell reports transport, source binding, exact calls, abstention, timeout, latency, and cost.
+- `capability_license_records`: Accepted licenses bind model, harness, schema, tokenizer, family, manifest, and expiration.
+- `rejected_and_abstained_cell_records`: Every unlicensed cell has a terminal reason.
+- `license_binding_and_expiration_fields`: License identity and expiry fields are explicit and narrow.
+- `model_row_family_label_harness_schema_source_fallback_abstention_and_promotion_attack_matrix`: Swap, drift, fallback, abstention, repetition, and promotion attacks fail closed.
+- `licensed_cell_count`: Bare count of valid model-family licenses.
+- `licensed_model_count`: Bare count of mandated models with at least one valid license.
+- `licensed_constraint_family_count`: Bare count of families with at least one valid license.
+- `held_factor_transport_license_ready_score`: Readiness is a conjunctive matrix gate and never a universal-support claim.
+- `universal_support_claimed`: Bare false prevents a universal gate from reappearing under another name.
+- `protected_leakage_count`: Protected leakage must be zero for any license.
+- `model_weight_change_count`: Bare zero proves no model weights changed.
+- `prohibited_mechanism_usage_counts`: Retry, repair, reselection, tuning, family substitution, fallback, and external-tokenizer counts stay zero.
+- `harm_underpowered_missing_and_flagged_cells`: Missing, underpowered, abstained, rejected, and attacked cells stay visible.
+- `protected_files_unchanged`: Protected files remain byte-identical.
+- `preconditions_checked`: Preconditions bind upstream, models, tokenizers, GPU, schema, manifests, sources, and protected files.
+- `inference_substrate`: The substrate declares deterministic verifier replay over local GGUF identity receipts.
+- `verifier_is_oracle`: Bare true applies only to exact task checkers.
+- `field_principles`: Every required field states its guard and scientific purpose.
+- `field_provenance`: Every required field maps to specs, upstream artifacts, sidecars, model receipts, tests, or exact checks.
+- `random_seed`: Fixed seeds pin held schedule and matrix order.
+- `duration_s`: Wall time is measured without padding.
+- `tests_run`: Verification commands and exit codes are recorded.
+- `reproducibility_checksum`: A normalized checksum detects artifact drift.
+- `honest_verdict`: The verdict starts with a terminal prefix and states the license boundary.
+- `model_family_harness_freeze_ready_score`: The Exp6394 gate proves only that harnesses froze before held access.
+
+## SCENARIO-LEARN-6395-MATRIX: Held Trials Stay Cell-Local
+
+**Given** three mandated model rows and three executable constraint families
+**When** Exp6395 builds the held matrix
+**Then** it SHALL create nine model-family cells
+**And** each cell SHALL use only its exact model row, frozen harness hash,
+schema hash, held event-manifest hash, and family label.
+
+## SCENARIO-LEARN-6395-LICENSE: Narrow Licenses Require Exact Held Evidence
+
+**Given** a model-family cell has at least six held trials
+**When** at least four proposals are source-bound and exact-evaluable with zero
+false accepts, zero protected leakage, complete runtime receipts, and no
+prohibited mechanism
+**Then** Exp6395 SHALL issue a license bound to that exact model file,
+tokenizer, harness, schema, manifest, family, and expiration rule.
+
+## SCENARIO-LEARN-6395-ABSTAIN: Missing Or Unlicensed Cells Abstain
+
+**Given** a mandated model file is missing or a cell fails the license rule
+**When** Exp6395 writes terminal dispositions
+**Then** the affected cells SHALL be rejected or abstained with reasons
+**And** no legacy model, alternate model row, or other family result SHALL
+populate those cells.
+
+## SCENARIO-LEARN-6395-ATTACKS: Capability Matrix Attacks Fail Closed
+
+**Given** a row-swap, family-swap, harness-drift, stale-schema,
+source-substitution, missing-row, fallback-laundering, abstention-suppression,
+repeated-output, or exact-fail-promotion attack
+**When** Exp6395 evaluates the attack matrix
+**Then** no attack SHALL promote a license.
+
+## SCENARIO-LEARN-6395-READY: Matrix Readiness Is Not Universal Support
+
+**Given** at least two mandated models and at least two constraint families
+have a valid license
+**When** every remaining cell has an explicit terminal disposition and
+`universal_support_claimed` is false
+**Then** `held_factor_transport_license_ready_score` SHALL be `1.0`.
+
+## Implementation Status (REQ-LEARN-6395)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6395 | Planned: `python/carnot/experiment_6395_held_factor_transport_license_matrix.py`; terminal artifact `results/experiment_6395_held_factor_transport_license_matrix.json`. | Planned: `tests/python/test_experiment_6395_held_factor_transport_license_matrix.py`. |
+| SCENARIO-LEARN-6395-MATRIX | Planned: `python/carnot/experiment_6395_held_factor_transport_license_matrix.py`. | Planned: `tests/python/test_experiment_6395_held_factor_transport_license_matrix.py`. |
+| SCENARIO-LEARN-6395-LICENSE | Planned: `python/carnot/experiment_6395_held_factor_transport_license_matrix.py`. | Planned: `tests/python/test_experiment_6395_held_factor_transport_license_matrix.py`. |
+| SCENARIO-LEARN-6395-ABSTAIN | Planned: `python/carnot/experiment_6395_held_factor_transport_license_matrix.py`. | Planned: `tests/python/test_experiment_6395_held_factor_transport_license_matrix.py`. |
+| SCENARIO-LEARN-6395-ATTACKS | Planned: `python/carnot/experiment_6395_held_factor_transport_license_matrix.py`. | Planned: `tests/python/test_experiment_6395_held_factor_transport_license_matrix.py`. |
+| SCENARIO-LEARN-6395-READY | Planned: `python/carnot/experiment_6395_held_factor_transport_license_matrix.py`. | Planned: `tests/python/test_experiment_6395_held_factor_transport_license_matrix.py`. |
+
 ## REQ-LEARN-6383: Dependency-Guided Factor Rollback Stress
 
 **Given** versioned factor release and whole-version rollback already exist
