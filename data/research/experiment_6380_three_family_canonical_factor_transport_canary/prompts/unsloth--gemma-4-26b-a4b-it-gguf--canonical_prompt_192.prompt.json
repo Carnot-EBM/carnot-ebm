@@ -1,0 +1,181 @@
+{
+  "canonical_schema": {
+    "allowed_variables": [
+      "reject_bias"
+    ],
+    "field_order": [
+      "schema",
+      "proposal_id",
+      "event_id",
+      "model_hf_id",
+      "model_family",
+      "arm",
+      "candidate_index",
+      "changed_factor",
+      "edits",
+      "selection_score",
+      "obligations",
+      "edit_source_spans",
+      "evidence_summary"
+    ],
+    "fixed_fields": {
+      "arm": "canonical_prompt_192",
+      "candidate_index": 0,
+      "changed_factor": "reject_factor",
+      "event_id": "live-6366-008",
+      "schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit"
+    },
+    "forbidden_fields": [
+      "protected_outcome",
+      "protected_success",
+      "exact_label",
+      "hidden_state",
+      "source_weight_delta",
+      "analysis",
+      "thinking"
+    ],
+    "model_bound_fields": [
+      "proposal_id",
+      "model_hf_id",
+      "model_family"
+    ],
+    "numeric_bounds": {
+      "edits": {
+        "max": 1.0,
+        "max_abs_movement": 1.0,
+        "min": -1.0
+      },
+      "selection_score": {
+        "max": 1.0,
+        "min": 0.0
+      }
+    },
+    "required_fields": [
+      "schema",
+      "proposal_id",
+      "event_id",
+      "model_hf_id",
+      "model_family",
+      "arm",
+      "candidate_index",
+      "changed_factor",
+      "edits",
+      "selection_score",
+      "obligations",
+      "edit_source_spans",
+      "evidence_summary"
+    ],
+    "schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit",
+    "source_binding_checks": {
+      "allowed_variables": [
+        "reject_bias"
+      ],
+      "edit_source_span": {
+        "source_end": 122,
+        "source_sha256": "sha256:f0b63973229e2c83d0f974e5abca7430484b48f83ed2dbf1fd2a763737ce98e6",
+        "source_start": 111
+      },
+      "obligation": {
+        "obligation_id": "obl-live-6366-008-0",
+        "source_end": 189,
+        "source_sha256": "sha256:d7c2dbee861b8f5b5a30896787fbd2e2c1621b1cb52b727d13aeb0508023c69c",
+        "source_start": 106,
+        "source_text": "Edit reject_bias for reject_factor within [-1.0, 1.0] to repair conservation_guard."
+      },
+      "source_binding_required": true,
+      "source_text_sha256": "sha256:31f64469c5f643cbe0725cb39817eaa44bf9d0fb03637f7682fccfc2a9a75532"
+    },
+    "type": "object",
+    "version": "v1"
+  },
+  "compact_valid_shape": {
+    "arm": "canonical_prompt_192",
+    "candidate_index": 0,
+    "changed_factor": "reject_factor",
+    "edit_source_spans": {
+      "reject_bias": {
+        "source_end": 122,
+        "source_sha256": "sha256:f0b63973229e2c83d0f974e5abca7430484b48f83ed2dbf1fd2a763737ce98e6",
+        "source_start": 111
+      }
+    },
+    "edits": {
+      "reject_bias": 0.5
+    },
+    "event_id": "live-6366-008",
+    "evidence_summary": "Visible obligation obl-live-6366-008-0 supports editing reject_bias.",
+    "model_family": "gemma_moe",
+    "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "obligations": [
+      {
+        "obligation_id": "obl-live-6366-008-0",
+        "source_end": 189,
+        "source_sha256": "sha256:d7c2dbee861b8f5b5a30896787fbd2e2c1621b1cb52b727d13aeb0508023c69c",
+        "source_start": 106,
+        "source_text": "Edit reject_bias for reject_factor within [-1.0, 1.0] to repair conservation_guard."
+      }
+    ],
+    "proposal_id": "unsloth--gemma-4-26b-a4b-it-gguf:live-6366-008:0",
+    "schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit",
+    "selection_score": 0.5
+  },
+  "fixed_repetition_policy": {
+    "larger_token_budget_alone_qualifies_contract": false,
+    "max_repeated_token_fraction": 0.7,
+    "max_repeated_token_run": 64,
+    "policy_defined_before_live_execution": true,
+    "schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.repetition_policy",
+    "threshold_breach_decision": "abstain"
+  },
+  "instruction": "Return exactly one JSON object. Copy ids, spans, hashes, and visible source text exactly. Do not output markdown or hidden reasoning.",
+  "source_event": {
+    "allowed_variables": [
+      "reject_bias"
+    ],
+    "changed_factor": "reject_factor",
+    "edit_bounds": {
+      "max": 1.0,
+      "max_abs_movement": 1.0,
+      "min": -1.0
+    },
+    "edit_source_spans": {
+      "reject_bias": {
+        "end": 122,
+        "sha256": "sha256:f0b63973229e2c83d0f974e5abca7430484b48f83ed2dbf1fd2a763737ce98e6",
+        "start": 111
+      }
+    },
+    "event_id": "live-6366-008",
+    "executable_structure": "single_assertion",
+    "family": "conservation_guard",
+    "minimized_exact_counterexample": {
+      "case_id": "exp6366-conservation_guard-single_assertion-symbolic-08",
+      "exact": true,
+      "executable_structure": "single_assertion",
+      "expected": "reject",
+      "family": "conservation_guard",
+      "generator_seed": 636608,
+      "minimal": true,
+      "observed_before_edit": "repair",
+      "source_text_sha256": "sha256:31f64469c5f643cbe0725cb39817eaa44bf9d0fb03637f7682fccfc2a9a75532",
+      "surface_relabel": "symbolic",
+      "variables": {
+        "reject_bias": 0.0
+      }
+    },
+    "source_obligations": [
+      {
+        "obligation_id": "obl-live-6366-008-0",
+        "span": {
+          "end": 189,
+          "sha256": "sha256:d7c2dbee861b8f5b5a30896787fbd2e2c1621b1cb52b727d13aeb0508023c69c",
+          "start": 106
+        },
+        "text": "Edit reject_bias for reject_factor within [-1.0, 1.0] to repair conservation_guard."
+      }
+    ],
+    "source_text": "EVENT live-6366-008. FAMILY conservation_guard. STRUCTURE single_assertion. SURFACE symbolic. OBLIGATION: Edit reject_bias for reject_factor within [-1.0, 1.0] to repair conservation_guard. Counterexample live-6366-008: reject_bias=0.0, expected=reject, observed=repair.",
+    "source_text_sha256": "sha256:31f64469c5f643cbe0725cb39817eaa44bf9d0fb03637f7682fccfc2a9a75532",
+    "surface_relabel": "symbolic"
+  }
+}

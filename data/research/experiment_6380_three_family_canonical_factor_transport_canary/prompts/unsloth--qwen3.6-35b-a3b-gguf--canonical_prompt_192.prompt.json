@@ -1,0 +1,181 @@
+{
+  "canonical_schema": {
+    "allowed_variables": [
+      "accept_bias"
+    ],
+    "field_order": [
+      "schema",
+      "proposal_id",
+      "event_id",
+      "model_hf_id",
+      "model_family",
+      "arm",
+      "candidate_index",
+      "changed_factor",
+      "edits",
+      "selection_score",
+      "obligations",
+      "edit_source_spans",
+      "evidence_summary"
+    ],
+    "fixed_fields": {
+      "arm": "canonical_prompt_192",
+      "candidate_index": 0,
+      "changed_factor": "accept_factor",
+      "event_id": "live-6366-000",
+      "schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit"
+    },
+    "forbidden_fields": [
+      "protected_outcome",
+      "protected_success",
+      "exact_label",
+      "hidden_state",
+      "source_weight_delta",
+      "analysis",
+      "thinking"
+    ],
+    "model_bound_fields": [
+      "proposal_id",
+      "model_hf_id",
+      "model_family"
+    ],
+    "numeric_bounds": {
+      "edits": {
+        "max": 1.0,
+        "max_abs_movement": 1.0,
+        "min": -1.0
+      },
+      "selection_score": {
+        "max": 1.0,
+        "min": 0.0
+      }
+    },
+    "required_fields": [
+      "schema",
+      "proposal_id",
+      "event_id",
+      "model_hf_id",
+      "model_family",
+      "arm",
+      "candidate_index",
+      "changed_factor",
+      "edits",
+      "selection_score",
+      "obligations",
+      "edit_source_spans",
+      "evidence_summary"
+    ],
+    "schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit",
+    "source_binding_checks": {
+      "allowed_variables": [
+        "accept_bias"
+      ],
+      "edit_source_span": {
+        "source_end": 119,
+        "source_sha256": "sha256:4710cba0bac843a3f05d2f2190b3ece5b3f2097f5b2bd651c536787d731da5da",
+        "source_start": 108
+      },
+      "obligation": {
+        "obligation_id": "obl-live-6366-000-0",
+        "source_end": 183,
+        "source_sha256": "sha256:8db064f857527e5971bf69fed8c3b382fc5316247b59682651b54abd62a27326",
+        "source_start": 103,
+        "source_text": "Edit accept_bias for accept_factor within [-1.0, 1.0] to repair threshold_guard."
+      },
+      "source_binding_required": true,
+      "source_text_sha256": "sha256:7be89372c926ce78de4907a573b14186f3edf3fafb98b9a2aa50b1845a2e2ed4"
+    },
+    "type": "object",
+    "version": "v1"
+  },
+  "compact_valid_shape": {
+    "arm": "canonical_prompt_192",
+    "candidate_index": 0,
+    "changed_factor": "accept_factor",
+    "edit_source_spans": {
+      "accept_bias": {
+        "source_end": 119,
+        "source_sha256": "sha256:4710cba0bac843a3f05d2f2190b3ece5b3f2097f5b2bd651c536787d731da5da",
+        "source_start": 108
+      }
+    },
+    "edits": {
+      "accept_bias": 0.5
+    },
+    "event_id": "live-6366-000",
+    "evidence_summary": "Visible obligation obl-live-6366-000-0 supports editing accept_bias.",
+    "model_family": "qwen_moe",
+    "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "obligations": [
+      {
+        "obligation_id": "obl-live-6366-000-0",
+        "source_end": 183,
+        "source_sha256": "sha256:8db064f857527e5971bf69fed8c3b382fc5316247b59682651b54abd62a27326",
+        "source_start": 103,
+        "source_text": "Edit accept_bias for accept_factor within [-1.0, 1.0] to repair threshold_guard."
+      }
+    ],
+    "proposal_id": "unsloth--qwen3.6-35b-a3b-gguf:live-6366-000:0",
+    "schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit",
+    "selection_score": 0.5
+  },
+  "fixed_repetition_policy": {
+    "larger_token_budget_alone_qualifies_contract": false,
+    "max_repeated_token_fraction": 0.7,
+    "max_repeated_token_run": 64,
+    "policy_defined_before_live_execution": true,
+    "schema": "carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.repetition_policy",
+    "threshold_breach_decision": "abstain"
+  },
+  "instruction": "Return exactly one JSON object. Copy ids, spans, hashes, and visible source text exactly. Do not output markdown or hidden reasoning.",
+  "source_event": {
+    "allowed_variables": [
+      "accept_bias"
+    ],
+    "changed_factor": "accept_factor",
+    "edit_bounds": {
+      "max": 1.0,
+      "max_abs_movement": 1.0,
+      "min": -1.0
+    },
+    "edit_source_spans": {
+      "accept_bias": {
+        "end": 119,
+        "sha256": "sha256:4710cba0bac843a3f05d2f2190b3ece5b3f2097f5b2bd651c536787d731da5da",
+        "start": 108
+      }
+    },
+    "event_id": "live-6366-000",
+    "executable_structure": "single_assertion",
+    "family": "threshold_guard",
+    "minimized_exact_counterexample": {
+      "case_id": "exp6366-threshold_guard-single_assertion-symbolic-00",
+      "exact": true,
+      "executable_structure": "single_assertion",
+      "expected": "accept",
+      "family": "threshold_guard",
+      "generator_seed": 636600,
+      "minimal": true,
+      "observed_before_edit": "reject",
+      "source_text_sha256": "sha256:7be89372c926ce78de4907a573b14186f3edf3fafb98b9a2aa50b1845a2e2ed4",
+      "surface_relabel": "symbolic",
+      "variables": {
+        "accept_bias": 0.0
+      }
+    },
+    "source_obligations": [
+      {
+        "obligation_id": "obl-live-6366-000-0",
+        "span": {
+          "end": 183,
+          "sha256": "sha256:8db064f857527e5971bf69fed8c3b382fc5316247b59682651b54abd62a27326",
+          "start": 103
+        },
+        "text": "Edit accept_bias for accept_factor within [-1.0, 1.0] to repair threshold_guard."
+      }
+    ],
+    "source_text": "EVENT live-6366-000. FAMILY threshold_guard. STRUCTURE single_assertion. SURFACE symbolic. OBLIGATION: Edit accept_bias for accept_factor within [-1.0, 1.0] to repair threshold_guard. Counterexample live-6366-000: accept_bias=0.0, expected=accept, observed=reject.",
+    "source_text_sha256": "sha256:7be89372c926ce78de4907a573b14186f3edf3fafb98b9a2aa50b1845a2e2ed4",
+    "surface_relabel": "symbolic"
+  }
+}

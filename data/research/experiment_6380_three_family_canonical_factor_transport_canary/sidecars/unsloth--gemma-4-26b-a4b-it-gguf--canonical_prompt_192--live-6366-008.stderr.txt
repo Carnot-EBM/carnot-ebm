@@ -1,0 +1,27 @@
+
+CARNOT_GPU_SAMPLE:{"phase": "before_load", "rows": [{"gpu_index": 0, "memory_free_mb": 23859, "memory_used_mb": 266, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "phase": "before_load", "process_identity": {"cmdline": "llama_cpp observable child", "pid": 1524491, "ppid": 1523789}, "timestamp_utc": "2026-08-13T06:24:22Z", "utilization_pct": 0}, {"gpu_index": 1, "memory_free_mb": 23859, "memory_used_mb": 266, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "phase": "before_load", "process_identity": {"cmdline": "llama_cpp observable child", "pid": 1524491, "ppid": 1523789}, "timestamp_utc": "2026-08-13T06:24:22Z", "utilization_pct": 100}]}
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 24123 MiB):
+  Device 0: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24123 MiB
+llama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)
+llama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048
+llama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048
+
+CARNOT_PHASE:{"duration_s": 7.355768851, "ended_ns": 1786602269565082680, "phase": "load", "started_ns": 1786602262209313829}
+
+CARNOT_GPU_SAMPLE:{"phase": "after_load", "rows": [{"gpu_index": 0, "memory_free_mb": 23859, "memory_used_mb": 266, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "phase": "after_load", "process_identity": {"cmdline": "llama_cpp observable child", "pid": 1524491, "ppid": 1523789}, "timestamp_utc": "2026-08-13T06:24:29Z", "utilization_pct": 0}, {"gpu_index": 1, "memory_free_mb": 6463, "memory_used_mb": 17661, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "phase": "after_load", "process_identity": {"cmdline": "llama_cpp observable child", "pid": 1524491, "ppid": 1523789}, "timestamp_utc": "2026-08-13T06:24:29Z", "utilization_pct": 99}]}
+
+CARNOT_PHASE:{"duration_s": 0.004295107, "ended_ns": 1786602269599541728, "phase": "prompt", "started_ns": 1786602269595246621}
+
+CARNOT_GPU_SAMPLE:{"phase": "during_generation", "rows": [{"gpu_index": 0, "memory_free_mb": 23859, "memory_used_mb": 266, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "phase": "during_generation", "process_identity": {"cmdline": "llama_cpp observable child", "pid": 1524491, "ppid": 1523789}, "timestamp_utc": "2026-08-13T06:24:29Z", "utilization_pct": 0}, {"gpu_index": 1, "memory_free_mb": 6463, "memory_used_mb": 17661, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "phase": "during_generation", "process_identity": {"cmdline": "llama_cpp observable child", "pid": 1524491, "ppid": 1523789}, "timestamp_utc": "2026-08-13T06:24:29Z", "utilization_pct": 99}]}
+
+CARNOT_USAGE:{"completion_tokens": 192, "prompt_tokens": 2338, "total_tokens": 2530}
+
+CARNOT_PHASE:{"duration_s": 3.27802449, "ended_ns": 1786602272877588229, "phase": "generate", "started_ns": 1786602269599563739}
+
+CARNOT_PHASE:{"duration_s": 0.107856256, "ended_ns": 1786602272985459453, "phase": "unload", "started_ns": 1786602272877603197}
+
+CARNOT_GPU_SAMPLE:{"phase": "after_unload", "rows": [{"gpu_index": 0, "memory_free_mb": 23859, "memory_used_mb": 266, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "phase": "after_unload", "process_identity": {"cmdline": "llama_cpp observable child", "pid": 1524491, "ppid": 1523789}, "timestamp_utc": "2026-08-13T06:24:33Z", "utilization_pct": 0}, {"gpu_index": 1, "memory_free_mb": 23551, "memory_used_mb": 573, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "phase": "after_unload", "process_identity": {"cmdline": "llama_cpp observable child", "pid": 1524491, "ppid": 1523789}, "timestamp_utc": "2026-08-13T06:24:33Z", "utilization_pct": 96}]}
+
+CARNOT_PHASE:{"duration_s": 0.004535468, "ended_ns": 1786602273022713470, "phase": "cleanup", "started_ns": 1786602273018178002}
+
+CARNOT_OFFLOAD:{"authenticated_gpu_offload": true, "llama_supports_gpu_offload": true}

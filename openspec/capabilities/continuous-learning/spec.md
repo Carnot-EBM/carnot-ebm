@@ -1785,3 +1785,135 @@ matched cost over repeated sampling for every required model family
 | REQ-LEARN-6344-SINGLE-OPEN | Planned | tests/python/test_experiment_6344_counterexample_factor_proposal_calibration.py |
 | REQ-LEARN-6344-ORACLE-BOUNDARY | Planned | tests/python/test_experiment_6344_counterexample_factor_proposal_calibration.py |
 | REQ-LEARN-6344-PROVENANCE | Planned | tests/python/test_experiment_6344_counterexample_factor_proposal_calibration.py |
+
+## REQ-LEARN-6380: Three-Family Canonical Factor Transport Canary
+
+**Given** Exp6379 reports the deterministic canonical transport contract ready
+for run date 20260813
+**When** Exp6380 starts
+**Then** it SHALL write
+`results/experiment_6380_three_family_canonical_factor_transport_canary.json`
+**And** it SHALL revalidate the Exp6379 artifact, both RTX 3090 GPUs, model
+hashes, embedded GGUF tokenizers, llama.cpp GPU offload, disk, source hashes,
+and event-manifest hashes before live generation.
+
+Exp6380 SHALL seal at least 12 fresh licensed executable events across at least
+three constraint families. The event set SHALL balance executable structure and
+surface relabeling. It SHALL use exactly these local GGUF model ids from
+`cached_sota_pair()`: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Token counts SHALL use embedded GGUF
+tokenizers only. `AutoTokenizer` SHALL not be called.
+
+Exp6380 SHALL preregister three matched arms: frozen Exp6366 prompt at 192
+tokens, canonical prompt at 192 tokens, and canonical prompt at the computed
+per-model allowance with the fixed repetition policy. Apart from prompt,
+completion allowance, and the preregistered repetition policy, sampling inputs
+SHALL stay fixed.
+
+Exp6380 SHALL run each required model sequentially through the Exp6365
+observable child-process contract. It SHALL preserve raw stdout and stderr
+before parsing. It SHALL not use grammar decoding, parser retry, JSON repair,
+hidden states, generated labels, model-weight mutation, protected validation
+reads, or an external scorer.
+
+Exp6380 SHALL parse each raw output once with the canonical validator. It SHALL
+freeze source-span alignment for parse-valid objects and only then call exact
+task checkers. Exact checkers are the only correctness oracle. Output
+transport, parsing, and model proposals are not oracles.
+
+Exp6380 SHALL set `three_family_factor_transport_ready_score=1.0` only when
+each constraint family has at least one nonempty source-bound parse-valid
+canonical-capacity-arm object, each family has at least one exact-checker call,
+protected leakage is zero, same-step writes are zero, runtime receipts are
+complete, protected files are unchanged, and all recorded tests pass. If the
+same all-invalid verdict recurs, the retry scope SHALL retire.
+
+Exp6380 SHALL emit these fields with explicit principles:
+
+- `status`: Terminal status separates blocked, positive, null, and retired transport evidence.
+- `exp6379_gate_receipt`: The deterministic transport contract is revalidated before live calls.
+- `MODEL_SPECS`: The three mandated GGUF model rows come from cached SOTA helper calls.
+- `models_used`: Only models with authenticated runtime receipts count as used.
+- `cached_sota_pair_receipts`: Helper-call receipts prevent manual model substitution.
+- `model_file_hashes_revisions_quantizations_and_tokenizers`: Model file identity and tokenizer method are pinned.
+- `embedded_gguf_tokenizer_receipts`: Tokenizer receipts use only embedded GGUF tokenizers.
+- `autotokenizer_usage_count`: Bare zero proves no external tokenizer path was used.
+- `cuda_offload_and_runtime_receipts_by_model`: CUDA offload, timing, token usage, return, raw streams, and cleanup are reported.
+- `sealed_event_manifest_path_hash_license_and_balance`: Fresh licensed events are sealed before prompting.
+- `canonical_schema_path_hash_and_drift_receipt`: The canonical schema source is hash-bound and checked for drift.
+- `preregistered_arm_contract`: The three arms and fixed sampling differences are frozen before generation.
+- `per_arm_prompt_output_and_context_capacity_receipts`: Prompt tokens, output allowance, and context margin are recorded per call.
+- `raw_output_before_parse_paths_hashes_and_counts`: Raw outputs are frozen before classification or parsing.
+- `failure_taxonomy_counts_by_model_and_arm`: Failure labels distinguish thinking, repetition, truncation, syntax, structure, source, semantic, timeout, and abstention.
+- `parse_valid_invalid_timeout_and_abstain_counts_by_model_and_arm`: Parse outcomes stay separate from exact correctness.
+- `source_span_alignment_and_conflict_counts`: Source-bound spans and conflicts are counted before exact checking.
+- `exact_checker_paths_versions_calls_costs_and_errors`: Exact checker identity, calls, costs, and errors are recorded.
+- `exact_pass_fail_counts_by_model_and_arm`: Exact pass and fail counts stay separate from transport readiness.
+- `same_step_read_write_isolation_results`: Same-step writes and protected reads remain invisible.
+- `retired_decoding_mechanism_usage_count`: Bare zero proves retired decode helpers were not used.
+- `three_family_factor_transport_ready_score`: Readiness is a conjunctive transport gate.
+- `semantic_utility_not_implied_by_transport`: The artifact states that transport readiness is not semantic utility.
+- `harm_underpowered_missing_and_flagged_cells`: Missing, invalid, timeout, abstain, underpowered, and retired cells stay visible.
+- `protected_files_unchanged`: Protected files remain byte-identical.
+- `preconditions_checked`: Preconditions freeze upstream, model, tokenizer, GPU, disk, schema, event, source, and protected hashes.
+- `inference_substrate`: The substrate declares local llama.cpp GGUF child-process generation.
+- `verifier_is_oracle`: Bare true applies only to exact task checkers.
+- `field_principles`: Every required field states its guard.
+- `field_provenance`: Every required field maps to specs, inputs, sidecars, model receipts, tests, or exact checks.
+- `random_seed`: Fixed seeds pin schedule and prompt construction.
+- `duration_s`: Wall time is measured without padding.
+- `tests_run`: Verification commands and exit codes are recorded.
+- `reproducibility_checksum`: A normalized checksum detects artifact drift.
+- `honest_verdict`: The verdict starts with a terminal prefix and states the transport boundary.
+
+## SCENARIO-LEARN-6380-GATE: Exp6379 Gates Live Work
+
+**Given** the Exp6379 artifact is missing, not ready, or hash-drifted
+**When** Exp6380 computes preconditions
+**Then** live generation SHALL not qualify readiness
+**And** the terminal verdict SHALL start with `blocked:` or `retired:`.
+
+## SCENARIO-LEARN-6380-ARMS: Three Arms Are Preregistered
+
+**Given** the selected source events and model rows
+**When** Exp6380 builds prompts
+**Then** it SHALL produce the frozen Exp6366 192-token control, canonical
+192-token control, and canonical computed-allowance arm with fixed sampling
+inputs except for the preregistered differences.
+
+## SCENARIO-LEARN-6380-RAW: Raw Output Freezes Before Parsing
+
+**Given** a child process returns stdout and stderr
+**When** Exp6380 classifies and parses the row
+**Then** raw path, byte count, hash, and parse-start time SHALL prove the raw
+bytes existed before parsing.
+
+## SCENARIO-LEARN-6380-ORACLE: Exact Checkers Alone Are Oracles
+
+**Given** a raw output is parse-valid and source-bound
+**When** Exp6380 evaluates correctness
+**Then** it SHALL call the exact task checker after raw freeze
+**And** it SHALL state that transport, parsing, and model proposals are not
+oracles.
+
+## SCENARIO-LEARN-6380-READY: Each Family Must Produce Source-Bound Transport
+
+**Given** all required models finish their assigned arms
+**When** readiness is computed
+**Then** `three_family_factor_transport_ready_score` SHALL be `1.0` only if
+each constraint family has a nonempty source-bound parse-valid canonical
+capacity-arm object and an exact-checker call with zero protected leakage,
+zero same-step writes, complete runtime receipts, unchanged protected files,
+and passing tests.
+
+## Implementation Status (REQ-LEARN-6380)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6380 | Implemented: `python/carnot/experiment_6380_three_family_canonical_factor_transport_canary.py`; terminal artifact `results/experiment_6380_three_family_canonical_factor_transport_canary.json`. | Implemented: `tests/python/test_experiment_6380_three_family_canonical_factor_transport_canary.py`. |
+| SCENARIO-LEARN-6380-GATE | Implemented: `python/carnot/experiment_6380_three_family_canonical_factor_transport_canary.py`. | Implemented: `tests/python/test_experiment_6380_three_family_canonical_factor_transport_canary.py`. |
+| SCENARIO-LEARN-6380-ARMS | Implemented: `python/carnot/experiment_6380_three_family_canonical_factor_transport_canary.py`. | Implemented: `tests/python/test_experiment_6380_three_family_canonical_factor_transport_canary.py`. |
+| SCENARIO-LEARN-6380-RAW | Implemented: `python/carnot/experiment_6380_three_family_canonical_factor_transport_canary.py`. | Implemented: `tests/python/test_experiment_6380_three_family_canonical_factor_transport_canary.py`. |
+| SCENARIO-LEARN-6380-ORACLE | Implemented: `python/carnot/experiment_6380_three_family_canonical_factor_transport_canary.py`. | Implemented: `tests/python/test_experiment_6380_three_family_canonical_factor_transport_canary.py`. |
+| SCENARIO-LEARN-6380-READY | Implemented: `python/carnot/experiment_6380_three_family_canonical_factor_transport_canary.py`. | Implemented: `tests/python/test_experiment_6380_three_family_canonical_factor_transport_canary.py`. |

@@ -1,0 +1,132 @@
+{
+  "compact_valid_shape": {
+    "arm": "repaired_live_factor_proposal_authenticity",
+    "candidate_index": 0,
+    "changed_factor": "reject_factor",
+    "edit_source_spans": {
+      "reject_bias": {
+        "source_end": 122,
+        "source_sha256": "sha256:f0b63973229e2c83d0f974e5abca7430484b48f83ed2dbf1fd2a763737ce98e6",
+        "source_start": 111
+      }
+    },
+    "edits": {
+      "reject_bias": 0.5
+    },
+    "event_id": "live-6366-008",
+    "model_family": "gemma_moe",
+    "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "obligations": [
+      {
+        "obligation_id": "obl-live-6366-008-0",
+        "source_end": 189,
+        "source_sha256": "sha256:d7c2dbee861b8f5b5a30896787fbd2e2c1621b1cb52b727d13aeb0508023c69c",
+        "source_start": 106,
+        "source_text": "Edit reject_bias for reject_factor within [-1.0, 1.0] to repair conservation_guard."
+      }
+    ],
+    "proposal_id": "unsloth--gemma-4-26b-a4b-it-gguf:live-6366-008:0",
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.factor_edit_schema",
+    "selection_score": 0.5
+  },
+  "instruction": "Return exactly one JSON object. Copy ids, source spans, and source hashes exactly. Do not include markdown.",
+  "proposal_schema": {
+    "edit_bounds": {
+      "max": 1.0,
+      "max_abs_movement": 1.0,
+      "min": -1.0
+    },
+    "edits_allowed_only_for": [
+      "reject_bias"
+    ],
+    "fixed_fields": {
+      "arm": "repaired_live_factor_proposal_authenticity",
+      "candidate_index": 0,
+      "changed_factor": "reject_factor",
+      "event_id": "live-6366-008",
+      "model_family": "gemma_moe",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+    },
+    "required_fields": [
+      "proposal_id",
+      "event_id",
+      "model_hf_id",
+      "arm",
+      "candidate_index",
+      "changed_factor",
+      "edits",
+      "selection_score"
+    ],
+    "schema": "carnot.experiment_6344.counterexample_factor_proposal_calibration.v1.factor_edit_schema",
+    "source_binding_required": {
+      "edit_source_end": 122,
+      "edit_source_sha256": "sha256:f0b63973229e2c83d0f974e5abca7430484b48f83ed2dbf1fd2a763737ce98e6",
+      "edit_source_start": 111,
+      "edit_variable": "reject_bias",
+      "obligation_id": "obl-live-6366-008-0",
+      "obligation_source_end": 189,
+      "obligation_source_sha256": "sha256:d7c2dbee861b8f5b5a30896787fbd2e2c1621b1cb52b727d13aeb0508023c69c",
+      "obligation_source_start": 106
+    }
+  },
+  "released_factor_snapshot": {
+    "active_factor_ids": [
+      "accept_guard",
+      "reject_guard",
+      "repair_guard"
+    ],
+    "read_only_during_proposal": true,
+    "released_root_sha256": "sha256:1c22b1f77ae1e00f16bfc4817eaa047d1798a235790e01507056642129e16607",
+    "released_version_id": "exp6343-final-active"
+  },
+  "source_event": {
+    "allowed_variables": [
+      "reject_bias"
+    ],
+    "changed_factor": "reject_factor",
+    "edit_bounds": {
+      "max": 1.0,
+      "max_abs_movement": 1.0,
+      "min": -1.0
+    },
+    "edit_source_spans": {
+      "reject_bias": {
+        "end": 122,
+        "sha256": "sha256:f0b63973229e2c83d0f974e5abca7430484b48f83ed2dbf1fd2a763737ce98e6",
+        "start": 111
+      }
+    },
+    "event_id": "live-6366-008",
+    "executable_structure": "single_assertion",
+    "family": "conservation_guard",
+    "minimized_exact_counterexample": {
+      "case_id": "exp6366-conservation_guard-single_assertion-symbolic-08",
+      "exact": true,
+      "executable_structure": "single_assertion",
+      "expected": "reject",
+      "family": "conservation_guard",
+      "generator_seed": 636608,
+      "minimal": true,
+      "observed_before_edit": "repair",
+      "source_text_sha256": "sha256:31f64469c5f643cbe0725cb39817eaa44bf9d0fb03637f7682fccfc2a9a75532",
+      "surface_relabel": "symbolic",
+      "variables": {
+        "reject_bias": 0.0
+      }
+    },
+    "source_obligations": [
+      {
+        "obligation_id": "obl-live-6366-008-0",
+        "span": {
+          "end": 189,
+          "sha256": "sha256:d7c2dbee861b8f5b5a30896787fbd2e2c1621b1cb52b727d13aeb0508023c69c",
+          "start": 106
+        },
+        "text": "Edit reject_bias for reject_factor within [-1.0, 1.0] to repair conservation_guard."
+      }
+    ],
+    "source_text": "EVENT live-6366-008. FAMILY conservation_guard. STRUCTURE single_assertion. SURFACE symbolic. OBLIGATION: Edit reject_bias for reject_factor within [-1.0, 1.0] to repair conservation_guard. Counterexample live-6366-008: reject_bias=0.0, expected=reject, observed=repair.",
+    "source_text_sha256": "sha256:31f64469c5f643cbe0725cb39817eaa44bf9d0fb03637f7682fccfc2a9a75532",
+    "surface_relabel": "symbolic"
+  }
+}
