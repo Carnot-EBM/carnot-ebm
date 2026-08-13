@@ -15754,3 +15754,5 @@ code |
 | 2026-08-13 06:27 UTC | Gated on Exp6379 readiness: three-family canonical | OK | 86 passed, 1 warning in 8.75s |
 | 2026-08-13 06:29 UTC | Gated on Exp6380 readiness: verified-frontier live | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran |
 | 2026-08-13 06:31 UTC | Gated on Exp6380 readiness: verified-frontier live | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran |
+| 2026-08-13 06:33 UTC | Gated on Exp6380 readiness: verified-frontier live | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran |
+| 2026-08-13 06:35 UTC | Gated on Exp6381 positive delta: chronological ver | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos |
