@@ -4196,6 +4196,103 @@ the checksum matches, and `verifier_is_oracle` is false.
 |---|---|---|
 | REQ-INFRA-6363 | Implemented: `python/carnot/experiment_6363_v548_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json`. | Implemented: `tests/python/test_experiment_6363_v548_terminal_handoff_and_queue_preflight.py`. |
 
+## REQ-INFRA-6377: V549 Handoff SHALL Preserve The Four-Task V548 Boundary And Validate The Full V549 Queue
+
+Carnot SHALL build Exp6377 as a bounded V548-to-V549 evidence handoff over
+exactly Exp6363 through Exp6366. The handoff SHALL hash the active roadmap,
+optional next roadmap, milestone document, conductor source, conductor log,
+exclusion manifest, and the four expected V548 artifacts before importing
+artifact fields. It SHALL read each present V548 artifact through
+`scripts/summarize_artifact.py` and keep live adversarial findings separate
+from stamped artifact fields.
+
+Exp6377 SHALL preserve the V548 evidence classes without promotion. It SHALL
+record Exp6363 as blocked, Exp6364 and Exp6365 as clean terminal evidence, and
+Exp6366 as a null transport failure with three nonempty raw outputs, zero
+parse-valid factor edits, and zero exact-checker calls. It SHALL record
+Exp6367 through Exp6376 as proposal-only V548 identities. These identities
+SHALL not count as executed, blocked, or missing active V548 tasks.
+
+Exp6377 SHALL validate the V549 queue without changing it. It SHALL require
+Exp6377 through Exp6390, fourteen unique task IDs, unique result JSON
+deliverables, ascending execution order, ordered dependencies, structured
+gates, gate fields that appear in upstream required artifact fields, complete
+prior-failure entries with `retire_if_same_verdict: true`, and no dependency
+or gate reference to a retired upstream task ID. It SHALL run or mirror the
+roadmap schema, prior-failure, gate-audit, and exclusion-manifest checks.
+
+Exp6377 SHALL render queue prompts with the same `{project_root}` and `{date}`
+format contract used by the conductor before checking prompt contents. Each
+rendered prompt SHALL include `CONTEXT`, `EXISTING CODE TO READ FIRST`,
+`TASK`, `CONCRETE STEPS`, the project root, the planning date, a `Run command:`
+line, and the exact final prohibition line
+`Do NOT push. Do NOT modify scripts/research_conductor.py.`. Each LLM task
+SHALL declare `MODEL_SPECS`, at least one mandated local GGUF ID, embedded
+GGUF tokenizer use, and a no-`AutoTokenizer` rule. Agent/model pairs SHALL be
+coherent.
+
+The Exp6377 artifact SHALL be written atomically to
+`results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json` with
+`inference_substrate=aggregation_from_upstream_artifacts` and
+`verifier_is_oracle=false`. The artifact SHALL include these required fields:
+`status`, `v548_active_roadmap_path_and_hash`, `v548_active_task_ids`,
+`v548_terminal_artifacts_by_task`, `v548_conductor_outcomes`,
+`v548_blocked_null_clean_and_proposal_only_states`,
+`exp6365_runtime_boundary`, `exp6366_transport_failure_boundary`,
+`v549_milestone_doc_and_queue_hashes`, `v549_task_ids`,
+`v549_id_and_deliverable_checks`, `v549_dependency_and_gate_checks`,
+`v549_gate_field_cross_reference_checks`, `v549_prior_failure_checks`,
+`v549_exclusion_manifest_checks`, `v549_agent_model_and_llm_policy_checks`,
+`prompt_contract_checks`, `active_roadmap_modified`, `conductor_modified`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+### SCENARIO-INFRA-6377-1: V548 Active Boundary Is Four Tasks
+
+GIVEN V548 executed Exp6363 through Exp6366
+WHEN Exp6377 builds the terminal matrix
+THEN only those four tasks are counted as active V548 tasks
+AND Exp6367 through Exp6376 are recorded as proposal-only.
+
+### SCENARIO-INFRA-6377-2: Runtime And Transport Boundaries Stay Separate
+
+GIVEN Exp6365 is runtime-ready and Exp6366 is transport-null
+WHEN Exp6377 reconciles the two artifacts
+THEN complete GGUF execution is recorded separately from parse-valid output,
+source binding, and exact-checker calls.
+
+### SCENARIO-INFRA-6377-3: V549 Queue Contains Fourteen Ordered Tasks
+
+GIVEN the V549 roadmap declares Exp6377 through Exp6390
+WHEN Exp6377 validates IDs, deliverables, order, dependencies, and gates
+THEN any duplicate, missing, extra, unordered, malformed, or retired-upstream
+reference fails the corresponding structured check.
+
+### SCENARIO-INFRA-6377-4: Prompt And LLM Policy Contracts Are Rendered
+
+GIVEN roadmap prompts use `{project_root}` and `{date}` placeholders
+WHEN Exp6377 validates prompt contracts
+THEN it renders prompts with the conductor-compatible values and checks
+sections, run command, final prohibition, model IDs, embedded tokenizer rules,
+no-`AutoTokenizer` rules, and agent/model pairs.
+
+### SCENARIO-INFRA-6377-5: Artifact Is Annotated, Checksummed, And Non-Mutating
+
+GIVEN precondition hashes, summary receipts, queue checks, and command receipts
+are assembled
+WHEN Exp6377 writes the artifact
+THEN every required field and structured gate expression has a principle,
+every required field has provenance, protected files remain byte-identical,
+the checksum matches, `random_seed` is null, and `verifier_is_oracle` is false.
+
+## Implementation Status (REQ-INFRA-6377)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6377 | Implemented: `python/carnot/experiment_6377_v549_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json`. | Implemented: `tests/python/test_experiment_6377_v549_terminal_handoff_and_queue_preflight.py`. |
+
 ## REQ-INFRA-6365: GGUF Child Failure Forensics SHALL Preserve Runtime Diagnostics
 
 Carnot SHALL build Exp6365 as a reusable observable child-process contract for

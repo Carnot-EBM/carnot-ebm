@@ -1,0 +1,882 @@
+{
+  "active_roadmap_modified": false,
+  "conductor_modified": false,
+  "duration_s": 0.017283038935,
+  "exp6365_runtime_boundary": {
+    "all_child_contracts_ok": true,
+    "all_three_mandated_models_used": true,
+    "all_vram_rise_and_release_proved": true,
+    "artifact_path": "results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json",
+    "artifact_sha256": "sha256:ddcb05da7e9ea8fd9365810bdefa983bac9c72d0e7eb49a71ede59a5840d684c",
+    "boundary": "runtime_observability_only_no_factor_quality_claim",
+    "gguf_runtime_observability_ready_score": 1.0,
+    "honest_verdict": "complete: all three GGUF child-process runtime contracts passed",
+    "mandated_gguf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "models_used": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "proposal_quality_claimed": false,
+    "raw_outputs_nonempty": true,
+    "status": "complete"
+  },
+  "exp6366_transport_failure_boundary": {
+    "all_raw_outputs_nonempty_before_parse": true,
+    "artifact_path": "results/experiment_6366_repaired_live_factor_proposal_authenticity.json",
+    "artifact_sha256": "sha256:5f89dd1eebd87743eb883c0be57719ab32f388bf82c15fc5ad1b45c8edfc91fe",
+    "boundary": "live_generation_nonempty_but_no_parse_valid_factor_edits_or_exact_calls",
+    "exact_checker_call_count": 0,
+    "exact_pass_fail_totals": {
+      "total_exact_calls": 0,
+      "total_exact_fail": 0,
+      "total_exact_pass": 0
+    },
+    "hidden_state_access_count": 0,
+    "honest_verdict": "complete_null: repaired live calls ran but authenticity gates did not all pass",
+    "models_used": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "parse_invalid_count": 3,
+    "parse_valid_count": 0,
+    "protected_validation_leak_count": 0,
+    "repaired_live_factor_proposal_authenticity_ready_score": 0.0,
+    "source_model_weight_mutation_count": 0,
+    "status": "complete_null",
+    "total_raw_output_byte_count": 1991,
+    "total_raw_output_count": 3,
+    "transport_ready": false
+  },
+  "field_principles": {
+    "active_roadmap_modified": "The active roadmap must stay byte-identical during this run.",
+    "conductor_modified": "The conductor source must stay byte-identical during this run.",
+    "duration_s": "Wall time is measured without padding.",
+    "exp6365_runtime_boundary": "Complete GGUF runtime is not treated as factor transport success.",
+    "exp6366_transport_failure_boundary": "Raw nonempty outputs are not treated as parse-valid or exact-checked edits.",
+    "field_principles": "Every required field and structured gate expression has a reason.",
+    "field_provenance": "Every required field identifies its source kind.",
+    "gate:exp6380-three-family-canonical-factor-transport-canary:exp6379-canonical-factor-edit-transport-contract.canonical_factor_transport_contract_ready_score==1.0": "This structured gate expression must remain auditable.",
+    "gate:exp6381-verified-frontier-live-factor-proposal-ab:exp6380-three-family-canonical-factor-transport-canary.three_family_factor_transport_ready_score==1.0": "This structured gate expression must remain auditable.",
+    "gate:exp6382-chronological-verified-factor-self-learning:exp6381-verified-frontier-live-factor-proposal-ab.delta_verified_future_exact_yield>0.0": "This structured gate expression must remain auditable.",
+    "gate:exp6382-chronological-verified-factor-self-learning:exp6381-verified-frontier-live-factor-proposal-ab.verified_frontier_ready_score==1.0": "This structured gate expression must remain auditable.",
+    "gate:exp6384-default-off-certified-factor-consumer-ab:exp6382-chronological-verified-factor-self-learning.prospective_verified_factor_self_learning_ready_score==1.0": "This structured gate expression must remain auditable.",
+    "gate:exp6384-default-off-certified-factor-consumer-ab:exp6383-dependency-guided-factor-rollback-stress.dependency_guided_rollback_ready_score==1.0": "This structured gate expression must remain auditable.",
+    "gate:exp6387-arc-active-reward-machine-discriminator:exp6386-arc-two-sided-goal-evidence-contract.arc_two_sided_goal_contract_ready_score==1.0": "This structured gate expression must remain auditable.",
+    "gate:exp6388-arc-goal-evidence-response-calibration:exp6387-arc-active-reward-machine-discriminator.arc_active_reward_machine_ready_score==1.0": "This structured gate expression must remain auditable.",
+    "gate:exp6389-arc-default-off-active-goal-shadow:exp6388-arc-goal-evidence-response-calibration.arc_evidence_calibration_ready_score==1.0": "This structured gate expression must remain auditable.",
+    "gate:exp6389-arc-default-off-active-goal-shadow:exp6388-arc-goal-evidence-response-calibration.delta_admission_precision>0.0": "This structured gate expression must remain auditable.",
+    "gate:exp6389-arc-default-off-active-goal-shadow:exp6388-arc-goal-evidence-response-calibration.delta_false_accept_count<=0": "This structured gate expression must remain auditable.",
+    "honest_verdict": "The verdict uses a terminal prefix and names the queue boundary.",
+    "inference_substrate": "This task uses repository evidence with no model call.",
+    "preconditions_checked": "Input hashes and artifact classifications are frozen before field reads.",
+    "prompt_contract_checks": "Rendered prompts must contain the operational contract the agent receives.",
+    "protected_files_unchanged": "Protected hashes prove no handoff-side rewrite occurred.",
+    "random_seed": "No random sampling is used by this deterministic handoff.",
+    "reproducibility_checksum": "The normalized payload is content-addressed.",
+    "status": "The status states whether the V549 queue is activation-safe.",
+    "tests_run": "Verification commands and exit codes are recorded.",
+    "v548_active_roadmap_path_and_hash": "The prior V548 active queue hash is pinned from Exp6363 evidence.",
+    "v548_active_task_ids": "Only four active V548 tasks define the handoff denominator.",
+    "v548_blocked_null_clean_and_proposal_only_states": "Blocked, null, clean, and proposal-only states are not mixed.",
+    "v548_conductor_outcomes": "Conductor outcomes stay separate from artifact fields.",
+    "v548_terminal_artifacts_by_task": "Each V548 task keeps its exact artifact state.",
+    "v549_agent_model_and_llm_policy_checks": "Agent routing and local GGUF policy are checked.",
+    "v549_dependency_and_gate_checks": "Dependencies and structured gates must be ordered and valid.",
+    "v549_exclusion_manifest_checks": "Retired upstream references must fail before execution.",
+    "v549_gate_field_cross_reference_checks": "Gate fields must appear in upstream required artifact fields.",
+    "v549_id_and_deliverable_checks": "The queue must contain fourteen unique ordered IDs and result JSON deliverables.",
+    "v549_milestone_doc_and_queue_hashes": "The V549 proposal and queue sources are hash-pinned.",
+    "v549_prior_failure_checks": "Prior failures must name the changed mechanism and retirement rule.",
+    "v549_task_ids": "The audited V549 queue identity is explicit.",
+    "verifier_is_oracle": "The handoff reconciles records and is not a correctness oracle."
+  },
+  "field_provenance": {
+    "active_roadmap_modified": "measured",
+    "conductor_modified": "measured",
+    "duration_s": "measured",
+    "exp6365_runtime_boundary": "upstream",
+    "exp6366_transport_failure_boundary": "upstream",
+    "field_principles": "constant",
+    "field_provenance": "constant",
+    "honest_verdict": "derived",
+    "inference_substrate": "constant",
+    "preconditions_checked": "measured",
+    "prompt_contract_checks": "derived",
+    "protected_files_unchanged": "measured",
+    "random_seed": "constant",
+    "reproducibility_checksum": "derived",
+    "status": "derived",
+    "tests_run": "measured",
+    "v548_active_roadmap_path_and_hash": "upstream",
+    "v548_active_task_ids": "constant",
+    "v548_blocked_null_clean_and_proposal_only_states": "derived",
+    "v548_conductor_outcomes": "measured",
+    "v548_terminal_artifacts_by_task": "upstream",
+    "v549_agent_model_and_llm_policy_checks": "derived",
+    "v549_dependency_and_gate_checks": "derived",
+    "v549_exclusion_manifest_checks": "derived",
+    "v549_gate_field_cross_reference_checks": "derived",
+    "v549_id_and_deliverable_checks": "derived",
+    "v549_milestone_doc_and_queue_hashes": "measured",
+    "v549_prior_failure_checks": "derived",
+    "v549_task_ids": "upstream",
+    "verifier_is_oracle": "constant"
+  },
+  "honest_verdict": "complete_v549_queue_preflight_passed: V548 evidence is bounded and the fourteen-task V549 queue validates",
+  "inference_substrate": "deterministic_repository_evidence_handoff_no_llm",
+  "preconditions_checked": {
+    "active_roadmap_sha256": "sha256:7b403902a0794a3e2ce15a62694dbd20ae59b5811c5f90787e872e3c1123de7c",
+    "conductor_log_sha256": "sha256:cb4fe93125e48a34cade6997cd414b5e92e5993b145a6029babb12b82595588b",
+    "conductor_source_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+    "date": "20260813",
+    "exclusion_manifest_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+    "git_status_before": [
+      " M openspec/capabilities/research-harnesses/spec.md",
+      "?? python/carnot/experiment_6377_v549_terminal_handoff_and_queue_preflight.py",
+      "?? tests/python/test_experiment_6377_v549_terminal_handoff_and_queue_preflight.py"
+    ],
+    "milestone_doc_sha256": "sha256:dbd073112967801f3bb313524c1e13939abcc59702d6ac5dbc1695c46a643431",
+    "next_roadmap_present": false,
+    "next_roadmap_sha256": null,
+    "protected_hashes_before": {
+      "openspec/capabilities/research-harnesses/spec.md": "sha256:db9ac53b2c10c879d6229d84a20e3b2c0b15d30f3311508c942672f349d852fc",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:dbd073112967801f3bb313524c1e13939abcc59702d6ac5dbc1695c46a643431",
+      "ops/changelog.md": "sha256:0682f9be493d3e965497bdb1355958674d127107527203e8b8baa0b59f057ea2",
+      "ops/conductor-log.md": "sha256:cb4fe93125e48a34cade6997cd414b5e92e5993b145a6029babb12b82595588b",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "ops/known-issues.md": "sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "research-complete.yaml": "sha256:d388163c8c2636eb43dcb297d24c43fd30203d93f4cc1dedfd39edf06191c9cf",
+      "research-roadmap-next.yaml": null,
+      "research-roadmap.yaml": "sha256:7b403902a0794a3e2ce15a62694dbd20ae59b5811c5f90787e872e3c1123de7c",
+      "results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json": "sha256:8140a8aef62893713580001809ecdfadc77462b65962f85ef61e615dbcd334a4",
+      "results/experiment_6364_v548_post_marker_source_scope_freeze.json": "sha256:1374bc57589b6839ad0a8262368139dba67a7ab04c79e5fb091d6451f891366c",
+      "results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json": "sha256:ddcb05da7e9ea8fd9365810bdefa983bac9c72d0e7eb49a71ede59a5840d684c",
+      "results/experiment_6366_repaired_live_factor_proposal_authenticity.json": "sha256:5f89dd1eebd87743eb883c0be57719ab32f388bf82c15fc5ad1b45c8edfc91fe",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "v548_artifact_path_classifications": {
+      "exp6363-v548-terminal-handoff-and-queue-preflight": {
+        "classification": "blocked",
+        "conductor_receipt_status": null,
+        "honest_verdict_prefix": "blocked_v548_queue_incomplete",
+        "honest_verdict_raw": "blocked_v548_queue_incomplete: active V548 queue has 4 of 14 expected tasks",
+        "loadable": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json",
+        "present": true,
+        "reason": "status=blocked verdict=blocked",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "sha256": "sha256:8140a8aef62893713580001809ecdfadc77462b65962f85ef61e615dbcd334a4",
+        "status_class": "blocked",
+        "status_prefix": "blocked_v548_queue_incomplete",
+        "status_raw": "blocked_v548_queue_incomplete",
+        "terminal": true,
+        "verdict_class": "blocked"
+      },
+      "exp6364-v548-post-marker-source-scope-freeze": {
+        "classification": "complete",
+        "conductor_receipt_status": null,
+        "honest_verdict_prefix": "complete_no_scope_change",
+        "honest_verdict_raw": "complete_no_scope_change: no strict post-marker source changed V548 executable scope; verification caveat: 1 command(s) returned nonzero",
+        "loadable": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6364_v548_post_marker_source_scope_freeze.json",
+        "present": true,
+        "reason": "status=complete verdict=complete",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "sha256": "sha256:1374bc57589b6839ad0a8262368139dba67a7ab04c79e5fb091d6451f891366c",
+        "status_class": "complete",
+        "status_prefix": "complete_no_scope_change",
+        "status_raw": "complete_no_scope_change",
+        "terminal": true,
+        "verdict_class": "complete"
+      },
+      "exp6365-gguf-child-failure-forensics-runtime-contract": {
+        "classification": "complete",
+        "conductor_receipt_status": null,
+        "honest_verdict_prefix": "complete",
+        "honest_verdict_raw": "complete: all three GGUF child-process runtime contracts passed",
+        "loadable": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json",
+        "present": true,
+        "reason": "status=complete verdict=complete",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "sha256": "sha256:ddcb05da7e9ea8fd9365810bdefa983bac9c72d0e7eb49a71ede59a5840d684c",
+        "status_class": "complete",
+        "status_prefix": "complete",
+        "status_raw": "complete",
+        "terminal": true,
+        "verdict_class": "complete"
+      },
+      "exp6366-repaired-live-factor-proposal-authenticity": {
+        "classification": "null",
+        "conductor_receipt_status": null,
+        "honest_verdict_prefix": "complete_null",
+        "honest_verdict_raw": "complete_null: repaired live calls ran but authenticity gates did not all pass",
+        "loadable": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6366_repaired_live_factor_proposal_authenticity.json",
+        "present": true,
+        "reason": "status=null verdict=null",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "sha256": "sha256:5f89dd1eebd87743eb883c0be57719ab32f388bf82c15fc5ad1b45c8edfc91fe",
+        "status_class": "null",
+        "status_prefix": "complete_null",
+        "status_raw": "complete_null",
+        "terminal": true,
+        "verdict_class": "null"
+      }
+    }
+  },
+  "prompt_contract_checks": {
+    "checked_task_count": 14,
+    "failures": [],
+    "ok": true,
+    "raw_placeholder_contract_ok": true,
+    "raw_placeholder_failures": [],
+    "render_receipts": {
+      "exp6377-v549-terminal-handoff-and-queue-preflight": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6378-v549-post-marker-source-scope-freeze": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6379-canonical-factor-edit-transport-contract": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6380-three-family-canonical-factor-transport-canary": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6381-verified-frontier-live-factor-proposal-ab": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6382-chronological-verified-factor-self-learning": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6383-dependency-guided-factor-rollback-stress": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6384-default-off-certified-factor-consumer-ab": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6385-live-factor-learning-and-rollback-safety-audit": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6386-arc-two-sided-goal-evidence-contract": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6387-arc-active-reward-machine-discriminator": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6388-arc-goal-evidence-response-calibration": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6389-arc-default-off-active-goal-shadow": {
+        "error": null,
+        "format_ok": true
+      },
+      "exp6390-v549-adversarial-capstone": {
+        "error": null,
+        "format_ok": true
+      }
+    },
+    "rendered_prompt_count": 14
+  },
+  "protected_files_unchanged": {
+    "ok": true,
+    "rows": {
+      "openspec/capabilities/research-harnesses/spec.md": {
+        "after": "sha256:db9ac53b2c10c879d6229d84a20e3b2c0b15d30f3311508c942672f349d852fc",
+        "before": "sha256:db9ac53b2c10c879d6229d84a20e3b2c0b15d30f3311508c942672f349d852fc",
+        "unchanged": true
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "after": "sha256:dbd073112967801f3bb313524c1e13939abcc59702d6ac5dbc1695c46a643431",
+        "before": "sha256:dbd073112967801f3bb313524c1e13939abcc59702d6ac5dbc1695c46a643431",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "after": "sha256:0682f9be493d3e965497bdb1355958674d127107527203e8b8baa0b59f057ea2",
+        "before": "sha256:0682f9be493d3e965497bdb1355958674d127107527203e8b8baa0b59f057ea2",
+        "unchanged": true
+      },
+      "ops/conductor-log.md": {
+        "after": "sha256:cb4fe93125e48a34cade6997cd414b5e92e5993b145a6029babb12b82595588b",
+        "before": "sha256:cb4fe93125e48a34cade6997cd414b5e92e5993b145a6029babb12b82595588b",
+        "unchanged": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "after": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "before": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "unchanged": true
+      },
+      "ops/known-issues.md": {
+        "after": "sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895",
+        "before": "sha256:ddf50406f43fa7677cce8ba944b1dd59a13cb687f9f9530b1b1a8dabbd899895",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "unchanged": true
+      },
+      "research-complete.yaml": {
+        "after": "sha256:d388163c8c2636eb43dcb297d24c43fd30203d93f4cc1dedfd39edf06191c9cf",
+        "before": "sha256:d388163c8c2636eb43dcb297d24c43fd30203d93f4cc1dedfd39edf06191c9cf",
+        "unchanged": true
+      },
+      "research-roadmap-next.yaml": {
+        "after": null,
+        "before": null,
+        "unchanged": true
+      },
+      "research-roadmap.yaml": {
+        "after": "sha256:7b403902a0794a3e2ce15a62694dbd20ae59b5811c5f90787e872e3c1123de7c",
+        "before": "sha256:7b403902a0794a3e2ce15a62694dbd20ae59b5811c5f90787e872e3c1123de7c",
+        "unchanged": true
+      },
+      "results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json": {
+        "after": "sha256:8140a8aef62893713580001809ecdfadc77462b65962f85ef61e615dbcd334a4",
+        "before": "sha256:8140a8aef62893713580001809ecdfadc77462b65962f85ef61e615dbcd334a4",
+        "unchanged": true
+      },
+      "results/experiment_6364_v548_post_marker_source_scope_freeze.json": {
+        "after": "sha256:1374bc57589b6839ad0a8262368139dba67a7ab04c79e5fb091d6451f891366c",
+        "before": "sha256:1374bc57589b6839ad0a8262368139dba67a7ab04c79e5fb091d6451f891366c",
+        "unchanged": true
+      },
+      "results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json": {
+        "after": "sha256:ddcb05da7e9ea8fd9365810bdefa983bac9c72d0e7eb49a71ede59a5840d684c",
+        "before": "sha256:ddcb05da7e9ea8fd9365810bdefa983bac9c72d0e7eb49a71ede59a5840d684c",
+        "unchanged": true
+      },
+      "results/experiment_6366_repaired_live_factor_proposal_authenticity.json": {
+        "after": "sha256:5f89dd1eebd87743eb883c0be57719ab32f388bf82c15fc5ad1b45c8edfc91fe",
+        "before": "sha256:5f89dd1eebd87743eb883c0be57719ab32f388bf82c15fc5ad1b45c8edfc91fe",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "before": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "unchanged": true
+      }
+    }
+  },
+  "random_seed": null,
+  "reproducibility_checksum": "sha256:3b65301b40ab66446c2d4718615685633610ef33a1a3d50e1b7e46e1b054988c",
+  "status": "complete_v549_queue_preflight_passed",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6377_v549_terminal_handoff_and_queue_preflight.py -q --no-cov -n 0",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6377_v549_terminal_handoff_and_queue_preflight.py -m pytest tests/python/test_experiment_6377_v549_terminal_handoff_and_queue_preflight.py -q --no-cov -n 0",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6377_v549_terminal_handoff_and_queue_preflight.py --fail-under=100 --show-missing",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6377_v549_terminal_handoff_and_queue_preflight.py",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/python -c 'import yaml; from pathlib import Path; from scripts.roadmap_schema import Roadmap; Roadmap.model_validate(yaml.safe_load(Path(\"research-roadmap.yaml\").read_text()))'",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/python scripts/determination_preservation_lint.py",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/python scripts/root_clutter_sweep.py",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": null,
+      "source": "declared"
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6377_v549_terminal_handoff_and_queue_preflight --date 20260813",
+      "exit_code": null,
+      "source": "declared"
+    }
+  ],
+  "v548_active_roadmap_path_and_hash": {
+    "boundary_note": "The V548 active roadmap has been consumed; Exp6363 supplies the V548 active hash.",
+    "current_active_roadmap": {
+      "milestone": "2026.08.549",
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:7b403902a0794a3e2ce15a62694dbd20ae59b5811c5f90787e872e3c1123de7c"
+    },
+    "milestone_at_exp6363": "2026.08.548",
+    "path": "research-roadmap.yaml",
+    "same_as_current_active": false,
+    "sha256_at_exp6363": "sha256:b5dad711c2ae278c100f5805b18f3b4416c52e3d0337bb4a8a616b87026d179e",
+    "source": "results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json"
+  },
+  "v548_active_task_ids": [
+    "exp6363-v548-terminal-handoff-and-queue-preflight",
+    "exp6364-v548-post-marker-source-scope-freeze",
+    "exp6365-gguf-child-failure-forensics-runtime-contract",
+    "exp6366-repaired-live-factor-proposal-authenticity"
+  ],
+  "v548_blocked_null_clean_and_proposal_only_states": {
+    "blocked": [
+      "exp6363-v548-terminal-handoff-and-queue-preflight"
+    ],
+    "clean": [
+      "exp6364-v548-post-marker-source-scope-freeze",
+      "exp6365-gguf-child-failure-forensics-runtime-contract"
+    ],
+    "counts": {
+      "blocked": 1,
+      "clean": 2,
+      "missing_active": 0,
+      "null": 1,
+      "proposal_only": 10
+    },
+    "missing_active": [],
+    "null": [
+      "exp6366-repaired-live-factor-proposal-authenticity"
+    ],
+    "proposal_only": {
+      "counted_as_blocked": false,
+      "counted_as_executed": false,
+      "counted_as_missing": false,
+      "executed_count": 0,
+      "reason": "These identities were proposal-only V548 scope and did not enter the active queue.",
+      "task_ids": [
+        "exp6367-verified-frontier-factor-proposal-ab",
+        "exp6368-prospective-verified-frontier-factor-learning",
+        "exp6369-dependency-guided-factor-rollback-stress",
+        "exp6370-default-off-certified-factor-consumer-ab",
+        "exp6371-live-learning-consumer-and-rollback-audit",
+        "exp6372-arc-two-sided-goal-evidence-contract",
+        "exp6373-arc-active-reward-machine-discriminator",
+        "exp6374-arc-goal-evidence-response-calibration",
+        "exp6375-arc-default-off-active-goal-shadow",
+        "exp6376-v548-adversarial-capstone"
+      ]
+    }
+  },
+  "v548_conductor_outcomes": {
+    "exp6363-v548-terminal-handoff-and-queue-preflight": {
+      "FAIL": 1,
+      "OK": 1,
+      "attempt_count": 2,
+      "rows": [
+        {
+          "line": 16243,
+          "message": "Codex CLI error: Hard wall-clock cap after 4800s. Last output: nd_receipts\"]",
+          "raw": "| 2026-08-13 02:19 UTC | V547 terminal evidence handoff and V548 queue pref | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: nd_receipts\"]  |",
+          "status": "FAIL",
+          "timestamp_utc": "2026-08-13 02:19 UTC",
+          "title_truncated": "V547 terminal evidence handoff and V548 queue pref"
+        },
+        {
+          "line": 16244,
+          "message": "cache hit: 88 passed, 1 warning in 77.16s (0:01:17)",
+          "raw": "| 2026-08-13 02:40 UTC | V547 terminal evidence handoff and V548 queue pref | OK | cache hit: 88 passed, 1 warning in 77.16s (0:01:17) |",
+          "status": "OK",
+          "timestamp_utc": "2026-08-13 02:40 UTC",
+          "title_truncated": "V547 terminal evidence handoff and V548 queue pref"
+        }
+      ]
+    },
+    "exp6364-v548-post-marker-source-scope-freeze": {
+      "OK": 1,
+      "attempt_count": 1,
+      "rows": [
+        {
+          "line": 16245,
+          "message": "87 passed, 1 warning in 8.34s",
+          "raw": "| 2026-08-13 03:08 UTC | V548 dated source delta and three-lane scope freez | OK | 87 passed, 1 warning in 8.34s |",
+          "status": "OK",
+          "timestamp_utc": "2026-08-13 03:08 UTC",
+          "title_truncated": "V548 dated source delta and three-lane scope freez"
+        }
+      ]
+    },
+    "exp6365-gguf-child-failure-forensics-runtime-contract": {
+      "OK": 1,
+      "attempt_count": 1,
+      "rows": [
+        {
+          "line": 16246,
+          "message": "88 passed, 1 warning in 10.31s",
+          "raw": "| 2026-08-13 03:34 UTC | Three-model GGUF child failure forensics and obser | OK | 88 passed, 1 warning in 10.31s |",
+          "status": "OK",
+          "timestamp_utc": "2026-08-13 03:34 UTC",
+          "title_truncated": "Three-model GGUF child failure forensics and obser"
+        }
+      ]
+    },
+    "exp6366-repaired-live-factor-proposal-authenticity": {
+      "OK": 1,
+      "attempt_count": 1,
+      "rows": [
+        {
+          "line": 16247,
+          "message": "89 passed, 1 warning in 8.60s",
+          "raw": "| 2026-08-13 03:57 UTC | Gated repaired three-model live factor proposal au | OK | 89 passed, 1 warning in 8.60s |",
+          "status": "OK",
+          "timestamp_utc": "2026-08-13 03:57 UTC",
+          "title_truncated": "Gated repaired three-model live factor proposal au"
+        }
+      ]
+    }
+  },
+  "v548_terminal_artifacts_by_task": {
+    "exp6363-v548-terminal-handoff-and-queue-preflight": {
+      "conductor_receipt": {
+        "FAIL": 1,
+        "OK": 1,
+        "attempt_count": 2,
+        "rows": [
+          {
+            "line": 16243,
+            "message": "Codex CLI error: Hard wall-clock cap after 4800s. Last output: nd_receipts\"]",
+            "raw": "| 2026-08-13 02:19 UTC | V547 terminal evidence handoff and V548 queue pref | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: nd_receipts\"]  |",
+            "status": "FAIL",
+            "timestamp_utc": "2026-08-13 02:19 UTC",
+            "title_truncated": "V547 terminal evidence handoff and V548 queue pref"
+          },
+          {
+            "line": 16244,
+            "message": "cache hit: 88 passed, 1 warning in 77.16s (0:01:17)",
+            "raw": "| 2026-08-13 02:40 UTC | V547 terminal evidence handoff and V548 queue pref | OK | cache hit: 88 passed, 1 warning in 77.16s (0:01:17) |",
+            "status": "OK",
+            "timestamp_utc": "2026-08-13 02:40 UTC",
+            "title_truncated": "V547 terminal evidence handoff and V548 queue pref"
+          }
+        ]
+      },
+      "corrigendum_pending": null,
+      "declared_deliverable": "results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json",
+      "honest_verdict_raw": "blocked_v548_queue_incomplete: active V548 queue has 4 of 14 expected tasks",
+      "loadable": true,
+      "present": true,
+      "reason": "status=blocked verdict=blocked",
+      "sha256": "sha256:8140a8aef62893713580001809ecdfadc77462b65962f85ef61e615dbcd334a4",
+      "stamped_flagged_adversarial": null,
+      "status_raw": "blocked_v548_queue_incomplete",
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json",
+        "exit_code": 0,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:26724fd6fe3a8e197d4be2607180750bc0456907655c52a2a9a909ba839f2d9e"
+      },
+      "task_id": "exp6363-v548-terminal-handoff-and-queue-preflight",
+      "terminal": true,
+      "terminal_class": "blocked"
+    },
+    "exp6364-v548-post-marker-source-scope-freeze": {
+      "conductor_receipt": {
+        "OK": 1,
+        "attempt_count": 1,
+        "rows": [
+          {
+            "line": 16245,
+            "message": "87 passed, 1 warning in 8.34s",
+            "raw": "| 2026-08-13 03:08 UTC | V548 dated source delta and three-lane scope freez | OK | 87 passed, 1 warning in 8.34s |",
+            "status": "OK",
+            "timestamp_utc": "2026-08-13 03:08 UTC",
+            "title_truncated": "V548 dated source delta and three-lane scope freez"
+          }
+        ]
+      },
+      "corrigendum_pending": null,
+      "declared_deliverable": "results/experiment_6364_v548_post_marker_source_scope_freeze.json",
+      "honest_verdict_raw": "complete_no_scope_change: no strict post-marker source changed V548 executable scope; verification caveat: 1 command(s) returned nonzero",
+      "loadable": true,
+      "present": true,
+      "reason": "status=complete verdict=complete",
+      "sha256": "sha256:1374bc57589b6839ad0a8262368139dba67a7ab04c79e5fb091d6451f891366c",
+      "stamped_flagged_adversarial": null,
+      "status_raw": "complete_no_scope_change",
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6364_v548_post_marker_source_scope_freeze.json",
+        "exit_code": 0,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:ec8a7ccd6cc11e7c3ed64f3c46dee8f00efa96659bc188f90f5ab1928f9ae064"
+      },
+      "task_id": "exp6364-v548-post-marker-source-scope-freeze",
+      "terminal": true,
+      "terminal_class": "complete"
+    },
+    "exp6365-gguf-child-failure-forensics-runtime-contract": {
+      "conductor_receipt": {
+        "OK": 1,
+        "attempt_count": 1,
+        "rows": [
+          {
+            "line": 16246,
+            "message": "88 passed, 1 warning in 10.31s",
+            "raw": "| 2026-08-13 03:34 UTC | Three-model GGUF child failure forensics and obser | OK | 88 passed, 1 warning in 10.31s |",
+            "status": "OK",
+            "timestamp_utc": "2026-08-13 03:34 UTC",
+            "title_truncated": "Three-model GGUF child failure forensics and obser"
+          }
+        ]
+      },
+      "corrigendum_pending": null,
+      "declared_deliverable": "results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json",
+      "honest_verdict_raw": "complete: all three GGUF child-process runtime contracts passed",
+      "loadable": true,
+      "present": true,
+      "reason": "status=complete verdict=complete",
+      "sha256": "sha256:ddcb05da7e9ea8fd9365810bdefa983bac9c72d0e7eb49a71ede59a5840d684c",
+      "stamped_flagged_adversarial": null,
+      "status_raw": "complete",
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json",
+        "exit_code": 0,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:3bcdfa5a16c83c8690c2445d0e05d1273d28533f5dec8a2aa0a2e383d7ec5ddd"
+      },
+      "task_id": "exp6365-gguf-child-failure-forensics-runtime-contract",
+      "terminal": true,
+      "terminal_class": "complete"
+    },
+    "exp6366-repaired-live-factor-proposal-authenticity": {
+      "conductor_receipt": {
+        "OK": 1,
+        "attempt_count": 1,
+        "rows": [
+          {
+            "line": 16247,
+            "message": "89 passed, 1 warning in 8.60s",
+            "raw": "| 2026-08-13 03:57 UTC | Gated repaired three-model live factor proposal au | OK | 89 passed, 1 warning in 8.60s |",
+            "status": "OK",
+            "timestamp_utc": "2026-08-13 03:57 UTC",
+            "title_truncated": "Gated repaired three-model live factor proposal au"
+          }
+        ]
+      },
+      "corrigendum_pending": null,
+      "declared_deliverable": "results/experiment_6366_repaired_live_factor_proposal_authenticity.json",
+      "honest_verdict_raw": "complete_null: repaired live calls ran but authenticity gates did not all pass",
+      "loadable": true,
+      "present": true,
+      "reason": "status=null verdict=null",
+      "sha256": "sha256:5f89dd1eebd87743eb883c0be57719ab32f388bf82c15fc5ad1b45c8edfc91fe",
+      "stamped_flagged_adversarial": null,
+      "status_raw": "complete_null",
+      "summary_receipt": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6366_repaired_live_factor_proposal_authenticity.json",
+        "exit_code": 0,
+        "invoked_before_field_import": true,
+        "live_adversarial_findings": [],
+        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "stdout_sha256": "sha256:fa3da51d5683bcd59c5aa1ba4f4364e7f7791a149d188b2797a39a8aea848f9a"
+      },
+      "task_id": "exp6366-repaired-live-factor-proposal-authenticity",
+      "terminal": true,
+      "terminal_class": "null"
+    }
+  },
+  "v549_agent_model_and_llm_policy_checks": {
+    "llm_task_ids": [
+      "exp6379-canonical-factor-edit-transport-contract",
+      "exp6380-three-family-canonical-factor-transport-canary",
+      "exp6381-verified-frontier-live-factor-proposal-ab",
+      "exp6382-chronological-verified-factor-self-learning",
+      "exp6384-default-off-certified-factor-consumer-ab",
+      "exp6388-arc-goal-evidence-response-calibration",
+      "exp6389-arc-default-off-active-goal-shadow"
+    ],
+    "mandated_gguf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "model_policy_failures": [],
+    "ok": true,
+    "route_failures": []
+  },
+  "v549_dependency_and_gate_checks": {
+    "dependency_failures": [],
+    "gate_count": 11,
+    "gate_failures": [],
+    "ok": true,
+    "structured_gate_expressions": [
+      "gate:exp6380-three-family-canonical-factor-transport-canary:exp6379-canonical-factor-edit-transport-contract.canonical_factor_transport_contract_ready_score==1.0",
+      "gate:exp6381-verified-frontier-live-factor-proposal-ab:exp6380-three-family-canonical-factor-transport-canary.three_family_factor_transport_ready_score==1.0",
+      "gate:exp6382-chronological-verified-factor-self-learning:exp6381-verified-frontier-live-factor-proposal-ab.verified_frontier_ready_score==1.0",
+      "gate:exp6382-chronological-verified-factor-self-learning:exp6381-verified-frontier-live-factor-proposal-ab.delta_verified_future_exact_yield>0.0",
+      "gate:exp6384-default-off-certified-factor-consumer-ab:exp6382-chronological-verified-factor-self-learning.prospective_verified_factor_self_learning_ready_score==1.0",
+      "gate:exp6384-default-off-certified-factor-consumer-ab:exp6383-dependency-guided-factor-rollback-stress.dependency_guided_rollback_ready_score==1.0",
+      "gate:exp6387-arc-active-reward-machine-discriminator:exp6386-arc-two-sided-goal-evidence-contract.arc_two_sided_goal_contract_ready_score==1.0",
+      "gate:exp6388-arc-goal-evidence-response-calibration:exp6387-arc-active-reward-machine-discriminator.arc_active_reward_machine_ready_score==1.0",
+      "gate:exp6389-arc-default-off-active-goal-shadow:exp6388-arc-goal-evidence-response-calibration.arc_evidence_calibration_ready_score==1.0",
+      "gate:exp6389-arc-default-off-active-goal-shadow:exp6388-arc-goal-evidence-response-calibration.delta_admission_precision>0.0",
+      "gate:exp6389-arc-default-off-active-goal-shadow:exp6388-arc-goal-evidence-response-calibration.delta_false_accept_count<=0"
+    ]
+  },
+  "v549_exclusion_manifest_checks": {
+    "hard_risk_count": 0,
+    "ok": true,
+    "retired_upstream_references": [],
+    "risk_count": 0,
+    "risks": []
+  },
+  "v549_gate_field_cross_reference_checks": {
+    "checked_gate_count": 11,
+    "failures": [],
+    "ok": true
+  },
+  "v549_id_and_deliverable_checks": {
+    "deliverable_failures": [],
+    "duplicate_deliverables": [],
+    "duplicate_task_ids": [],
+    "execution_order_ok": true,
+    "expected_task_count": 14,
+    "expected_task_ids": [
+      "exp6377-v549-terminal-handoff-and-queue-preflight",
+      "exp6378-v549-post-marker-source-scope-freeze",
+      "exp6379-canonical-factor-edit-transport-contract",
+      "exp6380-three-family-canonical-factor-transport-canary",
+      "exp6381-verified-frontier-live-factor-proposal-ab",
+      "exp6382-chronological-verified-factor-self-learning",
+      "exp6383-dependency-guided-factor-rollback-stress",
+      "exp6384-default-off-certified-factor-consumer-ab",
+      "exp6385-live-factor-learning-and-rollback-safety-audit",
+      "exp6386-arc-two-sided-goal-evidence-contract",
+      "exp6387-arc-active-reward-machine-discriminator",
+      "exp6388-arc-goal-evidence-response-calibration",
+      "exp6389-arc-default-off-active-goal-shadow",
+      "exp6390-v549-adversarial-capstone"
+    ],
+    "extra_task_ids": [],
+    "missing_expected_task_ids": [],
+    "ok": true,
+    "task_count": 14,
+    "unique_deliverables": true
+  },
+  "v549_milestone_doc_and_queue_hashes": {
+    "active_roadmap": {
+      "milestone": "2026.08.549",
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "sha256": "sha256:7b403902a0794a3e2ce15a62694dbd20ae59b5811c5f90787e872e3c1123de7c"
+    },
+    "audited_queue": {
+      "milestone": "2026.08.549",
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "selection_note": "research-roadmap-next.yaml absent; active research-roadmap.yaml audited",
+      "sha256": "sha256:7b403902a0794a3e2ce15a62694dbd20ae59b5811c5f90787e872e3c1123de7c"
+    },
+    "conductor_log": {
+      "path": "ops/conductor-log.md",
+      "present": true,
+      "sha256": "sha256:cb4fe93125e48a34cade6997cd414b5e92e5993b145a6029babb12b82595588b"
+    },
+    "conductor_source": {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "exclusion_manifest": {
+      "path": "ops/exclusion_manifest.yaml",
+      "present": true,
+      "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+    },
+    "milestone_doc": {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "sha256": "sha256:dbd073112967801f3bb313524c1e13939abcc59702d6ac5dbc1695c46a643431"
+    },
+    "requested_next_roadmap": {
+      "path": "research-roadmap-next.yaml",
+      "present": false,
+      "sha256": null
+    }
+  },
+  "v549_prior_failure_checks": {
+    "failures": [],
+    "gate_audit_passed": true,
+    "gate_audit_prior_missing": 0,
+    "ok": true,
+    "prior_entry_count": 15,
+    "validate_prior_failures": {
+      "prior_failure_violations": [],
+      "schema_errors": []
+    }
+  },
+  "v549_task_ids": [
+    "exp6377-v549-terminal-handoff-and-queue-preflight",
+    "exp6378-v549-post-marker-source-scope-freeze",
+    "exp6379-canonical-factor-edit-transport-contract",
+    "exp6380-three-family-canonical-factor-transport-canary",
+    "exp6381-verified-frontier-live-factor-proposal-ab",
+    "exp6382-chronological-verified-factor-self-learning",
+    "exp6383-dependency-guided-factor-rollback-stress",
+    "exp6384-default-off-certified-factor-consumer-ab",
+    "exp6385-live-factor-learning-and-rollback-safety-audit",
+    "exp6386-arc-two-sided-goal-evidence-contract",
+    "exp6387-arc-active-reward-machine-discriminator",
+    "exp6388-arc-goal-evidence-response-calibration",
+    "exp6389-arc-default-off-active-goal-shadow",
+    "exp6390-v549-adversarial-capstone"
+  ],
+  "verifier_is_oracle": false
+}
