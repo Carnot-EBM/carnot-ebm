@@ -158,6 +158,37 @@ _DETERMINATION_TOKENS = (
 )
 
 
+def determination_damage(head: dict, cur: dict) -> dict:
+    """Determination keys present-and-truthy in HEAD that the working tree has lost.
+
+    Extracted as a PURE function 2026-08-13 so the rule can be tested without a git
+    fixture. `_restore_dropped_determinations` handles the plumbing; this is the decision.
+
+    TWO DAMAGE SHAPES, not one. The original inline test was `k not in cur`, which catches
+    only a DELETED key. The 2026-08-12 incident was the other shape: `flagged_adversarial`
+    was still PRESENT and set to None, so the test was False and nothing was restored on the
+    exact case the helper exists for. Five artifacts reached the index with their quarantine
+    lifted. A determination is meaningful only when TRUTHY -- False and None both re-admit an
+    artifact to headline aggregation -- so truthy-in-HEAD and falsy-or-absent-now is damage.
+
+    THE DELIBERATE-CLEAR CARVE-OUT. determination_preservation_lint documents clearing as:
+    set the value falsy AND add a `*_cleared_note` saying what was re-verified. Restoring over
+    that would make an auditable decision impossible to express, so a present `*_cleared_note`
+    means hands off.
+    """
+    out: dict = {}
+    for k, v in head.items():
+        if not any(t in k for t in _DETERMINATION_TOKENS):
+            continue
+        if not v:
+            continue  # nothing meaningful in HEAD to protect
+        if f"{k}_cleared_note" in cur:
+            continue  # cleared through the sanctioned, auditable route
+        if not cur.get(k):
+            out[k] = v
+    return out
+
+
 def _restore_dropped_determinations() -> None:
     """Re-add fabrication-gate determinations a TEST RUN stripped, before `git add -A` commits it.
 
@@ -209,38 +240,7 @@ def _restore_dropped_determinations() -> None:
                 cur = _json.loads(path.read_text())
                 if not isinstance(head, dict) or not isinstance(cur, dict):
                     continue
-                # RESTORE TWO DAMAGE SHAPES, not one (widened 2026-08-13).
-                #
-                # The original test was `k not in cur`, which only catches a DELETED key. The
-                # 2026-08-12 incident was the other shape: `flagged_adversarial` was still
-                # PRESENT and had been set to None, so `k not in cur` was False and this helper
-                # restored nothing on the very case it exists for. Five artifacts reached the
-                # index with their quarantine lifted; only determination-preservation-lint
-                # refusing a HUMAN commit caught it, and that lint never runs here because the
-                # conductor commits --no-verify.
-                #
-                # A determination is meaningful only when TRUTHY: `flagged_adversarial: False`
-                # and `flagged_adversarial: None` both re-admit a quarantined artifact to
-                # headline aggregation. So a truthy value in HEAD that is falsy or absent now is
-                # damage, and is restored.
-                #
-                # STILL STRICTLY ADDITIVE, so it cannot lose a legitimate edit: a deliberate
-                # clear is expressed as a falsy value PLUS a `*_cleared_note` (the documented
-                # route in determination_preservation_lint's docstring), and that note is itself
-                # a determination token, so a cleared artifact carries a key HEAD lacks and is
-                # left alone.
-                def _damaged(key: str, head_val: object) -> bool:
-                    if not head_val:
-                        return False  # nothing meaningful in HEAD to protect
-                    if f"{key}_cleared_note" in cur:
-                        return False  # deliberately cleared through the sanctioned route
-                    return not cur.get(key)
-
-                missing = {
-                    k: v
-                    for k, v in head.items()
-                    if any(t in k for t in _DETERMINATION_TOKENS) and _damaged(k, v)
-                }
+                missing = determination_damage(head, cur)
                 if not missing:
                     continue
                 cur.update(missing)

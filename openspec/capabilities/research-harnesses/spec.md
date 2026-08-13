@@ -4756,3 +4756,42 @@ bare zero forbidden claim counts, and no historical result byte rewritten.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-INFRA-6210 | Pending implementation: `python/carnot/experiment_6210_v537_adversarial_capstone.py`; terminal artifact `results/experiment_6210_v537_adversarial_capstone.json`. | Pending focused tests: `tests/python/test_experiment_6210_v537_adversarial_capstone.py`. |
+
+### REQ-OPS-DETERMINATION-RESTORE-6260: The Conductor's Determination Restore Covers Downgrade, Not Only Deletion
+
+**Origin:** 2026-08-12 incident, root-caused 2026-08-13. Five artifacts reached the git index
+with `flagged_adversarial` changed `True -> None`, lifting their quarantine.
+`_restore_dropped_determinations` already existed and already ran before every conductor
+`git add -A`, and restored nothing, because its test was `k not in cur` -- False when the key
+is PRESENT and merely nulled. The guard ran and was SILENT NON-FIRING on the exact case it
+was written for. Caught only because `determination-preservation-lint` refused a separate
+human commit; that lint never runs on conductor commits, which use `--no-verify` deliberately
+for the anti-stash-loss reasons documented in `git_commit_and_push`.
+
+`research_conductor.determination_damage(head, cur)` SHALL return every determination-token
+key that is present-and-TRUTHY in HEAD and is falsy or absent in the working tree. A
+determination is meaningful only when truthy, because `False` and `None` both re-admit a
+quarantined artifact to headline aggregation.
+
+The repair SHALL remain strictly additive: it only ever copies a lost determination back, so
+it cannot discard a legitimate edit or a re-run's fresh numbers.
+
+A DELIBERATE clear SHALL be preserved. `determination_preservation_lint` documents clearing
+as setting the value falsy AND adding a `*_cleared_note` recording what was re-verified; when
+that note is present the key SHALL be left alone, so an auditable decision stays expressible.
+
+#### SCENARIO-OPS-DETERMINATION-RESTORE-6260-DOWNGRADE-TO-NULL-IS-DAMAGE
+
+Given HEAD holds `flagged_adversarial: True` and the working tree holds
+`flagged_adversarial: None`, the key SHALL be reported as damage and restored.
+
+#### SCENARIO-OPS-DETERMINATION-RESTORE-6260-DELIBERATE-CLEAR-SURVIVES
+
+Given the working tree holds a falsy determination AND a matching `*_cleared_note`, the key
+SHALL NOT be restored.
+
+## Implementation Status (REQ-OPS-DETERMINATION-RESTORE-6260)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-OPS-DETERMINATION-RESTORE-6260 | `scripts/research_conductor.py:determination_damage` (pure decision rule) consumed by `_restore_dropped_determinations`. | `tests/python/test_conductor_determination_restore_downgrade_20260813.py` (8/8: both damage shapes, deliberate-clear carve-out, falsy-in-HEAD, non-determination keys, fresh measurements alongside a lost determination). |
