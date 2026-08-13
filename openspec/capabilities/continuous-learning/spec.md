@@ -2938,6 +2938,158 @@ protected file changed, or a recorded test fails
 | SCENARIO-LEARN-6406-LEDGER | Planned: `python/carnot/experiment_6406_clean_v550_factor_evidence_boundary.py`. | Planned: `tests/python/test_experiment_6406_clean_v550_factor_evidence_boundary.py`. |
 | SCENARIO-LEARN-6406-READY | Planned: `python/carnot/experiment_6406_clean_v550_factor_evidence_boundary.py`. | Planned: `tests/python/test_experiment_6406_clean_v550_factor_evidence_boundary.py`. |
 
+## REQ-LEARN-6407: Provenance-Linked Tiered Factor Memory Protocol
+
+**Given** the V550 factor head, release ledger, lifecycle code, exact checkers,
+licenses, and protected artifacts may drift
+**When** Exp6407 runs on planning date 20260813
+**Then** it SHALL write
+`results/experiment_6407_provenance_tiered_factor_memory_protocol.json`
+**And** it SHALL freeze a research-only two-tier factor memory protocol without
+invoking an LLM, measuring learning utility, or giving authority to the
+compiled cache.
+
+Exp6407 SHALL hash the V550 factor-head schema, release ledger, lifecycle code,
+exact checkers, license records, upstream artifacts, sidecars, and protected
+files before building any memory row. Missing hashes SHALL fail closed.
+
+Exp6407 SHALL define an append-only raw record schema with event hash, source
+spans, model and harness identity, license key, exact checker version, release
+outcome, predecessor, disposition, timestamps, expiry, supersession, and
+transaction receipt. Each raw row SHALL have a canonical row hash.
+
+Exp6407 SHALL define a compiled typed graph with factor, evidence, model,
+constraint-family, checker, license, predecessor, expiry, and supersession
+node or edge types. Each compiled row SHALL include at least one raw row hash.
+The compiled graph is a cache. It SHALL fail closed to the raw tier on any
+missing or conflicting provenance.
+
+Exp6407 SHALL compute exact affected-neighborhood receipts for additions,
+revocations, expiry, and supersession. Local replay over the affected
+neighborhood SHALL match full replay on deterministic fixtures.
+
+Exp6407 SHALL define raw-tier escalation for missing provenance, implicit
+support, graph/cache disagreement, stale summaries, expired licenses,
+unresolved supersession, and checker drift. Each escalation condition SHALL
+have a deterministic test receipt.
+
+Exp6407 SHALL freeze at least 48 controlled candidate events across supported,
+contradicted, implicit, stale, duplicated, replayed, superseded, poisoned, and
+clean-negative classes. Calibration, acquisition, retention, and future
+partitions SHALL be sealed.
+
+Exp6407 SHALL expose diagnostic admission features for utility, exact
+confidence, novelty, recency, and content type. These features are
+interpretable diagnostics only. No weighted diagnostic score SHALL override an
+exact veto.
+
+Exp6407 SHALL attack orphan summaries, forged raw links, cycle creation,
+neighborhood underreach, neighborhood overreach, stale heads, partial atomic
+writes, duplicate effects, expiry removal, and cache resurrection after
+restart. Each attack SHALL fail closed to raw-tier escalation, quarantine, or
+rejection.
+
+Exp6407 SHALL set
+`provenance_tiered_memory_protocol_ready_score=1.0` only when all compiled rows
+trace to immutable raw evidence, local and full replay agree, every attack
+fails closed, partitions are sealed, protected files stay unchanged, all tests
+pass, `compiled_cache_authority_claimed=false`, and
+`learning_utility_claimed=false`.
+
+Exp6407 SHALL emit these fields:
+
+- `status`
+- `upstream_factor_head_release_ledger_lifecycle_checker_and_license_hashes`
+- `raw_record_schema_path_hash_and_required_fields`
+- `compiled_typed_graph_schema_path_hash_node_and_edge_types`
+- `raw_to_compiled_provenance_link_receipts`
+- `affected_neighborhood_equations_and_receipts`
+- `local_vs_full_replay_equivalence_results`
+- `raw_tier_escalation_rules_and_tests`
+- `contamination_manifest_path_hash_counts_classes_and_partition_seals`
+- `diagnostic_admission_feature_contract`
+- `exact_veto_override_count`
+- `supported_contradicted_implicit_stale_duplicate_replay_supersession_poison_and_negative_fixture_results`
+- `orphan_forgery_cycle_neighborhood_head_atomic_duplicate_expiry_and_restart_attack_matrix`
+- `compiled_cache_authority_claimed`
+- `learning_utility_claimed`
+- `provenance_tiered_memory_protocol_ready_score`
+- `protected_files_unchanged`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+## SCENARIO-LEARN-6407-RAW-COMPILED: Every Cache Row Links To Raw Evidence
+
+**Given** append-only raw rows and a compiled graph cache
+**When** Exp6407 compiles factors, evidence, models, checkers, licenses,
+predecessors, expiry edges, and supersession edges
+**Then** each compiled row SHALL include raw row hashes that exist in the raw
+ledger
+**And** any missing or forged raw hash SHALL escalate to the raw tier.
+
+## SCENARIO-LEARN-6407-REPLAY: Local Replay Matches Full Replay
+
+**Given** additions, revocations, expiry, and supersession events
+**When** Exp6407 replays the affected typed neighborhood
+**Then** the local replay receipt SHALL match full replay exactly
+**And** underreach or overreach SHALL fail closed.
+
+## SCENARIO-LEARN-6407-ESCALATION: Raw Tier Handles Ambiguity
+
+**Given** missing provenance, implicit support, graph disagreement, stale
+summary, expired license, unresolved supersession, or checker drift
+**When** Exp6407 checks the compiled cache
+**Then** the decision SHALL escalate to raw evidence
+**And** no compiled summary SHALL authorize a commit.
+
+## SCENARIO-LEARN-6407-CONTAMINATION: Controlled Fixtures Are Sealed
+
+**Given** at least 48 candidate events across supported, contradicted,
+implicit, stale, duplicate, replay, supersession, poison, and clean-negative
+classes
+**When** Exp6407 builds the contamination protocol
+**Then** the class counts and calibration, acquisition, retention, and future
+partition seals SHALL be recorded
+**And** diagnostic admission features SHALL not override an exact veto.
+
+## SCENARIO-LEARN-6407-ATTACKS: Cache Attacks Fail Closed
+
+**Given** orphan summary, forged raw link, cycle creation, neighborhood
+underreach, neighborhood overreach, stale head, partial atomic write, duplicate
+effect, expiry removal, or restart resurrection attack
+**When** Exp6407 evaluates the attack matrix
+**Then** every attack SHALL fail closed
+**And** no attack SHALL claim cache authority or learning utility.
+
+## SCENARIO-LEARN-6407-READY: Readiness Is Fully Conjunctive
+
+**Given** any compiled row lacks raw evidence, local and full replay differ,
+an escalation condition is missing, a partition seal is absent, a diagnostic
+overrides an exact veto, an attack succeeds, a protected file changes, a test
+fails, compiled cache authority is claimed, or learning utility is claimed
+**When** Exp6407 refreshes readiness
+**Then** `provenance_tiered_memory_protocol_ready_score` SHALL be `0.0`.
+
+## Implementation Status (REQ-LEARN-6407)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6407 | Implemented: `python/carnot/experiment_6407_provenance_tiered_factor_memory_protocol.py`; terminal artifact `results/experiment_6407_provenance_tiered_factor_memory_protocol.json`. | Implemented: `tests/python/test_experiment_6407_provenance_tiered_factor_memory_protocol.py`. |
+| SCENARIO-LEARN-6407-RAW-COMPILED | Implemented: `python/carnot/experiment_6407_provenance_tiered_factor_memory_protocol.py`. | Implemented: `tests/python/test_experiment_6407_provenance_tiered_factor_memory_protocol.py`. |
+| SCENARIO-LEARN-6407-REPLAY | Implemented: `python/carnot/experiment_6407_provenance_tiered_factor_memory_protocol.py`. | Implemented: `tests/python/test_experiment_6407_provenance_tiered_factor_memory_protocol.py`. |
+| SCENARIO-LEARN-6407-ESCALATION | Implemented: `python/carnot/experiment_6407_provenance_tiered_factor_memory_protocol.py`. | Implemented: `tests/python/test_experiment_6407_provenance_tiered_factor_memory_protocol.py`. |
+| SCENARIO-LEARN-6407-CONTAMINATION | Implemented: `python/carnot/experiment_6407_provenance_tiered_factor_memory_protocol.py`. | Implemented: `tests/python/test_experiment_6407_provenance_tiered_factor_memory_protocol.py`. |
+| SCENARIO-LEARN-6407-ATTACKS | Implemented: `python/carnot/experiment_6407_provenance_tiered_factor_memory_protocol.py`. | Implemented: `tests/python/test_experiment_6407_provenance_tiered_factor_memory_protocol.py`. |
+| SCENARIO-LEARN-6407-READY | Implemented: `python/carnot/experiment_6407_provenance_tiered_factor_memory_protocol.py`. | Implemented: `tests/python/test_experiment_6407_provenance_tiered_factor_memory_protocol.py`. |
+
 ## REQ-LEARN-6383: Dependency-Guided Factor Rollback Stress
 
 **Given** versioned factor release and whole-version rollback already exist
