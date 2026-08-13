@@ -3090,6 +3090,173 @@ fails, compiled cache authority is claimed, or learning utility is claimed
 | SCENARIO-LEARN-6407-ATTACKS | Implemented: `python/carnot/experiment_6407_provenance_tiered_factor_memory_protocol.py`. | Implemented: `tests/python/test_experiment_6407_provenance_tiered_factor_memory_protocol.py`. |
 | SCENARIO-LEARN-6407-READY | Implemented: `python/carnot/experiment_6407_provenance_tiered_factor_memory_protocol.py`. | Implemented: `tests/python/test_experiment_6407_provenance_tiered_factor_memory_protocol.py`. |
 
+## REQ-LEARN-6408: Powered Write-Time Factor Admission A/B
+
+**Given** Exp6406 defines a clean V550-only evidence boundary, Exp6407 freezes
+the raw and compiled memory protocol, and Exp6395 licenses exactly four
+model-family cells
+**When** Exp6408 starts on planning date 20260813
+**Then** it SHALL write
+`results/experiment_6408_powered_write_time_factor_admission_ab.json`
+**And** it SHALL compare frozen baseline, write-everything, and
+provenance-plus-exact admission arms only inside the four licensed cells.
+
+Exp6408 SHALL use the three mandated local GGUF model ids from
+`cached_sota_pair()`: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Token counts SHALL use embedded GGUF
+tokenizers only. Exp6408 SHALL not call `AutoTokenizer`. Qwen cells and the
+two unlicensed Gemma cells SHALL record abstention without fallback.
+
+Exp6408 SHALL revalidate the Exp6406 clean-boundary gate, the Exp6407
+protocol gate, Exp6395 licenses, frozen harnesses, schemas, model files,
+embedded tokenizers, RTX 3090 CUDA offload, and exact checker hashes before
+any arm runs.
+
+Exp6408 SHALL seal at least 36 fresh held events. Events SHALL be balanced
+across the four licensed cells and contamination classes. The manifest SHALL
+prove disjointness from V550 and Exp6407 development fixtures before
+generation and before scoring.
+
+Exp6408 SHALL freeze raw model bytes, parser-independent source spans,
+proposed typed effects, diagnostic features, exact support receipts,
+admission dispositions, and the memory head hash before future outcomes are
+visible.
+
+The provenance-plus-exact arm SHALL admit only exact-supported, source-bound,
+license-valid, predecessor-fresh proposals. Contradicted, implicit, stale,
+duplicate, replayed, superseded, poisoned, malformed, and unlicensed rows
+SHALL reject, quarantine, defer, or abstain.
+
+Exp6408 SHALL report proposal transport, exact evaluability, admission
+precision and recall, contamination propagation, future exact yield, false
+accepts and false rejects, raw escalation, abstention, latency, verification
+cost, and GPU memory by arm and licensed cell. It SHALL emit
+`delta_future_exact_yield` and `delta_contamination_propagation_rate` as
+finite bare numbers.
+
+Exp6408 SHALL attack model and family swaps, license inheritance, harness
+drift, source substitution, exact-check omission, diagnostic veto override,
+stale heads, duplicate evidence, pooled abstention, and future-label leakage.
+Every attack SHALL fail closed.
+
+Exp6408 SHALL set `powered_write_time_admission_ready_score=1.0` only when the
+powered arms run, provenance admission beats write-everything on future exact
+yield, contamination propagation does not increase over frozen and is lower
+than write-everything, false accepts do not increase, every unlicensed cell
+abstains, protected leakage is zero, tests pass, and no model weights change.
+
+Exp6408 SHALL emit these fields:
+
+- `status`
+- `exp6406_and_exp6407_gate_receipts`
+- `MODEL_SPECS`
+- `models_used`
+- `cached_sota_pair_receipts`
+- `model_file_hashes_revisions_quantizations_and_tokenizers`
+- `embedded_gguf_tokenizer_receipts`
+- `autotokenizer_usage_count`
+- `license_and_frozen_harness_bindings`
+- `unlicensed_and_rejected_cell_abstention_records`
+- `cuda_offload_runtime_peak_memory_and_duration_receipts_by_model`
+- `held_manifest_path_hash_counts_balance_partition_seals_and_disjointness`
+- `preregistered_frozen_write_everything_and_exact_admission_arm_contract`
+- `matched_work_receipts`
+- `raw_bytes_source_effect_diagnostic_checker_disposition_and_head_freeze_records`
+- `per_arm_model_family_contamination_admission_yield_harm_escalation_abstention_and_cost_results`
+- `exact_future_yield_by_arm`
+- `contamination_propagation_rate_by_arm`
+- `delta_future_exact_yield`
+- `delta_contamination_propagation_rate`
+- `false_accept_false_reject_and_negative_transfer_results`
+- `confidence_intervals_and_effective_sample_sizes`
+- `model_license_harness_source_checker_diagnostic_head_duplicate_pooling_and_leakage_attack_matrix`
+- `silent_fallback_count`
+- `exact_veto_override_count`
+- `protected_leakage_count`
+- `model_weight_change_count`
+- `powered_write_time_admission_ready_score`
+- `universal_support_claimed`
+- `public_factor_claim_eligibility`
+- `harm_underpowered_missing_and_flagged_cells`
+- `protected_files_unchanged`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map the Exp6406 gate, the Exp6407 gate,
+`delta_future_exact_yield`, `delta_contamination_propagation_rate`, and
+`powered_write_time_admission_ready_score` to their purposes. `verifier_is_oracle`
+SHALL be true only for exact event checkers.
+
+## SCENARIO-LEARN-6408-LICENSED-CELLS: Write-Time Arms Stay Licensed
+
+**Given** Exp6395 licenses four cells and rejects or abstains from the rest
+**When** Exp6408 runs the powered A/B
+**Then** only licensed cells SHALL receive arm work
+**And** every unlicensed or rejected cell SHALL abstain with zero fallback.
+
+## SCENARIO-LEARN-6408-FRESH-MANIFEST: Held Events Are Fresh And Balanced
+
+**Given** V550 and Exp6407 development fixtures already exist
+**When** Exp6408 seals its held manifest
+**Then** it SHALL create at least 36 fresh events balanced across licensed
+cells and contamination classes
+**And** it SHALL prove disjointness before generation and before scoring.
+
+## SCENARIO-LEARN-6408-ADMISSION: Exact Support Owns Admission
+
+**Given** raw bytes, source spans, typed effects, diagnostics, checker
+receipts, and a head hash are frozen before future outcomes
+**When** Exp6408 admits a proposal
+**Then** exact-supported, source-bound, license-valid, predecessor-fresh rows
+SHALL admit
+**And** contradicted, implicit, stale, duplicate, replayed, superseded,
+poisoned, malformed, and unlicensed rows SHALL not admit.
+
+## SCENARIO-LEARN-6408-MATCHED-ARMS: Powered Arms Use Equal Work
+
+**Given** frozen baseline, write-everything, and exact-admission arms
+**When** Exp6408 executes them
+**Then** prompts, event order, token budgets, checker calls, consumer budget,
+models, and cells SHALL match.
+
+## SCENARIO-LEARN-6408-ATTACKS: Admission Attacks Fail Closed
+
+**Given** model swap, family swap, license inheritance, harness drift, source
+substitution, exact-check omission, diagnostic veto override, stale head,
+duplicate evidence, pooled abstention, or future-label leakage
+**When** Exp6408 evaluates the attack matrix
+**Then** no attack SHALL promote readiness.
+
+## SCENARIO-LEARN-6408-READY: Readiness Requires Better Utility And Lower Harm
+
+**Given** the powered arms ran, all unlicensed cells abstained, false accepts
+did not increase, protected leakage is zero, and tests passed
+**When** provenance admission beats write-everything on future exact yield and
+has lower contamination propagation than write-everything without increasing
+over frozen
+**Then** `powered_write_time_admission_ready_score` SHALL be `1.0`.
+
+## Implementation Status (REQ-LEARN-6408)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6408 | Planned: `python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py`; terminal artifact `results/experiment_6408_powered_write_time_factor_admission_ab.json`. | Planned: `tests/python/test_experiment_6408_powered_write_time_factor_admission_ab.py`. |
+| SCENARIO-LEARN-6408-LICENSED-CELLS | Planned: `python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py`. | Planned: `tests/python/test_experiment_6408_powered_write_time_factor_admission_ab.py`. |
+| SCENARIO-LEARN-6408-FRESH-MANIFEST | Planned: `python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py`. | Planned: `tests/python/test_experiment_6408_powered_write_time_factor_admission_ab.py`. |
+| SCENARIO-LEARN-6408-ADMISSION | Planned: `python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py`. | Planned: `tests/python/test_experiment_6408_powered_write_time_factor_admission_ab.py`. |
+| SCENARIO-LEARN-6408-MATCHED-ARMS | Planned: `python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py`. | Planned: `tests/python/test_experiment_6408_powered_write_time_factor_admission_ab.py`. |
+| SCENARIO-LEARN-6408-ATTACKS | Planned: `python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py`. | Planned: `tests/python/test_experiment_6408_powered_write_time_factor_admission_ab.py`. |
+| SCENARIO-LEARN-6408-READY | Planned: `python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py`. | Planned: `tests/python/test_experiment_6408_powered_write_time_factor_admission_ab.py`. |
+
 ## REQ-LEARN-6383: Dependency-Guided Factor Rollback Stress
 
 **Given** versioned factor release and whole-version rollback already exist
