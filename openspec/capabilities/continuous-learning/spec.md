@@ -2671,6 +2671,135 @@ mutation, or failed test
 | SCENARIO-LEARN-6398-ROLLBACK | Implemented: `python/carnot/experiment_6398_default_off_transactional_factor_consumer.py`. | Implemented: `tests/python/test_experiment_6398_default_off_transactional_factor_consumer.py`. |
 | SCENARIO-LEARN-6398-READY | Implemented: `python/carnot/experiment_6398_default_off_transactional_factor_consumer.py`. | Implemented: `tests/python/test_experiment_6398_default_off_transactional_factor_consumer.py`. |
 
+## REQ-LEARN-6399: V550 Capability Learning Safety Audit
+
+**Given** V550 factor-chain artifacts may be present, absent, blocked,
+skipped, null, flagged, retired, or malformed
+**When** Exp6399 runs on planning date 20260813
+**Then** it SHALL write
+`results/experiment_6399_capability_learning_safety_audit.json`
+**And** it SHALL audit Exp6394 through Exp6398 independently of conductor
+success, without invoking an LLM, rerunning upstream experiments, or repairing
+upstream evidence.
+
+Exp6399 SHALL register expected artifacts, sidecars, source files, task IDs,
+model IDs, schemas, harnesses, license records, factor heads, transaction logs,
+and exact checker versions before reading upstream conclusion fields. Missing,
+blocked, skipped, null, flagged, and retired rows SHALL keep their own classes.
+The audit SHALL keep artifact verdicts separate from conductor outcomes.
+
+Exp6399 SHALL treat exact checker receipts as oracle evidence only within their
+declared event and license scope. Harnesses, licenses, transaction records, and
+model text SHALL be non-oracles. The top-level `verifier_is_oracle` SHALL be
+bare `false`.
+
+Exp6399 SHALL attack development-held leakage, future leakage, source
+substitution, family identity drift, model hash drift, harness drift, schema
+drift, license overreach, inherited licenses, silent fallback, abstention
+suppression, and partial-cell pooling. It SHALL also attack self-activation,
+stale predecessor, duplicate effect, replayed evidence, optional-stopping
+reset, interrupted atomic write, concurrent head advance, restart corruption,
+unauthorized license renewal, exact-check omission, verifier-version drift,
+rollback underreach, rollback overreach, revoked-descendant survival, consumer
+write, and production enablement.
+
+Exp6399 SHALL recompute readiness and downstream gates from bare terminal
+fields. Missing, nested, wrong-type, boolean, NaN, and infinity values SHALL
+fail closed. Safety success SHALL not promote utility. A narrow model-family
+license SHALL never become a general factor utility claim. A predecessor-bound
+transaction SHALL never launder a partial or failed model-family cell into a
+public claim.
+
+Exp6399 SHALL verify the mandated `MODEL_SPECS`, cached SOTA receipts, embedded
+GGUF tokenizer receipts, no `AutoTokenizer` use, no legacy headline result,
+accurate `inference_substrate`, and task-linked GPU evidence where applicable.
+It SHALL set `public_factor_claim_eligibility=false` unless every required clean
+scientific gate and safety gate passes for the full declared public scope.
+
+Exp6399 SHALL emit these fields with explicit fail-closed principles:
+
+- `status`: Terminal status follows the independent audit and public-claim gate.
+- `audit_registration_path_hash_and_expected_scope`: Registration binds paths, scopes, versions, and read order before conclusions.
+- `present_absent_blocked_skipped_null_flagged_and_retired_artifact_matrix`: Every expected input keeps its terminal evidence class.
+- `artifact_verdict_and_conductor_outcome_reconciliation`: Artifact verdicts and conductor outcomes stay separate.
+- `model_schema_harness_license_factor_head_transaction_and_checker_hash_matrix`: Model, schema, harness, license, head, transaction, and checker hashes are bound together.
+- `development_held_future_and_source_leakage_attack_results`: Leakage and source attacks cannot promote readiness.
+- `family_model_harness_schema_license_fallback_abstention_and_pooling_attack_results`: License and pooling attacks cannot broaden scope.
+- `predecessor_effect_evidence_optional_stopping_atomicity_concurrency_restart_and_renewal_attack_results`: Transaction attacks cannot advance a head or renew a license.
+- `exact_checker_rollback_revocation_consumer_write_and_enablement_attack_results`: Checker, rollback, consumer-write, and enablement attacks fail closed.
+- `recomputed_readiness_scores_and_gates`: Bare terminal fields recompute all readiness and claim gates.
+- `model_policy_and_inference_substrate_checks`: Model, tokenizer, GPU, substrate, and legacy-claim checks stay explicit.
+- `duration_receipt_source`: Wall-clock duration is measured by the audit only.
+- `critical_major_and_minor_findings`: Findings are severity-separated without synthesis.
+- `utility_promotion_count`: Safety evidence cannot become utility evidence.
+- `public_factor_claim_eligibility`: The public claim is false unless the full clean scope passes.
+- `upstream_artifacts_modified`: Upstream artifacts must remain unchanged.
+- `protected_files_unchanged`: Protected repo files must remain unchanged.
+- `preconditions_checked`: Preconditions bind date, registration, classes, hashes, sources, protected files, and commands.
+- `inference_substrate`: The substrate declares deterministic artifact audit without LLM or upstream rerun.
+- `verifier_is_oracle`: Bare false states that the audit is not an oracle.
+- `field_principles`: Required fields and recomputed claim fields state their fail-closed purpose.
+- `field_provenance`: Required fields trace to specs, inputs, attacks, checks, tests, or hashes.
+- `random_seed`: Fixed seed pins registration and attack order.
+- `duration_s`: Wall time is measured without padding.
+- `tests_run`: Verification commands and exit codes are recorded.
+- `reproducibility_checksum`: A normalized checksum detects artifact drift.
+- `honest_verdict`: The verdict starts with a terminal prefix and states the public-claim boundary.
+
+## SCENARIO-LEARN-6399-REGISTRATION: Scope Freezes Before Conclusions
+
+**Given** the expected V550 artifact chain and sidecars
+**When** Exp6399 starts
+**Then** it SHALL write a registration sidecar that hashes expected paths,
+source files, task IDs, model IDs, schemas, harnesses, licenses, factor heads,
+transaction logs, and checker versions before reading readiness or utility
+fields.
+
+## SCENARIO-LEARN-6399-CLASS-PRESERVATION: Blocked And Missing Stay Visible
+
+**Given** any upstream artifact is missing, blocked, skipped, null, flagged,
+retired, or malformed
+**When** Exp6399 builds the artifact matrix
+**Then** the row SHALL keep that class
+**And** no downstream positive row SHALL relabel it clean.
+
+## SCENARIO-LEARN-6399-LICENSE-BOUNDARY: Narrow Licenses Do Not Become Public Claims
+
+**Given** only a subset of model-family cells carries narrow licenses
+**When** Exp6399 recomputes downstream utility and claim gates
+**Then** `public_factor_claim_eligibility` SHALL remain `false`
+**And** unlicensed, rejected, underpowered, missing, blocked, null, flagged,
+and retired cells SHALL not be pooled as successes.
+
+## SCENARIO-LEARN-6399-TRANSACTION-BOUNDARY: Failed Transactions Do Not Launder Claims
+
+**Given** stale predecessor, duplicate effect, replayed evidence, self-activation,
+optional-stopping reset, interrupted write, concurrent head advance, restart
+corruption, or unauthorized license renewal
+**When** Exp6399 evaluates transaction attacks
+**Then** no attack SHALL advance the retained head, renew a license, promote
+readiness, write a consumer factor, or enable production.
+
+## SCENARIO-LEARN-6399-READY: Claim Readiness Fails Closed
+
+**Given** any recomputed readiness field is missing, nested, wrong-type,
+boolean, NaN, infinity, non-positive where positive is required, or outside the
+declared license scope
+**When** Exp6399 refreshes terminal fields
+**Then** the claim gate SHALL fail closed
+**And** `public_factor_claim_eligibility` SHALL be `false`.
+
+## Implementation Status (REQ-LEARN-6399)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6399 | Implemented: `python/carnot/experiment_6399_capability_learning_safety_audit.py`; terminal artifact `results/experiment_6399_capability_learning_safety_audit.json`. | Implemented: `tests/python/test_experiment_6399_capability_learning_safety_audit.py`. |
+| SCENARIO-LEARN-6399-REGISTRATION | Implemented: `python/carnot/experiment_6399_capability_learning_safety_audit.py`. | Implemented: `tests/python/test_experiment_6399_capability_learning_safety_audit.py`. |
+| SCENARIO-LEARN-6399-CLASS-PRESERVATION | Implemented: `python/carnot/experiment_6399_capability_learning_safety_audit.py`. | Implemented: `tests/python/test_experiment_6399_capability_learning_safety_audit.py`. |
+| SCENARIO-LEARN-6399-LICENSE-BOUNDARY | Implemented: `python/carnot/experiment_6399_capability_learning_safety_audit.py`. | Implemented: `tests/python/test_experiment_6399_capability_learning_safety_audit.py`. |
+| SCENARIO-LEARN-6399-TRANSACTION-BOUNDARY | Implemented: `python/carnot/experiment_6399_capability_learning_safety_audit.py`. | Implemented: `tests/python/test_experiment_6399_capability_learning_safety_audit.py`. |
+| SCENARIO-LEARN-6399-READY | Implemented: `python/carnot/experiment_6399_capability_learning_safety_audit.py`. | Implemented: `tests/python/test_experiment_6399_capability_learning_safety_audit.py`. |
+
 ## REQ-LEARN-6383: Dependency-Guided Factor Rollback Stress
 
 **Given** versioned factor release and whole-version rollback already exist
