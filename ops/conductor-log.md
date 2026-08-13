@@ -15760,3 +15760,5 @@ code |
 | 2026-08-13 06:54 UTC | Gated on Exp6381 positive delta: chronological ver | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos |
 | 2026-08-13 06:54 UTC | Gated on Exp6382 and Exp6383 readiness: default-of | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6382-chronological-verified-factor-self |
 | 2026-08-13 06:56 UTC | Gated on Exp6381 positive delta: chronological ver | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos |
+| 2026-08-13 06:56 UTC | Gated on Exp6382 and Exp6383 readiness: default-of | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6382-chronological-verified-factor-self |
+| 2026-08-13 06:58 UTC | Gated on Exp6382 and Exp6383 readiness: default-of | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6382-chronological-verified-factor-self-l |
