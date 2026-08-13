@@ -3391,3 +3391,65 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-6224 | Planned (`python/carnot/experiment_6224_v538_adversarial_capstone.py`, `results/experiment_6224_v538_adversarial_capstone.json`) | Planned (`tests/python/test_experiment_6224_v538_adversarial_capstone.py`) |
+
+- REQ-CAPSTONE-6390: The V549 adversarial capstone workflow SHALL read
+  primary Exp6377 through Exp6389 artifact paths and sidecars without rerunning
+  an upstream experiment, SHALL hash milestone, roadmap, conductor, exclusion,
+  registry, expected artifact, sidecar, and changed source inputs before
+  semantic reads, SHALL preserve missing, blocked, null, flagged, retired, and
+  proposal-only states, and SHALL write
+  `results/experiment_6390_v549_adversarial_capstone.json` without modifying
+  `scripts/research_conductor.py`, `ops/status.md`, `ops/changelog.md`,
+  `_bmad/traceability.md`, or `ops/metrics.md`. It SHALL replay
+  `scripts/summarize_artifact.py` and live adversarial verification for each
+  present artifact, SHALL preserve original stamped adversarial state apart
+  from live verifier state, SHALL recompute Exp6379 through Exp6389 readiness
+  fields and structured gates from primary fields, SHALL record mismatches,
+  missing fields, non-finite values, wrong model identities, and inconsistent
+  hashes, and SHALL keep transport validity, exact semantic utility, release,
+  retention, rollback, consumer utility, safety, ARC admission, live influence,
+  and solve credit as separate layers. It SHALL set
+  `public_claim_eligibility=false` unless every named upstream result has clean
+  primary evidence, SHALL set `verifier_is_oracle=false` for the aggregation,
+  and SHALL preserve upstream oracle declarations without replacing them.
+- SCENARIO-CAPSTONE-6390: Given V549 upstream artifacts may be clean,
+  flagged, blocked, null, or absent, when Exp6390 runs on planning date
+  20260813, then the artifact SHALL emit top-level fields `status`,
+  `milestone_and_roadmap_hashes`,
+  `expected_task_ids_and_terminal_classes`,
+  `original_and_live_adversarial_verdicts`,
+  `upstream_artifact_and_sidecar_hashes`, `structured_gate_recomputation`,
+  `readiness_field_recomputation`,
+  `prior_failure_and_retirement_recomputation`,
+  `model_policy_tokenizer_gpu_and_raw_order_audit`,
+  `exact_oracle_and_protected_data_audit`, `factor_transport_verdict`,
+  `verified_frontier_verdict`, `continuous_self_learning_verdict`,
+  `dependency_rollback_verdict`, `consumer_verdict`,
+  `factor_safety_verdict`, `arc_goal_contract_verdict`,
+  `arc_reward_machine_verdict`, `arc_calibration_verdict`,
+  `arc_live_shadow_verdict`, `arc_registry_and_no_solve_audit`,
+  `hardware_claim_boundary`, `three_prd_gap_decisions`,
+  `branch_promotion_retirement_and_deferral_decisions`,
+  `missing_blocked_null_flagged_and_retired_evidence`,
+  `documentation_reconciliation_receipts`, `public_claim_eligibility`,
+  `protected_files_unchanged`, `preconditions_checked`,
+  `inference_substrate`, `verifier_is_oracle`, `field_principles`,
+  `field_provenance`, `random_seed`, `duration_s`, `tests_run`,
+  `reproducibility_checksum`, and `honest_verdict`. Exp6382 absence SHALL stay missing.
+  Exp6380 transport null SHALL not retire Exp6366 scope because it did
+  not repeat the all-invalid prior verdict. Exp6385 safety success SHALL not
+  promote FR-11 utility. Exp6389 SHALL stay blocked when the structured gate
+  expects a bare numeric `delta_admission_precision` but receives a mapping.
+- SCENARIO-CAPSTONE-6390-FIELD-PRINCIPLES: The artifact SHALL include a
+  `field_principles` entry for every required field. The entries SHALL state
+  that exact task checkers are the only factor correctness oracles, ARC
+  environment transitions are evidence only after action freeze, model text and
+  parsed JSON are not oracles, public claim eligibility is false while any
+  named upstream is missing, blocked, null, or flagged, and documentation
+  reconciliation is deferred by the stop rule rather than fabricated.
+
+## Implementation Status (REQ-CAPSTONE-6390)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-6390 | Planned (`python/carnot/experiment_6390_v549_adversarial_capstone.py`, `results/experiment_6390_v549_adversarial_capstone.json`) | Planned (`tests/python/test_experiment_6390_v549_adversarial_capstone.py`) |
