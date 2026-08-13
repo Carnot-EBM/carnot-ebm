@@ -15756,3 +15756,5 @@ code |
 | 2026-08-13 06:31 UTC | Gated on Exp6380 readiness: verified-frontier live | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran |
 | 2026-08-13 06:33 UTC | Gated on Exp6380 readiness: verified-frontier live | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6380-three-family-canonical-factor-tran |
 | 2026-08-13 06:35 UTC | Gated on Exp6381 positive delta: chronological ver | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos |
+| 2026-08-13 06:52 UTC | Dependency-guided certified-factor descendant roll | OK | 88 passed, 1 warning in 10.15s |
+| 2026-08-13 06:54 UTC | Gated on Exp6381 positive delta: chronological ver | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6381-verified-frontier-live-factor-propos |
