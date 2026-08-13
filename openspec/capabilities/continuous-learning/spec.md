@@ -2511,6 +2511,166 @@ test
 | SCENARIO-LEARN-6397-FUTURE | Planned: `python/carnot/experiment_6397_transactional_continuous_factor_learning.py`. | Planned: `tests/python/test_experiment_6397_transactional_continuous_factor_learning.py`. |
 | SCENARIO-LEARN-6397-READY | Planned: `python/carnot/experiment_6397_transactional_continuous_factor_learning.py`. | Planned: `tests/python/test_experiment_6397_transactional_continuous_factor_learning.py`. |
 
+## REQ-LEARN-6398: Default-Off Transactional Factor Consumer
+
+**Given** Exp6397 has a retained predecessor-bound factor head and Exp6383 has
+a positive selective rollback control
+**When** Exp6398 runs on planning date 20260813
+**Then** it SHALL write
+`results/experiment_6398_default_off_transactional_factor_consumer.json`
+**And** it SHALL evaluate a default-off future consumer without writing factors,
+advancing heads, renewing licenses, approving fallbacks, reading protected
+outcomes early, or enabling the production path.
+
+Exp6398 SHALL revalidate both Exp6397 activation gates, factor-head hash,
+transaction log, license bindings, rollback receipt, model files, harnesses,
+GPU offload receipts, exact checker hashes, and the untouched consumer-event
+seal before any consumer decision. The active Exp6397 head SHALL be retained
+and predecessor-bound. It SHALL be read-only for the whole run.
+
+Exp6398 SHALL use exactly these local GGUF model ids from `cached_sota_pair()`:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Token counts SHALL use embedded GGUF
+tokenizers only. The experiment SHALL not call `AutoTokenizer`.
+
+Exp6398 SHALL freeze all factor and license writes. It SHALL use at least 24
+untouched future consumer events across licensed families. It SHALL compare
+three matched arms: frozen baseline, V546 replay-certified registry, and V550
+transactional registry. Event order, model work, exact checker calls, token
+budgets, and protected access rules SHALL match across arms.
+
+Exp6398 SHALL call only licensed model-family cells. Unlicensed, rejected,
+expired, stale, revoked, missing, or family-mismatched cells SHALL preserve an
+explicit abstention. Retry, switch, and abstain outcomes SHALL remain distinct.
+A failed or revoked model-family cell SHALL NOT silently switch to another
+family or inherit another family's license.
+
+Exp6398 SHALL record source-bound proposals, factor retrievals, license
+checks, abstentions, exact checker calls, exact yield, false accepts, false
+rejects, latency, verification cost, and consumer decisions by model and
+family. It SHALL report family-specific and pooled confidence intervals,
+effective sample sizes, negative transfer, harm, underpowered cells, and
+missing cells. It SHALL NOT pool abstentions as successes.
+
+Exp6398 SHALL inject stale head, revoked descendant, expired license,
+model-row swap, family switch request, absent licensed model, duplicated
+evidence, incomplete rollback, and suppressed abstention attacks. Every attack
+SHALL fail closed. Exp6398 SHALL apply the Exp6383 selective rollback control
+to harmful descendants on the injected cells only, and compare it with full
+reset and no rollback on those same injected cells. It SHALL NOT claim a new
+rollback method.
+
+Exp6398 SHALL set
+`default_off_transactional_consumer_ready_score=1.0` only when V550 improves
+exact yield over frozen, false accepts do not increase, every attack fails
+closed, selective rollback removes harmful descendants, the production enable
+count stays zero, and all recorded tests pass.
+
+Exp6398 SHALL emit these fields with explicit principles:
+
+- `status`: Terminal status follows read-only consumer safety, arm utility, rollback, protected access, and tests.
+- `exp6397_gate_receipts`: Exp6397 gates, factor head, transaction log, licenses, rollback carry, and protected seals gate this run.
+- `MODEL_SPECS`: The three mandated GGUF rows come from cached SOTA helper calls.
+- `models_used`: Only licensed mandated models with default-off consumer work count as used.
+- `cached_sota_pair_receipts`: Helper-call receipts prevent manual model substitution.
+- `embedded_gguf_tokenizer_receipts`: Tokenizer receipts use only embedded GGUF tokenizers.
+- `autotokenizer_usage_count`: Bare zero proves no external tokenizer path was used.
+- `frozen_factor_head_and_transaction_log_hashes`: Exp6397 retained head and transaction log are hash-bound before consumer reads.
+- `license_and_harness_bindings`: Licenses, harnesses, exact checkers, and release ledger are bound before decisions.
+- `cuda_offload_and_runtime_receipts_by_model`: CUDA offload and cleanup are reported for mandated models.
+- `untouched_consumer_manifest_path_hash_license_balance_and_prior_access_receipt`: Future consumer events, license balance, and no-prior-access seal are frozen.
+- `preregistered_arm_contract`: Frozen, V546, and V550 consumer arms are matched before scoring.
+- `matched_work_receipts`: Event counts, model calls, exact checks, token budgets, latency rules, and work caps match across arms.
+- `per_model_family_retrieval_license_abstention_checker_yield_and_cost_results`: Retrievals, license checks, abstentions, checker calls, yield, latency, cost, and decisions are reported by model and family.
+- `exact_yield_by_arm`: Consumer exact yield is reported by arm.
+- `delta_exact_yield_over_frozen`: V550 utility is compared with frozen baseline.
+- `false_accept_false_reject_negative_transfer_and_harm_results`: False accepts, false rejects, negative transfer, and harm stay visible.
+- `confidence_intervals_and_effective_sample_sizes`: Per-family and pooled intervals, effective sample sizes, and abstention exclusions are explicit.
+- `stale_head_revoked_descendant_expired_license_model_swap_family_switch_missing_model_duplicate_evidence_rollback_and_abstention_attack_matrix`: Every preregistered consumer attack fails closed.
+- `selective_rollback_full_reset_and_no_rollback_injected_cell_results`: Exp6383 selective rollback, full reset, and no rollback are compared only on injected cells.
+- `consumer_factor_write_count`: Bare zero proves the consumer wrote no factors.
+- `factor_head_advance_count`: Bare zero proves no head advanced.
+- `license_renewal_count`: Bare zero proves licenses were not renewed.
+- `silent_fallback_count`: Bare zero proves no fallback was approved silently.
+- `production_enable_count`: Bare zero proves the default-off path stayed off.
+- `protected_leakage_count`: Bare zero proves protected outcomes were not read early.
+- `default_off_transactional_consumer_ready_score`: Readiness is conjunctive over utility, false accepts, attacks, rollback, production enablement, and tests.
+- `harm_underpowered_missing_and_flagged_cells`: Missing, underpowered, unlicensed, rejected, expired, stale, revoked, and attacked cells stay visible.
+- `protected_files_unchanged`: Protected files remain byte-identical.
+- `preconditions_checked`: Preconditions bind date, upstream gates, models, tokenizers, GPUs, exact checkers, manifests, seeds, and protected files.
+- `inference_substrate`: The substrate declares deterministic default-off consumer replay over licensed local GGUF receipts.
+- `verifier_is_oracle`: Bare true applies only to exact task checkers.
+- `field_principles`: Every required field states its guard and purpose.
+- `field_provenance`: Every required field maps to specs, upstream artifacts, consumer events, attacks, tests, or exact checks.
+- `random_seed`: Fixed seed pins consumer events, arm order, attacks, and future opens.
+- `duration_s`: Wall time is measured without padding.
+- `tests_run`: Verification commands and exit codes are recorded.
+- `reproducibility_checksum`: A normalized checksum detects artifact drift.
+- `honest_verdict`: The verdict starts with a terminal prefix and states the default-off consumer boundary.
+
+## SCENARIO-LEARN-6398-READONLY: Consumer Cannot Mutate State
+
+**Given** the Exp6397 terminal factor head and transaction log
+**When** Exp6398 evaluates default-off future consumer events
+**Then** factor writes, head advances, license renewals, silent fallbacks,
+protected leakage, and production enables SHALL all remain zero.
+
+## SCENARIO-LEARN-6398-LICENSED: License Cells Cannot Switch Families
+
+**Given** licensed and unlicensed model-family cells
+**When** a cell is rejected, expired, stale, revoked, missing, or not licensed
+**Then** the consumer SHALL abstain explicitly
+**And** it SHALL NOT switch to another model family or inherit another
+family's license.
+
+## SCENARIO-LEARN-6398-MATCHED: Arms Share Future Consumer Work
+
+**Given** at least 24 untouched future consumer events across licensed families
+**When** frozen, V546, and V550 arms run
+**Then** event order, model work, exact checker calls, token budgets, and
+protected access rules SHALL match across arms
+**And** V550 exact yield SHALL be compared with frozen baseline.
+
+## SCENARIO-LEARN-6398-ATTACKS: Consumer Attacks Fail Closed
+
+**Given** stale head, revoked descendant, expired license, model-row swap,
+family switch, missing model, duplicate evidence, incomplete rollback, or
+suppressed abstention attack
+**When** Exp6398 evaluates the attacked cell
+**Then** the decision SHALL fail closed as abstain, reject, quarantine, or
+rollback
+**And** no failed cell SHALL write factors, advance a head, renew a license, or
+enable production.
+
+## SCENARIO-LEARN-6398-ROLLBACK: Exp6383 Control Applies Only To Injected Cells
+
+**Given** harmful descendants on injected cells
+**When** Exp6398 compares selective rollback, full reset, and no rollback
+**Then** the Exp6383 selective rollback control SHALL remove harmful
+descendants, full reset SHALL over-remove valid injected state, and no rollback
+SHALL leave unsafe survivors
+**And** the comparison SHALL NOT rerun or rename the original rollback method.
+
+## SCENARIO-LEARN-6398-READY: Readiness Is Fully Conjunctive
+
+**Given** no V550 exact-yield gain, increased false accepts, attack survivor,
+rollback failure, production enablement, protected leakage, protected-file
+mutation, or failed test
+**When** readiness is computed
+**Then** `default_off_transactional_consumer_ready_score` SHALL be `0.0`.
+
+## Implementation Status (REQ-LEARN-6398)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6398 | Implemented: `python/carnot/experiment_6398_default_off_transactional_factor_consumer.py`; terminal artifact `results/experiment_6398_default_off_transactional_factor_consumer.json`. | Implemented: `tests/python/test_experiment_6398_default_off_transactional_factor_consumer.py`. |
+| SCENARIO-LEARN-6398-READONLY | Implemented: `python/carnot/experiment_6398_default_off_transactional_factor_consumer.py`. | Implemented: `tests/python/test_experiment_6398_default_off_transactional_factor_consumer.py`. |
+| SCENARIO-LEARN-6398-LICENSED | Implemented: `python/carnot/experiment_6398_default_off_transactional_factor_consumer.py`. | Implemented: `tests/python/test_experiment_6398_default_off_transactional_factor_consumer.py`. |
+| SCENARIO-LEARN-6398-MATCHED | Implemented: `python/carnot/experiment_6398_default_off_transactional_factor_consumer.py`. | Implemented: `tests/python/test_experiment_6398_default_off_transactional_factor_consumer.py`. |
+| SCENARIO-LEARN-6398-ATTACKS | Implemented: `python/carnot/experiment_6398_default_off_transactional_factor_consumer.py`. | Implemented: `tests/python/test_experiment_6398_default_off_transactional_factor_consumer.py`. |
+| SCENARIO-LEARN-6398-ROLLBACK | Implemented: `python/carnot/experiment_6398_default_off_transactional_factor_consumer.py`. | Implemented: `tests/python/test_experiment_6398_default_off_transactional_factor_consumer.py`. |
+| SCENARIO-LEARN-6398-READY | Implemented: `python/carnot/experiment_6398_default_off_transactional_factor_consumer.py`. | Implemented: `tests/python/test_experiment_6398_default_off_transactional_factor_consumer.py`. |
+
 ## REQ-LEARN-6383: Dependency-Guided Factor Rollback Stress
 
 **Given** versioned factor release and whole-version rollback already exist
