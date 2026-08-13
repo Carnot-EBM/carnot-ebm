@@ -34253,3 +34253,106 @@ Intelligence. Source claims remain hypotheses until Carnot reproduces them.
   physical-board probe, TSU execution, or hardware-speed claim.
 
 <!-- V548-PLANNER-REFRESH-20260812-END -->
+
+## V549 Planner Refresh (2026-08-13, after milestone 2026.08.548)
+
+This refresh used the four active V548 artifacts as the evidence boundary. It
+searched arXiv first for recent work on EBM reasoning, constraint solving,
+Ising systems, hallucination control, KANs, constrained generation, sampling
+hardware, and continual learning. It then checked OpenReview, Hugging Face
+Papers, Semantic Scholar citation records for EBT (`2507.02092`) and ARM-EBM
+(`2512.15605`), GitHub, Extropic, and Logical Intelligence. Source claims stay
+hypotheses until Carnot reproduces them.
+
+### Promoted method: one structured-output instruction surface
+
+- **Your Prompt Is Not the Only Prompt: How Much Do LLMs Weight
+  Structured-Output Schema Descriptions?** - arXiv:2608.08254,
+  https://arxiv.org/abs/2608.08254; submitted 2026-08-08. The study treats
+  prompts and schema descriptions as one instruction surface. Conflicting
+  instructions caused model-dependent accuracy losses. A required
+  intermediate field helped some models when output headroom existed. Carnot
+  hook: generate the factor-edit prompt, example, validator, and output-token
+  lower bound from one canonical schema object. Hash that object. Reject
+  prompt-schema drift. Test a bounded `evidence_summary` field inside the JSON
+  object, but do not request or store hidden chain of thought.
+- **Empirical Study for Structured Output Control in LLMs for Software
+  Engineering** - arXiv:2606.09395,
+  https://arxiv.org/abs/2606.09395. This study found that tight syntax control
+  did not remove structural and semantic errors. Carnot hook: separate raw
+  output, parse validity, schema validity, source binding, exact checker calls,
+  and exact utility. A parse-valid result is only a transport result. This
+  control does not reopen the retired parser/JIT or grammar-decoding lane.
+- **Learning to Generate Structured Output with Schema Reinforcement
+  Learning** - arXiv:2502.18878,
+  https://arxiv.org/abs/2502.18878. SchemaBench shows that valid JSON remains a
+  measurable model capability and that fine-grained validation can improve
+  trained models. Carnot disposition: use its failure taxonomy only. V549 does
+  not fine-tune the flagship GGUF models and does not treat a schema validator
+  as semantic authority.
+
+### Evidence boundary and carried methods
+
+- Exp6365 proved that all three mandated GGUF families can load through
+  llama.cpp, use their embedded tokenizers, offload to the two RTX 3090 GPUs,
+  and emit nonempty raw bytes. This closes the V547 process-failure question.
+- Exp6366 returned `complete_null` with zero parse-valid proposals and zero
+  exact-checker calls. Qwen3.6 spent its 192-token allowance on reasoning,
+  Gemma-4-31B repeated one token, and Gemma-4-26B began the requested JSON but
+  ended inside `edit_source_spans`. V549 must first distinguish instruction
+  drift, repetition, and capacity failure. A token-budget raise alone is not a
+  valid mechanism.
+- Hypothesis Frontier (`2608.10843`), dependency-guided rollback
+  (`2608.10502`), ReTree (`2608.10676`), active reward machines
+  (`2604.07480`), zero-shot goal recognition (`2605.15333`), and Memoir
+  (`2607.20792`) remain the strongest direct methods from the V548 refresh.
+  They were proposal-only after Exp6366 and have not yet been tested in an
+  active milestone.
+
+### Secondary-source and product status
+
+- **OpenReview and Hugging Face Papers:** recent verifier work still favors
+  learned judges, repeated evaluation, uncertainty, or formal-tool routing.
+  These can rank proposals or trigger abstention. They do not replace exact
+  validators or reopen external generated-text scoring.
+- **Semantic Scholar:** the EBT and ARM-EBM citation trails surfaced no newer
+  local GGUF-compatible verifier with exact release authority. Citation counts
+  are discovery receipts, not evidence quality.
+- **GitHub:** targeted EBM, constraint, KAN, sampler, and structured-output
+  searches found libraries for grammar decoding and paper-specific research.
+  None supplies a new Carnot runtime dependency. Grammar and parser retries
+  remain outside V549.
+- **Extropic:** the first-party `From One to One Billion` update at
+  https://extropic.ai/writing/from-one-to-one-billion says Z1 has taped out and
+  lists 269,568 pbits, 215,904 coupling parameters, greater-than-50 MHz sampling,
+  and less-than-1 W chip power. It places sticks, cards, and clusters in early
+  access in 2027. The July 29 CHIPS item is a non-binding R&D letter of intent.
+  Carnot has no authenticated device or simulator API receipt. Schedule no TSU
+  execution, energy, power, latency, or availability claim.
+- **Logical Intelligence:** the current first-party page still presents Kona
+  1.0, Aleph, and automatic formal verification. It exposes no public weights,
+  reproducible Kona architecture, or documented local API. Kona remains
+  product direction only.
+- **KAN and local hardware:** the refresh found no result that clears Carnot's
+  closed KAN utility lane. No GateMate, KV260, PolarFire, or NPU state changed.
+
+### V549 planning impact
+
+- Make the factor-edit transport contract the first scientific gate. Use one
+  canonical schema source, measured completion lower bounds, bounded
+  repetition controls, and per-family failure labels. Do not use grammar,
+  parser retries, post-hoc repair, or a token-budget increase by itself.
+- Retry live factor proposal authenticity only after the deterministic
+  transport fixture passes. Declare Exp6366 as the prior failure. Retire the
+  new attempt if the same all-invalid verdict returns.
+- Run the verified-incumbent frontier only after the live transport gate. Then
+  run chronological continuous self-learning, dependency rollback, a
+  default-off future consumer, and an independent safety audit.
+- Complete the unexecuted ARC goal-evidence work with new experiment IDs. Make
+  no game or level solve claim. Keep behavior default-off and do not update the
+  solve registry.
+- Use the dual RTX 3090 host for mandatory GGUF cells. Schedule no unchanged
+  hardware probe, KAN training, hidden-state scoring, external-text scoring,
+  EBT pretraining, or parser/JIT retry.
+
+<!-- V549-PLANNER-REFRESH-20260813-END -->

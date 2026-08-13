@@ -1,0 +1,754 @@
+milestone: "2026.08.549"
+milestone_title: "Canonical Factor Transport and Prospective Learning"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp6377-v549-terminal-handoff-and-queue-preflight
+    milestone: "2026.08.549"
+    deliverable: results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json
+    title: "V548 terminal evidence handoff and V549 queue preflight"
+    priority: critical
+    track: infrastructure
+    requires_gpu: false
+    max_turns: 100
+    estimated_wall_time_min: 45
+    agent_type: claude
+    model: opus
+    prior_failures:
+      - experiment_id: exp6363-v548-terminal-handoff-and-queue-preflight
+        verdict: "blocked_v548_queue_incomplete: active V548 queue has 4 of 14 expected tasks"
+        addressed_by: "This handoff treats four tasks as the complete active V548 queue and validates the new 14-task V549 queue before activation instead of comparing the active file with the old proposal count."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Milestone 2026.08.548 is terminal. Its active roadmap contained four tasks, Exp6363 through Exp6366. Exp6363 reported blocked_v548_queue_incomplete because the proposal named 14 tasks while the activated queue had four. The four active tasks are now the correct evidence boundary. Exp6365 proved complete observable GGUF execution for all three mandated families. Exp6366 produced three nonempty raw outputs but zero parse-valid factor edits and zero exact-checker calls. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/research-roadmap.yaml and {project_root}/research-roadmap-next.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json through {project_root}/results/experiment_6366_repaired_live_factor_proposal_authenticity.json
+      - {project_root}/ops/conductor-log.md, {project_root}/ops/status.md, and {project_root}/ops/changelog.md
+      - {project_root}/research-complete.yaml, {project_root}/ops/exclusion_manifest.yaml, and {project_root}/ops/known-issues.md
+      - {project_root}/scripts/roadmap_schema.py, {project_root}/scripts/validate_prior_failures.py, {project_root}/scripts/audit_roadmap_gates.py, and {project_root}/scripts/exclusion_manifest_lint.py
+
+      TASK
+      Create a bounded V548-to-V549 handoff and a full queue preflight. Reconcile only Exp6363-Exp6366 as executed V548 tasks. Preserve blocked, null, clean, proposal-only, and missing states. Validate all 14 V549 tasks before activation. Do not modify the active roadmap or conductor.
+
+      CONCRETE STEPS
+      0. Hash the active roadmap, next roadmap, milestone document, conductor, exclusion manifest, and four expected V548 artifacts.
+      1. Read each V548 artifact through scripts/summarize_artifact.py. Preserve conductor outcomes and adversarial flags separately from stamped fields.
+      2. Record that Exp6367-Exp6376 were proposal-only. Do not count them as executed, blocked, or missing active tasks.
+      3. Validate 14 unique V549 IDs and deliverables, execution order, structured gates, gate-field cross-references, required prior-failure subfields, and no references to retired upstream task IDs.
+      4. Check each prompt for CONTEXT, EXISTING CODE TO READ FIRST, TASK, CONCRETE STEPS, {project_root}, {date}, a Run command, and the exact final prohibition line.
+      5. Check every LLM task for MODEL_SPECS and at least one mandated local GGUF ID. Check embedded-tokenizer and no-AutoTokenizer rules. Check agent_type and model pairs.
+      6. Add or update applicable REQ-* and SCENARIO-* entries before implementation. Write focused tests. Run schema, prior-failure, gate, exclusion, spec-coverage, adversarial, determination-preservation, and root-clutter checks.
+      7. Write the artifact atomically. A repeated incomplete-queue verdict retires this handoff scope.
+
+      Required deliverable: {project_root}/results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, v548_active_roadmap_path_and_hash, v548_active_task_ids, v548_terminal_artifacts_by_task, v548_conductor_outcomes, v548_blocked_null_clean_and_proposal_only_states, exp6365_runtime_boundary, exp6366_transport_failure_boundary, v549_milestone_doc_and_queue_hashes, v549_task_ids, v549_id_and_deliverable_checks, v549_dependency_and_gate_checks, v549_gate_field_cross_reference_checks, v549_prior_failure_checks, v549_exclusion_manifest_checks, v549_agent_model_and_llm_policy_checks, prompt_contract_checks, active_roadmap_modified, conductor_modified, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      field_principles must map every required field and gate to its purpose. field_provenance must classify every field as measured, derived, constant, or upstream. Set verifier_is_oracle=false.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6377_v549_terminal_handoff_and_queue_preflight --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6378-v549-post-marker-source-scope-freeze
+    milestone: "2026.08.549"
+    deliverable: results/experiment_6378_v549_post_marker_source_scope_freeze.json
+    title: "V549 dated source delta and three-lane scope freeze"
+    priority: high
+    track: infrastructure
+    requires_gpu: false
+    max_turns: 30
+    estimated_wall_time_min: 45
+    prior_failures:
+      - experiment_id: exp6364-v548-post-marker-source-scope-freeze
+        verdict: "complete_no_scope_change: no strict post-marker source changed V548 scope"
+        addressed_by: "The window starts after the V549 marker and validates a newly indexed schema-instruction paper plus corrected Extropic Z1 status against the V548 terminal evidence."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      The V549 planner refresh is in research-references.md. It promotes arXiv:2608.08254 as a direct control for the Exp6366 structured-output failure and carries arXiv:2606.09395 as a syntax-versus-semantics control. It records the Extropic Z1 tapeout and 2027 early-access claim but no authenticated Carnot hardware route. It keeps Hypothesis Frontier, dependency rollback, active reward machines, and goal evidence as the executable research lanes. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/research-program.md and {project_root}/research-references.md
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md and {project_root}/research-roadmap-next.yaml
+      - {project_root}/results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json
+      - {project_root}/results/experiment_6364_v548_post_marker_source_scope_freeze.json
+      - {project_root}/research-hardware-wishlist.md, {project_root}/ops/exclusion_manifest.yaml, and {project_root}/ops/known-issues.md
+
+      TASK
+      Validate the V549 dated research marker and freeze the executable scope. Recheck direct metadata and public availability. Separate actionable methods, controls, product status, closed scopes, and unavailable sources. Do not reopen a retired mechanism because a paper uses similar words.
+
+      CONCRETE STEPS
+      0. Check network reachability. Record unavailable endpoints and rate limits without inventing content.
+      1. Hash the V549 planner section. Validate direct titles, dates, identifiers, and URLs for promoted sources.
+      2. Recheck arXiv, OpenReview, Hugging Face Papers, Semantic Scholar EBT and ARM-EBM citation trails, GitHub, Extropic first-party pages, and Logical Intelligence first-party pages.
+      3. Classify each source as executable now, control only, deferred, retired scope, product status, or unavailable.
+      4. Freeze canonical factor transport, prospective certified self-learning with rollback, and live-path two-sided ARC goal evidence as the active lanes.
+      5. Freeze grammar and parser retries, external text scoring, hidden-state scoring, KAN training, EBT pretraining, unchanged board probes, TSU execution, and Kona execution as closed or deferred.
+      6. Add or update applicable REQ-* and SCENARIO-* entries. Write focused tests for marker detection, source classification, and closed-scope preservation. Run focused tests, coverage, spec coverage, adversarial verification, and root-clutter sweep.
+      7. Write an atomic terminal artifact. A no-change result is valid and does not expand the milestone.
+
+      Required deliverable: {project_root}/results/experiment_6378_v549_post_marker_source_scope_freeze.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, planner_marker_path_and_hash, source_window_start_and_end_utc, direct_arxiv_source_receipts, openreview_receipts, huggingface_papers_receipts, semantic_scholar_ebt_and_arm_ebm_receipts, github_discovery_receipts, extropic_first_party_receipt, logical_intelligence_first_party_receipt, new_actionable_findings, post_marker_findings_count, executable_scope_change_required, active_lane_freeze, closed_and_deferred_scope_freeze, unavailable_or_rate_limited_sources, retired_scope_reopened, source_claim_boundaries, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=false. Map every required field to a principle and a direct, measured, derived, or constant provenance.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6378_v549_post_marker_source_scope_freeze --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6379-canonical-factor-edit-transport-contract
+    milestone: "2026.08.549"
+    deliverable: results/experiment_6379_canonical_factor_edit_transport_contract.json
+    title: "Canonical factor-edit instruction and capacity transport contract"
+    priority: critical
+    track: infrastructure
+    requires_gpu: false
+    max_turns: 100
+    estimated_wall_time_min: 60
+    agent_type: claude
+    model: opus
+    prior_failures:
+      - experiment_id: exp6366-repaired-live-factor-proposal-authenticity
+        verdict: "complete_null: repaired live calls ran but authenticity gates did not all pass"
+        addressed_by: "This task does not rerun generation. It replays the frozen raw failures and replaces duplicated prompt/schema instructions with one hashed source that also computes tokenizer-specific output capacity."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6366 authenticated all three model calls but produced zero parse-valid objects. Qwen used the 192-token budget for analysis, dense Gemma repeated one token, and MoE Gemma truncated inside the JSON object. The prompt printed a compact target and then printed a larger payload that contained the same target again. arXiv:2608.08254 says schema descriptions and prompts form one model-dependent instruction surface. This task is deterministic transport infrastructure. It is not another grammar, parser, or generation retry. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/python/carnot/experiment_6366_repaired_live_factor_proposal_authenticity.py and its focused test
+      - {project_root}/results/experiment_6366_repaired_live_factor_proposal_authenticity.json and its raw stdout sidecars
+      - {project_root}/python/carnot/experiment_6344_counterexample_factor_proposal_calibration.py
+      - {project_root}/scripts/experiment_template.py and {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/research-references.md V549 marker
+      - {project_root}/openspec/capabilities/continuous-learning/spec.md and {project_root}/openspec/capabilities/research-harnesses/spec.md
+
+      TASK
+      Build a single-source factor-edit transport contract. One canonical object must generate the schema description, output example, validator, prompt fragment, source-binding rules, and output-token lower bound. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF for embedded-tokenizer capacity checks. Do not call AutoTokenizer. Do not invoke autoregressive generation. Do not add grammar decoding, parser retry, or post-hoc repair.
+
+      CONCRETE STEPS
+      0. Freeze and hash the Exp6366 artifact, prompt payload, schema sidecar, and three raw outputs before classification.
+      1. Label each frozen failure as thinking leakage, repetition collapse, truncation, syntax failure, structural failure, semantic failure, or unknown. Preserve overlapping labels.
+      2. Define one canonical bounded factor-edit object. Generate the prompt instruction, compact example, validator field list, and source-binding checks from it. Reject hand-written duplicates and hash drift.
+      3. Include a short bounded evidence_summary field inside the JSON object as one preregistered variant. It may cite visible evidence. It must not request hidden chain of thought.
+      4. Count the exact minimal serialized output with each model's embedded GGUF tokenizer in vocab-only mode. Compute old-budget margin, required completion lower bound, fixed headroom, n_ctx margin, and truncation risk separately.
+      5. Define a bounded repetition policy before live execution. Treat a repeated-token threshold breach as abstention. Do not let a larger token budget alone qualify the contract.
+      6. Add mutation tests for prompt-schema conflict, stale examples, missing fixed fields, reordered fields, thinking prefixes, markdown, repeated tokens, mid-object truncation, unsupported source spans, and parse-valid semantic corruption.
+      7. Add or update REQ-* and SCENARIO-* entries before implementation. Run focused tests, 100% focused coverage for new code, spec coverage, adversarial verification, determination preservation, and root-clutter sweep.
+      8. Set canonical_factor_transport_contract_ready_score=1.0 only when all deterministic generators agree, all drift attacks fail closed, all three tokenizer capacity receipts exist, and no retired decoding mechanism is present.
+
+      Required deliverable: {project_root}/results/experiment_6379_canonical_factor_edit_transport_contract.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, upstream_exp6366_path_hash_and_terminal_class, frozen_raw_failure_paths_hashes_and_labels, MODEL_SPECS, embedded_gguf_tokenizer_receipts, autotokenizer_usage_count, live_autoregressive_generation_invoked, canonical_schema_path_hash_and_version, canonical_schema_generated_surfaces, prompt_schema_drift_checks, bounded_evidence_summary_variant, per_model_minimum_output_tokens_and_capacity_margins, repetition_policy_and_failure_thresholds, deterministic_transport_mutation_matrix, syntax_structure_source_binding_and_semantic_boundaries, retired_decoding_mechanism_usage_count, canonical_factor_transport_contract_ready_score, no_model_quality_or_utility_claim, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=false. The schema validator checks transport only. Exact task checkers remain the later semantic oracle.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6379_canonical_factor_edit_transport_contract --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6380-three-family-canonical-factor-transport-canary
+    milestone: "2026.08.549"
+    deliverable: results/experiment_6380_three_family_canonical_factor_transport_canary.json
+    title: "Gated on Exp6379 readiness: three-family canonical factor transport canary"
+    priority: critical
+    track: self-learning
+    requires_gpu: true
+    max_turns: 100
+    estimated_wall_time_min: 150
+    agent_type: claude
+    model: opus
+    gated_on:
+      - upstream: exp6379-canonical-factor-edit-transport-contract
+        artifact_field: canonical_factor_transport_contract_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp6366-repaired-live-factor-proposal-authenticity
+        verdict: "complete_null: repaired live calls ran but authenticity gates did not all pass"
+        addressed_by: "This retry uses one hashed instruction surface, tokenizer-derived output capacity, a preregistered repetition policy, and a three-arm control that separates instruction change from added headroom."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6379 must establish the deterministic transport contract before this task runs. Exp6366 proved live execution but returned one invalid output from every mandated family and zero exact-checker calls. This retry changes the mechanism. It uses a canonical schema source, a capacity allowance derived from the exact target under each embedded tokenizer, and a fixed repetition control. It includes the old prompt and old token allowance as controls. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6379_canonical_factor_edit_transport_contract.json
+      - {project_root}/python/carnot/experiment_6379_canonical_factor_edit_transport_contract.py and its focused test
+      - {project_root}/python/carnot/experiment_6366_repaired_live_factor_proposal_authenticity.py and its raw sidecars
+      - {project_root}/python/carnot/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.py
+      - {project_root}/scripts/experiment_template.py and {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/openspec/capabilities/continuous-learning/spec.md
+
+      TASK
+      Run a bounded three-arm factor-edit transport canary on all three mandated local models. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF from cached_sota_pair(). Use embedded GGUF tokenizers only. Never call AutoTokenizer. Preserve raw output before parsing. Use no grammar, parser retry, JSON repair, hidden states, or external scorer. Exact checkers are the only correctness oracle.
+
+      CONCRETE STEPS
+      0. Revalidate the Exp6379 gate, both RTX 3090 GPUs, model hashes, embedded tokenizers, llama.cpp offload, disk, source hashes, and event-manifest hashes.
+      1. Seal at least 12 fresh licensed executable events across at least three constraint families. Balance executable structure and surface relabeling.
+      2. Preregister three matched arms: frozen Exp6366 prompt at 192 tokens, canonical prompt at 192 tokens, and canonical prompt at the computed per-model allowance with the fixed repetition policy. Change no other sampling input.
+      3. Run each model sequentially through the Exp6365 observable child contract. Record task-linked GPU, timing, capacity, raw stdout/stderr, token usage, return, and cleanup receipts.
+      4. Freeze raw outputs before classification. Report thinking leakage, repetition, truncation, syntax, structural, source-binding, semantic, timeout, and abstention counts by model and arm.
+      5. Parse once with the canonical validator. Do not retry or repair. For parse-valid objects, freeze source alignment and then call the exact checker. Keep exact pass or fail separate from transport readiness.
+      6. Prove read-only same-step isolation. Count model-weight changes, hidden-state access, generated labels, and protected-validation reads.
+      7. Add REQ-* and SCENARIO-* entries and focused tests. Run focused tests and coverage, spec coverage, relevant inference E2E checks, adversarial verification, determination preservation, and root-clutter sweep.
+      8. Set three_family_factor_transport_ready_score=1.0 only when every family has at least one nonempty source-bound parse-valid canonical-arm object, at least one exact-checker call, zero protected leakage, zero same-step writes, and complete runtime receipts. If the same all-invalid verdict recurs, retire this retry scope.
+
+      Required deliverable: {project_root}/results/experiment_6380_three_family_canonical_factor_transport_canary.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, exp6379_gate_receipt, MODEL_SPECS, models_used, cached_sota_pair_receipts, model_file_hashes_revisions_quantizations_and_tokenizers, embedded_gguf_tokenizer_receipts, autotokenizer_usage_count, cuda_offload_and_runtime_receipts_by_model, sealed_event_manifest_path_hash_license_and_balance, canonical_schema_path_hash_and_drift_receipt, preregistered_arm_contract, per_arm_prompt_output_and_context_capacity_receipts, raw_output_before_parse_paths_hashes_and_counts, failure_taxonomy_counts_by_model_and_arm, parse_valid_invalid_timeout_and_abstain_counts_by_model_and_arm, source_span_alignment_and_conflict_counts, exact_checker_paths_versions_calls_costs_and_errors, exact_pass_fail_counts_by_model_and_arm, same_step_read_write_isolation_results, retired_decoding_mechanism_usage_count, three_family_factor_transport_ready_score, semantic_utility_not_implied_by_transport, harm_underpowered_missing_and_flagged_cells, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=true only for exact task checkers. State that output transport, parsing, and model proposals are not oracles.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6380_three_family_canonical_factor_transport_canary --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6381-verified-frontier-live-factor-proposal-ab
+    milestone: "2026.08.549"
+    deliverable: results/experiment_6381_verified_frontier_live_factor_proposal_ab.json
+    title: "Gated on Exp6380 readiness: verified-frontier live factor proposal A/B"
+    priority: critical
+    track: self-learning
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 180
+    gated_on:
+      - upstream: exp6380-three-family-canonical-factor-transport-canary
+        artifact_field: three_family_factor_transport_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp6353-live-counterexample-factor-proposal-ab
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The new upstream requires parse-valid canonical outputs and exact-checker calls from every mandated model, so this A/B can exercise proposal utility instead of repeating the retired empty-generation gate."
+        retire_if_same_verdict: true
+      - experiment_id: exp6366-repaired-live-factor-proposal-authenticity
+        verdict: "complete_null: repaired live calls ran but authenticity gates did not all pass"
+        addressed_by: "This task runs only after Exp6380 clears the changed single-source transport gate and then compares proposal search policies rather than another raw authenticity canary."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6380 must show authentic source-bound factor edits from every mandated model before this experiment runs. The research question is now proposal search. Hypothesis Frontier keeps the best exactly verified incumbent and uses immutable residual counterexamples for later rounds. Carnot must compare that method with independent repeated proposals at matched work. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6380_three_family_canonical_factor_transport_canary.json
+      - {project_root}/python/carnot/experiment_6380_three_family_canonical_factor_transport_canary.py
+      - {project_root}/python/carnot/experiment_6344_counterexample_factor_proposal_calibration.py
+      - {project_root}/python/carnot/experiment_6345_prospective_certified_factor_evolution_ab.py
+      - {project_root}/python/carnot/experiment_6342_anytime_evalue_release_ledger.py
+      - {project_root}/research-references.md entries for arXiv:2608.10843 and arXiv:2608.10729
+      - {project_root}/openspec/capabilities/continuous-learning/spec.md and {project_root}/openspec/capabilities/self-learning/spec.md
+
+      TASK
+      Compare independent live proposals with a verified-incumbent frontier on sealed executable events. MODEL_SPECS must include all three mandated IDs: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use cached_sota_pair(), embedded tokenizers, and the Exp6380 canonical transport. Never call AutoTokenizer. Match calls, capacity, candidate count, exact checks, wall time, and event order. The exact checker owns every accept or reject.
+
+      CONCRETE STEPS
+      0. Revalidate the gate, model files, GPU offload, canonical schema hash, event licenses, exact checker hashes, and protected future partition.
+      1. Seal train-counterexample and untouched future-event partitions before model calls. Balance family, hardness, and surface form.
+      2. Preregister independent-restart and verified-frontier arms. Use the same seeds, model order, events, calls, output capacity, and exact-check budget.
+      3. In the frontier arm, keep only the strongest exactly verified incumbent. Give later rounds only immutable residual failures. Never expose protected future outcomes.
+      4. Record proposal diversity, source-bound validity, exact pass rate, incumbent changes, residual-set changes, marginal verified gain, stop reason, exact-check cost, latency, and model-specific results.
+      5. Freeze the selected factor for each arm. Evaluate untouched future exact outcomes once. Report confidence intervals and family-stratified effects.
+      6. Add placebo labels, event-order perturbation, identity-blind joins, equal-work checks, and no-gain stopping attacks. Fail closed on leakage or work mismatch.
+      7. Add REQ-* and SCENARIO-* entries and focused tests. Run focused tests and coverage, spec coverage, inference E2E checks, adversarial verification, determination preservation, and root-clutter sweep.
+      8. Set verified_frontier_ready_score=1.0 only when the treatment fired, work matched, no protected leak occurred, and every model produced exact-evaluable proposals. Record delta_verified_future_exact_yield without rounding before gates.
+
+      Required deliverable: {project_root}/results/experiment_6381_verified_frontier_live_factor_proposal_ab.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, exp6380_gate_receipt, MODEL_SPECS, models_used, cached_sota_pair_receipts, embedded_gguf_tokenizer_receipts, autotokenizer_usage_count, cuda_runtime_receipts, sealed_train_residual_and_future_manifests, canonical_transport_hash, preregistered_arm_contract, matched_work_receipts, raw_proposals_and_source_binding_counts, exact_checker_receipts, incumbent_and_residual_trajectory_by_round, proposal_diversity_and_marginal_gain, stopping_rule_and_stop_reasons, future_exact_outcomes_by_arm_model_and_family, delta_verified_future_exact_yield, uncertainty_intervals, treatment_activation_receipt, leakage_and_shortcut_controls, verified_frontier_ready_score, harm_underpowered_missing_and_flagged_cells, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=true only for protected exact task checkers. Model proposals and the frontier rank are not oracles.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6381_verified_frontier_live_factor_proposal_ab --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6382-chronological-verified-factor-self-learning
+    milestone: "2026.08.549"
+    deliverable: results/experiment_6382_chronological_verified_factor_self_learning.json
+    title: "Gated on Exp6381 positive delta: chronological verified-factor continuous self-learning"
+    priority: critical
+    track: self-learning
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 210
+    gated_on:
+      - upstream: exp6381-verified-frontier-live-factor-proposal-ab
+        artifact_field: verified_frontier_ready_score
+        op: "=="
+        value: 1.0
+      - upstream: exp6381-verified-frontier-live-factor-proposal-ab
+        artifact_field: delta_verified_future_exact_yield
+        op: ">"
+        value: 0.0
+    prior_failures:
+      - experiment_id: exp6354-prospective-live-certified-factor-learning
+        verdict: "GATE_BLOCK: Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal-ab)"
+        addressed_by: "This task depends on the fresh Exp6381 frontier artifact and a measured positive future exact-yield delta, so it cannot repeat the retired Exp6353 gate chain."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      This is the milestone's required continuous self-learning experiment. It runs only if Exp6381 proves a positive future exact-yield delta. The learner must process a sealed chronological stream. The active factor snapshot stays read-only during each proposal. A candidate may commit only after source binding, exact outcomes, protected replay, and the anytime release rule pass. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/research-program.md Continuous Self-Learning section
+      - {project_root}/results/experiment_6381_verified_frontier_live_factor_proposal_ab.json
+      - {project_root}/python/carnot/experiment_6381_verified_frontier_live_factor_proposal_ab.py
+      - {project_root}/python/carnot/experiment_6342_anytime_evalue_release_ledger.py through {project_root}/python/carnot/experiment_6346_certified_factor_evolution_safety_audit.py
+      - {project_root}/python/carnot/experiment_6290_keyed_revocable_atomic_repair_memory.py
+      - {project_root}/openspec/capabilities/continuous-learning/spec.md and {project_root}/openspec/capabilities/self-learning/spec.md
+
+      TASK
+      Run prospective chronological continuous self-learning with frozen, V546 replay, and live verified-frontier arms. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF from cached_sota_pair(). Use embedded tokenizers only. Never call AutoTokenizer. Keep model weights frozen. Treat the factor registry as the learned state. Exact checkers and the preregistered anytime evidence process control release.
+
+      CONCRETE STEPS
+      0. Revalidate both gates, all model and GPU receipts, the canonical transport hash, exact checker hashes, and enough disk for append-only ledgers and rollback snapshots.
+      1. Seal chronological past, release-calibration, near-future, held-family, and reversal partitions before learning. Hash order, labels, licenses, seeds, and no-overlap checks.
+      2. Preregister frozen, V546 replay, and live-frontier arms with matched event exposure, exact-check opportunities, capacity, and time.
+      3. For each live event, snapshot the released registry. Generate against that read-only snapshot. Freeze raw output and exact outcome. Update the e-process. Commit a new version only after every release condition passes.
+      4. Record additions, rejected proposals, quarantine, evidence IDs, version roots, capacity, replacement or deletion, restart recovery, and same-step read-write isolation.
+      5. Measure forward transfer, cumulative exact yield, false accepts, abstention, near-future utility, held-family retention, negative transfer, verification cost, latency, and memory growth after each release.
+      6. Run reversal and poison injections. Roll back to the last exact-valid version. Prove model weights, event manifests, checkers, and protected outcomes never change.
+      7. Add REQ-* and SCENARIO-* entries and focused tests. Run focused tests and coverage, spec coverage, applicable self-learning E2E checks, adversarial verification, determination preservation, and root-clutter sweep.
+      8. Set prospective_verified_factor_self_learning_ready_score=1.0 only when at least one live factor releases, future exact yield beats frozen, retention gates pass, no protected leak or unsafe commit occurs, and rollback restores an exact-valid root.
+
+      Required deliverable: {project_root}/results/experiment_6382_chronological_verified_factor_self_learning.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, exp6381_gate_receipts, MODEL_SPECS, models_used, cached_sota_pair_receipts, embedded_gguf_tokenizer_receipts, autotokenizer_usage_count, cuda_runtime_receipts, sealed_chronological_partition_manifests, arm_contract_and_matched_work_receipts, initial_registry_path_hash_and_root, read_only_then_commit_transaction_receipts, raw_proposal_source_binding_and_exact_outcome_ledger, anytime_release_state_by_event, factor_version_roots_and_capacity, additions_rejections_quarantine_merge_delete_and_eviction_counts, forward_transfer_and_future_exact_yield, held_family_retention_and_negative_transfer, false_accept_abstention_cost_latency_and_memory, poison_reversal_restart_and_rollback_results, model_weight_and_protected_file_immutability, prospective_verified_factor_self_learning_ready_score, harm_underpowered_missing_and_flagged_cells, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=true only for exact checkers. The e-process authorizes release only over exact evidence and is not a correctness oracle by itself.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6382_chronological_verified_factor_self_learning --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6383-dependency-guided-factor-rollback-stress
+    milestone: "2026.08.549"
+    deliverable: results/experiment_6383_dependency_guided_factor_rollback_stress.json
+    title: "Dependency-guided certified-factor descendant rollback stress test"
+    priority: high
+    track: self-learning
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 75
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp6354-prospective-live-certified-factor-learning
+        verdict: "GATE_BLOCK: Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal-ab)"
+        addressed_by: "This deterministic rollback stress test is ungated, uses frozen typed-lineage fixtures, and cannot repeat the absent prospective-learning execution or promote its utility."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Carnot already has versioned factor release and whole-version rollback. V549 needs selective rollback before a future consumer can use live factors. arXiv:2608.10502 motivates typed memory-to-decision dependencies. ReTree motivates branch-local invalidation. This task runs even if live learning is blocked. It uses deterministic fixtures and cannot promote learning utility. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/python/carnot/experiment_6342_anytime_evalue_release_ledger.py through {project_root}/python/carnot/experiment_6346_certified_factor_evolution_safety_audit.py
+      - {project_root}/python/carnot/experiment_6290_keyed_revocable_atomic_repair_memory.py
+      - {project_root}/results/experiment_6382_chronological_verified_factor_self_learning.json when present
+      - {project_root}/research-references.md entries for arXiv:2608.10502 and arXiv:2608.10676
+      - {project_root}/openspec/capabilities/continuous-learning/spec.md and {project_root}/openspec/capabilities/self-learning/spec.md
+
+      TASK
+      Implement and stress a typed factor dependency graph. Compare selective descendant rollback, full registry reset, and no rollback on frozen exact fixtures. Preserve factors and decisions with independent trusted support. Fail closed on cycles, missing evidence, corrupted lineage, or incomplete invalidation. Do not invoke an LLM and do not claim live utility.
+
+      CONCRETE STEPS
+      0. Hash the factor registry, release ledger, exact checkers, and any present Exp6382 artifact. Treat absent or blocked Exp6382 as context, not as a task gate.
+      1. Define typed nodes for source events, obligations, exact evidence, factor versions, factors, consumer decisions, and rollback actions. Define allowed edges and acyclicity rules.
+      2. Build deterministic clean, stale, poisoned, duplicated, misattributed, partially supported, shared-support, cyclic, and missing-evidence fixtures.
+      3. Preregister selective rollback, full reset, and no-rollback controls. Match the initial graph, injection order, and exact replay work.
+      4. Diagnose the bad source node. Invalidate only unsupported descendants. Preserve nodes with an independent exact-valid support path.
+      5. Replay exact protected fixtures. Measure harmful descendants removed, valid state preserved, over-rollback, under-rollback, latency, memory, and exact-check cost.
+      6. Test journal interruption, restart, double rollback, root mismatch, edge tampering, orphaned nodes, and rollback of an active consumer decision. Require an idempotent exact-valid terminal root.
+      7. Add REQ-* and SCENARIO-* entries before implementation. Write comprehensive tests. Run focused tests, 100% focused coverage, spec coverage, applicable E2E checks, adversarial verification, and root-clutter sweep.
+      8. Set dependency_guided_rollback_ready_score=1.0 only if selective rollback removes every harmful descendant, preserves every independently supported node, beats full reset on preservation, and has zero unsafe survivors.
+
+      Required deliverable: {project_root}/results/experiment_6383_dependency_guided_factor_rollback_stress.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, upstream_learning_context_class, registry_release_ledger_and_checker_hashes, typed_dependency_schema_path_hash_and_version, allowed_node_and_edge_types, preregistered_injection_and_arm_contract, deterministic_fixture_manifest, lineage_graphs_before_and_after_injection, diagnosis_receipts, selective_full_reset_and_no_rollback_results, harmful_descendants_removed, independently_supported_state_preserved, overrollback_underrollback_and_unsafe_survivor_counts, exact_replay_cost_latency_and_memory, cycle_missing_edge_corruption_and_interruption_results, journal_restart_and_idempotence_receipts, terminal_registry_roots, dependency_guided_rollback_ready_score, no_live_utility_claim, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=true only for deterministic exact replay checkers. Lineage and rollback policy are not correctness oracles.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6383_dependency_guided_factor_rollback_stress --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6384-default-off-certified-factor-consumer-ab
+    milestone: "2026.08.549"
+    deliverable: results/experiment_6384_default_off_certified_factor_consumer_ab.json
+    title: "Gated on Exp6382 and Exp6383 readiness: default-off certified factor consumer A/B"
+    priority: high
+    track: self-learning
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 150
+    gated_on:
+      - upstream: exp6382-chronological-verified-factor-self-learning
+        artifact_field: prospective_verified_factor_self_learning_ready_score
+        op: "=="
+        value: 1.0
+      - upstream: exp6383-dependency-guided-factor-rollback-stress
+        artifact_field: dependency_guided_rollback_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp6355-default-off-certified-factor-consumer-ab
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "This consumer requires fresh prospective learning and dependency-rollback artifacts from the new chain instead of the absent Exp6354 deliverable."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      The consumer must stay disabled unless prospective learning and selective rollback both pass. It must read a frozen certified registry and cannot write during evaluation. The question is whether a qualified live registry improves untouched future exact outcomes without false accepts, retention loss, or unsafe stale dependencies. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6382_chronological_verified_factor_self_learning.json
+      - {project_root}/results/experiment_6383_dependency_guided_factor_rollback_stress.json
+      - {project_root}/python/carnot/experiment_6382_chronological_verified_factor_self_learning.py
+      - {project_root}/python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py
+      - {project_root}/python/carnot/experiment_6355_default_off_certified_factor_consumer_ab.py
+      - {project_root}/openspec/capabilities/continuous-learning/spec.md and {project_root}/openspec/capabilities/self-learning/spec.md
+
+      TASK
+      Compare frozen, V546 replay, and certified-live factor registries on untouched future events with the consumer default-off. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF from cached_sota_pair(). Use embedded tokenizers only. Never call AutoTokenizer. Freeze registry writes before evaluation. The exact checker owns correctness.
+
+      CONCRETE STEPS
+      0. Revalidate both structured gates, all registry roots, dependency roots, model hashes, GPU offload, embedded tokenizers, exact checker hashes, and untouched-event seals.
+      1. Preregister frozen, replay, and certified-live arms. Match models, event order, capacity, verifier opportunities, wall-time budget, and abstention policy.
+      2. Load each frozen registry read-only. Prove no proposal, release, merge, deletion, eviction, or rollback write can occur during consumer evaluation.
+      3. Generate on untouched near-future and held-family events with all three models. Preserve raw output, source binding, registry version, dependency ancestry, and exact outcomes.
+      4. Measure exact yield, false accepts, abstention, harmful interventions, verification calls and errors, latency, memory, model-family effects, and retained protected performance.
+      5. Inject one stale dependency after prediction freeze and before final exact replay. Require selective rollback to invalidate affected decisions without changing independent decisions.
+      6. Run identity-blind joins, registry-version swaps, event reorder, duplicate evidence, missing lineage, and evaluation-write attacks. Any unsafe write or stale decision blocks promotion.
+      7. Add REQ-* and SCENARIO-* entries and focused tests. Run focused tests and coverage, spec coverage, inference and self-learning E2E checks, adversarial verification, determination preservation, and root-clutter sweep.
+      8. Set certified_factor_consumer_ready_score=1.0 only if certified-live improves exact yield over both controls, false accepts do not increase, retention passes, every stale descendant is revoked, and registry writes remain zero. Keep the feature default-off regardless.
+
+      Required deliverable: {project_root}/results/experiment_6384_default_off_certified_factor_consumer_ab.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, exp6382_and_exp6383_gate_receipts, MODEL_SPECS, models_used, cached_sota_pair_receipts, embedded_gguf_tokenizer_receipts, autotokenizer_usage_count, cuda_runtime_receipts, frozen_registry_and_dependency_roots_by_arm, untouched_future_event_manifest, preregistered_arm_and_matched_work_contract, consumer_default_off_and_read_only_receipts, raw_output_source_binding_registry_and_lineage_receipts, exact_yield_false_accept_abstention_and_harm_by_arm_model_and_family, verification_cost_errors_latency_and_memory, retention_results, stale_dependency_injection_and_decision_invalidation, registry_write_during_evaluation_count, leakage_shortcut_and_identity_blind_controls, certified_factor_consumer_ready_score, harm_underpowered_missing_and_flagged_cells, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=true only for protected exact task checkers. Factors, ancestry, and model text are not oracles.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6384_default_off_certified_factor_consumer_ab --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6385-live-factor-learning-and-rollback-safety-audit
+    milestone: "2026.08.549"
+    deliverable: results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json
+    title: "Independent canonical-transport learning rollback and consumer safety audit"
+    priority: critical
+    track: safety
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 75
+    prior_failures:
+      - experiment_id: exp6356-live-certified-learning-safety-audit
+        verdict: "complete_null: live certified learning safety audit found missing, blocked, null, or unauthentic evidence"
+        addressed_by: "This audit adds the canonical transport and dependency-lineage surfaces, reads the new V549 artifacts when present, and preserves missing or blocked inputs instead of promoting them."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6356 correctly blocked utility promotion because the V547 proposal and learning evidence was missing or unauthentic. V549 adds a canonical structured-output boundary and a dependency-guided rollback surface. This audit runs regardless of gates. A missing or blocked upstream remains a terminal evidence class. Safety success cannot substitute for utility evidence. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/python/carnot/experiment_6356_live_certified_learning_safety_audit.py and its focused test
+      - {project_root}/results/experiment_6379_canonical_factor_edit_transport_contract.json through {project_root}/results/experiment_6384_default_off_certified_factor_consumer_ab.json when present
+      - {project_root}/python/carnot/experiment_6379_canonical_factor_edit_transport_contract.py through {project_root}/python/carnot/experiment_6384_default_off_certified_factor_consumer_ab.py when present
+      - {project_root}/ops/exclusion_manifest.yaml and {project_root}/ops/known-issues.md
+      - {project_root}/openspec/capabilities/continuous-learning/spec.md and {project_root}/openspec/capabilities/self-learning/spec.md
+
+      TASK
+      Run an independent fail-closed safety audit of V549 factor transport, proposal search, chronological learning, selective rollback, and the future consumer. Freeze attack definitions before reading outcome-sensitive fields. Do not rerun an upstream experiment. Do not promote utility from clean attacks, blocked tasks, null tasks, or absent artifacts.
+
+      CONCRETE STEPS
+      0. Hash all present upstream artifacts, sidecars, source files, exact checkers, protected manifests, and exclusion state. Classify absent, blocked, null, clean, and flagged inputs before semantic reads.
+      1. Register attacks for process substitution, prompt-schema drift, capacity undercount, thinking-prefix acceptance, repeated-token acceptance, truncation laundering, parser retry, post-hoc repair, source substitution, and exact-check bypass.
+      2. Register attacks for residual-set mutation, incumbent laundering, optional-stopping reset, same-step writes, future-outcome leakage, duplicate evidence, event reorder, family identity shortcuts, and unequal work.
+      3. Register attacks for false lineage, missing edges, cycles, shared-support deletion, incomplete descendant invalidation, journal interruption, rollback root mismatch, and stale consumer decisions.
+      4. Register attacks for registry writes during evaluation, version swaps, quarantine bypass, capacity overflow, model-weight changes, and unsafe feature enablement.
+      5. Replay each attack against immutable copies. Report detected, fail-closed, unsafe survivor, false alarm, and inapplicable counts by upstream terminal class.
+      6. Recompute every readiness field from primary data. Safety success must leave utility promotion zero unless a separate clean utility artifact qualifies.
+      7. Add REQ-* and SCENARIO-* entries and focused tests. Run focused tests and 100% focused coverage, spec coverage, applicable E2E checks, adversarial verification, determination preservation, and root-clutter sweep.
+      8. Set factor_learning_rollback_safety_ready_score=1.0 only if every applicable harmful attack fails closed, no protected data leaks, no unsafe state survives, and no missing or blocked input is relabeled clean.
+
+      Required deliverable: {project_root}/results/experiment_6385_live_factor_learning_and_rollback_safety_audit.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, upstream_artifact_and_sidecar_hashes, upstream_terminal_classification, audit_registration_path_hash_and_preoutcome_receipt, attack_manifest_path_hash, transport_attack_results, proposal_frontier_attack_results, chronological_learning_attack_results, dependency_rollback_attack_results, consumer_attack_results, detected_fail_closed_unsafe_survivor_false_alarm_and_inapplicable_counts, readiness_recomputation, protected_validation_leak_count, source_model_weight_mutation_count, registry_write_during_consumer_count, unsafe_commit_count, utility_promotion_count, factor_learning_rollback_safety_ready_score, harm_underpowered_missing_and_flagged_cells, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=true only where immutable exact checker outputs are replayed. The audit does not create correctness labels.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6385_live_factor_learning_and_rollback_safety_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6386-arc-two-sided-goal-evidence-contract
+    milestone: "2026.08.549"
+    deliverable: results/experiment_6386_arc_two_sided_goal_evidence_contract.json
+    title: "Two-sided live ARC goal-evidence admission contract"
+    priority: critical
+    track: arc
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 75
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp6258-goal-veto-confusion-matrix
+        verdict: "complete_goal_veto_confusion_21_false_accepts_0_false_rejects_of_29_acceptance_precision_0.1923"
+        addressed_by: "This contract replaces specificity-only admission with accepted, rejected, and unverifiable states that require both firing and non-firing evidence before termination."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6258 found 21 false accepts, five true accepts, zero false rejects, and acceptance precision 0.1923. A predicate could pass when it never fired because the observation window contained no win. V549 must fix the contract before it adds a reward-machine discriminator. This task makes no game or level solve claim. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6258_goal_veto_confusion_matrix.json
+      - {project_root}/python/carnot/arc_goal_verifier.py and its focused tests
+      - {project_root}/python/carnot/arc_live_goal_verifier.py and its focused tests
+      - {project_root}/python/carnot/e3_orchestrator.py and {project_root}/python/carnot/agent_integration.py
+      - {project_root}/ops/arc_solve_registry.yaml and {project_root}/ops/arc_solve_proof_policy.md
+      - {project_root}/openspec/capabilities/arc-agi/spec.md and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Implement a default-off two-sided live ARC goal-evidence contract with accepted, rejected, and unverifiable states. Verified termination requires bounded firing evidence and bounded non-firing evidence. An unverified goal may rank legal probes but cannot terminate a level or update solve credit. Use only the live agent's own visible frames, actions, legal action set, deadlines, and runtime evidence.
+
+      CONCRETE STEPS
+      0. Registry-precheck the current live mechanism and hash the solve registry. This task must not duplicate a credited solve or change any solve record.
+      1. Reconstruct all 29 Exp6258 predicates and confusion labels. Freeze them as the regression fixture.
+      2. Define accepted, rejected, and unverifiable states. Require at least one preregistered firing witness and one preregistered non-firing contrast for verified acceptance.
+      3. Define bounded evidence windows, event identities, duplicate handling, timeouts, reversal, contradiction, and deadline behavior. Missing evidence returns unverifiable.
+      4. Keep verification separate from search. An unverifiable hypothesis may rank one legal probe. It cannot terminate, claim a solve, read hidden source, or call offline ground-truth search.
+      5. Replay Exp6258 and new constant-false, constant-true, delayed-trigger, duplicate, contradictory, and no-win-window fixtures. Measure the new confusion matrix.
+      6. Prove the contract is reachable from E3AgentPolicy and make_carnot_agent when the flag is enabled, and prove the shipped default stays off.
+      7. Add REQ-* and SCENARIO-* entries before implementation. Write comprehensive tests. Run focused tests, coverage, ARC E2E checks, spec coverage, adversarial verification, and root-clutter sweep.
+      8. Set arc_two_sided_goal_contract_ready_score=1.0 only if all 21 prior false accepts are rejected or unverifiable, no prior true accept becomes a false accept, no unverified hypothesis terminates, and the registry is unchanged.
+
+      Required deliverable: {project_root}/results/experiment_6386_arc_two_sided_goal_evidence_contract.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, exp6258_path_hash_and_confusion_boundary, registry_precheck_and_hash, no_duplicate_solve_target_receipt, two_sided_contract_path_hash_and_version, accepted_rejected_and_unverifiable_rules, firing_and_nonfiring_evidence_requirements, evidence_window_duplicate_timeout_reversal_and_deadline_rules, regression_and_adversarial_fixture_manifest, old_and_new_confusion_matrices, false_accept_false_reject_true_accept_true_reject_and_unverifiable_counts, admission_precision_and_coverage, live_entrypoint_reachability_receipts, default_off_receipt, termination_and_registry_write_counts, arc_solve_claim, arc_two_sided_goal_contract_ready_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set arc_solve_claim=false. Do not include solve_provenance because this task claims no level solve. Set verifier_is_oracle=false because the contract admits evidence but does not know hidden game truth.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6386_arc_two_sided_goal_evidence_contract --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6387-arc-active-reward-machine-discriminator
+    milestone: "2026.08.549"
+    deliverable: results/experiment_6387_arc_active_reward_machine_discriminator.json
+    title: "Gated on Exp6386 readiness: live-path active reward-machine discriminator"
+    priority: high
+    track: arc
+    requires_gpu: false
+    max_turns: 50
+    estimated_wall_time_min: 90
+    agent_type: codex
+    model: gpt-5.5
+    gated_on:
+      - upstream: exp6386-arc-two-sided-goal-evidence-contract
+        artifact_field: arc_two_sided_goal_contract_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp5712-arc-relational-goal-energy-live-ab
+        verdict: "complete: relational_live_route_null_no_promotion"
+        addressed_by: "This attempt replaces scalar relational goal energy with bounded visible-event automata and cannot run until the new two-sided evidence contract clears."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6386 must close the one-sided admission flaw before active goal selection runs. Active Reward Machine Inference motivates maintaining bounded automata over visible events and choosing legal trajectory extensions that distinguish them. Carnot must keep this mechanism on the live agent's own attempt path. It may not read source code, use offline ground-truth BFS, use a hand GameAdapter, or claim a game or level solve. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6386_arc_two_sided_goal_evidence_contract.json
+      - {project_root}/python/carnot/experiment_6386_arc_two_sided_goal_evidence_contract.py
+      - {project_root}/python/carnot/e3_orchestrator.py, {project_root}/python/carnot/agent_integration.py, and {project_root}/python/carnot/arc_live_goal_verifier.py
+      - {project_root}/python/carnot/arc_hypothesis_policy.py and its focused tests when present
+      - {project_root}/research-references.md entry for arXiv:2604.07480
+      - {project_root}/ops/arc_solve_registry.yaml, {project_root}/ops/arc_solve_proof_policy.md, and {project_root}/openspec/capabilities/arc-agi/spec.md
+
+      TASK
+      Implement a bounded default-off reward-machine hypothesis frontier over visible live events. Each candidate is a small automaton with source-linked transition evidence. Choose a legal probe only when candidate outcome predictions disagree. Feed observations back through the two-sided contract. Prove reachability from E3AgentPolicy and make_carnot_agent. Make no solve claim and do not update the solve registry.
+
+      CONCRETE STEPS
+      0. Revalidate the Exp6386 gate. Registry-precheck current live reachability and hash the registry, entrypoints, legal-action provider, and evidence contract.
+      1. Define bounded automaton states, visible event symbols, transition evidence, hypothesis capacity, eviction, abstention, contradiction, and timeout rules.
+      2. Create game-blind deterministic trajectory fixtures with two to five competing automata. Include unique disagreement actions, no-disagreement cases, delayed evidence, repeated frames, contradictory evidence, and deadlines.
+      3. Score only legal actions by expected hypothesis elimination. If no safe disagreement action exists, defer to the unchanged base policy.
+      4. Freeze the chosen action and active hypotheses before reading the resulting environment transition. Use the transition only as evaluation evidence for the next step.
+      5. Wire the default-off feature through E3AgentPolicy and make_carnot_agent. Prove the normal live entrypoint can reach it and the shipped default cannot change actions.
+      6. Measure hypothesis elimination, wrong elimination, abstention, legal-action changes, evidence cost, latency, timeout, base-policy fallback, and two-sided admission state.
+      7. Attack hidden-source reads, offline search, adapter lookup, action-set mutation, result-before-action leakage, duplicate evidence, unbounded growth, and solve-registry writes.
+      8. Add REQ-* and SCENARIO-* entries and focused tests. Run focused tests and coverage, ARC E2E checks, spec coverage, adversarial verification, and root-clutter sweep. Set arc_active_reward_machine_ready_score=1.0 only when treatment reachability and evidence integrity pass with zero forbidden access.
+
+      Required deliverable: {project_root}/results/experiment_6387_arc_active_reward_machine_discriminator.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, exp6386_gate_receipt, registry_precheck_path_hash_and_unchanged_receipt, no_duplicate_solve_target_receipt, reward_machine_schema_path_hash_and_version, hypothesis_capacity_eviction_abstention_and_timeout_rules, deterministic_game_blind_fixture_manifest, hypothesis_and_transition_evidence_trajectories, legal_disagreement_action_selection_receipts, action_frozen_before_outcome_receipts, live_entrypoint_and_feature_flag_reachability, default_off_and_base_policy_fallback_receipts, hypothesis_elimination_wrong_elimination_abstention_cost_and_latency, two_sided_admission_results, hidden_source_offline_search_adapter_and_oracle_access_counts, registry_write_count, arc_solve_claim, arc_active_reward_machine_ready_score, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set arc_solve_claim=false. Do not include solve_provenance because this task claims no level solve. Set verifier_is_oracle=false. Environment transitions are evaluation evidence only after action freeze.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6387_arc_active_reward_machine_discriminator --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6388-arc-goal-evidence-response-calibration
+    milestone: "2026.08.549"
+    deliverable: results/experiment_6388_arc_goal_evidence_response_calibration.json
+    title: "Gated on Exp6387 readiness: three-family ARC goal evidence-response calibration"
+    priority: critical
+    track: arc
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 210
+    gated_on:
+      - upstream: exp6387-arc-active-reward-machine-discriminator
+        artifact_field: arc_active_reward_machine_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp6258-goal-veto-confusion-matrix
+        verdict: "complete_goal_veto_confusion_21_false_accepts_0_false_rejects_of_29_acceptance_precision_0.1923"
+        addressed_by: "This calibration uses the new two-sided contract, matched evidence prefixes, and an active reward-machine arm to test evidence response instead of replaying the specificity-only veto."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6387 must prove a live-reachable, game-blind reward-machine discriminator before calibration. arXiv:2605.15333 reports model-dependent response to accumulating observations. Carnot must measure that response across the three mandated local families. Predictions must freeze before each evaluation transition. No arm may terminate a level or update solve credit. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6386_arc_two_sided_goal_evidence_contract.json and {project_root}/results/experiment_6387_arc_active_reward_machine_discriminator.json
+      - {project_root}/python/carnot/experiment_6386_arc_two_sided_goal_evidence_contract.py and {project_root}/python/carnot/experiment_6387_arc_active_reward_machine_discriminator.py
+      - {project_root}/python/carnot/arc_live_goal_verifier.py, {project_root}/python/carnot/e3_orchestrator.py, and {project_root}/python/carnot/agent_integration.py
+      - {project_root}/scripts/experiment_template.py and {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/research-references.md entry for arXiv:2605.15333
+      - {project_root}/ops/arc_solve_registry.yaml and {project_root}/openspec/capabilities/arc-agi/spec.md
+
+      TASK
+      Calibrate goal-evidence response on matched live-trajectory prefixes. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF from cached_sota_pair(). Use embedded GGUF tokenizers only. Compare the current gate, frozen-prior control, passive two-sided evidence, and active reward-machine evidence. Make no solve claim.
+
+      CONCRETE STEPS
+      0. Revalidate the gate, registry hash, model files, embedded tokenizers, both GPUs, llama.cpp offload, disk, deadlines, and live entrypoint reachability.
+      1. Registry-precheck target fixtures. Use only games and trajectory prefixes that do not create a duplicate solve claim. Seal visible frames, actions, legal sets, evidence identities, prefix boundaries, and evaluation labels.
+      2. Preregister current-gate, frozen-prior, passive two-sided, and active two-sided arms. Match model calls, token capacity, trajectory exposure, deadlines, and evaluation opportunities.
+      3. For each model and prefix, freeze the goal hypothesis, confidence or abstention, evidence references, and next legal probe before reading later transitions.
+      4. Report accepted, rejected, unverifiable, false accept, false reject, precision, coverage, calibration error, evidence monotonicity, hypothesis elimination, and response to each added evidence unit.
+      5. Compute delta_admission_precision and delta_false_accept_count for active two-sided evidence against the current gate. Preserve unrounded values for downstream gates.
+      6. Add shuffled-evidence, duplicate-evidence, surface-relabeled, no-win-window, model-identity-blind, action-order, deadline, and result-before-prediction controls.
+      7. Prove no hidden source, offline search, GameAdapter, external scorer, hidden state, AutoTokenizer, or registry write occurred. Keep every feature default-off outside the harness.
+      8. Add REQ-* and SCENARIO-* entries and focused tests. Run focused tests and coverage, inference and ARC E2E checks, spec coverage, adversarial verification, determination preservation, and root-clutter sweep. Set arc_evidence_calibration_ready_score=1.0 only when all models and arms have complete authentic receipts and the treatment fired.
+
+      Required deliverable: {project_root}/results/experiment_6388_arc_goal_evidence_response_calibration.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, exp6387_gate_receipt, registry_precheck_path_hash_and_unchanged_receipt, no_duplicate_solve_target_receipt, MODEL_SPECS, models_used, cached_sota_pair_receipts, embedded_gguf_tokenizer_receipts, autotokenizer_usage_count, cuda_runtime_receipts, sealed_visible_trajectory_prefix_manifest, preregistered_arm_and_matched_work_contract, raw_model_output_and_evidence_binding_receipts, prediction_frozen_before_evaluation_receipts, accepted_rejected_unverifiable_and_confusion_counts_by_arm_model_and_prefix, admission_precision_coverage_and_calibration_by_arm_model, evidence_response_and_monotonicity_curves, hypothesis_elimination_and_probe_results, delta_admission_precision, delta_false_accept_count, shuffled_duplicate_surface_identity_deadline_and_order_controls, forbidden_access_and_registry_write_counts, arc_solve_claim, arc_evidence_calibration_ready_score, harm_underpowered_missing_and_flagged_cells, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set arc_solve_claim=false. Do not include solve_provenance because this task claims no level solve. Set verifier_is_oracle=false. Frozen later transitions label calibration only.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6388_arc_goal_evidence_response_calibration --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6389-arc-default-off-active-goal-shadow
+    milestone: "2026.08.549"
+    deliverable: results/experiment_6389_arc_default_off_active_goal_shadow.json
+    title: "Gated on Exp6388 improvement: default-off live ARC active-goal shadow"
+    priority: high
+    track: arc
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 150
+    gated_on:
+      - upstream: exp6388-arc-goal-evidence-response-calibration
+        artifact_field: arc_evidence_calibration_ready_score
+        op: "=="
+        value: 1.0
+      - upstream: exp6388-arc-goal-evidence-response-calibration
+        artifact_field: delta_admission_precision
+        op: ">"
+        value: 0.0
+      - upstream: exp6388-arc-goal-evidence-response-calibration
+        artifact_field: delta_false_accept_count
+        op: "<="
+        value: 0
+    prior_failures:
+      - experiment_id: exp5712-arc-relational-goal-energy-live-ab
+        verdict: "complete: relational_live_route_null_no_promotion"
+        addressed_by: "This shadow uses the new two-sided reward-machine route and runs only after a measured precision gain with no false-accept increase, unlike the prior null relational-energy A/B."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      This task runs only if the three-family calibration is complete, admission precision improves, and false accepts do not increase. It is a live shadow test, not a solve task. The route stays default-off. It uses the middle mandated MoE model as the headline model and the normal Carnot agent entrypoint. It cannot change solve credit. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6388_arc_goal_evidence_response_calibration.json
+      - {project_root}/python/carnot/experiment_6387_arc_active_reward_machine_discriminator.py and {project_root}/python/carnot/experiment_6388_arc_goal_evidence_response_calibration.py
+      - {project_root}/python/carnot/e3_orchestrator.py, {project_root}/python/carnot/agent_integration.py, and {project_root}/python/carnot/arc_live_goal_verifier.py
+      - {project_root}/python/carnot/arc_hypothesis_policy.py and focused tests when present
+      - {project_root}/ops/arc_solve_registry.yaml, {project_root}/ops/arc_solve_proof_policy.md, and {project_root}/ops/e2e-test-plan.md
+      - {project_root}/openspec/capabilities/arc-agi/spec.md
+
+      TASK
+      Run a matched route-off versus active-goal-shadow live-path A/B through make_carnot_agent. MODEL_SPECS must include unsloth/gemma-4-26B-A4B-it-GGUF from cached_sota_pair() as the headline model. Use its embedded GGUF tokenizer only. Never call AutoTokenizer. The shadow may propose a legal action, but the harness records influence without enabling goal-based termination. Make no game or level solve claim and do not update the solve registry.
+
+      CONCRETE STEPS
+      0. Revalidate all three gates, the registry hash, no-duplicate-target receipt, model hash, tokenizer, GPU offload, ARC SDK reachability, deadlines, and feature default.
+      1. Seal a bounded game-blind live roster and seeds. Exclude any cell that would duplicate an already reproduced target level. Record no source code, offline search result, or per-game adapter.
+      2. Preregister route-off and active-goal-shadow arms with matched budgets, seeds, deadlines, action opportunities, model calls, and environment resets.
+      3. Run the normal live entrypoint. Freeze base action, shadow action, active hypotheses, evidence IDs, and legal set before the environment transition.
+      4. Never let the shadow terminate a level. Measure legal action disagreement, accepted shadow influence, hypothesis elimination, false admission, abstention, transition evidence, timeout, latency, token use, and cost.
+      5. Use the environment only after action freeze. Keep navigation policy, world-model policy, verifier routing, and registry writes unchanged outside the feature flag.
+      6. Attack flag leakage, source reads, offline BFS, adapter lookup, illegal action, action-after-result, model substitution, deadline overrun, environment-reset mismatch, and solve-registry writes.
+      7. Add REQ-* and SCENARIO-* entries and focused tests. Run focused tests and coverage, the normal live-agent E2E check, spec coverage, adversarial verification, determination preservation, and root-clutter sweep.
+      8. Set arc_active_goal_shadow_ready_score=1.0 only if the live route is authentic, treatment fires, false admissions do not increase, every action is legal and pre-outcome, deadlines pass, and registry writes remain zero. Keep the feature default-off.
+
+      Required deliverable: {project_root}/results/experiment_6389_arc_default_off_active_goal_shadow.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, exp6388_gate_receipts, registry_precheck_path_hash_and_unchanged_receipt, no_duplicate_solve_target_receipt, MODEL_SPECS, models_used, cached_sota_pair_receipts, embedded_gguf_tokenizer_receipts, autotokenizer_usage_count, cuda_runtime_receipts, sealed_live_roster_seeds_and_budget_contract, normal_entrypoint_and_feature_flag_reachability, route_off_and_shadow_matched_work_receipts, base_and_shadow_actions_frozen_before_outcomes, legal_action_disagreement_and_influence_counts, hypothesis_elimination_false_admission_abstention_and_transition_evidence, timeout_latency_token_and_cost_results, forbidden_access_illegal_action_and_registry_write_counts, default_off_receipt, arc_solve_claim, arc_active_goal_shadow_ready_score, harm_underpowered_missing_and_flagged_cells, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set arc_solve_claim=false. Do not include solve_provenance because this task claims no level solve. Set verifier_is_oracle=false. The environment is an evaluation oracle only after action freeze.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6389_arc_default_off_active_goal_shadow --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6390-v549-adversarial-capstone
+    milestone: "2026.08.549"
+    deliverable: results/experiment_6390_v549_adversarial_capstone.json
+    title: "V549 adversarial capstone and PRD-gap reconciliation"
+    priority: critical
+    track: integration
+    requires_gpu: false
+    max_turns: 100
+    estimated_wall_time_min: 90
+    model: opus
+    prior_failures:
+      - experiment_id: exp6196-v536-capstone
+        verdict: "blocked: bootstrap only; capstone reconciliation checks not complete"
+        addressed_by: "This capstone routes directly to Opus with a 100-turn budget and requires full primary-artifact reconciliation rather than accepting a bootstrap-only deliverable."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      V549 has 13 upstream tasks across factor transport, prospective continuous self-learning, dependency rollback, a default-off consumer, and two-sided live ARC goal evidence. The capstone must reconcile whatever evidence exists. It must preserve blocked, null, missing, flagged, retired, and proposal-only states. It must not rerun an upstream experiment or turn safety success into utility success. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/research-program.md, {project_root}/_bmad/prd.md, and {project_root}/_bmad/architecture.md
+      - {project_root}/research-roadmap.yaml, {project_root}/research-roadmap-next.yaml, and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json through {project_root}/results/experiment_6389_arc_default_off_active_goal_shadow.json when present
+      - {project_root}/scripts/summarize_artifact.py, {project_root}/scripts/adversarial_verify.py, and {project_root}/scripts/determination_preservation_lint.py
+      - {project_root}/ops/conductor-log.md, {project_root}/ops/status.md, {project_root}/ops/changelog.md, {project_root}/ops/metrics.md, and {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/_bmad/traceability.md and all changed OpenSpec capability specs
+
+      TASK
+      Build the V549 adversarial capstone from primary artifacts. Recompute every structured gate and readiness claim. Decide the three PRD gaps: canonical local factor transport, prospective FR-11 continuous self-learning with rollback and consumer safety, and falsifiable live ARC goal evidence. Preserve model, hardware, oracle, and no-solve boundaries. Reconcile specs and operations documents only to measured terminal evidence.
+
+      CONCRETE STEPS
+      0. Hash the milestone, roadmap, conductor, exclusion manifest, registry, expected artifacts, sidecars, and changed source. Classify every expected task before semantic reads.
+      1. Read each present artifact through scripts/summarize_artifact.py. Preserve original and live adversarial verdicts separately.
+      2. Recompute all Exp6379-Exp6389 readiness fields and gates from primary fields. Record mismatches, missing fields, non-finite numbers, wrong model identities, and inconsistent hashes.
+      3. Recompute the Exp6366 prior-failure retirement condition. If Exp6380 repeats the all-invalid verdict, require its new scope to enter the exclusion manifest through the normal governed path.
+      4. Separate transport validity, exact semantic utility, release, retention, rollback, consumer utility, safety, ARC admission, live influence, and solve credit. No layer can borrow readiness from another.
+      5. Audit all LLM artifacts for mandated MODEL_SPECS, embedded tokenizers, no AutoTokenizer, authentic GPU receipts, raw-before-parse order, protected-data isolation, and exact-oracle separation.
+      6. Audit ARC artifacts for live reachability, legal pre-outcome actions, default-off status, no hidden source or offline search, no duplicate solve target, arc_solve_claim=false, and unchanged registry.
+      7. Decide each PRD gap as advanced, null, blocked, unsafe, or missing. Decide every branch as promote-default-off, retain-control, rerun-only-with-new-mechanism, retire, or defer.
+      8. Add or update applicable REQ-* and SCENARIO-* entries. Write focused capstone tests. Run focused tests and coverage, schema and gate audits, spec coverage, applicable E2E checks, adversarial verification, determination preservation, exclusion lint, and root-clutter sweep.
+      9. Reconcile openspec, _bmad/traceability.md, ops/status.md, ops/changelog.md, and ops/metrics.md with measured evidence. Do not claim publication or push changes.
+
+      Required deliverable: {project_root}/results/experiment_6390_v549_adversarial_capstone.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, milestone_and_roadmap_hashes, expected_task_ids_and_terminal_classes, original_and_live_adversarial_verdicts, upstream_artifact_and_sidecar_hashes, structured_gate_recomputation, readiness_field_recomputation, prior_failure_and_retirement_recomputation, model_policy_tokenizer_gpu_and_raw_order_audit, exact_oracle_and_protected_data_audit, factor_transport_verdict, verified_frontier_verdict, continuous_self_learning_verdict, dependency_rollback_verdict, consumer_verdict, factor_safety_verdict, arc_goal_contract_verdict, arc_reward_machine_verdict, arc_calibration_verdict, arc_live_shadow_verdict, arc_registry_and_no_solve_audit, hardware_claim_boundary, three_prd_gap_decisions, branch_promotion_retirement_and_deferral_decisions, missing_blocked_null_flagged_and_retired_evidence, documentation_reconciliation_receipts, public_claim_eligibility, protected_files_unchanged, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set public_claim_eligibility=false unless every named result has clean primary evidence. Set verifier_is_oracle=false for aggregation. Preserve upstream oracle declarations without replacing them.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6390_v549_adversarial_capstone --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
