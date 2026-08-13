@@ -15767,3 +15767,4 @@ code |
 | 2026-08-13 08:26 UTC | Independent canonical-transport learning rollback  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-13 08:50 UTC | Two-sided live ARC goal-evidence admission contrac | OK | 111 passed, 1 warning in 11.22s |
 | 2026-08-13 09:13 UTC | Gated on Exp6386 readiness: live-path active rewar | OK | 109 passed, 1 warning in 10.51s |
+| 2026-08-13 09:32 UTC | Gated on Exp6387 readiness: three-family ARC goal  | OK | 86 passed, 1 warning in 8.79s |
