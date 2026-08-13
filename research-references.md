@@ -34460,3 +34460,111 @@ Carnot reproduces them.
   hidden-state scorer, external-text scorer, or EBT pretraining.
 
 <!-- V550-PLANNER-REFRESH-20260813-END -->
+
+## V551 Planner Refresh (2026-08-13, after milestone 2026.08.550)
+
+This refresh used Exp6391 through Exp6403 as the evidence boundary. It searched
+arXiv first for 2025-2026 EBM reasoning, neural constraint solving, Ising and
+thermodynamic hardware, hallucination control, KANs, constrained generation,
+and continual learning. It then checked OpenReview, Hugging Face Papers,
+Semantic Scholar, GitHub, Extropic, and Logical Intelligence. Source claims are
+hypotheses until Carnot reproduces them with exact authority and fresh held
+evidence.
+
+### Promoted methods
+
+- **Scoped Verification for Reliable Long-Horizon Agentic Context Evolution
+  under Distribution Shift** - arXiv:2607.09175,
+  https://arxiv.org/abs/2607.09175. GRACE represents mutable context as a typed
+  graph and validates an update only in the affected typed neighborhood before
+  reconstructing an incremental checkpoint. Five reported replications improve
+  strict final-checkpoint reliability over flat-text evolution. Carnot hook:
+  represent licensed factor memory as a predecessor-bound typed graph. Compute
+  an exact affected-neighborhood receipt for every proposed update and evaluate
+  fresh distribution-shift windows before activation. The graph does not grant
+  semantic authority; exact event checkers remain the release gate.
+- **ConsistencyGate: Preventing Memory Contamination in LLM Agents via
+  Self-Consistency Admission Control** - arXiv:2607.22962,
+  https://arxiv.org/abs/2607.22962. The paper isolates write-time contamination
+  as a compounding long-horizon failure and releases controlled corruption
+  benchmarks. Carnot hook: build a frozen factor-event contamination stream and
+  compare write-everything with a provenance-plus-exact-check admission gate.
+  Use local SOTA GGUF support scores only as proposal features. A model vote
+  cannot authorize a commit, and implicit-source cases must abstain or escalate
+  to the immutable ledger.
+- **From Lossy to Verified: A Provenance-Aware Tiered Memory for Agents** -
+  arXiv:2602.17913, https://arxiv.org/abs/2602.17913; also published at the ICLR
+  2026 MemAgents workshop. TierMem keeps a fast summary tier linked to an
+  immutable raw-log tier and escalates when summary evidence is insufficient.
+  Carnot hook: treat the compiled factor graph as the fast tier and the
+  append-only event/release ledger as authority. Measure exact answer agreement,
+  escalation rate, latency, bounded growth, and provenance coverage across
+  process restarts. Verified findings may be cached only with raw-source hashes.
+- **Adaptive Memory Admission Control for LLM Agents** - arXiv:2603.04549,
+  https://arxiv.org/abs/2603.04549; ICLR 2026 MemAgents. A-MAC decomposes
+  admission into utility, factual confidence, novelty, recency, and content-type
+  features. Carnot hook: use those categories as an interpretable diagnostic
+  vector, but replace the paper's LLM-assisted authority with deterministic
+  provenance, exact release outcomes, and predecessor checks. Compare diagnostic
+  ranking with the hard admission decision; never average away an exact veto.
+
+### Controls and deferred methods
+
+- The V550 AI4AI harness, retry/switch/abstain policy, transactional continuity
+  kernel, and delayed-feedback policy-selection controls remain the immediate
+  prerequisites. V551 extends their licensed factor cells; it does not retry the
+  retired universal-support claim.
+- The recent OpenReview and Hugging Face memory papers often train learned
+  routers or let an LLM judge memory value. Carnot may measure those scores, but
+  exact evidence, source hashes, and release receipts remain authoritative.
+- Ultrafast on-chip KAN learning (`2602.02056`), thermodynamic model scaling
+  (`2607.00170`), FPGA Ising decomposition (`2602.15985`), and KAN continual
+  classifiers (`2503.21076`) are already indexed. They provide no changed local
+  hardware receipt and do not reopen the closed KAN utility lane.
+- Recent hallucination and constrained-decoding work remains learned-score or
+  generation-side evidence. It does not supersede exact checkers and does not
+  reopen external generated-text scoring, grammar decoding, parser/JIT repair,
+  hidden-state scoring, or EBT pretraining.
+
+### Secondary-source and product status
+
+- **Semantic Scholar:** the unauthenticated API was rate-limited during this
+  refresh. The latest valid receipt remains 33 EBT (`2507.02092`) citations and
+  eight ARM-EBM (`2512.15605`) citations from V550. Targeted citation search
+  found no new exact-authority, local-GGUF mechanism.
+- **OpenReview:** the ICLR 2026 MemAgents record confirms TierMem and A-MAC as
+  current memory-governance work. GRACE and ConsistencyGate are newer arXiv
+  records and provide the sharper long-horizon test hypotheses.
+- **Hugging Face Papers:** current records emphasize state continuity,
+  provenance, memory poisoning, and scoped verification. FARMA/SENTINEL,
+  ElephantAgent, and AutoMem were already indexed; they are controls, not new
+  lanes.
+- **GitHub:** the TierMem and A-MAC reference repositories are public, but their
+  default stacks depend on external APIs or learned routers. Reuse benchmark
+  shapes and provenance fields only; do not add a production dependency or
+  closed API.
+- **Extropic:** first-party writing still has no authenticated Carnot TSU route.
+  Z1 remains a future early-access target. Schedule no TSU power, latency, or
+  availability claim.
+- **Logical Intelligence:** Kona 1.0 and the June formal-verification material
+  still expose no weights, reproducible architecture, or documented local API.
+  Kona remains a product comparator only.
+
+### V551 planning impact
+
+- Run a clean V550-only factor evidence audit before extending the path. Do not
+  mix the already flagged Exp6385 artifact into the new claim boundary.
+- Freeze a provenance-linked two-tier factor-memory and controlled contamination
+  protocol. Then run multi-session, distribution-shift continuous self-learning
+  on the licensed Gemma cells with exact transactional admission and rollback.
+- Test fresh powered factor evidence on the already licensed model-family and
+  constraint-family cells. Qwen's unlicensed cells must abstain; no silent
+  fallback or universal-support claim is allowed.
+- Move the default-off ARC route from held causal evidence to fresh opt-in live
+  policy windows, then replicate on a held game family. Make no game or level
+  solve claim and do not update the solve registry.
+- Schedule no unchanged board probe, CCTU rerun, KAN training, TSU task, Kona
+  task, hidden-state scorer, external-text scorer, grammar/parser retry, or EBT
+  pretraining.
+
+<!-- V551-PLANNER-REFRESH-20260813-END -->
