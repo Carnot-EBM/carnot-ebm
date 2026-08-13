@@ -202,6 +202,7 @@ import argparse
 import contextlib
 import json
 import os
+import time
 import subprocess
 import sys
 import uuid
@@ -796,6 +797,47 @@ def prune_stale_markers() -> list[Path]:
     return blocking
 
 
+RETENTION_DAYS = 7
+
+
+def prune_old_debris(days: int = RETENTION_DAYS) -> tuple[int, int]:
+    """Delete spent snapshots and write-logs older than `days`. Returns (files, bytes).
+
+    WHY THIS EXISTS. `prune_stale_markers` above retires MARKERS -- the interlock files. Nothing
+    ever removed the two debug files each run leaves behind, so the directory grew without limit.
+    Measured 2026-08-13: 3,501 files and 464 MB on the operator's disk, 3,441 of them `.writes.log`
+    from runs that finished weeks ago. A guard that quietly consumes half a gigabyte of somebody's
+    disk is a guard they will eventually turn off.
+
+    WHAT IS SAFE TO DELETE, and why this cannot weaken the interlock. A `.pending.json` marker is
+    the ONLY file the gate consults, and this function never touches one at any age -- an old
+    marker means an old unresolved rewrite, which is more serious than a recent one, not less. A
+    `.snapshot.json` is a baseline that only a matching `--check` reads, and a `--check` a week
+    after its `--snapshot` is meaningless anyway: the tree has moved on and the diff would be
+    mostly other people's work. A `.writes.log` is never read by any code path in this file; it is
+    there for a human reading a fresh incident.
+
+    FAIL OPEN, deliberately, and this is the opposite choice from `prune_stale_markers`. That
+    function fails CLOSED because a marker it cannot read might be hiding real damage. This one
+    fails OPEN because it only removes debris: if a file cannot be stat'ed or unlinked, skipping
+    it costs some disk and nothing else. Never let a cleanup routine fail a gate.
+    """
+    cutoff = time.time() - days * 86400
+    n = freed = 0
+    for p in list(RUNS.glob("*.snapshot.json")) + list(RUNS.glob("*.writes.log")):
+        try:
+            st = p.stat()
+            if st.st_mtime >= cutoff:
+                continue
+            size = st.st_size
+            p.unlink()
+        except OSError:
+            continue  # fail open: debris cleanup must never break a gate
+        n += 1
+        freed += size
+    return n, freed
+
+
 def arm_from_pytest(
     baseline: dict[str, str], command: list[str], run_id: str | None = None
 ) -> list[str]:
@@ -924,6 +966,16 @@ def cmd_gate() -> int:
     Fails CLOSED in every direction: an unreadable marker refuses, and git being unable to answer
     refuses rather than assuming the tree is clean.
     """
+    # Debris cleanup rides on the gate because the gate runs on every commit, so the directory
+    # self-limits instead of needing anyone to remember. It touches no marker and cannot fail
+    # this function -- see prune_old_debris for why it fails open where prune_stale_markers
+    # fails closed.
+    try:
+        n, freed = prune_old_debris()
+        if n:
+            print(f"test-suite-mutation-check: pruned {n} spent file(s), {freed / 1048576:.0f} MB")
+    except Exception:  # noqa: BLE001
+        pass
     try:
         blocking = prune_stale_markers()
     except GitError as exc:

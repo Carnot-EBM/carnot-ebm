@@ -930,3 +930,104 @@ def test_a_new_baseline_discards_the_previous_windows_observations(repo, monkeyp
     assert art.read_text() == '{"experiment": 3946, "edited_by_hand": true}\n', (
         "the hand edit was reverted on a previous window's evidence"
     )
+
+
+# ---------------------------------------------------------------------------
+# Retention: the directory has to stop growing, without ever weakening the gate.
+#
+# REQ-OPS-MUTATION-RETENTION-6265. Measured 2026-08-13: 3,501 files and 464 MB, 3,441 of them
+# `.writes.log` from runs that finished weeks ago. `prune_stale_markers` retires MARKERS; nothing
+# ever removed the two debug files each run leaves behind. A guard that silently eats half a
+# gigabyte of the operator's disk is a guard they eventually switch off.
+#
+# The whole risk of a cleanup routine living next to an interlock is that it deletes the
+# interlock. So the load-bearing test here is the second one: a pending marker survives at ANY
+# age. An old unresolved rewrite is more serious than a recent one, not less.
+# ---------------------------------------------------------------------------
+
+
+def _age(p: Path, days: float) -> None:
+    """Backdate a file so the retention cutoff sees it as old."""
+    import os
+    import time
+
+    t = time.time() - days * 86400
+    os.utime(p, (t, t))
+
+
+def test_prune_old_debris_removes_spent_files_past_the_cutoff(tmp_path, monkeypatch):
+    runs = tmp_path / "runs"
+    runs.mkdir()
+    monkeypatch.setattr(tsm, "RUNS", runs)
+
+    old_log = runs / "abc.writes.log"
+    old_log.write_text("x" * 100)
+    _age(old_log, 30)
+    old_snap = runs / "abc.snapshot.json"
+    old_snap.write_text("{}")
+    _age(old_snap, 30)
+    fresh = runs / "def.writes.log"
+    fresh.write_text("y")
+
+    n, freed = tsm.prune_old_debris(days=7)
+
+    assert n == 2, "both files older than the cutoff should go"
+    assert freed >= 100
+    assert not old_log.exists()
+    assert not old_snap.exists()
+    assert fresh.exists(), "a file inside the retention window must be kept"
+
+
+def test_prune_old_debris_never_deletes_a_pending_marker_at_any_age(tmp_path, monkeypatch):
+    """The one property that matters. A marker is the interlock; debris cleanup must not see it.
+
+    Deliberately backdated a year. Age is not evidence a rewrite was resolved -- only the tree is,
+    which is `prune_stale_markers`'s job and requires reading the marker's file list. If this test
+    ever fails, the gate can be silenced by waiting.
+    """
+    runs = tmp_path / "runs"
+    runs.mkdir()
+    monkeypatch.setattr(tsm, "RUNS", runs)
+
+    marker = runs / "ancient.pending.json"
+    marker.write_text(json.dumps({"modified_tracked_files": ["results/x.json"]}))
+    _age(marker, 365)
+
+    n, _ = tsm.prune_old_debris(days=7)
+
+    assert n == 0
+    assert marker.exists(), "a pending marker must survive debris cleanup at any age"
+
+
+def test_prune_old_debris_fails_open_when_a_file_cannot_be_removed(tmp_path, monkeypatch):
+    """Cleanup must never break the gate it rides on.
+
+    This is the OPPOSITE choice from `prune_stale_markers`, which fails closed. That one refuses
+    when it cannot prove damage is resolved. This one only removes debris, so an unreadable or
+    undeletable file costs disk and nothing else -- skip it and carry on.
+    """
+    runs = tmp_path / "runs"
+    runs.mkdir()
+    monkeypatch.setattr(tsm, "RUNS", runs)
+
+    doomed = runs / "gone.writes.log"
+    doomed.write_text("z")
+    _age(doomed, 30)
+    survivor = runs / "other.writes.log"
+    survivor.write_text("zz")
+    _age(survivor, 30)
+
+    real_unlink = Path.unlink
+
+    def flaky(self, *a, **k):
+        if self.name == "gone.writes.log":
+            raise OSError("permission denied")
+        return real_unlink(self, *a, **k)
+
+    monkeypatch.setattr(Path, "unlink", flaky)
+
+    n, _ = tsm.prune_old_debris(days=7)  # must not raise
+
+    assert n == 1, "the deletable file is still cleaned up"
+    assert doomed.exists()
+    assert not survivor.exists()
