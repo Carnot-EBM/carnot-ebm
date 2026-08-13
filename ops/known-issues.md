@@ -17574,3 +17574,58 @@ ranked, sampled, or searched over.
 solves, so arm B is unconstructible at hidden-game level 1 regardless -- this measured the
 BEST case for the fix and it still failed. The live threshold remains unchanged; there is now
 no reason to change it.
+
+## 2026-08-13 REQ-OPS-VERDICT-ROW-6261: a lint that checks a verdict against its own rows
+
+Operator question: "how do we make this process self improving?" The answer, grounded in what
+actually failed this session rather than in general principle.
+
+**The gap.** The project already checks an artifact against ITSELF -- acceptance-gate
+self-reports, fabrication patterns, determination preservation, freshness. Nothing asked
+whether the headline is SUPPORTED BY THE ROWS. Three artifacts in two days had headlines their
+own rows contradicted:
+
+| artifact | verdict said | rows said |
+|---|---|---|
+| exp6252 | gate MET | the ablation was byte-identical to the baseline on 20 of 25 rows |
+| exp6251 | gate MET | 1 win, 1 loss, 2 rows pinned at floor/ceiling |
+| exp6254 | (a clean null) | every row was None, from a store-path bug |
+
+Each was caught by a human reading rows. That is not a process, and it compounds: the
+conductor plans from `honest_verdict`, so a wrong verdict propagates into the retro, the
+planner, and the exclusion decisions.
+
+**Shipped.** `scripts/verdict_row_consistency_lint.py` with five checks, each built from one of
+those real incidents: ALL_ROWS_NULL, DEGENERATE_CONTROL, NO_HEADROOM_MAJORITY,
+WINS_NOT_EXCEEDING_LOSSES, COVERAGE_SHORTFALL. Verified against the originals -- it catches
+exp6252's degenerate control and exp6251's pinned rows, and blocks the exp6254 shape. 11 tests.
+
+**Advisory by default, one hard class.** Only ALL_ROWS_NULL exits non-zero, because "every row
+empty" is unambiguous. The rest warn. A hard block on a fuzzy match over free-form artifacts is
+how a guard starts punishing people for other people's data -- the artifact-freshness lesson
+from the day before.
+
+**It hit its own bug class twice while being built, which is worth recording.**
+1. The first version scanned only top-level row keys and found NOTHING on exp6252, whose arms
+   are nested at `row["arms"][name][field]` -- a pattern list narrower than its concept, on the
+   tool written to catch exactly that.
+2. `_metric_like` excluded any field containing `_n`, which threw away `best_of_n_held`, the
+   headline metric of exp6251. Same unanchored-substring bug as "meta" matching inside
+   "meta_tensor" in the TAUTOLOGY check. Exclusions are now suffix-anchored.
+
+**THE MORE IMPORTANT FINDING, surfaced by running it.** Over the 60 most recent artifacts the
+lint checked **3** and skipped **57** -- and its first version printed a bare "OK" while doing
+so, which is the guard-is-green-while-blind state this project keeps finding in other guards.
+It now always prints coverage.
+
+The 57 skips are mostly CORRECT: those artifacts have no per-unit row container at all. Their
+lists are `MODEL_SPECS`, tokenizer receipts, `gates_evaluated`, `tests_run` -- bookkeeping, not
+measurement units. Widening the container list to include them would manufacture findings.
+
+So the real conclusion is bigger than the lint: **most recent artifacts report a verdict and
+aggregate numbers with no per-unit rows, which makes their headline claims unfalsifiable from
+the artifact alone.** No tool can check a claim whose evidence was never written down. If the
+loop is to be self-improving, per-unit rows should be a REQUIRED ARTIFACT FIELD for any
+experiment making a comparative claim, the same way `random_seed` and
+`reproducibility_checksum` already are. That is a planner-side convention change, not a lint,
+and it is the higher-leverage half of the answer.
