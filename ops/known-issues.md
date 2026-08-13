@@ -17828,3 +17828,15 @@ drifts generous becomes reassurance. 7 tests pin the classifier for exactly that
 measurement that closes a real question is worth more than five. The number is a prompt to ask
 "did this milestone move the headline, and if not was that the plan?" -- not a target to
 optimise.
+
+## 2026-08-13 MANDATORY-NEXT-MILESTONE: recurring blockers nobody has investigated
+
+Emitted by `scripts/recurring_blocker_ledger.py`. Each line is ONE blocker message that
+has stopped work repeatedly across milestones. A recurring blocker may be correct -- a
+gate refusing genuinely unready work is doing its job -- but nothing has LOOKED, which is
+the unattended failure mode: a failure nobody reads never gets fixed.
+
+- **x31** `blocked_gate_check_failed` — milestones 2026.08.536..2026.08.549; e.g. `experiment_6188_livecodebench_headroom_audit.json`
+
+Investigate the highest-count blocker first: diagnose the root cause, then either fix it
+or record why the block is correct and expected. Do NOT simply re-run the task.
