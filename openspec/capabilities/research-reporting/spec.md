@@ -15,6 +15,120 @@ performance.
 
 ## Requirements
 
+### REQ-REPORT-6405: V551 Source Marker And Executable Scope Freeze
+
+Carnot SHALL build Exp6405 as a dated V551 source-marker validation and
+scope-freeze report. The report SHALL locate the exact
+`<!-- V551-PLANNER-REFRESH-20260813-END -->` marker in
+`research-references.md`. It SHALL hash the full V551 planner section, record
+the marker path and line, and use the marker commit time as the exclusive
+strict post-marker source lower bound.
+
+Exp6405 SHALL check network reachability before live source requests. If
+network reachability or a source endpoint fails, it SHALL record the failure.
+It SHALL not invent source content. It SHALL record rate-limit headers when an
+endpoint supplies them.
+
+Exp6405 SHALL validate direct arXiv metadata and public URLs for the V551
+marker sources: GRACE (`2607.09175`), ConsistencyGate (`2607.22962`),
+TierMem (`2602.17913`), and A-MAC (`2603.04549`). Each receipt SHALL record
+the arXiv ID, title, submitted date, direct URL, endpoint outcome, source
+class, and fallback state.
+
+Exp6405 SHALL recheck OpenReview, Hugging Face Papers, Semantic Scholar EBT
+and ARM-EBM citation records, GitHub discovery, Extropic first-party pages,
+and Logical Intelligence first-party pages. It SHALL classify each finding as
+`executable_now`, `diagnostic_control`, `deferred`, `retired_scope`,
+`product_status`, or `unavailable`.
+
+Exp6405 SHALL freeze clean factor evidence accounting, provenance-linked
+two-tier memory, exact write admission, graph-local multi-session learning,
+and fresh opt-in ARC policy evidence as active lanes. It SHALL freeze
+universal factor support, external generated-text scoring, hidden-state
+scoring, CCTU, KAN training, EBT pretraining, grammar/parser repair, offline
+ARC solving, per-game adapters, unchanged board probes, TSU execution, and
+Kona execution as closed or deferred scopes. A topical match to a retired
+mechanism SHALL not reopen that mechanism.
+
+The Exp6405 artifact SHALL be written atomically to
+`results/experiment_6405_v551_post_marker_source_scope_freeze.json` with
+`inference_substrate=web_and_bibliographic_search_only` and
+`verifier_is_oracle=false`.
+
+The Exp6405 artifact SHALL include these required fields: `status`,
+`planner_marker_path_and_hash`, `source_window_start_and_end_utc`,
+`direct_arxiv_source_receipts`, `openreview_receipts`,
+`huggingface_papers_receipts`,
+`semantic_scholar_ebt_and_arm_ebm_receipts`, `github_discovery_receipts`,
+`extropic_first_party_receipt`, `logical_intelligence_first_party_receipt`,
+`new_actionable_findings`, `post_marker_findings_count`,
+`executable_scope_change_required`, `active_lane_freeze`,
+`control_only_findings`, `closed_and_deferred_scope_freeze`,
+`unavailable_or_rate_limited_sources`, `retired_scope_reopened`,
+`hardware_state_change_found`, `source_claim_boundaries`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`. `field_principles` SHALL cover every required field.
+`field_provenance` SHALL cover every required field with measured, derived,
+constant, or upstream provenance.
+
+#### SCENARIO-REPORT-6405-1: V551 Marker Section Is Hash-Pinned
+
+**Given** the V551 planner marker is present in `research-references.md`
+**When** Exp6405 builds the marker receipt
+**Then** it records one marker, its line, the full-section SHA-256 hash, and
+the marker commit time as the exclusive source lower bound.
+
+#### SCENARIO-REPORT-6405-2: V551 arXiv Receipts Validate Or Fall Back
+
+**Given** the V551 marker paper IDs are known
+**When** Exp6405 queries arXiv metadata
+**Then** each paper receipt records title, submitted date, direct URL, source
+class, endpoint outcome, and whether live metadata or planner fallback was
+used.
+
+#### SCENARIO-REPORT-6405-3: Source Classes Keep Scope Separate
+
+**Given** source rows from primary, secondary, product, repository, or failed
+routes
+**When** Exp6405 classifies them
+**Then** only strict post-marker, stable, primary or first-party, public,
+locally executable rows can become new actionable findings.
+
+#### SCENARIO-REPORT-6405-4: Active Lanes Are Frozen Without Queue Edits
+
+**Given** the V551 marker names graph-local verification, contamination
+checks, tiered provenance, and admission diagnostics
+**When** Exp6405 freezes executable scope
+**Then** those mechanisms stay inside the five active lanes and
+`executable_scope_change_required` stays false when no strict post-marker
+finding exists.
+
+#### SCENARIO-REPORT-6405-5: Closed Scope Stays Closed
+
+**Given** a source uses terms related to universal factor support, external
+generated-text scoring, hidden states, CCTU, KAN, EBT, grammar or parser
+repair, offline ARC solving, board probes, TSU, or Kona
+**When** Exp6405 classifies that source
+**Then** it records the row only as a diagnostic, deferred, retired, product,
+or unavailable source unless a new authenticated local executable route exists.
+
+#### SCENARIO-REPORT-6405-6: Artifact Is Annotated And Non-Mutating
+
+**Given** source receipts, protected hashes, command receipts, and field maps
+are assembled
+**When** Exp6405 validates the report before writing
+**Then** every required field has a principle and provenance, protected files
+remain byte-identical, the checksum matches, and `verifier_is_oracle` is
+false.
+
+## Implementation Status (REQ-REPORT-6405)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6405 | Planned (`python/carnot/experiment_6405_v551_post_marker_source_scope_freeze.py`, terminal artifact `results/experiment_6405_v551_post_marker_source_scope_freeze.json`) | Planned (`tests/python/test_experiment_6405_v551_post_marker_source_scope_freeze.py`) |
+
 ### REQ-REPORT-6143: Experiment Test Artifact Isolation
 
 Carnot experiment artifact writers SHALL resolve output paths through one
