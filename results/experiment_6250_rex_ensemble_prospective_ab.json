@@ -115,7 +115,7 @@
   "honest_verdict": "complete_ensemble_gate_not_met_3_of_3_matched_held_optimal_ensemble_0.5118_vs_best_pure_0.481",
   "duration_s": 25016.827,
   "reproducibility_checksum": "7a62af9bf6d53d7ad7a1fb24a74015a1aaaff1f860ec2a1a5a33a5309f6e943e",
-  "flagged_adversarial": true,
+  "flagged_adversarial": false,
   "corrigendum_pending": [
     {
       "kind": "TAUTOLOGY",
@@ -123,5 +123,6 @@
       "detail": "rex_pooled_mean_held=0.481 and best_pure_arm_pooled_mean_held=0.481 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
     }
   ],
-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation. | 2026-08-13: the TAUTOLOGY entry in corrigendum_pending is a FALSE POSITIVE, retained per never-prune; see flagged_adversarial_cleared_note.",
+  "flagged_adversarial_cleared_note": "CLEARED 2026-08-13 after re-verification. The TAUTOLOGY flag fired on rex_pooled_mean_held == best_pure_arm_pooled_mean_held == 0.481. That equality is STRUCTURAL, not a coincidence between two measurements: this experiment computes best_pure_arm_pooled_mean_held = max(linear_pooled_mean_held, rex_pooled_mean_held) (scripts/experiments/experiment_6250_rex_ensemble_prospective_ab.py:297). linear scored 0.2032 and rex 0.4810, so best_pure IS rex by construction and the two cannot differ. Verified by reading the source and by checking best_pure == max(linear, rex) in the artifact. Same class as the identifier/seed carve-out the TAUTOLOGY check already carries (CLAUDE.md, 'TAUTOLOGY excludes identifiers/seeds'). A general derived-extremum carve-out was attempted in adversarial_verify.py and REVERTED: the sibling match pulled in ensemble_pooled_mean_held (0.5118, not a pure arm), so the verified-max test failed, and a name-inference heuristic that misfires on its first real case must not be shipped into a fabrication gate. Cleared per-artifact instead, which is auditable and cannot become a blanket exemption. The underlying result is unchanged: selector 3/3, ensemble 0.5118 vs best pure 0.4810, gate NOT met on coverage (sc25 produced no candidate from either arm)."
 }

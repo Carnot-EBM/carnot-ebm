@@ -6164,3 +6164,10 @@ The critical path for milestone .250:
 - theme: repaired multi-model runtime checks concentrated a short compute-only milestone under coarse timing reconstruction
 - key result: the compute tail is ranked, but phase-level causes, task-time GPU efficiency, parallel model loading, and runner engagement are not established by the supplied evidence
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.549
+
+- exp_range: exp6379-exp6387 (visible readiness-reference bounds only; the complete milestone range is not available)
+- theme: readiness-gated canonical transport work concentrated a brief compute-heavy milestone under coarse timing reconstruction
+- key result: the locked classification reports no compute-task GPU-idle fault, while the supplied data does not establish concurrent model loading or runner selection
+- acceptance: no data available this milestone
