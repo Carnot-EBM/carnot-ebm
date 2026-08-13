@@ -1918,6 +1918,137 @@ and passing tests.
 | SCENARIO-LEARN-6380-ORACLE | Implemented: `python/carnot/experiment_6380_three_family_canonical_factor_transport_canary.py`. | Implemented: `tests/python/test_experiment_6380_three_family_canonical_factor_transport_canary.py`. |
 | SCENARIO-LEARN-6380-READY | Implemented: `python/carnot/experiment_6380_three_family_canonical_factor_transport_canary.py`. | Implemented: `tests/python/test_experiment_6380_three_family_canonical_factor_transport_canary.py`. |
 
+## REQ-LEARN-6394: Model-Family Factor Harness Freeze
+
+**Given** Exp6379 is contract-ready and Exp6380 exposes family-specific
+development evidence
+**When** Exp6394 starts on planning date 20260813
+**Then** it SHALL write
+`results/experiment_6394_model_family_factor_harness_freeze.json`
+**And** it SHALL use exactly these local GGUF model ids from
+`cached_sota_pair()`: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+Exp6394 SHALL revalidate both RTX 3090 GPUs, model file hashes, revisions,
+quantizations, embedded GGUF tokenizers, llama.cpp GPU offload, free disk,
+the Exp6379 schema hash, and the Exp6380 raw-output receipts before it marks
+the freeze ready. Token counts SHALL use embedded GGUF tokenizers only.
+The experiment SHALL not call a Hugging Face tokenizer loader.
+
+Exp6394 SHALL seal disjoint development and held manifests before any freeze
+selection. The development manifest SHALL contain at least 18 licensed
+development events across at least three executable constraint families. It
+SHALL balance executable structure and surface labels. The held manifest SHALL
+contain only redacted event identifiers, family labels, and hashes during
+selection. Held content and held outcomes SHALL not be read.
+
+Exp6394 SHALL preregister at most four bounded harness variants. Variants may
+change prompt-role placement, response prefix, a bounded isolated packaging
+step, or deterministic field routing. They SHALL not use grammar decoding,
+parser or JIT repair, post-hoc JSON repair, hidden states, external scorers,
+fine-tuning, or a token increase as the only selected change.
+
+Exp6394 SHALL measure nonempty output, thinking leakage, repetition,
+truncation, parse validity, source binding, exact checker calls, exact pass or
+fail, abstention, latency, and verification cost by model family and variant.
+It SHALL preserve raw outputs before one parse attempt. Exact task checkers are
+the only oracles. The builder, harness selector, parser, and model text are
+not oracles.
+
+Exp6394 SHALL freeze one selected harness per model family with code hash,
+prompt hash, response prefix, capacity, call count, seed, schema hash, and
+selection reason. If a family has no passing development transport cell, the
+selected harness SHALL be an explicit abstention policy for that family.
+Readiness SHALL not imply a held license.
+
+Exp6394 SHALL set `model_family_harness_freeze_ready_score=1.0` only when all
+three family selections are frozen before held access, development work is
+matched, raw receipts are complete, held access during selection is zero,
+protected leakage and same-step writes are zero, model weight changes are zero,
+all prohibited mechanism counts are zero, protected files are unchanged, and
+all recorded verification commands pass. This field is the Exp6395 gate only.
+
+Exp6394 SHALL emit these fields with explicit principles:
+
+- `status`: Terminal status separates positive freeze, null, and blocked evidence.
+- `MODEL_SPECS`: The three mandated GGUF model rows come from cached SOTA helper calls.
+- `models_used`: Only authenticated Exp6380 development rows count as used models.
+- `cached_sota_pair_receipts`: Helper-call receipts prevent manual model substitution.
+- `model_file_hashes_revisions_quantizations_and_tokenizers`: Model file identity and tokenizer method are pinned.
+- `embedded_gguf_tokenizer_receipts`: Tokenizer receipts use only embedded GGUF tokenizers.
+- `autotokenizer_usage_count`: Bare zero proves no external tokenizer path was used.
+- `cuda_offload_and_runtime_receipts_by_model`: CUDA offload, timing, token usage, return, raw streams, and cleanup are reported from development evidence.
+- `development_and_held_manifest_paths_hashes_licenses_and_disjointness`: Development and held manifests are sealed, licensed, hash-bound, and disjoint.
+- `development_balance_receipt`: Development events meet family, structure, and surface balance.
+- `preregistered_harness_variants`: The bounded variants are frozen before selection.
+- `builder_model_role_and_non_oracle_boundary`: The builder may propose surfaces but is not an oracle.
+- `matched_development_work_receipts`: Event order, seeds, sampling controls, call counts, output capacity, and exact-check budget are matched within each family.
+- `raw_output_before_parse_paths_hashes_and_counts`: Raw bytes are frozen before classification or parsing.
+- `per_family_variant_transport_source_binding_exact_and_cost_results`: Transport, source binding, exact checks, and costs stay grouped by family and variant.
+- `selected_harness_by_model_family`: One frozen harness or explicit abstention is selected for each family.
+- `frozen_harness_paths_hashes_and_controls`: Code, prompt, prefix, capacity, call count, seed, and schema hash are frozen.
+- `explicit_abstention_policy`: Failed cells abstain instead of inheriting another family result.
+- `held_access_during_selection_count`: Bare zero proves held content and outcomes did not affect selection.
+- `protected_leakage_and_same_step_write_counts`: Protected replay rows, generated labels, and same-step writes remain invisible.
+- `model_weight_change_count`: Bare zero proves no model weights changed.
+- `grammar_parser_jit_json_repair_hidden_state_and_external_scorer_usage_counts`: Bare zero counts prove prohibited mechanisms were absent.
+- `model_family_harness_freeze_ready_score`: This bare scalar opens only the Exp6395 held-license gate.
+- `held_license_not_implied`: A freeze does not license any held cell.
+- `harm_underpowered_missing_and_flagged_cells`: Missing, invalid, underpowered, abstention, and flagged cells stay visible.
+- `protected_files_unchanged`: Protected files remain byte-identical.
+- `preconditions_checked`: Preconditions bind upstream, model, tokenizer, GPU, disk, schema, raw, source, and protected hashes.
+- `inference_substrate`: The substrate declares local llama.cpp GGUF development evidence and deterministic freeze construction.
+- `verifier_is_oracle`: Bare true applies only to exact task checkers.
+- `field_principles`: Every required field states its guard.
+- `field_provenance`: Every required field maps to specs, upstream artifacts, sidecars, model receipts, tests, or exact checks.
+- `random_seed`: Fixed seeds pin manifest, variant, and selector order.
+- `duration_s`: Wall time is measured without padding.
+- `tests_run`: Verification commands and exit codes are recorded.
+- `reproducibility_checksum`: A normalized checksum detects artifact drift.
+- `honest_verdict`: The verdict starts with a terminal prefix and states the freeze boundary.
+
+## SCENARIO-LEARN-6394-MANIFESTS: Development And Held Splits Are Sealed
+
+**Given** the Exp6366 generated event matrix
+**When** Exp6394 builds its split manifests
+**Then** the development manifest contains at least 18 licensed events across
+three families
+**And** the held manifest is redacted and disjoint before selection starts.
+
+## SCENARIO-LEARN-6394-SELECTION: Family Selections Freeze Or Abstain
+
+**Given** Exp6380 has two Gemma source-bound capacity passes and a Qwen invalid
+capacity cell
+**When** Exp6394 applies its preregistered exact development rule
+**Then** each Gemma family selects the canonical capacity harness
+**And** the Qwen family freezes an explicit abstention harness.
+
+## SCENARIO-LEARN-6394-NON-ORACLE: Exact Checkers Alone Are Oracles
+
+**Given** builder text, parser output, selector rules, and model text exist
+**When** Exp6394 writes its oracle boundary
+**Then** only exact task checkers are marked as oracles
+**And** builder, selector, parser, and model text are marked non-oracle.
+
+## SCENARIO-LEARN-6394-READY: Freeze Readiness Does Not License Held Cells
+
+**Given** all three family selections are frozen before held access
+**When** raw receipts, matched work, prohibited counts, protected hashes, and
+tests all pass
+**Then** `model_family_harness_freeze_ready_score` SHALL be `1.0`
+**And** `held_license_not_implied` SHALL be true.
+
+## Implementation Status (REQ-LEARN-6394)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6394 | Implemented: `python/carnot/experiment_6394_model_family_factor_harness_freeze.py`; terminal artifact `results/experiment_6394_model_family_factor_harness_freeze.json`. | Implemented: `tests/python/test_experiment_6394_model_family_factor_harness_freeze.py`. |
+| SCENARIO-LEARN-6394-MANIFESTS | Implemented: `python/carnot/experiment_6394_model_family_factor_harness_freeze.py`. | Implemented: `tests/python/test_experiment_6394_model_family_factor_harness_freeze.py`. |
+| SCENARIO-LEARN-6394-SELECTION | Implemented: `python/carnot/experiment_6394_model_family_factor_harness_freeze.py`. | Implemented: `tests/python/test_experiment_6394_model_family_factor_harness_freeze.py`. |
+| SCENARIO-LEARN-6394-NON-ORACLE | Implemented: `python/carnot/experiment_6394_model_family_factor_harness_freeze.py`. | Implemented: `tests/python/test_experiment_6394_model_family_factor_harness_freeze.py`. |
+| SCENARIO-LEARN-6394-READY | Implemented: `python/carnot/experiment_6394_model_family_factor_harness_freeze.py`. | Implemented: `tests/python/test_experiment_6394_model_family_factor_harness_freeze.py`. |
+
 ## REQ-LEARN-6383: Dependency-Guided Factor Rollback Stress
 
 **Given** versioned factor release and whole-version rollback already exist
