@@ -3453,3 +3453,68 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-6390 | Planned (`python/carnot/experiment_6390_v549_adversarial_capstone.py`, `results/experiment_6390_v549_adversarial_capstone.json`) | Planned (`tests/python/test_experiment_6390_v549_adversarial_capstone.py`) |
+
+- REQ-CAPSTONE-6403: The V550 adversarial capstone workflow SHALL read
+  Exp6391 through Exp6402 artifacts and sidecars, plus Exp6390, the active
+  roadmap, milestone document, conductor, exclusion manifest, known issues,
+  solve registry, claims ledger, specs, and ops documents. It SHALL hash those
+  inputs before semantic reads. It SHALL not invoke an LLM, rerun an upstream
+  experiment, fill missing scientific cells, change solve records, modify the
+  conductor, or edit `research-roadmap.yaml`.
+  It SHALL replay `scripts/summarize_artifact.py` and live adversarial
+  verification for every present V550 primary artifact. It SHALL preserve
+  present, absent, blocked, skipped, null, partial, abstained, flagged, retired,
+  and clean evidence classes. It SHALL recompute every gate from bare fields.
+  Missing, nested, stale, wrong-type, non-finite, wrong-identity, wrong-hash, or
+  unprincipled gates SHALL fail closed. It SHALL keep factor capability,
+  frontier utility, transactional self-learning, rollback, consumer, ARC active
+  route, solve boundary, PRD gaps, hardware, decentralization, and public claim
+  decisions separate.
+- SCENARIO-CAPSTONE-6403: Given V550 upstream artifacts may be clean,
+  positive, null, blocked, skipped, missing, flagged, partial, abstained, or
+  retired, when Exp6403 runs on planning date 20260813, then the artifact SHALL
+  emit top-level fields `status`, `expected_task_ids_and_deliverables`,
+  `present_absent_blocked_skipped_null_partial_abstained_flagged_retired_and_clean_matrix`,
+  `artifact_verdict_conductor_outcome_and_duration_reconciliation`,
+  `recomputed_gate_type_finiteness_identity_hash_and_principle_checks`,
+  `factor_harness_license_and_universal_support_decision`,
+  `factor_frontier_alignment_learnability_and_future_utility_decision`,
+  `transactional_continuous_self_learning_decision`,
+  `rollback_and_consumer_decision`, `factor_safety_audit_decision`,
+  `arc_scalar_contract_decision`,
+  `arc_shadow_reachability_and_provenance_decision`,
+  `arc_causal_progress_false_accept_and_oracle_timing_decision`,
+  `arc_safety_audit_and_no_solve_decision`,
+  `model_policy_gpu_and_tokenizer_checks`,
+  `prd_constraint_extraction_gap_state`, `prd_fr11_gap_state`,
+  `prd_fr12_gap_state`, `live_arc_self_discovery_gap_state`,
+  `hardware_gap_state`, `decentralization_state`, `public_claim_eligibility`,
+  `next_branch_and_retirement_decisions`, `specs_and_ops_docs_updated`,
+  `active_roadmap_modified`, `conductor_modified`, `solve_registry_modified`,
+  `claims_ledger_modified`, `protected_files_unchanged`,
+  `preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+  `field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+  `tests_run`, `e2e_checks_run`, `reproducibility_checksum`, and
+  `honest_verdict`.
+- SCENARIO-CAPSTONE-6403-DECISIONS: The factor branch SHALL preserve narrow
+  held licenses and SHALL keep universal support false when any mandated model
+  abstains or is unlicensed. FR-11 SHALL be partial when transactional learning
+  and default-off consumer evidence are positive but the independent safety
+  audit blocks broad public utility. The ARC branch SHALL allow route promotion
+  as a default-off internal next branch only when scalar contract, live
+  provenance, treatment firing, positive progress delta, no false-accept
+  increase, oracle-after-action timing, no solve claim, no registry write, and
+  independent audit gates pass. Public claim eligibility SHALL remain false
+  when either independent safety audit denies public claims.
+- SCENARIO-CAPSTONE-6403-FIELD-PRINCIPLES: The artifact SHALL include a
+  `field_principles` entry for every required field and for every gate, PRD
+  state, promotion decision, solve boundary, and public-claim field. The
+  entries SHALL state why the field exists and how it prevents laundering
+  blocked, null, partial, flagged, abstained, or unaudited evidence into a
+  broader claim.
+
+## Implementation Status (REQ-CAPSTONE-6403)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-6403 | Planned (`python/carnot/experiment_6403_v550_adversarial_capstone.py`, `results/experiment_6403_v550_adversarial_capstone.json`) | Planned (`tests/python/test_experiment_6403_v550_adversarial_capstone.py`) |
