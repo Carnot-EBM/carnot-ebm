@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.08.550",
-  "generated_at": "2026-08-13T19:11:09Z",
+  "generated_at": "2026-08-13T20:31:13Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 4.1,
   "experiments_completed": 13,
@@ -36,23 +36,24 @@
   "gpu_idle_on_compute_bound_tasks": false,
   "reconstructed_from_disk_mtime": true,
   "timing_integrity_mismatch": false,
-  "summary": "The milestone completed 13 experiments in 4.1 minutes, with 10 classified as compute-bound. No compute-task GPU-idle fault was established; fallback timing reconstruction and missing task-linked phase and concurrency telemetry limit the efficiency diagnosis.",
+  "summary": "The milestone completed 13 experiments in 4.1 minutes, including 10 compute-bound experiments. Model-family factor harness development and held-split freeze was the compute timing leader at 1.39 minutes, but the supplied timing does not identify a causal phase.",
   "bottlenecks_identified": [
-    "Live git-log timing found no commits, so disk modification times had to reconstruct the milestone and could not attribute elapsed time to execution phases.",
-    "Model-family factor harness development and held-split freeze was the longest compute-bound entry at 1.39 minutes, but the supplied data provides no phase breakdown that explains why.",
-    "The GPU snapshot is not correlated with an active experiment, execution phase, model count, or runner dispatch, preventing a task-time utilization and concurrency assessment."
+    "The timing reconstruction ranks tasks but does not split gate wait, setup, model load, inference, or synthesis time, so it cannot explain why the compute leader took longest.",
+    "Three of the four compute-bound entries in the slowest list depend on prerequisite gates; the data does not separate necessary dependency time from dispatch delay.",
+    "The GPU snapshot is not correlated with task intervals, so it cannot grade GPU efficiency for the compute-bound work; the locked task classification does not identify compute-bound GPU idling.",
+    "No model-concurrency count or runner-selection receipt is available, so the data cannot determine whether any parallel multi-model task missed DualGPURunner."
   ],
   "improvements_suggested": [
-    "Persist monotonic start, stop, and phase timestamps for every experiment so live records replace disk-mtime reconstruction.",
-    "Attach GPU utilization samples to the active experiment and phase, together with model-count, concurrency-window, and runner-dispatch receipts.",
-    "Add a gate-aware ready queue that evaluates prerequisites before launch and dispatches independent eligible compute work concurrently; select DualGPURunner only when multiple models are actually loaded in parallel.",
-    "Retain the existing failure-ledger pre-launch check and continue treating its fast doomed-rerun blocks as saved time rather than runtime bottlenecks."
+    "Record monotonic per-task phase timing for gate wait, setup, model load, inference, and synthesis.",
+    "Attach periodic GPU utilization samples to the active experiment and its compute-bound classification.",
+    "Record loaded-model concurrency and runner selection for each compute task, and require a DualGPURunner receipt only when two or more models run in parallel.",
+    "Dispatch independent gate-ready work automatically when a prerequisite completes, while preserving declared dependencies."
   ],
   "top_3_highest_leverage_actions": [
-    "Replace fallback reconstruction with durable per-experiment and per-phase monotonic timing.",
-    "Correlate GPU samples with task identity, compute phase, model concurrency, and runner selection.",
-    "Schedule gate-ready independent compute work concurrently and route only genuine parallel multi-model work through DualGPURunner."
+    "Add task-scoped phase timing so the next retrospective can target measured execution or gate-handoff cost.",
+    "Correlate GPU samples, loaded-model count, and runner selection with each compute task.",
+    "Add event-driven dispatch for independent gate-ready work."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The record ranks the operational tail but does not support causal attribution for the longest task, a compute-time GPU efficiency grade, or a parallel-model runner finding. The next retrospective should distinguish measured execution defects from missing observability at task and phase boundaries."
+  "meta_reflection": "The milestone was brief, but disk-mtime reconstruction and a point-in-time GPU snapshot do not support causal efficiency claims. The next retrospective needs task-linked phase and accelerator telemetry before it can assign a nonzero speedup estimate."
 }
