@@ -15781,3 +15781,4 @@ code |
 | 2026-08-13 13:44 UTC | Model-family factor harness development and held-s | OK | 86 passed, 1 warning in 11.04s |
 | 2026-08-13 14:08 UTC | Gated on Exp6394 freeze: held factor-transport cap | OK | 86 passed, 1 warning in 9.35s |
 | 2026-08-13 14:28 UTC | Gated on Exp6395 licenses: capability-qualified ve | OK | 86 passed, 1 warning in 9.95s |
+| 2026-08-13 14:46 UTC | Gated on Exp6396 positive delta: transactional con | OK | 88 passed, 1 warning in 9.98s |
