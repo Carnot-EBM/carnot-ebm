@@ -1,0 +1,1460 @@
+{
+  "audit_registration_path_hash_and_expected_scope": {
+    "expected_scope": {
+      "artifact_paths": {
+        "exp6386": "results/experiment_6386_arc_two_sided_goal_evidence_contract.json",
+        "exp6387": "results/experiment_6387_arc_active_reward_machine_discriminator.json",
+        "exp6388": "results/experiment_6388_arc_goal_evidence_response_calibration.json",
+        "exp6393": "results/experiment_6393_arc_scalar_gate_metric_contract.json",
+        "exp6400": "results/experiment_6400_arc_default_off_active_goal_shadow.json",
+        "exp6401": "results/experiment_6401_arc_active_goal_causal_holdout.json"
+      },
+      "deliverable_target": "results/experiment_6402_arc_active_goal_safety_audit.json",
+      "forbidden_actions": [
+        "llm_invocation",
+        "new_arc_attempt",
+        "missing_window_recreation",
+        "solve_registry_write",
+        "claims_ledger_write",
+        "policy_promotion"
+      ],
+      "live_entrypoints": [
+        "make_carnot_agent -> E3AgentPolicy",
+        "python/carnot/agentic/arc_competition_agent.py"
+      ],
+      "model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "registry_paths": {
+        "claims_ledger": "ops/arc_solve_claims.yaml",
+        "conductor_log": "ops/conductor-log.md",
+        "solve_registry": "ops/arc_solve_registry.yaml"
+      },
+      "sidecar_paths": {
+        "exp6400_windows": "results/experiment_6400_arc_default_off_active_goal_shadow_windows.json",
+        "exp6401_windows": "results/experiment_6401_arc_active_goal_causal_holdout_windows.json"
+      },
+      "source_paths": {
+        "active_reward_machine": "python/carnot/agentic/arc_active_reward_machine_frontier.py",
+        "adversarial_verify": "scripts/adversarial_verify.py",
+        "arc_spec": "openspec/capabilities/arc-agi/spec.md",
+        "determination_preservation": "scripts/determination_preservation_lint.py",
+        "exp6400_source": "python/carnot/experiment_6400_arc_default_off_active_goal_shadow.py",
+        "exp6401_source": "python/carnot/experiment_6401_arc_active_goal_causal_holdout.py",
+        "exp6402_source": "python/carnot/experiment_6402_arc_active_goal_safety_audit.py",
+        "live_competition_agent": "python/carnot/agentic/arc_competition_agent.py",
+        "requested_arc_agi_agent": "python/carnot/arc_agi/agent.py",
+        "requested_arc_agi_ebm_agent": "python/carnot/arc_agi/ebm_agent.py",
+        "requested_arc_agi_sdk_entry": "python/carnot/arc_agi/sdk_entry.py",
+        "requested_determination_preservation": "scripts/check_determination_preservation.py",
+        "research_conductor": "scripts/research_conductor.py",
+        "root_clutter_sweep": "scripts/root_clutter_sweep.py",
+        "summarize_artifact": "scripts/summarize_artifact.py",
+        "two_sided_goal_contract": "python/carnot/agentic/arc_two_sided_goal_contract.py"
+      }
+    },
+    "paths": {
+      "openspec/capabilities/arc-agi/spec.md": {
+        "exists": true,
+        "path": "openspec/capabilities/arc-agi/spec.md",
+        "role": "source",
+        "sha256": "sha256:d03fe2f338e704b6eefc00fe96dbf62171de354b8542ca88e331322fa992fabf",
+        "size_bytes": 28399,
+        "state": "present"
+      },
+      "ops/arc_solve_claims.yaml": {
+        "exists": false,
+        "path": "ops/arc_solve_claims.yaml",
+        "role": "registry",
+        "sha256": null,
+        "size_bytes": 0,
+        "state": "absent"
+      },
+      "ops/arc_solve_registry.yaml": {
+        "exists": true,
+        "path": "ops/arc_solve_registry.yaml",
+        "role": "registry",
+        "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "size_bytes": 462740,
+        "state": "present"
+      },
+      "ops/conductor-log.md": {
+        "exists": true,
+        "path": "ops/conductor-log.md",
+        "role": "registry",
+        "sha256": "sha256:af334159fe569566fad5eae0f8cd39a24a92e841cc8965f284516587159a08ca",
+        "size_bytes": 2235307,
+        "state": "present"
+      },
+      "python/carnot/agentic/arc_active_reward_machine_frontier.py": {
+        "exists": true,
+        "path": "python/carnot/agentic/arc_active_reward_machine_frontier.py",
+        "role": "source",
+        "sha256": "sha256:30f8d952ebb9181af580de28b4cadf4dd447274992b5ceb2bc8228a48f7d0dcf",
+        "size_bytes": 23568,
+        "state": "present"
+      },
+      "python/carnot/agentic/arc_competition_agent.py": {
+        "exists": true,
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "role": "source",
+        "sha256": "sha256:e04d0ab8b6ebdb2f8c1e539d19022f8aea3925de47c5feacbf45091de909b11c",
+        "size_bytes": 487921,
+        "state": "present"
+      },
+      "python/carnot/agentic/arc_two_sided_goal_contract.py": {
+        "exists": true,
+        "path": "python/carnot/agentic/arc_two_sided_goal_contract.py",
+        "role": "source",
+        "sha256": "sha256:10ec21fee1ee145e5c279a45df0d64115ff982d9dd3faf91d22e2fbd5458a4e1",
+        "size_bytes": 20601,
+        "state": "present"
+      },
+      "python/carnot/arc_agi/agent.py": {
+        "exists": false,
+        "path": "python/carnot/arc_agi/agent.py",
+        "role": "source",
+        "sha256": null,
+        "size_bytes": 0,
+        "state": "absent"
+      },
+      "python/carnot/arc_agi/ebm_agent.py": {
+        "exists": false,
+        "path": "python/carnot/arc_agi/ebm_agent.py",
+        "role": "source",
+        "sha256": null,
+        "size_bytes": 0,
+        "state": "absent"
+      },
+      "python/carnot/arc_agi/sdk_entry.py": {
+        "exists": false,
+        "path": "python/carnot/arc_agi/sdk_entry.py",
+        "role": "source",
+        "sha256": null,
+        "size_bytes": 0,
+        "state": "absent"
+      },
+      "python/carnot/experiment_6400_arc_default_off_active_goal_shadow.py": {
+        "exists": true,
+        "path": "python/carnot/experiment_6400_arc_default_off_active_goal_shadow.py",
+        "role": "source",
+        "sha256": "sha256:5c6cd221e9242933f1961151eb3545227557e920729be63e4582cbac2f31038c",
+        "size_bytes": 54382,
+        "state": "present"
+      },
+      "python/carnot/experiment_6401_arc_active_goal_causal_holdout.py": {
+        "exists": true,
+        "path": "python/carnot/experiment_6401_arc_active_goal_causal_holdout.py",
+        "role": "source",
+        "sha256": "sha256:eb29d1d4703c07568849a5be35addd7fbef80010929e6684e3259c6be9b7a495",
+        "size_bytes": 62500,
+        "state": "present"
+      },
+      "python/carnot/experiment_6402_arc_active_goal_safety_audit.py": {
+        "exists": true,
+        "path": "python/carnot/experiment_6402_arc_active_goal_safety_audit.py",
+        "role": "source",
+        "sha256": "sha256:0d3d5b15c24b75e3ca160bf5e2e465c076c189611f063cc7cd66dc47007cead7",
+        "size_bytes": 53356,
+        "state": "present"
+      },
+      "results/experiment_6386_arc_two_sided_goal_evidence_contract.json": {
+        "exists": true,
+        "path": "results/experiment_6386_arc_two_sided_goal_evidence_contract.json",
+        "role": "artifact",
+        "sha256": "sha256:c2e0e3c362dd6a1a3c02592b4ffd9891eb9a4a7697ba90f915e3e341b651351e",
+        "size_bytes": 22514,
+        "state": "present"
+      },
+      "results/experiment_6387_arc_active_reward_machine_discriminator.json": {
+        "exists": true,
+        "path": "results/experiment_6387_arc_active_reward_machine_discriminator.json",
+        "role": "artifact",
+        "sha256": "sha256:35bb20897a566468afb1659c5416d54c3fca81aafad4c2e5bb93ec661144ecda",
+        "size_bytes": 27749,
+        "state": "present"
+      },
+      "results/experiment_6388_arc_goal_evidence_response_calibration.json": {
+        "exists": true,
+        "path": "results/experiment_6388_arc_goal_evidence_response_calibration.json",
+        "role": "artifact",
+        "sha256": "sha256:f2285216e0b17b178dc14a033843be01f286bbda8834904bc2a7786eccff8a98",
+        "size_bytes": 103795,
+        "state": "present"
+      },
+      "results/experiment_6393_arc_scalar_gate_metric_contract.json": {
+        "exists": true,
+        "path": "results/experiment_6393_arc_scalar_gate_metric_contract.json",
+        "role": "artifact",
+        "sha256": "sha256:f241403e13b7b3e42f3f588fa032612cb6d0c0168a785203321fc78200ab2f33",
+        "size_bytes": 13919,
+        "state": "present"
+      },
+      "results/experiment_6400_arc_default_off_active_goal_shadow.json": {
+        "exists": true,
+        "path": "results/experiment_6400_arc_default_off_active_goal_shadow.json",
+        "role": "artifact",
+        "sha256": "sha256:9fc73c12483c7f470220a48b8530bc94bd8e8b8e2d84808a7e9b399d9a6c5606",
+        "size_bytes": 123006,
+        "state": "present"
+      },
+      "results/experiment_6400_arc_default_off_active_goal_shadow_windows.json": {
+        "exists": true,
+        "path": "results/experiment_6400_arc_default_off_active_goal_shadow_windows.json",
+        "role": "sidecar",
+        "sha256": "sha256:23097273946b8003ddb2ace9ddb5a8dd478feac070091b54cef1d8fa42ad9f3f",
+        "size_bytes": 26401,
+        "state": "present"
+      },
+      "results/experiment_6401_arc_active_goal_causal_holdout.json": {
+        "exists": true,
+        "path": "results/experiment_6401_arc_active_goal_causal_holdout.json",
+        "role": "artifact",
+        "sha256": "sha256:95c8e52c31f99309e4dd368b4c7821e8aa4dfe0e1306430abc3d4fcdffd6594e",
+        "size_bytes": 488409,
+        "state": "present"
+      },
+      "results/experiment_6401_arc_active_goal_causal_holdout_windows.json": {
+        "exists": true,
+        "path": "results/experiment_6401_arc_active_goal_causal_holdout_windows.json",
+        "role": "sidecar",
+        "sha256": "sha256:d517f61a35065a668828e124ed5b469ff3eec3f96e329153ffe1ff49897a8a7b",
+        "size_bytes": 37033,
+        "state": "present"
+      },
+      "scripts/adversarial_verify.py": {
+        "exists": true,
+        "path": "scripts/adversarial_verify.py",
+        "role": "source",
+        "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+        "size_bytes": 254560,
+        "state": "present"
+      },
+      "scripts/check_determination_preservation.py": {
+        "exists": false,
+        "path": "scripts/check_determination_preservation.py",
+        "role": "source",
+        "sha256": null,
+        "size_bytes": 0,
+        "state": "absent"
+      },
+      "scripts/determination_preservation_lint.py": {
+        "exists": true,
+        "path": "scripts/determination_preservation_lint.py",
+        "role": "source",
+        "sha256": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
+        "size_bytes": 65178,
+        "state": "present"
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "path": "scripts/research_conductor.py",
+        "role": "source",
+        "sha256": "sha256:458ec2966f40918581381a8895875ab86664e14c8f69ea21afe5be71e4348509",
+        "size_bytes": 308792,
+        "state": "present"
+      },
+      "scripts/root_clutter_sweep.py": {
+        "exists": true,
+        "path": "scripts/root_clutter_sweep.py",
+        "role": "source",
+        "sha256": "sha256:be83376d4820e8f254bd341a9b4f7683454db8af7f69998887267e502c343402",
+        "size_bytes": 8233,
+        "state": "present"
+      },
+      "scripts/summarize_artifact.py": {
+        "exists": true,
+        "path": "scripts/summarize_artifact.py",
+        "role": "source",
+        "sha256": "sha256:62bf92bd99b7325ae841e4d93270ccd53338c9d54765e14acadbb7f5c35d1c7d",
+        "size_bytes": 17583,
+        "state": "present"
+      }
+    },
+    "registered_before_reading_conclusions": true,
+    "registration_scope": "V550 active-goal safety audit inputs only"
+  },
+  "claims_ledger_modified": false,
+  "critical_major_and_minor_findings": {
+    "critical": [],
+    "major": [],
+    "minor": [
+      {
+        "detail": "The audit is not a solve, route promotion, policy promotion, or registry entry.",
+        "name": "public_claim_ineligible_by_scope"
+      }
+    ]
+  },
+  "default_off_reachability_and_executed_action_integrity_checks": {
+    "active_reward_machine_default_off": true,
+    "active_reward_machine_route_reachable": true,
+    "checks": [
+      {
+        "detail": "Active goal routes are default-off.",
+        "name": "active_goal_default_off",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Route is reachable for audit only.",
+        "name": "live_route_reachable",
+        "passed": true,
+        "severity_if_failed": "major"
+      },
+      {
+        "detail": "Shadow route cannot alter executed actions.",
+        "name": "executed_action_integrity",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Normal live entrypoint is pinned.",
+        "name": "normal_entrypoint",
+        "passed": true,
+        "severity_if_failed": "major"
+      }
+    ],
+    "default_off_and_integrity_clean": true,
+    "executed_action_change_count": 0
+  },
+  "duration_s": 0.0128,
+  "field_principles": {
+    "audit_registration_path_hash_and_expected_scope": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "claims_ledger_modified": "Must stay false so the audit cannot create a claims-ledger entry.",
+    "critical_major_and_minor_findings": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "default_off_reachability_and_executed_action_integrity_checks": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "duration_s": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "field_principles": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "field_provenance": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "goal_false_accept_abstention_missing_progress_enablement_solve_and_registry_attack_results": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "hidden_source_search_bfs_adapter_proxy_and_outer_loop_attack_results": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "honest_verdict": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "inference_substrate": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "live_attempt_provenance_checks": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "model_policy_and_inference_substrate_checks": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "oracle_timing_freeze_window_duplicate_model_state_legal_work_and_firing_attack_results": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "preconditions_checked": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "present_absent_blocked_skipped_null_flagged_and_retired_artifact_matrix": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "protected_files_unchanged": "Confirms registry, claims, source, spec, and upstream artifacts stayed unchanged.",
+    "public_arc_claim_eligibility": "Must fail closed; V550 route evidence is not a public ARC solve claim.",
+    "random_seed": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "recomputed_scalar_gates_and_readiness": "Recomputes terminal gates from bare fields so nested or stale claims cannot pass by assertion.",
+    "recomputed_scalar_gates_and_readiness.exp6393.ready": "Fail closed if the scalar gate contract is absent, malformed, or not ready.",
+    "recomputed_scalar_gates_and_readiness.exp6400.ready": "Fail closed if the default-off shadow did not fire cleanly without action changes.",
+    "recomputed_scalar_gates_and_readiness.exp6401.ready": "Fail closed if the causal holdout did not pass matched work and false-accept gates.",
+    "recomputed_scalar_gates_and_readiness.public_arc_claim_eligibility_recomputed": "False by audit scope unless a separate public-claim gate exists.",
+    "recomputed_scalar_gates_and_readiness.scientific_readiness": "True only when the present chain satisfies narrow route-value readiness.",
+    "reproducibility_checksum": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "route_promotion_count": "Must stay zero because this audit cannot promote a route or policy.",
+    "solve_claim_count": "Must stay zero because route evidence is not a game or level solve.",
+    "solve_registry_modified": "Must stay false so the audit cannot alter solve records.",
+    "source_entrypoint_policy_reward_machine_model_window_and_registry_hash_matrix": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "status": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "tests_run": "Required Exp6402 audit field; keeps the active-goal safety boundary auditable.",
+    "upstream_artifacts_modified": "Must stay false so the audit does not repair or rewrite upstream evidence.",
+    "verifier_is_oracle": "False for the audit; post-action oracle receipts remain upstream row-local evidence."
+  },
+  "field_provenance": {
+    "audit_registration_path_hash_and_expected_scope": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "claims_ledger_modified": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "critical_major_and_minor_findings": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "default_off_reachability_and_executed_action_integrity_checks": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "duration_s": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "field_principles": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "field_provenance": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "goal_false_accept_abstention_missing_progress_enablement_solve_and_registry_attack_results": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "hidden_source_search_bfs_adapter_proxy_and_outer_loop_attack_results": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "honest_verdict": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "inference_substrate": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "live_attempt_provenance_checks": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "model_policy_and_inference_substrate_checks": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "oracle_timing_freeze_window_duplicate_model_state_legal_work_and_firing_attack_results": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "preconditions_checked": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "present_absent_blocked_skipped_null_flagged_and_retired_artifact_matrix": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "protected_files_unchanged": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "public_arc_claim_eligibility": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "random_seed": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "recomputed_scalar_gates_and_readiness": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "reproducibility_checksum": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "route_promotion_count": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "solve_claim_count": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "solve_registry_modified": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "source_entrypoint_policy_reward_machine_model_window_and_registry_hash_matrix": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "status": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "tests_run": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "upstream_artifacts_modified": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ],
+    "verifier_is_oracle": [
+      "REQ-ARC-ARM-6402",
+      "experiment_6402_arc_active_goal_safety_audit"
+    ]
+  },
+  "goal_false_accept_abstention_missing_progress_enablement_solve_and_registry_attack_results": {
+    "audit_route_promotion_count": 0,
+    "checks": [
+      {
+        "detail": "No constant-false goal accepted.",
+        "name": "constant_false_goal_acceptance",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "False accepts do not increase.",
+        "name": "false_accept_aggregation",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Abstentions are not pooled as successes.",
+        "name": "abstention_pooling",
+        "passed": true,
+        "severity_if_failed": "major"
+      },
+      {
+        "detail": "Missing cells are not pooled.",
+        "name": "missing_cell_pooling",
+        "passed": true,
+        "severity_if_failed": "major"
+      },
+      {
+        "detail": "Progress proxy remains a bare positive proxy.",
+        "name": "progress_proxy_relabeling",
+        "passed": true,
+        "severity_if_failed": "major"
+      },
+      {
+        "detail": "Routes remain default-off.",
+        "name": "route_enablement",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "No solve wording field is present.",
+        "name": "solve_wording",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Solve registry was not modified.",
+        "name": "solve_registry_writes",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Claims ledger was not modified.",
+        "name": "claims_ledger_writes",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Rows carry no solve leakage.",
+        "name": "row_level_solve_leakage",
+        "passed": true,
+        "severity_if_failed": "critical"
+      }
+    ],
+    "claims_ledger_modified": false,
+    "goal_and_claim_boundary_clean": true,
+    "solve_claim_count": 0,
+    "solve_registry_modified": false,
+    "upstream_route_promotion_eligible_count": 1
+  },
+  "hidden_source_search_bfs_adapter_proxy_and_outer_loop_attack_results": {
+    "checks": [
+      {
+        "detail": "No hidden game source access.",
+        "name": "hidden_game_source_access",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "No offline ground-truth search.",
+        "name": "offline_ground_truth_search",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "No exhaustive BFS label search.",
+        "name": "exhaustive_bfs",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "No per-game adapter use.",
+        "name": "per_game_adapter_use",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Development proxy was not substituted for live route.",
+        "name": "development_proxy_substitution",
+        "passed": true,
+        "severity_if_failed": "major"
+      },
+      {
+        "detail": "No outer-loop reverse engineering source.",
+        "name": "outer_loop_reverse_engineering",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Nested provenance forbidden counts are zero.",
+        "name": "provenance_forbidden_counts",
+        "passed": true,
+        "severity_if_failed": "critical"
+      }
+    ],
+    "counts": {
+      "development_proxy_substitution_count": 0,
+      "exhaustive_bfs_count": 0,
+      "hidden_source_access_count": 0,
+      "offline_ground_truth_search_count": 0,
+      "outer_loop_reverse_engineering_count": 0,
+      "per_game_adapter_count": 0
+    },
+    "forbidden_access_clean": true
+  },
+  "honest_verdict": "complete: active_goal_safety_audit_no_public_arc_claim_eligible",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "live_attempt_provenance_checks": {
+    "checks": [
+      {
+        "detail": "Exp6400 has six windows.",
+        "name": "exp6400_window_minimum",
+        "passed": true,
+        "severity_if_failed": "major"
+      },
+      {
+        "detail": "Exp6400 has 36 visible transitions.",
+        "name": "exp6400_transition_minimum",
+        "passed": true,
+        "severity_if_failed": "major"
+      },
+      {
+        "detail": "Exp6401 has eight held windows.",
+        "name": "exp6401_window_minimum",
+        "passed": true,
+        "severity_if_failed": "major"
+      },
+      {
+        "detail": "Exp6401 has 48 visible transitions.",
+        "name": "exp6401_transition_minimum",
+        "passed": true,
+        "severity_if_failed": "major"
+      },
+      {
+        "detail": "Held windows are disjoint.",
+        "name": "exp6401_disjoint_from_exp6400",
+        "passed": true,
+        "severity_if_failed": "major"
+      },
+      {
+        "detail": "Exp6400 provenance counts are zero.",
+        "name": "exp6400_provenance_no_forbidden_access",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Exp6401 provenance counts are zero.",
+        "name": "exp6401_provenance_no_forbidden_access",
+        "passed": true,
+        "severity_if_failed": "critical"
+      }
+    ],
+    "exp6400": {
+      "evidence_fields": [
+        "visible_frame_hashes",
+        "transition_payload.action",
+        "transition_payload.grid_sha256",
+        "transition_payload.next_grid_sha256",
+        "runtime_reverse_engineering_state"
+      ],
+      "fresh_live_attempt_window_count": 6,
+      "hidden_source_access_count": 0,
+      "offline_ground_truth_search_count": 0,
+      "oracle_before_action_count": 0,
+      "per_game_adapter_count": 0,
+      "route_behavior_not_solve": true,
+      "source": "normal live ARC policy transition store shape",
+      "visible_transition_count": 36
+    },
+    "exp6401": {
+      "evidence_fields": [
+        "visible_frame_hashes",
+        "transition_payload.action",
+        "transition_payload.grid_sha256",
+        "transition_payload.next_grid_sha256",
+        "runtime_reverse_engineering_state"
+      ],
+      "exp6400_disjointness_proof_hash": "sha256:99eec38b617605866389166bda3a0fc80432b7d8f981ebd487950c135325fbec",
+      "fresh_held_live_attempt_window_count": 8,
+      "hidden_source_access_count": 0,
+      "offline_ground_truth_search_count": 0,
+      "oracle_before_action_count": 0,
+      "per_game_adapter_count": 0,
+      "route_behavior_not_solve": true,
+      "source": "normal live ARC policy transition store shape",
+      "visible_transition_count": 48
+    },
+    "live_attempt_provenance_clean": true
+  },
+  "model_policy_and_inference_substrate_checks": {
+    "all_mandated_model_ids_present": true,
+    "autotokenizer_usage_count": 0,
+    "cached_sota_receipts_present": true,
+    "checks": [
+      {
+        "detail": "Mandated model ids are present.",
+        "name": "model_ids",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Cached SOTA receipts resolve mandated ids.",
+        "name": "cached_sota_receipts",
+        "passed": true,
+        "severity_if_failed": "major"
+      },
+      {
+        "detail": "MODEL_SPECS are present.",
+        "name": "model_specs",
+        "passed": true,
+        "severity_if_failed": "major"
+      },
+      {
+        "detail": "GGUF embedded tokenizers are OK.",
+        "name": "embedded_tokenizers",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "AutoTokenizer usage count is zero.",
+        "name": "autotokenizer_absent",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Upstream substrate is no-LLM ARC runtime.",
+        "name": "inference_substrate",
+        "passed": true,
+        "severity_if_failed": "major"
+      },
+      {
+        "detail": "GPU offload receipts are terminal.",
+        "name": "task_linked_gpu_evidence",
+        "passed": true,
+        "severity_if_failed": "major"
+      },
+      {
+        "detail": "No legacy headline cell is present.",
+        "name": "legacy_headline_cell",
+        "passed": true,
+        "severity_if_failed": "major"
+      }
+    ],
+    "embedded_tokenizers_all_ok": true,
+    "inference_substrate_accurate": true,
+    "legacy_headline_cell_present": false,
+    "model_policy_substrate_clean": true,
+    "model_specs_present": true,
+    "models_used": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "task_linked_gpu_evidence_terminal": true
+  },
+  "oracle_timing_freeze_window_duplicate_model_state_legal_work_and_firing_attack_results": {
+    "checks": [
+      {
+        "detail": "No oracle access before action freeze.",
+        "name": "oracle_before_action",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Outcomes are not visible before freeze.",
+        "name": "timestamp_order",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Actions freeze before outcomes.",
+        "name": "action_freeze",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Freeze receipt hashes recompute.",
+        "name": "freeze_receipt_forgery",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Held windows do not reuse Exp6400 windows.",
+        "name": "window_reuse",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Transition source ids are unique.",
+        "name": "duplicate_transitions",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Model-window rows are unique.",
+        "name": "duplicate_rows",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Model order matches the contract.",
+        "name": "model_row_swaps",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "No stale goal state reached rows.",
+        "name": "stale_goal_state",
+        "passed": true,
+        "severity_if_failed": "major"
+      },
+      {
+        "detail": "Selected actions are legal.",
+        "name": "legal_action_mismatch",
+        "passed": true,
+        "severity_if_failed": "critical"
+      },
+      {
+        "detail": "Matched work receipts pass.",
+        "name": "unequal_work",
+        "passed": true,
+        "severity_if_failed": "major"
+      },
+      {
+        "detail": "Active treatment fires for active rows.",
+        "name": "treatment_non_firing",
+        "passed": true,
+        "severity_if_failed": "major"
+      }
+    ],
+    "oracle_timing_and_work_clean": true,
+    "post_action_transition_check_oracle_count": 48
+  },
+  "preconditions_checked": {
+    "no_llm_invoked": true,
+    "no_missing_window_recreation": true,
+    "no_new_arc_attempts": true,
+    "ops_reconciliation_deferred_by_stop_rule": true,
+    "planning_date": "20260813",
+    "registration_before_reading_conclusions": true,
+    "scripts_research_conductor_modified": false,
+    "spec_has_req_arc_arm_6402": true
+  },
+  "present_absent_blocked_skipped_null_flagged_and_retired_artifact_matrix": {
+    "artifact_state_counts": {
+      "clean": 6
+    },
+    "artifact_states": {
+      "exp6386": {
+        "flagged_adversarial": false,
+        "honest_verdict": "complete_two_sided_goal_contract_false_accepts_fixed_default_off_no_solve_claim",
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "name": "exp6386",
+        "path": "results/experiment_6386_arc_two_sided_goal_evidence_contract.json",
+        "registered_state": "present",
+        "sha256": "sha256:c2e0e3c362dd6a1a3c02592b4ffd9891eb9a4a7697ba90f915e3e341b651351e",
+        "state": "clean",
+        "status": "complete",
+        "verifier_is_oracle": false
+      },
+      "exp6387": {
+        "flagged_adversarial": false,
+        "honest_verdict": "complete_active_reward_machine_default_off_live_reachable_no_solve_claim",
+        "inference_substrate": "live_agent_visible_event_reward_machine_frontier_no_llm_no_solve",
+        "name": "exp6387",
+        "path": "results/experiment_6387_arc_active_reward_machine_discriminator.json",
+        "registered_state": "present",
+        "sha256": "sha256:35bb20897a566468afb1659c5416d54c3fca81aafad4c2e5bb93ec661144ecda",
+        "state": "clean",
+        "status": "complete",
+        "verifier_is_oracle": false
+      },
+      "exp6388": {
+        "flagged_adversarial": false,
+        "honest_verdict": "complete_goal_evidence_response_calibration_no_solve_claim",
+        "inference_substrate": "sealed_cached_event_evaluation",
+        "name": "exp6388",
+        "path": "results/experiment_6388_arc_goal_evidence_response_calibration.json",
+        "registered_state": "present",
+        "sha256": "sha256:f2285216e0b17b178dc14a033843be01f286bbda8834904bc2a7786eccff8a98",
+        "state": "clean",
+        "status": "complete",
+        "verifier_is_oracle": false
+      },
+      "exp6393": {
+        "flagged_adversarial": false,
+        "honest_verdict": "complete: scalar_gate_metric_contract_ready_no_live_route_or_solve_claim",
+        "inference_substrate": "deterministic_replay_from_frozen_exp6388_rows",
+        "name": "exp6393",
+        "path": "results/experiment_6393_arc_scalar_gate_metric_contract.json",
+        "registered_state": "present",
+        "sha256": "sha256:f241403e13b7b3e42f3f588fa032612cb6d0c0168a785203321fc78200ab2f33",
+        "state": "clean",
+        "status": "complete",
+        "verifier_is_oracle": false
+      },
+      "exp6400": {
+        "flagged_adversarial": false,
+        "honest_verdict": "complete: active_goal_shadow_ready_default_off_no_solve_claim",
+        "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+        "name": "exp6400",
+        "path": "results/experiment_6400_arc_default_off_active_goal_shadow.json",
+        "registered_state": "present",
+        "sha256": "sha256:9fc73c12483c7f470220a48b8530bc94bd8e8b8e2d84808a7e9b399d9a6c5606",
+        "state": "clean",
+        "status": "complete",
+        "verifier_is_oracle": false
+      },
+      "exp6401": {
+        "flagged_adversarial": false,
+        "honest_verdict": "complete: active_goal_causal_holdout_ready_positive_progress_no_solve_claim",
+        "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+        "name": "exp6401",
+        "path": "results/experiment_6401_arc_active_goal_causal_holdout.json",
+        "registered_state": "present",
+        "sha256": "sha256:95c8e52c31f99309e4dd368b4c7821e8aa4dfe0e1306430abc3d4fcdffd6594e",
+        "state": "clean",
+        "status": "complete",
+        "verifier_is_oracle": false
+      }
+    },
+    "path_state_counts": {
+      "absent": 5,
+      "present": 22
+    },
+    "states_preserved": [
+      "present",
+      "absent",
+      "blocked",
+      "skipped",
+      "null",
+      "flagged",
+      "retired",
+      "clean"
+    ]
+  },
+  "protected_files_unchanged": {
+    "openspec/capabilities/arc-agi/spec.md": {
+      "after": "sha256:d03fe2f338e704b6eefc00fe96dbf62171de354b8542ca88e331322fa992fabf",
+      "after_state": "present",
+      "before": "sha256:d03fe2f338e704b6eefc00fe96dbf62171de354b8542ca88e331322fa992fabf",
+      "before_state": "present",
+      "unchanged": true
+    },
+    "ops/arc_solve_claims.yaml": {
+      "after": null,
+      "after_state": "absent",
+      "before": null,
+      "before_state": "absent",
+      "unchanged": true
+    },
+    "ops/arc_solve_registry.yaml": {
+      "after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "after_state": "present",
+      "before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "before_state": "present",
+      "unchanged": true
+    },
+    "results/experiment_6393_arc_scalar_gate_metric_contract.json": {
+      "after": "sha256:f241403e13b7b3e42f3f588fa032612cb6d0c0168a785203321fc78200ab2f33",
+      "after_state": "present",
+      "before": "sha256:f241403e13b7b3e42f3f588fa032612cb6d0c0168a785203321fc78200ab2f33",
+      "before_state": "present",
+      "unchanged": true
+    },
+    "results/experiment_6400_arc_default_off_active_goal_shadow.json": {
+      "after": "sha256:9fc73c12483c7f470220a48b8530bc94bd8e8b8e2d84808a7e9b399d9a6c5606",
+      "after_state": "present",
+      "before": "sha256:9fc73c12483c7f470220a48b8530bc94bd8e8b8e2d84808a7e9b399d9a6c5606",
+      "before_state": "present",
+      "unchanged": true
+    },
+    "results/experiment_6400_arc_default_off_active_goal_shadow_windows.json": {
+      "after": "sha256:23097273946b8003ddb2ace9ddb5a8dd478feac070091b54cef1d8fa42ad9f3f",
+      "after_state": "present",
+      "before": "sha256:23097273946b8003ddb2ace9ddb5a8dd478feac070091b54cef1d8fa42ad9f3f",
+      "before_state": "present",
+      "unchanged": true
+    },
+    "results/experiment_6401_arc_active_goal_causal_holdout.json": {
+      "after": "sha256:95c8e52c31f99309e4dd368b4c7821e8aa4dfe0e1306430abc3d4fcdffd6594e",
+      "after_state": "present",
+      "before": "sha256:95c8e52c31f99309e4dd368b4c7821e8aa4dfe0e1306430abc3d4fcdffd6594e",
+      "before_state": "present",
+      "unchanged": true
+    },
+    "results/experiment_6401_arc_active_goal_causal_holdout_windows.json": {
+      "after": "sha256:d517f61a35065a668828e124ed5b469ff3eec3f96e329153ffe1ff49897a8a7b",
+      "after_state": "present",
+      "before": "sha256:d517f61a35065a668828e124ed5b469ff3eec3f96e329153ffe1ff49897a8a7b",
+      "before_state": "present",
+      "unchanged": true
+    },
+    "scripts/research_conductor.py": {
+      "after": "sha256:458ec2966f40918581381a8895875ab86664e14c8f69ea21afe5be71e4348509",
+      "after_state": "present",
+      "before": "sha256:458ec2966f40918581381a8895875ab86664e14c8f69ea21afe5be71e4348509",
+      "before_state": "present",
+      "unchanged": true
+    }
+  },
+  "public_arc_claim_eligibility": false,
+  "random_seed": 6402,
+  "recomputed_scalar_gates_and_readiness": {
+    "claims_ledger_modified_recomputed": false,
+    "exp6393": {
+      "gates": [
+        {
+          "actual": 1.0,
+          "actual_type": "float",
+          "bare_number": true,
+          "expected": 1.0,
+          "field": "arc_gate_metric_contract_ready_score",
+          "op": "==",
+          "passed": true
+        },
+        {
+          "actual": 0.75,
+          "actual_type": "float",
+          "bare_number": true,
+          "expected": 0.0,
+          "field": "delta_admission_precision_scalar",
+          "op": ">",
+          "passed": true
+        },
+        {
+          "actual": -9,
+          "actual_type": "int",
+          "bare_number": true,
+          "expected": 0.0,
+          "field": "delta_false_accept_count_scalar",
+          "op": "<=",
+          "passed": true
+        }
+      ],
+      "ready": true
+    },
+    "exp6400": {
+      "gates": [
+        {
+          "actual": 1.0,
+          "actual_type": "float",
+          "bare_number": true,
+          "expected": 1.0,
+          "field": "arc_active_goal_shadow_ready_score",
+          "op": "==",
+          "passed": true
+        },
+        {
+          "actual": 18,
+          "actual_type": "int",
+          "bare_number": true,
+          "expected": 0.0,
+          "field": "active_shadow_treatment_fired_count",
+          "op": ">",
+          "passed": true
+        },
+        {
+          "actual": -9,
+          "actual_type": "int",
+          "bare_number": true,
+          "expected": 0.0,
+          "field": "delta_shadow_false_accept_count",
+          "op": "<=",
+          "passed": true
+        },
+        {
+          "actual": 0,
+          "actual_type": "int",
+          "bare_number": true,
+          "expected": 0.0,
+          "field": "executed_action_change_count",
+          "op": "==",
+          "passed": true
+        }
+      ],
+      "ready": true
+    },
+    "exp6401": {
+      "gates": [
+        {
+          "actual": 1.0,
+          "actual_type": "float",
+          "bare_number": true,
+          "expected": 1.0,
+          "field": "arc_active_goal_causal_ready_score",
+          "op": "==",
+          "passed": true
+        },
+        {
+          "actual": -9,
+          "actual_type": "int",
+          "bare_number": true,
+          "expected": 0.0,
+          "field": "delta_false_accept_count",
+          "op": "<=",
+          "passed": true
+        },
+        {
+          "actual": 3.5,
+          "actual_type": "float",
+          "bare_number": true,
+          "expected": 0.0,
+          "field": "delta_exact_progress_proxy",
+          "op": ">",
+          "passed": true
+        }
+      ],
+      "ready": true,
+      "route_promotion_eligible": true
+    },
+    "public_arc_claim_eligibility_recomputed": false,
+    "public_claim_fail_closed_reason": "audit_scope_not_public_arc_claim_or_policy_promotion",
+    "route_promotion_count_recomputed": 0,
+    "scientific_readiness": true,
+    "solve_claim_count_recomputed": 0,
+    "solve_registry_modified_recomputed": false
+  },
+  "reproducibility_checksum": "sha256:8e91f8706ec38cf6a5c4386df15fee69c922fb5e9cb73b25ab8701ea611ac9c1",
+  "route_promotion_count": 0,
+  "solve_claim_count": 0,
+  "solve_registry_modified": false,
+  "source_entrypoint_policy_reward_machine_model_window_and_registry_hash_matrix": {
+    "all_embedded_receipts_match_registration": true,
+    "all_registered_hashes_match_current": true,
+    "embedded_receipt_comparisons": {
+      "exp6400_agent_hash": {
+        "actual": "sha256:e04d0ab8b6ebdb2f8c1e539d19022f8aea3925de47c5feacbf45091de909b11c",
+        "expected": "sha256:e04d0ab8b6ebdb2f8c1e539d19022f8aea3925de47c5feacbf45091de909b11c",
+        "matches": true,
+        "name": "exp6400_agent_hash"
+      },
+      "exp6400_registry_hash": {
+        "actual": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "expected": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "matches": true,
+        "name": "exp6400_registry_hash"
+      },
+      "exp6400_reward_machine_hash": {
+        "actual": "sha256:30f8d952ebb9181af580de28b4cadf4dd447274992b5ceb2bc8228a48f7d0dcf",
+        "expected": "sha256:30f8d952ebb9181af580de28b4cadf4dd447274992b5ceb2bc8228a48f7d0dcf",
+        "matches": true,
+        "name": "exp6400_reward_machine_hash"
+      },
+      "exp6400_two_sided_contract_hash": {
+        "actual": "sha256:10ec21fee1ee145e5c279a45df0d64115ff982d9dd3faf91d22e2fbd5458a4e1",
+        "expected": "sha256:10ec21fee1ee145e5c279a45df0d64115ff982d9dd3faf91d22e2fbd5458a4e1",
+        "matches": true,
+        "name": "exp6400_two_sided_contract_hash"
+      },
+      "exp6400_window_payload_hash": {
+        "actual": "sha256:a7587e348e4ee055bc516d0fa058de95562a061751af6f2e12eeaae692bfb841",
+        "expected": "sha256:a7587e348e4ee055bc516d0fa058de95562a061751af6f2e12eeaae692bfb841",
+        "matches": true,
+        "name": "exp6400_window_payload_hash"
+      },
+      "exp6401_agent_hash": {
+        "actual": "sha256:e04d0ab8b6ebdb2f8c1e539d19022f8aea3925de47c5feacbf45091de909b11c",
+        "expected": "sha256:e04d0ab8b6ebdb2f8c1e539d19022f8aea3925de47c5feacbf45091de909b11c",
+        "matches": true,
+        "name": "exp6401_agent_hash"
+      },
+      "exp6401_evaluator_hash": {
+        "actual": "sha256:eb29d1d4703c07568849a5be35addd7fbef80010929e6684e3259c6be9b7a495",
+        "expected": "sha256:eb29d1d4703c07568849a5be35addd7fbef80010929e6684e3259c6be9b7a495",
+        "matches": true,
+        "name": "exp6401_evaluator_hash"
+      },
+      "exp6401_exp6400_manifest_file_hash": {
+        "actual": "sha256:23097273946b8003ddb2ace9ddb5a8dd478feac070091b54cef1d8fa42ad9f3f",
+        "expected": "sha256:23097273946b8003ddb2ace9ddb5a8dd478feac070091b54cef1d8fa42ad9f3f",
+        "matches": true,
+        "name": "exp6401_exp6400_manifest_file_hash"
+      },
+      "exp6401_registry_hash": {
+        "actual": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "expected": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "matches": true,
+        "name": "exp6401_registry_hash"
+      },
+      "exp6401_reward_machine_hash": {
+        "actual": "sha256:30f8d952ebb9181af580de28b4cadf4dd447274992b5ceb2bc8228a48f7d0dcf",
+        "expected": "sha256:30f8d952ebb9181af580de28b4cadf4dd447274992b5ceb2bc8228a48f7d0dcf",
+        "matches": true,
+        "name": "exp6401_reward_machine_hash"
+      },
+      "exp6401_two_sided_contract_hash": {
+        "actual": "sha256:10ec21fee1ee145e5c279a45df0d64115ff982d9dd3faf91d22e2fbd5458a4e1",
+        "expected": "sha256:10ec21fee1ee145e5c279a45df0d64115ff982d9dd3faf91d22e2fbd5458a4e1",
+        "matches": true,
+        "name": "exp6401_two_sided_contract_hash"
+      },
+      "exp6401_window_payload_hash": {
+        "actual": "sha256:e44985ae07601fe2f5d795fe9ce7e0420de5a6d3a850f95549e97fbe564e95c1",
+        "expected": "sha256:e44985ae07601fe2f5d795fe9ce7e0420de5a6d3a850f95549e97fbe564e95c1",
+        "matches": true,
+        "name": "exp6401_window_payload_hash"
+      }
+    },
+    "model_hashes": {
+      "exp6400": {
+        "unsloth/Qwen3.6-35B-A3B-GGUF": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "unsloth/gemma-4-26B-A4B-it-GGUF": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "unsloth/gemma-4-31B-it-GGUF": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
+      },
+      "exp6401": {
+        "unsloth/Qwen3.6-35B-A3B-GGUF": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "unsloth/gemma-4-26B-A4B-it-GGUF": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "unsloth/gemma-4-31B-it-GGUF": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
+      }
+    },
+    "model_hashes_consistent_across_present_artifacts": true,
+    "registered_path_comparisons": [
+      {
+        "current_sha256": "sha256:d03fe2f338e704b6eefc00fe96dbf62171de354b8542ca88e331322fa992fabf",
+        "current_state": "present",
+        "matches": true,
+        "path": "openspec/capabilities/arc-agi/spec.md",
+        "registered_sha256": "sha256:d03fe2f338e704b6eefc00fe96dbf62171de354b8542ca88e331322fa992fabf",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": null,
+        "current_state": "absent",
+        "matches": true,
+        "path": "ops/arc_solve_claims.yaml",
+        "registered_sha256": null,
+        "registered_state": "absent"
+      },
+      {
+        "current_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "current_state": "present",
+        "matches": true,
+        "path": "ops/arc_solve_registry.yaml",
+        "registered_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:af334159fe569566fad5eae0f8cd39a24a92e841cc8965f284516587159a08ca",
+        "current_state": "present",
+        "matches": true,
+        "path": "ops/conductor-log.md",
+        "registered_sha256": "sha256:af334159fe569566fad5eae0f8cd39a24a92e841cc8965f284516587159a08ca",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:30f8d952ebb9181af580de28b4cadf4dd447274992b5ceb2bc8228a48f7d0dcf",
+        "current_state": "present",
+        "matches": true,
+        "path": "python/carnot/agentic/arc_active_reward_machine_frontier.py",
+        "registered_sha256": "sha256:30f8d952ebb9181af580de28b4cadf4dd447274992b5ceb2bc8228a48f7d0dcf",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:e04d0ab8b6ebdb2f8c1e539d19022f8aea3925de47c5feacbf45091de909b11c",
+        "current_state": "present",
+        "matches": true,
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "registered_sha256": "sha256:e04d0ab8b6ebdb2f8c1e539d19022f8aea3925de47c5feacbf45091de909b11c",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:10ec21fee1ee145e5c279a45df0d64115ff982d9dd3faf91d22e2fbd5458a4e1",
+        "current_state": "present",
+        "matches": true,
+        "path": "python/carnot/agentic/arc_two_sided_goal_contract.py",
+        "registered_sha256": "sha256:10ec21fee1ee145e5c279a45df0d64115ff982d9dd3faf91d22e2fbd5458a4e1",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": null,
+        "current_state": "absent",
+        "matches": true,
+        "path": "python/carnot/arc_agi/agent.py",
+        "registered_sha256": null,
+        "registered_state": "absent"
+      },
+      {
+        "current_sha256": null,
+        "current_state": "absent",
+        "matches": true,
+        "path": "python/carnot/arc_agi/ebm_agent.py",
+        "registered_sha256": null,
+        "registered_state": "absent"
+      },
+      {
+        "current_sha256": null,
+        "current_state": "absent",
+        "matches": true,
+        "path": "python/carnot/arc_agi/sdk_entry.py",
+        "registered_sha256": null,
+        "registered_state": "absent"
+      },
+      {
+        "current_sha256": "sha256:5c6cd221e9242933f1961151eb3545227557e920729be63e4582cbac2f31038c",
+        "current_state": "present",
+        "matches": true,
+        "path": "python/carnot/experiment_6400_arc_default_off_active_goal_shadow.py",
+        "registered_sha256": "sha256:5c6cd221e9242933f1961151eb3545227557e920729be63e4582cbac2f31038c",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:eb29d1d4703c07568849a5be35addd7fbef80010929e6684e3259c6be9b7a495",
+        "current_state": "present",
+        "matches": true,
+        "path": "python/carnot/experiment_6401_arc_active_goal_causal_holdout.py",
+        "registered_sha256": "sha256:eb29d1d4703c07568849a5be35addd7fbef80010929e6684e3259c6be9b7a495",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:0d3d5b15c24b75e3ca160bf5e2e465c076c189611f063cc7cd66dc47007cead7",
+        "current_state": "present",
+        "matches": true,
+        "path": "python/carnot/experiment_6402_arc_active_goal_safety_audit.py",
+        "registered_sha256": "sha256:0d3d5b15c24b75e3ca160bf5e2e465c076c189611f063cc7cd66dc47007cead7",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:c2e0e3c362dd6a1a3c02592b4ffd9891eb9a4a7697ba90f915e3e341b651351e",
+        "current_state": "present",
+        "matches": true,
+        "path": "results/experiment_6386_arc_two_sided_goal_evidence_contract.json",
+        "registered_sha256": "sha256:c2e0e3c362dd6a1a3c02592b4ffd9891eb9a4a7697ba90f915e3e341b651351e",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:35bb20897a566468afb1659c5416d54c3fca81aafad4c2e5bb93ec661144ecda",
+        "current_state": "present",
+        "matches": true,
+        "path": "results/experiment_6387_arc_active_reward_machine_discriminator.json",
+        "registered_sha256": "sha256:35bb20897a566468afb1659c5416d54c3fca81aafad4c2e5bb93ec661144ecda",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:f2285216e0b17b178dc14a033843be01f286bbda8834904bc2a7786eccff8a98",
+        "current_state": "present",
+        "matches": true,
+        "path": "results/experiment_6388_arc_goal_evidence_response_calibration.json",
+        "registered_sha256": "sha256:f2285216e0b17b178dc14a033843be01f286bbda8834904bc2a7786eccff8a98",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:f241403e13b7b3e42f3f588fa032612cb6d0c0168a785203321fc78200ab2f33",
+        "current_state": "present",
+        "matches": true,
+        "path": "results/experiment_6393_arc_scalar_gate_metric_contract.json",
+        "registered_sha256": "sha256:f241403e13b7b3e42f3f588fa032612cb6d0c0168a785203321fc78200ab2f33",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:9fc73c12483c7f470220a48b8530bc94bd8e8b8e2d84808a7e9b399d9a6c5606",
+        "current_state": "present",
+        "matches": true,
+        "path": "results/experiment_6400_arc_default_off_active_goal_shadow.json",
+        "registered_sha256": "sha256:9fc73c12483c7f470220a48b8530bc94bd8e8b8e2d84808a7e9b399d9a6c5606",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:23097273946b8003ddb2ace9ddb5a8dd478feac070091b54cef1d8fa42ad9f3f",
+        "current_state": "present",
+        "matches": true,
+        "path": "results/experiment_6400_arc_default_off_active_goal_shadow_windows.json",
+        "registered_sha256": "sha256:23097273946b8003ddb2ace9ddb5a8dd478feac070091b54cef1d8fa42ad9f3f",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:95c8e52c31f99309e4dd368b4c7821e8aa4dfe0e1306430abc3d4fcdffd6594e",
+        "current_state": "present",
+        "matches": true,
+        "path": "results/experiment_6401_arc_active_goal_causal_holdout.json",
+        "registered_sha256": "sha256:95c8e52c31f99309e4dd368b4c7821e8aa4dfe0e1306430abc3d4fcdffd6594e",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:d517f61a35065a668828e124ed5b469ff3eec3f96e329153ffe1ff49897a8a7b",
+        "current_state": "present",
+        "matches": true,
+        "path": "results/experiment_6401_arc_active_goal_causal_holdout_windows.json",
+        "registered_sha256": "sha256:d517f61a35065a668828e124ed5b469ff3eec3f96e329153ffe1ff49897a8a7b",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+        "current_state": "present",
+        "matches": true,
+        "path": "scripts/adversarial_verify.py",
+        "registered_sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": null,
+        "current_state": "absent",
+        "matches": true,
+        "path": "scripts/check_determination_preservation.py",
+        "registered_sha256": null,
+        "registered_state": "absent"
+      },
+      {
+        "current_sha256": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
+        "current_state": "present",
+        "matches": true,
+        "path": "scripts/determination_preservation_lint.py",
+        "registered_sha256": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:458ec2966f40918581381a8895875ab86664e14c8f69ea21afe5be71e4348509",
+        "current_state": "present",
+        "matches": true,
+        "path": "scripts/research_conductor.py",
+        "registered_sha256": "sha256:458ec2966f40918581381a8895875ab86664e14c8f69ea21afe5be71e4348509",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:be83376d4820e8f254bd341a9b4f7683454db8af7f69998887267e502c343402",
+        "current_state": "present",
+        "matches": true,
+        "path": "scripts/root_clutter_sweep.py",
+        "registered_sha256": "sha256:be83376d4820e8f254bd341a9b4f7683454db8af7f69998887267e502c343402",
+        "registered_state": "present"
+      },
+      {
+        "current_sha256": "sha256:62bf92bd99b7325ae841e4d93270ccd53338c9d54765e14acadbb7f5c35d1c7d",
+        "current_state": "present",
+        "matches": true,
+        "path": "scripts/summarize_artifact.py",
+        "registered_sha256": "sha256:62bf92bd99b7325ae841e4d93270ccd53338c9d54765e14acadbb7f5c35d1c7d",
+        "registered_state": "present"
+      }
+    ],
+    "window_manifest_hashes": {
+      "exp6400_file_hash": "sha256:23097273946b8003ddb2ace9ddb5a8dd478feac070091b54cef1d8fa42ad9f3f",
+      "exp6400_payload_hash": "sha256:a7587e348e4ee055bc516d0fa058de95562a061751af6f2e12eeaae692bfb841",
+      "exp6401_payload_hash": "sha256:e44985ae07601fe2f5d795fe9ce7e0420de5a6d3a850f95549e97fbe564e95c1"
+    }
+  },
+  "status": "complete",
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6402_arc_active_goal_safety_audit.py --fail-under=100 --show-missing": null,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6402_arc_active_goal_safety_audit.py -m pytest tests/python/test_experiment_6402_arc_active_goal_safety_audit.py -q --no-cov -n 0": null,
+    ".venv/bin/pytest tests/python -q": null,
+    ".venv/bin/pytest tests/python/test_experiment_6402_arc_active_goal_safety_audit.py -q --no-cov -n 0": null,
+    ".venv/bin/python -m carnot.experiment_6402_arc_active_goal_safety_audit --date 20260813": null,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6402_arc_active_goal_safety_audit.json": null,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6402_arc_active_goal_safety_audit.py": null,
+    ".venv/bin/python scripts/determination_preservation_lint.py --all": null,
+    ".venv/bin/python scripts/root_clutter_sweep.py": null,
+    "sed -n '1,220p' ops/e2e-test-plan.md": null
+  },
+  "tests_run": [
+    ".venv/bin/python -m carnot.experiment_6402_arc_active_goal_safety_audit --date 20260813",
+    ".venv/bin/pytest tests/python/test_experiment_6402_arc_active_goal_safety_audit.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6402_arc_active_goal_safety_audit.py -m pytest tests/python/test_experiment_6402_arc_active_goal_safety_audit.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6402_arc_active_goal_safety_audit.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6402_arc_active_goal_safety_audit.py",
+    "sed -n '1,220p' ops/e2e-test-plan.md",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6402_arc_active_goal_safety_audit.json",
+    ".venv/bin/python scripts/determination_preservation_lint.py --all",
+    ".venv/bin/python scripts/root_clutter_sweep.py"
+  ],
+  "upstream_artifacts_modified": false,
+  "verifier_is_oracle": false
+}
