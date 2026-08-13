@@ -4293,6 +4293,144 @@ the checksum matches, `random_seed` is null, and `verifier_is_oracle` is false.
 |---|---|---|
 | REQ-INFRA-6377 | Implemented: `python/carnot/experiment_6377_v549_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json`. | Implemented: `tests/python/test_experiment_6377_v549_terminal_handoff_and_queue_preflight.py`. |
 
+## REQ-INFRA-6379: Canonical Factor-Edit Transport Contract SHALL Use One Source
+
+Carnot SHALL build Exp6379 as deterministic transport infrastructure for the
+Exp6366 factor-edit failure. The experiment SHALL freeze and hash the Exp6366
+terminal artifact, prompt payload sidecars, bounded schema sidecar, and all
+three raw stdout sidecars before it labels any failure. Each frozen raw failure
+SHALL preserve overlapping labels from this set: `thinking_leakage`,
+`repetition_collapse`, `truncation`, `syntax_failure`, `structural_failure`,
+`semantic_failure`, and `unknown`.
+
+Exp6379 SHALL define one canonical bounded factor-edit object. That object
+SHALL generate the schema description, prompt instruction fragment, compact
+output example, validator field list, source-binding checks, and output-token
+lower bound. Hand-written duplicate surfaces, stale examples, field reorder,
+missing fixed fields, prompt-schema conflict, and hash drift SHALL fail closed.
+The canonical object SHALL include one preregistered bounded
+`evidence_summary` variant that may cite visible source evidence. It SHALL not
+ask for hidden chain of thought.
+
+Exp6379 SHALL include `MODEL_SPECS` rows for exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Token capacity checks SHALL use each local
+GGUF file's embedded tokenizer in vocab-only mode. The experiment SHALL not call
+`AutoTokenizer`, invoke autoregressive generation, add grammar decoding, retry a
+parser, or repair output after the fact. It SHALL compute the minimal
+serialized-output token count, old-budget margin, required completion lower
+bound, fixed headroom, context-window margin, and truncation risk separately for
+each model.
+
+Exp6379 SHALL define a bounded repetition policy before any later live
+execution. A repeated-token threshold breach SHALL become abstention. A larger
+token budget alone SHALL not qualify the transport contract. The artifact SHALL
+write `canonical_factor_transport_contract_ready_score=1.0` only when all
+deterministic generated surfaces agree, all drift attacks fail closed, all three
+embedded-tokenizer capacity receipts exist, and no retired decoding mechanism
+is present.
+
+The Exp6379 artifact SHALL be written atomically to
+`results/experiment_6379_canonical_factor_edit_transport_contract.json` with
+`inference_substrate=deterministic_gguf_vocab_only_transport_contract` and
+`verifier_is_oracle=false`. The artifact SHALL include these required fields:
+`status`, `upstream_exp6366_path_hash_and_terminal_class`,
+`frozen_raw_failure_paths_hashes_and_labels`, `MODEL_SPECS`,
+`embedded_gguf_tokenizer_receipts`, `autotokenizer_usage_count`,
+`live_autoregressive_generation_invoked`,
+`canonical_schema_path_hash_and_version`, `canonical_schema_generated_surfaces`,
+`prompt_schema_drift_checks`, `bounded_evidence_summary_variant`,
+`per_model_minimum_output_tokens_and_capacity_margins`,
+`repetition_policy_and_failure_thresholds`,
+`deterministic_transport_mutation_matrix`,
+`syntax_structure_source_binding_and_semantic_boundaries`,
+`retired_decoding_mechanism_usage_count`,
+`canonical_factor_transport_contract_ready_score`,
+`no_model_quality_or_utility_claim`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+### Required Artifact Fields And Principles
+
+- `status`: Terminal status distinguishes positive and null deterministic transport evidence.
+- `upstream_exp6366_path_hash_and_terminal_class`: The Exp6366 terminal artifact is frozen before failure labels are assigned.
+- `frozen_raw_failure_paths_hashes_and_labels`: Raw stdout, prompt payload, and schema hashes bind each failure label to bytes.
+- `MODEL_SPECS`: The three mandated GGUF model ids are present for tokenizer capacity checks.
+- `embedded_gguf_tokenizer_receipts`: Each token receipt uses the embedded GGUF tokenizer in vocab-only mode.
+- `autotokenizer_usage_count`: A bare zero records that no external tokenizer path was used.
+- `live_autoregressive_generation_invoked`: A bare false records that this run is deterministic transport infrastructure.
+- `canonical_schema_path_hash_and_version`: The single canonical object is written and hash-bound as the schema source.
+- `canonical_schema_generated_surfaces`: Prompt, schema, validator, example, and source checks share one canonical hash.
+- `prompt_schema_drift_checks`: Drift between generated surfaces fails closed before any later live call.
+- `bounded_evidence_summary_variant`: The JSON object may include a short visible-evidence summary.
+- `per_model_minimum_output_tokens_and_capacity_margins`: Output-token lower bounds and context margins are measured per model.
+- `repetition_policy_and_failure_thresholds`: Repeated-token collapse is a preregistered abstention, not a transport pass.
+- `deterministic_transport_mutation_matrix`: Known drift, syntax, structure, source, and semantic attacks are rejected.
+- `syntax_structure_source_binding_and_semantic_boundaries`: The validator checks transport boundaries but not exact task utility.
+- `retired_decoding_mechanism_usage_count`: A bare zero records that retired decoding controls were not used.
+- `canonical_factor_transport_contract_ready_score`: Readiness is one only when generators, drift checks, token receipts, and bans agree.
+- `no_model_quality_or_utility_claim`: The artifact makes no model-quality, factor-success, or utility claim.
+- `protected_files_unchanged`: Conductor, ops, traceability, and Exp6366 inputs stay byte-identical.
+- `preconditions_checked`: Preconditions bind upstream evidence, model identities, token receipts, bans, and protected hashes.
+- `inference_substrate`: The substrate is deterministic local GGUF tokenizer measurement.
+- `verifier_is_oracle`: The validator is not the later exact semantic oracle.
+- `field_principles`: Every required field states its guard.
+- `field_provenance`: Every required field maps to specs, frozen inputs, generated surfaces, tests, or constants.
+- `random_seed`: The seed pins deterministic ordering even though no random sampling occurs.
+- `duration_s`: Wall time is measured without padding.
+- `tests_run`: Verification commands and exit codes are recorded.
+- `reproducibility_checksum`: A normalized checksum detects artifact drift.
+- `honest_verdict`: The verdict uses a terminal prefix and states the transport-only claim.
+
+### SCENARIO-INFRA-6379-1: Exp6366 Failures Freeze Before Labels
+
+GIVEN Exp6366 wrote three nonempty raw stdout sidecars and zero parse-valid
+objects
+WHEN Exp6379 classifies those outputs
+THEN the Exp6366 artifact, prompt payloads, schema sidecar, and raw outputs are
+hashed first
+AND each model keeps all applicable deterministic failure labels.
+
+### SCENARIO-INFRA-6379-2: Canonical Object Generates All Surfaces
+
+GIVEN the canonical bounded factor-edit object
+WHEN Exp6379 builds prompt, schema, validator, example, source-binding, and
+token-bound surfaces
+THEN each surface derives from the same canonical hash
+AND duplicate or stale hand-written surfaces fail closed.
+
+### SCENARIO-INFRA-6379-3: Drift And Malformed Output Fail Closed
+
+GIVEN prompt-schema conflict, stale examples, missing fixed fields, reordered
+fields, thinking prefixes, markdown fences, repeated tokens, mid-object
+truncation, unsupported source spans, or parse-valid semantic corruption
+WHEN the deterministic transport validator checks them
+THEN each mutation is rejected without parser retry, grammar decoding, or
+post-hoc repair.
+
+### SCENARIO-INFRA-6379-4: Token Capacity Uses Embedded GGUF Tokenizers Only
+
+GIVEN the three mandated local GGUF model rows
+WHEN Exp6379 computes output capacity receipts
+THEN each receipt uses the embedded GGUF tokenizer in vocab-only mode
+AND it records minimal output tokens, old-budget margin, lower bound, headroom,
+context margin, and truncation risk per model.
+
+### SCENARIO-INFRA-6379-5: Readiness Is Deterministic Transport Only
+
+GIVEN all generators agree, all drift attacks fail closed, all tokenizer
+receipts exist, and retired decoding mechanisms are absent
+WHEN Exp6379 writes its artifact
+THEN `canonical_factor_transport_contract_ready_score` is `1.0`
+AND no model quality, exact utility, or semantic-oracle claim is made.
+
+## Implementation Status (REQ-INFRA-6379)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6379 | Implemented: `python/carnot/experiment_6379_canonical_factor_edit_transport_contract.py`; terminal artifact `results/experiment_6379_canonical_factor_edit_transport_contract.json`. | Implemented: `tests/python/test_experiment_6379_canonical_factor_edit_transport_contract.py`. |
+
 ## REQ-INFRA-6365: GGUF Child Failure Forensics SHALL Preserve Runtime Diagnostics
 
 Carnot SHALL build Exp6365 as a reusable observable child-process contract for
