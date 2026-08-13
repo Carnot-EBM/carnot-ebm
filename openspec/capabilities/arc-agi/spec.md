@@ -164,3 +164,46 @@ run
 protected files are unchanged, forbidden access counts are zero,
 `arc_solve_claim` is false, `verifier_is_oracle` is false, and the registry hash
 is unchanged.
+
+### REQ-ARC-ARM-6393: Scalar ARC Gate-Metric Contract
+
+Experiment 6393 SHALL replay immutable Exp6388 row-level evidence into bare
+numeric gate fields. It SHALL recompute pooled admission precision, admission
+precision delta, false-accept count, and false-accept delta from frozen rows.
+It SHALL NOT trust the nested Exp6388 aggregate as the source of truth.
+
+The producer SHALL emit `delta_admission_precision_scalar` and
+`delta_false_accept_count_scalar` as finite bare numbers. It SHALL keep
+by-model values in separate detail fields. Mapping, list, string, bool, NaN,
+infinity, rounded sign-change, missing-row, duplicate-row, stale-hash, and
+model-order attacks SHALL fail closed.
+
+Experiment 6393 SHALL write
+`results/experiment_6393_arc_scalar_gate_metric_contract.json` with the required
+top-level fields named by the task. The artifact SHALL set
+`arc_gate_metric_contract_ready_score=1.0` only when the row replay reproduces
+the V549 Exp6388 metrics, every scalar gate field is finite, all coercion
+attacks fail closed, Exp6388 and Exp6389 remain unchanged, and no live route or
+solve claim is made.
+
+### SCENARIO-ARC-ARM-6393-ROW-REPLAY
+
+**Given** immutable Exp6388 frozen prediction rows
+**When** Exp6393 recomputes the active and current gate counts
+**Then** active pooled admission precision is 1.0, delta admission precision is
+0.75, active false accepts are 0, delta false accepts are -9, and by-model
+detail rows are preserved outside the conductor scalar fields.
+
+### SCENARIO-ARC-ARM-6393-ATTACKS-FAIL-CLOSED
+
+**Given** malformed scalar values, non-finite floats, rounded sign changes,
+missing model rows, duplicate rows, stale hashes, and model-order swaps
+**When** Exp6393 validates the producer contract
+**Then** each case is rejected before a ready score can be set.
+
+### SCENARIO-ARC-ARM-6393-GATE-REPLAY
+
+**Given** the planned Exp6400 gate predicates over Exp6393
+**When** the conductor comparison function evaluates the new artifact fields
+**Then** each comparison receives a finite bare number and the exact operands,
+operator, result, and reason are recorded.

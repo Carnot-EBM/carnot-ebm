@@ -127,6 +127,17 @@ terminal blocked artifact with the exact gate that failed.
 Downstream tasks shall not infer completion from commit presence, log presence,
 or roadmap presence alone.
 
+### REQ-HARNESS-6393: Numeric Gate Producers Must Expose Bare Finite Scalars
+
+Any producer that feeds a conductor numeric comparison gate SHALL expose the
+gated field as a finite bare number. It SHALL place maps, lists, per-model
+details, and diagnostic receipts in separate non-gated fields.
+
+The producer SHALL validate the comparison surface before it reports readiness.
+Mapping, list, string, bool, NaN, infinity, rounded sign-change, missing-row,
+duplicate-row, stale-hash, and order-swap inputs SHALL fail closed. The replay
+receipt SHALL record the exact operands and conductor comparison result.
+
 ### REQ-HARNESS-009: Acceptance-Object Alignment
 
 Extra verifier, search, or orchestration layers are allowed only when their

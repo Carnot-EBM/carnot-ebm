@@ -1,0 +1,329 @@
+{
+  "admission_precision_by_model_detail": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "active_reward_machine_admission_precision": 1.0,
+      "current_gate_admission_precision": 0.25,
+      "delta_admission_precision": 0.75,
+      "operands": {
+        "active_accepted": 1,
+        "active_true_accept": 1,
+        "current_accepted": 4,
+        "current_true_accept": 1
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "active_reward_machine_admission_precision": 1.0,
+      "current_gate_admission_precision": 0.25,
+      "delta_admission_precision": 0.75,
+      "operands": {
+        "active_accepted": 1,
+        "active_true_accept": 1,
+        "current_accepted": 4,
+        "current_true_accept": 1
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "active_reward_machine_admission_precision": 1.0,
+      "current_gate_admission_precision": 0.25,
+      "delta_admission_precision": 0.75,
+      "operands": {
+        "active_accepted": 1,
+        "active_true_accept": 1,
+        "current_accepted": 4,
+        "current_true_accept": 1
+      }
+    }
+  },
+  "arc_gate_metric_contract_ready_score": 1.0,
+  "coercion_rounding_missing_duplicate_and_order_attack_matrix": [
+    {
+      "attack": "mapping_value",
+      "fail_closed": true,
+      "reason": "delta_admission_precision_scalar must be a bare int or float, got dict"
+    },
+    {
+      "attack": "list_value",
+      "fail_closed": true,
+      "reason": "delta_admission_precision_scalar must be a bare int or float, got list"
+    },
+    {
+      "attack": "string_value",
+      "fail_closed": true,
+      "reason": "delta_admission_precision_scalar must be a bare int or float, got str"
+    },
+    {
+      "attack": "bool_value",
+      "fail_closed": true,
+      "reason": "delta_admission_precision_scalar must be a bare int or float, got bool"
+    },
+    {
+      "attack": "nan_value",
+      "fail_closed": true,
+      "reason": "delta_admission_precision_scalar must be finite, got nan"
+    },
+    {
+      "attack": "infinity_value",
+      "fail_closed": true,
+      "reason": "delta_admission_precision_scalar must be finite, got inf"
+    },
+    {
+      "attack": "rounded_sign_change",
+      "fail_closed": true,
+      "reason": "rounded sign change would alter gate result (raw=0.0004, published=0.0, op='>', boundary=0.0)"
+    },
+    {
+      "attack": "missing_model_rows",
+      "fail_closed": true,
+      "reason": "missing row receipt: ('unsloth/Qwen3.6-35B-A3B-GGUF', 'active_reward_machine_evidence', 'exp6388-alpha-e0')"
+    },
+    {
+      "attack": "duplicated_rows",
+      "fail_closed": true,
+      "reason": "duplicate row receipt: ('unsloth/Qwen3.6-35B-A3B-GGUF', 'current_gate', 'exp6388-alpha-e0')"
+    },
+    {
+      "attack": "stale_hashes",
+      "fail_closed": true,
+      "reason": "stale hash for results/experiment_6388_arc_goal_evidence_response_calibration.json: actual=f2285216e0b17b178dc14a033843be01f286bbda8834904bc2a7786eccff8a98, expected=stale"
+    },
+    {
+      "attack": "model_order_swap",
+      "fail_closed": true,
+      "reason": "model order does not match the Exp6388 producer contract"
+    }
+  ],
+  "conductor_modified": false,
+  "delta_admission_precision_scalar": 0.75,
+  "delta_false_accept_count_scalar": -9,
+  "duration_s": 0.0045,
+  "false_accept_count_by_model_detail": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "active_reward_machine_false_accept_count": 0,
+      "current_gate_false_accept_count": 3,
+      "delta_false_accept_count": -3
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "active_reward_machine_false_accept_count": 0,
+      "current_gate_false_accept_count": 3,
+      "delta_false_accept_count": -3
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "active_reward_machine_false_accept_count": 0,
+      "current_gate_false_accept_count": 3,
+      "delta_false_accept_count": -3
+    }
+  },
+  "false_accept_count_scalar": 0,
+  "field_principles": {
+    "arc_gate_metric_contract_ready_score": "Feeds the downstream Exp6400 readiness gate. It is 1.0 only after row replay, scalar checks, attack rejection, and protected-file checks pass.",
+    "delta_admission_precision_scalar": "Feeds the downstream Exp6400 greater-than gate. It is the bare finite pooled admission-precision lift from active evidence over the current gate.",
+    "delta_false_accept_count_scalar": "Feeds the downstream Exp6400 non-increase gate. It is the bare finite active false-accept count minus current-gate false-accept count.",
+    "false_accept_count_scalar": "Records active false accepts from row counts so the delta can be audited.",
+    "pooled_admission_precision_scalar": "Records active pooled precision from row counts so the delta can be audited."
+  },
+  "field_provenance": {
+    "coercion_rounding_missing_duplicate_and_order_attack_matrix": "Exp6393 local fail-closed probes over scalar and row-contract validators",
+    "immutable_row_count_receipts": "Exp6388 raw_model_output_and_evidence_binding_receipts, recomputed by Exp6393",
+    "protected_files_unchanged": "sha256 comparison with captured pre-change hashes",
+    "structured_gate_replay_results": "scripts.conductor_gates._eval_op with the planned Exp6400 gate predicates",
+    "upstream_exp6388_path_hash_and_terminal_class": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6388_arc_goal_evidence_response_calibration.json",
+    "upstream_exp6389_path_hash_and_terminal_class": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6389_arc_default_off_active_goal_shadow.json"
+  },
+  "historical_artifacts_modified": false,
+  "honest_verdict": "complete: scalar_gate_metric_contract_ready_no_live_route_or_solve_claim",
+  "immutable_row_count_receipts": {
+    "aggregate_counts_match_row_recompute": true,
+    "aggregate_delta_used_as_source": false,
+    "arm_order": [
+      "current_gate",
+      "frozen_prior_control",
+      "passive_two_sided_evidence",
+      "active_reward_machine_evidence"
+    ],
+    "duplicate_row_count": 0,
+    "expected_receipt_count": 48,
+    "missing_row_count": 0,
+    "model_order": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "nested_delta_present_but_not_trusted": true,
+    "prefix_ids": [
+      "exp6388-alpha-e0",
+      "exp6388-alpha-e1",
+      "exp6388-alpha-e2",
+      "exp6388-beta-counter"
+    ],
+    "raw_receipt_count": 48,
+    "source_field": "raw_model_output_and_evidence_binding_receipts"
+  },
+  "inference_substrate": "deterministic_replay_from_frozen_exp6388_rows",
+  "metric_producer_path_hash_and_version": {
+    "contract_version": "exp6393_scalar_gate_metric_contract_v1",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6393_arc_scalar_gate_metric_contract.py",
+    "sha256": "1f628d5c1a2b1af04cdca6aba3bc5353206b0354315c34bfa6fd056e042e91e0",
+    "source_metric_producer_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6388_arc_goal_evidence_response_calibration.py",
+    "source_metric_producer_sha256": "82bb08a432941baca8591f0ba05d890b290bea7a20694b6e130c4af01e19969b"
+  },
+  "no_live_route_or_solve_claim": {
+    "arc_solve_claim": false,
+    "live_route_utility_claim": false,
+    "no_arc_run_invoked": true,
+    "no_llm_invoked": true,
+    "solve_provenance_present": false
+  },
+  "pooled_admission_precision_scalar": 1.0,
+  "preconditions_checked": {
+    "agents_codex_and_claude_instructions_read": true,
+    "conductor_unchanged": true,
+    "exp6388_terminal_class": "terminal_complete",
+    "exp6389_terminal_class": "terminal_blocked",
+    "historical_artifacts_unchanged": true,
+    "no_arc_run_invoked": true,
+    "no_llm_invoked": true,
+    "planning_date": "20260813",
+    "prechange_hashes_checked": {
+      "python/carnot/experiment_6388_arc_goal_evidence_response_calibration.py": "82bb08a432941baca8591f0ba05d890b290bea7a20694b6e130c4af01e19969b",
+      "research-roadmap.yaml": "9e95395293d59655d63f421fcf46de2b8cfa626fe48df4b157a55246725c7354",
+      "results/experiment_6388_arc_goal_evidence_response_calibration.json": "f2285216e0b17b178dc14a033843be01f286bbda8834904bc2a7786eccff8a98",
+      "results/experiment_6389_arc_default_off_active_goal_shadow.json": "fde8d48a0677fa6b858e66d6779a470e2af47a8d71c97453fd7437dcebee7da9",
+      "scripts/conductor_gates.py": "9bb1f3ea71076d81b8c39665e27e743acf27bdbdafa621cfd9b29395554aa45e",
+      "scripts/research_conductor.py": "458ec2966f40918581381a8895875ab86664e14c8f69ea21afe5be71e4348509"
+    },
+    "spec_has_req_arc_arm_6393": true,
+    "spec_has_req_harness_6393": true,
+    "spec_paths": [
+      "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/arc-agi/spec.md",
+      "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-harnesses/spec.md"
+    ]
+  },
+  "protected_files_unchanged": {
+    "python/carnot/experiment_6388_arc_goal_evidence_response_calibration.py": true,
+    "research-roadmap.yaml": true,
+    "results/experiment_6388_arc_goal_evidence_response_calibration.json": true,
+    "results/experiment_6389_arc_default_off_active_goal_shadow.json": true,
+    "scripts/conductor_gates.py": true,
+    "scripts/research_conductor.py": true
+  },
+  "random_seed": 6393,
+  "recomputation_equations_and_operands": {
+    "delta_admission_precision_scalar": {
+      "active_accepted": 3,
+      "active_true_accept": 3,
+      "current_accepted": 12,
+      "current_true_accept": 3,
+      "equation": "(active_true_accept / active_accepted) - (current_true_accept / current_accepted)",
+      "value": 0.75
+    },
+    "delta_false_accept_count_scalar": {
+      "active_false_accept_count": 0,
+      "current_false_accept_count": 9,
+      "equation": "active_false_accept_count - current_false_accept_count",
+      "value": -9
+    },
+    "false_accept_count_scalar": {
+      "active_false_accept_count": 0,
+      "equation": "active_false_accept_count",
+      "value": 0
+    },
+    "pooled_admission_precision_scalar": {
+      "active_accepted": 3,
+      "active_true_accept": 3,
+      "equation": "active_true_accept / active_accepted",
+      "value": 1.0
+    }
+  },
+  "reproducibility_checksum": "cb222408c0b4996d7c75e1a1a87c429458f1e5f56910b28f554de5ed0c97c971",
+  "scalar_type_and_finiteness_checks": {
+    "delta_admission_precision_scalar": {
+      "bool_rejected": true,
+      "finite_bare_number": true,
+      "type": "float",
+      "value": 0.75
+    },
+    "delta_false_accept_count_scalar": {
+      "bool_rejected": true,
+      "finite_bare_number": true,
+      "type": "int",
+      "value": -9
+    },
+    "false_accept_count_scalar": {
+      "bool_rejected": true,
+      "finite_bare_number": true,
+      "type": "int",
+      "value": 0
+    },
+    "pooled_admission_precision_scalar": {
+      "bool_rejected": true,
+      "finite_bare_number": true,
+      "type": "float",
+      "value": 1.0
+    }
+  },
+  "status": "complete",
+  "structured_gate_replay_results": [
+    {
+      "actual": 1.0,
+      "actual_type": "float",
+      "artifact_field": "arc_gate_metric_contract_ready_score",
+      "comparison_surface_finite_bare_number": true,
+      "expected": 1.0,
+      "op": "==",
+      "passed": true,
+      "reason": "actual=1.0 == expected=1.0",
+      "upstream": "exp6393-arc-scalar-gate-metric-contract"
+    },
+    {
+      "actual": 0.75,
+      "actual_type": "float",
+      "artifact_field": "delta_admission_precision_scalar",
+      "comparison_surface_finite_bare_number": true,
+      "expected": 0.0,
+      "op": ">",
+      "passed": true,
+      "reason": "actual=0.75 > expected=0.0",
+      "upstream": "exp6393-arc-scalar-gate-metric-contract"
+    },
+    {
+      "actual": -9,
+      "actual_type": "int",
+      "artifact_field": "delta_false_accept_count_scalar",
+      "comparison_surface_finite_bare_number": true,
+      "expected": 0,
+      "op": "<=",
+      "passed": true,
+      "reason": "actual=-9 <= expected=0",
+      "upstream": "exp6393-arc-scalar-gate-metric-contract"
+    }
+  ],
+  "tests_run": [
+    ".venv/bin/python - <<'PY' ... Roadmap.model_validate(yaml.safe_load(research-roadmap.yaml))",
+    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+    ".venv/bin/pytest tests/python/test_experiment_6393_arc_scalar_gate_metric_contract.py -q --no-cov",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/coverage run -m pytest tests/python/test_experiment_6393_arc_scalar_gate_metric_contract.py -q -o addopts=''",
+    ".venv/bin/coverage report --include='python/carnot/experiment_6393_arc_scalar_gate_metric_contract.py' --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6393_arc_scalar_gate_metric_contract.json",
+    ".venv/bin/python scripts/determination_preservation_lint.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py"
+  ],
+  "upstream_exp6388_path_hash_and_terminal_class": {
+    "expected_sha256": "f2285216e0b17b178dc14a033843be01f286bbda8834904bc2a7786eccff8a98",
+    "honest_verdict": "complete_goal_evidence_response_calibration_no_solve_claim",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6388_arc_goal_evidence_response_calibration.json",
+    "sha256": "f2285216e0b17b178dc14a033843be01f286bbda8834904bc2a7786eccff8a98",
+    "status": "complete",
+    "terminal_class": "terminal_complete"
+  },
+  "upstream_exp6389_path_hash_and_terminal_class": {
+    "expected_sha256": "fde8d48a0677fa6b858e66d6779a470e2af47a8d71c97453fd7437dcebee7da9",
+    "honest_verdict": "blocked_gate_check_failed",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6389_arc_default_off_active_goal_shadow.json",
+    "sha256": "fde8d48a0677fa6b858e66d6779a470e2af47a8d71c97453fd7437dcebee7da9",
+    "status": "blocked",
+    "terminal_class": "terminal_blocked"
+  },
+  "verifier_is_oracle": false
+}
