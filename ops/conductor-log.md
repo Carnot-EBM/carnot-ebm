@@ -15770,3 +15770,4 @@ code |
 | 2026-08-13 09:32 UTC | Gated on Exp6387 readiness: three-family ARC goal  | OK | 86 passed, 1 warning in 8.79s |
 | 2026-08-13 09:34 UTC | Gated on Exp6388 improvement: default-off live ARC | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra |
 | 2026-08-13 09:36 UTC | Gated on Exp6388 improvement: default-off live ARC | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra |
+| 2026-08-13 09:38 UTC | Gated on Exp6388 improvement: default-off live ARC | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra |
