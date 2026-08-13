@@ -15774,3 +15774,4 @@ code |
 | 2026-08-13 10:07 UTC | V549 adversarial capstone and PRD-gap reconciliati | OK | 87 passed, 1 warning in 41.65s |
 | 2026-08-13 11:03 UTC | Plan milestone 2026.08.550 | OK | 13 tasks proposed |
 | 2026-08-13 11:05 UTC | Milestone 2026.08.550 activated | OK | 13 tasks queued |
+| 2026-08-13 12:29 UTC | V549 terminal evidence handoff and V550 queue pref | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: nd_receipts"]  |

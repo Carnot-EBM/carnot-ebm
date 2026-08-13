@@ -4293,6 +4293,122 @@ the checksum matches, `random_seed` is null, and `verifier_is_oracle` is false.
 |---|---|---|
 | REQ-INFRA-6377 | Implemented: `python/carnot/experiment_6377_v549_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6377_v549_terminal_handoff_and_queue_preflight.json`. | Implemented: `tests/python/test_experiment_6377_v549_terminal_handoff_and_queue_preflight.py`. |
 
+## REQ-INFRA-6391: V550 Handoff SHALL Preserve V549 Terminal Evidence And Preflight The Active V550 Queue
+
+Carnot SHALL build Exp6391 as a bounded V549-to-V550 evidence handoff over
+Exp6377 through Exp6390. The handoff SHALL hash the active roadmap, optional
+next roadmap, milestone document, conductor log, conductor source, exclusion
+manifest, known issues, and every expected V549 terminal artifact before it
+imports artifact fields. It SHALL invoke `scripts/summarize_artifact.py` for
+Exp6377 through Exp6390 and preserve absent, complete, positive, null, blocked,
+flagged, skipped, and retired states without filling gaps.
+
+Exp6391 SHALL keep artifact verdicts, conductor outcomes, adversarial flags,
+and per-task durations as separate facts. It SHALL derive each duration from
+the matching terminal artifact receipt. It SHALL not copy one aggregate
+milestone duration onto tasks. If a repeated unresolved artifact-versus-
+conductor mismatch is present, the handoff SHALL record the retirement trigger
+instead of resolving it silently.
+
+Exp6391 SHALL record the factor boundary exactly: Exp6379 contract-ready,
+Exp6380 global-null, two qualified Gemma family observations, Qwen invalid,
+Exp6381 blocked, Exp6382 absent or blocked, Exp6383 positive rollback control,
+and Exp6384 blocked. It SHALL record the ARC boundary exactly: Exp6386 through
+Exp6388 ready, Exp6388's scalar detail still nested for
+`delta_admission_precision`, and Exp6389 `blocked_gate_check_failed`.
+
+Exp6391 SHALL validate the active V550 queue without changing it. It SHALL
+require exactly thirteen unique task IDs from Exp6391 through Exp6403, unique
+result JSON deliverables, ascending execution order, structured gates,
+required upstream gate fields, complete prior-failure entries, no retired-ID
+reuse, and no retired `requires` chain. It SHALL validate the capability
+license gates and ARC metric gates before later tasks run.
+
+Exp6391 SHALL render each prompt with the conductor-compatible `{project_root}`
+and `{date}` values before checking it. Every rendered prompt SHALL include
+`CONTEXT`, `EXISTING CODE TO READ FIRST`, `TASK`, `CONCRETE STEPS`, the project
+root, planning date `20260813`, a `Run command:` line, and the final line
+`Do NOT push. Do NOT modify scripts/research_conductor.py.`. Every task SHALL
+use `agent_type=codex` and `model=gpt-5.5`. Every LLM task SHALL name
+`MODEL_SPECS`, `cached_sota_pair()`, at least one mandated GGUF ID, embedded
+GGUF tokenizers, no `AutoTokenizer`, and no legacy headline cell.
+
+The Exp6391 artifact SHALL be written atomically to
+`results/experiment_6391_v550_terminal_handoff_and_queue_preflight.json` with
+`inference_substrate=aggregation_from_upstream_artifacts` and
+`verifier_is_oracle=false`. The artifact SHALL include these required fields:
+`status`, `v549_active_roadmap_path_and_hash`, `v549_task_ids`,
+`v549_terminal_artifacts_by_task`, `v549_artifact_verdicts`,
+`v549_conductor_outcomes`, `v549_adversarial_flags`,
+`v549_duration_receipts_by_task`, `v549_factor_boundary`,
+`v549_arc_boundary`, `v550_milestone_doc_and_queue_hashes`,
+`v550_task_ids`, `v550_id_and_deliverable_checks`,
+`v550_dependency_and_gate_checks`,
+`v550_gate_field_cross_reference_checks`, `v550_prior_failure_checks`,
+`v550_exclusion_manifest_checks`,
+`v550_agent_model_and_llm_policy_checks`, `prompt_contract_checks`,
+`active_roadmap_modified`, `conductor_modified`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INFRA-6391-1: V549 Evidence Classes Stay Separate
+
+GIVEN V549 produced complete, positive, null, blocked, absent, and flagged
+evidence
+WHEN Exp6391 builds its terminal matrix
+THEN artifact verdicts, conductor outcomes, adversarial flags, and per-task
+durations are recorded in separate fields and no missing artifact is invented.
+
+### SCENARIO-INFRA-6391-2: Factor Boundary Preserves Partial Capability
+
+GIVEN Exp6379 is ready and Exp6380 is globally null
+WHEN Exp6391 summarizes factor evidence
+THEN both Gemma qualified observations, the invalid Qwen row, the blocked
+Exp6381 and Exp6384 gates, the absent or blocked Exp6382 state, and the
+positive Exp6383 rollback control remain explicit.
+
+### SCENARIO-INFRA-6391-3: ARC Boundary Preserves Nested Metric Failure
+
+GIVEN Exp6386 through Exp6388 are ready and Exp6389 is gate-blocked
+WHEN Exp6391 summarizes ARC evidence
+THEN Exp6388's nested `delta_admission_precision` detail is not converted into
+a bare gate scalar and Exp6389 remains `blocked_gate_check_failed`.
+
+### SCENARIO-INFRA-6391-4: V550 Queue And Gate Contracts Validate
+
+GIVEN the active V550 roadmap declares Exp6391 through Exp6403
+WHEN Exp6391 validates IDs, deliverables, order, gates, prior failures, and
+retired references
+THEN any duplicate, missing, extra, unordered, malformed, unstructured,
+unknown-field, or retired-upstream reference fails the relevant structured
+check.
+
+### SCENARIO-INFRA-6391-5: Prompt And LLM Policy Contracts Validate
+
+GIVEN V550 prompts use `{project_root}` and `{date}` placeholders
+WHEN Exp6391 validates rendered prompt contracts
+THEN it checks all required prompt sections, run commands, final prohibition,
+agent/model pairs, model specs, cached SOTA access, mandated GGUF IDs,
+embedded-tokenizer rules, no-`AutoTokenizer` rules, and no legacy headline
+cell.
+
+### SCENARIO-INFRA-6391-6: Artifact Is Annotated, Checksummed, And Non-Mutating
+
+GIVEN precondition hashes, summary receipts, queue checks, and command receipts
+are assembled
+WHEN Exp6391 writes its artifact
+THEN every required field and structured gate has a principle, every required
+field has provenance classified as measured, derived, constant, or upstream,
+protected files remain byte-identical, the checksum matches, `random_seed` is
+null, and `verifier_is_oracle` is false.
+
+## Implementation Status (REQ-INFRA-6391)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6391 | Planned: `python/carnot/experiment_6391_v550_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6391_v550_terminal_handoff_and_queue_preflight.json`. | Planned: `tests/python/test_experiment_6391_v550_terminal_handoff_and_queue_preflight.py`. |
+
 ## REQ-INFRA-6379: Canonical Factor-Edit Transport Contract SHALL Use One Source
 
 Carnot SHALL build Exp6379 as deterministic transport infrastructure for the
