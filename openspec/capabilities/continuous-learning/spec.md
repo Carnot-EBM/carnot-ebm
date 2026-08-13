@@ -2349,6 +2349,168 @@ the delta is not positive.
 | SCENARIO-LEARN-6396-ATTACKS | Planned: `python/carnot/experiment_6396_capability_qualified_verified_frontier_ab.py`. | Planned: `tests/python/test_experiment_6396_capability_qualified_verified_frontier_ab.py`. |
 | SCENARIO-LEARN-6396-READY | Planned: `python/carnot/experiment_6396_capability_qualified_verified_frontier_ab.py`. | Planned: `tests/python/test_experiment_6396_capability_qualified_verified_frontier_ab.py`. |
 
+## REQ-LEARN-6397: Transactional Continuous Factor Learning
+
+**Given** Exp6396 has a qualified verified-frontier result and Exp6383 has a
+positive selective rollback control
+**When** Exp6397 starts on planning date 20260813
+**Then** it SHALL write
+`results/experiment_6397_transactional_continuous_factor_learning.json`
+**And** it SHALL activate candidate factors only through exact predecessor-bound
+transactions on Exp6395 licensed cells.
+
+Exp6397 SHALL revalidate both Exp6396 gates, license records, frozen harnesses,
+model files, GPU offload receipts, exact checker hashes, the e-value release
+ledger, the Exp6383 rollback receipt, and protected partitions before opening
+the chronological stream. Unlicensed cells SHALL abstain without model calls,
+substitution, or inherited evidence.
+
+Exp6397 SHALL use exactly these local GGUF model ids from `cached_sota_pair()`:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Token counts SHALL use embedded GGUF
+tokenizers only. The experiment SHALL not call `AutoTokenizer`.
+
+Exp6397 SHALL seal a chronological stream with at least 48 events. The stream
+SHALL include acquisition, release, retention, and untouched future segments,
+at least three update opportunities, and at least two restart boundaries. The
+licensed constraint families SHALL be balanced. Protected future events SHALL
+be evaluated once after all factor heads are frozen.
+
+Exp6397 SHALL compare three matched arms: frozen baseline, V546
+replay-certified factor control, and capability-qualified live learner. Event
+order, exact checks, consumer budget, and protected partitions SHALL match
+across arms.
+
+The active factor head SHALL be read-only during proposal. Each typed candidate
+SHALL be evaluated off-commit and bound to `predecessor_head_hash`,
+`candidate_hash`, evidence hashes, exact release receipt, e-process state, and
+proposed effects. Each proposal SHALL atomically record exactly one
+disposition: Commit, Reject, Quarantine, or Defer.
+
+A Commit SHALL revalidate ownership, predecessor freshness, exact support,
+effect uniqueness, retention, and protected replay before the head advances.
+Reject, Quarantine, and Defer dispositions SHALL never advance the head.
+Stale predecessors, duplicate effects, replayed evidence, self-approval,
+concurrent proposals, interrupted writes, and restart recovery attacks SHALL
+fail closed. No failed transaction may change the active head.
+
+Exp6397 SHALL report proposal learnability, exact alignment, forward transfer,
+backward retention, negative transfer, forgetting, abstention, factor growth,
+verification cost, restart recovery, and selective rollback. It SHALL carry
+`selective_rollback_control_ready_score` exactly from Exp6383.
+
+Exp6397 SHALL set
+`transactional_continuous_self_learning_ready_score=1.0` only when at least one
+factor commits through the full transaction, untouched future exact yield beats
+the frozen baseline, retention has no harmful regression, factor growth stays
+bounded, stale or duplicate attacks fail closed, protected leakage is zero,
+model weight changes are zero, and all recorded tests pass.
+
+Exp6397 SHALL emit these fields with explicit principles:
+
+- `status`: Terminal status follows transactional activation gates and protected replay.
+- `exp6396_gate_receipts`: Exp6396 readiness, licenses, future yield, and protected partitions gate this run.
+- `MODEL_SPECS`: The three mandated GGUF rows come from cached SOTA helper calls.
+- `models_used`: Only licensed mandated models with transactional work count as used.
+- `cached_sota_pair_receipts`: Helper-call receipts prevent manual model substitution.
+- `embedded_gguf_tokenizer_receipts`: Tokenizer receipts use only embedded GGUF tokenizers.
+- `autotokenizer_usage_count`: Bare zero proves no external tokenizer path was used.
+- `license_and_frozen_harness_bindings`: Licenses, harnesses, schemas, models, and exact checkers are bound before events run.
+- `unlicensed_cell_abstention_records`: Unlicensed cells abstain without substitution.
+- `cuda_offload_and_runtime_receipts_by_model`: CUDA offload and cleanup are reported for mandated models.
+- `chronological_manifest_path_hash_license_balance_and_partition_seals`: Chronology, licenses, balance, restart boundaries, and partitions are sealed.
+- `preregistered_arm_contract`: Frozen, V546 control, and live learner arms are matched.
+- `factor_head_initial_hash`: The initial read-only factor head is frozen.
+- `typed_candidate_records`: Typed candidates are evaluated off-commit.
+- `predecessor_candidate_evidence_checker_eprocess_and_effect_bindings`: Candidate activation inputs are hash-bound.
+- `atomic_disposition_records`: Each candidate has exactly one terminal disposition.
+- `factor_head_transition_history`: Only successful commits advance the head.
+- `commit_reject_quarantine_and_defer_counts`: Disposition counts stay explicit.
+- `stale_duplicate_self_approval_concurrency_interrupt_and_restart_attack_matrix`: Transaction attacks fail closed.
+- `proposal_learnability_results`: Learnability is reported separately from utility.
+- `exact_alignment_results`: Exact checker alignment is reported separately from learnability and utility.
+- `forward_transfer_results`: Future exact transfer is measured per arm.
+- `backward_retention_and_forgetting_results`: Prior retained behavior cannot regress.
+- `negative_transfer_and_harm_results`: Harmful transfer, abstention, and leakage stay visible.
+- `factor_growth_and_capacity_results`: Factor growth stays bounded.
+- `verification_cost_results`: Exact checker calls, latency, and cost are charged.
+- `untouched_future_evaluation_receipts`: Protected future outcomes open once after head freeze.
+- `future_exact_yield_by_arm`: Future exact utility is reported by arm.
+- `delta_future_exact_yield_over_frozen`: Live learner future yield is compared with frozen.
+- `selective_rollback_control_path_hash_and_terminal_class`: Exp6383 is carried as a rollback control.
+- `selective_rollback_control_ready_score`: The exact Exp6383 ready score is carried.
+- `transactional_continuous_self_learning_ready_score`: Readiness is conjunctive over commit, utility, retention, growth, attacks, leaks, weights, and tests.
+- `protected_leakage_count`: Bare zero proves protected partitions did not leak.
+- `same_step_write_count`: Bare zero proves proposal-time writes stayed invisible.
+- `model_weight_change_count`: Bare zero proves no model weights changed.
+- `harm_underpowered_missing_and_flagged_cells`: Missing, underpowered, unlicensed, rejected, and attacked cells stay visible.
+- `protected_files_unchanged`: Protected files remain byte-identical.
+- `preconditions_checked`: Preconditions bind upstream gates, models, tokenizers, GPUs, exact checkers, manifests, seeds, and protected files.
+- `inference_substrate`: The substrate declares deterministic transactional replay over licensed local GGUF receipts.
+- `verifier_is_oracle`: Bare true applies only to exact task checkers and exact release tests.
+- `field_principles`: Every required field states its guard and purpose.
+- `field_provenance`: Every required field maps to specs, upstream artifacts, transactions, attacks, tests, or exact checks.
+- `random_seed`: Fixed seeds pin chronology, proposals, attacks, and future opens.
+- `duration_s`: Wall time is measured without padding.
+- `tests_run`: Verification commands and exit codes are recorded.
+- `reproducibility_checksum`: A normalized checksum detects artifact drift.
+- `honest_verdict`: The verdict starts with a terminal prefix and states the transaction boundary.
+
+## SCENARIO-LEARN-6397-CHRONOLOGY: Stream And Arms Are Sealed
+
+**Given** licensed Exp6395 cells and Exp6396 qualification receipts
+**When** Exp6397 seals the chronological stream
+**Then** it SHALL contain at least 48 events, acquisition, release, retention,
+and untouched future partitions, at least three update opportunities, and at
+least two restart boundaries
+**And** all three arms SHALL share event order, exact checks, and consumer
+budget.
+
+## SCENARIO-LEARN-6397-TRANSACTION: Commits Are Predecessor-Bound
+
+**Given** a typed candidate proposed against a read-only active factor head
+**When** Exp6397 evaluates the candidate off-commit
+**Then** the record SHALL bind predecessor head, candidate, evidence, exact
+checker, e-process state, release receipt, and proposed effects
+**And** exactly one disposition SHALL be recorded.
+
+## SCENARIO-LEARN-6397-ATTACKS: Failed Transactions Do Not Advance The Head
+
+**Given** stale predecessor, duplicate effect, replayed evidence,
+self-approval, concurrent proposal, interrupted write, or restart attack
+**When** Exp6397 replays the transaction journal
+**Then** every attack SHALL fail closed
+**And** the active head hash SHALL remain unchanged for each failed
+transaction.
+
+## SCENARIO-LEARN-6397-FUTURE: Utility Opens Once After Head Freeze
+
+**Given** at least one factor committed through the full transaction
+**When** Exp6397 evaluates untouched future events
+**Then** future exact outcomes SHALL open once after the head is frozen
+**And** live-learner future yield SHALL be reported against the frozen
+baseline.
+
+## SCENARIO-LEARN-6397-READY: Readiness Is Fully Conjunctive
+
+**Given** no committed factor, non-positive future delta, harmful retention
+regression, unbounded factor growth, stale or duplicate attack survivor,
+protected leakage, model weight mutation, protected-file mutation, or failed
+test
+**When** readiness is computed
+**Then** `transactional_continuous_self_learning_ready_score` SHALL be `0.0`.
+
+## Implementation Status (REQ-LEARN-6397)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6397 | Planned: `python/carnot/experiment_6397_transactional_continuous_factor_learning.py`; terminal artifact `results/experiment_6397_transactional_continuous_factor_learning.json`. | Planned: `tests/python/test_experiment_6397_transactional_continuous_factor_learning.py`. |
+| SCENARIO-LEARN-6397-CHRONOLOGY | Planned: `python/carnot/experiment_6397_transactional_continuous_factor_learning.py`. | Planned: `tests/python/test_experiment_6397_transactional_continuous_factor_learning.py`. |
+| SCENARIO-LEARN-6397-TRANSACTION | Planned: `python/carnot/experiment_6397_transactional_continuous_factor_learning.py`. | Planned: `tests/python/test_experiment_6397_transactional_continuous_factor_learning.py`. |
+| SCENARIO-LEARN-6397-ATTACKS | Planned: `python/carnot/experiment_6397_transactional_continuous_factor_learning.py`. | Planned: `tests/python/test_experiment_6397_transactional_continuous_factor_learning.py`. |
+| SCENARIO-LEARN-6397-FUTURE | Planned: `python/carnot/experiment_6397_transactional_continuous_factor_learning.py`. | Planned: `tests/python/test_experiment_6397_transactional_continuous_factor_learning.py`. |
+| SCENARIO-LEARN-6397-READY | Planned: `python/carnot/experiment_6397_transactional_continuous_factor_learning.py`. | Planned: `tests/python/test_experiment_6397_transactional_continuous_factor_learning.py`. |
+
 ## REQ-LEARN-6383: Dependency-Guided Factor Rollback Stress
 
 **Given** versioned factor release and whole-version rollback already exist

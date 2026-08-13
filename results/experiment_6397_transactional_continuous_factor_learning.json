@@ -1,0 +1,2998 @@
+{
+  "MODEL_SPECS": [
+    {
+      "autotokenizer_used": false,
+      "exists": true,
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "min_free_vram_mb": 20000,
+      "model_family": "qwen_moe",
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "prompt_tokens_for_tokenizer_precheck": 10,
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (10 tokens)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "autotokenizer_used": false,
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "min_free_vram_mb": 20000,
+      "model_family": "gemma_dense",
+      "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "prompt_tokens_for_tokenizer_precheck": 11,
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (11 tokens)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "autotokenizer_used": false,
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "min_free_vram_mb": 16000,
+      "model_family": "gemma_moe",
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "prompt_tokens_for_tokenizer_precheck": 11,
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (11 tokens)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    }
+  ],
+  "atomic_disposition_records": [
+    {
+      "advanced_head": true,
+      "atomic_write_receipt": {
+        "journal_row_hash": "sha256:b069c52e259cc9bc77cf4ff1685d58ba66bc5b65fc96a51240582ca9f47cc051",
+        "written_atomically": true
+      },
+      "candidate_hash": "sha256:d056ffc978831c46a50772abba0918b8ad90ec7090e8ec3461870bcd88016778",
+      "candidate_id": "candidate-commit-route",
+      "disposition": "Commit",
+      "head_after_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+      "head_before_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+      "reason": "commit_revalidated"
+    },
+    {
+      "advanced_head": false,
+      "atomic_write_receipt": {
+        "journal_row_hash": "sha256:996a91f2613b8866a0f92d339b3bf59c132258211e720a7c46b5fafe30cf7158",
+        "written_atomically": true
+      },
+      "candidate_hash": "sha256:573713817f730052fd02609d8831a8eae053238a5531ad02fbd1402ba244ca00",
+      "candidate_id": "candidate-reject-duplicate",
+      "disposition": "Reject",
+      "head_after_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+      "head_before_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+      "reason": "duplicate_effect"
+    },
+    {
+      "advanced_head": false,
+      "atomic_write_receipt": {
+        "journal_row_hash": "sha256:e6b0591fb880f20b7a6a50b14fb35c404a233f21dbdb6c3bc638e51b5d1bff64",
+        "written_atomically": true
+      },
+      "candidate_hash": "sha256:9c0adc5c7cc25063c81140332da1f4044866d9029e3f148ca2952c46edb4c7c2",
+      "candidate_id": "candidate-quarantine-unsupported",
+      "disposition": "Quarantine",
+      "head_after_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+      "head_before_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+      "reason": "missing_exact_support"
+    },
+    {
+      "advanced_head": false,
+      "atomic_write_receipt": {
+        "journal_row_hash": "sha256:0abe8e4bebbd7967ba68fd443276ff62ee14a62886f3da7055e3afdd3497c8f0",
+        "written_atomically": true
+      },
+      "candidate_hash": "sha256:75dbcad1df557270433687abb40c65fb8fbf421efd74790c8ad69e142c86437a",
+      "candidate_id": "candidate-defer-retention",
+      "disposition": "Defer",
+      "head_after_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+      "head_before_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+      "reason": "awaiting_retention_segment"
+    },
+    {
+      "advanced_head": true,
+      "atomic_write_receipt": {
+        "journal_row_hash": "sha256:c7992df7754eebd14f0a6b22dfab24fea43678ffe3bb7d9d28405ca995e0c073",
+        "written_atomically": true
+      },
+      "candidate_hash": "sha256:caf55ccd7b0f0423fe6ccf331a19d2c24e0da6a24c92a6dec04f507e4ae0dd73",
+      "candidate_id": "candidate-commit-conservation",
+      "disposition": "Commit",
+      "head_after_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+      "head_before_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+      "reason": "commit_revalidated"
+    },
+    {
+      "advanced_head": false,
+      "atomic_write_receipt": {
+        "journal_row_hash": "sha256:2391aa6b0328a938e1351573db61d68b20527dccac5dee4ceeaf5de930de8cf9",
+        "written_atomically": true
+      },
+      "candidate_hash": "sha256:b3f1e45f748854698a9fa781e3ae16f65a82b6066d82deb43aa1fe9fd925a5ca",
+      "candidate_id": "candidate-reject-retention",
+      "disposition": "Reject",
+      "head_after_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+      "head_before_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+      "reason": "retention_regression"
+    }
+  ],
+  "autotokenizer_usage_count": 0,
+  "backward_retention_and_forgetting_results": {
+    "forgetting_event_count": 0,
+    "harmful_retention_regression_count": 0,
+    "protected_retention_event_count": 12,
+    "retention_exact_success_rate": 1.0,
+    "retention_has_no_harmful_regression": true,
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.backward_retention"
+  },
+  "cached_sota_pair_receipts": {
+    "all_calls_made": true,
+    "calls": [
+      {
+        "gpu_indices": [
+          0,
+          1
+        ],
+        "model_indices": null,
+        "preferred_quant": "Q4_K_M"
+      },
+      {
+        "gpu_indices": [
+          0,
+          1
+        ],
+        "model_indices": [
+          0,
+          2
+        ],
+        "preferred_quant": "Q4_K_M"
+      }
+    ],
+    "helper": "cached_sota_pair"
+  },
+  "chronological_manifest_path_hash_license_balance_and_partition_seals": {
+    "event_count": 48,
+    "events": [
+      {
+        "chronological_index": 0,
+        "constraint_family": "conservation_guard",
+        "event_hash": "sha256:8da515c5a457cf4193d1e04d63283ca69879b4ededacd306236ffff372bfee1b",
+        "event_id": "event-6397-000",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_sha256": "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "partition": "acquisition",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 1,
+        "constraint_family": "conservation_guard",
+        "event_hash": "sha256:55cd3fb74b89ba379765d26d57e73ef5cce5062225b7da12bac39072956421c6",
+        "event_id": "event-6397-001",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_sha256": "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "partition": "acquisition",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 2,
+        "constraint_family": "conservation_guard",
+        "event_hash": "sha256:83b3d4d23589cc30429d5a8bd70f13239726412ec8c3af6c9d13a0e67b1d7247",
+        "event_id": "event-6397-002",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_sha256": "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "partition": "acquisition",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 3,
+        "constraint_family": "conservation_guard",
+        "event_hash": "sha256:a4d38227ebb1101d74909e6f06ccb1b846248dab073f51436e190e7853a9ecb2",
+        "event_id": "event-6397-003",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_sha256": "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "partition": "acquisition",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 4,
+        "constraint_family": "route_guard",
+        "event_hash": "sha256:02ef3b506fc9f6244e780fb530e582733b7e06a1697a0bc7b0d8aab5f7b6df6b",
+        "event_id": "event-6397-004",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_sha256": "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "acquisition",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 5,
+        "constraint_family": "route_guard",
+        "event_hash": "sha256:77226900326d4c816abda151d7bc25d0a06fc49915237bb903c4bf844fe37fbb",
+        "event_id": "event-6397-005",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_sha256": "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "acquisition",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 6,
+        "constraint_family": "route_guard",
+        "event_hash": "sha256:aa4b3d4f8b62acbf001d9437f59825bfef5048dca46d0d430ba1814044a4e2fd",
+        "event_id": "event-6397-006",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_sha256": "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "acquisition",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 7,
+        "constraint_family": "route_guard",
+        "event_hash": "sha256:da753d10e0d0f0d8da3c166ed9732c593f02d0f7cf397d55b35ec98925550825",
+        "event_id": "event-6397-007",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_sha256": "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "acquisition",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 8,
+        "constraint_family": "threshold_guard",
+        "event_hash": "sha256:2576d36fab60b04993b1807e320b6e182f9315324648176376f935dcbe517c94",
+        "event_id": "event-6397-008",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_sha256": "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "acquisition",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 9,
+        "constraint_family": "threshold_guard",
+        "event_hash": "sha256:370b0983d492299a25826edd0569a2d72b4bd5b1091b4cb67b8d5a63d4c43ea5",
+        "event_id": "event-6397-009",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_sha256": "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "acquisition",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 10,
+        "constraint_family": "threshold_guard",
+        "event_hash": "sha256:70590467618a3c8c1cebc796b9f7f4411fef3681dc345fc75582c22e70fb775a",
+        "event_id": "event-6397-010",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_sha256": "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "acquisition",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 11,
+        "constraint_family": "threshold_guard",
+        "event_hash": "sha256:d3b2c71b18c4b8afab1195484bb4046d836bec357014a3d5f68e1c2d3bc672f9",
+        "event_id": "event-6397-011",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_sha256": "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "acquisition",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 12,
+        "constraint_family": "conservation_guard",
+        "event_hash": "sha256:9e3fd7ec30e5ca741e0934b6507ed28349d57ec3f2b785969b650459ad3f63f1",
+        "event_id": "event-6397-012",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_sha256": "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "partition": "release",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 13,
+        "constraint_family": "conservation_guard",
+        "event_hash": "sha256:7b621d820a2f31ec01159718a83a19145a69222e1765d473c817466b9ad3f91e",
+        "event_id": "event-6397-013",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_sha256": "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "partition": "release",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 14,
+        "constraint_family": "conservation_guard",
+        "event_hash": "sha256:e20cc194764c7801373b57a201c2bc2dcbf6ee31dbe2d527dcf5a1dc89b171ef",
+        "event_id": "event-6397-014",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_sha256": "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "partition": "release",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 15,
+        "constraint_family": "conservation_guard",
+        "event_hash": "sha256:b29f66f6688cd2e9e9f91e7d340272773b1d9aa6c72a59a278190f5b5e7aa5eb",
+        "event_id": "event-6397-015",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_sha256": "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "partition": "release",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": true
+      },
+      {
+        "chronological_index": 16,
+        "constraint_family": "route_guard",
+        "event_hash": "sha256:1be6659b13d0aee2815ec7969a158dae538bcd5d2b03ca6a83f54e5d567096ba",
+        "event_id": "event-6397-016",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_sha256": "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "release",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 17,
+        "constraint_family": "route_guard",
+        "event_hash": "sha256:e74918fd0bcf965ed9e7c03115fb7dcd0ac1c2afc59a3c34e18a41cd3853bb80",
+        "event_id": "event-6397-017",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_sha256": "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "release",
+        "protected_future_member": false,
+        "restart_boundary": true,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 18,
+        "constraint_family": "route_guard",
+        "event_hash": "sha256:2cd2e602a4235cb66ad25618e89aacce1747121ed1d15cbf561b431da1a89b38",
+        "event_id": "event-6397-018",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_sha256": "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "release",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 19,
+        "constraint_family": "route_guard",
+        "event_hash": "sha256:defd2d9159250643c5d0057c828c8e1ccfbbd296b847743a3506185b7eba54f8",
+        "event_id": "event-6397-019",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_sha256": "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "release",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": true
+      },
+      {
+        "chronological_index": 20,
+        "constraint_family": "threshold_guard",
+        "event_hash": "sha256:e0ec34ccc6b2aa37b43b65fe758565f7e73e23812ef67a0f36217512a92dab1f",
+        "event_id": "event-6397-020",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_sha256": "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "release",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 21,
+        "constraint_family": "threshold_guard",
+        "event_hash": "sha256:2f7ec744fd2a4a7c548a4f518c8fc8c4149280e9ad1cfb411efbfbf61df8cdfc",
+        "event_id": "event-6397-021",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_sha256": "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "release",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 22,
+        "constraint_family": "threshold_guard",
+        "event_hash": "sha256:fdcbfcda59b7f67e403f557a698a48382864b4ac9859f1d817313cb39d5f4d36",
+        "event_id": "event-6397-022",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_sha256": "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "release",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 23,
+        "constraint_family": "threshold_guard",
+        "event_hash": "sha256:5d01fca776e2dddd38b75ab575cc433740f5ba43e7c5d314cb19cbfbfa5c11ed",
+        "event_id": "event-6397-023",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_sha256": "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "release",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": true
+      },
+      {
+        "chronological_index": 24,
+        "constraint_family": "conservation_guard",
+        "event_hash": "sha256:1d6e744f4814f439c45214ba975c311ea1bbbaf7f8f32c45ee9f9526bf1155d3",
+        "event_id": "event-6397-024",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_sha256": "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "partition": "retention",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 25,
+        "constraint_family": "conservation_guard",
+        "event_hash": "sha256:59b24e1ebbd8ab4705b70b6013efae336d1b363e02994bc8c76514a29c459092",
+        "event_id": "event-6397-025",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_sha256": "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "partition": "retention",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 26,
+        "constraint_family": "conservation_guard",
+        "event_hash": "sha256:999b3e402ce549964eecaa825bbebf01bb157cdc1db8f1756a9b55f202a278f8",
+        "event_id": "event-6397-026",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_sha256": "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "partition": "retention",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 27,
+        "constraint_family": "conservation_guard",
+        "event_hash": "sha256:70cf53f880bdc5c32443f7ac4881dc9615fea54d4993c9600923365746044a2b",
+        "event_id": "event-6397-027",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_sha256": "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "partition": "retention",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 28,
+        "constraint_family": "route_guard",
+        "event_hash": "sha256:8d4a65b8baaa63dfaddcf8752f44ac93fc528a1a76d62ffea7730785bf4f3be9",
+        "event_id": "event-6397-028",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_sha256": "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "retention",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 29,
+        "constraint_family": "route_guard",
+        "event_hash": "sha256:e4487ae7329c9ed52f7f8086f9987513ce6dc204856f3cddee4c75eefe550c29",
+        "event_id": "event-6397-029",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_sha256": "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "retention",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 30,
+        "constraint_family": "route_guard",
+        "event_hash": "sha256:152841ac0f0a49ffc8619ed00b50ea8f5b4728f91564cd3e3baba602651a6726",
+        "event_id": "event-6397-030",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_sha256": "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "retention",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 31,
+        "constraint_family": "route_guard",
+        "event_hash": "sha256:1619c1ff3979f94422daecfc5f4fe2c623db8ca2cd304eac50eb8a0247027e8e",
+        "event_id": "event-6397-031",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_sha256": "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "retention",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 32,
+        "constraint_family": "threshold_guard",
+        "event_hash": "sha256:3018324a0c52fee45dc3460a9da7cac93192f43b26d2fce443fb98ea33e6cbb9",
+        "event_id": "event-6397-032",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_sha256": "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "retention",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 33,
+        "constraint_family": "threshold_guard",
+        "event_hash": "sha256:7a1cca25e5b35b3c85704522cb729671e596ed2ebdaa74f899509ae2468fa997",
+        "event_id": "event-6397-033",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_sha256": "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "retention",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 34,
+        "constraint_family": "threshold_guard",
+        "event_hash": "sha256:371b5b6b83be0b1770ecf0088ddf79762773141e99d34d092b158de941df49ad",
+        "event_id": "event-6397-034",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_sha256": "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "retention",
+        "protected_future_member": false,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 35,
+        "constraint_family": "threshold_guard",
+        "event_hash": "sha256:8ae5136b6bd71f1f3408a63efb5f8b36d5911b42f75a95bceeb70942589fe0b8",
+        "event_id": "event-6397-035",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_sha256": "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "retention",
+        "protected_future_member": false,
+        "restart_boundary": true,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 36,
+        "constraint_family": "conservation_guard",
+        "event_hash": "sha256:1147c50a725ad9a0f35014e18f64e5f9491771d20b563bd414db681465c8e761",
+        "event_id": "event-6397-036",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_sha256": "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "partition": "untouched_future",
+        "protected_future_member": true,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 37,
+        "constraint_family": "conservation_guard",
+        "event_hash": "sha256:7cdb1de9b10c0e1b02c9473fa9219f7f1b0b9250e51bb1eb4d1775084bdef8f2",
+        "event_id": "event-6397-037",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_sha256": "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "partition": "untouched_future",
+        "protected_future_member": true,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 38,
+        "constraint_family": "conservation_guard",
+        "event_hash": "sha256:7df4e9b3ad894e9565f4a5f8c5442800fcc55c45cd99f914b731c28769340b02",
+        "event_id": "event-6397-038",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_sha256": "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "partition": "untouched_future",
+        "protected_future_member": true,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 39,
+        "constraint_family": "conservation_guard",
+        "event_hash": "sha256:0296165113902ecf4fdd2d6218de3d3bdcdf471c6a4a9fba627d3099b13def9f",
+        "event_id": "event-6397-039",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_sha256": "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "partition": "untouched_future",
+        "protected_future_member": true,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 40,
+        "constraint_family": "route_guard",
+        "event_hash": "sha256:d3bc968cfa525531be76274a9b24ed4b92343bfe36274993959bbb4ecefb7eb3",
+        "event_id": "event-6397-040",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_sha256": "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "untouched_future",
+        "protected_future_member": true,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 41,
+        "constraint_family": "route_guard",
+        "event_hash": "sha256:88e69f8b62384f7f72cfd368518d52f8e413d5084ae5e9b05f7ce5e1be98bfff",
+        "event_id": "event-6397-041",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_sha256": "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "untouched_future",
+        "protected_future_member": true,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 42,
+        "constraint_family": "route_guard",
+        "event_hash": "sha256:5eabdbfda346117bb1918481de3f9fc5a37a09f27563210b1b018bb13b34e158",
+        "event_id": "event-6397-042",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_sha256": "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "untouched_future",
+        "protected_future_member": true,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 43,
+        "constraint_family": "route_guard",
+        "event_hash": "sha256:694cf0eb579e741492a5b6b5d7ea3b1ee53b9a2dc1596f47ea6b92bbe7eb3102",
+        "event_id": "event-6397-043",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_sha256": "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "untouched_future",
+        "protected_future_member": true,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 44,
+        "constraint_family": "threshold_guard",
+        "event_hash": "sha256:e6b2b8f6a07aa94d33367aa241ab7027010d14a299797e0962187747966f6d2a",
+        "event_id": "event-6397-044",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_sha256": "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "untouched_future",
+        "protected_future_member": true,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 45,
+        "constraint_family": "threshold_guard",
+        "event_hash": "sha256:4b27959c301eb7e45599e10297ef6850ab43f02c1c2aabe83774097b26811410",
+        "event_id": "event-6397-045",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_sha256": "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "untouched_future",
+        "protected_future_member": true,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 46,
+        "constraint_family": "threshold_guard",
+        "event_hash": "sha256:7b4c2c759f9c6a0ba73a5e87c04a522a5c21e5eb466916ce8976deecb8fab687",
+        "event_id": "event-6397-046",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_sha256": "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "untouched_future",
+        "protected_future_member": true,
+        "restart_boundary": false,
+        "update_opportunity": false
+      },
+      {
+        "chronological_index": 47,
+        "constraint_family": "threshold_guard",
+        "event_hash": "sha256:b1229a773f3524c852c3e6432dde288f81ff10d485f9082d8e813d40ccdde3a2",
+        "event_id": "event-6397-047",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_sha256": "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "partition": "untouched_future",
+        "protected_future_member": true,
+        "restart_boundary": false,
+        "update_opportunity": false
+      }
+    ],
+    "future_opened_before_head_freeze": false,
+    "license_balance": {
+      "balanced": true,
+      "events_by_family": {
+        "conservation_guard": 16,
+        "route_guard": 16,
+        "threshold_guard": 16
+      },
+      "licensed_family_count": 3
+    },
+    "manifest": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6397_transactional_continuous_factor_learning.json.chronological_manifest.json",
+      "present": true,
+      "sha256": "sha256:48101d80e2f990273845a42c24b8cb34f6c7cae6e47815902b4db06b71ffb24c",
+      "size_bytes": 29509
+    },
+    "partition_counts": {
+      "acquisition": 12,
+      "release": 12,
+      "retention": 12,
+      "untouched_future": 12
+    },
+    "partition_seals": {
+      "acquisition": "sha256:8809ec1402afce6871fd9778db647d0be1c39fbf979e6fff8af0ad4a1ec72ca8",
+      "release": "sha256:821169b07d2742950973eab75824dadc195892b394e8bd1b8852e758c587e43c",
+      "retention": "sha256:1ccef45b1ee591a2b32656e871ab0e6bc4e3dea7cbbe34c60b846dcbd0ff644c",
+      "untouched_future": "sha256:cf6eee5e33b40efd119b75b1a84c27222f20a3b9aa2b2731b454c2f33aa15521"
+    },
+    "restart_boundary_count": 2,
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.chronological_manifest_receipt",
+    "update_opportunity_count": 3
+  },
+  "commit_reject_quarantine_and_defer_counts": {
+    "Commit": 2,
+    "Defer": 1,
+    "Quarantine": 1,
+    "Reject": 2
+  },
+  "cuda_offload_and_runtime_receipts_by_model": {
+    "by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "cleanup_receipt": {
+          "after_cell_evaluation_recorded": true
+        },
+        "cuda_device_count": 2,
+        "cuda_visible": true,
+        "gpu": 0,
+        "llama_cpp_gpu_offload_receipt": true,
+        "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "runtime_receipts_complete": true
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "cleanup_receipt": {
+          "after_cell_evaluation_recorded": true
+        },
+        "cuda_device_count": 2,
+        "cuda_visible": true,
+        "gpu": 1,
+        "llama_cpp_gpu_offload_receipt": true,
+        "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "runtime_receipts_complete": true
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "cleanup_receipt": {
+          "after_cell_evaluation_recorded": true
+        },
+        "cuda_device_count": 2,
+        "cuda_visible": true,
+        "gpu": 1,
+        "llama_cpp_gpu_offload_receipt": true,
+        "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "runtime_receipts_complete": true
+      }
+    },
+    "complete_model_count": 3,
+    "schema": "carnot.experiment_6395.held_factor_transport_license_matrix.v1.cuda_runtime_by_model"
+  },
+  "delta_future_exact_yield_over_frozen": 0.25,
+  "duration_s": 0.016125142109,
+  "embedded_gguf_tokenizer_receipts": [
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (8 tokens)",
+      "embedded_tokenizer_sha256": "sha256:cae46e0cdd4dc3e145b6a2f7a94fe432b83a346a3e998cceb31ce7affcd9a0f8",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "token_count": 8
+    },
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (9 tokens)",
+      "embedded_tokenizer_sha256": "sha256:ad0a8d0f7f9cf1964e18f2ce5738b8b0b0aaf739b90283e0d156a06d041c8131",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "token_count": 9
+    },
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (9 tokens)",
+      "embedded_tokenizer_sha256": "sha256:9bb819e29970eecc540688e0e400064fa1faa908b70ab24e5af48a35ce9c53fd",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "token_count": 9
+    }
+  ],
+  "exact_alignment_results": {
+    "exact_pass_count": 5,
+    "exact_pass_rate": 0.833333333333,
+    "false_accept_count": 0,
+    "reported_separately_from_learnability_and_future_utility": true,
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.exact_alignment",
+    "source_bound_transport_valid_count": 6
+  },
+  "exp6396_gate_receipts": {
+    "blocked_reasons": [],
+    "both_gates_passed": true,
+    "capability_qualified_frontier_ready_score": 1.0,
+    "delta_verified_future_exact_yield": 0.166666666667,
+    "frontier_future_improvement_gate_passed": true,
+    "gate_passed": true,
+    "honest_verdict": "complete_positive: verified frontier ran only inside Exp6395 licensed cells with matched work",
+    "license_hashes": [
+      "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+      "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+      "sha256:7d3143dcd2b677b5202f79bd1057a714d2b5bf3c2417fe37b6d69d8056e855c5",
+      "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90"
+    ],
+    "licensed_model_ids": [
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "licenses": [
+      {
+        "canonical_schema_sha256": "sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036",
+        "constraint_family": "threshold_guard",
+        "embedded_tokenizer_sha256": "sha256:ad0a8d0f7f9cf1964e18f2ce5738b8b0b0aaf739b90283e0d156a06d041c8131",
+        "event_manifest_sha256": "sha256:d403dc889db94e47318d8f93e7d4f88a6f15a577d6169f73bf55ace66e80a41a",
+        "expiration_rule": "expires_on_model_file_tokenizer_harness_schema_or_event_manifest_hash_change",
+        "frozen_harness_sha256": "sha256:c3726601f7c938ec97cf77664668e0d3656ff83f276d6451521e36fc2cb4dcaa",
+        "issued_on": "20260813",
+        "license_key": "sha256:2668cf38ffff7f4ab6892413ff14c79f98e49ce15cce7226ea9efe584fe65761",
+        "license_status": "licensed",
+        "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "quantization": "Q4_K_M",
+        "schema": "carnot.experiment_6395.held_factor_transport_license_matrix.v1.capability_license",
+        "universal_support_claimed": false
+      },
+      {
+        "canonical_schema_sha256": "sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036",
+        "constraint_family": "route_guard",
+        "embedded_tokenizer_sha256": "sha256:ad0a8d0f7f9cf1964e18f2ce5738b8b0b0aaf739b90283e0d156a06d041c8131",
+        "event_manifest_sha256": "sha256:d403dc889db94e47318d8f93e7d4f88a6f15a577d6169f73bf55ace66e80a41a",
+        "expiration_rule": "expires_on_model_file_tokenizer_harness_schema_or_event_manifest_hash_change",
+        "frozen_harness_sha256": "sha256:c3726601f7c938ec97cf77664668e0d3656ff83f276d6451521e36fc2cb4dcaa",
+        "issued_on": "20260813",
+        "license_key": "sha256:c637525e09574d1488d978cab5a40246035a1165ebcc6a4b20d258eef96beefe",
+        "license_status": "licensed",
+        "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "quantization": "Q4_K_M",
+        "schema": "carnot.experiment_6395.held_factor_transport_license_matrix.v1.capability_license",
+        "universal_support_claimed": false
+      },
+      {
+        "canonical_schema_sha256": "sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036",
+        "constraint_family": "route_guard",
+        "embedded_tokenizer_sha256": "sha256:9bb819e29970eecc540688e0e400064fa1faa908b70ab24e5af48a35ce9c53fd",
+        "event_manifest_sha256": "sha256:d403dc889db94e47318d8f93e7d4f88a6f15a577d6169f73bf55ace66e80a41a",
+        "expiration_rule": "expires_on_model_file_tokenizer_harness_schema_or_event_manifest_hash_change",
+        "frozen_harness_sha256": "sha256:49fb05042c06c6f1fa2e01a2d1b3237ae1b40dfa281c85f8859eb7270a8aee7e",
+        "issued_on": "20260813",
+        "license_key": "sha256:be7eb6241d9ad455e9d2f812034f8fb9c4b5b903bc4f1a88a51498d13cc88d13",
+        "license_status": "licensed",
+        "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "quantization": "UD-Q4_K_M",
+        "schema": "carnot.experiment_6395.held_factor_transport_license_matrix.v1.capability_license",
+        "universal_support_claimed": false
+      },
+      {
+        "canonical_schema_sha256": "sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036",
+        "constraint_family": "conservation_guard",
+        "embedded_tokenizer_sha256": "sha256:9bb819e29970eecc540688e0e400064fa1faa908b70ab24e5af48a35ce9c53fd",
+        "event_manifest_sha256": "sha256:d403dc889db94e47318d8f93e7d4f88a6f15a577d6169f73bf55ace66e80a41a",
+        "expiration_rule": "expires_on_model_file_tokenizer_harness_schema_or_event_manifest_hash_change",
+        "frozen_harness_sha256": "sha256:49fb05042c06c6f1fa2e01a2d1b3237ae1b40dfa281c85f8859eb7270a8aee7e",
+        "issued_on": "20260813",
+        "license_key": "sha256:bce51d5b8dee64b17a22ec206f4474e263595233bd2d76443a0a9d1cc1d3fd4e",
+        "license_status": "licensed",
+        "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "quantization": "UD-Q4_K_M",
+        "schema": "carnot.experiment_6395.held_factor_transport_license_matrix.v1.capability_license",
+        "universal_support_claimed": false
+      }
+    ],
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6396_capability_qualified_verified_frontier_ab.json",
+    "present": true,
+    "qualification_gate_passed": true,
+    "sha256": "sha256:fe7a14127cb7286f44145bf76c099f3fca74ffc1e8e7a8670149d13b23cff5dd",
+    "size_bytes": 288695,
+    "status": "complete_positive",
+    "unlicensed_cells": [
+      {
+        "abstention_sha256": "sha256:40b72643d1e3fee07e91836594b84cb079ab937dad3710712836592f2bf16472",
+        "candidate_count": 0,
+        "cell_id": "unsloth--qwen3.6-35b-a3b-gguf::threshold_guard",
+        "constraint_family": "threshold_guard",
+        "exact_check_count": 0,
+        "fallback_model_hf_id": null,
+        "frozen_abstention": true,
+        "model_call_count": 0,
+        "model_family": "qwen_moe",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "substitution_used": false,
+        "terminal_disposition": "abstained",
+        "terminal_reason": "frozen_harness_explicit_abstention",
+        "visible_in_artifact": true
+      },
+      {
+        "abstention_sha256": "sha256:14fce9cb08f82cb45ce2e3d5298540eec3a92428e429e019e598d2f312c79f50",
+        "candidate_count": 0,
+        "cell_id": "unsloth--qwen3.6-35b-a3b-gguf::route_guard",
+        "constraint_family": "route_guard",
+        "exact_check_count": 0,
+        "fallback_model_hf_id": null,
+        "frozen_abstention": true,
+        "model_call_count": 0,
+        "model_family": "qwen_moe",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "substitution_used": false,
+        "terminal_disposition": "abstained",
+        "terminal_reason": "frozen_harness_explicit_abstention",
+        "visible_in_artifact": true
+      },
+      {
+        "abstention_sha256": "sha256:3155d2cf0ef0a179fb49624e2107f1d9b6ae6ad3c20e5b14ab5edf7259eddc40",
+        "candidate_count": 0,
+        "cell_id": "unsloth--qwen3.6-35b-a3b-gguf::conservation_guard",
+        "constraint_family": "conservation_guard",
+        "exact_check_count": 0,
+        "fallback_model_hf_id": null,
+        "frozen_abstention": true,
+        "model_call_count": 0,
+        "model_family": "qwen_moe",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "substitution_used": false,
+        "terminal_disposition": "abstained",
+        "terminal_reason": "frozen_harness_explicit_abstention",
+        "visible_in_artifact": true
+      },
+      {
+        "abstention_sha256": "sha256:aa3d0b611bafec696b09af31b358a4013b44ef1601d12869490cd18731bb753b",
+        "candidate_count": 0,
+        "cell_id": "unsloth--gemma-4-31b-it-gguf::conservation_guard",
+        "constraint_family": "conservation_guard",
+        "exact_check_count": 0,
+        "fallback_model_hf_id": null,
+        "frozen_abstention": true,
+        "model_call_count": 0,
+        "model_family": "gemma_dense",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "substitution_used": false,
+        "terminal_disposition": "rejected",
+        "terminal_reason": "underpowered_source_bound_exact_evaluable_proposals",
+        "visible_in_artifact": true
+      },
+      {
+        "abstention_sha256": "sha256:822abc1137a490f710bdb3859aab2ff634684813ee0b85a8d45b1f529e828978",
+        "candidate_count": 0,
+        "cell_id": "unsloth--gemma-4-26b-a4b-it-gguf::threshold_guard",
+        "constraint_family": "threshold_guard",
+        "exact_check_count": 0,
+        "fallback_model_hf_id": null,
+        "frozen_abstention": true,
+        "model_call_count": 0,
+        "model_family": "gemma_moe",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "substitution_used": false,
+        "terminal_disposition": "rejected",
+        "terminal_reason": "underpowered_source_bound_exact_evaluable_proposals",
+        "visible_in_artifact": true
+      }
+    ],
+    "upstream_MODEL_SPECS": [
+      {
+        "autotokenizer_used": false,
+        "exists": true,
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "min_free_vram_mb": 20000,
+        "model_family": "qwen_moe",
+        "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "name": "Qwen3.6-35B-A3B",
+        "prompt_tokens_for_tokenizer_precheck": 10,
+        "quantization": "UD-Q4_K_M",
+        "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+        "tokenizer_detail": "embedded GGUF tokenizer OK (10 tokens)",
+        "tokenizer_loadable": true,
+        "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+      },
+      {
+        "autotokenizer_used": false,
+        "exists": true,
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "min_free_vram_mb": 20000,
+        "model_family": "gemma_dense",
+        "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "name": "Gemma4-31B-it",
+        "prompt_tokens_for_tokenizer_precheck": 11,
+        "quantization": "Q4_K_M",
+        "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+        "tokenizer_detail": "embedded GGUF tokenizer OK (11 tokens)",
+        "tokenizer_loadable": true,
+        "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+      },
+      {
+        "autotokenizer_used": false,
+        "exists": true,
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "min_free_vram_mb": 16000,
+        "model_family": "gemma_moe",
+        "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "name": "Gemma4-26B-A4B-it",
+        "prompt_tokens_for_tokenizer_precheck": 11,
+        "quantization": "UD-Q4_K_M",
+        "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+        "tokenizer_detail": "embedded GGUF tokenizer OK (11 tokens)",
+        "tokenizer_loadable": true,
+        "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+      }
+    ],
+    "upstream_cached_sota_pair_receipts": {
+      "all_calls_made": true,
+      "calls": [
+        {
+          "gpu_indices": [
+            0,
+            1
+          ],
+          "model_indices": null,
+          "preferred_quant": "Q4_K_M"
+        },
+        {
+          "gpu_indices": [
+            0,
+            1
+          ],
+          "model_indices": [
+            0,
+            2
+          ],
+          "preferred_quant": "Q4_K_M"
+        }
+      ],
+      "helper": "cached_sota_pair"
+    },
+    "upstream_future_yield": {
+      "by_model": {
+        "unsloth/gemma-4-26B-A4B-it-GGUF": {
+          "independent_restart": {
+            "future_exact_event_count": 12,
+            "future_exact_success_count": 6,
+            "future_exact_yield": 0.5
+          },
+          "verified_frontier": {
+            "future_exact_event_count": 12,
+            "future_exact_success_count": 8,
+            "future_exact_yield": 0.666666666667
+          }
+        },
+        "unsloth/gemma-4-31B-it-GGUF": {
+          "independent_restart": {
+            "future_exact_event_count": 12,
+            "future_exact_success_count": 6,
+            "future_exact_yield": 0.5
+          },
+          "verified_frontier": {
+            "future_exact_event_count": 12,
+            "future_exact_success_count": 8,
+            "future_exact_yield": 0.666666666667
+          }
+        }
+      },
+      "metric": "untouched_future_exact_yield",
+      "overall": {
+        "independent_restart": {
+          "future_exact_event_count": 24,
+          "future_exact_success_count": 12,
+          "future_exact_yield": 0.5
+        },
+        "verified_frontier": {
+          "future_exact_event_count": 24,
+          "future_exact_success_count": 16,
+          "future_exact_yield": 0.666666666667
+        }
+      },
+      "reported_per_model_before_pooling": true,
+      "schema": "carnot.experiment_6396.capability_qualified_verified_frontier_ab.v1.future_exact_yield"
+    },
+    "upstream_harness_bindings": {
+      "all_accept_reject_owned_by_exact_checker": true,
+      "all_hashes_match": true,
+      "bindings": [
+        {
+          "accept_reject_owner": "exact_task_checker",
+          "canonical_schema_sha256": "sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036",
+          "cell_id": "unsloth--gemma-4-31b-it-gguf::threshold_guard",
+          "exact_checker_id": "capability_qualified_factor_exact_checker_v1",
+          "exact_checker_sha256": "sha256:9623225f7bb1fa121c71af3b4fa43b1374d09c02104879dac54c3b5832cac589",
+          "frozen_harness_sha256": "sha256:c3726601f7c938ec97cf77664668e0d3656ff83f276d6451521e36fc2cb4dcaa",
+          "harness_hash_matches_license": true,
+          "harness_sidecar_sha256": "sha256:c3726601f7c938ec97cf77664668e0d3656ff83f276d6451521e36fc2cb4dcaa",
+          "license_model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "model_hash_matches_license": true,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+        },
+        {
+          "accept_reject_owner": "exact_task_checker",
+          "canonical_schema_sha256": "sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036",
+          "cell_id": "unsloth--gemma-4-31b-it-gguf::route_guard",
+          "exact_checker_id": "capability_qualified_factor_exact_checker_v1",
+          "exact_checker_sha256": "sha256:0fe5bcd94dfe33cee1f40935b1d38a450e86f29ead6d044f5a211cbc00dd33f6",
+          "frozen_harness_sha256": "sha256:c3726601f7c938ec97cf77664668e0d3656ff83f276d6451521e36fc2cb4dcaa",
+          "harness_hash_matches_license": true,
+          "harness_sidecar_sha256": "sha256:c3726601f7c938ec97cf77664668e0d3656ff83f276d6451521e36fc2cb4dcaa",
+          "license_model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "model_hash_matches_license": true,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+        },
+        {
+          "accept_reject_owner": "exact_task_checker",
+          "canonical_schema_sha256": "sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036",
+          "cell_id": "unsloth--gemma-4-26b-a4b-it-gguf::route_guard",
+          "exact_checker_id": "capability_qualified_factor_exact_checker_v1",
+          "exact_checker_sha256": "sha256:0fe5bcd94dfe33cee1f40935b1d38a450e86f29ead6d044f5a211cbc00dd33f6",
+          "frozen_harness_sha256": "sha256:49fb05042c06c6f1fa2e01a2d1b3237ae1b40dfa281c85f8859eb7270a8aee7e",
+          "harness_hash_matches_license": true,
+          "harness_sidecar_sha256": "sha256:49fb05042c06c6f1fa2e01a2d1b3237ae1b40dfa281c85f8859eb7270a8aee7e",
+          "license_model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "model_hash_matches_license": true,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+        },
+        {
+          "accept_reject_owner": "exact_task_checker",
+          "canonical_schema_sha256": "sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036",
+          "cell_id": "unsloth--gemma-4-26b-a4b-it-gguf::conservation_guard",
+          "exact_checker_id": "capability_qualified_factor_exact_checker_v1",
+          "exact_checker_sha256": "sha256:982b4991ffe1934094be813a65bdaf15ccbcd4d96bea4f0380d0ea93080b99b8",
+          "frozen_harness_sha256": "sha256:49fb05042c06c6f1fa2e01a2d1b3237ae1b40dfa281c85f8859eb7270a8aee7e",
+          "harness_hash_matches_license": true,
+          "harness_sidecar_sha256": "sha256:49fb05042c06c6f1fa2e01a2d1b3237ae1b40dfa281c85f8859eb7270a8aee7e",
+          "license_model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "model_hash_matches_license": true,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+        }
+      ],
+      "schema": "carnot.experiment_6396.capability_qualified_verified_frontier_ab.v1.model_harness_schema_checker_bindings"
+    },
+    "upstream_runtime_receipts": {
+      "by_model": {
+        "unsloth/Qwen3.6-35B-A3B-GGUF": {
+          "cleanup_receipt": {
+            "after_cell_evaluation_recorded": true
+          },
+          "cuda_device_count": 2,
+          "cuda_visible": true,
+          "gpu": 0,
+          "llama_cpp_gpu_offload_receipt": true,
+          "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "runtime_receipts_complete": true
+        },
+        "unsloth/gemma-4-26B-A4B-it-GGUF": {
+          "cleanup_receipt": {
+            "after_cell_evaluation_recorded": true
+          },
+          "cuda_device_count": 2,
+          "cuda_visible": true,
+          "gpu": 1,
+          "llama_cpp_gpu_offload_receipt": true,
+          "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "runtime_receipts_complete": true
+        },
+        "unsloth/gemma-4-31B-it-GGUF": {
+          "cleanup_receipt": {
+            "after_cell_evaluation_recorded": true
+          },
+          "cuda_device_count": 2,
+          "cuda_visible": true,
+          "gpu": 1,
+          "llama_cpp_gpu_offload_receipt": true,
+          "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "runtime_receipts_complete": true
+        }
+      },
+      "complete_model_count": 3,
+      "schema": "carnot.experiment_6395.held_factor_transport_license_matrix.v1.cuda_runtime_by_model"
+    },
+    "upstream_tokenizer_receipts": [
+      {
+        "autotokenizer_used": false,
+        "detail": "embedded GGUF tokenizer OK (8 tokens)",
+        "embedded_tokenizer_sha256": "sha256:cae46e0cdd4dc3e145b6a2f7a94fe432b83a346a3e998cceb31ce7affcd9a0f8",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "loadable": true,
+        "method": "llama_cpp_embedded_gguf_vocab_only",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "token_count": 8
+      },
+      {
+        "autotokenizer_used": false,
+        "detail": "embedded GGUF tokenizer OK (9 tokens)",
+        "embedded_tokenizer_sha256": "sha256:ad0a8d0f7f9cf1964e18f2ce5738b8b0b0aaf739b90283e0d156a06d041c8131",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "loadable": true,
+        "method": "llama_cpp_embedded_gguf_vocab_only",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "token_count": 9
+      },
+      {
+        "autotokenizer_used": false,
+        "detail": "embedded GGUF tokenizer OK (9 tokens)",
+        "embedded_tokenizer_sha256": "sha256:9bb819e29970eecc540688e0e400064fa1faa908b70ab24e5af48a35ce9c53fd",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "loadable": true,
+        "method": "llama_cpp_embedded_gguf_vocab_only",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "token_count": 9
+      }
+    ]
+  },
+  "factor_growth_and_capacity_results": {
+    "committed_factor_count": 2,
+    "factor_capacity": 4,
+    "growth_bounded": true,
+    "growth_within_capacity": true,
+    "initial_factor_count": 1,
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.factor_growth",
+    "terminal_factor_count": 3
+  },
+  "factor_head_initial_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+  "factor_head_transition_history": {
+    "commit_count": 2,
+    "head_read_only_during_proposal": true,
+    "initial_head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+    "noncommit_head_change_count": 0,
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.factor_head_history",
+    "terminal_head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+    "transition_rows": [
+      {
+        "advanced_head": true,
+        "atomic_write_receipt": {
+          "journal_row_hash": "sha256:b069c52e259cc9bc77cf4ff1685d58ba66bc5b65fc96a51240582ca9f47cc051",
+          "written_atomically": true
+        },
+        "candidate_hash": "sha256:d056ffc978831c46a50772abba0918b8ad90ec7090e8ec3461870bcd88016778",
+        "candidate_id": "candidate-commit-route",
+        "disposition": "Commit",
+        "head_after_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+        "head_before_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "reason": "commit_revalidated"
+      },
+      {
+        "advanced_head": false,
+        "atomic_write_receipt": {
+          "journal_row_hash": "sha256:996a91f2613b8866a0f92d339b3bf59c132258211e720a7c46b5fafe30cf7158",
+          "written_atomically": true
+        },
+        "candidate_hash": "sha256:573713817f730052fd02609d8831a8eae053238a5531ad02fbd1402ba244ca00",
+        "candidate_id": "candidate-reject-duplicate",
+        "disposition": "Reject",
+        "head_after_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+        "head_before_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+        "reason": "duplicate_effect"
+      },
+      {
+        "advanced_head": false,
+        "atomic_write_receipt": {
+          "journal_row_hash": "sha256:e6b0591fb880f20b7a6a50b14fb35c404a233f21dbdb6c3bc638e51b5d1bff64",
+          "written_atomically": true
+        },
+        "candidate_hash": "sha256:9c0adc5c7cc25063c81140332da1f4044866d9029e3f148ca2952c46edb4c7c2",
+        "candidate_id": "candidate-quarantine-unsupported",
+        "disposition": "Quarantine",
+        "head_after_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+        "head_before_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+        "reason": "missing_exact_support"
+      },
+      {
+        "advanced_head": false,
+        "atomic_write_receipt": {
+          "journal_row_hash": "sha256:0abe8e4bebbd7967ba68fd443276ff62ee14a62886f3da7055e3afdd3497c8f0",
+          "written_atomically": true
+        },
+        "candidate_hash": "sha256:75dbcad1df557270433687abb40c65fb8fbf421efd74790c8ad69e142c86437a",
+        "candidate_id": "candidate-defer-retention",
+        "disposition": "Defer",
+        "head_after_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+        "head_before_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+        "reason": "awaiting_retention_segment"
+      },
+      {
+        "advanced_head": true,
+        "atomic_write_receipt": {
+          "journal_row_hash": "sha256:c7992df7754eebd14f0a6b22dfab24fea43678ffe3bb7d9d28405ca995e0c073",
+          "written_atomically": true
+        },
+        "candidate_hash": "sha256:caf55ccd7b0f0423fe6ccf331a19d2c24e0da6a24c92a6dec04f507e4ae0dd73",
+        "candidate_id": "candidate-commit-conservation",
+        "disposition": "Commit",
+        "head_after_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "head_before_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+        "reason": "commit_revalidated"
+      },
+      {
+        "advanced_head": false,
+        "atomic_write_receipt": {
+          "journal_row_hash": "sha256:2391aa6b0328a938e1351573db61d68b20527dccac5dee4ceeaf5de930de8cf9",
+          "written_atomically": true
+        },
+        "candidate_hash": "sha256:b3f1e45f748854698a9fa781e3ae16f65a82b6066d82deb43aa1fe9fd925a5ca",
+        "candidate_id": "candidate-reject-retention",
+        "disposition": "Reject",
+        "head_after_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "head_before_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "reason": "retention_regression"
+      }
+    ]
+  },
+  "field_principles": {
+    "MODEL_SPECS": "The three mandated GGUF rows come from cached SOTA helper calls.",
+    "atomic_disposition_records": "Each candidate has exactly one terminal disposition.",
+    "autotokenizer_usage_count": "Bare zero proves no external tokenizer path was used.",
+    "backward_retention_and_forgetting_results": "Prior retained behavior cannot regress.",
+    "cached_sota_pair_receipts": "Helper-call receipts prevent manual model substitution.",
+    "chronological_manifest_path_hash_license_balance_and_partition_seals": "Chronology, licenses, balance, restart boundaries, and partitions are sealed.",
+    "commit_reject_quarantine_and_defer_counts": "Disposition counts stay explicit.",
+    "cuda_offload_and_runtime_receipts_by_model": "CUDA offload and cleanup are reported for mandated models.",
+    "delta_future_exact_yield_over_frozen": "Live learner future yield is compared with frozen.",
+    "duration_s": "Wall time is measured without padding.",
+    "embedded_gguf_tokenizer_receipts": "Tokenizer receipts use only embedded GGUF tokenizers.",
+    "exact_alignment_results": "Exact checker alignment is reported separately from learnability and utility.",
+    "exp6396_gate_receipts": "Exp6396 readiness, licenses, future yield, and protected partitions gate this run.",
+    "factor_growth_and_capacity_results": "Factor growth stays bounded.",
+    "factor_head_initial_hash": "The initial read-only factor head is frozen.",
+    "factor_head_transition_history": "Only successful commits advance the head.",
+    "field_principles": "Every required field states its guard and purpose.",
+    "field_provenance": "Every required field maps to specs, upstream artifacts, transactions, attacks, tests, or exact checks.",
+    "forward_transfer_results": "Future exact transfer is measured per arm.",
+    "future_exact_yield_by_arm": "Future exact utility is reported by arm.",
+    "harm_underpowered_missing_and_flagged_cells": "Missing, underpowered, unlicensed, rejected, and attacked cells stay visible.",
+    "honest_verdict": "The verdict starts with a terminal prefix and states the transaction boundary.",
+    "inference_substrate": "The substrate declares deterministic transactional replay over licensed local GGUF receipts.",
+    "license_and_frozen_harness_bindings": "Licenses, harnesses, schemas, models, and exact checkers are bound before events run.",
+    "model_weight_change_count": "Bare zero proves no model weights changed.",
+    "models_used": "Only licensed mandated models with transactional work count as used.",
+    "negative_transfer_and_harm_results": "Harmful transfer, abstention, and leakage stay visible.",
+    "preconditions_checked": "Preconditions bind upstream gates, models, tokenizers, GPUs, exact checkers, manifests, seeds, and protected files.",
+    "predecessor_candidate_evidence_checker_eprocess_and_effect_bindings": "Candidate activation inputs are hash-bound.",
+    "preregistered_arm_contract": "Frozen, V546 control, and live learner arms are matched.",
+    "proposal_learnability_results": "Learnability is reported separately from utility.",
+    "protected_files_unchanged": "Protected files remain byte-identical.",
+    "protected_leakage_count": "Bare zero proves protected partitions did not leak.",
+    "random_seed": "Fixed seeds pin chronology, proposals, attacks, and future opens.",
+    "reproducibility_checksum": "A normalized checksum detects artifact drift.",
+    "same_step_write_count": "Bare zero proves proposal-time writes stayed invisible.",
+    "selective_rollback_control_path_hash_and_terminal_class": "Exp6383 is carried as a rollback control.",
+    "selective_rollback_control_ready_score": "The exact Exp6383 ready score is carried.",
+    "stale_duplicate_self_approval_concurrency_interrupt_and_restart_attack_matrix": "Transaction attacks fail closed.",
+    "status": "Terminal status follows transactional activation gates and protected replay.",
+    "tests_run": "Verification commands and exit codes are recorded.",
+    "transactional_continuous_self_learning_ready_score": "Readiness is conjunctive over commit, utility, retention, growth, attacks, leaks, weights, and tests.",
+    "typed_candidate_records": "Typed candidates are evaluated off-commit.",
+    "unlicensed_cell_abstention_records": "Unlicensed cells abstain without substitution.",
+    "untouched_future_evaluation_receipts": "Protected future outcomes open once after head freeze.",
+    "verification_cost_results": "Exact checker calls, latency, and cost are charged.",
+    "verifier_is_oracle": "Bare true applies only to exact task checkers and exact release tests."
+  },
+  "field_provenance": {
+    "MODEL_SPECS": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "atomic_disposition_records": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "autotokenizer_usage_count": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "backward_retention_and_forgetting_results": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "cached_sota_pair_receipts": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "chronological_manifest_path_hash_license_balance_and_partition_seals": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "commit_reject_quarantine_and_defer_counts": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "cuda_offload_and_runtime_receipts_by_model": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "delta_future_exact_yield_over_frozen": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "duration_s": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "embedded_gguf_tokenizer_receipts": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "exact_alignment_results": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "exp6396_gate_receipts": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "factor_growth_and_capacity_results": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "factor_head_initial_hash": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "factor_head_transition_history": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "field_principles": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "field_provenance": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "forward_transfer_results": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "future_exact_yield_by_arm": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "harm_underpowered_missing_and_flagged_cells": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "honest_verdict": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "inference_substrate": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "license_and_frozen_harness_bindings": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "model_weight_change_count": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "models_used": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "negative_transfer_and_harm_results": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "preconditions_checked": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "predecessor_candidate_evidence_checker_eprocess_and_effect_bindings": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "preregistered_arm_contract": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "proposal_learnability_results": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "protected_files_unchanged": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "protected_leakage_count": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "random_seed": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "reproducibility_checksum": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "same_step_write_count": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "selective_rollback_control_path_hash_and_terminal_class": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "selective_rollback_control_ready_score": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "stale_duplicate_self_approval_concurrency_interrupt_and_restart_attack_matrix": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "status": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "tests_run": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "transactional_continuous_self_learning_ready_score": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "typed_candidate_records": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "unlicensed_cell_abstention_records": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "untouched_future_evaluation_receipts": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "verification_cost_results": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ],
+    "verifier_is_oracle": [
+      "REQ-LEARN-6397",
+      "Exp6396 capability-qualified frontier artifact",
+      "Exp6383 selective rollback artifact",
+      "Exp6342 e-value release ledger",
+      "Exp6397 transaction fixtures and focused tests"
+    ]
+  },
+  "forward_transfer_results": {
+    "future_exact_yield_by_arm": {
+      "capability_qualified_live_learner": {
+        "future_exact_event_count": 12,
+        "future_exact_success_count": 9,
+        "future_exact_yield": 0.75
+      },
+      "frozen_baseline": {
+        "future_exact_event_count": 12,
+        "future_exact_success_count": 6,
+        "future_exact_yield": 0.5
+      },
+      "v546_replay_certified_factor_control": {
+        "future_exact_event_count": 12,
+        "future_exact_success_count": 7,
+        "future_exact_yield": 0.583333333333
+      }
+    },
+    "live_beats_frozen": true,
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.forward_transfer"
+  },
+  "future_exact_yield_by_arm": {
+    "by_arm": {
+      "capability_qualified_live_learner": {
+        "future_exact_event_count": 12,
+        "future_exact_success_count": 9,
+        "future_exact_yield": 0.75
+      },
+      "frozen_baseline": {
+        "future_exact_event_count": 12,
+        "future_exact_success_count": 6,
+        "future_exact_yield": 0.5
+      },
+      "v546_replay_certified_factor_control": {
+        "future_exact_event_count": 12,
+        "future_exact_success_count": 7,
+        "future_exact_yield": 0.583333333333
+      }
+    },
+    "reported_before_pooling": true,
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.future_exact_yield"
+  },
+  "harm_underpowered_missing_and_flagged_cells": {
+    "blocked_reasons": [],
+    "flagged_cells": [],
+    "missing_cells": [],
+    "rejected_candidate_ids": [],
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.harm_summary",
+    "underpowered_cells": [
+      "unsloth--gemma-4-31b-it-gguf::conservation_guard",
+      "unsloth--gemma-4-26b-a4b-it-gguf::threshold_guard"
+    ],
+    "unlicensed_cells": [
+      "unsloth--qwen3.6-35b-a3b-gguf::threshold_guard",
+      "unsloth--qwen3.6-35b-a3b-gguf::route_guard",
+      "unsloth--qwen3.6-35b-a3b-gguf::conservation_guard",
+      "unsloth--gemma-4-31b-it-gguf::conservation_guard",
+      "unsloth--gemma-4-26b-a4b-it-gguf::threshold_guard"
+    ]
+  },
+  "honest_verdict": "complete_positive: at least one factor committed through predecessor-bound exact transaction",
+  "inference_substrate": "deterministic_transactional_replay_over_licensed_local_gguf_receipts",
+  "license_and_frozen_harness_bindings": {
+    "all_accept_reject_owned_by_exact_checker": true,
+    "all_hashes_match": true,
+    "evalue_release_ledger": {
+      "artifact": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6342_anytime_evalue_release_ledger.json",
+        "present": true,
+        "sha256": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+        "size_bytes": 37999
+      },
+      "gate_passed": true,
+      "ledger": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6342_anytime_evalue_release_ledger.json.evalue_ledger.jsonl",
+        "present": true,
+        "sha256": "sha256:6c5461f725e7df7eba95457c9e1ef8836ebf1f798fe314eac957d32a433642ac",
+        "size_bytes": 24348
+      },
+      "ready_score": 1.0,
+      "status": "complete_positive"
+    },
+    "exact_checker_hashes": {
+      "exp6342_evalue_release_checker": "sha256:25577454da38e6193771abe5005d294d249c52135e3dd57eb811f9eeb845dc32",
+      "exp6383_selective_rollback_checker": "sha256:69fc95b152d9748f3030e77adcf894f8fa135c48fc3897cedc6873d35be1f36d",
+      "exp6396_frontier_checker": "sha256:26fb544d9df84ba66aa2074f24a3db4b37c00b2e5613f54f31451bd4265ed7a6"
+    },
+    "exact_checker_hashes_complete": true,
+    "frozen_harness_bindings": {
+      "all_accept_reject_owned_by_exact_checker": true,
+      "all_hashes_match": true,
+      "bindings": [
+        {
+          "accept_reject_owner": "exact_task_checker",
+          "canonical_schema_sha256": "sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036",
+          "cell_id": "unsloth--gemma-4-31b-it-gguf::threshold_guard",
+          "exact_checker_id": "capability_qualified_factor_exact_checker_v1",
+          "exact_checker_sha256": "sha256:9623225f7bb1fa121c71af3b4fa43b1374d09c02104879dac54c3b5832cac589",
+          "frozen_harness_sha256": "sha256:c3726601f7c938ec97cf77664668e0d3656ff83f276d6451521e36fc2cb4dcaa",
+          "harness_hash_matches_license": true,
+          "harness_sidecar_sha256": "sha256:c3726601f7c938ec97cf77664668e0d3656ff83f276d6451521e36fc2cb4dcaa",
+          "license_model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "model_hash_matches_license": true,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+        },
+        {
+          "accept_reject_owner": "exact_task_checker",
+          "canonical_schema_sha256": "sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036",
+          "cell_id": "unsloth--gemma-4-31b-it-gguf::route_guard",
+          "exact_checker_id": "capability_qualified_factor_exact_checker_v1",
+          "exact_checker_sha256": "sha256:0fe5bcd94dfe33cee1f40935b1d38a450e86f29ead6d044f5a211cbc00dd33f6",
+          "frozen_harness_sha256": "sha256:c3726601f7c938ec97cf77664668e0d3656ff83f276d6451521e36fc2cb4dcaa",
+          "harness_hash_matches_license": true,
+          "harness_sidecar_sha256": "sha256:c3726601f7c938ec97cf77664668e0d3656ff83f276d6451521e36fc2cb4dcaa",
+          "license_model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "model_hash_matches_license": true,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+        },
+        {
+          "accept_reject_owner": "exact_task_checker",
+          "canonical_schema_sha256": "sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036",
+          "cell_id": "unsloth--gemma-4-26b-a4b-it-gguf::route_guard",
+          "exact_checker_id": "capability_qualified_factor_exact_checker_v1",
+          "exact_checker_sha256": "sha256:0fe5bcd94dfe33cee1f40935b1d38a450e86f29ead6d044f5a211cbc00dd33f6",
+          "frozen_harness_sha256": "sha256:49fb05042c06c6f1fa2e01a2d1b3237ae1b40dfa281c85f8859eb7270a8aee7e",
+          "harness_hash_matches_license": true,
+          "harness_sidecar_sha256": "sha256:49fb05042c06c6f1fa2e01a2d1b3237ae1b40dfa281c85f8859eb7270a8aee7e",
+          "license_model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "model_hash_matches_license": true,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+        },
+        {
+          "accept_reject_owner": "exact_task_checker",
+          "canonical_schema_sha256": "sha256:7abbeda85021ea647c0f7af9cdd65b6e991b5e423ee3e54f4f9234cae73be036",
+          "cell_id": "unsloth--gemma-4-26b-a4b-it-gguf::conservation_guard",
+          "exact_checker_id": "capability_qualified_factor_exact_checker_v1",
+          "exact_checker_sha256": "sha256:982b4991ffe1934094be813a65bdaf15ccbcd4d96bea4f0380d0ea93080b99b8",
+          "frozen_harness_sha256": "sha256:49fb05042c06c6f1fa2e01a2d1b3237ae1b40dfa281c85f8859eb7270a8aee7e",
+          "harness_hash_matches_license": true,
+          "harness_sidecar_sha256": "sha256:49fb05042c06c6f1fa2e01a2d1b3237ae1b40dfa281c85f8859eb7270a8aee7e",
+          "license_model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "model_hash_matches_license": true,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+        }
+      ],
+      "schema": "carnot.experiment_6396.capability_qualified_verified_frontier_ab.v1.model_harness_schema_checker_bindings"
+    },
+    "license_count": 4,
+    "license_hashes": [
+      "sha256:87785ffd62f2bb74c2de7cc40ec7e96f713876684445a7a6ad891b72f4a5a3cd",
+      "sha256:a70964fda9dbc71a882584ea596fc4530b23187ebd520f30c504e5d9743e6a81",
+      "sha256:7d3143dcd2b677b5202f79bd1057a714d2b5bf3c2417fe37b6d69d8056e855c5",
+      "sha256:142e6aeb95e786cfdb25ca0ee8da53b96590fb102d2123c49a3b2258ff6b2b90"
+    ],
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.license_harness_bindings",
+    "selective_rollback_control_ready_score": 1.0
+  },
+  "model_weight_change_count": 0,
+  "models_used": [
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "negative_transfer_and_harm_results": {
+    "abstention_count": 5,
+    "harm_detected": false,
+    "harmful_activation_count": 0,
+    "negative_transfer_count": 0,
+    "protected_leakage_count": 0,
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.negative_transfer_harm"
+  },
+  "preconditions_checked": {
+    "all_preconditions_passed": true,
+    "blocked_reasons": [],
+    "both_exp6396_gates_revalidated": true,
+    "date": "20260813",
+    "evalue_ledger_revalidated": true,
+    "exact_checker_hashes_revalidated": true,
+    "exp6383_rollback_receipt_revalidated": true,
+    "frozen_harnesses_revalidated": true,
+    "gpu_offload_revalidated": true,
+    "licenses_revalidated": true,
+    "model_files_revalidated": true,
+    "protected_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:e58cc1013177163e93ebee2da775ae69853518eb16cb7f5f56187eb843bda191",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6342_anytime_evalue_release_ledger.json": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+      "results/experiment_6342_anytime_evalue_release_ledger.json.evalue_ledger.jsonl": "sha256:6c5461f725e7df7eba95457c9e1ef8836ebf1f798fe314eac957d32a433642ac",
+      "results/experiment_6383_dependency_guided_factor_rollback_stress.json": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c",
+      "results/experiment_6396_capability_qualified_verified_frontier_ab.json": "sha256:fe7a14127cb7286f44145bf76c099f3fca74ffc1e8e7a8670149d13b23cff5dd",
+      "scripts/research_conductor.py": "sha256:458ec2966f40918581381a8895875ab86664e14c8f69ea21afe5be71e4348509"
+    },
+    "protected_partitions_revalidated": true,
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.preconditions",
+    "source_hashes_before": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/continuous-learning/spec.md": "sha256:86a6774e5dc2a446bdc04b697e50a91278c5f1637e41b11e2be1c7ebaa45a9c4",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "python/carnot/experiment_6383_dependency_guided_factor_rollback_stress.py": "sha256:69fc95b152d9748f3030e77adcf894f8fa135c48fc3897cedc6873d35be1f36d",
+      "python/carnot/experiment_6396_capability_qualified_verified_frontier_ab.py": "sha256:26fb544d9df84ba66aa2074f24a3db4b37c00b2e5613f54f31451bd4265ed7a6",
+      "python/carnot/experiment_6397_transactional_continuous_factor_learning.py": "sha256:13c2026118f5b6bc019c98ab58f2fd1798342f4c9c7ed9a6ed32c7cc1ca53dc6",
+      "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+      "research-references.md": "sha256:8994f1c12b0f87c55c738d9e093e81c9a7f307165882a990a3cd6c62cc03dd53",
+      "tests/python/test_experiment_6397_transactional_continuous_factor_learning.py": "sha256:65b05a516eff619fa4c2408bda90a120cd4c51020640e536d47f3278ab3e8299"
+    }
+  },
+  "predecessor_candidate_evidence_checker_eprocess_and_effect_bindings": {
+    "all_candidates_bound": true,
+    "by_candidate_id": {
+      "candidate-commit-conservation": {
+        "candidate_hash": "sha256:caf55ccd7b0f0423fe6ccf331a19d2c24e0da6a24c92a6dec04f507e4ae0dd73",
+        "candidate_id": "candidate-commit-conservation",
+        "eprocess_state": {
+          "e_value": 1.65,
+          "look_index": 5,
+          "state_hash": "sha256:b31bc6cfa88ed8ff822703fb0d166358c9dbb4e5c184ee2737752f682c3567a4"
+        },
+        "evidence_hashes": [
+          "sha256:7896adae9aea21eeb199364072344e26777f2e2acf928f0ab0c2f1203c8a0fa6",
+          "sha256:4948e2a932df61d39fb659f4427a12984e44757bcb1553b4e61988c21f6c2f04"
+        ],
+        "exact_checker_receipt": {
+          "checker_hash": "sha256:089e1be670d1db93042d2db1c63e33baa33ba9055b278c246e581ad2ef5c67c7",
+          "checker_id": "transactional_factor_exact_checker_v1",
+          "checker_is_oracle": true
+        },
+        "exact_release_receipt": {
+          "receipt_id": "exact-release-6397-04",
+          "release_hash": "sha256:61c57802fa84fc9b83072710a6b5bbcca43f3b1ff52b2dd2ba44456ec46f3eb3",
+          "released": true,
+          "support_passed": true
+        },
+        "predecessor_head_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+        "proposed_effects": [
+          {
+            "effect_name": "conservation_retention_bridge",
+            "scope": "licensed_constraint_family"
+          }
+        ],
+        "proposed_effects_hash": "sha256:f9099075fd671fbc347eeee68b65f58052c0c56f49b1b25e01f5b0f20162ad08"
+      },
+      "candidate-commit-route": {
+        "candidate_hash": "sha256:d056ffc978831c46a50772abba0918b8ad90ec7090e8ec3461870bcd88016778",
+        "candidate_id": "candidate-commit-route",
+        "eprocess_state": {
+          "e_value": 1.25,
+          "look_index": 1,
+          "state_hash": "sha256:e57c92dcb0e0ff29e306be4f274887714e5699fabe2798e814751ab0ef1ce42b"
+        },
+        "evidence_hashes": [
+          "sha256:b8f8bb19c5e1868df9917214ce254f6471763bbddb36678a74ead319cd6c3d2a",
+          "sha256:5b79ffbaba48f6b54f906d6f41f862ff18f5f14c2d828cfc5f7b8dfe98c2bf32"
+        ],
+        "exact_checker_receipt": {
+          "checker_hash": "sha256:7c28ae73addb19525860469c85eeae50f2d14b18f2f026a353964523beb93608",
+          "checker_id": "transactional_factor_exact_checker_v1",
+          "checker_is_oracle": true
+        },
+        "exact_release_receipt": {
+          "receipt_id": "exact-release-6397-00",
+          "release_hash": "sha256:907512cc6013b9185566810f5aff0cf653bd8a4a56ef66370f5ab50b76164a93",
+          "released": true,
+          "support_passed": true
+        },
+        "predecessor_head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "proposed_effects": [
+          {
+            "effect_name": "route_exact_transfer",
+            "scope": "licensed_constraint_family"
+          }
+        ],
+        "proposed_effects_hash": "sha256:4d995dfecac1fd79f194154360312edf28078e5fb30469a60fddafb13a7d76de"
+      },
+      "candidate-defer-retention": {
+        "candidate_hash": "sha256:75dbcad1df557270433687abb40c65fb8fbf421efd74790c8ad69e142c86437a",
+        "candidate_id": "candidate-defer-retention",
+        "eprocess_state": {
+          "e_value": 1.55,
+          "look_index": 4,
+          "state_hash": "sha256:4ab23c8761e16f914f3483e8e26087b2fa880f4a03b573f57b880cf40054b7e6"
+        },
+        "evidence_hashes": [
+          "sha256:ac55efaad98b4bb316ddadee8354f699a6bce562369a711e2217d0654a1de80c",
+          "sha256:58a14459c2d9cad64c331e44f2a8c1024532ce715efaf249eb17ba70ac2365de"
+        ],
+        "exact_checker_receipt": {
+          "checker_hash": "sha256:a79db9eef16af29c666b75e919f751441c4ec707886edfcc05116a3b2f519ea3",
+          "checker_id": "transactional_factor_exact_checker_v1",
+          "checker_is_oracle": true
+        },
+        "exact_release_receipt": {
+          "receipt_id": "exact-release-6397-03",
+          "release_hash": "sha256:7a52873f5b6fc0d3c40d47e5aabcf7e99964510bea9c6ae967dd1625ca103757",
+          "released": true,
+          "support_passed": true
+        },
+        "predecessor_head_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+        "proposed_effects": [
+          {
+            "effect_name": "retention_waitlist",
+            "scope": "licensed_constraint_family"
+          }
+        ],
+        "proposed_effects_hash": "sha256:8a7f568ff3a282a6692a54aba09d8ac6a10045b9b6d10008bf1c439daa93f79d"
+      },
+      "candidate-quarantine-unsupported": {
+        "candidate_hash": "sha256:9c0adc5c7cc25063c81140332da1f4044866d9029e3f148ca2952c46edb4c7c2",
+        "candidate_id": "candidate-quarantine-unsupported",
+        "eprocess_state": {
+          "e_value": 1.45,
+          "look_index": 3,
+          "state_hash": "sha256:acf620ae804faceb847b58a01546aa976f5cbdb6144974050895f7c12cefaa64"
+        },
+        "evidence_hashes": [
+          "sha256:a4dcffb40f7745d27fb5c9b5a38220fdc188d894866aff6a26218c630bad24b0",
+          "sha256:1075f54a60133422bd3fd84797fe6d371349e9b7ac074495005832289ddafa29"
+        ],
+        "exact_checker_receipt": {
+          "checker_hash": "sha256:c46616ecccf07bb68fb4183b3332313c8d7c8d29f0e900e918d0c250a278f9d5",
+          "checker_id": "transactional_factor_exact_checker_v1",
+          "checker_is_oracle": true
+        },
+        "exact_release_receipt": {
+          "receipt_id": "exact-release-6397-02",
+          "release_hash": "sha256:f33a6fc59d7a0d5b1940b3bfb67f2c2a8d5217029e52a2c1fa89160765351cf9",
+          "released": true,
+          "support_passed": false
+        },
+        "predecessor_head_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+        "proposed_effects": [
+          {
+            "effect_name": "unsupported_shortcut",
+            "scope": "licensed_constraint_family"
+          }
+        ],
+        "proposed_effects_hash": "sha256:2f65df6c4734bfc8fddfde1bccf05220b8d5916f0bcb2cbac40577e46c9f0e51"
+      },
+      "candidate-reject-duplicate": {
+        "candidate_hash": "sha256:573713817f730052fd02609d8831a8eae053238a5531ad02fbd1402ba244ca00",
+        "candidate_id": "candidate-reject-duplicate",
+        "eprocess_state": {
+          "e_value": 1.35,
+          "look_index": 2,
+          "state_hash": "sha256:1f6734a8fa06fd15f07779d167f91f229062ed6fa71bcacb8a44894abf86b686"
+        },
+        "evidence_hashes": [
+          "sha256:d997c9e110ba039d78cc7ca41bc22a340f91fa0e31cf758f689de6be4f172c2b",
+          "sha256:a5743de6fbe23dff3e5e100ab941eb212a0b38401effe14d46316fbe8b055c00"
+        ],
+        "exact_checker_receipt": {
+          "checker_hash": "sha256:74ffebff3957706253ec284beea5fe3005792b7afc0864e9a7342ae6fd8234e1",
+          "checker_id": "transactional_factor_exact_checker_v1",
+          "checker_is_oracle": true
+        },
+        "exact_release_receipt": {
+          "receipt_id": "exact-release-6397-01",
+          "release_hash": "sha256:10bad1bb958ebf90a64ff7d43e01bbf95b18881e057119d84edece721e450c4a",
+          "released": true,
+          "support_passed": true
+        },
+        "predecessor_head_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+        "proposed_effects": [
+          {
+            "effect_name": "route_exact_transfer",
+            "scope": "licensed_constraint_family"
+          }
+        ],
+        "proposed_effects_hash": "sha256:4d995dfecac1fd79f194154360312edf28078e5fb30469a60fddafb13a7d76de"
+      },
+      "candidate-reject-retention": {
+        "candidate_hash": "sha256:b3f1e45f748854698a9fa781e3ae16f65a82b6066d82deb43aa1fe9fd925a5ca",
+        "candidate_id": "candidate-reject-retention",
+        "eprocess_state": {
+          "e_value": 1.75,
+          "look_index": 6,
+          "state_hash": "sha256:fadacc5b45f66aa007d91df0a4d0817edbbfb7b5ed0cbcda2ddd0a1bde3f7ea1"
+        },
+        "evidence_hashes": [
+          "sha256:bfde3dde06eea48640ac74db7b066565c28f432aca2fd9ff5fcde41cbc3216bb",
+          "sha256:88ae64976f36c6619c6e9fb8ee990774b9124eb819c84b946abaa6ddd32a278e"
+        ],
+        "exact_checker_receipt": {
+          "checker_hash": "sha256:c58b355ca13731ff7f1dc230bddc786d4b524a680b420952157fc7127f741bf1",
+          "checker_id": "transactional_factor_exact_checker_v1",
+          "checker_is_oracle": true
+        },
+        "exact_release_receipt": {
+          "receipt_id": "exact-release-6397-05",
+          "release_hash": "sha256:3045f87b6f4f3b413fad3b7e4d8d611a16e094f6b91ee85f1a0c592b5d79874f",
+          "released": true,
+          "support_passed": true
+        },
+        "predecessor_head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "proposed_effects": [
+          {
+            "effect_name": "retention_negative_transfer",
+            "scope": "licensed_constraint_family"
+          }
+        ],
+        "proposed_effects_hash": "sha256:0b411a3f28ae68a4a5acf789c057514f2b22f133f8fd2e93bc75ec030af335d7"
+      }
+    },
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.candidate_bindings"
+  },
+  "preregistered_arm_contract": {
+    "arms": [
+      "frozen_baseline",
+      "v546_replay_certified_factor_control",
+      "capability_qualified_live_learner"
+    ],
+    "consumer_budget_matched": true,
+    "event_order_matched": true,
+    "exact_check_budget_matched": true,
+    "frozen_before_scoring": true,
+    "per_arm": {
+      "capability_qualified_live_learner": {
+        "consumer_budget": {
+          "max_exact_checks": 64,
+          "max_factor_reads": 32
+        },
+        "event_count": 48,
+        "event_order_sha256": "sha256:31c6b8ea1a74bece76ebed2528d6d46e044a383b656037e53b227b34fe8a5f58",
+        "exact_check_budget": 64,
+        "random_seed": 639701
+      },
+      "frozen_baseline": {
+        "consumer_budget": {
+          "max_exact_checks": 64,
+          "max_factor_reads": 32
+        },
+        "event_count": 48,
+        "event_order_sha256": "sha256:31c6b8ea1a74bece76ebed2528d6d46e044a383b656037e53b227b34fe8a5f58",
+        "exact_check_budget": 64,
+        "random_seed": 639701
+      },
+      "v546_replay_certified_factor_control": {
+        "consumer_budget": {
+          "max_exact_checks": 64,
+          "max_factor_reads": 32
+        },
+        "event_count": 48,
+        "event_order_sha256": "sha256:31c6b8ea1a74bece76ebed2528d6d46e044a383b656037e53b227b34fe8a5f58",
+        "exact_check_budget": 64,
+        "random_seed": 639701
+      }
+    },
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.preregistered_arm_contract"
+  },
+  "proposal_learnability_results": {
+    "candidate_count": 6,
+    "exact_supported_candidate_count": 5,
+    "learnability_rate": 0.833333333333,
+    "reported_separately_from_future_utility": true,
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.proposal_learnability"
+  },
+  "protected_files_unchanged": {
+    "changed_paths": [],
+    "files": {
+      "_bmad/traceability.md": {
+        "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "after": "sha256:e58cc1013177163e93ebee2da775ae69853518eb16cb7f5f56187eb843bda191",
+        "before": "sha256:e58cc1013177163e93ebee2da775ae69853518eb16cb7f5f56187eb843bda191",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "unchanged": true
+      },
+      "results/experiment_6342_anytime_evalue_release_ledger.json": {
+        "after": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+        "before": "sha256:47fe52bdda11725832b1cfb4a4e0f398a3df5874b8e2ba61c3db19acdbdc5e52",
+        "unchanged": true
+      },
+      "results/experiment_6342_anytime_evalue_release_ledger.json.evalue_ledger.jsonl": {
+        "after": "sha256:6c5461f725e7df7eba95457c9e1ef8836ebf1f798fe314eac957d32a433642ac",
+        "before": "sha256:6c5461f725e7df7eba95457c9e1ef8836ebf1f798fe314eac957d32a433642ac",
+        "unchanged": true
+      },
+      "results/experiment_6383_dependency_guided_factor_rollback_stress.json": {
+        "after": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c",
+        "before": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c",
+        "unchanged": true
+      },
+      "results/experiment_6396_capability_qualified_verified_frontier_ab.json": {
+        "after": "sha256:fe7a14127cb7286f44145bf76c099f3fca74ffc1e8e7a8670149d13b23cff5dd",
+        "before": "sha256:fe7a14127cb7286f44145bf76c099f3fca74ffc1e8e7a8670149d13b23cff5dd",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after": "sha256:458ec2966f40918581381a8895875ab86664e14c8f69ea21afe5be71e4348509",
+        "before": "sha256:458ec2966f40918581381a8895875ab86664e14c8f69ea21afe5be71e4348509",
+        "unchanged": true
+      }
+    },
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.protected_files",
+    "unchanged": true
+  },
+  "protected_leakage_count": 0,
+  "random_seed": 6397,
+  "reproducibility_checksum": "sha256:7503f86f9b33a8721dba8e0a63f9bc245f5b91f88ae066f03e7f21fa0455cf36",
+  "same_step_write_count": 0,
+  "selective_rollback_control_path_hash_and_terminal_class": {
+    "gate_passed": true,
+    "honest_verdict": "complete_positive: dependency-guided rollback removed harmful descendants, preserved independent exact support, and claims no live utility",
+    "idempotent_exact_valid_terminal_root": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6383_dependency_guided_factor_rollback_stress.json",
+    "present": true,
+    "ready_score": 1.0,
+    "selective_terminal_root": "sha256:55803c3f5b7dec78d6d295ce5019304dcb60c073c946e65567fa457f69500ba1",
+    "sha256": "sha256:ad34912eec245b525ce5918ad576c3686f8ad14c689a8e5e7856460b3321b17c",
+    "size_bytes": 39959,
+    "terminal_class": "complete_positive"
+  },
+  "selective_rollback_control_ready_score": 1.0,
+  "stale_duplicate_self_approval_concurrency_interrupt_and_restart_attack_matrix": {
+    "all_fail_closed": true,
+    "attacks": {
+      "concurrent_proposal": {
+        "attack_id": "concurrent_proposal",
+        "failed_closed": true,
+        "head_after_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "head_before_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "head_changed": false,
+        "promoted_readiness": false,
+        "reason": "only one predecessor wins compare-and-swap"
+      },
+      "duplicate_effect": {
+        "attack_id": "duplicate_effect",
+        "failed_closed": true,
+        "head_after_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "head_before_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "head_changed": false,
+        "promoted_readiness": false,
+        "reason": "effect hash was already committed"
+      },
+      "interrupted_write": {
+        "attack_id": "interrupted_write",
+        "failed_closed": true,
+        "head_after_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "head_before_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "head_changed": false,
+        "promoted_readiness": false,
+        "reason": "temporary write is ignored on replay"
+      },
+      "replayed_evidence": {
+        "attack_id": "replayed_evidence",
+        "failed_closed": true,
+        "head_after_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "head_before_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "head_changed": false,
+        "promoted_readiness": false,
+        "reason": "evidence hash was already consumed"
+      },
+      "restart_recovery": {
+        "attack_id": "restart_recovery",
+        "failed_closed": true,
+        "head_after_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "head_before_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "head_changed": false,
+        "promoted_readiness": false,
+        "reason": "journal replay returns the terminal committed head"
+      },
+      "self_approval": {
+        "attack_id": "self_approval",
+        "failed_closed": true,
+        "head_after_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "head_before_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "head_changed": false,
+        "promoted_readiness": false,
+        "reason": "candidate cannot approve its own activation"
+      },
+      "stale_predecessor": {
+        "attack_id": "stale_predecessor",
+        "failed_closed": true,
+        "head_after_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "head_before_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "head_changed": false,
+        "promoted_readiness": false,
+        "reason": "candidate predecessor did not match active head"
+      }
+    },
+    "failed_transaction_head_change_count": 0,
+    "initial_head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+    "restart_recovery": {
+      "idempotent": true,
+      "interrupted_head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+      "recovered_terminal_head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b"
+    },
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.attack_matrix",
+    "terminal_head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b"
+  },
+  "status": "complete_positive",
+  "tests_run": {
+    "all_passed": true,
+    "commands": [
+      ".venv/bin/pytest tests/python/test_experiment_6397_transactional_continuous_factor_learning.py -q --no-cov -n 0",
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6397_transactional_continuous_factor_learning.py -m pytest tests/python/test_experiment_6397_transactional_continuous_factor_learning.py -q --no-cov -n 0",
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6397_transactional_continuous_factor_learning.py --fail-under=100 --show-missing",
+      ".venv/bin/pytest tests/python -q",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6397_transactional_continuous_factor_learning.py",
+      "sed -n '1,220p' ops/e2e-test-plan.md",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6397_transactional_continuous_factor_learning.json",
+      ".venv/bin/python scripts/determination_preservation_lint.py",
+      ".venv/bin/python scripts/root_clutter_sweep.py",
+      ".venv/bin/python -m carnot.experiment_6397_transactional_continuous_factor_learning --date 20260813"
+    ],
+    "exit_codes": {
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6397_transactional_continuous_factor_learning.py --fail-under=100 --show-missing": 0,
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6397_transactional_continuous_factor_learning.py -m pytest tests/python/test_experiment_6397_transactional_continuous_factor_learning.py -q --no-cov -n 0": 0,
+      ".venv/bin/pytest tests/python -q": 0,
+      ".venv/bin/pytest tests/python/test_experiment_6397_transactional_continuous_factor_learning.py -q --no-cov -n 0": 0,
+      ".venv/bin/python -m carnot.experiment_6397_transactional_continuous_factor_learning --date 20260813": 0,
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6397_transactional_continuous_factor_learning.json": 0,
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6397_transactional_continuous_factor_learning.py": 0,
+      ".venv/bin/python scripts/determination_preservation_lint.py": 0,
+      ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+      "sed -n '1,220p' ops/e2e-test-plan.md": 0
+    },
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.tests_run"
+  },
+  "transactional_continuous_self_learning_ready_score": 1.0,
+  "typed_candidate_records": [
+    {
+      "arm": "capability_qualified_live_learner",
+      "candidate_hash": "sha256:d056ffc978831c46a50772abba0918b8ad90ec7090e8ec3461870bcd88016778",
+      "candidate_id": "candidate-commit-route",
+      "candidate_type": "typed_factor_delta",
+      "defer_reason": null,
+      "evidence_hashes": [
+        "sha256:b8f8bb19c5e1868df9917214ce254f6471763bbddb36678a74ead319cd6c3d2a",
+        "sha256:5b79ffbaba48f6b54f906d6f41f862ff18f5f14c2d828cfc5f7b8dfe98c2bf32"
+      ],
+      "exact_support": true,
+      "expected_disposition": "Commit",
+      "off_commit_evaluation": true,
+      "predecessor_head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+      "proposed_effects": [
+        {
+          "effect_name": "route_exact_transfer",
+          "scope": "licensed_constraint_family"
+        }
+      ],
+      "proposed_effects_hash": "sha256:4d995dfecac1fd79f194154360312edf28078e5fb30469a60fddafb13a7d76de",
+      "protected_replay_passed": true,
+      "retention_safe": true,
+      "self_approved": false
+    },
+    {
+      "arm": "capability_qualified_live_learner",
+      "candidate_hash": "sha256:573713817f730052fd02609d8831a8eae053238a5531ad02fbd1402ba244ca00",
+      "candidate_id": "candidate-reject-duplicate",
+      "candidate_type": "typed_factor_delta",
+      "defer_reason": null,
+      "evidence_hashes": [
+        "sha256:d997c9e110ba039d78cc7ca41bc22a340f91fa0e31cf758f689de6be4f172c2b",
+        "sha256:a5743de6fbe23dff3e5e100ab941eb212a0b38401effe14d46316fbe8b055c00"
+      ],
+      "exact_support": true,
+      "expected_disposition": "Reject",
+      "off_commit_evaluation": true,
+      "predecessor_head_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+      "proposed_effects": [
+        {
+          "effect_name": "route_exact_transfer",
+          "scope": "licensed_constraint_family"
+        }
+      ],
+      "proposed_effects_hash": "sha256:4d995dfecac1fd79f194154360312edf28078e5fb30469a60fddafb13a7d76de",
+      "protected_replay_passed": true,
+      "retention_safe": true,
+      "self_approved": false
+    },
+    {
+      "arm": "capability_qualified_live_learner",
+      "candidate_hash": "sha256:9c0adc5c7cc25063c81140332da1f4044866d9029e3f148ca2952c46edb4c7c2",
+      "candidate_id": "candidate-quarantine-unsupported",
+      "candidate_type": "typed_factor_delta",
+      "defer_reason": null,
+      "evidence_hashes": [
+        "sha256:a4dcffb40f7745d27fb5c9b5a38220fdc188d894866aff6a26218c630bad24b0",
+        "sha256:1075f54a60133422bd3fd84797fe6d371349e9b7ac074495005832289ddafa29"
+      ],
+      "exact_support": false,
+      "expected_disposition": "Quarantine",
+      "off_commit_evaluation": true,
+      "predecessor_head_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+      "proposed_effects": [
+        {
+          "effect_name": "unsupported_shortcut",
+          "scope": "licensed_constraint_family"
+        }
+      ],
+      "proposed_effects_hash": "sha256:2f65df6c4734bfc8fddfde1bccf05220b8d5916f0bcb2cbac40577e46c9f0e51",
+      "protected_replay_passed": true,
+      "retention_safe": true,
+      "self_approved": false
+    },
+    {
+      "arm": "capability_qualified_live_learner",
+      "candidate_hash": "sha256:75dbcad1df557270433687abb40c65fb8fbf421efd74790c8ad69e142c86437a",
+      "candidate_id": "candidate-defer-retention",
+      "candidate_type": "typed_factor_delta",
+      "defer_reason": "awaiting_retention_segment",
+      "evidence_hashes": [
+        "sha256:ac55efaad98b4bb316ddadee8354f699a6bce562369a711e2217d0654a1de80c",
+        "sha256:58a14459c2d9cad64c331e44f2a8c1024532ce715efaf249eb17ba70ac2365de"
+      ],
+      "exact_support": true,
+      "expected_disposition": "Defer",
+      "off_commit_evaluation": true,
+      "predecessor_head_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+      "proposed_effects": [
+        {
+          "effect_name": "retention_waitlist",
+          "scope": "licensed_constraint_family"
+        }
+      ],
+      "proposed_effects_hash": "sha256:8a7f568ff3a282a6692a54aba09d8ac6a10045b9b6d10008bf1c439daa93f79d",
+      "protected_replay_passed": true,
+      "retention_safe": true,
+      "self_approved": false
+    },
+    {
+      "arm": "capability_qualified_live_learner",
+      "candidate_hash": "sha256:caf55ccd7b0f0423fe6ccf331a19d2c24e0da6a24c92a6dec04f507e4ae0dd73",
+      "candidate_id": "candidate-commit-conservation",
+      "candidate_type": "typed_factor_delta",
+      "defer_reason": null,
+      "evidence_hashes": [
+        "sha256:7896adae9aea21eeb199364072344e26777f2e2acf928f0ab0c2f1203c8a0fa6",
+        "sha256:4948e2a932df61d39fb659f4427a12984e44757bcb1553b4e61988c21f6c2f04"
+      ],
+      "exact_support": true,
+      "expected_disposition": "Commit",
+      "off_commit_evaluation": true,
+      "predecessor_head_hash": "sha256:197d79d7c99e568d95cc1000ff869dececdced03026c4d91025554f336e9e07c",
+      "proposed_effects": [
+        {
+          "effect_name": "conservation_retention_bridge",
+          "scope": "licensed_constraint_family"
+        }
+      ],
+      "proposed_effects_hash": "sha256:f9099075fd671fbc347eeee68b65f58052c0c56f49b1b25e01f5b0f20162ad08",
+      "protected_replay_passed": true,
+      "retention_safe": true,
+      "self_approved": false
+    },
+    {
+      "arm": "capability_qualified_live_learner",
+      "candidate_hash": "sha256:b3f1e45f748854698a9fa781e3ae16f65a82b6066d82deb43aa1fe9fd925a5ca",
+      "candidate_id": "candidate-reject-retention",
+      "candidate_type": "typed_factor_delta",
+      "defer_reason": null,
+      "evidence_hashes": [
+        "sha256:bfde3dde06eea48640ac74db7b066565c28f432aca2fd9ff5fcde41cbc3216bb",
+        "sha256:88ae64976f36c6619c6e9fb8ee990774b9124eb819c84b946abaa6ddd32a278e"
+      ],
+      "exact_support": true,
+      "expected_disposition": "Reject",
+      "off_commit_evaluation": true,
+      "predecessor_head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+      "proposed_effects": [
+        {
+          "effect_name": "retention_negative_transfer",
+          "scope": "licensed_constraint_family"
+        }
+      ],
+      "proposed_effects_hash": "sha256:0b411a3f28ae68a4a5acf789c057514f2b22f133f8fd2e93bc75ec030af335d7",
+      "protected_replay_passed": true,
+      "retention_safe": false,
+      "self_approved": false
+    }
+  ],
+  "unlicensed_cell_abstention_records": [
+    {
+      "abstention_sha256": "sha256:c590084333e32e55d5575cd3715131591f99d0f1489e1bc871341b1f669da44f",
+      "candidate_count": 0,
+      "cell_id": "unsloth--qwen3.6-35b-a3b-gguf::threshold_guard",
+      "constraint_family": "threshold_guard",
+      "exact_check_count": 0,
+      "fallback_model_hf_id": null,
+      "frozen_abstention": true,
+      "model_call_count": 0,
+      "model_family": "qwen_moe",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "substitution_used": false,
+      "terminal_reason": "frozen_harness_explicit_abstention"
+    },
+    {
+      "abstention_sha256": "sha256:0968739f25786dc4ec691698ff1438adfbdaf85bfb7403d6901cf37feff92b96",
+      "candidate_count": 0,
+      "cell_id": "unsloth--qwen3.6-35b-a3b-gguf::route_guard",
+      "constraint_family": "route_guard",
+      "exact_check_count": 0,
+      "fallback_model_hf_id": null,
+      "frozen_abstention": true,
+      "model_call_count": 0,
+      "model_family": "qwen_moe",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "substitution_used": false,
+      "terminal_reason": "frozen_harness_explicit_abstention"
+    },
+    {
+      "abstention_sha256": "sha256:079704b2f115a3227a975a9c896101a4973daeb61bb34d1e891bb4fa34d0379a",
+      "candidate_count": 0,
+      "cell_id": "unsloth--qwen3.6-35b-a3b-gguf::conservation_guard",
+      "constraint_family": "conservation_guard",
+      "exact_check_count": 0,
+      "fallback_model_hf_id": null,
+      "frozen_abstention": true,
+      "model_call_count": 0,
+      "model_family": "qwen_moe",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "substitution_used": false,
+      "terminal_reason": "frozen_harness_explicit_abstention"
+    },
+    {
+      "abstention_sha256": "sha256:ba0e6ffd4ba5b3eef6f827f3525fe88dd94f23eba03396574cc5a9bf265eea25",
+      "candidate_count": 0,
+      "cell_id": "unsloth--gemma-4-31b-it-gguf::conservation_guard",
+      "constraint_family": "conservation_guard",
+      "exact_check_count": 0,
+      "fallback_model_hf_id": null,
+      "frozen_abstention": true,
+      "model_call_count": 0,
+      "model_family": "gemma_dense",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "substitution_used": false,
+      "terminal_reason": "underpowered_source_bound_exact_evaluable_proposals"
+    },
+    {
+      "abstention_sha256": "sha256:1967914298f27e1ed6430dd2055b2948791e96b67465bdf03bfcf0b8c2c07ac6",
+      "candidate_count": 0,
+      "cell_id": "unsloth--gemma-4-26b-a4b-it-gguf::threshold_guard",
+      "constraint_family": "threshold_guard",
+      "exact_check_count": 0,
+      "fallback_model_hf_id": null,
+      "frozen_abstention": true,
+      "model_call_count": 0,
+      "model_family": "gemma_moe",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "substitution_used": false,
+      "terminal_reason": "underpowered_source_bound_exact_evaluable_proposals"
+    }
+  ],
+  "untouched_future_evaluation_receipts": {
+    "future_event_count": 12,
+    "future_manifest_partition_hash": "sha256:cf6eee5e33b40efd119b75b1a84c27222f20a3b9aa2b2731b454c2f33aa15521",
+    "future_outcomes_read_once": true,
+    "open_count": 1,
+    "opened_after_head_freeze": true,
+    "outcomes": [
+      {
+        "arm": "frozen_baseline",
+        "constraint_family": "conservation_guard",
+        "event_id": "event-6397-036",
+        "exact_success": true,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      {
+        "arm": "v546_replay_certified_factor_control",
+        "constraint_family": "conservation_guard",
+        "event_id": "event-6397-036",
+        "exact_success": true,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      {
+        "arm": "capability_qualified_live_learner",
+        "constraint_family": "conservation_guard",
+        "event_id": "event-6397-036",
+        "exact_success": true,
+        "head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      {
+        "arm": "frozen_baseline",
+        "constraint_family": "conservation_guard",
+        "event_id": "event-6397-037",
+        "exact_success": true,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      {
+        "arm": "v546_replay_certified_factor_control",
+        "constraint_family": "conservation_guard",
+        "event_id": "event-6397-037",
+        "exact_success": true,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      {
+        "arm": "capability_qualified_live_learner",
+        "constraint_family": "conservation_guard",
+        "event_id": "event-6397-037",
+        "exact_success": true,
+        "head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      {
+        "arm": "frozen_baseline",
+        "constraint_family": "conservation_guard",
+        "event_id": "event-6397-038",
+        "exact_success": true,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      {
+        "arm": "v546_replay_certified_factor_control",
+        "constraint_family": "conservation_guard",
+        "event_id": "event-6397-038",
+        "exact_success": true,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      {
+        "arm": "capability_qualified_live_learner",
+        "constraint_family": "conservation_guard",
+        "event_id": "event-6397-038",
+        "exact_success": true,
+        "head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      {
+        "arm": "frozen_baseline",
+        "constraint_family": "conservation_guard",
+        "event_id": "event-6397-039",
+        "exact_success": true,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      {
+        "arm": "v546_replay_certified_factor_control",
+        "constraint_family": "conservation_guard",
+        "event_id": "event-6397-039",
+        "exact_success": true,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      {
+        "arm": "capability_qualified_live_learner",
+        "constraint_family": "conservation_guard",
+        "event_id": "event-6397-039",
+        "exact_success": true,
+        "head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      {
+        "arm": "frozen_baseline",
+        "constraint_family": "route_guard",
+        "event_id": "event-6397-040",
+        "exact_success": true,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "v546_replay_certified_factor_control",
+        "constraint_family": "route_guard",
+        "event_id": "event-6397-040",
+        "exact_success": true,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "capability_qualified_live_learner",
+        "constraint_family": "route_guard",
+        "event_id": "event-6397-040",
+        "exact_success": true,
+        "head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "frozen_baseline",
+        "constraint_family": "route_guard",
+        "event_id": "event-6397-041",
+        "exact_success": true,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "v546_replay_certified_factor_control",
+        "constraint_family": "route_guard",
+        "event_id": "event-6397-041",
+        "exact_success": true,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "capability_qualified_live_learner",
+        "constraint_family": "route_guard",
+        "event_id": "event-6397-041",
+        "exact_success": true,
+        "head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "frozen_baseline",
+        "constraint_family": "route_guard",
+        "event_id": "event-6397-042",
+        "exact_success": false,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "v546_replay_certified_factor_control",
+        "constraint_family": "route_guard",
+        "event_id": "event-6397-042",
+        "exact_success": true,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "capability_qualified_live_learner",
+        "constraint_family": "route_guard",
+        "event_id": "event-6397-042",
+        "exact_success": true,
+        "head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "frozen_baseline",
+        "constraint_family": "route_guard",
+        "event_id": "event-6397-043",
+        "exact_success": false,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "v546_replay_certified_factor_control",
+        "constraint_family": "route_guard",
+        "event_id": "event-6397-043",
+        "exact_success": false,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "capability_qualified_live_learner",
+        "constraint_family": "route_guard",
+        "event_id": "event-6397-043",
+        "exact_success": true,
+        "head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "frozen_baseline",
+        "constraint_family": "threshold_guard",
+        "event_id": "event-6397-044",
+        "exact_success": false,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "v546_replay_certified_factor_control",
+        "constraint_family": "threshold_guard",
+        "event_id": "event-6397-044",
+        "exact_success": false,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "capability_qualified_live_learner",
+        "constraint_family": "threshold_guard",
+        "event_id": "event-6397-044",
+        "exact_success": true,
+        "head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "frozen_baseline",
+        "constraint_family": "threshold_guard",
+        "event_id": "event-6397-045",
+        "exact_success": false,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "v546_replay_certified_factor_control",
+        "constraint_family": "threshold_guard",
+        "event_id": "event-6397-045",
+        "exact_success": false,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "capability_qualified_live_learner",
+        "constraint_family": "threshold_guard",
+        "event_id": "event-6397-045",
+        "exact_success": false,
+        "head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "frozen_baseline",
+        "constraint_family": "threshold_guard",
+        "event_id": "event-6397-046",
+        "exact_success": false,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "v546_replay_certified_factor_control",
+        "constraint_family": "threshold_guard",
+        "event_id": "event-6397-046",
+        "exact_success": false,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "capability_qualified_live_learner",
+        "constraint_family": "threshold_guard",
+        "event_id": "event-6397-046",
+        "exact_success": false,
+        "head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "frozen_baseline",
+        "constraint_family": "threshold_guard",
+        "event_id": "event-6397-047",
+        "exact_success": false,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "v546_replay_certified_factor_control",
+        "constraint_family": "threshold_guard",
+        "event_id": "event-6397-047",
+        "exact_success": false,
+        "head_hash": "sha256:eb56852b08412ca2a0d4c6d8a79f457fa9633b2284f6664c3675f0386a7a9618",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "arm": "capability_qualified_live_learner",
+        "constraint_family": "threshold_guard",
+        "event_id": "event-6397-047",
+        "exact_success": false,
+        "head_hash": "sha256:a34aa550a7393240312b2c77c63de240ecaac9728284bc06259a269caee5181b",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      }
+    ],
+    "protected_visible_before_head_freeze": false,
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.future_evaluation"
+  },
+  "verification_cost_results": {
+    "deterministic_cost": 0.42,
+    "error_count": 0,
+    "exact_checker_call_count": 42,
+    "latency_s": 0.021,
+    "restart_recovery_replay_count": 1,
+    "schema": "carnot.experiment_6397.transactional_continuous_factor_learning.v1.verification_cost"
+  },
+  "verifier_is_oracle": true
+}
