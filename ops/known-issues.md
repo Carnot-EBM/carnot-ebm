@@ -17690,3 +17690,57 @@ and more durable half of the answer is the convention change, not the lint: make
 a required artifact field for any comparative claim. A claim whose evidence is written down can
 be checked by a human in seconds; a claim whose evidence was never recorded cannot be checked
 by any tool. 57 of 60 recent artifacts are in the second category.
+
+## 2026-08-13 Kaggle v15 preview A/B: concurrency at REAL prompt size is worse than sequential
+
+First data from the preview-A/B channel (REQ-ARC-WMTE-6228 lineage, kernel v15). Free -- no
+submission slot consumed. 12 arms, 608s, on the real scored card.
+
+**FINDING 1: at induce-realistic prompt size, concurrency COSTS more than it saves.**
+
+| arm | k | wall | tok/s |
+|---|---|---|---|
+| base_k1_worst | 1 | **9.34s** | 27.41 |
+| base_k4_worst | 4 | **58.71s** | 17.44 |
+| base_k8_worst | 8 | **144.79s** | 14.14 |
+
+Four concurrent worst-case requests take 58.71s. Four SEQUENTIAL requests would take about
+4 x 9.34 = 37.4s. So concurrency is roughly 1.6x SLOWER than doing them one at a time, and
+per-stream throughput falls from 27.4 to 14.1 tok/s as k rises.
+
+At small prompts the picture inverts (k=4 small: 5.37s for 4x256 tokens, 190 tok/s aggregate
+against 7.37 tok/s at k=1), so batching helps when prompts are short and hurts when they are
+induce-sized. The scored path uses induce-sized prompts.
+
+**This settles exp6251's open caveat with a measurement.** That experiment reported
+`mean_batching_efficiency: 3.604` and I flagged in the artifact that the figure measures
+OVERLAP, not speed-up, because the sequential arm never ran. It is now measured on the scored
+hardware, and the honest reading is worse than "no speed-up": best-of-N over concurrent
+requests is more expensive in wall-clock than best-of-N run sequentially. Any future
+best-of-N design should assume concurrency is a cost, not a discount.
+
+**FINDING 2: `--parallel 8` breaks the induce prompt outright.** `slots8_k1_worst` returned
+HTTP 400: *"request (21880 tokens) exceeds the available context size (13312 tokens)"*. With
+`-c 106496 --parallel 8` each slot gets 13312 tokens and a real induce prompt (21879) does not
+fit. This CONFIRMS on the scored card what `_default_induce_n_ctx`'s docstring warned in
+prose: an explicit `--parallel` DIVIDES the pool and is strictly worse.
+
+Consequence for REQ-ARC-WMTE-6253: the `CARNOT_ARC_LLAMA_SERVER_SLOTS` knob shipped 2026-08-11
+changes only the n_ctx ARITHMETIC and never passes `--parallel`, which is why it is safe as
+shipped. Anyone who later wires `--parallel` to it must raise `-c` proportionally or the
+scored run will 400 on every induce call. The knob's docstring said this; it is now measured.
+
+**FINDING 3, and it is a real defect: the Kaggle code dataset is STALE.** The harness printed
+`constants=fallback:ImportError("cannot import name '_llama_server_slots' from
+carnot.agentic.arc_executable_world_model")`. The `carnot-agent-code` dataset on Kaggle does
+not contain the 2026-08-11 knob work, so the scored path runs OLDER code than this repo. Every
+arm above therefore measured the HARDWARE, not the shipped configuration -- which the harness
+said out loud in a `PREVIEW AB CONFIG WARNING`, exactly as designed.
+
+Two consequences: (a) the P4 config knobs are NOT on the scored card and will not be until the
+dataset is re-uploaded; (b) the guard that would have let this pass silently instead announced
+it, so the "loud fallback" design in the v15 harness earned its place on first contact.
+
+**Not fixed here.** Re-uploading the `carnot-agent-code` dataset is an external publishing
+action and stays operator-gated. It is the single cheapest thing that would make the scored run
+match this repo.
