@@ -1,0 +1,1303 @@
+{
+  "MODEL_SPECS": [
+    {
+      "autotokenizer_used": false,
+      "exists": true,
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "min_free_vram_mb": 20000,
+      "model_family": "qwen_moe",
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "prompt_tokens_for_default_prompt": 7,
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (7 exact prompt tokens)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "autotokenizer_used": false,
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "min_free_vram_mb": 20000,
+      "model_family": "gemma_dense",
+      "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "prompt_tokens_for_default_prompt": 8,
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (8 exact prompt tokens)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "autotokenizer_used": false,
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "min_free_vram_mb": 16000,
+      "model_family": "gemma_moe",
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "prompt_tokens_for_default_prompt": 8,
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (8 exact prompt tokens)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    }
+  ],
+  "autotokenizer_usage_count": 0,
+  "cached_sota_pair_receipts": {
+    "all_calls_made": true,
+    "calls": [
+      {
+        "gpu_indices": [
+          0,
+          1
+        ],
+        "model_indices": null,
+        "preferred_quant": "Q4_K_M"
+      },
+      {
+        "gpu_indices": [
+          0,
+          1
+        ],
+        "model_indices": [
+          0,
+          2
+        ],
+        "preferred_quant": "Q4_K_M"
+      }
+    ]
+  },
+  "child_exit_signal_timeout_and_usage_receipts_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "contract_ok": true,
+      "returncode": 0,
+      "root_cause_inferred": false,
+      "signal": null,
+      "timed_out": false,
+      "usage": {
+        "completion_tokens": 2,
+        "prompt_tokens": 7,
+        "total_tokens": 9
+      },
+      "usage_receipt_valid": true
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "contract_ok": true,
+      "returncode": 0,
+      "root_cause_inferred": false,
+      "signal": null,
+      "timed_out": false,
+      "usage": {
+        "completion_tokens": 2,
+        "prompt_tokens": 8,
+        "total_tokens": 10
+      },
+      "usage_receipt_valid": true
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "contract_ok": true,
+      "returncode": 0,
+      "root_cause_inferred": false,
+      "signal": null,
+      "timed_out": false,
+      "usage": {
+        "completion_tokens": 2,
+        "prompt_tokens": 8,
+        "total_tokens": 10
+      },
+      "usage_receipt_valid": true
+    }
+  },
+  "dispatcher_and_process_identity_receipts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "argv_sanitized": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "\nimport gc\nimport json\nimport os\nimport subprocess\nimport sys\nimport time\n\n\ndef emit(name, payload):\n    sys.stderr.writ...<truncated>... \"authenticated_gpu_offload\": supports and int(sampling[\"n_gpu_layers\"]) != 0})\n",
+        "{\"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"model_path\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth--Q...<truncated>..._ctx\": 512, \"n_gpu_layers\": -1, \"temperature\": 0.0, \"top_p\": 1.0}, \"seed\": 6365}"
+      ],
+      "dispatcher": "llama_cpp_python_child_per_gpu",
+      "pid": 1447970,
+      "process_identity": {
+        "cmdline": "",
+        "exists": true,
+        "pid": 1447970,
+        "ppid": 1447837,
+        "process_group_id": 1447970,
+        "session_id": 1447970
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "argv_sanitized": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "\nimport gc\nimport json\nimport os\nimport subprocess\nimport sys\nimport time\n\n\ndef emit(name, payload):\n    sys.stderr.writ...<truncated>... \"authenticated_gpu_offload\": supports and int(sampling[\"n_gpu_layers\"]) != 0})\n",
+        "{\"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"model_path\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth...<truncated>..._ctx\": 512, \"n_gpu_layers\": -1, \"temperature\": 0.0, \"top_p\": 1.0}, \"seed\": 6365}"
+      ],
+      "dispatcher": "llama_cpp_python_child_per_gpu",
+      "pid": 1448101,
+      "process_identity": {
+        "cmdline": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c \nimport gc\nimport json\nimport os\nimport subprocess\nimport sys\nimport time\n\n\ndef emit(name, payload):\n    sys.stderr.write(\"\\nCARNOT_%s:%s\\n\" % (name, json.dumps(payload, sort_keys=True)))\n    sys.stderr.flush()\n\n\ndef sample(model_id, phase):\n    try:\n        out = subprocess.check_output(\n            [\n                \"nvidia-smi\",\n                \"--query-gpu=index,memory.used,memory.free,utilization.gpu\",\n                \"--format=csv,noheader,nounits\",\n            ],\n            text=True,\n            timeout=5,\n        )\n        rows = []\n        for line in out.splitlines():\n            parts = [part.strip() for part in line.split(\",\")]\n            if len(parts) >= 4:\n                rows.append(\n                    {\n                        \"model_hf_id\": model_id,\n                        \"phase\": phase,\n                        \"gpu_index\": int(parts[0]),\n                        \"timestamp_utc\": time.strftime(\"%Y-%m-%dT%H:%M:%SZ\", time.gmtime()),\n                        \"memory_used_mb\": int(float(parts[1])),\n                        \"memory_free_mb\": int(float(parts[2])),\n                        \"utilization_pct\": int(float(parts[3])),\n                        \"process_identity\": {\n                            \"pid\": os.getpid(),\n                            \"ppid\": os.getppid(),\n                            \"cmdline\": \"llama_cpp observable child\",\n                        },\n                    }\n                )\n        emit(\"GPU_SAMPLE\", {\"phase\": phase, \"rows\": rows})\n    except Exception as exc:\n        emit(\"GPU_SAMPLE\", {\"phase\": phase, \"rows\": [], \"error\": \"%s: %s\" % (type(exc).__name__, exc)})\n\n\ndef timing(phase, started, ended):\n    emit(\"PHASE\", {\"phase\": phase, \"started_ns\": started, \"ended_ns\": ended, \"duration_s\": (ended - started) / 1000000000})\n\n\nargs = json.loads(sys.argv[1])\nmodel_id = args[\"model_hf_id\"]\nprompt = args[\"prompt\"]\nsampling = args[\"sampling\"]\nsample(model_id, \"before_load\")\n\nfrom llama_cpp import Llama, llama_cpp\n\nsupports = bool(llama_cpp.llama_supports_gpu_offload())\nload_start = time.time_ns()\nllm = Llama(\n    model_path=args[\"model_path\"],\n    n_ctx=int(sampling[\"n_ctx\"]),\n    n_gpu_layers=int(sampling[\"n_gpu_layers\"]),\n    main_gpu=0,\n    n_batch=64,\n    n_ubatch=64,\n    seed=int(args[\"seed\"]),\n    verbose=False,\n)\nload_end = time.time_ns()\ntiming(\"load\", load_start, load_end)\nsample(model_id, \"after_load\")\n\nprompt_start = time.time_ns()\nprompt_tokens = len(llm.tokenize(prompt.encode(\"utf-8\")))\nprompt_end = time.time_ns()\ntiming(\"prompt\", prompt_start, prompt_end)\n\ngen_start = time.time_ns()\nsample(model_id, \"during_generation\")\nresult = llm.create_completion(\n    prompt,\n    max_tokens=int(sampling[\"max_tokens\"]),\n    temperature=float(sampling[\"temperature\"]),\n    top_p=float(sampling[\"top_p\"]),\n    echo=False,\n)\ntext = str(result.get(\"choices\", [{}])[0].get(\"text\", \"\"))\nsys.stdout.buffer.write(text.encode(\"utf-8\", \"replace\"))\nsys.stdout.flush()\nusage = dict(result.get(\"usage\", {}))\nif int(usage.get(\"prompt_tokens\", 0) or 0) <= 0:\n    usage[\"prompt_tokens\"] = prompt_tokens\nif int(usage.get(\"completion_tokens\", 0) or 0) <= 0:\n    usage[\"completion_tokens\"] = max(1, len(llm.tokenize(text.encode(\"utf-8\"))))\nusage[\"total_tokens\"] = int(usage[\"prompt_tokens\"]) + int(usage[\"completion_tokens\"])\nemit(\"USAGE\", usage)\ngen_end = time.time_ns()\ntiming(\"generate\", gen_start, gen_end)\n\nunload_start = time.time_ns()\nclose = getattr(llm, \"close\", None)\nif callable(close):\n    close()\ndel llm\ngc.collect()\nunload_end = time.time_ns()\ntiming(\"unload\", unload_start, unload_end)\nsample(model_id, \"after_unload\")\ncleanup_start = time.time_ns()\ngc.collect()\ncleanup_end = time.time_ns()\ntiming(\"cleanup\", cleanup_start, cleanup_end)\nemit(\"OFFLOAD\", {\"llama_supports_gpu_offload\": supports, \"authenticated_gpu_offload\": supports and int(sampling[\"n_gpu_layers\"]) != 0})\n {\"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"model_path\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf\", \"prompt\": \"Return one short word. Ready?\", \"sampling\": {\"max_tokens\": 2, \"n_ctx\": 512, \"n_gpu_layers\": -1, \"temperature\": 0.0, \"top_p\": 1.0}, \"seed\": 6365}",
+        "exists": true,
+        "pid": 1448101,
+        "ppid": 1447837,
+        "process_group_id": 1448101,
+        "session_id": 1448101
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "argv_sanitized": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "\nimport gc\nimport json\nimport os\nimport subprocess\nimport sys\nimport time\n\n\ndef emit(name, payload):\n    sys.stderr.writ...<truncated>... \"authenticated_gpu_offload\": supports and int(sampling[\"n_gpu_layers\"]) != 0})\n",
+        "{\"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"model_path\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth--ge...<truncated>..._ctx\": 512, \"n_gpu_layers\": -1, \"temperature\": 0.0, \"top_p\": 1.0}, \"seed\": 6365}"
+      ],
+      "dispatcher": "llama_cpp_python_child_per_gpu",
+      "pid": 1448048,
+      "process_identity": {
+        "cmdline": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c \nimport gc\nimport json\nimport os\nimport subprocess\nimport sys\nimport time\n\n\ndef emit(name, payload):\n    sys.stderr.write(\"\\nCARNOT_%s:%s\\n\" % (name, json.dumps(payload, sort_keys=True)))\n    sys.stderr.flush()\n\n\ndef sample(model_id, phase):\n    try:\n        out = subprocess.check_output(\n            [\n                \"nvidia-smi\",\n                \"--query-gpu=index,memory.used,memory.free,utilization.gpu\",\n                \"--format=csv,noheader,nounits\",\n            ],\n            text=True,\n            timeout=5,\n        )\n        rows = []\n        for line in out.splitlines():\n            parts = [part.strip() for part in line.split(\",\")]\n            if len(parts) >= 4:\n                rows.append(\n                    {\n                        \"model_hf_id\": model_id,\n                        \"phase\": phase,\n                        \"gpu_index\": int(parts[0]),\n                        \"timestamp_utc\": time.strftime(\"%Y-%m-%dT%H:%M:%SZ\", time.gmtime()),\n                        \"memory_used_mb\": int(float(parts[1])),\n                        \"memory_free_mb\": int(float(parts[2])),\n                        \"utilization_pct\": int(float(parts[3])),\n                        \"process_identity\": {\n                            \"pid\": os.getpid(),\n                            \"ppid\": os.getppid(),\n                            \"cmdline\": \"llama_cpp observable child\",\n                        },\n                    }\n                )\n        emit(\"GPU_SAMPLE\", {\"phase\": phase, \"rows\": rows})\n    except Exception as exc:\n        emit(\"GPU_SAMPLE\", {\"phase\": phase, \"rows\": [], \"error\": \"%s: %s\" % (type(exc).__name__, exc)})\n\n\ndef timing(phase, started, ended):\n    emit(\"PHASE\", {\"phase\": phase, \"started_ns\": started, \"ended_ns\": ended, \"duration_s\": (ended - started) / 1000000000})\n\n\nargs = json.loads(sys.argv[1])\nmodel_id = args[\"model_hf_id\"]\nprompt = args[\"prompt\"]\nsampling = args[\"sampling\"]\nsample(model_id, \"before_load\")\n\nfrom llama_cpp import Llama, llama_cpp\n\nsupports = bool(llama_cpp.llama_supports_gpu_offload())\nload_start = time.time_ns()\nllm = Llama(\n    model_path=args[\"model_path\"],\n    n_ctx=int(sampling[\"n_ctx\"]),\n    n_gpu_layers=int(sampling[\"n_gpu_layers\"]),\n    main_gpu=0,\n    n_batch=64,\n    n_ubatch=64,\n    seed=int(args[\"seed\"]),\n    verbose=False,\n)\nload_end = time.time_ns()\ntiming(\"load\", load_start, load_end)\nsample(model_id, \"after_load\")\n\nprompt_start = time.time_ns()\nprompt_tokens = len(llm.tokenize(prompt.encode(\"utf-8\")))\nprompt_end = time.time_ns()\ntiming(\"prompt\", prompt_start, prompt_end)\n\ngen_start = time.time_ns()\nsample(model_id, \"during_generation\")\nresult = llm.create_completion(\n    prompt,\n    max_tokens=int(sampling[\"max_tokens\"]),\n    temperature=float(sampling[\"temperature\"]),\n    top_p=float(sampling[\"top_p\"]),\n    echo=False,\n)\ntext = str(result.get(\"choices\", [{}])[0].get(\"text\", \"\"))\nsys.stdout.buffer.write(text.encode(\"utf-8\", \"replace\"))\nsys.stdout.flush()\nusage = dict(result.get(\"usage\", {}))\nif int(usage.get(\"prompt_tokens\", 0) or 0) <= 0:\n    usage[\"prompt_tokens\"] = prompt_tokens\nif int(usage.get(\"completion_tokens\", 0) or 0) <= 0:\n    usage[\"completion_tokens\"] = max(1, len(llm.tokenize(text.encode(\"utf-8\"))))\nusage[\"total_tokens\"] = int(usage[\"prompt_tokens\"]) + int(usage[\"completion_tokens\"])\nemit(\"USAGE\", usage)\ngen_end = time.time_ns()\ntiming(\"generate\", gen_start, gen_end)\n\nunload_start = time.time_ns()\nclose = getattr(llm, \"close\", None)\nif callable(close):\n    close()\ndel llm\ngc.collect()\nunload_end = time.time_ns()\ntiming(\"unload\", unload_start, unload_end)\nsample(model_id, \"after_unload\")\ncleanup_start = time.time_ns()\ngc.collect()\ncleanup_end = time.time_ns()\ntiming(\"cleanup\", cleanup_start, cleanup_end)\nemit(\"OFFLOAD\", {\"llama_supports_gpu_offload\": supports, \"authenticated_gpu_offload\": supports and int(sampling[\"n_gpu_layers\"]) != 0})\n {\"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"model_path\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf\", \"prompt\": \"Return one short word. Ready?\", \"sampling\": {\"max_tokens\": 2, \"n_ctx\": 512, \"n_gpu_layers\": -1, \"temperature\": 0.0, \"top_p\": 1.0}, \"seed\": 6365}",
+        "exists": true,
+        "pid": 1448048,
+        "ppid": 1447837,
+        "process_group_id": 1448048,
+        "session_id": 1448048
+      }
+    }
+  },
+  "duration_s": 77.954276424,
+  "embedded_gguf_tokenizer_receipts": [
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (7 exact prompt tokens)",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "prompt_tokens_for_default_prompt": 7
+    },
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (8 exact prompt tokens)",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "prompt_tokens_for_default_prompt": 8
+    },
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (8 exact prompt tokens)",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "prompt_tokens_for_default_prompt": 8
+    }
+  ],
+  "exp6352_source_artifact_sampling_drift": {
+    "artifact_max_tokens_values": [
+      128
+    ],
+    "artifact_process_n_ctx_values": [
+      512
+    ],
+    "n_ctx_mismatch": true,
+    "root_cause_inferred": false,
+    "source_max_tokens": 128,
+    "source_sampling": {
+      "max_tokens": 128,
+      "n_ctx": 2048,
+      "n_gpu_layers": -1,
+      "temperature": 0.2,
+      "top_p": 0.9
+    },
+    "source_sampling_n_ctx": 2048,
+    "top_level_random_seed_present": false
+  },
+  "failure_injection_matrix": {
+    "all_diagnostics_preserved": true,
+    "all_fail_closed": true,
+    "rows": [
+      {
+        "contract_ok": false,
+        "diagnostics_preserved": true,
+        "fail_closed": true,
+        "injection": "nonzero_exit",
+        "returncode": 3,
+        "stderr_bytes": 2,
+        "stdout_bytes": 2,
+        "timed_out": false,
+        "usage_receipt_valid": false
+      },
+      {
+        "contract_ok": false,
+        "diagnostics_preserved": true,
+        "fail_closed": true,
+        "injection": "timeout",
+        "returncode": -9,
+        "stderr_bytes": 0,
+        "stdout_bytes": 0,
+        "timed_out": true,
+        "usage_receipt_valid": false
+      },
+      {
+        "contract_ok": false,
+        "diagnostics_preserved": true,
+        "fail_closed": true,
+        "injection": "empty_stdout",
+        "returncode": 0,
+        "stderr_bytes": 0,
+        "stdout_bytes": 0,
+        "timed_out": false,
+        "usage_receipt_valid": false
+      },
+      {
+        "contract_ok": false,
+        "diagnostics_preserved": true,
+        "fail_closed": true,
+        "injection": "malformed_usage_receipt",
+        "returncode": 0,
+        "stderr_bytes": 19,
+        "stdout_bytes": 2,
+        "timed_out": false,
+        "usage_receipt_valid": false
+      },
+      {
+        "contract_ok": false,
+        "diagnostics_preserved": true,
+        "fail_closed": true,
+        "injection": "context_overflow",
+        "reason": "context capacity margin negative"
+      },
+      {
+        "contract_ok": false,
+        "diagnostics_preserved": true,
+        "fail_closed": true,
+        "injection": "source_drift",
+        "reason": "source hash mismatch"
+      },
+      {
+        "contract_ok": false,
+        "diagnostics_preserved": true,
+        "fail_closed": true,
+        "injection": "missing_gpu_sample",
+        "reason": "required GPU phase absent"
+      }
+    ]
+  },
+  "field_principles": {
+    "MODEL_SPECS": "The measured matrix contains only the three required GGUF ids.",
+    "autotokenizer_usage_count": "Bare zero proves no Hugging Face tokenizer side channel was used.",
+    "cached_sota_pair_receipts": "Helper-call receipts prevent manual model substitution.",
+    "child_exit_signal_timeout_and_usage_receipts_by_model": "Exit, signal, timeout, and usage receipts define child success.",
+    "dispatcher_and_process_identity_receipts": "Dispatcher and PID receipts explain how each child ran.",
+    "duration_s": "Wall time is measured without padding.",
+    "embedded_gguf_tokenizer_receipts": "Tokenizer counting uses GGUF metadata, not AutoTokenizer.",
+    "exp6352_source_artifact_sampling_drift": "Sampling drift explains why source and artifact receipts disagree.",
+    "failure_injection_matrix": "Injected failures prove the contract fails closed with diagnostics.",
+    "field_principles": "Every required field states the audit failure it prevents.",
+    "field_provenance": "Every required field identifies measured, derived, source, or constant origin.",
+    "gguf_runtime_observability_ready_score": "The score is one only when all runtime-observability gates pass.",
+    "honest_verdict": "The verdict uses a terminal prefix and avoids quality claims.",
+    "inference_substrate": "The substrate is local llama.cpp child-process runtime observation.",
+    "live_autoregressive_generation_invoked_by_model": "Each model row states whether a real completion occurred.",
+    "llama_cpp_gpu_offload_support_receipt": "GPU offload support must be queried from llama.cpp itself.",
+    "load_prompt_generate_unload_cleanup_timings_by_model": "Phase timing separates load, prompt, generation, unload, and cleanup.",
+    "model_file_hashes_revisions_quantizations_and_tokenizers": "Exact model files and tokenizer methods are pinned.",
+    "models_used": "Only rows that satisfy the child contract count as used models.",
+    "no_proposal_quality_or_utility_claim": "The artifact must not claim proposal quality, accuracy, or utility.",
+    "preconditions_checked": "Preconditions record GPU, model, tokenizer, disk, RAM, process, and VRAM checks.",
+    "prompt_token_context_capacity_receipts_by_model": "Context capacity is checked before model load.",
+    "protected_files_unchanged": "Protected files stay byte-identical during the run.",
+    "random_seed": "A fixed seed makes the runtime prompts reproducible.",
+    "raw_output_paths_hashes_and_byte_counts": "Raw bytes are frozen before any downstream parse.",
+    "reconstructed_exp6352_command_and_source_receipt": "The prior command and source are reconstructed before rerun.",
+    "reproducibility_checksum": "The normalized payload is content-addressed.",
+    "source_command_prompt_and_environment_hashes_by_call": "Hashes bind source, command, prompt, and allowed environment.",
+    "status": "The status separates blocked preconditions from complete runtime evidence.",
+    "stdout_stderr_sidecar_paths_hashes_and_bounded_excerpts": "Full child output is retained while the artifact stays bounded.",
+    "task_linked_gpu_samples_by_model_and_phase": "GPU samples are linked to model id and runtime phase.",
+    "tests_run": "Verification commands and exit codes are recorded.",
+    "upstream_exp6352_path_hash_and_terminal_class": "The failed upstream artifact is hash-bound before diagnosis.",
+    "verifier_is_oracle": "False because this task checks runtime authenticity, not proposal correctness.",
+    "vram_rise_and_release_receipts_by_model": "VRAM rise and release prove real GPU loading and cleanup."
+  },
+  "field_provenance": {
+    "MODEL_SPECS": "constant",
+    "autotokenizer_usage_count": "constant",
+    "cached_sota_pair_receipts": "measured child data",
+    "child_exit_signal_timeout_and_usage_receipts_by_model": "measured child data",
+    "dispatcher_and_process_identity_receipts": "measured child data",
+    "duration_s": "measured child data",
+    "embedded_gguf_tokenizer_receipts": "measured child data",
+    "exp6352_source_artifact_sampling_drift": "derived check",
+    "failure_injection_matrix": "derived check",
+    "field_principles": "constant",
+    "field_provenance": "constant",
+    "gguf_runtime_observability_ready_score": "derived check",
+    "honest_verdict": "derived check",
+    "inference_substrate": "constant",
+    "live_autoregressive_generation_invoked_by_model": "measured child data",
+    "llama_cpp_gpu_offload_support_receipt": "measured child data",
+    "load_prompt_generate_unload_cleanup_timings_by_model": "measured child data",
+    "model_file_hashes_revisions_quantizations_and_tokenizers": "source hash",
+    "models_used": "measured child data",
+    "no_proposal_quality_or_utility_claim": "constant",
+    "preconditions_checked": "derived check",
+    "prompt_token_context_capacity_receipts_by_model": "derived check",
+    "protected_files_unchanged": "source hash",
+    "random_seed": "constant",
+    "raw_output_paths_hashes_and_byte_counts": "measured child data",
+    "reconstructed_exp6352_command_and_source_receipt": "source hash",
+    "reproducibility_checksum": "derived check",
+    "source_command_prompt_and_environment_hashes_by_call": "measured child data",
+    "status": "derived check",
+    "stdout_stderr_sidecar_paths_hashes_and_bounded_excerpts": "measured child data",
+    "task_linked_gpu_samples_by_model_and_phase": "measured child data",
+    "tests_run": "derived check",
+    "upstream_exp6352_path_hash_and_terminal_class": "source hash",
+    "verifier_is_oracle": "constant",
+    "vram_rise_and_release_receipts_by_model": "derived check"
+  },
+  "gguf_runtime_observability_ready_score": 1.0,
+  "honest_verdict": "complete: all three GGUF child-process runtime contracts passed",
+  "inference_substrate": "local_llama_cpp_gguf_observable_child_process_contract",
+  "live_autoregressive_generation_invoked_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": true,
+    "unsloth/gemma-4-26B-A4B-it-GGUF": true,
+    "unsloth/gemma-4-31B-it-GGUF": true
+  },
+  "llama_cpp_gpu_offload_support_receipt": {
+    "llama_supports_gpu_offload": true,
+    "system_info_excerpt": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
+    "system_info_sha256": "sha256:959e16c2eadaf9b8856c780a0fa8d811ad90ce2b48559d357857efbe8049b261"
+  },
+  "load_prompt_generate_unload_cleanup_timings_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "child_process": {
+        "duration_s": 9.949346394,
+        "ended_ns": 1786591917383630492,
+        "started_ns": 1786591907434284098
+      },
+      "cleanup": {
+        "duration_s": 0.007315078,
+        "ended_ns": 1786591917141907299,
+        "started_ns": 1786591917134592221
+      },
+      "generate": {
+        "duration_s": 0.134357092,
+        "ended_ns": 1786591917024480683,
+        "started_ns": 1786591916890123591
+      },
+      "load": {
+        "duration_s": 9.214619694,
+        "ended_ns": 1786591916857792792,
+        "started_ns": 1786591907643173098
+      },
+      "prompt": {
+        "duration_s": 0.000591611,
+        "ended_ns": 1786591916890106499,
+        "started_ns": 1786591916889514888
+      },
+      "unload": {
+        "duration_s": 0.077892227,
+        "ended_ns": 1786591917102387348,
+        "started_ns": 1786591917024495121
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "child_process": {
+        "duration_s": 8.078765716,
+        "ended_ns": 1786591938991091876,
+        "started_ns": 1786591930912326160
+      },
+      "cleanup": {
+        "duration_s": 0.007541643,
+        "ended_ns": 1786591938738568003,
+        "started_ns": 1786591938731026360
+      },
+      "generate": {
+        "duration_s": 0.099347801,
+        "ended_ns": 1786591938593255799,
+        "started_ns": 1786591938493907998
+      },
+      "load": {
+        "duration_s": 7.355008329,
+        "ended_ns": 1786591938462993619,
+        "started_ns": 1786591931107985290
+      },
+      "prompt": {
+        "duration_s": 0.00062256,
+        "ended_ns": 1786591938493879906,
+        "started_ns": 1786591938493257346
+      },
+      "unload": {
+        "duration_s": 0.106600552,
+        "ended_ns": 1786591938699883993,
+        "started_ns": 1786591938593283441
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "child_process": {
+        "duration_s": 9.097060406,
+        "ended_ns": 1786591928650641998,
+        "started_ns": 1786591919553581592
+      },
+      "cleanup": {
+        "duration_s": 0.004423668,
+        "ended_ns": 1786591928409077165,
+        "started_ns": 1786591928404653497
+      },
+      "generate": {
+        "duration_s": 0.164104328,
+        "ended_ns": 1786591928266560359,
+        "started_ns": 1786591928102456031
+      },
+      "load": {
+        "duration_s": 8.265948624,
+        "ended_ns": 1786591928068633690,
+        "started_ns": 1786591919802685066
+      },
+      "prompt": {
+        "duration_s": 0.000520047,
+        "ended_ns": 1786591928102429321,
+        "started_ns": 1786591928101909274
+      },
+      "unload": {
+        "duration_s": 0.106853808,
+        "ended_ns": 1786591928373436529,
+        "started_ns": 1786591928266582721
+      }
+    }
+  },
+  "model_file_hashes_revisions_quantizations_and_tokenizers": [
+    {
+      "exists": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "exists": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    },
+    {
+      "exists": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only"
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "no_proposal_quality_or_utility_claim": true,
+  "preconditions_checked": {
+    "all_embedded_tokenizers_loadable": true,
+    "all_model_files_resolved": true,
+    "all_preconditions_passed": true,
+    "autotokenizer_usage_count": 0,
+    "blocked_reasons": [],
+    "both_rtx_3090_gpus_present": true,
+    "date": "20260813",
+    "disk_free_gb": 1111.028,
+    "disk_ready": true,
+    "gpu_snapshot": {
+      "devices": [
+        {
+          "index": 0,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 0
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 0
+        }
+      ],
+      "ok": true,
+      "timestamp_utc": "2026-08-13T03:31:45Z"
+    },
+    "llama_supports_gpu_offload": true,
+    "protected_training_pids": [],
+    "protected_training_process_present": false,
+    "ram_ready": true,
+    "sequential_vram_ready": true,
+    "vram_probe_model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "vram_probe_proved_rise_before_cuda_ready": true
+  },
+  "prompt_token_context_capacity_receipts_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "capacity_margin": 503,
+      "fits": true,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "n_ctx": 512,
+      "prompt_tokens": 7,
+      "requested_output_tokens": 2
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "capacity_margin": 502,
+      "fits": true,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "n_ctx": 512,
+      "prompt_tokens": 8,
+      "requested_output_tokens": 2
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "capacity_margin": 502,
+      "fits": true,
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "n_ctx": 512,
+      "prompt_tokens": 8,
+      "requested_output_tokens": 2
+    }
+  },
+  "protected_files_unchanged": {
+    "after_hash": "sha256:c7e39670935b746a31783ba3ed39ca298337522e0b875f7c44d1cd14675045ad",
+    "before_hash": "sha256:c7e39670935b746a31783ba3ed39ca298337522e0b875f7c44d1cd14675045ad",
+    "changed_paths": [],
+    "ops_ledgers_untouched": true,
+    "scripts_research_conductor_py_untouched": true,
+    "unchanged": true
+  },
+  "random_seed": 6365,
+  "raw_output_paths_hashes_and_byte_counts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "raw_bytes_nonempty_before_parse": true,
+      "raw_output_bytes": 9,
+      "raw_output_path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6365_gguf_child_failure_forensics/sidecars/unsloth--qwen3.6-35b-a3b-gguf.stdout.txt",
+      "raw_output_sha256": "sha256:a13b425e76759d7b611dd3d4ce5e072db18233faf91c97f2652f7e3e43565262"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "raw_bytes_nonempty_before_parse": true,
+      "raw_output_bytes": 6,
+      "raw_output_path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6365_gguf_child_failure_forensics/sidecars/unsloth--gemma-4-26b-a4b-it-gguf.stdout.txt",
+      "raw_output_sha256": "sha256:a3786c0d039c260d3d13d0ab6a2203a32b76bc39b11bb152d750685813281f7b"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "raw_bytes_nonempty_before_parse": true,
+      "raw_output_bytes": 7,
+      "raw_output_path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6365_gguf_child_failure_forensics/sidecars/unsloth--gemma-4-31b-it-gguf.stdout.txt",
+      "raw_output_sha256": "sha256:704d7101543cd537d8caac1a129fbd869aa98bb1ad2d2a6db76996436752290a"
+    }
+  },
+  "reconstructed_exp6352_command_and_source_receipt": {
+    "child_command_template": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-c",
+      "Exp6352 embedded child code from live_llama_cpp_generation",
+      "<json child args>"
+    ],
+    "environment_receipt_available": false,
+    "process_receipts_by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "argv_sha256": "sha256:05770b81ec2acb52c6dc9736e1969f526100e36a2a37803c6a907687ae816622",
+        "command_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "exit_state": {
+          "returncode": 1,
+          "timed_out": false
+        },
+        "sampling": {
+          "max_tokens": 128,
+          "n_ctx": 512,
+          "n_gpu_layers": -1,
+          "temperature": 0.2,
+          "top_p": 0.9
+        },
+        "seed": 635202
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "argv_sha256": "sha256:91f4d97644ea196e179376f2e9eea03526e27eee95afc85f14ce6942ab970abe",
+        "command_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "exit_state": {
+          "returncode": 1,
+          "timed_out": false
+        },
+        "sampling": {
+          "max_tokens": 128,
+          "n_ctx": 512,
+          "n_gpu_layers": -1,
+          "temperature": 0.2,
+          "top_p": 0.9
+        },
+        "seed": 635204
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "argv_sha256": "sha256:44c62ba378ab3bab038a245db6b71bfaf0f9eff6cc2c650996abffe69816de18",
+        "command_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "exit_state": {
+          "returncode": 1,
+          "timed_out": false
+        },
+        "sampling": {
+          "max_tokens": 128,
+          "n_ctx": 512,
+          "n_gpu_layers": -1,
+          "temperature": 0.2,
+          "top_p": 0.9
+        },
+        "seed": 635203
+      }
+    },
+    "prompt_hashes_by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": "sha256:4fb83070349e6c55ba22f349355d8afc3de0b725cfd4e2dd1f088619e74ec5c6",
+      "unsloth/gemma-4-26B-A4B-it-GGUF": "sha256:633d4f9bc9715018cff94934d507792f3343b72633f5b10018d70cfe027a87b6",
+      "unsloth/gemma-4-31B-it-GGUF": "sha256:7584ee7652c5e72793cbd52aa219aa7053f2168a60db9405bfeccfb515560de9"
+    },
+    "run_command": ".venv/bin/python -m carnot.experiment_6352_live_factor_proposal_authenticity_preflight --date 20260812",
+    "source_git_commit": "0f88ec230beb31246420a818b08af2a1fef71242",
+    "source_path": "python/carnot/experiment_6352_live_factor_proposal_authenticity_preflight.py",
+    "source_sha256": "sha256:ff25c38c69adbebc35348c5efec6593319ad6e4b499ea3c802f786769fba4f04"
+  },
+  "reproducibility_checksum": "sha256:81d0b78ea5e869c7a67731e7bd8fa401eb6c0fc394b49549b324e542c445e7a5",
+  "source_command_prompt_and_environment_hashes_by_call": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "argv_sha256": "sha256:d72c7bac7d90bd453109d45603cd9b990b2ca1f4bec9077c3e9512e3e058aafa",
+      "command_hash": "sha256:d72c7bac7d90bd453109d45603cd9b990b2ca1f4bec9077c3e9512e3e058aafa",
+      "environment_allowlist_hash": "sha256:08e9213566be83657538645776419c6e97186ae466bab985f6f686ab52fc785d",
+      "prompt_sha256": "sha256:b79918799bfb16f4d7be553fb615baa8bc6837eb9b1b57ed3df90bdf3b94ec93",
+      "source_hash": "sha256:1e6ba1cdca3469be4c1d3aa3c2147eebdad99cfd4de8c3826db13b6d1d7e35f2"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "argv_sha256": "sha256:bccbb98e25f272ce321dd49194994573287dbc8c7e22eb30207346a2d52dd1c8",
+      "command_hash": "sha256:bccbb98e25f272ce321dd49194994573287dbc8c7e22eb30207346a2d52dd1c8",
+      "environment_allowlist_hash": "sha256:3e631fe1ac83f5515a616179632df64e637f5fe9178a579b73e28b6e1dded77a",
+      "prompt_sha256": "sha256:b79918799bfb16f4d7be553fb615baa8bc6837eb9b1b57ed3df90bdf3b94ec93",
+      "source_hash": "sha256:1e6ba1cdca3469be4c1d3aa3c2147eebdad99cfd4de8c3826db13b6d1d7e35f2"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "argv_sha256": "sha256:ee698d50d9061da791b898290d9314c6377e45ab8c2e6b639320b93f349e8b7d",
+      "command_hash": "sha256:ee698d50d9061da791b898290d9314c6377e45ab8c2e6b639320b93f349e8b7d",
+      "environment_allowlist_hash": "sha256:3e631fe1ac83f5515a616179632df64e637f5fe9178a579b73e28b6e1dded77a",
+      "prompt_sha256": "sha256:b79918799bfb16f4d7be553fb615baa8bc6837eb9b1b57ed3df90bdf3b94ec93",
+      "source_hash": "sha256:1e6ba1cdca3469be4c1d3aa3c2147eebdad99cfd4de8c3826db13b6d1d7e35f2"
+    }
+  },
+  "status": "complete",
+  "stdout_stderr_sidecar_paths_hashes_and_bounded_excerpts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "stderr_byte_count": 3568,
+      "stderr_excerpt": "\nCARNOT_GPU_SAMPLE:{\"phase\": \"before_load\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"phase\": \"before_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1447970, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:31:47Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"phase\": \"before_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1447970, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:31:47Z\", \"utilization_pct\": 0}]}\nggml_cuda_init: found 1 CUDA devices (Total VRAM: 24123 MiB):\n  Device 0: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24123 MiB\n\nCARNOT_PHASE:{\"duration_s\": 9.214619694, \"ended_ns\": 1786591916857792792, \"phase\": \"load\", \"started_ns\": 1786591907643173098}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"after_load\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 2875, \"memory_used_mb\": 21249, \"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"phase\": \"after_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1447970, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:31:56Z\", \"utilization_pct\": 68}, {\"gpu_index\": 1, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"phase\": \"after_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1447970, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:31:56Z\", \"utilization_pct\": 0}]}\n\nCARNOT_PHASE:{\"duration_s\": 0.000591611, \"ended_ns\": 1786591916890106499, \"phase\": \"prompt\", \"started_ns\": 1786591916889514888}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"during_generation\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 2875, \"memory_used_mb\": 21249, \"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"phase\": \"during_generation\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1447970, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:31:56Z\", \"utilization_pct\": 68}, {\"gpu_index\": 1, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"phase\": \"during_generation\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1447970, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:31:56Z\", \"utilization_pct\": 0}]}\n\nCARNOT_USAGE:{\"completion_tokens\": 2, \"prompt_tokens\": 7, \"total_tokens\": 9}\n\nCARNOT_PHASE:{\"duration_s\": 0.134357092, \"ended_ns\": 1786591917024480683, \"phase\": \"generate\", \"started_ns\": 1786591916890123591}\n\nCARNOT_PHASE:{\"duration_s\": 0.077892227, \"ended_ns\": 1786591917102387348, \"phase\": \"unload\", \"started_ns\": 1786591917024495121}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"after_unload\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23567, \"memory_used_mb\": 557, \"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"phase\": \"after_unload\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1447970, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:31:57Z\", \"utilization_pct\": 68}, {\"gpu_index\": 1, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/Qwen3.6-35B-A3B-GGUF\", \"phase\": \"after_unload\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1447970, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:31:57Z\", \"utilization_pct\": 0}]}\n\nCARNOT_PHASE:{\"duration_s\": 0.007315078, \"ended_ns\": 1786591917141907299, \"phase\": \"cleanup\", \"started_ns\": 1786591917134592221}\n\nCARNOT_OFFLOAD:{\"authenticated_gpu_offload\": true, \"llama_supports_gpu_offload\": true}\n",
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6365_gguf_child_failure_forensics/sidecars/unsloth--qwen3.6-35b-a3b-gguf.stderr.txt",
+      "stderr_sha256": "sha256:920f636f5c956d0ccb5e52ecd3092700e9d2eba55b388f92b8b2ff1065aaae12",
+      "stdout_byte_count": 9,
+      "stdout_excerpt": "\n\n<think>",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6365_gguf_child_failure_forensics/sidecars/unsloth--qwen3.6-35b-a3b-gguf.stdout.txt",
+      "stdout_sha256": "sha256:a13b425e76759d7b611dd3d4ce5e072db18233faf91c97f2652f7e3e43565262"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "stderr_byte_count": 3953,
+      "stderr_excerpt": "\nCARNOT_GPU_SAMPLE:{\"phase\": \"before_load\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"phase\": \"before_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1448101, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:32:10Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"phase\": \"before_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1448101, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:32:10Z\", \"utilization_pct\": 0}]}\nggml_cuda_init: found 1 CUDA devices (Total VRAM: 24123 MiB):\n  Device 0: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24123 MiB\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\n\nCARNOT_PHASE:{\"duration_s\": 7.355008329, \"ended_ns\": 1786591938462993619, \"phase\": \"load\", \"started_ns\": 1786591931107985290}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"after_load\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"phase\": \"after_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1448101, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:32:18Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 7265, \"memory_used_mb\": 16859, \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"phase\": \"after_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1448101, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:32:18Z\", \"utilization_pct\": 100}]}\n\nCARNOT_PHASE:{\"duration_s\": 0.00062256, \"ended_ns\": 1786591938493879906, \"phase\": \"prompt\", \"started_ns\": 1786591938493257346}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"during_generation\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"phase\": \"during_generation\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1448101, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:32:18Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 7265, \"memory_used_mb\": 16859, \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"phase\": \"during_generation\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1448101, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:32:18Z\", \"utilization_pct\": 100}]}\n\nCARNOT_USAGE:{\"completion_tokens\": 2, \"prompt_tokens\": 8, \"total_tokens\": 10}\n\nCARNOT_PHASE:{\"duration_s\": 0.099347801, \"ended_ns\": 1786591938593255799, \"phase\": \"generate\", \"started_ns\": 1786591938493907998}\n\nCARNOT_PHASE:{\"duration_s\": 0.106600552, \"ended_ns\": 1786591938699883993, \"phase\": \"unload\", \"started_ns\": 1786591938593283441}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"after_unload\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"phase\": \"after_unload\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1448101, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:32:18Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 23567, \"memory_used_mb\": 557, \"model_hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"phase\": \"after_unload\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1448101, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:32:18Z\", \"utilization_pct\": 73}]}\n\nCARNOT_PHASE:{\"duration_s\": 0.007541643, \"ended_ns\": 1786591938738568003, \"phase\": \"cleanup\", \"started_ns\": 1786591938731026360}\n\nCARNOT_OFFLOAD:{\"authenticated_gpu_offload\": true, \"llama_supports_gpu_offload\": true}\n",
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6365_gguf_child_failure_forensics/sidecars/unsloth--gemma-4-26b-a4b-it-gguf.stderr.txt",
+      "stderr_sha256": "sha256:7e940e889dffb595297173fb2db56126f34cdef2008ef83adb496be439812b9e",
+      "stdout_byte_count": 6,
+      "stdout_excerpt": "\n\nWait",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6365_gguf_child_failure_forensics/sidecars/unsloth--gemma-4-26b-a4b-it-gguf.stdout.txt",
+      "stdout_sha256": "sha256:a3786c0d039c260d3d13d0ab6a2203a32b76bc39b11bb152d750685813281f7b"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "stderr_byte_count": 3922,
+      "stderr_excerpt": "\nCARNOT_GPU_SAMPLE:{\"phase\": \"before_load\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"phase\": \"before_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1448048, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:31:59Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"phase\": \"before_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1448048, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:31:59Z\", \"utilization_pct\": 0}]}\nggml_cuda_init: found 1 CUDA devices (Total VRAM: 24123 MiB):\n  Device 0: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24123 MiB\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 4096\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 4096\n\nCARNOT_PHASE:{\"duration_s\": 8.265948624, \"ended_ns\": 1786591928068633690, \"phase\": \"load\", \"started_ns\": 1786591919802685066}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"after_load\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"phase\": \"after_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1448048, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:32:08Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 5609, \"memory_used_mb\": 18515, \"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"phase\": \"after_load\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1448048, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:32:08Z\", \"utilization_pct\": 100}]}\n\nCARNOT_PHASE:{\"duration_s\": 0.000520047, \"ended_ns\": 1786591928102429321, \"phase\": \"prompt\", \"started_ns\": 1786591928101909274}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"during_generation\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"phase\": \"during_generation\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1448048, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:32:08Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 5609, \"memory_used_mb\": 18515, \"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"phase\": \"during_generation\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1448048, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:32:08Z\", \"utilization_pct\": 100}]}\n\nCARNOT_USAGE:{\"completion_tokens\": 2, \"prompt_tokens\": 8, \"total_tokens\": 10}\n\nCARNOT_PHASE:{\"duration_s\": 0.164104328, \"ended_ns\": 1786591928266560359, \"phase\": \"generate\", \"started_ns\": 1786591928102456031}\n\nCARNOT_PHASE:{\"duration_s\": 0.106853808, \"ended_ns\": 1786591928373436529, \"phase\": \"unload\", \"started_ns\": 1786591928266582721}\n\nCARNOT_GPU_SAMPLE:{\"phase\": \"after_unload\", \"rows\": [{\"gpu_index\": 0, \"memory_free_mb\": 23859, \"memory_used_mb\": 266, \"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"phase\": \"after_unload\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1448048, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:32:08Z\", \"utilization_pct\": 0}, {\"gpu_index\": 1, \"memory_free_mb\": 23567, \"memory_used_mb\": 557, \"model_hf_id\": \"unsloth/gemma-4-31B-it-GGUF\", \"phase\": \"after_unload\", \"process_identity\": {\"cmdline\": \"llama_cpp observable child\", \"pid\": 1448048, \"ppid\": 1447837}, \"timestamp_utc\": \"2026-08-13T03:32:08Z\", \"utilization_pct\": 20}]}\n\nCARNOT_PHASE:{\"duration_s\": 0.004423668, \"ended_ns\": 1786591928409077165, \"phase\": \"cleanup\", \"started_ns\": 1786591928404653497}\n\nCARNOT_OFFLOAD:{\"authenticated_gpu_offload\": true, \"llama_supports_gpu_offload\": true}\n",
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6365_gguf_child_failure_forensics/sidecars/unsloth--gemma-4-31b-it-gguf.stderr.txt",
+      "stderr_sha256": "sha256:563153aad695b71cfd3400d025adb49b1e13676d834e651775b2396ec21ae956",
+      "stdout_byte_count": 7,
+      "stdout_excerpt": "\n\nReady",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6365_gguf_child_failure_forensics/sidecars/unsloth--gemma-4-31b-it-gguf.stdout.txt",
+      "stdout_sha256": "sha256:704d7101543cd537d8caac1a129fbd869aa98bb1ad2d2a6db76996436752290a"
+    }
+  },
+  "task_linked_gpu_samples_by_model_and_phase": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "after_cleanup": [
+        {
+          "gpu_index": 0,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "phase": "after_cleanup",
+          "process_identity": {
+            "exists": false,
+            "pid": 1447970
+          },
+          "timestamp_utc": "2026-08-13T03:31:57Z",
+          "utilization_pct": 100
+        },
+        {
+          "gpu_index": 1,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "phase": "after_cleanup",
+          "process_identity": {
+            "exists": false,
+            "pid": 1447970
+          },
+          "timestamp_utc": "2026-08-13T03:31:57Z",
+          "utilization_pct": 0
+        }
+      ],
+      "after_load": [
+        {
+          "gpu_index": 0,
+          "memory_free_mb": 2875,
+          "memory_used_mb": 21249,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "phase": "after_load",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1447970,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:31:56Z",
+          "utilization_pct": 68
+        },
+        {
+          "gpu_index": 1,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "phase": "after_load",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1447970,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:31:56Z",
+          "utilization_pct": 0
+        }
+      ],
+      "after_unload": [
+        {
+          "gpu_index": 0,
+          "memory_free_mb": 23567,
+          "memory_used_mb": 557,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "phase": "after_unload",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1447970,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:31:57Z",
+          "utilization_pct": 68
+        },
+        {
+          "gpu_index": 1,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "phase": "after_unload",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1447970,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:31:57Z",
+          "utilization_pct": 0
+        }
+      ],
+      "before_load": [
+        {
+          "gpu_index": 0,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "phase": "before_load",
+          "process_identity": {
+            "cmdline": ".venv/bin/python -m carnot.experiment_6365_gguf_child_failure_forensics_and_runtime_contract --date 20260813",
+            "exists": true,
+            "pid": 1447837,
+            "ppid": 1440040,
+            "process_group_id": 1447837,
+            "session_id": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:31:47Z",
+          "utilization_pct": 0
+        },
+        {
+          "gpu_index": 1,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "phase": "before_load",
+          "process_identity": {
+            "cmdline": ".venv/bin/python -m carnot.experiment_6365_gguf_child_failure_forensics_and_runtime_contract --date 20260813",
+            "exists": true,
+            "pid": 1447837,
+            "ppid": 1440040,
+            "process_group_id": 1447837,
+            "session_id": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:31:47Z",
+          "utilization_pct": 0
+        }
+      ],
+      "during_generation": [
+        {
+          "gpu_index": 0,
+          "memory_free_mb": 2875,
+          "memory_used_mb": 21249,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "phase": "during_generation",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1447970,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:31:56Z",
+          "utilization_pct": 68
+        },
+        {
+          "gpu_index": 1,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "phase": "during_generation",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1447970,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:31:56Z",
+          "utilization_pct": 0
+        }
+      ]
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "after_cleanup": [
+        {
+          "gpu_index": 0,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "phase": "after_cleanup",
+          "process_identity": {
+            "exists": false,
+            "pid": 1448101
+          },
+          "timestamp_utc": "2026-08-13T03:32:19Z",
+          "utilization_pct": 0
+        },
+        {
+          "gpu_index": 1,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "phase": "after_cleanup",
+          "process_identity": {
+            "exists": false,
+            "pid": 1448101
+          },
+          "timestamp_utc": "2026-08-13T03:32:19Z",
+          "utilization_pct": 73
+        }
+      ],
+      "after_load": [
+        {
+          "gpu_index": 0,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "phase": "after_load",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1448101,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:32:18Z",
+          "utilization_pct": 0
+        },
+        {
+          "gpu_index": 1,
+          "memory_free_mb": 7265,
+          "memory_used_mb": 16859,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "phase": "after_load",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1448101,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:32:18Z",
+          "utilization_pct": 100
+        }
+      ],
+      "after_unload": [
+        {
+          "gpu_index": 0,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "phase": "after_unload",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1448101,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:32:18Z",
+          "utilization_pct": 0
+        },
+        {
+          "gpu_index": 1,
+          "memory_free_mb": 23567,
+          "memory_used_mb": 557,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "phase": "after_unload",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1448101,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:32:18Z",
+          "utilization_pct": 73
+        }
+      ],
+      "before_load": [
+        {
+          "gpu_index": 0,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "phase": "before_load",
+          "process_identity": {
+            "cmdline": ".venv/bin/python -m carnot.experiment_6365_gguf_child_failure_forensics_and_runtime_contract --date 20260813",
+            "exists": true,
+            "pid": 1447837,
+            "ppid": 1440040,
+            "process_group_id": 1447837,
+            "session_id": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:32:10Z",
+          "utilization_pct": 0
+        },
+        {
+          "gpu_index": 1,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "phase": "before_load",
+          "process_identity": {
+            "cmdline": ".venv/bin/python -m carnot.experiment_6365_gguf_child_failure_forensics_and_runtime_contract --date 20260813",
+            "exists": true,
+            "pid": 1447837,
+            "ppid": 1440040,
+            "process_group_id": 1447837,
+            "session_id": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:32:10Z",
+          "utilization_pct": 0
+        }
+      ],
+      "during_generation": [
+        {
+          "gpu_index": 0,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "phase": "during_generation",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1448101,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:32:18Z",
+          "utilization_pct": 0
+        },
+        {
+          "gpu_index": 1,
+          "memory_free_mb": 7265,
+          "memory_used_mb": 16859,
+          "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "phase": "during_generation",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1448101,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:32:18Z",
+          "utilization_pct": 100
+        }
+      ]
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "after_cleanup": [
+        {
+          "gpu_index": 0,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "phase": "after_cleanup",
+          "process_identity": {
+            "exists": false,
+            "pid": 1448048
+          },
+          "timestamp_utc": "2026-08-13T03:32:08Z",
+          "utilization_pct": 0
+        },
+        {
+          "gpu_index": 1,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "phase": "after_cleanup",
+          "process_identity": {
+            "exists": false,
+            "pid": 1448048
+          },
+          "timestamp_utc": "2026-08-13T03:32:08Z",
+          "utilization_pct": 100
+        }
+      ],
+      "after_load": [
+        {
+          "gpu_index": 0,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "phase": "after_load",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1448048,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:32:08Z",
+          "utilization_pct": 0
+        },
+        {
+          "gpu_index": 1,
+          "memory_free_mb": 5609,
+          "memory_used_mb": 18515,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "phase": "after_load",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1448048,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:32:08Z",
+          "utilization_pct": 100
+        }
+      ],
+      "after_unload": [
+        {
+          "gpu_index": 0,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "phase": "after_unload",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1448048,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:32:08Z",
+          "utilization_pct": 0
+        },
+        {
+          "gpu_index": 1,
+          "memory_free_mb": 23567,
+          "memory_used_mb": 557,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "phase": "after_unload",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1448048,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:32:08Z",
+          "utilization_pct": 20
+        }
+      ],
+      "before_load": [
+        {
+          "gpu_index": 0,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "phase": "before_load",
+          "process_identity": {
+            "cmdline": ".venv/bin/python -m carnot.experiment_6365_gguf_child_failure_forensics_and_runtime_contract --date 20260813",
+            "exists": true,
+            "pid": 1447837,
+            "ppid": 1440040,
+            "process_group_id": 1447837,
+            "session_id": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:31:59Z",
+          "utilization_pct": 0
+        },
+        {
+          "gpu_index": 1,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "phase": "before_load",
+          "process_identity": {
+            "cmdline": ".venv/bin/python -m carnot.experiment_6365_gguf_child_failure_forensics_and_runtime_contract --date 20260813",
+            "exists": true,
+            "pid": 1447837,
+            "ppid": 1440040,
+            "process_group_id": 1447837,
+            "session_id": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:31:59Z",
+          "utilization_pct": 0
+        }
+      ],
+      "during_generation": [
+        {
+          "gpu_index": 0,
+          "memory_free_mb": 23859,
+          "memory_used_mb": 266,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "phase": "during_generation",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1448048,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:32:08Z",
+          "utilization_pct": 0
+        },
+        {
+          "gpu_index": 1,
+          "memory_free_mb": 5609,
+          "memory_used_mb": 18515,
+          "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "phase": "during_generation",
+          "process_identity": {
+            "cmdline": "llama_cpp observable child",
+            "pid": 1448048,
+            "ppid": 1447837
+          },
+          "timestamp_utc": "2026-08-13T03:32:08Z",
+          "utilization_pct": 100
+        }
+      ]
+    }
+  },
+  "tests_run": {
+    "commands": [
+      ".venv/bin/pytest tests/python/test_experiment_6365_gguf_child_failure_forensics_and_runtime_contract.py -q --no-cov -n 0",
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.py -m pytest tests/python/test_experiment_6365_gguf_child_failure_forensics_and_runtime_contract.py -q --no-cov -n 0",
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.py --fail-under=100 --show-missing",
+      ".venv/bin/pytest tests/python -q",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6365_gguf_child_failure_forensics_and_runtime_contract.py",
+      "sed -n '1,220p' ops/e2e-test-plan.md",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json",
+      ".venv/bin/python scripts/determination_preservation_lint.py",
+      ".venv/bin/python scripts/root_clutter_sweep.py",
+      ".venv/bin/python -m carnot.experiment_6365_gguf_child_failure_forensics_and_runtime_contract --date 20260813"
+    ],
+    "exit_codes": {
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.py --fail-under=100 --show-missing": 0,
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.py -m pytest tests/python/test_experiment_6365_gguf_child_failure_forensics_and_runtime_contract.py -q --no-cov -n 0": 0,
+      ".venv/bin/pytest tests/python -q": 0,
+      ".venv/bin/pytest tests/python/test_experiment_6365_gguf_child_failure_forensics_and_runtime_contract.py -q --no-cov -n 0": 0,
+      ".venv/bin/python -m carnot.experiment_6365_gguf_child_failure_forensics_and_runtime_contract --date 20260813": 0,
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json": 0,
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6365_gguf_child_failure_forensics_and_runtime_contract.py": 0,
+      ".venv/bin/python scripts/determination_preservation_lint.py": 0,
+      ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+      "sed -n '1,220p' ops/e2e-test-plan.md": 0
+    }
+  },
+  "upstream_exp6352_path_hash_and_terminal_class": {
+    "honest_verdict": "complete_null: live generation ran but authenticity readiness gates did not all pass",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6352_live_factor_proposal_authenticity_preflight.json",
+    "present": true,
+    "sha256": "sha256:8604ff3f59e3af22aada3c821ac569003c5d1ff94fd061ca01cf9ec9a05250b2",
+    "size_bytes": 47758,
+    "status": "complete_null",
+    "terminal_class": "terminal_null"
+  },
+  "verifier_is_oracle": false,
+  "vram_rise_and_release_receipts_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "memory_used_mb_by_phase": {
+        "after_cleanup": 266,
+        "after_load": 21249,
+        "after_unload": 557,
+        "before_load": 266,
+        "during_generation": 21249
+      },
+      "min_vram_rise_mb": 64,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "peak_memory_used_mb": 21249,
+      "proved_release": true,
+      "proved_rise": true,
+      "proved_rise_and_release": true,
+      "release_tolerance_mb": 128
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "memory_used_mb_by_phase": {
+        "after_cleanup": 266,
+        "after_load": 16859,
+        "after_unload": 557,
+        "before_load": 266,
+        "during_generation": 16859
+      },
+      "min_vram_rise_mb": 64,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "peak_memory_used_mb": 16859,
+      "proved_release": true,
+      "proved_rise": true,
+      "proved_rise_and_release": true,
+      "release_tolerance_mb": 128
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "memory_used_mb_by_phase": {
+        "after_cleanup": 266,
+        "after_load": 18515,
+        "after_unload": 557,
+        "before_load": 266,
+        "during_generation": 18515
+      },
+      "min_vram_rise_mb": 64,
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "peak_memory_used_mb": 18515,
+      "proved_release": true,
+      "proved_rise": true,
+      "proved_rise_and_release": true,
+      "release_tolerance_mb": 128
+    }
+  }
+}
