@@ -442,3 +442,111 @@ can be set.
 `delta_false_accept_count` and `delta_exact_progress_proxy` are bare numbers,
 protected files are unchanged, `solve_claim_count` is zero, the solve registry
 hash is unchanged, and no solve claim is made.
+
+### REQ-ARC-ARM-6402: Active-Goal Safety Audit
+
+Experiment 6402 SHALL independently audit the V550 active-goal chain from
+registered artifacts, sidecars, sources, live entrypoints, model ids, policy
+hashes, reward-machine hashes, window manifests, and registry hashes. It SHALL
+register expected paths, existence states, and hashes before reading artifact
+conclusions. It SHALL preserve absent, blocked, skipped, null, flagged,
+retired, and clean states without filling missing windows or recreating ARC
+calls.
+
+The audit SHALL recompute scalar gates and scientific readiness from terminal
+fields in Exp6393, Exp6400, and Exp6401. It SHALL treat post-action environment
+transitions as evaluation-oracle evidence only after verified action freeze.
+Models, goal hypotheses, reward machines, routes, and shadow ranks SHALL remain
+non-oracles. The audit SHALL not invoke an LLM, run new ARC attempts, search
+hidden game source, run exhaustive offline ground-truth BFS, use per-game
+adapters, promote a policy, update `ops/arc_solve_registry.yaml`, write a
+claims ledger, or change solve records.
+
+The audit SHALL attack hidden game-source access, offline ground-truth search,
+exhaustive BFS, per-game adapter use, development-proxy substitution,
+outer-loop reverse engineering, oracle-before-action access, timestamp reorder,
+freeze-receipt forgery, window reuse, duplicate transitions, model-row swaps,
+stale goal state, legal-action mismatch, unequal work, treatment non-firing,
+constant-false goal acceptance, false-accept aggregation, abstention pooling,
+missing-cell pooling, progress-proxy relabeling, route enablement, solve
+wording, solve-registry writes, and claims-ledger writes.
+
+The audit SHALL verify MODEL_SPECS, cached SOTA receipts, embedded tokenizer
+receipts, zero AutoTokenizer use, declared inference substrate, task-linked GPU
+evidence, and absence of a legacy headline cell for present LLM tasks. It SHALL
+compare all registered result and source hashes with current hashes and with
+embedded upstream receipts where available. It SHALL verify that active-goal
+code remains default-off and cannot alter normal executed actions.
+
+Experiment 6402 SHALL write
+`results/experiment_6402_arc_active_goal_safety_audit.json` with `status`,
+`audit_registration_path_hash_and_expected_scope`,
+`present_absent_blocked_skipped_null_flagged_and_retired_artifact_matrix`,
+`recomputed_scalar_gates_and_readiness`,
+`source_entrypoint_policy_reward_machine_model_window_and_registry_hash_matrix`,
+`live_attempt_provenance_checks`,
+`hidden_source_search_bfs_adapter_proxy_and_outer_loop_attack_results`,
+`oracle_timing_freeze_window_duplicate_model_state_legal_work_and_firing_attack_results`,
+`goal_false_accept_abstention_missing_progress_enablement_solve_and_registry_attack_results`,
+`model_policy_and_inference_substrate_checks`,
+`default_off_reachability_and_executed_action_integrity_checks`,
+`critical_major_and_minor_findings`, `route_promotion_count`,
+`solve_claim_count`, `solve_registry_modified`, `claims_ledger_modified`,
+`public_arc_claim_eligibility`, `upstream_artifacts_modified`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+`public_arc_claim_eligibility` SHALL be false unless all present evidence is
+clean, causal work matches, false accepts do not increase, route enablement is
+zero, solve claims are zero, solve-registry writes are zero, and claims-ledger
+writes are zero. `verifier_is_oracle` SHALL be false for the audit. The field
+principles SHALL map every recomputed readiness, route-promotion, solve,
+registry, and public-claim field to its fail-closed purpose.
+
+### SCENARIO-ARC-ARM-6402-REGISTRATION-FIRST
+
+**Given** the expected active-goal artifact chain, sidecars, source files, live
+entrypoints, model ids, and registry files
+**When** Exp6402 starts
+**Then** it records existence states and hashes before loading artifact
+conclusions, preserves absent paths as absent, and later compares every current
+hash with the registration entry.
+
+### SCENARIO-ARC-ARM-6402-READINESS-RECOMPUTE
+
+**Given** Exp6393, Exp6400, and Exp6401 terminal fields
+**When** Exp6402 recomputes readiness
+**Then** readiness uses only bare terminal fields, fail-closes malformed or
+missing fields, records route promotion separately from public-claim
+eligibility, and never treats a route-value finding as a solve.
+
+### SCENARIO-ARC-ARM-6402-ATTACKS-FAIL-CLOSED
+
+**Given** forbidden provenance, oracle timing, freeze, window, duplicate, model,
+goal, legal-action, work, treatment-fire, aggregation, progress, route,
+wording, registry, and claims-ledger attacks
+**When** Exp6402 validates the V550 active-goal chain
+**Then** each attack records a passed fail-closed control or a finding, and any
+unclean control keeps `public_arc_claim_eligibility` false.
+
+### SCENARIO-ARC-ARM-6402-MODEL-POLICY-SUBSTRATE
+
+**Given** present Exp6400 and Exp6401 model, tokenizer, GPU, policy, reward
+machine, and inference-substrate receipts
+**When** Exp6402 audits those receipts
+**Then** all mandated model ids, cached SOTA receipts, model hashes, tokenizer
+receipts, zero AutoTokenizer use, task-linked GPU evidence, default-off route
+flags, and source hashes are checked without loading a model or invoking an
+LLM.
+
+### SCENARIO-ARC-ARM-6402-ARTIFACT-NO-PROMOTION
+
+**Given** the audit is not an ARC solve, policy promotion, registry update, or
+claims-ledger update
+**When** Exp6402 writes its artifact
+**Then** `route_promotion_count`, `solve_claim_count`, registry writes, and
+claims-ledger writes are zero, protected files are unchanged, upstream
+artifacts are unchanged, `public_arc_claim_eligibility` is false, and the
+honest verdict states that the audit is complete and no public ARC claim is
+eligible.
