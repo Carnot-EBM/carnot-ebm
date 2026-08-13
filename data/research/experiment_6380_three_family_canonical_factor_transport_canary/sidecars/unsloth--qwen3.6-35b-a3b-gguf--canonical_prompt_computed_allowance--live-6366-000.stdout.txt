@@ -1,0 +1,16 @@
+
+
+<think>
+Here's a thinking process:
+
+1.  **Analyze User Input:**
+   - The user provides a strict prompt: "Do not think. Do not output analysis. Do not output markdown. /no_think Return only this JSON object, with no extra text: [JSON object]"
+   - Then provides a schema and visible source with detailed constraints.
+   - The prompt explicitly says: "Return only this JSON object, with no extra text:" followed by the exact JSON.
+   - The JSON provided is:
+     `{"schema":"carnot.experiment_6379.canonical_factor_edit_transport_contract.v1.factor_edit","proposal_id":"unsloth--qwen3.6-35b-a3b-gguf:live-6366-000:0","event_id":"live-6366-000","model_hf_id":"unsloth/Qwen3.6-35B-A3B-GGUF","model_family":"qwen_moe","arm":"canonical_prompt_computed_allowance","candidate_index":0,"changed_factor":"accept_factor","edits":{"accept_bias":0.5},"selection_score":0.5,"obligations":[{"obligation_id":"obl-live-6366-000-0","source_start":103,"source_end":183,"source_sha256":"sha256:8db064f857527e5971bf69fed8c3b382fc5316247b59682651b54abd62a27326","source_text":"Edit accept_bias for accept_factor within [-1.0, 1.0] to repair threshold_guard."}],"edit_source_spans":{"accept_bias":{"source_start":108,"source_end":119,"source_sha256":"sha256:4710cba0bac843a3f05d2f2190b3ece5b3f2097f5b2bd651c536787d731da5da"}},"evidence_summary":"Visible obligation obl-live-6366-000-0 supports editing accept_bias."}`
+   - The prompt also says: "Do not output markdown."
+   - I must output *exactly* that JSON string, nothing else.
+
+2.  **Verify Constraints:**
+   - "Do not think
