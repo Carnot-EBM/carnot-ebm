@@ -1,0 +1,342 @@
+milestone: "2026.08.548"
+milestone_title: "Observable Proposals, Certified Rollback, and Falsifiable Goals"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp6363-v548-terminal-handoff-and-queue-preflight
+    milestone: "2026.08.548"
+    deliverable: results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json
+    title: "V547 terminal evidence handoff and V548 queue preflight"
+    priority: critical
+    track: infrastructure
+    requires_gpu: false
+    max_turns: 30
+    estimated_wall_time_min: 45
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp6350-v547-bounded-terminal-handoff
+        verdict: "complete_with_flagged_boundaries: V546 evidence preserved Exp6337 as flagged, Exp6341 as gate-blocked, factor learning as replay-qualified, and ARC as no-solve"
+        addressed_by: "This handoff reads the seven active V547 tasks from primary artifacts, preserves the Exp6350 quarantine, and validates the new V548 queue instead of claiming the flagged prior handoff was clean."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Milestone 2026.08.547 is terminal. Its active roadmap contained seven tasks, Exp6350 through Exp6356. Exp6350 was quarantined by the conductor for DURATION_TOO_SHORT and missing method evidence. Exp6352 resolved all three mandatory GGUF files, embedded tokenizers, both RTX 3090 GPUs, and disk capacity, but every generation child returned code 1, produced zero raw bytes and zero tokens, left models_used empty, and set live_autoregressive_generation_invoked false. Exp6352 preserved no stderr in its terminal artifact. It recorded n_ctx=512 while the committed source now declares n_ctx=2048. Exp6353 gate-blocked three times. Exp6354 was pre-emptively skipped because Exp6353 retired. Exp6355 gate-blocked on the absent Exp6354 deliverable. Exp6356 ended complete_null. This task establishes the exact V548 evidence boundary and checks the staged queue before research begins.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/research-program.md, {project_root}/research-roadmap.yaml, and {project_root}/research-roadmap-next.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/ops/conductor-log.md, {project_root}/ops/status.md, and {project_root}/ops/changelog.md
+      - {project_root}/results/experiment_6350_v547_bounded_terminal_handoff.json through {project_root}/results/experiment_6356_live_certified_learning_safety_audit.json when present
+      - {project_root}/python/carnot/experiment_6352_live_factor_proposal_authenticity_preflight.py
+      - {project_root}/research-complete.yaml, {project_root}/ops/exclusion_manifest.yaml, and {project_root}/ops/known-issues.md
+      - {project_root}/scripts/roadmap_schema.py, {project_root}/scripts/validate_prior_failures.py, {project_root}/scripts/audit_roadmap_gates.py, and {project_root}/scripts/exclusion_manifest_lint.py
+
+      TASK
+      Create a bounded V547-to-V548 terminal handoff and queue preflight. Reconcile only the seven tasks in the active V547 roadmap. Preserve flagged, blocked, missing, retired-upstream, and null states. Do not count the proposal-only Exp6357-Exp6362 identities as executed tasks. Validate all 14 V548 task IDs, deliverables, structured gates, gate-field cross-references, prior-failure entries, agent/model pairings, mandatory GGUF policy, and exact prompt endings. Confirm that the active roadmap and conductor are unchanged.
+
+      CONCRETE STEPS
+      0. Run read-only preconditions: resolve the repository root, hash the active and next roadmaps, hash the conductor, load the exclusion manifest, and verify that every expected V547 artifact path is classified as present, absent, blocked, or flagged.
+      1. Read every V547 artifact through scripts/summarize_artifact.py before importing a field. Preserve live adversarial findings separately from stamped fields.
+      2. Reconcile the conductor outcomes for Exp6350-Exp6356. Record all three Exp6353 gate failures, all three Exp6354 pre-emptive skips, all three Exp6355 gate failures, and the terminal Exp6356 audit.
+      3. Compare Exp6352 source constants with its terminal process receipts. Record the n_ctx mismatch, empty outputs, missing stderr, missing top-level random seed, and prose-versus-boolean generation contradiction without guessing a root cause.
+      4. Parse research-roadmap-next.yaml. Check the milestone, 14 unique task IDs, unique deliverables, dependency order, structured gates, and every gated field against the upstream REQUIRED ARTIFACT FIELDS block.
+      5. Check every prior_failures entry for experiment_id, verdict, addressed_by, and retire_if_same_verdict=true. Run the roadmap schema, prior-failure, gate, and exclusion-manifest linters.
+      6. Check every prompt for CONTEXT, EXISTING CODE TO READ FIRST, TASK, CONCRETE STEPS, {project_root}, {date}, a Run command, and the exact final prohibition line.
+      7. Write tests for the new handoff experiment. Add or update the applicable REQ-* and SCENARIO-* entries before implementation. Run focused tests, focused coverage, spec coverage, the applicable read-only E2E checks, adversarial_verify, determination-preservation lint, and root-clutter sweep.
+      8. Write the terminal artifact atomically. Use a complete_, passed_, success_, shipped_, or blocked_ honest_verdict prefix. Never convert a flagged or blocked upstream into clean evidence.
+
+      Required deliverable: {project_root}/results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - v547_active_roadmap_path_and_hash
+      - v547_active_task_ids
+      - v547_terminal_artifacts_by_task
+      - v547_conductor_outcomes_and_attempt_counts
+      - v547_flagged_blocked_missing_and_null_states
+      - exp6352_generation_failure_receipt
+      - exp6352_source_artifact_drift_receipt
+      - proposal_only_v547_ids_not_executed
+      - v548_milestone_doc_and_queue_hashes
+      - v548_task_ids
+      - v548_id_collision_check
+      - v548_deliverable_checks
+      - v548_dependency_and_structured_gate_checks
+      - v548_gate_field_cross_reference_checks
+      - v548_prior_failure_checks
+      - v548_agent_model_and_llm_policy_checks
+      - prompt_contract_checks
+      - active_roadmap_modified
+      - conductor_modified
+      - protected_files_unchanged
+      - preconditions_checked
+      - inference_substrate
+      - verifier_is_oracle
+      - field_principles
+      - field_provenance
+      - random_seed
+      - duration_s
+      - tests_run
+      - reproducibility_checksum
+      - honest_verdict
+      field_principles must map every required field and every structured gate expression to one short sentence that explains why the field exists. field_provenance must identify a measured, derived, constant, or upstream source for every required field. Set verifier_is_oracle=false because this task reconciles evidence and does not judge scientific correctness.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6363_v548_terminal_handoff_and_queue_preflight --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6364-v548-post-marker-source-scope-freeze
+    milestone: "2026.08.548"
+    deliverable: results/experiment_6364_v548_post_marker_source_scope_freeze.json
+    title: "V548 dated source delta and three-lane scope freeze"
+    priority: high
+    track: infrastructure
+    requires_gpu: false
+    max_turns: 30
+    estimated_wall_time_min: 45
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp6351-v547-post-marker-source-scope-freeze
+        verdict: "complete_null: no strict post-marker source changed V547 scope"
+        addressed_by: "The new window starts after the V548 planner marker and includes newly indexed verifier-guided induction and dependency-rollback work, so it freezes a changed three-lane scope instead of repeating the V547 query."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      The V548 planner refresh is already appended to research-references.md. It promotes Hypothesis Frontier (arXiv:2608.10843), Dependency-Guided Rollback Repair (arXiv:2608.10502), ReTree (arXiv:2608.10676), Decomposition-Induced Context-Memory Conflict (arXiv:2608.10627), and Optimal Stopping of Self-Refining Foundation Models (arXiv:2608.10729). It preserves Active Reward Machine Inference and Zero-Shot Goal Recognition for the ARC lane. Semantic Scholar returned 33 EBT citations and eight ARM-EBM citations in the dated query. Extropic and Kona still expose no authenticated local runtime. The active scientific lanes are observable GGUF proposals, certified factor learning with dependency rollback, and falsifiable live ARC goals.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/research-program.md and {project_root}/research-references.md
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md and {project_root}/research-roadmap-next.yaml
+      - {project_root}/results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json
+      - {project_root}/results/experiment_6351_v547_post_marker_source_scope_freeze.json
+      - {project_root}/ops/exclusion_manifest.yaml, {project_root}/ops/known-issues.md, and {project_root}/research-hardware-wishlist.md
+      - {project_root}/python/carnot/experiment_6351_v547_post_marker_source_scope_freeze.py
+
+      TASK
+      Validate the dated V548 research marker and freeze the executable scope. Recheck direct source metadata and public availability without fabricating access. Record whether any strict post-marker source changes the plan. Freeze the three active lanes and the explicit no-claim boundaries. Do not reopen a retired mechanism based on topical similarity.
+
+      CONCRETE STEPS
+      0. Confirm network reachability before any live source request. If a source is unavailable, record the failure and use the already dated planner receipt without inventing content.
+      1. Locate the V548 planner marker and hash the full section. Validate arXiv IDs, submission dates, titles, and direct URLs for each promoted paper.
+      2. Recheck OpenReview, Hugging Face Papers, Semantic Scholar records for EBT and ARM-EBM, GitHub discovery, Extropic writing, and Logical Intelligence. Record dated endpoint outcomes and rate limits.
+      3. Classify each finding as executable now, control only, deferred, retired-scope, or unavailable. Explain each classification in one sentence.
+      4. Freeze the active lanes: observable local GGUF proposal generation, verified-frontier certified factor learning with dependency rollback, and live-path ARC two-sided goal evidence.
+      5. Freeze closed scopes: parser/JIT decoding, finite-ID or parser-only generated-answer transport, external generated-text or logprob scoring, hidden-state scoring, KAN training, EBT pretraining, unchanged local-board probes, TSU execution, and Kona execution. Mention closed patterns only as exclusions.
+      6. Write tests for marker detection, source classification, unavailable-source handling, and closed-scope preservation. Add or update the applicable research-reporting REQ-* and SCENARIO-* entries first.
+      7. Run focused tests, focused coverage, spec coverage, adversarial_verify, and root-clutter sweep. Write an atomic terminal artifact with no broad literature claim.
+
+      Required deliverable: {project_root}/results/experiment_6364_v548_post_marker_source_scope_freeze.json.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - planner_marker_path_and_hash
+      - source_window_start_and_end_utc
+      - direct_arxiv_source_receipts
+      - openreview_receipts
+      - huggingface_papers_receipts
+      - semantic_scholar_ebt_and_arm_ebm_receipts
+      - github_discovery_receipts
+      - extropic_first_party_receipt
+      - logical_intelligence_first_party_receipt
+      - new_actionable_findings
+      - post_marker_findings_count
+      - executable_scope_change_required
+      - active_lane_freeze
+      - closed_and_deferred_scope_freeze
+      - unavailable_or_rate_limited_sources
+      - retired_scope_reopened
+      - source_claim_boundaries
+      - protected_files_unchanged
+      - preconditions_checked
+      - inference_substrate
+      - verifier_is_oracle
+      - field_principles
+      - field_provenance
+      - random_seed
+      - duration_s
+      - tests_run
+      - reproducibility_checksum
+      - honest_verdict
+      field_principles must map every required field to one short sentence that explains why it exists. field_provenance must identify a direct source, measured endpoint, derived classification, or constant for every required field. Set verifier_is_oracle=false because source discovery does not decide scientific correctness.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6364_v548_post_marker_source_scope_freeze --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6365-gguf-child-failure-forensics-runtime-contract
+    milestone: "2026.08.548"
+    deliverable: results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json
+    title: "Three-model GGUF child failure forensics and observable runtime contract"
+    priority: critical
+    track: infrastructure
+    requires_gpu: true
+    max_turns: 100
+    estimated_wall_time_min: 90
+    agent_type: claude
+    model: opus
+    prior_failures:
+      - experiment_id: exp6352-live-factor-proposal-authenticity-preflight
+        verdict: "complete_null: live generation ran but authenticity readiness gates did not all pass"
+        addressed_by: "This attempt changes the deliverable from proposal-quality preflight to child-process forensics, retains stderr and source snapshots, proves context capacity, adds task-linked GPU and dispatcher receipts, and requires minimal nonempty output from each model before readiness."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6352 passed model, tokenizer, CUDA, VRAM, and disk preconditions. Its Qwen child ran 34.75 seconds and both Gemma children ran about nine seconds, but all returned code 1 before any token. Raw files were empty. The artifact retained no stderr, so the cause is unknown. Its process receipts record n_ctx=512 while the committed source declares 2048. The V547 operational retro also lacks task-linked GPU samples, model-count receipts, phase timing, and dispatcher choice. This is a changed diagnostic scope. It must make no factor-quality claim.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/scripts/experiment_template.py and {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/python/carnot/experiment_6352_live_factor_proposal_authenticity_preflight.py
+      - {project_root}/tests/python/test_experiment_6352_live_factor_proposal_authenticity_preflight.py
+      - {project_root}/results/experiment_6352_live_factor_proposal_authenticity_preflight.json
+      - {project_root}/results/operational_retro_2026_08_547.json
+      - {project_root}/openspec/capabilities/research-harnesses/spec.md and {project_root}/openspec/capabilities/continuous-learning/spec.md
+      - {project_root}/ops/e2e-test-plan.md and {project_root}/ops/known-issues.md
+
+      TASK
+      Diagnose the V547 child failures and implement a reusable observable llama.cpp child-process contract. Use cached_sota_pair() and exactly these MODEL_SPECS in the measured matrix: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use the embedded GGUF tokenizer only. Never call AutoTokenizer. Preserve a bounded stderr excerpt in the artifact and full stdout/stderr sidecars by hash. Bind every child call to the exact source revision, command, prompt, tokenizer count, context capacity, dispatcher, GPU samples, and phase timings. End with one minimal nonempty autoregressive completion from each model. Make no proposal, accuracy, or utility claim.
+
+      CONCRETE STEPS
+      0. Run preconditions before model work: verify both RTX 3090 GPUs, required GGUF paths, embedded tokenizers, llama.cpp GPU-offload support with llama_supports_gpu_offload(), disk and RAM, no protected training process, and enough free VRAM for sequential loading. Load one model and prove VRAM rises before accepting CUDA readiness.
+      1. Reconstruct Exp6352's recorded command, sampling arguments, prompt hash, source hash, and environment from the artifact and git. Do not rerun the full failed matrix until diagnostics are retained.
+      2. Add an observable child runner that records argv without secrets, PID, dispatcher, environment allowlist hash, source hash, stdout and stderr paths and hashes, return code, signal, timeout, phase timestamps, prompt token count, requested output tokens, n_ctx, and capacity margin.
+      3. Use the embedded GGUF tokenizer in vocab-only mode to count each exact prompt. Fail before model load when prompt_tokens + max_tokens exceeds n_ctx. Record any source-versus-artifact sampling drift.
+      4. Add task-linked GPU samples before load, after load, during generation, after unload, and after cleanup. Record GPU index, memory, utilization, process identity, and sampling timestamps. Prove memory release.
+      5. Run deterministic failure injections for nonzero exit, timeout, empty stdout, malformed usage receipt, context overflow, source drift, and missing GPU sample. Each must fail closed and preserve diagnostics.
+      6. Run a minimal bounded completion on each mandatory model sequentially. Require return code zero, nonempty raw bytes before parsing, positive prompt and completion token counts, authenticated offload, and no timeout. Do not score semantic quality.
+      7. Add REQ-* and SCENARIO-* entries before implementation. Write focused tests for all injected failures and success normalization. Run focused tests, 100% focused coverage for new code, relevant inference tests, spec coverage, applicable E2E checks, adversarial_verify, determination-preservation lint, and root-clutter sweep.
+      8. Write the artifact atomically. Set gguf_runtime_observability_ready_score=1.0 only when all three model rows meet every contract. Otherwise emit a blocked_ or complete_null terminal verdict and list exact blockers.
+
+      Required deliverable: {project_root}/results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - upstream_exp6352_path_hash_and_terminal_class
+      - reconstructed_exp6352_command_and_source_receipt
+      - exp6352_source_artifact_sampling_drift
+      - MODEL_SPECS
+      - models_used
+      - cached_sota_pair_receipts
+      - model_file_hashes_revisions_quantizations_and_tokenizers
+      - embedded_gguf_tokenizer_receipts
+      - autotokenizer_usage_count
+      - llama_cpp_gpu_offload_support_receipt
+      - task_linked_gpu_samples_by_model_and_phase
+      - dispatcher_and_process_identity_receipts
+      - source_command_prompt_and_environment_hashes_by_call
+      - prompt_token_context_capacity_receipts_by_model
+      - stdout_stderr_sidecar_paths_hashes_and_bounded_excerpts
+      - child_exit_signal_timeout_and_usage_receipts_by_model
+      - load_prompt_generate_unload_cleanup_timings_by_model
+      - raw_output_paths_hashes_and_byte_counts
+      - live_autoregressive_generation_invoked_by_model
+      - failure_injection_matrix
+      - vram_rise_and_release_receipts_by_model
+      - gguf_runtime_observability_ready_score
+      - no_proposal_quality_or_utility_claim
+      - protected_files_unchanged
+      - preconditions_checked
+      - inference_substrate
+      - verifier_is_oracle
+      - field_principles
+      - field_provenance
+      - random_seed
+      - duration_s
+      - tests_run
+      - reproducibility_checksum
+      - honest_verdict
+      field_principles must map every required field and the downstream gguf_runtime_observability_ready_score gate to one short sentence that explains why it exists. field_provenance must identify measured child data, source hash, derived check, or constant for every required field. Set verifier_is_oracle=false because this task verifies runtime authenticity, not proposal correctness.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6365_gguf_child_failure_forensics_and_runtime_contract --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6366-repaired-live-factor-proposal-authenticity
+    milestone: "2026.08.548"
+    deliverable: results/experiment_6366_repaired_live_factor_proposal_authenticity.json
+    title: "Gated repaired three-model live factor proposal authenticity canary"
+    priority: critical
+    track: self-learning
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    agent_type: codex
+    model: gpt-5.5
+    gated_on:
+      - upstream: exp6365-gguf-child-failure-forensics-runtime-contract
+        artifact_field: gguf_runtime_observability_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp6352-live-factor-proposal-authenticity-preflight
+        verdict: "complete_null: live generation ran but authenticity readiness gates did not all pass"
+        addressed_by: "This canary runs only after the new observable runtime proves nonempty completions for all models, uses source-bound obligation parsing, and rejects source-artifact drift and decomposition substitution."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6352 attempted this scientific boundary but no model produced a token. Exp6365 is a materially changed prerequisite that retains child diagnostics and must report gguf_runtime_observability_ready_score=1.0 before this task is dispatched. The purpose here is authenticity, not utility: prove that fresh executable failure events cause real local models to emit bounded factor-edit proposals that are preserved raw, parsed without source substitution, and judged only by exact checkers.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.json
+      - {project_root}/python/carnot/experiment_6352_live_factor_proposal_authenticity_preflight.py and its focused test
+      - {project_root}/python/carnot/experiment_6344_counterexample_factor_proposal_calibration.py
+      - {project_root}/results/experiment_6342_anytime_evalue_release_ledger.json through {project_root}/results/experiment_6346_certified_factor_evolution_safety_audit.json
+      - {project_root}/openspec/capabilities/continuous-learning/spec.md and {project_root}/openspec/capabilities/self-learning/spec.md
+      - {project_root}/research-references.md V548 marker, especially arXiv:2608.10627
+
+      TASK
+      Run a small repaired authenticity canary with all three mandatory local GGUF families. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF from cached_sota_pair(). Use only embedded GGUF tokenizers. Generate fresh executable events from licensed local generators. Preserve raw outputs before parsing. Bind every parsed obligation and factor edit to exact source spans so a decomposer cannot replace event content with its model prior. Keep the released factor snapshot read-only throughout each proposal call. Exact checkers are the only correctness oracle.
+
+      CONCRETE STEPS
+      0. Revalidate the structured gate and Exp6365 artifact through scripts/summarize_artifact.py. Recheck model files, embedded tokenizers, GPU offload, VRAM rise, disk, context capacity, and output sidecar paths before generation.
+      1. Seal a balanced canary manifest before model calls. Include at least 12 fresh events across at least three executable constraint families, balanced by structure and surface relabeling. Record generator licenses and hashes.
+      2. Freeze the active factor snapshot. Give each model the same source event, exact minimized counterexample, bounded edit schema, and read-only snapshot at matched temperature and token budget.
+      3. Use the Exp6365 child contract. Preserve nonempty raw bytes before any parser. Record stdout, stderr, exit, token, timing, GPU, source, command, prompt, and dispatcher receipts.
+      4. Parse only the bounded factor-edit schema. For every obligation and proposed edit, record source-span alignment. Count context-memory substitutions, unsupported obligations, invalid edits, timeouts, and abstentions as failures, never as proposals.
+      5. Prove same-step isolation by mutation tests. A proposal must not read its own pending write or modify the released snapshot, exact checker, event manifest, or protected validation set.
+      6. Run exact outcome checks after the raw proposal and parse are frozen. Record valid, invalid, exact-pass, exact-fail, and abstain counts by model. Make no comparative utility claim.
+      7. Add REQ-* and SCENARIO-* entries first. Write focused tests for raw-before-parse, source binding, isolation, empty output, child failure, and oracle separation. Run focused tests and coverage, spec coverage, applicable E2E checks, adversarial_verify, determination-preservation lint, and root-clutter sweep.
+      8. Set repaired_live_factor_proposal_authenticity_ready_score=1.0 only if all three families have authenticated nonempty calls, at least one source-bound parse-valid proposal, zero source substitutions, zero same-step writes, and complete exact-check receipts. Otherwise finish honestly.
+
+      Required deliverable: {project_root}/results/experiment_6366_repaired_live_factor_proposal_authenticity.json.
+      REQUIRED ARTIFACT FIELDS:
+      - status
+      - exp6365_gate_receipt
+      - MODEL_SPECS
+      - models_used
+      - cached_sota_pair_receipts
+      - model_file_hashes_revisions_quantizations_and_tokenizers
+      - embedded_gguf_tokenizer_receipts
+      - autotokenizer_usage_count
+      - cuda_offload_vram_and_runtime_receipts_by_model
+      - sealed_event_manifest_path_hash_license_and_balance
+      - released_factor_snapshot_path_hash_and_read_only_receipt
+      - information_exposure_contract
+      - live_autoregressive_generation_invoked_by_model
+      - child_process_observability_receipts_by_model
+      - raw_output_before_parse_paths_hashes_and_counts
+      - bounded_factor_edit_schema_path_and_hash
+      - parse_valid_invalid_timeout_and_abstain_counts_by_model
+      - source_span_alignment_and_decomposition_conflict_counts
+      - same_step_read_write_isolation_results
+      - exact_checker_paths_hashes_versions_calls_costs_and_errors
+      - exact_pass_fail_counts_by_model
+      - source_model_weight_mutation_count
+      - generated_label_count
+      - hidden_state_access_count
+      - protected_validation_leak_count
+      - repaired_live_factor_proposal_authenticity_ready_score
+      - harm_underpowered_missing_and_flagged_cells
+      - protected_files_unchanged
+      - preconditions_checked
+      - inference_substrate
+      - verifier_is_oracle
+      - field_principles
+      - field_provenance
+      - random_seed
+      - duration_s
+      - tests_run
+      - reproducibility_checksum
+      - honest_verdict
+      field_principles must map every required field and the repaired_live_factor_proposal_authenticity_ready_score gate to one short sentence that explains why it exists. field_provenance must identify measured model output, exact checker data, source hash, derived check, or constant for every required field. Set verifier_is_oracle=true for the protected exact task checkers. State that model proposals, parsing, and learned scores are not oracles.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6366_repaired_live_factor_proposal_authenticity --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
