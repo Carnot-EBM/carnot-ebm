@@ -103,6 +103,10 @@ from carnot.agentic.arc_frame_change_predictor import (
 )
 from carnot.agentic.arc_goal_energy_live import GOAL_ENERGY_SOURCE
 from carnot.agentic.arc_two_sided_goal_contract import coerce_two_sided_goal_contract
+from carnot.agentic.arc_active_reward_machine_frontier import (
+    RewardMachineFrontier,
+    reward_machine_frontier_from_transitions,
+)
 from carnot.agentic.arc_value_learner import coerce_object_centric_proposal_policy
 from carnot.agentic.arc_value_net import load_live_spatial_value_head
 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
@@ -208,6 +212,10 @@ SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_BETA = 1.0
 # runtime evidence before it can terminate search. Unverified goals can only
 # affect probe ordering.
 SUBMITTED_TWO_SIDED_GOAL_CONTRACT_ENABLED = False
+# REQ-ARC-ARM-6387: default OFF. When enabled, a bounded reward-machine frontier
+# may pick one legal disagreement probe before goal selection. It never earns
+# solve credit and observes outcomes only after the action is frozen.
+SUBMITTED_ACTIVE_REWARD_MACHINE_ENABLED = False
 SUBMITTED_QD_GENERATION_ENABLED = False
 SUBMITTED_QD_GENERATION_MODE = "energy_fitness_map_elites_sequence_generator"
 SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED = False
@@ -5166,6 +5174,7 @@ class E3AgentPolicy:
         epistemic_ledger: Any = _DEFAULT_EPISTEMIC_LEDGER,
         structured_evidence_memory: Any = _DEFAULT_STRUCTURED_EVIDENCE_MEMORY,
         two_sided_goal_contract: Any | bool | None = None,
+        active_reward_machine: Any | bool | None = None,
         target_licensed_route_shadow: Any | bool | None = False,
     ) -> None:
         import os
@@ -5176,6 +5185,14 @@ class E3AgentPolicy:
         if active_probe_controller is None:
             active_probe_controller = os.environ.get("CARNOT_ARC_ACTIVE_PROBE") == "1"
         self.active_probe_controller_enabled = bool(active_probe_controller)
+        if active_reward_machine is None:
+            active_reward_machine = os.environ.get("CARNOT_ARC_ACTIVE_REWARD_MACHINE") == "1"
+        self.active_reward_machine_enabled = bool(active_reward_machine)
+        self._reward_machine_frontier: Any = (
+            active_reward_machine
+            if hasattr(active_reward_machine, "choose_legal_disagreement")
+            else None
+        )
         self.active_probe_budget = max(0, int(active_probe_budget))
         self.active_probe_concentration_threshold = max(
             0.0,
@@ -5374,6 +5391,19 @@ class E3AgentPolicy:
             "posterior_entropy_reduction": 0.0,
             "trace": [],
             "verifier_is_oracle": False,
+        }
+        self._reward_machine_pending: Any = None
+        self._last_legal_action_ids: tuple[int, ...] = ()
+        self.reward_machine_diagnostics: dict[str, Any] = {
+            "enabled": bool(self.active_reward_machine_enabled),
+            "probe_actions_taken": 0,
+            "hypothesis_elimination_count": 0,
+            "wrong_elimination_count": 0,
+            "abstention_count": 0,
+            "legal_action_mutation_count": 0,
+            "base_policy_fallback_count": 0,
+            "verifier_is_oracle": False,
+            "arc_solve_claim": False,
         }
         self._observed_level: Optional[int] = None
         self._start_level: Optional[int] = None
@@ -6107,6 +6137,124 @@ class E3AgentPolicy:
         finally:
             self._active_probe_pending = None
 
+    def _remember_reward_machine_origin(self, move: tuple, latest: Any) -> None:
+        if self._reward_machine_pending is None or latest is None:
+            return
+        kind, data = move
+        if kind in ("RESET", None):
+            return
+        try:
+            if int(kind) != int(self._reward_machine_pending.action):
+                return
+            from carnot.agentic.arc_agi3_world_model import grid_of
+            from carnot.agentic.arc_executable_world_model import detect_cell, to_logical
+
+            self.cell = detect_cell(grid_of(latest))
+            self._prev = (to_logical(grid_of(latest), self.cell), int(kind), data)
+            self._prev_level = _level_of(latest)
+        except Exception:
+            return
+
+    def _observe_reward_machine_transition(self, transition: Any) -> None:
+        if self._reward_machine_pending is None or self._reward_machine_frontier is None:
+            return
+        try:
+            update = self._reward_machine_frontier.observe_action_result(
+                action=int(getattr(transition, "action", 0) or 0),
+                data=getattr(transition, "data", None),
+                tick=len(self.transitions),
+                level_before=int(getattr(transition, "level_before", 0) or 0),
+                level_after=int(getattr(transition, "level_after", 0) or 0),
+                frame_before_hash=self._reward_machine_grid_hash(getattr(transition, "grid", None)),
+                frame_after_hash=self._reward_machine_grid_hash(
+                    getattr(transition, "next_grid", None)
+                ),
+                source_transition_id=f"e3:{self.short}:{len(self.transitions)}",
+            )
+            self.reward_machine_diagnostics = self._reward_machine_frontier.diagnostics()
+            self.reward_machine_diagnostics["last_update"] = update.as_dict()
+            self.reward_machine_diagnostics["verifier_is_oracle"] = False
+            self.reward_machine_diagnostics["arc_solve_claim"] = False
+            self._pending_induction_reason = "active_reward_machine_observed"
+            self.induced = False
+            self.phase = "induce"
+        except Exception as exc:
+            self.reward_machine_diagnostics["last_update_error"] = repr(exc)[:160]
+        finally:
+            self._reward_machine_pending = None
+
+    @staticmethod
+    def _reward_machine_grid_hash(grid: Any) -> str:
+        try:
+            import numpy as np
+
+            arr = np.asarray(grid)
+            payload = {
+                "shape": list(arr.shape),
+                "values": arr.astype(int, copy=False).tolist() if arr.size else [],
+            }
+            return json.dumps(payload, sort_keys=True, separators=(",", ":"))
+        except Exception:
+            return repr(grid)[:160]
+
+    def _maybe_plan_reward_machine_probe(
+        self,
+        *,
+        attempt: dict[str, Any],
+        active_transitions: Sequence[Any],
+        plan_start_grid: Any,
+    ) -> bool:
+        if not self.active_reward_machine_enabled:
+            return False
+        try:
+            from carnot.agentic import arc_executable_world_model as e3
+
+            if self._reward_machine_frontier is None:
+                self._reward_machine_frontier = reward_machine_frontier_from_transitions(
+                    active_transitions,
+                    capacity=5,
+                    timeout_ticks=8,
+                )
+            if not isinstance(self._reward_machine_frontier, RewardMachineFrontier) and not hasattr(
+                self._reward_machine_frontier,
+                "choose_legal_disagreement",
+            ):
+                return False
+            legal_actions = tuple(self._last_legal_action_ids)
+            model_rows = [
+                row
+                for row in e3._model_candidates(plan_start_grid)
+                if int(row.get("action", 0) or 0) != 6
+            ]
+            selection = self._reward_machine_frontier.choose_legal_disagreement(
+                legal_actions=legal_actions,
+                candidate_actions=model_rows,
+                tick=len(self.transitions),
+                base_policy_action=None,
+            )
+            attempt["active_reward_machine_enabled"] = True
+            attempt["active_reward_machine_selection"] = selection.as_dict()
+            attempt["active_reward_machine_diagnostics"] = (
+                self._reward_machine_frontier.diagnostics()
+            )
+            self.reward_machine_diagnostics = self._reward_machine_frontier.diagnostics()
+            self.reward_machine_diagnostics["verifier_is_oracle"] = False
+            self.reward_machine_diagnostics["arc_solve_claim"] = False
+            if selection.action is None:
+                return False
+            self.plan = [{"action": int(selection.action), "data": selection.data}]
+            self.pi = 0
+            self._reward_machine_pending = selection
+            self._execute_plan_from_current = True
+            attempt["planned"] = True
+            attempt["plan_length"] = 1
+            attempt["engine_source"] = "active_reward_machine_disagreement_probe"
+            return True
+        except Exception as exc:
+            attempt["active_reward_machine_error"] = repr(exc)[:160]
+            self.reward_machine_diagnostics["last_error"] = repr(exc)[:160]
+            return False
+
     def _proposer(self):
         if self.proposer is None:
             import os
@@ -6596,6 +6744,13 @@ class E3AgentPolicy:
                 )
             except Exception:
                 pass
+        if latest is not None:
+            try:
+                from carnot.agentic.arc_agi3_live_adapter import _available_action_ids
+
+                self._last_legal_action_ids = tuple(_available_action_ids(latest))
+            except Exception:
+                self._last_legal_action_ids = ()
         self._maybe_route_from_frame(latest)
         # collect a transition from the last action's outcome
         if self._prev is not None and latest is not None:
@@ -6651,6 +6806,7 @@ class E3AgentPolicy:
                         except Exception:
                             pass
                     self._observe_active_probe_transition(transition)
+                    self._observe_reward_machine_transition(transition)
                     self._maybe_route_from_transitions()
             except Exception:
                 # A degenerate/empty frame (e.g. shape (0,) -- the same class of
@@ -6742,6 +6898,7 @@ class E3AgentPolicy:
                 if self._execute_plan_from_current:
                     mv = self._next_plan_move()
                     self._remember_active_probe_origin(mv, latest)
+                    self._remember_reward_machine_origin(mv, latest)
                     self._track_prev_for_transition(mv, latest)
                     self._prov_top = "induce.plan_from_current"
                     return mv
@@ -6752,6 +6909,7 @@ class E3AgentPolicy:
         if self.phase == "execute" and self.pi < len(self.plan):
             mv = self._next_plan_move()
             self._remember_active_probe_origin(mv, latest)
+            self._remember_reward_machine_origin(mv, latest)
             self._track_prev_for_transition(mv, latest)
             self._prov_top = "execute.plan_step"
             return mv
@@ -7387,6 +7545,12 @@ class E3AgentPolicy:
                         self.plan = list(stall_outcome.plan)
                         return
                 # else: fall through to active_probe_controller / plain single-shot path below
+            if _plan_start_grid is not None and self._maybe_plan_reward_machine_probe(
+                attempt=attempt,
+                active_transitions=active_transitions,
+                plan_start_grid=_plan_start_grid,
+            ):
+                return
             if self.active_probe_controller_enabled and _plan_start_grid is not None:
                 try:
                     from carnot.agentic.arc_active_probe import (
@@ -8114,6 +8278,8 @@ SUBMITTED_AGENT_CONFIG = {
     "goal_energy_candidate_guidance_beta": SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_BETA,
     "two_sided_goal_contract_enabled": SUBMITTED_TWO_SIDED_GOAL_CONTRACT_ENABLED,
     "two_sided_goal_contract_wired": True,
+    "active_reward_machine_enabled": SUBMITTED_ACTIVE_REWARD_MACHINE_ENABLED,
+    "active_reward_machine_wired": True,
     "qd_generation_enabled": SUBMITTED_QD_GENERATION_ENABLED,
     "qd_generation_mode": SUBMITTED_QD_GENERATION_MODE,
     "controllable_novelty_proposal_enabled": SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,

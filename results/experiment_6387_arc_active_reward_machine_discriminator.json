@@ -1,0 +1,745 @@
+{
+  "action_frozen_before_outcome_receipts": {
+    "environment_transition_used_after_freeze": true,
+    "frozen_hypothesis_ids": [
+      "level",
+      "same"
+    ],
+    "frozen_predictions": {
+      "level": "level_up",
+      "same": "same_frame_no_level"
+    },
+    "unique_action_frozen_before_outcome": true
+  },
+  "arc_active_reward_machine_ready_score": 1.0,
+  "arc_solve_claim": false,
+  "default_off_and_base_policy_fallback_receipts": {
+    "base_policy_fallback_count": 1,
+    "env_default": "0",
+    "env_var": "CARNOT_ARC_ACTIVE_REWARD_MACHINE",
+    "shipped_default_cannot_change_actions": true,
+    "submitted_config_default": false
+  },
+  "deterministic_game_blind_fixture_manifest": {
+    "candidate_count_range": [
+      2,
+      5
+    ],
+    "fixtures": {
+      "contradictory_evidence": {
+        "expected": "contradiction_no_wrong_elimination"
+      },
+      "deadline_timeout": {
+        "expected": "stale_probe_abstention"
+      },
+      "delayed_evidence": {
+        "deadline_ticks": 1,
+        "expected": "timeout_no_elimination"
+      },
+      "no_disagreement": {
+        "expected": "base_policy_fallback",
+        "hypotheses": 2
+      },
+      "repeated_frames": {
+        "expected": "duplicate_collapsed",
+        "visible_symbol": "same_frame_no_level"
+      },
+      "unique_disagreement": {
+        "expected_probe_action": 2,
+        "hypotheses": 2,
+        "legal_actions": [
+          1,
+          2
+        ]
+      }
+    },
+    "forbidden_access_counts": {
+      "adapter_lookup_calls": 0,
+      "hidden_source_reads": 0,
+      "offline_search_calls": 0,
+      "oracle_result_before_action_reads": 0
+    },
+    "game_blind": true,
+    "version": "6387.1",
+    "visible_event_symbols": [
+      "same_frame_no_level",
+      "frame_changed_no_level",
+      "level_up"
+    ]
+  },
+  "duration_s": 1.5452,
+  "exp6386_gate_receipt": {
+    "arc_solve_claim": false,
+    "arc_two_sided_goal_contract_ready_score": 1.0,
+    "passed": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6386_arc_two_sided_goal_evidence_contract.json",
+    "path_sha256": "c2e0e3c362dd6a1a3c02592b4ffd9891eb9a4a7697ba90f915e3e341b651351e",
+    "status": "complete",
+    "verifier_is_oracle": false
+  },
+  "field_principles": {
+    "action_frozen_before_outcome_receipts": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "arc_active_reward_machine_ready_score": "1.0 only for default-off reachability plus clean evidence integrity and zero forbidden access",
+    "arc_solve_claim": "false because reward-machine discrimination is not a game or level solve",
+    "default_off_and_base_policy_fallback_receipts": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "deterministic_game_blind_fixture_manifest": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "duration_s": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "exp6386_gate_receipt": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "field_principles": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "field_provenance": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "hidden_source_offline_search_adapter_and_oracle_access_counts": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "honest_verdict": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "hypothesis_and_transition_evidence_trajectories": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "hypothesis_capacity_eviction_abstention_and_timeout_rules": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "hypothesis_elimination_wrong_elimination_abstention_cost_and_latency": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "inference_substrate": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "legal_disagreement_action_selection_receipts": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "live_entrypoint_and_feature_flag_reachability": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "no_duplicate_solve_target_receipt": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "preconditions_checked": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "protected_files_unchanged": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "random_seed": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "registry_precheck_path_hash_and_unchanged_receipt": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "registry_write_count": "must stay zero because no solve credit is requested",
+    "reproducibility_checksum": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "reward_machine_schema_path_hash_and_version": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "status": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "tests_run": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "two_sided_admission_results": "required Exp6387 field; keeps live reachability, evidence integrity, and no-solve boundaries auditable",
+    "verifier_is_oracle": "false because transition outcomes are evaluation evidence only after action freeze"
+  },
+  "field_provenance": {
+    "exp6386_gate_receipt": "results/experiment_6386_arc_two_sided_goal_evidence_contract.json",
+    "hidden_source_offline_search_adapter_and_oracle_access_counts": "deterministic game-blind fixture manifest",
+    "live_entrypoint_and_feature_flag_reachability": "inspect source for make_carnot_agent and E3AgentPolicy",
+    "protected_files_unchanged": "sha256 comparison against run-start and HEAD where available",
+    "registry_precheck_path_hash_and_unchanged_receipt": "ops/arc_solve_registry.yaml",
+    "reward_machine_schema_path_hash_and_version": "python/carnot/agentic/arc_active_reward_machine_frontier.py"
+  },
+  "hidden_source_offline_search_adapter_and_oracle_access_counts": {
+    "adapter_lookup_calls": 0,
+    "hidden_source_reads": 0,
+    "offline_search_calls": 0,
+    "oracle_result_before_action_reads": 0
+  },
+  "honest_verdict": "complete_active_reward_machine_default_off_live_reachable_no_solve_claim",
+  "hypothesis_and_transition_evidence_trajectories": {
+    "capacity_timeout_contradiction_duplicate": {
+      "contradiction_selection": {
+        "action": 2,
+        "data": null,
+        "expected_elimination": 1,
+        "fallback_action": null,
+        "frozen_before_outcome": true,
+        "frozen_hypothesis_ids": [
+          "middle",
+          "newest"
+        ],
+        "frozen_predictions": {
+          "middle": "frame_changed_no_level",
+          "newest": "level_up"
+        },
+        "legal_actions": [
+          2
+        ],
+        "prediction_buckets": [
+          {
+            "hypotheses": [
+              "middle"
+            ],
+            "n_hypotheses": 1,
+            "predicted_symbol": "frame_changed_no_level"
+          },
+          {
+            "hypotheses": [
+              "newest"
+            ],
+            "n_hypotheses": 1,
+            "predicted_symbol": "level_up"
+          }
+        ],
+        "reason": "legal_prediction_disagreement"
+      },
+      "contradiction_update": {
+        "action_frozen_before_outcome": true,
+        "arc_solve_claim": false,
+        "eliminated_hypothesis_ids": [],
+        "evaluated_hypothesis_ids": [
+          "middle",
+          "newest"
+        ],
+        "kept_hypothesis_ids": [],
+        "observed_symbol": "same_frame_no_level",
+        "state": "contradiction",
+        "two_sided_admission": {
+          "middle": {
+            "accepted_firing_witness_ids": [],
+            "accepted_nonfiring_contrast_ids": [
+              "fixture:contradiction:same:middle"
+            ],
+            "contradiction_event_ids": [],
+            "duplicate_event_count": 0,
+            "firing_witness_ids": [],
+            "hypothesis_id": "middle",
+            "nonfiring_contrast_ids": [
+              "fixture:contradiction:same:middle"
+            ],
+            "reasons": [
+              "no_preregistered_firing_witness",
+              "missing_firing_witness"
+            ],
+            "reversed_event_ids": [],
+            "solve_credit_allowed": false,
+            "state": "unverifiable",
+            "termination_allowed": false,
+            "window_event_ids": [
+              "fixture:contradiction:same:middle"
+            ]
+          },
+          "newest": {
+            "accepted_firing_witness_ids": [],
+            "accepted_nonfiring_contrast_ids": [],
+            "contradiction_event_ids": [],
+            "duplicate_event_count": 0,
+            "firing_witness_ids": [
+              "fixture:contradiction:same:newest"
+            ],
+            "hypothesis_id": "newest",
+            "nonfiring_contrast_ids": [],
+            "reasons": [
+              "no_preregistered_nonfiring_contrast",
+              "missing_firing_witness",
+              "missing_nonfiring_contrast"
+            ],
+            "reversed_event_ids": [],
+            "solve_credit_allowed": false,
+            "state": "rejected",
+            "termination_allowed": false,
+            "window_event_ids": [
+              "fixture:contradiction:same:newest"
+            ]
+          }
+        },
+        "wrong_elimination_count": 0
+      },
+      "duplicate_update": {
+        "action_frozen_before_outcome": false,
+        "arc_solve_claim": false,
+        "eliminated_hypothesis_ids": [],
+        "evaluated_hypothesis_ids": [],
+        "kept_hypothesis_ids": [],
+        "observed_symbol": "",
+        "state": "duplicate",
+        "two_sided_admission": {},
+        "wrong_elimination_count": 0
+      },
+      "timeout_selection": {
+        "action": 2,
+        "data": null,
+        "expected_elimination": 1,
+        "fallback_action": null,
+        "frozen_before_outcome": true,
+        "frozen_hypothesis_ids": [
+          "middle",
+          "newest"
+        ],
+        "frozen_predictions": {
+          "middle": "frame_changed_no_level",
+          "newest": "level_up"
+        },
+        "legal_actions": [
+          2
+        ],
+        "prediction_buckets": [
+          {
+            "hypotheses": [
+              "middle"
+            ],
+            "n_hypotheses": 1,
+            "predicted_symbol": "frame_changed_no_level"
+          },
+          {
+            "hypotheses": [
+              "newest"
+            ],
+            "n_hypotheses": 1,
+            "predicted_symbol": "level_up"
+          }
+        ],
+        "reason": "legal_prediction_disagreement"
+      },
+      "timeout_update": {
+        "action_frozen_before_outcome": true,
+        "arc_solve_claim": false,
+        "eliminated_hypothesis_ids": [],
+        "evaluated_hypothesis_ids": [
+          "middle",
+          "newest"
+        ],
+        "kept_hypothesis_ids": [],
+        "observed_symbol": "",
+        "state": "timeout",
+        "two_sided_admission": {},
+        "wrong_elimination_count": 0
+      }
+    },
+    "no_disagreement": {
+      "selection": {
+        "action": null,
+        "data": null,
+        "expected_elimination": 0,
+        "fallback_action": [
+          1,
+          null
+        ],
+        "frozen_before_outcome": false,
+        "frozen_hypothesis_ids": [],
+        "frozen_predictions": {},
+        "legal_actions": [
+          1,
+          2
+        ],
+        "prediction_buckets": [],
+        "reason": "no_safe_legal_disagreement"
+      }
+    },
+    "two_sided_admission": {
+      "contrast_update": {
+        "action_frozen_before_outcome": true,
+        "arc_solve_claim": false,
+        "eliminated_hypothesis_ids": [],
+        "evaluated_hypothesis_ids": [
+          "goal_level",
+          "goal_same"
+        ],
+        "kept_hypothesis_ids": [
+          "goal_level",
+          "goal_same"
+        ],
+        "observed_symbol": "same_frame_no_level",
+        "state": "evaluated",
+        "two_sided_admission": {
+          "goal_level": {
+            "accepted_firing_witness_ids": [],
+            "accepted_nonfiring_contrast_ids": [
+              "fixture:two-sided:contrast:goal_level"
+            ],
+            "contradiction_event_ids": [],
+            "duplicate_event_count": 0,
+            "firing_witness_ids": [],
+            "hypothesis_id": "goal_level",
+            "nonfiring_contrast_ids": [
+              "fixture:two-sided:contrast:goal_level"
+            ],
+            "reasons": [
+              "no_preregistered_firing_witness",
+              "missing_firing_witness"
+            ],
+            "reversed_event_ids": [],
+            "solve_credit_allowed": false,
+            "state": "unverifiable",
+            "termination_allowed": false,
+            "window_event_ids": [
+              "fixture:two-sided:contrast:goal_level"
+            ]
+          },
+          "goal_same": {
+            "accepted_firing_witness_ids": [],
+            "accepted_nonfiring_contrast_ids": [
+              "fixture:two-sided:contrast:goal_same"
+            ],
+            "contradiction_event_ids": [],
+            "duplicate_event_count": 0,
+            "firing_witness_ids": [],
+            "hypothesis_id": "goal_same",
+            "nonfiring_contrast_ids": [
+              "fixture:two-sided:contrast:goal_same"
+            ],
+            "reasons": [
+              "no_preregistered_firing_witness",
+              "missing_firing_witness"
+            ],
+            "reversed_event_ids": [],
+            "solve_credit_allowed": false,
+            "state": "unverifiable",
+            "termination_allowed": false,
+            "window_event_ids": [
+              "fixture:two-sided:contrast:goal_same"
+            ]
+          }
+        },
+        "wrong_elimination_count": 0
+      },
+      "fire_selection": {
+        "action": 2,
+        "data": null,
+        "expected_elimination": 1,
+        "fallback_action": null,
+        "frozen_before_outcome": true,
+        "frozen_hypothesis_ids": [
+          "goal_level",
+          "goal_same"
+        ],
+        "frozen_predictions": {
+          "goal_level": "level_up",
+          "goal_same": "same_frame_no_level"
+        },
+        "legal_actions": [
+          2
+        ],
+        "prediction_buckets": [
+          {
+            "hypotheses": [
+              "goal_level"
+            ],
+            "n_hypotheses": 1,
+            "predicted_symbol": "level_up"
+          },
+          {
+            "hypotheses": [
+              "goal_same"
+            ],
+            "n_hypotheses": 1,
+            "predicted_symbol": "same_frame_no_level"
+          }
+        ],
+        "reason": "legal_prediction_disagreement"
+      },
+      "fire_update": {
+        "action_frozen_before_outcome": true,
+        "arc_solve_claim": false,
+        "eliminated_hypothesis_ids": [
+          "goal_same"
+        ],
+        "evaluated_hypothesis_ids": [
+          "goal_level",
+          "goal_same"
+        ],
+        "kept_hypothesis_ids": [
+          "goal_level"
+        ],
+        "observed_symbol": "level_up",
+        "state": "evaluated",
+        "two_sided_admission": {
+          "goal_level": {
+            "accepted_firing_witness_ids": [
+              "fixture:two-sided:fire:goal_level"
+            ],
+            "accepted_nonfiring_contrast_ids": [
+              "fixture:two-sided:contrast:goal_level"
+            ],
+            "contradiction_event_ids": [],
+            "duplicate_event_count": 0,
+            "firing_witness_ids": [
+              "fixture:two-sided:fire:goal_level"
+            ],
+            "hypothesis_id": "goal_level",
+            "nonfiring_contrast_ids": [
+              "fixture:two-sided:contrast:goal_level"
+            ],
+            "reasons": [
+              "bounded_two_sided_evidence"
+            ],
+            "reversed_event_ids": [],
+            "solve_credit_allowed": true,
+            "state": "accepted",
+            "termination_allowed": true,
+            "window_event_ids": [
+              "fixture:two-sided:contrast:goal_level",
+              "fixture:two-sided:fire:goal_level"
+            ]
+          },
+          "goal_same": {
+            "accepted_firing_witness_ids": [],
+            "accepted_nonfiring_contrast_ids": [
+              "fixture:two-sided:contrast:goal_same"
+            ],
+            "contradiction_event_ids": [],
+            "duplicate_event_count": 0,
+            "firing_witness_ids": [],
+            "hypothesis_id": "goal_same",
+            "nonfiring_contrast_ids": [
+              "fixture:two-sided:contrast:goal_same",
+              "fixture:two-sided:fire:goal_same"
+            ],
+            "reasons": [
+              "no_preregistered_firing_witness",
+              "missing_firing_witness",
+              "contrast_leveled_up"
+            ],
+            "reversed_event_ids": [],
+            "solve_credit_allowed": false,
+            "state": "rejected",
+            "termination_allowed": false,
+            "window_event_ids": [
+              "fixture:two-sided:contrast:goal_same",
+              "fixture:two-sided:fire:goal_same"
+            ]
+          }
+        },
+        "wrong_elimination_count": 0
+      }
+    },
+    "unique_disagreement": {
+      "selection": {
+        "action": 2,
+        "data": null,
+        "expected_elimination": 1,
+        "fallback_action": [
+          1,
+          null
+        ],
+        "frozen_before_outcome": true,
+        "frozen_hypothesis_ids": [
+          "level",
+          "same"
+        ],
+        "frozen_predictions": {
+          "level": "level_up",
+          "same": "same_frame_no_level"
+        },
+        "legal_actions": [
+          1,
+          2
+        ],
+        "prediction_buckets": [
+          {
+            "hypotheses": [
+              "level"
+            ],
+            "n_hypotheses": 1,
+            "predicted_symbol": "level_up"
+          },
+          {
+            "hypotheses": [
+              "same"
+            ],
+            "n_hypotheses": 1,
+            "predicted_symbol": "same_frame_no_level"
+          }
+        ],
+        "reason": "legal_prediction_disagreement"
+      },
+      "update": {
+        "action_frozen_before_outcome": true,
+        "arc_solve_claim": false,
+        "eliminated_hypothesis_ids": [
+          "same"
+        ],
+        "evaluated_hypothesis_ids": [
+          "level",
+          "same"
+        ],
+        "kept_hypothesis_ids": [
+          "level"
+        ],
+        "observed_symbol": "level_up",
+        "state": "evaluated",
+        "two_sided_admission": {
+          "level": {
+            "accepted_firing_witness_ids": [
+              "fixture:unique:outcome:level"
+            ],
+            "accepted_nonfiring_contrast_ids": [],
+            "contradiction_event_ids": [],
+            "duplicate_event_count": 0,
+            "firing_witness_ids": [
+              "fixture:unique:outcome:level"
+            ],
+            "hypothesis_id": "level",
+            "nonfiring_contrast_ids": [],
+            "reasons": [
+              "no_preregistered_nonfiring_contrast",
+              "missing_nonfiring_contrast"
+            ],
+            "reversed_event_ids": [],
+            "solve_credit_allowed": false,
+            "state": "unverifiable",
+            "termination_allowed": false,
+            "window_event_ids": [
+              "fixture:unique:outcome:level"
+            ]
+          },
+          "same": {
+            "accepted_firing_witness_ids": [],
+            "accepted_nonfiring_contrast_ids": [],
+            "contradiction_event_ids": [],
+            "duplicate_event_count": 0,
+            "firing_witness_ids": [],
+            "hypothesis_id": "same",
+            "nonfiring_contrast_ids": [
+              "fixture:unique:outcome:same"
+            ],
+            "reasons": [
+              "no_preregistered_firing_witness",
+              "missing_firing_witness",
+              "contrast_leveled_up",
+              "missing_nonfiring_contrast"
+            ],
+            "reversed_event_ids": [],
+            "solve_credit_allowed": false,
+            "state": "rejected",
+            "termination_allowed": false,
+            "window_event_ids": [
+              "fixture:unique:outcome:same"
+            ]
+          }
+        },
+        "wrong_elimination_count": 0
+      }
+    }
+  },
+  "hypothesis_capacity_eviction_abstention_and_timeout_rules": {
+    "abstention": "no safe legal disagreement, unknown prediction, or fewer than two hypotheses",
+    "action_freeze": "action, legal set, active ids, and predictions are copied before outcome",
+    "capacity": "bounded integer; Exp6387 default is five active hypotheses",
+    "contradiction": "all active predictions mismatch the outcome; no mass elimination",
+    "duplicate": "source_transition_id is processed once",
+    "eviction": "deterministic oldest-active eviction when capacity is exceeded",
+    "timeout": "pending probe expires after timeout_ticks before evidence can update beliefs"
+  },
+  "hypothesis_elimination_wrong_elimination_abstention_cost_and_latency": {
+    "abstention_count": 1,
+    "base_policy_fallback_count": 1,
+    "evidence_event_count": 8,
+    "hypothesis_elimination_count": 2,
+    "latency_s_total": 0.0,
+    "legal_action_mutation_count": 0,
+    "timeout_count": 1,
+    "wrong_elimination_count": 0
+  },
+  "inference_substrate": "live_agent_visible_event_reward_machine_frontier_no_llm_no_solve",
+  "legal_disagreement_action_selection_receipts": {
+    "expected_elimination": 1,
+    "illegal_candidate_ignored": true,
+    "no_disagreement_abstained": true,
+    "unique_selected_legal_action": true
+  },
+  "live_entrypoint_and_feature_flag_reachability": {
+    "active_reward_machine_kwarg_in_e3_policy": true,
+    "e3_agent_policy_importable": true,
+    "entrypoint": "make_carnot_agent -> E3AgentPolicy",
+    "env_flag_supported": true,
+    "make_carnot_agent_constructs_e3_policy": true,
+    "make_carnot_agent_importable": true,
+    "submitted_default_cannot_change_actions": true,
+    "submitted_default_off": true
+  },
+  "no_duplicate_solve_target_receipt": {
+    "arc_solve_claim": false,
+    "duplicate_solve_target": false,
+    "public_solve_target_selected": false,
+    "registry_record_change_requested": false
+  },
+  "preconditions_checked": {
+    "agents_codex_and_claude_instructions_read": true,
+    "environment_transitions_are_post_freeze_evidence_only": true,
+    "exp6386_ready_score": 1.0,
+    "no_solve_registry_write_attempted": true,
+    "planning_date": "20260813",
+    "registry_hash_checked_before_and_after": true,
+    "scripts_research_conductor_unmodified": true,
+    "spec_has_req_6387": true,
+    "spec_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/arc-agi/spec.md"
+  },
+  "protected_files_unchanged": {
+    "ops/arc_solve_registry.yaml": true,
+    "scripts/research_conductor.py": true
+  },
+  "random_seed": 6387,
+  "registry_precheck_path_hash_and_unchanged_receipt": {
+    "checked_before_active_goal_selection": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+    "path_hashes": {
+      "entrypoint": "e04d0ab8b6ebdb2f8c1e539d19022f8aea3925de47c5feacbf45091de909b11c",
+      "evidence_contract": "10ec21fee1ee145e5c279a45df0d64115ff982d9dd3faf91d22e2fbd5458a4e1",
+      "legal_action_provider": "02696c233fbe2a8e382e7404ccbb89e38b73ed7bde39382fcd2950cbd24d9152"
+    },
+    "sha256_after": "071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "sha256_before": "071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "unchanged": true
+  },
+  "registry_write_count": 0,
+  "reproducibility_checksum": "c6bf38d5a2efe6b76949d2259dfa228a6a3bcf1d3972d1ec387460763375b1b6",
+  "reward_machine_schema_path_hash_and_version": {
+    "automaton_state_bound": 5,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_active_reward_machine_frontier.py",
+    "sha256": "30f8d952ebb9181af580de28b4cadf4dd447274992b5ceb2bc8228a48f7d0dcf",
+    "version": "6387.1",
+    "visible_event_symbols": [
+      "same_frame_no_level",
+      "frame_changed_no_level",
+      "level_up"
+    ]
+  },
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_arc_active_reward_machine_frontier.py -q",
+    ".venv/bin/pytest tests/python/test_arc_two_sided_goal_contract.py -q",
+    ".venv/bin/python -m carnot.experiment_6387_arc_active_reward_machine_discriminator --date 20260813",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/pytest tests/python/test_arc_active_reward_machine_frontier.py --cov=carnot.agentic.arc_active_reward_machine_frontier --cov=carnot.experiment_6387_arc_active_reward_machine_discriminator --cov-report=term-missing --cov-fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6387_arc_active_reward_machine_discriminator.json",
+    ".venv/bin/python scripts/arc_orphan_solver_lint.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py --check"
+  ],
+  "two_sided_admission_results": {
+    "goal_level": {
+      "accepted_firing_witness_ids": [
+        "fixture:two-sided:fire:goal_level"
+      ],
+      "accepted_nonfiring_contrast_ids": [
+        "fixture:two-sided:contrast:goal_level"
+      ],
+      "contradiction_event_ids": [],
+      "duplicate_event_count": 0,
+      "firing_witness_ids": [
+        "fixture:two-sided:fire:goal_level"
+      ],
+      "hypothesis_id": "goal_level",
+      "nonfiring_contrast_ids": [
+        "fixture:two-sided:contrast:goal_level"
+      ],
+      "reasons": [
+        "bounded_two_sided_evidence"
+      ],
+      "reversed_event_ids": [],
+      "solve_credit_allowed": true,
+      "state": "accepted",
+      "termination_allowed": true,
+      "window_event_ids": [
+        "fixture:two-sided:contrast:goal_level",
+        "fixture:two-sided:fire:goal_level"
+      ]
+    },
+    "goal_same": {
+      "accepted_firing_witness_ids": [],
+      "accepted_nonfiring_contrast_ids": [
+        "fixture:two-sided:contrast:goal_same"
+      ],
+      "contradiction_event_ids": [],
+      "duplicate_event_count": 0,
+      "firing_witness_ids": [],
+      "hypothesis_id": "goal_same",
+      "nonfiring_contrast_ids": [
+        "fixture:two-sided:contrast:goal_same",
+        "fixture:two-sided:fire:goal_same"
+      ],
+      "reasons": [
+        "no_preregistered_firing_witness",
+        "missing_firing_witness",
+        "contrast_leveled_up"
+      ],
+      "reversed_event_ids": [],
+      "solve_credit_allowed": false,
+      "state": "rejected",
+      "termination_allowed": false,
+      "window_event_ids": [
+        "fixture:two-sided:contrast:goal_same",
+        "fixture:two-sided:fire:goal_same"
+      ]
+    }
+  },
+  "verifier_is_oracle": false
+}
