@@ -15833,3 +15833,4 @@ code |
 | 2026-08-14 17:59 UTC | Gated on Exp6428 positive admission: prospective w | OK | 88 passed, 1 warning in 12.80s |
 | 2026-08-14 18:23 UTC | Gated on Exp6430 prospective stream: controlled me | OK | 88 passed, 1 warning in 15.52s |
 | 2026-08-14 18:42 UTC | Gated on Exp6430 and Exp6431: held-shift process-r | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-14 19:05 UTC | Independent V553 CSL row-recomputation and safety  | OK | 88 passed, 1 warning in 12.65s |
