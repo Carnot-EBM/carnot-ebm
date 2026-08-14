@@ -225,8 +225,37 @@ flags:
     promotable: false
     state: unevaluated
   CARNOT_ARC_GRID_FALLBACK_CANDIDATES:
+    benchmark_reachable: true
     discovered: '2026-08-14'
-    evidence: []
+    evidence:
+    - arm_total_levels: 5
+      baseline_total_levels: 16
+      date: '2026-08-14'
+      engine: scored
+      games_compared: 25
+      identical_to_baseline: false
+      levels_improved: []
+      levels_regressed:
+      - bp35
+      - cd82
+      - dc22
+      - lf52
+      - r11l
+      - s5i5
+      - su15
+      - vc33
+      lever_counters_moved: true
+      same_levels_cheaper: []
+      same_levels_costlier:
+      - lp85
+      - sp80
+      value: '1'
+      verdict: 'REFUSED: regressed on [''bp35'', ''cd82'', ''dc22'', ''lf52'', ''r11l'', ''s5i5'', ''su15'',
+        ''vc33'']. A flag that breaks a game it used to clear is not promoted, whatever the aggregate
+        says.'
+    last_measured: '2026-08-14'
+    measured_on_engine: scored
+    promotable: false
     state: unevaluated
   CARNOT_ARC_HAZARD_MOVE_PRUNER:
     discovered: '2026-08-14'
