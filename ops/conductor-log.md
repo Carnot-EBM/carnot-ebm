@@ -15802,3 +15802,8 @@ code |
 | 2026-08-14 02:00 UTC | V551 terminal evidence handoff and V552 queue pref | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: nd_receipts"]  |
 | 2026-08-14 03:25 UTC | V551 terminal evidence handoff and V552 queue pref | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: fault occurred |
 | 2026-08-14 03:46 UTC | V551 terminal evidence handoff and V552 queue pref | OK | cache hit: 88 passed, 1 warning in 68.69s (0:01:08) |
+| 2026-08-14 05:09 UTC | V552 dated source delta and executable scope freez | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: fact.json"),
++ |
+| 2026-08-14 06:33 UTC | V552 dated source delta and executable scope freez | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output:    },
++    },
+ |

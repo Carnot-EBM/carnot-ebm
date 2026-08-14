@@ -129,6 +129,123 @@ false.
 |---|---|---|
 | REQ-REPORT-6405 | Planned (`python/carnot/experiment_6405_v551_post_marker_source_scope_freeze.py`, terminal artifact `results/experiment_6405_v551_post_marker_source_scope_freeze.json`) | Planned (`tests/python/test_experiment_6405_v551_post_marker_source_scope_freeze.py`) |
 
+### REQ-REPORT-6411: V552 Source Marker And Executable Scope Freeze
+
+Carnot SHALL build Exp6411 as a dated V552 source-marker validation and
+scope-freeze report for planning date 20260814. The report SHALL locate the
+exact `<!-- V552-PLANNER-REFRESH-20260813-END -->` marker in
+`research-references.md`. It SHALL hash the full V552 planner section and
+record the marker path, line, commit, and UTC source lower bound.
+
+Exp6411 SHALL check network reachability before live source requests. If a
+source endpoint fails or rate-limits the run, it SHALL record the endpoint,
+status, headers, and error. It SHALL not invent source content.
+
+Exp6411 SHALL validate direct arXiv metadata and public URLs for the V552
+marker sources: Agentic Router (`2608.09184`), Boolean WCSP CCG
+kernelization (`2608.10005`), and Rethinking LLM Verification
+(`2608.10725`). Each receipt SHALL record the arXiv ID, title, submitted
+date, direct URL, abstract hash, endpoint outcome, public availability, and
+fallback state.
+
+Exp6411 SHALL recheck OpenReview, Hugging Face Papers, Semantic Scholar EBT
+and ARM-EBM citation records, GitHub Trending, Extropic first-party pages,
+and Logical Intelligence first-party pages. It SHALL classify each finding as
+`executable_now`, `diagnostic_control`, `deferred`, `retired_scope`,
+`product_status`, or `unavailable`.
+
+Exp6411 SHALL freeze authentic GGUF receipts, fresh exact event capture, CCG
+kernelization, selective refinement, prospective dual-path continuous
+self-learning, and default-off ARC policy influence as active lanes. It SHALL
+freeze hidden-state scoring, external generated-text scoring, grammar/parser
+transport retries, EBT pretraining, KAN training, unchanged hardware probes,
+TSU execution, Kona execution, and offline ARC solves as closed, deferred, or
+product-only scope. A product announcement or vocabulary match SHALL not
+reopen a closed technique.
+
+Exp6411 SHALL record whether strict post-marker public source evidence
+changes V552 scope. It SHALL not edit the queue silently.
+
+The Exp6411 artifact SHALL be written atomically to
+`results/experiment_6411_v552_post_marker_source_scope_freeze.json` with
+`inference_substrate=web_and_bibliographic_search_only` and
+`verifier_is_oracle=false`.
+
+The Exp6411 artifact SHALL include these required fields: `status`,
+`planner_marker_path_and_hash`, `source_window_start_and_end_utc`,
+`direct_arxiv_source_receipts`, `openreview_receipts`,
+`huggingface_papers_receipts`,
+`semantic_scholar_ebt_and_arm_ebm_receipts`, `github_trending_receipts`,
+`extropic_first_party_receipts`,
+`logical_intelligence_first_party_receipts`,
+`promoted_method_classifications`, `executable_scope`,
+`diagnostic_controls`, `deferred_product_and_hardware_scope`,
+`retired_or_closed_scope`, `unavailable_sources_and_rate_limits`,
+`post_marker_delta`, `scope_changed_after_marker`, `queue_edit_required`,
+`protected_files_unchanged`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `field_principles`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`,
+`reproducibility_checksum`, and `honest_verdict`. `field_principles` SHALL
+map every classification and scope decision. `field_provenance` SHALL cover
+every required field with measured, derived, constant, or upstream
+provenance.
+
+#### SCENARIO-REPORT-6411-1: V552 Marker Section Is Hash-Pinned
+
+**Given** the V552 planner marker is present in `research-references.md`
+**When** Exp6411 builds the marker receipt
+**Then** it records one marker, its line, the full-section SHA-256 hash, and
+the marker commit time as the exclusive source lower bound.
+
+#### SCENARIO-REPORT-6411-2: V552 arXiv Receipts Validate Or Fall Back
+
+**Given** the V552 marker paper IDs are known
+**When** Exp6411 queries arXiv metadata
+**Then** each paper receipt records title, submitted date, abstract hash,
+direct URL, endpoint outcome, public availability, and whether live metadata
+or planner fallback was used.
+
+#### SCENARIO-REPORT-6411-3: Source Classes Keep Scope Separate
+
+**Given** source rows from primary, secondary, product, repository, or failed
+routes
+**When** Exp6411 classifies them
+**Then** executable scope can change only from stable, public, primary or
+first-party rows that map to a bounded local V552 lane.
+
+#### SCENARIO-REPORT-6411-4: Active V552 Lanes Are Frozen
+
+**Given** the V552 marker names authenticated receipts, exact event capture,
+CCG kernelization, selective refinement, dual-path learning, and ARC policy
+influence
+**When** Exp6411 freezes executable scope
+**Then** those mechanisms stay inside the six active lanes and the queue
+requires no edit when no strict post-marker delta supersedes them.
+
+#### SCENARIO-REPORT-6411-5: Closed Scope Stays Closed
+
+**Given** a source uses terms related to hidden states, generated text,
+grammar retries, EBT, KAN, board probes, TSU, Kona, or ARC solves
+**When** Exp6411 classifies that source
+**Then** it records the row only as a diagnostic, deferred, retired, product,
+or unavailable source unless a new authenticated local executable route
+exists.
+
+#### SCENARIO-REPORT-6411-6: Artifact Is Annotated And Non-Mutating
+
+**Given** source receipts, protected hashes, command receipts, and field maps
+are assembled
+**When** Exp6411 validates the report before writing
+**Then** every required field has a principle and provenance, protected files
+remain byte-identical, the checksum matches, and `verifier_is_oracle` is
+false.
+
+## Implementation Status (REQ-REPORT-6411)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6411 | Planned (`python/carnot/experiment_6411_v552_post_marker_source_scope_freeze.py`, terminal artifact `results/experiment_6411_v552_post_marker_source_scope_freeze.json`) | Planned (`tests/python/test_experiment_6411_v552_post_marker_source_scope_freeze.py`) |
+
 ### REQ-REPORT-6143: Experiment Test Artifact Isolation
 
 Carnot experiment artifact writers SHALL resolve output paths through one
