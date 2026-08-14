@@ -15820,3 +15820,4 @@ code |
 | 2026-08-14 10:45 UTC | Gated on Exp6418 positive CSL: held-shift and rest | OK | cache hit: 87 passed, 2 warnings in 8.74s |
 | 2026-08-14 11:14 UTC | Independent execution-grounded CSL authenticity an | OK | 87 passed, 1 warning in 10.47s |
 | 2026-08-14 11:32 UTC | Gated on Exp6413 receipts: default-off live ARC ex | OK | 100 passed, 1 warning in 14.61s |
+| 2026-08-14 11:50 UTC | Independent held-family ARC executed-policy safety | OK | 100 passed, 1 warning in 18.42s |
