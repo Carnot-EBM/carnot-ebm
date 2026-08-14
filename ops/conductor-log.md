@@ -15836,3 +15836,4 @@ code |
 | 2026-08-14 19:05 UTC | Independent V553 CSL row-recomputation and safety  | OK | 88 passed, 1 warning in 12.65s |
 | 2026-08-14 20:27 UTC | ARC generic state-key reachability invariant and f | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: act: ["forced  |
 | 2026-08-14 20:29 UTC | ARC generic state-key reachability invariant and f | OK | Deliverable already exists in repo |
+| 2026-08-14 20:56 UTC | V553 adversarial capstone, claim decision, and doc | OK | 146 passed, 1 warning in 50.32s |
