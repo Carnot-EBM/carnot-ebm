@@ -4924,6 +4924,153 @@ recover exactly, all attacks fail closed, and no adversarial flag remains
 | SCENARIO-LEARN-6432-ATTACKS | Implemented: `python/carnot/experiment_6432_held_shift_process_restart_csl_replication.py`. | Implemented: `tests/python/test_experiment_6432_held_shift_process_restart_csl_replication.py`. |
 | SCENARIO-LEARN-6432-READY | Implemented: `python/carnot/experiment_6432_held_shift_process_restart_csl_replication.py`. | Implemented: `tests/python/test_experiment_6432_held_shift_process_restart_csl_replication.py`. |
 
+## REQ-LEARN-6433: CSL Row Recomputation Safety Audit
+
+**Given** Exp6420 nullified the V552 CSL claim and Exp6430, Exp6431, and
+Exp6432 report new positive V553 summaries
+**When** Exp6433 runs on planning date 20260814
+**Then** it SHALL write
+`results/experiment_6433_csl_row_recomputation_safety_audit.json`
+**And** it SHALL recompute V553 metrics from immutable row evidence without
+importing Exp6430, Exp6431, or Exp6432 aggregate or readiness functions.
+
+Exp6433 SHALL hash every expected upstream artifact, embedded row block,
+manifest, raw output, source, test, checker, receipt helper, memory head, and
+determination record. It SHALL record CPU, RAM, disk, missing inputs, and the
+current repository state.
+
+Exp6433 SHALL classify every expected input as present, missing, skipped,
+blocked, null, flagged, underpowered, or eligible. Missing rows SHALL remain
+visible. Missing rows SHALL never become zeros and SHALL never be dropped from
+denominators.
+
+Exp6433 SHALL recheck manifest pre-absence receipts, unique event ids, unique
+raw-output hashes across event ids, prompt and model bindings, proposal-before-
+outcome order, exact feedback order, capacity enforcement, memory authority,
+head transitions, held-policy freeze, and restart persistence.
+
+Exp6433 SHALL derive development capacity, interference, and held metrics from
+per-unit rows and immutable sidecar rows. It SHALL compute counts, rates,
+deltas, confidence intervals, capacity frontier points, interference results,
+held effects, retention, forgetting, contamination, restart recovery, growth,
+and costs independently of upstream aggregate code.
+
+Exp6433 SHALL compare every reported value it audits with its independent
+value. Each comparison SHALL record absolute delta, tolerance, row population,
+filter, numerator, denominator, and mismatch reason.
+
+Exp6433 SHALL replay raw-output reuse, cache resurrection, row deletion,
+duplicate event, event reorder, same-step write, stale head, authority spoof,
+supersession bypass, hidden retuning, future leakage, restart corruption,
+rollback omission, and exact-veto override attacks. Critical attacks SHALL fail
+closed before claim eligibility can become true.
+
+Exp6433 SHALL preserve stamped adversarial findings separately from current
+adversarial findings. It SHALL also record determination-preservation and
+artifact-convention audit findings.
+
+Exp6433 SHALL set `prospective_csl_claim_eligibility=true` only when all
+required rows exist, headline values recompute within frozen tolerance,
+development and held future effects are positive with adequate effective sample
+size, protected retention holds, contamination is zero, every critical attack
+fails closed, and no current flag remains. Otherwise it SHALL use a
+`complete_null` or `complete_blocked` verdict with a `blocked_reason`.
+
+Exp6433 SHALL emit these fields:
+
+- `status`
+- `expected_and_available_upstream_inputs`
+- `upstream_artifact_row_manifest_raw_source_test_checker_receipt_head_and_determination_hashes`
+- `missing_input_findings`
+- `upstream_state_by_task`
+- `per_unit_rows`
+- `event_and_raw_output_uniqueness_rechecks`
+- `causal_order_and_exact_feedback_rechecks`
+- `capacity_and_head_transition_rechecks`
+- `held_freeze_and_restart_rechecks`
+- `independently_recomputed_development_capacity_interference_and_held_metrics`
+- `reported_vs_recomputed_deltas`
+- `mismatch_count`
+- `effective_sample_sizes_and_uncertainty_rechecks`
+- `retention_forgetting_contamination_growth_restart_and_cost_rechecks`
+- `attack_matrix`
+- `open_critical_attack_ids`
+- `current_and_stamped_adversarial_findings`
+- `determination_preservation_findings`
+- `artifact_convention_findings`
+- `public_factor_claim_eligibility`
+- `prospective_csl_claim_eligibility`
+- `csl_row_recomputation_audit_ready_score`
+- `same_verdict_retirement_decision`
+- `harm_underpowered_missing_and_flagged_cells`
+- `protected_files_unchanged`
+- `blocked_reason`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map every required field. It SHALL map every
+missing-input rule, recomputation family, attack id, eligibility decision, and
+retirement decision. `per_unit_rows` SHALL contain one audit row for every
+source unit and every reported-vs-recomputed comparison. `verifier_is_oracle`
+SHALL be false for the audit as a whole. Exact validators remain semantic
+oracles being audited.
+
+## SCENARIO-LEARN-6433-HASHES: Expected Inputs Are Classified
+
+**Given** expected V553 artifacts, rows, sidecars, raw outputs, sources, tests,
+checkers, receipt helpers, heads, and determination records
+**When** Exp6433 builds the input ledger
+**Then** each input SHALL carry a hash or missing receipt
+**And** each input SHALL receive a visible state classification.
+
+## SCENARIO-LEARN-6433-ROWS: Metrics Recompute From Rows
+
+**Given** Exp6430, Exp6431, and Exp6432 per-unit rows
+**When** Exp6433 reduces the row sets
+**Then** development capacity, interference, and held metrics SHALL be derived
+without importing upstream aggregate or readiness functions.
+
+## SCENARIO-LEARN-6433-DELTAS: Reported Values Are Compared
+
+**Given** reported headline values and independent row reductions
+**When** Exp6433 compares values
+**Then** each comparison SHALL record absolute delta, tolerance, row
+population, filter, numerator, denominator, and mismatch reason.
+
+## SCENARIO-LEARN-6433-ATTACKS: Critical Attacks Fail Closed
+
+**Given** reuse, cache, deletion, duplicate, reorder, same-step, stale-head,
+authority, supersession, retuning, leakage, restart, rollback, and veto attacks
+**When** Exp6433 builds the attack matrix
+**Then** open critical attacks SHALL force claim eligibility false.
+
+## SCENARIO-LEARN-6433-ELIGIBILITY: Current Flags Block Claims
+
+**Given** row recomputation matches but a current critical adversarial flag or
+stamped determination remains
+**When** Exp6433 computes claim eligibility
+**Then** `prospective_csl_claim_eligibility` SHALL be false
+**And** `honest_verdict` SHALL start with `complete_null:`.
+
+## Implementation Status (REQ-LEARN-6433)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6433 | Implemented: `python/carnot/experiment_6433_csl_row_recomputation_safety_audit.py`; terminal artifact `results/experiment_6433_csl_row_recomputation_safety_audit.json`. | Implemented: `tests/python/test_experiment_6433_csl_row_recomputation_safety_audit.py`. |
+| SCENARIO-LEARN-6433-HASHES | Implemented: `python/carnot/experiment_6433_csl_row_recomputation_safety_audit.py`. | Implemented: `tests/python/test_experiment_6433_csl_row_recomputation_safety_audit.py`. |
+| SCENARIO-LEARN-6433-ROWS | Implemented: `python/carnot/experiment_6433_csl_row_recomputation_safety_audit.py`. | Implemented: `tests/python/test_experiment_6433_csl_row_recomputation_safety_audit.py`. |
+| SCENARIO-LEARN-6433-DELTAS | Implemented: `python/carnot/experiment_6433_csl_row_recomputation_safety_audit.py`. | Implemented: `tests/python/test_experiment_6433_csl_row_recomputation_safety_audit.py`. |
+| SCENARIO-LEARN-6433-ATTACKS | Implemented: `python/carnot/experiment_6433_csl_row_recomputation_safety_audit.py`. | Implemented: `tests/python/test_experiment_6433_csl_row_recomputation_safety_audit.py`. |
+| SCENARIO-LEARN-6433-ELIGIBILITY | Implemented: `python/carnot/experiment_6433_csl_row_recomputation_safety_audit.py`. | Implemented: `tests/python/test_experiment_6433_csl_row_recomputation_safety_audit.py`. |
+
 ## REQ-LEARN-6409: Graph-Local Multisession Continuous Learning
 
 **Given** Exp6408 first shows positive future exact yield with non-increased
