@@ -566,3 +566,77 @@ def test_a_diagnostics_method_that_raises_does_not_lose_the_row():
 
     assert out["explorer.good_diagnostics"] == {"observe_calls": 3}
     assert "diagnostics_error" in out["explorer.bad_diagnostics"]
+
+
+# --------------------------------------------------------------------------- sweep safety
+#
+# REQ-ARC-FLAG-SWEEP-6271. Of the 54 default-off flags the scored engine reaches, only 20 are
+# boolean capability toggles. A sweep that set every one to "1" would set GGUF_PATH to a nonsense
+# path, INDUCE_TIMEOUT to one second, and DISABLE_INDUCTION to on -- turning the LLM OFF -- then
+# record the resulting damage as evidence that those capabilities are harmful. A ledger full of
+# confident wrong verdicts is worse than an empty one.
+
+
+def test_a_path_flag_is_never_swept():
+    assert ledger.classify_flag("CARNOT_ARC_GGUF_PATH") == "path"
+
+
+def test_a_numeric_knob_is_never_swept():
+    """`INDUCE_TIMEOUT=1` is a one-second timeout, which breaks induction rather than enabling it."""
+    assert ledger.classify_flag("CARNOT_ARC_INDUCE_TIMEOUT") == "numeric"
+
+
+def test_an_inverse_flag_is_never_swept():
+    """Turning DISABLE_INDUCTION on removes the LLM. A regression would be the expected result."""
+    assert ledger.classify_flag("CARNOT_ARC_DISABLE_INDUCTION") == "inverse"
+
+
+def test_a_write_permission_flag_is_never_swept():
+    """E3_ALLOW_EVIDENCE_WRITE disables the guard stopping tests writing the tracked record.
+
+    Inert outside pytest, so sweeping it yields a confident meaningless null -- and its presence
+    in a list called "capability flags" would tell the next reader it had been measured and found
+    worthless.
+    """
+    assert ledger.classify_flag("CARNOT_ARC_E3_ALLOW_EVIDENCE_WRITE") == "guard"
+
+
+def test_a_genuine_boolean_capability_is_swept():
+    """The classifier must not be so cautious that nothing is measurable."""
+    assert ledger.classify_flag("CARNOT_ARC_ACTIVE_PROBE") == "bool"
+
+
+def test_sweep_reports_every_exclusion_rather_than_narrowing_silently(tmp_path, monkeypatch):
+    """A sweep that quietly shrinks its candidate list is the project's signature bug with a
+    progress bar."""
+    monkeypatch.setattr(ledger, "LEDGER", tmp_path / "l.yaml")
+
+    todo, skipped = ledger.sweep_candidates("scored", {"flags": {}})
+
+    assert todo, "some flags must be measurable"
+    assert len(skipped) > len(todo), "most flags are excluded, and each exclusion carries a reason"
+    assert all(v for v in skipped.values()), "every skip states why"
+    assert any("corrupt" in v for v in skipped.values()), "value-knob exclusions explain the risk"
+
+
+def test_sweep_is_resumable_and_skips_what_it_already_measured(tmp_path, monkeypatch):
+    """An interrupted six-hour sweep must continue, not restart."""
+    monkeypatch.setattr(ledger, "LEDGER", tmp_path / "l.yaml")
+    todo_before, _ = ledger.sweep_candidates("scored", {"flags": {}})
+    done = todo_before[0]
+
+    todo_after, skipped = ledger.sweep_candidates(
+        "scored", {"flags": {done: {"evidence": [{"verdict": "HOLD"}]}}}
+    )
+
+    assert done not in todo_after
+    assert skipped[done] == "already measured"
+
+
+def test_sweep_dry_run_measures_nothing(tmp_path, monkeypatch):
+    monkeypatch.setattr(ledger, "LEDGER", tmp_path / "l.yaml")
+    monkeypatch.setattr(
+        ledger, "run_bench", lambda *a, **k: (_ for _ in ()).throw(AssertionError("ran a sweep"))
+    )
+
+    assert ledger.cmd_sweep("scored", None, dry_run=True) == 0

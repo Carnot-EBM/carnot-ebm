@@ -53,6 +53,7 @@ import re
 import subprocess
 import sys
 from datetime import UTC, datetime
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -70,7 +71,8 @@ def _now() -> str:
     return datetime.now(UTC).strftime("%Y-%m-%d")
 
 
-def discover_flags() -> list[str]:
+@lru_cache(maxsize=1)
+def discover_flags() -> tuple[str, ...]:
     """Every `CARNOT_ARC_*` name the agent mentions.
 
     Read from source rather than kept as a list here, for the same reason `arc_bench.roster` reads
@@ -78,13 +80,9 @@ def discover_flags() -> list[str]:
     watches, which is this project's most-repeated defect.
     """
     found: set[str] = set()
-    for d in SCAN_DIRS:
-        for f in d.rglob("*.py"):
-            try:
-                found.update(re.findall(r"CARNOT_ARC_[A-Z0-9_]+", f.read_text()))
-            except OSError:
-                continue
-    return sorted(found)
+    for _stem, src in _agent_sources():
+        found.update(re.findall(r"CARNOT_ARC_[A-Z0-9_]+", src))
+    return tuple(sorted(found))
 
 
 def _agentic_imports(path: Path) -> set[str]:
@@ -159,6 +157,93 @@ def reachable_flags(entry: str = "arc_graph_explore", engine: str | None = None)
     return flags
 
 
+@lru_cache(maxsize=1)
+def _agent_sources() -> tuple[tuple[str, str], ...]:
+    """(module stem, source) for every agentic file, read ONCE.
+
+    Cached because the callers are per-flag and there are ~95 flags over ~200 files. Uncached,
+    classifying the whole set re-read the tree ninety-five times -- roughly 19,000 file reads,
+    slow enough that the sweep's own candidate listing looked like a hang. Correctness was never
+    at stake; the cache just stops the quadratic.
+    """
+    out = []
+    for d in SCAN_DIRS:
+        for f in sorted(d.rglob("*.py")):
+            try:
+                out.append((f.stem, f.read_text()))
+            except OSError:
+                continue
+    return tuple(out)
+
+
+@lru_cache(maxsize=512)
+def _read_sites(flag: str) -> tuple[tuple[str, str], ...]:
+    """(text before, text after) each `environ.get("<flag>"...)` in the agent source."""
+    out = []
+    if True:
+        for _stem, src in _agent_sources():
+            for m in re.finditer(
+                rf'([\w.\[\]()"\'= ]{{0,60}})environ\.get\(\s*["\']{flag}["\']([^\n]{{0,80}})', src
+            ):
+                out.append((m.group(1), m.group(2)))
+    return tuple(out)
+
+
+@lru_cache(maxsize=512)
+def classify_flag(flag: str) -> str:
+    """`bool` | `numeric` | `path` | `inverse` | `unknown`, from how the value is USED.
+
+    WHY A SWEEP CANNOT JUST SET EVERYTHING TO "1". Of the 54 default-off flags the scored engine
+    reaches, only 23 are boolean toggles. The rest would be actively corrupted by `=1`:
+    `CARNOT_ARC_GGUF_PATH=1` is a nonsense model path, `CARNOT_ARC_INDUCE_TIMEOUT=1` is a
+    one-second timeout that breaks induction outright, and `CARNOT_ARC_DISABLE_INDUCTION=1` turns
+    the LLM OFF -- the exact opposite of measuring a capability.
+
+    A blind sweep would run all three, watch the numbers fall, and record the damage as evidence
+    that those capabilities are harmful. That is worse than not sweeping: it is a ledger full of
+    confident, wrong verdicts, which is the failure mode every guard in this file exists to avoid.
+
+    `inverse` is separate from `bool` because the name carries the semantics: turning on a
+    `DISABLE_*` flag REMOVES a capability, so "does it improve the benchmark" is the wrong
+    question and a regression would be the expected result.
+
+    UNKNOWN IS NOT SWEPT. 33 flags land there, and some are plainly numeric on inspection
+    (`GOAL_GATE_MAX_NODES`, `GENERATOR_SEED`). Under-sweeping costs coverage; over-sweeping costs
+    correctness and fills the record with garbage. The error direction is deliberate.
+    """
+    if re.search(r"DISABLE|_OFF\b|_DISABLED", flag):
+        return "inverse"
+    # GUARD / PERMISSION flags are not capabilities. Turning one on removes a protection or
+    # asserts a precondition; "does it improve the benchmark" is the wrong question and the honest
+    # answer is always "no, that is not what it is for".
+    #
+    # `CARNOT_ARC_E3_ALLOW_EVIDENCE_WRITE` is why this branch exists. It disables the guard that
+    # stops a test writing into the TRACKED e3 evidence directory. It is inert outside pytest, so
+    # sweeping it would have produced a confident, meaningless null -- and the name sitting in a
+    # candidate list called "capability flags" is a trap for the next reader, who would reasonably
+    # conclude someone had measured it and found it worthless. Given the day this project has had
+    # with tests rewriting the research record, a sweep must not be in the habit of flipping
+    # write-permission flags at all.
+    if re.search(r"ALLOW_|_ALLOW|REQUIRE_|_BYPASS|BYPASS_", flag):
+        return "guard"
+    kinds = set()
+    for pre, post in _read_sites(flag):
+        if re.search(r"int\s*\(|float\s*\(", pre):
+            kinds.add("numeric")
+        elif re.search(r'==\s*["\']1["\']|in\s*\(?["\']1["\']|\.lower\(\)\s*in', pre + post):
+            kinds.add("bool")
+        elif re.search(r"Path\s*\(", pre) or re.search(r"_DIR$|_PATH$", flag):
+            kinds.add("path")
+        else:
+            kinds.add("unknown")
+    if not kinds:
+        return "unknown"
+    for k in ("numeric", "path"):  # a value knob anywhere wins: never set it to "1"
+        if k in kinds:
+            return k
+    return "bool" if kinds == {"bool"} else "unknown"
+
+
 def _defining_modules(flag: str) -> list[str]:
     """Which agentic modules mention a flag. Used only to make an unreachable flag legible.
 
@@ -167,15 +252,7 @@ def _defining_modules(flag: str) -> list[str]:
     the ledger because it happened to live in a file with the wrong name. Print the evidence and
     let a human classify.
     """
-    out = []
-    for d in SCAN_DIRS:
-        for f in sorted(d.rglob("*.py")):
-            try:
-                if flag in f.read_text():
-                    out.append(f.stem)
-            except OSError:
-                continue
-    return out[:3]
+    return [stem for stem, src in _agent_sources() if flag in src][:3]
 
 
 def load() -> dict[str, Any]:
@@ -384,6 +461,96 @@ def cmd_measure(flag: str, value: str, force: bool = False, engine: str = "explo
     return 0
 
 
+def sweep_candidates(engine: str, data: dict) -> tuple[list[str], dict[str, str]]:
+    """(flags to measure, {flag: why-skipped}). Every exclusion is reported, never silent.
+
+    A sweep that quietly narrows its own candidate list is the pattern-narrower-than-its-concept
+    failure with a progress bar. Whatever it declines to touch, it says so and says why.
+    """
+    reach = reachable_flags(engine=engine)
+    todo, skipped = [], {}
+    for flag in discover_flags():
+        entry = (data.get("flags") or {}).get(flag) or {}
+        if entry.get("evidence"):
+            skipped[flag] = "already measured"
+        elif flag not in reach:
+            skipped[flag] = f"not reachable on {engine}"
+        else:
+            kind = classify_flag(flag)
+            if kind != "bool":
+                skipped[flag] = f"{kind}: setting it to 1 would corrupt the run, not enable it"
+            else:
+                todo.append(flag)
+    return todo, skipped
+
+
+def cmd_sweep(engine: str, limit: int | None, dry_run: bool) -> int:
+    """Measure every unmeasured boolean capability flag, promoting what earns it.
+
+    THE SHARED BASELINE. `--measure` runs baseline+arm per flag. A sweep of 23 flags that way is 46
+    sweeps. The search is DETERMINISTIC -- dc22 spent exactly 11,737 actions on two separate runs --
+    so the baseline is identical every time and can be computed ONCE and reused. That is 24 sweeps
+    instead of 46, and the halving is a consequence of the determinism, not a shortcut around it.
+
+    If a stochastic component is ever added to the search, this optimisation becomes WRONG and the
+    per-flag baseline has to come back. The same paragraph in this file's header says the same
+    thing about the k-independent-runs rule; both assumptions live or die together.
+
+    RESUMABLE by construction: a flag with recorded evidence is skipped, so an interrupted sweep
+    continues where it stopped rather than re-measuring what it already knows.
+    """
+    data = load()
+    todo, skipped = sweep_candidates(engine, data)
+    print(f"arc-flag-ledger sweep on `{engine}`: {len(todo)} candidate(s), {len(skipped)} skipped")
+    reasons: dict[str, int] = {}
+    for why in skipped.values():
+        reasons[why.split(":")[0]] = reasons.get(why.split(":")[0], 0) + 1
+    for why, n in sorted(reasons.items(), key=lambda kv: -kv[1]):
+        print(f"    skipped {n:>3}  {why}")
+    if limit:
+        todo = todo[:limit]
+    if dry_run or not todo:
+        for f in todo:
+            print(f"    would measure {f}")
+        return 0
+
+    tmp = Path(os.environ.get("TMPDIR", "/tmp"))
+    print("\n  shared baseline sweep (deterministic, computed once)...")
+    base = run_bench(out=tmp / "arc_sweep_base.json", engine=engine)
+    print(
+        f"    baseline: {base['total_levels_cleared']} level(s), {base['total_actions_spent']} actions"
+    )
+
+    promoted = []
+    for i, flag in enumerate(todo, 1):
+        print(f"\n  [{i}/{len(todo)}] {flag}")
+        arm = run_bench({flag: "1"}, out=tmp / "arc_sweep_arm.json", engine=engine)
+        cmp = compare(base, arm)
+        ok, why = verdict(cmp)
+        print(f"    {arm['total_levels_cleared']} level(s), {arm['total_actions_spent']} actions")
+        print(f"    {why}")
+        data = load()  # re-read: a concurrent --discover may have touched the file
+        entry = data.setdefault("flags", {}).setdefault(
+            flag, {"state": "unevaluated", "evidence": []}
+        )
+        entry.setdefault("evidence", []).append(
+            {"date": _now(), "value": "1", "verdict": why, "engine": engine, **cmp}
+        )
+        entry["last_measured"] = _now()
+        entry["promotable"] = ok
+        entry["benchmark_reachable"] = True
+        entry["measured_on_engine"] = engine
+        if ok:
+            entry["state"] = "on"
+            entry["promoted_on"] = _now()
+            promoted.append(flag)
+            print("    PROMOTED -> default ON")
+        save(data)
+
+    print(f"\n  swept {len(todo)}, promoted {len(promoted)}: {promoted or 'none'}")
+    return 0
+
+
 def cmd_promote(flag: str) -> int:
     """Promote only on evidence already recorded. Never measures implicitly.
 
@@ -475,12 +642,22 @@ def main(argv: list[str]) -> int:
         help="measure a flag the benchmark cannot reach, recording the null deliberately",
     )
     ap.add_argument("--promote", metavar="FLAG")
+    ap.add_argument(
+        "--sweep",
+        action="store_true",
+        help="measure every unmeasured boolean capability flag on the chosen engine, promoting "
+        "what earns it. Resumable; skips anything already measured.",
+    )
+    ap.add_argument("--limit", type=int, default=None, help="sweep only the first N candidates")
+    ap.add_argument("--dry-run", action="store_true", help="sweep: list candidates, measure none")
     args = ap.parse_args(argv)
 
     if args.discover:
         return cmd_discover()
     if args.measure:
         return cmd_measure(args.measure, args.value, force=args.force, engine=args.engine)
+    if args.sweep:
+        return cmd_sweep(args.engine, args.limit, args.dry_run)
     if args.promote:
         return cmd_promote(args.promote)
     return cmd_status()
