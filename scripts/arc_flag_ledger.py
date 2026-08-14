@@ -46,6 +46,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import os
 import re
@@ -84,6 +85,69 @@ def discover_flags() -> list[str]:
             except OSError:
                 continue
     return sorted(found)
+
+
+def _agentic_imports(path: Path) -> set[str]:
+    """Sibling `carnot.agentic` modules this file imports, including function-level imports.
+
+    Function-level imports matter here and an `ast`-only walk would still find them, but the
+    regex is kept as a belt-and-braces second pass: `arc_loop_solve`-style code imports inside
+    functions constantly, and a closure that misses one silently understates reachability -- which
+    is the exact error direction this whole function exists to prevent.
+    """
+    try:
+        src = path.read_text()
+        tree = ast.parse(src)
+    except (OSError, SyntaxError):
+        return set()
+    out: set[str] = set()
+    for n in ast.walk(tree):
+        if isinstance(n, ast.ImportFrom) and n.module and "carnot.agentic." in n.module:
+            out.add(n.module.split(".")[-1])
+        elif isinstance(n, ast.Import):
+            for a in n.names:
+                if "carnot.agentic." in a.name:
+                    out.add(a.name.split(".")[-1])
+    out.update(re.findall(r"from carnot\.agentic\.(\w+) import", src))
+    return out
+
+
+def reachable_flags(entry: str = "arc_graph_explore") -> set[str]:
+    """Flags the BENCHMARK can actually influence, by transitive import closure.
+
+    WHY THIS GUARDS EVERY MEASUREMENT. `arc_bench.py` drives `graph_explore_solve_v2`, not the
+    full `E3AgentPolicy` cascade. Measured 2026-08-13: 48 of the 95 tracked flags are inside that
+    closure and 47 are not.
+
+    Setting an unreachable flag and running the benchmark produces an identical result, because
+    the code that reads it never executes. The comparison would then record HOLD -- "no level
+    gained and no clear efficiency gain" -- which reads as "this capability is worthless". It
+    would be wrong for 47 flags, and it would be wrong in the most damaging direction available:
+    a ledger that systematically files real capabilities as duds, with evidence attached.
+
+    So `--measure` refuses an unreachable flag instead of producing that number. Refusing to
+    measure is a smaller error than measuring the wrong thing confidently.
+    """
+    agentic = REPO / "python" / "carnot" / "agentic"
+    seen: set[str] = set()
+    frontier = {entry}
+    while frontier:
+        mod = frontier.pop()
+        if mod in seen:
+            continue
+        seen.add(mod)
+        p = agentic / f"{mod}.py"
+        if p.exists():
+            frontier |= _agentic_imports(p) - seen
+    flags: set[str] = set()
+    for mod in seen:
+        p = agentic / f"{mod}.py"
+        if p.exists():
+            try:
+                flags.update(re.findall(r"CARNOT_ARC_[A-Z0-9_]+", p.read_text()))
+            except OSError:
+                continue
+    return flags
 
 
 def load() -> dict[str, Any]:
@@ -189,7 +253,17 @@ def verdict(cmp: dict) -> tuple[bool, str]:
     return False, "HOLD: no level gained and no clear efficiency gain."
 
 
-def cmd_measure(flag: str, value: str) -> int:
+def cmd_measure(flag: str, value: str, force: bool = False) -> int:
+    if not force and flag not in reachable_flags():
+        print(
+            f"arc-flag-ledger: REFUSING to measure {flag}.\n"
+            "  It is outside the benchmark's import closure, so the code that reads it never\n"
+            "  runs. The sweep would return an identical result and this ledger would record\n"
+            "  HOLD -- filing a real capability as worthless, with evidence attached.\n"
+            "  Measure it with a harness that exercises it, or pass --force to record the null\n"
+            "  deliberately."
+        )
+        return 1
     tmp = Path(os.environ.get("TMPDIR", "/tmp"))
     print(f"arc-flag-ledger: baseline sweep (flag unset)...")
     base = run_bench(out=tmp / "arc_bench_base.json")
@@ -211,8 +285,17 @@ def cmd_measure(flag: str, value: str) -> int:
     entry["evidence"].append({"date": _now(), "value": value, "verdict": why, **cmp})
     entry["last_measured"] = _now()
     entry["promotable"] = ok
+    entry["benchmark_reachable"] = flag in reachable_flags()
     save(data)
-    print(f"  recorded in {LEDGER.relative_to(REPO)}")
+    # Never let a cosmetic path-prettify raise. `relative_to` throws when the ledger is not under
+    # the repo (a test tmp_path, an operator running with LEDGER overridden), and an exception
+    # here would blow up AFTER an eleven-minute measurement has already been saved -- turning a
+    # completed run into a traceback for the sake of a shorter filename.
+    try:
+        shown = LEDGER.relative_to(REPO)
+    except ValueError:
+        shown = LEDGER
+    print(f"  recorded in {shown}")
     return 0
 
 
@@ -263,6 +346,14 @@ def cmd_status() -> int:
     for name in sorted(by.get("on", [])):
         e = flags[name]
         print(f"    ON  {name}  (promoted {e.get('promoted_on')})")
+    reach = reachable_flags()
+    tracked_reachable = sorted(set(flags) & reach)
+    print(
+        f"\n  benchmark-reachable: {len(tracked_reachable)} of {len(flags)}. The other "
+        f"{len(flags) - len(tracked_reachable)} sit outside\n"
+        "  arc_bench's import closure, so a sweep cannot see them and --measure refuses them.\n"
+        "  They need a harness that runs the full E3AgentPolicy cascade."
+    )
     unevaluated = len(by.get("unevaluated", []))
     if unevaluated:
         print(
@@ -278,13 +369,18 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--status", action="store_true")
     ap.add_argument("--measure", metavar="FLAG")
     ap.add_argument("--value", default="1")
+    ap.add_argument(
+        "--force",
+        action="store_true",
+        help="measure a flag the benchmark cannot reach, recording the null deliberately",
+    )
     ap.add_argument("--promote", metavar="FLAG")
     args = ap.parse_args(argv)
 
     if args.discover:
         return cmd_discover()
     if args.measure:
-        return cmd_measure(args.measure, args.value)
+        return cmd_measure(args.measure, args.value, force=args.force)
     if args.promote:
         return cmd_promote(args.promote)
     return cmd_status()

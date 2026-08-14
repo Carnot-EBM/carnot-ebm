@@ -276,3 +276,70 @@ def test_measured_report_round_trips_as_json():
     report = {"schema": arc_bench.SCHEMA, "per_game_rows": rows, **arc_bench.aggregate(rows)}
 
     assert json.loads(json.dumps(report))["schema"] == "carnot.arc_bench.v1"
+
+
+# --------------------------------------------------------------------------- reachability guard
+#
+# The benchmark drives `graph_explore_solve_v2`, not the full E3AgentPolicy cascade. Measured
+# 2026-08-13: 48 of the 95 tracked flags are inside that import closure, 47 are not. Setting an
+# unreachable flag produces a byte-identical sweep, which the promotion rule reads as HOLD -- "no
+# level gained" -- filing a real capability as worthless with evidence attached. For 47 flags that
+# verdict would be wrong, and wrong in the most damaging direction available.
+
+
+def test_reachability_is_computed_transitively_not_from_the_entry_file_alone():
+    """A direct-imports-only closure would report ~4 flags and refuse 91 real ones."""
+    reach = ledger.reachable_flags()
+
+    assert len(reach) > 20, f"closure looks shallow: {len(reach)} flags"
+    # Read directly by the entry module...
+    assert "CARNOT_ARC_SMALL_OBJECT_FIRST" in reach
+    # ...and by a module several hops down the import chain.
+    assert "CARNOT_ARC_INDUCE_MAX_TOKENS" in reach
+
+
+def test_reachability_excludes_flags_outside_the_benchmark_path():
+    """If everything were 'reachable' the guard would be decorative."""
+    reach = ledger.reachable_flags()
+    all_flags = set(ledger.discover_flags())
+
+    assert reach < all_flags, "some flags must be unreachable or this guard does nothing"
+
+
+def test_measure_refuses_an_unreachable_flag_and_explains_the_false_negative(
+    tmp_path, monkeypatch, capsys
+):
+    """Refusing to measure is a smaller error than measuring the wrong thing confidently."""
+    monkeypatch.setattr(ledger, "LEDGER", tmp_path / "l.yaml")
+    monkeypatch.setattr(ledger, "reachable_flags", lambda *a, **k: {"CARNOT_ARC_REACHABLE"})
+
+    called = {"n": 0}
+    monkeypatch.setattr(ledger, "run_bench", lambda *a, **k: called.__setitem__("n", 1) or {})
+
+    rc = ledger.cmd_measure("CARNOT_ARC_ELSEWHERE", "1")
+    out = capsys.readouterr().out
+
+    assert rc == 1
+    assert called["n"] == 0, "it must not burn a sweep on a flag it cannot see"
+    assert "REFUSING" in out
+    assert "never" in out and "runs" in out, "must say WHY, not just decline"
+
+
+def test_force_records_an_unreachable_null_deliberately(tmp_path, monkeypatch):
+    """The escape hatch exists, but it has to be typed -- an accident cannot take it."""
+    monkeypatch.setattr(ledger, "LEDGER", tmp_path / "l.yaml")
+    monkeypatch.setattr(ledger, "reachable_flags", lambda *a, **k: set())
+    rep = _report([_row("a", 1, 100)])
+    monkeypatch.setattr(ledger, "run_bench", lambda *a, **k: rep)
+
+    rc = ledger.cmd_measure("CARNOT_ARC_ELSEWHERE", "1", force=True)
+
+    assert rc == 0
+    import yaml
+
+    saved = yaml.safe_load((tmp_path / "l.yaml").read_text())
+    entry = saved["flags"]["CARNOT_ARC_ELSEWHERE"]
+    assert entry["benchmark_reachable"] is False, (
+        "a forced null must be stamped unreachable, so a later reader cannot mistake it for "
+        "evidence that the capability does nothing"
+    )
