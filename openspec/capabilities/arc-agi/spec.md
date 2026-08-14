@@ -551,6 +551,123 @@ artifacts are unchanged, `public_arc_claim_eligibility` is false, and the
 honest verdict states that the audit is complete and no public ARC claim is
 eligible.
 
+### REQ-ARC-ARM-6421: Explicit Opt-In Active-Goal Executed-Policy A/B
+
+Experiment 6421 SHALL run a fresh route-off versus explicit-opt-in causal A/B
+on the canonical live ARC policy path. The route SHALL remain shipped default
+off before and after the run. The explicit-opt-in arm SHALL be reversible by
+constructing a fresh policy with the flag unset.
+
+Before any policy window is scored, Exp6421 SHALL revalidate the Exp6413
+authenticated GGUF receipt gate, the Exp6400 shadow gate, the Exp6401 causal
+gate, the Exp6402 safety audit, the solve registry, current shipped defaults,
+canonical live entrypoint, generator model and tokenizer hashes, GPU receipts,
+exact game interface, game roster, seeds, budgets, and protected held family.
+The solve registry precheck SHALL cover every registered game. The task SHALL
+not target a level, extend solve credit, update a solve registry, or write a
+public ARC claim.
+
+The `MODEL_SPECS` field SHALL include the shipped canonical live generator,
+`unsloth/gemma-4-31B-it-qat-GGUF`, and at least one mandated SOTA model
+resolved through `cached_sota_pair()`, including
+`unsloth/gemma-4-31B-it-GGUF`. Tokenizer receipts SHALL come from the embedded
+GGUF tokenizer. The producer SHALL not call `AutoTokenizer`.
+Authenticated process and raw-output receipts MAY be inherited from Exp6413
+only when the Exp6413 gate is revalidated and every inherited receipt is
+content-addressed in the new artifact.
+
+The A/B SHALL preregister matched route-off and explicit-opt-in arms over fresh
+agent-visible windows. Each pair SHALL match games, seeds, observations, action
+budgets, generator calls, prompts, token budgets, legal action set, and initial
+agent state. The only behavioral difference SHALL be explicit enablement of the
+active-goal route. The route-on arm MAY change only to a legal candidate action
+that appears in the live policy's own candidate receipt. Executed actions,
+observations, budgets, and terminal reasons SHALL be preserved per window.
+
+Exp6421 SHALL measure route firing, changed legal executed actions, legal-action
+rate, exact observation consistency, progress proxy, action count, latency, GPU
+cost, deadline misses, and harmful regressions. Exact legal-action and observed
+transition checks MAY be oracle-scoped. Routes, model output, progress proxies,
+and policy scores SHALL not be treated as oracles.
+
+Exp6421 SHALL attack route-label swaps, action substitution, observation reuse,
+budget mismatch, off-path fixtures, model receipt reuse, game duplication,
+source access, hidden adapter use, and solve-credit leakage. Each attack SHALL
+fail closed before `arc_executed_policy_influence_ready_score` can be set to
+1.0.
+
+Experiment 6421 SHALL write
+`results/experiment_6421_arc_opt_in_executed_policy_ab.json` with `status`,
+`exp6413_gate_receipt`, `solve_registry_precheck_path_hash_and_results`,
+`MODEL_SPECS`, `models_used`, `cached_sota_pair_receipts`,
+`canonical_generator_model_file_and_embedded_tokenizer_hashes`,
+`autotokenizer_usage_count`,
+`canonical_live_entrypoint_route_policy_game_interface_and_config_hashes`,
+`shipped_default_before_and_after`,
+`preregistered_off_and_opt_in_arm_contract`,
+`matched_games_seeds_observations_actions_model_calls_prompts_tokens_and_initial_state_receipts`,
+`authenticated_model_process_and_raw_output_receipts`,
+`per_window_route_candidate_executed_action_observation_budget_and_terminal_receipts`,
+`per_arm_route_firing_policy_change_legal_action_observation_progress_actions_latency_gpu_deadline_and_harm_results`,
+`causal_policy_delta`, `attack_matrix`, `source_access_count`,
+`per_game_adapter_count`, `outer_loop_re_used`, `level_solve_claimed`,
+`solve_registry_modified`, `route_default_promoted`,
+`public_arc_claim_eligibility`, `arc_executed_policy_influence_ready_score`,
+`harm_underpowered_missing_and_flagged_cells`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+`arc_executed_policy_influence_ready_score` SHALL equal 1.0 only when the route
+fires, causes a reproducible legal executed-policy change, produces no harmful
+regression, authentic receipts pass, the shipped default remains off, and no
+solve or registry mutation occurs. `public_arc_claim_eligibility` SHALL be
+false unless a later audit permits a narrow internal policy claim. The honest
+verdict SHALL start with a terminal prefix.
+
+### SCENARIO-ARC-ARM-6421-PRECONDITIONS
+
+**Given** Exp6413, Exp6400, Exp6401, Exp6402, the solve registry, and the live
+policy source
+**When** Exp6421 starts
+**Then** it records gate receipts, registry hashes and every-game precheck
+results, current default-off route values, model and tokenizer hashes, GPU
+receipts, game roster, seeds, budgets, exact game interface hashes, and
+protected held-family receipts before arm evaluation.
+
+### SCENARIO-ARC-ARM-6421-MATCHED-OPT-IN-ARMS
+
+**Given** a fresh agent-visible window
+**When** route-off and explicit-opt-in arms are built
+**Then** games, seeds, observations, action budgets, generator calls, prompts,
+token budgets, legal action sets, and initial agent state match, and the only
+planned difference is explicit active-goal enablement.
+
+### SCENARIO-ARC-ARM-6421-EXECUTED-POLICY-CHANGE
+
+**Given** a matched window where the active-goal route fires
+**When** both arms execute policy actions
+**Then** the opt-in arm changes to a legal candidate action, preserves exact
+observation consistency, records route candidates and executed actions, and
+keeps the change bounded to policy behavior rather than solve credit.
+
+### SCENARIO-ARC-ARM-6421-ATTACKS-FAIL-CLOSED
+
+**Given** route-label swaps, action substitution, observation reuse, budget
+mismatch, off-path fixtures, model receipt reuse, game duplication, source
+access, hidden adapter use, and solve-credit leakage
+**When** Exp6421 validates the A/B evidence
+**Then** every attack fails closed before the ready score can be set.
+
+### SCENARIO-ARC-ARM-6421-NO-SOLVE-OR-PROMOTION
+
+**Given** the completed Exp6421 artifact
+**When** it is validated
+**Then** no level solve is claimed, the solve registry is unchanged, the route
+default is not promoted, public claim eligibility is false, verifier oracle
+scope is limited to legal-action and exact observed-transition checks, and all
+required fields have principles.
+
 ## REQ-ARC-BENCH-6267: One held-out ARC number that can move
 
 The ARC loop MUST maintain a single comparable measurement of live-agent
