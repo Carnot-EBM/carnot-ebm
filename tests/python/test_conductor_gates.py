@@ -199,8 +199,14 @@ def test_exists_value_false_means_should_not_exist(tmp_path):
     task = {
         "id": "exp-demo",
         "title": "demo",
-        "gated_on": [{"upstream": "exp3946-r11l-first-solve", "artifact_field": "honest_verdict",
-                      "op": "exists", "value": False}],
+        "gated_on": [
+            {
+                "upstream": "exp3946-r11l-first-solve",
+                "artifact_field": "honest_verdict",
+                "op": "exists",
+                "value": False,
+            }
+        ],
     }
     assert evaluate_gates(task, results_dir=tmp_path).passed is False
 
@@ -551,3 +557,100 @@ def test_evaluate_gates_string_true_against_bool_true_passes(tmp_path):
     }
     result = evaluate_gates(task, results_dir=tmp_path)
     assert result.passed is True, result.summary
+
+
+# ---------------------------------------------------------------------------
+# REQ-OPS-GATE-NULL-DIAGNOSTIC-6266: say WHY a gated field read None.
+#
+# Milestone .539 cascade-blocked four tasks on exp6228. Every block recorded the same message:
+# `actual=None == expected=1`. True, and useless -- it does not distinguish "the upstream forgot
+# the field" from "the upstream wrote it as null" from "the upstream produced nothing", and the
+# three have different fixes. Nobody could act on it, so the blocks were never examined and the
+# recurring-blocker ledger counted them as four more anonymous `blocked_gate_check_failed`.
+#
+# The real cause was the worst of the three: exp6228's artifact carried every gated field,
+# spelled correctly, with every value null -- `honest_verdict` included. A skeleton, not a result.
+# A check that asks only "is the key present?" sees a complete artifact.
+# ---------------------------------------------------------------------------
+
+
+def test_null_valued_gate_field_is_reported_as_null_not_as_absent(tmp_path):
+    """The .539 case. The field IS there; it is empty. Say so, and name the other empties."""
+    _seed_artifact(
+        tmp_path,
+        6228,
+        "runtime_endurance",
+        {
+            "gemma_4_31b_runtime_ready_score": None,
+            "qwen_runtime_ready_score": None,
+            "honest_verdict": None,
+        },
+    )
+    task = {
+        "id": "exp6229-downstream",
+        "gated_on": [
+            {
+                "upstream": "exp6228-supervised-three-family-runtime-endurance",
+                "artifact_field": "gemma_4_31b_runtime_ready_score",
+                "op": "==",
+                "value": 1,
+            }
+        ],
+    }
+    r = evaluate_gates(task, results_dir=tmp_path)
+
+    assert not r.passed
+    assert "wrote 'gemma_4_31b_runtime_ready_score' as null" in r.summary
+    # The tell that the whole artifact is a template, which is what makes re-running the
+    # DOWNSTREAM task pointless. Without this the reader retries the wrong task.
+    assert "template and never filled it" in r.summary
+    assert "Re-run the UPSTREAM task" in r.summary
+    assert "honest_verdict" in r.summary
+
+
+def test_absent_gate_field_says_the_upstream_never_promised_it_and_names_near_misses(tmp_path):
+    """The other half. An absent field is a broken contract, not an empty result.
+
+    The near-miss list exists because the usual cause is spelling drift between the gate and the
+    upstream's REQUIRED ARTIFACT FIELDS -- `scorer_ready` gated against an artifact that wrote
+    `ebcn_scorer_ready`. Naming the close key turns a cascade into a one-word fix.
+    """
+    _seed_artifact(tmp_path, 6228, "runtime_endurance", {"qwen_runtime_ready_score": 1.0})
+    task = {
+        "id": "exp6229-downstream",
+        "gated_on": [
+            {
+                "upstream": "exp6228-supervised-three-family-runtime-endurance",
+                "artifact_field": "qwen_runtime_ready",
+                "op": "==",
+                "value": 1,
+            }
+        ],
+    }
+    r = evaluate_gates(task, results_dir=tmp_path)
+
+    assert not r.passed
+    assert "has NO field 'qwen_runtime_ready'" in r.summary
+    assert "REQUIRED ARTIFACT FIELDS" in r.summary
+    assert "qwen_runtime_ready_score" in r.summary, "must name the near-miss key"
+    assert "as null" not in r.summary, "absent and null must not be described the same way"
+
+
+def test_diagnosis_never_changes_whether_a_gate_passes(tmp_path):
+    """Diagnosis is prose. A guard that alters a verdict while explaining it is a new bug class."""
+    _seed_artifact(tmp_path, 6228, "runtime_endurance", {"ready_score": 1.0})
+    task = {
+        "id": "exp6229-downstream",
+        "gated_on": [
+            {
+                "upstream": "exp6228-supervised-three-family-runtime-endurance",
+                "artifact_field": "ready_score",
+                "op": "==",
+                "value": 1.0,
+            }
+        ],
+    }
+    r = evaluate_gates(task, results_dir=tmp_path)
+
+    assert r.passed, "a satisfied gate must still pass"
+    assert "as null" not in r.summary and "has NO field" not in r.summary
