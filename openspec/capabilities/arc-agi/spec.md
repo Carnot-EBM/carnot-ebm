@@ -668,6 +668,104 @@ default is not promoted, public claim eligibility is false, verifier oracle
 scope is limited to legal-action and exact observed-transition checks, and all
 required fields have principles.
 
+### REQ-ARC-ARM-6422: Held-Family Policy Safety Audit
+
+Experiment 6422 SHALL independently audit Exp6421 and, when preconditions
+permit, replay the frozen route-off versus explicit-opt-in policy comparison on
+a pre-sealed held ARC live-window family through the canonical
+`make_carnot_agent -> E3AgentPolicy` path. The audit SHALL not repair Exp6421,
+tune from held outcomes, target a level, claim a solve, mutate
+`ops/arc_solve_registry.yaml`, or promote the active-goal route.
+
+The audit SHALL hash every available Exp6421 artifact, sidecar, source, route
+configuration, model receipt, solve registry, held manifest, checker, and
+determination record. Missing sidecars and blocked, null, underpowered, or
+flagged cells SHALL remain explicit findings rather than being dropped.
+
+The held-family precheck SHALL registry-precheck every held game or synthetic
+held window id, prove the held manifest was sealed before Exp6421 outcomes,
+exclude duplicate windows, and record whether any target was already credited
+at the tested level. If the held family is missing, opened too late, duplicated,
+or solve-credit contaminated, the audit SHALL still write a terminal artifact
+with readiness zero.
+
+`MODEL_SPECS` SHALL carry the same shipped canonical live generator evidence as
+Exp6421 and the mandated dense GGUF model
+`unsloth/gemma-4-31B-it-GGUF` resolved through `cached_sota_pair()`. Tokenizer
+receipts SHALL come from embedded GGUF tokenizers, and the producer SHALL not
+call `AutoTokenizer`.
+
+Experiment 6422 SHALL recompute route firing, legal executed-policy change,
+exact observations, progress proxy, actions, latency, deadline misses, and harm
+from raw policy rows. It SHALL compare reported Exp6421 deltas against held
+recomputed deltas, and SHALL attack route-label swaps, action substitution,
+observation reuse, budget mismatch, off-path fixtures, model substitution,
+source access, exhaustive search, per-game adapter use, duplicate games, hidden
+retuning, and solve-credit leakage.
+
+Experiment 6422 SHALL write
+`results/experiment_6422_arc_held_family_policy_safety_audit.json` with
+`status`, `expected_and_available_exp6421_inputs`,
+`upstream_artifact_sidecar_source_route_model_checker_and_determination_hashes`,
+`missing_input_findings`, `solve_registry_precheck_path_hash_and_results`,
+`held_manifest_path_hash_counts_seal_time_disjointness_and_duplicate_checks`,
+`frozen_route_config_hash`, `MODEL_SPECS`, `models_used`,
+`cached_sota_pair_receipts`, `embedded_gguf_tokenizer_receipts`,
+`autotokenizer_usage_count`, `authenticated_model_and_live_policy_receipts`,
+`matched_held_off_and_opt_in_work_receipts`,
+`recomputed_route_firing_policy_change_legal_action_observation_progress_actions_latency_deadline_and_harm_results`,
+`reported_vs_recomputed_deltas`, `attack_matrix`, `source_access_count`,
+`exhaustive_search_count`, `per_game_adapter_count`, `hidden_retuning_count`,
+`outer_loop_re_used`, `level_solve_claimed`, `solve_registry_modified`,
+`shipped_default_preserved`, `public_arc_claim_eligibility`,
+`arc_held_policy_safety_audit_ready_score`,
+`adversarial_and_determination_preservation_findings`,
+`harm_underpowered_missing_and_flagged_cells`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+`arc_held_policy_safety_audit_ready_score` SHALL equal 1.0 only when eligible
+held policy influence reproduces without harm, all model and policy receipts
+are authentic, all critical attacks fail closed, shipped default-off behavior
+is preserved, and no solve or registry claim occurs. The top-level
+`verifier_is_oracle` SHALL be false. Exact legal-action and observed-transition
+checks MAY remain scoped semantic oracles. The honest verdict SHALL start with
+a terminal prefix.
+
+### SCENARIO-ARC-ARM-6422-HASH-AND-MISSING-INPUTS
+
+**Given** Exp6421, Exp6402, route sources, model receipts, held manifests,
+checkers, determination records, and sidecars if present
+**When** Exp6422 starts
+**Then** it records path hashes and explicit missing-input findings before it
+uses any upstream conclusion.
+
+### SCENARIO-ARC-ARM-6422-HELD-REPLAY
+
+**Given** a held live-window manifest sealed before Exp6421 outcomes
+**When** Exp6422 replays the frozen route on matched route-off and opt-in arms
+**Then** games, seeds, observations, legal actions, budgets, prompts, token
+budgets, model calls, and initial policy state match, and only the explicit
+route enablement can change the executed legal action.
+
+### SCENARIO-ARC-ARM-6422-RECOMPUTE-AND-ATTACKS
+
+**Given** raw held policy rows and Exp6421 reported deltas
+**When** Exp6422 recomputes metrics and runs adversarial controls
+**Then** route firing, legal policy change, observations, progress, latency,
+deadline, and harm are recomputed from rows, reported deltas are compared, and
+all critical attacks fail closed before readiness can be one.
+
+### SCENARIO-ARC-ARM-6422-NO-SOLVE-OR-REGISTRY
+
+**Given** the completed Exp6422 artifact
+**When** it is validated
+**Then** source access, exhaustive search, per-game adapters, hidden retuning,
+outer-loop RE, level solve claims, solve registry writes, public claim
+eligibility, and route promotion are all absent, and every required field has a
+principle.
+
 ## REQ-ARC-BENCH-6267: One held-out ARC number that can move
 
 The ARC loop MUST maintain a single comparable measurement of live-agent
