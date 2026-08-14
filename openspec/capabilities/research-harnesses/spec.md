@@ -4545,6 +4545,130 @@ matches, `random_seed` is null, and `verifier_is_oracle` is false.
 |---|---|---|
 | REQ-INFRA-6410 | Implemented: `python/carnot/experiment_6410_v552_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6410_v552_terminal_handoff_and_queue_preflight.json`. | Implemented: `tests/python/test_experiment_6410_v552_terminal_handoff_and_queue_preflight.py`. |
 
+## REQ-INFRA-6424: V552 Evidence Handoff And V553 Queue Preflight
+
+Carnot SHALL build Exp6424 as the exact V552-to-V553 handoff for planning date
+20260814. The experiment SHALL preserve V552 artifact verdicts, conductor
+outcomes, current adversarial findings, and scientific claim eligibility as
+separate fields. It SHALL not rewrite historical determinations. It SHALL not
+edit the active roadmap, conductor, ARC solve registry, or protected V552
+evidence.
+
+Exp6424 SHALL hash the active roadmap, any next-roadmap file, the V553
+milestone document, conductor source and log, exclusion manifest, known issues,
+north star, solve registry, claim records, every V552 terminal artifact, and
+every known V552 sidecar. Missing protected inputs SHALL be recorded as absent,
+not invented. Exp6424 SHALL record CPU, RAM, disk, GPU, and model-cache state
+without starting research compute.
+
+Exp6424 SHALL summarize Exp6410 through Exp6423 with
+`scripts/summarize_artifact.py` before importing headline fields. It SHALL
+record each task's honest verdict, conductor outcome, current flag state,
+duration, inference substrate, and claim eligibility. Exp6424 SHALL preserve
+the Exp6414 and Exp6417 duration flags, the Exp6420 CSL null, and the
+Exp6421/Exp6422 no-solve boundary. It SHALL not infer claim eligibility from
+an upstream positive summary when a later current audit blocks that claim.
+
+Exp6424 SHALL validate the complete twelve-task V553 queue. It SHALL require
+unique ordered IDs, result JSON deliverables, valid agent and model routes,
+structured gates with valid field types, upstream gate fields declared in the
+required artifact block, complete prior-failure entries, no retired ID reuse,
+no retired dependency chain, valid exclusion-manifest lint, and valid roadmap
+schema checks. It SHALL accept the active `research-roadmap.yaml` as the V553
+queue when `research-roadmap-next.yaml` is absent after activation.
+
+Exp6424 SHALL render every V553 prompt with `{project_root}` and `{date}`.
+Every rendered prompt SHALL include `CONTEXT`, `EXISTING CODE TO READ FIRST`,
+`TASK`, `CONCRETE STEPS`, the project root, planning date `20260814`, a
+`Run command:` line, and the final line
+`Do NOT push. Do NOT modify scripts/research_conductor.py.`. Every LLM task
+SHALL name `MODEL_SPECS`, `cached_sota_pair()`, at least one mandated GGUF ID,
+embedded GGUF tokenizers, no `AutoTokenizer`, fresh raw-output requirements,
+and no legacy headline model.
+
+Exp6424 SHALL check the ARC V553 task without claiming a game or level solve.
+The ARC prompt SHALL not update the solve registry. It SHALL use the canonical
+live path and SHALL forbid game source access, exhaustive ground-truth search,
+and per-game adapters.
+
+The Exp6424 artifact SHALL be written atomically to
+`results/experiment_6424_v553_terminal_handoff_and_queue_preflight.json` with
+`inference_substrate=aggregation_from_upstream_artifacts` and
+`verifier_is_oracle=false`. The artifact SHALL include these required fields:
+`status`, `v552_active_roadmap_path_and_hash`, `v552_task_ids`,
+`v552_terminal_artifacts_and_sidecars_by_task`, `v552_artifact_verdicts`,
+`v552_conductor_outcomes`, `v552_current_adversarial_findings`,
+`v552_scientific_claim_eligibility_by_task`,
+`exp6414_6417_6420_6421_6422_boundary`,
+`v553_milestone_doc_and_queue_hashes`, `v553_task_ids`,
+`v553_id_and_deliverable_checks`, `v553_dependency_and_gate_checks`,
+`v553_gate_field_cross_reference_checks`, `v553_prior_failure_checks`,
+`v553_exclusion_manifest_checks`,
+`v553_agent_model_and_llm_policy_checks`, `v553_arc_no_solve_checks`,
+`prompt_contract_checks`, `active_roadmap_modified`, `conductor_modified`,
+`solve_registry_modified`, `protected_files_unchanged`, `blocked_reason`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`field_principles` SHALL cover every required field and every structured gate.
+`field_provenance` SHALL classify every required field as measured, derived,
+constant, or upstream. `random_seed` SHALL be null.
+
+### SCENARIO-INFRA-6424-1: V552 Evidence Classes Stay Separate
+
+GIVEN V552 artifacts include clean, flagged, null, internal-only, and aggregate
+evidence classes
+WHEN Exp6424 builds the terminal handoff
+THEN artifact verdicts, conductor outcomes, current adversarial findings, and
+scientific eligibility are recorded in separate fields.
+
+### SCENARIO-INFRA-6424-2: V552 Boundaries Are Preserved
+
+GIVEN Exp6414 and Exp6417 have current duration flags, Exp6420 has a CSL null,
+and Exp6421 and Exp6422 have no-solve ARC results
+WHEN Exp6424 records claim eligibility
+THEN factor and prospective CSL public eligibility stay false, ARC solve
+eligibility stays false, and the historical artifact verdicts remain intact.
+
+### SCENARIO-INFRA-6424-3: V553 Queue Contains Twelve Tasks
+
+GIVEN the V553 queue is active in `research-roadmap.yaml`
+WHEN Exp6424 validates task identity and deliverables
+THEN it records exactly Exp6424 through Exp6435 in ascending order with unique
+JSON deliverables.
+
+### SCENARIO-INFRA-6424-4: V553 Gates And Prior Failures Are Valid
+
+GIVEN V553 tasks include structured gates and prior-failure records
+WHEN Exp6424 validates dependencies, gate fields, prior failures, and retired
+IDs
+THEN every gate references an earlier task and declared required artifact
+field, every prior failure is complete, and no retired chain is admitted.
+
+### SCENARIO-INFRA-6424-5: Prompt, LLM, And ARC Contracts Validate
+
+GIVEN V553 prompts mix audit, aggregation, local GGUF, and ARC work
+WHEN Exp6424 renders and checks the prompts
+THEN all prompt sections, run commands, final prohibitions, GGUF execution
+rules, fresh raw-output rules, and ARC no-solve rules are checked before
+research execution.
+
+### SCENARIO-INFRA-6424-6: Artifact Is Annotated, Checksummed, And Non-Mutating
+
+GIVEN protected hashes, summaries, queue checks, environment receipts, and
+command receipts are assembled
+WHEN Exp6424 writes its artifact
+THEN every required field and structured gate has a principle, every required
+field has provenance, protected files remain byte-identical, the checksum
+matches, `random_seed` is null, `blocked_reason` is null on pass, and
+`verifier_is_oracle` is false.
+
+## Implementation Status (REQ-INFRA-6424)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6424 | Planned: `python/carnot/experiment_6424_v553_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6424_v553_terminal_handoff_and_queue_preflight.json`. | Planned: `tests/python/test_experiment_6424_v553_terminal_handoff_and_queue_preflight.py`. |
+
 ## REQ-INFRA-6404: V551 Handoff SHALL Preserve V550 Evidence And Fail Closed On Queue Mismatch
 
 Carnot SHALL build Exp6404 as a bounded V550-to-V551 evidence handoff over
