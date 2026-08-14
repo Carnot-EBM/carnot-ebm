@@ -15811,3 +15811,4 @@ code |
 | 2026-08-14 07:06 UTC | Independent V551 powered-claim integrity audit and | OK | 89 passed, 1 warning in 11.58s |
 | 2026-08-14 07:33 UTC | Authenticated three-family SOTA GGUF execution rec | OK | 86 passed, 1 warning in 9.00s |
 | 2026-08-14 07:51 UTC | Gated on Exp6413 authentic receipts: fresh three-f | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-14 08:13 UTC | Exact Boolean WCSP constraint-composite-graph kern | OK | 88 passed, 1 warning in 10.36s |
