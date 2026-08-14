@@ -11604,5 +11604,18 @@
       "protected_retention_checker"
     ],
     "value": true
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "negative_transfer_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.25486198 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
