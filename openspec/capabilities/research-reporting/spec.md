@@ -246,6 +246,131 @@ false.
 |---|---|---|
 | REQ-REPORT-6411 | Planned (`python/carnot/experiment_6411_v552_post_marker_source_scope_freeze.py`, terminal artifact `results/experiment_6411_v552_post_marker_source_scope_freeze.json`) | Planned (`tests/python/test_experiment_6411_v552_post_marker_source_scope_freeze.py`) |
 
+### REQ-REPORT-6412: V551 Powered Claim Integrity Audit
+
+Carnot SHALL build Exp6412 as a dated V551 claim-integrity audit for planning
+date 20260814. The audit SHALL read Exp6407, Exp6408, and Exp6409 from source
+to artifact. It SHALL hash every audited source, artifact, sidecar, conductor
+record, and determination record before it classifies any claim.
+
+Exp6412 SHALL classify every audited runtime, model, GPU, raw-output, event,
+exact-check, future-evaluation, readiness, public-factor, and FR11 field as
+`measured`, `derived`, `constant`, `inherited`, or `absent`. It SHALL record
+the artifact field, the source line or upstream artifact that produced it, and
+the claim risk for each field.
+
+Exp6412 SHALL confirm whether each audited experiment opened a model file,
+ran a model process, generated tokens, stored raw output bytes, sampled GPU
+telemetry against a PID, and observed exact outcomes after admission. Missing
+receipts SHALL be explicit. A model name, model path, static duration, host
+snapshot, inherited row, synthetic byte hash, or fixed success count SHALL NOT
+count as powered execution evidence.
+
+Exp6412 SHALL rerun adversarial verification and determination-preservation
+lint without changing the audited inputs. It SHALL keep stamped historical
+findings separate from current live findings.
+
+Exp6412 SHALL write an additive corrigendum sidecar and an additive
+claim-ledger sidecar next to its terminal artifact. It SHALL NOT edit or clear
+Exp6407, Exp6408, Exp6409, their sidecars, historical adversarial flags,
+historical corrigenda, conductor records, or determination records.
+
+Exp6412 SHALL mark deterministic protocol readiness, deterministic replay,
+powered GGUF admission, prospective CSL, public factor eligibility, and FR11
+progress independently. Powered and prospective claims SHALL be unproven when
+model-open, process, token, raw-output, PID-bound GPU, or temporal exact-outcome
+receipts are absent. Deterministic replay MAY remain eligible when all replay
+inputs are immutable and no powered claim is used.
+
+Exp6412 SHALL mutation-test the audit with constant durations, forged PIDs,
+model-name-only rows, inherited outputs, missing raw hashes, and fabricated GPU
+samples. Every mutation attack SHALL lose powered eligibility.
+
+The Exp6412 artifact SHALL be written atomically to
+`results/experiment_6412_v551_powered_claim_integrity_audit.json` with
+`inference_substrate=aggregation_from_upstream_artifacts_no_llm` and
+`verifier_is_oracle=false`.
+
+The Exp6412 artifact SHALL include these required fields: `status`,
+`audited_source_artifact_sidecar_and_log_hashes`,
+`per_experiment_field_provenance_matrix`, `model_file_open_evidence`,
+`model_process_execution_evidence`, `token_generation_evidence`,
+`raw_output_byte_evidence`, `pid_bound_gpu_telemetry_evidence`,
+`exact_outcome_temporal_evidence`, `constant_and_inherited_field_findings`,
+`stamped_and_current_adversarial_findings`,
+`determination_preservation_results`,
+`deterministic_protocol_claim_eligibility`,
+`deterministic_replay_claim_eligibility`,
+`powered_gguf_claim_eligibility`, `prospective_csl_claim_eligibility`,
+`public_factor_claim_eligibility`, `fr11_claim_eligibility`,
+`additive_corrigendum_path_and_hash`,
+`additive_claim_ledger_path_entry_and_hash`, `historical_artifacts_modified`,
+`historical_determinations_preserved`, `mutation_attack_matrix`,
+`powered_false_accept_count`, `v551_claim_boundary_ready_score`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`field_principles` SHALL map every claim eligibility and
+`v551_claim_boundary_ready_score` to its purpose. `field_provenance` SHALL cover
+every required field with `measured`, `derived`, `constant`, `inherited`, or
+`absent` provenance.
+
+#### SCENARIO-REPORT-6412-1: Field Provenance Separates Evidence Classes
+
+**Given** Exp6407, Exp6408, and Exp6409 artifacts and sources exist
+**When** Exp6412 builds the audit matrix
+**Then** every claimed receipt and result is classified as measured, derived,
+constant, inherited, or absent with a source line or upstream artifact.
+
+#### SCENARIO-REPORT-6412-2: Powered Receipts Fail Closed
+
+**Given** Exp6408 reports model paths, CUDA state, fixed model durations, and
+derived peak memory
+**When** Exp6412 checks powered evidence
+**Then** powered GGUF eligibility is false unless model-open, process, token,
+raw-output, PID-bound GPU, and temporal exact-outcome receipts are present.
+
+#### SCENARIO-REPORT-6412-3: Inherited CSL Does Not Become Prospective Proof
+
+**Given** Exp6409 imports Exp6408 and inherits its runtime surface
+**When** Exp6412 checks CSL claims
+**Then** deterministic replay can remain eligible but prospective CSL
+eligibility is false without fresh powered execution receipts.
+
+#### SCENARIO-REPORT-6412-4: Historical Records Stay Immutable
+
+**Given** Exp6407 has a stamped adversarial flag and corrigendum record
+**When** Exp6412 writes its additive audit, corrigendum, and claim ledger
+**Then** Exp6407, Exp6408, Exp6409, their sidecars, and determination records
+remain byte-identical.
+
+#### SCENARIO-REPORT-6412-5: Mutation Attacks Lose Powered Eligibility
+
+**Given** constant durations, forged PIDs, model-name-only rows, inherited
+outputs, missing raw hashes, and fabricated GPU samples
+**When** Exp6412 evaluates the mutation attack matrix
+**Then** every attack fails closed and `powered_false_accept_count` is zero.
+
+#### SCENARIO-REPORT-6412-6: Claim Boundary Ready Score Is Conjunctive
+
+**Given** field provenance is complete, additive sidecars are immutable, and
+historical determinations are preserved
+**When** no unpowered or prospective claim remains eligible as powered
+**Then** `v551_claim_boundary_ready_score` is 1.0 and the terminal verdict
+uses an allowed complete prefix.
+
+## Implementation Status (REQ-REPORT-6412)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6412 | Planned (`python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py`, terminal artifact `results/experiment_6412_v551_powered_claim_integrity_audit.json`) | Planned (`tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py`) |
+| SCENARIO-REPORT-6412-1 | Planned (`python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py`) | Planned (`tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py`) |
+| SCENARIO-REPORT-6412-2 | Planned (`python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py`) | Planned (`tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py`) |
+| SCENARIO-REPORT-6412-3 | Planned (`python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py`) | Planned (`tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py`) |
+| SCENARIO-REPORT-6412-4 | Planned (`python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py`) | Planned (`tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py`) |
+| SCENARIO-REPORT-6412-5 | Planned (`python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py`) | Planned (`tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py`) |
+| SCENARIO-REPORT-6412-6 | Planned (`python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py`) | Planned (`tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py`) |
+
 ### REQ-REPORT-6143: Experiment Test Artifact Isolation
 
 Carnot experiment artifact writers SHALL resolve output paths through one
