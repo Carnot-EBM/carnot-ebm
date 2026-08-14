@@ -4478,6 +4478,213 @@ veto overrides are zero, growth is bounded, and all attacks fail closed
 | SCENARIO-LEARN-6430-ATTACKS | Implemented: `python/carnot/experiment_6430_prospective_write_once_memory_capacity_frontier.py`. | Implemented: `tests/python/test_experiment_6430_prospective_write_once_memory_capacity_frontier.py`. |
 | SCENARIO-LEARN-6430-READY | Implemented: `python/carnot/experiment_6430_prospective_write_once_memory_capacity_frontier.py`. | Implemented: `tests/python/test_experiment_6430_prospective_write_once_memory_capacity_frontier.py`. |
 
+## REQ-LEARN-6431: Controlled Memory Interference A/B
+
+**Given** Exp6430 has sealed prospective write-once rows, Exp6420 keeps the V552
+memory safety null context visible, and V553 cites arXiv:2608.07622
+**When** Exp6431 runs on planning date 20260814
+**Then** it SHALL write
+`results/experiment_6431_controlled_memory_interference_ab.json`
+**And** it SHALL compare capacity-matched baseline memory with
+authority-aware retrieval and write controls.
+
+Exp6431 SHALL revalidate Exp6430 gates, row hashes, manifest hashes, frozen
+capacity contracts, memory policy hashes, exact support checkers, authority
+schema, CPU, RAM, disk, and protected future seal before readiness can become
+one. It SHALL not invoke a new LLM. It SHALL not tune on the held partition.
+
+Exp6431 SHALL freeze the interference matrix and matched arms before downstream
+outcomes are used. The matrix SHALL include benign accumulation, reinforcing
+evidence, contradiction, source-authority conflict, supersession, temporal
+invalidity, lexical collision, structural collision, poisoned evidence, and
+target occlusion. Event order, evidence, capacity, query work, and initial head
+SHALL match across arms.
+
+Exp6431 SHALL apply each relationship through the local transactional memory
+path. It SHALL use write, retrieval, expiry, supersession, rollback, and exact
+retention receipts. It SHALL not fabricate success labels. It SHALL not bypass
+exact support.
+
+Exp6431 SHALL record target exposure, target retrieval, downstream use, proposal
+coverage, write precision, plasticity, protected stability, contamination,
+rollback, future exact yield, latency, and work for every unit and arm.
+
+Exp6431 SHALL separate target-exposure failure from downstream-use failure. It
+SHALL report results by relationship, capacity, model family, and factor family.
+It SHALL flag empty or underpowered cells rather than pool them into stronger
+cells.
+
+Exp6431 SHALL require lower-authority contradiction, expired evidence,
+superseded evidence, and poison to fail closed. Higher-authority valid updates
+MAY replace older state only through an auditable transition.
+
+Exp6431 SHALL attack authority spoofing, recency-only override, source pooling,
+lexical collision, structural collision, target hiding, cache resurrection,
+rollback omission, head substitution, and post-outcome relation labels. Every
+critical invalid-memory attack SHALL fail closed.
+
+Exp6431 SHALL recompute every aggregate from per-unit rows. It SHALL set
+`memory_interference_safety_ready_score=1.0` only when every critical invalid
+memory attack fails closed, protected stability does not regress,
+contamination is zero after rollback, valid higher-authority plasticity remains
+nonzero, and all aggregates recompute.
+
+Exp6431 SHALL emit these fields:
+
+- `status`
+- `exp6430_gate_receipts`
+- `upstream_row_manifest_policy_checker_and_head_hashes`
+- `preregistered_interference_matrix`
+- `preregistered_capacity_matched_arm_contract`
+- `per_unit_rows`
+- `per_relationship_capacity_model_and_family_exposure_retrieval_use_coverage_precision_plasticity_stability_contamination_rollback_yield_latency_and_work_results`
+- `exposure_failure_count`
+- `downstream_use_failure_count`
+- `authority_spoof_accept_count`
+- `expired_or_superseded_accept_count`
+- `poisoned_evidence_accept_count`
+- `valid_higher_authority_update_count`
+- `protected_stability_delta`
+- `contamination_after_rollback`
+- `aggregate_recomputation_receipts`
+- `reported_vs_recomputed_deltas`
+- `attack_matrix`
+- `memory_interference_safety_ready_score`
+- `harm_underpowered_missing_and_flagged_cells`
+- `protected_files_unchanged`
+- `blocked_reason`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map both gates, every relationship class, all safety
+counters, and `memory_interference_safety_ready_score`. `per_unit_rows` SHALL
+be present because Exp6431 makes comparative claims. `verifier_is_oracle` SHALL
+be true only for exact support, authority, expiry, supersession, release, and
+retention checks. Retrieval and memory scores SHALL NOT be oracles.
+`honest_verdict` SHALL start with a terminal success prefix.
+
+Required field principles:
+
+- `status`: Names the terminal state for the controlled memory-interference A/B.
+- `exp6430_gate_receipts`: Pins Exp6430 readiness, Exp6420 null context, and sealed-row eligibility.
+- `upstream_row_manifest_policy_checker_and_head_hashes`: Binds rows, manifests, memory policy, exact checkers, heads, and machine resources.
+- `preregistered_interference_matrix`: Freezes relationship labels before downstream outcomes can steer them.
+- `preregistered_capacity_matched_arm_contract`: Proves baseline and authority-aware arms share capacity, work, evidence, order, and initial heads.
+- `per_unit_rows`: Records one arm-level unit before aggregate calculation.
+- `per_relationship_capacity_model_and_family_exposure_retrieval_use_coverage_precision_plasticity_stability_contamination_rollback_yield_latency_and_work_results`: Reports separated cells without masking weak strata.
+- `exposure_failure_count`: Counts target records blocked before retrieval.
+- `downstream_use_failure_count`: Counts exposed records that were not used correctly downstream.
+- `authority_spoof_accept_count`: Must be zero because spoofed authority cannot release memory.
+- `expired_or_superseded_accept_count`: Must be zero because invalid temporal state cannot release memory.
+- `poisoned_evidence_accept_count`: Must be zero because poison cannot release memory.
+- `valid_higher_authority_update_count`: Must stay nonzero to show safe plasticity.
+- `protected_stability_delta`: Must not regress protected behavior.
+- `contamination_after_rollback`: Must be zero after rollback.
+- `aggregate_recomputation_receipts`: Recomputes metrics from per-unit rows.
+- `reported_vs_recomputed_deltas`: Shows reported aggregates match row recomputation.
+- `attack_matrix`: Shows every critical invalid-memory attack fails closed.
+- `memory_interference_safety_ready_score`: Conjunctive readiness for authority-aware memory interference safety.
+- `harm_underpowered_missing_and_flagged_cells`: Keeps weak, missing, null, and flagged cells visible.
+- `protected_files_unchanged`: Shows protected upstream and ops files stayed byte-identical.
+- `blocked_reason`: Explains failed preconditions.
+- `preconditions_checked`: Lists gates, hashes, schemas, resources, and seals checked before readiness.
+- `inference_substrate`: Declares deterministic replay over sealed Exp6430 rows with no new LLM.
+- `verifier_is_oracle`: Marks only exact support and authority lifecycle checks as oracles.
+- `field_principles`: Documents why each field exists.
+- `field_provenance`: Maps each field to specs, inputs, rows, reductions, attacks, or tests.
+- `random_seed`: Pins relation assignment, arms, attacks, and reductions.
+- `duration_s`: Records measured wall time without padding.
+- `tests_run`: Records verification commands and exit codes.
+- `reproducibility_checksum`: Content-addresses the artifact with volatile fields normalized.
+- `honest_verdict`: Uses a terminal success prefix and states the interference result.
+- `gate:exp6430_complete_ready`: Exp6430 must be complete, ready, and row-sealed.
+- `gate:exp6420_safety_null_context`: Exp6420 null findings must remain visible.
+- `relationship:benign_accumulation`: Valid same-authority evidence should remain usable.
+- `relationship:reinforcing_evidence`: Valid reinforcing evidence should improve coverage without instability.
+- `relationship:contradiction`: Lower-authority contradiction must fail closed.
+- `relationship:source_authority_conflict`: Lower-authority source conflict must fail closed.
+- `relationship:supersession`: Valid higher-authority updates may replace older state through audit.
+- `relationship:temporal_invalidity`: Expired evidence must fail closed.
+- `relationship:lexical_collision`: Similar words must not hide the target record.
+- `relationship:structural_collision`: Similar structure must not hide the target record.
+- `relationship:poisoned_evidence`: Poisoned evidence must fail closed.
+- `relationship:target_occlusion`: Target exposure must be measured apart from downstream use.
+- `attack:authority_spoofing`: Spoofed source rank must not release memory.
+- `attack:recency_only_override`: Recency alone must not override authority.
+- `attack:source_pooling`: Pooled sources must not launder lower authority.
+- `attack:lexical_collision`: Lexical collision must not select the wrong record.
+- `attack:structural_collision`: Structural collision must not select the wrong record.
+- `attack:target_hiding`: Hidden targets must stay visible to the exposure metric.
+- `attack:cache_resurrection`: Stale cache must not revive invalid memory.
+- `attack:rollback_omission`: Rollback omission must not leave contamination.
+- `attack:head_substitution`: Head swaps must not alter the matched initial state.
+- `attack:post_outcome_relation_labels`: Relation labels must not be assigned after outcome use.
+
+## SCENARIO-LEARN-6431-GATES: Sealed Inputs Gate The Run
+
+**Given** Exp6430 and Exp6420 artifacts are available
+**When** Exp6431 checks preconditions
+**Then** gates, row hashes, manifest hashes, memory policy, exact checkers,
+authority schema, CPU, RAM, disk, and protected future seal SHALL pass before
+readiness can become one.
+
+## SCENARIO-LEARN-6431-FREEZE: Matrix And Arms Freeze First
+
+**Given** the sealed Exp6430 stream
+**When** Exp6431 builds the interference matrix
+**Then** relationship labels, capacities, arms, evidence hashes, query work, and
+initial heads SHALL be frozen before downstream outcomes can steer them.
+
+## SCENARIO-LEARN-6431-PATHS: Lifecycle Controls Use Real Memory Paths
+
+**Given** each relationship class
+**When** Exp6431 replays the matched arms
+**Then** write, retrieval, expiry, supersession, rollback, and exact-retention
+receipts SHALL decide exposure, retrieval, use, and contamination.
+
+## SCENARIO-LEARN-6431-METRICS: Exposure And Use Are Separate
+
+**Given** per-unit rows exist for every arm
+**When** Exp6431 reduces results
+**Then** target exposure failure and downstream-use failure SHALL be counted
+separately by relationship, capacity, model family, and factor family.
+
+## SCENARIO-LEARN-6431-ATTACKS: Critical Invalid Memory Fails Closed
+
+**Given** authority spoofing, recency override, source pooling, collisions,
+target hiding, cache resurrection, rollback omission, head substitution, and
+post-outcome labels
+**When** Exp6431 builds the attack matrix
+**Then** every critical attack SHALL fail closed in the authority-aware arm.
+
+## SCENARIO-LEARN-6431-READY: Readiness Is Fully Conjunctive
+
+**Given** row-recomputed aggregates and attack receipts
+**When** attacks fail closed, protected stability does not regress,
+contamination is zero after rollback, valid higher-authority plasticity is
+nonzero, and reported metrics recompute
+**Then** `memory_interference_safety_ready_score` SHALL be `1.0`.
+
+## Implementation Status (REQ-LEARN-6431)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6431 | Implemented: `python/carnot/experiment_6431_controlled_memory_interference_ab.py`; terminal artifact `results/experiment_6431_controlled_memory_interference_ab.json`. | Implemented: `tests/python/test_experiment_6431_controlled_memory_interference_ab.py`. |
+| SCENARIO-LEARN-6431-GATES | Implemented: `python/carnot/experiment_6431_controlled_memory_interference_ab.py`. | Implemented: `tests/python/test_experiment_6431_controlled_memory_interference_ab.py`. |
+| SCENARIO-LEARN-6431-FREEZE | Implemented: `python/carnot/experiment_6431_controlled_memory_interference_ab.py`. | Implemented: `tests/python/test_experiment_6431_controlled_memory_interference_ab.py`. |
+| SCENARIO-LEARN-6431-PATHS | Implemented: `python/carnot/experiment_6431_controlled_memory_interference_ab.py`. | Implemented: `tests/python/test_experiment_6431_controlled_memory_interference_ab.py`. |
+| SCENARIO-LEARN-6431-METRICS | Implemented: `python/carnot/experiment_6431_controlled_memory_interference_ab.py`. | Implemented: `tests/python/test_experiment_6431_controlled_memory_interference_ab.py`. |
+| SCENARIO-LEARN-6431-ATTACKS | Implemented: `python/carnot/experiment_6431_controlled_memory_interference_ab.py`. | Implemented: `tests/python/test_experiment_6431_controlled_memory_interference_ab.py`. |
+| SCENARIO-LEARN-6431-READY | Implemented: `python/carnot/experiment_6431_controlled_memory_interference_ab.py`. | Implemented: `tests/python/test_experiment_6431_controlled_memory_interference_ab.py`. |
+
 ## REQ-LEARN-6409: Graph-Local Multisession Continuous Learning
 
 **Given** Exp6408 first shows positive future exact yield with non-increased
