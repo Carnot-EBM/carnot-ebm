@@ -1,0 +1,1957 @@
+{
+  "adversarial_and_determination_preservation_findings": {
+    "current_guard_commands": [
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6420_csl_authenticity_safety_audit.json",
+      ".venv/bin/python scripts/determination_preservation_lint.py"
+    ],
+    "current_guard_results_recorded_in_tests_run": true,
+    "determination_preservation": {
+      "command": ".venv/bin/python scripts/determination_preservation_lint.py",
+      "note": "The guard command is run during verification, outside artifact construction.",
+      "passed": true
+    },
+    "exp6412_historical": {
+      "corrigendum_preserved": true,
+      "honest_verdict": "complete: V551 claim boundary audited; powered and prospective claims are unproven, deterministic replay is preserved",
+      "prospective_csl_claim_eligibility": {
+        "blockers": [
+          "inherits_exp6408_unpowered_runtime_surface",
+          "model_file_opened",
+          "model_process_ran",
+          "tokens_generated",
+          "raw_output_bytes_stored",
+          "pid_bound_gpu_samples",
+          "exact_outcomes_observed_after_admission",
+          "nonconstant_runtime_duration"
+        ],
+        "claim_class": "prospective_csl",
+        "eligible": false,
+        "scope": "deterministic replay preserved, CSL progress unproven"
+      },
+      "public_factor_claim_eligibility": {
+        "blockers": [
+          "powered_receipts_absent",
+          "public_boundary_not_established"
+        ],
+        "claim_class": "public_factor",
+        "eligible": false,
+        "scope": "internal audit only"
+      },
+      "stamped_and_current_adversarial_findings": {
+        "exp6407-provenance-tiered-factor-memory-protocol": {
+          "current": {
+            "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
+            "exp_id": null,
+            "flag_count": 2,
+            "flags": [
+              {
+                "detail": "duration_s=0.036034676014 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+                "kind": "DURATION_TOO_SHORT",
+                "severity": "critical"
+              },
+              {
+                "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+                "kind": "METHODOLOGY_MISSING",
+                "severity": "warn"
+              }
+            ],
+            "honest_verdict": "complete: provenance tiered factor memory protocol ready; cache has no authority",
+            "loaded": true,
+            "max_severity": 2,
+            "title": ""
+          },
+          "current_live_has_critical": true,
+          "stamped": {
+            "corrigendum_pending": [
+              {
+                "detail": "duration_s=0.036034676014 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+                "kind": "DURATION_TOO_SHORT",
+                "severity": "critical"
+              },
+              {
+                "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+                "kind": "METHODOLOGY_MISSING",
+                "severity": "warn"
+              }
+            ],
+            "flagged_adversarial": true,
+            "honest_verdict": "complete: provenance tiered factor memory protocol ready; cache has no authority",
+            "status": "complete_positive"
+          },
+          "stamped_and_current_preserved_separately": true
+        },
+        "exp6408-powered-write-time-factor-admission-ab": {
+          "current": {
+            "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6408_powered_write_time_factor_admission_ab.json",
+            "exp_id": null,
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "complete: powered write-time admission ran in four Exp6395 licensed cells and be",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          },
+          "current_live_has_critical": false,
+          "stamped": {
+            "corrigendum_pending": null,
+            "flagged_adversarial": null,
+            "honest_verdict": "complete: powered write-time admission ran in four Exp6395 licensed cells and beat write-everything with lower contamination",
+            "status": "complete_positive"
+          },
+          "stamped_and_current_preserved_separately": true
+        },
+        "exp6409-graph-local-multisession-continuous-learning": {
+          "current": {
+            "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6409_graph_local_multisession_continuous_learning.json",
+            "exp_id": null,
+            "flag_count": 0,
+            "flags": [],
+            "honest_verdict": "complete: graph-local multisession CSL improved future exact yield with zero con",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          },
+          "current_live_has_critical": false,
+          "stamped": {
+            "corrigendum_pending": null,
+            "flagged_adversarial": null,
+            "honest_verdict": "complete: graph-local multisession CSL improved future exact yield with zero contamination and rollback-clean retention",
+            "status": "complete_positive"
+          },
+          "stamped_and_current_preserved_separately": true
+        }
+      },
+      "status": "complete_claim_boundary_ready"
+    },
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.guard_findings"
+  },
+  "attack_matrix": {
+    "all_critical_attacks_fail_closed": false,
+    "open_critical_attack_ids": [
+      "raw_output_reuse",
+      "cache_resurrection"
+    ],
+    "rows": [
+      {
+        "attack_id": "forged_pid",
+        "critical": true,
+        "evidence": "positive PID, accepted process, accepted GPU receipt, zero exit",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      {
+        "attack_id": "substituted_model_bytes",
+        "critical": true,
+        "evidence": "actual model byte hashes match recorded hashes",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      {
+        "attack_id": "raw_output_reuse",
+        "critical": true,
+        "evidence": "development event-level raw_output_reuse_count=24",
+        "fail_closed": false,
+        "readiness_promoted_if_open": true
+      },
+      {
+        "attack_id": "event_reordering",
+        "critical": true,
+        "evidence": "chronological indices and order fields are monotonic",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      {
+        "attack_id": "future_label_leakage",
+        "critical": true,
+        "evidence": "future partitions are not used for training",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      {
+        "attack_id": "same_step_writes",
+        "critical": true,
+        "evidence": "same_step_write_count is zero",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      {
+        "attack_id": "model_identity_swap",
+        "critical": true,
+        "evidence": "models_used matches mandated ids and silent fallback is zero",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      {
+        "attack_id": "stale_heads",
+        "critical": true,
+        "evidence": "held frozen heads match Exp6418 terminal heads",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      {
+        "attack_id": "duplicates",
+        "critical": true,
+        "evidence": "duplicate exact-label events did not enter commit transitions",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      {
+        "attack_id": "partial_commits",
+        "critical": true,
+        "evidence": "each event/path has one atomic disposition",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      {
+        "attack_id": "rollback_omission",
+        "critical": true,
+        "evidence": "upstream records harmful descendant rollback attacks",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      {
+        "attack_id": "cache_resurrection",
+        "critical": true,
+        "evidence": "held path_receipt_before_manifest_write.present=True",
+        "fail_closed": false,
+        "readiness_promoted_if_open": true
+      },
+      {
+        "attack_id": "poisoned_evidence",
+        "critical": true,
+        "evidence": "exact veto override and protected leakage counts are zero",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      {
+        "attack_id": "hidden_retuning",
+        "critical": true,
+        "evidence": "held no-post-outcome-retuning counters are zero",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      }
+    ],
+    "rows_by_attack": {
+      "cache_resurrection": {
+        "attack_id": "cache_resurrection",
+        "critical": true,
+        "evidence": "held path_receipt_before_manifest_write.present=True",
+        "fail_closed": false,
+        "readiness_promoted_if_open": true
+      },
+      "duplicates": {
+        "attack_id": "duplicates",
+        "critical": true,
+        "evidence": "duplicate exact-label events did not enter commit transitions",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      "event_reordering": {
+        "attack_id": "event_reordering",
+        "critical": true,
+        "evidence": "chronological indices and order fields are monotonic",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      "forged_pid": {
+        "attack_id": "forged_pid",
+        "critical": true,
+        "evidence": "positive PID, accepted process, accepted GPU receipt, zero exit",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      "future_label_leakage": {
+        "attack_id": "future_label_leakage",
+        "critical": true,
+        "evidence": "future partitions are not used for training",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      "hidden_retuning": {
+        "attack_id": "hidden_retuning",
+        "critical": true,
+        "evidence": "held no-post-outcome-retuning counters are zero",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      "model_identity_swap": {
+        "attack_id": "model_identity_swap",
+        "critical": true,
+        "evidence": "models_used matches mandated ids and silent fallback is zero",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      "partial_commits": {
+        "attack_id": "partial_commits",
+        "critical": true,
+        "evidence": "each event/path has one atomic disposition",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      "poisoned_evidence": {
+        "attack_id": "poisoned_evidence",
+        "critical": true,
+        "evidence": "exact veto override and protected leakage counts are zero",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      "raw_output_reuse": {
+        "attack_id": "raw_output_reuse",
+        "critical": true,
+        "evidence": "development event-level raw_output_reuse_count=24",
+        "fail_closed": false,
+        "readiness_promoted_if_open": true
+      },
+      "rollback_omission": {
+        "attack_id": "rollback_omission",
+        "critical": true,
+        "evidence": "upstream records harmful descendant rollback attacks",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      "same_step_writes": {
+        "attack_id": "same_step_writes",
+        "critical": true,
+        "evidence": "same_step_write_count is zero",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      "stale_heads": {
+        "attack_id": "stale_heads",
+        "critical": true,
+        "evidence": "held frozen heads match Exp6418 terminal heads",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      },
+      "substituted_model_bytes": {
+        "attack_id": "substituted_model_bytes",
+        "critical": true,
+        "evidence": "actual model byte hashes match recorded hashes",
+        "fail_closed": true,
+        "readiness_promoted_if_open": false
+      }
+    },
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.attack_matrix"
+  },
+  "csl_authenticity_safety_audit_ready_score": 0.0,
+  "duration_s": 0.024681654,
+  "exact_veto_override_count": 0,
+  "expected_and_available_upstream_inputs": {
+    "all_required_present": true,
+    "available_count": 26,
+    "expected_count": 26,
+    "missing_required_count": 0,
+    "missing_required_paths": [],
+    "rows": [
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "size_bytes": 1165
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "size_bytes": 2396
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "size_bytes": 287937
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/continuous-learning/spec.md",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:1f75312bc4645f39e19c380a47fb0b31faef8626350c7fd241da2c8e507846aa",
+        "size_bytes": 275663
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/self-learning/spec.md",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:8a66bf921dda113b43b96bdcb02281bda73e5522fae8c933525ec54b93db77fc",
+        "size_bytes": 1577914
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6412_v551_powered_claim_integrity_audit.json",
+        "present": true,
+        "principle_key": "missing_input:required_artifact",
+        "required": true,
+        "role": "artifact",
+        "sha256": "sha256:b57f55728b994ea2dfd04e0f720f4c17a31bd18ef30f999d0d81aa18c2921e1f",
+        "size_bytes": 95163
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6412_v551_powered_claim_integrity_audit.json.claim_ledger.jsonl",
+        "present": true,
+        "principle_key": "missing_input:required_determination_record",
+        "required": true,
+        "role": "determination_record",
+        "sha256": "sha256:20956786adadb1a816a883c89814a7ae0f768c843812180d4657df1d3493fcaa",
+        "size_bytes": 441
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6412_v551_powered_claim_integrity_audit.json.corrigendum.json",
+        "present": true,
+        "principle_key": "missing_input:required_determination_record",
+        "required": true,
+        "role": "determination_record",
+        "sha256": "sha256:38d6ea6ef74e918a538752cc810305a1be977dd65060ef2e2398382f27173860",
+        "size_bytes": 737
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6418_execution_grounded_dual_path_csl.json",
+        "present": true,
+        "principle_key": "missing_input:required_artifact",
+        "required": true,
+        "role": "artifact",
+        "sha256": "sha256:d69bbbe8c1b90fc531bea5f36892bbc6419eb7b72b73d6380e7a9ac2c17ba805",
+        "size_bytes": 505193
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6418_execution_grounded_dual_path_csl/chronological_manifest.json",
+        "present": true,
+        "principle_key": "missing_input:required_sidecar",
+        "required": true,
+        "role": "sidecar",
+        "sha256": "sha256:b21ff80d72148a739b8b4adab4c949d8746cf69d77db0fa7cad52a0a5cec1f19",
+        "size_bytes": 113885
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6418_execution_grounded_dual_path_csl.py",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:48e2536323254319131c460724736bb4d573ad160f8a87d82ef74d65a0b5a7d7",
+        "size_bytes": 68476
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_6418_execution_grounded_dual_path_csl.py",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:28d12a281dc1fa98a37102c120d31932807148c18db108784829b72c2fa7a61b",
+        "size_bytes": 19195
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6419_held_shift_restart_csl_replication.json",
+        "present": true,
+        "principle_key": "missing_input:required_artifact",
+        "required": true,
+        "role": "artifact",
+        "sha256": "sha256:d79a83a6ab7a939f0eaddb360fff6d5b3ecf6a14df5c4a94726f12e6de4bd30d",
+        "size_bytes": 239460
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6419_held_shift_restart_csl_replication/held_shift_manifest.json",
+        "present": true,
+        "principle_key": "missing_input:required_sidecar",
+        "required": true,
+        "role": "sidecar",
+        "sha256": "sha256:d9946d94beac543ae86581cc76e9bacc90535799f586128cbe3a82e85610d495",
+        "size_bytes": 122454
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6419_held_shift_restart_csl_replication.py",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:5693d779a5f60ed983cf8c9f35186c942e4a3883f22ecaedbe84355dd6965e73",
+        "size_bytes": 52323
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_6419_held_shift_restart_csl_replication.py",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:91d3abf87573fcabf95563e18c46ad0af722aaadd3cc19f74ab134b9e7db9dd4",
+        "size_bytes": 17529
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6413_authenticated_sota_gguf_execution_receipts.json",
+        "present": true,
+        "principle_key": "missing_input:required_artifact",
+        "required": true,
+        "role": "artifact",
+        "sha256": "sha256:3775844256172a9030ec83319268a08fc0a23614ac447bd1324bc867f1a67f2d",
+        "size_bytes": 70965
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6414_fresh_three_family_factor_event_corpus.json",
+        "present": true,
+        "principle_key": "missing_input:required_artifact",
+        "required": true,
+        "role": "artifact",
+        "sha256": "sha256:d6bc25c3fd0bd81ed9066d1057dcf7ff7af7e59c3b2d1d4b1c35d423103b6a18",
+        "size_bytes": 461321
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6417_authentic_write_time_factor_admission_ab.json",
+        "present": true,
+        "principle_key": "missing_input:required_artifact",
+        "required": true,
+        "role": "artifact",
+        "sha256": "sha256:46c10b50c3900b1dbb848d26590713938c48414b90a2d050d1c61778f3e4d508",
+        "size_bytes": 685779
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
+        "present": true,
+        "principle_key": "missing_input:required_artifact",
+        "required": true,
+        "role": "artifact",
+        "sha256": "sha256:71395943562c2a0d4a4e86fcf708f0d5d7dd684573737667fb7da49a6ac0c73a",
+        "size_bytes": 392739
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6397_transactional_continuous_factor_learning.json",
+        "present": true,
+        "principle_key": "missing_input:required_artifact",
+        "required": true,
+        "role": "artifact",
+        "sha256": "sha256:0b959ab25ffac06d2de469faf1ae24afe8fd09c16c4de683527b280f51def0b5",
+        "size_bytes": 143058
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "present": true,
+        "principle_key": "missing_input:required_checker",
+        "required": true,
+        "role": "checker",
+        "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+        "size_bytes": 254560
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/determination_preservation_lint.py",
+        "present": true,
+        "principle_key": "missing_input:required_checker",
+        "required": true,
+        "role": "checker",
+        "sha256": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
+        "size_bytes": 65178
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/root_clutter_sweep.py",
+        "present": true,
+        "principle_key": "missing_input:required_checker",
+        "required": true,
+        "role": "checker",
+        "sha256": "sha256:be83376d4820e8f254bd341a9b4f7683454db8af7f69998887267e502c343402",
+        "size_bytes": 8233
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6420_csl_authenticity_safety_audit.py",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:1bae7e9f5c0018dfde305840ef1c5d5774f0d002012b611a10db20712ac25f05",
+        "size_bytes": 79909
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_6420_csl_authenticity_safety_audit.py",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:363019f96fde75e61286845f82d4f844c92d831a073d4ddf76fb3333c76a4133",
+        "size_bytes": 9169
+      }
+    ],
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.expected_inputs"
+  },
+  "field_principles": {
+    "adversarial_and_determination_preservation_findings": "Preserves historical and current guard findings separately.",
+    "attack:cache_resurrection": "This critical attack must fail closed before readiness can become one.",
+    "attack:duplicates": "This critical attack must fail closed before readiness can become one.",
+    "attack:event_reordering": "This critical attack must fail closed before readiness can become one.",
+    "attack:forged_pid": "This critical attack must fail closed before readiness can become one.",
+    "attack:future_label_leakage": "This critical attack must fail closed before readiness can become one.",
+    "attack:hidden_retuning": "This critical attack must fail closed before readiness can become one.",
+    "attack:model_identity_swap": "This critical attack must fail closed before readiness can become one.",
+    "attack:partial_commits": "This critical attack must fail closed before readiness can become one.",
+    "attack:poisoned_evidence": "This critical attack must fail closed before readiness can become one.",
+    "attack:raw_output_reuse": "This critical attack must fail closed before readiness can become one.",
+    "attack:rollback_omission": "This critical attack must fail closed before readiness can become one.",
+    "attack:same_step_writes": "This critical attack must fail closed before readiness can become one.",
+    "attack:stale_heads": "This critical attack must fail closed before readiness can become one.",
+    "attack:substituted_model_bytes": "This critical attack must fail closed before readiness can become one.",
+    "attack_matrix": "Shows each critical attack and whether it failed closed.",
+    "csl_authenticity_safety_audit_ready_score": "Readiness is one only when both streams exist and all critical gates pass.",
+    "duration_s": "Records wall time for the deterministic audit.",
+    "eligibility:prospective_csl": "Prospective CSL eligibility follows the audit readiness gate.",
+    "eligibility:public_factor": "Public factor eligibility follows the audit readiness gate.",
+    "exact_veto_override_count": "Counts any exact veto override across the chain.",
+    "expected_and_available_upstream_inputs": "Lists every expected V552 input and whether it exists.",
+    "field_principles": "Maps fields, missing-input rules, attacks, eligibility, and readiness.",
+    "field_provenance": "Maps fields to upstream artifacts, row replay, guards, or tests.",
+    "harm_underpowered_missing_and_flagged_cells": "Keeps missing, underpowered, flagged, heterogeneous, and attacked cells visible.",
+    "hidden_retuning_count": "Counts held-retuning evidence after outcome open.",
+    "honest_verdict": "Uses a terminal prefix and states the audited claim boundary.",
+    "inference_substrate": "Declares deterministic artifact provenance audit with no new LLM call.",
+    "missing_input:required_artifact": "Missing expected input of this class must remain visible and lower readiness.",
+    "missing_input:required_checker": "Missing expected input of this class must remain visible and lower readiness.",
+    "missing_input:required_determination_record": "Missing expected input of this class must remain visible and lower readiness.",
+    "missing_input:required_model_byte": "Missing expected input of this class must remain visible and lower readiness.",
+    "missing_input:required_sidecar": "Missing expected input of this class must remain visible and lower readiness.",
+    "missing_input:required_source": "Missing expected input of this class must remain visible and lower readiness.",
+    "missing_input_findings": "Keeps missing expected inputs visible and lowers readiness.",
+    "preconditions_checked": "Lists the gates that control readiness.",
+    "process_and_raw_output_authenticity_rechecks": "Rechecks PID, process, raw-output, and model-byte authenticity from receipts.",
+    "proposal_memory_exact_feasibility_bindings": "Binds proposal commits to exact feasibility evidence.",
+    "proposal_precedes_outcome_checks": "Verifies proposal freeze order precedes exact outcome order.",
+    "prospective_csl_claim_eligibility": "Allows a prospective CSL claim only after all audit gates pass.",
+    "protected_files_unchanged": "Shows upstream and ops protected files stayed byte-identical.",
+    "protected_leakage_count": "Counts protected partition leakage across the chain.",
+    "public_factor_claim_eligibility": "Allows a public factor claim only after all audit gates pass.",
+    "random_seed": "Pins deterministic audit ordering and tie handling.",
+    "readiness:csl_authenticity_safety_audit_ready_score": "The score is fully conjunctive over availability, authenticity, causality, metrics, safety, and attacks.",
+    "recomputed_development_and_held_metrics": "Recomputes metrics from published rows instead of terminal claims.",
+    "reconstructed_event_time_order": "Replays event order from row order fields and hashes.",
+    "reported_vs_recomputed_deltas": "Compares reported metrics with row-derived metrics.",
+    "reproducibility_checksum": "Hashes the artifact with volatile fields normalized.",
+    "retention_forgetting_contamination_growth_restart_and_cost_rechecks": "Rechecks retention, forgetting, contamination, growth, restart, and cost gates.",
+    "selection_memory_exact_consequence_bindings": "Binds selection commits to exact consequence evidence.",
+    "status": "Names the terminal audit result without hiding null evidence.",
+    "tests_run": "Records commands and exit codes that guard the artifact.",
+    "uncertainty_and_effective_sample_sizes": "Reports effect uncertainty and effective sample size without pooling away small cells.",
+    "untouched_future_partition_checks": "Verifies future rows were not used for training before evaluation.",
+    "update_follows_exact_feedback_checks": "Verifies memory updates follow exact feedback evidence.",
+    "upstream_artifact_sidecar_source_checkpoint_model_and_checker_hashes": "Hashes artifacts, sidecars, sources, checkpoints, model bytes, checkers, and determination records.",
+    "verifier_is_oracle": "The audit is not an oracle; it inspects upstream exact oracles."
+  },
+  "field_provenance": {
+    "adversarial_and_determination_preservation_findings": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "attack_matrix": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "csl_authenticity_safety_audit_ready_score": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "duration_s": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "exact_veto_override_count": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "expected_and_available_upstream_inputs": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "field_principles": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "field_provenance": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "harm_underpowered_missing_and_flagged_cells": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "hidden_retuning_count": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "honest_verdict": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "inference_substrate": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "missing_input_findings": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "preconditions_checked": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "process_and_raw_output_authenticity_rechecks": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "proposal_memory_exact_feasibility_bindings": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "proposal_precedes_outcome_checks": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "prospective_csl_claim_eligibility": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "protected_files_unchanged": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "protected_leakage_count": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "public_factor_claim_eligibility": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "random_seed": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "recomputed_development_and_held_metrics": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "reconstructed_event_time_order": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "reported_vs_recomputed_deltas": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "reproducibility_checksum": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "retention_forgetting_contamination_growth_restart_and_cost_rechecks": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "selection_memory_exact_consequence_bindings": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "status": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "tests_run": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "uncertainty_and_effective_sample_sizes": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "untouched_future_partition_checks": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "update_follows_exact_feedback_checks": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "upstream_artifact_sidecar_source_checkpoint_model_and_checker_hashes": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ],
+    "verifier_is_oracle": [
+      "REQ-LEARN-6420",
+      "Exp6412 V551 claim-boundary audit",
+      "Exp6418 development CSL artifact",
+      "Exp6419 held restart CSL artifact",
+      "row-level replay and hash receipts",
+      "Exp6420 focused tests"
+    ]
+  },
+  "harm_underpowered_missing_and_flagged_cells": {
+    "all_visible": true,
+    "open_critical_attack_ids": [
+      "raw_output_reuse",
+      "cache_resurrection"
+    ],
+    "reported_metric_mismatch_count": 8,
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.harm_visible",
+    "underpowered_cell_count": 4,
+    "visible_harm_reasons": [
+      "reported_metric_mismatch",
+      "open_critical_attacks",
+      "underpowered_cells"
+    ]
+  },
+  "hidden_retuning_count": 0,
+  "honest_verdict": "complete_null: V552 CSL chain audit completed; reported metrics do not recompute from rows or critical attacks remain open",
+  "inference_substrate": "artifact_provenance_audit",
+  "missing_input_findings": {
+    "all_missing_visible": true,
+    "missing_by_role": {},
+    "missing_optional_count": 0,
+    "missing_principle_keys": [],
+    "missing_required_count": 0,
+    "missing_required_paths": [],
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.missing_inputs"
+  },
+  "preconditions_checked": {
+    "all_critical_attacks_fail_closed": false,
+    "all_required_inputs_available": true,
+    "both_streams_exist": true,
+    "causal_order_holds": true,
+    "checked": [
+      "expected_inputs",
+      "model_bytes",
+      "process_receipts",
+      "raw_outputs",
+      "event_order",
+      "proposal_outcome_order",
+      "update_feedback_order",
+      "future_partition",
+      "reported_vs_recomputed_metrics",
+      "retention_forgetting_contamination_growth_restart_cost",
+      "critical_attacks",
+      "historical_determination_preservation"
+    ],
+    "contamination_zero_after_rollback": true,
+    "date_matches": true,
+    "no_exact_veto_overridden": true,
+    "planning_date": "20260814",
+    "powered_receipts_authentic": true,
+    "protected_retention_non_negative": true,
+    "recomputed_metrics_match": false,
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.preconditions",
+    "tests_all_passed": true
+  },
+  "process_and_raw_output_authenticity_rechecks": {
+    "all_exp6418_process_receipts_accepted": true,
+    "all_exp6419_process_receipts_accepted": true,
+    "all_exp6419_raw_outputs_frozen": true,
+    "all_model_bytes_match_recorded_hashes": true,
+    "all_pids_bound_and_positive": true,
+    "all_rechecks_passed": true,
+    "exp6418_pid_rows": [
+      {
+        "exit_returncode": 0,
+        "gpu_receipt_accepted": true,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pid": 2478853,
+        "pid_positive_integer": true,
+        "process_receipt_accepted": true,
+        "raw_output_sha256": "sha256:c42fc69d7f6265ea5e98d9221f5ee0151a5064109eb2e88461a314253e5c1d2a"
+      },
+      {
+        "exit_returncode": 0,
+        "gpu_receipt_accepted": true,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pid": 2478933,
+        "pid_positive_integer": true,
+        "process_receipt_accepted": true,
+        "raw_output_sha256": "sha256:1ae8b3bfab5eea4e311c545f8ceca32cca22be85e727eb4714f205c56a8b0e78"
+      },
+      {
+        "exit_returncode": 0,
+        "gpu_receipt_accepted": true,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "pid": 2479000,
+        "pid_positive_integer": true,
+        "process_receipt_accepted": true,
+        "raw_output_sha256": "sha256:4d205b8adf4756ea3381d431ef3472a3ee48eb087659d1351c987ba41606ceed"
+      }
+    ],
+    "exp6419_raw_rows_checked": 72,
+    "model_byte_rows": [
+      {
+        "actual_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "hash_method": "huggingface_blob_content_address",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "matches_recorded": true,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "present": true,
+        "recorded_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "role": "model_byte",
+        "size_bytes": 76
+      },
+      {
+        "actual_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "hash_method": "huggingface_blob_content_address",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "matches_recorded": true,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "present": true,
+        "recorded_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "role": "model_byte",
+        "size_bytes": 76
+      },
+      {
+        "actual_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "hash_method": "huggingface_blob_content_address",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "matches_recorded": true,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "present": true,
+        "recorded_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "role": "model_byte",
+        "size_bytes": 76
+      }
+    ],
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.process_raw_authenticity"
+  },
+  "proposal_memory_exact_feasibility_bindings": {
+    "all_commits_have_exact_feasibility": true,
+    "commit_count": 6,
+    "missing_or_bad_binding_count": 0,
+    "rows": [
+      {
+        "bound": true,
+        "event_id": "exp6418-session-01-event-000",
+        "exact_feasible_action": true,
+        "head_after_hash": "sha256:488bcb3195656c7543791cb8a1494b505481cfaa577aa0710e485d1fd9b151e4",
+        "update_source": "exact_feasibility_outcomes_only"
+      },
+      {
+        "bound": true,
+        "event_id": "exp6418-session-01-event-004",
+        "exact_feasible_action": true,
+        "head_after_hash": "sha256:c225a70f2b4d7d8d4bc6c04b3742bf397575e8437ec5c1eebf33b69261f4c936",
+        "update_source": "exact_feasibility_outcomes_only"
+      },
+      {
+        "bound": true,
+        "event_id": "exp6418-session-01-event-008",
+        "exact_feasible_action": true,
+        "head_after_hash": "sha256:32eb414c9cbc752394f94bc7aa62824263aa3e63d49f79e8bb86cc296034c088",
+        "update_source": "exact_feasibility_outcomes_only"
+      },
+      {
+        "bound": true,
+        "event_id": "exp6418-session-01-event-016",
+        "exact_feasible_action": true,
+        "head_after_hash": "sha256:d789b15c1eb07252ccdb045b2a1bf0ab75d72241e1086274d368627b1d40283d",
+        "update_source": "exact_feasibility_outcomes_only"
+      },
+      {
+        "bound": true,
+        "event_id": "exp6418-session-01-event-020",
+        "exact_feasible_action": true,
+        "head_after_hash": "sha256:edc995958671924912db8b851adefaca425d84b72201fa3d9bdeb69ffde9ab7f",
+        "update_source": "exact_feasibility_outcomes_only"
+      },
+      {
+        "bound": true,
+        "event_id": "exp6418-session-02-event-024",
+        "exact_feasible_action": true,
+        "head_after_hash": "sha256:a1f9f5f89bc46d61d79355af552196af0cb532c2fd0bce88f05186eb4f91829d",
+        "update_source": "exact_feasibility_outcomes_only"
+      }
+    ],
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.proposal_feasibility_bindings"
+  },
+  "proposal_precedes_outcome_checks": {
+    "all_proposals_precede_outcomes": true,
+    "checked_count": 288,
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.proposal_precedes_outcome",
+    "violation_count": 0,
+    "violations": []
+  },
+  "prospective_csl_claim_eligibility": {
+    "blockers": [
+      "cache_resurrection",
+      "raw_output_reuse",
+      "reported_metrics_do_not_recompute_from_rows"
+    ],
+    "claim_class": "prospective_csl",
+    "eligible": false,
+    "scope": "V552 CSL chain only; V551 claim-boundary blockers are preserved separately"
+  },
+  "protected_files_unchanged": {
+    "changed_paths": [],
+    "files": {
+      "_bmad/traceability.md": {
+        "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "after": "sha256:0411b92b847e0a5b5a1d07da9529c9ada5f683493fa05960d1790db211c75ebd",
+        "before": "sha256:0411b92b847e0a5b5a1d07da9529c9ada5f683493fa05960d1790db211c75ebd",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "unchanged": true
+      },
+      "results/experiment_6412_v551_powered_claim_integrity_audit.json": {
+        "after": "sha256:b57f55728b994ea2dfd04e0f720f4c17a31bd18ef30f999d0d81aa18c2921e1f",
+        "before": "sha256:b57f55728b994ea2dfd04e0f720f4c17a31bd18ef30f999d0d81aa18c2921e1f",
+        "unchanged": true
+      },
+      "results/experiment_6412_v551_powered_claim_integrity_audit.json.claim_ledger.jsonl": {
+        "after": "sha256:20956786adadb1a816a883c89814a7ae0f768c843812180d4657df1d3493fcaa",
+        "before": "sha256:20956786adadb1a816a883c89814a7ae0f768c843812180d4657df1d3493fcaa",
+        "unchanged": true
+      },
+      "results/experiment_6412_v551_powered_claim_integrity_audit.json.corrigendum.json": {
+        "after": "sha256:38d6ea6ef74e918a538752cc810305a1be977dd65060ef2e2398382f27173860",
+        "before": "sha256:38d6ea6ef74e918a538752cc810305a1be977dd65060ef2e2398382f27173860",
+        "unchanged": true
+      },
+      "results/experiment_6418_execution_grounded_dual_path_csl.json": {
+        "after": "sha256:d69bbbe8c1b90fc531bea5f36892bbc6419eb7b72b73d6380e7a9ac2c17ba805",
+        "before": "sha256:d69bbbe8c1b90fc531bea5f36892bbc6419eb7b72b73d6380e7a9ac2c17ba805",
+        "unchanged": true
+      },
+      "results/experiment_6419_held_shift_restart_csl_replication.json": {
+        "after": "sha256:d79a83a6ab7a939f0eaddb360fff6d5b3ecf6a14df5c4a94726f12e6de4bd30d",
+        "before": "sha256:d79a83a6ab7a939f0eaddb360fff6d5b3ecf6a14df5c4a94726f12e6de4bd30d",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after": "sha256:01ee05e4b261754164ffac978bbd6920e51cbc172618162734fec806a9c11949",
+        "before": "sha256:01ee05e4b261754164ffac978bbd6920e51cbc172618162734fec806a9c11949",
+        "unchanged": true
+      }
+    },
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.protected_files",
+    "unchanged": true
+  },
+  "protected_leakage_count": 0,
+  "public_factor_claim_eligibility": {
+    "blockers": [
+      "prospective_csl_claim_not_eligible"
+    ],
+    "claim_class": "public_factor",
+    "eligible": false,
+    "scope": "internal audit only until Exp6420 readiness is one"
+  },
+  "random_seed": 6420,
+  "recomputed_development_and_held_metrics": {
+    "development": {
+      "contamination": 0.0,
+      "cost_units": 288,
+      "event_count": 96,
+      "forgetting": 0.0,
+      "future_event_count": 24,
+      "future_exact_success_count": 0,
+      "future_exact_yield": 0.0,
+      "growth": 12,
+      "learning_event_count": 72,
+      "proposal_commit_count": 6,
+      "proposal_coverage": 0.083333333,
+      "raw_output_reuse_count": 24,
+      "restart_recovery": 1.0,
+      "retention": 1.0,
+      "selection_commit_count": 6,
+      "selection_success": 0.083333333,
+      "source": "Exp6418 manifest, outcome, freeze, and transition rows",
+      "unique_event_raw_output_count": 72
+    },
+    "held": {
+      "contamination": 0.0,
+      "event_count": 72,
+      "forgetting": 0.0,
+      "future_event_count": 24,
+      "future_exact_success_count": 4,
+      "future_exact_yield": 0.166666667,
+      "gpu_cost": 0.0144,
+      "growth": 12,
+      "latency_s": 0.072,
+      "learning_event_count": 48,
+      "proposal_coverage": 0.333333333,
+      "proposal_feasible_count": 16,
+      "restart_recovery": 1.0,
+      "retention": 1.0,
+      "selection_success": 0.166666667,
+      "selection_success_count": 8,
+      "source": "Exp6419 held manifest and raw-output receipt rows"
+    },
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.recomputed_metrics"
+  },
+  "reconstructed_event_time_order": {
+    "causal_order_holds": true,
+    "development_event_count": 96,
+    "development_indices_monotonic": true,
+    "held_event_count": 72,
+    "held_indices_monotonic": true,
+    "held_raw_precedes_outcome": true,
+    "immutable_event_hashes_present": true,
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.event_time_order"
+  },
+  "reported_vs_recomputed_deltas": {
+    "all_reported_match_recomputed": false,
+    "comparisons": [
+      {
+        "abs_delta": 0.541666667,
+        "matches": false,
+        "metric": "proposal_coverage",
+        "recomputed": 0.083333333,
+        "reported": 0.625,
+        "scope": "development"
+      },
+      {
+        "abs_delta": 0.5,
+        "matches": false,
+        "metric": "top1_exact_selection_success",
+        "recomputed": 0.083333333,
+        "reported": 0.583333333,
+        "scope": "development"
+      },
+      {
+        "abs_delta": 0.5,
+        "matches": false,
+        "metric": "future_exact_yield",
+        "recomputed": 0.0,
+        "reported": 0.5,
+        "scope": "development"
+      },
+      {
+        "abs_delta": 0.333333334,
+        "matches": false,
+        "metric": "proposal_coverage",
+        "recomputed": 0.333333333,
+        "reported": 0.666666667,
+        "scope": "held"
+      },
+      {
+        "abs_delta": 0.458333333,
+        "matches": false,
+        "metric": "selection_success",
+        "recomputed": 0.166666667,
+        "reported": 0.625,
+        "scope": "held"
+      },
+      {
+        "abs_delta": 0.416666666,
+        "matches": false,
+        "metric": "future_exact_yield",
+        "recomputed": 0.166666667,
+        "reported": 0.583333333,
+        "scope": "held"
+      },
+      {
+        "abs_delta": 0.25,
+        "matches": false,
+        "metric": "delta_future_exact_yield_over_frozen",
+        "recomputed": 0.0,
+        "reported": 0.25,
+        "scope": "development"
+      },
+      {
+        "abs_delta": 0.25,
+        "matches": false,
+        "metric": "held_delta_future_exact_yield_over_frozen",
+        "recomputed": 0.0,
+        "reported": 0.25,
+        "scope": "held"
+      }
+    ],
+    "mismatch_count": 8,
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.reported_vs_recomputed"
+  },
+  "reproducibility_checksum": "sha256:b747173bd8192b251f084456f617ce45fa9c1cf5e34eeb7837cab3a26fb4b58c",
+  "retention_forgetting_contamination_growth_restart_and_cost_rechecks": {
+    "contamination_zero_after_rollback": true,
+    "costs_match_reported_surfaces": true,
+    "development": {
+      "contamination": 0.0,
+      "cost_units": 288,
+      "forgetting": 0.0,
+      "growth": 12,
+      "restart_recovery": 1.0,
+      "retention": 1.0
+    },
+    "exact_veto_override_count": 0,
+    "growth_bounded": true,
+    "held": {
+      "contamination": 0.0,
+      "forgetting": 0.0,
+      "gpu_cost": 0.0144,
+      "growth": 12,
+      "latency_s": 0.072,
+      "restart_recovery": 1.0,
+      "retention": 1.0
+    },
+    "protected_retention_non_negative": true,
+    "restart_recovery_success": true,
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.safety_cost_rechecks"
+  },
+  "selection_memory_exact_consequence_bindings": {
+    "all_commits_have_exact_consequence": true,
+    "commit_count": 6,
+    "missing_or_bad_binding_count": 0,
+    "rows": [
+      {
+        "bound": true,
+        "event_id": "exp6418-session-01-event-000",
+        "exact_consequence_success": true,
+        "head_after_hash": "sha256:27c0ac9526e2522c27cc2d5e368a04a1b8b0d5263cb1e0e7f9a987b9950bb6d6",
+        "update_source": "exact_observed_consequences_only"
+      },
+      {
+        "bound": true,
+        "event_id": "exp6418-session-01-event-004",
+        "exact_consequence_success": true,
+        "head_after_hash": "sha256:3f33935a9160c2d4457309c0fba8bd3cb86850e17091e0d2c1a57a7c5b166b47",
+        "update_source": "exact_observed_consequences_only"
+      },
+      {
+        "bound": true,
+        "event_id": "exp6418-session-01-event-008",
+        "exact_consequence_success": true,
+        "head_after_hash": "sha256:81d8d0bce1f52e5144ae1dc67cbf2e5a32e4172746708fd22b491d72e36d6b62",
+        "update_source": "exact_observed_consequences_only"
+      },
+      {
+        "bound": true,
+        "event_id": "exp6418-session-01-event-016",
+        "exact_consequence_success": true,
+        "head_after_hash": "sha256:a418e86e8d2610fb378ad067e81c528ff7efcd5dc487f7dba2bb2b0dafd52573",
+        "update_source": "exact_observed_consequences_only"
+      },
+      {
+        "bound": true,
+        "event_id": "exp6418-session-01-event-020",
+        "exact_consequence_success": true,
+        "head_after_hash": "sha256:7ac4db3daaa8328529f401f4ba0d4b8a625dc4e728f7e5a4188f91d47b2b08eb",
+        "update_source": "exact_observed_consequences_only"
+      },
+      {
+        "bound": true,
+        "event_id": "exp6418-session-02-event-024",
+        "exact_consequence_success": true,
+        "head_after_hash": "sha256:8fbd4bfd5e43f20d4decf40ad0f6fff7a5cb54019c9ab823ab3db42c07195fba",
+        "update_source": "exact_observed_consequences_only"
+      }
+    ],
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.selection_consequence_bindings"
+  },
+  "status": "complete_null",
+  "tests_run": {
+    "all_passed": true,
+    "commands": [
+      "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6420_csl_authenticity_safety_audit --date 20260814",
+      ".venv/bin/pytest tests/python/test_experiment_6420_csl_authenticity_safety_audit.py -q --no-cov -n 0",
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6420_csl_authenticity_safety_audit.py -m pytest tests/python/test_experiment_6420_csl_authenticity_safety_audit.py -q --no-cov -n 0",
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6420_csl_authenticity_safety_audit.py --fail-under=100 --show-missing",
+      ".venv/bin/pytest tests/python -q",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6420_csl_authenticity_safety_audit.py",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6420_csl_authenticity_safety_audit.json",
+      ".venv/bin/python scripts/determination_preservation_lint.py",
+      ".venv/bin/python scripts/root_clutter_sweep.py"
+    ],
+    "exit_codes": {
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6420_csl_authenticity_safety_audit.py --fail-under=100 --show-missing": 0,
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6420_csl_authenticity_safety_audit.py -m pytest tests/python/test_experiment_6420_csl_authenticity_safety_audit.py -q --no-cov -n 0": 0,
+      ".venv/bin/pytest tests/python -q": 0,
+      ".venv/bin/pytest tests/python/test_experiment_6420_csl_authenticity_safety_audit.py -q --no-cov -n 0": 0,
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6420_csl_authenticity_safety_audit.json": 0,
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6420_csl_authenticity_safety_audit.py": 0,
+      ".venv/bin/python scripts/determination_preservation_lint.py": 0,
+      ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+      "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6420_csl_authenticity_safety_audit --date 20260814": 0
+    }
+  },
+  "uncertainty_and_effective_sample_sizes": {
+    "effects": [
+      {
+        "ci95": [
+          -0.014630245,
+          0.514630245
+        ],
+        "control_n": 24,
+        "control_rate": 0.25,
+        "control_success": 6,
+        "delta": 0.25,
+        "effective_sample_size": 24,
+        "name": "reported_development_future_effect",
+        "standard_error": 0.135015431,
+        "treatment_n": 24,
+        "treatment_rate": 0.5,
+        "treatment_success": 12,
+        "underpowered": true
+      },
+      {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "control_n": 24,
+        "control_rate": 0.0,
+        "control_success": 0,
+        "delta": 0.0,
+        "effective_sample_size": 24,
+        "name": "recomputed_development_future_effect",
+        "standard_error": 0.0,
+        "treatment_n": 24,
+        "treatment_rate": 0.0,
+        "treatment_success": 0,
+        "underpowered": true
+      },
+      {
+        "ci95": [
+          -0.022901929,
+          0.522901929
+        ],
+        "control_n": 24,
+        "control_rate": 0.333333333,
+        "control_success": 8,
+        "delta": 0.25,
+        "effective_sample_size": 24,
+        "name": "reported_held_future_effect",
+        "standard_error": 0.139235678,
+        "treatment_n": 24,
+        "treatment_rate": 0.583333333,
+        "treatment_success": 14,
+        "underpowered": true
+      },
+      {
+        "ci95": [
+          -0.210862427,
+          0.210862427
+        ],
+        "control_n": 24,
+        "control_rate": 0.166666667,
+        "control_success": 4,
+        "delta": 0.0,
+        "effective_sample_size": 24,
+        "name": "recomputed_held_future_effect",
+        "standard_error": 0.107582871,
+        "treatment_n": 24,
+        "treatment_rate": 0.166666667,
+        "treatment_success": 4,
+        "underpowered": true
+      }
+    ],
+    "heterogeneous_cells": [
+      {
+        "cell": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "event_count": 40,
+        "scope": "development_by_model",
+        "underpowered": false
+      },
+      {
+        "cell": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "event_count": 24,
+        "scope": "development_by_model",
+        "underpowered": true
+      },
+      {
+        "cell": "unsloth/gemma-4-31B-it-GGUF",
+        "event_count": 32,
+        "scope": "development_by_model",
+        "underpowered": false
+      },
+      {
+        "cell": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "event_count": 24,
+        "scope": "held_by_model",
+        "underpowered": true
+      },
+      {
+        "cell": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "event_count": 24,
+        "scope": "held_by_model",
+        "underpowered": true
+      },
+      {
+        "cell": "unsloth/gemma-4-31B-it-GGUF",
+        "event_count": 24,
+        "scope": "held_by_model",
+        "underpowered": true
+      }
+    ],
+    "pooled_summary_not_used_for_readiness": true,
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.uncertainty",
+    "small_cell_count": 4
+  },
+  "untouched_future_partition_checks": {
+    "exp6418_future_labels_visible_before_freeze_count": 0,
+    "exp6418_future_used_for_training": false,
+    "exp6419_future_evaluated_once": true,
+    "exp6419_future_used_for_training": false,
+    "exp6419_held_absent_during_mechanism_selection": true,
+    "future_partition_untouched": true,
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.future_partition"
+  },
+  "update_follows_exact_feedback_checks": {
+    "all_updates_follow_exact_feedback": true,
+    "checked_count": 12,
+    "rows": [
+      {
+        "event_id": "exp6418-session-01-event-000",
+        "exact_feedback_present": true,
+        "exact_label_passed": true,
+        "off_commit_evaluation": true,
+        "path": "proposal",
+        "update_follows_exact_feedback": true,
+        "update_source": "exact_feasibility_outcomes_only"
+      },
+      {
+        "event_id": "exp6418-session-01-event-004",
+        "exact_feedback_present": true,
+        "exact_label_passed": true,
+        "off_commit_evaluation": true,
+        "path": "proposal",
+        "update_follows_exact_feedback": true,
+        "update_source": "exact_feasibility_outcomes_only"
+      },
+      {
+        "event_id": "exp6418-session-01-event-008",
+        "exact_feedback_present": true,
+        "exact_label_passed": true,
+        "off_commit_evaluation": true,
+        "path": "proposal",
+        "update_follows_exact_feedback": true,
+        "update_source": "exact_feasibility_outcomes_only"
+      },
+      {
+        "event_id": "exp6418-session-01-event-016",
+        "exact_feedback_present": true,
+        "exact_label_passed": true,
+        "off_commit_evaluation": true,
+        "path": "proposal",
+        "update_follows_exact_feedback": true,
+        "update_source": "exact_feasibility_outcomes_only"
+      },
+      {
+        "event_id": "exp6418-session-01-event-020",
+        "exact_feedback_present": true,
+        "exact_label_passed": true,
+        "off_commit_evaluation": true,
+        "path": "proposal",
+        "update_follows_exact_feedback": true,
+        "update_source": "exact_feasibility_outcomes_only"
+      },
+      {
+        "event_id": "exp6418-session-02-event-024",
+        "exact_feedback_present": true,
+        "exact_label_passed": true,
+        "off_commit_evaluation": true,
+        "path": "proposal",
+        "update_follows_exact_feedback": true,
+        "update_source": "exact_feasibility_outcomes_only"
+      },
+      {
+        "event_id": "exp6418-session-01-event-000",
+        "exact_feedback_present": true,
+        "exact_label_passed": true,
+        "off_commit_evaluation": true,
+        "path": "selection",
+        "update_follows_exact_feedback": true,
+        "update_source": "exact_observed_consequences_only"
+      },
+      {
+        "event_id": "exp6418-session-01-event-004",
+        "exact_feedback_present": true,
+        "exact_label_passed": true,
+        "off_commit_evaluation": true,
+        "path": "selection",
+        "update_follows_exact_feedback": true,
+        "update_source": "exact_observed_consequences_only"
+      },
+      {
+        "event_id": "exp6418-session-01-event-008",
+        "exact_feedback_present": true,
+        "exact_label_passed": true,
+        "off_commit_evaluation": true,
+        "path": "selection",
+        "update_follows_exact_feedback": true,
+        "update_source": "exact_observed_consequences_only"
+      },
+      {
+        "event_id": "exp6418-session-01-event-016",
+        "exact_feedback_present": true,
+        "exact_label_passed": true,
+        "off_commit_evaluation": true,
+        "path": "selection",
+        "update_follows_exact_feedback": true,
+        "update_source": "exact_observed_consequences_only"
+      },
+      {
+        "event_id": "exp6418-session-01-event-020",
+        "exact_feedback_present": true,
+        "exact_label_passed": true,
+        "off_commit_evaluation": true,
+        "path": "selection",
+        "update_follows_exact_feedback": true,
+        "update_source": "exact_observed_consequences_only"
+      },
+      {
+        "event_id": "exp6418-session-02-event-024",
+        "exact_feedback_present": true,
+        "exact_label_passed": true,
+        "off_commit_evaluation": true,
+        "path": "selection",
+        "update_follows_exact_feedback": true,
+        "update_source": "exact_observed_consequences_only"
+      }
+    ],
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.updates_follow_feedback",
+    "violation_count": 0
+  },
+  "upstream_artifact_sidecar_source_checkpoint_model_and_checker_hashes": {
+    "artifacts": [
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6412_v551_powered_claim_integrity_audit.json",
+        "present": true,
+        "principle_key": "missing_input:required_artifact",
+        "required": true,
+        "role": "artifact",
+        "sha256": "sha256:b57f55728b994ea2dfd04e0f720f4c17a31bd18ef30f999d0d81aa18c2921e1f",
+        "size_bytes": 95163
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6418_execution_grounded_dual_path_csl.json",
+        "present": true,
+        "principle_key": "missing_input:required_artifact",
+        "required": true,
+        "role": "artifact",
+        "sha256": "sha256:d69bbbe8c1b90fc531bea5f36892bbc6419eb7b72b73d6380e7a9ac2c17ba805",
+        "size_bytes": 505193
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6419_held_shift_restart_csl_replication.json",
+        "present": true,
+        "principle_key": "missing_input:required_artifact",
+        "required": true,
+        "role": "artifact",
+        "sha256": "sha256:d79a83a6ab7a939f0eaddb360fff6d5b3ecf6a14df5c4a94726f12e6de4bd30d",
+        "size_bytes": 239460
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6413_authenticated_sota_gguf_execution_receipts.json",
+        "present": true,
+        "principle_key": "missing_input:required_artifact",
+        "required": true,
+        "role": "artifact",
+        "sha256": "sha256:3775844256172a9030ec83319268a08fc0a23614ac447bd1324bc867f1a67f2d",
+        "size_bytes": 70965
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6414_fresh_three_family_factor_event_corpus.json",
+        "present": true,
+        "principle_key": "missing_input:required_artifact",
+        "required": true,
+        "role": "artifact",
+        "sha256": "sha256:d6bc25c3fd0bd81ed9066d1057dcf7ff7af7e59c3b2d1d4b1c35d423103b6a18",
+        "size_bytes": 461321
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6417_authentic_write_time_factor_admission_ab.json",
+        "present": true,
+        "principle_key": "missing_input:required_artifact",
+        "required": true,
+        "role": "artifact",
+        "sha256": "sha256:46c10b50c3900b1dbb848d26590713938c48414b90a2d050d1c61778f3e4d508",
+        "size_bytes": 685779
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
+        "present": true,
+        "principle_key": "missing_input:required_artifact",
+        "required": true,
+        "role": "artifact",
+        "sha256": "sha256:71395943562c2a0d4a4e86fcf708f0d5d7dd684573737667fb7da49a6ac0c73a",
+        "size_bytes": 392739
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6397_transactional_continuous_factor_learning.json",
+        "present": true,
+        "principle_key": "missing_input:required_artifact",
+        "required": true,
+        "role": "artifact",
+        "sha256": "sha256:0b959ab25ffac06d2de469faf1ae24afe8fd09c16c4de683527b280f51def0b5",
+        "size_bytes": 143058
+      }
+    ],
+    "available_hash_count": 33,
+    "checkers": [
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "present": true,
+        "principle_key": "missing_input:required_checker",
+        "required": true,
+        "role": "checker",
+        "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+        "size_bytes": 254560
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/determination_preservation_lint.py",
+        "present": true,
+        "principle_key": "missing_input:required_checker",
+        "required": true,
+        "role": "checker",
+        "sha256": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
+        "size_bytes": 65178
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/root_clutter_sweep.py",
+        "present": true,
+        "principle_key": "missing_input:required_checker",
+        "required": true,
+        "role": "checker",
+        "sha256": "sha256:be83376d4820e8f254bd341a9b4f7683454db8af7f69998887267e502c343402",
+        "size_bytes": 8233
+      }
+    ],
+    "checkpoints": {
+      "exp6418_proposal_terminal_head": "sha256:a1f9f5f89bc46d61d79355af552196af0cb532c2fd0bce88f05186eb4f91829d",
+      "exp6418_selection_terminal_head": "sha256:8fbd4bfd5e43f20d4decf40ad0f6fff7a5cb54019c9ab823ab3db42c07195fba",
+      "exp6419_frozen_proposal_head": "sha256:a1f9f5f89bc46d61d79355af552196af0cb532c2fd0bce88f05186eb4f91829d",
+      "exp6419_frozen_selection_head": "sha256:8fbd4bfd5e43f20d4decf40ad0f6fff7a5cb54019c9ab823ab3db42c07195fba"
+    },
+    "determination_records": [
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6412_v551_powered_claim_integrity_audit.json.claim_ledger.jsonl",
+        "present": true,
+        "principle_key": "missing_input:required_determination_record",
+        "required": true,
+        "role": "determination_record",
+        "sha256": "sha256:20956786adadb1a816a883c89814a7ae0f768c843812180d4657df1d3493fcaa",
+        "size_bytes": 441
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6412_v551_powered_claim_integrity_audit.json.corrigendum.json",
+        "present": true,
+        "principle_key": "missing_input:required_determination_record",
+        "required": true,
+        "role": "determination_record",
+        "sha256": "sha256:38d6ea6ef74e918a538752cc810305a1be977dd65060ef2e2398382f27173860",
+        "size_bytes": 737
+      }
+    ],
+    "missing_model_byte_count": 0,
+    "model_bytes": [
+      {
+        "actual_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "hash_method": "huggingface_blob_content_address",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "matches_recorded": true,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "present": true,
+        "recorded_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "role": "model_byte",
+        "size_bytes": 76
+      },
+      {
+        "actual_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "hash_method": "huggingface_blob_content_address",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "matches_recorded": true,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "present": true,
+        "recorded_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "role": "model_byte",
+        "size_bytes": 76
+      },
+      {
+        "actual_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "hash_method": "huggingface_blob_content_address",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "matches_recorded": true,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "present": true,
+        "recorded_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "role": "model_byte",
+        "size_bytes": 76
+      }
+    ],
+    "model_hash_mismatch_count": 0,
+    "schema": "carnot.experiment_6420.csl_authenticity_safety_audit.v1.hash_inventory",
+    "sidecars": [
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6418_execution_grounded_dual_path_csl/chronological_manifest.json",
+        "present": true,
+        "principle_key": "missing_input:required_sidecar",
+        "required": true,
+        "role": "sidecar",
+        "sha256": "sha256:b21ff80d72148a739b8b4adab4c949d8746cf69d77db0fa7cad52a0a5cec1f19",
+        "size_bytes": 113885
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6419_held_shift_restart_csl_replication/held_shift_manifest.json",
+        "present": true,
+        "principle_key": "missing_input:required_sidecar",
+        "required": true,
+        "role": "sidecar",
+        "sha256": "sha256:d9946d94beac543ae86581cc76e9bacc90535799f586128cbe3a82e85610d495",
+        "size_bytes": 122454
+      }
+    ],
+    "sources": [
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "size_bytes": 1165
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "size_bytes": 2396
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "size_bytes": 287937
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/continuous-learning/spec.md",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:1f75312bc4645f39e19c380a47fb0b31faef8626350c7fd241da2c8e507846aa",
+        "size_bytes": 275663
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/self-learning/spec.md",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:8a66bf921dda113b43b96bdcb02281bda73e5522fae8c933525ec54b93db77fc",
+        "size_bytes": 1577914
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6418_execution_grounded_dual_path_csl.py",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:48e2536323254319131c460724736bb4d573ad160f8a87d82ef74d65a0b5a7d7",
+        "size_bytes": 68476
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_6418_execution_grounded_dual_path_csl.py",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:28d12a281dc1fa98a37102c120d31932807148c18db108784829b72c2fa7a61b",
+        "size_bytes": 19195
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6419_held_shift_restart_csl_replication.py",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:5693d779a5f60ed983cf8c9f35186c942e4a3883f22ecaedbe84355dd6965e73",
+        "size_bytes": 52323
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_6419_held_shift_restart_csl_replication.py",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:91d3abf87573fcabf95563e18c46ad0af722aaadd3cc19f74ab134b9e7db9dd4",
+        "size_bytes": 17529
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6420_csl_authenticity_safety_audit.py",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:1bae7e9f5c0018dfde305840ef1c5d5774f0d002012b611a10db20712ac25f05",
+        "size_bytes": 79909
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_6420_csl_authenticity_safety_audit.py",
+        "present": true,
+        "principle_key": "missing_input:required_source",
+        "required": true,
+        "role": "source",
+        "sha256": "sha256:363019f96fde75e61286845f82d4f844c92d831a073d4ddf76fb3333c76a4133",
+        "size_bytes": 9169
+      }
+    ]
+  },
+  "verifier_is_oracle": {
+    "audit_is_oracle": false,
+    "false_for": {
+      "audit": false,
+      "model_output": false,
+      "proposal_memory": false,
+      "selection_memory": false
+    },
+    "upstream_exact_checkers_audited_as_oracles": [
+      "exp6418.exact_feasibility_checker",
+      "exp6418.exact_consequence_checker",
+      "exp6418.exact_release_checker",
+      "exp6418.exact_retention_checker",
+      "exp6419.exact_outcome_checker",
+      "exp6419.exact_retention_checker"
+    ],
+    "value": false
+  }
+}
