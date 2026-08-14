@@ -5144,6 +5144,26 @@ def research_step(
     # deliverables when claude -p was killed mid-run. Now we commit everything
     # as a checkpoint so nothing is lost.
     if git_has_changes():
+        # Put back any fabrication-gate determination a test run stripped, BEFORE staging.
+        #
+        # This pairs with the --no-verify below and is not optional alongside it. Skipping the
+        # hooks is right for a commit whose only job is preserving work -- pre-commit's
+        # stash-restore cycle can destroy that work -- but it also skips
+        # determination-preservation-lint, which is the guard that refuses a commit dropping a
+        # `flagged_adversarial` stamp or a corrigendum.
+        #
+        # Not hypothetical. On 2026-08-13 a test run rewrote 13 historical artifacts and stripped
+        # the quarantine stamp plus corrigendum records from five of them (exp833, exp1736,
+        # exp3361, exp3377, exp3392). The diffs carried no new science -- fresh timestamps, and in
+        # exp2824 a silently changed metric -- so the only real content of the rewrite was the
+        # deletion of a review's recorded judgement. `git_commit_and_push` already called this
+        # restore for exactly that reason; this path did not, so it would have published the
+        # damage on the next checkpoint.
+        #
+        # Restore rather than refuse, deliberately. A checkpoint that refuses leaves the work
+        # uncommitted and vulnerable, which is the failure this whole block exists to prevent.
+        # Restoring keeps both: the new numbers land, the determination survives.
+        _restore_dropped_determinations()
         _, porcelain, _ = run_cmd(["git", "diff", "--name-only"])
         _, untracked, _ = run_cmd(["git", "ls-files", "--others", "--exclude-standard"])
         changed = [f.strip() for f in porcelain.splitlines() if f.strip()]

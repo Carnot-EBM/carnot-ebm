@@ -17974,3 +17974,37 @@ actions would invert the scored metric. The right fix is the state key itself,
 not a flag: a key that collapses distinct states makes sc25 invisible to every
 future flag measurement, because no flag can change an outcome decided before
 the search runs.
+
+## 2026-08-13 Test-run record damage, fourth recurrence, and the hole the --no-verify fix opened
+
+A test run rewrote **13 historical artifacts**. Five lost their fabrication-gate
+quarantine: exp833, exp1736, exp3361, exp3377, exp3392 each had
+`flagged_adversarial: true` plus `corrigendum_note` and `corrigendum_pending`
+deleted. exp2824 silently changed a metric (`tier_low` renamed to
+`tier_transfer`, values 0.5 to 0.8). Everything else in the diffs was fresh
+timestamps.
+
+So the only real content of the rewrite was the deletion of recorded review
+judgements. `determination-preservation-lint` refused the commit and named every
+lost field. All 13 restored from HEAD. Working as designed.
+
+**The hole, which is mine and is now closed.** Earlier the same day the
+conductor's checkpoint commit was changed to `--no-verify`, because pre-commit's
+stash-restore cycle had destroyed an outer-loop session's work twice in one hour.
+That fix is right for a commit whose only job is preserving work. It also skips
+`determination-preservation-lint`, so the very next checkpoint would have
+published this damage silently, with no refusal and nobody reading a diff.
+
+`git_commit_and_push` already called `_restore_dropped_determinations()` before
+its own `--no-verify` for exactly this reason. The checkpoint path did not. It
+does now.
+
+Restore rather than refuse, deliberately: a checkpoint that refuses leaves the
+work uncommitted and vulnerable, which is the failure the checkpoint exists to
+prevent. Restoring keeps both -- new numbers land, the determination survives.
+
+**The general lesson, worth stating because this is the fourth recurrence.**
+Skipping a hook suite to protect one property can silently drop another. When you
+disable verification on a path, enumerate what that path was getting from the
+hooks and re-add each protection you still need directly. `--no-verify` is not a
+scalpel unless you make it one.
