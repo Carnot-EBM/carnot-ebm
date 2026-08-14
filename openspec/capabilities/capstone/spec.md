@@ -3518,3 +3518,72 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-6403 | Planned (`python/carnot/experiment_6403_v550_adversarial_capstone.py`, `results/experiment_6403_v550_adversarial_capstone.json`) | Planned (`tests/python/test_experiment_6403_v550_adversarial_capstone.py`) |
+
+- REQ-CAPSTONE-6423: The V552 adversarial capstone workflow SHALL read
+  Exp6410 through Exp6422 from their declared primary artifact paths, hash the
+  roadmap, milestone document, expected artifacts and sidecars, relevant source
+  files, specs, ops records, ARC registry, claim ledgers, exclusion manifest,
+  and requested checkers, and write
+  `results/experiment_6423_v552_adversarial_capstone.json`. It SHALL preserve
+  missing, blocked, partial, null, underpowered, flagged, retired, and complete
+  classes as separate facts. It SHALL replay current adversarial verification
+  for present artifacts. It SHALL not import conductor success, stale
+  downstream summaries, flagged artifacts, inherited V551 receipts, or duration
+  substitutions as scientific evidence. It SHALL set
+  `verifier_is_oracle=false` because the workflow audits exact checkers and
+  claim boundaries rather than acting as a semantic oracle. It SHALL keep
+  `public_factor_claim_eligibility=false` and
+  `public_arc_claim_eligibility=false` unless every declared evidence and audit
+  gate passes. It SHALL record that ops/status, ops/changelog, traceability,
+  known-issues, and architecture reconciliation is deferred by the operator
+  stop rule instead of silently editing those files.
+- SCENARIO-CAPSTONE-6423-HASHES: Given the repository state on planning date
+  20260814, when the workflow runs, then the artifact SHALL emit `status`,
+  `roadmap_doc_artifact_sidecar_source_spec_ops_registry_ledger_and_manifest_hashes`,
+  `expected_completed_missing_blocked_flagged_and_retired_tasks`,
+  `protected_files_unchanged`, `preconditions_checked`, `tests_run`,
+  `duration_s`, `random_seed`, `reproducibility_checksum`, and
+  `honest_verdict`, with every absent requested input recorded by path.
+- SCENARIO-CAPSTONE-6423-PER-TASK: The artifact SHALL emit
+  `per_task_honest_verdicts_conductor_outcomes_source_behavior_adversarial_findings_duration_receipts_and_scientific_eligibility`
+  for Exp6410 through Exp6422. Exp6414 and Exp6417 SHALL remain flagged when
+  current adversarial verification reports `DURATION_TOO_SHORT`, even if their
+  own positive fields are present.
+- SCENARIO-CAPSTONE-6423-RECHECKS: The artifact SHALL recompute and emit
+  `v551_corrigendum_boundary_applied`,
+  `authentic_family_and_receipt_coverage_recheck`,
+  `ccg_optimum_preservation_recheck`, `selective_refinement_recheck`,
+  `authentic_admission_recheck`, `prospective_and_held_csl_rechecks`,
+  `retention_forgetting_contamination_growth_and_restart_rechecks`,
+  `csl_audit_recheck`, `arc_policy_and_held_audit_rechecks`,
+  and `arc_no_solve_and_registry_checks` from primary artifact fields. Exp6408
+  and Exp6409 SHALL not count as powered or prospective evidence unless clean
+  V552 reproduction receipts replace the missing V551 receipts.
+- SCENARIO-CAPSTONE-6423-ATTACKS-AND-ELIGIBILITY: The artifact SHALL emit
+  `claim_pooling_missing_flagged_duration_inheritance_leakage_oracle_retuning_offpath_solve_and_public_attack_matrix`,
+  `deterministic_protocol_claim_eligibility`,
+  `authentic_powered_factor_claim_eligibility`,
+  `prospective_csl_claim_eligibility`, `public_factor_claim_eligibility`,
+  `internal_arc_policy_claim_eligibility`, `public_arc_claim_eligibility`,
+  `hardware_status`, and `same_verdict_retirement_decisions`. Claim pooling,
+  missing-cell erasure, flagged-artifact reuse, duration substitution,
+  inherited receipt reuse, future-label leakage, oracle circularity, held-set
+  retuning, ARC off-path evidence, solve-credit leakage, and public overclaim
+  SHALL each fail closed or be reported as an open blocker.
+- SCENARIO-CAPSTONE-6423-PRD-NEXT-QUESTION: The artifact SHALL emit exactly
+  three `remaining_prd_gaps` and one `next_falsifiable_research_question`.
+  The question SHALL be measurable and SHALL not be a version-only
+  continuation.
+- SCENARIO-CAPSTONE-6423-FIELD-PRINCIPLES: The artifact SHALL include
+  `field_principles` for every required field and specifically for every
+  eligibility, retirement, remaining-gap, and next-question field. It SHALL
+  include `field_provenance` for every required field. The artifact SHALL emit
+  `openspec_traceability_status_changelog_known_issues_and_architecture_reconciliation`,
+  `inference_substrate`, `verifier_is_oracle`, and `honest_verdict` with a
+  terminal prefix.
+
+## Implementation Status (REQ-CAPSTONE-6423)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-6423 | Planned (`python/carnot/experiment_6423_v552_adversarial_capstone.py`, `results/experiment_6423_v552_adversarial_capstone.json`) | Planned (`tests/python/test_experiment_6423_v552_adversarial_capstone.py`) |
