@@ -17894,3 +17894,38 @@ exists nowhere in the file. It compiled, because the guard is only evaluated at 
 would have raised `NameError` at the first milestone close and taken the retrospective path with
 it. Now gated on `not dry_run`, the same condition as its four siblings. Reading what the
 neighbours do beats assuming a symbol exists.
+
+## 2026-08-13 ARC held-out baseline established, and one anomaly it found immediately
+
+`scripts/arc_bench.py --all` now has a recorded baseline in
+`ops/arc_bench_latest.json`. This is the number the ARC loop steers on, replacing
+`reproducible_total_levels`, which is pinned at 183 of 183 and can never move
+again.
+
+**Baseline, 25 public games, adapters bypassed, 3000 expansions, 5.5 minutes:**
+
+| metric | value |
+|---|---|
+| games clearing at least one level | 8 of 25 |
+| clear rate | 0.32 |
+| total actions spent | 364,730 |
+| actions per level cleared | 45,591 |
+| games errored | 0 |
+
+The clear rate is the useful part. It is neither 0 nor saturated, so there is
+room to move in both directions and a change is readable. Seventeen games at
+level 0 are the improvement surface.
+
+**The anomaly: sc25 spends 24 actions and stops.** Every other level-0 game
+spends between 8,155 and 74,700. sc25 spends 24 — roughly 300 times less than
+the next cheapest failure. That is not a game being hard; that is exploration
+terminating almost immediately. Either the adapter-free path hits an early dead
+end there, or something rejects the game before search starts.
+
+Worth an investigation slot. A game the search refuses to explore is invisible to
+every flag measurement that follows, because no flag can change an outcome that
+is decided before the search runs.
+
+**Do not quote these numbers as hidden-game results.** They are public games with
+the hand-written adapter bypassed. That removes the hand-written route, not the
+knowledge that produced it.
