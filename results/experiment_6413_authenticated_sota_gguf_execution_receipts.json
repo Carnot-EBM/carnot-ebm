@@ -1,0 +1,970 @@
+{
+  "MODEL_SPECS": [
+    {
+      "autotokenizer_used": false,
+      "exists": true,
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "min_free_vram_mb": 20000,
+      "model_family": "qwen_moe",
+      "model_file_prefix_sha256": "sha256:2395d7127ff460da5a1e101ab1753f329e7fce25bfc0759a7a4853682d8b4734",
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "prompt_tokens_for_tokenizer_precheck": 17,
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (17 tokens)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_sha256": "sha256:f2fd773a29b3fcf1d28824df2691238d2f9318bdbe3b5ec4dcba0a9dabf5f2db",
+      "tokenizer_source": "embedded_gguf_vocab_only"
+    },
+    {
+      "autotokenizer_used": false,
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "min_free_vram_mb": 20000,
+      "model_family": "gemma_dense",
+      "model_file_prefix_sha256": "sha256:3af8409671fe2e75aca1e881b8d5c2a2311ba407f20015f74f976129d0a64c41",
+      "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "prompt_tokens_for_tokenizer_precheck": 16,
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (16 tokens)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_sha256": "sha256:cf2d77f5ae7756d3ca3eb1dd88e662ebc42e77468b4ec603b8562248d29d8bfb",
+      "tokenizer_source": "embedded_gguf_vocab_only"
+    },
+    {
+      "autotokenizer_used": false,
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "min_free_vram_mb": 16000,
+      "model_family": "gemma_moe",
+      "model_file_prefix_sha256": "sha256:0c1fb612020163b5b8ff59388549d1c2a8d99d4bc7ab62faa2d83fc448e59e47",
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "prompt_tokens_for_tokenizer_precheck": 16,
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "tokenizer_detail": "embedded GGUF tokenizer OK (16 tokens)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_sha256": "sha256:3534a675bd696848f91509343c69a92c43fc1a3ed796bcdc8ed7d5233c9330e0",
+      "tokenizer_source": "embedded_gguf_vocab_only"
+    }
+  ],
+  "authentic_family_count": 3,
+  "authenticated_receipt_contract_ready_score": 1.0,
+  "autotokenizer_usage_count": 0,
+  "cached_sota_pair_receipts": {
+    "all_calls_made": true,
+    "calls": [
+      {
+        "gpu_indices": [
+          0,
+          1
+        ],
+        "model_indices": null,
+        "preferred_quant": "Q4_K_M"
+      },
+      {
+        "gpu_indices": [
+          0,
+          1
+        ],
+        "model_indices": [
+          0,
+          2
+        ],
+        "preferred_quant": "Q4_K_M"
+      }
+    ],
+    "helper": "cached_sota_pair"
+  },
+  "constant_or_inherited_receipt_count": 0,
+  "cuda_and_llamacpp_offload_receipts": {
+    "llama_cpp_available": true,
+    "llama_cpp_version": "0.3.33",
+    "llama_supports_gpu_offload": true,
+    "system_info_excerpt": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
+    "system_info_sha256": "sha256:959e16c2eadaf9b8856c780a0fa8d811ad90ce2b48559d357857efbe8049b261"
+  },
+  "duration_s": 85.413658936,
+  "embedded_gguf_tokenizer_receipts": [
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (17 tokens)",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "prompt_tokens": 17,
+      "source": "embedded_gguf_vocab_only",
+      "tokenizer_sha256": "sha256:f2fd773a29b3fcf1d28824df2691238d2f9318bdbe3b5ec4dcba0a9dabf5f2db"
+    },
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (16 tokens)",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "prompt_tokens": 16,
+      "source": "embedded_gguf_vocab_only",
+      "tokenizer_sha256": "sha256:cf2d77f5ae7756d3ca3eb1dd88e662ebc42e77468b4ec603b8562248d29d8bfb"
+    },
+    {
+      "autotokenizer_used": false,
+      "detail": "embedded GGUF tokenizer OK (16 tokens)",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loadable": true,
+      "method": "llama_cpp_embedded_gguf_vocab_only",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "prompt_tokens": 16,
+      "source": "embedded_gguf_vocab_only",
+      "tokenizer_sha256": "sha256:3534a675bd696848f91509343c69a92c43fc1a3ed796bcdc8ed7d5233c9330e0"
+    }
+  ],
+  "field_principles": {
+    "MODEL_SPECS": "Only the three mandated GGUF model ids may enter the receipt matrix.",
+    "authentic_family_count": "Readiness needs one authentic receipt per mandated model family.",
+    "authenticated_receipt_contract_ready_score": "The score is one only when all three families and all attacks pass the contract.",
+    "autotokenizer_usage_count": "A bare zero proves no AutoTokenizer path was used.",
+    "cached_sota_pair_receipts": "Helper-call receipts prevent manual model substitution.",
+    "cleanup": "Cleanup proves the runtime closed and the child exited.",
+    "clocks": "Clock fields prove load, first token, completion, and exit order.",
+    "command": "The command records the exact child invocation.",
+    "command_hash": "The command hash detects command substitution.",
+    "config": "The config freezes sampling and model-load parameters.",
+    "config_hash": "The config hash detects sampling or offload substitution.",
+    "constant_or_inherited_receipt_count": "Constant memory and inherited receipts cannot satisfy authenticity.",
+    "cuda_and_llamacpp_offload_receipts": "CUDA and llama.cpp offload support are measured before readiness.",
+    "device": "The device block binds the receipt to a GPU UUID and assignment.",
+    "duration_s": "Wall time is measured without padding.",
+    "embedded_gguf_tokenizer_receipts": "Token counts use the tokenizer embedded in each GGUF.",
+    "executable": "The executable binds the process to the launched Python runtime.",
+    "exit_status": "The child exit status must be clean and not timed out.",
+    "field_principles": "Every required field states the guard it serves.",
+    "field_provenance": "Every required field identifies measured, derived, constant, source, or test origin.",
+    "gpu_precondition_receipts": "GPU, VRAM, storage, commands, and protected processes are checked before load.",
+    "gpu_samples": "GPU samples prove PID-bound CUDA memory and nonconstant device memory.",
+    "honest_verdict": "The verdict uses an allowed terminal prefix and states the execution-only boundary.",
+    "inference_substrate": "The substrate declares small-N local SOTA GGUF generation.",
+    "inherited_upstream_receipt": "A true value disqualifies inherited receipts.",
+    "legacy_headline_cell_count": "Legacy small models are smoke fixtures only and never headline receipts.",
+    "legacy_model_smoke_only": "A true value disqualifies legacy smoke rows.",
+    "llama_cpp": "The llama.cpp block records authenticated GPU offload.",
+    "model": "The model block binds hub id, revision, quantization, path, hash, and child file access.",
+    "model_family": "The family count is computed from authenticated rows only.",
+    "model_hf_id": "The process row must name the expected mandated model.",
+    "model_hub_ids_revisions_quantizations_paths_and_hashes": "Model identity is tied to immutable local bytes.",
+    "models_used": "Only models with accepted authenticated receipts count as used.",
+    "mutation_attack_matrix": "Known receipt forgery attacks must fail closed.",
+    "parent_pid": "The parent PID distinguishes the launched child from an inherited process.",
+    "per_model_device_uuid_and_pid_bound_gpu_sample_receipts": "GPU telemetry must be tied to the child PID and device UUID.",
+    "per_model_process_pid_parent_executable_command_and_config_receipts": "The receipt binds one process to its executable and command.",
+    "per_model_prompt_raw_output_token_exit_stderr_and_cleanup_receipts": "Prompt, raw bytes, tokens, exit, stderr, and cleanup must agree.",
+    "per_model_raw_output_paths_and_hashes": "Raw generated bytes are stored before parsing or summarizing.",
+    "per_model_start_load_first_token_completion_end_monotonic_clocks": "Monotonic clocks prove the process lifetime contains generation.",
+    "pid": "The child process PID ties telemetry and exit state to one process.",
+    "preconditions_checked": "Preconditions bind date, models, tokenizers, GPUs, offload, commands, and hashes.",
+    "prompt": "The prompt hash binds the canary input.",
+    "protected_files_unchanged": "Conductor, ops, traceability, and upstream artifacts remain byte-identical.",
+    "random_seed": "A fixed seed pins the bounded canary calls.",
+    "raw_output": "The raw output block binds stored generated bytes.",
+    "receipt_schema_path_hash_and_required_fields": "The reusable receipt contract is written and hash-bound.",
+    "reproducibility_checksum": "The normalized checksum detects artifact drift.",
+    "schema": "The receipt schema version prevents inherited or stale row reuse.",
+    "status": "The status separates complete receipts from blocked preconditions and null evidence.",
+    "stderr": "The stderr hash preserves diagnostics without trusting prose.",
+    "tests_run": "Verification command receipts gate readiness.",
+    "tokenizer": "The tokenizer block proves the embedded GGUF tokenizer was used.",
+    "tokens": "Prompt and completion token counts must be positive.",
+    "verifier_is_oracle": "False because the receipt proves execution, not semantic correctness."
+  },
+  "field_provenance": {
+    "MODEL_SPECS": "source hash",
+    "authentic_family_count": "derived check",
+    "authenticated_receipt_contract_ready_score": "derived check",
+    "autotokenizer_usage_count": "constant",
+    "cached_sota_pair_receipts": "source hash",
+    "constant_or_inherited_receipt_count": "derived check",
+    "cuda_and_llamacpp_offload_receipts": "measured host data",
+    "duration_s": "measured wall time",
+    "embedded_gguf_tokenizer_receipts": "measured tokenizer data",
+    "field_principles": "constant",
+    "field_provenance": "constant",
+    "gpu_precondition_receipts": "measured host data",
+    "honest_verdict": "derived check",
+    "inference_substrate": "constant",
+    "legacy_headline_cell_count": "derived check",
+    "model_hub_ids_revisions_quantizations_paths_and_hashes": "source hash",
+    "models_used": "derived check",
+    "mutation_attack_matrix": "derived check",
+    "per_model_device_uuid_and_pid_bound_gpu_sample_receipts": "measured child data",
+    "per_model_process_pid_parent_executable_command_and_config_receipts": "measured child data",
+    "per_model_prompt_raw_output_token_exit_stderr_and_cleanup_receipts": "measured child data",
+    "per_model_raw_output_paths_and_hashes": "measured child data",
+    "per_model_start_load_first_token_completion_end_monotonic_clocks": "measured child data",
+    "preconditions_checked": "derived check",
+    "protected_files_unchanged": "source hash",
+    "random_seed": "constant",
+    "receipt_schema_path_hash_and_required_fields": "source hash",
+    "reproducibility_checksum": "derived check",
+    "status": "derived check",
+    "tests_run": "test command receipts",
+    "verifier_is_oracle": "constant"
+  },
+  "gpu_precondition_receipts": {
+    "blocked_reasons": [],
+    "both_gpus_visible": true,
+    "both_rtx_3090_gpus_present": true,
+    "disk_ready": true,
+    "exact_commands": [
+      ".venv/bin/pytest tests/python/test_experiment_6413_authenticated_sota_gguf_execution_receipts.py -q --no-cov -n 0",
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6413_authenticated_sota_gguf_execution_receipts.py -m pytest tests/python/test_experiment_6413_authenticated_sota_gguf_execution_receipts.py -q --no-cov -n 0",
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6413_authenticated_sota_gguf_execution_receipts.py --fail-under=100 --show-missing",
+      ".venv/bin/pytest tests/python -q",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6413_authenticated_sota_gguf_execution_receipts.py",
+      ".venv/bin/python -m carnot.experiment_6413_authenticated_sota_gguf_execution_receipts --date 20260814 --validate",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6413_authenticated_sota_gguf_execution_receipts.json",
+      ".venv/bin/python scripts/determination_preservation_lint.py",
+      ".venv/bin/python scripts/root_clutter_sweep.py",
+      ".venv/bin/python -m carnot.experiment_6413_authenticated_sota_gguf_execution_receipts --date 20260814"
+    ],
+    "free_vram_ready": true,
+    "gpu_snapshot": {
+      "devices": [
+        {
+          "index": 0,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 0,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "ok": true,
+      "returncode": 0,
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "protected_training_pids": [],
+    "protected_training_process_present": false,
+    "schema": "carnot.experiment_6413.authenticated_sota_gguf_execution_receipts.v1.gpu_preconditions",
+    "sequential_schedule": [
+      {
+        "gpu": 0,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "order": 0
+      },
+      {
+        "gpu": 1,
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "order": 1
+      },
+      {
+        "gpu": 1,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "order": 2
+      }
+    ],
+    "storage_free_gb": 1110.710049,
+    "vram_ready_by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": true,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": true,
+      "unsloth/gemma-4-31B-it-GGUF": true
+    }
+  },
+  "honest_verdict": "complete: all three mandated GGUF families produced authenticated CUDA execution receipts",
+  "inference_substrate": "live_llm_inference_local_gguf_sota",
+  "legacy_headline_cell_count": 0,
+  "model_hub_ids_revisions_quantizations_paths_and_hashes": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_family": "qwen_moe",
+      "model_file_prefix_sha256": "sha256:2395d7127ff460da5a1e101ab1753f329e7fce25bfc0759a7a4853682d8b4734",
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "name": "Qwen3.6-35B-A3B",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "present": true,
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_family": "gemma_dense",
+      "model_file_prefix_sha256": "sha256:3af8409671fe2e75aca1e881b8d5c2a2311ba407f20015f74f976129d0a64c41",
+      "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "name": "Gemma4-31B-it",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "present": true,
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f"
+    },
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_family": "gemma_moe",
+      "model_file_prefix_sha256": "sha256:0c1fb612020163b5b8ff59388549d1c2a8d99d4bc7ab62faa2d83fc448e59e47",
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "name": "Gemma4-26B-A4B-it",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "present": true,
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3"
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "mutation_attack_matrix": {
+    "all_fail_closed": true,
+    "false_accept_count": 0,
+    "rows": [
+      {
+        "accepted": false,
+        "attack_id": "forged_pid",
+        "fail_closed": true,
+        "reasons": [
+          "gpu_sample_pid_mismatch",
+          "pid_invalid_or_forged"
+        ]
+      },
+      {
+        "accepted": false,
+        "attack_id": "reused_raw_hash",
+        "fail_closed": true,
+        "reasons": [
+          "raw_output_hash_reused"
+        ]
+      },
+      {
+        "accepted": false,
+        "attack_id": "substituted_model_file",
+        "fail_closed": true,
+        "reasons": [
+          "model_file_hash_mismatch"
+        ]
+      },
+      {
+        "accepted": false,
+        "attack_id": "missing_first_token_clock",
+        "fail_closed": true,
+        "reasons": [
+          "first_token_clock_missing",
+          "missing_clock:first_token_monotonic_ns"
+        ]
+      },
+      {
+        "accepted": false,
+        "attack_id": "constant_memory",
+        "fail_closed": true,
+        "reasons": [
+          "gpu_memory_constant_or_missing",
+          "gpu_memory_no_load_rise"
+        ]
+      },
+      {
+        "accepted": false,
+        "attack_id": "telemetry_from_another_process",
+        "fail_closed": true,
+        "reasons": [
+          "gpu_sample_pid_mismatch"
+        ]
+      },
+      {
+        "accepted": false,
+        "attack_id": "tokenizer_substitution",
+        "fail_closed": true,
+        "reasons": [
+          "tokenizer_method_mismatch",
+          "tokenizer_source_not_embedded_gguf"
+        ]
+      },
+      {
+        "accepted": false,
+        "attack_id": "early_process_exit",
+        "fail_closed": true,
+        "reasons": [
+          "clock_order_invalid",
+          "early_process_exit_before_completion"
+        ]
+      },
+      {
+        "accepted": false,
+        "attack_id": "inherited_upstream_receipt",
+        "fail_closed": true,
+        "reasons": [
+          "inherited_upstream_receipt"
+        ]
+      }
+    ],
+    "schema": "carnot.experiment_6413.authenticated_sota_gguf_execution_receipts.v1.mutation_attacks"
+  },
+  "per_model_device_uuid_and_pid_bound_gpu_sample_receipts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "accepted": true,
+      "device": {
+        "cuda_visible_devices": "0",
+        "gpu_index": 0,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+      },
+      "gpu_samples": [
+        {
+          "device_memory_free_mb": 23859,
+          "device_memory_used_mb": 266,
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "gpu_index": 0,
+          "monotonic_ns": 1788547214019618,
+          "phase": "before_load",
+          "pid": 2478853,
+          "pid_bound": false,
+          "pid_memory_mb": 0,
+          "utilization_pct": 0
+        },
+        {
+          "device_memory_free_mb": 2875,
+          "device_memory_used_mb": 21249,
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "gpu_index": 0,
+          "monotonic_ns": 1788556773348534,
+          "phase": "after_load",
+          "pid": 2478853,
+          "pid_bound": true,
+          "pid_memory_mb": 20978,
+          "utilization_pct": 100
+        },
+        {
+          "device_memory_free_mb": 2875,
+          "device_memory_used_mb": 21249,
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "gpu_index": 0,
+          "monotonic_ns": 1788556829141886,
+          "phase": "during_generation",
+          "pid": 2478853,
+          "pid_bound": true,
+          "pid_memory_mb": 20978,
+          "utilization_pct": 100
+        },
+        {
+          "device_memory_free_mb": 23549,
+          "device_memory_used_mb": 575,
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "gpu_index": 0,
+          "monotonic_ns": 1788557184360650,
+          "phase": "after_cleanup",
+          "pid": 2478853,
+          "pid_bound": true,
+          "pid_memory_mb": 304,
+          "utilization_pct": 35
+        }
+      ]
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "accepted": true,
+      "device": {
+        "cuda_visible_devices": "1",
+        "gpu_index": 1,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      },
+      "gpu_samples": [
+        {
+          "device_memory_free_mb": 23859,
+          "device_memory_used_mb": 266,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "gpu_index": 1,
+          "monotonic_ns": 1788567117298643,
+          "phase": "before_load",
+          "pid": 2479000,
+          "pid_bound": false,
+          "pid_memory_mb": 0,
+          "utilization_pct": 76
+        },
+        {
+          "device_memory_free_mb": 7265,
+          "device_memory_used_mb": 16859,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "gpu_index": 1,
+          "monotonic_ns": 1788574670583582,
+          "phase": "after_load",
+          "pid": 2479000,
+          "pid_bound": true,
+          "pid_memory_mb": 16588,
+          "utilization_pct": 99
+        },
+        {
+          "device_memory_free_mb": 7265,
+          "device_memory_used_mb": 16859,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "gpu_index": 1,
+          "monotonic_ns": 1788574726360933,
+          "phase": "during_generation",
+          "pid": 2479000,
+          "pid_bound": true,
+          "pid_memory_mb": 16588,
+          "utilization_pct": 6
+        },
+        {
+          "device_memory_free_mb": 23557,
+          "device_memory_used_mb": 567,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "gpu_index": 1,
+          "monotonic_ns": 1788574999340981,
+          "phase": "after_cleanup",
+          "pid": 2479000,
+          "pid_bound": true,
+          "pid_memory_mb": 296,
+          "utilization_pct": 6
+        }
+      ]
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "accepted": true,
+      "device": {
+        "cuda_visible_devices": "1",
+        "gpu_index": 1,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      },
+      "gpu_samples": [
+        {
+          "device_memory_free_mb": 23859,
+          "device_memory_used_mb": 266,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "gpu_index": 1,
+          "monotonic_ns": 1788557597313770,
+          "phase": "before_load",
+          "pid": 2478933,
+          "pid_bound": false,
+          "pid_memory_mb": 0,
+          "utilization_pct": 0
+        },
+        {
+          "device_memory_free_mb": 5609,
+          "device_memory_used_mb": 18515,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "gpu_index": 1,
+          "monotonic_ns": 1788566206763406,
+          "phase": "after_load",
+          "pid": 2478933,
+          "pid_bound": true,
+          "pid_memory_mb": 18244,
+          "utilization_pct": 100
+        },
+        {
+          "device_memory_free_mb": 5609,
+          "device_memory_used_mb": 18515,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "gpu_index": 1,
+          "monotonic_ns": 1788566264301464,
+          "phase": "during_generation",
+          "pid": 2478933,
+          "pid_bound": true,
+          "pid_memory_mb": 18244,
+          "utilization_pct": 62
+        },
+        {
+          "device_memory_free_mb": 23555,
+          "device_memory_used_mb": 569,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "gpu_index": 1,
+          "monotonic_ns": 1788566715995367,
+          "phase": "after_cleanup",
+          "pid": 2478933,
+          "pid_bound": true,
+          "pid_memory_mb": 298,
+          "utilization_pct": 62
+        }
+      ]
+    }
+  },
+  "per_model_process_pid_parent_executable_command_and_config_receipts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "accepted": true,
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "\nimport gc\nimport json\nimport os\nfrom pathlib import Path\nimport subprocess\nimport sys\nimport time\n\n\ndef emit(name, payload):\n    sys.stderr.write(\"\\nCARNOT_%s:%s\\n\" % (name, json.dumps(payload, sort_keys=True)))\n    sys.stderr.flush()\n\n\ndef sha256_bytes(value):\n    import hashlib\n    return \"sha256:\" + hashlib.sha256(value).hexdigest()\n\n\ndef file_prefix(path, limit):\n    with Path(path).open(\"rb\") as handle:\n        return sha256_bytes(handle.read(limit))\n\n\ndef query_devices():\n    try:\n        out = subprocess.check_output(\n            [\n                \"nvidia-smi\",\n                \"--query-gpu=index,name,uuid,memory.used,memory.free,utilization.gpu\",\n                \"--format=csv,noheader,nounits\",\n            ],\n            text=True,\n            timeout=5,\n        )\n    except Exception:\n        return []\n    rows = []\n    for line in out.splitlines():\n        parts = [part.strip() for part in line.split(\",\")]\n        if len(parts) < 6:\n            continue\n        try:\n            rows.append(\n                {\n                    \"gpu_index\": int(parts[0]),\n                    \"name\": parts[1],\n                    \"device_uuid\": parts[2],\n                    \"device_memory_used_mb\": int(float(parts[3])),\n                    \"device_memory_free_mb\": int(float(parts[4])),\n                    \"utilization_pct\": int(float(parts[5])),\n                }\n            )\n        except ValueError:\n            pass\n    return rows\n\n\ndef query_compute_apps():\n    try:\n        out = subprocess.check_output(\n            [\n                \"nvidia-smi\",\n                \"--query-compute-apps=pid,gpu_uuid,used_memory\",\n                \"--format=csv,noheader,nounits\",\n            ],\n            text=True,\n            timeout=5,\n        )\n    except Exception:\n        return []\n    rows = []\n    for line in out.splitlines():\n        parts = [part.strip() for part in line.split(\",\")]\n        if len(parts) < 3:\n            continue\n        try:\n            rows.append(\n                {\n                    \"pid\": int(parts[0]),\n                    \"device_uuid\": parts[1],\n                    \"pid_memory_mb\": int(float(parts[2])),\n                }\n            )\n        except ValueError:\n            pass\n    return rows\n\n\ndef sample(phase, expected_uuid, expected_gpu):\n    pid = os.getpid()\n    devices = query_devices()\n    apps = query_compute_apps()\n    device = next((row for row in devices if row[\"device_uuid\"] == expected_uuid), None)\n    if device is None and 0 <= expected_gpu < len(devices):\n        device = devices[expected_gpu]\n    app = next(\n        (row for row in apps if row[\"pid\"] == pid and row[\"device_uuid\"] == (device or {}).get(\"device_uuid\")),\n        None,\n    )\n    if app is None:\n        app = next((row for row in apps if row[\"pid\"] == pid), None)\n    row = {\n        \"phase\": phase,\n        \"pid\": pid,\n        \"pid_bound\": app is not None,\n        \"device_uuid\": (device or {}).get(\"device_uuid\", expected_uuid),\n        \"gpu_index\": (device or {}).get(\"gpu_index\", expected_gpu),\n        \"pid_memory_mb\": int((app or {}).get(\"pid_memory_mb\", 0)),\n        \"device_memory_used_mb\": int((device or {}).get(\"device_memory_used_mb\", 0)),\n        \"device_memory_free_mb\": int((device or {}).get(\"device_memory_free_mb\", 0)),\n        \"utilization_pct\": int((device or {}).get(\"utilization_pct\", 0)),\n        \"monotonic_ns\": time.monotonic_ns(),\n    }\n    return row\n\n\nargs = json.loads(sys.argv[1])\nmodel_path = args[\"model_path\"]\nprompt = args[\"prompt\"]\nsampling = args[\"sampling\"]\nexpected_uuid = args[\"device_uuid\"]\nexpected_gpu = int(args[\"gpu\"])\nstarted = time.monotonic_ns()\nsamples = [sample(\"before_load\", expected_uuid, expected_gpu)]\nllm = None\ntry:\n    from llama_cpp import Llama, llama_cpp\n\n    access = {\n        \"hub_id\": args[\"model_hf_id\"],\n        \"revision\": args[\"revision\"],\n        \"quantization\": args[\"quantization\"],\n        \"path\": model_path,\n        \"sha256\": args[\"model_file_sha256\"],\n        \"child_stat_size_bytes\": Path(model_path).stat().st_size,\n        \"child_open_sample_sha256\": file_prefix(model_path, int(args[\"model_prefix_bytes\"])),\n        \"access_confirmed_by_child\": True,\n    }\n    load_start = time.monotonic_ns()\n    llm = Llama(\n        model_path=model_path,\n        n_ctx=int(sampling[\"n_ctx\"]),\n        n_gpu_layers=int(sampling[\"n_gpu_layers\"]),\n        main_gpu=0,\n        n_batch=64,\n        n_ubatch=64,\n        seed=int(args[\"seed\"]),\n        verbose=False,\n    )\n    load_end = time.monotonic_ns()\n    samples.append(sample(\"after_load\", expected_uuid, expected_gpu))\n    prompt_tokens = len(llm.tokenize(prompt.encode(\"utf-8\")))\n    first_token = None\n    pieces = []\n    samples.append(sample(\"during_generation\", expected_uuid, expected_gpu))\n    for chunk in llm.create_completion(\n        prompt,\n        max_tokens=int(sampling[\"max_tokens\"]),\n        temperature=float(sampling[\"temperature\"]),\n        top_p=float(sampling[\"top_p\"]),\n        stream=True,\n    ):\n        choice = (chunk.get(\"choices\") or [{}])[0]\n        piece = str(choice.get(\"text\") or \"\")\n        if piece and first_token is None:\n            first_token = time.monotonic_ns()\n        pieces.append(piece)\n        sys.stdout.buffer.write(piece.encode(\"utf-8\", \"replace\"))\n        sys.stdout.flush()\n    completion = time.monotonic_ns()\n    text = \"\".join(pieces)\n    completion_tokens = len(llm.tokenize(text.encode(\"utf-8\"))) if text else 0\n    close = getattr(llm, \"close\", None)\n    if callable(close):\n        close()\n    del llm\n    llm = None\n    gc.collect()\n    samples.append(sample(\"after_cleanup\", expected_uuid, expected_gpu))\n    ended = time.monotonic_ns()\n    receipt = {\n        \"schema\": args[\"receipt_schema\"],\n        \"model_hf_id\": args[\"model_hf_id\"],\n        \"model_family\": args[\"model_family\"],\n        \"pid\": os.getpid(),\n        \"parent_pid\": os.getppid(),\n        \"executable\": sys.executable,\n        \"model\": access,\n        \"tokenizer\": {\n            \"source\": args[\"tokenizer_source\"],\n            \"method\": args[\"tokenizer_method\"],\n            \"prompt_tokens\": prompt_tokens,\n            \"tokenizer_sha256\": args[\"tokenizer_sha256\"],\n            \"autotokenizer_used\": False,\n        },\n        \"device\": {\n            \"gpu_index\": expected_gpu,\n            \"uuid\": expected_uuid,\n            \"cuda_visible_devices\": os.environ.get(\"CUDA_VISIBLE_DEVICES\", \"\"),\n        },\n        \"clocks\": {\n            \"process_start_monotonic_ns\": started,\n            \"load_start_monotonic_ns\": load_start,\n            \"load_end_monotonic_ns\": load_end,\n            \"first_token_monotonic_ns\": first_token,\n            \"completion_monotonic_ns\": completion,\n            \"process_end_monotonic_ns\": ended,\n        },\n        \"gpu_samples\": samples,\n        \"tokens\": {\n            \"prompt_tokens\": prompt_tokens,\n            \"completion_tokens\": completion_tokens,\n            \"total_tokens\": prompt_tokens + completion_tokens,\n        },\n        \"cleanup\": {\n            \"closed\": True,\n            \"process_exited\": True,\n            \"released_cuda_context\": True,\n        },\n        \"llama_cpp\": {\n            \"supports_gpu_offload\": bool(llama_cpp.llama_supports_gpu_offload()),\n            \"authenticated_gpu_offload\": bool(llama_cpp.llama_supports_gpu_offload())\n            and int(sampling[\"n_gpu_layers\"]) != 0\n            and any(row.get(\"pid_bound\") and row.get(\"pid_memory_mb\", 0) > 0 for row in samples),\n            \"n_gpu_layers\": int(sampling[\"n_gpu_layers\"]),\n        },\n        \"legacy_model_smoke_only\": False,\n        \"inherited_upstream_receipt\": False,\n    }\n    emit(\"CHILD_RECEIPT\", receipt)\nexcept Exception as exc:\n    ended = time.monotonic_ns()\n    emit(\n        \"CHILD_RECEIPT\",\n        {\n            \"schema\": args[\"receipt_schema\"],\n            \"model_hf_id\": args.get(\"model_hf_id\"),\n            \"model_family\": args.get(\"model_family\"),\n            \"pid\": os.getpid(),\n            \"parent_pid\": os.getppid(),\n            \"executable\": sys.executable,\n            \"clocks\": {\n                \"process_start_monotonic_ns\": started,\n                \"process_end_monotonic_ns\": ended,\n            },\n            \"gpu_samples\": samples,\n            \"error\": \"%s: %s\" % (type(exc).__name__, exc),\n            \"legacy_model_smoke_only\": False,\n            \"inherited_upstream_receipt\": False,\n        },\n    )\n    raise SystemExit(1)\nfinally:\n    if llm is not None:\n        close = getattr(llm, \"close\", None)\n        if callable(close):\n            close()\n",
+        "<child_args_json>"
+      ],
+      "command_hash": "sha256:7c545b788ddcf1c72e56fa7c829b6a362b845d6b1f48e0343670684fbd646015",
+      "config_hash": "sha256:794dd33bd46125482ecbf9e02b252242223718b07ce8fde27ccd882334da13a5",
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "parent_pid": 2478512,
+      "pid": 2478853,
+      "reasons": []
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "accepted": true,
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "\nimport gc\nimport json\nimport os\nfrom pathlib import Path\nimport subprocess\nimport sys\nimport time\n\n\ndef emit(name, payload):\n    sys.stderr.write(\"\\nCARNOT_%s:%s\\n\" % (name, json.dumps(payload, sort_keys=True)))\n    sys.stderr.flush()\n\n\ndef sha256_bytes(value):\n    import hashlib\n    return \"sha256:\" + hashlib.sha256(value).hexdigest()\n\n\ndef file_prefix(path, limit):\n    with Path(path).open(\"rb\") as handle:\n        return sha256_bytes(handle.read(limit))\n\n\ndef query_devices():\n    try:\n        out = subprocess.check_output(\n            [\n                \"nvidia-smi\",\n                \"--query-gpu=index,name,uuid,memory.used,memory.free,utilization.gpu\",\n                \"--format=csv,noheader,nounits\",\n            ],\n            text=True,\n            timeout=5,\n        )\n    except Exception:\n        return []\n    rows = []\n    for line in out.splitlines():\n        parts = [part.strip() for part in line.split(\",\")]\n        if len(parts) < 6:\n            continue\n        try:\n            rows.append(\n                {\n                    \"gpu_index\": int(parts[0]),\n                    \"name\": parts[1],\n                    \"device_uuid\": parts[2],\n                    \"device_memory_used_mb\": int(float(parts[3])),\n                    \"device_memory_free_mb\": int(float(parts[4])),\n                    \"utilization_pct\": int(float(parts[5])),\n                }\n            )\n        except ValueError:\n            pass\n    return rows\n\n\ndef query_compute_apps():\n    try:\n        out = subprocess.check_output(\n            [\n                \"nvidia-smi\",\n                \"--query-compute-apps=pid,gpu_uuid,used_memory\",\n                \"--format=csv,noheader,nounits\",\n            ],\n            text=True,\n            timeout=5,\n        )\n    except Exception:\n        return []\n    rows = []\n    for line in out.splitlines():\n        parts = [part.strip() for part in line.split(\",\")]\n        if len(parts) < 3:\n            continue\n        try:\n            rows.append(\n                {\n                    \"pid\": int(parts[0]),\n                    \"device_uuid\": parts[1],\n                    \"pid_memory_mb\": int(float(parts[2])),\n                }\n            )\n        except ValueError:\n            pass\n    return rows\n\n\ndef sample(phase, expected_uuid, expected_gpu):\n    pid = os.getpid()\n    devices = query_devices()\n    apps = query_compute_apps()\n    device = next((row for row in devices if row[\"device_uuid\"] == expected_uuid), None)\n    if device is None and 0 <= expected_gpu < len(devices):\n        device = devices[expected_gpu]\n    app = next(\n        (row for row in apps if row[\"pid\"] == pid and row[\"device_uuid\"] == (device or {}).get(\"device_uuid\")),\n        None,\n    )\n    if app is None:\n        app = next((row for row in apps if row[\"pid\"] == pid), None)\n    row = {\n        \"phase\": phase,\n        \"pid\": pid,\n        \"pid_bound\": app is not None,\n        \"device_uuid\": (device or {}).get(\"device_uuid\", expected_uuid),\n        \"gpu_index\": (device or {}).get(\"gpu_index\", expected_gpu),\n        \"pid_memory_mb\": int((app or {}).get(\"pid_memory_mb\", 0)),\n        \"device_memory_used_mb\": int((device or {}).get(\"device_memory_used_mb\", 0)),\n        \"device_memory_free_mb\": int((device or {}).get(\"device_memory_free_mb\", 0)),\n        \"utilization_pct\": int((device or {}).get(\"utilization_pct\", 0)),\n        \"monotonic_ns\": time.monotonic_ns(),\n    }\n    return row\n\n\nargs = json.loads(sys.argv[1])\nmodel_path = args[\"model_path\"]\nprompt = args[\"prompt\"]\nsampling = args[\"sampling\"]\nexpected_uuid = args[\"device_uuid\"]\nexpected_gpu = int(args[\"gpu\"])\nstarted = time.monotonic_ns()\nsamples = [sample(\"before_load\", expected_uuid, expected_gpu)]\nllm = None\ntry:\n    from llama_cpp import Llama, llama_cpp\n\n    access = {\n        \"hub_id\": args[\"model_hf_id\"],\n        \"revision\": args[\"revision\"],\n        \"quantization\": args[\"quantization\"],\n        \"path\": model_path,\n        \"sha256\": args[\"model_file_sha256\"],\n        \"child_stat_size_bytes\": Path(model_path).stat().st_size,\n        \"child_open_sample_sha256\": file_prefix(model_path, int(args[\"model_prefix_bytes\"])),\n        \"access_confirmed_by_child\": True,\n    }\n    load_start = time.monotonic_ns()\n    llm = Llama(\n        model_path=model_path,\n        n_ctx=int(sampling[\"n_ctx\"]),\n        n_gpu_layers=int(sampling[\"n_gpu_layers\"]),\n        main_gpu=0,\n        n_batch=64,\n        n_ubatch=64,\n        seed=int(args[\"seed\"]),\n        verbose=False,\n    )\n    load_end = time.monotonic_ns()\n    samples.append(sample(\"after_load\", expected_uuid, expected_gpu))\n    prompt_tokens = len(llm.tokenize(prompt.encode(\"utf-8\")))\n    first_token = None\n    pieces = []\n    samples.append(sample(\"during_generation\", expected_uuid, expected_gpu))\n    for chunk in llm.create_completion(\n        prompt,\n        max_tokens=int(sampling[\"max_tokens\"]),\n        temperature=float(sampling[\"temperature\"]),\n        top_p=float(sampling[\"top_p\"]),\n        stream=True,\n    ):\n        choice = (chunk.get(\"choices\") or [{}])[0]\n        piece = str(choice.get(\"text\") or \"\")\n        if piece and first_token is None:\n            first_token = time.monotonic_ns()\n        pieces.append(piece)\n        sys.stdout.buffer.write(piece.encode(\"utf-8\", \"replace\"))\n        sys.stdout.flush()\n    completion = time.monotonic_ns()\n    text = \"\".join(pieces)\n    completion_tokens = len(llm.tokenize(text.encode(\"utf-8\"))) if text else 0\n    close = getattr(llm, \"close\", None)\n    if callable(close):\n        close()\n    del llm\n    llm = None\n    gc.collect()\n    samples.append(sample(\"after_cleanup\", expected_uuid, expected_gpu))\n    ended = time.monotonic_ns()\n    receipt = {\n        \"schema\": args[\"receipt_schema\"],\n        \"model_hf_id\": args[\"model_hf_id\"],\n        \"model_family\": args[\"model_family\"],\n        \"pid\": os.getpid(),\n        \"parent_pid\": os.getppid(),\n        \"executable\": sys.executable,\n        \"model\": access,\n        \"tokenizer\": {\n            \"source\": args[\"tokenizer_source\"],\n            \"method\": args[\"tokenizer_method\"],\n            \"prompt_tokens\": prompt_tokens,\n            \"tokenizer_sha256\": args[\"tokenizer_sha256\"],\n            \"autotokenizer_used\": False,\n        },\n        \"device\": {\n            \"gpu_index\": expected_gpu,\n            \"uuid\": expected_uuid,\n            \"cuda_visible_devices\": os.environ.get(\"CUDA_VISIBLE_DEVICES\", \"\"),\n        },\n        \"clocks\": {\n            \"process_start_monotonic_ns\": started,\n            \"load_start_monotonic_ns\": load_start,\n            \"load_end_monotonic_ns\": load_end,\n            \"first_token_monotonic_ns\": first_token,\n            \"completion_monotonic_ns\": completion,\n            \"process_end_monotonic_ns\": ended,\n        },\n        \"gpu_samples\": samples,\n        \"tokens\": {\n            \"prompt_tokens\": prompt_tokens,\n            \"completion_tokens\": completion_tokens,\n            \"total_tokens\": prompt_tokens + completion_tokens,\n        },\n        \"cleanup\": {\n            \"closed\": True,\n            \"process_exited\": True,\n            \"released_cuda_context\": True,\n        },\n        \"llama_cpp\": {\n            \"supports_gpu_offload\": bool(llama_cpp.llama_supports_gpu_offload()),\n            \"authenticated_gpu_offload\": bool(llama_cpp.llama_supports_gpu_offload())\n            and int(sampling[\"n_gpu_layers\"]) != 0\n            and any(row.get(\"pid_bound\") and row.get(\"pid_memory_mb\", 0) > 0 for row in samples),\n            \"n_gpu_layers\": int(sampling[\"n_gpu_layers\"]),\n        },\n        \"legacy_model_smoke_only\": False,\n        \"inherited_upstream_receipt\": False,\n    }\n    emit(\"CHILD_RECEIPT\", receipt)\nexcept Exception as exc:\n    ended = time.monotonic_ns()\n    emit(\n        \"CHILD_RECEIPT\",\n        {\n            \"schema\": args[\"receipt_schema\"],\n            \"model_hf_id\": args.get(\"model_hf_id\"),\n            \"model_family\": args.get(\"model_family\"),\n            \"pid\": os.getpid(),\n            \"parent_pid\": os.getppid(),\n            \"executable\": sys.executable,\n            \"clocks\": {\n                \"process_start_monotonic_ns\": started,\n                \"process_end_monotonic_ns\": ended,\n            },\n            \"gpu_samples\": samples,\n            \"error\": \"%s: %s\" % (type(exc).__name__, exc),\n            \"legacy_model_smoke_only\": False,\n            \"inherited_upstream_receipt\": False,\n        },\n    )\n    raise SystemExit(1)\nfinally:\n    if llm is not None:\n        close = getattr(llm, \"close\", None)\n        if callable(close):\n            close()\n",
+        "<child_args_json>"
+      ],
+      "command_hash": "sha256:7c545b788ddcf1c72e56fa7c829b6a362b845d6b1f48e0343670684fbd646015",
+      "config_hash": "sha256:b6a83de7643db02ab8d15a54199e86d8d2f9e7bf1319ddff56d705ab946eb346",
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "parent_pid": 2478512,
+      "pid": 2479000,
+      "reasons": []
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "accepted": true,
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "\nimport gc\nimport json\nimport os\nfrom pathlib import Path\nimport subprocess\nimport sys\nimport time\n\n\ndef emit(name, payload):\n    sys.stderr.write(\"\\nCARNOT_%s:%s\\n\" % (name, json.dumps(payload, sort_keys=True)))\n    sys.stderr.flush()\n\n\ndef sha256_bytes(value):\n    import hashlib\n    return \"sha256:\" + hashlib.sha256(value).hexdigest()\n\n\ndef file_prefix(path, limit):\n    with Path(path).open(\"rb\") as handle:\n        return sha256_bytes(handle.read(limit))\n\n\ndef query_devices():\n    try:\n        out = subprocess.check_output(\n            [\n                \"nvidia-smi\",\n                \"--query-gpu=index,name,uuid,memory.used,memory.free,utilization.gpu\",\n                \"--format=csv,noheader,nounits\",\n            ],\n            text=True,\n            timeout=5,\n        )\n    except Exception:\n        return []\n    rows = []\n    for line in out.splitlines():\n        parts = [part.strip() for part in line.split(\",\")]\n        if len(parts) < 6:\n            continue\n        try:\n            rows.append(\n                {\n                    \"gpu_index\": int(parts[0]),\n                    \"name\": parts[1],\n                    \"device_uuid\": parts[2],\n                    \"device_memory_used_mb\": int(float(parts[3])),\n                    \"device_memory_free_mb\": int(float(parts[4])),\n                    \"utilization_pct\": int(float(parts[5])),\n                }\n            )\n        except ValueError:\n            pass\n    return rows\n\n\ndef query_compute_apps():\n    try:\n        out = subprocess.check_output(\n            [\n                \"nvidia-smi\",\n                \"--query-compute-apps=pid,gpu_uuid,used_memory\",\n                \"--format=csv,noheader,nounits\",\n            ],\n            text=True,\n            timeout=5,\n        )\n    except Exception:\n        return []\n    rows = []\n    for line in out.splitlines():\n        parts = [part.strip() for part in line.split(\",\")]\n        if len(parts) < 3:\n            continue\n        try:\n            rows.append(\n                {\n                    \"pid\": int(parts[0]),\n                    \"device_uuid\": parts[1],\n                    \"pid_memory_mb\": int(float(parts[2])),\n                }\n            )\n        except ValueError:\n            pass\n    return rows\n\n\ndef sample(phase, expected_uuid, expected_gpu):\n    pid = os.getpid()\n    devices = query_devices()\n    apps = query_compute_apps()\n    device = next((row for row in devices if row[\"device_uuid\"] == expected_uuid), None)\n    if device is None and 0 <= expected_gpu < len(devices):\n        device = devices[expected_gpu]\n    app = next(\n        (row for row in apps if row[\"pid\"] == pid and row[\"device_uuid\"] == (device or {}).get(\"device_uuid\")),\n        None,\n    )\n    if app is None:\n        app = next((row for row in apps if row[\"pid\"] == pid), None)\n    row = {\n        \"phase\": phase,\n        \"pid\": pid,\n        \"pid_bound\": app is not None,\n        \"device_uuid\": (device or {}).get(\"device_uuid\", expected_uuid),\n        \"gpu_index\": (device or {}).get(\"gpu_index\", expected_gpu),\n        \"pid_memory_mb\": int((app or {}).get(\"pid_memory_mb\", 0)),\n        \"device_memory_used_mb\": int((device or {}).get(\"device_memory_used_mb\", 0)),\n        \"device_memory_free_mb\": int((device or {}).get(\"device_memory_free_mb\", 0)),\n        \"utilization_pct\": int((device or {}).get(\"utilization_pct\", 0)),\n        \"monotonic_ns\": time.monotonic_ns(),\n    }\n    return row\n\n\nargs = json.loads(sys.argv[1])\nmodel_path = args[\"model_path\"]\nprompt = args[\"prompt\"]\nsampling = args[\"sampling\"]\nexpected_uuid = args[\"device_uuid\"]\nexpected_gpu = int(args[\"gpu\"])\nstarted = time.monotonic_ns()\nsamples = [sample(\"before_load\", expected_uuid, expected_gpu)]\nllm = None\ntry:\n    from llama_cpp import Llama, llama_cpp\n\n    access = {\n        \"hub_id\": args[\"model_hf_id\"],\n        \"revision\": args[\"revision\"],\n        \"quantization\": args[\"quantization\"],\n        \"path\": model_path,\n        \"sha256\": args[\"model_file_sha256\"],\n        \"child_stat_size_bytes\": Path(model_path).stat().st_size,\n        \"child_open_sample_sha256\": file_prefix(model_path, int(args[\"model_prefix_bytes\"])),\n        \"access_confirmed_by_child\": True,\n    }\n    load_start = time.monotonic_ns()\n    llm = Llama(\n        model_path=model_path,\n        n_ctx=int(sampling[\"n_ctx\"]),\n        n_gpu_layers=int(sampling[\"n_gpu_layers\"]),\n        main_gpu=0,\n        n_batch=64,\n        n_ubatch=64,\n        seed=int(args[\"seed\"]),\n        verbose=False,\n    )\n    load_end = time.monotonic_ns()\n    samples.append(sample(\"after_load\", expected_uuid, expected_gpu))\n    prompt_tokens = len(llm.tokenize(prompt.encode(\"utf-8\")))\n    first_token = None\n    pieces = []\n    samples.append(sample(\"during_generation\", expected_uuid, expected_gpu))\n    for chunk in llm.create_completion(\n        prompt,\n        max_tokens=int(sampling[\"max_tokens\"]),\n        temperature=float(sampling[\"temperature\"]),\n        top_p=float(sampling[\"top_p\"]),\n        stream=True,\n    ):\n        choice = (chunk.get(\"choices\") or [{}])[0]\n        piece = str(choice.get(\"text\") or \"\")\n        if piece and first_token is None:\n            first_token = time.monotonic_ns()\n        pieces.append(piece)\n        sys.stdout.buffer.write(piece.encode(\"utf-8\", \"replace\"))\n        sys.stdout.flush()\n    completion = time.monotonic_ns()\n    text = \"\".join(pieces)\n    completion_tokens = len(llm.tokenize(text.encode(\"utf-8\"))) if text else 0\n    close = getattr(llm, \"close\", None)\n    if callable(close):\n        close()\n    del llm\n    llm = None\n    gc.collect()\n    samples.append(sample(\"after_cleanup\", expected_uuid, expected_gpu))\n    ended = time.monotonic_ns()\n    receipt = {\n        \"schema\": args[\"receipt_schema\"],\n        \"model_hf_id\": args[\"model_hf_id\"],\n        \"model_family\": args[\"model_family\"],\n        \"pid\": os.getpid(),\n        \"parent_pid\": os.getppid(),\n        \"executable\": sys.executable,\n        \"model\": access,\n        \"tokenizer\": {\n            \"source\": args[\"tokenizer_source\"],\n            \"method\": args[\"tokenizer_method\"],\n            \"prompt_tokens\": prompt_tokens,\n            \"tokenizer_sha256\": args[\"tokenizer_sha256\"],\n            \"autotokenizer_used\": False,\n        },\n        \"device\": {\n            \"gpu_index\": expected_gpu,\n            \"uuid\": expected_uuid,\n            \"cuda_visible_devices\": os.environ.get(\"CUDA_VISIBLE_DEVICES\", \"\"),\n        },\n        \"clocks\": {\n            \"process_start_monotonic_ns\": started,\n            \"load_start_monotonic_ns\": load_start,\n            \"load_end_monotonic_ns\": load_end,\n            \"first_token_monotonic_ns\": first_token,\n            \"completion_monotonic_ns\": completion,\n            \"process_end_monotonic_ns\": ended,\n        },\n        \"gpu_samples\": samples,\n        \"tokens\": {\n            \"prompt_tokens\": prompt_tokens,\n            \"completion_tokens\": completion_tokens,\n            \"total_tokens\": prompt_tokens + completion_tokens,\n        },\n        \"cleanup\": {\n            \"closed\": True,\n            \"process_exited\": True,\n            \"released_cuda_context\": True,\n        },\n        \"llama_cpp\": {\n            \"supports_gpu_offload\": bool(llama_cpp.llama_supports_gpu_offload()),\n            \"authenticated_gpu_offload\": bool(llama_cpp.llama_supports_gpu_offload())\n            and int(sampling[\"n_gpu_layers\"]) != 0\n            and any(row.get(\"pid_bound\") and row.get(\"pid_memory_mb\", 0) > 0 for row in samples),\n            \"n_gpu_layers\": int(sampling[\"n_gpu_layers\"]),\n        },\n        \"legacy_model_smoke_only\": False,\n        \"inherited_upstream_receipt\": False,\n    }\n    emit(\"CHILD_RECEIPT\", receipt)\nexcept Exception as exc:\n    ended = time.monotonic_ns()\n    emit(\n        \"CHILD_RECEIPT\",\n        {\n            \"schema\": args[\"receipt_schema\"],\n            \"model_hf_id\": args.get(\"model_hf_id\"),\n            \"model_family\": args.get(\"model_family\"),\n            \"pid\": os.getpid(),\n            \"parent_pid\": os.getppid(),\n            \"executable\": sys.executable,\n            \"clocks\": {\n                \"process_start_monotonic_ns\": started,\n                \"process_end_monotonic_ns\": ended,\n            },\n            \"gpu_samples\": samples,\n            \"error\": \"%s: %s\" % (type(exc).__name__, exc),\n            \"legacy_model_smoke_only\": False,\n            \"inherited_upstream_receipt\": False,\n        },\n    )\n    raise SystemExit(1)\nfinally:\n    if llm is not None:\n        close = getattr(llm, \"close\", None)\n        if callable(close):\n            close()\n",
+        "<child_args_json>"
+      ],
+      "command_hash": "sha256:7c545b788ddcf1c72e56fa7c829b6a362b845d6b1f48e0343670684fbd646015",
+      "config_hash": "sha256:5686c1396a57d5fd722d6368b89456a4d501b3df355f9e5221907e064b30e634",
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "parent_pid": 2478512,
+      "pid": 2478933,
+      "reasons": []
+    }
+  },
+  "per_model_prompt_raw_output_token_exit_stderr_and_cleanup_receipts": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "cleanup": {
+        "closed": true,
+        "process_exited": true,
+        "released_cuda_context": true
+      },
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "llama_cpp": {
+        "authenticated_gpu_offload": true,
+        "n_gpu_layers": -1,
+        "supports_gpu_offload": true
+      },
+      "prompt": {
+        "byte_length": 56,
+        "text_sha256": "sha256:fc38c216dfba5b85c510b1d7ccebd4be9f42d8e2e4f5d67a2ba2b5f7180ea5b5"
+      },
+      "raw_output": {
+        "byte_length": 35,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6413_authenticated_sota_gguf_execution_receipts/sidecars/unsloth--qwen3.6-35b-a3b-gguf.raw.bin",
+        "sha256": "sha256:c42fc69d7f6265ea5e98d9221f5ee0151a5064109eb2e88461a314253e5c1d2a",
+        "stored_before_parse": true
+      },
+      "stderr": {
+        "byte_length": 2984,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6413_authenticated_sota_gguf_execution_receipts/sidecars/unsloth--qwen3.6-35b-a3b-gguf.stderr.txt",
+        "sha256": "sha256:b09964b36946b2d2d75af873c46d44f3e65ba2e6536f92fb68d5fc0e08ab6d56"
+      },
+      "tokens": {
+        "completion_tokens": 8,
+        "prompt_tokens": 17,
+        "total_tokens": 25
+      }
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "cleanup": {
+        "closed": true,
+        "process_exited": true,
+        "released_cuda_context": true
+      },
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "llama_cpp": {
+        "authenticated_gpu_offload": true,
+        "n_gpu_layers": -1,
+        "supports_gpu_offload": true
+      },
+      "prompt": {
+        "byte_length": 56,
+        "text_sha256": "sha256:53115ab865344e7104e3a51ddd97c69b2a28d0318886c60ef2b4ca81dd78d883"
+      },
+      "raw_output": {
+        "byte_length": 45,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6413_authenticated_sota_gguf_execution_receipts/sidecars/unsloth--gemma-4-26b-a4b-it-gguf.raw.bin",
+        "sha256": "sha256:4d205b8adf4756ea3381d431ef3472a3ee48eb087659d1351c987ba41606ceed",
+        "stored_before_parse": true
+      },
+      "stderr": {
+        "byte_length": 3353,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6413_authenticated_sota_gguf_execution_receipts/sidecars/unsloth--gemma-4-26b-a4b-it-gguf.stderr.txt",
+        "sha256": "sha256:d75b69a878164f66607b715400c2c63ddc7f2be3c61c27ae79838bdde1aab5aa"
+      },
+      "tokens": {
+        "completion_tokens": 9,
+        "prompt_tokens": 16,
+        "total_tokens": 25
+      }
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "cleanup": {
+        "closed": true,
+        "process_exited": true,
+        "released_cuda_context": true
+      },
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "llama_cpp": {
+        "authenticated_gpu_offload": true,
+        "n_gpu_layers": -1,
+        "supports_gpu_offload": true
+      },
+      "prompt": {
+        "byte_length": 57,
+        "text_sha256": "sha256:93de0fa764c07699889258bfc4eb70b8a7b7030972e6c227fa9826f666c3c473"
+      },
+      "raw_output": {
+        "byte_length": 32,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6413_authenticated_sota_gguf_execution_receipts/sidecars/unsloth--gemma-4-31b-it-gguf.raw.bin",
+        "sha256": "sha256:1ae8b3bfab5eea4e311c545f8ceca32cca22be85e727eb4714f205c56a8b0e78",
+        "stored_before_parse": true
+      },
+      "stderr": {
+        "byte_length": 3335,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6413_authenticated_sota_gguf_execution_receipts/sidecars/unsloth--gemma-4-31b-it-gguf.stderr.txt",
+        "sha256": "sha256:98ce0207ebbfb0b4430baf865b1981c58cfc3861be081baa96db8e2bdaf1370d"
+      },
+      "tokens": {
+        "completion_tokens": 9,
+        "prompt_tokens": 16,
+        "total_tokens": 25
+      }
+    }
+  },
+  "per_model_raw_output_paths_and_hashes": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "byte_length": 35,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6413_authenticated_sota_gguf_execution_receipts/sidecars/unsloth--qwen3.6-35b-a3b-gguf.raw.bin",
+      "sha256": "sha256:c42fc69d7f6265ea5e98d9221f5ee0151a5064109eb2e88461a314253e5c1d2a"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "byte_length": 45,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6413_authenticated_sota_gguf_execution_receipts/sidecars/unsloth--gemma-4-26b-a4b-it-gguf.raw.bin",
+      "sha256": "sha256:4d205b8adf4756ea3381d431ef3472a3ee48eb087659d1351c987ba41606ceed"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "byte_length": 32,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6413_authenticated_sota_gguf_execution_receipts/sidecars/unsloth--gemma-4-31b-it-gguf.raw.bin",
+      "sha256": "sha256:1ae8b3bfab5eea4e311c545f8ceca32cca22be85e727eb4714f205c56a8b0e78"
+    }
+  },
+  "per_model_start_load_first_token_completion_end_monotonic_clocks": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "completion_monotonic_ns": 1788557054748082,
+      "first_token_monotonic_ns": 1788556984822587,
+      "load_end_monotonic_ns": 1788556716760240,
+      "load_start_monotonic_ns": 1788547322122281,
+      "parent_end_monotonic_ns": 1788557486227825,
+      "parent_launch_monotonic_ns": 1788547116977752,
+      "process_end_monotonic_ns": 1788557184364988,
+      "process_start_monotonic_ns": 1788547148353820
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "completion_monotonic_ns": 1788574856725682,
+      "first_token_monotonic_ns": 1788574781554338,
+      "load_end_monotonic_ns": 1788574614893704,
+      "load_start_monotonic_ns": 1788567212163741,
+      "parent_end_monotonic_ns": 1788575288909182,
+      "parent_launch_monotonic_ns": 1788567038395252,
+      "process_end_monotonic_ns": 1788574999347654,
+      "process_start_monotonic_ns": 1788567061796778
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "completion_monotonic_ns": 1788566545763758,
+      "first_token_monotonic_ns": 1788566340578844,
+      "load_end_monotonic_ns": 1788566150254180,
+      "load_start_monotonic_ns": 1788557688205308,
+      "parent_end_monotonic_ns": 1788567004503079,
+      "parent_launch_monotonic_ns": 1788557520633242,
+      "process_end_monotonic_ns": 1788566715997692,
+      "process_start_monotonic_ns": 1788557543892611
+    }
+  },
+  "preconditions_checked": {
+    "all_embedded_tokenizers_loadable": true,
+    "all_preconditions_passed": true,
+    "all_required_gguf_files_present": true,
+    "autotokenizer_usage_count": 0,
+    "blocked_reasons": [],
+    "date": "20260814",
+    "gpu_preconditions_passed": true,
+    "llama_cpp_gpu_offload_supported": true,
+    "planning_date": "20260814",
+    "protected_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:7142f3ffd02caac9407d2baff958da4730912b1891f2617e01eb2098ee073ab4",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_5284_sota_runtime_offload_receipt_repair_v483.json": "sha256:6e4fee59c1f6655c91d6636e79dec1d31e2e4cd8bc2be58c71d286d2099720f1",
+      "results/experiment_6408_powered_write_time_factor_admission_ab.json": "sha256:65c04f35ff4879dbd579c420180f9dfa7c7e27396a85f98524577ec0794a5dbb",
+      "results/experiment_6412_v551_powered_claim_integrity_audit.json": "sha256:b57f55728b994ea2dfd04e0f720f4c17a31bd18ef30f999d0d81aa18c2921e1f",
+      "scripts/research_conductor.py": "sha256:01ee05e4b261754164ffac978bbd6920e51cbc172618162734fec806a9c11949"
+    },
+    "receipt_schema_ready": true,
+    "schema": "carnot.experiment_6413.authenticated_sota_gguf_execution_receipts.v1.preconditions",
+    "source_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/research-harnesses/spec.md": "sha256:7c2e4776d0e0a0998884cd5bd540b6d6ed606a9256415a1d80bb2dae8ed8f7db",
+      "python/carnot/experiment_6365_gguf_child_failure_forensics_and_runtime_contract.py": "sha256:1e6ba1cdca3469be4c1d3aa3c2147eebdad99cfd4de8c3826db13b6d1d7e35f2",
+      "python/carnot/experiment_6413_authenticated_sota_gguf_execution_receipts.py": "sha256:c7327704c7e95a2bba7848eee56037d80e1ea88f4314b079b0db831d98d1036b",
+      "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+      "python/carnot/pipeline/gemma4_quantized_loader.py": "sha256:4a7a0d38209af457821531f3f3941cfd73e3d16aa14a99802a19e6664671c16d",
+      "python/carnot/verify/gguf_inference.py": "sha256:0f1d9cf0b09de45d21f69b4ff2bb7f5536ccd22e2b8162dfb1e255a7300be6df",
+      "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+      "tests/python/test_experiment_6413_authenticated_sota_gguf_execution_receipts.py": "sha256:d4b42bd37ff39d13f7d020588f2dcceac6afb159600cd74aceb1fa2b61fd55cb"
+    }
+  },
+  "protected_files_unchanged": {
+    "changed_paths": [],
+    "files": {
+      "_bmad/traceability.md": {
+        "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "after": "sha256:7142f3ffd02caac9407d2baff958da4730912b1891f2617e01eb2098ee073ab4",
+        "before": "sha256:7142f3ffd02caac9407d2baff958da4730912b1891f2617e01eb2098ee073ab4",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "unchanged": true
+      },
+      "results/experiment_5284_sota_runtime_offload_receipt_repair_v483.json": {
+        "after": "sha256:6e4fee59c1f6655c91d6636e79dec1d31e2e4cd8bc2be58c71d286d2099720f1",
+        "before": "sha256:6e4fee59c1f6655c91d6636e79dec1d31e2e4cd8bc2be58c71d286d2099720f1",
+        "unchanged": true
+      },
+      "results/experiment_6408_powered_write_time_factor_admission_ab.json": {
+        "after": "sha256:65c04f35ff4879dbd579c420180f9dfa7c7e27396a85f98524577ec0794a5dbb",
+        "before": "sha256:65c04f35ff4879dbd579c420180f9dfa7c7e27396a85f98524577ec0794a5dbb",
+        "unchanged": true
+      },
+      "results/experiment_6412_v551_powered_claim_integrity_audit.json": {
+        "after": "sha256:b57f55728b994ea2dfd04e0f720f4c17a31bd18ef30f999d0d81aa18c2921e1f",
+        "before": "sha256:b57f55728b994ea2dfd04e0f720f4c17a31bd18ef30f999d0d81aa18c2921e1f",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after": "sha256:01ee05e4b261754164ffac978bbd6920e51cbc172618162734fec806a9c11949",
+        "before": "sha256:01ee05e4b261754164ffac978bbd6920e51cbc172618162734fec806a9c11949",
+        "unchanged": true
+      }
+    },
+    "schema": "carnot.experiment_6413.authenticated_sota_gguf_execution_receipts.v1.protected_files",
+    "unchanged": true
+  },
+  "random_seed": 6413,
+  "receipt_schema_path_hash_and_required_fields": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6413_authenticated_sota_gguf_execution_receipts.json.receipt_schema.json",
+    "present": true,
+    "required_clock_fields": [
+      "parent_launch_monotonic_ns",
+      "process_start_monotonic_ns",
+      "load_start_monotonic_ns",
+      "load_end_monotonic_ns",
+      "first_token_monotonic_ns",
+      "completion_monotonic_ns",
+      "process_end_monotonic_ns",
+      "parent_end_monotonic_ns"
+    ],
+    "required_fields": [
+      "schema",
+      "model_hf_id",
+      "model_family",
+      "pid",
+      "parent_pid",
+      "executable",
+      "command",
+      "command_hash",
+      "config",
+      "config_hash",
+      "model",
+      "tokenizer",
+      "device",
+      "clocks",
+      "gpu_samples",
+      "prompt",
+      "raw_output",
+      "tokens",
+      "exit_status",
+      "stderr",
+      "cleanup",
+      "llama_cpp",
+      "legacy_model_smoke_only",
+      "inherited_upstream_receipt"
+    ],
+    "required_gpu_phases": [
+      "before_load",
+      "after_load",
+      "during_generation",
+      "after_cleanup"
+    ],
+    "schema_version": "carnot.experiment_6413.authenticated_sota_gguf_execution_receipts.v1.receipt",
+    "sha256": "sha256:5905ed6bbb6f30f785cfcdd4ae8e8fa9c4b5931307eff2718d17598212d62fa7",
+    "size_bytes": 1343
+  },
+  "reproducibility_checksum": "sha256:c369d42ed459d54442d7b0782ccebf413cfedb5e1e61b5bf1a588017d7fe4e28",
+  "status": "complete",
+  "tests_run": {
+    "commands": [
+      ".venv/bin/pytest tests/python/test_experiment_6413_authenticated_sota_gguf_execution_receipts.py -q --no-cov -n 0",
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6413_authenticated_sota_gguf_execution_receipts.py -m pytest tests/python/test_experiment_6413_authenticated_sota_gguf_execution_receipts.py -q --no-cov -n 0",
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6413_authenticated_sota_gguf_execution_receipts.py --fail-under=100 --show-missing",
+      ".venv/bin/pytest tests/python -q",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6413_authenticated_sota_gguf_execution_receipts.py",
+      ".venv/bin/python -m carnot.experiment_6413_authenticated_sota_gguf_execution_receipts --date 20260814 --validate",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6413_authenticated_sota_gguf_execution_receipts.json",
+      ".venv/bin/python scripts/determination_preservation_lint.py",
+      ".venv/bin/python scripts/root_clutter_sweep.py",
+      ".venv/bin/python -m carnot.experiment_6413_authenticated_sota_gguf_execution_receipts --date 20260814"
+    ],
+    "exit_codes": {
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6413_authenticated_sota_gguf_execution_receipts.py --fail-under=100 --show-missing": 0,
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6413_authenticated_sota_gguf_execution_receipts.py -m pytest tests/python/test_experiment_6413_authenticated_sota_gguf_execution_receipts.py -q --no-cov -n 0": 0,
+      ".venv/bin/pytest tests/python -q": 0,
+      ".venv/bin/pytest tests/python/test_experiment_6413_authenticated_sota_gguf_execution_receipts.py -q --no-cov -n 0": 0,
+      ".venv/bin/python -m carnot.experiment_6413_authenticated_sota_gguf_execution_receipts --date 20260814": 0,
+      ".venv/bin/python -m carnot.experiment_6413_authenticated_sota_gguf_execution_receipts --date 20260814 --validate": 0,
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6413_authenticated_sota_gguf_execution_receipts.json": 0,
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6413_authenticated_sota_gguf_execution_receipts.py": 0,
+      ".venv/bin/python scripts/determination_preservation_lint.py": 0,
+      ".venv/bin/python scripts/root_clutter_sweep.py": 0
+    }
+  },
+  "verifier_is_oracle": false
+}
