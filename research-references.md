@@ -34568,3 +34568,112 @@ evidence.
   pretraining.
 
 <!-- V551-PLANNER-REFRESH-20260813-END -->
+
+## V552 Planner Refresh (2026-08-13, after milestone 2026.08.551)
+
+This refresh used Exp6404 through Exp6409 as the evidence boundary. It searched
+arXiv first for 2025-2026 EBM reasoning, neural constraint solving, Ising and
+thermodynamic hardware, hallucination control, KANs, constrained generation,
+and continual learning. It then checked OpenReview, Hugging Face Papers,
+Semantic Scholar citation records, GitHub Trending, Extropic, and Logical
+Intelligence. Source claims remain hypotheses until Carnot reproduces them with
+exact authority, authentic runtime receipts, and fresh held evidence.
+
+### Promoted methods
+
+- **Agentic Router: An Execution-Grounded Continual Learning Approach With
+  Memory** - arXiv:2608.09184, https://arxiv.org/abs/2608.09184; submitted
+  2026-08-10. The system separates reusable proposal guidance, which improves
+  feasible-action coverage, from a consequence predictor updated from real
+  execution feedback, which improves conditional selection. The two paths are
+  complementary. Carnot hook: split continuous factor learning into a
+  proposal-coverage memory and a verifier-conditioned selection memory. Update
+  only from fresh exact execution outcomes, report both axes independently, and
+  never let either learned path override an exact release veto.
+- **Exploiting Structure in the Boolean Weighted Constraint Satisfaction
+  Problem: A Constraint Composite Graph-Based Approach** - arXiv:2608.10005,
+  https://arxiv.org/abs/2608.10005; submitted 2026-08-07. The constraint
+  composite graph combines a WCSP's macro interaction graph with its micro
+  numeric structure. Its maxflow kernel fixes variables before search while
+  preserving the optimum; the same representation also supports message
+  passing, ILP, and quantum-annealing backends. Carnot hook: implement an exact
+  Boolean WCSP-to-CCG kernelization control before energy sampling. Measure
+  state-space reduction, optimum preservation, verifier-call reduction, and
+  wall time on frozen instances. Do not claim hardware advantage.
+- **Rethinking LLM Verification: Evidence Structure, Uncertainty, and
+  Selective Refinement** - arXiv:2608.10725,
+  https://arxiv.org/abs/2608.10725; submitted 2026-08-11. The paper uses
+  abstention as the trigger for a more expensive ontology-grounded second pass
+  and reports improved accuracy in medical hypothesis verification. Carnot
+  hook: use exact abstention, missing provenance, and checker disagreement as
+  routing signals for targeted symbolic refinement. Compare selective
+  refinement with always-refine and never-refine controls. A confidence score
+  may route work but cannot authorize acceptance.
+
+### Controls and evidence corrections
+
+- **V551 powered-evidence correction:** Exp6408's artifact labels its model
+  entries as fresh runtime receipts, but the implementation derives fixed
+  `duration_s` and memory values without executing the three GGUF generators.
+  Exp6409 imports and replays that receipt surface. Their positive deltas are
+  therefore audit-required hypotheses, not a clean powered foundation. V552
+  must capture subprocess/PID, model-file hash, command/config hash, raw output
+  hash, monotonic phase clocks, first-token or completion evidence, sampled GPU
+  telemetry, exact event outcomes, and exit status before repeating either
+  claim. Additive corrigenda must preserve the historical determination trail.
+- Distributional EBMs (`2605.18871`), Spilled Energy (`2602.18671`),
+  LLM-as-a-Verifier (`2607.05391`), GRACE (`2607.09175`), ConsistencyGate
+  (`2607.22962`), TierMem (`2602.17913`), and A-MAC (`2603.04549`) remain useful
+  controls. None grants a learned score release authority, and none excuses a
+  missing live-model receipt.
+- The finite-ID/grammar/parser generated-answer lane, current CPU-only GGUF
+  offload path, frozen Exp5895 CSL requalification, hidden-state scoring,
+  external-text scoring, EBT pretraining, and KAN utility lane remain retired
+  or closed. V552 must use a changed authenticated runtime/event surface.
+
+### Secondary-source and product status
+
+- **Semantic Scholar:** the unauthenticated EBT (`2507.02092`) citation request
+  was rate-limited. The ARM-EBM (`2512.15605`) response still exposed the eight
+  previously indexed citing works, including Distributional EBMs and LoopUS.
+  No newly visible citation supplies an exact-authority local GGUF mechanism.
+- **OpenReview:** the current result set repeated Distributional EBMs,
+  execution-verified agent loops, and verifiable-constraint rewards. These
+  support separating learned proposal scores from deterministic penalties but
+  do not reopen learned-verifier authority.
+- **Hugging Face Papers:** current verification records repeated Spilled
+  Energy, LLM-as-a-Verifier, entropy-based detection, and deterministic or
+  speculative verification. The selective-refinement arXiv result above is the
+  only promoted routing hypothesis; token energy remains diagnostic only.
+- **GitHub Trending:** the weekly Python page exposed general agent, skill, and
+  compute repositories, but no new local GGUF EBM, CCG/WCSP, KAN, or sampler
+  dependency that supersedes Carnot's exact checkers. Implement the small exact
+  CCG control locally rather than adding an unverified production dependency.
+- **Extropic:** the first-party hardware page lists Z1 Stick and Z1 Card as
+  early access 2027. Carnot still has no authenticated XTR-0/Z1 device or API
+  route. Schedule no TSU execution, power, latency, or availability claim.
+- **Logical Intelligence:** current Kona/Aleph pages still expose product and
+  architecture language but no public Kona weights, reproducible architecture,
+  or documented local inference API. Kona remains product context only.
+
+### V552 planning impact
+
+- Begin with an independent Exp6407-6409 claim-integrity audit and additive
+  corrigendum ledger. No downstream task may inherit the synthetic receipt as
+  proof of live execution.
+- Build one reusable authenticated GGUF execution-receipt layer, then create a
+  fresh three-family factor-event corpus with the mandated local models. Use
+  legacy small models only for CPU smoke tests.
+- Test exact CCG kernelization and abstention-triggered refinement before the
+  new powered write-time admission A/B. Exact checkers keep authority.
+- Run execution-grounded dual-path continuous self-learning prospectively over
+  process restarts and held distribution shifts. Protect prior exact outcomes,
+  quarantine stale-head updates, and report proposal coverage separately from
+  selection quality.
+- Continue ARC only as a default-off executed-policy influence test on the live
+  path. Make no new game/level solve claim and do not update the solve registry.
+- Schedule no unchanged board probe, TSU task, Kona task, KAN training,
+  grammar/parser retry, hidden-state scorer, external-text scorer, or EBT
+  pretraining.
+
+<!-- V552-PLANNER-REFRESH-20260813-END -->
