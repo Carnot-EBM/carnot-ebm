@@ -4232,6 +4232,252 @@ checkers are upstream semantic oracles
 | SCENARIO-LEARN-6420-ATTACKS | Planned: `python/carnot/experiment_6420_csl_authenticity_safety_audit.py`. | Planned: `tests/python/test_experiment_6420_csl_authenticity_safety_audit.py`. |
 | SCENARIO-LEARN-6420-ORACLE | Planned: `python/carnot/experiment_6420_csl_authenticity_safety_audit.py`. | Planned: `tests/python/test_experiment_6420_csl_authenticity_safety_audit.py`. |
 
+## REQ-LEARN-6430: Prospective Write-Once Memory Capacity Frontier
+
+**Given** Exp6428 has a clean write-time admission result, Exp6426 supplies the
+task-scoped runtime receipt contract, and Exp6420 found invalid V552 CSL
+metrics, raw-output reuse, cache resurrection, and underpowered cells
+**When** Exp6430 runs on planning date 20260814
+**Then** it SHALL write
+`results/experiment_6430_prospective_write_once_memory_capacity_frontier.json`
+**And** it SHALL run a fresh prospective write-once factor-memory stream.
+
+Exp6430 SHALL revalidate Exp6428 gates, Exp6426 runtime receipts, GPUs, VRAM,
+model bytes, embedded GGUF tokenizers, runner identity, memory schemas, exact
+checkers, licenses, protected partitions, disk, and initial heads. It SHALL
+prove the new stream manifest and final artifact paths are absent before
+generation.
+
+Exp6430 SHALL use exactly these local GGUF model ids from `cached_sota_pair()`:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Token counts SHALL use embedded GGUF
+tokenizers only. Exp6430 SHALL not call `AutoTokenizer`.
+
+Exp6430 SHALL preregister at least 120 unique chronological events across five
+sessions, three drift regimes, three model families, real process restarts,
+expiry boundaries, supersession boundaries, and an untouched future partition.
+It SHALL freeze capacities 0, 4, 8, 16, and 32 before outcomes open.
+
+Exp6430 SHALL generate one fresh raw output for every event through the
+task-scoped receipt helper. It SHALL freeze event rows and proposals before
+exact outcomes. One event may be replayed across matched arms, but one raw
+output SHALL NOT represent two event ids.
+
+Exp6430 SHALL compare frozen and capacity-limited exact-governed memories at
+matched events, model calls, prompts, tokens, checker calls, consumer work, and
+initial heads. It SHALL update memory only after exact feedback. Exact release
+and protected-retention checks SHALL control every activation.
+
+Exp6430 SHALL atomically Commit, Reject, Quarantine, Defer, Evict, Expire, or
+Supersede only after exact support, protected retention, unique effect, license,
+predecessor, and capacity checks. It SHALL record every head transition.
+
+Exp6430 SHALL evaluate future rows once in causal order. It SHALL write
+per-unit rows before deriving proposal coverage, write precision, selection
+success, future exact yield, transfer, retention, forgetting, contamination,
+memory growth, eviction, restart recovery, and cost.
+
+Exp6430 SHALL estimate the capacity-utility frontier with counts, confidence
+intervals, and effective sample sizes. It SHALL not choose capacity after held
+outcomes are read.
+
+Exp6430 SHALL attack raw-output reuse, cache resurrection, stale heads,
+duplicate effects, concurrent writes, interrupted commits, expired licenses,
+superseded evidence, model swaps, delayed outcomes, same-step writes, hidden
+retuning, and future leakage. Every critical attack SHALL fail closed.
+
+Exp6430 SHALL set `prospective_write_once_csl_ready_score=1.0` only when at
+least one nonzero capacity improves row-recomputed future exact yield over
+frozen, write precision and retention meet their frozen controls,
+contamination and exact-veto overrides are zero, growth is bounded, all
+critical attacks fail closed, and `current_adversarial_flag_count` is zero.
+
+Exp6430 SHALL emit these fields:
+
+- `status`
+- `exp6428_gate_receipts`
+- `MODEL_SPECS`
+- `models_used`
+- `cached_sota_pair_receipts`
+- `model_file_and_embedded_tokenizer_hashes`
+- `autotokenizer_usage_count`
+- `task_scoped_process_gpu_runner_and_raw_output_receipts`
+- `manifest_absence_before_run_receipt`
+- `chronological_manifest_path_hash_event_session_drift_restart_expiry_supersession_counts_and_partition_seals`
+- `preregistered_capacity_and_arm_contract`
+- `per_unit_rows`
+- `per_event_unique_raw_output_and_pre_outcome_freeze_records`
+- `exact_feedback_receipts`
+- `memory_schema_head_and_transition_history`
+- `commit_reject_quarantine_defer_evict_expire_and_supersede_counts`
+- `per_capacity_coverage_precision_selection_future_yield_transfer_retention_forgetting_contamination_growth_eviction_restart_and_cost_results`
+- `capacity_utility_frontier`
+- `effective_sample_sizes_and_uncertainty`
+- `best_capacity_selected_without_held_tuning`
+- `aggregate_recomputation_receipts`
+- `reported_vs_recomputed_deltas`
+- `raw_output_reuse_count`
+- `cache_resurrection_count`
+- `same_step_write_count`
+- `contamination_propagation_rate`
+- `exact_veto_override_count`
+- `protected_leakage_count`
+- `attack_matrix`
+- `prospective_write_once_csl_ready_score`
+- `current_adversarial_flag_count`
+- `harm_underpowered_missing_and_flagged_cells`
+- `protected_files_unchanged`
+- `blocked_reason`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map every required field. It SHALL map all gates,
+capacities, causal writes, frontier metrics, attacks, `current_adversarial_flag_count`,
+and `prospective_write_once_csl_ready_score`. `per_unit_rows` SHALL be present
+because Exp6430 makes comparative claims. `verifier_is_oracle` SHALL be true
+only for exact feedback, release, and protected-retention checks. Model output
+and memory SHALL NOT be oracles. `honest_verdict` SHALL start with a terminal
+success prefix.
+
+Required field principles:
+
+- `status`: Names the terminal state for the prospective write-once capacity frontier.
+- `exp6428_gate_receipts`: Pins the clean write-time admission gate and the V552 null context.
+- `MODEL_SPECS`: Carries the three mandated GGUF model identities from cached SOTA receipts.
+- `models_used`: Lists only the three mandated GGUF models.
+- `cached_sota_pair_receipts`: Records the helper calls that supplied all mandated model ids.
+- `model_file_and_embedded_tokenizer_hashes`: Binds model bytes and embedded tokenizer metadata.
+- `autotokenizer_usage_count`: Must remain zero because GGUF tokenizers are embedded.
+- `task_scoped_process_gpu_runner_and_raw_output_receipts`: Binds fresh event generation to task-scoped process receipts.
+- `manifest_absence_before_run_receipt`: Proves the new manifest and artifact paths did not exist before generation.
+- `chronological_manifest_path_hash_event_session_drift_restart_expiry_supersession_counts_and_partition_seals`: Seals events, sessions, drift regimes, restarts, expiry, supersession, and future rows.
+- `preregistered_capacity_and_arm_contract`: Freezes capacities, arms, work, prompts, tokens, checkers, and initial heads before outcomes.
+- `per_unit_rows`: Records one comparative future row before aggregate calculation.
+- `per_event_unique_raw_output_and_pre_outcome_freeze_records`: Proves each event id has one fresh raw output and frozen proposal before outcome release.
+- `exact_feedback_receipts`: Records exact feedback, release, and protected-retention checks.
+- `memory_schema_head_and_transition_history`: Records every schema, head, and transition.
+- `commit_reject_quarantine_defer_evict_expire_and_supersede_counts`: Counts each atomic memory disposition.
+- `per_capacity_coverage_precision_selection_future_yield_transfer_retention_forgetting_contamination_growth_eviction_restart_and_cost_results`: Reports separated capacity metrics without pooled masking.
+- `capacity_utility_frontier`: Separates capacity, coverage, write precision, and future utility.
+- `effective_sample_sizes_and_uncertainty`: Reports counts, confidence intervals, and effective sample sizes.
+- `best_capacity_selected_without_held_tuning`: Proves capacity was selected from the preregistered frontier rule.
+- `aggregate_recomputation_receipts`: Recomputes metrics from per-unit rows.
+- `reported_vs_recomputed_deltas`: Shows reported aggregates match row recomputation.
+- `raw_output_reuse_count`: Must be zero because one raw output cannot represent two event ids.
+- `cache_resurrection_count`: Must be zero because stale caches cannot revive writes.
+- `same_step_write_count`: Must be zero because writes follow exact outcomes.
+- `contamination_propagation_rate`: Must be zero for readiness.
+- `exact_veto_override_count`: Must be zero because exact rejections cannot be overridden.
+- `protected_leakage_count`: Must be zero because protected and future rows cannot route writes.
+- `attack_matrix`: Shows all critical attacks fail closed.
+- `prospective_write_once_csl_ready_score`: Conjunctive readiness score for exact-governed capacity utility.
+- `current_adversarial_flag_count`: Must be zero for readiness.
+- `harm_underpowered_missing_and_flagged_cells`: Keeps V552 defects and any weak cells visible.
+- `protected_files_unchanged`: Shows protected upstream and ops files stayed byte-identical.
+- `blocked_reason`: Explains failed preconditions.
+- `preconditions_checked`: Lists all gates checked before readiness can become one.
+- `inference_substrate`: Declares task-scoped local GGUF receipt replay with exact-governed memory.
+- `verifier_is_oracle`: Marks only exact feedback, release, and protected-retention checks as oracles.
+- `field_principles`: Documents why each field exists.
+- `field_provenance`: Maps each field to specs, inputs, stream rows, reductions, attacks, or tests.
+- `random_seed`: Pins event generation, capacities, arms, attacks, and metrics.
+- `duration_s`: Records measured wall time without padding.
+- `tests_run`: Records verification commands and exit codes.
+- `reproducibility_checksum`: Content-addresses the payload with volatile fields normalized.
+- `honest_verdict`: Uses a terminal success prefix and states the capacity-frontier result.
+- `gate:exp6428_clean_write_time_admission`: Exp6428 must be complete, clean, and ready.
+- `gate:exp6426_task_scoped_receipts`: Exp6426 runtime receipt contract must pass.
+- `gate:exp6420_safety_null_context`: V552 safety defects must remain visible and not be reused as evidence.
+- `gate:manifest_absence`: The Exp6430 manifest and artifact must be absent before generation.
+- `gate:embedded_tokenizers`: All token counts must come from embedded GGUF tokenizers.
+- `capacity:0`: Frozen memory is the no-write control.
+- `capacity:4`: Capacity four tests severe memory pressure.
+- `capacity:8`: Capacity eight tests moderate memory pressure.
+- `capacity:16`: Capacity sixteen tests the middle frontier.
+- `capacity:32`: Capacity thirty-two tests the high-capacity frontier.
+- `write:Commit`: Commits require exact support, valid license, protected retention, unique effect, predecessor freshness, and capacity room.
+- `write:Reject`: Rejects record exact, license, or predecessor failure.
+- `write:Quarantine`: Quarantine contains malformed or unsafe evidence.
+- `write:Defer`: Defers rows before exact support or under frozen authority.
+- `write:Evict`: Eviction keeps capacity bounded after exact lower-priority selection.
+- `write:Expire`: Expiry removes records after temporal or license validity ends.
+- `write:Supersede`: Supersession replaces an older exact effect with newer exact support.
+- `frontier:coverage`: Coverage measures proposal reach separately from precision.
+- `frontier:precision`: Write precision measures accepted exact support.
+- `frontier:future_yield`: Future exact yield measures held utility.
+- `frontier:retention`: Protected retention guards prior exact behavior.
+
+## SCENARIO-LEARN-6430-GATES: Receipts And Manifest Absence Gate The Run
+
+**Given** Exp6428 and Exp6426 artifacts are available
+**When** Exp6430 checks preconditions
+**Then** their gates, model files, tokenizers, runner, protected partitions,
+memory schemas, exact checkers, licenses, disk, initial heads, and path absence
+SHALL pass before readiness can become one.
+
+## SCENARIO-LEARN-6430-STREAM: Fresh Chronological Events Are Frozen
+
+**Given** the preregistered stream
+**When** Exp6430 generates events
+**Then** at least 120 unique events SHALL cover five sessions, three drift
+regimes, three model families, restarts, expiry, supersession, and an
+untouched future partition
+**And** every event SHALL have a unique raw-output hash and a pre-outcome
+proposal freeze record.
+
+## SCENARIO-LEARN-6430-CAPACITY: Exact Feedback Controls Memory Writes
+
+**Given** capacities 0, 4, 8, 16, and 32
+**When** Exp6430 processes chronological feedback
+**Then** every Commit, Reject, Quarantine, Defer, Evict, Expire, or Supersede
+transition SHALL follow exact support, release, retention, license,
+predecessor, unique-effect, and capacity checks.
+
+## SCENARIO-LEARN-6430-FRONTIER: Per-Unit Rows Precede The Frontier
+
+**Given** all proposal and feedback rows are frozen
+**When** Exp6430 evaluates future rows once in causal order
+**Then** it SHALL write per-unit rows before deriving coverage, precision,
+selection, future yield, transfer, retention, forgetting, contamination,
+growth, eviction, restart, cost, and frontier metrics.
+
+## SCENARIO-LEARN-6430-ATTACKS: Critical Attacks Fail Closed
+
+**Given** reuse, cache, head, duplicate, concurrency, interruption, license,
+supersession, model, delayed-outcome, same-step-write, hidden-retuning, and
+future-leakage attacks
+**When** Exp6430 validates the attack matrix
+**Then** no attack SHALL commit unsafe memory, leak labels, switch models,
+inherit licenses, revive stale cache, or promote readiness.
+
+## SCENARIO-LEARN-6430-READY: Readiness Requires A Clean Nonzero Capacity Gain
+
+**Given** matched work and row-recomputed aggregates
+**When** at least one nonzero capacity improves future exact yield over
+frozen, write precision and retention meet controls, contamination and exact
+veto overrides are zero, growth is bounded, and all attacks fail closed
+**Then** `prospective_write_once_csl_ready_score` SHALL be `1.0`.
+
+## Implementation Status (REQ-LEARN-6430)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6430 | Implemented: `python/carnot/experiment_6430_prospective_write_once_memory_capacity_frontier.py`; terminal artifact `results/experiment_6430_prospective_write_once_memory_capacity_frontier.json`. | Implemented: `tests/python/test_experiment_6430_prospective_write_once_memory_capacity_frontier.py`. |
+| SCENARIO-LEARN-6430-GATES | Implemented: `python/carnot/experiment_6430_prospective_write_once_memory_capacity_frontier.py`. | Implemented: `tests/python/test_experiment_6430_prospective_write_once_memory_capacity_frontier.py`. |
+| SCENARIO-LEARN-6430-STREAM | Implemented: `python/carnot/experiment_6430_prospective_write_once_memory_capacity_frontier.py`. | Implemented: `tests/python/test_experiment_6430_prospective_write_once_memory_capacity_frontier.py`. |
+| SCENARIO-LEARN-6430-CAPACITY | Implemented: `python/carnot/experiment_6430_prospective_write_once_memory_capacity_frontier.py`. | Implemented: `tests/python/test_experiment_6430_prospective_write_once_memory_capacity_frontier.py`. |
+| SCENARIO-LEARN-6430-FRONTIER | Implemented: `python/carnot/experiment_6430_prospective_write_once_memory_capacity_frontier.py`. | Implemented: `tests/python/test_experiment_6430_prospective_write_once_memory_capacity_frontier.py`. |
+| SCENARIO-LEARN-6430-ATTACKS | Implemented: `python/carnot/experiment_6430_prospective_write_once_memory_capacity_frontier.py`. | Implemented: `tests/python/test_experiment_6430_prospective_write_once_memory_capacity_frontier.py`. |
+| SCENARIO-LEARN-6430-READY | Implemented: `python/carnot/experiment_6430_prospective_write_once_memory_capacity_frontier.py`. | Implemented: `tests/python/test_experiment_6430_prospective_write_once_memory_capacity_frontier.py`. |
+
 ## REQ-LEARN-6409: Graph-Local Multisession Continuous Learning
 
 **Given** Exp6408 first shows positive future exact yield with non-increased
