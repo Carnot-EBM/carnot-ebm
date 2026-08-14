@@ -15799,3 +15799,5 @@ code |
 | 2026-08-13 23:39 UTC | Gated on Exp6408 positive admission: graph-local m | OK | 86 passed, 1 warning in 9.85s |
 | 2026-08-14 00:35 UTC | Plan milestone 2026.08.552 | OK | 14 tasks proposed |
 | 2026-08-14 00:37 UTC | Milestone 2026.08.552 activated | OK | 14 tasks queued |
+| 2026-08-14 02:00 UTC | V551 terminal evidence handoff and V552 queue pref | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: nd_receipts"]  |
+| 2026-08-14 03:25 UTC | V551 terminal evidence handoff and V552 queue pref | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: fault occurred |

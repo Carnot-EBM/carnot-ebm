@@ -4420,6 +4420,131 @@ null, and `verifier_is_oracle` is false.
 |---|---|---|
 | REQ-INFRA-6391 | Planned: `python/carnot/experiment_6391_v550_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6391_v550_terminal_handoff_and_queue_preflight.json`. | Planned: `tests/python/test_experiment_6391_v550_terminal_handoff_and_queue_preflight.py`. |
 
+## REQ-INFRA-6410: V551 Evidence Handoff And V552 Queue Preflight
+
+Carnot SHALL build Exp6410 as the exact V551-to-V552 handoff for planning date
+20260814. The experiment SHALL preserve V551 artifact verdicts, source
+behavior, conductor outcomes, adversarial findings, and scientific claim
+eligibility as separate fields. It SHALL not edit historical artifacts,
+historical determinations, the active roadmap, the conductor, the ARC solve
+registry, or any claim ledger.
+
+Exp6410 SHALL hash the active roadmap, any next-roadmap file, the milestone
+document, conductor source and log, exclusion manifest, known issues, north
+star, solve registry, claim ledgers, V551 terminal artifacts, and V551
+sidecars. Missing protected inputs SHALL be recorded as absent, not invented.
+
+Exp6410 SHALL summarize Exp6404 through Exp6409 with
+`scripts/summarize_artifact.py` before importing headline fields. It SHALL run
+current adversarial verification for each artifact. It SHALL record Exp6407's
+stamped and current adversarial flag as open. It SHALL inspect the Exp6408 and
+Exp6409 implementation paths and record that Exp6408 derives runtime duration
+and peak-memory receipts in source without an authenticated generation process,
+and that Exp6409 inherits the Exp6408 receipt surface. These source findings
+SHALL make powered GGUF and prospective continuous-learning positives
+audit-required hypotheses, while preserving the historical artifact verdicts.
+
+Exp6410 SHALL validate the complete fourteen-task V552 queue. It SHALL require
+unique ordered IDs, result JSON deliverables, structured gates with valid field
+types, required upstream gate fields, complete prior-failure entries, no retired
+ID reuse, no retired dependency chain, valid exclusion-manifest lint, and valid
+roadmap schema checks. It SHALL accept the active `research-roadmap.yaml` as the
+V552 queue when `research-roadmap-next.yaml` is absent after activation.
+
+Exp6410 SHALL render every V552 prompt with `{project_root}` and `{date}`.
+Every rendered prompt SHALL include `CONTEXT`, `EXISTING CODE TO READ FIRST`,
+`TASK`, `CONCRETE STEPS`, the project root, planning date `20260814`, a
+`Run command:` line, and the final line
+`Do NOT push. Do NOT modify scripts/research_conductor.py.`. Every LLM/GPU task
+SHALL name `MODEL_SPECS`, `cached_sota_pair()`, at least one mandated GGUF ID,
+embedded GGUF tokenizers, no `AutoTokenizer`, authentic execution receipts, and
+no legacy headline model. Non-GPU audit and aggregation tasks MAY use Claude
+routes when the roadmap declares them.
+
+Exp6410 SHALL check ARC tasks without claiming a game or level solve. ARC
+prompts SHALL not update the solve registry, SHALL not use an outer-loop solver
+or per-game adapter as the scored mechanism, and SHALL name the canonical live
+agent path.
+
+The Exp6410 artifact SHALL be written atomically to
+`results/experiment_6410_v552_terminal_handoff_and_queue_preflight.json` with
+`inference_substrate=aggregation_from_upstream_artifacts` and
+`verifier_is_oracle=false`. The artifact SHALL include these required fields:
+`status`, `v551_active_roadmap_path_and_hash`, `v551_task_ids`,
+`v551_terminal_artifacts_and_sidecars_by_task`, `v551_artifact_verdicts`,
+`v551_source_execution_findings`, `v551_conductor_outcomes`,
+`v551_adversarial_findings`,
+`v551_scientific_claim_eligibility_by_task`,
+`exp6407_6408_6409_claim_correction`,
+`v552_milestone_doc_and_queue_hashes`, `v552_task_ids`,
+`v552_id_and_deliverable_checks`, `v552_dependency_and_gate_checks`,
+`v552_gate_field_cross_reference_checks`, `v552_prior_failure_checks`,
+`v552_exclusion_manifest_checks`,
+`v552_agent_model_and_llm_policy_checks`, `v552_arc_no_solve_checks`,
+`prompt_contract_checks`, `active_roadmap_modified`, `conductor_modified`,
+`solve_registry_modified`, `claims_ledger_modified`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`field_principles` SHALL cover every required field and every structured gate.
+`field_provenance` SHALL classify every required field as measured, derived,
+constant, or upstream. `random_seed` SHALL be null.
+
+### SCENARIO-INFRA-6410-1: V551 Evidence Classes Stay Separate
+
+GIVEN V551 artifacts include clean, blocked, flagged, unproven, missing, and
+null evidence classes
+WHEN Exp6410 builds the terminal handoff
+THEN artifact verdicts, conductor outcomes, adversarial findings, source
+execution findings, and scientific eligibility are recorded in separate fields.
+
+### SCENARIO-INFRA-6410-2: Powered Positives Become Audit-Required Hypotheses
+
+GIVEN Exp6407 remains adversarial-flagged and Exp6408 derives runtime receipts
+without authenticated generation
+WHEN Exp6410 records the Exp6407 through Exp6409 correction
+THEN Exp6407 remains open-flagged, Exp6408 powered GGUF eligibility is false,
+Exp6409 prospective CSL eligibility is false, and no historical verdict is
+rewritten.
+
+### SCENARIO-INFRA-6410-3: V552 Queue Contains Fourteen Tasks
+
+GIVEN the V552 queue is active in `research-roadmap.yaml`
+WHEN Exp6410 validates task identity and deliverables
+THEN it records exactly Exp6410 through Exp6423 in ascending order with unique
+JSON deliverables.
+
+### SCENARIO-INFRA-6410-4: V552 Gates And Prior Failures Are Valid
+
+GIVEN V552 tasks include structured gates and prior-failure records
+WHEN Exp6410 validates dependencies, gate fields, prior failures, and retired
+IDs
+THEN every gate references an earlier task and declared required artifact field,
+every prior failure is complete, and no retired chain is admitted.
+
+### SCENARIO-INFRA-6410-5: Prompt, LLM, And ARC Contracts Validate
+
+GIVEN V552 prompts mix audit, aggregation, GPU, and ARC work
+WHEN Exp6410 renders and checks the prompts
+THEN all prompt sections, run commands, final prohibitions, GGUF execution
+rules, authentic-receipt rules, and ARC no-solve rules are checked before
+queue execution.
+
+### SCENARIO-INFRA-6410-6: Artifact Is Annotated, Checksummed, And Non-Mutating
+
+GIVEN protected hashes, summaries, queue checks, and command receipts are
+assembled
+WHEN Exp6410 writes its artifact
+THEN every required field and structured gate has a principle, every required
+field has provenance, protected files remain byte-identical, the checksum
+matches, `random_seed` is null, and `verifier_is_oracle` is false.
+
+## Implementation Status (REQ-INFRA-6410)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6410 | Implemented: `python/carnot/experiment_6410_v552_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6410_v552_terminal_handoff_and_queue_preflight.json`. | Implemented: `tests/python/test_experiment_6410_v552_terminal_handoff_and_queue_preflight.py`. |
+
 ## REQ-INFRA-6404: V551 Handoff SHALL Preserve V550 Evidence And Fail Closed On Queue Mismatch
 
 Carnot SHALL build Exp6404 as a bounded V550-to-V551 evidence handoff over
