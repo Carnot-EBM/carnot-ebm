@@ -4846,6 +4846,49 @@ def research_step(
                 except Exception as _e:
                     logger.warning("Artifact convention audit failed (non-fatal): %s", _e)
 
+            # ARC held-out benchmark (REQ-ARC-BENCH-6267). The one ARC number that can still move.
+            #
+            # `reproducible_total_levels` is pinned at 183 of 183 -- every public game is cleared
+            # and adaptered, so the metric that steered this work for months can never change
+            # again. Nothing replaced it, and the loop drifted: 13 of the last 16 ARC tasks ended
+            # `ready_no_solve_claim` or `default_off`, and three tasks named "holdout" produced
+            # metric sets sharing ZERO keys. Milestone .542 and .550 are not comparable.
+            #
+            # This runs the adapter-free path -- the same first-contact mechanism the live agent
+            # uses on a game it has never seen -- and reports levels cleared against actions
+            # spent, which is what the competition scores. A rotating subset keeps it near a
+            # minute; `--all` is for promotion. Never blocks; it exists so the flag ledger has
+            # something to select on.
+            if not dry_run:
+                try:
+                    subprocess.run(
+                        [
+                            sys.executable,
+                            str(PROJECT_ROOT / "scripts" / "arc_bench.py"),
+                            "--quiet",
+                            "--out",
+                            str(PROJECT_ROOT / "ops" / "arc_bench_latest.json"),
+                        ],
+                        cwd=PROJECT_ROOT,
+                        timeout=1800,
+                        check=False,
+                    )
+                    # Keep the flag ledger's view of the agent current. Discovery is a source
+                    # scan, so a capability shipped behind a new flag this milestone is tracked
+                    # from the moment it lands rather than whenever someone remembers.
+                    subprocess.run(
+                        [
+                            sys.executable,
+                            str(PROJECT_ROOT / "scripts" / "arc_flag_ledger.py"),
+                            "--discover",
+                        ],
+                        cwd=PROJECT_ROOT,
+                        timeout=120,
+                        check=False,
+                    )
+                except Exception as _e:
+                    logger.warning("ARC held-out benchmark failed (non-fatal): %s", _e)
+
             # ARC live-agent self-solve audit (2026-06-22 operator directive, 2nd
             # recurrence: "aggressively caught and stopped"). Hostile review that the
             # recent ARC work made the LIVE agent better at self-discovering
