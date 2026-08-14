@@ -844,6 +844,135 @@ preservation and certificate checks.
 
 **Spec traces:** REQ-CONSTRAINT-VERIFY-6415
 
+### REQ-CONSTRAINT-VERIFY-6416: Selective Exact Refinement A/B Replay
+
+Carnot SHALL provide Exp6416 at
+`python/carnot/experiment_6416_selective_exact_refinement_ab.py`. The command
+`.venv/bin/python -m carnot.experiment_6416_selective_exact_refinement_ab --date 20260814`
+SHALL write
+`results/experiment_6416_selective_exact_refinement_ab.json`.
+
+Exp6416 SHALL consume only the frozen Exp6414 factor-event corpus and the
+frozen Exp6415 Boolean WCSP CCG certificate artifact. It SHALL not call an LLM.
+It SHALL revalidate the Exp6414 and Exp6415 gates, corpus seals, raw-output
+hashes, checker versions, CCG certificates, and protected future partition
+before any arm outcome is accepted.
+
+The trigger contract SHALL be registered before acceptance outcomes are
+exposed. Only these exact trigger classes may route a row to refinement:
+`exact_abstention`, `missing_provenance`, `checker_disagreement`, and
+`certified_ccg_reducible`. The contract SHALL separate counts and work for each
+trigger class. Model confidence, score magnitude, model identity pooling, and
+post-outcome class labels SHALL NOT authorize acceptance.
+
+The A/B replay SHALL compare three matched arms over identical frozen rows:
+`never_refine`, `always_refine`, and `selective_refine`. Refinement may recover
+source spans from sealed Exp6414 source text, replay the deterministic Exp6414
+exact checker, or apply independently verified Exp6415 CCG certificates. A row
+may be accepted only when a deterministic exact checker or independent CCG
+certificate-backed replay gives exact authority. Routing and confidence SHALL
+not be oracles.
+
+The artifact SHALL measure exact yield, false accepts, false rejects,
+unresolved abstentions, checker calls, kernelization work, raw-tier
+escalations, latency, and cost overall and by model family and trigger class.
+It SHALL emit the bare finite scalar `delta_exact_yield_over_never_refine`,
+the bare finite scalar `selective_vs_always_exact_accuracy_delta`, and the bare
+finite scalar `selective_vs_always_work_delta`.
+
+The attack matrix SHALL include confidence-only routing, trigger tampering,
+post-outcome selection, CCG certificate substitution, source fabrication,
+pooled model identities, and future-label leakage. Each attack SHALL fail
+closed. `selective_refinement_safe_score` SHALL be the bare scalar `1.0` only
+when selective false accepts do not exceed never-refine false accepts,
+protected leakage is zero, exact yield improves over never-refine or matched
+accuracy uses less exact work than always-refine, and every attack fails
+closed. Otherwise it SHALL be `0.0`.
+
+The artifact SHALL include `status`,
+`exp6414_and_exp6415_gate_receipts`,
+`corpus_certificate_checker_and_partition_hashes`,
+`preregistered_trigger_contract`,
+`preregistered_never_always_and_selective_arm_contract`,
+`matched_work_contract`,
+`per_arm_exact_yield_false_accept_false_reject_abstention_checker_kernel_escalation_latency_and_cost_results`,
+`per_model_family_and_trigger_class_results`,
+`delta_exact_yield_over_never_refine`,
+`selective_vs_always_exact_accuracy_delta`,
+`selective_vs_always_work_delta`, `confidence_authority_count`,
+`protected_leakage_count`, `attack_matrix`,
+`selective_refinement_safe_score`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+Field principles SHALL be:
+
+- `status`: Names whether the selective exact refinement replay is safe, blocked, or null.
+- `exp6414_and_exp6415_gate_receipts`: Pins both upstream gates before any arm uses their evidence.
+- `corpus_certificate_checker_and_partition_hashes`: Binds raw rows, checker versions, CCG certificates, and the future partition.
+- `preregistered_trigger_contract`: Shows the exact route triggers and excludes confidence authority.
+- `preregistered_never_always_and_selective_arm_contract`: Defines the three matched arms before outcome selection.
+- `matched_work_contract`: Keeps row sets and work units identical across comparable arms.
+- `per_arm_exact_yield_false_accept_false_reject_abstention_checker_kernel_escalation_latency_and_cost_results`: Reports the required arm metrics.
+- `per_model_family_and_trigger_class_results`: Disaggregates results by model family and trigger class.
+- `delta_exact_yield_over_never_refine`: Bare yield lift from selective refinement over never-refine.
+- `selective_vs_always_exact_accuracy_delta`: Bare matched exact-accuracy difference for selective minus always.
+- `selective_vs_always_work_delta`: Bare matched work difference for selective minus always.
+- `confidence_authority_count`: Must stay zero because confidence is diagnostic only.
+- `protected_leakage_count`: Must stay zero because protected future labels cannot route rows.
+- `attack_matrix`: Proves confidence, trigger, certificate, source, identity, and future-label attacks fail closed.
+- `selective_refinement_safe_score`: Bare gate for downstream use.
+- `protected_files_unchanged`: Shows protected upstream and ops files stayed byte-identical.
+- `preconditions_checked`: Lists local gates checked before accepting the artifact.
+- `inference_substrate`: Declares frozen deterministic replay with no new LLM calls.
+- `verifier_is_oracle`: Marks only exact event checkers and independent CCG certificate checks as oracles.
+- `field_principles`: Documents why each required field exists.
+- `field_provenance`: States how each required field was produced.
+- `random_seed`: Pins deterministic trigger and CCG certificate mapping.
+- `duration_s`: Records command wall time.
+- `tests_run`: Records verification commands and exit codes.
+- `reproducibility_checksum`: Content-addresses the payload with volatile fields normalized.
+- `honest_verdict`: Gives a terminal-prefix verdict with the exact authority boundary.
+- `gate:exp6414`: Exp6414 is a gate, not a mutable data source.
+- `gate:exp6415`: Exp6415 certificates are gate evidence, not routing confidence.
+- `arm:never_refine`: The baseline accepts only already exact rows.
+- `arm:always_refine`: The expensive control refines every frozen row.
+- `arm:selective_refine`: The selective arm refines only rows allowed by the preregistered triggers.
+
+### SCENARIO-CONSTRAINT-VERIFY-6416-TRIGGERS: Confidence Cannot Route Or Accept
+
+Given the frozen Exp6414 rows and Exp6415 certificates,
+When Exp6416 builds the trigger contract,
+Then only exact abstention, missing provenance, checker disagreement, or
+certified CCG reducibility may select refinement, and
+`confidence_authority_count` remains `0`.
+
+**Spec traces:** REQ-CONSTRAINT-VERIFY-6416
+
+### SCENARIO-CONSTRAINT-VERIFY-6416-MATCHED-ARMS: Selective Matches Always With Less Work
+
+Given never-refine, always-refine, and selective-refine run on the same frozen
+rows,
+When deterministic source recovery, exact checker replay, and CCG certificate
+checks finish,
+Then selective exact accuracy matches always-refine, selective work is less
+than always-refine, and selective exact yield exceeds never-refine without
+increasing false accepts.
+
+**Spec traces:** REQ-CONSTRAINT-VERIFY-6416
+
+### SCENARIO-CONSTRAINT-VERIFY-6416-ATTACKS: Unsafe Refinement Fails Closed
+
+Given confidence-only routing, trigger tampering, post-outcome selection, CCG
+certificate substitution, source fabrication, pooled model identity, and
+future-label leakage attacks,
+When Exp6416 validates the artifact,
+Then each attack fails closed and `selective_refinement_safe_score` can become
+`1.0` only if every attack failed closed.
+
+**Spec traces:** REQ-CONSTRAINT-VERIFY-6416
+
 ### SCENARIO-VERIFY-6301-SHORTCUTS: Controls Fail Closed
 
 Given a cached bus whose shared vectors carry a claim-direction, pair-swap,
