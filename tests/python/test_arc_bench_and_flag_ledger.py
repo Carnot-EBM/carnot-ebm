@@ -256,12 +256,22 @@ def test_roster_comes_from_the_registry_and_holds_the_public_games():
 
 def test_run_game_reports_an_error_row_rather_than_raising(monkeypatch):
     """A benchmark that dies on one game loses the whole sweep, including the games that passed."""
-    import carnot.agentic.arc_solver_kit as kit
+    import sys
+    import types
+
+    # Stubbed through sys.modules rather than imported: the real solver kit pulls the agent stack
+    # in and trips the suite's memory-leak guard at ~500MB. The behaviour under test is this
+    # function's error handling, not the arcade.
+    kit = types.ModuleType("carnot.agentic.arc_solver_kit")
 
     def boom():
         raise RuntimeError("arcade unavailable")
 
-    monkeypatch.setattr(kit, "offline_arcade", boom)
+    kit.offline_arcade = boom
+    ge = types.ModuleType("carnot.agentic.arc_graph_explore")
+    ge.graph_explore_solve_v2 = lambda *a, **k: (None, 0)
+    monkeypatch.setitem(sys.modules, "carnot.agentic.arc_solver_kit", kit)
+    monkeypatch.setitem(sys.modules, "carnot.agentic.arc_graph_explore", ge)
 
     row = arc_bench.run_game("ls20")
 
@@ -466,3 +476,93 @@ def test_scored_engine_reports_an_error_row_rather_than_raising(monkeypatch):
 
     assert row["error"] and "policy exploded" in row["error"]
     assert row["levels_cleared"] == 0
+
+
+# --------------------------------------------------------------------------- fire counters
+#
+# REQ-ARC-BENCH-6270. Import reachability proves a flag's code is LOADED. It cannot prove the code
+# RUNS. The first scored-engine A/B hit that gap: CARNOT_ARC_HAZARD_MOVE_PRUNER produced baseline
+# and arm sweeps identical to the digit -- 16 levels, 48,313 actions, both arms. Read naively that
+# is "measured, does not help." Measured directly on tu93 with the flag on: flag_resolved True,
+# observe_calls 292, observed_nav_transitions 288, model_fitted FALSE. The lever is wired and
+# running; the hypothesis class simply never fits. Three different facts, three different fixes.
+
+
+def test_identical_arms_with_no_counter_movement_is_a_wiring_result_not_a_null():
+    """The flag never resolved. Recording HOLD here files a capability as worthless."""
+    rows = [_row("a", 1, 100), _row("b", 0, 200)]
+    rep = _report(rows)
+
+    ok, why = ledger.verdict(ledger.compare(rep, _report([dict(r) for r in rows])))
+
+    assert not ok
+    assert "UNINTERPRETABLE_NO_EFFECT" in why
+    assert "WIRING" in why
+    assert "Do NOT record it as a null" in why
+
+
+def test_identical_arms_but_moved_counters_is_a_different_verdict():
+    """Wired and running, outcome unchanged. Not the same claim as 'never fired'."""
+    base = _report([dict(_row("a", 1, 100), fire_counters={"hz": {"observe_calls": 0}})])
+    arm = _report([dict(_row("a", 1, 100), fire_counters={"hz": {"observe_calls": 288}})])
+
+    cmp = ledger.compare(base, arm)
+    ok, why = ledger.verdict(cmp)
+
+    assert cmp["identical_to_baseline"] is True
+    assert cmp["lever_counters_moved"] is True
+    assert not ok
+    assert "UNINTERPRETABLE_FIRED_NO_EFFECT" in why
+
+
+def test_a_real_change_is_never_called_uninterpretable():
+    """The guard must not swallow genuine results -- that would be the opposite failure."""
+    base = _report([_row("a", 0, 100), _row("b", 0, 100)])
+    arm = _report([_row("a", 1, 100), _row("b", 1, 100)])
+
+    cmp = ledger.compare(base, arm)
+    ok, why = ledger.verdict(cmp)
+
+    assert cmp["identical_to_baseline"] is False
+    assert ok and "PROMOTE" in why
+
+
+def test_no_effect_is_checked_before_the_regression_and_hold_rules():
+    """Ordering matters. 'Did nothing' outranks 'did not help enough' -- different instructions."""
+    rows = [_row("a", 0, 100)]
+
+    _, why = ledger.verdict(ledger.compare(_report(rows), _report([dict(r) for r in rows])))
+
+    assert "UNINTERPRETABLE" in why
+    assert "HOLD" not in why, "a no-op must never be reported as a measured null"
+
+
+def test_fire_counters_are_discovered_by_scanning_not_from_a_name_list():
+    """A hand-written lever list goes stale the next time a lever is added.
+
+    A silently missing counter is exactly the false null this whole mechanism exists to prevent,
+    so the collector reflects over the live object instead.
+    """
+    import inspect
+
+    src = inspect.getsource(arc_bench._fire_counters)
+
+    assert "dir(" in src, "must enumerate the object, not a maintained list"
+    assert "_diagnostics" in src
+
+
+def test_a_diagnostics_method_that_raises_does_not_lose_the_row():
+    class Boom:
+        def bad_diagnostics(self):
+            raise RuntimeError("nope")
+
+        def good_diagnostics(self):
+            return {"observe_calls": 3}
+
+    class Pol:
+        explorer = Boom()
+
+    out = arc_bench._fire_counters(Pol())
+
+    assert out["explorer.good_diagnostics"] == {"observe_calls": 3}
+    assert "diagnostics_error" in out["explorer.bad_diagnostics"]
