@@ -550,3 +550,115 @@ claims-ledger writes are zero, protected files are unchanged, upstream
 artifacts are unchanged, `public_arc_claim_eligibility` is false, and the
 honest verdict states that the audit is complete and no public ARC claim is
 eligible.
+
+## REQ-ARC-BENCH-6267: One held-out ARC number that can move
+
+The ARC loop MUST maintain a single comparable measurement of live-agent
+capability, computed the way the competition computes it.
+
+**Why.** `reproducible_total_levels` reached 183 of 183 on 2026-07-17. Every
+public game is cleared and hand-adaptered, so the metric that steered this work
+for months is pinned and can never move again. Nothing replaced it. Measured
+2026-08-13 across the last 10 milestones: 16 ARC tasks, 13 ending
+`ready_no_solve_claim` or `default_off`. Three tasks named "holdout" -- Exp6295,
+Exp6308, Exp6401 -- emitted metric sets sharing zero keys. Milestone .542 and
+milestone .550 cannot be compared.
+
+`scripts/arc_bench.py` runs the adapter-free path, the same first-contact
+mechanism the live agent uses on a game it has never seen, and reports levels
+cleared against actions spent under one fixed schema.
+
+### SCENARIO-ARC-BENCH-6267-HELD-OUT-PATH
+
+**Given** a public game that has a registered `GameAdapter`
+**When** the benchmark runs that game
+**Then** the adapter is bypassed, the run uses `graph_explore_solve_v2`, and the
+row records `adapter_used: false`.
+
+### SCENARIO-ARC-BENCH-6267-SCORED-SHAPE
+
+**Given** a completed benchmark run
+**When** the report is written
+**Then** each row carries `levels_cleared` and `actions_spent`, where actions are
+counted by wrapping `env.step` rather than taken from the returned solution
+length, because the two differ by three orders of magnitude on ls20 (13 against
+17,197) and the competition scores what was spent.
+
+### SCENARIO-ARC-BENCH-6267-ERRORS-VISIBLE
+
+**Given** a game that raises during the run
+**When** the report is aggregated
+**Then** the game appears as an error row and is counted in `games_errored`, and
+is excluded from `clear_rate` rather than counted as a clean zero, so a sweep
+that drops its hard cases cannot report a rising average while getting worse.
+
+### SCENARIO-ARC-BENCH-6267-ROSTER-CHANGE-RESETS-ROTATION
+
+**Given** a persisted rotation offset taken against an earlier roster
+**When** the roster changes
+**Then** the offset resolves to 0, so a newly added game is benchmarked on the
+next run instead of being skipped for as many runs as the offset is ahead.
+
+### SCENARIO-ARC-BENCH-6267-HELD-OUT-CAVEAT-CARRIED
+
+**Given** any benchmark report or console output
+**When** it is produced
+**Then** it states that these are the 25 public games with their adapter
+bypassed, that disabling the adapter removes the hand-written route and not the
+knowledge that produced it, and that the number is not a hidden-game result.
+
+## REQ-ARC-FLAG-LEDGER-6268: Measured ARC improvements promote themselves
+
+An ARC capability shipped behind a flag MUST be able to reach default-on by
+measured evidence, and MUST NOT reach it any other way.
+
+**Why.** The agent carries 101 distinct `CARNOT_ARC_*` flags. Nothing recorded
+which were on, why, or on what evidence. A loop that generates options and never
+chooses between them is not improving; 101 unchosen options is a search space
+nobody searches.
+
+### SCENARIO-ARC-FLAG-LEDGER-6268-REGRESSION-REFUSES
+
+**Given** an arm that clears new levels on three games and loses a level on one
+game it previously cleared, so the aggregate improves
+**When** the promotion rule evaluates it
+**Then** promotion is REFUSED and the lost game is named, because an aggregate
+win that costs a game is the ARC engine-store failure that destroyed ka59 from
+1.0 to 0.0.
+
+### SCENARIO-ARC-FLAG-LEDGER-6268-ONE-GAME-IS-NOT-EVIDENCE
+
+**Given** an arm that improves exactly one game and regresses none
+**When** the promotion rule evaluates it
+**Then** the verdict is HOLD, because the search is deterministic and a single
+improved game is a coincidence rather than a capability.
+
+### SCENARIO-ARC-FLAG-LEDGER-6268-EFFICIENCY-COUNTS
+
+**Given** an arm that clears the same levels using strictly fewer actions on
+every cleared game and more on none
+**When** the promotion rule evaluates it
+**Then** promotion is granted, because the competition metric squares efficiency.
+
+### SCENARIO-ARC-FLAG-LEDGER-6268-NO-IMPLICIT-MEASUREMENT
+
+**Given** a flag with no recorded evidence, or whose last recorded verdict
+refused promotion
+**When** promotion is requested
+**Then** the request is refused, the recorded reason is repeated, and no
+measurement is run implicitly, because a promotion that measures itself is a
+promotion nobody reviewed.
+
+### SCENARIO-ARC-FLAG-LEDGER-6268-DISCOVERY-FROM-SOURCE
+
+**Given** a capability shipped behind a new `CARNOT_ARC_*` flag
+**When** the ledger discovers flags
+**Then** the flag set is read from the agent source rather than a maintained
+list, so a new flag is tracked from the milestone it lands in.
+
+### SCENARIO-ARC-FLAG-LEDGER-6268-CORRUPT-LEDGER-FAILS-LOUD
+
+**Given** an unreadable `ops/arc_flag_ledger.yaml`
+**When** the ledger is loaded
+**Then** the process exits with an error rather than starting a fresh ledger,
+because silently replacing it would erase every promotion and its evidence.
