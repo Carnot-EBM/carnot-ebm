@@ -973,6 +973,154 @@ Then each attack fails closed and `selective_refinement_safe_score` can become
 
 **Spec traces:** REQ-CONSTRAINT-VERIFY-6416
 
+### REQ-CONSTRAINT-VERIFY-6429: Constraint Saturation Verification-Cost A/B Replay
+
+Carnot SHALL provide Exp6429 at
+`python/carnot/experiment_6429_constraint_saturation_verification_cost_ab.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6429_constraint_saturation_verification_cost_ab --date 20260814`
+SHALL write
+`results/experiment_6429_constraint_saturation_verification_cost_ab.json`.
+
+Exp6429 SHALL consume only clean Exp6427 rows plus the frozen Exp6416 and
+Exp6415 exact-refinement evidence. It SHALL not call an LLM. It SHALL
+revalidate upstream gates, immutable row hashes, raw row hashes, constraint
+strata, checker versions, CCG certificate versions, partition seals, CPU, RAM,
+disk, and monotonic timing before any readiness score is credited.
+
+The replay SHALL preregister `never_refine`, `always_refine`, and
+`selective_refine` arms before outcome-derived cost-error counts are computed.
+The preregistered contract SHALL declare fixed checker-call and wall-time
+budgets. A verification-cost error SHALL mean an exact-incorrect row that the
+arm did not identify as an error within its declared budget. Abstained rows
+SHALL be reported as abstentions, not hidden as correct rows.
+
+The selective arm SHALL use only `exact_abstention`, `missing_provenance`,
+`checker_disagreement`, or `certified_ccg_reducible` triggers. Confidence may
+be recorded as a diagnostic. Confidence, model identity pooling, post-outcome
+class labels, and future partitions SHALL NOT authorize row acceptance.
+Deterministic event checkers and independent CCG certificate checks are the
+only oracles.
+
+The artifact SHALL record per-unit arm outcomes with constraint count,
+interaction class, model family, exact result, detected error, abstention,
+checker calls, elapsed time, budget exhaustion, and cost-error status. It SHALL
+derive per-constraint success, joint success, joint-success decay,
+interaction penalties, verification-cost error rates, false accepts, false
+rejects, exact work, time-to-verdict, uncertainty, and effective sample size
+from `per_unit_rows`.
+
+The selective-vs-always comparison SHALL test matched joint exact accuracy and
+median and tail cost by constraint count, interaction class, and model family.
+It SHALL report null, underpowered, or crossover cells without pooling them
+away. `verification_cost_study_ready_score` SHALL be the bare scalar `1.0`
+only when budgets were frozen, rows are complete, all aggregates recompute,
+selective false accepts do not exceed always-refine false accepts, and every
+critical attack fails closed. A null selective advantage SHALL still be a
+complete result when the gates pass.
+
+The attack matrix SHALL include confidence authority, outcome-aware budget
+choice, post-outcome trigger selection, row deletion, model pooling,
+certificate substitution, source fabrication, and future leakage. Each attack
+SHALL fail closed.
+
+The artifact SHALL include `status`, `exp6427_gate_receipts`,
+`corpus_row_checker_certificate_and_partition_hashes`,
+`preregistered_arm_and_budget_contract`,
+`verification_cost_error_definition`, `per_unit_rows`,
+`per_arm_constraint_count_interaction_model_budget_correctness_abstention_checker_time_and_cost_error_results`,
+`per_constraint_success`, `joint_success`,
+`joint_success_decay_by_constraint_count`, `interaction_penalty`,
+`verification_cost_error_rate_by_budget`,
+`false_accept_and_false_reject_deltas`,
+`selective_vs_always_accuracy_delta`,
+`selective_vs_always_median_and_tail_cost_deltas`,
+`effective_sample_sizes_and_uncertainty`, `aggregate_recomputation_receipts`,
+`reported_vs_recomputed_deltas`, `confidence_authority_count`,
+`attack_matrix`, `verification_cost_study_ready_score`,
+`harm_underpowered_missing_and_flagged_cells`, `protected_files_unchanged`,
+`blocked_reason`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`,
+`random_seed`, `duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Field principles SHALL be:
+
+- `status`: Names whether the verification-cost replay is complete, blocked, or null.
+- `exp6427_gate_receipts`: Pins the clean row gate and the Exp6416 exact-refinement reference gate.
+- `corpus_row_checker_certificate_and_partition_hashes`: Binds rows, raw outputs, checkers, certificates, and partitions.
+- `preregistered_arm_and_budget_contract`: Freezes arms and budgets before cost-error aggregation.
+- `verification_cost_error_definition`: Defines cost errors separately from exact correctness.
+- `per_unit_rows`: Provides the row and arm decisions behind every comparative claim.
+- `per_arm_constraint_count_interaction_model_budget_correctness_abstention_checker_time_and_cost_error_results`: Reports matched arm metrics by required strata.
+- `per_constraint_success`: Reports exact per-constraint success from rows.
+- `joint_success`: Reports exact joint success from rows.
+- `joint_success_decay_by_constraint_count`: Shows joint collapse as simultaneous constraints accumulate.
+- `interaction_penalty`: Measures interacting minus independent outcomes at each constraint count.
+- `verification_cost_error_rate_by_budget`: Reports budgeted misses of exact-incorrect rows.
+- `false_accept_and_false_reject_deltas`: Shows whether selective changes release harm against controls.
+- `selective_vs_always_accuracy_delta`: Bare matched accuracy delta for selective minus always.
+- `selective_vs_always_median_and_tail_cost_deltas`: Shows median and tail cost savings or crossover cells.
+- `effective_sample_sizes_and_uncertainty`: Reports sample size and uncertainty for each stratum.
+- `aggregate_recomputation_receipts`: States the formulas and row hashes used for aggregate recomputation.
+- `reported_vs_recomputed_deltas`: Shows reported metrics equal row recomputation.
+- `confidence_authority_count`: Must stay zero because confidence is diagnostic only.
+- `attack_matrix`: Proves known authority, budget, row, source, certificate, and leakage attacks fail closed.
+- `verification_cost_study_ready_score`: Bare readiness gate for downstream use.
+- `harm_underpowered_missing_and_flagged_cells`: Names underpowered or missing cells instead of pooling them away.
+- `protected_files_unchanged`: Shows conductor, ops, traceability, and upstream artifacts stayed byte-stable.
+- `blocked_reason`: Names any precondition blocker.
+- `preconditions_checked`: Lists local gates checked before accepting the artifact.
+- `inference_substrate`: Declares deterministic replay over frozen rows with no new LLM call.
+- `verifier_is_oracle`: Marks only deterministic event and certificate checks as oracles.
+- `field_principles`: Documents why each required field exists.
+- `field_provenance`: States how each required field was produced.
+- `random_seed`: Pins deterministic row order, trigger mapping, and budget replay.
+- `duration_s`: Records command wall time.
+- `tests_run`: Records required test, coverage, spec, adversarial, and root-clutter checks.
+- `reproducibility_checksum`: Content-addresses the artifact with volatile fields normalized.
+- `honest_verdict`: Gives a terminal-prefix verdict with the exact authority boundary.
+- `gate:exp6427`: Exp6427 is the immutable row gate, not a mutable data source.
+- `gate:exp6416`: Exp6416 supplies a frozen exact-refinement reference, not new outcomes.
+- `arm:never_refine`: The baseline spends no extra checker calls and exposes budgeted misses.
+- `arm:always_refine`: The control spends exact checker work on every row.
+- `arm:selective_refine`: The selective arm spends work only under allowed exact triggers.
+- `budget:checker_calls`: Checker-call limits are frozen before cost-error aggregation.
+- `budget:wall_time`: Wall-time limits are frozen before cost-error aggregation.
+- `cost_error`: Cost errors measure missed exact-incorrect rows within budget.
+- `readiness:verification_cost_study_ready_score`: Readiness requires frozen budgets, complete rows, recomputation, no added false accepts, and closed attacks.
+
+### SCENARIO-CONSTRAINT-VERIFY-6429-BUDGETS: Budgets Freeze Before Cost Errors
+
+Given clean Exp6427 rows and frozen Exp6416 evidence,
+When Exp6429 builds the arm and budget contract,
+Then never, always, and selective budgets are registered before
+cost-error aggregation, confidence has no authority, and
+`confidence_authority_count` remains `0`.
+
+**Spec traces:** REQ-CONSTRAINT-VERIFY-6429
+
+### SCENARIO-CONSTRAINT-VERIFY-6429-MATCHED-ARMS: Selective Matches Always With Lower Cost
+
+Given the three arms run on identical Exp6427 rows,
+When per-row arm outcomes are replayed,
+Then selective and always have equal matched joint accuracy, selective has
+lower median and tail time-to-verdict, and selective false accepts do not
+exceed always-refine false accepts.
+
+**Spec traces:** REQ-CONSTRAINT-VERIFY-6429
+
+### SCENARIO-CONSTRAINT-VERIFY-6429-ROWS-AND-ATTACKS: Rows Recompute And Attacks Fail Closed
+
+Given the Exp6429 artifact,
+When aggregate recomputation and adversarial mutation checks run,
+Then all reported aggregate deltas are zero, per-unit rows are present, and
+confidence, outcome-aware budgets, post-outcome triggers, row deletion, model
+pooling, certificate substitution, source fabrication, and future leakage fail
+closed before readiness can become `1.0`.
+
+**Spec traces:** REQ-CONSTRAINT-VERIFY-6429
+
 ### SCENARIO-VERIFY-6301-SHORTCUTS: Controls Fail Closed
 
 Given a cached bus whose shared vectors carry a claim-direction, pair-swap,

@@ -36,8 +36,29 @@ flags:
     promotable: false
     state: unevaluated
   CARNOT_ARC_BOUNDED_REINDUCTION:
+    benchmark_reachable: true
     discovered: '2026-08-14'
-    evidence: []
+    evidence:
+    - arm_total_levels: 14
+      baseline_total_levels: 16
+      date: '2026-08-14'
+      engine: scored
+      games_compared: 25
+      identical_to_baseline: false
+      levels_improved: []
+      levels_regressed:
+      - bp35
+      - cd82
+      lever_counters_moved: true
+      same_levels_cheaper:
+      - s5i5
+      same_levels_costlier: []
+      value: '1'
+      verdict: 'REFUSED: regressed on [''bp35'', ''cd82'']. A flag that breaks a game it used to clear
+        is not promoted, whatever the aggregate says.'
+    last_measured: '2026-08-14'
+    measured_on_engine: scored
+    promotable: false
     state: unevaluated
   CARNOT_ARC_BUDGET_AWARE_SEARCH:
     discovered: '2026-08-14'
