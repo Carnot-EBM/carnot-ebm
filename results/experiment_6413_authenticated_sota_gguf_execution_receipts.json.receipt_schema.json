@@ -1,0 +1,61 @@
+{
+  "mutation_attacks": [
+    "forged_pid",
+    "reused_raw_hash",
+    "substituted_model_file",
+    "missing_first_token_clock",
+    "constant_memory",
+    "telemetry_from_another_process",
+    "tokenizer_substitution",
+    "early_process_exit",
+    "inherited_upstream_receipt"
+  ],
+  "pid_bound_gpu_phases": [
+    "after_load",
+    "during_generation"
+  ],
+  "required_clock_fields": [
+    "parent_launch_monotonic_ns",
+    "process_start_monotonic_ns",
+    "load_start_monotonic_ns",
+    "load_end_monotonic_ns",
+    "first_token_monotonic_ns",
+    "completion_monotonic_ns",
+    "process_end_monotonic_ns",
+    "parent_end_monotonic_ns"
+  ],
+  "required_fields": [
+    "schema",
+    "model_hf_id",
+    "model_family",
+    "pid",
+    "parent_pid",
+    "executable",
+    "command",
+    "command_hash",
+    "config",
+    "config_hash",
+    "model",
+    "tokenizer",
+    "device",
+    "clocks",
+    "gpu_samples",
+    "prompt",
+    "raw_output",
+    "tokens",
+    "exit_status",
+    "stderr",
+    "cleanup",
+    "llama_cpp",
+    "legacy_model_smoke_only",
+    "inherited_upstream_receipt"
+  ],
+  "required_gpu_phases": [
+    "before_load",
+    "after_load",
+    "during_generation",
+    "after_cleanup"
+  ],
+  "schema": "carnot.experiment_6413.authenticated_sota_gguf_execution_receipts.v1.receipt",
+  "semantic_correctness_claimed": false
+}
