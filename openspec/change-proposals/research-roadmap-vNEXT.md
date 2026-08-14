@@ -1,493 +1,496 @@
-# Research Roadmap vNEXT — Evidence-Complete Energy and Safe Online Memory
+# Research Roadmap vNEXT — Causal Factors and Safe Persistent Learning
 
-**Milestone:** 2026.08.553  
+**Milestone:** 2026.08.554  
 **Planning date:** 2026-08-14  
 **Status:** Proposed  
-**Predecessor:** 2026.08.552  
+**Predecessor:** 2026.08.553  
 **Execution queue:** `research-roadmap-next.yaml`  
 **Task count:** 12 experiments in four phases
 
 ## 1. Decision
 
-Milestone 2026.08.553 will repair the evidence boundary that blocked V552. It
-will then test two new research ideas on clean data:
+Milestone 2026.08.554 will move from factor correlation to factor causality. It
+will test whether exact-admitted factors change future exact outcomes under
+active, ablated, tombstoned, and placebo controls. It will then use only the
+surviving factor policy in a fresh continuous self-learning stream.
 
-1. verification cost under compositional constraint saturation; and
-2. capacity-limited continuous memory under controlled interference.
+The milestone also repairs two V553 evidence failures. It reruns the
+verification-cost measurement with real monotonic work and enough independent
+rows. It recovers the zero-byte ARC reachability artifact with bounded CPU
+shards and checkpoints.
 
-The milestone keeps exact validators as the only release authority. Learned
-energy, model output, memory, and routing may propose, rank, abstain, or direct
-work. They may not accept an invalid result.
-
-One ARC task preserves the standing generalization floor. It tests a generic
-state-key reachability repair on the canonical live path. It makes no game or
-level solve claim and does not modify the solve registry.
+Exact validators remain the only release authority. Models, factors, energy
+signals, memories, and routers may propose, rank, abstain, or direct work. They
+may not override an exact rejection.
 
 No board experiment is scheduled. The local FPGA and TSU state did not change.
-V553 uses dual RTX 3090 CUDA execution for authenticated GGUF work and records
-task-linked resource receipts that can support later hardware comparisons.
+V554 uses the two RTX 3090 GPUs for authenticated GGUF generation and uses CPU
+execution for exact replay, cost measurement, audits, and ARC reachability.
 
-## 2. What V552 proved
+## 2. What V553 proved
 
-V552 produced real progress, but its strongest public claims did not survive
-the full evidence chain.
+V553 established a narrow factor result and repaired the recurring gate
+contract. It did not establish the broader cost, self-learning, or ARC claims.
 
-| Evidence | What is proved | Boundary carried into V553 |
+| Evidence | What V553 proved | Boundary carried into V554 |
 |---|---|---|
-| Exp6412 | The V551 powered claims were not supported by live execution receipts. The additive correction trail works. | Historical artifacts stay immutable. New claims must start from fresh execution. |
-| Exp6413 | All three mandated GGUF families produced authenticated local CUDA receipts. | The reusable process, model-byte, tokenizer, raw-output, and GPU receipt layer survives. |
-| Exp6414 | A fresh three-family factor corpus was created and exact-checker bound. | The artifact is adversarial-flagged because `duration_s=48.151455055` is below the declared 60-second live-model floor. It has no claim-ready standing. |
-| Exp6415 | Exact Boolean WCSP CCG kernelization reduced work while preserving optima on its frozen cases. | This is a clean deterministic control. It does not prove learned energy value. |
-| Exp6416 | Exact-triggered selective refinement matched always-refine accuracy with less work and no false accepts. | Routing is useful when exact triggers retain authority. |
-| Exp6417 | The write-time admission replay reported positive future yield and no retention harm. | The artifact is adversarial-flagged because its measured duration is implausibly small. The public factor claim remains false. |
-| Exp6418–6419 | Dual-path memory and held restart runs recorded valid exact bindings, retention, rollback, and restart structures. | Their reported utility deltas do not recompute from event rows. Development and held recomputed deltas are both zero. |
-| Exp6420 | The independent audit found eight metric mismatches, 24 reused development outputs, cache resurrection, and four underpowered cells. | Prospective CSL eligibility is false. A fresh write-once stream is required. |
-| Exp6421–6422 | A default-off ARC route changed legal executed policy and passed a held-family safety audit. | This is internal policy influence only. No solve, registry, or public ARC claim exists. |
-| Exp6423 | The capstone preserved the authentic receipt layer, blocked flagged factor claims, nullified the CSL public claim, and preserved the narrow ARC policy result. | V553 must not pool positive upstream summaries across flagged or non-recomputable evidence. |
+| Exp6424–6426 | The queue preflight, recurring-gate diagnostics, and task-scoped runtime receipt are usable. A local GGUF task can bind process, model, raw bytes, timing, and GPU evidence. | V554 extends this receipt across generation, factor compilation, checker transport, and final verdict. |
+| Exp6427 | A clean 144-row factor corpus covers three model families and three factor families. Of 144 rows, 64 are exactly evaluable; joint exact success is 15/64. | The corpus proves availability and exact binding. It does not prove that a stored factor caused a future outcome. |
+| Exp6428 | Exact write-time admission improves future exact yield by 0.08333 with zero contamination and no retention harm. | This is the narrow eligible factor result. A write-everything arm has the same yield but 0.3542 contamination, so exact admission remains required. |
+| Exp6429 | Selective verification matched always-refine accuracy and used fewer checker calls in the reported rows. | The artifact is claim-ineligible. `DURATION_TOO_SHORT` and underpowered cost cells remain open. |
+| Exp6430 | A development write-once memory frontier reports future exact yield rising from 0 at capacity 0 to 0.75 at capacities 16 and 32. | This is development evidence. It does not repair the held-stream authenticity failure. |
+| Exp6431 | Authority-aware memory reports 0.60 future yield against 0.12 for the baseline. | All 400 cells are underpowered. The result is not enough for a safety promotion. |
+| Exp6432 | Held restart rows report a large positive effect. | `DURATION_TOO_SHORT` makes the result ineligible. Fresh task-scoped generation and powered timing are required. |
+| Exp6433 | Independent row recomputation found no aggregate mismatch. | Prospective CSL remains `complete_null` because the held prerequisite is flagged. |
+| Exp6434 | No scientific evidence was produced. | The deliverable is zero bytes after a hard wall-clock failure. Reachability remains unknown. |
+| Exp6435 | The narrow factor branch is eligible. Verification cost, prospective CSL, ARC reachability, public ARC, and hardware claims remain blocked. | V554 must preserve these separate determinations. |
 
 ## 3. The three largest PRD gaps
 
-### Gap 1 — Scientific provenance does not yet support a public energy claim
+### Gap 1 — Stored factors have utility but no causal influence proof
 
-The PRD requires trustworthy verification and reproducible local execution.
-V552 has authentic model receipts, exact CCG controls, and safe selective
-refinement. It does not have one clean chain from fresh model bytes to an
-untouched future outcome. Exp6414 and Exp6417 remain flagged. Comparative
-artifacts also lack a common `per_unit_rows` surface.
+FR-12 requires deterministic constraint verification. V553 shows that exact
+admission prevents contamination and can improve future yield. It does not
+show that the factor itself changed behavior. A factor may be dead prompt text,
+or an execution wrapper may introduce the observed difference. Verification
+cost also lacks an eligible powered measurement.
 
-V553 response:
+V554 response:
 
-- add a reusable task-scoped runtime receipt contract;
-- create a new constraint-count-stratified factor corpus;
-- recompute every aggregate from immutable event rows; and
-- rerun the write-time admission question with honest timing and current
-  adversarial checks.
+- bind immutable bytes at every generation-to-verdict boundary;
+- rerun verification cost with real monotonic work and at least five distinct
+  source rows per cost cell;
+- compare active, ablated, tombstoned, and length-matched placebo factors; and
+- replicate causal influence under binding shifts and constraint revocation.
 
-### Gap 2 — FR11 continuous self-learning has structure but no verified utility
+### Gap 2 — FR-11 continuous self-learning lacks fresh held safety evidence
 
-The PRD calls for online improvement with immutable validation, rollback, and
-bounded forgetting. V552 recorded the right transaction shapes, but the audit
-found zero recomputed utility delta, raw-output reuse, cache resurrection, and
-underpowered cells. This is not a verified self-learning result.
+The PRD requires autonomous improvement with immutable validation, rollback,
+and bounded forgetting. V553 has a development memory frontier. Its held run
+is duration-flagged, and its interference cells are underpowered. It also does
+not test whether a successful but unsafe exposure becomes persistent policy.
 
-V553 response:
+V554 response:
 
-- generate a fresh write-once event stream;
-- measure a memory capacity-versus-utility frontier;
-- attack authority conflicts, supersession, and retrieval collisions;
-- replicate on a sealed held shift after real process restarts; and
-- run an independent audit that derives every headline from rows.
+- compare full-event replay with a target-bound factor contract on a fresh
+  chronological stream;
+- measure authoring, retrieval, execution, quarantine, rollback, and
+  fresh-session harm after malicious-but-successful exposures;
+- replicate the frozen policy on new held generations after process restarts;
+  and
+- recompute every CSL headline from immutable per-unit rows.
 
-### Gap 3 — Live autonomy and deployment cost remain below the PRD vision
+This phase is the milestone's required continuous self-learning work.
 
-The live ARC route can affect policy, but it has not improved a public-score-
-relevant outcome. The adapter-bypassed public baseline clears at least one
-level in 8 of 25 games. A generic state key collapses `sc25` after 24 actions,
-so the current live search cannot even expose that game to later policy work.
-Hardware acceleration also remains proof-of-concept only.
+### Gap 3 — Live ARC policy cannot prove generic reachability
 
-V553 response:
+The live ARC route can change legal policy, but the latest state-key
+reachability experiment produced no artifact. The PRD vision needs a general
+agent that can explore hidden tasks through the canonical live path. It does
+not need another offline solver or per-game adapter.
 
-- diagnose and repair the generic state-key reachability invariant;
-- test it on the full adapter-bypassed public roster with per-game regression
-  gates; and
-- record task-linked verification cost and GPU use for all powered work.
+V554 response:
 
-The ARC task does not claim or register a solve. The hardware part is evidence
-infrastructure only. It makes no speed, power, or board-availability claim.
+- retain the canonical adapter-bypassed live path;
+- detect observation-history collisions generically;
+- compare the baseline key with the smallest collision-certified suffix;
+- run bounded per-roster CPU shards with atomic checkpoints; and
+- make no game, level, registry, or public-score solve claim.
+
+Hardware acceleration remains a fourth gap. It is not one of this milestone's
+three active questions because no authenticated device state changed.
 
 ## 4. Research refresh and experiment hooks
 
-The dated source ledger is in `research-references.md` under the V553 planner
-marker. Four findings change the experiment design.
+The dated source ledger is in `research-references.md` under the V554 planner
+marker.
 
-| Source | Carnot use in V553 | Boundary |
+| Source | Carnot use in V554 | Boundary |
 |---|---|---|
-| Constraint Saturation Evaluation, arXiv:2608.12426 | Stratify factor rows by constraint count and interaction class. Report per-constraint and joint exact success. | No LLM judge. No claim outside the frozen families. |
-| Verification Cost, arXiv:2608.08709 | Measure exact correctness and cost-to-verdict under fixed budgets as separate outcomes. | Cost does not weaken the exact release veto. |
-| Formal Agent Memory, arXiv:2608.11654 | Measure coverage, precision, retention, and query value across fixed memory capacities. | Memory is not an oracle. |
-| Controlled Memory Interference, arXiv:2608.07622 | Add authority conflict, supersession, temporal-validity, and retrieval-collision attacks. | A failed attack blocks promotion. |
+| Dead text or binding clause?, arXiv:2608.12599 | Compile active factor ledgers, preserve tombstones, and use sequential clause ablation to measure incremental exact effect. | Exact checkers remain authoritative. Prompt influence is not correctness. |
+| QuoteBench, arXiv:2608.13547 | Replay immutable bytes across raw generation, factor compilation, checker transport, and final exact validation. | Attribute model and wrapper failures separately. |
+| Practice Makes Unsafe, arXiv:2608.12851 | Add malicious-success exposure and lifecycle metrics for authoring, retrieval, execution, quarantine, rollback, and later harm. | A local task success cannot override a protected exact invariant. |
+| Beyond Retrieval, arXiv:2608.12847 | Compare full trajectories with query-conditioned factor contracts that carry procedure, bindings, applicability, and verification requirements. | Hold retrieval candidates, models, budgets, and target rows fixed. |
+| Agent Behavioral Contracts II, arXiv:2608.12895 | Measure joint model-factor-checker co-failure and an assumption-free finite-sample certificate. | Do not multiply marginal reliabilities or treat the certificate as release authority. |
+| Constraint activation bottlenecks, arXiv:2608.12321 | Distinguish factor availability from factor use with black-box active-versus-ablated exact outcomes. | Do not reopen the retired hidden-state scorer lane. |
 
-Recent vector-spin hardware, trie decoding, and neural drift bounds remain
-controls. Carnot has no local vector-spin device. The generated-answer grammar
-lane remains retired. Neural drift claims wait until row-level memory effects
-are real.
-
-Semantic Scholar still exposes 33 EBT citations and eight ARM-EBM citations.
-OpenReview and Hugging Face Papers add no executable exact-authority baseline.
-GitHub Trending adds no required runtime dependency. Extropic Z1 remains a
-future access target. Kona still has no public weights or documented local API.
+OpenReview and Hugging Face results do not provide a stronger executable local
+authority than Carnot's exact checkers. Semantic Scholar was rate-limited
+during this refresh; the V553 EBT and ARM-EBM counts remain the last
+authenticated snapshot. Current GitHub results add no required dependency.
+Extropic still provides no authenticated Carnot-local TSU route. Kona still
+provides no public weights or reproducible local API. Recent KAN, Ising, and
+FPGA work does not close the selected evidence gaps with available hardware.
 
 ## 5. Target architecture
 
 ```text
-                   task-scoped resource receipt contract
-                   phase clocks | PID | GPU | runner | hashes
-                                      |
-                                      v
-  mandated local GGUFs ---> immutable per-unit event rows
-       Qwen MoE             raw bytes | prompt | model | source | cost
-       Gemma dense                       |
-       Gemma MoE                         v
-                              deterministic exact checks
-                                      |
-                    +-----------------+------------------+
-                    |                                    |
-                    v                                    v
-        constraint saturation + cost          exact write-time admission
-          never / always / selective           commit / reject / quarantine
-                    |                                    |
-                    +-----------------+------------------+
-                                      |
-                                      v
-                         capacity-limited online memory
-                    proposal coverage | selection utility
-                                      |
-                    +-----------------+------------------+
-                    |                                    |
-                    v                                    v
-          authority-interference attacks       held shift + process restart
-                    |                                    |
-                    +-----------------+------------------+
-                                      |
-                                      v
-                         independent row recomputation
-                                      |
-                           exact release veto remains final
+ mandated local GGUFs
+ Qwen MoE | Gemma dense | Gemma MoE
+                |
+                v
+       immutable raw generation
+                |
+                v
+      exact-admitted factor ledger
+  active | ablated | tombstoned | placebo
+                |
+                v
+       compiled target-bound support
+                |
+                v
+       exact checker transport input
+                |
+                v
+         exact checker output
+                |
+                v
+          final release veto
+                |
+       generation-to-verdict receipt
+   hashes | PIDs | model | timing | replay
+                |
+       +--------+---------+
+       |                  |
+       v                  v
+ causal factor A/B     verification cost A/B
+       |                  |
+       +--------+---------+
+                |
+                v
+   query-conditioned persistent memory
+ full event | target-bound factor | frozen
+                |
+       +--------+---------+
+       |                  |
+       v                  v
+ malicious success    held process restart
+ lifecycle controls   fresh model generations
+       |                  |
+       +--------+---------+
+                |
+                v
+      independent row recomputation
+                |
+                v
+      exact release veto remains final
 
-  canonical live ARC path
-        observation ---> collision certificate ---> generic state-key suffix
-             |                                         |
-             +---------- full-roster matched A/B <-----+
-                  default off | no solve credit
+ canonical live ARC observation
+                |
+                v
+ generic collision certificate
+                |
+                v
+ bounded state-key suffix A/B
+ CPU shards | checkpoints | no solve credit
 ```
 
-Three rules hold across the diagram:
+Five rules hold across the diagram:
 
 1. Every comparative claim has immutable `per_unit_rows`.
-2. Every aggregate is a deterministic function of those rows.
-3. A model, score, router, or memory cannot override an exact rejection.
+2. Every aggregate is a deterministic reduction of those rows.
+3. Raw bytes are hashed at each command-path boundary.
+4. Joint reliability comes from joint outcomes, not multiplied marginals.
+5. A model, score, factor, memory, or router cannot override exact rejection.
 
 ## 6. Phase design
 
-### Phase 0 — Evidence and execution controls
+### Phase 0 — Handoff and path attribution
 
-#### Exp6424 — V552 terminal handoff and V553 queue preflight
+#### Exp6436 — V553 terminal handoff and V554 queue preflight
 
-Question: Is the V553 queue complete, schema-valid, non-retired, and anchored to
-the actual V552 terminal evidence?
+Question: Is the V554 queue anchored to the real V553 terminal evidence and
+free of schema, gate, exclusion, model, and prior-failure defects?
 
-The task records all V552 artifacts, conductor outcomes, current adversarial
-findings, and scientific eligibility. It validates all 12 V553 tasks before
-research starts. It also checks prompts, gates, model policy, prior failures,
-deliverables, and protected files.
-
-Deliverable:
-`results/experiment_6424_v553_terminal_handoff_and_queue_preflight.json`
-
-#### Exp6425 — Recurring gate-block root cause and diagnostic contract
-
-Question: Why did `blocked_gate_check_failed` stop 31 tasks across recent
-milestones without identifying the failed gate?
-
-This is the mandatory-next issue from `ops/known-issues.md`. The task traces the
-31 cases to their producer fields and structured gates. It separates correct
-scientific refusals from missing data, wrong field names, wrong types, retired
-dependencies, and stale artifact reads. It may repair shared producer or
-artifact diagnostics outside the conductor. It must not rerun the blocked
-experiments.
+The task records the clean factor boundary, flagged cost and held results,
+underpowered interference result, zero-byte ARC artifact, and capstone
+determinations. It validates every V554 task and its exact gate field before
+research starts.
 
 Deliverable:
-`results/experiment_6425_recurring_gate_block_root_cause.json`
+`results/experiment_6436_v554_terminal_handoff_and_queue_preflight.json`
 
-#### Exp6426 — Task-scoped runtime and resource receipt contract
+#### Exp6437 — Generation-to-verdict receipt and replay contract
 
-Question: Can each powered experiment prove which task used which model,
-runner, process, GPU, and wall-clock interval?
+Question: Can Carnot locate a failure at the raw-generation, factor-
+compilation, checker-transport, checker-output, or final-verdict boundary?
 
-The contract captures monotonic phase clocks, subprocess IDs, command and
-config hashes, model-byte hashes, raw-output hashes, PID-linked GPU samples,
-runner selection, concurrency, exit status, and attribution failures. It must
-work for successful, blocked, interrupted, and CPU-only tasks. It does not
-modify the conductor.
+The task extends the V553 runtime receipt without changing the conductor. It
+uses identity, injected-wrapper, and restored-wrapper replays over immutable
+bytes. Exact final-state validation must expose which boundary changed.
 
 Deliverable:
-`results/experiment_6426_task_scoped_runtime_receipt_contract.json`
+`results/experiment_6437_generation_to_verdict_receipt_replay_contract.json`
 
-### Phase 1 — Clean factor evidence and verification cost
+### Phase 1 — Cost and causal factor influence
 
-#### Exp6427 — Fresh constraint-saturation factor corpus
+#### Exp6438 — Powered verification-cost repair
 
-Question: Can the three mandated local model families produce a clean,
-row-recomputable factor corpus with no current adversarial flag?
+Question: Can selective exact verification preserve always-refine accuracy
+while reducing checker work in an eligible, powered measurement?
 
-This task is a changed rerun of Exp6414. It uses Exp6426 receipts, new prompts,
-new raw bytes, and monotonic task timing. The corpus is balanced across three
-factor families, three model families, constraint counts, and interaction
-classes. Exact checkers score both each constraint and the joint result.
+This is a changed rerun of Exp6429. It uses real monotonic checker work, at
+least five distinct source rows in every reported cost cell, and the Exp6437
+path receipt. It compares never-refine, always-refine, and exact-triggered
+selective arms. `duration_s` must measure the real task and pass current
+adversarial checks.
 
-Promotion gates:
-
-- all three mandated models execute through `cached_sota_pair()`;
-- every row has a unique raw-output hash and task receipt;
-- the corpus and future partition are sealed before analysis;
-- all headline metrics recompute from `per_unit_rows`; and
-- current adversarial flag count is zero.
-
-If the same duration-flagged verdict recurs, retire this exact rerun scope.
+Promotion requires accuracy parity with always-refine, no false-accept
+increase, fewer checker calls or lower measured exact-verification time, full
+row recomputation, and zero current critical flag.
 
 Deliverable:
-`results/experiment_6427_fresh_constraint_saturation_factor_corpus.json`
+`results/experiment_6438_powered_verification_cost_repair_ab.json`
 
-#### Exp6428 — Clean exact write-time factor admission A/B
+#### Exp6439 — Development clause-influence A/B
 
-Question: Does exact write-time admission improve untouched future exact yield
-over a frozen arm without increasing contamination or reducing retention?
+Question: Does an exact-admitted factor change a future exact outcome, or is it
+dead support text?
 
-This is a changed rerun of Exp6417. It consumes only the clean Exp6427 rows and
-records real nonzero execution time. Frozen, write-everything, and exact-
-admission arms receive matched evidence and work. The future partition is
-evaluated once.
+Fresh matched generations from all three mandated model families compare an
+active factor, sequential clause ablation, a tombstoned factor, no factor, and
+a length-matched placebo. Every clause has an executable checker. The same
+task, model, decoding budget, and final checker are held fixed.
 
-Promotion gates:
-
-- `delta_future_exact_yield > 0`;
-- contamination does not increase over frozen and stays below write-everything;
-- protected retention does not regress;
-- every aggregate matches row recomputation; and
-- the current adversarial flag count is zero.
-
-If the same flagged positive verdict recurs, retire this exact rerun scope.
+Promotion requires a positive row-derived active-over-ablated exact effect,
+no false-accept increase, a valid placebo control, full command-path receipts,
+and zero current critical flag.
 
 Deliverable:
-`results/experiment_6428_clean_write_time_factor_admission_ab.json`
+`results/experiment_6439_factor_clause_influence_ab.json`
 
-#### Exp6429 — Constraint saturation and verification-cost A/B
+#### Exp6440 — Held revocation and binding-shift replication
 
-Question: Under a fixed verification budget, where does exact joint success
-collapse, and can exact-triggered selective verification reduce cost without
-adding false accepts?
+Question: Does the active factor effect survive new bindings, and do
+tombstones stop stale or revoked factors from causing behavioral relapse?
 
-The task compares never-refine, always-refine, and exact-triggered selective
-arms on the sealed Exp6427 rows. It reports results by constraint count,
-interaction class, model family, and verifier budget. It separates correctness,
-abstention, time-to-verdict, checker calls, and verification-cost errors.
-
-This task does not require a positive Exp6428 result. It asks a distinct
-measurement question about the clean corpus.
+The task seals held units before generation. It compares compiled active
+ledgers, raw factor text, tombstoned ledgers, and no-memory controls across all
+three mandated model families. Each reported cell needs at least 12 distinct
+held units. This powers the authority-interference question that Exp6431 left
+underpowered.
 
 Deliverable:
-`results/experiment_6429_constraint_saturation_verification_cost_ab.json`
+`results/experiment_6440_held_factor_revocation_binding_shift_ab.json`
 
-### Phase 2 — Continuous self-learning with independent recomputation
+### Phase 2 — Continuous self-learning and lifecycle safety
 
-#### Exp6430 — Prospective write-once memory capacity frontier
+#### Exp6441 — Prospective query-conditioned factor reuse
 
-Question: Does exact-governed continuous memory improve future exact outcomes,
-and how does value change with memory capacity?
+Question: Does exact-governed, target-bound factor memory improve later exact
+outcomes over both frozen memory and full-event replay?
 
-This is the milestone's required continuous self-learning task. It is gated on
-a clean positive Exp6428 result. It generates a new chronological stream with
-the three mandated GGUF families. Every event gets a fresh raw output. The task
-proves the manifest path did not exist before generation. It compares frozen
-memory with fixed capacities and reports coverage, precision, exact future
-yield, retention, forgetting, growth, restart recovery, and cost.
+This is the main continuous self-learning experiment. It creates a new
+chronological stream with the three mandated model families. It compares
+frozen memory, full-event replay, and query-conditioned factor contracts with
+procedure, recovered bindings, applicability, and verification requirements.
+Every event has fresh raw bytes. The future partition is sealed before any
+memory write.
 
-The task addresses Exp6420 by construction:
-
-- no raw output may serve more than one event;
-- all rows are written before aggregate calculation;
-- no cached held manifest may be resurrected;
-- effects are reported with counts and uncertainty; and
-- exact validators remain the release authority.
+Promotion requires positive future exact yield over frozen memory, no increase
+in contamination or protected-case failure, bounded memory growth, full row
+recomputation, and zero critical path-attribution failure.
 
 Deliverable:
-`results/experiment_6430_prospective_write_once_memory_capacity_frontier.json`
+`results/experiment_6441_prospective_query_conditioned_factor_reuse.json`
 
-#### Exp6431 — Controlled memory-interference A/B
+#### Exp6442 — Malicious-success skill-misevolution safety A/B
 
-Question: Can the frozen Exp6430 memory policy resist authority conflict,
-supersession, temporal invalidity, retrieval collision, and poisoning?
+Question: Can a locally successful but globally unsafe exposure persist into
+later factor state, and do exact quarantine and rollback stop it?
 
-The task applies a pre-registered interference matrix to the sealed stream. It
-compares capacity-matched memory with and without authority-aware retrieval and
-write controls. It measures target exposure, downstream use, plasticity,
-protected stability, contamination, rollback, and exact future yield.
+The task compares frozen memory, ungoverned factor evolution, and exact-
+governed quarantine plus rollback. It measures authoring, retrieval,
+execution, quarantine, rollback, benign utility, and fresh-session harm. One
+mandatory SOTA GGUF operating point is sufficient for this safety study.
 
-An attack that reaches release authority or survives rollback blocks promotion.
-
-Deliverable:
-`results/experiment_6431_controlled_memory_interference_ab.json`
-
-#### Exp6432 — Held-shift process-restart replication
-
-Question: Does the frozen memory policy retain any positive effect on a new
-distribution after real process restarts?
-
-The task uses new prompts and new raw outputs. It does not replay development
-bytes. It seals the held manifest before model execution, restarts the process
-between sessions, and verifies memory heads from disk. It reports row-derived
-effects and negative transfer by model and family.
+Any unsafe factor that reaches release authority, survives quarantine, or
+reappears after rollback blocks promotion.
 
 Deliverable:
-`results/experiment_6432_held_shift_process_restart_csl_replication.json`
+`results/experiment_6442_skill_misevolution_quarantine_rollback_ab.json`
 
-#### Exp6433 — Independent CSL row-recomputation and safety audit
+#### Exp6443 — Fresh held-shift process-restart CSL replication
 
-Question: Do Exp6430 through Exp6432 support a prospective CSL claim when an
-independent implementation recomputes every metric and replays every attack?
+Question: Does the frozen exact-governed policy retain positive value on new
+held generations after real process restarts?
 
-This audit is deliberately ungated. Missing, skipped, null, flagged, or
-underpowered upstream results must remain visible. The audit cannot import the
-upstream aggregate functions. It reads immutable rows and derives counts,
-rates, deltas, uncertainty, retention, forgetting, contamination, and cost.
-
-If it repeats Exp6420's null verdict, the exact repeated CSL claim scope is
-retired. Transaction mechanics may remain valid as non-utility infrastructure.
+This is a changed rerun of Exp6432. It uses all three mandated model families,
+new prompts, new raw outputs, task-scoped path receipts, sealed held manifests,
+and process restarts between sessions. Development bytes may not appear in any
+held row.
 
 Deliverable:
-`results/experiment_6433_csl_row_recomputation_safety_audit.json`
+`results/experiment_6443_fresh_held_restart_csl_replication.json`
 
-### Phase 3 — Live-path reachability and adversarial close
+#### Exp6444 — Independent CSL lifecycle recomputation audit
 
-#### Exp6434 — ARC state-key reachability invariant A/B
+Question: Do Exp6441 through Exp6443 support a prospective self-learning claim
+when an independent implementation recomputes every metric and replays every
+safety attack?
 
-Question: Does a generic collision-certified state key prevent premature
-frontier collapse without causing per-game regressions?
-
-The task starts from the current 25-game adapter-bypassed public baseline. It
-detects observation-history collisions generically and adds the smallest state
-suffix only after a collision certificate. It runs matched baseline and arm
-cells across the full roster and multiple seeds.
-
-The success surface is search reachability, regression safety, and action cost.
-The task makes no game or level solve claim. It does not update
-`ops/arc_solve_registry.yaml`. Public games are a development proxy, not hidden
-game evidence.
+The audit is ungated. Missing, skipped, blocked, null, flagged, or underpowered
+upstream evidence must remain visible. It cannot import upstream aggregate
+functions. A repeated `complete_null` CSL determination retires this exact
+claim scope.
 
 Deliverable:
-`results/experiment_6434_arc_state_key_reachability_ab.json`
+`results/experiment_6444_csl_lifecycle_recomputation_audit.json`
 
-#### Exp6435 — V553 adversarial capstone and reconciliation
+### Phase 3 — ARC recovery and adversarial close
 
-Question: Which V553 claims remain eligible after current adversarial checks,
-row recomputation, dependency review, and determination preservation?
+#### Exp6445 — Sharded ARC state-key reachability recovery
 
-The capstone audits all 12 tasks. It cannot average away missing, skipped,
-flagged, null, or underpowered cells. It records separate eligibility for:
+Question: Does a generic collision-certified state suffix prevent premature
+frontier collapse without causing full-roster regressions?
 
-- the factor and verification-cost result;
-- prospective continuous self-learning;
-- the narrow ARC reachability result; and
-- hardware or deployment claims.
+This is a changed recovery of Exp6434. It runs bounded per-roster CPU shards,
+writes atomic checkpoints, and resumes without repeating completed cells. It
+uses only the canonical adapter-bypassed live path. The outcome is reachability,
+collision reduction, legal-action coverage, and action cost.
 
-It reconciles OpenSpec, traceability, status, changelog, known issues, the
-exclusion manifest, and the claim ledger. Hardware eligibility remains false
-unless an authenticated hardware artifact exists, which V553 does not plan.
+The task makes no game or level solve claim. It may not read game source, use
+offline ground-truth BFS, add a per-game adapter, or update the solve registry.
 
 Deliverable:
-`results/experiment_6435_v553_adversarial_capstone.json`
+`results/experiment_6445_arc_state_key_reachability_sharded_ab.json`
+
+#### Exp6446 — Joint pathway dependence audit
+
+Question: Do shared model, factor, and checker components co-fail strongly
+enough that marginal reliability overstates pipeline reliability?
+
+The audit reads immutable joint rows from Exp6438 through Exp6445. It reports
+co-failure moments for same-model and heterogeneous cells and computes an
+assumption-free finite-sample interval where the data support it. It does not
+fit or multiply an independence model and does not change release authority.
+
+Deliverable:
+`results/experiment_6446_joint_pathway_dependence_audit.json`
+
+#### Exp6447 — V554 adversarial capstone and reconciliation
+
+Question: Which V554 claims remain eligible after row recomputation,
+dependency review, current adversarial checks, and determination preservation?
+
+The capstone audits all 12 tasks. It preserves separate eligibility for
+verification cost, causal factor influence, prospective continuous self-
+learning, narrow ARC reachability, public ARC, and hardware. It cannot average
+away missing, flagged, null, or underpowered evidence.
+
+Deliverable:
+`results/experiment_6447_v554_adversarial_capstone.json`
 
 ## 7. Dependency graph
 
 ```text
-Exp6424  terminal handoff and queue preflight
+Exp6436  terminal handoff and queue preflight
    |
-   +------------------------+------------------------+
-   |                        |                        |
-   v                        v                        v
-Exp6425                  Exp6426                 later capstone
-gate-block audit         runtime receipts
-                            |
-                            v
-                         Exp6427
-                      clean factor corpus
-                       /             \
-                      v               v
-                   Exp6428          Exp6429
-                clean admission   saturation + cost
-                      |
-                      v
-                   Exp6430
-               memory capacity frontier
-                    /   \
-                   v     v
-                Exp6431  |
-              interference|
-                   \      |
-                    v     v
-                     Exp6432
-                 held restart replication
-                         |
-                         v
-                     Exp6433
-                  independent audit
+   v
+Exp6437  generation-to-verdict receipt
+   | \
+   |  +-----------------------> Exp6438 verification-cost repair
+   v
+Exp6439  development clause influence
+   |
+   v
+Exp6440  held revocation and binding shift
+   |
+   v
+Exp6441  prospective query-conditioned factor reuse
+   | \
+   |  +-----------------------> Exp6442 malicious-success safety
+   |                                  |
+   +----------------------------------+
+   |                                  |
+   v                                  v
+Exp6443  held restart replication <---+
+   |
+   v
+Exp6444  independent CSL audit
 
-Exp6434  ARC reachability A/B  ----------------------+
-Exp6425  gate-block result     ----------------------+--> Exp6435
-Exp6429  verification-cost result -------------------+
-Exp6433  CSL audit ----------------------------------+
+Exp6445  sharded ARC reachability recovery
+
+Exp6438 --+
+Exp6439 --+
+Exp6440 --+
+Exp6441 --+--> Exp6446 joint dependence audit
+Exp6442 --+
+Exp6443 --+
+Exp6445 --+
+
+Exp6436 through Exp6446 ----------------> Exp6447 capstone
 ```
 
-Structured conductor gates exist only where a failed prerequisite makes the
-downstream experiment meaningless. Exp6433 and Exp6435 remain ungated so they
+Structured gates exist only where a failed prerequisite makes downstream work
+scientifically meaningless. Exp6444, Exp6446, and Exp6447 stay ungated so they
 can report missing or blocked evidence.
 
 ## 8. Models and inference policy
 
-Experiments that execute an LLM are Exp6427, Exp6430, and Exp6432. Their
-`MODEL_SPECS` must include:
+Experiments that execute an LLM are Exp6439 through Exp6443. Each has an
+explicit `MODEL_SPECS` contract and uses `cached_sota_pair()` with embedded
+GGUF tokenizers. None may call `AutoTokenizer`.
+
+Exp6439, Exp6440, Exp6441, and Exp6443 use all three headline families:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF`;
 - `unsloth/gemma-4-31B-it-GGUF`; and
 - `unsloth/gemma-4-26B-A4B-it-GGUF`.
 
-Each task must use `cached_sota_pair()` and the embedded GGUF tokenizer. It
-must not call `AutoTokenizer`. It must bind model bytes, prompt, runner,
-process, raw output, GPU samples, and exit status to each event row.
+Exp6442 may use only `unsloth/gemma-4-26B-A4B-it-GGUF` as its declared
+headline operating point to control cost. It still needs authenticated local
+CUDA execution and complete receipts.
 
 `Qwen3.5-0.8B` and `gemma-4-E4B-it` may appear only in CPU smoke tests. They
 cannot support a headline cell.
+
+All V554 tasks use the repository's Codex-default route:
+`agent_type: codex` and `model: gpt-5.5`.
 
 ## 9. Hardware requirements
 
 | Resource | Tasks | Requirement and boundary |
 |---|---|---|
-| Dual RTX 3090, 48 GB total VRAM | Exp6427, Exp6430, Exp6432 | Run mandated GGUF families with CUDA offload. Record task-linked PIDs, GPU samples, concurrency, runner selection, and model-byte hashes. A CPU fallback blocks headline eligibility. |
-| CPU and system RAM | All tasks | Exact checkers, CCG, row recomputation, ARC search, and audit work. Record CPU-only substrate honestly. |
-| Local persistent disk | Exp6427–Exp6433 | Store immutable raw outputs, per-unit JSONL rows, manifests, memory heads, restart receipts, and hashes. Pre-existing held paths block freshness. |
-| ARC live environment | Exp6434 | Use the canonical adapter-bypassed public benchmark and exact game interface. No source reads, exhaustive ground-truth search, or per-game adapter. |
-| KV260, GateMate, PolarFire | None | No state change justifies another probe. Existing POC boundaries remain. |
-| Extropic XTR-0 or Z1 | None | No authenticated local route exists. No execution, power, latency, or availability claim. |
+| Dual RTX 3090, 48 GB total VRAM | Exp6439–Exp6443 | Run mandatory GGUF generations with CUDA offload. Bind PIDs, GPU samples, runner, model bytes, raw output, and phase timing to each task. CPU fallback blocks headline eligibility. |
+| CPU and system RAM | Exp6436–Exp6438, Exp6444–Exp6447 | Run exact replay, checker-cost controls, row recomputation, dependence certificates, ARC search, and audits. Record the substrate honestly. |
+| Persistent local disk | Exp6437–Exp6446 | Store immutable raw bytes, path-stage hashes, per-unit JSONL, sealed manifests, memory heads, restart receipts, ARC checkpoints, and source hashes. |
+| ARC live environment | Exp6445 | Use the canonical adapter-bypassed public roster and live interface. No source reads, exhaustive ground-truth search, or per-game adapter. |
+| KV260, GateMate, PolarFire | None | No state change justifies a probe. Existing proof-of-concept limits remain. |
+| Extropic XTR-0 or Z1 | None | No authenticated local route exists. No execution, power, latency, speed, or availability claim. |
 
-The milestone does not claim hardware acceleration. Exp6426 creates the cost
-and attribution evidence needed for a later matched hardware comparison.
+The milestone does not claim hardware acceleration.
 
 ## 10. Measurement contract
 
 Every comparative artifact must include `per_unit_rows`. Each row must carry a
-stable unit ID, arm, partition, model or substrate, source hashes, outcome,
-work, timing, and exclusion reason. Aggregate fields must identify their row
-filter and deterministic reduction.
+stable unit ID, arm, partition, model or substrate, source hashes, relevant
+path-stage hashes, exact outcome, work, timing, and exclusion reason. Aggregate
+fields must name their row filter and deterministic reduction.
 
 Every task must include:
 
-- `blocked_reason`, even when null;
-- `inference_substrate`;
-- `field_principles` for every required field and gate;
+- `blocked_reason` and `gate_check_summary`;
+- `preconditions_checked` and `inference_substrate`;
+- `field_principles` for every required field and acceptance gate;
 - `field_provenance` classified as measured, derived, constant, or upstream;
 - `random_seed`, `duration_s`, `tests_run`, and `reproducibility_checksum`;
-- current adversarial and determination-preservation results when a scientific
-  claim is made.
+- current adversarial findings for each scientific claim; and
+- one terminal `honest_verdict`.
 
-The main claim ladder is:
+If `honest_verdict` starts with `blocked_`, `gate_check_summary` must name the
+failed check, field, expected condition, observed value, and evidence path.
+
+The claim ladder is:
 
 ```text
 authenticated execution
-  -> immutable per-unit evidence
-  -> exact row recomputation
-  -> positive held effect with uncertainty
-  -> adversarial attacks fail closed
+  -> immutable path-stage bytes
+  -> exact per-unit outcomes
+  -> causal active-versus-control effect
+  -> positive fresh held effect
+  -> lifecycle attacks fail closed
+  -> independent recomputation
   -> narrow claim eligibility
 ```
 
@@ -496,50 +499,57 @@ rung engineering evidence.
 
 ## 11. Success and retirement rules
 
-V553 is scientifically successful if it closes questions honestly. A clean
-null is acceptable. A fabricated or non-recomputable positive is not.
+V554 succeeds scientifically when it closes questions honestly. A clean null
+is acceptable. A fabricated, aggregate-only, or path-ambiguous positive is not.
 
-Public factor eligibility requires:
+Causal factor eligibility requires:
 
-- clean Exp6427 execution and rows;
-- positive and clean Exp6428 held future yield;
-- zero false-accept increase and no retention regression; and
-- an eligible Exp6435 determination.
+- clean Exp6437 path attribution;
+- positive exact active-over-ablated effect in Exp6439;
+- held binding-shift effect and tombstone safety in Exp6440;
+- no false-accept increase; and
+- eligible Exp6446 and Exp6447 determinations.
 
 Prospective CSL eligibility requires:
 
-- fresh write-once event outputs;
-- positive row-recomputed future value on development and held streams;
+- fresh write-once outputs in Exp6441 and Exp6443;
+- positive row-derived development and held future exact value;
 - bounded memory growth and protected retention;
-- no surviving critical interference attack; and
-- an eligible Exp6433 and Exp6435 determination.
+- no surviving malicious-success, quarantine, or rollback attack;
+- eligible Exp6444, Exp6446, and Exp6447 determinations.
 
-ARC eligibility is limited to a generic reachability result. Exp6434 cannot
-create solve credit or support a hidden-game claim.
+ARC eligibility is limited to generic reachability. Exp6445 cannot create solve
+credit or support a hidden-game or public-score claim.
 
-The following repeated scopes carry mechanical retirement:
+Mechanical retirement applies to these changed reruns:
 
-| New task | Prior task | Retire if repeated |
+| New task | Prior task | Retire if the same verdict returns |
 |---|---|---|
-| Exp6427 | Exp6414 | The clean corpus again ends with the same flagged evidence verdict. |
-| Exp6428 | Exp6417 | The admission A/B again ends with the same flagged positive verdict. |
-| Exp6430–Exp6433 | Exp6420 | The fresh CSL chain again ends with non-recomputable rows or open raw-output/cache attacks. |
+| Exp6438 | Exp6429 | The repaired cost study repeats the same duration-flagged or underpowered evidence outcome. |
+| Exp6440 | Exp6431 | The held authority study again reports a positive headline with underpowered cells. |
+| Exp6441 | Exp6433 | The changed query-conditioned CSL chain repeats the same ineligible terminal determination. |
+| Exp6443 | Exp6432 | The held restart study repeats the same duration-flagged positive outcome. |
+| Exp6444 | Exp6433 | The independent audit repeats the same `complete_null` CSL determination. |
+| Exp6445 | Exp6434 | The recovery again produces no usable artifact or equivalent terminal result. |
 
-No retired experiment ID is reused. No task depends on a retired upstream ID.
+Every entry in `research-roadmap-next.yaml` includes
+`retire_if_same_verdict: true`. No retired experiment ID is reused. No task
+depends on a retired upstream ID.
 
 ## 12. Reconciliation obligations
 
-Before V553 is complete:
+Before V554 is complete:
 
 1. add or update relevant `REQ-*` and `SCENARIO-*` entries before code;
-2. run focused unit tests and applicable E2E checks from
-   `ops/e2e-test-plan.md`;
-3. run roadmap schema, prior-failure, gate, exclusion, spec-coverage,
-   adversarial, determination-preservation, and root-clutter checks;
-4. preserve the three unrelated dirty audit reports present at planning time;
-5. reconcile `openspec/`, `_bmad/traceability.md`, `ops/status.md`,
+2. write focused tests before implementation changes;
+3. run applicable E2E checks from `ops/e2e-test-plan.md`;
+4. run roadmap schema, prior-failure, gate, exclusion, spec-coverage,
+   adversarial, row-consistency, determination-preservation, and root-clutter
+   checks;
+5. preserve unrelated dirty audit and ARC files present at planning time;
+6. reconcile `openspec/`, `_bmad/traceability.md`, `ops/status.md`,
    `ops/changelog.md`, `ops/known-issues.md`, and claim records; and
-6. write one honest next research question from the surviving evidence.
+7. write one honest next research question from the surviving evidence.
 
 The milestone must not modify `research-roadmap.yaml` during planning. It must
 not modify `scripts/research_conductor.py`. It must not push.

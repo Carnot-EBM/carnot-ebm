@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (73 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (74 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,9 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (73 modul
 
 ## Hostile LLM review
 
-TL;DR: **NO EVIDENCE OF ADVANCE.** Zero recent ARC solve artifacts means no `SELF_DISCOVERY_ADVANCE` can be credited. Reachability alone proves wiring, not autonomous discovery.
+**TL;DR: UNCLEAR / NO NEW ADVANCE — zero recent solve artifacts exist, so no self-discovery capability was demonstrated or reviewable.**
 
-Per-artifact review: **None submitted.**
+Per-artifact: none.
 
-Pattern watch: The 73-module live closure is necessary but insufficient. Guard against treating “reachable solver code” as a result; require artifacts proving the live agent discovered hidden-game solutions from its own runtime attempts—not source reading, offline BFS, hand-built adapters, or precomputed knowledge.
+Reachability passes: all 74 solver-like modules are on a live entrypoint path. This proves accessibility, not autonomous discovery or successful hidden-game solving.
+
+**Recommended action:** Produce live-run artifacts recording the agent’s observations, attempts, runtime reverse-engineering, discovered strategy, and resulting solve. Reject unsupported solve claims by default.
+
+**Pattern watch:** No recent evidence of outer-loop solving—but also no evidence of live self-discovery. Do not treat module reachability or absence of violations as progress.
 

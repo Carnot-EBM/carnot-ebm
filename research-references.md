@@ -34786,3 +34786,114 @@ them with exact authority, row-recomputable evidence, and fresh held data.
   pretraining.
 
 <!-- V553-PLANNER-REFRESH-20260814-END -->
+
+## V554 planner refresh - 2026-08-14
+
+<!-- V554-PLANNER-REFRESH-20260814-START -->
+
+This refresh covers work announced after the V553 cutoff. It keeps exact
+validators as the only release authority. Learned scores, memories, and
+energy signals may rank, route, abstain, or propose. They may not release an
+answer by themselves.
+
+### Promising primary findings
+
+- **Dead text or binding clause? Measuring and restoring constraint influence
+  in black-box LLM dialogues** - arXiv:2608.12599,
+  https://arxiv.org/abs/2608.12599; submitted 2026-08-12. The work pairs each
+  constraint with an executable checker, records revocations as tombstones,
+  compiles the active contract, and measures each clause with sequential
+  ablation. Carnot hook: test whether admitted factors cause exact outcome
+  changes or remain dead prompt text. Compare active, ablated, and tombstoned
+  factors under matched models and budgets. Keep exact checkers authoritative.
+- **QuoteBench: How Matched Scores Can Hide Command-Path Failures** -
+  arXiv:2608.13547, https://arxiv.org/abs/2608.13547; submitted 2026-08-13.
+  The benchmark separates raw generation from transport and execution with
+  replay and exact final-state validation. The same model reply loses 55.4 to
+  73.2 percentage points through an added parser. Carnot hook: extend the
+  task-scoped receipt through raw generation, factor compilation, checker
+  transport, and final exact verdict. Replay immutable bytes at each boundary
+  before attributing a factor or self-learning effect to the model.
+- **Practice Makes Unsafe: Skill Misevolution in Self-Improving LLM Agents** -
+  arXiv:2608.12851, https://arxiv.org/abs/2608.12851; submitted 2026-08-13.
+  Successful but unsafe trajectories can become persistent reusable policy.
+  The paper measures authoring, retrieval, and fresh-session execution and
+  tests a governed repair wrapper. Carnot hook: add malicious-but-successful
+  exposure rows to the prospective factor stream. Measure write, retrieval,
+  execution, quarantine, rollback, benign utility, and fresh-session harm.
+- **Beyond Retrieval: Query-Conditioned Reuse of Long-Horizon Agent
+  Trajectories** - arXiv:2608.12847,
+  https://arxiv.org/abs/2608.12847; submitted 2026-08-13. Query-conditioned
+  reuse stores a procedure, bindings to recover, applicability conditions, and
+  verification requirements. It outperforms full-trajectory injection while
+  using fewer online tokens in the reported agent benchmarks. Carnot hook:
+  compare raw event replay with a target-bound factor contract under binding
+  shift. Measure exact future yield, contamination, protected-case retention,
+  and checker cost per row.
+- **Agent Behavioral Contracts II: Certifying Compositional Reliability
+  Without Assuming Independence** - arXiv:2608.12895,
+  https://arxiv.org/abs/2608.12895; submitted 2026-08-13. Same-model agents show
+  strongly dependent failures, so multiplying marginal reliability can
+  overstate a compound system. The paper gives an assumption-free certificate
+  from measured joint moments. Carnot hook: record joint generator-factor-
+  verifier outcomes. Do not infer pipeline reliability from independent arm
+  averages. Treat a finite-sample joint certificate as an audit control, not
+  release authority.
+- **LLMs Know the Constraint But Do Not Use It: Activation Bottlenecks in
+  Pragmatic Constraint Reasoning** - arXiv:2608.12321,
+  https://arxiv.org/abs/2608.12321. The paper separates constraint knowledge
+  from decision routing and reports that prompted mitigations can increase
+  conservative bias. Carnot hook: use exact active-versus-ablated outcomes to
+  distinguish factor availability from factor use. Do not reopen the retired
+  hidden-state scorer lane; the black-box clause-ablation control answers the
+  current causal question.
+
+### Secondary-source and product checks
+
+- **OpenReview:** ICLR 2026 records include NRGPT, Spilled Energy, scalable
+  adversarial EBMs, and causal-energy transformer formulations. These are
+  useful architecture references, but none changes Carnot's current exact-
+  authority boundary. The new milestone does not reopen generated-text,
+  logprob, or hidden-state release scoring.
+- **Hugging Face Papers:** current verifier pages emphasize broad learned
+  verification and selection. They support measuring verification as a
+  separate system component. They do not supersede Carnot's executable local
+  checkers.
+- **Semantic Scholar:** the public API returned HTTP 429 during this refresh.
+  Search-index checks found one 2026 ARM-EBM citation in energy-based Gibbs
+  training for diffusion LLMs and broad EBT survey citations, but no new work
+  that supplies a local exact verifier. Retain the V553 counts as the last
+  authenticated API snapshot; do not invent replacement counts.
+- **GitHub:** current results include VerIF, LLM-as-a-Verifier, ConstraintLLM,
+  CCTU, and a llama.cpp deterministic draft-filter discussion. They are useful
+  implementation references. None is a drop-in exact-authority dependency for
+  this milestone, so add no new runtime package.
+- **Extropic:** the first-party writing index still ends with the October 2025
+  X0/XTR-0, TSU, DTM, and `thrml` launch material. Carnot has no authenticated
+  XTR-0 or Z1 route. Schedule no TSU execution, power, speed, or availability
+  claim.
+- **Logical Intelligence:** first-party pages still describe Kona 1.0 as a
+  continuous, globally scored constraint reasoner and publish a Sudoku product
+  benchmark. They expose no public weights or reproducible local inference
+  path. Keep Kona as a product comparator only.
+- **KAN, Ising, and FPGA sampling:** the recent search repeated adaptive-grid
+  KANs, Lagrange oscillatory Ising constraint solvers, and simulated or future
+  sampling hardware. None closes a current Carnot evidence gap with available
+  hardware. Schedule no KAN retrain, Ising solver claim, or unchanged board
+  probe in V554.
+
+### V554 planning impact
+
+- Prove that a stored factor changes exact behavior. Use active, ablated, and
+  tombstoned controls with immutable command-path receipts.
+- Repair the duration-flagged verification-cost result with monotonic timing,
+  enough rows per cost cell, and replayable per-unit evidence.
+- Run continuous self-learning on genuinely fresh held generations. Add
+  malicious-success exposure, lifecycle safety metrics, quarantine, rollback,
+  and process-restart controls.
+- Recover the zero-byte ARC reachability artifact with bounded CPU shards and
+  checkpoints. Make no game or level solve claim.
+- Schedule no unchanged hardware probe. State dual RTX 3090 needs for GGUF
+  generation and CPU-only needs for exact replay and ARC reachability.
+
+<!-- V554-PLANNER-REFRESH-20260814-END -->
