@@ -6185,3 +6185,10 @@ The critical path for milestone .250:
 - theme: zero-resolution compute ties exposed missing task-period instrumentation
 - key result: the operational record supports neither a causal compute ranking nor a multi-model dispatch failure; its locked task-idle indicator does not mark a fault
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.552
+
+- exp_range: no data available this milestone
+- theme: authenticated receipt and receipt-gated work concentrated the compute-bound execution tail
+- key result: the records rank the compute tail but do not explain its phases, establish a compute-task GPU-idle fault, or show a missed parallel multi-model runner dispatch
+- acceptance: no data available this milestone
