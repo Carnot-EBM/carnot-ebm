@@ -3452,6 +3452,245 @@ protected retention does not regress
 | SCENARIO-LEARN-6417-ATTACKS | Implemented: `python/carnot/experiment_6417_authentic_write_time_factor_admission_ab.py`. | Implemented: `tests/python/test_experiment_6417_authentic_write_time_factor_admission_ab.py`. |
 | SCENARIO-LEARN-6417-READY | Implemented: `python/carnot/experiment_6417_authentic_write_time_factor_admission_ab.py`. | Implemented: `tests/python/test_experiment_6417_authentic_write_time_factor_admission_ab.py`. |
 
+## REQ-LEARN-6418: Execution-Grounded Dual-Path Continuous Self-Learning
+
+**Given** Exp6417 has an authentic exact-admission replay, Exp6413 provides
+authenticated local GGUF execution receipts, Exp6407 defines raw and compiled
+memory schemas, and Exp6397 defines predecessor-bound transactions
+**When** Exp6418 runs on planning date 20260814
+**Then** it SHALL write
+`results/experiment_6418_execution_grounded_dual_path_csl.json`
+**And** it SHALL compare frozen, single-path exact transactional, and
+dual-path learners over at least four sessions.
+
+Exp6418 SHALL revalidate Exp6417 gates, the authenticated receipt layer, model
+files, GPUs, raw and compiled memory schemas, licenses, exact checkers, initial
+heads, rollback receipts, protected partitions, and Exp6413 receipt bindings
+before any new session event is generated.
+
+Exp6418 SHALL use exactly these local GGUF model ids from `cached_sota_pair()`:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Token counts SHALL use embedded GGUF
+tokenizers only. Exp6418 SHALL not call `AutoTokenizer`.
+
+Exp6418 SHALL preregister at least 96 chronological events across four
+sessions, three drift regimes, six update opportunities, four process
+restarts, two expiry boundaries, and two supersession boundaries. Future rows
+SHALL be sealed before generation. Frozen, single-path exact transactional, and
+dual-path arms SHALL match event order, model calls, prompts, tokens, checker
+calls, consumer work, and initial heads.
+
+Exp6418 SHALL generate new session events through Exp6413's receipt layer. It
+SHALL freeze raw bytes and proposals before exact outcomes are exposed. Exact
+feasibility labels and exact consequence labels SHALL open only in causal
+chronological order.
+
+The proposal-memory path SHALL update only from exact feasible-action evidence.
+The selection-memory path SHALL update only from exact observed consequences.
+Typed heads and predecessor hashes SHALL remain separate. Every write SHALL be
+evaluated off-commit before atomic disposition.
+
+Each memory write SHALL atomically Commit, Reject, Quarantine, or Defer after
+exact support, protected retention, unique effect, license, expiry,
+supersession, and predecessor checks. Exact release, exact retention, exact
+feasibility, and exact consequence checks SHALL control activation. No learned
+path or model output SHALL override an exact veto.
+
+Exp6418 SHALL attack contamination, stale heads, duplicate effects, concurrent
+proposals, interrupted writes, expired licenses, superseded evidence, cache
+resurrection, model swaps, delayed outcomes, and restart corruption. Harmful
+descendants SHALL roll back. Every attack SHALL fail closed.
+
+Exp6418 SHALL report proposal coverage, top-1 exact success, prequential
+future exact yield, forward transfer, backward retention, forgetting, negative
+transfer, contamination, growth, escalation, restart recovery, and cost by arm,
+session, model, and family.
+
+Exp6418 SHALL emit `delta_proposal_coverage_over_frozen`,
+`delta_selection_success_over_frozen`, and
+`delta_future_exact_yield_over_frozen` as bare finite numbers.
+
+Exp6418 SHALL set `execution_grounded_dual_path_csl_ready_score=1.0` only when
+both learning paths receive causal exact outcomes, future yield improves,
+contamination is zero, protected retention survives rollback, growth is
+bounded, and every attack fails closed.
+
+Exp6418 SHALL emit these fields:
+
+- `status`
+- `exp6417_gate_receipts`
+- `MODEL_SPECS`
+- `models_used`
+- `cached_sota_pair_receipts`
+- `model_file_and_embedded_tokenizer_hashes`
+- `autotokenizer_usage_count`
+- `cuda_offload_and_authenticated_process_receipts_by_model`
+- `chronological_manifest_path_hash_session_drift_update_restart_expiry_supersession_counts_and_partition_seals`
+- `preregistered_frozen_single_path_and_dual_path_arm_contract`
+- `matched_work_receipts`
+- `raw_event_and_pre_outcome_proposal_freeze_records`
+- `exact_feasibility_and_consequence_outcome_receipts`
+- `proposal_memory_schema_head_and_transition_history`
+- `selection_memory_schema_head_and_transition_history`
+- `predecessor_license_checker_expiry_and_supersession_bindings`
+- `atomic_disposition_records`
+- `commit_reject_quarantine_and_defer_counts_by_path_and_session`
+- `per_arm_session_model_and_family_proposal_coverage_selection_success_future_yield_transfer_retention_forgetting_negative_transfer_contamination_growth_escalation_restart_and_cost_results`
+- `delta_proposal_coverage_over_frozen`
+- `delta_selection_success_over_frozen`
+- `delta_future_exact_yield_over_frozen`
+- `contamination_propagation_rate`
+- `forgetting_delta`
+- `protected_leakage_count`
+- `same_step_write_count`
+- `exact_veto_override_count`
+- `model_weight_change_count`
+- `attack_matrix`
+- `execution_grounded_dual_path_csl_ready_score`
+- `public_factor_claim_eligibility`
+- `harm_underpowered_missing_and_flagged_cells`
+- `protected_files_unchanged`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map every required field and these gate keys:
+`gate:exp6417`, `gate:exp6413`, `gate:exp6407`, `gate:exp6397`,
+`gate:model_files`, `gate:gpu_receipts`, `gate:schemas`, `gate:licenses`,
+`gate:exact_checkers`, `gate:initial_heads`, `gate:rollback`, and
+`gate:protected_partitions`. It SHALL map `learning_path:proposal`,
+`learning_path:selection`, all three deltas, `contamination_propagation_rate`,
+`forgetting_delta`, and `execution_grounded_dual_path_csl_ready_score`.
+`verifier_is_oracle` SHALL be true only for exact feasibility, consequence,
+release, and retention checks. Learned proposal memory, learned selection
+memory, and model outputs SHALL NOT be oracles.
+
+Required field principles:
+
+- `status`: Names the terminal state for the exact-governed dual-path CSL run.
+- `exp6417_gate_receipts`: Pins the authentic write-time admission gate.
+- `MODEL_SPECS`: Carries the three mandated GGUF model identities from cached SOTA receipts.
+- `models_used`: Lists only mandated models with authenticated local receipt support.
+- `cached_sota_pair_receipts`: Records helper calls so manual model substitution is detectable.
+- `model_file_and_embedded_tokenizer_hashes`: Binds model files and embedded GGUF tokenizer hashes.
+- `autotokenizer_usage_count`: Must be zero because external tokenizer paths are forbidden.
+- `cuda_offload_and_authenticated_process_receipts_by_model`: Binds CUDA, process, command, raw output, and cleanup receipts.
+- `chronological_manifest_path_hash_session_drift_update_restart_expiry_supersession_counts_and_partition_seals`: Seals sessions, drift, updates, restarts, expiry, supersession, and future partitions.
+- `preregistered_frozen_single_path_and_dual_path_arm_contract`: Defines all three arms before labels open.
+- `matched_work_receipts`: Shows event order, model calls, prompts, tokens, checker calls, consumer work, and initial heads match.
+- `raw_event_and_pre_outcome_proposal_freeze_records`: Proves raw bytes and proposals froze before outcomes.
+- `exact_feasibility_and_consequence_outcome_receipts`: Opens exact labels only after freeze and in causal order.
+- `proposal_memory_schema_head_and_transition_history`: Records proposal-memory updates from exact feasible-action evidence only.
+- `selection_memory_schema_head_and_transition_history`: Records selection-memory updates from exact observed consequences only.
+- `predecessor_license_checker_expiry_and_supersession_bindings`: Binds every write to predecessor, license, checker, expiry, and supersession receipts.
+- `atomic_disposition_records`: Records one Commit, Reject, Quarantine, or Defer for every write.
+- `commit_reject_quarantine_and_defer_counts_by_path_and_session`: Keeps disposition counts visible per path and session.
+- `per_arm_session_model_and_family_proposal_coverage_selection_success_future_yield_transfer_retention_forgetting_negative_transfer_contamination_growth_escalation_restart_and_cost_results`: Reports all metrics without pooled masking.
+- `delta_proposal_coverage_over_frozen`: Bare proposal-coverage lift for dual path over frozen.
+- `delta_selection_success_over_frozen`: Bare selection-success lift for dual path over frozen.
+- `delta_future_exact_yield_over_frozen`: Bare future exact-yield lift for dual path over frozen.
+- `contamination_propagation_rate`: Must remain zero for readiness.
+- `forgetting_delta`: Must show no protected forgetting.
+- `protected_leakage_count`: Must be zero because protected partitions cannot route writes.
+- `same_step_write_count`: Must be zero because current outcomes cannot influence same-step decisions.
+- `exact_veto_override_count`: Must be zero because exact vetoes cannot be overridden.
+- `model_weight_change_count`: Must be zero because CSL changes external memory only.
+- `attack_matrix`: Shows every contamination, head, duplicate, concurrency, interruption, license, supersession, cache, model, delay, and restart attack fails closed.
+- `execution_grounded_dual_path_csl_ready_score`: Conjunctive readiness score for exact-governed dual-path learning.
+- `public_factor_claim_eligibility`: Allows public claim only for this exact-governed run and not for learned scores as authority.
+- `harm_underpowered_missing_and_flagged_cells`: Keeps missing, underpowered, flagged, and attacked cells visible.
+- `protected_files_unchanged`: Shows protected files stayed byte-identical.
+- `preconditions_checked`: Lists every gate checked before readiness can become one.
+- `inference_substrate`: Declares authenticated local GGUF receipt replay with exact-governed memory updates.
+- `verifier_is_oracle`: Marks only exact feasibility, consequence, release, and retention checkers as oracles.
+- `field_principles`: Documents why each field exists.
+- `field_provenance`: Maps each field to upstream receipts, exact checks, manifests, attacks, tests, or code.
+- `random_seed`: Pins session order, arm work, updates, attacks, and metric fixtures.
+- `duration_s`: Records measured wall time without padding.
+- `tests_run`: Records verification commands and exit codes.
+- `reproducibility_checksum`: Content-addresses the artifact with volatile fields normalized.
+- `honest_verdict`: Uses a terminal prefix and states the exact-governed dual-path boundary.
+- `gate:exp6417`: Exp6417 must be authentic and ready before Exp6418 can run.
+- `gate:exp6413`: Exp6413 supplies authenticated GGUF process and raw-output receipts.
+- `gate:exp6407`: Exp6407 supplies raw and compiled memory schema receipts.
+- `gate:exp6397`: Exp6397 supplies predecessor-bound transaction and rollback discipline.
+- `gate:model_files`: Model files must exist and match recorded hashes.
+- `gate:gpu_receipts`: CUDA and process receipts must be bound to each model.
+- `gate:schemas`: Raw and compiled memory schemas must be present and hash-bound.
+- `gate:licenses`: License validity controls commits and blocks inheritance.
+- `gate:exact_checkers`: Exact checkers own feasibility, consequence, release, and retention labels.
+- `gate:initial_heads`: Proposal and selection heads start from separate read-only hashes.
+- `gate:rollback`: Harmful descendants must roll back to prior exact heads.
+- `gate:protected_partitions`: Future and protected partitions stay sealed before outcome open.
+- `learning_path:proposal`: Proposal memory updates only from exact feasible-action outcomes.
+- `learning_path:selection`: Selection memory updates only from exact observed consequences.
+
+## SCENARIO-LEARN-6418-GATES: Authenticated Preconditions Are Revalidated
+
+**Given** Exp6417, Exp6413, Exp6407, and Exp6397 artifacts exist
+**When** Exp6418 checks its preconditions
+**Then** it SHALL revalidate their ready scores, model files, GPUs, schemas,
+licenses, exact checkers, initial heads, rollback receipts, and protected
+partitions before any session event is generated.
+
+## SCENARIO-LEARN-6418-CHRONOLOGY: Four Sessions Are Sealed
+
+**Given** authenticated upstream event receipts
+**When** Exp6418 preregisters its chronological manifest
+**Then** it SHALL seal at least 96 events across four sessions, three drift
+regimes, six update opportunities, four restarts, two expiry boundaries, and
+two supersession boundaries before generation opens.
+
+## SCENARIO-LEARN-6418-CAUSAL-PATHS: Learned Paths Use Separate Exact Labels
+
+**Given** raw events and proposals are frozen before outcomes
+**When** exact labels open in causal order
+**Then** proposal memory SHALL update only from exact feasibility outcomes
+**And** selection memory SHALL update only from exact consequence outcomes.
+
+## SCENARIO-LEARN-6418-MATCHED-ARMS: Work Surfaces Match
+
+**Given** frozen, single-path exact transactional, and dual-path arms
+**When** the three arms run
+**Then** event order, model calls, prompts, tokens, checker calls, consumer
+work, and initial heads SHALL match across arms.
+
+## SCENARIO-LEARN-6418-ATTACKS: Dual-Path Attacks Fail Closed
+
+**Given** contamination, stale head, duplicate effect, concurrent proposal,
+interrupted write, expired license, superseded evidence, cache resurrection,
+model swap, delayed outcome, or restart corruption attacks
+**When** Exp6418 validates the attack matrix
+**Then** no attack SHALL commit unsafe memory, override an exact veto, or
+promote readiness.
+
+## SCENARIO-LEARN-6418-READY: Readiness Requires Exact-Governed Future Gain
+
+**Given** both learning paths receive causal exact outcomes and every attack
+fails closed
+**When** dual-path learning improves future exact yield over frozen with zero
+contamination, no protected forgetting, bounded growth, and passing tests
+**Then** `execution_grounded_dual_path_csl_ready_score` SHALL be `1.0`.
+
+## Implementation Status (REQ-LEARN-6418)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6418 | Implemented: `python/carnot/experiment_6418_execution_grounded_dual_path_csl.py`; terminal artifact `results/experiment_6418_execution_grounded_dual_path_csl.json`. | Implemented: `tests/python/test_experiment_6418_execution_grounded_dual_path_csl.py`. |
+| SCENARIO-LEARN-6418-GATES | Implemented: `python/carnot/experiment_6418_execution_grounded_dual_path_csl.py`. | Implemented: `tests/python/test_experiment_6418_execution_grounded_dual_path_csl.py`. |
+| SCENARIO-LEARN-6418-CHRONOLOGY | Implemented: `python/carnot/experiment_6418_execution_grounded_dual_path_csl.py`. | Implemented: `tests/python/test_experiment_6418_execution_grounded_dual_path_csl.py`. |
+| SCENARIO-LEARN-6418-CAUSAL-PATHS | Implemented: `python/carnot/experiment_6418_execution_grounded_dual_path_csl.py`. | Implemented: `tests/python/test_experiment_6418_execution_grounded_dual_path_csl.py`. |
+| SCENARIO-LEARN-6418-MATCHED-ARMS | Implemented: `python/carnot/experiment_6418_execution_grounded_dual_path_csl.py`. | Implemented: `tests/python/test_experiment_6418_execution_grounded_dual_path_csl.py`. |
+| SCENARIO-LEARN-6418-ATTACKS | Implemented: `python/carnot/experiment_6418_execution_grounded_dual_path_csl.py`. | Implemented: `tests/python/test_experiment_6418_execution_grounded_dual_path_csl.py`. |
+| SCENARIO-LEARN-6418-READY | Implemented: `python/carnot/experiment_6418_execution_grounded_dual_path_csl.py`. | Implemented: `tests/python/test_experiment_6418_execution_grounded_dual_path_csl.py`. |
+
 ## REQ-LEARN-6409: Graph-Local Multisession Continuous Learning
 
 **Given** Exp6408 first shows positive future exact yield with non-increased
