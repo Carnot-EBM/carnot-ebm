@@ -6192,3 +6192,10 @@ The critical path for milestone .250:
 - theme: authenticated receipt and receipt-gated work concentrated the compute-bound execution tail
 - key result: the records rank the compute tail but do not explain its phases, establish a compute-task GPU-idle fault, or show a missed parallel multi-model runner dispatch
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.553
+
+- exp_range: exp6426-exp6426 (only identifier present in the authoritative timing data; the complete milestone range is not available)
+- theme: wall time concentrated in a synthesis-only reachability and roster pass rather than accelerator work
+- key result: the first compute row was readiness-dependent; neither in-task accelerator duty cycle nor eligibility for the dual-GPU runner is observable
+- acceptance: no data available this milestone
