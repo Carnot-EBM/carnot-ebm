@@ -573,6 +573,8 @@ def graph_explore_solve_v2(
     structural_energy_scorer=None,
     move_pruner=None,
     state_key_action_suffix_k: Optional[int] = None,
+    collision_certified_state_key_suffix: bool | None = None,
+    collision_certified_state_key_suffix_max_k: int = 4,
     stats: Optional[dict] = None,
 ) -> tuple[Optional[list], int]:
     """SYSTEMATIC graph-explore (toward arXiv:2512.24156): maintain a directed
@@ -673,6 +675,18 @@ def graph_explore_solve_v2(
             state_key_action_suffix_k = 0
     suffix_k = max(0, int(state_key_action_suffix_k))
 
+    if collision_certified_state_key_suffix is None:
+        collision_certified_state_key_suffix = (
+            os.environ.get("CARNOT_ARC_COLLISION_CERTIFIED_STATE_KEY_SUFFIX") == "1"
+        )
+    certified_suffix_enabled = bool(collision_certified_state_key_suffix) and suffix_k == 0
+    from carnot.agentic.arc_state_key_certifier import StateKeyCollisionCertifier
+
+    collision_certifier = StateKeyCollisionCertifier(
+        enabled=certified_suffix_enabled,
+        max_suffix_k=collision_certified_state_key_suffix_max_k,
+    )
+
     def _action_suffix(path) -> str:
         if not suffix_k:
             return ""
@@ -686,10 +700,38 @@ def graph_explore_solve_v2(
             )
         return "|k:" + ";".join(parts)
 
-    def _node_key(frame, path) -> str:
+    def _node_key(frame, path, observation_history) -> str:
         # k=0 returns node_id(frame) EXACTLY (empty suffix) — the shipped default is
         # unchanged, which is what the both-directions test asserts.
-        return node_id(frame) + _action_suffix(path)
+        base_key = node_id(frame)
+        if suffix_k:
+            return base_key + _action_suffix(path)
+        return collision_certifier.state_key(base_key, observation_history, path)
+
+    def _base_from_state_key(key: str) -> str:
+        for marker in ("|k:", "|certk:"):
+            if marker in key:
+                return key.split(marker, 1)[0]
+        return key
+
+    def _history_action_label(step) -> str:
+        data = step.get("data")
+        if data is None:
+            return str(int(step["action"]))
+        return f"{int(step['action'])}@{json.dumps(data, sort_keys=True, default=str)}"
+
+    def _obs_history_root(frame, path) -> tuple[str, ...]:
+        tokens: list[str] = [f"obs:{node_id(frame)}"]
+        if path:
+            tokens.insert(0, f"prefix_len:{len(path)}")
+            tokens.extend(f"prefix_act:{_history_action_label(step)}" for step in path)
+        return tuple(tokens)
+
+    def _obs_history_next(parent_history, label, frame_after) -> tuple[str, ...]:
+        return tuple(parent_history or ()) + (
+            f"act:{_history_action_label(label)}",
+            f"obs:{node_id(frame_after)}",
+        )
 
     def _candidates(frame, previous_frame=None):
         return rich_action_candidates(
@@ -710,8 +752,11 @@ def graph_explore_solve_v2(
         return f
 
     f0 = replay(prefix)  # root at the post-prefix state (L0 if no prefix)
-    h0 = _node_key(f0, prefix)
-    states = {h0: {"path": list(prefix), "untested": _candidates(f0), "frame": f0}}
+    obs0 = _obs_history_root(f0, prefix)
+    h0 = _node_key(f0, prefix, obs0)
+    states = {
+        h0: {"path": list(prefix), "untested": _candidates(f0), "frame": f0, "obs_history": obs0}
+    }
     best = start_level
     expansions = 0
     qd_search_generator = coerce_qd_generator(
@@ -761,7 +806,21 @@ def graph_explore_solve_v2(
             # splits. states == distinct_frames when k=0; the gap between them is the
             # state-space inflation the suffix key paid for its de-aliasing.
             stats["distinct_frames"] = (
-                len({k.split("|k:", 1)[0] for k in states}) if suffix_k else len(states)
+                len({_base_from_state_key(k) for k in states})
+                if (suffix_k or certified_suffix_enabled)
+                else len(states)
+            )
+            cert_diag = collision_certifier.diagnostics()
+            cert_rows = collision_certifier.certificate_rows()
+            stats["state_key_collision_certified_suffix_enabled"] = bool(certified_suffix_enabled)
+            stats["state_key_collision_certificate_count"] = int(len(cert_rows))
+            stats["state_key_collision_certificates"] = cert_rows
+            stats["state_key_collision_diagnostics"] = cert_diag
+            stats["state_key_effective_suffix_max_k"] = max(
+                int(suffix_k), int(cert_diag.get("max_suffix_k_used") or 0)
+            )
+            stats["state_key_collision_hash_substitution_detected"] = bool(
+                cert_diag.get("hash_substitution_detected")
             )
             stats["proposal_prior_enabled"] = structural_energy_scorer is not None
             stats["expansion_priority_enabled"] = (
@@ -918,6 +977,7 @@ def graph_explore_solve_v2(
         nonlocal expansions, best
         traj = list(state["path"])
         nf = frame_here
+        obs_history = tuple(state.get("obs_history") or ())
         for step in sequence:
             label = _label(step["action"], step.get("data"))
             if _should_prune(nf, label):
@@ -932,6 +992,7 @@ def graph_explore_solve_v2(
             if nf is None:
                 return True, None
             traj = traj + [{"action": int(step["action"]), "data": step.get("data")}]
+            obs_history = _obs_history_next(obs_history, label, nf)
             lvl = _levels_completed(nf)
             _observe(before, label, nf, lvl > start_level)
             if lvl > start_level and _predicate_allows_emit(nf):
@@ -941,12 +1002,13 @@ def graph_explore_solve_v2(
             if _game_over(nf) or expansions >= max_expansions:
                 return True, None
         if nf is not None and not _game_over(nf):
-            nh = _node_key(nf, traj)
+            nh = _node_key(nf, traj, obs_history)
             if nh not in states:
                 states[nh] = {
                     "path": traj,
                     "untested": _candidates(nf, previous_frame=frame_here),
                     "frame": nf,
+                    "obs_history": obs_history,
                 }
                 return True, ("new_state", nh)
         return True, None
@@ -955,7 +1017,9 @@ def graph_explore_solve_v2(
         nonlocal expansions, best
         traj = list(state["path"])
         nf = frame_here
+        obs_history = tuple(state.get("obs_history") or ())
         for step in sequence:
+            label = _label(step["action"], step.get("data"))
             nf = env.step(
                 _game_action(GameAction, int(step["action"])),
                 data=step.get("data"),
@@ -965,6 +1029,7 @@ def graph_explore_solve_v2(
             if nf is None:
                 return True, None
             traj = traj + [{"action": int(step["action"]), "data": step.get("data")}]
+            obs_history = _obs_history_next(obs_history, label, nf)
             lvl = _levels_completed(nf)
             if lvl > start_level and _predicate_allows_emit(nf):
                 _mark_goal_plan_emitted()
@@ -973,12 +1038,13 @@ def graph_explore_solve_v2(
             if _game_over(nf) or expansions >= max_expansions:
                 return True, None
         if nf is not None and not _game_over(nf):
-            nh = _node_key(nf, traj)
+            nh = _node_key(nf, traj, obs_history)
             if nh not in states:
                 states[nh] = {
                     "path": traj,
                     "untested": _candidates(nf, previous_frame=frame_here),
                     "frame": nf,
+                    "obs_history": obs_history,
                 }
                 return True, ("new_state", nh)
         return True, None
@@ -1036,6 +1102,7 @@ def graph_explore_solve_v2(
             if nf is None:
                 continue
             traj = st["path"] + [{"action": int(sel.action_id), "data": sel.data}]
+            obs_history = _obs_history_next(st.get("obs_history"), label, nf)
             lvl = _levels_completed(nf)
             _observe(f_here, label, nf, lvl > start_level)
             if lvl > start_level and _predicate_allows_emit(nf):
@@ -1044,12 +1111,13 @@ def graph_explore_solve_v2(
             best = max(best, lvl)
             if _game_over(nf):
                 continue
-            nh = _node_key(nf, traj)
+            nh = _node_key(nf, traj, obs_history)
             if nh not in states:  # new state ⇒ add to graph + frontier
                 states[nh] = {
                     "path": traj,
                     "untested": _candidates(nf, previous_frame=f_here),
                     "frame": nf,
+                    "obs_history": obs_history,
                 }
                 frontier.append(nh)
         return _ret(None, best)
@@ -1156,6 +1224,7 @@ def graph_explore_solve_v2(
             expansions += 1
             if nf is not None:
                 traj = st["path"] + [{"action": int(sel.action_id), "data": sel.data}]
+                obs_history = _obs_history_next(st.get("obs_history"), label, nf)
                 lvl = _levels_completed(nf)
                 _observe(f_here, label, nf, lvl > start_level)
                 if lvl > start_level and _predicate_allows_emit(nf):
@@ -1163,12 +1232,13 @@ def graph_explore_solve_v2(
                     return _ret(traj, lvl)
                 best = max(best, lvl)
                 if not _game_over(nf):
-                    nh = _node_key(nf, traj)
+                    nh = _node_key(nf, traj, obs_history)
                     if nh not in states:  # new state ⇒ add with A* priority g+h
                         states[nh] = {
                             "path": traj,
                             "untested": _candidates(nf, previous_frame=f_here),
                             "frame": nf,
+                            "obs_history": obs_history,
                         }
                         heapq.heappush(
                             heap,
