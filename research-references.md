@@ -34677,3 +34677,112 @@ exact authority, authentic runtime receipts, and fresh held evidence.
   pretraining.
 
 <!-- V552-PLANNER-REFRESH-20260813-END -->
+
+## V553 Planner Refresh (2026-08-14, after milestone 2026.08.552)
+
+This refresh used Exp6410 through Exp6423 as the evidence boundary. It searched
+arXiv first for 2025-2026 work on EBM reasoning, neural constraint solving,
+Ising systems, hallucination control, KANs, constrained generation, sampling
+hardware, and continual learning. It then checked OpenReview, Hugging Face
+Papers, Semantic Scholar citation records, GitHub Trending, Extropic, and
+Logical Intelligence. Source claims remain hypotheses until Carnot reproduces
+them with exact authority, row-recomputable evidence, and fresh held data.
+
+### Promoted methods
+
+- **Large Language Models Can Follow Instructions, But Not Many at Once: Phase
+  Transitions in Compositional Constraint Satisfaction** - arXiv:2608.12426,
+  https://arxiv.org/abs/2608.12426; submitted 2026-08-12. The benchmark varies
+  the number and type of simultaneous constraints. It scores every constraint
+  with deterministic rules and finds a sharp fall in joint success as the
+  constraint count grows. Carnot hook: stratify fresh factor events by
+  constraint count and interaction class. Report per-constraint and all-
+  constraint outcomes separately. Use exact checkers, not an LLM judge.
+- **AI Evaluation Should Measure Verification Cost, Not Correctness Alone** -
+  arXiv:2608.08709, https://arxiv.org/abs/2608.08709; submitted 2026-08-09. The
+  paper defines verification-cost errors relative to a verifier population and
+  a deployment budget. Carnot hook: treat exact correctness and the cost of
+  reaching that verdict as separate outcomes. Record task-linked wall time,
+  verifier calls, GPU samples, and false-release exposure under fixed budgets.
+  This is a measurement control, not evidence that a learned verifier is safe.
+- **Towards a Formal Definition of Agent Memory: Basis, Span, Optimality, and
+  the Sequential Memory Problem** - arXiv:2608.11654,
+  https://arxiv.org/abs/2608.11654; submitted 2026-08-12. The work models memory
+  as a capacity-constrained basis and separates coverage from precision under
+  noisy writes. It also frames continual memory as a sequential decision
+  problem. Carnot hook: publish a capacity-utility frontier for factor memory.
+  Measure exact proposal coverage, write precision, protected-case retention,
+  and query-time value at each capacity. Exact validation keeps release
+  authority.
+- **Controlled Memory Interference in Continual LLM Agents** -
+  arXiv:2608.07622, https://arxiv.org/abs/2608.07622; submitted 2026-08-07. The
+  framework varies memory relationships, temporal validity, and authority. It
+  finds that interference can block target exposure or disrupt later use.
+  Carnot hook: add authority-conflict, supersession, and retrieval-collision
+  attacks to the continuous self-learning stream. Require row-level evidence
+  for both plasticity and protected-memory stability.
+
+### Controls and non-promotions
+
+- **Spin Vector Control for Heisenberg-Inspired Probabilistic Computing** -
+  arXiv:2608.12568, https://arxiv.org/abs/2608.12568; submitted 2026-08-12. The
+  device result supports vector-spin probabilistic circuits as a future
+  hardware direction. Carnot has no such device or authenticated execution
+  route. Schedule no Heisenberg-hardware speed, power, or availability claim.
+- **Trie Automata for Constrained Decoding over Large Finite Sets** -
+  arXiv:2608.12574, https://arxiv.org/abs/2608.12574; submitted 2026-08-12. The
+  paper reports fast finite-set constrained decoding. Carnot's grammar and
+  parser generated-answer lane remains closed. Keep this as a serving control;
+  do not reopen it without a changed exact-authority question.
+- **Drift and Dependence: Layer-wise Information-Theoretic Bounds for Replay-
+  Based Continual Learning** - arXiv:2608.11690,
+  https://arxiv.org/abs/2608.11690; submitted 2026-08-12. Its split between
+  representation drift and optimization dependence is a useful diagnostic
+  analogy. Carnot should first establish exact row-level memory effects before
+  adding neural representation claims.
+- Exp6414 and Exp6417 remain duration-flagged. Exp6420 remains a null CSL safety
+  result because reported effects did not recompute from rows and critical
+  attacks stayed open. Positive upstream summaries do not repair those
+  evidence defects.
+
+### Secondary-source and product status
+
+- **Semantic Scholar:** direct API queries on 2026-08-14 again returned 33 EBT
+  (`2507.02092`) citations and eight ARM-EBM (`2512.15605`) citations. The
+  newest relevant records remain Explorative Modeling, Memoir, Solver-Hard,
+  Fixed-Point Reasoners, LoopUS, and Distributional EBMs. No new citation
+  supplies a local exact-authority verifier.
+- **OpenReview:** current ICLR 2026 records repeat EBT, residual-energy decoding,
+  and lifelong-memory safety themes. None provides a stronger executable local
+  baseline than Carnot's exact checkers and authenticated GGUF path.
+- **Hugging Face Papers:** recent pages repeat selective verification,
+  self-verification training, and proxy verification. They support measuring
+  budgeted verification cost. They do not grant a learned score release
+  authority.
+- **GitHub Trending:** the current page exposed general agent and compute
+  projects. It exposed no new local GGUF EBM, constraint, KAN, or sampler
+  dependency that supersedes Carnot's exact validators.
+- **Extropic:** the first-party writing index still exposes Z1 as a future
+  early-access target. Carnot has no authenticated XTR-0 or Z1 device route.
+  Schedule no TSU execution, power, latency, or availability claim.
+- **Logical Intelligence:** current Kona and Aleph pages still expose product
+  claims but no public Kona weights, reproducible architecture, or documented
+  local inference API. Kona remains a product comparator only.
+
+### V553 planning impact
+
+- Repair evidence at the row boundary. Recompute every claimed factor and CSL
+  effect from immutable events before promoting a new result.
+- Treat constraint count, verification cost, memory capacity, and authority
+  interference as independent experimental axes.
+- Use fresh authenticated runs from the mandated GGUF models. Legacy small
+  models remain smoke tests only.
+- Keep exact checkers as the sole release authority. Learned energy and memory
+  may rank, route, abstain, or propose.
+- Continue ARC only through the default-off live path. Test held-mechanic policy
+  transfer without a game or level solve claim.
+- Schedule no unchanged board probe, TSU task, Kona task, KAN training,
+  grammar/parser retry, hidden-state scorer, external-text scorer, or EBT
+  pretraining.
+
+<!-- V553-PLANNER-REFRESH-20260814-END -->
