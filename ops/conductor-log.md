@@ -15826,3 +15826,4 @@ code |
 | 2026-08-14 13:59 UTC | V552 terminal evidence handoff and V553 queue pref | OK | 123 passed, 1 warning in 152.53s (0:02:32) |
 | 2026-08-14 15:22 UTC | Recurring blocked-gate root cause and diagnostic c | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output:     monkeypatc |
 | 2026-08-14 15:34 UTC | Recurring blocked-gate root cause and diagnostic c | OK | 131 passed, 1 warning in 26.20s |
+| 2026-08-14 16:28 UTC | Task-scoped runtime, GPU, concurrency, and runner  | OK | 88 passed, 1 warning in 9.48s |
