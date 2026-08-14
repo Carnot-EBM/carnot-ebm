@@ -15829,3 +15829,4 @@ code |
 | 2026-08-14 16:28 UTC | Task-scoped runtime, GPU, concurrency, and runner  | OK | 88 passed, 1 warning in 9.48s |
 | 2026-08-14 17:01 UTC | Gated on Exp6426 readiness: fresh row-recomputable | OK | 131 passed, 1 warning in 203.49s (0:03:23) |
 | 2026-08-14 17:18 UTC | Gated on Exp6427 clean corpus: exact write-time fa | OK | 87 passed, 1 warning in 12.62s |
+| 2026-08-14 17:36 UTC | Gated on Exp6427 clean corpus: constraint saturati | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
