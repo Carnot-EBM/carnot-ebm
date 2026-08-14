@@ -247,8 +247,18 @@ def compare(baseline: dict, arm: dict) -> dict[str, Any]:
         elif a[g]["levels_cleared"] > 0:
             da = a[g]["actions_spent"] - b[g]["actions_spent"]
             (cheaper if da < 0 else costlier if da > 0 else []).append(g)  # type: ignore[union-attr]
+    # Byte-identical across EVERY compared game. Computed here rather than inferred from the
+    # aggregate, because two games could trade a level and leave the totals equal while the flag
+    # was plainly doing something.
+    identical = bool(set(b) & set(a)) and all(
+        b[g]["levels_cleared"] == a[g]["levels_cleared"]
+        and b[g]["actions_spent"] == a[g]["actions_spent"]
+        for g in (set(b) & set(a))
+        if not (b[g].get("error") or a[g].get("error"))
+    )
     return {
         "games_compared": len(set(b) & set(a)),
+        "identical_to_baseline": identical,
         "levels_improved": improved,
         "levels_regressed": regressed,
         "same_levels_cheaper": cheaper,
@@ -264,6 +274,25 @@ def verdict(cmp: dict) -> tuple[bool, str]:
     Refusing on ANY regression is the point. An aggregate improvement that costs one game is the
     ka59 failure repeating with better paperwork.
     """
+    # NO OBSERVABLE EFFECT comes FIRST, because it is not a weak result -- it is a different
+    # claim, and conflating the two is how a real capability gets filed as a dud.
+    #
+    # Found on the first scored-engine measurement. CARNOT_ARC_HAZARD_MOVE_PRUNER produced
+    # baseline and arm sweeps that were identical to the digit: 16 levels and 48,313 actions on
+    # both. Not "a small effect" -- literally none. The flag is IMPORT-reachable on that engine,
+    # so the reachability guard passed it, but it never FIRES: two pre-wiring censuses recorded
+    # in arc_scored_path_lever_harness.py found this pruner fits 0 of 25 and 1 of 15 public games.
+    #
+    # "HOLD: no level gained" would read as "measured, does not help." The truth is "not measured
+    # at all." Import reachability proves the code is LOADED; it cannot prove the code RUNS.
+    if cmp.get("identical_to_baseline"):
+        return False, (
+            "UNINTERPRETABLE_NO_EFFECT: every game returned byte-identical levels AND actions. "
+            "The flag changed nothing observable, so this is not evidence about its value -- it "
+            "is evidence the code never fired, or is not wired to this engine. Do NOT record it "
+            "as a null. Check the lever's own fire counters (see "
+            "arc_scored_path_lever_harness.py) before concluding anything."
+        )
     if cmp["levels_regressed"]:
         return False, (
             f"REFUSED: regressed on {cmp['levels_regressed']}. A flag that breaks a game it used "

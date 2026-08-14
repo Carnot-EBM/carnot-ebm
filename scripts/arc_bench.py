@@ -159,6 +159,46 @@ def select(games: list[str], subset: int) -> list[str]:
     return picked
 
 
+def _fire_counters(policy: Any) -> dict[str, Any]:
+    """Every `*_diagnostics()` the live explorer exposes, read off the object after the run.
+
+    WHY A ROW NEEDS THIS. Import reachability proves a flag's code is LOADED. It cannot prove the
+    code RUNS. The first scored-engine A/B hit that gap: `CARNOT_ARC_HAZARD_MOVE_PRUNER` produced
+    baseline and arm sweeps identical to the digit -- 16 levels, 48,313 actions, both arms -- and
+    the naive reading is "measured, does not help." The truth is "never fired": two censuses
+    recorded in `arc_scored_path_lever_harness.py` found that pruner fits 0 of 25 and 1 of 15
+    public games.
+
+    `arc_flag_ledger.verdict` catches the whole-sweep case by noticing the arms are identical.
+    This is the finer-grained half -- it says WHICH lever was silent and why, per game, so a null
+    can be classified without re-running anything. `hazard_move_pruner_diagnostics` already
+    distinguishes dead-observe-channel from no-nav-jurisdiction from model-did-not-fit from
+    genuinely-fired-and-pruned-nothing; only the last is a reportable null.
+
+    Discovered by scanning the object, not from a list of lever names kept here. A hand-written
+    list would go stale the next time a lever is added, and a silently missing counter is exactly
+    the false null this function exists to prevent. Never raises: a diagnostics method that throws
+    records its error rather than losing the whole row.
+    """
+    out: dict[str, Any] = {}
+    explorer = getattr(policy, "explorer", None)
+    for holder, label in ((explorer, "explorer"), (policy, "policy")):
+        if holder is None:
+            continue
+        for name in dir(holder):
+            if not name.endswith("_diagnostics") or name.startswith("__"):
+                continue
+            try:
+                attr = getattr(holder, name)
+                value = attr() if callable(attr) else attr
+            except Exception as exc:  # noqa: BLE001
+                out[f"{label}.{name}"] = {"diagnostics_error": repr(exc)[:120]}
+                continue
+            if isinstance(value, dict):
+                out[f"{label}.{name}"] = value
+    return out
+
+
 def run_game_scored(
     game: str,
     *,
@@ -220,6 +260,7 @@ def run_game_scored(
         row["levels_cleared"] = int(r.get("levels") or 0)
         row["actions_spent"] = int(r.get("charged_actions") or r.get("actions") or 0)
         row["efficiency"] = r.get("efficiency")
+        row["fire_counters"] = _fire_counters(policy)
     except Exception as exc:  # noqa: BLE001
         row["error"] = f"{type(exc).__name__}: {exc}"[:200]
     finally:

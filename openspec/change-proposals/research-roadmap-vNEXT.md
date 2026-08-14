@@ -1,451 +1,545 @@
-# Research Roadmap vNEXT — Authenticated Execution, Selective Verification, and Prospective Self-Learning
+# Research Roadmap vNEXT — Evidence-Complete Energy and Safe Online Memory
 
-**Milestone:** 2026.08.552
-**Date:** 2026-08-13
-**Status:** Proposed
-**Experiments:** 14 (Exp6410–Exp6423)
-**Execution file:** `research-roadmap-next.yaml`
+**Milestone:** 2026.08.553  
+**Planning date:** 2026-08-14  
+**Status:** Proposed  
+**Predecessor:** 2026.08.552  
+**Execution queue:** `research-roadmap-next.yaml`  
+**Task count:** 12 experiments in four phases
 
-## 1. Executive decision
+## 1. Decision
 
-Milestone 2026.08.552 repairs the evidence boundary before extending Carnot's
-factor-learning claim. V551 established useful deterministic memory and replay
-machinery, but its two scientific positives are not yet powered evidence:
-Exp6408 derives constant timing and memory fields without invoking the declared
-GGUF generators, and Exp6409 replays that surface. V552 therefore treats the
-reported deltas as hypotheses requiring independent audit and genuine live
-reproduction.
+Milestone 2026.08.553 will repair the evidence boundary that blocked V552. It
+will then test two new research ideas on clean data:
 
-The milestone has four phases:
+1. verification cost under compositional constraint saturation; and
+2. capacity-limited continuous memory under controlled interference.
 
-1. establish an immutable V551 claim boundary and an authenticated local-GGUF
-   execution receipt;
-2. test exact structural reduction and selective refinement on a fresh
-   three-family event corpus;
-3. run prospective, execution-grounded continuous self-learning across process
-   restarts and held distribution shifts;
-4. test the default-off ARC route on the canonical live policy path, audit it,
-   and reconcile the milestone.
+The milestone keeps exact validators as the only release authority. Learned
+energy, model output, memory, and routing may propose, rank, abstain, or direct
+work. They may not accept an invalid result.
 
-No learned score becomes a semantic oracle. No task claims an ARC game or level
-solve. No retired generation/parser, CPU-only offload, hidden-state, external
-text-scorer, EBT-pretraining, KAN, FPGA, TSU, or Kona lane is reopened.
+One ARC task preserves the standing generalization floor. It tests a generic
+state-key reachability repair on the canonical live path. It makes no game or
+level solve claim and does not modify the solve registry.
 
-## 2. What milestone 2026.08.551 proved
+No board experiment is scheduled. The local FPGA and TSU state did not change.
+V553 uses dual RTX 3090 CUDA execution for authenticated GGUF work and records
+task-linked resource receipts that can support later hardware comparisons.
 
-V551 completed all six tasks in the active queue.
+## 2. What V552 proved
 
-- Exp6404 proved that activation evidence can detect an incomplete queue. It
-  found only six of twelve roadmap tasks and preserved the active roadmap.
-- Exp6405 found no post-marker source or hardware change that expanded scope.
-- Exp6406 created a clean V550-only factor evidence boundary. It supports narrow
-  internal factor claims and keeps public eligibility false.
-- Exp6407 built an append-only raw record, compiled typed graph, exact
-  neighborhood replay, and fail-closed contamination fixtures. The protocol is
-  useful, but the artifact remains adversarial-flagged because a deterministic
-  no-LLM task carried compute-bound markers with an implausibly short duration.
-- Exp6408's deterministic replay shows that the intended exact admission rule
-  separates clean from contaminated fixtures. It does **not** prove a powered
-  GGUF effect because the implementation did not execute the declared models.
-- Exp6409's replay shows that the proposed graph-local transaction logic can
-  preserve exact fixtures across synthetic sessions. It does **not** prove
-  prospective continuous self-learning because it inherits Exp6408's receipt
-  surface and completes in 0.02 seconds.
+V552 produced real progress, but its strongest public claims did not survive
+the full evidence chain.
 
-The surviving V551 contribution is therefore a protocol and deterministic test
-bed, not a live-model learning result.
+| Evidence | What is proved | Boundary carried into V553 |
+|---|---|---|
+| Exp6412 | The V551 powered claims were not supported by live execution receipts. The additive correction trail works. | Historical artifacts stay immutable. New claims must start from fresh execution. |
+| Exp6413 | All three mandated GGUF families produced authenticated local CUDA receipts. | The reusable process, model-byte, tokenizer, raw-output, and GPU receipt layer survives. |
+| Exp6414 | A fresh three-family factor corpus was created and exact-checker bound. | The artifact is adversarial-flagged because `duration_s=48.151455055` is below the declared 60-second live-model floor. It has no claim-ready standing. |
+| Exp6415 | Exact Boolean WCSP CCG kernelization reduced work while preserving optima on its frozen cases. | This is a clean deterministic control. It does not prove learned energy value. |
+| Exp6416 | Exact-triggered selective refinement matched always-refine accuracy with less work and no false accepts. | Routing is useful when exact triggers retain authority. |
+| Exp6417 | The write-time admission replay reported positive future yield and no retention harm. | The artifact is adversarial-flagged because its measured duration is implausibly small. The public factor claim remains false. |
+| Exp6418–6419 | Dual-path memory and held restart runs recorded valid exact bindings, retention, rollback, and restart structures. | Their reported utility deltas do not recompute from event rows. Development and held recomputed deltas are both zero. |
+| Exp6420 | The independent audit found eight metric mismatches, 24 reused development outputs, cache resurrection, and four underpowered cells. | Prospective CSL eligibility is false. A fresh write-once stream is required. |
+| Exp6421–6422 | A default-off ARC route changed legal executed policy and passed a held-family safety audit. | This is internal policy influence only. No solve, registry, or public ARC claim exists. |
+| Exp6423 | The capstone preserved the authentic receipt layer, blocked flagged factor claims, nullified the CSL public claim, and preserved the narrow ARC policy result. | V553 must not pool positive upstream summaries across flagged or non-recomputable evidence. |
 
-## 3. The three largest gaps to the PRD vision
+## 3. The three largest PRD gaps
 
-### Gap 1 — scientific provenance is weaker than the claim surface
+### Gap 1 — Scientific provenance does not yet support a public energy claim
 
-The PRD requires reliable local verification and the research program requires
-honest, reproducible powered evidence. Current artifacts can carry model IDs,
-GPU-looking values, and `powered` labels without process-level proof that model
-generation happened. This gap invalidates promotion even when deterministic
-replay results are internally consistent.
+The PRD requires trustworthy verification and reproducible local execution.
+V552 has authentic model receipts, exact CCG controls, and safe selective
+refinement. It does not have one clean chain from fresh model bytes to an
+untouched future outcome. Exp6414 and Exp6417 remain flagged. Comparative
+artifacts also lack a common `per_unit_rows` surface.
 
-V552 response: Exp6412 audits and quarantines the affected claims. Exp6413 adds
-subprocess, PID, model-file hash, raw-output hash, monotonic phase-clock, GPU
-sample, completion, and exit receipts. All later powered tasks consume that
-contract.
+V553 response:
 
-### Gap 2 — continuous self-learning is not yet prospective or execution-grounded
+- add a reusable task-scoped runtime receipt contract;
+- create a new constraint-count-stratified factor corpus;
+- recompute every aggregate from immutable event rows; and
+- rerun the write-time admission question with honest timing and current
+  adversarial checks.
 
-FR11 calls for persistent improvement from experience without catastrophic
-forgetting. V551 replayed pre-built rows. It did not show new model outputs,
-exact outcomes, commits, restarts, drift, and future evaluation in causal order.
+### Gap 2 — FR11 continuous self-learning has structure but no verified utility
 
-V552 response: Exp6418 implements the dual-path hypothesis from Agentic Router:
-proposal-coverage memory and selection memory are updated separately from real
-exact outcomes. Exp6419 repeats the result on a sealed held stream. Exp6420
-independently attacks provenance, temporal order, rollback, and contamination.
+The PRD calls for online improvement with immutable validation, rollback, and
+bounded forgetting. V552 recorded the right transaction shapes, but the audit
+found zero recomputed utility delta, raw-output reuse, cache resurrection, and
+underpowered cells. This is not a verified self-learning result.
 
-### Gap 3 — exact constraint structure and live ARC policy influence remain thin
+V553 response:
 
-Carnot has exact checkers and samplers, but the current factor lane does not
-exploit both the macro graph and micro numeric structure of a WCSP before
-sampling. Separately, the ARC north-star route has internal causal evidence but
-still lacks a fresh default-off executed-policy result on the canonical live
-path.
+- generate a fresh write-once event stream;
+- measure a memory capacity-versus-utility frontier;
+- attack authority conflicts, supersession, and retrieval collisions;
+- replicate on a sealed held shift after real process restarts; and
+- run an independent audit that derives every headline from rows.
 
-V552 response: Exp6415 tests exact CCG maxflow kernelization before energy
-sampling. Exp6421 runs the ARC route as a default-off policy influence test;
-Exp6422 audits held-family behavior. Neither task receives solve credit.
+### Gap 3 — Live autonomy and deployment cost remain below the PRD vision
 
-## 4. Research refresh incorporated
+The live ARC route can affect policy, but it has not improved a public-score-
+relevant outcome. The adapter-bypassed public baseline clears at least one
+level in 8 of 25 games. A generic state key collapses `sc25` after 24 actions,
+so the current live search cannot even expose that game to later policy work.
+Hardware acceleration also remains proof-of-concept only.
 
-The full dated refresh is recorded in `research-references.md` under
-`V552 Planner Refresh` before this roadmap was designed.
+V553 response:
 
-- **Agentic Router** (arXiv:2608.09184) motivates separate proposal and
-  selection learning paths updated from real execution feedback.
-- **Constraint Composite Graph WCSP** (arXiv:2608.10005) motivates exact
-  maxflow kernelization that preserves the optimum before sampling.
-- **Rethinking LLM Verification** (arXiv:2608.10725) motivates using abstention
-  as a trigger for targeted exact refinement rather than as a learned approval.
+- diagnose and repair the generic state-key reachability invariant;
+- test it on the full adapter-bypassed public roster with per-game regression
+  gates; and
+- record task-linked verification cost and GPU use for all powered work.
 
-Secondary checks produced no executable TSU, Kona, or new local dependency.
-Extropic lists Z1 hardware as early access 2027. Public Kona pages still expose
-no weights or reproducible local API.
+The ARC task does not claim or register a solve. The hardware part is evidence
+infrastructure only. It makes no speed, power, or board-availability claim.
+
+## 4. Research refresh and experiment hooks
+
+The dated source ledger is in `research-references.md` under the V553 planner
+marker. Four findings change the experiment design.
+
+| Source | Carnot use in V553 | Boundary |
+|---|---|---|
+| Constraint Saturation Evaluation, arXiv:2608.12426 | Stratify factor rows by constraint count and interaction class. Report per-constraint and joint exact success. | No LLM judge. No claim outside the frozen families. |
+| Verification Cost, arXiv:2608.08709 | Measure exact correctness and cost-to-verdict under fixed budgets as separate outcomes. | Cost does not weaken the exact release veto. |
+| Formal Agent Memory, arXiv:2608.11654 | Measure coverage, precision, retention, and query value across fixed memory capacities. | Memory is not an oracle. |
+| Controlled Memory Interference, arXiv:2608.07622 | Add authority conflict, supersession, temporal-validity, and retrieval-collision attacks. | A failed attack blocks promotion. |
+
+Recent vector-spin hardware, trie decoding, and neural drift bounds remain
+controls. Carnot has no local vector-spin device. The generated-answer grammar
+lane remains retired. Neural drift claims wait until row-level memory effects
+are real.
+
+Semantic Scholar still exposes 33 EBT citations and eight ARM-EBM citations.
+OpenReview and Hugging Face Papers add no executable exact-authority baseline.
+GitHub Trending adds no required runtime dependency. Extropic Z1 remains a
+future access target. Kona still has no public weights or documented local API.
 
 ## 5. Target architecture
 
 ```text
-             mandated local GGUF families on dual RTX 3090
-                               |
-                               v
-                 +---------------------------+
-                 | authenticated run receipt |
-                 | PID / hashes / clocks /   |
-                 | raw bytes / GPU samples   |
-                 +-------------+-------------+
-                               |
-                               v
-                 +---------------------------+
-                 | immutable fresh event log |
-                 | source + license + split  |
-                 +-------------+-------------+
-                               |
-                    +----------+----------+
-                    |                     |
-                    v                     v
-        +-----------------------+  +-----------------------+
-        | exact event checkers  |  | exact CCG kernelizer  |
-        | semantic authority    |  | optimum-preserving    |
-        +-----------+-----------+  +-----------+-----------+
-                    |                          |
-                    +------------+-------------+
-                                 v
-                  +-----------------------------+
-                  | selective refinement router |
-                  | never / always / abstain     |
-                  +--------------+--------------+
-                                 |
-                                 v
-                  +-----------------------------+
-                  | exact transactional release |
-                  | commit/reject/quarantine     |
-                  +--------------+--------------+
-                                 |
-               +-----------------+------------------+
-               |                                    |
-               v                                    v
-   +--------------------------+        +--------------------------+
-   | proposal-coverage memory |        | consequence/selection    |
-   | feasible candidates      |        | memory from exact outcome|
-   +-------------+------------+        +-------------+------------+
-                 +-------------+----------------------+
-                               v
-                   future exact held evaluation
+                   task-scoped resource receipt contract
+                   phase clocks | PID | GPU | runner | hashes
+                                      |
+                                      v
+  mandated local GGUFs ---> immutable per-unit event rows
+       Qwen MoE             raw bytes | prompt | model | source | cost
+       Gemma dense                       |
+       Gemma MoE                         v
+                              deterministic exact checks
+                                      |
+                    +-----------------+------------------+
+                    |                                    |
+                    v                                    v
+        constraint saturation + cost          exact write-time admission
+          never / always / selective           commit / reject / quarantine
+                    |                                    |
+                    +-----------------+------------------+
+                                      |
+                                      v
+                         capacity-limited online memory
+                    proposal coverage | selection utility
+                                      |
+                    +-----------------+------------------+
+                    |                                    |
+                    v                                    v
+          authority-interference attacks       held shift + process restart
+                    |                                    |
+                    +-----------------+------------------+
+                                      |
+                                      v
+                         independent row recomputation
+                                      |
+                           exact release veto remains final
 
-   Independent ARC branch:
-   canonical live agent -> default-off route -> executed actions/observations
-                         -> exact game feedback -> causal policy audit
-                         -> no solve credit / no registry update
+  canonical live ARC path
+        observation ---> collision certificate ---> generic state-key suffix
+             |                                         |
+             +---------- full-roster matched A/B <-----+
+                  default off | no solve credit
 ```
 
-The immutable raw log and exact checker remain authoritative. The compiled
-graph, proposal memory, selection memory, learned diagnostics, and routing
-scores are caches or proposal mechanisms only.
+Three rules hold across the diagram:
+
+1. Every comparative claim has immutable `per_unit_rows`.
+2. Every aggregate is a deterministic function of those rows.
+3. A model, score, router, or memory cannot override an exact rejection.
 
 ## 6. Phase design
 
-### Phase 0 — evidence integrity and authentic runtime (Exp6410–Exp6413)
+### Phase 0 — Evidence and execution controls
 
-**Exp6410 — V551 terminal handoff and V552 queue preflight**
+#### Exp6424 — V552 terminal handoff and V553 queue preflight
 
-Reconcile the six terminal artifacts, the incomplete-queue finding, the new
-claim correction, and the full fourteen-task queue. Fail closed on missing
-artifacts, malformed gates, retired chains, model-policy violations, or prompt
-contract violations.
+Question: Is the V553 queue complete, schema-valid, non-retired, and anchored to
+the actual V552 terminal evidence?
 
-**Exp6411 — dated source delta and executable scope freeze**
+The task records all V552 artifacts, conductor outcomes, current adversarial
+findings, and scientific eligibility. It validates all 12 V553 tasks before
+research starts. It also checks prompts, gates, model policy, prior failures,
+deliverables, and protected files.
 
-Validate the new reference marker and freeze the three promoted methods. Keep
-product announcements, unavailable sources, and retired mechanisms out of the
-execution scope.
+Deliverable:
+`results/experiment_6424_v553_terminal_handoff_and_queue_preflight.json`
 
-**Exp6412 — independent V551 powered-claim integrity audit**
+#### Exp6425 — Recurring gate-block root cause and diagnostic contract
 
-Inspect source and artifacts for Exp6407–Exp6409. Recompute whether each runtime
-field is measured, derived, constant, or inherited. Write an additive
-corrigendum/claim-boundary ledger without erasing historical determinations.
-The expected safe boundary is protocol-ready but powered-result-unproven.
+Question: Why did `blocked_gate_check_failed` stop 31 tasks across recent
+milestones without identifying the failed gate?
 
-**Exp6413 — authenticated three-family GGUF execution receipt layer**
+This is the mandatory-next issue from `ops/known-issues.md`. The task traces the
+31 cases to their producer fields and structured gates. It separates correct
+scientific refusals from missing data, wrong field names, wrong types, retired
+dependencies, and stale artifact reads. It may repair shared producer or
+artifact diagnostics outside the conductor. It must not rerun the blocked
+experiments.
 
-Build and mutation-test the reusable receipt contract. Run one bounded canary
-per mandated family through the actual local inference path. A receipt is ready
-only when the process, model bytes, raw output, GPU activity, timing, and exit
-status agree. Legacy small models may appear only in CPU smoke tests.
+Deliverable:
+`results/experiment_6425_recurring_gate_block_root_cause.json`
 
-Phase exit: the V551 claim boundary is immutable and at least one authentic
-receipt exists for each mandated family. Synthetic or constant receipts cannot
-pass.
+#### Exp6426 — Task-scoped runtime and resource receipt contract
 
-### Phase 1 — exact structure and selective verification (Exp6414–Exp6417)
+Question: Can each powered experiment prove which task used which model,
+runner, process, GPU, and wall-clock interval?
 
-**Exp6414 — fresh three-family exact factor-event corpus**
+The contract captures monotonic phase clocks, subprocess IDs, command and
+config hashes, model-byte hashes, raw-output hashes, PID-linked GPU samples,
+runner selection, concurrency, exit status, and attribution failures. It must
+work for successful, blocked, interrupted, and CPU-only tasks. It does not
+modify the conductor.
 
-Generate a sealed event corpus from the three mandated models using Exp6413's
-receipt layer. Preserve raw bytes before parsing. Exact checkers label outcomes.
-Each model/family cell can be licensed, abstained, or rejected independently;
-there is no universal-support gate.
+Deliverable:
+`results/experiment_6426_task_scoped_runtime_receipt_contract.json`
 
-**Exp6415 — Boolean WCSP constraint-composite-graph kernelization**
+### Phase 1 — Clean factor evidence and verification cost
 
-Implement a small exact CCG/maxflow kernelizer and compare it with unkernelized
-exact and energy-sampling controls. Verify optimum preservation by exhaustive or
-ILP reference on frozen small instances. Report reduction and cost, not quantum
-or hardware advantage.
+#### Exp6427 — Fresh constraint-saturation factor corpus
 
-**Exp6416 — abstention-triggered exact selective-refinement A/B**
+Question: Can the three mandated local model families produce a clean,
+row-recomputable factor corpus with no current adversarial flag?
 
-Compare never-refine, always-refine, and exact-triggered selective refinement
-on frozen Exp6414 rows. Triggers include exact abstention, missing provenance,
-checker disagreement, and structural reducibility. CCG and deterministic
-checkers perform refinement. Learned confidence is diagnostic only.
+This task is a changed rerun of Exp6414. It uses Exp6426 receipts, new prompts,
+new raw bytes, and monotonic task timing. The corpus is balanced across three
+factor families, three model families, constraint counts, and interaction
+classes. Exact checkers score both each constraint and the joint result.
 
-**Exp6417 — genuine powered write-time admission A/B**
+Promotion gates:
 
-Repeat V551's admission question on the authentic corpus. Compare frozen,
-write-everything, and provenance-plus-exact admission under chronological
-future evaluation. The task is explicitly a changed mechanism after Exp6408:
-real raw model bytes and process receipts replace constant-derived runtime rows.
+- all three mandated models execute through `cached_sota_pair()`;
+- every row has a unique raw-output hash and task receipt;
+- the corpus and future partition are sealed before analysis;
+- all headline metrics recompute from `per_unit_rows`; and
+- current adversarial flag count is zero.
 
-Phase exit: authentic fresh events exist, exact kernelization preserves the
-optimum, selective refinement is safe, and genuine write-time admission has a
-positive future exact-yield delta without increased contamination.
+If the same duration-flagged verdict recurs, retire this exact rerun scope.
 
-### Phase 2 — prospective continuous self-learning (Exp6418–Exp6420)
+Deliverable:
+`results/experiment_6427_fresh_constraint_saturation_factor_corpus.json`
 
-**Exp6418 — execution-grounded dual-path continuous self-learning**
+#### Exp6428 — Clean exact write-time factor admission A/B
 
-Run at least four chronological sessions. Proposal-coverage memory changes only
-after exact evidence that a proposal was feasible. Selection memory changes
-only after exact observed consequence labels. Both are predecessor-bound,
-off-commit, restart-safe, and subject to exact retention tests.
+Question: Does exact write-time admission improve untouched future exact yield
+over a frozen arm without increasing contamination or reducing retention?
 
-**Exp6419 — held-shift and restart replication**
+This is a changed rerun of Exp6417. It consumes only the clean Exp6427 rows and
+records real nonzero execution time. Frozen, write-everything, and exact-
+admission arms receive matched evidence and work. The future partition is
+evaluated once.
 
-Freeze the mechanism from Exp6418. Generate a new held stream with model-family,
-constraint-family, surface, and temporal shifts. Test restarts, expiry,
-supersession, and untouched future evaluation once.
+Promotion gates:
 
-**Exp6420 — independent CSL authenticity and safety audit**
+- `delta_future_exact_yield > 0`;
+- contamination does not increase over frozen and stays below write-everything;
+- protected retention does not regress;
+- every aggregate matches row recomputation; and
+- the current adversarial flag count is zero.
 
-Run ungated so a failed or missing upstream remains visible. Attack time order,
-future-label leakage, model identity, raw-output substitution, stale heads,
-duplicate effects, partial writes, rollback, contamination, and protected
-retention. Verify that the learned paths never override exact vetoes.
+If the same flagged positive verdict recurs, retire this exact rerun scope.
 
-Phase exit: two independent prospective streams show non-negative protected
-retention, bounded growth, zero surviving contamination, and positive held
-future exact yield, with clean authentic receipts and audit.
+Deliverable:
+`results/experiment_6428_clean_write_time_factor_admission_ab.json`
 
-### Phase 3 — default-off ARC policy evidence and reconciliation (Exp6421–Exp6423)
+#### Exp6429 — Constraint saturation and verification-cost A/B
 
-**Exp6421 — default-off live ARC executed-policy influence A/B**
+Question: Under a fixed verification budget, where does exact joint success
+collapse, and can exact-triggered selective verification reduce cost without
+adding false accepts?
 
-Use the canonical live agent entrypoint and the shipped local generator. Compare
-route disabled with explicit opt-in at matched game windows, seeds, budgets,
-and generator calls. Credit only route firings, changed legal actions, exact
-observations, and causal policy metrics. Do not claim a solve and do not update
-the solve registry.
+The task compares never-refine, always-refine, and exact-triggered selective
+arms on the sealed Exp6427 rows. It reports results by constraint count,
+interaction class, model family, and verifier budget. It separates correctness,
+abstention, time-to-verdict, checker calls, and verification-cost errors.
 
-**Exp6422 — independent held-family ARC safety audit**
+This task does not require a positive Exp6428 result. It asks a distinct
+measurement question about the clean corpus.
 
-Run ungated. Reproduce or inspect the policy influence on a sealed held game
-family and attack route-label swaps, off-path fixtures, action substitution,
-budget mismatch, source access, per-game adapters, duplicate games, and solver
-reachability. Any outer-loop or development-proxy evidence remains non-headline.
+Deliverable:
+`results/experiment_6429_constraint_saturation_verification_cost_ab.json`
 
-**Exp6423 — adversarial capstone and reconciliation**
+### Phase 2 — Continuous self-learning with independent recomputation
 
-Recompute all gates from primary artifacts. Separate protocol, powered,
-continuous-learning, ARC-internal, and public claims. Reconcile OpenSpec,
-traceability, status, changelog, known issues, exclusion decisions, and the next
-research question without widening any failed boundary.
+#### Exp6430 — Prospective write-once memory capacity frontier
 
-## 7. Experiment matrix
+Question: Does exact-governed continuous memory improve future exact outcomes,
+and how does value change with memory capacity?
 
-| Exp | Phase | Question | Primary deliverable | Headline gate |
-|---|---:|---|---|---|
-| 6410 | 0 | Is the V551 boundary and V552 queue activation-safe? | `results/experiment_6410_v552_terminal_handoff_and_queue_preflight.json` | queue clean |
-| 6411 | 0 | Did new research change executable scope? | `results/experiment_6411_v552_post_marker_source_scope_freeze.json` | scope frozen |
-| 6412 | 0 | Which V551 claims have authentic powered provenance? | `results/experiment_6412_v551_powered_claim_integrity_audit.json` | clean claim boundary |
-| 6413 | 0 | Can each mandated GGUF produce authentic receipts? | `results/experiment_6413_authenticated_sota_gguf_execution_receipts.json` | 3/3 authentic |
-| 6414 | 1 | Can fresh model events be sealed and exactly labeled? | `results/experiment_6414_fresh_three_family_factor_event_corpus.json` | corpus ready |
-| 6415 | 1 | Does CCG kernelization preserve optimum and reduce work? | `results/experiment_6415_boolean_wcsp_ccg_kernelization.json` | exact preservation |
-| 6416 | 1 | Does exact-triggered refinement beat never-refine safely? | `results/experiment_6416_selective_exact_refinement_ab.json` | positive exact delta |
-| 6417 | 1 | Does genuine exact admission improve future yield? | `results/experiment_6417_authentic_write_time_factor_admission_ab.json` | positive/no contamination |
-| 6418 | 2 | Can two learning paths improve from real outcomes? | `results/experiment_6418_execution_grounded_dual_path_csl.json` | prospective CSL ready |
-| 6419 | 2 | Does the frozen learner replicate under held shift? | `results/experiment_6419_held_shift_restart_csl_replication.json` | held replication |
-| 6420 | 2 | Is the CSL claim authentic and safe? | `results/experiment_6420_csl_authenticity_safety_audit.json` | audit clean |
-| 6421 | 3 | Does opt-in routing causally change live ARC policy? | `results/experiment_6421_arc_opt_in_executed_policy_ab.json` | policy influence only |
-| 6422 | 3 | Does ARC policy evidence survive held audit? | `results/experiment_6422_arc_held_family_policy_safety_audit.json` | audit clean/no solve |
-| 6423 | 3 | What survives adversarial reconciliation? | `results/experiment_6423_v552_adversarial_capstone.json` | terminal boundary |
+This is the milestone's required continuous self-learning task. It is gated on
+a clean positive Exp6428 result. It generates a new chronological stream with
+the three mandated GGUF families. Every event gets a fresh raw output. The task
+proves the manifest path did not exist before generation. It compares frozen
+memory with fixed capacities and reports coverage, precision, exact future
+yield, retention, forgetting, growth, restart recovery, and cost.
 
-## 8. Dependency graph
+The task addresses Exp6420 by construction:
+
+- no raw output may serve more than one event;
+- all rows are written before aggregate calculation;
+- no cached held manifest may be resurrected;
+- effects are reported with counts and uncertainty; and
+- exact validators remain the release authority.
+
+Deliverable:
+`results/experiment_6430_prospective_write_once_memory_capacity_frontier.json`
+
+#### Exp6431 — Controlled memory-interference A/B
+
+Question: Can the frozen Exp6430 memory policy resist authority conflict,
+supersession, temporal invalidity, retrieval collision, and poisoning?
+
+The task applies a pre-registered interference matrix to the sealed stream. It
+compares capacity-matched memory with and without authority-aware retrieval and
+write controls. It measures target exposure, downstream use, plasticity,
+protected stability, contamination, rollback, and exact future yield.
+
+An attack that reaches release authority or survives rollback blocks promotion.
+
+Deliverable:
+`results/experiment_6431_controlled_memory_interference_ab.json`
+
+#### Exp6432 — Held-shift process-restart replication
+
+Question: Does the frozen memory policy retain any positive effect on a new
+distribution after real process restarts?
+
+The task uses new prompts and new raw outputs. It does not replay development
+bytes. It seals the held manifest before model execution, restarts the process
+between sessions, and verifies memory heads from disk. It reports row-derived
+effects and negative transfer by model and family.
+
+Deliverable:
+`results/experiment_6432_held_shift_process_restart_csl_replication.json`
+
+#### Exp6433 — Independent CSL row-recomputation and safety audit
+
+Question: Do Exp6430 through Exp6432 support a prospective CSL claim when an
+independent implementation recomputes every metric and replays every attack?
+
+This audit is deliberately ungated. Missing, skipped, null, flagged, or
+underpowered upstream results must remain visible. The audit cannot import the
+upstream aggregate functions. It reads immutable rows and derives counts,
+rates, deltas, uncertainty, retention, forgetting, contamination, and cost.
+
+If it repeats Exp6420's null verdict, the exact repeated CSL claim scope is
+retired. Transaction mechanics may remain valid as non-utility infrastructure.
+
+Deliverable:
+`results/experiment_6433_csl_row_recomputation_safety_audit.json`
+
+### Phase 3 — Live-path reachability and adversarial close
+
+#### Exp6434 — ARC state-key reachability invariant A/B
+
+Question: Does a generic collision-certified state key prevent premature
+frontier collapse without causing per-game regressions?
+
+The task starts from the current 25-game adapter-bypassed public baseline. It
+detects observation-history collisions generically and adds the smallest state
+suffix only after a collision certificate. It runs matched baseline and arm
+cells across the full roster and multiple seeds.
+
+The success surface is search reachability, regression safety, and action cost.
+The task makes no game or level solve claim. It does not update
+`ops/arc_solve_registry.yaml`. Public games are a development proxy, not hidden
+game evidence.
+
+Deliverable:
+`results/experiment_6434_arc_state_key_reachability_ab.json`
+
+#### Exp6435 — V553 adversarial capstone and reconciliation
+
+Question: Which V553 claims remain eligible after current adversarial checks,
+row recomputation, dependency review, and determination preservation?
+
+The capstone audits all 12 tasks. It cannot average away missing, skipped,
+flagged, null, or underpowered cells. It records separate eligibility for:
+
+- the factor and verification-cost result;
+- prospective continuous self-learning;
+- the narrow ARC reachability result; and
+- hardware or deployment claims.
+
+It reconciles OpenSpec, traceability, status, changelog, known issues, the
+exclusion manifest, and the claim ledger. Hardware eligibility remains false
+unless an authenticated hardware artifact exists, which V553 does not plan.
+
+Deliverable:
+`results/experiment_6435_v553_adversarial_capstone.json`
+
+## 7. Dependency graph
 
 ```text
-6410 ----> 6411
-  |          |
-  v          v
-6412       scope freeze
-  |
-  +------------------+
-                     |
-6413 ----> 6414 ----> 6416 ----> 6417 ----> 6418 ----> 6419
-  |          ^          ^           ^           |
-  |          |          |           |           v
-  |        fresh      6415 CCG      |         6420 audit (ungated)
-  |        corpus                    |
-  +---------------------------------+
-  |
-  +----> 6421 ARC policy A/B ----> 6422 audit (ungated)
+Exp6424  terminal handoff and queue preflight
+   |
+   +------------------------+------------------------+
+   |                        |                        |
+   v                        v                        v
+Exp6425                  Exp6426                 later capstone
+gate-block audit         runtime receipts
+                            |
+                            v
+                         Exp6427
+                      clean factor corpus
+                       /             \
+                      v               v
+                   Exp6428          Exp6429
+                clean admission   saturation + cost
+                      |
+                      v
+                   Exp6430
+               memory capacity frontier
+                    /   \
+                   v     v
+                Exp6431  |
+              interference|
+                   \      |
+                    v     v
+                     Exp6432
+                 held restart replication
+                         |
+                         v
+                     Exp6433
+                  independent audit
 
-6410..6422 -----------------------> 6423 capstone (ungated)
+Exp6434  ARC reachability A/B  ----------------------+
+Exp6425  gate-block result     ----------------------+--> Exp6435
+Exp6429  verification-cost result -------------------+
+Exp6433  CSL audit ----------------------------------+
 ```
 
-Structured conductor gates:
+Structured conductor gates exist only where a failed prerequisite makes the
+downstream experiment meaningless. Exp6433 and Exp6435 remain ungated so they
+can report missing or blocked evidence.
 
-- Exp6414: Exp6413 `authenticated_receipt_contract_ready_score == 1.0`.
-- Exp6416: Exp6414 `fresh_factor_event_corpus_ready_score == 1.0` and Exp6415
-  `ccg_kernelization_exact_ready_score == 1.0`.
-- Exp6417: Exp6412 `v551_claim_boundary_ready_score == 1.0`, Exp6414 corpus
-  ready, and Exp6416 `selective_refinement_safe_score == 1.0`.
-- Exp6418: Exp6417 ready, future exact-yield delta `> 0`, and contamination
-  delta `<= 0`.
-- Exp6419: Exp6418 ready and prospective future exact-yield delta `> 0`.
-- Exp6421: Exp6413 authenticated receipt contract ready.
+## 8. Models and inference policy
 
-Audits and the capstone are deliberately ungated. Missing or failed upstream
-evidence must appear as missing/null/blocked, not disappear behind a conductor
-skip.
-
-## 9. Model and inference policy
-
-Every experiment that invokes an LLM must resolve `MODEL_SPECS` through
-`cached_sota_pair()` and include at least one of:
+Experiments that execute an LLM are Exp6427, Exp6430, and Exp6432. Their
+`MODEL_SPECS` must include:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF`;
-- `unsloth/gemma-4-31B-it-GGUF`;
+- `unsloth/gemma-4-31B-it-GGUF`; and
 - `unsloth/gemma-4-26B-A4B-it-GGUF`.
 
-Exp6413, Exp6414, Exp6418, and Exp6419 use all three families. Exp6421 uses the
-canonical shipped ARC generator, which must be one of the mandated models and
-must be named in `MODEL_SPECS`. Exp6422 does not silently substitute a model.
-Legacy Qwen3.5-0.8B and Gemma E4B are CPU smoke tests only and cannot produce a
-headline result. Use embedded GGUF tokenizers; never fetch a tokenizer through
-`AutoTokenizer`.
+Each task must use `cached_sota_pair()` and the embedded GGUF tokenizer. It
+must not call `AutoTokenizer`. It must bind model bytes, prompt, runner,
+process, raw output, GPU samples, and exit status to each event row.
 
-## 10. Hardware requirements and preconditions
+`Qwen3.5-0.8B` and `gemma-4-E4B-it` may appear only in CPU smoke tests. They
+cannot support a headline cell.
 
-### Required now
+## 9. Hardware requirements
 
-- two local RTX 3090 24 GiB GPUs;
-- cached GGUF files for all three mandated families;
-- a CUDA-capable llama.cpp-backed runtime with actual offload support;
-- `nvidia-smi` or NVML telemetry sampled against the model process PID;
-- sufficient local storage for raw-output, model-hash, event, and checkpoint
-  sidecars;
-- CPU exact-checker, maxflow, exhaustive/ILP reference, and test capacity.
+| Resource | Tasks | Requirement and boundary |
+|---|---|---|
+| Dual RTX 3090, 48 GB total VRAM | Exp6427, Exp6430, Exp6432 | Run mandated GGUF families with CUDA offload. Record task-linked PIDs, GPU samples, concurrency, runner selection, and model-byte hashes. A CPU fallback blocks headline eligibility. |
+| CPU and system RAM | All tasks | Exact checkers, CCG, row recomputation, ARC search, and audit work. Record CPU-only substrate honestly. |
+| Local persistent disk | Exp6427–Exp6433 | Store immutable raw outputs, per-unit JSONL rows, manifests, memory heads, restart receipts, and hashes. Pre-existing held paths block freshness. |
+| ARC live environment | Exp6434 | Use the canonical adapter-bypassed public benchmark and exact game interface. No source reads, exhaustive ground-truth search, or per-game adapter. |
+| KV260, GateMate, PolarFire | None | No state change justifies another probe. Existing POC boundaries remain. |
+| Extropic XTR-0 or Z1 | None | No authenticated local route exists. No execution, power, latency, or availability claim. |
 
-Each compute task checks these before model loading. A missing model, embedded
-tokenizer, CUDA offload receipt, free-VRAM threshold, process telemetry route,
-or exact checker produces a terminal blocked artifact. It does not fall back to
-a CPU headline run.
+The milestone does not claim hardware acceleration. Exp6426 creates the cost
+and attribution evidence needed for a later matched hardware comparison.
 
-### Explicitly not required
+## 10. Measurement contract
 
-- KV260, GateMate, PolarFire, or a new FPGA bitstream;
-- XTR-0, Z1, or another TSU;
-- AMD NPU/ROCm acceleration;
-- Kona weights or API;
-- remote model APIs.
+Every comparative artifact must include `per_unit_rows`. Each row must carry a
+stable unit ID, arm, partition, model or substrate, source hashes, outcome,
+work, timing, and exclusion reason. Aggregate fields must identify their row
+filter and deterministic reduction.
 
-No hardware speed, energy, power, or availability claim is in scope.
+Every task must include:
 
-## 11. Measurement and claim rules
+- `blocked_reason`, even when null;
+- `inference_substrate`;
+- `field_principles` for every required field and gate;
+- `field_provenance` classified as measured, derived, constant, or upstream;
+- `random_seed`, `duration_s`, `tests_run`, and `reproducibility_checksum`;
+- current adversarial and determination-preservation results when a scientific
+  claim is made.
 
-- Freeze manifests, prompts, checker hashes, model files, model configs, event
-  order, and gates before future outcomes are visible.
-- Capture raw model bytes before parsing or factor extraction.
-- Record process/PID, command/config hash, model hash, start/load/first-token/
-  completion/end monotonic clocks, sampled GPU memory/utilization, exit status,
-  and raw-output hash.
-- Classify every artifact field as measured, derived, constant, or upstream.
-- Exact checkers may be evaluation oracles. Learned energies, model text,
-  confidence, memory, routing, and CCG reduction are not semantic oracles.
-- Report missing, underpowered, blocked, abstained, and adversarial-flagged cells
-  explicitly.
-- Do not pool model-family abstentions into a universal result.
-- Do not update model weights in the factor-learning lane. The selection path
-  may update only the explicitly preregistered lightweight state if tests prove
-  exact vetoes and protected retention remain intact.
-- ARC tasks record `level_solve_claimed=false`, `solve_registry_modified=false`,
-  and `outer_loop_re_used=false`.
+The main claim ladder is:
 
-## 12. Success, partial, and retirement decisions
+```text
+authenticated execution
+  -> immutable per-unit evidence
+  -> exact row recomputation
+  -> positive held effect with uncertainty
+  -> adversarial attacks fail closed
+  -> narrow claim eligibility
+```
 
-The milestone is fully successful only if:
+Failure at one rung blocks every higher rung. It does not erase valid lower-
+rung engineering evidence.
 
-1. the V551 claim boundary is clean and immutable;
-2. all three mandated model families produce authentic execution receipts;
-3. exact CCG kernelization preserves every frozen optimum;
-4. selective refinement is non-harmful and improves exact yield or reduces work
-   at matched exact accuracy;
-5. genuine write-time admission improves future exact yield without increased
-   contamination;
-6. prospective dual-path self-learning replicates on a held shifted stream with
-   no surviving protected-retention regression;
-7. independent audits are clean; and
-8. ARC policy influence, if any, is causal, default-off, held, and explicitly
-   non-solve.
+## 11. Success and retirement rules
 
-A partial result is valid. The capstone must narrow claims rather than convert a
-protocol success into a powered success. Repeating Exp6408 or Exp6409's same
-verdict without authentic process receipts mechanically retires that rerun
-scope. Repeating old CPU-only offload, generated-answer transport, or frozen CSL
-requalification is prohibited by the exclusion manifest.
+V553 is scientifically successful if it closes questions honestly. A clean
+null is acceptable. A fabricated or non-recomputable positive is not.
 
-## 13. Operational reconciliation
+Public factor eligibility requires:
 
-Implementation tasks must add or update the relevant `REQ-*` and `SCENARIO-*`
-entries before code, write focused tests first, run applicable checks from
-`ops/e2e-test-plan.md`, and keep these records aligned before the capstone:
+- clean Exp6427 execution and rows;
+- positive and clean Exp6428 held future yield;
+- zero false-accept increase and no retention regression; and
+- an eligible Exp6435 determination.
 
-- `openspec/capabilities/*/spec.md`;
-- `_bmad/traceability.md`;
-- `ops/status.md`;
-- `ops/changelog.md`;
-- `ops/conductor-log.md` through normal conductor execution;
-- `ops/known-issues.md` for unresolved authenticity or provenance gaps;
-- `ops/exclusion_manifest.yaml` only when a declared same-verdict retirement
-  actually fires.
+Prospective CSL eligibility requires:
 
-`_bmad/architecture.md` was last reconciled on 2026-07-03 and is stale relative
-to the current live ARC and factor-memory paths. Exp6423 must either reconcile
-it from verified V552 evidence or record a concrete blocked documentation item.
+- fresh write-once event outputs;
+- positive row-recomputed future value on development and held streams;
+- bounded memory growth and protected retention;
+- no surviving critical interference attack; and
+- an eligible Exp6433 and Exp6435 determination.
+
+ARC eligibility is limited to a generic reachability result. Exp6434 cannot
+create solve credit or support a hidden-game claim.
+
+The following repeated scopes carry mechanical retirement:
+
+| New task | Prior task | Retire if repeated |
+|---|---|---|
+| Exp6427 | Exp6414 | The clean corpus again ends with the same flagged evidence verdict. |
+| Exp6428 | Exp6417 | The admission A/B again ends with the same flagged positive verdict. |
+| Exp6430–Exp6433 | Exp6420 | The fresh CSL chain again ends with non-recomputable rows or open raw-output/cache attacks. |
+
+No retired experiment ID is reused. No task depends on a retired upstream ID.
+
+## 12. Reconciliation obligations
+
+Before V553 is complete:
+
+1. add or update relevant `REQ-*` and `SCENARIO-*` entries before code;
+2. run focused unit tests and applicable E2E checks from
+   `ops/e2e-test-plan.md`;
+3. run roadmap schema, prior-failure, gate, exclusion, spec-coverage,
+   adversarial, determination-preservation, and root-clutter checks;
+4. preserve the three unrelated dirty audit reports present at planning time;
+5. reconcile `openspec/`, `_bmad/traceability.md`, `ops/status.md`,
+   `ops/changelog.md`, `ops/known-issues.md`, and claim records; and
+6. write one honest next research question from the surviving evidence.
+
+The milestone must not modify `research-roadmap.yaml` during planning. It must
+not modify `scripts/research_conductor.py`. It must not push.
