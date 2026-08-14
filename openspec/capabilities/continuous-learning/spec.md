@@ -3452,6 +3452,206 @@ protected retention does not regress
 | SCENARIO-LEARN-6417-ATTACKS | Implemented: `python/carnot/experiment_6417_authentic_write_time_factor_admission_ab.py`. | Implemented: `tests/python/test_experiment_6417_authentic_write_time_factor_admission_ab.py`. |
 | SCENARIO-LEARN-6417-READY | Implemented: `python/carnot/experiment_6417_authentic_write_time_factor_admission_ab.py`. | Implemented: `tests/python/test_experiment_6417_authentic_write_time_factor_admission_ab.py`. |
 
+## REQ-LEARN-6428: Clean Write-Time Factor Admission A/B
+
+**Given** Exp6427 provides a clean row-recomputable factor corpus and Exp6417 is
+adversarial-flagged for implausible deterministic replay duration
+**When** Exp6428 runs on planning date 20260814
+**Then** it SHALL write
+`results/experiment_6428_clean_write_time_factor_admission_ab.json`
+**And** it SHALL perform no new model generation.
+
+Exp6428 SHALL revalidate Exp6427 structured gates, row hashes, task receipts,
+event order, partitions, exact checkers, licenses, initial heads, disk, CPU,
+RAM, and untouched future seal before any arm runs. Exp6427 `calibration` rows
+SHALL serve as the protected retention control partition for this replay.
+
+Exp6428 SHALL freeze acquisition, protected retention, and future partitions.
+It SHALL prove future outcomes were unavailable when every proposal and
+disposition was recorded. It SHALL compare `frozen`, `write_everything`, and
+`exact_admission` arms with matched row order, evidence, checker calls,
+consumer budget, and initial head.
+
+Exp6428 SHALL bind every proposal to raw event, model, prompt, source, license,
+checker, predecessor, expiry, supersession, and refinement hashes. Each
+proposal SHALL receive exactly one atomic disposition: `Commit`, `Reject`,
+`Quarantine`, or `Defer`. Contradicted, implicit, stale, duplicate, replayed,
+superseded, poisoned, malformed, unlicensed, and stale-head rows SHALL fail
+closed.
+
+Exp6428 SHALL write one per-unit future row for every arm and cell before any
+aggregate. It SHALL derive exact yield, contamination, false accepts, false
+rejects, protected retention, abstention, growth, escalation, and work only in
+an independent reduction pass.
+
+Exp6428 SHALL attack receipt substitution, source replacement, model swap,
+license inheritance, checker omission, stale head, duplicate effect, future
+leakage, exact-veto override, row deletion, and duration synthesis. Every
+attack SHALL fail closed.
+
+Exp6428 SHALL emit `delta_future_exact_yield`,
+`delta_contamination_propagation_rate`, and `protected_retention_delta` as bare
+finite numbers. It SHALL set `clean_write_time_admission_ready_score=1.0` only
+when exact admission beats frozen future exact yield, contamination does not
+increase and remains below write-everything, protected retention does not
+regress, aggregates recompute exactly, all attacks fail closed, and
+`current_adversarial_flag_count` is zero.
+
+Exp6428 SHALL emit these fields:
+
+- `status`
+- `exp6427_gate_receipts`
+- `upstream_model_process_raw_output_and_row_hashes`
+- `corpus_event_order_partition_checker_license_and_head_hashes`
+- `preregistered_frozen_write_everything_and_exact_admission_arm_contract`
+- `matched_work_receipts`
+- `per_unit_rows`
+- `per_proposal_source_model_license_checker_predecessor_expiry_and_supersession_bindings`
+- `atomic_disposition_records`
+- `untouched_future_evaluation_receipts`
+- `aggregate_recomputation_receipts`
+- `reported_vs_recomputed_deltas`
+- `delta_future_exact_yield`
+- `delta_contamination_propagation_rate`
+- `protected_retention_delta`
+- `false_accept_delta`
+- `false_reject_delta`
+- `factor_growth_by_arm`
+- `exact_work_by_arm`
+- `exact_veto_override_count`
+- `protected_leakage_count`
+- `runtime_field_synthesis_count`
+- `task_phase_duration_receipts`
+- `attack_matrix`
+- `clean_write_time_admission_ready_score`
+- `current_adversarial_flag_count`
+- `public_factor_claim_eligibility`
+- `harm_underpowered_missing_and_flagged_cells`
+- `protected_files_unchanged`
+- `blocked_reason`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map both gates, all arms, each delta, the flag count,
+and the readiness score. `verifier_is_oracle` SHALL be true only for exact event
+and protected-retention checks. Admission and memory SHALL NOT be oracles.
+
+Required field principles:
+
+- `status`: Names the terminal safety state for the clean Exp6427 replay.
+- `exp6427_gate_receipts`: Pins the clean corpus gate and the Exp6417 duration quarantine context.
+- `upstream_model_process_raw_output_and_row_hashes`: Binds model, prompt, process, raw output, and row hashes before parsing can act.
+- `corpus_event_order_partition_checker_license_and_head_hashes`: Seals event order, partitions, checkers, licenses, disk, CPU, RAM, and the initial head.
+- `preregistered_frozen_write_everything_and_exact_admission_arm_contract`: Defines all three arms before future outcomes open.
+- `matched_work_receipts`: Shows equal row order, evidence, checker calls, consumer budget, and initial head for all arms.
+- `per_unit_rows`: Records one future outcome row for every arm and cell before aggregate calculation.
+- `per_proposal_source_model_license_checker_predecessor_expiry_and_supersession_bindings`: Binds every proposal to source, model, license, checker, predecessor, expiry, supersession, and refinement hashes.
+- `atomic_disposition_records`: Records exactly one Commit, Reject, Quarantine, or Defer decision for every proposal.
+- `untouched_future_evaluation_receipts`: Proves future outcomes open once after proposal dispositions and head freeze.
+- `aggregate_recomputation_receipts`: Recomputes every comparative aggregate from per-unit rows in an independent pass.
+- `reported_vs_recomputed_deltas`: Shows reported deltas and reductions match the independent recomputation.
+- `delta_future_exact_yield`: Bare future exact-yield lift for exact admission over frozen.
+- `delta_contamination_propagation_rate`: Bare contamination-rate change for exact admission over frozen.
+- `protected_retention_delta`: Bare protected-retention change for exact admission over frozen.
+- `false_accept_delta`: Bare false-accept rate change for exact admission over frozen.
+- `false_reject_delta`: Bare false-reject rate change for exact admission over frozen.
+- `factor_growth_by_arm`: Reports committed factor growth per arm.
+- `exact_work_by_arm`: Reports exact checker work per arm under the matched budget.
+- `exact_veto_override_count`: Must be zero because exact rejections cannot be overridden.
+- `protected_leakage_count`: Must be zero because protected and future labels cannot route writes.
+- `runtime_field_synthesis_count`: Must be zero because runtime fields come from receipts.
+- `task_phase_duration_receipts`: Records monotonic phase timing without synthetic duration fields.
+- `attack_matrix`: Shows substitution, source, model, license, checker, head, duplicate, leakage, veto, deletion, and duration attacks fail closed.
+- `clean_write_time_admission_ready_score`: Conjunctive score for future gain without contamination, retention harm, aggregate drift, or adversarial flags.
+- `current_adversarial_flag_count`: Must stay zero for the clean Exp6427 replay.
+- `public_factor_claim_eligibility`: Limits public eligibility to this clean replay and excludes the flagged Exp6417 timing claim.
+- `harm_underpowered_missing_and_flagged_cells`: Keeps unlicensed, underpowered, missing, blocked, and flagged cells visible.
+- `protected_files_unchanged`: Shows protected upstream and ops files stayed byte-identical.
+- `blocked_reason`: Explains why readiness is blocked when any precondition fails.
+- `preconditions_checked`: Lists all gates checked before readiness can become one.
+- `inference_substrate`: Declares cached Exp6427 deterministic replay with no new model generation.
+- `verifier_is_oracle`: Marks only exact event and protected-retention checkers as oracles.
+- `field_principles`: Documents why each field exists.
+- `field_provenance`: Maps each field to specs, inputs, replay, reductions, attacks, or tests.
+- `random_seed`: Pins the replay constants.
+- `duration_s`: Records measured wall time without padding.
+- `tests_run`: Records verification commands and exit codes.
+- `reproducibility_checksum`: Content-addresses the payload with volatile fields normalized.
+- `honest_verdict`: Uses a terminal prefix and states the clean replay boundary.
+- `gate:exp6427`: Exp6427 must be complete, clean, row-recomputable, and adversarial-clean before Exp6428 can promote readiness.
+- `gate:exp6417_duration_quarantine`: Exp6417 is context only because its deterministic replay duration is adversarial-flagged.
+- `gate:raw_outputs`: Raw output files and stored hashes must match before proposals bind.
+- `gate:event_order`: Chronological order and partitions must stay sealed.
+- `gate:licenses`: License validity controls commits and blocks inheritance.
+- `gate:initial_factor_head`: All arms start from the same read-only head.
+- `arm:frozen`: Frozen reads the future with no write-time state.
+- `arm:write_everything`: Write-everything commits every licensed proposal and acts as the contamination control.
+- `arm:exact_admission`: Exact admission commits only licensed joint-exact proposal rows.
+
+## SCENARIO-LEARN-6428-GATES: Clean Exp6427 Corpus Gates The Replay
+
+**Given** Exp6427 is the only corpus source
+**When** Exp6428 checks preconditions
+**Then** Exp6427 readiness, row hashes, task receipts, partitions, licenses,
+and current adversarial flag count SHALL pass before readiness can become one.
+
+## SCENARIO-LEARN-6428-MATCHED-ARMS: Arms Use The Same Clean Rows
+
+**Given** the sealed Exp6427 acquisition and calibration rows
+**When** Exp6428 records proposal dispositions
+**Then** all three arms SHALL use the same row order, evidence hashes, checker
+calls, consumer budget, and initial head.
+
+## SCENARIO-LEARN-6428-ADMISSION: Exact Support Owns Clean Commits
+
+**Given** a clean Exp6427 proposal row
+**When** it is unlicensed, non-exact, stale, duplicate, replayed, superseded,
+poisoned, malformed, source-mismatched, or stale-head
+**Then** `exact_admission` SHALL not commit it.
+
+## SCENARIO-LEARN-6428-FUTURE: Per-Unit Future Rows Precede Aggregates
+
+**Given** all proposal dispositions are recorded
+**When** Exp6428 opens the untouched future partition once
+**Then** it SHALL record one per-unit row per arm and future cell before
+aggregate calculation.
+
+## SCENARIO-LEARN-6428-ATTACKS: Substitution And Leakage Attacks Fail Closed
+
+**Given** receipt substitution, source replacement, model swap, license
+inheritance, checker omission, stale head, duplicate effect, future leakage,
+exact-veto override, row deletion, or duration synthesis
+**When** Exp6428 validates the attack matrix
+**Then** no attack SHALL commit a factor or promote readiness.
+
+## SCENARIO-LEARN-6428-READY: Readiness Requires Clean Future Gain
+
+**Given** all verification commands pass and every attack fails closed
+**When** exact admission improves future exact yield, avoids contamination
+regression, stays below write-everything contamination, preserves protected
+retention, and has zero adversarial flags
+**Then** `clean_write_time_admission_ready_score` SHALL be `1.0`.
+
+## Implementation Status (REQ-LEARN-6428)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6428 | Implemented: `python/carnot/experiment_6428_clean_write_time_factor_admission_ab.py`; terminal artifact `results/experiment_6428_clean_write_time_factor_admission_ab.json`. | Implemented: `tests/python/test_experiment_6428_clean_write_time_factor_admission_ab.py`. |
+| SCENARIO-LEARN-6428-GATES | Implemented: `python/carnot/experiment_6428_clean_write_time_factor_admission_ab.py`. | Implemented: `tests/python/test_experiment_6428_clean_write_time_factor_admission_ab.py`. |
+| SCENARIO-LEARN-6428-MATCHED-ARMS | Implemented: `python/carnot/experiment_6428_clean_write_time_factor_admission_ab.py`. | Implemented: `tests/python/test_experiment_6428_clean_write_time_factor_admission_ab.py`. |
+| SCENARIO-LEARN-6428-ADMISSION | Implemented: `python/carnot/experiment_6428_clean_write_time_factor_admission_ab.py`. | Implemented: `tests/python/test_experiment_6428_clean_write_time_factor_admission_ab.py`. |
+| SCENARIO-LEARN-6428-FUTURE | Implemented: `python/carnot/experiment_6428_clean_write_time_factor_admission_ab.py`. | Implemented: `tests/python/test_experiment_6428_clean_write_time_factor_admission_ab.py`. |
+| SCENARIO-LEARN-6428-ATTACKS | Implemented: `python/carnot/experiment_6428_clean_write_time_factor_admission_ab.py`. | Implemented: `tests/python/test_experiment_6428_clean_write_time_factor_admission_ab.py`. |
+| SCENARIO-LEARN-6428-READY | Implemented: `python/carnot/experiment_6428_clean_write_time_factor_admission_ab.py`. | Implemented: `tests/python/test_experiment_6428_clean_write_time_factor_admission_ab.py`. |
+
 ## REQ-LEARN-6418: Execution-Grounded Dual-Path Continuous Self-Learning
 
 **Given** Exp6417 has an authentic exact-admission replay, Exp6413 provides
