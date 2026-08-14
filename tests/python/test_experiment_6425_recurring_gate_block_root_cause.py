@@ -179,6 +179,9 @@ def test_req_ops_recurring_gate_6425_builds_valid_real_report() -> None:
     assert report["protected_files_unchanged"]["ok"] is True
     assert set(report["field_provenance"]) == set(exp.REQUIRED_ARTIFACT_FIELDS)
     assert report["reproducibility_checksum"] == exp.payload_checksum(report)
+    assert {
+        item["command"] for item in report["tests_run"] if "root_clutter_sweep.py" in item["command"]
+    } == {".venv/bin/python scripts/root_clutter_sweep.py"}
 
 
 def test_req_ops_recurring_gate_6425_run_and_write_helpers(
@@ -355,6 +358,28 @@ milestones:
     assert any("missing required fields" in e for e in errors)
     assert any("31 frozen" in e for e in errors)
     assert any("verifier_is_oracle" in e for e in errors)
+
+
+def test_req_ops_recurring_gate_6425_git_status_precondition_uses_git_short(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """REQ-OPS-RECURRING-GATE-6425 records the real git status precondition."""
+
+    class DirtyStatus:
+        stdout = " M python/carnot/experiment_6425_recurring_gate_block_root_cause.py\n"
+
+    assert exp._git_status_empty(tmp_path) is False
+    monkeypatch.setattr(exp.subprocess, "run", lambda *args, **kwargs: DirtyStatus())
+
+    assert exp._git_status_empty(REPO) is False
+
+    def fail_git(*args, **kwargs):
+        raise exp.subprocess.CalledProcessError(1, ["git", "status", "--short"])
+
+    monkeypatch.setattr(exp.subprocess, "run", fail_git)
+
+    assert exp._git_status_empty(REPO) is False
 
 
 def test_req_ops_recurring_gate_6425_run_error_and_write_branches(
