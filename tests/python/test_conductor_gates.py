@@ -350,6 +350,43 @@ def test_write_blocked_artifact_satisfies_required_fields(tmp_path):
     assert len(data["gates_evaluated"]) == 1
 
 
+def test_scenario_ops_recurring_gate_6425_blocked_artifact_diagnostic_contract(tmp_path):
+    """SCENARIO-OPS-RECURRING-GATE-6425-DIAGNOSTIC-CONTRACT.
+
+    A reader must not need to parse a prose summary to find the failed gate.
+    The blocked artifact exposes the first failed upstream, field, operator,
+    expected value, observed value, observed type, and evidence path.
+    """
+    _seed_artifact(tmp_path, 819, "fix", {"ready_score": 0.0})
+    task = {
+        "id": "exp900-some-task",
+        "title": "Exp 900: Some Task",
+        "gated_on": [
+            {
+                "upstream": "exp819-fix",
+                "artifact_field": "ready_score",
+                "op": "==",
+                "value": 1.0,
+            }
+        ],
+    }
+
+    gate_check = evaluate_gates(task, results_dir=tmp_path)
+    path = write_blocked_artifact(task, gate_check, results_dir=tmp_path)
+    assert path is not None
+    data = json.loads(path.read_text())
+
+    assert data["blocked_reason"] == "actual=0.0 == expected=1.0"
+    assert data["failed_upstream"] == "exp819-fix"
+    assert data["failed_field"] == "ready_score"
+    assert data["failed_operator"] == "=="
+    assert data["failed_expected"] == 1.0
+    assert data["failed_observed"] == 0.0
+    assert data["failed_observed_type"] == "float"
+    assert data["failed_evidence_path"].endswith("experiment_819_fix.json")
+    assert data["blocked_diagnostic_contract"]["version"] == "blocked_gate_diagnostic_v1"
+
+
 def test_write_blocked_artifact_filename_matches_task_id(tmp_path):
     """Filename is derived deterministically from the task id."""
     task = {"id": "exp823-fr11-tier1-live-relay-v2", "title": "Exp 823"}
@@ -364,6 +401,15 @@ def test_write_blocked_artifact_returns_none_for_unparseable_id(tmp_path):
     task = {"id": "not-a-task-id", "title": "?"}
     gate_check = GateCheckResult(passed=False, gates_evaluated=[], summary="")
     assert write_blocked_artifact(task, gate_check, results_dir=tmp_path) is None
+
+
+def test_scenario_ops_recurring_gate_6425_nan_numeric_gate_fails_closed():
+    """SCENARIO-OPS-RECURRING-GATE-6425-MUTATIONS-FAIL-CLOSED."""
+    passed, reason = _eval_op(float("nan"), ">", 0.0)
+
+    assert passed is False
+    assert "NaN" in reason
+    assert "numeric comparison rejected" in reason
 
 
 # ---------------------------------------------------------------------------

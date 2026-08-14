@@ -5661,3 +5661,46 @@ Given an artifact that makes no comparative claim and is not blocked, the verdic
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-OPS-ARTIFACT-CONVENTION-6264 | `scripts/artifact_convention_audit.py`, wired as the fifth milestone-close audit in `research_conductor.py`; conventions added to the planner's REQUIRED ARTIFACT FIELDS guidance. | First live run flagged `experiment_3392_archive_v311_activate_v312.json` AGGREGATE_ONLY with a correct missing-check statement, and correctly passed two others as CHECKABLE. |
+
+### REQ-OPS-RECURRING-GATE-6425: Recurring Gate Blocks Carry Replayable Diagnostics
+
+Exp6425 SHALL freeze the `blocked_gate_check_failed` population for milestones
+2026.08.536 through 2026.08.549 before classification. It SHALL replay the
+structured gate records with `scripts/conductor_gates.py` in read-only mode.
+It SHALL NOT infer a gate from title prose when a structured gate exists.
+
+Each blocker occurrence SHALL bind the milestone, task id, upstream id, gate
+field, operator, expected value and type, observed value and type, upstream
+artifact path, upstream artifact hash, and terminal artifact path. Each
+occurrence SHALL classify as one of `correct_expected_refusal`,
+`missing_upstream`, `wrong_field_name`, `wrong_field_type`, `stale_artifact`,
+`retired_dependency`, `diagnostic_loss`, or `other_with_evidence`.
+
+Future conductor pre-gate blocked artifacts SHALL expose a stable diagnostic
+contract in addition to the legacy `gate_check_summary`. The contract SHALL
+include `blocked_reason`, failed upstream, failed field, operator, expected
+value, observed value, observed type, and evidence path. Existing historical
+artifacts SHALL remain unchanged.
+
+Malformed gate inputs SHALL fail closed with a specific diagnostic. This
+includes missing fields, strings in numeric gates, NaN values, stale hashes,
+retired upstream ids, and contradictory status fields.
+
+#### SCENARIO-OPS-RECURRING-GATE-6425-DIAGNOSTIC-CONTRACT
+
+Given a failing structured gate, `write_blocked_artifact` SHALL write
+`blocked_reason` and the first failed gate's upstream, field, operator,
+expected value, observed value, observed type, and evidence path.
+
+#### SCENARIO-OPS-RECURRING-GATE-6425-MUTATIONS-FAIL-CLOSED
+
+Given missing fields, string values in numeric gates, NaN values, stale hashes,
+retired upstream ids, or contradictory status fields, the Exp6425 diagnostic
+matrix SHALL mark each attack as killed with a specific diagnostic and SHALL
+not bypass the scientific gate.
+
+## Implementation Status (REQ-OPS-RECURRING-GATE-6425)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-OPS-RECURRING-GATE-6425 | Implemented (`python/carnot/experiment_6425_recurring_gate_block_root_cause.py`, `scripts/conductor_gates.py`, `results/experiment_6425_recurring_gate_block_root_cause.json`). | Implemented (`tests/python/test_experiment_6425_recurring_gate_block_root_cause.py`, `tests/python/test_conductor_gates.py`). |
