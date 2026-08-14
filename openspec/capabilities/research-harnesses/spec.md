@@ -5379,6 +5379,193 @@ THEN every critical attack is rejected and recorded in `attack_matrix`.
 |---|---|---|
 | REQ-INFRA-6426 | Planned: `python/carnot/task_runtime_receipts.py` and `python/carnot/experiment_6426_task_scoped_runtime_receipt_contract.py`; terminal artifact `results/experiment_6426_task_scoped_runtime_receipt_contract.json`. | Planned: `tests/python/test_experiment_6426_task_scoped_runtime_receipt_contract.py`. |
 
+## REQ-INFRA-6427: Fresh Constraint-Saturation Factor Corpus SHALL Bind Row-First Exact Outcomes To Task-Scoped Runtime Receipts
+
+Carnot SHALL provide Exp6427 at
+`python/carnot/experiment_6427_fresh_constraint_saturation_factor_corpus.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6427_fresh_constraint_saturation_factor_corpus --date 20260814`
+SHALL write
+`results/experiment_6427_fresh_constraint_saturation_factor_corpus.json`.
+
+Exp6427 SHALL revalidate the Exp6426 runtime-receipt gate, CUDA devices, free
+VRAM, model bytes, embedded GGUF tokenizers, runner selection, task-scoped
+receipt helper, exact checkers, license matrix, disk space, source manifests,
+and absence of the fresh raw-output directory before generation. It SHALL use
+`cached_sota_pair()` helper calls to resolve
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL use embedded GGUF tokenizers only
+and SHALL never call `AutoTokenizer`.
+
+Exp6427 SHALL preregister at least 144 rows before generation. The matrix SHALL
+be balanced across the three model families, three factor families,
+simultaneous constraint-count buckets `1-2`, `3-4`, `5-6`, and `7-8`,
+independent and interacting constraint classes, and fixed seeds. Acquisition,
+calibration, and untouched future partitions SHALL be sealed before raw output
+bytes are parsed.
+
+Every event SHALL be generated through the task-scoped receipt helper. Each row
+SHALL bind a unique prompt hash, raw-output byte hash, model hash, PID, GPU
+sample binding, event time, source identity, source license, checker identity,
+and partition. Raw outputs SHALL not reuse Exp6414 bytes and SHALL not be reused
+across event IDs.
+
+Exp6427 SHALL parse only the factor proposal surface. It SHALL not be a
+finite-ID generated-answer experiment, grammar experiment, parser-retry
+experiment, hidden-state experiment, or external-text-scoring experiment.
+Deterministic exact rules SHALL score each constraint and joint satisfaction.
+The artifact SHALL record evaluable, correct, abstained, malformed, truncated,
+duplicate, unsupported, and unlicensed outcomes without model pooling.
+
+Exp6427 SHALL write `per_unit_rows` before computing any aggregate. It SHALL
+recompute per-constraint success, joint success, exact yield, abstention, and
+cost by model, family, constraint count, and interaction class from those rows.
+Reported aggregate deltas SHALL be zero when readiness is positive.
+
+The attack matrix SHALL cover model substitution, raw-output reuse, prompt
+leakage, event reordering, source fabrication, checker swap, duplicated
+effects, pooled identities, CPU fallback, clock truncation, future-label
+leakage, and adversarial duration under-reporting. Each attack SHALL fail
+closed.
+
+The terminal artifact SHALL include `status`, `exp6426_gate_receipt`,
+`MODEL_SPECS`, `models_used`, `cached_sota_pair_receipts`,
+`model_file_and_embedded_tokenizer_hashes`, `autotokenizer_usage_count`,
+`runner_and_task_scoped_runtime_receipts`,
+`manifest_path_hash_counts_balance_and_partition_seals`,
+`preregistered_model_family_constraint_count_interaction_and_seed_matrix`,
+`per_unit_rows`,
+`per_row_prompt_raw_output_model_pid_gpu_source_license_checker_event_time_and_partition_bindings`,
+`per_row_constraint_results_and_joint_exact_outcome`,
+`per_model_family_constraint_count_and_interaction_results`,
+`per_constraint_success`, `joint_success`, `exact_yield`, `abstention_rate`,
+`malformed_count`, `truncation_count`, `duplicate_count`,
+`raw_output_reuse_count`, `cpu_fallback_count`, `protected_leakage_count`,
+`aggregate_recomputation_receipts`, `reported_vs_recomputed_deltas`,
+`task_phase_duration_receipts`, `attack_matrix`,
+`fresh_row_recomputable_factor_corpus_ready_score`,
+`current_adversarial_flag_count`, `harm_underpowered_missing_and_flagged_cells`,
+`protected_files_unchanged`, `blocked_reason`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `field_principles`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+`verifier_is_oracle` SHALL be true only for deterministic per-constraint and
+joint exact checks. Model output and factor proposals SHALL not be oracles.
+`fresh_row_recomputable_factor_corpus_ready_score` SHALL be bare `1.0` only
+when all three model families have authentic cells, every aggregate recomputes
+from rows, protected leakage and raw-output reuse are zero, all attacks fail
+closed, and `current_adversarial_flag_count` is zero. Otherwise it SHALL be
+bare `0.0`.
+
+Field principles SHALL be:
+
+- `status`: Names whether the row-recomputable corpus is complete, blocked, or null.
+- `exp6426_gate_receipt`: Pins task-scoped receipt readiness before new rows rely on it.
+- `MODEL_SPECS`: Lists only the three mandated local GGUF model identities.
+- `models_used`: Counts only authenticated rows from the three mandated model families.
+- `cached_sota_pair_receipts`: Shows every model came through the helper path.
+- `model_file_and_embedded_tokenizer_hashes`: Binds local model bytes and embedded tokenizer hashes.
+- `autotokenizer_usage_count`: Must stay zero because GGUF tokenizers are embedded.
+- `runner_and_task_scoped_runtime_receipts`: Binds the runner and helper schema used by each event.
+- `manifest_path_hash_counts_balance_and_partition_seals`: Shows the fresh row matrix and sealed partitions.
+- `preregistered_model_family_constraint_count_interaction_and_seed_matrix`: Freezes strata and seeds before generation.
+- `per_unit_rows`: Provides the immutable rows from which every comparative claim recomputes.
+- `per_row_prompt_raw_output_model_pid_gpu_source_license_checker_event_time_and_partition_bindings`: Binds each row to prompt, bytes, model, process, GPU, source, license, checker, time, and split.
+- `per_row_constraint_results_and_joint_exact_outcome`: Stores deterministic per-constraint and joint outcomes.
+- `per_model_family_constraint_count_and_interaction_results`: Reports row-derived strata without pooling model identities.
+- `per_constraint_success`: Reports per-constraint success recomputed from rows.
+- `joint_success`: Reports joint exact success recomputed from rows.
+- `exact_yield`: Reports evaluable exact yield recomputed from rows.
+- `abstention_rate`: Reports abstention from rows, including unsupported and unlicensed rows.
+- `malformed_count`: Counts malformed raw parses from rows.
+- `truncation_count`: Counts truncated outputs from rows.
+- `duplicate_count`: Counts duplicate event or effect surfaces from rows.
+- `raw_output_reuse_count`: Must stay zero because reused raw bytes invalidate row independence.
+- `cpu_fallback_count`: Must stay zero for authenticated local GGUF rows.
+- `protected_leakage_count`: Must stay zero because future labels and exact answers stay sealed.
+- `aggregate_recomputation_receipts`: Shows aggregate formulas and row hashes used for recomputation.
+- `reported_vs_recomputed_deltas`: Shows reported metrics equal recomputed metrics.
+- `task_phase_duration_receipts`: Reports measured monotonic phase intervals.
+- `attack_matrix`: Proves known substitution, leakage, reuse, pooling, fallback, and duration attacks fail closed.
+- `fresh_row_recomputable_factor_corpus_ready_score`: Bare gate for downstream use.
+- `current_adversarial_flag_count`: Must be zero for clean evidence.
+- `harm_underpowered_missing_and_flagged_cells`: Names missing or flagged cells instead of hiding them.
+- `protected_files_unchanged`: Shows protected upstream and ops files stayed byte-stable.
+- `blocked_reason`: Names any precondition blocker.
+- `preconditions_checked`: Lists host, model, receipt, raw-dir, license, source, and checker gates.
+- `inference_substrate`: Declares fresh task-scoped local GGUF factor-corpus generation.
+- `verifier_is_oracle`: Marks only deterministic exact checks as oracles.
+- `field_principles`: Documents why each required field exists.
+- `field_provenance`: States how each field was produced.
+- `random_seed`: Pins the row matrix and deterministic outcomes.
+- `duration_s`: Records measured wall time without padding.
+- `tests_run`: Records focused, coverage, E2E, adversarial, spec, global, and root checks.
+- `reproducibility_checksum`: Content-addresses the payload with volatile fields normalized.
+- `honest_verdict`: Gives a terminal-prefix verdict and the narrow evidence boundary.
+- `gate:exp6426`: Exp6426 is a gate for receipt mechanics, not a semantic oracle.
+- `stratum:model_family`: Model-family rows are disaggregated before any summary.
+- `stratum:factor_family`: Factor-family rows are disaggregated before any summary.
+- `stratum:constraint_count_bucket`: Constraint-count buckets test joint saturation effects.
+- `stratum:interaction_class`: Independent and interacting rows test different exact-satisfaction surfaces.
+
+### SCENARIO-INFRA-6427-1: Preregistration Is Balanced And Sealed
+
+GIVEN the three mandated GGUF model families
+WHEN Exp6427 builds its manifest
+THEN it preregisters at least 144 rows balanced by model family, factor family,
+constraint-count bucket, interaction class, and seed, with acquisition,
+calibration, and future partitions sealed before generation.
+
+**Spec traces:** REQ-INFRA-6427
+
+### SCENARIO-INFRA-6427-2: Rows Bind Runtime Receipts And Unique Raw Bytes
+
+GIVEN a preregistered event row
+WHEN Exp6427 generates and stores the raw factor proposal bytes
+THEN the row binds prompt hash, raw-output hash, model hash, PID, GPU sample,
+event time, source identity, source license, checker identity, and partition,
+and raw-output reuse remains zero.
+
+**Spec traces:** REQ-INFRA-6427
+
+### SCENARIO-INFRA-6427-3: Exact Outcomes And Aggregates Recompute From Rows
+
+GIVEN immutable `per_unit_rows`
+WHEN Exp6427 reports per-constraint success, joint success, exact yield,
+abstention, malformed, truncation, duplicate, and cost metrics
+THEN each aggregate recomputes from rows with zero reported-vs-recomputed delta.
+
+**Spec traces:** REQ-INFRA-6427
+
+### SCENARIO-INFRA-6427-4: Model Pooling And Leakage Fail Closed
+
+GIVEN attacks for model substitution, pooled identities, prompt leakage,
+future-label leakage, source fabrication, checker swap, event reordering, and
+duplicated effects
+WHEN Exp6427 validates the artifact
+THEN every attack fails closed and readiness remains zero for any accepted
+attack.
+
+**Spec traces:** REQ-INFRA-6427
+
+### SCENARIO-INFRA-6427-5: Readiness Requires Clean Current Evidence
+
+GIVEN all three model families have authentic cells
+WHEN Exp6427 computes
+`fresh_row_recomputable_factor_corpus_ready_score`
+THEN the score is `1.0` only when all aggregates are row-recomputed,
+raw-output reuse, CPU fallback, protected leakage, and adversarial flag counts
+are zero, protected files are unchanged, and all tests exit zero.
+
+**Spec traces:** REQ-INFRA-6427
+
+## Implementation Status (REQ-INFRA-6427)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6427 | Planned: `python/carnot/experiment_6427_fresh_constraint_saturation_factor_corpus.py`; terminal artifact `results/experiment_6427_fresh_constraint_saturation_factor_corpus.json`. | Planned: `tests/python/test_experiment_6427_fresh_constraint_saturation_factor_corpus.py`. |
+
 ## REQ-INFRA-6351: V547 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
 
 Carnot SHALL build Exp6351 as a deterministic V547 post-marker source sweep
