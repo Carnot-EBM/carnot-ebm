@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.552",
+  "generated_at": "2026-08-14T12:16:02Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 3.4,
+  "experiments_completed": 14,
+  "compute_bound_experiments_count": 10,
+  "slowest_experiments": [
+    {
+      "experiment": "Authenticated three-family SOTA GGUF execution receipt layer",
+      "duration_minutes": 1.42,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp6413 receipts: default-off live ARC executed-policy influence A/B",
+      "duration_minutes": 1.13,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp6413 authentic receipts: fresh three-family exact factor-event corpu",
+      "duration_minutes": 0.8,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V552 dated source delta and executable scope freeze",
+      "duration_minutes": 0.03,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independent held-family ARC executed-policy safety audit",
+      "duration_minutes": 0.01,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 14 experiments in 3.4 minutes, including 10 compute-bound experiments. The authenticated GGUF receipt task and two receipt-gated tasks formed the measured execution tail, but the records do not establish a compute-task GPU-idle fault.",
+  "bottlenecks_identified": [
+    "Execution time was concentrated in the authenticated GGUF receipt task and two receipt-gated tasks. Why those tasks were longest: no data available this milestone.",
+    "Timing came from disk-mtime reconstruction because the live git-log path found no commits. This limits causal analysis of short tasks.",
+    "The GPU report is a point-in-time snapshot rather than task-linked telemetry. It cannot grade GPU efficiency during compute execution. No data available this milestone shows that a compute-bound task loaded two or more models in parallel, so no missed DualGPURunner dispatch can be established."
+  ],
+  "improvements_suggested": [
+    "Record monotonic start and stop times for each experiment phase so the next retrospective does not depend on disk modification times.",
+    "Attach GPU utilization samples to each compute-bound task and mark synthesis-only intervals explicitly.",
+    "Record requested model count, parallel intent, selected runner, and GPU assignment in each execution receipt. Select DualGPURunner automatically only when two or more models are requested in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add experiment-scoped phase timers to the conductor artifact.",
+    "Add task-scoped GPU sampling for compute-bound execution.",
+    "Add model-concurrency and runner-selection receipts, with conditional DualGPURunner dispatch for parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The supplied data supports a runtime ranking, but it does not support a causal explanation, a task-period GPU efficiency grade, or a parallel-runner finding. The next milestone should store timing, GPU samples, model concurrency, and runner selection in one task receipt."
+}
