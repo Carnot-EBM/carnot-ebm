@@ -69,6 +69,7 @@ import argparse
 import hashlib
 import json
 import logging
+import os
 import sys
 import time
 from pathlib import Path
@@ -86,6 +87,13 @@ SCHEMA = "carnot.arc_bench.v1"
 DEFAULT_MAX_EXPANSIONS = 3000
 DEFAULT_MAX_DEPTH = 60
 DEFAULT_SUBSET = 8
+
+# The SCORED engine's defaults, taken from what actually ships rather than chosen here.
+# `make_carnot_agent`'s CarnotAgent sets MAX_ACTIONS = 2000 (raised from 400 on 2026-08-07); the
+# frontier seed is the shipped `frontier_discipline_seed`. Measuring at a budget the agent does not
+# use would produce numbers that do not describe the agent.
+SHIPPED_MAX_ACTIONS = 2000
+SHIPPED_FRONTIER_SEED = 20260724
 
 CAVEAT = (
     "These are the 25 PUBLIC games with their hand-written GameAdapter bypassed. Disabling the "
@@ -149,6 +157,80 @@ def select(games: list[str], subset: int) -> list[str]:
     except OSError:
         pass  # rotation is an optimisation; failing to persist must not fail the benchmark
     return picked
+
+
+def run_game_scored(
+    game: str,
+    *,
+    budget: int = SHIPPED_MAX_ACTIONS,
+    llm: bool = False,
+    seed: int = SHIPPED_FRONTIER_SEED,
+) -> dict[str, Any]:
+    """Run ONE game through the SCORED path: `E3AgentPolicy` driven by `lb.run_game`.
+
+    WHY A SECOND ENGINE. The `explore` engine drives `graph_explore_solve_v2`, and only 48 of the
+    95 tracked flags live inside that import closure. The other 47 are read by the cascade --
+    induction, the world-model verifier, planning, the frontier tiers -- and setting one while
+    running `explore` produces a byte-identical sweep that the promotion rule reads as "worthless".
+    `scripts/arc_flag_ledger.py` refuses to measure those flags for exactly that reason. This
+    engine is what un-refuses them.
+
+    It is also the path that actually ships. `make_carnot_agent(Agent)` builds `E3AgentPolicy`, so
+    a flag measured here is measured on the agent the competition runs.
+
+    `charged_actions`, NOT `actions`. The live gateway bills resets; `lb.run_game` reports both and
+    they differ (vc33: 387 against 400). Reporting the cheaper number would flatter every
+    efficiency comparison by whatever the reset count happens to be.
+
+    LLM OFF BY DEFAULT, and this is a real limitation rather than a default nobody thought about.
+    A sweep with induction live needs a healthy llama-server, takes far longer, and can silently
+    degrade mid-run -- `generate()` returns a failure tuple instead of raising, so the agent logs
+    `skipped: proposer_failed` and carries on emitting rows labelled as LLM-on. See
+    `scripts/arc_scored_path_lever_harness.py`, which instruments that case properly. Until this
+    engine carries the same generator-liveness witness per row, `--llm` is available but a flag
+    whose whole effect is inside induction should be measured with that harness, not this one.
+    """
+    import arc_leaderboard_eval as lb
+    from carnot.agentic.arc_competition_agent import E3AgentPolicy
+
+    row: dict[str, Any] = {
+        "game": game,
+        "adapter_used": False,
+        "engine": "scored",
+        "llm": llm,
+        "budget": budget,
+        "levels_cleared": 0,
+        "actions_spent": 0,
+        "solution_len": 0,
+        "wall_s": 0.0,
+        "error": None,
+    }
+    prev = os.environ.get("CARNOT_ARC_DISABLE_INDUCTION")
+    if llm:
+        os.environ.pop("CARNOT_ARC_DISABLE_INDUCTION", None)
+    else:
+        os.environ["CARNOT_ARC_DISABLE_INDUCTION"] = "1"
+    t0 = time.time()
+    try:
+        import random
+
+        random.seed(seed)
+        policy = E3AgentPolicy(game, frontier_discipline_seed=seed)
+        r = lb.run_game(game, policy, budget=budget, variant=0, reflect=None)
+        row["levels_cleared"] = int(r.get("levels") or 0)
+        row["actions_spent"] = int(r.get("charged_actions") or r.get("actions") or 0)
+        row["efficiency"] = r.get("efficiency")
+    except Exception as exc:  # noqa: BLE001
+        row["error"] = f"{type(exc).__name__}: {exc}"[:200]
+    finally:
+        # Restore rather than delete: a caller may have set it deliberately, and leaving this
+        # process-global flipped would silently change every later cell in the same sweep.
+        if prev is None:
+            os.environ.pop("CARNOT_ARC_DISABLE_INDUCTION", None)
+        else:
+            os.environ["CARNOT_ARC_DISABLE_INDUCTION"] = prev
+    row["wall_s"] = round(time.time() - t0, 2)
+    return row
 
 
 def run_game(
@@ -233,6 +315,20 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--subset", type=int, default=DEFAULT_SUBSET)
     ap.add_argument("--max-expansions", type=int, default=DEFAULT_MAX_EXPANSIONS)
     ap.add_argument("--out", help="write the report JSON here")
+    ap.add_argument(
+        "--engine",
+        choices=["explore", "scored"],
+        default="explore",
+        help="explore = graph_explore_solve_v2 (fast, 48 of 95 flags reachable); "
+        "scored = E3AgentPolicy, the path that actually ships (all flags reachable)",
+    )
+    ap.add_argument("--budget", type=int, default=SHIPPED_MAX_ACTIONS, help="scored engine only")
+    ap.add_argument(
+        "--llm",
+        action="store_true",
+        help="scored engine only: run induction live. Needs a healthy llama-server, and this "
+        "engine does NOT yet carry a per-row generator-liveness witness -- see run_game_scored.",
+    )
     ap.add_argument("--quiet", action="store_true", help="silence the arcade's INFO logging")
     args = ap.parse_args(argv)
 
@@ -247,12 +343,21 @@ def main(argv: list[str]) -> int:
     else:
         games = select(all_games, args.subset)
 
-    print(f"arc-bench {SCHEMA}: {len(games)} game(s), max_expansions={args.max_expansions}")
+    knob = (
+        f"budget={args.budget} llm={args.llm}"
+        if args.engine == "scored"
+        else f"max_expansions={args.max_expansions}"
+    )
+    print(f"arc-bench {SCHEMA}: {len(games)} game(s), engine={args.engine}, {knob}")
     print(f"  adapter-free (held-out) path. {CAVEAT}\n")
 
     rows = []
     for g in games:
-        r = run_game(g, max_expansions=args.max_expansions)
+        r = (
+            run_game_scored(g, budget=args.budget, llm=args.llm)
+            if args.engine == "scored"
+            else run_game(g, max_expansions=args.max_expansions)
+        )
         rows.append(r)
         mark = "ERR" if r["error"] else f"L{r['levels_cleared']}"
         print(
@@ -266,6 +371,9 @@ def main(argv: list[str]) -> int:
 
     report = {
         "schema": SCHEMA,
+        "engine": args.engine,
+        "budget": args.budget if args.engine == "scored" else None,
+        "llm": args.llm if args.engine == "scored" else None,
         "max_expansions": args.max_expansions,
         "max_depth": DEFAULT_MAX_DEPTH,
         "roster_size": len(all_games),

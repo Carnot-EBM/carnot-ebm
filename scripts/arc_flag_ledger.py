@@ -112,7 +112,14 @@ def _agentic_imports(path: Path) -> set[str]:
     return out
 
 
-def reachable_flags(entry: str = "arc_graph_explore") -> set[str]:
+# Which module each benchmark engine actually enters. Reachability is computed from here, so
+# adding an engine to arc_bench without adding its entry point here would silently under-report
+# what that engine can measure -- and under-reporting reachability is the direction that files
+# real capabilities as duds.
+ENGINE_ENTRY = {"explore": "arc_graph_explore", "scored": "arc_competition_agent"}
+
+
+def reachable_flags(entry: str = "arc_graph_explore", engine: str | None = None) -> set[str]:
     """Flags the BENCHMARK can actually influence, by transitive import closure.
 
     WHY THIS GUARDS EVERY MEASUREMENT. `arc_bench.py` drives `graph_explore_solve_v2`, not the
@@ -128,6 +135,8 @@ def reachable_flags(entry: str = "arc_graph_explore") -> set[str]:
     So `--measure` refuses an unreachable flag instead of producing that number. Refusing to
     measure is a smaller error than measuring the wrong thing confidently.
     """
+    if engine:
+        entry = ENGINE_ENTRY.get(engine, entry)
     agentic = REPO / "python" / "carnot" / "agentic"
     seen: set[str] = set()
     frontier = {entry}
@@ -148,6 +157,25 @@ def reachable_flags(entry: str = "arc_graph_explore") -> set[str]:
             except OSError:
                 continue
     return flags
+
+
+def _defining_modules(flag: str) -> list[str]:
+    """Which agentic modules mention a flag. Used only to make an unreachable flag legible.
+
+    Deliberately NOT an auto-classifier. Deciding "this is infrastructure, ignore it" from a module
+    name is exactly the pattern list that drifts, and it would let a real capability disappear from
+    the ledger because it happened to live in a file with the wrong name. Print the evidence and
+    let a human classify.
+    """
+    out = []
+    for d in SCAN_DIRS:
+        for f in sorted(d.rglob("*.py")):
+            try:
+                if flag in f.read_text():
+                    out.append(f.stem)
+            except OSError:
+                continue
+    return out[:3]
 
 
 def load() -> dict[str, Any]:
@@ -172,7 +200,11 @@ def save(data: dict) -> None:
     LEDGER.write_text(yaml.safe_dump(data, sort_keys=True, width=100))
 
 
-def run_bench(env_overrides: dict[str, str] | None = None, out: Path | None = None) -> dict:
+def run_bench(
+    env_overrides: dict[str, str] | None = None,
+    out: Path | None = None,
+    engine: str = "explore",
+) -> dict:
     """Full sweep, as a subprocess, so a flag is applied the way the agent really reads it.
 
     In-process `os.environ` mutation would be faster and would not survive module-level constants
@@ -181,7 +213,7 @@ def run_bench(env_overrides: dict[str, str] | None = None, out: Path | None = No
     out = out or Path(os.environ.get("TMPDIR", "/tmp")) / "arc_bench_arm.json"
     env = {**os.environ, **(env_overrides or {})}
     subprocess.run(
-        [sys.executable, str(BENCH), "--all", "--quiet", "--out", str(out)],
+        [sys.executable, str(BENCH), "--all", "--quiet", "--engine", engine, "--out", str(out)],
         env=env,
         capture_output=True,
         text=True,
@@ -253,25 +285,30 @@ def verdict(cmp: dict) -> tuple[bool, str]:
     return False, "HOLD: no level gained and no clear efficiency gain."
 
 
-def cmd_measure(flag: str, value: str, force: bool = False) -> int:
-    if not force and flag not in reachable_flags():
+def cmd_measure(flag: str, value: str, force: bool = False, engine: str = "explore") -> int:
+    if not force and flag not in reachable_flags(engine=engine):
         print(
             f"arc-flag-ledger: REFUSING to measure {flag}.\n"
-            "  It is outside the benchmark's import closure, so the code that reads it never\n"
-            "  runs. The sweep would return an identical result and this ledger would record\n"
+            f"  It is outside the {engine} engine's import closure, so the code that reads it\n"
+            "  never runs. The sweep would return an identical result and this ledger would record\n"
             "  HOLD -- filing a real capability as worthless, with evidence attached.\n"
-            "  Measure it with a harness that exercises it, or pass --force to record the null\n"
-            "  deliberately."
+            + (
+                "  It IS reachable on the `scored` engine -- re-run with --engine scored.\n"
+                if flag in reachable_flags(engine="scored") and engine != "scored"
+                else "  No engine reaches it. Check whether it is a tooling knob rather than an\n"
+                "  agent capability (--status names the module that defines it).\n"
+            )
+            + "  Or pass --force to record the null deliberately."
         )
         return 1
     tmp = Path(os.environ.get("TMPDIR", "/tmp"))
     print(f"arc-flag-ledger: baseline sweep (flag unset)...")
-    base = run_bench(out=tmp / "arc_bench_base.json")
+    base = run_bench(out=tmp / "arc_bench_base.json", engine=engine)
     print(
         f"  baseline: {base['total_levels_cleared']} level(s), {base['total_actions_spent']} actions"
     )
     print(f"arc-flag-ledger: arm sweep ({flag}={value})...")
-    arm = run_bench({flag: value}, out=tmp / "arc_bench_arm.json")
+    arm = run_bench({flag: value}, out=tmp / "arc_bench_arm.json", engine=engine)
     print(
         f"  arm:      {arm['total_levels_cleared']} level(s), {arm['total_actions_spent']} actions"
     )
@@ -285,7 +322,8 @@ def cmd_measure(flag: str, value: str, force: bool = False) -> int:
     entry["evidence"].append({"date": _now(), "value": value, "verdict": why, **cmp})
     entry["last_measured"] = _now()
     entry["promotable"] = ok
-    entry["benchmark_reachable"] = flag in reachable_flags()
+    entry["benchmark_reachable"] = flag in reachable_flags(engine=engine)
+    entry["measured_on_engine"] = engine
     save(data)
     # Never let a cosmetic path-prettify raise. `relative_to` throws when the ledger is not under
     # the repo (a test tmp_path, an operator running with LEDGER overridden), and an exception
@@ -346,14 +384,21 @@ def cmd_status() -> int:
     for name in sorted(by.get("on", [])):
         e = flags[name]
         print(f"    ON  {name}  (promoted {e.get('promoted_on')})")
-    reach = reachable_flags()
-    tracked_reachable = sorted(set(flags) & reach)
-    print(
-        f"\n  benchmark-reachable: {len(tracked_reachable)} of {len(flags)}. The other "
-        f"{len(flags) - len(tracked_reachable)} sit outside\n"
-        "  arc_bench's import closure, so a sweep cannot see them and --measure refuses them.\n"
-        "  They need a harness that runs the full E3AgentPolicy cascade."
-    )
+    print("\n  reachable per engine:")
+    covered: set[str] = set()
+    for eng in ENGINE_ENTRY:
+        r = set(flags) & reachable_flags(engine=eng)
+        covered |= r
+        print(f"    {eng:8} {len(r):>3} of {len(flags)}")
+    missing = sorted(set(flags) - covered)
+    if missing:
+        print(
+            f"    NEITHER  {len(missing):>3} -- no engine can see these. Naming the module that\n"
+            "             defines each one, because 'N flags nobody can measure' reads as a\n"
+            "             capability gap, and a tooling knob is not one:"
+        )
+        for f in missing:
+            print(f"             {f:42} {_defining_modules(f)}")
     unevaluated = len(by.get("unevaluated", []))
     if unevaluated:
         print(
@@ -370,6 +415,14 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--measure", metavar="FLAG")
     ap.add_argument("--value", default="1")
     ap.add_argument(
+        "--engine",
+        choices=sorted(ENGINE_ENTRY),
+        default="explore",
+        help="which benchmark engine to measure on. `scored` runs E3AgentPolicy -- the path that "
+        "actually ships -- and reaches 89 of 95 flags against `explore`'s 48, at roughly four "
+        "times the wall clock.",
+    )
+    ap.add_argument(
         "--force",
         action="store_true",
         help="measure a flag the benchmark cannot reach, recording the null deliberately",
@@ -380,7 +433,7 @@ def main(argv: list[str]) -> int:
     if args.discover:
         return cmd_discover()
     if args.measure:
-        return cmd_measure(args.measure, args.value, force=args.force)
+        return cmd_measure(args.measure, args.value, force=args.force, engine=args.engine)
     if args.promote:
         return cmd_promote(args.promote)
     return cmd_status()

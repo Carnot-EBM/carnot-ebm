@@ -343,3 +343,126 @@ def test_force_records_an_unreachable_null_deliberately(tmp_path, monkeypatch):
         "a forced null must be stamped unreachable, so a later reader cannot mistake it for "
         "evidence that the capability does nothing"
     )
+
+
+# --------------------------------------------------------------------------- the scored engine
+#
+# REQ-ARC-BENCH-6269. The explore engine reaches 48 of 95 flags; the other 47 are read by the
+# cascade -- induction, the world-model verifier, planning, frontier tiers. The scored engine
+# drives E3AgentPolicy, which is what `make_carnot_agent` builds and what the competition runs,
+# and reaches 89. The remaining 6 are tooling knobs, not agent capabilities.
+
+
+def test_scored_engine_reaches_far_more_flags_than_explore():
+    """If the second engine did not widen coverage there would be no reason to have built it."""
+    explore = ledger.reachable_flags(engine="explore")
+    scored = ledger.reachable_flags(engine="scored")
+
+    assert len(scored) > len(explore) + 30, f"explore={len(explore)} scored={len(scored)}"
+    # A flag the explore engine provably cannot see, which is the whole motivating case.
+    assert "CARNOT_ARC_HAZARD_MOVE_PRUNER" not in explore
+    assert "CARNOT_ARC_HAZARD_MOVE_PRUNER" in scored
+
+
+def test_every_engine_in_arc_bench_has_a_declared_entry_point():
+    """A new engine whose entry point is not declared silently under-reports its own reach.
+
+    Under-reporting reachability is the direction that files real capabilities as duds, so the two
+    lists are pinned together rather than left to be kept in sync by memory.
+    """
+    import argparse
+    import inspect
+
+    src = inspect.getsource(arc_bench.main)
+    # The engines arc_bench offers on the command line...
+    offered = set()
+    for line in src.splitlines():
+        if "choices=[" in line and "explore" in line:
+            offered = set(eval(line.split("choices=")[1].split("]")[0] + "]"))  # noqa: S307
+    assert offered, "could not read arc_bench's engine choices"
+    assert offered == set(ledger.ENGINE_ENTRY), (
+        f"arc_bench offers {offered} but ENGINE_ENTRY declares {set(ledger.ENGINE_ENTRY)}; "
+        "reachability for the undeclared engine would fall back to the explore closure"
+    )
+    del argparse
+
+
+def test_refusal_names_the_engine_that_can_see_the_flag(tmp_path, monkeypatch, capsys):
+    """A refusal that does not say what to do instead is a dead end.
+
+    The whole point of the second engine is that a flag refused on `explore` is usually measurable
+    on `scored`, so the message has to route the reader there.
+    """
+    monkeypatch.setattr(ledger, "LEDGER", tmp_path / "l.yaml")
+    monkeypatch.setattr(ledger, "run_bench", lambda *a, **k: pytest_fail_if_called())
+
+    def pytest_fail_if_called():
+        raise AssertionError("must not run a sweep for a refused flag")
+
+    rc = ledger.cmd_measure("CARNOT_ARC_HAZARD_MOVE_PRUNER", "1", engine="explore")
+    out = capsys.readouterr().out
+
+    assert rc == 1
+    assert "--engine scored" in out
+
+
+def _stub_scored_deps(monkeypatch, run_game_result=None, policy_raises=False):
+    """Stand in for the two heavy modules `run_game_scored` imports.
+
+    Importing `arc_competition_agent` and `arc_leaderboard_eval` for real pulls torch and the whole
+    agent stack into the test process, which trips the suite's memory-leak guard at ~500MB. The
+    behaviour under test is this function's own bookkeeping -- which action count it reports, and
+    whether it restores the env var -- so the dependencies are stubbed through `sys.modules` and
+    never loaded.
+    """
+    import sys
+    import types
+
+    def _policy(*a, **k):
+        if policy_raises:
+            raise RuntimeError("policy exploded")
+        return object()
+
+    aca = types.ModuleType("carnot.agentic.arc_competition_agent")
+    aca.E3AgentPolicy = _policy
+    lb = types.ModuleType("arc_leaderboard_eval")
+    lb.run_game = lambda *a, **k: run_game_result or {}
+    monkeypatch.setitem(sys.modules, "carnot.agentic.arc_competition_agent", aca)
+    monkeypatch.setitem(sys.modules, "arc_leaderboard_eval", lb)
+
+
+def test_scored_row_uses_charged_actions_not_raw_actions(monkeypatch):
+    """The live gateway bills resets. Reporting the cheaper number flatters every comparison.
+
+    Measured on vc33: actions=387, charged_actions=400. A benchmark reporting 387 would show an
+    efficiency gain the competition would not pay out.
+    """
+    _stub_scored_deps(monkeypatch, {"levels": 2, "actions": 387, "charged_actions": 400})
+
+    row = arc_bench.run_game_scored("vc33", budget=400)
+
+    assert row["actions_spent"] == 400, "must bill resets the way the gateway does"
+    assert row["levels_cleared"] == 2
+    assert row["engine"] == "scored"
+
+
+def test_scored_engine_restores_the_induction_env_var(monkeypatch):
+    """This flips a process-global. Leaving it flipped changes every later cell in the sweep."""
+    import os
+
+    _stub_scored_deps(monkeypatch, {"levels": 0, "charged_actions": 1})
+    monkeypatch.setenv("CARNOT_ARC_DISABLE_INDUCTION", "sentinel")
+
+    arc_bench.run_game_scored("vc33", budget=10, llm=True)
+
+    assert os.environ["CARNOT_ARC_DISABLE_INDUCTION"] == "sentinel"
+
+
+def test_scored_engine_reports_an_error_row_rather_than_raising(monkeypatch):
+    """A sweep that dies on one game loses every game that already passed."""
+    _stub_scored_deps(monkeypatch, policy_raises=True)
+
+    row = arc_bench.run_game_scored("vc33", budget=10)
+
+    assert row["error"] and "policy exploded" in row["error"]
+    assert row["levels_cleared"] == 0
