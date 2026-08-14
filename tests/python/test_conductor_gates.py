@@ -654,3 +654,48 @@ def test_diagnosis_never_changes_whether_a_gate_passes(tmp_path):
 
     assert r.passed, "a satisfied gate must still pass"
     assert "as null" not in r.summary and "has NO field" not in r.summary
+
+
+def test_quarantined_upstream_is_named_ahead_of_the_null_field(tmp_path):
+    """The .539 answer was already on disk and nothing surfaced it.
+
+    exp6228 wrote `status: preconditions_recorded`, `duration_s: 0.0` and
+    `flagged_adversarial: true` with a CRITICAL NONTERMINAL_DECLARED_ARTIFACT corrigendum -- it
+    recorded its preconditions and never ran the experiment, and adversarial_verify.py caught
+    exactly that. Four gates then read the same file and said only `actual=None`, never mentioning
+    the stamp sitting beside the field they were reading.
+
+    Quarantine outranks the null/absent split because it changes the instruction. "The field is
+    null, fill it in" is wrong advice for an artifact the fabrication gate has already rejected.
+    """
+    _seed_artifact(
+        tmp_path,
+        6228,
+        "runtime_endurance",
+        {
+            "gemma_4_31b_runtime_ready_score": None,
+            "status": "preconditions_recorded",
+            "flagged_adversarial": True,
+            "corrigendum_pending": [{"kind": "NONTERMINAL_DECLARED_ARTIFACT"}],
+        },
+    )
+    task = {
+        "id": "exp6229-downstream",
+        "gated_on": [
+            {
+                "upstream": "exp6228-supervised-three-family-runtime-endurance",
+                "artifact_field": "gemma_4_31b_runtime_ready_score",
+                "op": "==",
+                "value": 1,
+            }
+        ],
+    }
+    r = evaluate_gates(task, results_dir=tmp_path)
+
+    assert not r.passed
+    assert "UPSTREAM IS QUARANTINED" in r.summary
+    assert "NONTERMINAL_DECLARED_ARTIFACT" in r.summary
+    assert "preconditions_recorded" in r.summary
+    # Must NOT tell the reader to fill in the field -- that is the wrong fix here.
+    assert "template and never filled it" not in r.summary
+    assert "the upstream task has to " in r.summary
