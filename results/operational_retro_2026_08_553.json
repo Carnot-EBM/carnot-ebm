@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.553",
+  "generated_at": "2026-08-14T21:02:23Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 85.8,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 6,
+  "slowest_experiments": [
+    {
+      "experiment": "ARC generic state-key reachability invariant and full-roster A/B",
+      "duration_minutes": 84.63,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp6426 readiness: fresh row-recomputable constraint-saturation factor ",
+      "duration_minutes": 0.77,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Task-scoped runtime, GPU, concurrency, and runner receipt contract",
+      "duration_minutes": 0.24,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independent V553 CSL row-recomputation and safety audit",
+      "duration_minutes": 0.08,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V553 adversarial capstone, claim decision, and documentation reconciliation",
+      "duration_minutes": 0.05,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The locked timing record covers 12 experiments split evenly between compute-bound and synthesis-only work. Its duration is concentrated in one synthesis-only entry; compute-period GPU duty cycle and parallel-runner eligibility remain unobservable.",
+  "bottlenecks_identified": [
+    "The synthesis-only ARC generic state-key reachability invariant and full-roster A/B forms the dominant wall-time concentration, with no internal stage timings to localize its cost.",
+    "The displayed compute-bound order is the Exp6426-readiness-gated constraint-saturation factor task, the task-scoped runtime receipt contract, then the V553 capstone. Readiness is the only recorded context for the leader; its active-time cause is absent.",
+    "The device monitor captured an idle instant while the locked task-level idle indicator is false. Without synchronized samples across task lifetimes, accelerator duty cycle cannot be measured.",
+    "No data available this milestone states loaded-model concurrency or runner selection, leaving no factual basis for a DualGPURunner failure finding."
+  ],
+  "improvements_suggested": [
+    "Add monotonic phase timing, resumable checkpoints, and a deterministic CPU sharding-and-merge path for independent cases in the long synthesis invariant and roster A/B workflow.",
+    "Capture task-correlated GPU utilization throughout every compute-bound task, with timestamps tied to task start and finish.",
+    "Emit loaded-model concurrency and runner-selection receipts, selecting DualGPURunner only for simultaneous multi-model execution.",
+    "Record readiness-gate wait separately from active execution so dependency delay is not conflated with compute time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument and checkpoint the synthesis-only ARC reachability and full-roster A/B phases, then shard independent cases across CPU workers.",
+    "Persist task-scoped GPU samples across each compute-bound execution window.",
+    "Persist model-concurrency and runner-dispatch receipts, with conditional DualGPURunner routing for parallel multi-model tasks."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence is sufficient to locate wall-time concentration but insufficient to assign its internal cause or score accelerator use. A future record should separate gate wait from execution and align phase, device, concurrency, and dispatch events on one task timeline."
+}
