@@ -250,6 +250,14 @@ def compare(baseline: dict, arm: dict) -> dict[str, Any]:
     # Byte-identical across EVERY compared game. Computed here rather than inferred from the
     # aggregate, because two games could trade a level and leave the totals equal while the flag
     # was plainly doing something.
+    # Did ANY lever's internal counters move, even though the outcome did not? This separates
+    # "the flag never resolved" (a wiring bug) from "the flag ran and changed nothing" (a weak but
+    # real null). Fully general -- it diffs whatever `*_diagnostics()` blocks the rows happen to
+    # carry, with no per-lever knowledge, so a lever added tomorrow is covered.
+    diag_moved = any(
+        (b[g].get("fire_counters") or {}) != (a[g].get("fire_counters") or {})
+        for g in (set(b) & set(a))
+    )
     identical = bool(set(b) & set(a)) and all(
         b[g]["levels_cleared"] == a[g]["levels_cleared"]
         and b[g]["actions_spent"] == a[g]["actions_spent"]
@@ -259,6 +267,7 @@ def compare(baseline: dict, arm: dict) -> dict[str, Any]:
     return {
         "games_compared": len(set(b) & set(a)),
         "identical_to_baseline": identical,
+        "lever_counters_moved": diag_moved,
         "levels_improved": improved,
         "levels_regressed": regressed,
         "same_levels_cheaper": cheaper,
@@ -286,12 +295,21 @@ def verdict(cmp: dict) -> tuple[bool, str]:
     # "HOLD: no level gained" would read as "measured, does not help." The truth is "not measured
     # at all." Import reachability proves the code is LOADED; it cannot prove the code RUNS.
     if cmp.get("identical_to_baseline"):
+        if cmp.get("lever_counters_moved"):
+            # The lever ran and the outcome did not move. Still not promotable, and still not the
+            # same as "the idea is worthless": tu93 shows the shape -- flag_resolved True, 288 nav
+            # transitions observed, model_fitted False. The hypothesis class did not fit, so the
+            # lever had nothing to act on. That is a statement about this corpus, not the lever.
+            return False, (
+                "UNINTERPRETABLE_FIRED_NO_EFFECT: the lever's own counters moved, so it IS wired "
+                "and running, but every game returned byte-identical levels and actions. Read the "
+                "row's fire_counters to tell 'fitted and found nothing to do' from 'never fitted' "
+                "-- only the first is a reportable null about the lever's value."
+            )
         return False, (
-            "UNINTERPRETABLE_NO_EFFECT: every game returned byte-identical levels AND actions. "
-            "The flag changed nothing observable, so this is not evidence about its value -- it "
-            "is evidence the code never fired, or is not wired to this engine. Do NOT record it "
-            "as a null. Check the lever's own fire counters (see "
-            "arc_scored_path_lever_harness.py) before concluding anything."
+            "UNINTERPRETABLE_NO_EFFECT: every game returned byte-identical levels AND actions, "
+            "and no lever counter moved either. The flag did not resolve on this engine. That is "
+            "a WIRING result, not evidence about the capability. Do NOT record it as a null."
         )
     if cmp["levels_regressed"]:
         return False, (

@@ -18008,3 +18008,45 @@ Skipping a hook suite to protect one property can silently drop another. When yo
 disable verification on a path, enumerate what that path was getting from the
 hooks and re-add each protection you still need directly. `--no-verify` is not a
 scalpel unless you make it one.
+
+## 2026-08-14 CARNOT_ARC_HAZARD_MOVE_PRUNER: not a null, a non-firing lever
+
+The first scored-engine A/B returned baseline and arm sweeps identical to the
+digit: 16 levels and 48,313 actions on both. Read naively that is "measured, does
+not help." It is not.
+
+Measured directly on tu93 with the flag set, budget 300:
+
+| | flag unset | flag=1 |
+|---|---|---|
+| enabled / flag_resolved | False / False | **True / True** |
+| observe_calls | 0 | **292** |
+| observed_nav_transitions | 0 | **288** |
+| model_fitted | False | **False** |
+| rows_pruned | 0 | 0 |
+
+The lever IS wired and IS running -- the flag resolves and the observe channel
+sees 288 nav transitions. The hypothesis class never fits, so the pruner has
+nothing to act on. Per the taxonomy in
+`scripts/arc_scored_path_lever_harness.py`, that is UNINTERPRETABLE_NOT_FITTED,
+not a reportable null. It matches the two pre-wiring censuses recorded there: the
+pruner fits 0 of 25 and 1 of 15 public games.
+
+**Not recorded as evidence about the lever's value**, because it is not. The
+public corpus cannot answer that question; a corpus with avatar-removal deaths
+could.
+
+**What this changed in the machinery.** Import reachability proves a flag's code
+is LOADED, never that it RUNS -- a narrower version of the same false negative
+the reachability guard was built to stop. `verdict()` now separates three cases
+before it reaches HOLD:
+
+- arms identical AND no lever counter moved -> `UNINTERPRETABLE_NO_EFFECT`, a
+  WIRING result
+- arms identical BUT counters moved -> `UNINTERPRETABLE_FIRED_NO_EFFECT`, read
+  the counters to tell "fitted and found nothing" from "never fitted"
+- anything else -> the existing regression / HOLD / promote rules
+
+Scored rows now carry `fire_counters`: every `*_diagnostics()` block the live
+explorer and policy expose, 27 of them on a real run, collected by scanning the
+object rather than from a maintained lever list.
