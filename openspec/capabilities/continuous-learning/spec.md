@@ -4685,6 +4685,245 @@ nonzero, and reported metrics recompute
 | SCENARIO-LEARN-6431-ATTACKS | Implemented: `python/carnot/experiment_6431_controlled_memory_interference_ab.py`. | Implemented: `tests/python/test_experiment_6431_controlled_memory_interference_ab.py`. |
 | SCENARIO-LEARN-6431-READY | Implemented: `python/carnot/experiment_6431_controlled_memory_interference_ab.py`. | Implemented: `tests/python/test_experiment_6431_controlled_memory_interference_ab.py`. |
 
+## REQ-LEARN-6432: Held-Shift Process-Restart CSL Replication
+
+**Given** Exp6430 selected a frozen write-once memory capacity policy, Exp6431
+passed the controlled interference gate, and Exp6420 keeps the Exp6419 failure
+mode visible
+**When** Exp6432 runs on planning date 20260814
+**Then** it SHALL write
+`results/experiment_6432_held_shift_process_restart_csl_replication.json`
+**And** it SHALL replicate the frozen Exp6430 policy on a fresh held
+factor-family shift after real process restarts.
+
+Exp6432 SHALL revalidate Exp6430 and Exp6431 gates before held generation. It
+SHALL check GPUs, VRAM, model bytes, embedded GGUF tokenizers, the local
+runner, task-scoped receipt helpers, the frozen memory policy, selected
+capacity, exact checkers, licenses, disk, and protected development rows. It
+SHALL prove the held manifest path and raw-output paths were absent before new
+bytes are generated.
+
+Exp6432 SHALL use the three mandated local GGUF model ids returned by
+`cached_sota_pair()`: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Token counts SHALL use embedded GGUF
+tokenizers only. Exp6432 SHALL not use a transformers tokenizer path.
+
+Exp6432 SHALL preregister the held factor-family shift, model balance,
+sessions, seeds, prompts, budgets, process restart points, expiry boundaries,
+supersession boundaries, and untouched evaluation partition. It SHALL not tune
+the memory policy after held exposure.
+
+Exp6432 SHALL start from the persisted Exp6430 selected-capacity memory head.
+It SHALL recover that head in a new process from disk before each held session.
+It SHALL prove the recovered head hash matches the sealed Exp6430 head. It
+SHALL preserve exact authority. It SHALL not keep any parent in-memory state
+except the hash of the persisted schema.
+
+Exp6432 SHALL generate one new raw output for each held event id. It SHALL bind
+each raw output to the event id, prompt hash, model id, model bytes, embedded
+tokenizer hash, task receipt, and child process id. It SHALL freeze proposals
+before exact outcomes become visible.
+
+Exp6432 SHALL compare frozen memory and selected-capacity memory at matched
+work. It SHALL write one per-unit row before it computes coverage, precision,
+selection, future exact yield, transfer, retention, forgetting, negative
+transfer, contamination, restart recovery, latency, and GPU cost.
+
+Exp6432 SHALL attack raw-output reuse, cache resurrection, stale or substituted
+heads, model swaps, hidden retuning, future leakage, same-step writes, expired
+licenses, superseded evidence, interrupted persistence, rollback omission, and
+protected leakage. Every attack SHALL fail closed.
+
+Exp6432 SHALL recompute every aggregate from held per-unit rows. It SHALL
+report confidence intervals, effective sample sizes, underpowered strata, and
+exact null cells without development pooling.
+
+Exp6432 SHALL set `held_shift_restart_csl_ready_score=1.0` only when the frozen
+selected-capacity policy improves row-recomputed held future exact yield over
+frozen, protected retention does not regress, contamination and negative
+transfer stay within preregistered bounds, restarts recover exactly, every
+attack fails closed, and `current_adversarial_flag_count=0`.
+
+Exp6432 SHALL emit these fields:
+
+- `status`
+- `exp6430_and_exp6431_gate_receipts`
+- `MODEL_SPECS`
+- `models_used`
+- `cached_sota_pair_receipts`
+- `model_file_and_embedded_tokenizer_hashes`
+- `autotokenizer_usage_count`
+- `held_manifest_and_raw_output_path_absence_receipts`
+- `held_manifest_path_hash_counts_balance_shift_restart_expiry_supersession_and_partition_seals`
+- `frozen_memory_policy_capacity_checker_model_prompt_and_head_hashes`
+- `task_scoped_process_gpu_runner_and_raw_output_receipts`
+- `per_unit_rows`
+- `per_event_unique_raw_output_and_pre_outcome_freeze_records`
+- `process_restart_and_persisted_head_recovery_receipts`
+- `per_arm_model_family_session_coverage_precision_selection_future_yield_transfer_retention_forgetting_negative_transfer_contamination_restart_latency_and_gpu_cost_results`
+- `held_future_exact_yield_delta`
+- `protected_retention_delta`
+- `negative_transfer_delta`
+- `contamination_propagation_rate`
+- `effective_sample_sizes_and_uncertainty`
+- `aggregate_recomputation_receipts`
+- `reported_vs_recomputed_deltas`
+- `raw_output_reuse_count`
+- `cache_resurrection_count`
+- `hidden_retuning_count`
+- `protected_leakage_count`
+- `attack_matrix`
+- `held_shift_restart_csl_ready_score`
+- `current_adversarial_flag_count`
+- `harm_underpowered_missing_and_flagged_cells`
+- `protected_files_unchanged`
+- `blocked_reason`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map both upstream gates, held freshness, all deltas,
+all attacks, the flag count, and the readiness score. `per_unit_rows` SHALL be
+present because Exp6432 makes comparative claims. `verifier_is_oracle` SHALL be
+true only for exact feedback, persistence integrity, release, and
+protected-retention checks. Model output and memory SHALL NOT be oracles.
+`honest_verdict` SHALL start with a terminal success prefix.
+
+Required field principles:
+
+- `status`: Names the terminal state for the held-shift process-restart replication.
+- `exp6430_and_exp6431_gate_receipts`: Pins the clean stream gate, the interference safety gate, and the Exp6420 failure context.
+- `MODEL_SPECS`: Carries the three mandated GGUF model identities from cached SOTA receipts.
+- `models_used`: Lists only the three mandated GGUF models used for held rows.
+- `cached_sota_pair_receipts`: Records the helper calls that supplied all mandated model ids.
+- `model_file_and_embedded_tokenizer_hashes`: Binds model bytes, bytes-in-use counts, and embedded tokenizer metadata.
+- `autotokenizer_usage_count`: Must remain zero because GGUF tokenizer metadata is embedded.
+- `held_manifest_and_raw_output_path_absence_receipts`: Proves held manifest, artifact, and raw-output paths were absent before generation.
+- `held_manifest_path_hash_counts_balance_shift_restart_expiry_supersession_and_partition_seals`: Seals held event order, balance, shift, restarts, expiry, supersession, and untouched evaluation rows.
+- `frozen_memory_policy_capacity_checker_model_prompt_and_head_hashes`: Freezes the Exp6430 policy, selected capacity, exact checkers, model bytes, prompts, and persisted head before held outcomes.
+- `task_scoped_process_gpu_runner_and_raw_output_receipts`: Binds fresh held generation to task-scoped process, GPU, runner, and raw-output receipts.
+- `per_unit_rows`: Records one matched frozen or selected-capacity row before aggregate calculation.
+- `per_event_unique_raw_output_and_pre_outcome_freeze_records`: Proves each held event has one raw output and a proposal frozen before outcome release.
+- `process_restart_and_persisted_head_recovery_receipts`: Proves each held session recovered the persisted Exp6430 head from disk in a new process.
+- `per_arm_model_family_session_coverage_precision_selection_future_yield_transfer_retention_forgetting_negative_transfer_contamination_restart_latency_and_gpu_cost_results`: Reports separated arm, model-family, and session cells without development pooling.
+- `held_future_exact_yield_delta`: Must be positive for readiness.
+- `protected_retention_delta`: Must be nonnegative for readiness.
+- `negative_transfer_delta`: Must stay at or below the preregistered harm bound.
+- `contamination_propagation_rate`: Must be zero for readiness.
+- `effective_sample_sizes_and_uncertainty`: Reports counts, confidence intervals, nulls, and underpowered strata.
+- `aggregate_recomputation_receipts`: Recomputes metrics from per-unit rows.
+- `reported_vs_recomputed_deltas`: Shows reported aggregates match row recomputation.
+- `raw_output_reuse_count`: Must be zero because one raw output cannot represent two held event ids.
+- `cache_resurrection_count`: Must be zero because stale caches cannot revive memory.
+- `hidden_retuning_count`: Must be zero because the policy is frozen before held exposure.
+- `protected_leakage_count`: Must be zero because protected and future labels cannot route writes.
+- `attack_matrix`: Shows all critical attacks fail closed.
+- `held_shift_restart_csl_ready_score`: Conjunctive readiness score for held-shift restart replication.
+- `current_adversarial_flag_count`: Must be zero for readiness.
+- `harm_underpowered_missing_and_flagged_cells`: Keeps weak, missing, null, and flagged cells visible.
+- `protected_files_unchanged`: Shows protected upstream and ops files stayed byte-identical.
+- `blocked_reason`: Explains failed preconditions.
+- `preconditions_checked`: Lists gates, GPUs, VRAM, model bytes, tokenizers, runner, helpers, policy, checkers, licenses, disk, path absence, and protected rows.
+- `inference_substrate`: Declares task-scoped local GGUF held generation with exact-governed persisted memory.
+- `verifier_is_oracle`: Marks only exact feedback, persistence integrity, release, and protected-retention checks as oracles.
+- `field_principles`: Documents why each artifact field exists.
+- `field_provenance`: Maps each field to sources, rows, reductions, checks, attacks, or tests.
+- `random_seed`: Pins held events, sessions, prompts, restarts, attacks, and reductions.
+- `duration_s`: Records measured wall time without padding.
+- `tests_run`: Records verification commands and exit codes.
+- `reproducibility_checksum`: Content-addresses the artifact with volatile fields normalized.
+- `honest_verdict`: Uses a terminal success prefix and states the held-shift result.
+- `gate:exp6430_clean_stream`: Exp6430 must be complete, ready, row-recomputed, and cache-clean.
+- `gate:exp6431_interference_safety`: Exp6431 must be complete, ready, and contamination-clean.
+- `gate:exp6420_failure_context`: Exp6420 must keep raw-output reuse and cache resurrection defects visible.
+- `held:fresh_manifest`: Held manifest and raw-output paths must be absent before generation.
+- `held:new_prompts`: Held prompts must be new and bound to the planning date.
+- `held:unique_raw_outputs`: Held raw-output hashes must be unique and absent from Exp6430 raw hashes.
+- `delta:future_exact_yield`: Selected-capacity future exact yield must exceed frozen.
+- `delta:protected_retention`: Protected retention must not regress.
+- `delta:negative_transfer`: Negative transfer must stay within the preregistered bound.
+- `delta:contamination`: Contamination propagation must remain zero.
+- `attack:raw_output_reuse`: Raw-output reuse must not release or promote memory.
+- `attack:cache_resurrection`: Stale cache state must not revive writes.
+- `attack:stale_or_substituted_heads`: Head substitution must fail persisted-head verification.
+- `attack:model_swaps`: Model ids and bytes must match sealed receipts.
+- `attack:hidden_retuning`: Held outcomes must not change the capacity or policy.
+- `attack:future_leakage`: Future labels must not affect proposals or writes.
+- `attack:same_step_writes`: Writes must not occur in the same step as proposal generation.
+- `attack:expired_licenses`: Expired licenses must fail release.
+- `attack:superseded_evidence`: Superseded evidence must fail unless exact newer support exists.
+- `attack:interrupted_persistence`: Interrupted persistence must not promote a new head.
+- `attack:rollback_omission`: Rollback omission must not leave contamination.
+- `attack:protected_leakage`: Protected rows must not leak into held selection.
+
+## SCENARIO-LEARN-6432-GATES: Clean Stream And Safety Gates Hold
+
+**Given** Exp6430, Exp6431, Exp6426, and Exp6420 artifacts are available
+**When** Exp6432 checks preconditions
+**Then** both readiness gates, model bytes, embedded tokenizers, runner,
+helpers, policy, selected capacity, exact checkers, resources, path absence,
+and protected rows SHALL pass before readiness can become one.
+
+## SCENARIO-LEARN-6432-PREREGISTRATION: Held Plan Freezes First
+
+**Given** a new held factor-family shift
+**When** Exp6432 builds the held manifest
+**Then** model balance, sessions, seeds, prompts, budgets, restart points,
+expiry, supersession, and partitions SHALL be frozen before exact outcomes
+can steer the policy.
+
+## SCENARIO-LEARN-6432-RESTARTS: Persisted Head Recovers In New Processes
+
+**Given** the sealed Exp6430 selected-capacity head
+**When** Exp6432 starts each held session
+**Then** a new process SHALL recover the same head hash from disk and no
+unhashed parent memory state SHALL be accepted.
+
+## SCENARIO-LEARN-6432-ROWS: Matched Per-Unit Rows Precede Aggregates
+
+**Given** fresh held raw outputs and frozen proposals
+**When** Exp6432 evaluates frozen and selected-capacity arms
+**Then** it SHALL write matched per-unit rows before it reduces future exact
+yield, transfer, retention, forgetting, negative transfer, contamination,
+restart, latency, and GPU cost metrics.
+
+## SCENARIO-LEARN-6432-ATTACKS: Critical Held Attacks Fail Closed
+
+**Given** raw-output reuse, cache resurrection, head substitution, model swap,
+hidden retuning, future leakage, same-step write, expired license, superseded
+evidence, interrupted persistence, rollback omission, and protected leakage
+attacks
+**When** Exp6432 validates the attack matrix
+**Then** every attack SHALL fail closed and no attack SHALL promote readiness.
+
+## SCENARIO-LEARN-6432-READY: Readiness Requires Positive Held Yield
+
+**Given** row-recomputed held aggregates
+**When** selected-capacity future exact yield beats frozen, retention does not
+regress, negative transfer and contamination stay within bounds, restarts
+recover exactly, all attacks fail closed, and no adversarial flag remains
+**Then** `held_shift_restart_csl_ready_score` SHALL be `1.0`.
+
+## Implementation Status (REQ-LEARN-6432)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6432 | Implemented: `python/carnot/experiment_6432_held_shift_process_restart_csl_replication.py`; terminal artifact `results/experiment_6432_held_shift_process_restart_csl_replication.json`. | Implemented: `tests/python/test_experiment_6432_held_shift_process_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6432-GATES | Implemented: `python/carnot/experiment_6432_held_shift_process_restart_csl_replication.py`. | Implemented: `tests/python/test_experiment_6432_held_shift_process_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6432-PREREGISTRATION | Implemented: `python/carnot/experiment_6432_held_shift_process_restart_csl_replication.py`. | Implemented: `tests/python/test_experiment_6432_held_shift_process_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6432-RESTARTS | Implemented: `python/carnot/experiment_6432_held_shift_process_restart_csl_replication.py`. | Implemented: `tests/python/test_experiment_6432_held_shift_process_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6432-ROWS | Implemented: `python/carnot/experiment_6432_held_shift_process_restart_csl_replication.py`. | Implemented: `tests/python/test_experiment_6432_held_shift_process_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6432-ATTACKS | Implemented: `python/carnot/experiment_6432_held_shift_process_restart_csl_replication.py`. | Implemented: `tests/python/test_experiment_6432_held_shift_process_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6432-READY | Implemented: `python/carnot/experiment_6432_held_shift_process_restart_csl_replication.py`. | Implemented: `tests/python/test_experiment_6432_held_shift_process_restart_csl_replication.py`. |
+
 ## REQ-LEARN-6409: Graph-Local Multisession Continuous Learning
 
 **Given** Exp6408 first shows positive future exact yield with non-increased
