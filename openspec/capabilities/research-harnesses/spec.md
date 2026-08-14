@@ -5034,6 +5034,115 @@ verification commands exit zero.
 |---|---|---|
 | REQ-INFRA-6413 | Planned: `python/carnot/experiment_6413_authenticated_sota_gguf_execution_receipts.py`; terminal artifact `results/experiment_6413_authenticated_sota_gguf_execution_receipts.json`. | Planned: `tests/python/test_experiment_6413_authenticated_sota_gguf_execution_receipts.py`. |
 
+## REQ-INFRA-6414: Fresh Three-Family Factor-Event Corpus SHALL Bind Rows To Authenticated GGUF Receipts And Exact Labels
+
+Carnot SHALL build Exp6414 as a fresh V552 factor-event corpus. The corpus SHALL
+be independent of V550 and V551 fixtures. The planning date SHALL be
+`20260814`.
+
+Exp6414 SHALL revalidate the Exp6413 authenticated execution gate before it
+freezes rows. It SHALL use `cached_sota_pair()` helper calls to resolve exactly
+these GGUF model ids: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL use only embedded GGUF tokenizers.
+It SHALL never call `AutoTokenizer`.
+
+Exp6414 SHALL pre-register at least 72 events before generation. The event set
+SHALL be balanced across the three model families, supported and unsupported
+constraint families, clean, contradicted, implicit, stale, duplicate, and
+superseded classes, and acquisition, retention, and future partitions.
+
+Exp6414 SHALL seal prompts, model configs, event order, partitions, and exact
+checker versions before raw output parsing. Every row SHALL bind the process
+receipt, model file hash, tokenizer hash, prompt hash, raw output bytes, source
+span, proposed typed effect, model-family license state, and exact checker
+outcome.
+
+Exp6414 SHALL record model-family and constraint-family cells independently.
+Unsupported, abstaining, malformed, or invalid cells SHALL not block or inherit
+another cell. They SHALL abstain without fallback.
+
+Exp6414 SHALL prove byte and hash disjointness from V550 and V551 fixtures. It
+SHALL prevent future-label visibility before row freeze. It SHALL run attacks
+for model-row swaps, output substitution, receipt reuse, cross-family fallback,
+license inheritance, checker drift, partition leakage, and post-label row edits.
+
+Exp6414 SHALL write
+`results/experiment_6414_fresh_three_family_factor_event_corpus.json` with
+these required fields: `status`, `exp6413_gate_receipt`, `MODEL_SPECS`,
+`models_used`, `cached_sota_pair_receipts`,
+`model_file_and_tokenizer_hashes`, `embedded_gguf_tokenizer_receipts`,
+`autotokenizer_usage_count`, `license_and_frozen_harness_bindings`,
+`manifest_path_hash_counts_balance_classes_and_partition_seals`,
+`prompt_config_event_order_and_checker_freeze_receipts`,
+`corpus_disjointness_receipts`,
+`per_row_authenticated_process_and_raw_output_bindings`,
+`per_row_source_effect_license_and_exact_outcome_bindings`,
+`per_cell_transport_evaluability_correctness_abstention_malformed_truncation_duplicate_and_cost_results`,
+`unlicensed_cell_abstention_records`, `silent_fallback_count`,
+`universal_support_claimed`, `protected_leakage_count`,
+`model_output_substitution_count`, `attack_matrix`, `authentic_family_count`,
+`fresh_factor_event_corpus_ready_score`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+`fresh_factor_event_corpus_ready_score` SHALL be `1.0` only when all three
+GGUF families authenticate through Exp6413, all rows are raw-byte and checker
+bound, all partitions are sealed, protected leakage is zero, every unsupported
+cell abstains without fallback, all mutation attacks fail closed, and all
+recorded verification commands exit zero. `verifier_is_oracle` SHALL be true
+only for deterministic factor-event checkers. Model text, transport, licenses,
+and receipts SHALL not be semantic oracles.
+
+### SCENARIO-INFRA-6414-1: Manifest Is Fresh, Balanced, And Sealed
+
+GIVEN Exp6414 builds the V552 factor-event corpus
+WHEN the manifest is written
+THEN it contains at least 72 rows balanced across the required model families,
+constraint support states, outcome classes, and partitions
+AND it contains no byte or hash match to V550 or V551 fixture artifacts.
+
+### SCENARIO-INFRA-6414-2: Rows Bind Process, Bytes, Source, License, And Exact Outcome
+
+GIVEN a pre-registered row
+WHEN Exp6414 stores raw output and then runs exact checking
+THEN the row binds an accepted Exp6413 process receipt, model file hash,
+embedded tokenizer hash, prompt hash, raw output hash, source span, proposed
+typed effect, license state, and exact checker outcome.
+
+### SCENARIO-INFRA-6414-3: Cells Stay Independent
+
+GIVEN one model-family and constraint-family cell is unsupported, abstaining,
+malformed, duplicate, truncated, or exact-failing
+WHEN Exp6414 computes cell results
+THEN that cell records its own terminal state and does not block, promote, or
+inherit any other cell.
+
+### SCENARIO-INFRA-6414-4: Mutation Attacks Fail Closed
+
+GIVEN model-row swaps, output substitution, receipt reuse, cross-family
+fallback, license inheritance, checker drift, partition leakage, and post-label
+row edits
+WHEN Exp6414 validates the corpus
+THEN every attack fails closed and `model_output_substitution_count` remains
+zero.
+
+### SCENARIO-INFRA-6414-5: Readiness Is Conjunctive And Narrow
+
+GIVEN all three GGUF families authenticated, rows are sealed, unsupported cells
+abstain without fallback, disjointness holds, and exact checkers own semantic
+labels
+WHEN Exp6414 computes readiness
+THEN `fresh_factor_event_corpus_ready_score` is `1.0`
+AND `universal_support_claimed` is false.
+
+## Implementation Status (REQ-INFRA-6414)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6414 | Planned: `python/carnot/experiment_6414_fresh_three_family_factor_event_corpus.py`; terminal artifact `results/experiment_6414_fresh_three_family_factor_event_corpus.json`. | Planned: `tests/python/test_experiment_6414_fresh_three_family_factor_event_corpus.py`. |
+
 ## REQ-INFRA-6351: V547 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
 
 Carnot SHALL build Exp6351 as a deterministic V547 post-marker source sweep
