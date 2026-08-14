@@ -18050,3 +18050,32 @@ before it reaches HOLD:
 Scored rows now carry `fire_counters`: every `*_diagnostics()` block the live
 explorer and policy expose, 27 of them on a real run, collected by scanning the
 object rather than from a maintained lever list.
+
+## 2026-08-14 MANDATORY-NEXT-MILESTONE: the ARC-AGI-3 field moved and one of our beliefs is false
+
+SOTA ingestion (`docs/research-notes/sota-ingestion-self-improvement-and-arc-2026-08-14.md`).
+
+**Claude Opus 5 scores 30.2% on ARC-AGI-3** (snapshot 2026-08-14). GPT-5.6 Sol 7.8%, Opus 4.8
+1.5%. Carnot's hidden score is 0.08. A general-purpose frontier model called through an API with
+**no ARC-specific harness** scores roughly **four times** what this project's purpose-built
+harness scores.
+
+This refutes the recorded belief that "Carnot 0.08 hidden is comparable-to-ahead of the legitimate
+field." That was true when Sol's 7.8% topped the board. The memory has been corrected.
+
+**Sourcing caveat, do not skip.** The primary leaderboard is JavaScript-rendered and could not be
+read. The number comes from two independent aggregators that agree exactly on all eleven entries.
+**Task 1 is to verify it against the rendered primary leaderboard before it is cited anywhere
+public.**
+
+**Then decide, because this is an operator call and not an agent one.** A 4x gap to a bare
+frontier API call reads most simply as a GENERATOR-CAPABILITY gap, not a scaffolding gap. Our live
+stack is frozen to the open ~31B gemma-4-31B, chosen deliberately under the decentralization
+constraint (rule 1: local-first, open weights). Those two facts are now in tension and the project
+should say which it is choosing, rather than letting the headline drift.
+
+**A prior to hold while the flag sweep runs.** GRASP (arXiv:2605.29668) reports that its
+held-out-gated self-improvement loop -- the same architecture as `scripts/arc_flag_ledger.py` --
+improved 3 of 4 environments and "remain[ed] flat only where the action space is open-ended."
+ARC-AGI-3 is open-ended. If the 20-flag sweep promotes nothing, that is corroboration of a
+published result, not a failure of the machinery.
