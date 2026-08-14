@@ -324,8 +324,26 @@ flags:
     evidence: []
     state: unevaluated
   CARNOT_ARC_SMALL_OBJECT_FIRST:
+    benchmark_reachable: true
     discovered: '2026-08-14'
-    evidence: []
+    evidence:
+    - arm_total_levels: 7
+      baseline_total_levels: 8
+      date: '2026-08-14'
+      games_compared: 25
+      levels_improved: []
+      levels_regressed:
+      - ft09
+      same_levels_cheaper: []
+      same_levels_costlier:
+      - lp85
+      - su15
+      - vc33
+      value: '1'
+      verdict: 'REFUSED: regressed on [''ft09'']. A flag that breaks a game it used to clear is not promoted,
+        whatever the aggregate says.'
+    last_measured: '2026-08-14'
+    promotable: false
     state: unevaluated
   CARNOT_ARC_STALL_REFACTOR_LOOP:
     discovered: '2026-08-14'

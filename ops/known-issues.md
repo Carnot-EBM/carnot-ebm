@@ -17929,3 +17929,48 @@ is decided before the search runs.
 **Do not quote these numbers as hidden-game results.** They are public games with
 the hand-written adapter bypassed. That removes the hand-written route, not the
 knowledge that produced it.
+
+## 2026-08-13 First automated ARC flag A/B: refused, and sc25's search collapse explained
+
+The selection loop ran end to end for the first time.
+
+**`CARNOT_ARC_SMALL_OBJECT_FIRST` -- REFUSED.** Its own source comment said "the
+SUBMITTED agent is unchanged until an A/B greenlights it" (REQ-ARC-FCP-5758,
+diagnosed on r11l/su15). That A/B had never run. It has now.
+
+| | baseline | arm |
+|---|---|---|
+| levels cleared | 8 | **7** |
+| actions spent | 364,730 | 364,468 |
+
+The flag loses ft09, a game the baseline clears, and makes lp85, su15 and vc33
+more expensive. Total actions move by 0.07 percent, so anyone reading the
+aggregate alone would have called it neutral and shipped it. The per-game rule
+caught the lost game. That is the failure mode the regression gate exists for,
+and it fired on real data rather than a fixture on the first measurement taken.
+
+Not a verdict on the idea. Small-object-first click ranking may still be right
+for the games it was designed around. It is a verdict on turning it on globally,
+and it is recorded with evidence in `ops/arc_flag_ledger.yaml` rather than left
+as an open question for another six months.
+
+**sc25's 24-action collapse is a state-key problem, and it is fixable.** Measured
+directly at 1500 expansions:
+
+| `CARNOT_ARC_STATE_KEY_SUFFIX_K` | env steps | level |
+|---|---|---|
+| unset (default) | 24 | 0 |
+| 1 | 4,463 | 0 |
+| 2 | 3,876 | 0 |
+| 4 | 3,876 | 0 |
+
+At the default state key every action dedups to an already-seen state, so the
+frontier empties after 24 steps and search exits. The game is not hard here; it
+is unexplorable. With the suffix key set it explores normally.
+
+It still clears no level, so the promotion rule correctly does not promote it --
+"explores more" is neither a level nor an efficiency gain, and rewarding extra
+actions would invert the scored metric. The right fix is the state key itself,
+not a flag: a key that collapses distinct states makes sc25 invisible to every
+future flag measurement, because no flag can change an outcome decided before
+the search runs.
