@@ -37,7 +37,9 @@ Supported `op` values (intentionally small):
 
 from __future__ import annotations
 
+import hashlib
 import json
+import math
 import re
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -81,6 +83,8 @@ class GateResult:
     actual: Any
     passed: bool
     reason: str = ""
+    artifact_path: str | None = None
+    artifact_sha256: str | None = None
 
 
 @dataclass
@@ -133,6 +137,33 @@ def _coerce_gate_value(v: Any) -> Any:
     return v
 
 
+def _gate_value_type(value: Any) -> str:
+    """Name the observed JSON type in blocked gate diagnostics."""
+    if value is None:
+        return "null"
+    if isinstance(value, bool):
+        return "bool"
+    if isinstance(value, int):
+        return "int"
+    if isinstance(value, float):
+        return "float"
+    if isinstance(value, str):
+        return "str"
+    if isinstance(value, list):
+        return "list"
+    if isinstance(value, dict):
+        return "dict"
+    return type(value).__name__
+
+
+def _artifact_sha256(path: Path) -> str | None:
+    """Hash the exact upstream artifact read by a gate."""
+    try:
+        return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    except OSError:
+        return None
+
+
 def _eval_op(actual: Any, op: str, expected: Any) -> tuple[bool, str]:
     """Apply a single comparison operator. Returns (passed, reason).
 
@@ -169,6 +200,14 @@ def _eval_op(actual: Any, op: str, expected: Any) -> tuple[bool, str]:
             f"numeric comparison rejected because one side is None (actual={actual!r}, expected={expected!r})",
         )
     if op in (">", ">=", "<", "<="):
+        if (isinstance(actual, float) and math.isnan(actual)) or (
+            isinstance(expected, float) and math.isnan(expected)
+        ):
+            return (
+                False,
+                "numeric comparison rejected because NaN is not comparable "
+                f"(actual={actual!r}, expected={expected!r})",
+            )
         try:
             if op == ">":
                 return actual > expected, f"actual={actual} > expected={expected}"
@@ -344,11 +383,14 @@ def evaluate_gates(
                     actual=None,
                     passed=False,
                     reason=f"upstream artifact not found for task id {upstream!r}",
+                    artifact_path=None,
+                    artifact_sha256=None,
                 )
             )
             all_passed = False
             continue
 
+        artifact_sha = _artifact_sha256(artifact_path)
         try:
             data = json.loads(artifact_path.read_text())
         except (json.JSONDecodeError, OSError) as exc:
@@ -361,6 +403,8 @@ def evaluate_gates(
                     actual=None,
                     passed=False,
                     reason=f"upstream artifact unreadable: {exc}",
+                    artifact_path=artifact_path.as_posix(),
+                    artifact_sha256=artifact_sha,
                 )
             )
             all_passed = False
@@ -379,6 +423,8 @@ def evaluate_gates(
                 actual=actual,
                 passed=passed,
                 reason=op_reason,
+                artifact_path=artifact_path.as_posix(),
+                artifact_sha256=artifact_sha,
             )
         )
         if not passed:
@@ -395,6 +441,42 @@ def evaluate_gates(
         )
 
     return GateCheckResult(passed=all_passed, gates_evaluated=results, summary=summary)
+
+
+def _first_failed_gate(gate_check: GateCheckResult) -> GateResult | None:
+    """Return the failed gate a blocked artifact should expose."""
+    return next((g for g in gate_check.gates_evaluated if not g.passed), None)
+
+
+def _blocked_diagnostic_contract(first_failed: GateResult | None) -> dict[str, Any]:
+    """Build the stable failed-gate contract for future blocked artifacts."""
+    if first_failed is None:
+        return {
+            "version": "blocked_gate_diagnostic_v1",
+            "blocked_reason": None,
+            "failed_upstream": None,
+            "failed_field": None,
+            "failed_operator": None,
+            "failed_expected": None,
+            "failed_expected_type": "null",
+            "failed_observed": None,
+            "failed_observed_type": "null",
+            "failed_evidence_path": None,
+            "failed_evidence_sha256": None,
+        }
+    return {
+        "version": "blocked_gate_diagnostic_v1",
+        "blocked_reason": first_failed.reason,
+        "failed_upstream": first_failed.upstream,
+        "failed_field": first_failed.artifact_field,
+        "failed_operator": first_failed.op,
+        "failed_expected": first_failed.expected,
+        "failed_expected_type": _gate_value_type(first_failed.expected),
+        "failed_observed": first_failed.actual,
+        "failed_observed_type": _gate_value_type(first_failed.actual),
+        "failed_evidence_path": first_failed.artifact_path,
+        "failed_evidence_sha256": first_failed.artifact_sha256,
+    }
 
 
 def write_blocked_artifact(
@@ -427,6 +509,8 @@ def write_blocked_artifact(
 
     now = datetime.now(UTC)
     iso_now = now.isoformat()
+    first_failed = _first_failed_gate(gate_check)
+    diagnostic_contract = _blocked_diagnostic_contract(first_failed)
 
     artifact = {
         # REQUIRED_RESULT_FIELDS — keep aligned with scripts/experiment_template.py:153
@@ -440,6 +524,17 @@ def write_blocked_artifact(
         "title": task.get("title", f"Exp {exp_num}: (untitled)"),
         # Domain-specific fields
         "honest_verdict": "blocked_gate_check_failed",
+        "blocked_reason": diagnostic_contract["blocked_reason"] or gate_check.summary,
+        "failed_upstream": diagnostic_contract["failed_upstream"],
+        "failed_field": diagnostic_contract["failed_field"],
+        "failed_operator": diagnostic_contract["failed_operator"],
+        "failed_expected": diagnostic_contract["failed_expected"],
+        "failed_expected_type": diagnostic_contract["failed_expected_type"],
+        "failed_observed": diagnostic_contract["failed_observed"],
+        "failed_observed_type": diagnostic_contract["failed_observed_type"],
+        "failed_evidence_path": diagnostic_contract["failed_evidence_path"],
+        "failed_evidence_sha256": diagnostic_contract["failed_evidence_sha256"],
+        "blocked_diagnostic_contract": diagnostic_contract,
         "gate_check_summary": gate_check.summary,
         "gates_evaluated": [
             {
@@ -447,9 +542,13 @@ def write_blocked_artifact(
                 "artifact_field": g.artifact_field,
                 "op": g.op,
                 "expected": g.expected,
+                "expected_type": _gate_value_type(g.expected),
                 "actual": g.actual,
+                "actual_type": _gate_value_type(g.actual),
                 "passed": g.passed,
                 "reason": g.reason,
+                "artifact_path": g.artifact_path,
+                "artifact_sha256": g.artifact_sha256,
             }
             for g in gate_check.gates_evaluated
         ],
