@@ -662,3 +662,66 @@ list, so a new flag is tracked from the milestone it lands in.
 **When** the ledger is loaded
 **Then** the process exits with an error rather than starting a fresh ledger,
 because silently replacing it would erase every promotion and its evidence.
+
+## REQ-ARC-BENCH-6269: The benchmark must be able to reach the flag it measures
+
+A flag measurement MUST run on an engine whose import closure contains the flag,
+or MUST be refused.
+
+**Why.** `arc_bench.py`'s original engine drives `graph_explore_solve_v2`. Only 48
+of the 95 tracked `CARNOT_ARC_*` flags live inside that closure. Setting one of
+the other 47 and running the sweep produces a byte-identical result, because the
+code that reads it never executes. The promotion rule reads that as HOLD -- "no
+level gained and no clear efficiency gain" -- which files a real capability as
+worthless, with evidence attached. Wrong for 47 flags, in the most damaging
+direction available.
+
+The `scored` engine drives `E3AgentPolicy` through
+`arc_leaderboard_eval.run_game`. That is the policy `make_carnot_agent(Agent)`
+builds, so a flag measured there is measured on the agent the competition runs.
+Coverage: explore 48, scored 89, neither 6.
+
+### SCENARIO-ARC-BENCH-6269-REFUSE-UNREACHABLE
+
+**Given** a flag outside the selected engine's transitive import closure
+**When** a measurement is requested without `--force`
+**Then** the request is refused, no sweep is run, and the message states that the
+code reading the flag never executes.
+
+### SCENARIO-ARC-BENCH-6269-ROUTE-TO-A-CAPABLE-ENGINE
+
+**Given** a flag refused on one engine that IS reachable on another
+**When** the refusal is printed
+**Then** it names the engine that can measure it, because a refusal without a next
+step is a dead end.
+
+### SCENARIO-ARC-BENCH-6269-FORCED-NULL-IS-STAMPED
+
+**Given** `--force` is passed for an unreachable flag
+**When** the result is recorded
+**Then** the entry carries `benchmark_reachable: false`, so a later reader cannot
+mistake the null for evidence that the capability does nothing.
+
+### SCENARIO-ARC-BENCH-6269-CHARGED-ACTIONS
+
+**Given** a scored-engine run whose driver reports both `actions` and
+`charged_actions`
+**When** the row is written
+**Then** `actions_spent` takes `charged_actions`, because the live gateway bills
+resets and the two differ (vc33: 387 against 400); reporting the smaller number
+would show an efficiency gain the competition would not pay out.
+
+### SCENARIO-ARC-BENCH-6269-ENV-RESTORED
+
+**Given** the scored engine sets `CARNOT_ARC_DISABLE_INDUCTION` for one cell
+**When** that cell finishes, by success or by exception
+**Then** the variable is restored to its prior value, so one cell cannot change
+the meaning of every later cell in the same sweep.
+
+### SCENARIO-ARC-BENCH-6269-ENGINE-ENTRY-DECLARED
+
+**Given** an engine offered by `arc_bench`
+**When** reachability is computed
+**Then** that engine has a declared entry module, and a test fails if the two
+lists disagree, because an undeclared engine falls back to another engine's
+closure and silently under-reports its own reach.
