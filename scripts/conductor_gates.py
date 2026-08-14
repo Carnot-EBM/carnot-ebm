@@ -227,6 +227,57 @@ def _eval_op(actual: Any, op: str, expected: Any) -> tuple[bool, str]:
     return False, f"unknown op {op!r}"
 
 
+def _diagnose_missing_field(data: dict, field: str, base_reason: str) -> str:
+    """Say WHY a gated field read None. `dict.get` cannot tell these three cases apart.
+
+    WHY THIS EXISTS. Milestone .539 cascade-blocked four tasks on
+    `exp6228-supervised-three-family-runtime-endurance`. Each block recorded the same message:
+    `actual=None == expected=1`. That is true and useless. It does not say whether the upstream
+    forgot the field, wrote it as null, or produced nothing at all -- and the three have different
+    fixes. Nobody could act on it, so the block sat unexamined and the ledger counted it as one
+    more anonymous `blocked_gate_check_failed`.
+
+    What had actually happened was the worst of the three: exp6228's artifact carried every field
+    the gates named, spelled correctly, with every value `null` -- including `honest_verdict`. A
+    skeleton, not a result. A check that asks only "is the key present?" sees a complete artifact.
+
+    THE THREE CASES, and why each gets its own sentence:
+
+      absent      the upstream did not honour its own REQUIRED ARTIFACT FIELDS. Fix the upstream
+                  task's prompt, or the gate is naming a field nobody promised. Near-miss keys are
+                  listed because the usual cause is a spelling drift (`scorer_ready` written as
+                  `ebcn_scorer_ready`).
+      null-only   the field is there and empty. If several required-looking fields are null
+                  together, the upstream emitted a template and never filled it, so re-running the
+                  DOWNSTREAM task can never help -- the upstream is what has to run again.
+      real value  not this function's business; the caller only calls it when actual is None.
+
+    Diagnosis only. It never changes whether the gate passes.
+    """
+    if field in data:
+        nulls = [
+            k
+            for k, v in data.items()
+            if v is None and (k.endswith(("_score", "_ready", "_verdict")) or k == field)
+        ]
+        extra = (
+            f" The upstream ALSO left {len(nulls) - 1} other required-looking field(s) null "
+            f"({sorted(k for k in nulls if k != field)[:4]}), so it emitted a template and never "
+            "filled it. Re-run the UPSTREAM task; re-running this one cannot help."
+            if len(nulls) > 1
+            else " Re-run the UPSTREAM task; re-running this one cannot help."
+        )
+        return f"{base_reason} -- upstream wrote {field!r} as null.{extra}"
+
+    stem = field.rsplit("_", 2)[0] if "_" in field else field
+    near = sorted(k for k in data if stem and stem in k and k != field)[:4]
+    hint = f" Closest keys it DID write: {near}." if near else ""
+    return (
+        f"{base_reason} -- upstream artifact has NO field {field!r}; it did not honour its own "
+        f"REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.{hint}"
+    )
+
+
 def evaluate_gates(
     task: dict,
     results_dir: Path | None = None,
@@ -294,6 +345,8 @@ def evaluate_gates(
 
         actual = data.get(artifact_field)
         passed, op_reason = _eval_op(actual, op, expected)
+        if actual is None:
+            op_reason = _diagnose_missing_field(data, artifact_field, op_reason)
         results.append(
             GateResult(
                 upstream=upstream,
@@ -420,8 +473,6 @@ def select_max_turns(task: dict, default: int = 100) -> int:
     # genuinely need more headroom than the planner gives them. Floor them at 40
     # (still within the <=100 bound) regardless of the emitted value.
     _tid = str(task.get("id", "")).lower()
-    if val < 40 and any(
-        _p in _tid for _p in ("archive-v", "capstone-v", "plan-milestone-")
-    ):
+    if val < 40 and any(_p in _tid for _p in ("archive-v", "capstone-v", "plan-milestone-")):
         return 40
     return val
