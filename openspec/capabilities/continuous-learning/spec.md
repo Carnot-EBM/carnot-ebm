@@ -3886,6 +3886,152 @@ restart recovery
 | SCENARIO-LEARN-6419-ATTACKS | Implemented: `python/carnot/experiment_6419_held_shift_restart_csl_replication.py`. | Implemented: `tests/python/test_experiment_6419_held_shift_restart_csl_replication.py`. |
 | SCENARIO-LEARN-6419-READY | Implemented: `python/carnot/experiment_6419_held_shift_restart_csl_replication.py`. | Implemented: `tests/python/test_experiment_6419_held_shift_restart_csl_replication.py`. |
 
+## REQ-LEARN-6420: CSL Authenticity and Safety Audit
+
+**Given** Exp6412 records the V551 claim-boundary audit, Exp6418 records the
+development dual-path CSL stream, and Exp6419 records the held restart stream
+**When** Exp6420 runs on planning date 20260814
+**Then** it SHALL write
+`results/experiment_6420_csl_authenticity_safety_audit.json`
+**And** it SHALL not repair or rewrite upstream artifacts.
+
+Exp6420 SHALL hash every available upstream artifact, sidecar, source,
+checkpoint, model byte file, checker, and determination record that is expected
+by the V552 CSL chain. It SHALL record each missing expected input as evidence.
+
+Exp6420 SHALL reconstruct event order from monotonic order fields and immutable
+hashes. It SHALL prove proposals predate exact outcomes, memory updates follow
+exact feedback, and held future rows remain untouched before evaluation.
+
+Exp6420 SHALL verify proposal-memory updates against exact feasibility evidence
+and selection-memory updates against exact consequence evidence. It SHALL count
+exact veto overrides, protected leakage, hidden retuning, stale cache evidence,
+raw-output reuse, and metric recompute mismatches.
+
+Exp6420 SHALL recompute development and held proposal coverage, selection
+success, future yield, retention, forgetting, contamination, growth, restart
+recovery, and costs from published rows. Reported metric deltas SHALL match the
+row recomputation before readiness can become one.
+
+Exp6420 SHALL attack forged PIDs, substituted model bytes, raw-output reuse,
+event reordering, future-label leakage, same-step writes, model identity swaps,
+stale heads, duplicates, partial commits, rollback omission, cache
+resurrection, poisoned evidence, and hidden retuning. Each critical attack
+SHALL fail closed before readiness can become one.
+
+The attack ids are `forged_pid`, `substituted_model_bytes`,
+`raw_output_reuse`, `event_reordering`, `future_label_leakage`,
+`same_step_writes`, `model_identity_swap`, `stale_heads`, `duplicates`,
+`partial_commits`, `rollback_omission`, `cache_resurrection`,
+`poisoned_evidence`, and `hidden_retuning`.
+
+Exp6420 SHALL preserve historical Exp6412 claim-boundary findings, current
+adversarial verification findings, and determination-preservation findings as
+separate evidence. It SHALL not clear additive corrigenda.
+
+Exp6420 SHALL compare development and held effects with uncertainty and
+effective sample size. Underpowered or heterogeneous cells SHALL remain visible
+instead of being pooled away.
+
+Exp6420 SHALL set `csl_authenticity_safety_audit_ready_score=1.0` only when
+both streams exist, powered receipts are authentic, causal order holds,
+recomputed metrics match reported metrics, no exact veto is overridden,
+contamination is zero after rollback, protected retention is non-negative, and
+every critical attack fails closed.
+
+Exp6420 SHALL emit these fields:
+
+- `status`
+- `expected_and_available_upstream_inputs`
+- `upstream_artifact_sidecar_source_checkpoint_model_and_checker_hashes`
+- `missing_input_findings`
+- `process_and_raw_output_authenticity_rechecks`
+- `reconstructed_event_time_order`
+- `proposal_precedes_outcome_checks`
+- `update_follows_exact_feedback_checks`
+- `untouched_future_partition_checks`
+- `proposal_memory_exact_feasibility_bindings`
+- `selection_memory_exact_consequence_bindings`
+- `recomputed_development_and_held_metrics`
+- `reported_vs_recomputed_deltas`
+- `retention_forgetting_contamination_growth_restart_and_cost_rechecks`
+- `uncertainty_and_effective_sample_sizes`
+- `exact_veto_override_count`
+- `protected_leakage_count`
+- `hidden_retuning_count`
+- `attack_matrix`
+- `adversarial_and_determination_preservation_findings`
+- `prospective_csl_claim_eligibility`
+- `public_factor_claim_eligibility`
+- `csl_authenticity_safety_audit_ready_score`
+- `harm_underpowered_missing_and_flagged_cells`
+- `protected_files_unchanged`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map every required field. It SHALL map every
+missing-input rule, every attack id, both eligibility fields, and
+`csl_authenticity_safety_audit_ready_score`. `verifier_is_oracle` SHALL be
+false for the audit as a whole. Exact upstream checkers remain semantic
+oracles that this audit inspects.
+
+## SCENARIO-LEARN-6420-MISSING: Missing Inputs Lower Eligibility
+
+**Given** an expected V552 upstream artifact, sidecar, source, checker, model
+file, or determination record is absent
+**When** Exp6420 computes eligibility
+**Then** the missing input SHALL be listed in `missing_input_findings`
+**And** `csl_authenticity_safety_audit_ready_score` SHALL be `0.0`.
+
+## SCENARIO-LEARN-6420-CAUSAL: Temporal Order Is Replayed From Rows
+
+**Given** Exp6418 and Exp6419 event rows
+**When** Exp6420 reconstructs event time
+**Then** proposal freeze order SHALL precede exact outcome order
+**And** update event indices SHALL have exact feedback before update binding.
+
+## SCENARIO-LEARN-6420-METRICS: Reported Metrics Must Recompute
+
+**Given** published raw outcome, manifest, transition, and receipt rows
+**When** Exp6420 recomputes development and held effects
+**Then** reported deltas SHALL be compared with recomputed deltas
+**And** any mismatch SHALL lower claim eligibility.
+
+## SCENARIO-LEARN-6420-ATTACKS: Critical Attacks Fail Closed
+
+**Given** forged PID, model substitution, raw-output reuse, event reordering,
+future leakage, same-step write, identity swap, stale head, duplicate, partial
+commit, rollback, cache, poison, or hidden-retuning evidence
+**When** Exp6420 builds the attack matrix
+**Then** each critical attack SHALL fail closed before readiness can be one.
+
+## SCENARIO-LEARN-6420-ORACLE: The Audit Is Not The Oracle
+
+**Given** exact feasibility, consequence, outcome, release, and retention
+checkers are upstream semantic oracles
+**When** Exp6420 reports `verifier_is_oracle`
+**Then** the audit SHALL set the value to `false`
+**And** it SHALL identify those upstream exact checkers as audited oracles.
+
+## Implementation Status (REQ-LEARN-6420)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6420 | Planned: `python/carnot/experiment_6420_csl_authenticity_safety_audit.py`; terminal artifact `results/experiment_6420_csl_authenticity_safety_audit.json`. | Planned: `tests/python/test_experiment_6420_csl_authenticity_safety_audit.py`. |
+| SCENARIO-LEARN-6420-MISSING | Planned: `python/carnot/experiment_6420_csl_authenticity_safety_audit.py`. | Planned: `tests/python/test_experiment_6420_csl_authenticity_safety_audit.py`. |
+| SCENARIO-LEARN-6420-CAUSAL | Planned: `python/carnot/experiment_6420_csl_authenticity_safety_audit.py`. | Planned: `tests/python/test_experiment_6420_csl_authenticity_safety_audit.py`. |
+| SCENARIO-LEARN-6420-METRICS | Planned: `python/carnot/experiment_6420_csl_authenticity_safety_audit.py`. | Planned: `tests/python/test_experiment_6420_csl_authenticity_safety_audit.py`. |
+| SCENARIO-LEARN-6420-ATTACKS | Planned: `python/carnot/experiment_6420_csl_authenticity_safety_audit.py`. | Planned: `tests/python/test_experiment_6420_csl_authenticity_safety_audit.py`. |
+| SCENARIO-LEARN-6420-ORACLE | Planned: `python/carnot/experiment_6420_csl_authenticity_safety_audit.py`. | Planned: `tests/python/test_experiment_6420_csl_authenticity_safety_audit.py`. |
+
 ## REQ-LEARN-6409: Graph-Local Multisession Continuous Learning
 
 **Given** Exp6408 first shows positive future exact yield with non-increased
