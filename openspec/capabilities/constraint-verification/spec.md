@@ -726,6 +726,124 @@ from group-aware folds, and records that no Exp6300 refit occurred.
 
 **Spec traces:** REQ-VERIFY-6301
 
+### REQ-CONSTRAINT-VERIFY-6415: Exact Boolean WCSP CCG Kernelization Control
+
+Carnot SHALL provide a bounded exact Boolean WCSP-to-constraint-composite-graph
+control in `python/carnot/experiment_6415_boolean_wcsp_ccg_kernelization.py`.
+The run command SHALL write
+`results/experiment_6415_boolean_wcsp_ccg_kernelization.json`.
+
+The Boolean WCSP schema SHALL be canonical and reversible. It SHALL name
+variables, integer constants, unary terms, pairwise terms, duplicate handling,
+and deterministic ordering. The CCG schema SHALL include source, sink,
+variable nodes, auxiliary term nodes, weighted edges, graph-cut capacities, and
+a source-instance mapping contract.
+
+The kernelizer SHALL use a local maxflow/min-cut construction only for exact
+submodular Boolean pairwise costs. It SHALL fix variables only when residual
+reachability proves the label is forced in all minimum cuts. Every fixed
+variable SHALL carry a certificate that an independent exact check verifies
+against the source instance.
+
+The experiment SHALL freeze at least 48 small instances across unary,
+pairwise, frustrated, sparse, dense, decomposable, degenerate, and
+adversarial-weight classes. For every instance it SHALL compare the
+unkernelized exact reference, CCG maxflow kernelization plus exact completion,
+and a seeded energy-sampling control. The exact reference owns optimum labels.
+
+The attack matrix SHALL cover sign inversion, zero or negative weights,
+duplicate constraints, disconnected components, auxiliary-node omission,
+mapping reversal, integer overflow, unsound fixed variables, and non-unique
+optima. `ccg_kernelization_exact_ready_score` SHALL be bare `1.0` only when
+every frozen optimum is preserved, every fixed-variable certificate verifies,
+no attack creates an unsound reduction, and reduction and cost fields are
+measured.
+
+The artifact SHALL include `status`,
+`source_encoder_solver_sampler_and_dependency_hashes`,
+`boolean_wcsp_schema_path_hash_and_fields`,
+`ccg_schema_path_hash_node_edge_and_mapping_contract`,
+`kernelizer_path_and_hash`,
+`frozen_manifest_path_hash_counts_classes_and_seeds`,
+`exact_reference_method_and_receipts`,
+`per_instance_source_and_kernelized_optima`,
+`optimum_preservation_rate`,
+`fixed_variable_certificates_and_independent_checks`,
+`state_space_reduction_by_instance`,
+`verifier_call_reduction_by_instance`,
+`sampler_work_and_wall_time_by_arm`,
+`sign_weight_duplicate_component_auxiliary_mapping_overflow_fixed_variable_and_nonunique_attack_matrix`,
+`quantum_advantage_claimed`, `hardware_speedup_claimed`,
+`ccg_kernelization_exact_ready_score`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+`verifier_is_oracle` SHALL be true only for the independent exact optimum and
+certificate checks. The kernelizer and sampler SHALL NOT be oracles.
+`quantum_advantage_claimed` and `hardware_speedup_claimed` SHALL be false.
+
+Field principles SHALL be:
+
+- `status`: Names whether the exact local control is usable or blocked.
+- `source_encoder_solver_sampler_and_dependency_hashes`: Pins the code and dependency inputs used before this local control ran.
+- `boolean_wcsp_schema_path_hash_and_fields`: Makes the source WCSP schema inspectable and content-addressed.
+- `ccg_schema_path_hash_node_edge_and_mapping_contract`: Makes the CCG graph and reverse mapping contract inspectable.
+- `kernelizer_path_and_hash`: Pins the local maxflow kernelizer implementation.
+- `frozen_manifest_path_hash_counts_classes_and_seeds`: Shows the frozen panel size, classes, seeds, and manifest hash.
+- `exact_reference_method_and_receipts`: Declares exhaustive enumeration as the independent optimum authority.
+- `per_instance_source_and_kernelized_optima`: Compares source and kernelized exact optima for every frozen instance.
+- `optimum_preservation_rate`: Measures the fraction of frozen instances whose optimum is preserved exactly.
+- `fixed_variable_certificates_and_independent_checks`: Records each fixed-variable certificate and its independent exact check.
+- `state_space_reduction_by_instance`: Measures how many exact states remain after certified fixes.
+- `verifier_call_reduction_by_instance`: Measures exact verifier calls saved by completion after kernelization.
+- `sampler_work_and_wall_time_by_arm`: Keeps exact arms and the seeded energy sampler costed separately.
+- `sign_weight_duplicate_component_auxiliary_mapping_overflow_fixed_variable_and_nonunique_attack_matrix`: Proves known unsafe reductions are rejected or abstained.
+- `quantum_advantage_claimed`: Must stay false because this is a local CPU control.
+- `hardware_speedup_claimed`: Must stay false because no hardware path is used.
+- `ccg_kernelization_exact_ready_score`: Equals 1.0 only when preservation, certificates, attacks, and measurements all pass.
+- `protected_files_unchanged`: Shows conductor and reconciliation files stayed byte-stable.
+- `preconditions_checked`: Lists the local gates checked before the result is trusted.
+- `inference_substrate`: Declares deterministic CPU enumeration and local maxflow, not LLM inference.
+- `verifier_is_oracle`: Marks only exact optimum and certificate checks as oracles.
+- `field_principles`: Documents why each required artifact field exists.
+- `field_provenance`: States how each required artifact field was produced.
+- `random_seed`: Pins deterministic fixture and sampler replay.
+- `duration_s`: Records wall time for the experiment command.
+- `tests_run`: Records the verification commands run for this artifact.
+- `reproducibility_checksum`: Content-addresses the payload with this field blanked.
+- `honest_verdict`: Gives a terminal-prefix verdict that names the exact readiness outcome.
+
+### SCENARIO-CONSTRAINT-VERIFY-6415-EXACT-PRESERVATION: Kernelization Preserves Optima
+
+Given the frozen Boolean WCSP manifest,
+When Exp6415 runs,
+Then every CCG-kernelized exact-completion optimum equals the unkernelized
+exact reference optimum, every fixed-variable certificate passes an independent
+source-instance check, and `optimum_preservation_rate` is `1.0`.
+
+**Spec traces:** REQ-CONSTRAINT-VERIFY-6415
+
+### SCENARIO-CONSTRAINT-VERIFY-6415-ATTACKS: Unsafe Reductions Fail Closed
+
+Given sign, weight, duplicate, component, auxiliary, mapping, overflow,
+fixed-variable, and non-unique optimum attacks,
+When Exp6415 audits each attack,
+Then unsound or malformed reductions are rejected, abstained, or held at
+readiness zero rather than credited as safe fixed-variable reductions.
+
+**Spec traces:** REQ-CONSTRAINT-VERIFY-6415
+
+### SCENARIO-CONSTRAINT-VERIFY-6415-NO-SPEEDUP-CLAIM: Local Control Only
+
+Given Exp6415 compares exact reference, CCG kernelization, and energy sampling,
+When it writes the terminal artifact,
+Then the artifact declares a deterministic CPU local-control substrate, makes no
+quantum or hardware speedup claim, and sets readiness to `1.0` only from exact
+preservation and certificate checks.
+
+**Spec traces:** REQ-CONSTRAINT-VERIFY-6415
+
 ### SCENARIO-VERIFY-6301-SHORTCUTS: Controls Fail Closed
 
 Given a cached bus whose shared vectors carry a claim-direction, pair-swap,
