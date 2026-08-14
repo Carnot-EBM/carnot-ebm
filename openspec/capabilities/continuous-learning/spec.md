@@ -3691,6 +3691,201 @@ contamination, no protected forgetting, bounded growth, and passing tests
 | SCENARIO-LEARN-6418-ATTACKS | Implemented: `python/carnot/experiment_6418_execution_grounded_dual_path_csl.py`. | Implemented: `tests/python/test_experiment_6418_execution_grounded_dual_path_csl.py`. |
 | SCENARIO-LEARN-6418-READY | Implemented: `python/carnot/experiment_6418_execution_grounded_dual_path_csl.py`. | Implemented: `tests/python/test_experiment_6418_execution_grounded_dual_path_csl.py`. |
 
+## REQ-LEARN-6419: Held-Shift Restart CSL Replication
+
+**Given** Exp6418 first showed prospective execution-grounded improvement
+**When** Exp6419 runs on planning date 20260814
+**Then** it SHALL write
+`results/experiment_6419_held_shift_restart_csl_replication.json`
+**And** it SHALL freeze the Exp6418 learner before opening held outcomes.
+
+Exp6419 SHALL revalidate Exp6418 gates, freeze mechanism, config, checker,
+model, and prompt hashes, preflight authenticated GPU receipts, and prove the
+held manifest was absent from Exp6418 mechanism selection.
+
+Exp6419 SHALL use exactly these local GGUF model ids from `cached_sota_pair()`:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Token counts SHALL use embedded GGUF
+tokenizers only. Exp6419 SHALL not call `AutoTokenizer`.
+
+Exp6419 SHALL build at least 72 held chronological events. The stream SHALL
+span model-family, constraint-family, surface-form, and temporal shifts. It
+SHALL include at least three restart boundaries, expiry and supersession
+boundaries, and an untouched future partition.
+
+Exp6419 SHALL run frozen, single-path, and frozen dual-path arms at matched
+work. Every row SHALL bind to authenticated process and raw-output receipts.
+Raw bytes SHALL be frozen before exact held outcomes open.
+
+Exp6419 SHALL not tune triggers, learning rates, schemas, prompts, or gates
+after held outcomes. Incompatible cells SHALL count as harm or abstention.
+
+Exp6419 SHALL report proposal coverage, selection success, future exact yield,
+retention, forgetting, contamination, growth, escalation, restart recovery,
+latency, and GPU cost by arm, shift, model family, model, and session.
+
+Exp6419 SHALL attack checkpoint substitution, partial restart, stale cache
+resurrection, held-label access, model swap, prompt drift, license inheritance,
+and silent fallback. Every attack SHALL fail closed.
+
+Exp6419 SHALL emit `held_delta_future_exact_yield_over_frozen` as a bare
+finite number. It SHALL set `held_shift_csl_replication_ready_score=1.0` only
+when the frozen dual-path learner improves held future yield, has zero
+surviving contamination, no protected retention regression, bounded growth,
+successful restart recovery, and no post-outcome retuning.
+
+Exp6419 SHALL emit these fields:
+
+- `status`
+- `exp6418_gate_receipts`
+- `frozen_mechanism_config_checker_model_and_prompt_hashes`
+- `MODEL_SPECS`
+- `models_used`
+- `cached_sota_pair_receipts`
+- `embedded_gguf_tokenizer_receipts`
+- `autotokenizer_usage_count`
+- `held_manifest_path_hash_shift_counts_restart_expiry_supersession_counts_and_partition_seals`
+- `held_manifest_absence_before_freeze_receipt`
+- `authenticated_process_and_raw_output_receipts_by_model`
+- `matched_arm_work_receipts`
+- `no_post_outcome_retuning_receipts`
+- `per_arm_shift_model_and_session_proposal_coverage_selection_success_future_yield_retention_forgetting_contamination_growth_escalation_restart_latency_and_gpu_cost_results`
+- `held_delta_future_exact_yield_over_frozen`
+- `held_contamination_propagation_rate`
+- `held_forgetting_delta`
+- `protected_leakage_count`
+- `silent_fallback_count`
+- `attack_matrix`
+- `held_shift_csl_replication_ready_score`
+- `public_factor_claim_eligibility`
+- `harm_underpowered_missing_and_flagged_cells`
+- `protected_files_unchanged`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map every required field. It SHALL map both gates:
+`gate:exp6418_prospective_improvement` and `gate:held_manifest_absence`. It
+SHALL map each shift: `shift:model_family`, `shift:constraint_family`,
+`shift:surface_form`, and `shift:temporal`. It SHALL map
+`held_delta_future_exact_yield_over_frozen`,
+`held_contamination_propagation_rate`, `held_forgetting_delta`, and
+`held_shift_csl_replication_ready_score`.
+
+`verifier_is_oracle` SHALL be true only for exact outcome and retention
+checkers. Model output, proposal memory, and selection memory SHALL NOT be
+oracles. `honest_verdict` SHALL start with a terminal success prefix.
+
+Required field principles:
+
+- `status`: Names the terminal state for the held-shift restart replication.
+- `exp6418_gate_receipts`: Pins the upstream prospective improvement gate.
+- `frozen_mechanism_config_checker_model_and_prompt_hashes`: Freezes the learner, checker, model, config, and prompt identity before held outcomes.
+- `MODEL_SPECS`: Carries the three mandated GGUF model identities from cached SOTA receipts.
+- `models_used`: Lists only the three mandated GGUF models.
+- `cached_sota_pair_receipts`: Records cached SOTA helper evidence.
+- `embedded_gguf_tokenizer_receipts`: Proves embedded GGUF tokenizer use.
+- `autotokenizer_usage_count`: Must remain zero because external tokenizer paths are forbidden.
+- `held_manifest_path_hash_shift_counts_restart_expiry_supersession_counts_and_partition_seals`: Seals held events, shifts, restarts, expiry, supersession, and future rows.
+- `held_manifest_absence_before_freeze_receipt`: Proves Exp6418 mechanism selection did not include the held manifest.
+- `authenticated_process_and_raw_output_receipts_by_model`: Binds model processes and raw bytes before outcomes.
+- `matched_arm_work_receipts`: Shows frozen, single-path, and frozen dual-path arms used equal work.
+- `no_post_outcome_retuning_receipts`: Proves held outcomes did not change triggers, schemas, prompts, gates, or checkers.
+- `per_arm_shift_model_and_session_proposal_coverage_selection_success_future_yield_retention_forgetting_contamination_growth_escalation_restart_latency_and_gpu_cost_results`: Reports held metrics without pooled masking.
+- `held_delta_future_exact_yield_over_frozen`: Bare held future-yield lift for frozen dual path over frozen.
+- `held_contamination_propagation_rate`: Must remain zero for readiness.
+- `held_forgetting_delta`: Must show no protected forgetting.
+- `protected_leakage_count`: Must be zero because protected partitions cannot route writes.
+- `silent_fallback_count`: Must be zero because fallback would break model identity.
+- `attack_matrix`: Shows every held restart and substitution attack fails closed.
+- `held_shift_csl_replication_ready_score`: Conjunctive readiness score for the held-shift restart replication.
+- `public_factor_claim_eligibility`: Limits public claims to this exact held replication.
+- `harm_underpowered_missing_and_flagged_cells`: Keeps missing, underpowered, flagged, and harmful cells visible.
+- `protected_files_unchanged`: Shows protected files stayed byte-identical.
+- `preconditions_checked`: Lists every gate checked before readiness can become one.
+- `inference_substrate`: Declares authenticated GGUF receipt replay on a sealed held stream.
+- `verifier_is_oracle`: Marks only exact outcome and retention checkers as oracles.
+- `field_principles`: Documents why each field exists.
+- `field_provenance`: Maps each field to upstream receipts, manifest seals, attacks, tests, or code.
+- `random_seed`: Pins held order, shifts, arms, attacks, and metrics.
+- `duration_s`: Records measured wall time without padding.
+- `tests_run`: Records verification commands and exit codes.
+- `reproducibility_checksum`: Content-addresses the artifact with volatile fields normalized.
+- `honest_verdict`: Uses a terminal prefix and states the held replication result.
+- `gate:exp6418_prospective_improvement`: Exp6418 must be ready before the held replication can run.
+- `gate:held_manifest_absence`: The held manifest must be absent from Exp6418 mechanism selection.
+- `shift:model_family`: Model-family shift metrics must stay visible.
+- `shift:constraint_family`: Constraint-family shift metrics must stay visible.
+- `shift:surface_form`: Surface-form shift metrics must stay visible.
+- `shift:temporal`: Temporal shift metrics must stay visible.
+
+## SCENARIO-LEARN-6419-FREEZE: Held Stream Is Sealed After Mechanism Freeze
+
+**Given** Exp6418 has a ready artifact
+**When** Exp6419 freezes its mechanism and held manifest
+**Then** Exp6418 hashes SHALL be recorded before held outcomes open
+**And** the held manifest absence receipt SHALL prove Exp6418 mechanism
+selection did not include the held manifest.
+
+## SCENARIO-LEARN-6419-SHIFTS: Held Events Cover Declared Shifts
+
+**Given** authenticated held source rows
+**When** Exp6419 builds the held stream
+**Then** at least 72 chronological events SHALL cover model-family,
+constraint-family, surface-form, temporal, restart, expiry, supersession, and
+future-partition shifts.
+
+## SCENARIO-LEARN-6419-MATCHED-ARMS: Frozen Arms Use Equal Work
+
+**Given** frozen, single-path, and frozen dual-path arms
+**When** Exp6419 evaluates the held stream
+**Then** event order, model calls, prompt tokens, checker calls, raw-output
+receipts, latency surfaces, and GPU cost surfaces SHALL match across arms.
+
+## SCENARIO-LEARN-6419-NO-RETUNE: Held Outcomes Cannot Change the Mechanism
+
+**Given** held outcomes have opened once
+**When** Exp6419 records terminal receipts
+**Then** trigger, learning-rate, schema, prompt, gate, and checker hashes SHALL
+match their frozen hashes
+**And** post-outcome retuning counts SHALL be zero.
+
+## SCENARIO-LEARN-6419-ATTACKS: Restart and Substitution Attacks Fail Closed
+
+**Given** checkpoint substitution, partial restart, stale cache resurrection,
+held-label access, model swap, prompt drift, license inheritance, or silent
+fallback attacks
+**When** Exp6419 validates its attack matrix
+**Then** no attack SHALL commit unsafe memory, leak labels, switch models,
+inherit licenses, or promote readiness.
+
+## SCENARIO-LEARN-6419-READY: Replication Requires Held Future Gain
+
+**Given** matched held arms and no post-outcome retuning
+**When** frozen dual-path learning improves future exact yield over frozen with
+zero contamination, no protected forgetting, bounded growth, and successful
+restart recovery
+**Then** `held_shift_csl_replication_ready_score` SHALL be `1.0`.
+
+## Implementation Status (REQ-LEARN-6419)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6419 | Implemented: `python/carnot/experiment_6419_held_shift_restart_csl_replication.py`; terminal artifact `results/experiment_6419_held_shift_restart_csl_replication.json`. | Implemented: `tests/python/test_experiment_6419_held_shift_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6419-FREEZE | Implemented: `python/carnot/experiment_6419_held_shift_restart_csl_replication.py`. | Implemented: `tests/python/test_experiment_6419_held_shift_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6419-SHIFTS | Implemented: `python/carnot/experiment_6419_held_shift_restart_csl_replication.py`. | Implemented: `tests/python/test_experiment_6419_held_shift_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6419-MATCHED-ARMS | Implemented: `python/carnot/experiment_6419_held_shift_restart_csl_replication.py`. | Implemented: `tests/python/test_experiment_6419_held_shift_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6419-NO-RETUNE | Implemented: `python/carnot/experiment_6419_held_shift_restart_csl_replication.py`. | Implemented: `tests/python/test_experiment_6419_held_shift_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6419-ATTACKS | Implemented: `python/carnot/experiment_6419_held_shift_restart_csl_replication.py`. | Implemented: `tests/python/test_experiment_6419_held_shift_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6419-READY | Implemented: `python/carnot/experiment_6419_held_shift_restart_csl_replication.py`. | Implemented: `tests/python/test_experiment_6419_held_shift_restart_csl_replication.py`. |
+
 ## REQ-LEARN-6409: Graph-Local Multisession Continuous Learning
 
 **Given** Exp6408 first shows positive future exact yield with non-increased

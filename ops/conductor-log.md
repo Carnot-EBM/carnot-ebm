@@ -15815,3 +15815,5 @@ code |
 | 2026-08-14 08:33 UTC | Gated on Exp6414/6415 readiness: abstention-trigge | OK | 88 passed, 1 warning in 9.67s |
 | 2026-08-14 08:51 UTC | Gated on clean V551 boundary and selective refinem | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-14 09:14 UTC | Gated on Exp6417 positive admission: execution-gro | OK | 88 passed, 2 warnings in 10.93s |
+| 2026-08-14 10:37 UTC | Gated on Exp6418 positive CSL: held-shift and rest | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: idate",
++      |
