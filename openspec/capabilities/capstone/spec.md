@@ -3587,3 +3587,96 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-6423 | Planned (`python/carnot/experiment_6423_v552_adversarial_capstone.py`, `results/experiment_6423_v552_adversarial_capstone.json`) | Planned (`tests/python/test_experiment_6423_v552_adversarial_capstone.py`) |
+
+- REQ-CAPSTONE-6435: The V553 adversarial capstone workflow SHALL read
+  Exp6424 through Exp6434 from the active roadmap's declared artifact paths,
+  hash the roadmap, milestone document, expected artifacts, available row files,
+  sidecars, source files, tests, specs, ops records, ARC registry, claim records,
+  exclusion manifest, and dirty-worktree baseline, and write
+  `results/experiment_6435_v553_adversarial_capstone.json`. It SHALL preserve
+  completed, skipped, blocked, missing, flagged, null, retired, underpowered,
+  and substantive task facts separately. It SHALL summarize current and stamped
+  adversarial flags for every present artifact. It SHALL treat malformed or
+  empty primary artifacts as missing evidence, not as clean nulls. It SHALL
+  set `verifier_is_oracle=false` for the capstone while still naming exact
+  validators as upstream semantic oracles where applicable.
+- The required Exp6435 artifact field set is: `status`,
+  `expected_completed_skipped_blocked_missing_flagged_null_retired_underpowered_and_substantive_tasks`,
+  `per_unit_rows`,
+  `per_task_honest_verdicts_conductor_outcomes_current_and_stamped_flags_substrates_durations_gate_states_row_availability_and_scientific_eligibility`,
+  `roadmap_doc_artifact_sidecar_row_source_spec_ops_registry_claim_and_manifest_hashes`,
+  `factor_corpus_recheck`, `write_time_admission_recheck`,
+  `verification_cost_recheck`,
+  `csl_capacity_interference_held_and_audit_rechecks`,
+  `arc_reachability_no_solve_and_registry_rechecks`,
+  `public_factor_claim_eligibility`,
+  `verification_cost_claim_eligibility`,
+  `prospective_csl_claim_eligibility`,
+  `internal_arc_reachability_claim_eligibility`,
+  `public_arc_claim_eligibility`, `hardware_claim_eligibility`,
+  `claim_blockers_by_class`, `same_verdict_retirement_decisions`,
+  `recurring_gate_block_resolution_status`,
+  `task_scoped_runtime_receipt_status`,
+  `claim_pooling_missing_flagged_duration_row_mismatch_leakage_oracle_retuning_offpath_solve_and_hardware_attack_matrix`,
+  `openspec_traceability_status_changelog_known_issues_exclusion_and_claim_reconciliation`,
+  `hardware_status`, `remaining_prd_gaps`,
+  `next_falsifiable_research_question`, `protected_files_unchanged`,
+  `blocked_reason`, `preconditions_checked`, `inference_substrate`,
+  `verifier_is_oracle`, `field_principles`, `field_provenance`,
+  `random_seed`, `duration_s`, `tests_run`, `reproducibility_checksum`, and
+  `honest_verdict`.
+- SCENARIO-CAPSTONE-6435-HASHES: Given the repository state on planning date
+  20260814, when the workflow runs, then the artifact SHALL emit
+  `roadmap_doc_artifact_sidecar_row_source_spec_ops_registry_claim_and_manifest_hashes`,
+  `preconditions_checked`, `protected_files_unchanged`, `tests_run`,
+  `duration_s`, `random_seed`, `reproducibility_checksum`, and
+  `honest_verdict`, with absent inputs such as `research-roadmap-next.yaml`
+  recorded by path instead of hidden.
+- SCENARIO-CAPSTONE-6435-PER-TASK: The artifact SHALL emit
+  `per_task_honest_verdicts_conductor_outcomes_current_and_stamped_flags_substrates_durations_gate_states_row_availability_and_scientific_eligibility`
+  for Exp6424 through Exp6434. It SHALL expose Exp6429 and Exp6432 as flagged
+  by current duration checks. It SHALL expose the empty Exp6434 primary artifact
+  as missing or malformed ARC reachability evidence.
+- SCENARIO-CAPSTONE-6435-ROW-RECHECKS: The artifact SHALL recompute and emit
+  `factor_corpus_recheck`, `write_time_admission_recheck`,
+  `verification_cost_recheck`,
+  `csl_capacity_interference_held_and_audit_rechecks`, and
+  `arc_reachability_no_solve_and_registry_rechecks` from per-unit rows or
+  malformed-input receipts. It SHALL not import a positive aggregate when the
+  row population is underpowered, flagged, missing, or downstream of a weaker
+  required upstream.
+- SCENARIO-CAPSTONE-6435-CLAIM-ELIGIBILITY: The artifact SHALL decide
+  `public_factor_claim_eligibility`, `verification_cost_claim_eligibility`,
+  `prospective_csl_claim_eligibility`,
+  `internal_arc_reachability_claim_eligibility`,
+  `public_arc_claim_eligibility`, and `hardware_claim_eligibility` as separate
+  fields with explicit blockers in `claim_blockers_by_class`. Public factor
+  eligibility requires clean Exp6427 rows, positive clean Exp6428 held value,
+  no false-accept increase, no retention regression, and this capstone's clean
+  determination. Verification-cost eligibility requires Exp6429 to be clean
+  and not underpowered. Prospective CSL eligibility requires Exp6430 through
+  Exp6433 to support a clean audited development plus held chain. ARC public
+  and hardware eligibility SHALL remain false without a solve-safe ARC artifact
+  and an authenticated hardware artifact.
+- SCENARIO-CAPSTONE-6435-RETIREMENT-AND-ATTACKS: The artifact SHALL emit
+  `same_verdict_retirement_decisions`,
+  `recurring_gate_block_resolution_status`,
+  `task_scoped_runtime_receipt_status`, and
+  `claim_pooling_missing_flagged_duration_row_mismatch_leakage_oracle_retuning_offpath_solve_and_hardware_attack_matrix`.
+  Repeated Exp6414, Exp6417, or Exp6420 scopes SHALL retire only when the new
+  verdict is mechanically the same. Claim pooling, missing-cell erasure,
+  flagged-artifact reuse, duration mismatch, row mismatch, future-label
+  leakage, oracle circularity, held-set retuning, off-path ARC evidence, solve
+  leakage, and unauthenticated hardware claims SHALL fail closed.
+- SCENARIO-CAPSTONE-6435-FIELD-PRINCIPLES: The artifact SHALL include
+  `field_principles` for every required field and for every task state, claim
+  class, blocker, retirement decision, and next-question field. It SHALL include
+  `field_provenance` for every required field. `per_unit_rows` SHALL contain
+  one row per task and one row per claim decision. `honest_verdict` SHALL start
+  with an allowed terminal prefix and name the blockers honestly.
+
+## Implementation Status (REQ-CAPSTONE-6435)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-6435 | Planned (`python/carnot/experiment_6435_v553_adversarial_capstone.py`, `results/experiment_6435_v553_adversarial_capstone.json`) | Planned (`tests/python/test_experiment_6435_v553_adversarial_capstone.py`) |
