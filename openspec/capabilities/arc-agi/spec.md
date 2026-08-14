@@ -766,6 +766,89 @@ outer-loop RE, level solve claims, solve registry writes, public claim
 eligibility, and route promotion are all absent, and every required field has a
 principle.
 
+### REQ-ARC-ARM-6434: Collision-Certified State-Key Suffix
+
+Experiment 6434 SHALL add a generic, default-off state-key suffix route to the
+adapter-bypassed live ARC graph explorer. The route MAY extend a state key only
+after the current base key has aliased two distinct live observation histories.
+The certificate SHALL record the base key, the distinct observation-history
+hashes, alias evidence, and the minimal action-suffix length that separates the
+known histories. The route SHALL use only visible observations, legal actions,
+and the agent's own action history. It SHALL not use a game id, game-specific
+feature, source-derived rule, hand `GameAdapter`, hidden state, offline
+ground-truth search, or solve registry evidence.
+
+The route SHALL remain shipped default off before and after the run. The old
+manual suffix knob MAY remain for explicit diagnostics, but Exp6434 SHALL use
+only the collision-certified opt-in arm for the treatment. Identical histories,
+non-aliasing HUD changes, resets, process restarts, hash instability, and hash
+substitution SHALL not produce a certificate.
+
+Experiment 6434 SHALL run matched baseline and explicit opt-in arms over the
+full 25-game public roster with adapters bypassed. It SHALL use at least three
+seeds with identical expansion and action budgets, identical initial state
+receipts, and the canonical live graph-explore game interface. It SHALL report
+frontier exhaustion, unique states, alias certificates, environment steps, legal
+actions, exact observations, terminal reasons, cleared-state observations,
+errors, wall time, and action cost by game and seed. Cleared-state observations
+are diagnostic only. They SHALL not create solve credit.
+
+Experiment 6434 SHALL write
+`results/experiment_6434_arc_state_key_reachability_ab.json` with the fields
+named by the task. It SHALL set `verifier_is_oracle=true` only for legal-action,
+exact observed-transition, state-hash, and collision-certificate checks.
+Reachability metrics SHALL not be solve oracles. It SHALL not update
+`ops/arc_solve_registry.yaml`, claim a game or level solve, promote a default,
+or create public ARC claim eligibility.
+
+`arc_state_key_reachability_ready_score` SHALL equal 1.0 only when certified
+premature frontier collapse decreases, no baseline-cleared game regresses, no
+new error appears, all critical attacks fail closed, the default remains off,
+and no solve or registry mutation occurs. Otherwise the score SHALL be zero and
+the blocked reason SHALL name the failed gate.
+
+### SCENARIO-ARC-ARM-6434-CERTIFICATE
+
+**Given** two live paths reach the same base state key with distinct visible
+observation histories
+**When** the certified suffix route is enabled
+**Then** the second key is extended by the minimal separating action suffix, a
+certificate records both history hashes and alias evidence, and no game id,
+adapter, source rule, hidden state, or solve registry value is used.
+
+### SCENARIO-ARC-ARM-6434-NO-CERTIFICATE
+
+**Given** non-aliasing base keys, an identical history replay, a monotone HUD
+change, a reset, a process restart, hash instability, and hash substitution
+**When** the certifier receives those cases
+**Then** it records no accepted collision certificate and fails closed on the
+hash attacks.
+
+### SCENARIO-ARC-ARM-6434-MATCHED-AB
+
+**Given** the canonical adapter-bypassed public ARC roster
+**When** Exp6434 runs baseline and explicit opt-in arms
+**Then** games, seeds, expansion budgets, action budgets, exact game interface,
+initial states, legal action receipts, and shipped defaults match, with the
+certified suffix route as the only treatment difference.
+
+### SCENARIO-ARC-ARM-6434-ATTACKS-FAIL-CLOSED
+
+**Given** game-id branching, hidden adapter use, source access, offline BFS,
+false certificates, history truncation, hash substitution, budget mismatch,
+seed mismatch, state leakage, and solve-credit leakage
+**When** Exp6434 validates readiness
+**Then** each attack fails closed before readiness can be one.
+
+### SCENARIO-ARC-ARM-6434-NO-SOLVE-OR-PROMOTION
+
+**Given** the completed Exp6434 artifact
+**When** it is validated
+**Then** source access, exhaustive search, per-game adapters, outer-loop RE,
+level solve claims, solve registry writes, default promotion, and public claim
+eligibility are all absent, and every no-solve, regression, attack, and
+readiness field has a principle.
+
 ## REQ-ARC-BENCH-6267: One held-out ARC number that can move
 
 The ARC loop MUST maintain a single comparable measurement of live-agent

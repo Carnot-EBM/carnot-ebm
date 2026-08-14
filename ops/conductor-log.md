@@ -15834,3 +15834,5 @@ code |
 | 2026-08-14 18:23 UTC | Gated on Exp6430 prospective stream: controlled me | OK | 88 passed, 1 warning in 15.52s |
 | 2026-08-14 18:42 UTC | Gated on Exp6430 and Exp6431: held-shift process-r | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-14 19:05 UTC | Independent V553 CSL row-recomputation and safety  | OK | 88 passed, 1 warning in 12.65s |
+| 2026-08-14 20:27 UTC | ARC generic state-key reachability invariant and f | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: act: ["forced  |
+| 2026-08-14 20:29 UTC | ARC generic state-key reachability invariant and f | OK | Deliverable already exists in repo |
