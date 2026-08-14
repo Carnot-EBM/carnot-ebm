@@ -254,6 +254,29 @@ def _diagnose_missing_field(data: dict, field: str, base_reason: str) -> str:
 
     Diagnosis only. It never changes whether the gate passes.
     """
+    # Check the fabrication gate FIRST. It usually already knows, and it outranks everything
+    # below: if the upstream is quarantined, its field being null or absent is a symptom, and
+    # "fill in the field" is the wrong instruction.
+    #
+    # This is the .539 case exactly. exp6228 recorded `status: preconditions_recorded`,
+    # `duration_s: 0.0`, and `flagged_adversarial: true` with a CRITICAL
+    # `NONTERMINAL_DECLARED_ARTIFACT` corrigendum. The task never ran the experiment -- it wrote
+    # its preconditions and stopped. adversarial_verify.py caught that and stamped it. Four gates
+    # then read the same artifact and reported `actual=None`, never mentioning the stamp sitting
+    # beside the field they were reading. The answer was already on disk and nothing surfaced it.
+    if data.get("flagged_adversarial"):
+        pend = data.get("corrigendum_pending") or []
+        kinds = sorted({p.get("kind", "?") for p in pend if isinstance(p, dict)})
+        status = data.get("status")
+        return (
+            f"{base_reason} -- UPSTREAM IS QUARANTINED: it carries flagged_adversarial=true"
+            + (f" ({', '.join(kinds)})" if kinds else "")
+            + (f", status={status!r}" if status else "")
+            + ". The fabrication gate already rejected this artifact, so the null field is a "
+            "symptom, not the problem. Do not fill the field in; the upstream task has to "
+            "actually run. Per CLAUDE.md, never aggregate a flagged artifact's numbers."
+        )
+
     if field in data:
         nulls = [
             k
