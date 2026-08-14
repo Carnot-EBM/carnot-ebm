@@ -5267,6 +5267,118 @@ AND `universal_support_claimed` is false.
 |---|---|---|
 | REQ-INFRA-6414 | Planned: `python/carnot/experiment_6414_fresh_three_family_factor_event_corpus.py`; terminal artifact `results/experiment_6414_fresh_three_family_factor_event_corpus.json`. | Planned: `tests/python/test_experiment_6414_fresh_three_family_factor_event_corpus.py`. |
 
+## REQ-INFRA-6426: Task-Scoped Runtime Receipts SHALL Attribute Phases, GPU Evidence, Runner Choice, And Exit State To One Task
+
+Carnot SHALL build Exp6426 as the reusable task-scoped runtime receipt
+contract for V553 powered claims. The planning date SHALL be `20260814`.
+The contract SHALL attribute queue wait, model load, generation, exact
+verification, and artifact-write time to one task without trusting a model-name
+string, inherited wall-clock value, or aggregate GPU sample.
+
+The receipt schema SHALL be versioned and hash-bound. Each receipt row SHALL
+include task id, control id, phase, monotonic start and end, wall-clock start
+and end, parent PID, child PIDs, command hash, config hash, model hash, runner
+selection, device ids, concurrency group, raw-output hash, exit status, and
+attribution confidence. Rows SHALL be written through a reusable helper outside
+`scripts/research_conductor.py`. The helper SHALL write atomically and SHALL
+preserve partial receipts after interruption.
+
+Exp6426 SHALL run four controls: deterministic CPU success, explicit preflight
+block, interrupted child process, and one mandated local GGUF CUDA smoke. The
+powered control SHALL use `cached_sota_pair()` and SHALL include
+`unsloth/gemma-4-26B-A4B-it-GGUF` in `MODEL_SPECS`. It SHALL use only the
+embedded GGUF tokenizer and SHALL never call `AutoTokenizer`. If the powered
+smoke cannot run, Exp6426 SHALL fail closed with `blocked_reason` while still
+representing the CPU, blocked, and interrupted controls.
+
+Before the powered smoke, Exp6426 SHALL preflight both RTX 3090 devices, free
+VRAM, model cache, llama.cpp CUDA support, runner binary, tokenizer metadata,
+disk, CPU, RAM, and monotonic clock. The powered row SHALL record model file
+hashes, embedded tokenizer hashes, raw bytes, first-token or completion
+evidence, runner binary and selection receipts, child exit receipts, and
+PID-linked `nvidia-smi` samples.
+
+Duration SHALL be recomputed from phase intervals. The recomputation SHALL
+reject negative intervals, unexplained overlaps, missing intervals, synthesized
+runtime fields, and wall-clock-only intervals. Queue wait, model load,
+generation, exact verification, and artifact write SHALL remain separate phase
+rows.
+
+The contract SHALL reject forged PID, stale `nvidia-smi` sample, model-name-only
+substitution, raw-output reuse, runner swap, clock rollback, truncated receipt,
+concurrency collision, CPU fallback, and child-exit omission. Exp6426 SHALL set
+`runtime_receipt_contract_ready_score=1.0` only when all four control paths are
+represented, the powered path is authentic, every phase recomputes, and all
+critical attacks fail closed. It SHALL set `verifier_is_oracle=false`, because
+process and hash checks authenticate execution but do not prove semantic
+correctness.
+
+Exp6426 SHALL write
+`results/experiment_6426_task_scoped_runtime_receipt_contract.json` with these
+required fields: `status`, `receipt_schema_version_and_hash`,
+`helper_source_and_test_hashes`, `MODEL_SPECS`, `models_used`,
+`cached_sota_pair_receipts`, `model_file_and_embedded_tokenizer_hashes`,
+`autotokenizer_usage_count`, `runner_binary_and_selection_receipts`,
+`device_inventory_and_preflight_receipts`, `per_unit_rows`,
+`cpu_blocked_interrupted_and_powered_control_rows`,
+`per_phase_monotonic_and_wall_clock_receipts`,
+`parent_child_pid_and_exit_receipts`, `pid_linked_gpu_samples`,
+`concurrency_group_receipts`, `command_config_model_and_raw_output_hashes`,
+`synthesized_runtime_field_count`, `cpu_fallback_count`,
+`attribution_failure_count`, `recomputed_duration_s`,
+`reported_vs_recomputed_duration_delta`, `attack_matrix`,
+`runtime_receipt_contract_ready_score`, `current_adversarial_findings`,
+`protected_files_unchanged`, `blocked_reason`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `field_principles`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INFRA-6426-1: Versioned Helper Writes Atomic And Partial Receipts
+
+GIVEN a task-scoped receipt helper
+WHEN a control records phases and then an interruption happens
+THEN the helper writes completed rows atomically, preserves the partial receipt,
+and records the interrupted child PID and exit status.
+
+### SCENARIO-INFRA-6426-2: Four Controls Represent The Runtime Contract
+
+GIVEN deterministic CPU success, explicit preflight block, interrupted child,
+and mandated local GGUF powered smoke controls
+WHEN Exp6426 builds the terminal artifact
+THEN `per_unit_rows` contains one row per control and phase
+AND `runtime_receipt_contract_ready_score` can be `1.0` only when all four
+control paths are present and the powered path authenticates.
+
+### SCENARIO-INFRA-6426-3: Powered Smoke Uses Cached Gemma26 GGUF And Embedded Tokenizer
+
+GIVEN `cached_sota_pair()` resolves mandated local GGUF models
+WHEN Exp6426 selects the powered smoke model
+THEN `MODEL_SPECS` includes `unsloth/gemma-4-26B-A4B-it-GGUF`
+AND tokenizer receipts come from the embedded GGUF tokenizer with
+`autotokenizer_usage_count=0`.
+
+### SCENARIO-INFRA-6426-4: Duration Recomputes From Monotonic Phase Intervals
+
+GIVEN queue wait, model load, generation, exact verification, and artifact
+write phase rows
+WHEN Exp6426 recomputes duration
+THEN negative, overlapping-unexplained, missing, synthesized, or wall-clock-only
+intervals fail closed.
+
+### SCENARIO-INFRA-6426-5: Attribution Attacks Fail Closed
+
+GIVEN forged PID, stale GPU sample, model-name-only substitution, raw-output
+reuse, runner swap, clock rollback, truncated receipt, concurrency collision,
+CPU fallback, or child-exit omission
+WHEN the contract validator evaluates the mutated rows
+THEN every critical attack is rejected and recorded in `attack_matrix`.
+
+## Implementation Status (REQ-INFRA-6426)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6426 | Planned: `python/carnot/task_runtime_receipts.py` and `python/carnot/experiment_6426_task_scoped_runtime_receipt_contract.py`; terminal artifact `results/experiment_6426_task_scoped_runtime_receipt_contract.json`. | Planned: `tests/python/test_experiment_6426_task_scoped_runtime_receipt_contract.py`. |
+
 ## REQ-INFRA-6351: V547 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
 
 Carnot SHALL build Exp6351 as a deterministic V547 post-marker source sweep
