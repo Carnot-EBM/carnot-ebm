@@ -1429,3 +1429,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
 - artifact: results/experiment_6432_held_shift_process_restart_csl_replication.json
+
+## experiment_6434_arc_state_key_reachability_ab.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - UNREADABLE/corrupt artifact (Expecting value: line 1 column 1 (char 0)) — breaks the gate
+- artifact: results/experiment_6434_arc_state_key_reachability_ab.json
