@@ -13411,5 +13411,13 @@
       "retention_checker"
     ],
     "value": true
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=2.7e-07 but artifact declares deterministic-verifier substrate. Even loading checked-in JSON takes microseconds; a value below 0.0001s suggests the duration was not measured at all."
+    }
+  ]
 }

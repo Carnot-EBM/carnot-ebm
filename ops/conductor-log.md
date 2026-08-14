@@ -15813,3 +15813,4 @@ code |
 | 2026-08-14 07:51 UTC | Gated on Exp6413 authentic receipts: fresh three-f | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-14 08:13 UTC | Exact Boolean WCSP constraint-composite-graph kern | OK | 88 passed, 1 warning in 10.36s |
 | 2026-08-14 08:33 UTC | Gated on Exp6414/6415 readiness: abstention-trigge | OK | 88 passed, 1 warning in 9.67s |
+| 2026-08-14 08:51 UTC | Gated on clean V551 boundary and selective refinem | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
