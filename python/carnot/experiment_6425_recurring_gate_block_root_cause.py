@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 import platform
 import shutil
+import subprocess
 import time
 from typing import Any
 
@@ -490,8 +491,19 @@ def preconditions(root: Path = REPO_ROOT) -> JsonDict:
 
 
 def _git_status_empty(root: Path) -> bool:
-    git = root / ".git"
-    return git.exists() and not list((root).glob(".git/index.lock"))
+    if not (root / ".git").exists():
+        return False
+    try:
+        result = subprocess.run(
+            ["git", "status", "--short"],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return False
+    return not result.stdout.strip()
 
 
 def _mem_available_kb(path: Path = Path("/proc/meminfo")) -> int | None:
@@ -662,7 +674,7 @@ def _declared_tests_run() -> list[JsonDict]:
         {"command": ".venv/bin/python scripts/exclusion_manifest_lint.py", "purpose": "exclusion lint"},
         {"command": ".venv/bin/python scripts/artifact_convention_audit.py --recent 8 --dry-run", "purpose": "artifact convention audit dry run"},
         {"command": ".venv/bin/python scripts/determination_preservation_lint.py", "purpose": "determination preservation"},
-        {"command": ".venv/bin/python scripts/root_clutter_sweep.py --check", "purpose": "root clutter check"},
+        {"command": ".venv/bin/python scripts/root_clutter_sweep.py", "purpose": "root clutter dry-run"},
     ]
 
 
