@@ -15818,3 +15818,4 @@ code |
 | 2026-08-14 10:37 UTC | Gated on Exp6418 positive CSL: held-shift and rest | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: idate",
 +      |
 | 2026-08-14 10:45 UTC | Gated on Exp6418 positive CSL: held-shift and rest | OK | cache hit: 87 passed, 2 warnings in 8.74s |
+| 2026-08-14 11:14 UTC | Independent execution-grounded CSL authenticity an | OK | 87 passed, 1 warning in 10.47s |
