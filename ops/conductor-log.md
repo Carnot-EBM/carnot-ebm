@@ -16041,3 +16041,5 @@ code |
 | 2026-08-15 09:16 UTC | Gated on Exp6451 grounding readiness: representati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6451-typed-fact-grounding-fixed-policy-lo |
 | 2026-08-15 09:16 UTC | Gated on Exp6450 corpus readiness: held-out verifi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6450-sota-fixed-policy-candidate-corpus |
 | 2026-08-15 09:18 UTC | Gated on Exp6451 grounding readiness: representati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6451-typed-fact-grounding-fixed-policy-lo |
+| 2026-08-15 09:18 UTC | Gated on Exp6450 corpus readiness: held-out verifi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6450-sota-fixed-policy-candidate-corpus |
+| 2026-08-15 09:20 UTC | Gated on Exp6451 grounding readiness: representati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6451-typed-fact-grounding-fixed-policy-lo |
