@@ -5071,6 +5071,150 @@ stamped determination remains
 | SCENARIO-LEARN-6433-ATTACKS | Implemented: `python/carnot/experiment_6433_csl_row_recomputation_safety_audit.py`. | Implemented: `tests/python/test_experiment_6433_csl_row_recomputation_safety_audit.py`. |
 | SCENARIO-LEARN-6433-ELIGIBILITY | Implemented: `python/carnot/experiment_6433_csl_row_recomputation_safety_audit.py`. | Implemented: `tests/python/test_experiment_6433_csl_row_recomputation_safety_audit.py`. |
 
+## REQ-LEARN-6444: CSL Lifecycle Recomputation Audit
+
+**Given** Exp6433 left the prospective CSL claim ineligible, Exp6441 through
+Exp6443 are the expected V554 upstream tasks, and blocked or missing upstream
+evidence must stay visible
+**When** Exp6444 runs on planning date 20260815
+**Then** it SHALL write
+`results/experiment_6444_csl_lifecycle_recomputation_audit.json`
+**And** it SHALL independently recompute development, lifecycle-safety, and
+held CSL metrics from immutable per-unit rows without importing upstream
+aggregate, uncertainty, gating, or verdict functions.
+
+Exp6444 SHALL inventory Exp6441, Exp6442, and Exp6443 artifact paths and every
+referenced row path before importing any experiment module. Missing, zero-byte,
+malformed, blocked, skipped, flagged, null, and underpowered inputs SHALL remain
+visible audit evidence.
+
+Exp6444 SHALL freeze upstream paths, sizes, hashes, statuses, honest verdicts,
+readiness fields, adversarial findings, row counts, and gate summaries. It SHALL
+not mutate upstream artifacts.
+
+Exp6444 SHALL derive proposal coverage, admission precision, development and
+held future exact yield, paired deltas, uncertainty, contamination, protected
+retention, forgetting, memory growth, restart recovery, lifecycle unsafe
+authoring, unsafe retrieval, fresh-session harm, benign utility, quarantine
+precision and recall, rollback success, protected releases, resurrection, and
+online cost from documented row schemas.
+
+Exp6444 SHALL verify raw-output uniqueness, cross-task raw-output intersections,
+development-held hash disjointness, sealed future timing, event chronology,
+capacity matching, transaction ancestry, memory-head recovery, process
+boundaries, command-path continuity, exact-veto preservation, duration rules,
+and substrate rules.
+
+Exp6444 SHALL replay each critical attack with independent code. Critical
+attacks include raw-output reuse, row deletion, duplicate event, event reorder,
+future leakage, same-step write, stale head, authority spoof, supersession
+bypass, rollback omission, cache resurrection, restart corruption, exact-veto
+override, unsafe authoring, unsafe retrieval, protected release, and
+resurrection.
+
+Exp6444 SHALL emit one per-unit audit row or stable row reference for every
+audited upstream row and every reported-vs-recomputed comparison. Each
+comparison SHALL include upstream value, recomputed value, absolute delta,
+tolerance, mismatch state, inclusion decision, and evidence path.
+
+Exp6444 SHALL set `prospective_csl_eligibility=true` only when development and
+held exact effects are positive, no safety regression exists, protected release
+is zero, growth is bounded, timing and substrate are eligible, no critical
+attack is open, every required upstream evidence item exists and passes, and no
+material row mismatch exists. Otherwise it SHALL use a terminal
+`complete_null:` or `complete_blocked:` verdict and name the failed evidence.
+
+Exp6444 SHALL emit these fields:
+
+- `status`
+- `upstream_inventory_and_hashes`
+- `upstream_status_verdict_readiness_and_adversarial_findings`
+- `independent_reducer_source_and_test_hashes`
+- `per_unit_rows`
+- `development_metric_recomputation`
+- `held_metric_recomputation`
+- `lifecycle_safety_metric_recomputation`
+- `upstream_vs_recomputed_mismatches`
+- `mismatch_count_and_materiality`
+- `raw_output_uniqueness_and_cross_task_intersections`
+- `chronology_future_seal_and_capacity_checks`
+- `memory_head_transaction_and_restart_checks`
+- `command_path_chain_checks`
+- `exact_veto_checks`
+- `independent_attack_replay`
+- `duration_and_substrate_eligibility`
+- `prospective_csl_eligibility`
+- `csl_ineligibility_reasons`
+- `csl_audit_ready_score`
+- `current_adversarial_findings`
+- `protected_files_unchanged`
+- `blocked_reason`
+- `gate_check_summary`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map every required field. It SHALL also map each
+`csl_audit_ready_score` condition. `verifier_is_oracle` SHALL be false for the
+mixed audit as a whole. Deterministic exact checkers and row arithmetic SHALL be
+identified inside evidence records.
+
+## SCENARIO-LEARN-6444-INVENTORY: Missing V554 Evidence Blocks Readiness
+
+**Given** Exp6441 through Exp6443 are required upstream tasks
+**When** Exp6444 inventories their artifacts and rows
+**Then** missing Exp6441 or Exp6443 evidence and blocked Exp6442 evidence SHALL
+be reported as audit inputs
+**And** `csl_audit_ready_score` SHALL remain `0.0`.
+
+## SCENARIO-LEARN-6444-REDUCERS: Rows Drive Development And Held Metrics
+
+**Given** immutable Exp6430, Exp6431, and Exp6432 per-unit rows
+**When** Exp6444 reduces them
+**Then** development, lifecycle-safety, and held metrics SHALL be recomputed
+without importing upstream aggregate or readiness functions.
+
+## SCENARIO-LEARN-6444-CHAINS: Paths And Chronology Are Rechecked
+
+**Given** raw-output, event, memory-head, transaction, restart, and receipt
+evidence
+**When** Exp6444 audits command paths
+**Then** uniqueness, chronology, future seals, capacity bounds, transaction
+ancestry, process boundaries, and generation-to-verdict chains SHALL be visible.
+
+## SCENARIO-LEARN-6444-ATTACKS: Critical Attacks Block Eligibility
+
+**Given** critical lifecycle and CSL attacks
+**When** Exp6444 replays each attack independently
+**Then** any open critical attack, current critical adversarial flag, missing
+required evidence, or blocked upstream gate SHALL force
+`prospective_csl_eligibility=false`.
+
+## SCENARIO-LEARN-6444-DELIVERABLE: Artifact Is Terminal And Self-Checking
+
+**Given** Exp6444 writes its terminal artifact
+**When** validation runs
+**Then** every required field, field principle, provenance entry, gate summary,
+checksum, and terminal-prefix verdict SHALL validate.
+
+## Implementation Status (REQ-LEARN-6444)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6444 | Implemented: `python/carnot/experiment_6444_csl_lifecycle_recomputation_audit.py`; terminal artifact `results/experiment_6444_csl_lifecycle_recomputation_audit.json`. | Implemented: `tests/python/test_experiment_6444_csl_lifecycle_recomputation_audit.py`. |
+| SCENARIO-LEARN-6444-INVENTORY | Implemented: `python/carnot/experiment_6444_csl_lifecycle_recomputation_audit.py`. | Implemented: `tests/python/test_experiment_6444_csl_lifecycle_recomputation_audit.py`. |
+| SCENARIO-LEARN-6444-REDUCERS | Implemented: `python/carnot/experiment_6444_csl_lifecycle_recomputation_audit.py`. | Implemented: `tests/python/test_experiment_6444_csl_lifecycle_recomputation_audit.py`. |
+| SCENARIO-LEARN-6444-CHAINS | Implemented: `python/carnot/experiment_6444_csl_lifecycle_recomputation_audit.py`. | Implemented: `tests/python/test_experiment_6444_csl_lifecycle_recomputation_audit.py`. |
+| SCENARIO-LEARN-6444-ATTACKS | Implemented: `python/carnot/experiment_6444_csl_lifecycle_recomputation_audit.py`. | Implemented: `tests/python/test_experiment_6444_csl_lifecycle_recomputation_audit.py`. |
+| SCENARIO-LEARN-6444-DELIVERABLE | Implemented: `python/carnot/experiment_6444_csl_lifecycle_recomputation_audit.py`. | Implemented: `tests/python/test_experiment_6444_csl_lifecycle_recomputation_audit.py`. |
+
 ## REQ-LEARN-6409: Graph-Local Multisession Continuous Learning
 
 **Given** Exp6408 first shows positive future exact yield with non-increased
