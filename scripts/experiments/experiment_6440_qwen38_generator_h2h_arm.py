@@ -480,7 +480,12 @@ def main() -> int:
             mtp=False,
             kv_quant=KV_QUANT,
             n_ctx=N_CTX,
-            max_tokens=BUDGET,
+            # ARM_BUDGET, not BUDGET. The per-arm budget added earlier only reached
+            # run_reason_cell_budget's `budget=` argument; the PROPOSER kept the module-level
+            # 16384, so the raise never took effect and max-decoded stayed pinned near 16.9k. Two
+            # places had to change and I changed one -- the measurement then "tested" a budget it
+            # was never given.
+            max_tokens=ARM_BUDGET.get(args.arm, BUDGET),
             timeout=1800,
             use_chat_template=True,
             model_path=arm["gguf"],
