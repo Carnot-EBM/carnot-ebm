@@ -4669,6 +4669,128 @@ matches, `random_seed` is null, `blocked_reason` is null on pass, and
 |---|---|---|
 | REQ-INFRA-6424 | Planned: `python/carnot/experiment_6424_v553_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6424_v553_terminal_handoff_and_queue_preflight.json`. | Planned: `tests/python/test_experiment_6424_v553_terminal_handoff_and_queue_preflight.py`. |
 
+## REQ-INFRA-6436: V553 Terminal Handoff And V554 Queue Preflight
+
+Carnot SHALL build Exp6436 as the V553-to-V554 terminal handoff for planning
+date 20260815. The handoff SHALL read V553 terminal artifacts exactly as they
+exist on disk. It SHALL record missing and zero-byte artifacts without repair.
+It SHALL not rerun V553 experiments. It SHALL not edit `research-roadmap.yaml`
+or `scripts/research_conductor.py`.
+
+Exp6436 SHALL freeze one row per V553 task from Exp6427 through Exp6435. Each
+row SHALL record task ID, deliverable path, byte count, artifact status,
+honest verdict, current adversarial findings, claim eligibility, and the V553
+capstone determination. Exp6434 SHALL be recorded as missing scientific
+evidence when its artifact is zero bytes. The capstone determination SHALL
+preserve the narrow factor eligibility and the blocked verification-cost,
+prospective CSL, ARC reachability, public ARC, and hardware claims.
+
+Exp6436 SHALL validate the activated V554 queue from `research-roadmap.yaml`.
+It SHALL run the Pydantic roadmap schema, prior-failure linter,
+exclusion-manifest linter, structured gate checker, duplicate ID check,
+duplicate deliverable check, artifact-convention check,
+determination-preservation check, prompt terminal-line check, and
+root-clutter check. It SHALL require 12 unique task IDs in conductor order,
+milestone `2026.08.554` on every task, one concrete JSON deliverable per task,
+no retired ID, no retired dependency, and no gate that names a task outside the
+active roadmap. If any check fails, Exp6436 SHALL fail closed.
+
+Exp6436 SHALL bind every structured gate to an upstream task and an identical
+required artifact field. For each gate it SHALL record upstream task, artifact
+field, operator, expected value, producer task, producer deliverable, and
+whether the producer prompt declares the field in `REQUIRED ARTIFACT FIELDS`.
+
+Exp6436 SHALL validate V554 model and row contracts. Exp6439 through Exp6443
+SHALL include explicit `MODEL_SPECS`, at least one mandated local GGUF from
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`, `cached_sota_pair()`, embedded GGUF
+tokenizers, and no `AutoTokenizer` headline path. Comparative prompts SHALL
+require `per_unit_rows`. Blocked-verdict prompts SHALL require
+`gate_check_summary`. Required fields and acceptance gates SHALL be covered by
+`field_principles`.
+
+Exp6436 SHALL validate the complete four-field prior-failure contract for
+Exp6438, Exp6440, Exp6441, Exp6443, Exp6444, and Exp6445. Each entry SHALL
+contain `experiment_id`, `verdict`, `addressed_by`, and
+`retire_if_same_verdict=true`. If a required rerun task is absent from the
+active roadmap, the validation SHALL fail closed and name the missing task.
+
+The Exp6436 artifact SHALL be written atomically to
+`results/experiment_6436_v554_terminal_handoff_and_queue_preflight.json` with
+`inference_substrate=aggregation_from_upstream_artifacts` and
+`verifier_is_oracle=false`. The artifact SHALL include these required fields:
+`status`, `v553_terminal_rows`, `v553_artifact_count`,
+`v553_missing_or_zero_byte_artifacts`, `v553_flagged_artifacts`,
+`v553_underpowered_artifacts`, `v553_terminal_claim_determinations`,
+`active_roadmap_hash`, `task_count`, `task_ids_in_order`,
+`unique_id_and_deliverable_check`, `milestone_consistency_check`,
+`schema_validation`, `prior_failure_validation`,
+`exclusion_manifest_validation`, `structured_gate_validation`,
+`gate_producer_contract_rows`, `model_policy_validation`,
+`per_unit_row_contract_validation`, `prompt_terminal_line_validation`,
+`protected_files_unchanged`, `v554_queue_ready_score`, `blocked_reason`,
+`gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`field_principles` SHALL cover every required field and the
+`v554_queue_ready_score` acceptance gate. `field_provenance` SHALL classify
+every required field as measured, derived, constant, or upstream.
+
+### SCENARIO-INFRA-6436-1: V553 Terminal Rows Preserve Final Determinations
+
+GIVEN V553 artifacts include clean, flagged, underpowered, null, capstone, and
+zero-byte outcomes
+WHEN Exp6436 builds terminal handoff rows
+THEN it records one row per V553 task, preserves the V553 capstone claim
+determinations, and treats Exp6434 as missing scientific evidence.
+
+### SCENARIO-INFRA-6436-2: V554 Queue Identity Fails Closed On Mismatch
+
+GIVEN the activated V554 queue is read from `research-roadmap.yaml`
+WHEN Exp6436 validates task identity, deliverables, milestones, retired IDs,
+and gate upstreams
+THEN it requires exactly 12 ordered tasks and sets
+`v554_queue_ready_score=0.0` with a diagnostic when the active queue is short
+or otherwise invalid.
+
+### SCENARIO-INFRA-6436-3: Gate Producers Declare Exact Fields
+
+GIVEN a V554 task has a structured `gated_on` entry
+WHEN Exp6436 validates the producer contract
+THEN the upstream prompt's `REQUIRED ARTIFACT FIELDS` block must contain the
+exact `artifact_field` string and the gate row records the check result.
+
+### SCENARIO-INFRA-6436-4: Prompt Model And Row Contracts Are Enforced
+
+GIVEN V554 prompts include local-GGUF and comparative tasks
+WHEN Exp6436 checks prompt contracts
+THEN Exp6439 through Exp6443 satisfy the local GGUF policy, comparative prompts
+require `per_unit_rows`, blocked verdicts require `gate_check_summary`, and
+field principles cover each required field and acceptance gate.
+
+### SCENARIO-INFRA-6436-5: Rerun Prior Failures Are Complete
+
+GIVEN V554 contains changed reruns of V553 scopes
+WHEN Exp6436 checks prior failures
+THEN Exp6438, Exp6440, Exp6441, Exp6443, Exp6444, and Exp6445 each carry
+`experiment_id`, `verdict`, `addressed_by`, and
+`retire_if_same_verdict=true`, or the queue fails closed.
+
+### SCENARIO-INFRA-6436-6: Artifact Is Annotated And Non-Mutating
+
+GIVEN protected hashes, validation receipts, command receipts, and terminal
+rows are assembled
+WHEN Exp6436 writes its artifact
+THEN every required field has a principle and provenance, protected files stay
+byte-identical, the checksum matches, `random_seed` is null, and
+`verifier_is_oracle` is false.
+
+## Implementation Status (REQ-INFRA-6436)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6436 | Planned: `python/carnot/experiment_6436_v554_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6436_v554_terminal_handoff_and_queue_preflight.json`. | Planned: `tests/python/test_experiment_6436_v554_terminal_handoff_and_queue_preflight.py`. |
+
 ## REQ-INFRA-6404: V551 Handoff SHALL Preserve V550 Evidence And Fail Closed On Queue Mismatch
 
 Carnot SHALL build Exp6404 as a bounded V550-to-V551 evidence handoff over
