@@ -1,115 +1,168 @@
-milestone: "2026.08.555"
-milestone_title: "Verifier-Bounded Energy and Continuous Learning"
+milestone: "2026.08.556"
+milestone_title: "Provenance-Complete Constraint Routing and Unique-Event Self-Learning"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
-  - id: exp6448-v555-terminal-handoff-and-queue-integrity
-    operator_override: '2026-05-29 operator directive (standing): routine milestone-transition work scope-matches prior handoffs by construction. This task hands off V554 and validates the new V555 queue; no previous task could validate this milestone.'
-    milestone: "2026.08.555"
-    deliverable: results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json
-    title: "V554 terminal handoff and V555 queue integrity"
-    priority: critical
-    track: infrastructure
-    requires_gpu: false
-    max_turns: 30
-    estimated_wall_time_min: 45
-    agent_type: codex
-    model: gpt-5.5
-    prompt: |
-      CONTEXT
-      Milestone 2026.08.554 reached terminal state with 9 activated tasks although its design document expected 12. Exp6436 detected the mismatch and set v554_queue_ready_score=0.0. Exp6437, Exp6440, and Exp6442 are gate-block artifacts. Exp6441 and Exp6443 have no science artifacts. Exp6444 correctly left CSL ineligible. V555 has 12 tasks and deliberately keeps its science branches independent of this queue audit. Work at {project_root}. The planning date is {date}.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/research-program.md, {project_root}/_bmad/prd.md, and {project_root}/_bmad/architecture.md
-      - {project_root}/research-roadmap.yaml and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
-      - {project_root}/research-complete.yaml, {project_root}/research-references.md, and {project_root}/research-hardware-wishlist.md
-      - {project_root}/results/experiment_6436_v554_terminal_handoff_and_queue_preflight.json through {project_root}/results/experiment_6444_csl_lifecycle_recomputation_audit.json where present
-      - {project_root}/results/experiment_6435_v553_adversarial_capstone.json
-      - {project_root}/ops/conductor-log.md, {project_root}/ops/status.md, {project_root}/ops/changelog.md, and {project_root}/ops/exclusion_manifest.yaml
-      - {project_root}/scripts/roadmap_schema.py, {project_root}/scripts/validate_prior_failures.py, {project_root}/scripts/exclusion_manifest_lint.py, and {project_root}/scripts/conductor_gates.py
-      - {project_root}/scripts/adversarial_verify.py and {project_root}/ops/e2e-test-plan.md
-
-      TASK
-      Freeze the terminal V554 evidence and validate the activated V555 queue. Do not repair or rerun V554. Validate exact task count, IDs, deliverables, milestones, gates, prior-failure contracts, model declarations, prompt endings, and exclusion rules. Produce an audit artifact even when a check fails. No downstream task depends on this readiness score.
-
-      CONCRETE STEPS
-      0. PRECONDITIONS: resolve the repository root, active milestone, git state, active roadmap hash, V554 artifacts, exclusion manifest, roadmap schema, and protected files. Record missing and zero-byte files without changing them.
-      1. Add or confirm the narrow infrastructure REQ-* and SCENARIO-* before implementation. Write focused tests first.
-      2. Freeze one terminal row for each activated V554 task. Record task ID, path, byte count, status, honest_verdict, readiness fields, gate summary, current adversarial findings, and final claim eligibility.
-      3. Validate research-roadmap.yaml with the Pydantic schema, prior-failure validator, exclusion-manifest linter, structured gate checker, duplicate ID and deliverable checks, and prompt terminal-line checks.
-      4. Require exactly 12 tasks in conductor order, milestone 2026.08.555 on every task, 12 unique result paths, no retired ID, and no dependency on a retired task.
-      5. For every gated task, confirm that its upstream task exists in this roadmap and that the upstream prompt declares the exact artifact_field in REQUIRED ARTIFACT FIELDS.
-      6. Confirm every LLM task declares a mandatory GGUF, cached_sota_pair() or the same cache resolver, an embedded tokenizer, and no headline AutoTokenizer path.
-      7. Confirm every comparative task has per_unit_rows=true and requires row emission. Confirm every blocked artifact contract requires gate_check_summary.
-      8. Confirm every matching rerun has experiment_id, verdict, addressed_by, and retire_if_same_verdict=true. Confirm the Exp6448 operator override is nonempty and cites the standing transition directive.
-      9. Run focused tests, schema validation, gate validation, exclusion lint, artifact convention checks, determination preservation, and root-clutter checks.
-      10. Set v555_queue_integrity_score=1.0 only when all checks pass. Otherwise use a terminal blocked verdict and name every failed check.
-
-      Required deliverable: {project_root}/results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json.
-      REQUIRED ARTIFACT FIELDS:
-      status, v554_terminal_rows, v554_activated_task_count, v554_missing_zero_byte_or_blocked_artifacts, v554_terminal_claim_determinations, active_roadmap_hash, task_count, task_ids_in_order, unique_id_and_deliverable_check, milestone_consistency_check, schema_validation, prior_failure_validation, exclusion_manifest_validation, structured_gate_validation, gate_producer_contract_rows, model_policy_validation, per_unit_row_contract_validation, prompt_terminal_line_validation, protected_files_unchanged, v555_queue_integrity_score, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
-      Set verifier_is_oracle=false. field_principles must map every required field and every readiness condition. field_provenance must classify each required field as measured, derived, constant, or upstream. A blocked_* verdict requires gate_check_summary with failed check, expected condition, observed value, and evidence path. Otherwise use a terminal complete_, success_, passed_, or shipped_ prefix.
-
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6448_v555_terminal_handoff_and_queue_integrity --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6449-generation-to-verdict-path-receipt-contract
-    milestone: "2026.08.555"
-    deliverable: results/experiment_6449_generation_to_verdict_path_receipt_contract.json
-    title: "Ungated generation-to-verdict path receipt contract"
+  - id: exp6460-v556-terminal-handoff-and-queue-integrity
+    operator_override: "2026-05-29 operator directive (standing): routine milestone-transition work matches prior handoffs by construction. This task hands off V555 and validates the new V556 queue."
+    milestone: "2026.08.556"
+    deliverable: results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json
+    title: "V555 terminal handoff and V556 queue integrity"
     priority: critical
     track: infrastructure
     requires_gpu: false
     per_unit_rows: true
     max_turns: 30
-    estimated_wall_time_min: 90
+    estimated_wall_time_min: 45
     agent_type: codex
     model: gpt-5.5
     prior_failures:
-      - experiment_id: exp6437-generation-to-verdict-receipt-replay-contract
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "This task is ungated, runs directly on immutable nonzero V553 fixtures, and validates identity, injected-boundary, and restored-boundary controls without depending on queue readiness."
+      - experiment_id: exp6448-v555-terminal-handoff-and-queue-integrity
+        verdict: "complete_blocked_v555_queue_integrity_failed: V554 terminal facts are preserved but a V555 queue contract failed"
+        addressed_by: "This handoff targets a new milestone and directly adds the prior-failure declarations that Exp6448 found missing. It validates 13 V556 tasks and a different staged roadmap hash."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Exp6437 never exercised its receipt mechanism because the V554 queue gate failed. QuoteBench shows that the same raw model reply can produce a different exact result after an added parser or wrapper. V555 needs an immutable receipt from raw bytes through typed facts, energy input, checker transport, checker output, and final verdict. This task is intentionally ungated. Work at {project_root}. The planning date is {date}.
+      V555 completed its activated queue. Exp6448 found missing prior-failure declarations. Exp6450 produced an ineligible corpus. Exp6457 invalidated the nominal CSL claims. Exp6458 regressed one ARC safety game. V556 has 13 tasks and independent corpus, CSL, and ARC branches. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/results/experiment_6437_generation_to_verdict_receipt_replay_contract.json
-      - {project_root}/results/experiment_6426_task_scoped_runtime_receipt_contract.json and source
-      - {project_root}/results/experiment_6427_fresh_constraint_saturation_factor_corpus.json and source
-      - existing atomic-write, hash-chain, subprocess, exact-checker, and receipt helpers under {project_root}/python/carnot
-      - {project_root}/scripts/experiment_template.py, {project_root}/scripts/adversarial_verify.py, and {project_root}/scripts/verdict_row_consistency_lint.py
-      - {project_root}/openspec/capabilities/verification/spec.md, {project_root}/_bmad/traceability.md, and {project_root}/ops/e2e-test-plan.md
+      - {project_root}/research-program.md, {project_root}/_bmad/prd.md, and {project_root}/_bmad/architecture.md
+      - {project_root}/research-roadmap.yaml, {project_root}/research-roadmap-next.yaml, and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json through {project_root}/results/experiment_6459_v555_adversarial_capstone.json where present
+      - {project_root}/ops/conductor-log.md, {project_root}/ops/exclusion_manifest.yaml, and {project_root}/ops/known-issues.md
+      - {project_root}/scripts/roadmap_schema.py, {project_root}/scripts/validate_prior_failures.py, {project_root}/scripts/exclusion_manifest_lint.py, and {project_root}/scripts/conductor_gates.py
+      - {project_root}/scripts/adversarial_verify.py and {project_root}/ops/e2e-test-plan.md
 
       TASK
-      Build a reusable versioned path receipt that binds raw generation bytes, parse output, typed facts, energy input, checker request, checker response, and final verdict. Prove boundary localization with matched identity, injected-wrapper, and restored-wrapper replay controls. Use existing immutable fixture bytes. Do not call an LLM.
+      Freeze the terminal V555 evidence and validate the staged V556 queue. Do not repair V555. Validate task count, IDs, deliverables, gates, prior-failure blocks, model policy, prompt endings, and exclusions. No science task depends on this readiness score.
 
       CONCRETE STEPS
-      0. PRECONDITIONS: require readable nonzero fixture artifacts, an exact deterministic checker, atomic local storage, a monotonic clock, and new output paths. Record any failed condition in a terminal artifact.
-      1. Add path-receipt REQ-* and SCENARIO-* before implementation. Write focused tests first.
-      2. Define a versioned receipt with stage name, parent hash, input hash, output hash, code hash, configuration hash, monotonic timing, and terminal exact outcome.
-      3. Reject missing stages, duplicate stage IDs, parent-hash breaks, stage reordering, silent input mutation, unknown code hash, and a final verdict that does not recompute from checker output.
-      4. Run at least 24 independent fixture units through three matched controls: identity path, one disclosed injected transport wrapper, and the restored path.
-      5. Emit per_unit_rows for each unit and control with every stage hash, changed boundary, expected verdict, observed verdict, localization result, and replay timing.
-      6. Require the injected control to change only its declared boundary and the restored control to reproduce the identity terminal hash and verdict.
-      7. Attack wrapper insertion, parser substitution, stale checker response, missing stage, reordered stage, replayed raw bytes under another unit ID, forged parent hash, and aggregate-row mismatch.
-      8. Run focused tests, targeted 100% coverage for new source, spec coverage, relevant E2E checks, row consistency, current adversarial verification, determination preservation, and root-clutter checks.
-      9. Set path_receipt_ready_score=1.0 only if every control localizes correctly, all identity and restore rows replay, all attacks are detected, and critical findings are zero.
+      0. Resolve the repository, git state, protected files, V555 artifacts, active and staged roadmap hashes, and exclusion manifest. Record missing and zero-byte artifacts.
+      1. Add or confirm narrow infrastructure REQ-* and SCENARIO-* entries. Write focused tests first.
+      2. Emit one terminal row per V555 task with path, bytes, status, honest_verdict, gate summary, readiness, and eligibility.
+      3. Validate research-roadmap-next.yaml with the schema, prior-failure validator, exclusion linter, structured gate checker, and duplicate checks.
+      4. Require exactly 13 ordered tasks, 13 unique IDs, 13 unique JSON deliverables, milestone 2026.08.556 on every task, and no retired ID or dependency.
+      5. Confirm every gate producer exists in this roadmap and declares the exact artifact field in its own REQUIRED ARTIFACT FIELDS.
+      6. Confirm every comparative task has per_unit_rows=true. Confirm every blocked contract uses gate_check_summary. Confirm all matching reruns have all four prior-failure fields.
+      7. Confirm each live-LLM task declares at least one mandatory GGUF, cached local resolution, embedded tokenizers, and no headline legacy model.
+      8. Run focused tests, schema validation, prior-failure validation, exclusion lint, artifact convention checks, and root-clutter checks.
+      9. Set v556_queue_integrity_score=1.0 only if every check passes. Otherwise name every failed check and keep a terminal artifact.
 
-      Required deliverable: {project_root}/results/experiment_6449_generation_to_verdict_path_receipt_contract.json.
+      Required deliverable: {project_root}/results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json.
       REQUIRED ARTIFACT FIELDS:
-      status, receipt_schema_and_version, fixture_manifest_and_hashes, code_and_configuration_hashes, control_precommitment, per_unit_rows, identity_replay_results, injected_boundary_results, restored_boundary_results, stage_chain_validation, terminal_verdict_recomputation, attack_matrix, current_adversarial_findings, aggregate_row_recomputation, path_receipt_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
-      Set verifier_is_oracle=true only for the deterministic fixture checker and row arithmetic. per_unit_rows must contain every unit and control. field_principles must map every required field and every path_receipt_ready_score condition. A blocked_* verdict requires gate_check_summary. Otherwise use a terminal success prefix.
+      status, v555_terminal_rows, active_roadmap_hash, staged_roadmap_hash, task_count, task_ids_in_order, unique_id_and_deliverable_check, milestone_consistency_check, schema_validation, prior_failure_validation, exclusion_manifest_validation, structured_gate_validation, gate_producer_contract_rows, model_policy_validation, per_unit_rows, prompt_terminal_line_validation, protected_files_unchanged, v556_queue_integrity_score, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=false. A blocked_* verdict requires gate_check_summary with the failed check, expected value, observed value, and evidence path.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6449_generation_to_verdict_path_receipt_contract --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6460_v556_terminal_handoff_and_queue_integrity --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6450-sota-fixed-policy-candidate-corpus
-    milestone: "2026.08.555"
-    deliverable: results/experiment_6450_sota_fixed_policy_candidate_corpus.json
-    title: "Fresh SOTA fixed-policy candidate corpus"
+  - id: exp6461-v556-primary-source-freshness-receipt
+    milestone: "2026.08.556"
+    deliverable: results/experiment_6461_v556_sota_source_and_benchmark_delta.json
+    title: "V556 primary-source freshness receipt"
+    priority: high
+    track: sota-ingestion
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 30
+    estimated_wall_time_min: 60
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp5838-v520-source-delta-ingestion
+        verdict: "complete: no accepted post-V520 source deltas; references unchanged"
+        addressed_by: "This receipt covers a new 2026-08-15 cutoff, the late 2026-08-13 arXiv release, current EBT and ARM-EBM citation trails, and the open rendered ARC leaderboard issue. A null delta remains an acceptable result."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      V556 needs one reproducible SOTA-ingestion slot. The planner found late 2026-08-13 papers on long-horizon process evaluation, controlled exposure, and recursive harness learning. Known issue 2026-08-14 also requires primary rendered ARC leaderboard verification before any public citation. This task records sources only. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - the V555 and V556 refresh sections in {project_root}/research-references.md
+      - {project_root}/research-program.md and {project_root}/ops/known-issues.md
+      - existing source-ingestion experiments and source receipt helpers under {project_root}/python/carnot
+      - {project_root}/ops/arc_solve_registry.yaml and current ARC benchmark records
+      - {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Recheck the requested 2025-2026 sources and write a primary-source receipt. Verify the latest arXiv release, EBT and ARM-EBM citation trails, OpenReview, Hugging Face Papers, GitHub, Extropic, Logical Intelligence, and the rendered ARC leaderboard. Do not make an execution claim for unavailable products or hardware.
+
+      CONCRETE STEPS
+      0. Record network availability, query timestamp, source URL, HTTP state, and response hash for every source.
+      1. Add or confirm source-receipt REQ-* and SCENARIO-* entries. Write focused tests first.
+      2. Recheck arXiv for EBM reasoning, constraints, Ising, hallucination, KAN, guided decoding, hardware sampling, and continual learning.
+      3. Query Semantic Scholar citations for arXiv:2507.02092 and arXiv:2512.15605. Preserve returned titles and identifiers. Do not invent counts if rate-limited.
+      4. Check OpenReview, Hugging Face Papers, GitHub, Extropic first-party writing, and Logical Intelligence first-party pages.
+      5. Render the current ARC leaderboard and distinguish the displayed public score from a search snippet or cached number.
+      6. Emit per_unit_rows for every source with previous state, current state, evidence hash, relevance, and disposition.
+      7. Classify each finding as experiment hook, watch-only, duplicate, retired scope, or unavailable substrate.
+      8. Run focused tests and source-receipt consistency checks. Do not add a runtime dependency.
+
+      Required deliverable: {project_root}/results/experiment_6461_v556_sota_source_and_benchmark_delta.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, query_manifest, source_timestamps_and_hashes, arxiv_release_boundary, ebt_citation_rows, arm_ebm_citation_rows, openreview_rows, huggingface_rows, github_rows, extropic_first_party_status, logical_intelligence_first_party_status, rendered_arc_leaderboard_receipt, per_unit_rows, promoted_findings, duplicates_and_retired_scopes, unavailable_substrates, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=false. Primary pages are sources, not execution oracles. A blocked_* verdict requires gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6461_v556_sota_source_and_benchmark_delta --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6462-sota-raw-persistence-uniqueness-canary
+    milestone: "2026.08.556"
+    deliverable: results/experiment_6462_sota_raw_persistence_uniqueness_canary.json
+    title: "SOTA raw persistence and unique-event canary"
+    priority: critical
+    track: infrastructure
+    requires_gpu: true
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 180
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp6450-sota-fixed-policy-candidate-corpus
+        verdict: "complete: fixed-policy candidate corpus finished but readiness gate stayed closed"
+        addressed_by: "This task is a small persistence canary, not a full corpus. It writes one atomic file per generation, verifies nonzero bytes before parse, binds one event ID to one raw hash, and injects the zero-byte and clone failures that Exp6450 exposed."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6450 ran all three mandatory GGUFs, but 182 of 324 rows had missing or zero-byte raw output and 269 candidate rows were duplicates. Before another corpus run, V556 must prove atomic persistence and one-to-one event identity on a small live matrix. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6450_sota_fixed_policy_candidate_corpus.json and source
+      - {project_root}/results/experiment_6449_generation_to_verdict_path_receipt_contract.json and source
+      - {project_root}/scripts/experiment_template.py and cached_sota_pair() documentation
+      - {project_root}/python/carnot/inference/sota_models.py and current GGUF runner, atomic-write, checkpoint, and receipt helpers
+      - relevant inference and verification OpenSpec files and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Run a live raw-output persistence canary across all three mandated GGUFs. Prove that each generation has a new path, nonzero durable bytes, a unique event ID, and a replayable path receipt before parsing. Detect zero-byte, duplicate-event, cloned-candidate, stale-file, and hidden-CPU attacks.
+
+      CONCRETE STEPS
+      0. Require both RTX 3090 GPUs, cached model files, embedded tokenizers, free disk and VRAM, and new output paths. Fail closed before inference when a precondition fails.
+      1. Add raw-persistence REQ-* and SCENARIO-* entries. Write focused tests first.
+      2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF through cached_sota_pair() or the same cache resolver. Use embedded tokenizers. Legacy models may smoke-test only.
+      3. Seal at least four fixed units. Generate at least two independent outputs per unit and model with frozen prompts and settings.
+      4. Allocate the final path and event ID before generation. Write to a temporary file, fsync where supported, atomically rename, then verify byte count and SHA-256 before parse.
+      5. Bind event ID, unit ID, model file hash, tokenizer hash, device samples, prompt hash, raw hash, parse hash, checker hash, and verdict through the Exp6449 receipt chain.
+      6. Emit per_unit_rows for every generation and injected attack. Do not count text equality as event uniqueness.
+      7. Attack zero-byte rename, stale preexisting path, reused event ID, same raw path under two rows, cloned candidate row, model substitution, CPU fallback, and receipt reordering.
+      8. Run live inference, focused tests, row consistency, adversarial verification, and relevant E2E checks.
+      9. Set raw_persistence_canary_ready_score=1.0 only when every normal generation has nonzero durable bytes and a one-to-one event/path/hash binding, and every attack fails closed.
+
+      Required deliverable: {project_root}/results/experiment_6462_sota_raw_persistence_uniqueness_canary.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, MODEL_SPECS, models_used, cached_sota_pair_receipts, model_file_and_embedded_tokenizer_hashes, autotokenizer_usage_count, device_and_runner_receipts, sealed_unit_manifest, event_path_allocation_receipts, atomic_write_receipts, raw_output_manifest, per_unit_rows, one_event_one_path_one_hash_check, nonzero_durable_byte_check, raw_text_equality_diagnostic, cpu_fallback_count, attack_matrix, aggregate_row_recomputation, current_adversarial_findings, raw_persistence_canary_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=true only for byte, hash, receipt, and exact-checker arithmetic. A blocked_* verdict requires gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6462_sota_raw_persistence_uniqueness_canary --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6463-sota-fixed-policy-candidate-corpus-v2
+    milestone: "2026.08.556"
+    deliverable: results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json
+    title: "Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2"
     priority: critical
     track: sota-ingestion
     requires_gpu: true
@@ -118,410 +171,478 @@ tasks:
     estimated_wall_time_min: 480
     agent_type: codex
     model: gpt-5.5
+    gated_on:
+      - upstream: exp6462-sota-raw-persistence-uniqueness-canary
+        artifact_field: raw_persistence_canary_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp6450-sota-fixed-policy-candidate-corpus
+        verdict: "complete: fixed-policy candidate corpus finished but readiness gate stayed closed"
+        addressed_by: "This rerun depends on a live persistence canary, checkpoints after each generation, four presealed partitions, one event/path/hash binding, and explicit nonzero-byte and candidate-diversity gates before downstream readiness."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      V555 needs fresh matched candidate bytes before it can test typed grounding, objective replacement, held budget allocation, or constraint-energy selection. The corpus must avoid the retired finite-ID MMLU answer-transport lane. It uses executable fixed-policy tool-use environments with typed actions and an exact local simulator. It must preserve three sealed partitions and real selection headroom. Work at {project_root}. The planning date is {date}.
+      Exp6450 did not produce a valid evidence substrate. Exp6462 adds the missing atomic-write and event-identity prerequisite. This task rebuilds the fixed-policy corpus with sealed development, allocation-held, selection-held, and audit-held partitions. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/scripts/experiment_template.py and the cached_sota_pair() example
-      - {project_root}/python/carnot/inference/sota_models.py and the authenticated Exp6413 runtime receipts
-      - {project_root}/results/experiment_6426_task_scoped_runtime_receipt_contract.json and source
-      - {project_root}/results/experiment_6427_fresh_constraint_saturation_factor_corpus.json and source
-      - fixed policy, tool-call, simulator, exact checker, atomic write, and checkpoint helpers under {project_root}/python/carnot
-      - {project_root}/ops/exclusion_manifest.yaml, especially the finite-ID generated-answer retirement
-      - relevant verification, benchmark, and training-inference OpenSpec files and {project_root}/ops/e2e-test-plan.md
+      - {project_root}/results/experiment_6462_sota_raw_persistence_uniqueness_canary.json and source
+      - {project_root}/results/experiment_6450_sota_fixed_policy_candidate_corpus.json, raw manifest, and source
+      - {project_root}/results/experiment_6449_generation_to_verdict_path_receipt_contract.json
+      - {project_root}/scripts/experiment_template.py, cached_sota_pair(), and embedded-tokenizer helpers
+      - fixed-policy simulator, exact checker, checkpoint, and receipt code under {project_root}/python/carnot
+      - relevant OpenSpec files and {project_root}/ops/e2e-test-plan.md
 
       TASK
-      Build a fresh corpus of fixed-policy tool-use problems and matched candidate action plans from all three mandated local GGUF families. Seal development, allocation-held, and selection-held partitions before inference. Use a fixed parser and exact simulator. Preserve raw bytes, task-scoped CUDA receipts, path receipts, and per-candidate exact labels. Do not make a model-ranking claim.
+      Build a fresh provenance-complete fixed-policy candidate corpus with all three mandated local GGUFs. Seal four partitions before inference. Preserve one nonzero raw file per event, exact labels, and measurable selection headroom. Do not make a model-ranking claim.
 
       CONCRETE STEPS
-      0. PRECONDITIONS: require both RTX 3090 GPUs, cached mandatory model files, sufficient free VRAM, the embedded GGUF tokenizers, exact simulator imports, enough disk and wall time, new raw-output paths, and a sealed pre-run manifest. Fail closed before inference if any condition fails.
-      1. Add corpus and runtime-receipt REQ-* and SCENARIO-* before code. Write focused tests first.
-      2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF through cached_sota_pair() or the same cache resolver. Use GGUF-embedded tokenizers. Never call AutoTokenizer for a GGUF.
-      3. Seal 36 independent policy problems. Each problem has fixed entities, observable facts, fixed rule clauses, protected clauses, a typed tool-action schema, and a deterministic final-state checker.
-      4. Freeze 12 development, 12 allocation-held, and 12 selection-held problems by hash before generation. Do not expose held labels or change partition membership later.
-      5. Generate at least three candidate action plans per problem and model with frozen prompts, decoding settings, budgets, and seeds. Use fresh raw bytes. Legacy small models may run a smoke test only and must be excluded from headline rows.
-      6. Parse with one fixed parser. Record parse failures as outcomes. Do not reprompt, add a grammar retry, or convert structural validity into semantic success.
-      7. Run the exact simulator on each parsed plan. Store legality, protected-clause result, goal result, exact success, checker work, and path-stage hashes.
-      8. Emit per_unit_rows for every problem, partition, model, candidate, seed, parse result, exact result, raw hash, runtime receipt, and timing.
-      9. Check raw-output uniqueness, model-file hashes, embedded-tokenizer hashes, CUDA device samples, CPU fallback count, pre-run path nonexistence, partition sealing, and row-derived headroom.
-      10. Attack output reuse, model-name substitution, hidden CPU fallback, parser repair, held-label leakage, partition reassignment, duplicate candidates, exact-veto bypass, and aggregate-row mismatch.
-      11. Run live inference, focused tests, E2E checks, spec coverage, row consistency, current adversarial verification, determination preservation, and root-clutter checks.
-      12. Set sota_corpus_ready_score=1.0 only if all three model families have authenticated eligible rows, raw hashes are unique, partitions stayed sealed, exact labels recompute, each partition has mixed exact outcomes and candidate-selection headroom, duration passes live-model checks, and critical findings are zero.
+      0. Pre-gate on raw_persistence_canary_ready_score==1.0. If it fails, emit blocked_gate_check_failed with gate_check_summary and stop.
+      1. Add corpus-v2 REQ-* and SCENARIO-* entries. Write focused tests first.
+      2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF through cached local resolution and embedded tokenizers.
+      3. Seal at least 48 fixed-policy units: 12 development, 12 allocation-held, 12 selection-held, and 12 audit-held. Hash all labels and membership before generation.
+      4. Generate at least three candidates per unit and model. Use a new event ID and atomic raw path for every generation. Checkpoint after every event and resume without repeating completed events.
+      5. Parse once with the fixed parser. Record parse failure without repair. Run the deterministic simulator and exact checker on parsed plans.
+      6. Emit per_unit_rows with unit, partition, model, candidate, event ID, raw path and hash, parse result, exact result, device receipt, and timing.
+      7. Require mixed exact outcomes and positive candidate-selection headroom in each held partition. Report exact successes and parse failures by model, but do not rank models.
+      8. Attack zero-byte files, event reuse, candidate cloning, held exposure, membership reassignment, parser repair, CPU fallback, exact-veto bypass, and aggregate mismatch.
+      9. Run live inference, focused tests, row consistency, adversarial verification, spec coverage, and relevant E2E checks.
+      10. Set sota_corpus_ready_score=1.0 only if all models have eligible rows, every event is provenance-complete, partitions stayed sealed, labels recompute, every held split has headroom, and critical findings are zero.
 
-      Required deliverable: {project_root}/results/experiment_6450_sota_fixed_policy_candidate_corpus.json.
+      Required deliverable: {project_root}/results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json.
       REQUIRED ARTIFACT FIELDS:
-      status, MODEL_SPECS, models_used, cached_sota_pair_receipts, model_file_and_embedded_tokenizer_hashes, autotokenizer_usage_count, device_and_runner_receipts, sealed_problem_and_partition_manifest, preexistence_and_freshness_receipts, fixed_action_schema_and_parser_hash, exact_simulator_and_checker_hashes, raw_output_manifest, per_unit_rows, eligible_rows_by_model_and_partition, parse_failures_by_model, exact_outcomes_by_model_and_partition, candidate_headroom_by_partition, raw_output_uniqueness_and_reuse_count, cpu_fallback_count, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, sota_corpus_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
-      Set verifier_is_oracle=true only for the deterministic local simulator and final-state checker. The model and parser are not oracles. per_unit_rows must contain every candidate. field_principles must map every field and every sota_corpus_ready_score condition. A blocked_* verdict requires gate_check_summary. Otherwise use a terminal success prefix.
+      status, MODEL_SPECS, models_used, cached_sota_pair_receipts, model_file_and_embedded_tokenizer_hashes, autotokenizer_usage_count, device_and_runner_receipts, sealed_problem_and_partition_manifest, exposure_ledger, checkpoint_and_resume_receipts, raw_output_manifest, event_identity_manifest, fixed_parser_and_checker_hashes, per_unit_rows, eligible_rows_by_model_and_partition, parse_failures_by_model, exact_outcomes_by_model_and_partition, candidate_headroom_by_partition, one_event_one_path_one_hash_check, cpu_fallback_count, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, sota_corpus_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=true only for the deterministic simulator, checker, and row arithmetic. A blocked_* verdict requires gate_check_summary.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6450_sota_fixed_policy_candidate_corpus --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6463_sota_fixed_policy_candidate_corpus_v2 --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6451-typed-fact-grounding-fixed-policy-logic-ab
-    milestone: "2026.08.555"
-    deliverable: results/experiment_6451_typed_fact_grounding_fixed_policy_logic_ab.json
-    title: "Gated on Exp6450 corpus readiness: typed fact grounding into fixed policy logic"
+  - id: exp6464-fixed-slot-grounding-exact-logic-ab
+    milestone: "2026.08.556"
+    deliverable: results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
+    title: "Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B"
     priority: critical
     track: verification
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 150
+    agent_type: codex
+    model: gpt-5.5
+    gated_on:
+      - upstream: exp6463-sota-fixed-policy-candidate-corpus-v2
+        artifact_field: sota_corpus_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp6451-typed-fact-grounding-fixed-policy-logic-ab
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The prior task never ran. This task consumes the repaired corpus-v2 bytes, uses no new LLM call, and requires exact false-accept and task-success rows from a fixed predicate inventory and solver."
+        retire_if_same_verdict: true
+      - experiment_id: exp5923-sota-schema-supported-constraintir-ab
+        verdict: "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates"
+        addressed_by: "This task does not generate ConstraintIR, a schema, or a solver. It maps existing bytes to fixed typed slots and executes a predeclared exact rule program."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6451 was blocked before it tested policy-as-logic. Exp5923 retired generated ConstraintIR after zero exact semantic success. V556 uses fixed typed slots and a fixed solver on Exp6463 raw bytes. It does not call an LLM or generate a constraint language. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json, raw outputs, and source
+      - {project_root}/results/experiment_6451_typed_fact_grounding_fixed_policy_logic_ab.json
+      - {project_root}/results/experiment_5923_sota_schema_supported_constraintir_ab.json and retirement record
+      - fixed predicate, policy, solver, simulator, and exact-checker code under {project_root}/python/carnot
+      - relevant verification and constraint OpenSpec files and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Compare policy-as-prompt, fixed-slot policy-as-logic, ablated grounding, shuffled grounding, and a gold-fact upper bound on development rows. Use existing candidate bytes. Measure exact false accepts, exact task success, and grounding coverage.
+
+      CONCRETE STEPS
+      0. Pre-gate on sota_corpus_ready_score==1.0. On failure, emit gate_check_summary and stop.
+      1. Add fixed-grounding REQ-* and SCENARIO-* entries. Write focused tests first.
+      2. Freeze the predicate inventory, slot schema, parser, rule program, solver, and analysis before opening development labels.
+      3. Replay raw bytes through one fixed slot extractor. Missing or ambiguous slots stay missing. Do not repair or reprompt.
+      4. Execute fixed rules with the exact solver. Compare the five precommitted arms on matched units and candidate bytes.
+      5. Emit per_unit_rows with arm, slots, provenance, solver input and output hashes, selected candidate, false accept, protected-clause result, and exact task success.
+      6. Attack extra predicates, solver substitution, slot repair, shuffled unit binding, missing-fact default, leakage, and aggregate mismatch.
+      7. Run focused tests, targeted coverage, row consistency, adversarial verification, and relevant E2E checks.
+      8. Set fixed_slot_grounding_ready_score=1.0 only if exact rows recompute, false accepts do not increase versus policy-as-prompt, and the active arm has measurable room below the gold upper bound.
+
+      Required deliverable: {project_root}/results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, upstream_corpus_hash, fixed_predicate_inventory_and_hash, slot_schema_and_extractor_hash, fixed_rule_program_and_solver_hash, control_precommitment, per_unit_rows, grounding_coverage_by_arm, false_accepts_by_arm, exact_task_success_by_arm, active_minus_ablated_effect, gold_upper_bound_headroom, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, fixed_slot_grounding_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=true only for fixed solver and exact checker outputs. A blocked_* verdict requires gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6464_fixed_slot_grounding_exact_logic_ab --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6465-representation-objective-causal-ab-v2
+    milestone: "2026.08.556"
+    deliverable: results/experiment_6465_representation_objective_causal_ab_v2.json
+    title: "Gated on Exp6464 grounding readiness: representation-objective causal A/B v2"
+    priority: critical
+    track: energy
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    agent_type: codex
+    model: gpt-5.5
+    gated_on:
+      - upstream: exp6464-fixed-slot-grounding-exact-logic-ab
+        artifact_field: fixed_slot_grounding_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp6452-representation-objective-causal-ab
+        verdict: "no_honest_verdict: artifact missing after upstream gate cascade"
+        addressed_by: "The prior task never ran. This task has a repaired same-milestone grounding prerequisite, freezes facts and candidate bytes, and tests only predeclared objectives with row-level active, ablated, and shuffled controls."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6452 had no artifact because its upstream grounding task was blocked. The Objective Is the Bottleneck warns that a useful representation can appear null under a poor planning objective. This task freezes Exp6464 representation rows and changes only the objective. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json and source
+      - V555 and V556 objective entries in {project_root}/research-references.md
+      - existing factor, energy, reachability, exact-checker, and bootstrap helpers under {project_root}/python/carnot
+      - relevant energy and verification OpenSpec files and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Freeze the grounded representation and compare the current violation sum, protected-clause-first lexicographic energy, ablated objective, shuffled placebo, and exact oracle upper bound. Generate no new candidate bytes and change no model weights.
+
+      CONCRETE STEPS
+      0. Pre-gate on fixed_slot_grounding_ready_score==1.0. Otherwise emit gate_check_summary and stop.
+      1. Add objective-causality REQ-* and SCENARIO-* entries. Write focused tests first.
+      2. Freeze representation rows, candidates, split, objective formulas, tie rules, and analysis before labels are opened.
+      3. Apply each objective to matched development units. The oracle arm is diagnostic only.
+      4. Emit per_unit_rows with all objective terms, selected candidate, ties, protected-clause result, exact task success, and objective work.
+      5. Compute active-minus-ablated and active-minus-shuffled paired effects with confidence intervals and no-headroom counts.
+      6. Attack label leakage, term omission, tie manipulation, representation mutation, oracle promotion, and aggregate mismatch.
+      7. Run focused tests, row consistency, adversarial verification, and relevant E2E checks.
+      8. Set objective_causal_ready_score=1.0 only if the active objective changes decisions, improves exact outcomes over both ablated and shuffled controls, does not regress protected clauses, and remains below the oracle upper bound.
+
+      Required deliverable: {project_root}/results/experiment_6465_representation_objective_causal_ab_v2.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, upstream_grounding_hash, frozen_representation_and_candidate_manifest, objective_precommitment_and_hashes, per_unit_rows, decisions_changed_by_arm, exact_success_by_arm, protected_clause_results_by_arm, active_minus_ablated_effect_and_ci, active_minus_shuffled_effect_and_ci, oracle_upper_bound_headroom, no_headroom_counts, objective_work_by_arm, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, objective_causal_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=true only for deterministic objective arithmetic and exact outcomes. A blocked_* verdict requires gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6465_representation_objective_causal_ab_v2 --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6466-held-verifier-budget-allocation-v2
+    milestone: "2026.08.556"
+    deliverable: results/experiment_6466_held_verifier_budget_allocation_v2.json
+    title: "Gated on Exp6463 corpus readiness: held verifier budget allocation v2"
+    priority: high
+    track: efficiency
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    agent_type: codex
+    model: gpt-5.5
+    gated_on:
+      - upstream: exp6463-sota-fixed-policy-candidate-corpus-v2
+        artifact_field: sota_corpus_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp6453-held-verifier-budget-allocation-ab
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The prior task never ran. This task consumes the repaired corpus-v2 allocation-held split and freezes the policy on development rows before equal-cost held evaluation."
+        retire_if_same_verdict: true
+      - experiment_id: exp6429-constraint-saturation-verification-cost-ab
+        verdict: "complete: selective verification matched always-refine accuracy with lower median and tail cost"
+        addressed_by: "This rerun uses enough distinct held units, charges probe cost, includes harmful-flip and zero-gain controls, and enforces live duration and row recomputation."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6453 was blocked by the invalid V555 corpus. Exp6429 was underpowered and duration-ineligible. V556 has a sealed allocation-held split with exact headroom. Selective verification can also cause harmful flips, so the policy must be frozen and cost-matched. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json and source
+      - {project_root}/results/experiment_6453_held_verifier_budget_allocation_ab.json and {project_root}/results/experiment_6429_constraint_saturation_verification_cost_ab.json
+      - selective-verification and allocation entries in {project_root}/research-references.md
+      - allocation, cost, exact-checker, and bootstrap helpers under {project_root}/python/carnot
+      - relevant OpenSpec files and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Freeze an allocation policy on development units. Compare uniform, always-check, development-frozen adaptive, shuffled zero-gain, and in-sample oracle diagnostic arms on allocation-held rows at equal total exact-checker cost.
+
+      CONCRETE STEPS
+      0. Pre-gate on sota_corpus_ready_score==1.0. Otherwise emit gate_check_summary and stop.
+      1. Add held-allocation REQ-* and SCENARIO-* entries. Write focused tests first.
+      2. Freeze policy features, thresholds, total budget, probe charge, tie rules, and analysis on development units.
+      3. Unseal only allocation-held rows. Apply all arms at the same total charged checker budget.
+      4. Emit per_unit_rows with probes, checks, tokens if any, selected candidate, baseline correctness, final correctness, harmful flip, recovered failure, and total work.
+      5. Report exact yield, harmful flips, recoveries, median and tail cost, and policy calibration. Keep the in-sample oracle diagnostic out of promotion.
+      6. Attack free probes, unit reuse, budget drift, held tuning, no-headroom wins, oracle promotion, and aggregate mismatch.
+      7. Run focused tests, row consistency, adversarial verification, and relevant E2E checks.
+      8. Set held_allocation_ready_score=1.0 only if adaptive allocation improves held exact yield or preserves it with a predeclared material cost reduction, does not increase harmful flips, and passes all controls.
+
+      Required deliverable: {project_root}/results/experiment_6466_held_verifier_budget_allocation_v2.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, upstream_corpus_hash, development_policy_precommitment, sealed_allocation_held_manifest, equal_cost_budget_and_probe_charge, per_unit_rows, exact_yield_by_arm, harmful_flips_by_arm, recovered_failures_by_arm, cost_distribution_by_arm, no_headroom_counts, paired_effects_and_intervals, zero_gain_control_result, oracle_diagnostic_result, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, held_allocation_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=true only for exact checker and cost arithmetic. A blocked_* verdict requires gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6466_held_verifier_budget_allocation_v2 --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6467-held-exact-constraint-energy-selection-v2
+    milestone: "2026.08.556"
+    deliverable: results/experiment_6467_held_exact_constraint_energy_selection_v2.json
+    title: "Gated on Exp6465 objective causality: held exact-constraint energy selection v2"
+    priority: critical
+    track: energy
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    agent_type: codex
+    model: gpt-5.5
+    gated_on:
+      - upstream: exp6465-representation-objective-causal-ab-v2
+        artifact_field: objective_causal_ready_score
+        op: "=="
+        value: 1.0
+    prior_failures:
+      - experiment_id: exp6454-held-exact-constraint-energy-selection-ab
+        verdict: "no_honest_verdict: artifact missing after upstream gate cascade"
+        addressed_by: "The prior task never ran. This task has a repaired same-milestone objective prerequisite and uses untouched selection-held rows with a frozen objective and matched controls."
+        retire_if_same_verdict: true
+      - experiment_id: exp1006-energy-selection-ssd
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The prior comparison never ran. This task runs only after a same-milestone objective-causality artifact passes."
+        retire_if_same_verdict: true
+      - experiment_id: exp5708-sota-exact-constraint-canary
+        verdict: "blocked: parse_failures"
+        addressed_by: "This task consumes already parsed, provenance-complete corpus rows instead of reparsing SOTA output."
+        retire_if_same_verdict: true
+      - experiment_id: exp6205-held-code-selection-v2
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The prior task never ran. This task uses a current same-milestone producer with an exact gate field and an untouched fixed-policy held split."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6454 produced no artifact. V556 first requires a causal objective result from Exp6465. This task then tests whether that frozen objective changes final exact selection on untouched selection-held units. The energy score is proposal logic only. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json and source
+      - {project_root}/results/experiment_6465_representation_objective_causal_ab_v2.json and source
+      - prior selection artifacts and retirement entries named in prior_failures
+      - energy, exact-checker, bootstrap, and row-reducer helpers under {project_root}/python/carnot
+      - relevant OpenSpec files and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Freeze the Exp6465 objective and compare first candidate, vote, shuffled energy, violation sum, and changed energy on selection-held rows. Measure exact final success, protected clauses, harmful flips, and work.
+
+      CONCRETE STEPS
+      0. Pre-gate on objective_causal_ready_score==1.0. Otherwise emit gate_check_summary and stop.
+      1. Add held-energy-selection REQ-* and SCENARIO-* entries. Write focused tests first.
+      2. Freeze objective hash, weights, tie rules, baselines, analysis, and selection-held manifest before labels open.
+      3. Replay existing candidates. Generate no new bytes and make no parser repair.
+      4. Emit per_unit_rows with all energy terms, arm selection, baseline and final exact outcome, protected-clause result, harmful flip, and work.
+      5. Compute paired exact-success effects and confidence intervals. Report no-headroom and tie rows separately.
+      6. Attack hidden label terms, held tuning, tie manipulation, shuffled control failure, energy-as-oracle language, and aggregate mismatch.
+      7. Run focused tests, row consistency, adversarial verification, and relevant E2E checks.
+      8. Set held_energy_selection_ready_score=1.0 only if changed energy improves held exact success over first, vote, shuffled, and violation-sum controls without protected-clause regression.
+
+      Required deliverable: {project_root}/results/experiment_6467_held_exact_constraint_energy_selection_v2.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, upstream_corpus_and_objective_hashes, frozen_selection_manifest, objective_and_control_precommitment, per_unit_rows, exact_success_by_arm, protected_clause_results_by_arm, harmful_flips_by_arm, paired_effects_and_intervals, no_headroom_and_tie_counts, work_by_arm, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, held_energy_selection_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=true only for deterministic checker and row arithmetic. The energy score is not an oracle. A blocked_* verdict requires gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6467_held_exact_constraint_energy_selection_v2 --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6468-unique-event-verifier-bounded-csl
+    milestone: "2026.08.556"
+    deliverable: results/experiment_6468_unique_event_verifier_bounded_csl.json
+    title: "Prospective unique-event verifier-bounded continuous self-learning"
+    priority: critical
+    track: continuous-learning
     requires_gpu: true
     per_unit_rows: true
     max_turns: 50
     estimated_wall_time_min: 360
     agent_type: codex
     model: gpt-5.5
-    gated_on:
-      - upstream: exp6450-sota-fixed-policy-candidate-corpus
-        artifact_field: sota_corpus_ready_score
-        op: "=="
-        value: 1.0
     prior_failures:
-      - experiment_id: exp5923-sota-schema-supported-constraintir-ab
-        verdict: "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates"
-        addressed_by: "This task fills a fixed predeclared predicate inventory and executes a fixed rule program; it does not generate ConstraintIR, a schema, a solver, or a finite answer channel, and it scores exact semantics rather than structural validity."
+      - experiment_id: exp6455-prospective-verifier-bounded-factor-weight-csl
+        verdict: "success: verifier-bounded exact-sign factor weights improved future exact yield"
+        addressed_by: "The V555 audit found generation reuse and an open exact-veto attack. This task requires one live raw generation per event, exact veto before write admission, an exposure ledger, and attack-clean one-to-one event provenance."
+        retire_if_same_verdict: true
+      - experiment_id: exp6457-independent-verifier-bounded-csl-audit
+        verdict: "complete: independent verifier-bounded CSL audit did not grant eligibility"
+        addressed_by: "The learning mechanism now removes the two audit blockers: cloned raw generations cannot count as distinct events, and an exact-veto failure must block the write before persistent state changes."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Policy-as-logic (arXiv:2608.11905) separates LLM fact extraction from exact rule execution. Carnot previously retired a different mechanism in which an LLM generated a schema-supported ConstraintIR and achieved zero exact semantic success. V555 tests only fixed typed predicate slots and a fixed rule program. Exp6450 supplies fresh policy problems, candidate bytes, and exact simulator labels. Work at {project_root}. The planning date is {date}.
+      Exp6455 reported a positive online factor-weight effect. Exp6457 found that 216 rows contained only 72 unique raw outputs and that the exact-veto attack did not fail closed. V556 retries the mechanism with one live generation per event and exact checker authority before write admission. This task is independent of the Phase 1 corpus chain. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/results/experiment_6450_sota_fixed_policy_candidate_corpus.json and source
-      - {project_root}/results/experiment_5923_sota_schema_supported_constraintir_ab.json and its retirement record
-      - the V555 Policy-as-logic entry in {project_root}/research-references.md
-      - fixed predicate, policy, ASP or exact rule execution, simulator, and checker code under {project_root}/python/carnot
+      - {project_root}/research-program.md continuous self-learning section and FR-11 in {project_root}/_bmad/prd.md
+      - {project_root}/results/experiment_6455_prospective_verifier_bounded_factor_weight_csl.json and source
+      - {project_root}/results/experiment_6457_independent_verifier_bounded_csl_audit.json and attack rows
+      - {project_root}/results/experiment_6449_generation_to_verdict_path_receipt_contract.json
       - {project_root}/scripts/experiment_template.py, cached_sota_pair(), and embedded-tokenizer helpers
-      - relevant verification and constraint OpenSpec files, {project_root}/_bmad/traceability.md, and {project_root}/ops/e2e-test-plan.md
+      - factor store, transaction, rollback, exact-checker, event-log, and receipt code under {project_root}/python/carnot
+      - continuous-learning and safety OpenSpec files and {project_root}/ops/e2e-test-plan.md
 
       TASK
-      Compare policy-as-prompt, policy-as-code, fixed-slot policy-as-logic, and a gold-fact upper bound on the Exp6450 development split. The LLM may only ground observed text into a fixed predicate inventory. It may not synthesize rules, code, a solver, or a new schema. The exact rule executor and simulator remain authoritative.
+      Run prospective continuous self-learning on a fresh chronological stream. Compare frozen factor weights, self-signed updates, and verifier-bounded exact-sign updates. One generation is one event. The exact checker must pass before any write is admitted. Updates affect future units only.
 
       CONCRETE STEPS
-      0. PRECONDITIONS: require sota_corpus_ready_score=1.0, all three authenticated model receipts, readable development rows, a frozen predicate inventory, fixed rule program, exact simulator, sufficient GPU resources, new output paths, and sealed arm and analysis manifests.
-      1. Add fixed-grounding REQ-* and SCENARIO-* before implementation. Write focused tests first.
-      2. Define MODEL_SPECS with all three mandated GGUFs from cached_sota_pair() or the same resolver. Use embedded tokenizers and never AutoTokenizer.
-      3. Freeze the predicate names, types, entity domains, allowed values, missing-value behavior, contradiction behavior, and rule program before any call. Reject unknown predicates and invalid bindings.
-      4. Run matched arms on the 12 development problems: policy-as-prompt using Exp6450 plans; policy-as-code with the same text and budget; policy-as-logic with LLM-filled fixed slots plus exact execution; and gold facts as a non-deployment upper bound.
-      5. Hold source text, model, decoding, candidate budget, and final simulator fixed. Count every parse or grounding failure. Do not retry failed structured output.
-      6. Emit per_unit_rows for each problem, model, arm, predicate, grounded value, support span hash, rule result, selected action, exact outcome, false accept, abstention, token count, and timing.
-      7. Recompute grounding precision and recall, exact task success, protected-clause success, false accepts, abstentions, and cost from rows with paired uncertainty over distinct problems.
-      8. Attack unknown predicates, value coercion, unsupported facts, negation, revoked facts, binding swaps, contradictory facts, prompt-only leakage, gold-fact leakage, solver substitution, exact-veto bypass, and aggregate-row mismatch.
-      9. Run live CUDA work, focused tests, E2E checks, spec coverage, row consistency, current adversarial verification, determination preservation, and root-clutter checks.
-      10. Set typed_grounding_ready_score=1.0 only if policy-as-logic improves row-derived exact success over policy-as-prompt on at least one eligible model without a false-accept increase, grounding metrics meet the preregistered floor, gold facts retain headroom, all three models have eligible rows, and critical findings are zero.
+      0. Require both RTX 3090 GPUs, cached mandatory models, embedded tokenizers, new raw paths, empty event IDs, and a sealed chronological split.
+      1. Add unique-event CSL REQ-* and SCENARIO-* entries. Write focused tests first.
+      2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF through cached local resolution. Legacy models may smoke-test only.
+      3. Seal development, prospective-update, and future-held units. Record an exposure ledger before inference.
+      4. Generate one fresh output per event. Persist and validate raw bytes before parse. Never clone one output across candidate or arm rows.
+      5. Run the exact checker before write admission. A failed checker result must leave the persistent head unchanged.
+      6. Apply bounded external factor-weight updates. The exact outcome chooses direction. Model confidence may scale magnitude only. Freeze the base GGUFs.
+      7. Emit per_unit_rows and event rows with chronology, raw hash, arm, pre-state, checker result, write decision, post-state, future exact outcome, and rollback pointer.
+      8. Attack cloned raw output, duplicate event ID, held exposure, self-signed false pass, exact-veto bypass, future leakage, protected-case regression, and aggregate mismatch.
+      9. Run live inference, focused tests, row consistency, adversarial verification, and relevant E2E checks.
+      10. Set unique_event_csl_ready_score=1.0 only if one-to-one event provenance holds, exact veto precedes every write, the governed arm improves future exact yield over frozen and self-signed arms, protected cases do not regress, and critical attacks fail closed.
 
-      Required deliverable: {project_root}/results/experiment_6451_typed_fact_grounding_fixed_policy_logic_ab.json.
+      Required deliverable: {project_root}/results/experiment_6468_unique_event_verifier_bounded_csl.json.
       REQUIRED ARTIFACT FIELDS:
-      status, MODEL_SPECS, models_used, cached_sota_pair_receipts, model_and_embedded_tokenizer_hashes, autotokenizer_usage_count, device_and_runner_receipts, upstream_corpus_hash_and_gate_value, frozen_predicate_inventory_and_rule_program_hashes, arm_and_analysis_precommitment, per_unit_rows, grounding_metrics_by_model, exact_outcomes_by_arm_and_model, protected_clause_outcomes, false_accepts_and_abstentions, effects_and_uncertainty, checker_calls_tokens_and_timing, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, typed_grounding_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
-      Set verifier_is_oracle=true only for the fixed rule executor, exact simulator, and row arithmetic. per_unit_rows must contain every problem, model, arm, and predicate decision. field_principles must map every field and gate condition. A blocked_* verdict requires gate_check_summary with the Exp6450 gate or failed precondition. Otherwise use a terminal success prefix.
+      status, MODEL_SPECS, models_used, cached_sota_pair_receipts, model_file_and_embedded_tokenizer_hashes, autotokenizer_usage_count, device_and_runner_receipts, sealed_chronological_manifest, exposure_ledger, update_rule_and_bounds, raw_output_manifest, event_identity_manifest, exact_veto_before_write_receipts, per_unit_rows, event_rows, effect_by_arm_and_interval, protected_case_retention, write_and_rollback_counts, one_event_one_raw_hash_check, cpu_fallback_count, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, unique_event_csl_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=true only for deterministic checker, chronology, and row arithmetic. A blocked_* verdict requires gate_check_summary.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6451_typed_fact_grounding_fixed_policy_logic_ab --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6468_unique_event_verifier_bounded_csl --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6452-representation-objective-causal-ab
-    milestone: "2026.08.555"
-    deliverable: results/experiment_6452_representation_objective_causal_ab.json
-    title: "Gated on Exp6451 grounding readiness: representation-versus-objective causal A/B"
-    priority: critical
-    track: energy-verification
-    requires_gpu: false
-    per_unit_rows: true
-    max_turns: 50
-    estimated_wall_time_min: 150
-    agent_type: codex
-    model: gpt-5.5
-    gated_on:
-      - upstream: exp6451-typed-fact-grounding-fixed-policy-logic-ab
-        artifact_field: typed_grounding_ready_score
-        op: "=="
-        value: 1.0
-    prompt: |
-      CONTEXT
-      The Objective Is the Bottleneck (arXiv:2608.12959) shows that a useful representation can look ineffective when the planner optimizes the wrong objective. Carnot needs the same separation for grounded constraints. Exp6451 supplies frozen predicate rows and exact outcomes. This task changes only the ranking objective and uses no LLM calls. Work at {project_root}. The planning date is {date}.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/results/experiment_6451_typed_fact_grounding_fixed_policy_logic_ab.json and source
-      - {project_root}/results/experiment_6450_sota_fixed_policy_candidate_corpus.json and immutable development rows
-      - the V555 Objective Is the Bottleneck entry in {project_root}/research-references.md
-      - constraint energy, factor, objective, candidate selection, exact simulator, and bootstrap helpers under {project_root}/python/carnot
-      - relevant energy, verification, and constraints OpenSpec files and {project_root}/ops/e2e-test-plan.md
-
-      TASK
-      Freeze grounded representations and candidate bytes. Compare the current scalar violation objective, a reachability-aware lexicographic constraint energy, a clause-ablated version, and a shuffled placebo. Determine whether the objective, not representation absence, controls exact candidate selection.
-
-      CONCRETE STEPS
-      0. PRECONDITIONS: require typed_grounding_ready_score=1.0, readable immutable rows, at least two candidates per eligible problem, mixed exact outcomes, a deterministic simulator, a frozen objective specification, and new output paths.
-      1. Add objective-intervention REQ-* and SCENARIO-* before implementation. Write focused tests first.
-      2. Freeze candidate bytes, grounded facts, rule results, model IDs, partitions, and exact labels. Generate no new candidates and call no LLM.
-      3. Predeclare four objectives: scalar count of active violations; lexicographic protected-constraint then reachability energy; sequential clause ablation; and shuffled-energy placebo. Use deterministic tie breaks.
-      4. Score every candidate with every objective. Keep the exact final-state checker hidden from the scoring functions.
-      5. Emit per_unit_rows for each problem, model, candidate, objective, clause energy, protected energy, reachability term, rank, selected candidate, exact outcome, and timing.
-      6. Recompute selection accuracy, protected success, active-versus-ablated causal delta, placebo delta, rank correlation, false accepts, abstentions, and cost with paired uncertainty.
-      7. Include representation-quality controls that hold objective fixed and objective-quality controls that hold representation fixed. Do not infer usefulness from a probe score alone.
-      8. Attack exact-label leakage, objective tuning on selected outcomes, candidate mutation, tie-break drift, hidden clause deletion, protected-clause demotion, placebo non-randomness, and aggregate-row mismatch.
-      9. Run focused tests, targeted coverage, E2E checks, spec coverage, row consistency, current adversarial verification, determination preservation, and root-clutter checks.
-      10. Set objective_causal_ready_score=1.0 only if the new objective improves exact selection over the scalar objective, the active-versus-ablated effect is positive, the shuffled placebo does not reproduce the gain, protected success does not regress, aggregates recompute, and critical findings are zero.
-
-      Required deliverable: {project_root}/results/experiment_6452_representation_objective_causal_ab.json.
-      REQUIRED ARTIFACT FIELDS:
-      status, upstream_gate_value_and_artifact_hashes, frozen_representation_and_candidate_manifest, objective_precommitment_and_hashes, exact_checker_isolation_receipt, per_unit_rows, selection_outcomes_by_objective, protected_success_by_objective, active_ablated_and_placebo_effects, representation_fixed_objective_changed_results, objective_fixed_representation_changed_results, paired_effects_and_uncertainty, false_accepts_and_abstentions, checker_work_and_timing, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, objective_causal_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
-      Set verifier_is_oracle=false for all ranking objectives. The isolated exact final-state checker is authoritative. per_unit_rows must contain every candidate and objective. field_principles must map every field and readiness condition. A blocked_* verdict requires gate_check_summary. Otherwise use a terminal success prefix.
-
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6452_representation_objective_causal_ab --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6453-held-verifier-budget-allocation-ab
-    milestone: "2026.08.555"
-    deliverable: results/experiment_6453_held_verifier_budget_allocation_ab.json
-    title: "Gated on Exp6450 corpus readiness: held-out verifier budget allocation"
-    priority: high
-    track: verification-efficiency
-    requires_gpu: false
-    per_unit_rows: true
-    max_turns: 50
-    estimated_wall_time_min: 150
-    agent_type: codex
-    model: gpt-5.5
-    gated_on:
-      - upstream: exp6450-sota-fixed-policy-candidate-corpus
-        artifact_field: sota_corpus_ready_score
-        op: "=="
-        value: 1.0
-    prior_failures:
-      - experiment_id: exp6429-constraint-saturation-verification-cost-ab
-        verdict: "complete: selective verification matched always-refine accuracy with lower median and tail cost"
-        addressed_by: "This rerun freezes the allocator before a sealed held split, charges probe cost, uses enough distinct units per budget cell, adds a constructed zero-gain control, and enforces the live duration and row-recomputation rules that made Exp6429 ineligible."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      Exp6429 reported lower selective verification cost, but the artifact was duration-flagged and underpowered. Sampling Luck Masquerades as Allocation Gain (arXiv:2608.13087) shows that in-sample allocation gains can vanish out of sample. Exp6450 supplies a development split and a sealed allocation-held split. V555 must freeze the allocation policy before held evaluation and charge every probe. Work at {project_root}. The planning date is {date}.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/results/experiment_6450_sota_fixed_policy_candidate_corpus.json and source
-      - {project_root}/results/experiment_6429_constraint_saturation_verification_cost_ab.json and its capstone findings
-      - the V555 Sampling Luck and selective-verification entries in {project_root}/research-references.md
-      - verifier allocation, cost, bootstrap, exact simulator, and held-manifest helpers under {project_root}/python/carnot
-      - {project_root}/scripts/verdict_row_consistency_lint.py, relevant OpenSpec files, and {project_root}/ops/e2e-test-plan.md
-
-      TASK
-      Learn or tune a verifier allocation policy on development units only. Freeze it before opening the allocation-held split. Compare uniform allocation, held adaptive allocation, an in-sample oracle diagnostic, and a constructed zero-gain shuffled control at equal charged exact-checker budget.
-
-      CONCRETE STEPS
-      0. PRECONDITIONS: require sota_corpus_ready_score=1.0, sealed disjoint development and allocation-held partitions, mixed candidate outcomes, exact checker imports, enough distinct held units per budget cell, a monotonic clock, and new output paths.
-      1. Add held-allocation REQ-* and SCENARIO-* before implementation. Write focused tests first.
-      2. Use development rows to define cheap allocation features and tune the adaptive policy. Record every searched setting and freeze the chosen policy and analysis hash before reading held labels.
-      3. Predeclare equal total checker budgets and charge feature probes, parser work, and exact checks. Do not hide acquisition cost.
-      4. Run four matched arms on the sealed held split: uniform budget; frozen adaptive policy; in-sample oracle as a non-headline bias diagnostic; and a shuffled zero-gain control whose true allocation advantage is zero by construction.
-      5. Emit per_unit_rows for every held problem, arm, budget, candidate, allocated checker calls, probe calls, exact outcomes, selected result, harmful flip, abstention, and monotonic timing.
-      6. Recompute exact yield, best-valid-plan rate, harmful flips, checker calls, tokens, median and tail latency, and charged total cost from rows. Use uncertainty over distinct held problems.
-      7. Report development estimates separately from held estimates. Never use the in-sample oracle as a deployment claim.
-      8. Attack held-label access, policy edits after unsealing, uncharged probes, unequal budgets, repeated rows counted as independent, shuffled-control leakage, timing synthesis, and aggregate-row mismatch.
-      9. Run focused tests, E2E checks, spec coverage, row consistency, current adversarial verification, determination preservation, and root-clutter checks.
-      10. Set held_allocation_ready_score=1.0 only if the frozen adaptive policy improves held exact yield or matches it with a preregistered material cost reduction, the zero-gain control shows no false gain, no harmful-flip or protected-case regression occurs, every budget cell is powered, duration is eligible, aggregates recompute, and critical findings are zero.
-
-      Required deliverable: {project_root}/results/experiment_6453_held_verifier_budget_allocation_ab.json.
-      REQUIRED ARTIFACT FIELDS:
-      status, upstream_gate_value_and_corpus_hash, partition_disjointness_and_seal_receipts, development_search_rows_and_policy_freeze_hash, arm_budget_and_analysis_precommitment, per_unit_rows, distinct_held_units_per_budget_cell, underpowered_cell_count, held_exact_yield_by_arm_and_budget, held_cost_by_arm_and_budget, harmful_flips_and_abstentions, in_sample_oracle_diagnostic, zero_gain_control_result, effects_and_uncertainty, charged_probe_checker_token_and_timing_costs, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, held_allocation_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
-      Set verifier_is_oracle=true only for the deterministic exact simulator and row arithmetic. The allocation policy is not an oracle. per_unit_rows must contain every held problem, arm, and budget. field_principles must map every field and readiness condition. A blocked_* verdict requires gate_check_summary. Otherwise use a terminal success prefix.
-
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6453_held_verifier_budget_allocation_ab --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6454-held-exact-constraint-energy-selection-ab
-    prior_failures:
-    - experiment_id: exp1006-energy-selection-ssd
-      verdict: blocked_gate_check_failed
-      addressed_by: Never executed a comparison -- blocked at its own pre-gate, so it recorded no evidence
-        about energy selection. This task is gated on Exp6452's objective-causality result and runs only if
-        that lands.
-      retire_if_same_verdict: true
-    - experiment_id: exp5708-sota-exact-constraint-canary
-      verdict: 'blocked: parse_failures'
-      addressed_by: Blocked on candidate parsing, not on the selection question. This task consumes Exp6450's
-        already-parsed reserved held partition instead of re-parsing SOTA output.
-      retire_if_same_verdict: true
-    - experiment_id: exp6205-held-code-selection-v2
-      verdict: blocked_gate_check_failed
-      addressed_by: Also never ran; blocked on an upstream readiness score. Same gating class, different upstream,
-        and this task's upstream (Exp6452) is in the same milestone rather than a prior one.
-      retire_if_same_verdict: true
-    - experiment_id: exp787-sstar-energy-ranked-code-selection
-      verdict: energy_prefilter_efficient
-      addressed_by: 'The one prior that DID run, and it was POSITIVE (energy prefilter efficient), so it is
-        not a failure this task repeats. What is different: a frozen learned objective from Exp6452 and a
-        held partition the objective never saw, rather than a hand-specified prefilter on development rows.'
-      retire_if_same_verdict: true
-    milestone: "2026.08.555"
-    deliverable: results/experiment_6454_held_exact_constraint_energy_selection_ab.json
-    title: "Gated on Exp6452 objective causality: held exact-constraint energy selection"
-    priority: critical
-    track: energy-verification
-    requires_gpu: false
-    per_unit_rows: true
-    max_turns: 50
-    estimated_wall_time_min: 180
-    agent_type: codex
-    model: gpt-5.5
-    gated_on:
-      - upstream: exp6452-representation-objective-causal-ab
-        artifact_field: objective_causal_ready_score
-        op: "=="
-        value: 1.0
-    prompt: |
-      CONTEXT
-      Exp6452 tests the objective on development rows. V555 still needs a clean held selection result on candidate bytes that the objective never saw. Exp6450 reserved a selection-held partition. This task uses fixed typed constraints and the frozen Exp6452 energy. It does not use an LLM judge, generated-text reward model, hidden-state scorer, or exact label inside the ranking function. Work at {project_root}. The planning date is {date}.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/results/experiment_6452_representation_objective_causal_ab.json and source
-      - {project_root}/results/experiment_6450_sota_fixed_policy_candidate_corpus.json and sealed selection-held rows
-      - {project_root}/ops/exclusion_manifest.yaml entries for external-text scorers and finite-ID answer transport
-      - fixed constraint energy, candidate selection, simulator, bootstrap, and receipt helpers under {project_root}/python/carnot
-      - relevant energy and verification OpenSpec files and {project_root}/ops/e2e-test-plan.md
-
-      TASK
-      Freeze the Exp6452 objective and apply it once to the untouched selection-held partition. Compare first candidate, majority or modal action, scalar violation energy, frozen reachability-aware energy, and shuffled energy. The exact simulator validates the selected action after ranking.
-
-      CONCRETE STEPS
-      0. PRECONDITIONS: require objective_causal_ready_score=1.0, a frozen objective hash, sealed nonoverlapping selection-held rows, mixed exact outcomes, at least three candidates per eligible problem, exact simulator imports, and new output paths.
-      1. Add held-energy-selection REQ-* and SCENARIO-* before implementation. Write focused tests first.
-      2. Verify zero raw-hash and problem-ID overlap between the development rows used in Exp6452 and the selection-held rows.
-      3. Freeze all arms, tie breaks, exclusions, metrics, and uncertainty procedures before unsealing exact held labels.
-      4. Rank unchanged candidate bytes with first-candidate, modal-action, scalar-energy, frozen new-energy, and shuffled-energy controls. No arm may call the exact final checker before selection.
-      5. Run the exact simulator only as final evaluation and release authority. Record abstention when no candidate meets the fixed release rule.
-      6. Emit per_unit_rows for every held problem, model, candidate, arm, component energy, rank, selected action, exact outcome, protected outcome, false accept, abstention, checker calls, and timing.
-      7. Recompute held exact selection, protected success, false accepts, abstentions, paired wins and losses, uncertainty, and cost from rows.
-      8. Attack exact-label leakage, objective refit on held data, candidate mutation, hidden text scorer, model judge use, tie-break drift, shuffled placebo bias, exact-veto bypass, and aggregate-row mismatch.
-      9. Run focused tests, E2E checks, spec coverage, row consistency, current adversarial verification, determination preservation, and root-clutter checks.
-      10. Set energy_selection_ready_score=1.0 only if frozen new-energy selection improves held exact outcomes over both first-candidate and scalar-energy baselines, beats shuffled energy, does not regress protected success, has enough paired wins, all aggregates recompute, and critical findings are zero.
-
-      Required deliverable: {project_root}/results/experiment_6454_held_exact_constraint_energy_selection_ab.json.
-      REQUIRED ARTIFACT FIELDS:
-      status, upstream_gate_value_and_objective_hash, held_partition_seal_and_disjointness_receipts, arm_and_analysis_precommitment, exact_checker_isolation_receipt, per_unit_rows, held_selection_outcomes_by_arm_and_model, protected_outcomes_by_arm, false_accepts_and_abstentions, paired_wins_losses_and_uncertainty, scalar_active_ablated_and_shuffled_controls, checker_work_and_timing, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, energy_selection_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
-      Set verifier_is_oracle=false for every ranking arm. The isolated exact simulator is authoritative after selection. per_unit_rows must contain every held candidate and arm. field_principles must map every field and readiness condition. A blocked_* verdict requires gate_check_summary. Otherwise use a terminal success prefix.
-
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6454_held_exact_constraint_energy_selection_ab --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6455-prospective-verifier-bounded-factor-weight-csl
-    milestone: "2026.08.555"
-    deliverable: results/experiment_6455_prospective_verifier_bounded_factor_weight_csl.json
-    title: "Prospective verifier-bounded factor-weight continuous self-learning"
+  - id: exp6469-unique-event-csl-corruption-restart
+    milestone: "2026.08.556"
+    deliverable: results/experiment_6469_unique_event_csl_corruption_restart.json
+    title: "Gated on Exp6468 CSL readiness: unique-event corruption and restart replication"
     priority: critical
     track: continuous-learning
     requires_gpu: true
     per_unit_rows: true
     max_turns: 50
-    estimated_wall_time_min: 480
-    agent_type: codex
-    model: gpt-5.5
-    prompt: |
-      CONTEXT
-      FR-11 requires a closed learning loop with immutable validation, rollback, and bounded forgetting. V554 did not execute its prospective CSL task. CrEST (arXiv:2608.13179) suggests a narrower mechanism: let an exact verifier determine update direction and let model evidence change update magnitude only. This task updates an external constraint-energy weight vector online. It never changes the base GGUF weights and does not run LoRA or GRPO. It is V555's mandatory continuous self-learning experiment and is intentionally ungated. Work at {project_root}. The planning date is {date}.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - the Continuous Self-Learning section of {project_root}/research-program.md and FR-11 in {project_root}/_bmad/prd.md
-      - {project_root}/results/experiment_6409_graph_local_multisession_csl.json, {project_root}/results/experiment_6418_dual_path_continuous_self_learning.json, and later audits where present
-      - {project_root}/results/experiment_6430_prospective_write_once_memory_capacity_frontier.json, {project_root}/results/experiment_6433_csl_row_recomputation_safety_audit.json, and {project_root}/results/experiment_6444_csl_lifecycle_recomputation_audit.json
-      - the V555 CrEST and MemoPilot entries in {project_root}/research-references.md
-      - event-store, transaction-head, factor, energy, rollback, exact checker, checkpoint, and runtime receipt helpers under {project_root}/python/carnot
-      - {project_root}/scripts/experiment_template.py, cached_sota_pair(), embedded-tokenizer helpers, and {project_root}/ops/e2e-test-plan.md
-      - relevant continuous-learning, energy, verification, and inference OpenSpec files
-
-      TASK
-      Run a fresh chronological stream with matched candidate pools from all three mandated GGUFs. Compare frozen factor weights, self-teacher-signed updates, and verifier-bounded updates. Exact checker feedback must choose the update sign. Model confidence may scale only the magnitude. Each update may affect future units only.
-
-      CONCRETE STEPS
-      0. PRECONDITIONS: require both RTX 3090 GPUs, cached mandatory GGUFs, embedded tokenizer metadata, exact local policy checkers, a monotonic clock, atomic event storage, new raw-output and ledger paths, enough disk and time, and a sealed stream and arm manifest.
-      1. Add verifier-bounded CSL REQ-* and SCENARIO-* before implementation. Write focused tests first.
-      2. Define MODEL_SPECS with all three mandated GGUFs through cached_sota_pair() or the same resolver. Use embedded tokenizers and no AutoTokenizer.
-      3. Seal at least 24 chronological units per model. Each unit has new facts, bindings, candidate actions, protected cases, and a deterministic exact checker. Freeze seeds, decoding, candidate count, budgets, and analysis.
-      4. Generate one fresh matched candidate pool per unit and model. All arms select from the same candidate bytes. Preserve task-scoped CUDA and path receipts.
-      5. Run three independent state ledgers: frozen weights; self-teacher-signed updates; and verifier-bounded updates. The verifier arm must derive sign only from the exact result. The model can supply a bounded nonnegative magnitude. Clamp and log every update.
-      6. Enforce chronology. A unit's result may update state only after its selection and exact check. That state may affect only later units. Record before and after heads and transaction ancestry.
-      7. Emit per_unit_rows with chronological index, model, arm, candidate hashes, selected candidate, pre-update weights, exact result, teacher signal, exact sign, magnitude, post-update weights, head hashes, future exact outcome, protected outcome, checker work, and real timing.
-      8. Recompute future exact yield, online learning curve, negative transfer, forgetting, protected retention, false accepts, abstentions, weight growth, update sparsity, and cost from rows with uncertainty over distinct future units.
-      9. Attack future-label leakage, same-unit update use, teacher sign override, exact-result transport corruption, unbounded weights, state sharing across arms, output reuse, fake model receipts, CPU fallback, timing synthesis, and aggregate-row mismatch.
-      10. Run live CUDA work, focused tests, E2E checks, spec coverage, row consistency, current adversarial verification, determination preservation, and root-clutter checks.
-      11. Set verifier_bounded_csl_ready_score=1.0 only if the verifier-bounded arm improves future exact yield over frozen weights on distinct later units, outperforms or is safer than teacher-signed updates, has no protected-retention or false-accept regression, respects chronology, keeps weight growth bounded, has eligible rows for all three models, passes duration checks, and has zero critical findings.
-
-      Required deliverable: {project_root}/results/experiment_6455_prospective_verifier_bounded_factor_weight_csl.json.
-      REQUIRED ARTIFACT FIELDS:
-      status, MODEL_SPECS, models_used, cached_sota_pair_receipts, model_and_embedded_tokenizer_hashes, autotokenizer_usage_count, device_and_runner_receipts, sealed_stream_arm_and_analysis_manifest, path_nonexistence_and_freshness_receipts, exact_checker_and_update_rule_hashes, event_store_and_initial_head_hashes, per_unit_rows, chronology_and_future_only_checks, frozen_teacher_and_verifier_bounded_outcomes_by_model, future_exact_yield_delta, online_learning_curves, negative_transfer_and_forgetting, protected_retention, contamination_false_accepts_and_abstentions, weight_growth_and_update_sparsity, transaction_head_ancestry, checker_calls_tokens_and_timing, effects_and_uncertainty_over_distinct_future_units, raw_output_uniqueness_and_reuse_count, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, verifier_bounded_csl_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
-      Set verifier_is_oracle=true only for deterministic exact outcome checkers and row arithmetic. The self-teacher and energy ranker are not oracles. per_unit_rows must contain every chronological unit, model, and arm. field_principles must map every field and readiness condition. A blocked_* verdict requires gate_check_summary. Otherwise use a terminal success prefix.
-
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6455_prospective_verifier_bounded_factor_weight_csl --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6456-corrupt-feedback-held-restart-csl-replication
-    milestone: "2026.08.555"
-    deliverable: results/experiment_6456_corrupt_feedback_held_restart_csl_replication.json
-    title: "Gated on Exp6455 CSL readiness: corrupt-feedback quarantine and held restart replication"
-    priority: critical
-    track: continuous-learning-safety
-    requires_gpu: true
-    per_unit_rows: true
-    max_turns: 50
-    estimated_wall_time_min: 480
+    estimated_wall_time_min: 300
     agent_type: codex
     model: gpt-5.5
     gated_on:
-      - upstream: exp6455-prospective-verifier-bounded-factor-weight-csl
-        artifact_field: verifier_bounded_csl_ready_score
+      - upstream: exp6468-unique-event-verifier-bounded-csl
+        artifact_field: unique_event_csl_ready_score
         op: "=="
         value: 1.0
     prior_failures:
+      - experiment_id: exp6456-corrupt-feedback-held-restart-csl-replication
+        verdict: "success: Exp6456 clean learning improved held exact yield and governed learning detected, quarantined, tombstoned, rolled back, and prevented resurrection of all transport-corrupted feedback events."
+        addressed_by: "The V555 audit invalidated the upstream event substrate. This replication uses new unique held generations, exact veto before write, raw-hash disjointness, forged-pass and wrong-binding attacks, and real process restart receipts."
+        retire_if_same_verdict: true
       - experiment_id: exp6432-held-shift-process-restart-csl-replication
         verdict: "complete: held-shift process-restart replication improved future exact yield"
-        addressed_by: "This rerun uses a different verifier-bounded external weight learner, new held bytes from all three mandatory GGUFs, an injected corrupt-feedback transport event, receipt-based quarantine, tombstone rollback, and real restart and duration receipts."
+        addressed_by: "This task uses a different unique-event external factor learner, all mandatory GGUFs, explicit corrupt checker transport, and attack-clean duration and restart evidence."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Exp6432 reported a held restart improvement, but its duration flag made the claim ineligible. Exp6455 introduces a different mechanism: verifier-bounded external factor-weight updates. This task tests held binding shift, real process restart, and an injected corrupt-feedback transport event. The governed learner must detect, quarantine, tombstone, and roll back the corrupt event before it can affect future release. Work at {project_root}. The planning date is {date}.
+      Exp6456 reported successful corruption handling, but Exp6457 invalidated its reused generation substrate. Exp6468 introduces unique live events and exact-veto-first admission. This task tests the full lifecycle on new held generations after a real process restart. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/results/experiment_6455_prospective_verifier_bounded_factor_weight_csl.json and source
-      - {project_root}/results/experiment_6432_held_shift_process_restart_csl_replication.json and {project_root}/results/experiment_6433_csl_row_recomputation_safety_audit.json
-      - path receipt code and {project_root}/results/experiment_6449_generation_to_verdict_path_receipt_contract.json if present
-      - transaction, head recovery, quarantine, tombstone, rollback, restart, exact checker, and runtime helpers under {project_root}/python/carnot
-      - {project_root}/scripts/experiment_template.py, cached_sota_pair(), embedded-tokenizer helpers, and {project_root}/ops/e2e-test-plan.md
-      - relevant continuous-learning, safety, verification, and inference OpenSpec files
+      - {project_root}/results/experiment_6468_unique_event_verifier_bounded_csl.json and source
+      - {project_root}/results/experiment_6456_corrupt_feedback_held_restart_csl_replication.json and {project_root}/results/experiment_6457_independent_verifier_bounded_csl_audit.json
+      - path receipt, transaction, quarantine, tombstone, rollback, restart, and exact-checker code under {project_root}/python/carnot
+      - {project_root}/scripts/experiment_template.py and mandatory GGUF cache helpers
+      - relevant continuous-learning and safety OpenSpec files and {project_root}/ops/e2e-test-plan.md
 
       TASK
-      Replicate the frozen Exp6455 verifier-bounded learner on a new held binding-shift stream after real process restarts. Compare frozen weights, clean verifier-bounded learning, and governed learning with one disclosed transport-corrupted feedback event. Require receipt detection, quarantine, tombstone, rollback, and recovery of the last good head.
+      Replicate unique-event CSL on a new held binding shift after a real process restart. Inject forged pass, replayed raw output, wrong-unit binding, corrupt checker response, and interrupted write. Prove quarantine, tombstone, rollback, and non-resurrection.
 
       CONCRETE STEPS
-      0. PRECONDITIONS: require verifier_bounded_csl_ready_score=1.0, authenticated upstream state and receipts, both RTX 3090 GPUs, cached mandatory GGUFs, exact checkers, new held paths, enough disk and wall time, and a sealed held stream and corruption schedule.
-      1. Add held CSL safety REQ-* and SCENARIO-* before implementation. Write focused tests first.
-      2. Define MODEL_SPECS with all three mandated GGUFs through cached_sota_pair() or the same resolver. Use embedded tokenizers and no AutoTokenizer.
-      3. Seal at least 24 held units per model with new bindings, new clause combinations, protected cases, and zero problem or raw-hash overlap with Exp6455 and Exp6432.
-      4. Freeze the Exp6455 update rule and initial eligible head. Run three matched arms: frozen weights; clean verifier-bounded updates; and governed updates with one predeclared checker-transport corruption per session panel.
-      5. Start a new process at each session boundary. Reload state from disk, validate transaction ancestry and head hash, and record parent-child PIDs, start times, exit codes, and zero inherited in-memory state.
-      6. Bind every raw output, parse, factor input, checker request, checker response, update, and head transition with path receipts. The corrupt event must break the expected path hash before update admission.
-      7. Quarantine the corrupt event, write a tombstone, roll back to the last good head, restart, and prove the corrupt update cannot resurrect.
-      8. Emit per_unit_rows for every held unit, model, arm, session, process, candidate hash, exact outcome, update, corrupt-event state, quarantine, rollback, head hash, protected outcome, checker work, and timing.
-      9. Recompute held future exact yield, negative transfer, forgetting, protected retention, false accepts, quarantine precision and recall, rollback success, resurrection count, restart recovery, and cost from rows.
-      10. Attack cached development bytes, fake restart, inherited state, stale or forged head, missed corruption, quarantine false positive, rollback-to-bad-head, tombstone deletion, corrupt update resurrection, CPU fallback, timing synthesis, and aggregate-row mismatch.
-      11. Run live CUDA work, focused tests, E2E checks, spec coverage, row consistency, current adversarial verification, determination preservation, and root-clutter checks.
-      12. Set csl_safety_replication_ready_score=1.0 only if the clean learner retains a positive held future exact effect, governed learning contains every corrupt event with zero protected release and zero resurrection, benign utility stays within tolerance, all restart and freshness checks pass, all three models have eligible rows, duration is eligible, aggregates recompute, and critical findings are zero.
+      0. Pre-gate on unique_event_csl_ready_score==1.0. Otherwise emit gate_check_summary and stop.
+      1. Add corruption-restart REQ-* and SCENARIO-* entries. Write focused tests first.
+      2. Define MODEL_SPECS with all three mandatory GGUFs: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use cached paths and embedded tokenizers.
+      3. Freeze a new held manifest and confirm its units and raw hashes are absent from Exp6468 exposure and event ledgers.
+      4. Start a new process. Load only the committed store head and receipt chain. Record PID, start time, head hash, and model/device receipts.
+      5. Generate new unique raw events. Run clean, corrupt, and governed arms with exact veto before write.
+      6. Inject each corruption at a named boundary. Require quarantine and tombstone before rollback. Restart again and prove no corrupt state resurrects.
+      7. Emit per_unit_rows and lifecycle rows for every clean and corrupt event, state transition, restart, and future exact outcome.
+      8. Attack stale head, forged tombstone, wrong event binding, replay, partial atomic write, exact-veto bypass, held contamination, and aggregate mismatch.
+      9. Run live inference, focused tests, row consistency, adversarial verification, and relevant E2E checks.
+      10. Set corruption_restart_ready_score=1.0 only if clean learning retains a future exact effect, every corrupt event is blocked before release, rollback restores the last valid head, restart cannot resurrect corruption, and all held events are unique.
 
-      Required deliverable: {project_root}/results/experiment_6456_corrupt_feedback_held_restart_csl_replication.json.
+      Required deliverable: {project_root}/results/experiment_6469_unique_event_csl_corruption_restart.json.
       REQUIRED ARTIFACT FIELDS:
-      status, MODEL_SPECS, models_used, cached_sota_pair_receipts, model_and_embedded_tokenizer_hashes, autotokenizer_usage_count, device_and_runner_receipts, upstream_gate_value_policy_and_head_hashes, sealed_held_stream_corruption_and_analysis_manifest, path_nonexistence_freshness_and_disjointness_receipts, process_restart_and_pid_receipts, per_unit_rows, frozen_clean_and_governed_outcomes_by_model, future_exact_yield_delta, negative_transfer_and_forgetting, protected_retention, false_accepts_and_abstentions, corruption_detection_and_path_receipts, quarantine_precision_and_recall, tombstone_rollback_and_resurrection_results, transaction_ancestry_and_restart_recovery, checker_calls_tokens_and_timing, effects_and_uncertainty_over_distinct_held_units, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, csl_safety_replication_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
-      Set verifier_is_oracle=true only for deterministic exact checkers and row arithmetic. A transport-corrupted checker response is not authoritative. per_unit_rows must contain every held unit, model, arm, and restart session. field_principles must map every field and readiness condition. A blocked_* verdict requires gate_check_summary. Otherwise use a terminal success prefix and do not repeat the Exp6432 verdict unless the same duration-flagged evidence state recurs.
+      status, MODEL_SPECS, models_used, cached_sota_pair_receipts, model_file_and_embedded_tokenizer_hashes, device_and_runner_receipts, upstream_csl_hash, sealed_new_held_manifest, exposure_disjointness_receipts, process_restart_receipts, raw_output_manifest, event_identity_manifest, corruption_precommitment, exact_veto_before_write_receipts, per_unit_rows, lifecycle_rows, quarantine_tombstone_and_rollback_receipts, non_resurrection_check, clean_and_corrupt_effects, protected_case_retention, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, corruption_restart_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=true only for deterministic checker, hash chain, lifecycle, and row arithmetic. A blocked_* verdict requires gate_check_summary.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6456_corrupt_feedback_held_restart_csl_replication --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6469_unique_event_csl_corruption_restart --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6457-independent-verifier-bounded-csl-audit
-    milestone: "2026.08.555"
-    deliverable: results/experiment_6457_independent_verifier_bounded_csl_audit.json
-    title: "Independent verifier-bounded CSL row and lifecycle audit"
+  - id: exp6470-independent-unique-event-csl-audit
+    milestone: "2026.08.556"
+    deliverable: results/experiment_6470_independent_unique_event_csl_audit.json
+    title: "Independent unique-event CSL provenance and lifecycle audit v2"
     priority: critical
     track: audit
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 150
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp6457-independent-verifier-bounded-csl-audit
+        verdict: "complete: independent verifier-bounded CSL audit did not grant eligibility"
+        addressed_by: "This audit evaluates a changed unique-event mechanism with exact-veto-first admission, new raw files, an exposure ledger, independent lifecycle reducers, and explicit one-to-one event checks."
+        retire_if_same_verdict: true
+      - experiment_id: exp6433-csl-row-recomputation-safety-audit
+        verdict: "complete_null: V553 row recomputation audit completed; prospective CSL claim remains ineligible"
+        addressed_by: "This audit reads a different mechanism and requires unique live event provenance, current duration evidence, and new corruption and restart rows."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6457 correctly denied V555 CSL eligibility because raw outputs were reused and exact veto did not fail closed. V556 changes those contracts in Exp6468 and Exp6469. This audit remains ungated so it can preserve missing, blocked, null, or positive evidence. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/results/experiment_6457_independent_verifier_bounded_csl_audit.json and source
+      - {project_root}/results/experiment_6468_unique_event_verifier_bounded_csl.json and raw files where present
+      - {project_root}/results/experiment_6469_unique_event_csl_corruption_restart.json and raw files where present
+      - independent reducer, event-log, receipt, store, rollback, restart, and exact-checker helpers under {project_root}/python/carnot
+      - {project_root}/scripts/verdict_row_consistency_lint.py, {project_root}/scripts/adversarial_verify.py, and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Independently recompute every V556 CSL claim from raw files and immutable event logs. Verify one-to-one event identity, exposure chronology, exact-veto ordering, write effects, rollback, restart, held disjointness, duration, and row aggregates. Do not trust upstream summaries.
+
+      CONCRETE STEPS
+      0. Resolve both upstream artifacts and every referenced raw or lifecycle file. Record missing or zero-byte evidence without repair.
+      1. Add independent CSL-audit REQ-* and SCENARIO-* entries. Write focused tests first.
+      2. Recompute raw hashes, event IDs, unit bindings, partition membership, and exposure chronology from disk.
+      3. Require exactly one raw path and hash per credited event. Treat equal or replayed bytes as reuse and remove them from acquisition counts.
+      4. Recompute checker result, write order, factor delta, future outcome, protected retention, effect interval, and duration from independent code.
+      5. Replay corrupt feedback, exact-veto bypass, wrong binding, rollback, restart, and non-resurrection attacks.
+      6. Emit per_unit_rows and audit_rows for every event and discrepancy. Compare independent and upstream aggregates field by field.
+      7. Run focused tests, row consistency, adversarial verification, determination preservation, and relevant E2E checks.
+      8. Set csl_audit_eligible_score=1.0 only if all raw evidence exists, every credited event is unique, exact veto precedes every write, held exposure is zero, effects recompute, lifecycle attacks fail closed, and critical discrepancies are zero.
+
+      Required deliverable: {project_root}/results/experiment_6470_independent_unique_event_csl_audit.json.
+      REQUIRED ARTIFACT FIELDS:
+      status, upstream_artifact_inventory, raw_file_inventory_and_hashes, independent_event_identity_recomputation, independent_exposure_ledger, exact_veto_order_recomputation, per_unit_rows, audit_rows, independent_effect_recomputation, protected_case_recomputation, rollback_restart_and_non_resurrection_replay, duration_recomputation, upstream_vs_independent_field_comparison, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, critical_discrepancies, csl_audit_eligible_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=true only for independent exact-checker, hash, chronology, and arithmetic recomputation. A blocked_* verdict requires gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6470_independent_unique_event_csl_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6471-arc-generic-safety-shield-objective-ab
+    milestone: "2026.08.556"
+    deliverable: results/experiment_6471_arc_generic_safety_shield_objective_ab.json
+    title: "ARC generic safety-shield objective A/B without solve claim"
+    priority: high
+    track: arc-live-path
     requires_gpu: false
     per_unit_rows: true
     max_turns: 50
@@ -529,156 +650,97 @@ tasks:
     agent_type: codex
     model: gpt-5.5
     prior_failures:
-      - experiment_id: exp6433-csl-row-recomputation-safety-audit
-        verdict: "complete_null: V553 row recomputation audit completed; prospective CSL claim remains ineligible"
-        addressed_by: "This audit evaluates a different verifier-bounded external weight mechanism with exact-sign updates, a new held corruption-and-restart replication, independent reducers, and current duration checks."
-        retire_if_same_verdict: true
-      - experiment_id: exp6444-csl-lifecycle-recomputation-audit
-        verdict: "complete_blocked: V554 CSL lifecycle recomputation audit blocked by missing or failed upstream evidence"
-        addressed_by: "This audit remains ungated but reads the independently executable Exp6455 branch and the directly gated Exp6456 branch; it preserves missing evidence and retires the scope if the same blocked determination repeats."
+      - experiment_id: exp6458-arc-representation-objective-generalization-ab
+        verdict: "complete: Exp6458 audit finished with readiness gates unmet: frozen_safety_roster_not_regressed"
+        addressed_by: "This task freezes the prior representation and objective, adds a generic leave-one-game-out safety veto and conservative fallback, and uses one canonical reducer to prevent the two aggregate mismatches found by the V555 capstone."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      Exp6433 correctly left CSL ineligible. Exp6444 correctly exposed missing V554 artifacts. V555 changes the mechanism to verifier-bounded external weight updates and keeps its prospective experiment independent of the Phase 1 chain. This audit must remain ungated and must independently recompute every headline from immutable rows and event files. Work at {project_root}. The planning date is {date}.
-
-      EXISTING CODE TO READ FIRST
-      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/results/experiment_6433_csl_row_recomputation_safety_audit.json and source
-      - {project_root}/results/experiment_6444_csl_lifecycle_recomputation_audit.json and source
-      - {project_root}/results/experiment_6455_prospective_verifier_bounded_factor_weight_csl.json if present
-      - {project_root}/results/experiment_6456_corrupt_feedback_held_restart_csl_replication.json if present
-      - every immutable row, raw output, event, transaction, head, receipt, and checker file named by those artifacts
-      - {project_root}/scripts/verdict_row_consistency_lint.py, {project_root}/scripts/adversarial_verify.py, artifact convention checks, and determination preservation checks
-      - relevant continuous-learning and verification OpenSpec files and {project_root}/ops/e2e-test-plan.md
-
-      TASK
-      Independently recompute prospective and held CSL effects without importing upstream aggregate, readiness, gating, or verdict functions. Verify chronology, exact-sign authority, raw-output uniqueness, development-held disjointness, transaction ancestry, corruption detection, quarantine, rollback, restart, protected retention, and real timing. Produce one explicit CSL eligibility determination.
-
-      CONCRETE STEPS
-      0. PRECONDITIONS: inventory Exp6455 and Exp6456 artifacts and every referenced file before importing any experiment module. Missing, zero-byte, malformed, blocked, skipped, flagged, or underpowered artifacts are valid audit inputs.
-      1. Add independent CSL audit REQ-* and SCENARIO-* before implementation. Write focused tests first.
-      2. Freeze upstream paths, sizes, hashes, statuses, honest verdicts, readiness fields, adversarial findings, row counts, duration, substrate, and model receipts. Do not mutate upstream evidence.
-      3. Implement independent reducers from documented row schemas only. Do not import upstream aggregation, uncertainty, update, gate, or verdict functions.
-      4. Recompute future exact yield, learning curves, negative transfer, forgetting, protected retention, false accepts, abstentions, weight growth, update sparsity, and cost.
-      5. Recompute held replication, corruption detection, quarantine precision and recall, rollback success, resurrection count, restart recovery, and protected releases.
-      6. Verify that exact checker results alone determine update direction, teacher signals are nonnegative magnitudes, updates affect future units only, arms have separate state, and all transaction heads have valid ancestry.
-      7. Verify raw-output uniqueness, development-held disjointness, real process boundaries, path continuity, task-scoped CUDA receipts, and current duration floors.
-      8. Emit per_unit_rows with upstream task, row ID, upstream values, independently recomputed values, mismatch, inclusion decision, and evidence path. Keep every missing or excluded row visible.
-      9. Replay critical attacks independently. Check exact-veto preservation, corrupt-feedback containment, tombstone persistence, and aggregate-row consistency.
-      10. Run focused tests, E2E checks, spec coverage, row consistency, adversarial verification, determination preservation, artifact convention, and root-clutter checks.
-      11. Set csl_audit_ready_score=1.0 only if required upstream evidence exists, all positive effects recompute, no material mismatch or critical finding remains, safety and restart gates pass, and duration and substrate are eligible. Otherwise use complete_null or complete_blocked and state every reason. A blocked_* verdict must populate gate_check_summary even though the task is ungated.
-
-      Required deliverable: {project_root}/results/experiment_6457_independent_verifier_bounded_csl_audit.json.
-      REQUIRED ARTIFACT FIELDS:
-      status, upstream_inventory_and_hashes, upstream_status_verdict_readiness_duration_substrate_and_findings, independent_reducer_source_and_test_hashes, per_unit_rows, prospective_metric_recomputation, held_metric_recomputation, update_direction_and_chronology_checks, weight_growth_forgetting_and_protected_retention_checks, corruption_quarantine_rollback_and_resurrection_checks, raw_output_uniqueness_and_partition_intersections, transaction_head_and_restart_checks, path_receipt_and_exact_veto_checks, upstream_vs_recomputed_mismatches, mismatch_count_and_materiality, independent_attack_replay, duration_and_substrate_eligibility, prospective_csl_eligibility, csl_ineligibility_reasons, csl_audit_ready_score, current_adversarial_findings, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
-      Set verifier_is_oracle=true only for deterministic exact checkers and independently recomputed row arithmetic. per_unit_rows must contain every audited row or a stable reference plus all compared values. field_principles must map every field and readiness condition. A blocked_* verdict requires gate_check_summary. Otherwise use a terminal success prefix and retire this exact audit scope if it repeats either declared prior determination under the corresponding evidence state.
-
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6457_independent_verifier_bounded_csl_audit --date {date}
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp6458-arc-representation-objective-generalization-ab
-    milestone: "2026.08.555"
-    deliverable: results/experiment_6458_arc_representation_objective_generalization_ab.json
-    title: "Bounded ARC representation-objective generalization A/B without solve claim"
-    priority: critical
-    track: arc-generalization
-    requires_gpu: false
-    per_unit_rows: true
-    max_turns: 50
-    estimated_wall_time_min: 300
-    agent_type: codex
-    model: gpt-5.5
-    prior_failures:
-      - experiment_id: exp6434-arc-state-key-reachability-ab
-        verdict: "no_honest_verdict: zero-byte artifact after hard wall-clock failure"
-        addressed_by: "This recovery splits the roster into bounded CPU shards, writes atomic checkpoints after every cell, resumes without repeating finished cells, accepts a terminal partial artifact, and separates state representation from objective quality."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT
-      The public ARC solve registry is complete. V555 must not solve another public game. Exp6434 attempted a generic state-key reachability A/B but left a zero-byte artifact after a hard wall-clock failure. The Objective Is the Bottleneck suggests separating state representation from policy objective. This changed recovery uses bounded shards and measures held live-policy decisions only. It makes no game or level solve claim. Work at {project_root}. The planning date is {date}.
+      The public ARC solve registry is complete. Exp6458 improved some collision and reachability metrics but regressed the frozen safety roster on g50t. Exp6459 also found two row-aggregate mismatches. V556 tests a generic safety shield on live runtime traces. It makes no game or level solve claim. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md and {project_root}/CLAUDE.md, including ARC Live-Path Reachability Discipline
-      - {project_root}/ops/arc_solve_registry.yaml and current live-path registry checks
-      - {project_root}/results/experiment_6434_arc_state_key_reachability_ab.json, its source, tests, checkpoints, and Exp6435 capstone findings
-      - the ARC live E3AgentPolicy, state-key, frontier, feature-router, legal-action, and reachability code under {project_root}/python/carnot
-      - relevant immutable runtime observation and action traces; do not read game source
-      - the V555 Objective Is the Bottleneck entry in {project_root}/research-references.md
+      - {project_root}/ops/arc_solve_registry.yaml and current registry precheck
+      - {project_root}/results/experiment_6458_arc_representation_objective_generalization_ab.json, checkpoints, source, and tests
+      - {project_root}/results/experiment_6459_v555_adversarial_capstone.json
+      - live E3AgentPolicy, feature router, state representation, legal-action, reachability, and safety code under {project_root}/python/carnot
+      - immutable runtime observation and action traces only; do not read game source
       - relevant ARC OpenSpec files, {project_root}/scripts/arc_orphan_solver_lint.py, and {project_root}/ops/e2e-test-plan.md
 
       TASK
-      Measure whether a generic collision-certified state suffix and a reachability-aware objective improve held live-policy decisions. Compare representation and objective interventions separately. Use disjoint tuning and held rosters, bounded CPU shards, atomic checkpoints, and resume. Do not claim or attempt a game or level solve.
+      Freeze the best Exp6458 representation and objective. Add a generic safety veto and conservative fallback. Compare baseline, objective-only, shielded objective, ablated shield, and shuffled shield on leave-one-game-out runtime traces. Use one canonical row reducer. Make no solve claim.
 
       CONCRETE STEPS
-      0. PRECONDITIONS: run the registry precheck, confirm the task makes no solve claim, hash the unchanged registry, require canonical adapter-bypassed live-path imports, readable observation/action traces, no game-source access, no per-game adapters, a monotonic clock, writable atomic checkpoints, and explicit shard budgets.
-      1. Add ARC representation-objective generalization REQ-* and SCENARIO-* before implementation. Write focused tests first.
-      2. Freeze disjoint tuning and held game rosters by hash. Tune only generic suffix thresholds and objective weights on the tuning roster.
-      3. Define four matched arms: current state key plus current objective; collision-certified suffix plus current objective; collision-certified suffix plus reachability-aware objective; and suffix plus shuffled-objective placebo.
-      4. Use only observations and actions available to the live policy. Do not read game source, run offline ground-truth BFS, inject hidden state, create a GameAdapter, or use outer-loop reverse engineering.
-      5. Run bounded per-roster and per-seed CPU shards. Cap each shard, checkpoint atomically after every cell, print progress, resume completed cells without repetition, and always write a terminal partial or complete artifact.
-      6. Emit per_unit_rows for every held game, trace prefix, seed, arm, state collision, legal-action set, chosen action, recorded next-state reachability, policy influence, state count, action cost, timeout, and checkpoint receipt.
-      7. Recompute collision rate, legal-action coverage, held next-state reachability, policy choice changes, action cost, regressions, timeout rate, and paired effects from rows.
-      8. Record no_game_or_level_solve_claim=true, solve_registry_unchanged=true, game_source_access_count=0, offline_ground_truth_bfs_count=0, and per_game_adapter_count=0. Do not add solve_provenance because no solve is claimed.
-      9. Attack tuning-held leakage, source access, adapter use, oracle next-state access before action, registry mutation, completed-cell repetition, checkpoint truncation, placebo bias, timeout exclusion, and aggregate-row mismatch.
-      10. Run focused tests, ARC live-path and orphan-solver lints, E2E checks, spec coverage, row consistency, current adversarial verification, determination preservation, and root-clutter checks.
-      11. Set arc_objective_generalization_ready_score=1.0 only if the combined generic suffix and objective reduces collisions and improves held reachability or legal policy choice over both single-change arms, does not regress the frozen safety roster, all claims recompute from held rows, provenance boundaries pass, a nonzero held sample completes, and critical findings are zero.
+      0. Run registry precheck. Confirm the task will not solve a public game, read source, use an adapter, or update the registry.
+      1. Add ARC safety-shield REQ-* and SCENARIO-* entries. Write focused tests first.
+      2. Freeze the representation, objective, safety roster, leave-one-game-out splits, shield features, fallback, and canonical reducer.
+      3. Derive shield decisions from live-reachable runtime features only. No per-game rule or calibration is allowed.
+      4. Run bounded resumable CPU shards and atomic checkpoints. A partial terminal artifact is better than a zero-byte file.
+      5. Emit per_unit_rows for every game, trace, arm, decision, shield reason, legal action, reachability metric, safety result, and timing.
+      6. Recompute every aggregate through the same canonical reducer. Require exact equality between stored and recomputed values.
+      7. Attack source access, game identity leakage, per-game thresholds, adapter use, unreachable solver routing, duplicate solve claim, safety suppression, and aggregate mismatch.
+      8. Run focused tests, row consistency, adversarial verification, ARC orphan lint, and relevant E2E checks.
+      9. Set arc_safety_shield_ready_score=1.0 only if the shield preserves or improves held reachability, the full frozen safety roster does not regress, g50t does not regress, aggregates match rows, and critical findings are zero.
 
-      Required deliverable: {project_root}/results/experiment_6458_arc_representation_objective_generalization_ab.json.
+      Required deliverable: {project_root}/results/experiment_6471_arc_generic_safety_shield_objective_ab.json.
       REQUIRED ARTIFACT FIELDS:
-      status, registry_precheck_and_hash, no_game_or_level_solve_claim, solve_registry_unchanged, game_source_access_count, offline_ground_truth_bfs_count, per_game_adapter_count, canonical_live_path_receipts, tuning_and_held_roster_manifest_and_disjointness, arm_objective_and_suffix_precommitment, shard_budgets_and_checkpoint_manifest, resume_and_terminal_partial_receipts, per_unit_rows, collision_rates_by_arm, legal_action_coverage_by_arm, held_next_state_reachability_by_arm, policy_influence_by_arm, action_cost_timeout_and_regression_results, paired_effects_and_uncertainty, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, arc_objective_generalization_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
-      Set verifier_is_oracle=false. Recorded next-state transitions are post-action evaluation evidence, not a pre-action oracle. per_unit_rows must contain every held game, prefix, seed, and arm. field_principles must map every field and readiness condition. A blocked_* verdict requires gate_check_summary. Otherwise use a terminal success prefix. Never update ARC solve credit from this task.
+      status, registry_precheck, no_solve_claim, frozen_representation_objective_and_roster_hashes, leave_one_game_out_manifest, generic_shield_and_fallback_hash, canonical_reducer_hash, checkpoint_and_resume_receipts, per_unit_rows, reachability_by_arm, legal_action_results_by_arm, safety_roster_results_by_arm, g50t_safety_result, aggregate_row_recomputation, source_and_adapter_access_receipts, attack_matrix, current_adversarial_findings, arc_safety_shield_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      This task makes no game or level solve claim, so it has no credited solve_provenance value. Set verifier_is_oracle=false. A blocked_* verdict requires gate_check_summary.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6458_arc_representation_objective_generalization_ab --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6471_arc_generic_safety_shield_objective_ab --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6459-v555-adversarial-capstone
-    operator_override: '2026-05-29 operator directive (standing): routine milestone-transition task -- false-positive scope-match; a VN adversarial capstone scope-matches every prior capstone by construction and is structurally never a doomed rerun. This instance reconciles V555, which no prior capstone can have done.'
-    milestone: "2026.08.555"
-    deliverable: results/experiment_6459_v555_adversarial_capstone.json
-    title: "V555 adversarial capstone and reconciliation"
+  - id: exp6472-v556-adversarial-capstone
+    operator_override: "2026-05-29 operator directive (standing): milestone capstones repeat an audit shape by construction. This capstone audits only V556 evidence and preserves all earlier determinations."
+    milestone: "2026.08.556"
+    deliverable: results/experiment_6472_v556_adversarial_capstone.json
+    title: "V556 independent adversarial capstone and reconciliation"
     priority: critical
     track: capstone
     requires_gpu: false
     per_unit_rows: true
     max_turns: 50
-    estimated_wall_time_min: 240
+    estimated_wall_time_min: 180
     agent_type: codex
     model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp6459-v555-adversarial-capstone
+        verdict: "complete_blocked: V555 capstone complete; no requested science, public ARC, or hardware claim is eligible"
+        addressed_by: "This capstone audits a new V556 evidence set whose planned repairs are unique raw events, exact-veto-first learning, a rebuilt corpus, causal routing stages, and a generic ARC safety shield."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      V555 has 12 planned task slots across independent infrastructure, causal energy, verifier allocation, continuous self-learning, and ARC generalization branches. The capstone must not infer success from task completion. It must independently inspect every artifact, recompute claim fields from rows, preserve earlier terminal determinations, and keep public ARC and hardware claims blocked because V555 contains no such evidence task. This task is intentionally ungated. Work at {project_root}. The planning date is {date}.
+      V556 repairs the raw-event substrate, retries causal constraint routing, runs unique-event continuous learning, and tests a generic ARC safety shield. The capstone must remain independent and ungated. It promotes no claim from readiness fields alone. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md and {project_root}/CLAUDE.md
       - {project_root}/research-program.md, {project_root}/_bmad/prd.md, and {project_root}/_bmad/architecture.md
-      - {project_root}/research-roadmap.yaml and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
-      - all expected V555 deliverables from Exp6448 through Exp6458, including missing, zero-byte, blocked, and flagged files
-      - {project_root}/results/experiment_6435_v553_adversarial_capstone.json, {project_root}/results/experiment_6436_v554_terminal_handoff_and_queue_preflight.json, and {project_root}/results/experiment_6444_csl_lifecycle_recomputation_audit.json
-      - {project_root}/scripts/adversarial_verify.py, {project_root}/scripts/verdict_row_consistency_lint.py, artifact convention, determination preservation, recurring blocker, and spec coverage tools
-      - {project_root}/ops/exclusion_manifest.yaml, {project_root}/ops/known-issues.md, {project_root}/ops/status.md, {project_root}/ops/changelog.md, and {project_root}/ops/e2e-test-plan.md
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md and {project_root}/research-roadmap-next.yaml
+      - all {project_root}/results/experiment_6460_*.json through {project_root}/results/experiment_6471_*.json and referenced raw files where present
+      - {project_root}/results/experiment_6459_v555_adversarial_capstone.json and prior determinations
+      - {project_root}/ops/exclusion_manifest.yaml, {project_root}/ops/arc_solve_registry.yaml, and current protected files
+      - {project_root}/scripts/adversarial_verify.py, {project_root}/scripts/verdict_row_consistency_lint.py, and {project_root}/ops/e2e-test-plan.md
 
       TASK
-      Audit all 12 V555 slots. Independently recompute each comparative headline from per-unit rows. Replay current adversarial checks, validate dependency and gate contracts, preserve terminal findings, and issue separate eligibility decisions for typed grounding, objective causality, held verifier allocation, held energy selection, prospective CSL, held CSL safety, internal ARC generalization, public ARC, and hardware.
+      Independently audit V556. Recompute every requested headline from rows and raw files. Test gate contracts, path receipts, raw-event uniqueness, held exposure, exact-veto ordering, allocation cost, energy authority, CSL lifecycle, ARC provenance, reducer consistency, and protected files. Reconcile specs and operations documents only from eligible determinations.
 
       CONCRETE STEPS
-      0. PRECONDITIONS: inventory all 12 task definitions and expected deliverables before importing any experiment module. Record missing, zero-byte, malformed, blocked, skipped, flagged, underpowered, and duration-ineligible evidence as terminal inputs.
-      1. Add or confirm capstone audit REQ-* and SCENARIO-* before implementation. Write focused tests first.
-      2. Freeze each artifact path, size, hash, status, honest_verdict, readiness field, model receipt, duration, substrate, row count, gate summary, and current adversarial findings.
-      3. Validate task count, gate producer contracts, prior-failure blocks, model policy, required field principles, field provenance, prompt endings, protected files, and exclusion rules.
-      4. Independently recompute typed grounding, exact policy outcomes, objective interventions, held allocation effects and costs, held energy selection, CSL future yield, CSL safety lifecycle metrics, ARC collision and reachability effects, and every readiness score from rows.
-      5. Do not import upstream aggregate, readiness, or verdict functions. Report every upstream-versus-independent mismatch and its materiality.
-      6. Compute joint generator-grounder-energy-checker outcomes and co-failure moments where shared row keys permit. Do not multiply marginal reliabilities or assume independence.
-      7. Replay current attacks for output reuse, model substitution, CPU fallback, exact-label leakage, held leakage, uncharged cost, teacher authority, chronology, corrupt feedback, rollback, restart, ARC source access, adapters, registry mutation, and row inconsistency.
-      8. Emit per_unit_rows with task ID, artifact state, claim, row group, upstream value, recomputed value, mismatch, attack result, inclusion decision, and evidence path.
-      9. Preserve separate claim decisions. Missing evidence in one branch cannot invalidate or promote an independent branch. Public ARC and hardware remain no-claim unless separate eligible evidence exists; V555 plans none.
-      10. Run focused tests, all applicable E2E checks, spec coverage, row consistency, adversarial verification, determination preservation, artifact convention, docs audit, recurring blocker ledger, and root-clutter checks.
-      11. Set v555_capstone_ready_score=1.0 only if the capstone itself is complete, row-derived, attack-clean, and internally consistent. This score does not mean every science branch passed.
-      12. Use a terminal complete or complete_blocked verdict that names the eligible and ineligible claims. If honest_verdict starts blocked_, populate gate_check_summary with the failed audit check and observed evidence.
+      0. Resolve every V556 task and deliverable. Record missing, zero-byte, blocked, partial, and complete evidence without repair.
+      1. Add or confirm capstone REQ-* and SCENARIO-* entries. Write focused tests first.
+      2. Recompute gate outcomes from the exact upstream fields. Treat missing artifact and missing field as broken contracts, not scientific nulls.
+      3. Recompute raw byte counts, hashes, event identity, path chains, partition membership, exposure chronology, and device receipts from disk.
+      4. Recompute grounding, objective, allocation, energy selection, CSL, safety, and ARC aggregates from per-unit rows with independent reducers.
+      5. Attack zero-byte persistence, event cloning, hidden CPU fallback, held leakage, free probes, energy-as-oracle, exact-veto bypass, corrupt restart, source access, solve duplication, and aggregate mismatch.
+      6. Emit per_unit_rows for every upstream claim with upstream value, independent value, discrepancy, eligibility, and reason.
+      7. Run current adversarial verification, row consistency, determination preservation, spec coverage, applicable E2E checks, docs audit, and root-clutter checks.
+      8. Preserve all V555 and exclusion determinations. Do not promote a task that repeated its prior verdict when retire_if_same_verdict applies.
+      9. Update openspec, _bmad/traceability.md, ops/status.md, and ops/changelog.md only for independently eligible V556 results.
+      10. Set v556_capstone_ready_score=1.0 when the audit itself is complete and replayable. Report science_claim_eligible, continuous_learning_claim_eligible, arc_claim_eligible, and hardware_claim_eligible separately.
 
-      Required deliverable: {project_root}/results/experiment_6459_v555_adversarial_capstone.json.
+      Required deliverable: {project_root}/results/experiment_6472_v556_adversarial_capstone.json.
       REQUIRED ARTIFACT FIELDS:
-      status, expected_task_and_deliverable_manifest, task_artifact_inventory_hashes_sizes_statuses_and_verdicts, missing_zero_byte_blocked_flagged_underpowered_or_duration_ineligible_evidence, gate_producer_contract_validation, prior_failure_and_exclusion_validation, model_and_substrate_validation, field_principle_and_provenance_validation, per_unit_rows, independent_metric_recomputation_by_task, upstream_vs_recomputed_mismatches, mismatch_count_and_materiality, joint_pathway_rows_and_cofailure_moments, current_adversarial_attack_replay, current_adversarial_findings, typed_grounding_claim_eligibility, objective_causal_claim_eligibility, held_allocation_claim_eligibility, energy_selection_claim_eligibility, prospective_csl_claim_eligibility, held_csl_safety_claim_eligibility, internal_arc_generalization_claim_eligibility, public_arc_claim_eligibility, hardware_claim_eligibility, claim_ineligibility_reasons, terminal_determination_preservation, protected_files_unchanged, reconciliation_actions, v555_capstone_ready_score, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
-      Set verifier_is_oracle=true only for deterministic exact checkers and independent row arithmetic. per_unit_rows must cover every task and claim group or record why no rows exist. field_principles must map every required field and every claim gate. A blocked_* verdict requires gate_check_summary. Otherwise use a terminal success prefix.
+      status, upstream_artifact_inventory, gate_contract_recomputation, raw_file_and_event_identity_recomputation, device_and_model_receipt_recomputation, per_unit_rows, independent_grounding_objective_allocation_and_energy_recomputation, independent_csl_recomputation, independent_arc_recomputation, aggregate_row_recomputation, attack_matrix, current_adversarial_findings, critical_discrepancies, repeated_prior_verdict_retirements, determination_preservation, science_claim_eligible, continuous_learning_claim_eligible, arc_claim_eligible, hardware_claim_eligible, reconciliation_changes, v556_capstone_ready_score, protected_files_unchanged, blocked_reason, gate_check_summary, preconditions_checked, inference_substrate, verifier_is_oracle, field_principles, field_provenance, random_seed, duration_s, tests_run, reproducibility_checksum, honest_verdict.
+      Set verifier_is_oracle=true only for independent local hash, exact-checker, registry, and row arithmetic. A blocked_* verdict requires gate_check_summary.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6459_v555_adversarial_capstone --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6472_v556_adversarial_capstone --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
