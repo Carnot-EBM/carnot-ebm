@@ -5071,6 +5071,220 @@ stamped determination remains
 | SCENARIO-LEARN-6433-ATTACKS | Implemented: `python/carnot/experiment_6433_csl_row_recomputation_safety_audit.py`. | Implemented: `tests/python/test_experiment_6433_csl_row_recomputation_safety_audit.py`. |
 | SCENARIO-LEARN-6433-ELIGIBILITY | Implemented: `python/carnot/experiment_6433_csl_row_recomputation_safety_audit.py`. | Implemented: `tests/python/test_experiment_6433_csl_row_recomputation_safety_audit.py`. |
 
+## REQ-LEARN-6455: Prospective Verifier-Bounded Factor-Weight CSL
+
+**Given** FR-11 requires closed learning with immutable validation, rollback,
+and bounded forgetting
+**When** Exp6455 runs on planning date 20260815
+**Then** it SHALL write
+`results/experiment_6455_prospective_verifier_bounded_factor_weight_csl.json`
+**And** it SHALL compare frozen factor weights, self-teacher-signed updates,
+and verifier-bounded updates on one fresh chronological stream per mandated
+GGUF model.
+
+Exp6455 SHALL require both RTX 3090 GPUs, all three mandated GGUF files,
+embedded GGUF tokenizer metadata, exact local policy checkers, a monotonic
+clock, atomic event storage, fresh raw-output and ledger paths, enough disk,
+and a sealed stream, arm, and analysis manifest before readiness can become
+one.
+
+Exp6455 SHALL define `MODEL_SPECS` through `cached_sota_pair()` or the same
+local resolver. It SHALL include exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`. It
+SHALL use embedded GGUF tokenizers only. It SHALL not call `AutoTokenizer`.
+
+Exp6455 SHALL seal at least 24 chronological units per model before update
+state changes. Each unit SHALL include new facts, bindings, candidate actions,
+protected cases, and a deterministic exact checker. Frozen, self-teacher, and
+verifier-bounded arms SHALL select from the same candidate bytes for a given
+model and unit.
+
+Exp6455 SHALL maintain three independent state ledgers. The verifier-bounded arm SHALL derive update sign only from the exact checker result. Model evidence
+may supply only a bounded nonnegative update magnitude. Every update SHALL be
+clamped, logged, and applied only after selection and exact checking, so it can
+affect later units only.
+
+Exp6455 SHALL emit per-unit rows for every chronological unit, model, and arm.
+Rows SHALL include chronological index, model, arm, candidate hashes, selected
+candidate, pre-update weights, exact result, teacher signal, exact sign,
+magnitude, post-update weights, head hashes, future exact outcome, protected
+outcome, checker work, and real timing.
+
+Exp6455 SHALL recompute future exact yield, online learning curves, negative
+transfer, forgetting, protected retention, false accepts, abstentions, weight
+growth, update sparsity, and cost from rows. Uncertainty SHALL use distinct
+future units, not duplicate arm rows.
+
+Exp6455 SHALL attack future-label leakage, same-unit update use, teacher sign
+override, exact-result transport corruption, unbounded weights, state sharing
+across arms, output reuse, fake model receipts, CPU fallback, timing synthesis,
+and aggregate-row mismatch. Every critical attack SHALL fail closed.
+
+Exp6455 SHALL set `verifier_bounded_csl_ready_score=1.0` only when the
+verifier-bounded arm improves future exact yield over frozen weights on
+distinct later units, outperforms or is safer than teacher-signed updates, has
+no protected-retention or false-accept regression, respects chronology, keeps
+weight growth bounded, has eligible rows for all three models, passes duration
+checks, and has zero critical findings.
+
+Exp6455 SHALL emit these fields:
+
+- `status`
+- `MODEL_SPECS`
+- `models_used`
+- `cached_sota_pair_receipts`
+- `model_and_embedded_tokenizer_hashes`
+- `autotokenizer_usage_count`
+- `device_and_runner_receipts`
+- `sealed_stream_arm_and_analysis_manifest`
+- `path_nonexistence_and_freshness_receipts`
+- `exact_checker_and_update_rule_hashes`
+- `event_store_and_initial_head_hashes`
+- `per_unit_rows`
+- `chronology_and_future_only_checks`
+- `frozen_teacher_and_verifier_bounded_outcomes_by_model`
+- `future_exact_yield_delta`
+- `online_learning_curves`
+- `negative_transfer_and_forgetting`
+- `protected_retention`
+- `contamination_false_accepts_and_abstentions`
+- `weight_growth_and_update_sparsity`
+- `transaction_head_ancestry`
+- `checker_calls_tokens_and_timing`
+- `effects_and_uncertainty_over_distinct_future_units`
+- `raw_output_uniqueness_and_reuse_count`
+- `aggregate_row_recomputation`
+- `attack_matrix`
+- `current_adversarial_findings`
+- `verifier_bounded_csl_ready_score`
+- `protected_files_unchanged`
+- `blocked_reason`
+- `gate_check_summary`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map every required field and every
+`verifier_bounded_csl_ready_score` condition. `verifier_is_oracle` SHALL be
+true only for deterministic exact outcome checkers and row arithmetic. The
+self-teacher and factor-energy ranker SHALL NOT be oracles. `honest_verdict`
+SHALL start with `success:`, `complete:`, or `blocked:`.
+
+Required field principles:
+
+- `status`: Names the terminal state for the verifier-bounded CSL run.
+- `MODEL_SPECS`: Carries the three mandated GGUF model identities from cached SOTA receipts.
+- `models_used`: Lists only mandated models with eligible unit rows.
+- `cached_sota_pair_receipts`: Shows the helper calls used to resolve all mandated models.
+- `model_and_embedded_tokenizer_hashes`: Binds model bytes and embedded tokenizer metadata.
+- `autotokenizer_usage_count`: Must remain zero because GGUF tokenizers are embedded.
+- `device_and_runner_receipts`: Binds GPUs, CUDA receipts, runner mode, raw outputs, and CPU-fallback checks.
+- `sealed_stream_arm_and_analysis_manifest`: Freezes units, arms, candidates, seeds, budgets, and analysis before updates.
+- `path_nonexistence_and_freshness_receipts`: Proves raw-output, ledger, and result paths were fresh before the run.
+- `exact_checker_and_update_rule_hashes`: Pins deterministic checker and update-rule code.
+- `event_store_and_initial_head_hashes`: Records atomic event storage and independent initial heads.
+- `per_unit_rows`: Contains every model, chronological unit, and arm row before aggregate calculation.
+- `chronology_and_future_only_checks`: Proves decisions read only prior state and writes affect later units only.
+- `frozen_teacher_and_verifier_bounded_outcomes_by_model`: Reports exact outcomes by model and arm.
+- `future_exact_yield_delta`: Reports verifier-bounded future yield lift over frozen and teacher.
+- `online_learning_curves`: Shows chronological improvement from row data.
+- `negative_transfer_and_forgetting`: Reports harmful transfer and retained prior behavior.
+- `protected_retention`: Protects protected cases from learned-weight regressions.
+- `contamination_false_accepts_and_abstentions`: Counts leakage, false accepts, and abstentions.
+- `weight_growth_and_update_sparsity`: Shows weight caps, clamp counts, and sparse updates.
+- `transaction_head_ancestry`: Proves each arm has a separate head chain.
+- `checker_calls_tokens_and_timing`: Charges exact checks, model-evidence bytes, and measured timing.
+- `effects_and_uncertainty_over_distinct_future_units`: Computes uncertainty over later units.
+- `raw_output_uniqueness_and_reuse_count`: Proves fresh candidate bytes were not reused.
+- `aggregate_row_recomputation`: Recomputes reported metrics from rows.
+- `attack_matrix`: Shows critical leakage, authority, state, receipt, and timing attacks fail closed.
+- `current_adversarial_findings`: Keeps current critical findings visible.
+- `verifier_bounded_csl_ready_score`: Conjunctive readiness for exact-signed bounded CSL.
+- `protected_files_unchanged`: Shows protected files stayed byte-identical.
+- `blocked_reason`: Explains failed preconditions for blocked artifacts.
+- `gate_check_summary`: Summarizes readiness gates and blocker count.
+- `preconditions_checked`: Records required hardware, cache, tokenizer, checker, path, clock, and disk checks.
+- `inference_substrate`: Declares local SOTA GGUF CUDA receipts with exact checker governed external weights.
+- `verifier_is_oracle`: Marks only exact checker and row arithmetic as oracle boundaries.
+- `field_principles`: Documents why each field and readiness condition exists.
+- `field_provenance`: Maps each field to specs, manifests, rows, receipts, attacks, or tests.
+- `random_seed`: Pins streams, candidates, updates, and attacks.
+- `duration_s`: Records measured wall time without padding.
+- `tests_run`: Records focused, coverage, full pytest, spec, E2E, adversarial, row, determination, and clutter checks.
+- `reproducibility_checksum`: Content-addresses the artifact with volatile fields normalized.
+- `honest_verdict`: Uses a terminal prefix and states the exact-signed boundary.
+
+## SCENARIO-LEARN-6455-SPEC: Spec Owns The Artifact Contract
+
+**Given** Exp6455 is an FR-11 continuous-learning experiment
+**When** the OpenSpec is read
+**Then** all required artifact fields, scenarios, and readiness conditions
+SHALL be declared before implementation.
+
+## SCENARIO-LEARN-6455-MODELS: Cached GGUFs And Embedded Tokenizers Are Used
+
+**Given** the three mandated GGUFs are cached
+**When** Exp6455 builds model specs
+**Then** model rows SHALL come from cached SOTA helper calls, embedded
+tokenizer receipts SHALL be present, and `autotokenizer_usage_count` SHALL be
+zero.
+
+## SCENARIO-LEARN-6455-CHRONOLOGY: Updates Affect Only Later Units
+
+**Given** a chronological unit and an arm state
+**When** a candidate is selected and checked
+**Then** the update SHALL commit only after the exact result and SHALL NOT
+change the same unit's selection.
+
+## SCENARIO-LEARN-6455-VERIFIER-SIGN: Exact Results Own The Update Direction
+
+**Given** model evidence and exact checker feedback disagree
+**When** the verifier-bounded arm updates weights
+**Then** the update sign SHALL equal the exact result sign, and the model
+evidence SHALL affect only the bounded nonnegative magnitude.
+
+## SCENARIO-LEARN-6455-ROWS: Aggregates Recompute From Per-Unit Rows
+
+**Given** all model, arm, and unit rows are present
+**When** Exp6455 reports future yield, retention, growth, and cost
+**Then** those metrics SHALL recompute from row data without aggregate-only
+state.
+
+## SCENARIO-LEARN-6455-ATTACKS: Critical Attacks Fail Closed
+
+**Given** leakage, authority, state-sharing, output-reuse, fake-receipt,
+CPU-fallback, timing, or aggregate-mismatch attacks
+**When** Exp6455 validates its attack matrix
+**Then** no attack SHALL promote readiness or override an exact checker.
+
+## SCENARIO-LEARN-6455-READY: Readiness Requires Future Exact Gain
+
+**Given** all preconditions, tests, attacks, duration checks, and protected
+retention gates pass
+**When** verifier-bounded updates improve future exact yield over frozen and
+teacher-signed updates on distinct later units
+**Then** `verifier_bounded_csl_ready_score` SHALL be `1.0`.
+
+## Implementation Status (REQ-LEARN-6455)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6455 | Planned: `python/carnot/experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`; terminal artifact `results/experiment_6455_prospective_verifier_bounded_factor_weight_csl.json`. | Planned: `tests/python/test_experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. |
+| SCENARIO-LEARN-6455-SPEC | Planned: `python/carnot/experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. | Planned: `tests/python/test_experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. |
+| SCENARIO-LEARN-6455-MODELS | Planned: `python/carnot/experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. | Planned: `tests/python/test_experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. |
+| SCENARIO-LEARN-6455-CHRONOLOGY | Planned: `python/carnot/experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. | Planned: `tests/python/test_experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. |
+| SCENARIO-LEARN-6455-VERIFIER-SIGN | Planned: `python/carnot/experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. | Planned: `tests/python/test_experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. |
+| SCENARIO-LEARN-6455-ROWS | Planned: `python/carnot/experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. | Planned: `tests/python/test_experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. |
+| SCENARIO-LEARN-6455-ATTACKS | Planned: `python/carnot/experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. | Planned: `tests/python/test_experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. |
+| SCENARIO-LEARN-6455-READY | Planned: `python/carnot/experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. | Planned: `tests/python/test_experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. |
+
 ## REQ-LEARN-6444: CSL Lifecycle Recomputation Audit
 
 **Given** Exp6433 left the prospective CSL claim ineligible, Exp6441 through
