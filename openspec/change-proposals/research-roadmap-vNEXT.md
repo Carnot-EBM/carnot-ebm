@@ -1,434 +1,344 @@
-# Carnot Research Roadmap vNEXT: Verifier-Bounded Energy and Continuous Learning
+# Carnot Research Roadmap vNEXT: Provenance-Complete Constraint Routing and Unique-Event Self-Learning
 
-**Created:** 2026-08-15  
-**Milestone:** 2026.08.555  
-**Status:** Planned  
-**Supersedes:** milestone 2026.08.554, experiments 6436-6447 as proposed and
-experiments 6436-6444 as activated  
-**Primary evidence:** terminal artifacts for experiments 6426-6444,
-`ops/conductor-log.md`, `ops/exclusion_manifest.yaml`, and the V555 source
-refresh in `research-references.md`
+**Created:** 2026-08-15
+
+**Milestone:** 2026.08.556
+
+**Status:** Planned
+
+**Supersedes:** milestone 2026.08.555, experiments 6448-6459
+
+**Primary evidence:** V555 artifacts, `ops/conductor-log.md`,
+`ops/exclusion_manifest.yaml`, and the V556 source refresh in
+`research-references.md`
 
 The architecture document was last reconciled on 2026-07-03. It is stale under
-the repository's 30-day rule. This roadmap uses it for stable component names.
-It uses newer terminal artifacts, status records, and change proposals for
-current behavior.
+the repository's 30-day rule. This roadmap uses it only for stable component
+names. V555 artifacts and current operational records define live behavior.
 
-## 1. What milestone 2026.08.554 proved
+## 1. What milestone 2026.08.555 proved
 
-Milestone 2026.08.554 reached a terminal state, but it did not execute its main
-science chain. The activated YAML contained 9 tasks. The design document
-expected 12. Exp6436 measured this mismatch and set
-`v554_queue_ready_score=0.0`. The conductor then blocked or skipped the gated
-chain. This is evidence about the workflow, not evidence for causal factors or
-continuous self-learning.
+V555 completed its activated queue. It repaired the path-receipt boundary and
+ran two nominal continuous-learning experiments. Its independent audits did
+not grant a science claim.
 
-| Area | Terminal evidence | What it proves | What it does not prove |
+| Area | V555 evidence | What it proves | Remaining limit |
 |---|---|---|---|
-| Queue integrity | Exp6436 found 9 activated tasks where 12 were expected. | The handoff detected an incomplete queue and failed closed. | It does not validate any V554 science claim. |
-| Path receipts | Exp6437 ended `blocked_gate_check_failed`. | The conductor gate preserved the failed queue decision. | No generation-to-verdict receipt implementation ran. |
-| Factor influence | Exp6438-Exp6440 did not produce eligible science evidence. Exp6440 is a gate-block artifact. | Missing and blocked evidence remained visible. | No active-versus-ablated causal factor result exists. |
-| Continuous self-learning | Exp6441 and Exp6443 have no science artifacts. Exp6442 is gate-blocked. | The conductor did not promote absent upstream evidence. | No prospective or held V554 CSL claim exists. |
-| Independent audit | Exp6444 found 11 failed checks and set `csl_audit_ready_score=0.0`. | The independent audit preserved missing artifacts and the prior duration flag. | It cannot validate a CSL effect that never ran. |
-| ARC | The proposed sharded Exp6445 never entered the active queue. Exp6434 remains a zero-byte artifact. | The ARC evidence gap is still explicit. | There is no new reachability, generalization, game, or level claim. |
+| Queue | Exp6448 set `v555_queue_integrity_score=0`. It found missing prior-failure declarations. | Preflight can fail closed and name an activation defect. | V556 must declare every matching prior scope before activation. |
+| Path receipts | Exp6449 set `path_receipt_ready_score=1`. | Raw bytes, parser state, checker transport, and verdict can be bound and localized. | The receipt must now guard live SOTA writes, not fixtures only. |
+| SOTA corpus | Exp6450 ran all three mandated GGUFs for 2,013.6 seconds. It set `sota_corpus_ready_score=0`. Of 324 candidate rows, 182 had missing or zero-byte raw output, and 269 candidate rows were duplicates. | The local runners work, but the corpus is not a valid evidence substrate. | No grounding, allocation, or energy claim may use this corpus. |
+| Constraint-routing chain | Exp6451 and Exp6453 were gate-blocked. Exp6452 and Exp6454 were pre-gate skips with no artifacts. | The conductor preserved the failed corpus gate. | Carnot still has no causal exact-decision gain from grounding or energy. |
+| Continuous learning | Exp6455 and Exp6456 reported positive exact effects. | The external factor-weight mechanism can run, persist, roll back, and restart. | Exp6457 found only 72 unique raw outputs in 216 rows and an exact-veto attack that did not fail closed. The claims are ineligible. |
+| ARC | Exp6458 reduced some collisions and improved reachability. | Representation and objective changes can alter live-path metrics without a solve claim. | The frozen safety roster regressed on `g50t`, and the capstone found two row-aggregate mismatches. |
+| Capstone | Exp6459 completed an independent audit and granted no requested science, public ARC, or hardware claim. | The release boundary held. | The PRD gaps remain open. |
 
-The result changes the milestone design. V555 does not put all work behind one
-queue or receipt gate. Infrastructure tasks still report defects. Science tasks
-start from independent, known-good inputs and produce their own receipts.
+The key lesson is causal. A positive aggregate is not evidence when raw events
+are missing, cloned, or admitted before the exact veto. V556 repairs those
+contracts before it retries the scientific questions.
 
 ## 2. The three largest gaps to the PRD vision
 
-### Gap 1: Energy and constraints do not yet cause a verified decision gain
+### Gap 1: Carnot lacks a provenance-complete SOTA evidence substrate
 
-Carnot has exact checkers, factor admission, and several narrow positive factor
-results. It does not yet have a clean held result where a fixed constraint
-representation changes candidate selection and improves the final exact
-outcome. A null downstream policy may also hide a useful representation. V555
-must separate representation quality from objective quality.
+The PRD requires reproducible local inference and deterministic validation.
+V555 produced live SOTA rows, but more than half lacked nonzero raw bytes and
+most candidate rows were duplicates. V556 must prove atomic raw persistence,
+one event identity per generation, sealed partitions, and exact held headroom
+before downstream work runs.
 
-### Gap 2: FR-11 lacks an independently eligible continuous learning result
+### Gap 2: Exact constraints have not caused a held final-decision gain
 
-Carnot has promising memory and factor experiments. The recent prospective
-claims remain blocked by missing artifacts, underpowered cells, or duration
-flags. The PRD requires a closed loop with immutable validation, rollback, and
-bounded forgetting. V555 must update persistent state from exact future
-outcomes, survive restart, reject corrupt feedback, and pass an independent row
-recomputation.
+Carnot has exact checkers and admitted factors. It still lacks a held result in
+which fixed grounding, an explicit objective, or constraint energy changes the
+selected action and improves exact success. V556 separates four questions:
+fact grounding, objective choice, verifier allocation, and final energy
+selection. Each stage uses matched bytes and a sealed held split.
 
-### Gap 3: ARC live-path generalization lacks a bounded causal measurement
+### Gap 3: FR-11 has no independently eligible continuous-learning result
 
-The public ARC registry is complete. More public game solves are not useful.
-The open question is whether a generic state representation and a better
-objective change live policy reachability on held mechanics. Exp6434 failed
-before it wrote evidence. V555 must run bounded, resumable shards and make no
-game or level solve claim.
+V555's nominal learning gains came from reused generations and an open exact-
+veto attack. V556 uses one unique raw generation per learning event. The exact
+checker runs before write admission. A frozen arm, corrupt-feedback arm,
+rollback, restart, held chronology, and an independent reducer test the full
+FR-11 loop.
 
-## 3. Research hooks from the V555 source refresh
+ARC remains a secondary live-path risk. V556 adds a generic safety shield and
+canonical reducer. It makes no public game or level solve claim.
 
-| Source | Carnot experiment hook | Boundary |
+## 3. Research hooks from the V556 refresh
+
+| Source | V556 hook | Boundary |
 |---|---|---|
-| CrEST, arXiv:2608.13179 | Let exact verifier feedback choose update direction. Let model evidence change update magnitude only. | No in-loop LoRA or GRPO. The base GGUF stays frozen. |
-| Objective Is the Bottleneck, arXiv:2608.12959 | Freeze the representation and replace only the planning or ranking objective. | A better probe score is not a release claim. Final exact outcomes decide. |
-| Sampling Luck Masquerades as Allocation Gain, arXiv:2608.13087 | Tune a verifier allocation policy on development units and test it on a sealed held split. | Charge probe cost. Include a constructed zero-gain control. |
-| Policy-as-logic, arXiv:2608.11905 | Use an LLM only to ground facts into fixed typed slots. Run rules in an exact solver. | Do not ask the LLM to invent the rule language or solver. |
-| Training Under Challenge, arXiv:2608.12655 | Preserve executable counterexamples and state suite-relative conclusions. | Passing a finite attack suite is not a global proof. |
-| MemoPilot, OpenReview ICML 2026 | Assign credit from future task outcomes, not memory prose quality. | Borrow the temporal credit boundary, not its GRPO stack. |
+| Beyond Final Scores, arXiv:2608.13417 | Score generation, parse, verify, write, restart, and held use as separate events. | A terminal score cannot repair a broken process path. |
+| LittleLearner, arXiv:2608.13545 | Use an exposure ledger to distinguish acquisition from reuse. | A held unit or raw output seen during updates is not held evidence. |
+| AutoDesign, arXiv:2608.13560 | Test recursive improvement only behind a frozen validation boundary. | The learner may not edit the conductor, checker, split, or release gate. |
+| CrEST, arXiv:2608.13179 | Let exact outcomes choose update direction. | Model evidence may scale magnitude only. |
+| Objective Is the Bottleneck, arXiv:2608.12959 | Freeze representations while objectives change. | Probe quality alone is not a release claim. |
+| Sampling Luck Masquerades as Allocation Gain, arXiv:2608.13087 | Freeze allocation on development units and test at equal held cost. | Include harmful-flip and zero-gain controls. |
+| Policy-as-logic, arXiv:2608.11905 | Ground into fixed typed slots, then run fixed rules. | Do not generate a new constraint language or solver. |
 
-The refresh found no authenticated Extropic hardware route, no new local Kona
-runner, and no board state change. V555 schedules no TSU, Kona, NPU, FPGA, KAN,
-or Ising hardware experiment.
+Semantic Scholar still returned 33 EBT citing records and eight ARM-EBM
+citing records. No new citation changes the order below. Extropic exposes no
+authenticated local TSU route. Kona exposes no public local runner. KAN and
+Ising work do not close a current evidence gap.
 
-## 4. V555 architecture
+## 4. V556 architecture
 
 ```text
-                         exact authority boundary
-                                  │
-Natural-language policy task      │
-          │                       │
-          ▼                       │
-┌──────────────────────────┐      │
-│ Mandated local GGUFs     │      │
-│ Qwen3.6 35B-A3B          │      │
-│ Gemma 4 31B dense        │      │
-│ Gemma 4 26B-A4B          │      │
-└────────────┬─────────────┘      │
-             │ raw candidate bytes│
-             ▼                    │
-┌──────────────────────────┐      │
-│ Immutable path receipts  │      │
-│ model → bytes → parser   │      │
-│ → facts → energy → check │      │
-└────────────┬─────────────┘      │
-             │                    │
-             ▼                    │
-┌──────────────────────────┐      │
-│ Fixed typed fact slots   │      │
-│ + fixed rule program     │      │
-└────────────┬─────────────┘      │
-             │                    │
-             ▼                    │
-┌──────────────────────────┐      │
-│ Constraint energy        │      │
-│ objective + budget route │      │
-└────────────┬─────────────┘      │
-             │ proposal/ranking   │
-             ▼                    ▼
-┌──────────────────────────┐   ┌──────────────────────┐
-│ Selected candidate       │──▶│ Exact local checker  │──▶ release or abstain
-└────────────┬─────────────┘   └──────────┬───────────┘
-             │                            │ exact outcome
-             ▼                            ▼
-┌──────────────────────────┐   ┌──────────────────────┐
-│ Verifier-bounded online  │◀──│ Immutable event log  │
-│ factor-weight update     │   │ + rollback head      │
-└──────────────────────────┘   └──────────────────────┘
+                             exact authority boundary
+                                      │
+fixed policy unit                     │
+      │                               │
+      ▼                               │
+┌──────────────────────────────┐      │
+│ Mandatory local GGUF runner  │      │
+│ one generation → one event   │      │
+└──────────────┬───────────────┘      │
+               │ atomic nonzero bytes │
+               ▼                      │
+┌──────────────────────────────┐      │
+│ Event + path receipt         │      │
+│ model/file/tokenizer/device  │      │
+│ prompt/raw/parser/checker    │      │
+└──────────────┬───────────────┘      │
+               │                      │
+               ▼                      │
+┌──────────────────────────────┐      │
+│ Fixed typed grounding        │      │
+│ fixed rule program           │      │
+└──────────────┬───────────────┘      │
+               │                      │
+               ▼                      │
+┌──────────────────────────────┐      │
+│ Objective + budget + energy  │      │
+│ proposal and routing only    │      │
+└──────────────┬───────────────┘      │
+               │ selected candidate   ▼
+               └──────────────────▶ ┌────────────────────┐
+                                    │ Exact local checker │
+                                    └─────────┬──────────┘
+                                              │ pass / veto
+                  ┌───────────────────────────┴──────────┐
+                  ▼                                      ▼
+          release or abstain                   immutable event log
+                                                         │
+                                                         ▼
+                                              ┌────────────────────┐
+                                              │ bounded factor     │
+                                              │ update + rollback  │
+                                              └────────────────────┘
 
 Independent ARC lane:
-live observation traces → frozen state representation → objective A/B
-→ legal-action and held-reachability metrics; no solve or registry update
+live runtime traces → frozen objective → generic safety shield → canonical
+row reducer → reachability and safety metrics; no source read and no solve
 ```
 
-The learned or heuristic parts can ground, rank, route, abstain, or update
-persistent weights. Only deterministic local checkers can authorize release.
+Only the deterministic local checker can authorize release or a learning
+write. Learned or heuristic components may propose, rank, route, or abstain.
 
-## 5. Phase 0 - Independent evidence contracts and SOTA corpus
+## 5. Phase 0 - Handoff, source delta, and raw-event substrate
 
-### Exp6448 - V554 terminal handoff and V555 queue integrity
+### Exp6460 - V555 handoff and V556 queue integrity
 
-Question: Is the V555 queue complete, internally consistent, and executable?
-
-The task freezes the true V554 terminal state. It validates exactly 12 V555
-tasks, unique IDs and deliverables, gate producer fields, prompt endings,
-mandatory model declarations, prior-failure blocks, and exclusion rules. It is
-ungated. No science task depends on its readiness score. This prevents a queue
-defect from silently suppressing the full milestone again.
+Freeze all V555 terminal determinations. Validate 13 V556 tasks, gate producer
+fields, prompt endings, model policy, exclusions, and every prior-failure
+block. This task is infrastructure. No science task depends on it.
 
 Deliverable:
-`results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json`
+`results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json`
 
-### Exp6449 - Ungated generation-to-verdict path receipt contract
+### Exp6461 - V556 SOTA source and benchmark delta receipt
 
-Question: Can Carnot localize a changed verdict to the exact boundary that
-changed the bytes?
-
-This is a changed recovery of gate-blocked Exp6437. It runs directly on
-immutable V553 fixtures. It binds raw bytes, parse output, typed facts, energy
-input, checker transport, checker output, and final verdict. Identity,
-injected-wrapper, and restored-wrapper controls must localize the changed
-boundary. The task is infrastructure and remains independent of Exp6448.
+Recheck the latest arXiv release, EBT and ARM-EBM citation trails, OpenReview,
+Hugging Face Papers, GitHub, Extropic, Logical Intelligence, and the rendered
+ARC leaderboard. Preserve source timestamps and primary links. This is a
+source-ingestion task, not a product or benchmark claim.
 
 Deliverable:
-`results/experiment_6449_generation_to_verdict_path_receipt_contract.json`
+`results/experiment_6461_v556_sota_source_and_benchmark_delta.json`
 
-### Exp6450 - Fresh SOTA fixed-policy candidate corpus
+### Exp6462 - Atomic raw-output persistence and uniqueness canary
 
-Question: Can all three mandated local GGUFs produce a fresh, replayable
-candidate pool with real exact-selection headroom?
-
-The task seals 36 fixed-policy tool-use problems before inference. It creates
-development, allocation-held, and selection-held partitions. Every model
-produces matched candidate action plans. A fixed simulator labels final
-legality and task success. The artifact stores every raw output and path
-receipt. It does not claim that one model is better.
-
-Models:
-
-- `unsloth/Qwen3.6-35B-A3B-GGUF`
-- `unsloth/gemma-4-31B-it-GGUF`
-- `unsloth/gemma-4-26B-A4B-it-GGUF`
+Run a small live matrix across all three mandated GGUFs. Every generation gets
+a new path, atomic write, nonzero byte check, content hash, event ID, model and
+device receipt, and replay through Exp6449's path chain. Inject zero-byte,
+duplicate-event, and candidate-clone attacks. This is a changed recovery of
+Exp6450's evidence failure.
 
 Deliverable:
-`results/experiment_6450_sota_fixed_policy_candidate_corpus.json`
+`results/experiment_6462_sota_raw_persistence_uniqueness_canary.json`
 
-## 6. Phase 1 - Fixed logic, causal objectives, and held allocation
+### Exp6463 - Provenance-complete SOTA fixed-policy corpus v2
 
-### Exp6451 - Typed fact grounding into fixed policy logic
-
-Question: Does fixed-slot fact grounding plus exact rule execution beat
-policy-as-prompt without creating false accepts?
-
-The task uses each mandated GGUF only to fill fixed predicate slots. The rule
-program and solver already exist before model output. It compares
-policy-as-prompt, policy-as-code, gold-fact upper bound, and policy-as-logic on
-the development split. This is not another ConstraintIR generation attempt.
-
-This task is gated only on `sota_corpus_ready_score == 1.0` from Exp6450.
+Rebuild the corpus only if Exp6462 passes. Use all three mandatory GGUFs. Seal
+development, allocation-held, selection-held, and audit-held partitions. Each
+generation must have unique nonzero raw bytes. Every held partition must have
+mixed exact outcomes and selection headroom.
 
 Deliverable:
-`results/experiment_6451_typed_fact_grounding_fixed_policy_logic_ab.json`
+`results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json`
 
-### Exp6452 - Representation-versus-objective causal A/B
+## 6. Phase 1 - Causal constraint routing
 
-Question: Is a null candidate-selection result caused by the grounded facts or
-by the ranking objective?
+### Exp6464 - Fixed-slot grounding with exact rule execution
 
-The task freezes Exp6451 fact rows and candidate bytes. It compares the current
-scalar violation objective, a reachability-aware lexicographic energy, an
-active-versus-ablated objective, and a shuffled placebo. It changes no model
-weights and generates no new candidates. Exact final-state outcomes determine
-the result.
-
-This task is gated on `typed_grounding_ready_score == 1.0` from Exp6451.
+Consume Exp6463 bytes without new inference. Compare policy-as-prompt,
+fixed-slot policy-as-logic, an ablated grounding, and a gold-fact upper bound.
+Use a fixed predicate inventory and fixed solver. Measure false accepts and
+exact task success per unit.
 
 Deliverable:
-`results/experiment_6452_representation_objective_causal_ab.json`
+`results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json`
 
-### Exp6453 - Held-out verifier budget allocation
+### Exp6465 - Representation-versus-objective causal A/B v2
 
-Question: Does a development-frozen allocation policy improve exact yield on a
-sealed held split at equal total checker cost?
-
-The task compares uniform allocation, development-frozen adaptive allocation,
-an in-sample oracle diagnostic, and a zero-gain shuffled control. It charges
-probe work and holds the total exact-checker budget fixed. The allocation-held
-partition remains hidden until the policy and analysis are frozen.
-
-This task is gated only on `sota_corpus_ready_score == 1.0` from Exp6450. It is
-independent of Exp6451 and Exp6452.
+Freeze Exp6464 facts and candidates. Compare the current violation sum, a
+lexicographic protected-clause-first objective, an ablation, and a shuffled
+placebo. Require a row-level active-versus-ablated effect before readiness.
 
 Deliverable:
-`results/experiment_6453_held_verifier_budget_allocation_ab.json`
+`results/experiment_6465_representation_objective_causal_ab_v2.json`
 
-### Exp6454 - Held exact-constraint energy selection
+### Exp6466 - Held verifier allocation at equal total cost v2
 
-Question: Does the changed energy objective select more exact-valid action
-plans than first-candidate, vote, and shuffled-energy controls?
-
-The task uses the untouched selection-held partition. It freezes the Exp6452
-objective before unsealing the rows. The constraint energy is a proposal and
-ranking signal. The exact simulator remains the only authority. No external
-generated-text scorer or LLM judge is used.
-
-This task is gated on `objective_causal_ready_score == 1.0` from Exp6452.
+Freeze an allocation policy on development rows. Compare it with uniform,
+always-check, shuffled zero-gain, and in-sample oracle diagnostics on the
+allocation-held split. Charge every probe and report harmful flips.
 
 Deliverable:
-`results/experiment_6454_held_exact_constraint_energy_selection_ab.json`
+`results/experiment_6466_held_verifier_budget_allocation_v2.json`
 
-## 7. Phase 2 - Verifier-bounded continuous self-learning
+### Exp6467 - Held exact-constraint energy selection v2
 
-### Exp6455 - Prospective verifier-bounded factor-weight learning
-
-Question: Can Carnot improve future exact yield by updating persistent factor
-weights online while the base LLM stays frozen?
-
-This is the milestone's mandatory continuous self-learning experiment. It is a
-Tier-1 online weight update over an external constraint-energy layer. It seals
-a fresh chronological stream and generates matched candidate pools with all
-three mandated GGUFs. It compares frozen weights, self-teacher-signed updates,
-and verifier-bounded updates. Exact checker feedback chooses the update
-direction. Model confidence can only scale its magnitude. Updates at time `t`
-may affect only future units.
-
-The task is ungated. It does not depend on the Phase 1 gate chain.
+Freeze the Exp6465 objective before opening selection-held rows. Compare first
+candidate, vote, shuffled energy, violation sum, and the changed objective.
+Final exact success is the headline. The energy score is never authority.
 
 Deliverable:
-`results/experiment_6455_prospective_verifier_bounded_factor_weight_csl.json`
+`results/experiment_6467_held_exact_constraint_energy_selection_v2.json`
 
-### Exp6456 - Corrupt-feedback quarantine and held restart replication
+## 7. Phase 2 - Unique-event continuous self-learning
 
-Question: Does the learned weight ledger keep its benefit after binding shift
-and process restart, while a corrupt feedback event is quarantined and rolled
-back?
+### Exp6468 - Prospective unique-event verifier-bounded learning
 
-The task seals a new held stream. It compares frozen weights, the clean
-verifier-bounded learner, and a learner exposed to a transport-corrupted
-feedback event. Path receipts must detect the corrupt event. The governed arm
-must quarantine it, write a tombstone, roll back, restart a real process, and
-recover the last good head. All held model outputs are new.
-
-This task is gated on `verifier_bounded_csl_ready_score == 1.0` from Exp6455.
+This is the required continuous self-learning task. It is independent of the
+Phase 1 corpus chain. Generate a fresh chronological stream with all three
+mandatory GGUFs. One live generation is one learning event. The exact checker
+runs before write admission. Compare frozen weights, self-signed updates, and
+exact-sign verifier-bounded updates. Updates affect future units only.
 
 Deliverable:
-`results/experiment_6456_corrupt_feedback_held_restart_csl_replication.json`
+`results/experiment_6468_unique_event_verifier_bounded_csl.json`
 
-### Exp6457 - Independent CSL row and lifecycle audit
+### Exp6469 - Corrupt feedback, rollback, and held restart replication v2
 
-Question: Do the prospective and held CSL headlines recompute from immutable
-events without importing upstream aggregate functions?
-
-The audit is ungated. It independently recomputes future exact yield, update
-chronology, contamination, forgetting, protected retention, quarantine,
-rollback, restart recovery, and cost. Missing, blocked, malformed, flagged, or
-underpowered evidence stays visible. A repeated null or blocked result retires
-this exact audit scope under the declared prior-failure contracts.
+Run new held generations after a real process restart. Inject forged pass,
+replayed output, wrong-unit binding, and checker-transport corruption. The
+governed learner must quarantine, tombstone, roll back, and prevent
+resurrection before any protected release.
 
 Deliverable:
-`results/experiment_6457_independent_verifier_bounded_csl_audit.json`
+`results/experiment_6469_unique_event_csl_corruption_restart.json`
 
-## 8. Phase 3 - ARC generalization and adversarial close
+### Exp6470 - Independent CSL provenance and lifecycle audit v2
 
-### Exp6458 - Bounded ARC representation-objective generalization audit
-
-Question: Does a collision-certified state suffix plus a reachability-aware
-objective improve held live-policy decisions without a game-specific adapter?
-
-This is a changed recovery of zero-byte Exp6434. It uses bounded CPU shards,
-atomic checkpoints, resume, and a terminal partial artifact. It compares the
-current state key and objective, the new state suffix with the old objective,
-the new suffix with the new objective, and a shuffled placebo. Tuning and held
-game rosters are disjoint.
-
-The task measures state collisions, legal-action coverage, held next-state
-reachability, action cost, and policy influence. It does not claim or attempt a
-game or level solve. It may not read game source, use offline ground-truth BFS,
-add a per-game adapter, or change `ops/arc_solve_registry.yaml`.
+Remain ungated. Recompute Exp6468 and Exp6469 from raw files and event logs.
+Check one-to-one event identity, exposure chronology, exact-veto ordering,
+rollback, restart, held disjointness, row aggregates, and duration. Grant
+eligibility only if all critical attacks fail closed.
 
 Deliverable:
-`results/experiment_6458_arc_representation_objective_generalization_ab.json`
+`results/experiment_6470_independent_unique_event_csl_audit.json`
 
-### Exp6459 - V555 adversarial capstone and reconciliation
+## 8. Phase 3 - ARC safety and capstone
 
-Question: Which V555 claims remain eligible after independent row
-recomputation, current adversarial checks, dependency review, and determination
-preservation?
+### Exp6471 - Generic ARC safety-shield objective A/B
 
-The capstone is ungated. It audits all 12 task slots and preserves separate
-determinations for typed grounding, objective causality, held budget
-allocation, energy selection, prospective CSL, held CSL safety, internal ARC
-generalization, public ARC, and hardware. It also computes joint failure
-moments where row data support them. It may not multiply marginal reliability
-or average away missing evidence.
+Use runtime traces only. Freeze the best Exp6458 representation and objective.
+Add a generic safety veto and conservative fallback. Evaluate leave-one-game-
+out reachability, legal actions, and the frozen safety roster with a canonical
+row reducer. Do not read game source. Make no game or level solve claim.
 
 Deliverable:
-`results/experiment_6459_v555_adversarial_capstone.json`
+`results/experiment_6471_arc_generic_safety_shield_objective_ab.json`
+
+### Exp6472 - V556 independent adversarial capstone
+
+Recompute every requested headline from rows and raw evidence. Test gate
+contracts, path receipts, event uniqueness, held contamination, exact-veto
+ordering, aggregate consistency, ARC provenance, and protected files. Reconcile
+spec and operations documents only from eligible determinations.
+
+Deliverable:
+`results/experiment_6472_v556_adversarial_capstone.json`
 
 ## 9. Dependency graph
 
 ```text
-Phase 0
-  Exp6448  terminal handoff and queue integrity       (ungated)
-  Exp6449  path receipt contract                      (ungated)
-  Exp6450  fresh SOTA candidate corpus                (ungated)
-       │
-       ├──────────────▶ Exp6451 typed grounding
-       │                      │
-       │                      ▼
-       │               Exp6452 objective causal A/B
-       │                      │
-       │                      ▼
-       │               Exp6454 held energy selection
-       │
-       └──────────────▶ Exp6453 held budget allocation
+Exp6460 handoff ───────────────────────────────────────────────┐
+Exp6461 source delta ─────────────────────────────────────────┤
+                                                             │
+Exp6462 raw canary ──▶ Exp6463 corpus v2 ──┬─▶ Exp6464 grounding
+                                          │         │
+                                          │         ▼
+                                          │   Exp6465 objective ──▶ Exp6467 selection
+                                          │
+                                          └─▶ Exp6466 allocation
 
-Phase 2 independent branch
-  Exp6455 prospective verifier-bounded CSL             (ungated)
-       │
-       ▼
-  Exp6456 corrupt-feedback held restart
+Exp6468 unique-event CSL ──▶ Exp6469 corruption/restart
+          │                          │
+          └──────────────┬───────────┘
+                         ▼
+                 Exp6470 independent audit
 
-  Exp6455 + Exp6456 ──▶ Exp6457 independent audit      (audit is ungated)
-
-Phase 3
-  Exp6458 ARC representation-objective audit           (ungated)
-
-All task artifacts ──▶ Exp6459 capstone                (capstone is ungated)
+Exp6471 ARC safety ───────────────────────────────────────────┤
+all terminal evidence ───────────────────────────────▶ Exp6472 capstone
 ```
 
-Only four tasks have runtime gates. Every gate names an upstream task in this
-roadmap. Every producer prompt declares the exact gate field in its required
-artifact fields.
+Exp6470 is logically downstream but is not conductor-gated. It must record
+missing or failed evidence. Exp6472 is also ungated.
 
-## 10. Failed-experiment rerun discipline
+## 10. Hardware requirements
 
-| New task | Prior scope | What changes |
+| Experiments | Hardware | Requirement |
 |---|---|---|
-| Exp6449 | Exp6437 `blocked_gate_check_failed` | The receipt task is ungated and runs on immutable known-good fixtures. |
-| Exp6451 | Exp5923 retired schema-supported ConstraintIR | The model fills fixed predicate slots. It does not generate a schema, solver, or answer channel. |
-| Exp6453 | Exp6429 positive but duration-flagged selective verification | The policy is frozen before a sealed held test, probe cost is charged, and a zero-gain control detects allocation bias. |
-| Exp6456 | Exp6432 duration-flagged held restart | The task uses a different external weight learner, new bytes, corrupt-feedback quarantine, and real restart receipts. |
-| Exp6457 | Exp6433 null audit and Exp6444 blocked audit | The upstream mechanism is verifier-bounded weight learning, and the audit remains ungated. |
-| Exp6458 | Exp6434 zero-byte hard failure | The work is split into bounded shards with atomic checkpoints and a terminal partial artifact. |
+| Exp6462, Exp6463, Exp6468, Exp6469 | Two local RTX 3090 GPUs | Run the three mandated GGUF families through cached local files and embedded tokenizers. Record device samples and CPU fallback count. |
+| Exp6460, Exp6461, Exp6464-Exp6467, Exp6470-Exp6472 | CPU and local disk | Replay exact checkers, reducers, source receipts, ARC traces, and audits. |
+| All live generation | Local SSD | Use new raw-output paths, atomic rename, fsync where supported, byte count, SHA-256, and checkpoint manifests. |
+| FPGA, TSU, NPU, Ising hardware | Not required | No board state changed. No unchanged probe or hardware performance claim is scheduled. |
 
-Every matching YAML task carries all four required `prior_failures` fields.
-Exp6448 carries the standing routine-transition operator override.
+The dual RTX 3090 pair is sufficient. No wishlist purchase blocks V556.
 
-## 11. Model and measurement policy
+## 11. Promotion gates and stop rules
 
-Every task that executes an LLM must use `cached_sota_pair()` or the same
-cache resolver and declare at least one of the mandated GGUFs. Exp6450,
-Exp6451, Exp6455, and Exp6456 use all three. They use the GGUF-embedded
-tokenizer. They do not call `AutoTokenizer` on a GGUF. Legacy small models may
-run a CPU smoke test only. Their rows cannot support a headline.
+- A missing or zero-byte raw output is a failed event. It may not be replaced
+  by another row under the same event ID.
+- Each generation event has exactly one raw hash and one unit binding.
+- A duplicated output may be reported, but it cannot count as a distinct
+  learning or held event.
+- Held partitions are sealed before inference. Any exposure retires the held
+  claim for that unit.
+- The exact checker runs before learning write admission and before release.
+- A learned score, LLM score, energy, memory, or ARC heuristic is never a
+  release oracle.
+- Comparative tasks emit every unit row and pass the row-consistency lint.
+- A blocked verdict names the failed check in `gate_check_summary`.
+- If a changed rerun repeats its prior verdict, its task declares
+  `retire_if_same_verdict: true`.
+- Exp6471 cannot update the public ARC registry or claim a game or level solve.
+- The capstone promotes only independently recomputed, attack-clean evidence.
 
-Every comparison emits one `per_unit_rows` entry for each unit, model, arm,
-condition, and seed that supports the claim. Every aggregate must recompute
-from those rows. Every blocked artifact uses `gate_check_summary`. Every
-artifact records `inference_substrate`, `random_seed`, `duration_s`, and
-`reproducibility_checksum`. Each artifact maps every required field and gate to
-its principle in `field_principles` and classifies its provenance.
+## 12. Expected milestone decision
 
-## 12. Hardware requirements
+V556 can end in three honest states:
 
-| Experiments | Hardware | Expected use | Fail-closed boundary |
-|---|---|---|---|
-| 6448, 6449 | CPU, 8 GB RAM | Schema, hashes, replay, focused tests | No GPU or science claim. |
-| 6450, 6451 | Dual RTX 3090, cached GGUFs, 64+ GB host RAM | Fresh corpus and fact-grounding inference | No headline from CPU fallback or a missing model family. |
-| 6452-6454 | CPU, 16 GB RAM | Deterministic replay, solver work, bootstrap intervals | Exact-checker budgets and held partitions must stay sealed. |
-| 6455, 6456 | Dual RTX 3090, cached GGUFs, 64+ GB host RAM | Fresh chronological and held candidate generation | No replayed development bytes, synthetic timing, or fake restart. |
-| 6457-6459 | CPU, 16-32 GB RAM | Independent reduction, ARC shards, adversarial audit | Partial ARC work must still write an atomic terminal artifact. |
+1. The raw substrate fails again. Retire this corpus path and do not run its
+   gated causal chain.
+2. The substrate passes but grounding, allocation, or energy does not improve
+   held exact outcomes. Preserve the null and stop that mechanism.
+3. Constraint routing or continuous learning earns an independently audited
+   exact-outcome gain with complete unique-event provenance. Promote only that
+   narrow claim.
 
-The three mandated model files are already cached and Exp6413 authenticated the
-CUDA path. Each live task must obtain a fresh task-scoped receipt. No local
-board or authenticated TSU state changed after V554. V555 makes no hardware
-speedup, power, or availability claim.
-
-## 13. Success and retirement conditions
-
-V555 succeeds only if the terminal capstone can support at least one of these
-narrow claims from row-derived held evidence:
-
-1. Fixed typed grounding plus exact policy logic improves exact outcomes with
-   no false-accept increase.
-2. A changed constraint-energy objective improves held candidate selection at
-   fixed candidate bytes and checker authority.
-3. A development-frozen verifier allocation improves held exact yield at equal
-   charged budget and passes the zero-gain control.
-4. Verifier-bounded online factor weights improve fresh future exact yield,
-   survive restart, and contain corrupt feedback without safety regression.
-5. The generic ARC representation-objective pair improves held live-policy
-   reachability without source access, adapters, or solve credit.
-
-Any branch can fail honestly without invalidating independent branches. A same-
-verdict rerun activates its `retire_if_same_verdict` rule. The capstone must
-leave public ARC and hardware claims blocked unless separate eligible evidence
-exists. V555 does not contain such a task.
+The milestone is successful if it produces a trustworthy causal determination.
+It does not need a positive result.
