@@ -246,7 +246,18 @@ def launch(arm: dict[str, Any], llama_server: Path) -> tuple[subprocess.Popen, d
     env = dict(os.environ, CUDA_VISIBLE_DEVICES=str(GPU_INDEX))
     log(f"  launch: CUDA_VISIBLE_DEVICES={GPU_INDEX} {' '.join(args)}")
     t0 = time.time()
-    proc = subprocess.Popen(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env)
+    # CAPTURE the server's stderr instead of discarding it (changed 2026-08-15). The original
+    # sent both streams to DEVNULL. On the first Qwen3.8 run the server died mid-arm and the
+    # harness recorded only `Connection refused` -- a crash with no log is undiagnosable, so the
+    # run could not be classified as a model problem or an infrastructure one, and re-running
+    # blind would have reproduced exactly the same non-answer.
+    srv_log = (
+        Path(os.environ.get("CARNOT_H2H_SERVER_LOG_DIR", "/tmp"))
+        / f"llama_server_{args[args.index('--port') + 1]}.log"
+    )
+    srv_fh = srv_log.open("ab")
+    log(f"  server stderr -> {srv_log}")
+    proc = subprocess.Popen(args, stdout=srv_fh, stderr=subprocess.STDOUT, env=env)
     deadline = t0 + 1800
     healthy = False
     while time.time() < deadline:
