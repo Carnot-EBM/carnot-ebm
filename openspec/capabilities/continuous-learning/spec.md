@@ -5541,6 +5541,172 @@ contains every corrupt event with no resurrection and acceptable benign utility
 | SCENARIO-LEARN-6456-ATTACKS | Planned: `python/carnot/experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. | Planned: `tests/python/test_experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. |
 | SCENARIO-LEARN-6456-READY | Planned: `python/carnot/experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. | Planned: `tests/python/test_experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. |
 
+## REQ-LEARN-6457: Independent Verifier-Bounded CSL Audit
+
+**Given** Exp6455 and Exp6456 may report positive verifier-bounded CSL
+evidence
+**When** Exp6457 runs on planning date 20260815
+**Then** it SHALL write
+`results/experiment_6457_independent_verifier_bounded_csl_audit.json`
+**And** it SHALL recompute the prospective and held CSL effects from immutable
+row and event evidence without importing upstream aggregate, readiness, gate,
+update, or verdict functions.
+
+Exp6457 SHALL inventory Exp6433, Exp6444, Exp6455, Exp6456, their source
+files, tests, immutable rows, raw outputs, event stores, transactions, heads,
+receipts, and checker files before importing any experiment module. Missing,
+zero-byte, malformed, blocked, skipped, flagged, or underpowered upstream
+artifacts SHALL remain visible audit inputs.
+
+Exp6457 SHALL freeze upstream paths, sizes, hashes, status, honest verdict,
+readiness fields, adversarial findings, row counts, duration, substrate, and
+model receipts. The audit SHALL not mutate upstream evidence.
+
+Exp6457 SHALL implement independent reducers from documented row schemas only.
+It SHALL run without importing upstream aggregate, readiness, gate, update, or
+verdict functions.
+The reducers SHALL recompute future exact yield, learning curves, negative
+transfer, forgetting, protected retention, false accepts, abstentions, weight
+growth, update sparsity, cost, held replication, corruption detection,
+quarantine precision and recall, rollback success, resurrection count, restart
+recovery, and protected releases.
+
+Exp6457 SHALL verify exact checker authority, teacher-signal nonnegative
+magnitude, future-only updates, separate arm state, transaction ancestry,
+raw-output uniqueness, development-held disjointness, real process boundaries,
+path continuity, task-scoped CUDA receipts, duration floors, and exact-veto
+preservation.
+
+Exp6457 SHALL emit per-unit rows for every audited row or a stable row
+reference. Each audit row SHALL include upstream task, row id, upstream values,
+independently recomputed values, mismatch state, inclusion decision, and
+evidence path. Missing or excluded rows SHALL remain visible.
+
+Exp6457 SHALL replay exact-veto, corrupt-feedback containment, tombstone
+persistence, and aggregate-row consistency attacks independently. Critical
+findings SHALL fail closed.
+
+Exp6457 SHALL set `csl_audit_ready_score=1.0` only when all required upstream
+evidence exists, all positive effects recompute, no material mismatch or
+critical finding remains, safety and restart gates pass, duration and substrate
+are eligible, protected files are unchanged, and verification commands pass.
+Otherwise it SHALL use `complete_null` or `complete_blocked`, state every
+reason, and populate `gate_check_summary` for any blocked verdict even though
+the audit is ungated.
+
+Exp6457 SHALL emit these fields:
+
+- `status`
+- `upstream_inventory_and_hashes`
+- `upstream_status_verdict_readiness_duration_substrate_and_findings`
+- `independent_reducer_source_and_test_hashes`
+- `per_unit_rows`
+- `prospective_metric_recomputation`
+- `held_metric_recomputation`
+- `update_direction_and_chronology_checks`
+- `weight_growth_forgetting_and_protected_retention_checks`
+- `corruption_quarantine_rollback_and_resurrection_checks`
+- `raw_output_uniqueness_and_partition_intersections`
+- `transaction_head_and_restart_checks`
+- `path_receipt_and_exact_veto_checks`
+- `upstream_vs_recomputed_mismatches`
+- `mismatch_count_and_materiality`
+- `independent_attack_replay`
+- `duration_and_substrate_eligibility`
+- `prospective_csl_eligibility`
+- `csl_ineligibility_reasons`
+- `csl_audit_ready_score`
+- `current_adversarial_findings`
+- `protected_files_unchanged`
+- `blocked_reason`
+- `gate_check_summary`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map every required field and every readiness
+condition. `verifier_is_oracle` SHALL be true only for deterministic exact
+checkers and independently recomputed row arithmetic. `honest_verdict` SHALL
+start with `success:`, `complete:`, or `blocked:`.
+
+Required readiness principles:
+
+- `csl_audit_ready_score:required_upstream_evidence_exists`: Required upstream artifacts and named evidence files must exist and be readable.
+- `csl_audit_ready_score:prospective_positive_effect_recomputes`: Exp6455 prospective yield and safety metrics must recompute from rows.
+- `csl_audit_ready_score:held_positive_effect_recomputes`: Exp6456 held yield and containment metrics must recompute from rows.
+- `csl_audit_ready_score:zero_material_mismatch`: Material upstream and recomputed values must match within exact tolerances.
+- `csl_audit_ready_score:update_direction_authority`: Exact checker signs alone must determine verifier-bounded update direction.
+- `csl_audit_ready_score:safety_and_restart_gates_pass`: Corruption, quarantine, rollback, tombstone, resurrection, and restart checks must pass.
+- `csl_audit_ready_score:raw_outputs_unique_and_partitions_disjoint`: Raw hashes must be unique, and development and held partitions must not overlap.
+- `csl_audit_ready_score:duration_and_substrate_eligible`: Upstream and audit durations must satisfy the declared substrate floors.
+- `csl_audit_ready_score:zero_current_critical_findings`: Current adversarial, row, artifact, and determination checks must report no critical finding.
+- `csl_audit_ready_score:verification_commands_pass`: Focused tests, coverage, full pytest, spec coverage, row, adversarial, determination, artifact, and clutter checks must pass.
+
+## SCENARIO-LEARN-6457-SPEC: Spec Owns The Audit Contract
+
+**Given** Exp6457 is an independent CSL audit
+**When** the OpenSpec is read
+**Then** all required artifact fields, scenarios, and readiness principles
+SHALL be declared before implementation.
+
+## SCENARIO-LEARN-6457-INVENTORY: Upstream Evidence Is Frozen First
+
+**Given** Exp6457 starts
+**When** it inventories Exp6433, Exp6444, Exp6455, and Exp6456
+**Then** every present artifact and referenced evidence path SHALL record
+existence, size, hash, status, duration, substrate, readiness fields, and
+findings before any experiment module is imported.
+
+## SCENARIO-LEARN-6457-REDUCERS: Aggregates Recompute From Rows
+
+**Given** Exp6455 and Exp6456 per-unit rows are present
+**When** Exp6457 recomputes metrics
+**Then** prospective yield, held yield, retention, forgetting, growth,
+quarantine, rollback, restart, and cost metrics SHALL come from row fields and
+receipt files, not from upstream aggregate functions.
+
+## SCENARIO-LEARN-6457-AUTHORITY: Exact Checker Direction Is Preserved
+
+**Given** teacher evidence and exact checker outcomes disagree
+**When** Exp6457 audits verifier-bounded updates
+**Then** exact checker signs SHALL be the only update direction authority, and
+teacher evidence SHALL remain a nonnegative magnitude signal.
+
+## SCENARIO-LEARN-6457-SAFETY: Corrupt Feedback Cannot Resurrect
+
+**Given** Exp6456 scheduled corrupt transport events
+**When** Exp6457 recomputes quarantine, tombstone, rollback, and restart rows
+**Then** every corrupt event SHALL be detected and quarantined, no corrupt
+update SHALL commit, and resurrection count SHALL remain zero.
+
+## SCENARIO-LEARN-6457-READY: Blocked Verdicts Still Explain Gates
+
+**Given** required upstream evidence is missing, malformed, duration-ineligible,
+or materially mismatched
+**When** Exp6457 writes a terminal artifact
+**Then** `csl_audit_ready_score` SHALL be `0.0`, status SHALL be
+`complete_blocked` or `complete_null`, all reasons SHALL appear in
+`csl_ineligibility_reasons`, and `gate_check_summary` SHALL be populated.
+
+## Implementation Status (REQ-LEARN-6457)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6457 | Planned: `python/carnot/experiment_6457_independent_verifier_bounded_csl_audit.py`; terminal artifact `results/experiment_6457_independent_verifier_bounded_csl_audit.json`. | Planned: `tests/python/test_experiment_6457_independent_verifier_bounded_csl_audit.py`. |
+| SCENARIO-LEARN-6457-SPEC | Planned: `python/carnot/experiment_6457_independent_verifier_bounded_csl_audit.py`. | Planned: `tests/python/test_experiment_6457_independent_verifier_bounded_csl_audit.py`. |
+| SCENARIO-LEARN-6457-INVENTORY | Planned: `python/carnot/experiment_6457_independent_verifier_bounded_csl_audit.py`. | Planned: `tests/python/test_experiment_6457_independent_verifier_bounded_csl_audit.py`. |
+| SCENARIO-LEARN-6457-REDUCERS | Planned: `python/carnot/experiment_6457_independent_verifier_bounded_csl_audit.py`. | Planned: `tests/python/test_experiment_6457_independent_verifier_bounded_csl_audit.py`. |
+| SCENARIO-LEARN-6457-AUTHORITY | Planned: `python/carnot/experiment_6457_independent_verifier_bounded_csl_audit.py`. | Planned: `tests/python/test_experiment_6457_independent_verifier_bounded_csl_audit.py`. |
+| SCENARIO-LEARN-6457-SAFETY | Planned: `python/carnot/experiment_6457_independent_verifier_bounded_csl_audit.py`. | Planned: `tests/python/test_experiment_6457_independent_verifier_bounded_csl_audit.py`. |
+| SCENARIO-LEARN-6457-READY | Planned: `python/carnot/experiment_6457_independent_verifier_bounded_csl_audit.py`. | Planned: `tests/python/test_experiment_6457_independent_verifier_bounded_csl_audit.py`. |
+
 ## REQ-LEARN-6444: CSL Lifecycle Recomputation Audit
 
 **Given** Exp6433 left the prospective CSL claim ineligible, Exp6441 through
