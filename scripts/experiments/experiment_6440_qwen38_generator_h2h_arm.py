@@ -439,6 +439,34 @@ def main() -> int:
         "Do not rename them. Do not wrap them in a class. A different name is rejected.\n"
     )
 
+    # PER-MODEL THINK PREFIX (operator 2026-08-15: "fix it").
+    #
+    # `run_reason_cell_budget` sets `prop.no_think_prefix = "/think\n"` for every arm. `/think` is
+    # a QWEN3 hybrid-thinking control token. On gemma-4 it is inert text -- gemma has no such
+    # token, which is precisely why `ARC_LIVE_GENERATOR_NO_THINK_PREFIX` is "" with the comment
+    # "/no_think is a Qwen3 token; inert on gemma-4". On Qwen3.8 it is an active instruction to
+    # reason at length, and it made the model spend all three budgets thinking: 4,324 s,
+    # overran on every try. The same prompt with the prefix left at "" returned ok=True with both
+    # required symbols in 2,786 s.
+    #
+    # So the constant does nothing to one arm and disables the other. Set it to what each model
+    # actually deploys with instead:
+    #   gemma-4  -> ""          native channelled reasoning; the live constant is already ""
+    #   Qwen3.8  -> ""          the live stack used /no_think when a Qwen WAS the generator;
+    #                           "" is the neutral middle -- no forced thinking, no forced
+    #                           suppression -- and it is the setting verified to work here.
+    #
+    # BOTH LAND ON "", so the arms do NOT end up differing -- this RESTORES symmetry rather than
+    # breaking it. That is worth stating because the reasoning nearly went the other way: I first
+    # wrote this as an accepted asymmetry. It is not one. "/think" was the asymmetric setting,
+    # because it is a control token for one family and dead text for the other; "" is the same
+    # instruction to both.
+    #
+    # Removing it is also near-neutral for gemma specifically: `/think\n` was 8 characters of
+    # inert prompt text there, and gemma's reasoning is driven by the chat endpoint's native
+    # thought channel (exp6199's think-mode result), which this does not touch.
+    LIVE_THINK_PREFIX = {"gemma31b": "", "qwen38_27b": ""}
+
     def _induce_named(prop_, game_, window_, cell_):
         """exp5714._induce_no_fence with the symbol names spelled out. Same call, same required
         tuple, same tries -- only the instruction text differs."""
@@ -447,6 +475,9 @@ def main() -> int:
             induce_prompt,
         )
 
+        # Override the cell's "/think\n" with this arm's deployed setting. The cell saved the
+        # original and restores it in its own finally-block, so this does not leak between cells.
+        prop_.no_think_prefix = LIVE_THINK_PREFIX.get(args.arm, "")
         prompt = (
             induce_prompt(game_, window_, cell_, k=_induce_transitions_k())
             + _REQUIRED_SYMBOL_DIRECTIVE
