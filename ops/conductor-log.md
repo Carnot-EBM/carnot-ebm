@@ -16050,3 +16050,4 @@ code |
 | 2026-08-15 10:16 UTC | Gated on Exp6455 CSL readiness: corrupt-feedback q | OK | 89 passed, 1 warning in 29.98s |
 | 2026-08-15 10:18 UTC | Gated on Exp6452 objective causality: held exact-c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6452-representation-objective-causal-ab) |
 | 2026-08-15 10:43 UTC | Independent verifier-bounded CSL row and lifecycle | OK | 87 passed, 1 warning in 242.52s (0:04:02) |
+| 2026-08-15 11:18 UTC | Bounded ARC representation-objective generalizatio | OK | 88 passed, 1 warning in 117.88s (0:01:57) |
