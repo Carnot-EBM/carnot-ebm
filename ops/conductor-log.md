@@ -16021,3 +16021,13 @@ code |
 | 2026-08-15 04:46 UTC | Gated on Exp6441 and Exp6442 readiness: fresh held | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6441-prospective-query-conditioned-factor |
 | 2026-08-15 05:10 UTC | Independent continuous self-learning lifecycle row | OK | 87 passed, 1 warning in 9.21s |
 | 2026-08-15 05:12 UTC | Gated on Exp6441 and Exp6442 readiness: fresh held | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6441-prospective-query-conditioned-factor |
+| 2026-08-15 06:11 UTC | Plan milestone 2026.08.555 | OK | 12 tasks proposed |
+| 2026-08-15 06:13 UTC | Gated on Exp6441 and Exp6442 readiness: fresh held | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6441-prospective-query-conditioned-factor |
+| 2026-08-15 06:13 UTC | Activation REFUSED: milestone 2026.08.555 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-15 06:15 UTC | Activation REFUSED: milestone 2026.08.555 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-15 06:18 UTC | Activation REFUSED: milestone 2026.08.555 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-15 06:20 UTC | Activation REFUSED: milestone 2026.08.555 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-15 06:22 UTC | Activation REFUSED: milestone 2026.08.555 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-15 06:24 UTC | Activation REFUSED: milestone 2026.08.555 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-15 06:26 UTC | Activation REFUSED: milestone 2026.08.555 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-15 06:29 UTC | Milestone 2026.08.555 activated | OK | 12 tasks queued |
