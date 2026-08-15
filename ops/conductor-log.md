@@ -16002,3 +16002,6 @@ code |
 | 2026-08-15 04:26 UTC | V553 terminal handoff and V554 queue preflight | OK | 88 passed, 1 warning in 29.23s |
 | 2026-08-15 04:28 UTC | Gated on Exp6436 readiness: generation-to-verdict  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6436-v554-terminal-handoff-and-queue-pr |
 | 2026-08-15 04:30 UTC | Gated on Exp6436 readiness: generation-to-verdict  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6436-v554-terminal-handoff-and-queue-pr |
+| 2026-08-15 04:32 UTC | Gated on Exp6436 readiness: generation-to-verdict  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6436-v554-terminal-handoff-and-queue-pr |
+| 2026-08-15 04:34 UTC | Gated on Exp6437 readiness: powered verification-c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6437-generation-to-verdict-receipt-replay |
+| 2026-08-15 04:34 UTC | Gated on Exp6437 readiness: active, ablated, tombs | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6437-generation-to-verdict-receipt-replay |
