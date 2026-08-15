@@ -59,9 +59,32 @@ from typing import Any, Optional
 REPO = Path("/home/ianblenke/github.com/ianblenke/carnot")
 sys.path.insert(0, str(REPO / "python"))
 
-GPU_INDEX = 1  # both arms run here, sequentially. GPU 0 is another lane's (verified per-PID).
-GPU1_UUID = "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
-N_CTX = 32768  # exp5764's successfully-deployed n_ctx_deployed. NOT 81920 (inflates the footprint).
+# DUAL-GPU, n_ctx 65536 (operator directive 2026-08-15: "stop the conductor and use both eGPUs...
+# focused on accuracy and success regardless of how long it takes"). Applied to BOTH arms, so the
+# change is symmetric and the comparison stays honest.
+#
+# WHY THE OLD SINGLE-CARD 32768 HAD TO GO. tu93's induce_prompt is 15,771 tokens, so n_ctx 32768
+# left 16,997 to answer in. Gemma fits that because its reasoning goes to a separate
+# `reasoning_content` channel and does not consume the answer window. Qwen3's thinking is INLINE
+# and does. Four arm runs decoded 16,905 / 16,920 / 16,843 and were cut off mid-thought -- a match
+# to `n_ctx - prompt` within 0.5%. The constant was not neutral: it silently encoded an assumption
+# about where a model puts its reasoning.
+#
+# Measured 2026-08-15 on both cards at n_ctx 65536: Qwen3.8 completed tu93 in 1200s, generating
+# 41,613 tokens (~40k of them reasoning) and emitting 1,843 chars of COMPILING world model with
+# real game mechanics -- a fuel bar draining from row 63 and a win condition on cell (46,40).
+# It terminates on its own; it was never looping. It just needs ~42k tokens of room.
+#
+# 65536 does not fit on ONE 24 GB card (17.8 GB model + KV + 32 context checkpoints at ~150 MB
+# dropped the connection mid prompt-processing). Split across two it uses 9.7 + 10.6 GB and leaves
+# ~28 GB for KV, at 38.3 t/s -- no throughput cost versus single-card, so speed stays comparable.
+GPU_UUIDS = (
+    "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",  # GPU 0 -- freed by stopping the conductor
+    "GPU-7971baff-9583-eaa6-2292-393f930a28f9",  # GPU 1
+)
+GPU_INDEX = "0,1"
+GPU1_UUID = GPU_UUIDS[1]  # kept: the artifact field `gpu_uuid_proven` still reports it
+N_CTX = 65536
 BUDGET = 16384  # exp5726/5760/5764 completion budget
 
 # PER-ARM BUDGET (2026-08-15). The shared 16384 is NOT equal compute across these models, and
@@ -85,7 +108,7 @@ BUDGET = 16384  # exp5726/5760/5764 completion budget
 # STATE IT WHEN REPORTING: the arms differ in budget, deliberately, and the comparison is
 # "each model driven so it can finish", not "identical flags".
 ARM_BUDGET = {"qwen38_27b": 32768}
-MIN_RESIDENCY_MIB = 15000  # a real Q4 27B/31B offload; below this the model is not on the card
+MIN_RESIDENCY_MIB = 15000  # SUMMED over both cards; below this the model did not really load
 KV_QUANT = "q8_0"
 
 ARMS: dict[str, dict[str, Any]] = {
@@ -161,12 +184,14 @@ def gpu1_present() -> bool:
     power-cycle required), so this is checked per cell, not once at launch."""
     try:
         r = subprocess.run(
-            ["nvidia-smi", "-i", str(GPU_INDEX), "--query-gpu=uuid", "--format=csv,noheader"],
+            ["nvidia-smi", "--query-gpu=uuid", "--format=csv,noheader"],
             capture_output=True,
             text=True,
             timeout=25,
         )
-        return r.returncode == 0 and GPU1_UUID in r.stdout
+        # BOTH cards must still be present: the model is split across them, so losing either one
+        # is as fatal as losing the single card used to be.
+        return r.returncode == 0 and all(u in r.stdout for u in GPU_UUIDS)
     except Exception:
         return False
 
@@ -189,9 +214,14 @@ def pid_residency_mib(pid: int) -> Optional[int]:
         return None
     for line in r.stdout.splitlines():
         p = [x.strip() for x in line.split(",")]
-        if len(p) == 3 and p[0].isdigit() and int(p[0]) == pid and p[1] == GPU1_UUID:
-            return int(p[2])
-    return None
+    total = 0
+    for line in r.stdout.splitlines():
+        p = [x.strip() for x in line.split(",")]
+        if len(p) == 3 and p[0].isdigit() and int(p[0]) == pid and p[1] in GPU_UUIDS:
+            total += int(p[2])
+    # Summed across both cards, because a layer split puts roughly half the weights on each and a
+    # per-card check would see ~9.7 GB and wrongly conclude the model never loaded.
+    return total or None
 
 
 def props_model_path(port: int, timeout: float = 20.0) -> str:
@@ -265,6 +295,9 @@ def launch(arm: dict[str, Any], llama_server: Path) -> tuple[subprocess.Popen, d
         "-fit",
         "off",
     ]
+    # -sm layer -ts 1,1 splits the model evenly. No MTP on either arm, so no draft override.
+    if "-sm" not in args:
+        args += ["-sm", "layer", "-ts", "1,1"]
     env = dict(os.environ, CUDA_VISIBLE_DEVICES=str(GPU_INDEX))
     log(f"  launch: CUDA_VISIBLE_DEVICES={GPU_INDEX} {' '.join(args)}")
     t0 = time.time()
@@ -485,8 +518,14 @@ def main() -> int:
             # 16384, so the raise never took effect and max-decoded stayed pinned near 16.9k. Two
             # places had to change and I changed one -- the measurement then "tested" a budget it
             # was never given.
-            max_tokens=ARM_BUDGET.get(args.arm, BUDGET),
-            timeout=1800,
+            # Room to answer: n_ctx minus the largest prompt we build. The measured tu93 prompt
+            # is 15,771 tokens; 16384 is that rounded up with margin.
+            max_tokens=N_CTX - 16384,
+            # 3600s, because the measured Qwen3.8 induction took 1200s and the old 1800s left too
+            # little headroom for a slower game. A timeout here does not raise -- it returns
+            # (False, msg) and the cell records a silent non-answer, which is exactly the failure
+            # mode that cost four runs.
+            timeout=3600,
             use_chat_template=True,
             model_path=arm["gguf"],
         )
@@ -532,7 +571,10 @@ def main() -> int:
                     window=windows[game][0],
                     full_traj=windows[game][1],
                     cell=windows[game][2],
-                    budget=ARM_BUDGET.get(args.arm, BUDGET),
+                    # Symmetric across arms. ARM_BUDGET existed to work around the 32768
+                    # context ceiling; with n_ctx 65536 on two cards both models get the same
+                    # room, which is what makes the comparison readable.
+                    budget=N_CTX - 16384,
                 )
                 try:
                     src = (E3_DIR / game / "world_model.py").read_text()
