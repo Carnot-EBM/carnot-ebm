@@ -329,6 +329,29 @@ tasks:
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp6454-held-exact-constraint-energy-selection-ab
+    prior_failures:
+    - experiment_id: exp1006-energy-selection-ssd
+      verdict: blocked_gate_check_failed
+      addressed_by: Never executed a comparison -- blocked at its own pre-gate, so it recorded no evidence
+        about energy selection. This task is gated on Exp6452's objective-causality result and runs only if
+        that lands.
+      retire_if_same_verdict: true
+    - experiment_id: exp5708-sota-exact-constraint-canary
+      verdict: 'blocked: parse_failures'
+      addressed_by: Blocked on candidate parsing, not on the selection question. This task consumes Exp6450's
+        already-parsed reserved held partition instead of re-parsing SOTA output.
+      retire_if_same_verdict: true
+    - experiment_id: exp6205-held-code-selection-v2
+      verdict: blocked_gate_check_failed
+      addressed_by: Also never ran; blocked on an upstream readiness score. Same gating class, different upstream,
+        and this task's upstream (Exp6452) is in the same milestone rather than a prior one.
+      retire_if_same_verdict: true
+    - experiment_id: exp787-sstar-energy-ranked-code-selection
+      verdict: energy_prefilter_efficient
+      addressed_by: 'The one prior that DID run, and it was POSITIVE (energy prefilter efficient), so it is
+        not a failure this task repeats. What is different: a frozen learned objective from Exp6452 and a
+        held partition the objective never saw, rather than a hand-specified prefilter on development rows.'
+      retire_if_same_verdict: true
     milestone: "2026.08.555"
     deliverable: results/experiment_6454_held_exact_constraint_energy_selection_ab.json
     title: "Gated on Exp6452 objective causality: held exact-constraint energy selection"
@@ -609,6 +632,7 @@ tasks:
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp6459-v555-adversarial-capstone
+    operator_override: '2026-05-29 operator directive (standing): routine milestone-transition task -- false-positive scope-match; a VN adversarial capstone scope-matches every prior capstone by construction and is structurally never a doomed rerun. This instance reconciles V555, which no prior capstone can have done.'
     milestone: "2026.08.555"
     deliverable: results/experiment_6459_v555_adversarial_capstone.json
     title: "V555 adversarial capstone and reconciliation"
