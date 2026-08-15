@@ -63,6 +63,28 @@ GPU_INDEX = 1  # both arms run here, sequentially. GPU 0 is another lane's (veri
 GPU1_UUID = "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
 N_CTX = 32768  # exp5764's successfully-deployed n_ctx_deployed. NOT 81920 (inflates the footprint).
 BUDGET = 16384  # exp5726/5760/5764 completion budget
+
+# PER-ARM BUDGET (2026-08-15). The shared 16384 is NOT equal compute across these models, and
+# the first Qwen3.8 run proved it: every generation ran to the cap (16322, 16310, 16218 tokens
+# decoded) with ZERO natural stops, and no arm ever reached its code block.
+#
+# The cell is `/think` by design -- exp5726 verbatim, and that identity is what makes the number
+# comparable, so the cell is NOT modified. But gemma-4 and Qwen3 spend a think budget in
+# structurally different places. Gemma's reasoning goes to a SEPARATE `reasoning_content` channel
+# on the chat endpoint and does not consume the completion budget. Qwen3's hybrid thinking is
+# INLINE in the same stream, so it eats the budget the code has to fit in.
+#
+# So "same budget" flatters gemma and starves Qwen. Holding the number equal would have produced
+# a clean 0-for-39 that says nothing about induction quality -- the measure-the-wrong-thing
+# failure this project has hit repeatedly this week.
+#
+# The honest correction is to give the inline-thinking arm room to finish and to report the token
+# cost as part of the result, since the scored metric cares about cost anyway. 32768 is the same
+# as n_ctx, so it stays inside the deployed context.
+#
+# STATE IT WHEN REPORTING: the arms differ in budget, deliberately, and the comparison is
+# "each model driven so it can finish", not "identical flags".
+ARM_BUDGET = {"qwen38_27b": 32768}
 MIN_RESIDENCY_MIB = 15000  # a real Q4 27B/31B offload; below this the model is not on the card
 KV_QUANT = "q8_0"
 
@@ -505,7 +527,7 @@ def main() -> int:
                     window=windows[game][0],
                     full_traj=windows[game][1],
                     cell=windows[game][2],
-                    budget=BUDGET,
+                    budget=ARM_BUDGET.get(args.arm, BUDGET),
                 )
                 try:
                     src = (E3_DIR / game / "world_model.py").read_text()
@@ -513,6 +535,10 @@ def main() -> int:
                     src = ""
                 ms = memorization_scan(src, _window_changed_coords(windows[game][0]))
                 row["mem_scan"] = ms
+                # Stamped per row, not just in the meta: a row that travels on its own must
+                # carry the budget that produced it, or a later reader compares 16384-cells
+                # against 32768-cells without knowing.
+                row["budget"] = ARM_BUDGET.get(args.arm, BUDGET)
                 row["is_memorizing"] = ms["is_memorizing"]
             except Exception as exc:
                 row = {
