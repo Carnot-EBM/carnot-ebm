@@ -3680,3 +3680,82 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-6435 | Planned (`python/carnot/experiment_6435_v553_adversarial_capstone.py`, `results/experiment_6435_v553_adversarial_capstone.json`) | Planned (`tests/python/test_experiment_6435_v553_adversarial_capstone.py`) |
+
+- REQ-CAPSTONE-6459: The V555 adversarial capstone workflow SHALL read the
+  active V555 roadmap, the V555 change proposal, every expected Exp6448
+  through Exp6458 artifact from its declared path, prior capstones and CSL
+  audits named by the V555 task prompt, current checker scripts, specs, and
+  ops records. It SHALL inventory all 12 V555 task definitions before it reads
+  any upstream experiment module. It SHALL write
+  `results/experiment_6459_v555_adversarial_capstone.json` without modifying
+  `scripts/research_conductor.py`, `ops/status.md`, `ops/changelog.md`, or
+  `_bmad/traceability.md`. It SHALL preserve missing, zero-byte, malformed,
+  blocked, skipped, flagged, underpowered, duration-ineligible, null, and
+  complete upstream evidence as separate terminal inputs. It SHALL recompute
+  comparative headline fields from per-unit rows when rows exist, and it SHALL
+  report no-row evidence explicitly when a branch is blocked or missing. It
+  SHALL not import upstream aggregate, readiness, verdict, gate, update, or
+  uncertainty functions to decide claim eligibility.
+- The required Exp6459 artifact field set is: `status`,
+  `expected_task_and_deliverable_manifest`,
+  `task_artifact_inventory_hashes_sizes_statuses_and_verdicts`,
+  `missing_zero_byte_blocked_flagged_underpowered_or_duration_ineligible_evidence`,
+  `gate_producer_contract_validation`,
+  `prior_failure_and_exclusion_validation`,
+  `model_and_substrate_validation`,
+  `field_principle_and_provenance_validation`, `per_unit_rows`,
+  `independent_metric_recomputation_by_task`,
+  `upstream_vs_recomputed_mismatches`, `mismatch_count_and_materiality`,
+  `joint_pathway_rows_and_cofailure_moments`,
+  `current_adversarial_attack_replay`, `current_adversarial_findings`,
+  `typed_grounding_claim_eligibility`,
+  `objective_causal_claim_eligibility`,
+  `held_allocation_claim_eligibility`,
+  `energy_selection_claim_eligibility`,
+  `prospective_csl_claim_eligibility`,
+  `held_csl_safety_claim_eligibility`,
+  `internal_arc_generalization_claim_eligibility`,
+  `public_arc_claim_eligibility`, `hardware_claim_eligibility`,
+  `claim_ineligibility_reasons`, `terminal_determination_preservation`,
+  `protected_files_unchanged`, `reconciliation_actions`,
+  `v555_capstone_ready_score`, `blocked_reason`, `gate_check_summary`,
+  `preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+  `field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+  `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+- SCENARIO-CAPSTONE-6459-INVENTORY: Given the repository state on planning date
+  20260815, when the workflow runs, then the artifact SHALL emit one manifest
+  row for each V555 task slot, one artifact inventory row for each declared
+  deliverable, and explicit entries for missing Exp6452 and Exp6454 artifacts.
+  Blocked Exp6451 and Exp6453 artifacts SHALL preserve their
+  `gate_check_summary` and SHALL not become null or clean evidence.
+- SCENARIO-CAPSTONE-6459-ROW-RECOMPUTATION: The artifact SHALL recompute Exp6450
+  exact outcome and headroom counts, Exp6455 prospective future-yield deltas,
+  Exp6456 held safety deltas, Exp6457 audit findings, and Exp6458 collision and
+  reachability effects from row data. If Exp6451, Exp6452, Exp6453, or Exp6454
+  has no usable rows, the recomputation entry SHALL record `no_rows` with the
+  artifact state and gate reason.
+- SCENARIO-CAPSTONE-6459-CLAIM-DECISIONS: The artifact SHALL decide typed
+  grounding, objective causality, held allocation, held energy selection,
+  prospective CSL, held CSL safety, internal ARC generalization, public ARC,
+  and hardware as separate fields. Missing or blocked evidence in one branch
+  SHALL not invalidate or promote a different branch. Public ARC and hardware
+  SHALL remain ineligible unless V555 contains separate eligible evidence for
+  those public claims.
+- SCENARIO-CAPSTONE-6459-ATTACKS: The artifact SHALL replay or preserve current
+  attacks for output reuse, model substitution, CPU fallback, exact-label
+  leakage, held leakage, uncharged cost, teacher authority, chronology, corrupt
+  feedback, rollback, restart, ARC source access, adapters, registry mutation,
+  and row inconsistency. Each attack row SHALL show whether the attack was
+  detected, whether it failed closed, and whether any claim was promoted.
+- SCENARIO-CAPSTONE-6459-FIELD-PRINCIPLES: The artifact SHALL include
+  `field_principles` for every required field and for every claim gate. It
+  SHALL include `field_provenance` for every required field. `per_unit_rows`
+  SHALL contain at least one row for every task and every claim group, or a
+  no-row row with a reason. `honest_verdict` SHALL start with a terminal
+  prefix and name eligible and ineligible claims.
+
+## Implementation Status (REQ-CAPSTONE-6459)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-6459 | Planned (`python/carnot/experiment_6459_v555_adversarial_capstone.py`, `results/experiment_6459_v555_adversarial_capstone.json`) | Planned (`tests/python/test_experiment_6459_v555_adversarial_capstone.py`) |
