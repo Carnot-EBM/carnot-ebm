@@ -289,14 +289,26 @@ def run_bench(
     """
     out = out or Path(os.environ.get("TMPDIR", "/tmp")) / "arc_bench_arm.json"
     env = {**os.environ, **(env_overrides or {})}
-    subprocess.run(
-        [sys.executable, str(BENCH), "--all", "--quiet", "--engine", engine, "--out", str(out)],
-        env=env,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=3600,
-    )
+    # 4 hours, not 1. The first real sweep died at flag 16 of 20 on a TimeoutExpired: the scored
+    # engine's 25-game sweep takes ~17 min at baseline, but a flag that slows the search can push
+    # it far past that, and CARNOT_ARC_SGE_CANDIDATE_ROUTER pushed it past the hour. A slow arm is
+    # a RESULT (the flag costs time), not a reason to lose the whole run.
+    timeout_s = int(os.environ.get("CARNOT_BENCH_TIMEOUT_S", 4 * 3600))
+    try:
+        subprocess.run(
+            [sys.executable, str(BENCH), "--all", "--quiet", "--engine", engine, "--out", str(out)],
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=timeout_s,
+        )
+    except subprocess.TimeoutExpired:
+        # Return a TIMED-OUT marker rather than raising. Raising killed the sweep and lost the
+        # four flags after it; a timeout is information about THIS flag and must not end the run.
+        # `timed_out` has no per_game_rows, so `compare` sees no games and `verdict` cannot read
+        # it as an improvement -- it degrades to "no games compared", never to a false promotion.
+        return {"timed_out": True, "timeout_s": timeout_s, "per_game_rows": []}
     try:
         return json.loads(out.read_text())
     except (OSError, json.JSONDecodeError) as exc:
@@ -343,6 +355,7 @@ def compare(baseline: dict, arm: dict) -> dict[str, Any]:
     )
     return {
         "games_compared": len(set(b) & set(a)),
+        "arm_timed_out": bool(arm.get("timed_out")),
         "identical_to_baseline": identical,
         "lever_counters_moved": diag_moved,
         "levels_improved": improved,
@@ -371,6 +384,13 @@ def verdict(cmp: dict) -> tuple[bool, str]:
     #
     # "HOLD: no level gained" would read as "measured, does not help." The truth is "not measured
     # at all." Import reachability proves the code is LOADED; it cannot prove the code RUNS.
+    if cmp.get("arm_timed_out"):
+        return False, (
+            "UNINTERPRETABLE_TIMED_OUT: the arm sweep exceeded its wall-clock cap, so no outcome "
+            "was measured. That is a fact about cost, not about capability -- a flag that slows "
+            "the search this much may still be correct. Re-run it alone with a longer "
+            "CARNOT_BENCH_TIMEOUT_S before concluding anything."
+        )
     if cmp.get("identical_to_baseline"):
         if cmp.get("lever_counters_moved"):
             # The lever ran and the outcome did not move. Still not promotable, and still not the
