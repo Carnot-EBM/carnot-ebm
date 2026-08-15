@@ -85,6 +85,10 @@ GPU_UUIDS = (
 GPU_INDEX = "0,1"
 GPU1_UUID = GPU_UUIDS[1]  # kept: the artifact field `gpu_uuid_proven` still reports it
 N_CTX = 65536
+
+# The live agent's retry count. LocalGGUFProposer.tries defaults to 3 and the live induce
+# path passes tries=self.tries; exp5726's cell overrides it to 1 for its own question.
+LIVE_TRIES = 3
 BUDGET = 16384  # exp5726/5760/5764 completion budget
 
 # PER-ARM BUDGET (2026-08-15). The shared 16384 is NOT equal compute across these models, and
@@ -404,6 +408,70 @@ def main() -> int:
         run_reason_cell_budget,
     )
     from carnot.experiment_5760_cegis_refinement_induction_ab import ROSTER, TRIALS  # noqa: E402
+
+    # ---- NAME THE REQUIRED SYMBOLS EXPLICITLY (operator 2026-08-15: "tune the prompt or we may
+    # end up wasting the effort") -------------------------------------------------------------
+    #
+    # `generate()` accepts a completion only if it defines `def engine` AND `def is_level_complete`
+    # at top level, retrying `tries` times otherwise. The shipped directive reads:
+    #
+    #     "Return ONLY one ```python code block with engine + is_level_complete."
+    #
+    # which names the symbols but does not say they are FUNCTION NAMES. Gemma reads it the
+    # intended way. Qwen3.8 does not: its accepted-looking output defined `is_level_complete` and
+    # put the transition logic in a differently-named function, so every attempt was rejected and
+    # retried until the token budget was gone -- 1,444 s and `overran=True` on all three tu93
+    # cells, heading for a 15-hour 0/39 that would have measured naming, not induction.
+    #
+    # SYMMETRIC BY CONSTRUCTION: both arms call this same patched function, so gemma is held to
+    # the identical instruction. It is a clarification of the existing contract, not a new
+    # requirement -- the required tuple `("engine", "is_level_complete")` is unchanged.
+    #
+    # PATCHED HERE, not in exp5714, because that module is shared verbatim by other experiments
+    # and this is exp6440's protocol decision to make.
+    import carnot.experiment_5714_think_mode_rescoped_ab as _t5714  # noqa: E402
+
+    _REQUIRED_SYMBOL_DIRECTIVE = (
+        "\n\nReturn ONLY one ```python code block. It MUST define exactly these two TOP-LEVEL "
+        "functions, spelled exactly:\n"
+        "    def engine(grid, action):            # returns the next grid\n"
+        "    def is_level_complete(grid):         # returns True on a win\n"
+        "Do not rename them. Do not wrap them in a class. A different name is rejected.\n"
+    )
+
+    def _induce_named(prop_, game_, window_, cell_):
+        """exp5714._induce_no_fence with the symbol names spelled out. Same call, same required
+        tuple, same tries -- only the instruction text differs."""
+        from carnot.agentic.arc_executable_world_model import (
+            _induce_transitions_k,
+            induce_prompt,
+        )
+
+        prompt = (
+            induce_prompt(game_, window_, cell_, k=_induce_transitions_k())
+            + _REQUIRED_SYMBOL_DIRECTIVE
+        )
+        # tries=LIVE_TRIES, not prop_.tries. `run_reason_cell_budget` forces `prop.tries = 1`
+        # before calling us (exp5726 line ~324), because that experiment was specifically studying
+        # reasoning overrun -- "a /think overrun is recorded as induction_ok=False, the honest
+        # finding". That is an artifact of ITS question, not of deployment.
+        #
+        # THE LIVE SCORED AGENT GETS 3. `LocalGGUFProposer.tries` defaults to 3 and every live
+        # induce call passes `tries=self.tries`. So measuring at 1 does not describe the agent we
+        # ship, and it is a constraint that binds only one arm: gemma emits the right symbols on
+        # attempt one, Qwen3.8 spends attempt one reasoning. Verified directly -- the same prompt
+        # returned ok=True with both symbols at tries=3 (2,786 s) and overran at tries=1.
+        #
+        # Symmetric: both arms get 3. Gemma will simply not need the extra two.
+        ok_, code_ = prop_.generate(
+            prompt, ("engine", "is_level_complete"), tries=LIVE_TRIES, codeonly_eligible=False
+        )
+        if not ok_:
+            return False, code_
+        return prop_._write_world_model(game_, code_)
+
+    _t5714._induce_no_fence = _induce_named
+    log("prompt: required symbols named explicitly (both arms)")
     from carnot.experiment_5764_gemma31b_singleshot_induction_ab import (  # noqa: E402
         _window_changed_coords,
         memorization_scan,
