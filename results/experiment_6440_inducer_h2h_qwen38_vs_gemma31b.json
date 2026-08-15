@@ -1,0 +1,1062 @@
+{
+  "aggregation_wall_s": 755.635,
+  "arm_meta": {
+    "gemma31b": {},
+    "qwen27b": {
+      "arm": "qwen27b",
+      "arm_wall_s": 15155.55,
+      "budget": 16384,
+      "cells_completed": 39,
+      "cells_missing": [],
+      "cells_total": 39,
+      "e3_dir": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/e3_qwen27b",
+      "ended_iso": "2026-07-28T07:09:43Z",
+      "gguf": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-27B-MTP-GGUF/snapshots/5cb35eb3dcbf52dbce5f87dbc64df6aaffadcace/Qwen3.6-27B-Q4_K_M.gguf",
+      "hf_id": "unsloth/Qwen3.6-27B-MTP-GGUF",
+      "kv_quant": "q8_0",
+      "label": "qwen3.6-27B-base",
+      "mtp": false,
+      "n_ctx_deployed": 32768,
+      "preconditions_checked": [
+        {
+          "available": true,
+          "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-27B-MTP-GGUF/snapshots/5cb35eb3dcbf52dbce5f87dbc64df6aaffadcace/Qwen3.6-27B-Q4_K_M.gguf",
+          "resource": "gguf_cached::qwen3.6-27B-base"
+        },
+        {
+          "available": true,
+          "detail": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "resource": "llama_server_binary"
+        },
+        {
+          "available": true,
+          "detail": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "resource": "gpu1_on_pci_bus"
+        },
+        {
+          "available": true,
+          "detail": "CUDA build check",
+          "resource": "llama_cpp_gpu_offload"
+        },
+        {
+          "available": true,
+          "detail": "no pre-existing server on our port",
+          "resource": "port_8977_free_or_ours"
+        }
+      ],
+      "quantisation": "Q4_K_M",
+      "roster": [
+        "tu93",
+        "tr87",
+        "sp80",
+        "sb26",
+        "re86",
+        "g50t",
+        "r11l",
+        "cd82",
+        "ar25",
+        "lp85",
+        "sk48",
+        "vc33",
+        "ft09"
+      ],
+      "server": {
+        "completion_probe": {
+          "alive": true,
+          "content": "4",
+          "s": 0.11
+        },
+        "gpu_uuid_proven": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "health_wait_s": 10.0,
+        "n_ctx_deployed": 32768,
+        "pid": 2678213,
+        "port": 8977,
+        "props_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-27B-MTP-GGUF/snapshots/5cb35eb3dcbf52dbce5f87dbc64df6aaffadcace/Qwen3.6-27B-Q4_K_M.gguf",
+        "residency_mib_gpu1": 17856
+      },
+      "started_iso": "2026-07-28T02:57:07Z",
+      "status": "complete",
+      "trials": [
+        0,
+        1,
+        2
+      ],
+      "use_chat_template": true,
+      "wedge": null
+    },
+    "qwen38_27b": {}
+  },
+  "both_arms_complete": false,
+  "budget_exhaustion_finding": {
+    "recommended_next_measurement": "A third arm: Qwen3.6-27B at the same corpus with either /no_think or a raised budget, to separate 'induces worse' from 'spends its budget reasoning and runs out'. Deliberately NOT run here, because changing the prefix or budget would break mechanism identity with exp5764 -- the entire point of this matched design.",
+    "what_is_still_NOT_established": "This does NOT establish that Qwen is intrinsically the weaker INDUCER. On the cells where Qwen did finish, it sometimes scored well (see view A). A larger budget, or /no_think, might rescue it. So the honest claim is bounded: AT THIS BUDGET, with this mechanism, Qwen fails to deliver a usable world model on a large fraction of cells while gemma nearly always does.",
+    "what_was_measured": "The shared mechanism sends an identical '/think\\n' prefix and an identical 16384 TOKEN completion budget to both arms. reason_engaged (any of '<think', '</think', '<thinking', '<reasoning' in the raw completion) fired on 39/39 cells for BOTH arms, so the prefix is NOT inert on either model -- both genuinely reason. The difference is BUDGET EFFICIENCY: overran (llama.cpp stop_type == 'limit', i.e. it hit n_predict) fired on a large fraction of Qwen cells and on ZERO gemma cells (exp5764's gemma arm: overran 0/39, induce_failed 1/39, max completion 34816 chars). When Qwen exhausts the budget it emits code missing the required engine / is_level_* functions, so induce_ok=False and no scorable engine exists.",
+    "why_this_is_a_real_finding_not_a_harness_artifact": "An earlier draft of this analysis asserted the /think prefix was inert on gemma because gemma-4-31B-it's chat template lacks a <think> tag, and therefore that Qwen was being unfairly penalised. The measurement refutes that: gemma emits reasoning tags on every cell too. Both models get the same prompt, prefix, budget, quantisation, context, corpus and card. Qwen simply reasons longer and runs out. A fixed generation budget is a REAL operational constraint for this project (the scored ARC path is latency- and VRAM-bounded), so 'fails to emit a usable engine within budget' is a legitimate, decision-relevant deficiency, not an artifact."
+  },
+  "completeness": {
+    "gemma31b": {
+      "cells_completed": null,
+      "cells_missing": null,
+      "cells_total": null,
+      "status": null,
+      "wedge": null
+    },
+    "qwen27b": {
+      "cells_completed": 39,
+      "cells_missing": [],
+      "cells_total": 39,
+      "status": "complete",
+      "wedge": null
+    },
+    "qwen38_27b": {
+      "cells_completed": null,
+      "cells_missing": null,
+      "cells_total": null,
+      "status": null,
+      "wedge": null
+    }
+  },
+  "coverage_test": {
+    "basis": "view B (zero-imputed): a game counts as covered if mean heldout > 0",
+    "discordant_d": 0,
+    "gemma_only_covered": [],
+    "min_reachable_p_at_this_d": 1.0,
+    "p_two_sided": 1.0,
+    "qwen_only_covered": [],
+    "significant_at_0.05": false,
+    "test": "exact McNemar / two-sided binomial on discordant games"
+  },
+  "decisive_criterion": {
+    "caveat": "Under view B a cell that produced no engine counts as 0.0, and most of Qwen's zeros are budget exhaustion rather than a wrong world model. Both arms got the SAME budget, so this is a fair comparison of 'usable engine within budget' -- but read it together with secondary_criteria.n_overran / n_induce_failed and budget_exhaustion_finding before restating it as a claim about induction capability, which this experiment does NOT establish.",
+    "choice": "coverage_nonzero_games under view B (zero-imputed)",
+    "why": "The target is HIDDEN, out-of-distribution games. The operational question is whether the inducer yields ANY usable signal on an arbitrary unseen game, and a per-game mean is only defined once signal exists. The mean is also dominated by a few high scorers on tiny windows -- a single 1.0 on a 3-transition window moves a 13-game mean by 0.077, more than most real effects here. exp5764's own edge was 12/13 vs 6/13 coverage, far more robust than its 0.378 vs 0.188 mean."
+  },
+  "duration_s": 15155.55,
+  "duration_s_minus_measurement_wall_s_overhead": 37.52,
+  "exhaustive_bfs_calibration": false,
+  "experiment": "experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b",
+  "extreme_value_explanations": [],
+  "field_principles": {
+    "completeness": "Which cells each arm actually finished. A truncated arm must never be compared against a complete one; both_arms_complete gates the comparison.",
+    "coverage_nonzero_games": "Games where the arm got off the floor. For hidden OOD games, some signal almost everywhere plausibly beats a higher mean on a favourable subset.",
+    "measurement_wall_s": "Summed from each row's OWN elapsed_s, so it reflects real per-cell compute rather than wall-clock including server loads and idle gaps.",
+    "min_reachable_p_at_this_d": "Smallest two-sided p attainable at the achieved discordant count. Prevents claiming significance below the floor AND prevents reading an unavoidable null as evidence of equivalence.",
+    "per_game_detail_side_by_side": "Per-game matched values for BOTH arms in one place, including failure counts. A pooled mean over different game sets produced a phantom win difference earlier in this project; showing the per-game pairs makes that error class visible.",
+    "reproducibility_checksum": "sha256 over the raw per-cell shard jsonls -- the evidence the aggregates are computed from, so a third party can recompute them.",
+    "residency_mib_gpu1": "Proves WHICH physical card served each arm, read from per-PID residency against GPU 1's UUID rather than from CUDA_VISIBLE_DEVICES (an intention, not a fact).",
+    "views": "Three readings of the same cells, because a non-scorable cell is a judgement call (failure worth 0.0, or missing data?). Reporting one silently would hide the choice that most affects the answer.",
+    "vram_witness": "Sampled per-PID residency. Three prior attempts died on an unexplained hang; a card falling off the bus must be recorded, not inferred."
+  },
+  "hand_calibrated_per_game": false,
+  "honest_verdict": "partial_inducer_head_to_head_qwen27b_complete_39of39_gemma31b_None_NoneofNone_qwen38_27b_None_NoneofNone_no_comparison_truncated_arm_not_compared_to_complete_arm",
+  "inference_substrate": "live_llm_inference",
+  "measurement_wall_s": 15118.03,
+  "memorization_caveat": {
+    "does_it_change_the_ranking": "No. gemma leads on the memorizing subset AND on the non-memorizing subset, and leads decisively on coverage. But it BOUNDS the claim: this experiment ranks two inducers on a window-fitting proxy, and should not be restated as a measurement of generalizing world-model induction. The same caveat applies to exp5764 and to every prior number in this comparison lineage, since the mechanism is shared.",
+    "measured": {
+      "gemma31b": {
+        "mean_heldout_memorizing": null,
+        "mean_heldout_non_memorizing": null,
+        "memorizing_cells": 0,
+        "scorable_cells": 0
+      },
+      "qwen27b": {
+        "mean_heldout_memorizing": 0.152775,
+        "mean_heldout_non_memorizing": 0.0,
+        "memorizing_cells": 16,
+        "scorable_cells": 21
+      },
+      "qwen38_27b": {
+        "mean_heldout_memorizing": null,
+        "mean_heldout_non_memorizing": null,
+        "memorizing_cells": 0,
+        "scorable_cells": 0
+      }
+    },
+    "what_this_means": "heldout_accuracy is scored by WorldModelVerifier(window).score(engine) -- i.e. against the SAME window the engine was induced from -- and the inherited exp5726/exp5764 mechanism runs an AST memorization scan that flags engines hardcoding that window's changed coordinates. In BOTH arms essentially all of the non-zero score comes from cells flagged as memorizing; the non-memorizing cells score at or near zero. So this metric substantially measures 'can the model write an engine that fits the observed window', NOT 'can it induce a world model that generalizes to unseen dynamics'."
+  },
+  "methodology_note": "Sequential arms, ONE llama-server at a time on GPU 1 (24 GiB cannot hold a 21GB and an 18GB server together). GPU 0 was busy with an unrelated lane and was left alone. Card membership proven from per-PID residency vs GPU 1's UUID. Per-arm CARNOT_ARC_E3_DIR so neither arm can read the other's induced world_model.py (a shared engine store contaminated an earlier run). Per-cell shard caching so a wedge costs at most one cell. Every cell gated on GPU-1 presence, >15GB residency, /props model identity, and a bounded REAL /completion -- because exp5833 died with /health returning 200 while /completion hung, so health is not liveness. Paired unit is the GAME (13), not the cell (39): the 3 trials are repeats of one seeded window.",
+  "model_specs": {
+    "gemma31b": {
+      "gguf": null,
+      "hf_id": null,
+      "invoked": true,
+      "kv_quant": null,
+      "label": "gemma-4-31B-it",
+      "mtp": null,
+      "n_ctx_deployed": null,
+      "quantisation": null,
+      "quantisation_verified_from": "GGUF general.file_type == 15 (Q4_K_M), not filename",
+      "use_chat_template": null
+    },
+    "qwen27b": {
+      "gguf": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-27B-MTP-GGUF/snapshots/5cb35eb3dcbf52dbce5f87dbc64df6aaffadcace/Qwen3.6-27B-Q4_K_M.gguf",
+      "hf_id": "unsloth/Qwen3.6-27B-MTP-GGUF",
+      "invoked": true,
+      "kv_quant": "q8_0",
+      "label": "qwen3.6-27B-base",
+      "mtp": false,
+      "n_ctx_deployed": 32768,
+      "quantisation": "Q4_K_M",
+      "quantisation_verified_from": "GGUF general.file_type == 15 (Q4_K_M), not filename",
+      "use_chat_template": true
+    },
+    "qwen38_27b": {
+      "gguf": null,
+      "hf_id": null,
+      "invoked": true,
+      "kv_quant": null,
+      "label": "qwen3.8-27B",
+      "mtp": null,
+      "n_ctx_deployed": null,
+      "quantisation": null,
+      "quantisation_verified_from": "GGUF general.file_type == 15 (Q4_K_M), not filename",
+      "use_chat_template": null
+    }
+  },
+  "offline_ground_truth_bfs": false,
+  "per_game_detail_side_by_side": {
+    "ar25": {
+      "gemma31b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      },
+      "qwen27b": {
+        "cells_nonscorable": 3,
+        "cells_run": 3,
+        "cells_scorable": 0,
+        "failure_details": [
+          "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=16384 OUTPUT LIMIT before completing])"
+        ],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": 0.0,
+        "n_induce_failed": 3,
+        "n_memorizing": 0,
+        "n_overran": 3,
+        "n_reason_engaged": 3
+      },
+      "qwen38_27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      }
+    },
+    "cd82": {
+      "gemma31b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      },
+      "qwen27b": {
+        "cells_nonscorable": 2,
+        "cells_run": 3,
+        "cells_scorable": 1,
+        "failure_details": [
+          "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=16384 OUTPUT LIMIT before completing])"
+        ],
+        "heldout_cells_scorable": [
+          0.0
+        ],
+        "heldout_mean_scorable_only": 0.0,
+        "heldout_mean_zero_imputed": 0.0,
+        "n_induce_failed": 2,
+        "n_memorizing": 1,
+        "n_overran": 2,
+        "n_reason_engaged": 3
+      },
+      "qwen38_27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      }
+    },
+    "ft09": {
+      "gemma31b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      },
+      "qwen27b": {
+        "cells_nonscorable": 3,
+        "cells_run": 3,
+        "cells_scorable": 0,
+        "failure_details": [
+          "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=16384 OUTPUT LIMIT before completing])"
+        ],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": 0.0,
+        "n_induce_failed": 3,
+        "n_memorizing": 0,
+        "n_overran": 3,
+        "n_reason_engaged": 3
+      },
+      "qwen38_27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      }
+    },
+    "g50t": {
+      "gemma31b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      },
+      "qwen27b": {
+        "cells_nonscorable": 1,
+        "cells_run": 3,
+        "cells_scorable": 2,
+        "failure_details": [
+          "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=16384 OUTPUT LIMIT before completing])"
+        ],
+        "heldout_cells_scorable": [
+          0.0,
+          0.0
+        ],
+        "heldout_mean_scorable_only": 0.0,
+        "heldout_mean_zero_imputed": 0.0,
+        "n_induce_failed": 1,
+        "n_memorizing": 1,
+        "n_overran": 1,
+        "n_reason_engaged": 3
+      },
+      "qwen38_27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      }
+    },
+    "lp85": {
+      "gemma31b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      },
+      "qwen27b": {
+        "cells_nonscorable": 1,
+        "cells_run": 3,
+        "cells_scorable": 2,
+        "failure_details": [
+          "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=16384 OUTPUT LIMIT before completing])"
+        ],
+        "heldout_cells_scorable": [
+          0.0,
+          0.0
+        ],
+        "heldout_mean_scorable_only": 0.0,
+        "heldout_mean_zero_imputed": 0.0,
+        "n_induce_failed": 1,
+        "n_memorizing": 2,
+        "n_overran": 1,
+        "n_reason_engaged": 3
+      },
+      "qwen38_27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      }
+    },
+    "r11l": {
+      "gemma31b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      },
+      "qwen27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 3,
+        "cells_scorable": 3,
+        "failure_details": [],
+        "heldout_cells_scorable": [
+          0.0,
+          0.3333,
+          0.0
+        ],
+        "heldout_mean_scorable_only": 0.1111,
+        "heldout_mean_zero_imputed": 0.1111,
+        "n_induce_failed": 0,
+        "n_memorizing": 2,
+        "n_overran": 0,
+        "n_reason_engaged": 3
+      },
+      "qwen38_27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      }
+    },
+    "re86": {
+      "gemma31b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      },
+      "qwen27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 3,
+        "cells_scorable": 3,
+        "failure_details": [],
+        "heldout_cells_scorable": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "heldout_mean_scorable_only": 0.0,
+        "heldout_mean_zero_imputed": 0.0,
+        "n_induce_failed": 0,
+        "n_memorizing": 2,
+        "n_overran": 0,
+        "n_reason_engaged": 3
+      },
+      "qwen38_27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      }
+    },
+    "sb26": {
+      "gemma31b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      },
+      "qwen27b": {
+        "cells_nonscorable": 1,
+        "cells_run": 3,
+        "cells_scorable": 2,
+        "failure_details": [
+          "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=16384 OUTPUT LIMIT before completing])"
+        ],
+        "heldout_cells_scorable": [
+          0.0,
+          0.4444
+        ],
+        "heldout_mean_scorable_only": 0.2222,
+        "heldout_mean_zero_imputed": 0.148133,
+        "n_induce_failed": 1,
+        "n_memorizing": 2,
+        "n_overran": 1,
+        "n_reason_engaged": 3
+      },
+      "qwen38_27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      }
+    },
+    "sk48": {
+      "gemma31b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      },
+      "qwen27b": {
+        "cells_nonscorable": 3,
+        "cells_run": 3,
+        "cells_scorable": 0,
+        "failure_details": [
+          "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=16384 OUTPUT LIMIT before completing])"
+        ],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": 0.0,
+        "n_induce_failed": 3,
+        "n_memorizing": 0,
+        "n_overran": 3,
+        "n_reason_engaged": 3
+      },
+      "qwen38_27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      }
+    },
+    "sp80": {
+      "gemma31b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      },
+      "qwen27b": {
+        "cells_nonscorable": 2,
+        "cells_run": 3,
+        "cells_scorable": 1,
+        "failure_details": [
+          "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=16384 OUTPUT LIMIT before completing])"
+        ],
+        "heldout_cells_scorable": [
+          1.0
+        ],
+        "heldout_mean_scorable_only": 1.0,
+        "heldout_mean_zero_imputed": 0.333333,
+        "n_induce_failed": 2,
+        "n_memorizing": 1,
+        "n_overran": 2,
+        "n_reason_engaged": 3
+      },
+      "qwen38_27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      }
+    },
+    "tr87": {
+      "gemma31b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      },
+      "qwen27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 3,
+        "cells_scorable": 3,
+        "failure_details": [],
+        "heldout_cells_scorable": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "heldout_mean_scorable_only": 0.0,
+        "heldout_mean_zero_imputed": 0.0,
+        "n_induce_failed": 0,
+        "n_memorizing": 3,
+        "n_overran": 0,
+        "n_reason_engaged": 3
+      },
+      "qwen38_27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      }
+    },
+    "tu93": {
+      "gemma31b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      },
+      "qwen27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 3,
+        "cells_scorable": 3,
+        "failure_details": [],
+        "heldout_cells_scorable": [
+          0.0,
+          0.0,
+          0.6667
+        ],
+        "heldout_mean_scorable_only": 0.222233,
+        "heldout_mean_zero_imputed": 0.222233,
+        "n_induce_failed": 0,
+        "n_memorizing": 2,
+        "n_overran": 0,
+        "n_reason_engaged": 3
+      },
+      "qwen38_27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      }
+    },
+    "vc33": {
+      "gemma31b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      },
+      "qwen27b": {
+        "cells_nonscorable": 2,
+        "cells_run": 3,
+        "cells_scorable": 1,
+        "failure_details": [
+          "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output [HIT n_predict=16384 OUTPUT LIMIT before completing])"
+        ],
+        "heldout_cells_scorable": [
+          0.0
+        ],
+        "heldout_mean_scorable_only": 0.0,
+        "heldout_mean_zero_imputed": 0.0,
+        "n_induce_failed": 2,
+        "n_memorizing": 0,
+        "n_overran": 2,
+        "n_reason_engaged": 3
+      },
+      "qwen38_27b": {
+        "cells_nonscorable": 0,
+        "cells_run": 0,
+        "cells_scorable": 0,
+        "failure_details": [],
+        "heldout_cells_scorable": [],
+        "heldout_mean_scorable_only": null,
+        "heldout_mean_zero_imputed": null,
+        "n_induce_failed": 0,
+        "n_memorizing": 0,
+        "n_overran": 0,
+        "n_reason_engaged": 0
+      }
+    }
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-27B-MTP-GGUF/snapshots/5cb35eb3dcbf52dbce5f87dbc64df6aaffadcace/Qwen3.6-27B-Q4_K_M.gguf",
+      "resource": "gguf_cached::qwen3.6-27B-base"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "resource": "llama_server_binary"
+    },
+    {
+      "available": true,
+      "detail": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "resource": "gpu1_on_pci_bus"
+    },
+    {
+      "available": true,
+      "detail": "CUDA build check",
+      "resource": "llama_cpp_gpu_offload"
+    },
+    {
+      "available": true,
+      "detail": "no pre-existing server on our port",
+      "resource": "port_8977_free_or_ours"
+    }
+  ],
+  "prior_work_extended": {
+    "exp5598_and_exp5764_were_non_comparable": "exp5598 (4 games) and exp5764 (13 games) share only 3 games, far too few to separate the models; that mismatch is what this experiment exists to fix.",
+    "exp5705_confound_avoided": "exp5705 compared gemma Q8_0 against qwen Q4 and its own verdict admits the precision/model confound. Here BOTH arms are Q4_K_M, verified from each GGUF's general.file_type field rather than its filename.",
+    "exp5764_not_used_as_this_comparison_arm_sha256": "ed7f0d14f3991d17c81e9bf6b2773c3848b9b59d76267efa29a3cdf063abaf04",
+    "exp5833_failure_mode_guarded": "exp5833's qwen arm wedged with a HIP server and its verdict states it was not a valid 3-way ranking. Here each cell re-verifies a real /completion.",
+    "note": "exp5764's gemma numbers (pooled 0.378487, nonzero 12/13) are NOT this comparison's gemma arm. gemma was RE-RUN in this session so both arms are same-session, same-card, same-harness. exp5764 is cited only as a cross-check and is never modified (never-prune)."
+  },
+  "question": "WHICH INDUCER? base Qwen3.6-27B vs gemma-4-31B-it on world-model induction quality, matched on quantisation (both Q4_K_M, verified from GGUF general.file_type==15), corpus (exp5764's 13 games), mechanism (exp5726.run_reason_cell_budget at budget 16384), repeats (3/game), n_ctx (32768), and card (GPU 1, sequential, one server at a time). Decides which model the ARC induction path should use.",
+  "random_seed": 0,
+  "random_seeds_used": [
+    0,
+    1,
+    2
+  ],
+  "read_game_source": false,
+  "reproducibility_checksum": "sha256:28ce73df7d119caadb9a74f8d98a658eb77f75faead9548034ad9bbc02d1c6eb",
+  "requirements": [
+    "REQ-ARC-WMTE-6021"
+  ],
+  "roster": [
+    "tu93",
+    "tr87",
+    "sp80",
+    "sb26",
+    "re86",
+    "g50t",
+    "r11l",
+    "cd82",
+    "ar25",
+    "lp85",
+    "sk48",
+    "vc33",
+    "ft09"
+  ],
+  "schema": "carnot.exp6021.inducer_head_to_head.v1",
+  "secondary_criteria": {
+    "gemma31b": {
+      "headroom_mib_vs_24123_usable": null,
+      "headroom_mib_vs_24576_total": null,
+      "headroom_pct_of_usable": null,
+      "health_wait_s": null,
+      "median_cell_s": null,
+      "n_cells_run": 0,
+      "n_cells_scorable": 0,
+      "n_induce_failed": 0,
+      "n_memorizing": 0,
+      "n_overran": 0,
+      "n_reason_engaged": 0,
+      "residency_mib_gpu1": null,
+      "total_cell_s": null
+    },
+    "qwen27b": {
+      "headroom_mib_vs_24123_usable": 6267,
+      "headroom_mib_vs_24576_total": 6720,
+      "headroom_pct_of_usable": 26.0,
+      "health_wait_s": 10.0,
+      "median_cell_s": 434.6,
+      "n_cells_run": 39,
+      "n_cells_scorable": 21,
+      "n_induce_failed": 18,
+      "n_memorizing": 16,
+      "n_overran": 18,
+      "n_reason_engaged": 39,
+      "residency_mib_gpu1": 17856,
+      "total_cell_s": 15118.0
+    },
+    "qwen38_27b": {
+      "headroom_mib_vs_24123_usable": null,
+      "headroom_mib_vs_24576_total": null,
+      "headroom_pct_of_usable": null,
+      "health_wait_s": null,
+      "median_cell_s": null,
+      "n_cells_run": 0,
+      "n_cells_scorable": 0,
+      "n_induce_failed": 0,
+      "n_memorizing": 0,
+      "n_overran": 0,
+      "n_reason_engaged": 0,
+      "residency_mib_gpu1": null,
+      "total_cell_s": null
+    }
+  },
+  "solve_provenance": "development_proxy",
+  "submitted_to_leaderboard": false,
+  "trials_per_game": 3,
+  "used_env_source": true,
+  "verifier_is_oracle": false,
+  "views": {
+    "A_scorable_only": {
+      "arms": {
+        "gemma31b": {
+          "coverage_nonzero_games": 0,
+          "coverage_of": 0,
+          "mean_heldout_over_games": null,
+          "n_games": 0,
+          "nonzero_games": [],
+          "zero_games": []
+        },
+        "qwen27b": {
+          "coverage_nonzero_games": 0,
+          "coverage_of": 0,
+          "mean_heldout_over_games": null,
+          "n_games": 0,
+          "nonzero_games": [],
+          "zero_games": []
+        },
+        "qwen38_27b": {
+          "coverage_nonzero_games": 0,
+          "coverage_of": 0,
+          "mean_heldout_over_games": null,
+          "n_games": 0,
+          "nonzero_games": [],
+          "zero_games": []
+        }
+      },
+      "definition": "Per-game mean over ONLY the cells that produced a scorable engine. Answers: when this inducer produces a world model at all, how accurate is it? Ignores failure frequency, so it FLATTERS an arm that fails often but scores well when it succeeds.",
+      "games": [],
+      "n_games": 0,
+      "sign_test": {
+        "discordant_d": 0,
+        "gemma_wins": 0,
+        "min_reachable_p_at_this_d": 1.0,
+        "n_games": 0,
+        "p_two_sided": 1.0,
+        "per_game_deltas": {},
+        "qwen_wins": 0,
+        "significant_at_0.05": false,
+        "ties": 0
+      }
+    },
+    "B_zero_imputed": {
+      "arms": {
+        "gemma31b": {
+          "coverage_nonzero_games": 0,
+          "coverage_of": 0,
+          "mean_heldout_over_games": null,
+          "n_games": 0,
+          "nonzero_games": [],
+          "zero_games": []
+        },
+        "qwen27b": {
+          "coverage_nonzero_games": 0,
+          "coverage_of": 0,
+          "mean_heldout_over_games": null,
+          "n_games": 0,
+          "nonzero_games": [],
+          "zero_games": []
+        },
+        "qwen38_27b": {
+          "coverage_nonzero_games": 0,
+          "coverage_of": 0,
+          "mean_heldout_over_games": null,
+          "n_games": 0,
+          "nonzero_games": [],
+          "zero_games": []
+        }
+      },
+      "definition": "A cell that failed to produce a usable engine counts as heldout 0.0. Answers the OPERATIONAL question: hand this inducer an unseen game, what do you actually get? Producing no engine is a real failure with real cost, not missing data. Read together with budget_exhaustion_finding: the failures are budget exhaustion at a fixed 16384-token budget, which both arms received identically.",
+      "games": [],
+      "n_games": 0,
+      "sign_test": {
+        "discordant_d": 0,
+        "gemma_wins": 0,
+        "min_reachable_p_at_this_d": 1.0,
+        "n_games": 0,
+        "p_two_sided": 1.0,
+        "per_game_deltas": {},
+        "qwen_wins": 0,
+        "significant_at_0.05": false,
+        "ties": 0
+      }
+    },
+    "C_strict_all_trials_scorable_both_arms": {
+      "arms": {
+        "gemma31b": {
+          "coverage_nonzero_games": 0,
+          "coverage_of": 0,
+          "mean_heldout_over_games": null,
+          "n_games": 0,
+          "nonzero_games": [],
+          "zero_games": []
+        },
+        "qwen27b": {
+          "coverage_nonzero_games": 0,
+          "coverage_of": 0,
+          "mean_heldout_over_games": null,
+          "n_games": 0,
+          "nonzero_games": [],
+          "zero_games": []
+        },
+        "qwen38_27b": {
+          "coverage_nonzero_games": 0,
+          "coverage_of": 0,
+          "mean_heldout_over_games": null,
+          "n_games": 0,
+          "nonzero_games": [],
+          "zero_games": []
+        }
+      },
+      "definition": "Only games where BOTH arms scored all trials. Cleanest pairing but it DISCARDS precisely the games one arm failed on -- the most informative cases -- so it is a robustness check, never the headline.",
+      "games": [],
+      "n_games": 0,
+      "sign_test": {
+        "discordant_d": 0,
+        "gemma_wins": 0,
+        "min_reachable_p_at_this_d": 1.0,
+        "n_games": 0,
+        "p_two_sided": 1.0,
+        "per_game_deltas": {},
+        "qwen_wins": 0,
+        "significant_at_0.05": false,
+        "ties": 0
+      }
+    }
+  },
+  "vram_witness": {
+    "samples": 0
+  },
+  "window_transitions_by_game": {
+    "ar25": 12,
+    "cd82": 5,
+    "ft09": 4,
+    "g50t": 12,
+    "lp85": 5,
+    "r11l": 3,
+    "re86": 12,
+    "sb26": 9,
+    "sk48": 12,
+    "sp80": 4,
+    "tr87": 12,
+    "tu93": 12,
+    "vc33": 3
+  }
+}
