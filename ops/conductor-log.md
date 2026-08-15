@@ -16017,3 +16017,5 @@ code |
 | 2026-08-15 04:42 UTC | Gated on Exp6440 held influence: prospective query | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6440-held-factor-revocation-binding-shift |
 | 2026-08-15 04:42 UTC | Gated on Exp6441 CSL readiness: malicious-success  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6441-prospective-query-conditioned-fact |
 | 2026-08-15 04:44 UTC | Gated on Exp6440 held influence: prospective query | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6440-held-factor-revocation-binding-shift |
+| 2026-08-15 04:44 UTC | Gated on Exp6441 CSL readiness: malicious-success  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6441-prospective-query-conditioned-fact |
+| 2026-08-15 04:46 UTC | Gated on Exp6441 and Exp6442 readiness: fresh held | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6441-prospective-query-conditioned-factor |
