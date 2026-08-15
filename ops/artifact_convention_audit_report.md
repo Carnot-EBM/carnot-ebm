@@ -10,106 +10,27 @@ evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CHECKABLE | 7 |
-| AGGREGATE_ONLY | 4 |
 | CANNOT_DETERMINE | 1 |
 
-## experiment_6429_constraint_saturation_verification_cost_ab.json
-
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-Selective verification matched always-refine accuracy with lower median and tail cost.
-
-## WHAT IS MISSING
-Actual per-unit metric rows are missing: `per_unit_rows` is named in `field_principles` and `field_provenance`, but no `per_unit_rows` array is present in the written artifact; only aggregates such as `arms`, `by_constraint_count`, `by_constraint_count_interaction_model`, and `selective_vs_always_median_and_tail_cost_deltas` are referenced or summarized.
-
-## THE CHECK A READER CANNOT DO
-Can each underlying row show that `selective_refine` matched `always_refine` accuracy while reducing cost, rather than the aggregate being driven by a few rows or degenerate cases?
-
-## experiment_6430_prospective_write_once_memory_capacity_frontier.json
-
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-Capacity 16 is the best nonzero memory capacity/frontier point, with higher utility than smaller capacities and better utility than capacity 32.
-
-## WHAT IS MISSING
-Per-unit metric rows by capacity, e.g. rows containing `event_id`, `capacity`, `selection_success` or `future_exact_yield` contribution, `coverage`, `retention`, `write_precision`, and `utility`; present fields include aggregate `capacity_utility_frontier.rows`, `recomputed_capacity_results.by_capacity`, and only a `per_unit_row_hash`.
-
-## THE CHECK A READER CANNOT DO
-A reader cannot tell whether capacity 16’s reported `future_exact_yield: 0.75` came from broad per-event improvement or a small subset/outlier pattern hidden behind the aggregate.
-
-## experiment_6431_controlled_memory_interference_ab.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The authority-aware retrieval/write-control arm outperformed the capacity-matched baseline on future exact yield and failure counts.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6432_held_shift_process_restart_csl_replication.json
-
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-The artifact claims `selected_capacity_memory` achieved a positive held future exact yield delta over `frozen_memory` and readiness was met.
-
-## WHAT IS MISSING
-`per_unit_rows` with one row per held event/unit and its metrics; present fields include `aggregate_recomputation_receipts.recomputed_results.by_arm`, `aggregate_recomputation_receipts.recomputed_results.cells`, `effective_sample_sizes_and_uncertainty.rows`, and `per_unit_row_hash`, but those are aggregates or receipts, not the actual rows.
-
-## THE CHECK A READER CANNOT DO
-Can the 59/72 selected-capacity successes be traced across individual held events to rule out concentration in a few sessions or degenerate frozen-control rows?
-
-## experiment_6433_csl_row_recomputation_safety_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The row recomputation audit completed, but the prospective CSL claim remains ineligible.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6434_arc_state_key_reachability_ab.json
+## experiment_6436_v554_terminal_handoff_and_queue_preflight.json
 
 **CANNOT_DETERMINE**
 
+> Audit-integrity guard: quoted field(s) ['gate_check_summary'] do not appear in the artifact, so this verdict was downgraded and must not be acted on.
+
 ## VERDICT
-CANNOT_DETERMINE
+BLOCKED_WITHOUT_DIAGNOSTIC
 
 ## WHAT THE CLAIM IS
-no claim
+The artifact claims completion is blocked because the V554 queue is incomplete.
 
 ## WHAT IS MISSING
-the artifact content itself; no fields are present, including any per-unit rows or `gate_check_summary`
+A `gate_check_summary` or equivalent V554 diagnostic identifying the failed queue check and its observed value; `"status": "complete_blocked_v554_queue_incomplete"` is present, but only V553 artifact details and blockers are recorded.
 
 ## THE CHECK A READER CANNOT DO
-A reader cannot tell whether there was a comparative claim, a blocked verdict, or any recorded diagnostic from this artifact.
+Which V554 queue item or completeness check failed, and what actual value caused the blocked verdict?
 
-## experiment_6435_v553_adversarial_capstone.json
+## experiment_6437_generation_to_verdict_receipt_replay_contract.json
 
 **CHECKABLE**
 
@@ -117,7 +38,7 @@ A reader cannot tell whether there was a comparative claim, a blocked verdict, o
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims the V553 batch is complete but blocked: 10 of 11 upstream tasks completed, exp6434 is missing/malformed, public factor eligibility is allowed, and other claim classes are ineligible with listed blockers.
+The task was blocked because `v554_queue_ready_score` was 0.0 instead of the required 1.0.
 
 ## WHAT IS MISSING
 nothing
@@ -125,7 +46,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6440_inducer_h2h_qwen38_vs_gemma31b.json
+## experiment_6440_held_factor_revocation_binding_shift_ab.json
 
 **CHECKABLE**
 
@@ -133,10 +54,26 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-No valid head-to-head comparison was made because the comparison arms were incomplete/truncated.
+The experiment was blocked because the required upstream Exp6439 artifact was not found.
 
 ## WHAT IS MISSING
-nothing; the blocker is recorded in `"both_arms_complete": false`, `"honest_verdict"`, `"completeness"`, and `"per_game_detail_side_by_side"` showing `"gemma31b"` and `"qwen38_27b"` with no completed cells.
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6442_skill_misevolution_quarantine_rollback_ab.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because the Exp6441 upstream artifact required to check `prospective_csl_ready_score == 1.0` was not found.
+
+## WHAT IS MISSING
+nothing
 
 ## THE CHECK A READER CANNOT DO
 none
@@ -149,23 +86,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims the task completed because the CERCE ledger was added/implemented.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_1736_kanele_synth.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-experiment 1736 succeeded with a generated bitfile and simulated Vivado success
+The CERCE ledger was added and implemented.
 
 ## WHAT IS MISSING
 nothing
@@ -181,7 +102,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact reports aggregate metrics for experiment 1767: latency_ms 150.5, parse_rate 0.95, energy_score 0.88 over 100 prompts.
+no claim
 
 ## WHAT IS MISSING
 nothing
@@ -189,18 +110,34 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6436_v554_terminal_handoff_and_queue_preflight.json
+## experiment_1736_kanele_synth.json
 
-**AGGREGATE_ONLY**
+**CHECKABLE**
 
 ## VERDICT
-AGGREGATE_ONLY
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims V553 narrow factor evidence is eligible while verification-cost, prospective CSL, ARC reachability, public ARC, and hardware claims remain blocked by flagged, underpowered, missing, or unauthenticated evidence.
+Experiment 1736 achieved simulated Vivado success and generated a bitfile.
 
 ## WHAT IS MISSING
-Per-unit evidence rows are missing: the artifact has `"v553_terminal_rows"`, `"v553_flagged_artifacts"`, `"v553_underpowered_artifacts"`, `"row_availability"`, `"row_count"`, and `"rows_embedded_in_primary_artifact"`, but no actual per-row metrics for the claimed improvements or gates.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-A reader cannot check whether the claimed “improved future yield” or “lower median and tail cost” effects were broad across units or driven by one/few outliers.
+none
+
+## experiment_6444_csl_lifecycle_recomputation_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V554 CSL lifecycle recomputation audit is blocked by missing or failed upstream evidence.
+
+## WHAT IS MISSING
+nothing; `"blocked_reason"`, `"csl_ineligibility_reasons"`, and `"gate_check_summary.failed_checks"` identify the failed checks and observed evidence.
+
+## THE CHECK A READER CANNOT DO
+none
