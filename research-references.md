@@ -34897,3 +34897,148 @@ answer by themselves.
   generation and CPU-only needs for exact replay and ARC reachability.
 
 <!-- V554-PLANNER-REFRESH-20260814-END -->
+
+## V555 planner refresh - 2026-08-15
+
+<!-- V555-PLANNER-REFRESH-20260815-START -->
+
+This refresh covers the remaining 2026-08-13 arXiv release and the requested
+secondary sources. It keeps executable local checkers as release authority.
+Learned energies, memories, and language models may propose, rank, route, or
+abstain. They may not release an answer without the exact checker.
+
+### Promising primary findings
+
+- **Teach the Magnitude, Not the Direction: Verifier-Bounded Credit Assignment
+  for Multi-Turn Multi-step LLM Agents** - arXiv:2608.13179,
+  https://arxiv.org/abs/2608.13179; submitted 2026-08-13. CrEST keeps the
+  external verifier as the performance ceiling. It uses verified, turn-level
+  advantages and lets a self-teacher modulate update magnitude instead of
+  choosing the update direction. Carnot hook: update factor priorities from
+  exact future outcomes only. Let model evidence control update size, never
+  the sign of an unverified write. Test the update on a fresh chronological
+  stream with a frozen arm, a verifier-bounded arm, and corrupt-feedback
+  controls.
+- **The Objective Is the Bottleneck: Latent World Models Encode What Their
+  Planners Cannot Use** - arXiv:2608.12959,
+  https://arxiv.org/abs/2608.12959; submitted 2026-08-13. The reported latent
+  predictor retained long-horizon state information, but its squared-distance
+  planning objective hid that value. Replacing only the objective raised the
+  offset-100 success rate from 26% to 98% in the paper's setting. Carnot hook:
+  do not infer that a factor or state representation is useless from a null
+  downstream policy. Freeze the representation. Compare objectives with
+  matched candidate bytes and exact outcomes. Require an active-versus-
+  ablated causal effect before promotion.
+- **Sampling Luck Masquerades as Allocation Gain: Auditing Test-Time Budget
+  Allocation for Neural Combinatorial Optimization** - arXiv:2608.13087,
+  https://arxiv.org/abs/2608.13087; submitted 2026-08-13. In-sample allocation
+  appeared to gain 2.2% to 2.6%, but the gain vanished out of sample. A
+  preregistered held-out policy retained a real gain under distribution shift.
+  Carnot hook: learn or tune verifier allocation on development units only.
+  Freeze the policy before held evaluation. Charge probe cost, keep equal total
+  budgets, emit every unit row, and include a constructed zero-gain control.
+- **Policy-as-logic for robust reasoning over rules** - arXiv:2608.11905,
+  https://arxiv.org/abs/2608.11905; submitted 2026-08-12. The method assigns
+  the LLM to fact extraction and an answer-set solver to rule execution. It
+  reports greater robustness than policy-as-prompt and policy-as-code with
+  about one tenth of the tokens. Carnot hook: test typed fact grounding into a
+  fixed rule program. Do not ask the LLM to synthesize a new solver or a new
+  constraint language. Keep the exact solver output authoritative.
+- **Training Under Challenge: Executable Certificates and Challenge-Closed
+  Optimality for Neural Networks** - arXiv:2608.12655,
+  https://arxiv.org/abs/2608.12655; submitted 2026-08-12. The framework uses
+  predeclared executable challenges to produce replayable counterexamples to a
+  model checkpoint. Passing a finite suite stays suite-relative unless the
+  suite has a separate coverage argument. Carnot hook: make every capstone
+  attack constructive. Preserve the exact counterexample bytes and avoid
+  converting a finite attack pass into a global claim.
+- **The data geometry of masking diffusion: Certified-optimal schedules via
+  unmasking growth complexity** - arXiv:2608.13520,
+  https://arxiv.org/abs/2608.13520; submitted 2026-08-13. The paper estimates
+  local KL increments from coupled reveal trajectories and uses them to place
+  sampling work. Carnot hook: retain this as a future discrete-sampler
+  scheduling method. It does not close the current verification, CSL, or ARC
+  evidence gaps, so V555 does not schedule a new sampler task.
+- **Sustaining Plasticity via Learnable Wavelet Activations in Continual
+  Learning** - arXiv:2608.12874, https://arxiv.org/abs/2608.12874; submitted
+  2026-08-13. The method separates low- and high-frequency activation parts,
+  uses a loss-driven injection trigger, and regularizes old knowledge. Carnot
+  hook: the stability-plasticity split is relevant to future weight-learning
+  work. V555 uses a smaller verifier-bounded factor-weight update before any
+  new trainable network or KAN variant.
+- **HYDRA: Hyperbolic Dynamic Representation Architecture for
+  Kolmogorov-Arnold Networks** - arXiv:2608.12194,
+  https://arxiv.org/abs/2608.12194; submitted 2026-08-12. HYDRA shares
+  low-rank functional transformations in a bounded hyperbolic space to reduce
+  KAN redundancy. It does not provide an exact constraint authority or a local
+  Carnot-specific result. Record it for later compact-energy work. Do not
+  schedule a KAN retrain in V555.
+
+### Citation-trail checks
+
+- The Semantic Scholar API returned 33 citing records for EBT
+  (arXiv:2507.02092) on 2026-08-15. The newest directly relevant records remain
+  **Memoir** (arXiv:2607.20792) and **Solver-Hard Is Not Model-Hard**
+  (arXiv:2607.17047). Both are already indexed above. No newer citation
+  supplies an exact local verifier or changes the current experiment order.
+- The same API returned eight citing records for ARM-EBM
+  (arXiv:2512.15605). The most relevant records remain **Distributional
+  Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning**
+  (arXiv:2605.18871) and **Reinforcement Learning for Diffusion LLMs via
+  Energy-Based Gibbs Alignment**. These support distributional energy and
+  energy-guided decoding as research directions. They do not reopen Carnot's
+  retired external-text scorer or in-loop LoRA paths.
+
+### Secondary-source and product checks
+
+- **OpenReview:** MemoPilot, **From Player to Master: Enhancing Test-Time
+  Learning of LLM Agents via Reinforcement Learning over Memory**,
+  https://openreview.net/forum?id=gNWNtstp3r, uses turn-wise reward and
+  multi-turn advantage estimation for memory updates. Carnot will borrow the
+  future-outcome credit boundary, not the GRPO training stack. NRGPT and
+  Spilled Energy remain architecture references only. Their logits or learned
+  energies are not exact release authorities.
+- **Hugging Face Papers:** **Think Again or Think Longer? Selective
+  Verification for Budget-Aware Reasoning**,
+  https://huggingface.co/papers/2606.19808, treats verification as a serving
+  allocation decision and reports that verification can also flip correct
+  answers. This supports a held-out allocation experiment with harmful-flip
+  accounting. It does not justify an LLM judge as the final checker.
+- **GitHub:** the current search surfaced the paper code for EBT, recent
+  verifier and reward-model repositories, and mature constrained-generation
+  tools such as LMQL. No new repository is a drop-in exact-authority
+  dependency for V555. Add no package and do not reopen the retired finite-ID
+  generation or external-text scorer lanes.
+- **Extropic:** the first-party writing index still ends with the October 2025
+  X0, XTR-0, TSU, DTM, and `thrml` launch material:
+  https://extropic.ai/writing. The hardware page still labels Z1 as early
+  access in 2026: https://extropic.ai/hardware. Carnot has no authenticated
+  TSU route. Schedule no TSU latency, power, or availability claim.
+- **Logical Intelligence:** the current Kona page still describes Kona 1.0 as
+  a constraint-enforcement EBM beneath language-model interfaces:
+  https://logicalintelligence.com/kona-ebms-energy-based-models. New 2026
+  pages promote the Aleph formal prover and machine-checked code, but no public
+  Kona weights, API, reproducible local runner, or detailed new architecture
+  are available. Keep Kona and Aleph as product comparators only.
+- **Hardware and Ising:** no source found after the V554 cutoff that changes
+  the local board state or supplies authenticated thermodynamic hardware.
+  Keep the dual RTX 3090 path for mandated GGUF inference and CPU exact replay.
+  Schedule no unchanged FPGA, TSU, NPU, or Ising board probe in V555.
+
+### V555 planning impact
+
+- Replace the failed monolithic gate cascade with independent executable
+  branches. A queue audit may report a problem, but it must not suppress every
+  science task.
+- Test fixed-policy fact grounding, causal objective replacement, and exact
+  constraint-energy ranking on matched generated bytes.
+- Learn verification allocation on development units and test it only on a
+  sealed held set with equal total budgets and a zero-gain control.
+- Run continuous self-learning as verifier-bounded factor-weight updates on a
+  fresh chronological stream. Test corrupt feedback, rollback, restart, and
+  held future yield.
+- Recover the ARC generalization slot with bounded shards, atomic checkpoints,
+  and a representation-versus-objective audit. Make no game or level solve
+  claim.
+
+<!-- V555-PLANNER-REFRESH-20260815-END -->

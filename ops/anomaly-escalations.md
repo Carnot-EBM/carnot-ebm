@@ -1434,3 +1434,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - UNREADABLE/corrupt artifact (Expecting value: line 1 column 1 (char 0)) — breaks the gate
 - artifact: results/experiment_6434_arc_state_key_reachability_ab.json
+
+## experiment_6444_csl_lifecycle_recomputation_audit.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+- artifact: results/experiment_6444_csl_lifecycle_recomputation_audit.json
