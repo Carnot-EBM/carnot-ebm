@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.554",
+  "generated_at": "2026-08-15T05:16:00Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.0,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "V553 terminal handoff and V554 queue preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp6436 readiness: generation-to-verdict receipt and replay contract",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp6439 influence: held factor revocation and binding-shift A/B",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp6441 CSL readiness: malicious-success quarantine and rollback A/B",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independent continuous self-learning lifecycle row-recomputation audit",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Execution accounting records 5 experiments in 0.0 minutes, including 3 compute-bound tasks. All 5 entries tie at 0.0 minutes, so no compute-bound task is measurably slower and no phase-level cause can be assigned. The locked task attribution does not identify GPU idle on compute-bound work.",
+  "bottlenecks_identified": [
+    "Disk-mtime reconstruction has zero-minute resolution for all 5 entries, so the compute-bound leaders are tied and phase-level causes are not observable.",
+    "The point-in-time GPU snapshot is not linked to experiment execution windows, so compute-period utilization cannot be graded; the locked compute-task idle indicator remains false.",
+    "No task record declares concurrent model count or runner selection, so DualGPURunner eligibility and engagement cannot be audited."
+  ],
+  "improvements_suggested": [
+    "Capture monotonic task start, task end, phase duration, and gate-wait receipts instead of relying only on disk modification times.",
+    "Link GPU samples to active task IDs and compute-bound declarations, and alert only when an active compute-bound task remains idle.",
+    "Persist loaded-model count and runner selection in each compute-task receipt; select DualGPURunner only when at least 2 models are loaded in parallel.",
+    "Add readiness-aware queue dispatch so work with satisfied prerequisites can proceed while unresolved gated work remains pending."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add readiness-aware dispatch with explicit prerequisite and gate-wait receipts.",
+    "Record task-scoped monotonic phase timing and task-correlated GPU samples.",
+    "Record loaded-model count and runner selection, with DualGPURunner chosen only for at least 2 parallel models."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The reconstructed timing supports a duration tie, not a claim that execution was instantaneous. The idle GPU snapshot cannot be attributed to a running compute task, and no data available this milestone establishes parallel multi-model execution or DualGPURunner engagement."
+}

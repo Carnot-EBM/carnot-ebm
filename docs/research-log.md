@@ -6199,3 +6199,10 @@ The critical path for milestone .250:
 - theme: wall time concentrated in a synthesis-only reachability and roster pass rather than accelerator work
 - key result: the first compute row was readiness-dependent; neither in-task accelerator duty cycle nor eligibility for the dual-GPU runner is observable
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.554
+
+- exp_range: exp6436-exp6441 (visible label-reference bounds only; the complete milestone range is not available)
+- theme: readiness-labelled compute work tied at reconstructed timing resolution while task-level accelerator attribution remained absent
+- key result: no compute-bound task was measurably slower, and the evidence does not establish compute-period GPU inefficiency or a missed parallel multi-model runner dispatch
+- acceptance: no data available this milestone
