@@ -1,0 +1,3290 @@
+{
+  "labels_omitted_from_manifest": true,
+  "partitions": [
+    "development",
+    "allocation_held",
+    "selection_held"
+  ],
+  "planning_date": "20260815",
+  "problems": [
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_00",
+        "payload_item": "payload_00",
+        "protected_item": "sealed_relay_00"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          3,
+          0
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_00": [
+            1,
+            0
+          ],
+          "payload_00": [
+            2,
+            0
+          ],
+          "sealed_relay_00": [
+            0,
+            1
+          ]
+        },
+        "objective": "Deliver payload_00 at the exit without entering the protected cell or touching sealed_relay_00.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "development",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:c0521893606de48ef7fafa6e7a07bfec5dedc1d4eda80d9ad806adf0029cfaee",
+      "problem_id": "exp6450-policy-00",
+      "protected_clauses": [
+        "do not enter protected cell [0, 1]",
+        "do not pickup protected item sealed_relay_00",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 0,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_00 pickup requires carrying badge_00",
+        "deliver requires carrying payload_00 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_01",
+        "payload_item": "payload_01",
+        "protected_item": "sealed_relay_01"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          0,
+          3
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_01": [
+            0,
+            1
+          ],
+          "payload_01": [
+            0,
+            2
+          ],
+          "sealed_relay_01": [
+            1,
+            0
+          ]
+        },
+        "objective": "Deliver payload_01 at the exit without entering the protected cell or touching sealed_relay_01.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "development",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:e3a5391117bfa70598b233e9bc72d46778f5587777a61d85129d51a5c7ddf853",
+      "problem_id": "exp6450-policy-01",
+      "protected_clauses": [
+        "do not enter protected cell [1, 0]",
+        "do not pickup protected item sealed_relay_01",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 1,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_01 pickup requires carrying badge_01",
+        "deliver requires carrying payload_01 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_02",
+        "payload_item": "payload_02",
+        "protected_item": "sealed_relay_02"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          2,
+          1
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_02": [
+            1,
+            0
+          ],
+          "payload_02": [
+            1,
+            1
+          ],
+          "sealed_relay_02": [
+            2,
+            0
+          ]
+        },
+        "objective": "Deliver payload_02 at the exit without entering the protected cell or touching sealed_relay_02.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "development",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:e1c1f026ccc5a4e32762128421a9b10822dc3923b1d7789f74c85bb850c91e55",
+      "problem_id": "exp6450-policy-02",
+      "protected_clauses": [
+        "do not enter protected cell [2, 0]",
+        "do not pickup protected item sealed_relay_02",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 2,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_02 pickup requires carrying badge_02",
+        "deliver requires carrying payload_02 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_03",
+        "payload_item": "payload_03",
+        "protected_item": "sealed_relay_03"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          1,
+          2
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_03": [
+            0,
+            1
+          ],
+          "payload_03": [
+            1,
+            1
+          ],
+          "sealed_relay_03": [
+            0,
+            2
+          ]
+        },
+        "objective": "Deliver payload_03 at the exit without entering the protected cell or touching sealed_relay_03.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "development",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:244594f7bd1dd99fd0e0ef0d7fa813f61b14d46227fc348358d4098f5404d242",
+      "problem_id": "exp6450-policy-03",
+      "protected_clauses": [
+        "do not enter protected cell [0, 2]",
+        "do not pickup protected item sealed_relay_03",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 3,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_03 pickup requires carrying badge_03",
+        "deliver requires carrying payload_03 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_04",
+        "payload_item": "payload_04",
+        "protected_item": "sealed_relay_04"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          3,
+          0
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_04": [
+            1,
+            0
+          ],
+          "payload_04": [
+            2,
+            0
+          ],
+          "sealed_relay_04": [
+            0,
+            1
+          ]
+        },
+        "objective": "Deliver payload_04 at the exit without entering the protected cell or touching sealed_relay_04.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "development",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:4f5326613771bddc990be7b693d4fc3110458ed83f100af4eafd4aab4e7547f3",
+      "problem_id": "exp6450-policy-04",
+      "protected_clauses": [
+        "do not enter protected cell [0, 1]",
+        "do not pickup protected item sealed_relay_04",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 4,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_04 pickup requires carrying badge_04",
+        "deliver requires carrying payload_04 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_05",
+        "payload_item": "payload_05",
+        "protected_item": "sealed_relay_05"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          0,
+          3
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_05": [
+            0,
+            1
+          ],
+          "payload_05": [
+            0,
+            2
+          ],
+          "sealed_relay_05": [
+            1,
+            0
+          ]
+        },
+        "objective": "Deliver payload_05 at the exit without entering the protected cell or touching sealed_relay_05.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "development",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:dc0ba620332086fb0e7462db89eecfee2700d40a0010d686e8722f09d2d14db1",
+      "problem_id": "exp6450-policy-05",
+      "protected_clauses": [
+        "do not enter protected cell [1, 0]",
+        "do not pickup protected item sealed_relay_05",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 5,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_05 pickup requires carrying badge_05",
+        "deliver requires carrying payload_05 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_06",
+        "payload_item": "payload_06",
+        "protected_item": "sealed_relay_06"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          2,
+          1
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_06": [
+            1,
+            0
+          ],
+          "payload_06": [
+            1,
+            1
+          ],
+          "sealed_relay_06": [
+            2,
+            0
+          ]
+        },
+        "objective": "Deliver payload_06 at the exit without entering the protected cell or touching sealed_relay_06.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "development",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:29aa899192831b58fba4771c06bb130129ec4fdc2bb7126bc08353aac26eee0e",
+      "problem_id": "exp6450-policy-06",
+      "protected_clauses": [
+        "do not enter protected cell [2, 0]",
+        "do not pickup protected item sealed_relay_06",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 6,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_06 pickup requires carrying badge_06",
+        "deliver requires carrying payload_06 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_07",
+        "payload_item": "payload_07",
+        "protected_item": "sealed_relay_07"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          1,
+          2
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_07": [
+            0,
+            1
+          ],
+          "payload_07": [
+            1,
+            1
+          ],
+          "sealed_relay_07": [
+            0,
+            2
+          ]
+        },
+        "objective": "Deliver payload_07 at the exit without entering the protected cell or touching sealed_relay_07.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "development",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:99972509fc5632d984d6f40e899243aaef022280e9c583a169f34cdfa18175eb",
+      "problem_id": "exp6450-policy-07",
+      "protected_clauses": [
+        "do not enter protected cell [0, 2]",
+        "do not pickup protected item sealed_relay_07",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 7,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_07 pickup requires carrying badge_07",
+        "deliver requires carrying payload_07 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_08",
+        "payload_item": "payload_08",
+        "protected_item": "sealed_relay_08"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          3,
+          0
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_08": [
+            1,
+            0
+          ],
+          "payload_08": [
+            2,
+            0
+          ],
+          "sealed_relay_08": [
+            0,
+            1
+          ]
+        },
+        "objective": "Deliver payload_08 at the exit without entering the protected cell or touching sealed_relay_08.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "development",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:1300331063cac6187c5bf2fc9026490b13bae199af55a86044ba014cd9d708ac",
+      "problem_id": "exp6450-policy-08",
+      "protected_clauses": [
+        "do not enter protected cell [0, 1]",
+        "do not pickup protected item sealed_relay_08",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 8,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_08 pickup requires carrying badge_08",
+        "deliver requires carrying payload_08 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_09",
+        "payload_item": "payload_09",
+        "protected_item": "sealed_relay_09"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          0,
+          3
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_09": [
+            0,
+            1
+          ],
+          "payload_09": [
+            0,
+            2
+          ],
+          "sealed_relay_09": [
+            1,
+            0
+          ]
+        },
+        "objective": "Deliver payload_09 at the exit without entering the protected cell or touching sealed_relay_09.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "development",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:06927b6fd6ae4530ba471304b9dd9a8d17c860c321277b7ddc4baafd77b41520",
+      "problem_id": "exp6450-policy-09",
+      "protected_clauses": [
+        "do not enter protected cell [1, 0]",
+        "do not pickup protected item sealed_relay_09",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 9,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_09 pickup requires carrying badge_09",
+        "deliver requires carrying payload_09 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_10",
+        "payload_item": "payload_10",
+        "protected_item": "sealed_relay_10"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          2,
+          1
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_10": [
+            1,
+            0
+          ],
+          "payload_10": [
+            1,
+            1
+          ],
+          "sealed_relay_10": [
+            2,
+            0
+          ]
+        },
+        "objective": "Deliver payload_10 at the exit without entering the protected cell or touching sealed_relay_10.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "development",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:65550112d8d7c497e89da31b9a6e776c5910e4f6caa78b89a30b2ff75a1750c5",
+      "problem_id": "exp6450-policy-10",
+      "protected_clauses": [
+        "do not enter protected cell [2, 0]",
+        "do not pickup protected item sealed_relay_10",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 10,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_10 pickup requires carrying badge_10",
+        "deliver requires carrying payload_10 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_11",
+        "payload_item": "payload_11",
+        "protected_item": "sealed_relay_11"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          1,
+          2
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_11": [
+            0,
+            1
+          ],
+          "payload_11": [
+            1,
+            1
+          ],
+          "sealed_relay_11": [
+            0,
+            2
+          ]
+        },
+        "objective": "Deliver payload_11 at the exit without entering the protected cell or touching sealed_relay_11.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "development",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:ce99f52fb3880c0497bc9c8544b148af9a844b4f8dec09abbe2381c0e4ea3b32",
+      "problem_id": "exp6450-policy-11",
+      "protected_clauses": [
+        "do not enter protected cell [0, 2]",
+        "do not pickup protected item sealed_relay_11",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 11,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_11 pickup requires carrying badge_11",
+        "deliver requires carrying payload_11 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_12",
+        "payload_item": "payload_12",
+        "protected_item": "sealed_relay_12"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          3,
+          0
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_12": [
+            1,
+            0
+          ],
+          "payload_12": [
+            2,
+            0
+          ],
+          "sealed_relay_12": [
+            0,
+            1
+          ]
+        },
+        "objective": "Deliver payload_12 at the exit without entering the protected cell or touching sealed_relay_12.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "allocation_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:d0428006f4f7fa25e04a5d7327615994bc682b1574ed1256cd1d17032af5307e",
+      "problem_id": "exp6450-policy-12",
+      "protected_clauses": [
+        "do not enter protected cell [0, 1]",
+        "do not pickup protected item sealed_relay_12",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 12,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_12 pickup requires carrying badge_12",
+        "deliver requires carrying payload_12 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_13",
+        "payload_item": "payload_13",
+        "protected_item": "sealed_relay_13"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          0,
+          3
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_13": [
+            0,
+            1
+          ],
+          "payload_13": [
+            0,
+            2
+          ],
+          "sealed_relay_13": [
+            1,
+            0
+          ]
+        },
+        "objective": "Deliver payload_13 at the exit without entering the protected cell or touching sealed_relay_13.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "allocation_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:1361c79cfaa1710ab4050ab99bb3dd895e5ccd152835d4e8e879b2820ed7baf2",
+      "problem_id": "exp6450-policy-13",
+      "protected_clauses": [
+        "do not enter protected cell [1, 0]",
+        "do not pickup protected item sealed_relay_13",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 13,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_13 pickup requires carrying badge_13",
+        "deliver requires carrying payload_13 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_14",
+        "payload_item": "payload_14",
+        "protected_item": "sealed_relay_14"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          2,
+          1
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_14": [
+            1,
+            0
+          ],
+          "payload_14": [
+            1,
+            1
+          ],
+          "sealed_relay_14": [
+            2,
+            0
+          ]
+        },
+        "objective": "Deliver payload_14 at the exit without entering the protected cell or touching sealed_relay_14.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "allocation_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:3ddce7edd2f939ac89e612b6f94f7056751490059c3f38ab3ead7bf7b1cd7ace",
+      "problem_id": "exp6450-policy-14",
+      "protected_clauses": [
+        "do not enter protected cell [2, 0]",
+        "do not pickup protected item sealed_relay_14",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 14,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_14 pickup requires carrying badge_14",
+        "deliver requires carrying payload_14 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_15",
+        "payload_item": "payload_15",
+        "protected_item": "sealed_relay_15"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          1,
+          2
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_15": [
+            0,
+            1
+          ],
+          "payload_15": [
+            1,
+            1
+          ],
+          "sealed_relay_15": [
+            0,
+            2
+          ]
+        },
+        "objective": "Deliver payload_15 at the exit without entering the protected cell or touching sealed_relay_15.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "allocation_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:dc74515f720b18ec9edca9184be35ac92d86594c1b6b4c8344af68ab401999cc",
+      "problem_id": "exp6450-policy-15",
+      "protected_clauses": [
+        "do not enter protected cell [0, 2]",
+        "do not pickup protected item sealed_relay_15",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 15,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_15 pickup requires carrying badge_15",
+        "deliver requires carrying payload_15 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_16",
+        "payload_item": "payload_16",
+        "protected_item": "sealed_relay_16"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          3,
+          0
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_16": [
+            1,
+            0
+          ],
+          "payload_16": [
+            2,
+            0
+          ],
+          "sealed_relay_16": [
+            0,
+            1
+          ]
+        },
+        "objective": "Deliver payload_16 at the exit without entering the protected cell or touching sealed_relay_16.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "allocation_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:eabe90a972edb7b5a94f390c547cc58a3c04abab8723b052857da0d0a6bada34",
+      "problem_id": "exp6450-policy-16",
+      "protected_clauses": [
+        "do not enter protected cell [0, 1]",
+        "do not pickup protected item sealed_relay_16",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 16,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_16 pickup requires carrying badge_16",
+        "deliver requires carrying payload_16 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_17",
+        "payload_item": "payload_17",
+        "protected_item": "sealed_relay_17"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          0,
+          3
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_17": [
+            0,
+            1
+          ],
+          "payload_17": [
+            0,
+            2
+          ],
+          "sealed_relay_17": [
+            1,
+            0
+          ]
+        },
+        "objective": "Deliver payload_17 at the exit without entering the protected cell or touching sealed_relay_17.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "allocation_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:a6ab3b4d02e00e000457d2ac78c424b2b8551e36ae7994c3ef389e2e1dd0be3c",
+      "problem_id": "exp6450-policy-17",
+      "protected_clauses": [
+        "do not enter protected cell [1, 0]",
+        "do not pickup protected item sealed_relay_17",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 17,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_17 pickup requires carrying badge_17",
+        "deliver requires carrying payload_17 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_18",
+        "payload_item": "payload_18",
+        "protected_item": "sealed_relay_18"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          2,
+          1
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_18": [
+            1,
+            0
+          ],
+          "payload_18": [
+            1,
+            1
+          ],
+          "sealed_relay_18": [
+            2,
+            0
+          ]
+        },
+        "objective": "Deliver payload_18 at the exit without entering the protected cell or touching sealed_relay_18.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "allocation_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:3299c8c2c2c36977d2461cf14d36f196949f239879868bee19447bae22e77094",
+      "problem_id": "exp6450-policy-18",
+      "protected_clauses": [
+        "do not enter protected cell [2, 0]",
+        "do not pickup protected item sealed_relay_18",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 18,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_18 pickup requires carrying badge_18",
+        "deliver requires carrying payload_18 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_19",
+        "payload_item": "payload_19",
+        "protected_item": "sealed_relay_19"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          1,
+          2
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_19": [
+            0,
+            1
+          ],
+          "payload_19": [
+            1,
+            1
+          ],
+          "sealed_relay_19": [
+            0,
+            2
+          ]
+        },
+        "objective": "Deliver payload_19 at the exit without entering the protected cell or touching sealed_relay_19.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "allocation_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:baf3b58789e97e552cc469722c0915d78f959b08a80ba5e6e082e10905a5b9db",
+      "problem_id": "exp6450-policy-19",
+      "protected_clauses": [
+        "do not enter protected cell [0, 2]",
+        "do not pickup protected item sealed_relay_19",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 19,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_19 pickup requires carrying badge_19",
+        "deliver requires carrying payload_19 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_20",
+        "payload_item": "payload_20",
+        "protected_item": "sealed_relay_20"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          3,
+          0
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_20": [
+            1,
+            0
+          ],
+          "payload_20": [
+            2,
+            0
+          ],
+          "sealed_relay_20": [
+            0,
+            1
+          ]
+        },
+        "objective": "Deliver payload_20 at the exit without entering the protected cell or touching sealed_relay_20.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "allocation_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:9d23ccbc94a58a9d7966240d51af93b59c8801495cc5d715afd71baf1880ce9d",
+      "problem_id": "exp6450-policy-20",
+      "protected_clauses": [
+        "do not enter protected cell [0, 1]",
+        "do not pickup protected item sealed_relay_20",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 20,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_20 pickup requires carrying badge_20",
+        "deliver requires carrying payload_20 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_21",
+        "payload_item": "payload_21",
+        "protected_item": "sealed_relay_21"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          0,
+          3
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_21": [
+            0,
+            1
+          ],
+          "payload_21": [
+            0,
+            2
+          ],
+          "sealed_relay_21": [
+            1,
+            0
+          ]
+        },
+        "objective": "Deliver payload_21 at the exit without entering the protected cell or touching sealed_relay_21.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "allocation_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:7e82e5d559f07c8bddc2fb64352ced819a787649cad5f5ac608f0389e8c2f1d9",
+      "problem_id": "exp6450-policy-21",
+      "protected_clauses": [
+        "do not enter protected cell [1, 0]",
+        "do not pickup protected item sealed_relay_21",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 21,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_21 pickup requires carrying badge_21",
+        "deliver requires carrying payload_21 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_22",
+        "payload_item": "payload_22",
+        "protected_item": "sealed_relay_22"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          2,
+          1
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_22": [
+            1,
+            0
+          ],
+          "payload_22": [
+            1,
+            1
+          ],
+          "sealed_relay_22": [
+            2,
+            0
+          ]
+        },
+        "objective": "Deliver payload_22 at the exit without entering the protected cell or touching sealed_relay_22.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "allocation_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:7913f99e57525876fc2aee3dd2a91ff5ea76ab349c3cdf92d0619ceb60f30cf0",
+      "problem_id": "exp6450-policy-22",
+      "protected_clauses": [
+        "do not enter protected cell [2, 0]",
+        "do not pickup protected item sealed_relay_22",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 22,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_22 pickup requires carrying badge_22",
+        "deliver requires carrying payload_22 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_23",
+        "payload_item": "payload_23",
+        "protected_item": "sealed_relay_23"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          1,
+          2
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_23": [
+            0,
+            1
+          ],
+          "payload_23": [
+            1,
+            1
+          ],
+          "sealed_relay_23": [
+            0,
+            2
+          ]
+        },
+        "objective": "Deliver payload_23 at the exit without entering the protected cell or touching sealed_relay_23.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "allocation_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:60a0a81393774ccc2ce4a5eee95c6c2295c3e1d6d187492579a9571e5566280f",
+      "problem_id": "exp6450-policy-23",
+      "protected_clauses": [
+        "do not enter protected cell [0, 2]",
+        "do not pickup protected item sealed_relay_23",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 23,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_23 pickup requires carrying badge_23",
+        "deliver requires carrying payload_23 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_24",
+        "payload_item": "payload_24",
+        "protected_item": "sealed_relay_24"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          3,
+          0
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_24": [
+            1,
+            0
+          ],
+          "payload_24": [
+            2,
+            0
+          ],
+          "sealed_relay_24": [
+            0,
+            1
+          ]
+        },
+        "objective": "Deliver payload_24 at the exit without entering the protected cell or touching sealed_relay_24.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "selection_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:e8e765c5803f1f3f468610ccfc8d37fcc4f791312d705981b0cd6387c4808445",
+      "problem_id": "exp6450-policy-24",
+      "protected_clauses": [
+        "do not enter protected cell [0, 1]",
+        "do not pickup protected item sealed_relay_24",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 24,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_24 pickup requires carrying badge_24",
+        "deliver requires carrying payload_24 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_25",
+        "payload_item": "payload_25",
+        "protected_item": "sealed_relay_25"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          0,
+          3
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_25": [
+            0,
+            1
+          ],
+          "payload_25": [
+            0,
+            2
+          ],
+          "sealed_relay_25": [
+            1,
+            0
+          ]
+        },
+        "objective": "Deliver payload_25 at the exit without entering the protected cell or touching sealed_relay_25.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "selection_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:d6d5afe3b48fdf061a10de4f932a1ab60adb242652d16120ae9c1c6e82b1e128",
+      "problem_id": "exp6450-policy-25",
+      "protected_clauses": [
+        "do not enter protected cell [1, 0]",
+        "do not pickup protected item sealed_relay_25",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 25,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_25 pickup requires carrying badge_25",
+        "deliver requires carrying payload_25 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_26",
+        "payload_item": "payload_26",
+        "protected_item": "sealed_relay_26"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          2,
+          1
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_26": [
+            1,
+            0
+          ],
+          "payload_26": [
+            1,
+            1
+          ],
+          "sealed_relay_26": [
+            2,
+            0
+          ]
+        },
+        "objective": "Deliver payload_26 at the exit without entering the protected cell or touching sealed_relay_26.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "selection_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:98b906db385550084cdf45c78d9535e693d0116e8aca7351bd43248e2022154c",
+      "problem_id": "exp6450-policy-26",
+      "protected_clauses": [
+        "do not enter protected cell [2, 0]",
+        "do not pickup protected item sealed_relay_26",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 26,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_26 pickup requires carrying badge_26",
+        "deliver requires carrying payload_26 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_27",
+        "payload_item": "payload_27",
+        "protected_item": "sealed_relay_27"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          1,
+          2
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_27": [
+            0,
+            1
+          ],
+          "payload_27": [
+            1,
+            1
+          ],
+          "sealed_relay_27": [
+            0,
+            2
+          ]
+        },
+        "objective": "Deliver payload_27 at the exit without entering the protected cell or touching sealed_relay_27.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "selection_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:e411eb6e8f8e1c5cafec0a188d2eab45e10d436542e63c6e14a78d130110713e",
+      "problem_id": "exp6450-policy-27",
+      "protected_clauses": [
+        "do not enter protected cell [0, 2]",
+        "do not pickup protected item sealed_relay_27",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 27,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_27 pickup requires carrying badge_27",
+        "deliver requires carrying payload_27 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_28",
+        "payload_item": "payload_28",
+        "protected_item": "sealed_relay_28"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          3,
+          0
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_28": [
+            1,
+            0
+          ],
+          "payload_28": [
+            2,
+            0
+          ],
+          "sealed_relay_28": [
+            0,
+            1
+          ]
+        },
+        "objective": "Deliver payload_28 at the exit without entering the protected cell or touching sealed_relay_28.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "selection_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:289b50fbcc2359e6b87ab5fe6a2b4f8c62226f824491cd3680954e0183210f23",
+      "problem_id": "exp6450-policy-28",
+      "protected_clauses": [
+        "do not enter protected cell [0, 1]",
+        "do not pickup protected item sealed_relay_28",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 28,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_28 pickup requires carrying badge_28",
+        "deliver requires carrying payload_28 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_29",
+        "payload_item": "payload_29",
+        "protected_item": "sealed_relay_29"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          0,
+          3
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_29": [
+            0,
+            1
+          ],
+          "payload_29": [
+            0,
+            2
+          ],
+          "sealed_relay_29": [
+            1,
+            0
+          ]
+        },
+        "objective": "Deliver payload_29 at the exit without entering the protected cell or touching sealed_relay_29.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "selection_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:a71fed999faca96a8126b621652ae7ec9401f5075362fd2ada3f7bb5d41601f7",
+      "problem_id": "exp6450-policy-29",
+      "protected_clauses": [
+        "do not enter protected cell [1, 0]",
+        "do not pickup protected item sealed_relay_29",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 29,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_29 pickup requires carrying badge_29",
+        "deliver requires carrying payload_29 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_30",
+        "payload_item": "payload_30",
+        "protected_item": "sealed_relay_30"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          2,
+          1
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_30": [
+            1,
+            0
+          ],
+          "payload_30": [
+            1,
+            1
+          ],
+          "sealed_relay_30": [
+            2,
+            0
+          ]
+        },
+        "objective": "Deliver payload_30 at the exit without entering the protected cell or touching sealed_relay_30.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "selection_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:94975d0efddebfa9bc1b7069c32cbaed6a7a346fc403d16c3d251ddf09d34a6e",
+      "problem_id": "exp6450-policy-30",
+      "protected_clauses": [
+        "do not enter protected cell [2, 0]",
+        "do not pickup protected item sealed_relay_30",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 30,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_30 pickup requires carrying badge_30",
+        "deliver requires carrying payload_30 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_31",
+        "payload_item": "payload_31",
+        "protected_item": "sealed_relay_31"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          1,
+          2
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_31": [
+            0,
+            1
+          ],
+          "payload_31": [
+            1,
+            1
+          ],
+          "sealed_relay_31": [
+            0,
+            2
+          ]
+        },
+        "objective": "Deliver payload_31 at the exit without entering the protected cell or touching sealed_relay_31.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "selection_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:a025d1dccffd08c9bcf2368ae78d4417f47082ca6319bfbafd8f7cb0ba52c035",
+      "problem_id": "exp6450-policy-31",
+      "protected_clauses": [
+        "do not enter protected cell [0, 2]",
+        "do not pickup protected item sealed_relay_31",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 31,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_31 pickup requires carrying badge_31",
+        "deliver requires carrying payload_31 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_32",
+        "payload_item": "payload_32",
+        "protected_item": "sealed_relay_32"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          3,
+          0
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_32": [
+            1,
+            0
+          ],
+          "payload_32": [
+            2,
+            0
+          ],
+          "sealed_relay_32": [
+            0,
+            1
+          ]
+        },
+        "objective": "Deliver payload_32 at the exit without entering the protected cell or touching sealed_relay_32.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "selection_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:2d29f0f9ed69d39866ecf3b927c09db9fdcd7981a07c49a9ce9747c997969c9f",
+      "problem_id": "exp6450-policy-32",
+      "protected_clauses": [
+        "do not enter protected cell [0, 1]",
+        "do not pickup protected item sealed_relay_32",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 32,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_32 pickup requires carrying badge_32",
+        "deliver requires carrying payload_32 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_33",
+        "payload_item": "payload_33",
+        "protected_item": "sealed_relay_33"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          0,
+          3
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_33": [
+            0,
+            1
+          ],
+          "payload_33": [
+            0,
+            2
+          ],
+          "sealed_relay_33": [
+            1,
+            0
+          ]
+        },
+        "objective": "Deliver payload_33 at the exit without entering the protected cell or touching sealed_relay_33.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "selection_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:0d5c5cb03c67d7a98b92f99209bfa4ce8df86fd00f73d7ff358edd6c09a3c27c",
+      "problem_id": "exp6450-policy-33",
+      "protected_clauses": [
+        "do not enter protected cell [1, 0]",
+        "do not pickup protected item sealed_relay_33",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 33,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_33 pickup requires carrying badge_33",
+        "deliver requires carrying payload_33 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_34",
+        "payload_item": "payload_34",
+        "protected_item": "sealed_relay_34"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          2,
+          1
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_34": [
+            1,
+            0
+          ],
+          "payload_34": [
+            1,
+            1
+          ],
+          "sealed_relay_34": [
+            2,
+            0
+          ]
+        },
+        "objective": "Deliver payload_34 at the exit without entering the protected cell or touching sealed_relay_34.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "selection_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:be88884c86678922ef93b530d87f5a6aae36173ba190ac33901af787446653a9",
+      "problem_id": "exp6450-policy-34",
+      "protected_clauses": [
+        "do not enter protected cell [2, 0]",
+        "do not pickup protected item sealed_relay_34",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 34,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_34 pickup requires carrying badge_34",
+        "deliver requires carrying payload_34 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    },
+    {
+      "final_state_checker": "exp6450_grid_delivery_exact_checker_v1",
+      "finite_id_generated_answer_experiment": false,
+      "fixed_entities": {
+        "agent": "courier",
+        "badge_item": "badge_35",
+        "payload_item": "payload_35",
+        "protected_item": "sealed_relay_35"
+      },
+      "held_label_visible_before_generation": false,
+      "max_actions": 16,
+      "observable_facts": {
+        "exit": [
+          1,
+          2
+        ],
+        "grid_size": 4,
+        "items": {
+          "badge_35": [
+            0,
+            1
+          ],
+          "payload_35": [
+            1,
+            1
+          ],
+          "sealed_relay_35": [
+            0,
+            2
+          ]
+        },
+        "objective": "Deliver payload_35 at the exit without entering the protected cell or touching sealed_relay_35.",
+        "start": [
+          0,
+          0
+        ]
+      },
+      "partition": "selection_held",
+      "partition_exposed_to_prompt": false,
+      "problem_hash": "sha256:01cfeb59090c9ab0e9a93e533fbeacffd124548dd29967ea78f23280610b0834",
+      "problem_id": "exp6450-policy-35",
+      "protected_clauses": [
+        "do not enter protected cell [0, 2]",
+        "do not pickup protected item sealed_relay_35",
+        "do not exceed 16 typed actions"
+      ],
+      "row_index": 35,
+      "rule_clauses": [
+        "move must stay inside the grid",
+        "pickup requires the agent at the item cell",
+        "payload_35 pickup requires carrying badge_35",
+        "deliver requires carrying payload_35 at the exit cell"
+      ],
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.problem",
+      "typed_action_schema": {
+        "action_types": {
+          "deliver": {
+            "required_args": [
+              "item"
+            ]
+          },
+          "inspect": {
+            "required_args": [
+              "entity"
+            ]
+          },
+          "move": {
+            "direction_enum": [
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "required_args": [
+              "direction"
+            ]
+          },
+          "pickup": {
+            "required_args": [
+              "item"
+            ]
+          }
+        },
+        "parser_surface": "jsonl_candidate_action_plan_v1",
+        "required_action_shape": {
+          "action": "string",
+          "args": "object"
+        },
+        "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+      }
+    }
+  ],
+  "random_seed": 6450,
+  "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.sealed_problem_manifest",
+  "sealed_before_inference": true
+}
