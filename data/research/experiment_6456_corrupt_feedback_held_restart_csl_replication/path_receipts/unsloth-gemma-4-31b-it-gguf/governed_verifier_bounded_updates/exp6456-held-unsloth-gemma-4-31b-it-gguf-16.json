@@ -1,0 +1,242 @@
+{
+  "head_transition": {
+    "input_hash": "sha256:3782dd15e93ed8efc63cc6a85646a0c3c9a9425c8c35be1bdbaec393ce50142f",
+    "output_hash": "sha256:2a52527702731fcabe1bdbb3140f3ff292538c54b01c9f5aa72870865a59d6e9",
+    "parent_hash": "sha256:07ae935ae19c44c184c8771c164c9f140d3df9979ded851a745527fe8bc0f957",
+    "receipt_hash": "sha256:6ef5113b4bb988fd7fc0c6789c42621a2a3177f21974829f23fb07f3e047b25d",
+    "receipt_type": "head_transition",
+    "schema": "carnot.experiment_6456.corrupt_feedback_held_restart_csl.v1.transaction_receipt"
+  },
+  "path": {
+    "expected_path_hash": "sha256:4991dc403be87060f3b9e04e8acfd4cb161a4db204f285954e6b2101414af14c",
+    "observed_path_hash": "sha256:7bca26b063b024085c47c5320271cfbb6534b4c6587afa6744f55968663baecf",
+    "path_hash_matches": false,
+    "stages": [
+      {
+        "code_hash": "sha256:030a05790bb71f37d9db1690d0b0a152a4ec7d9bed433cfc81eae6789467dbeb",
+        "configuration_hash": "sha256:96f23792900cfa99a62bf53f5896313d6cc41124b9463106a818117140ee03af",
+        "input_hash": "sha256:add65b07a205531d79f2e3e9c16146ce643fd2e755cb68767566a0af4a8eb039",
+        "monotonic_end_ns": 1884668218090999,
+        "monotonic_start_ns": 1884668218090499,
+        "output_hash": "sha256:2883de38552fa7623cb607284398fac03615011e32eb0e2d87d0141d9928f719",
+        "output_payload": {
+          "candidate_hashes": [
+            "sha256:09fc39504b544c92ba58ea6d66bee5305183fc8ce55132bc7253c41afc12e59f",
+            "sha256:b62d6133cd221c101d27f87427f49841b9c9b194612e67e4ce95096ecc7c29de",
+            "sha256:3ec378d7760e3c33dd432d939193a24eba08fef08af033b750ee7ee097fd6d73",
+            "sha256:503b9e54fc70b746eaa5c1cf399757d6b912752fe82079947d58e3c72b8d3191"
+          ],
+          "model": "unsloth/gemma-4-31B-it-GGUF",
+          "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "raw_event_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-16",
+          "raw_sha256": "sha256:add65b07a205531d79f2e3e9c16146ce643fd2e755cb68767566a0af4a8eb039"
+        },
+        "parent_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "schema_version": "carnot.path_receipt.v1",
+        "stage_hash": "sha256:d8401b4aa671639753be80dc320df32ec2f6e5a5b55538127f3005d67e680aea",
+        "stage_id": "00-raw_generation_bytes",
+        "stage_index": 0,
+        "stage_name": "raw_generation_bytes",
+        "terminal_exact_outcome": null,
+        "unit_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-16"
+      },
+      {
+        "code_hash": "sha256:030a05790bb71f37d9db1690d0b0a152a4ec7d9bed433cfc81eae6789467dbeb",
+        "configuration_hash": "sha256:96f23792900cfa99a62bf53f5896313d6cc41124b9463106a818117140ee03af",
+        "input_hash": "sha256:2883de38552fa7623cb607284398fac03615011e32eb0e2d87d0141d9928f719",
+        "monotonic_end_ns": 1884668218091999,
+        "monotonic_start_ns": 1884668218091499,
+        "output_hash": "sha256:ae0e62849091fdcfda3c65313a7b30b851d2dd0df1e44cf34cf3fe8076da329c",
+        "output_payload": {
+          "candidate_count": 4,
+          "parsed_candidate_ids": [
+            "candidate_0",
+            "candidate_1",
+            "candidate_2",
+            "candidate_3"
+          ],
+          "unit_hash": "sha256:fa97cbc38a603f465b742555706e0d2d7139646438f72dc4f33d275b211a0669"
+        },
+        "parent_hash": "sha256:d8401b4aa671639753be80dc320df32ec2f6e5a5b55538127f3005d67e680aea",
+        "schema_version": "carnot.path_receipt.v1",
+        "stage_hash": "sha256:a5b5f508928a245d77c0ac47f8a27667178b3460bf7aa50060f865940ae31f4c",
+        "stage_id": "01-parse_output",
+        "stage_index": 1,
+        "stage_name": "parse_output",
+        "terminal_exact_outcome": null,
+        "unit_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-16"
+      },
+      {
+        "code_hash": "sha256:030a05790bb71f37d9db1690d0b0a152a4ec7d9bed433cfc81eae6789467dbeb",
+        "configuration_hash": "sha256:96f23792900cfa99a62bf53f5896313d6cc41124b9463106a818117140ee03af",
+        "input_hash": "sha256:ae0e62849091fdcfda3c65313a7b30b851d2dd0df1e44cf34cf3fe8076da329c",
+        "monotonic_end_ns": 1884668218092999,
+        "monotonic_start_ns": 1884668218092499,
+        "output_hash": "sha256:610a0824795a131b38d8071a4e4abf0ec1aefd8ee85e5e847f27c317a47b02d6",
+        "output_payload": {
+          "bindings": {
+            "must_bind": "exp6456_entity_1_16",
+            "target_slot": "exp6456_slot_13"
+          },
+          "clause_combination": [
+            "exp6456_clause_family_3",
+            "restart_scope_5",
+            "binding_shift_23"
+          ],
+          "facts": {
+            "constraint_topic": "exp6456_binding_topic_7",
+            "fresh_binding": "exp6456_entity_1_16->slot_13",
+            "new_fact": "exp6456_unsloth-gemma-4-31b-it-gguf_held_fact_16"
+          },
+          "protected_case": {
+            "case_id": "exp6456-protected-unsloth-gemma-4-31b-it-gguf-16",
+            "forbidden_action": "touch_protected_shortcut"
+          }
+        },
+        "parent_hash": "sha256:a5b5f508928a245d77c0ac47f8a27667178b3460bf7aa50060f865940ae31f4c",
+        "schema_version": "carnot.path_receipt.v1",
+        "stage_hash": "sha256:294006e5405b211056435da0e93c975234113e5bb878ba8233e5d7742d0a91ef",
+        "stage_id": "02-typed_facts",
+        "stage_index": 2,
+        "stage_name": "typed_facts",
+        "terminal_exact_outcome": null,
+        "unit_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-16"
+      },
+      {
+        "code_hash": "sha256:030a05790bb71f37d9db1690d0b0a152a4ec7d9bed433cfc81eae6789467dbeb",
+        "configuration_hash": "sha256:96f23792900cfa99a62bf53f5896313d6cc41124b9463106a818117140ee03af",
+        "input_hash": "sha256:610a0824795a131b38d8071a4e4abf0ec1aefd8ee85e5e847f27c317a47b02d6",
+        "monotonic_end_ns": 1884668218093999,
+        "monotonic_start_ns": 1884668218093499,
+        "output_hash": "sha256:0b54c16cb2ca668635c9b0e873700a4c5e151b472da391f0e2de9427ef17c94f",
+        "output_payload": {
+          "arm": "governed_verifier_bounded_updates",
+          "pre_update_weights": {
+            "abstain_guard": 0.0,
+            "protected_shortcut": 0.0,
+            "route_first": -0.212304,
+            "verified_binding": 2.0
+          },
+          "selected_candidate_hash": "sha256:b62d6133cd221c101d27f87427f49841b9c9b194612e67e4ce95096ecc7c29de",
+          "selected_features": [
+            "verified_binding"
+          ],
+          "teacher_evidence_hash": "sha256:526e24f88cd6e038cefc4cf6490e3d0fd3c785b18f3841d09e9364a2df1a1a7c"
+        },
+        "parent_hash": "sha256:294006e5405b211056435da0e93c975234113e5bb878ba8233e5d7742d0a91ef",
+        "schema_version": "carnot.path_receipt.v1",
+        "stage_hash": "sha256:84d81127d8246c29e1161ff3c7a723452720bf6a08cc01226f6e6c084cb4f672",
+        "stage_id": "03-energy_input",
+        "stage_index": 3,
+        "stage_name": "energy_input",
+        "terminal_exact_outcome": null,
+        "unit_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-16"
+      },
+      {
+        "code_hash": "sha256:030a05790bb71f37d9db1690d0b0a152a4ec7d9bed433cfc81eae6789467dbeb",
+        "configuration_hash": "sha256:96f23792900cfa99a62bf53f5896313d6cc41124b9463106a818117140ee03af",
+        "input_hash": "sha256:0b54c16cb2ca668635c9b0e873700a4c5e151b472da391f0e2de9427ef17c94f",
+        "monotonic_end_ns": 1884668218094999,
+        "monotonic_start_ns": 1884668218094499,
+        "output_hash": "sha256:987798381b79761251f5440f6d8adfe9febd3a3b16e864b663300d6780e711ad",
+        "output_payload": {
+          "candidate_hash": "sha256:b62d6133cd221c101d27f87427f49841b9c9b194612e67e4ce95096ecc7c29de",
+          "checker": "deterministic_binding_policy_checker_v1",
+          "model": "unsloth/gemma-4-31B-it-GGUF",
+          "unit_hash": "sha256:fa97cbc38a603f465b742555706e0d2d7139646438f72dc4f33d275b211a0669"
+        },
+        "parent_hash": "sha256:84d81127d8246c29e1161ff3c7a723452720bf6a08cc01226f6e6c084cb4f672",
+        "schema_version": "carnot.path_receipt.v1",
+        "stage_hash": "sha256:247617e01865f32a9d21225988c828acd45502b58b8f5bbbd60b23c9053ac2a5",
+        "stage_id": "04-checker_request",
+        "stage_index": 4,
+        "stage_name": "checker_request",
+        "terminal_exact_outcome": null,
+        "unit_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-16"
+      },
+      {
+        "code_hash": "sha256:030a05790bb71f37d9db1690d0b0a152a4ec7d9bed433cfc81eae6789467dbeb",
+        "configuration_hash": "sha256:96f23792900cfa99a62bf53f5896313d6cc41124b9463106a818117140ee03af",
+        "input_hash": "sha256:987798381b79761251f5440f6d8adfe9febd3a3b16e864b663300d6780e711ad",
+        "monotonic_end_ns": 1884668218095999,
+        "monotonic_start_ns": 1884668218095499,
+        "output_hash": "sha256:7bbfcb5d417f43887acfd35e48f3301057698c1641f5afcb6968c8735177f92f",
+        "output_payload": {
+          "corruption_marker": "sha256:01a47726d4a02ac4ef4ca7632c08828649fc4aab026176b41fb9f4d7d6a0e055",
+          "corruption_scheduled": true,
+          "transport_status": "corrupted_in_transit",
+          "transport_wrapper_hash": "sha256:b1111838d5dc77bc7caf07527910316a06b7a825515e96e7c381b8577549c2c5"
+        },
+        "parent_hash": "sha256:247617e01865f32a9d21225988c828acd45502b58b8f5bbbd60b23c9053ac2a5",
+        "schema_version": "carnot.path_receipt.v1",
+        "stage_hash": "sha256:1a2c490711a8b524e192f6a2607af024c22fcbf19e686ec4a675fd480399a9c3",
+        "stage_id": "05-checker_transport",
+        "stage_index": 5,
+        "stage_name": "checker_transport",
+        "terminal_exact_outcome": null,
+        "unit_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-16"
+      },
+      {
+        "code_hash": "sha256:030a05790bb71f37d9db1690d0b0a152a4ec7d9bed433cfc81eae6789467dbeb",
+        "configuration_hash": "sha256:96f23792900cfa99a62bf53f5896313d6cc41124b9463106a818117140ee03af",
+        "input_hash": "sha256:7bbfcb5d417f43887acfd35e48f3301057698c1641f5afcb6968c8735177f92f",
+        "monotonic_end_ns": 1884668218096999,
+        "monotonic_start_ns": 1884668218096499,
+        "output_hash": "sha256:a2075fcd8539c3b7cc4014742e2d5563567f7791294dd043d6fcf8d4d3fae19f",
+        "output_payload": {
+          "abstained": false,
+          "exact_outcome": true,
+          "protected_ok": true,
+          "violation_codes": []
+        },
+        "parent_hash": "sha256:1a2c490711a8b524e192f6a2607af024c22fcbf19e686ec4a675fd480399a9c3",
+        "schema_version": "carnot.path_receipt.v1",
+        "stage_hash": "sha256:b2e479b4cfff91b434753ae984454e6203867652ebf7f44fd0f0cde87212dc14",
+        "stage_id": "06-checker_response",
+        "stage_index": 6,
+        "stage_name": "checker_response",
+        "terminal_exact_outcome": null,
+        "unit_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-16"
+      },
+      {
+        "code_hash": "sha256:030a05790bb71f37d9db1690d0b0a152a4ec7d9bed433cfc81eae6789467dbeb",
+        "configuration_hash": "sha256:96f23792900cfa99a62bf53f5896313d6cc41124b9463106a818117140ee03af",
+        "input_hash": "sha256:a2075fcd8539c3b7cc4014742e2d5563567f7791294dd043d6fcf8d4d3fae19f",
+        "monotonic_end_ns": 1884668218097999,
+        "monotonic_start_ns": 1884668218097499,
+        "output_hash": "sha256:eaae1f96fb2c65058c697c2e5f8f671617b97912853ca7233e4c4c4c88ec573c",
+        "output_payload": {
+          "observed_verdict": "exact_pass",
+          "terminal_exact_outcome": true,
+          "update_magnitude": 0.180049,
+          "update_sign": 1
+        },
+        "parent_hash": "sha256:b2e479b4cfff91b434753ae984454e6203867652ebf7f44fd0f0cde87212dc14",
+        "schema_version": "carnot.path_receipt.v1",
+        "stage_hash": "sha256:4d2ddac94d735a9422120dc6ef79ffcbcfebb29c317edfdfb511b64c15e74dc0",
+        "stage_id": "07-final_verdict",
+        "stage_index": 7,
+        "stage_name": "final_verdict",
+        "terminal_exact_outcome": true,
+        "unit_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-16"
+      }
+    ],
+    "validation": {
+      "accepted": false,
+      "errors": [
+        "stage_hash_mismatch:checker_transport"
+      ],
+      "stage_count": 8,
+      "stage_names": [
+        "raw_generation_bytes",
+        "parse_output",
+        "typed_facts",
+        "energy_input",
+        "checker_request",
+        "checker_transport",
+        "checker_response",
+        "final_verdict"
+      ]
+    }
+  }
+}
