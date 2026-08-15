@@ -16037,3 +16037,5 @@ code |
 | 2026-08-15 09:08 UTC | Fresh SOTA fixed-policy candidate corpus | OK | cache hit: 88 passed, 2 warnings in 173.87s (0:02:53) |
 | 2026-08-15 09:10 UTC | Gated on Exp6450 corpus readiness: typed fact grou | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6450-sota-fixed-policy-candidate-corpus |
 | 2026-08-15 09:12 UTC | Gated on Exp6450 corpus readiness: typed fact grou | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6450-sota-fixed-policy-candidate-corpus |
+| 2026-08-15 09:14 UTC | Gated on Exp6450 corpus readiness: typed fact grou | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6450-sota-fixed-policy-candidate-corpus |
+| 2026-08-15 09:16 UTC | Gated on Exp6451 grounding readiness: representati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6451-typed-fact-grounding-fixed-policy-lo |
