@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.555",
+  "generated_at": "2026-08-15T11:47:38Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 40.2,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 7,
+  "slowest_experiments": [
+    {
+      "experiment": "Fresh SOTA fixed-policy candidate corpus",
+      "duration_minutes": 33.56,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bounded ARC representation-objective generalization A/B without solve claim",
+      "duration_minutes": 3.26,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Prospective verifier-bounded factor-weight continuous self-learning",
+      "duration_minutes": 1.6,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp6455 CSL readiness: corrupt-feedback quarantine and held restart rep",
+      "duration_minutes": 1.48,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independent verifier-bounded CSL row and lifecycle audit",
+      "duration_minutes": 0.21,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 10 experiments in 40.2 minutes, including 7 compute-bound experiments. Fresh SOTA fixed-policy candidate corpus took 33.56 minutes and dominated the recorded execution tail, but the supplied data does not identify the cause of that duration.",
+  "bottlenecks_identified": [
+    "Among the displayed compute-bound rows, Fresh SOTA fixed-policy candidate corpus took 33.56 minutes, Prospective verifier-bounded factor-weight continuous self-learning took 1.6 minutes, Gated on Exp6455 CSL readiness: corrupt-feedback quarantine and held restart rep took 1.48 minutes, and Independent verifier-bounded CSL row and lifecycle audit took 0.21 minutes. No phase data is available to explain these durations.",
+    "The GPU snapshot is not linked to an experiment interval. The locked task-level field does not flag GPU idle on compute-bound work, so the snapshot cannot establish inefficient compute-task utilization.",
+    "The data does not state whether any compute-bound task loaded multiple models concurrently or which runner it selected. A missed DualGPURunner engagement therefore cannot be identified."
+  ],
+  "improvements_suggested": [
+    "Emit task-scoped phase timing and GPU samples for every compute-bound experiment, with special attention to the fixed-policy corpus path.",
+    "Record model concurrency and runner selection in each compute receipt; select DualGPURunner only for declared concurrent multi-model work.",
+    "Add readiness-aware scheduling that assigns independent compute-bound experiments across the available GPUs and preserves single-GPU execution for single-model work.",
+    "Add checkpoints and long-stage alerts to the corpus workflow after phase telemetry identifies the stage that dominates its elapsed time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument the fixed-policy corpus workflow with phase clocks and task-correlated GPU samples.",
+    "Schedule independent compute-bound experiments across the available GPUs when their readiness gates permit overlap.",
+    "Require model-count and runner-selection receipts so DualGPURunner eligibility and engagement are auditable."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The available records support an elapsed-time ranking, but they do not support a causal explanation, a compute-period GPU efficiency grade, or a DualGPURunner failure finding. The estimated saving remains unquantified at 0 percent because the supplied data contains no measured alternative run."
+}

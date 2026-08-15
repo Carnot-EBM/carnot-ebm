@@ -6206,3 +6206,10 @@ The critical path for milestone .250:
 - theme: readiness-labelled compute work tied at reconstructed timing resolution while task-level accelerator attribution remained absent
 - key result: no compute-bound task was measurably slower, and the evidence does not establish compute-period GPU inefficiency or a missed parallel multi-model runner dispatch
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.555
+
+- exp_range: no data available this milestone
+- theme: one long corpus workflow dominated execution under coarse reconstructed timing
+- key result: the operational record ranks the compute tail but does not establish its phase-level cause, compute-period GPU efficiency, or parallel multi-model runner behavior
+- acceptance: no data available this milestone
