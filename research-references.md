@@ -35042,3 +35042,81 @@ abstain. They may not release an answer without the exact checker.
   claim.
 
 <!-- V555-PLANNER-REFRESH-20260815-END -->
+
+## V556 planner refresh - 2026-08-15
+
+<!-- V556-PLANNER-REFRESH-20260815-START -->
+
+This refresh rechecked the latest arXiv release after V555 finished. The
+arXiv API still ends at the 2026-08-13 release. Two late items in that release
+add useful controls for V556. They do not change Carnot's exact-authority
+boundary.
+
+### New promising findings
+
+- **Beyond Final Scores: A Systematic Evaluation of Agents for Long-Horizon
+  AI Research and Development** - arXiv:2608.13417,
+  https://arxiv.org/abs/2608.13417; submitted 2026-08-13. The study uses
+  rule-based process metrics and controlled reuse comparisons. It finds that
+  similar final scores can hide different execution and feedback failures.
+  It also finds that stored experience can help or mislead later decisions.
+  Carnot hook: record generation, parse, verification, write, restart, and
+  held-use events separately. A later score may not repair a broken evidence
+  path. Require an independent audit to recompute every promoted effect from
+  unique raw events.
+- **LittleLearner: Language Models Under Pedagogically Controlled Knowledge
+  Exposure** - arXiv:2608.13545,
+  https://arxiv.org/abs/2608.13545; submitted 2026-08-13. The paper creates a
+  model and corpus with explicit exposure limits. Its first tests separate
+  better use of existing knowledge from acquisition of out-of-scope skills.
+  Carnot hook: keep a chronological exposure ledger for continuous learning.
+  Count a held improvement only when the held item and its raw output were not
+  present in development, memory, or update events. Report reuse as reuse, not
+  acquisition.
+- **AutoDesign: Meta-Harness Optimization for Long-Horizon Agentic Design** -
+  arXiv:2608.13560, https://arxiv.org/abs/2608.13560; submitted 2026-08-13.
+  The system recursively updates a design harness from rollout feedback and
+  reports gains across several agent-model settings. Carnot hook: recursive
+  improvement needs a frozen validation boundary and later-decision evidence.
+  V556 will test only verifier-bounded factor updates. It will not let a
+  learning task edit the conductor, checker, held split, or release gate.
+
+### Requested source checks
+
+- **Semantic Scholar citation trails:** the public API again returned 33 EBT
+  citing records and eight ARM-EBM citing records. The newest relevant EBT
+  records remain Memoir and Solver-Hard Is Not Model-Hard. The main ARM-EBM
+  reasoning record remains Distributional Energy-Based Models. No new citing
+  paper changes the V556 order.
+- **OpenReview and Hugging Face Papers:** recent verifier work still supports
+  process decomposition, criteria decomposition, and selective allocation.
+  It does not supply a stronger local exact authority than Carnot's executable
+  checker. Learned or language-model scores remain proposal and routing aids.
+- **GitHub:** current EBM, KAN, verifier, and constraint repositories add no
+  required runtime dependency. The open EBT repository remains a research
+  reference. DRIFT-Bench remains a useful fixture source, not a release
+  checker.
+- **Extropic:** the first-party writing index still ends with the October 2025
+  TSU, X0, XTR-0, DTM, and `thrml` material. There is no authenticated local
+  TSU or Z1 route. V556 makes no thermodynamic latency or power claim.
+- **Logical Intelligence:** Kona 1.0 remains a product comparator for global
+  constraint scoring. Public pages still provide no weights or reproducible
+  local runner. V556 makes no Kona execution claim.
+- **KAN, Ising, and FPGA:** no new result closes V555's provenance, causal
+  routing, or continuous-learning gaps on available hardware. V556 schedules
+  no KAN retrain, Ising speed claim, or unchanged board probe.
+
+### V556 planning impact
+
+- Repair raw-output persistence and event uniqueness before making a science
+  claim from the SOTA corpus.
+- Rebuild the fixed-policy corpus with a sealed held split that has measurable
+  exact headroom.
+- Test grounding, objective choice, allocation, and exact-energy selection as
+  separate causal stages on matched bytes.
+- Run continuous learning with one raw generation per update event, exact
+  veto before write admission, rollback, restart, and an independent audit.
+- Add a generic ARC safety shield and canonical row reducer. Make no public
+  game or level solve claim.
+
+<!-- V556-PLANNER-REFRESH-20260815-END -->
