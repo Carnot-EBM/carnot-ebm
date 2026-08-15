@@ -16013,3 +16013,5 @@ code |
 | 2026-08-15 04:38 UTC | Gated on Exp6437 readiness: active, ablated, tombs | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6437-generation-to-verdict-receipt-replay |
 | 2026-08-15 04:38 UTC | Gated on Exp6439 influence: held factor revocation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6439-factor-clause-influence-ab.factor_ |
 | 2026-08-15 04:40 UTC | Gated on Exp6440 held influence: prospective query | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6440-held-factor-revocation-binding-shift |
+| 2026-08-15 04:40 UTC | Gated on Exp6441 CSL readiness: malicious-success  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6441-prospective-query-conditioned-fact |
+| 2026-08-15 04:42 UTC | Gated on Exp6440 held influence: prospective query | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6440-held-factor-revocation-binding-shift |
