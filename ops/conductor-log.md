@@ -16034,3 +16034,4 @@ code |
 | 2026-08-15 07:06 UTC | V554 terminal handoff and V555 queue integrity | OK | 87 passed, 1 warning in 34.80s |
 | 2026-08-15 07:27 UTC | Ungated generation-to-verdict path receipt contrac | OK | 87 passed, 1 warning in 10.39s |
 | 2026-08-15 08:22 UTC | Fresh SOTA fixed-policy candidate corpus | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6450_sota_fi |
+| 2026-08-15 09:08 UTC | Fresh SOTA fixed-policy candidate corpus | OK | cache hit: 88 passed, 2 warnings in 173.87s (0:02:53) |
