@@ -1,0 +1,806 @@
+{
+  "MODEL_SPECS": [
+    {
+      "autotokenizer_used": false,
+      "exists": true,
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_family": "qwen_moe",
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "size_bytes": 22134528992,
+      "tokenizer_detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_sha256": "sha256:6ae4adddd587955d550d764e7ecf09edb73539caf60206b9a9d4ac8460159bd6",
+      "tokenizer_source": "embedded_gguf_vocab_only"
+    },
+    {
+      "autotokenizer_used": false,
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_family": "gemma_dense",
+      "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "size_bytes": 18323731456,
+      "tokenizer_detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_sha256": "sha256:d30f20774b64d74527e52f2ec6ac3919453b5c29e07fe65e5982b55d0aa35909",
+      "tokenizer_source": "embedded_gguf_vocab_only"
+    },
+    {
+      "autotokenizer_used": false,
+      "exists": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_family": "gemma_moe",
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "size_bytes": 16947539744,
+      "tokenizer_detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_sha256": "sha256:7431e7b86e8a5b9699173db92751255e955d9945a9a847b981f7398674c04462",
+      "tokenizer_source": "embedded_gguf_vocab_only"
+    }
+  ],
+  "aggregate_row_recomputation": {
+    "matches_reported": false,
+    "reasons": [
+      "blocked"
+    ]
+  },
+  "attack_matrix": {
+    "all_critical_fail_closed": false,
+    "false_accept_count": 0,
+    "rows": []
+  },
+  "autotokenizer_usage_count": 0,
+  "blocked_reason": "free_vram",
+  "cached_sota_pair_receipts": {
+    "calls": [
+      {
+        "gpu_indices": [
+          0,
+          1
+        ],
+        "model_indices": null,
+        "preferred_quant": "Q4_K_M"
+      },
+      {
+        "gpu_indices": [
+          0,
+          1
+        ],
+        "model_indices": [
+          0,
+          2
+        ],
+        "preferred_quant": "Q4_K_M"
+      }
+    ],
+    "helper": "cached_sota_pair",
+    "returned_hf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "same_cache_resolver_used": true
+  },
+  "candidate_headroom_by_partition": {},
+  "cpu_fallback_count": 0,
+  "current_adversarial_findings": [
+    {
+      "detail": "free_vram",
+      "kind": "PRECONDITION_FAILED",
+      "severity": "critical"
+    }
+  ],
+  "device_and_runner_receipts": {
+    "receipt_rows": [],
+    "runtime_receipts_by_model": {}
+  },
+  "duration_s": 110.1875631751027,
+  "eligible_rows_by_model_and_partition": {},
+  "exact_outcomes_by_model_and_partition": {},
+  "exact_simulator_and_checker_hashes": {
+    "checker_id": "exp6450_grid_delivery_exact_checker_v1",
+    "checker_sha256": "sha256:4c9e38f13dba2473181b6f8f81e6d5653cfa13e3aff2a6f9e50aa541564f8e6d",
+    "model_is_oracle": false,
+    "parser_is_oracle": false,
+    "simulator_id": "exp6450_grid_delivery_simulator_v1",
+    "simulator_sha256": "sha256:bc1fbc367571f25665d6739bc074e7ceee95d3db1f0311000f49ee901318e05b",
+    "verifier_is_oracle": true
+  },
+  "field_principles": {
+    "MODEL_SPECS": "Lists only the three mandated local GGUF model identities.",
+    "aggregate_row_mismatch": "Critical attack must fail closed.",
+    "aggregate_row_recomputation": "Shows aggregates recompute from per-unit rows.",
+    "attack_matrix": "Every critical reuse, leakage, fallback, parser, and aggregate attack must fail closed.",
+    "autotokenizer_usage_count": "Must stay zero because GGUF tokenizers are embedded.",
+    "blocked_reason": "Names failed preconditions for blocked artifacts.",
+    "cached_sota_pair_receipts": "Shows model resolution used cached SOTA helper calls.",
+    "candidate_headroom_by_partition": "Shows candidate selection can change exact success.",
+    "cpu_fallback_count": "Must stay zero for CUDA GGUF rows.",
+    "current_adversarial_findings": "Must contain no critical finding before readiness is positive.",
+    "device_and_runner_receipts": "Binds CUDA devices, runner choices, and task-scoped receipts.",
+    "duplicate_candidates": "Critical attack must fail closed.",
+    "duration_s": "Reports measured wall duration without padding.",
+    "eligible_rows_by_model_and_partition": "Counts eligible rows without pooling model identities.",
+    "exact_outcomes_by_model_and_partition": "Reports exact labels from the simulator only.",
+    "exact_simulator_and_checker_hashes": "Pins the deterministic simulator and final checker.",
+    "exact_veto_bypass": "Critical attack must fail closed.",
+    "field_principles": "Maps each field and readiness condition.",
+    "field_provenance": "States how each field was produced.",
+    "fixed_action_schema_and_parser_hash": "Pins the typed action schema and fixed parser.",
+    "gate_check_summary": "Summarizes readiness gates and blocker count.",
+    "held_label_leakage": "Critical attack must fail closed.",
+    "hidden_cpu_fallback": "Critical attack must fail closed.",
+    "honest_verdict": "Uses a terminal success or blocked prefix and states the evidence boundary.",
+    "inference_substrate": "Declares fresh local GGUF typed tool-use candidate generation.",
+    "model_file_and_embedded_tokenizer_hashes": "Binds local model bytes and embedded tokenizer checks.",
+    "model_name_substitution": "Critical attack must fail closed.",
+    "models_used": "Counts only authenticated rows from mandated GGUF families.",
+    "output_reuse": "Critical attack must fail closed.",
+    "parse_failures_by_model": "Keeps parser failures as visible outcomes.",
+    "parser_repair": "Critical attack must fail closed.",
+    "partition_reassignment": "Critical attack must fail closed.",
+    "per_unit_rows": "Contains every problem, model, candidate, seed, parse, and exact outcome row.",
+    "preconditions_checked": "Lists host, model, tokenizer, simulator, fresh path, disk, and manifest checks.",
+    "preexistence_and_freshness_receipts": "Shows raw and result paths were fresh before inference.",
+    "protected_files_unchanged": "Shows conductor, ops, and upstream receipts stayed byte-stable.",
+    "random_seed": "Pins problem, prompt, and candidate seed schedules.",
+    "raw_output_manifest": "Lists raw generated bytes stored before parsing.",
+    "raw_output_uniqueness_and_reuse_count": "Must prove no raw byte reuse across candidate rows.",
+    "reproducibility_checksum": "Content-addresses the terminal artifact with volatile fields normalized.",
+    "sealed_problem_and_partition_manifest": "Freezes problems and partitions before generation.",
+    "sota_corpus_ready_score": "Bare gate for downstream V555 use.",
+    "sota_corpus_ready_score:critical_findings_zero": "Required readiness condition.",
+    "sota_corpus_ready_score:duration_live_check": "Required readiness condition.",
+    "sota_corpus_ready_score:exact_labels_recompute": "Required readiness condition.",
+    "sota_corpus_ready_score:mixed_exact_outcomes_and_headroom": "Required readiness condition.",
+    "sota_corpus_ready_score:partitions_sealed": "Required readiness condition.",
+    "sota_corpus_ready_score:protected_files_unchanged": "Required readiness condition.",
+    "sota_corpus_ready_score:raw_hashes_unique": "Required readiness condition.",
+    "sota_corpus_ready_score:three_authenticated_model_families": "Required readiness condition.",
+    "status": "States success, blocked, or complete-with-findings for the corpus.",
+    "tests_run": "Records focused, coverage, full, spec, E2E, adversarial, and root checks.",
+    "verifier_is_oracle": "True only for deterministic simulator and final-state checker."
+  },
+  "field_provenance": {
+    "MODEL_SPECS": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "aggregate_row_recomputation": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "attack_matrix": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "autotokenizer_usage_count": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "blocked_reason": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "cached_sota_pair_receipts": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "candidate_headroom_by_partition": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "cpu_fallback_count": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "current_adversarial_findings": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "device_and_runner_receipts": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "duration_s": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "eligible_rows_by_model_and_partition": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "exact_outcomes_by_model_and_partition": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "exact_simulator_and_checker_hashes": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "field_principles": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "field_provenance": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "fixed_action_schema_and_parser_hash": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "gate_check_summary": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "honest_verdict": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "inference_substrate": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "model_file_and_embedded_tokenizer_hashes": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "models_used": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "parse_failures_by_model": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "per_unit_rows": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "preconditions_checked": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "preexistence_and_freshness_receipts": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "protected_files_unchanged": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "random_seed": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "raw_output_manifest": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "raw_output_uniqueness_and_reuse_count": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "reproducibility_checksum": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "sealed_problem_and_partition_manifest": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "sota_corpus_ready_score": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "status": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "tests_run": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ],
+    "verifier_is_oracle": [
+      "REQ-INFRA-6450",
+      "sealed Exp6450 problem manifest",
+      "fresh local GGUF candidate bytes",
+      "fixed parser",
+      "deterministic local simulator",
+      "focused Exp6450 tests"
+    ]
+  },
+  "fixed_action_schema_and_parser_hash": {
+    "action_schema": {
+      "action_types": {
+        "deliver": {
+          "required_args": [
+            "item"
+          ]
+        },
+        "inspect": {
+          "required_args": [
+            "entity"
+          ]
+        },
+        "move": {
+          "direction_enum": [
+            "north",
+            "south",
+            "east",
+            "west"
+          ],
+          "required_args": [
+            "direction"
+          ]
+        },
+        "pickup": {
+          "required_args": [
+            "item"
+          ]
+        }
+      },
+      "parser_surface": "jsonl_candidate_action_plan_v1",
+      "required_action_shape": {
+        "action": "string",
+        "args": "object"
+      },
+      "schema": "carnot.experiment_6450.sota_fixed_policy_candidate_corpus.v1.typed_action_schema"
+    },
+    "action_schema_sha256": "sha256:cd7aba663e7621d29672a8699375172bf67353c52b9effa90ff5920738908c77",
+    "fixed_parser_id": "exp6450_jsonl_candidate_parser_v1",
+    "fixed_parser_sha256": "sha256:ce29105a6fd888e5659e4b27b6f87e773fc89a605901ce27b272a1bcc12cc308",
+    "grammar_retries_allowed": false,
+    "parser_repairs_allowed": false
+  },
+  "gate_check_summary": "1 precondition(s) failed",
+  "honest_verdict": "blocked_free_vram",
+  "inference_substrate": "live_llm_inference_local_gguf_sota_fixed_policy_tool_use",
+  "model_file_and_embedded_tokenizer_hashes": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_family": "qwen_moe",
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "quantization": "UD-Q4_K_M",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_sha256": "sha256:6ae4adddd587955d550d764e7ecf09edb73539caf60206b9a9d4ac8460159bd6",
+      "tokenizer_source": "embedded_gguf_vocab_only"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_family": "gemma_dense",
+      "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_sha256": "sha256:d30f20774b64d74527e52f2ec6ac3919453b5c29e07fe65e5982b55d0aa35909",
+      "tokenizer_source": "embedded_gguf_vocab_only"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_family": "gemma_moe",
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "quantization": "UD-Q4_K_M",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "tokenizer_loadable": true,
+      "tokenizer_method": "llama_cpp_embedded_gguf_vocab_only",
+      "tokenizer_sha256": "sha256:7431e7b86e8a5b9699173db92751255e955d9945a9a847b981f7398674c04462",
+      "tokenizer_source": "embedded_gguf_vocab_only"
+    }
+  ],
+  "models_used": [],
+  "parse_failures_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": 0,
+    "unsloth/gemma-4-26B-A4B-it-GGUF": 0,
+    "unsloth/gemma-4-31B-it-GGUF": 0
+  },
+  "per_unit_rows": {
+    "row_count": 0,
+    "row_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "2 RTX 3090 device(s) visible",
+      "path": "",
+      "resource": "rtx_3090_gpu_count"
+    },
+    {
+      "available": false,
+      "detail": "minimum required free VRAM 16000 MB",
+      "path": "",
+      "resource": "free_vram"
+    },
+    {
+      "available": true,
+      "detail": "all mandated GGUF files have hashes",
+      "path": "",
+      "resource": "mandatory_model_files"
+    },
+    {
+      "available": true,
+      "detail": "embedded GGUF tokenizer receipts are loadable",
+      "path": "",
+      "resource": "embedded_gguf_tokenizers"
+    },
+    {
+      "available": true,
+      "detail": "fixed parser and exact simulator import",
+      "path": "",
+      "resource": "exact_simulator_imports"
+    },
+    {
+      "available": true,
+      "detail": "1175485829120 free bytes",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot",
+      "resource": "disk_space"
+    },
+    {
+      "available": true,
+      "detail": "1876898069099820->1876898069100391",
+      "path": "",
+      "resource": "monotonic_clock"
+    },
+    {
+      "available": true,
+      "detail": "raw output directory and result path do not preexist",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6450_sota_fixed_policy_candidate_corpus/raw_outputs",
+      "resource": "new_raw_output_paths"
+    },
+    {
+      "available": true,
+      "detail": "problem and partition manifest sealed before inference",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6450_sota_fixed_policy_candidate_corpus/manifest/fixed_policy_problems.json",
+      "resource": "sealed_pre_run_manifest"
+    }
+  ],
+  "preexistence_and_freshness_receipts": {
+    "fresh_path_gate_passed": true,
+    "raw_output_dir": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6450_sota_fixed_policy_candidate_corpus/raw_outputs",
+    "raw_output_dir_preexisted": false,
+    "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6450_sota_fixed_policy_candidate_corpus.json",
+    "result_path_preexisted": false
+  },
+  "protected_files_unchanged": {
+    "changed_paths": [],
+    "files": {
+      "_bmad/traceability.md": {
+        "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "after": "sha256:834e9ef75911126ab54f14797e7cbc6b705b9b23370163ed17168cc3c4cb5c2d",
+        "before": "sha256:834e9ef75911126ab54f14797e7cbc6b705b9b23370163ed17168cc3c4cb5c2d",
+        "unchanged": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "after": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "before": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "unchanged": true
+      },
+      "results/experiment_6413_authenticated_sota_gguf_execution_receipts.json": {
+        "after": "sha256:3775844256172a9030ec83319268a08fc0a23614ac447bd1324bc867f1a67f2d",
+        "before": "sha256:3775844256172a9030ec83319268a08fc0a23614ac447bd1324bc867f1a67f2d",
+        "unchanged": true
+      },
+      "results/experiment_6426_task_scoped_runtime_receipt_contract.json": {
+        "after": "sha256:04648350517924561eadc4efde9417d7b3e3032b6c8d6a1e94e7c655fc626b0a",
+        "before": "sha256:04648350517924561eadc4efde9417d7b3e3032b6c8d6a1e94e7c655fc626b0a",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after": "sha256:01ee05e4b261754164ffac978bbd6920e51cbc172618162734fec806a9c11949",
+        "before": "sha256:01ee05e4b261754164ffac978bbd6920e51cbc172618162734fec806a9c11949",
+        "unchanged": true
+      }
+    },
+    "unchanged": true
+  },
+  "random_seed": 6450,
+  "raw_output_manifest": {
+    "raw_batches": [],
+    "row_count": 0,
+    "rows": []
+  },
+  "raw_output_uniqueness_and_reuse_count": {
+    "missing_raw_hash_count": 0,
+    "reuse_count": 0,
+    "row_count": 0,
+    "unique_raw_hash_count": 0
+  },
+  "reproducibility_checksum": "sha256:d05b96d1571d00fc8f6fda2da73a58fb441fc91b75e809c5f0f96612e1d3446a",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6450_sota_fixed_policy_candidate_corpus.json",
+  "run_date": "20260815",
+  "sealed_problem_and_partition_manifest": {
+    "held_label_visible_before_generation_count": 0,
+    "partition_counts": {
+      "allocation_held": 12,
+      "development": 12,
+      "selection_held": 12
+    },
+    "partition_exposed_to_prompt_count": 0,
+    "partition_membership_sha256": "sha256:708e6ed1cfa58f8ae94750db3fb7755a9eb42bdf001c4692f19526849c650fb0",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/experiment_6450_sota_fixed_policy_candidate_corpus/manifest/fixed_policy_problems.json",
+    "present": false,
+    "problem_count": 36,
+    "problem_hashes": {
+      "exp6450-policy-00": "sha256:c0521893606de48ef7fafa6e7a07bfec5dedc1d4eda80d9ad806adf0029cfaee",
+      "exp6450-policy-01": "sha256:e3a5391117bfa70598b233e9bc72d46778f5587777a61d85129d51a5c7ddf853",
+      "exp6450-policy-02": "sha256:e1c1f026ccc5a4e32762128421a9b10822dc3923b1d7789f74c85bb850c91e55",
+      "exp6450-policy-03": "sha256:244594f7bd1dd99fd0e0ef0d7fa813f61b14d46227fc348358d4098f5404d242",
+      "exp6450-policy-04": "sha256:4f5326613771bddc990be7b693d4fc3110458ed83f100af4eafd4aab4e7547f3",
+      "exp6450-policy-05": "sha256:dc0ba620332086fb0e7462db89eecfee2700d40a0010d686e8722f09d2d14db1",
+      "exp6450-policy-06": "sha256:29aa899192831b58fba4771c06bb130129ec4fdc2bb7126bc08353aac26eee0e",
+      "exp6450-policy-07": "sha256:99972509fc5632d984d6f40e899243aaef022280e9c583a169f34cdfa18175eb",
+      "exp6450-policy-08": "sha256:1300331063cac6187c5bf2fc9026490b13bae199af55a86044ba014cd9d708ac",
+      "exp6450-policy-09": "sha256:06927b6fd6ae4530ba471304b9dd9a8d17c860c321277b7ddc4baafd77b41520",
+      "exp6450-policy-10": "sha256:65550112d8d7c497e89da31b9a6e776c5910e4f6caa78b89a30b2ff75a1750c5",
+      "exp6450-policy-11": "sha256:ce99f52fb3880c0497bc9c8544b148af9a844b4f8dec09abbe2381c0e4ea3b32",
+      "exp6450-policy-12": "sha256:d0428006f4f7fa25e04a5d7327615994bc682b1574ed1256cd1d17032af5307e",
+      "exp6450-policy-13": "sha256:1361c79cfaa1710ab4050ab99bb3dd895e5ccd152835d4e8e879b2820ed7baf2",
+      "exp6450-policy-14": "sha256:3ddce7edd2f939ac89e612b6f94f7056751490059c3f38ab3ead7bf7b1cd7ace",
+      "exp6450-policy-15": "sha256:dc74515f720b18ec9edca9184be35ac92d86594c1b6b4c8344af68ab401999cc",
+      "exp6450-policy-16": "sha256:eabe90a972edb7b5a94f390c547cc58a3c04abab8723b052857da0d0a6bada34",
+      "exp6450-policy-17": "sha256:a6ab3b4d02e00e000457d2ac78c424b2b8551e36ae7994c3ef389e2e1dd0be3c",
+      "exp6450-policy-18": "sha256:3299c8c2c2c36977d2461cf14d36f196949f239879868bee19447bae22e77094",
+      "exp6450-policy-19": "sha256:baf3b58789e97e552cc469722c0915d78f959b08a80ba5e6e082e10905a5b9db",
+      "exp6450-policy-20": "sha256:9d23ccbc94a58a9d7966240d51af93b59c8801495cc5d715afd71baf1880ce9d",
+      "exp6450-policy-21": "sha256:7e82e5d559f07c8bddc2fb64352ced819a787649cad5f5ac608f0389e8c2f1d9",
+      "exp6450-policy-22": "sha256:7913f99e57525876fc2aee3dd2a91ff5ea76ab349c3cdf92d0619ceb60f30cf0",
+      "exp6450-policy-23": "sha256:60a0a81393774ccc2ce4a5eee95c6c2295c3e1d6d187492579a9571e5566280f",
+      "exp6450-policy-24": "sha256:e8e765c5803f1f3f468610ccfc8d37fcc4f791312d705981b0cd6387c4808445",
+      "exp6450-policy-25": "sha256:d6d5afe3b48fdf061a10de4f932a1ab60adb242652d16120ae9c1c6e82b1e128",
+      "exp6450-policy-26": "sha256:98b906db385550084cdf45c78d9535e693d0116e8aca7351bd43248e2022154c",
+      "exp6450-policy-27": "sha256:e411eb6e8f8e1c5cafec0a188d2eab45e10d436542e63c6e14a78d130110713e",
+      "exp6450-policy-28": "sha256:289b50fbcc2359e6b87ab5fe6a2b4f8c62226f824491cd3680954e0183210f23",
+      "exp6450-policy-29": "sha256:a71fed999faca96a8126b621652ae7ec9401f5075362fd2ada3f7bb5d41601f7",
+      "exp6450-policy-30": "sha256:94975d0efddebfa9bc1b7069c32cbaed6a7a346fc403d16c3d251ddf09d34a6e",
+      "exp6450-policy-31": "sha256:a025d1dccffd08c9bcf2368ae78d4417f47082ca6319bfbafd8f7cb0ba52c035",
+      "exp6450-policy-32": "sha256:2d29f0f9ed69d39866ecf3b927c09db9fdcd7981a07c49a9ce9747c997969c9f",
+      "exp6450-policy-33": "sha256:0d5c5cb03c67d7a98b92f99209bfa4ce8df86fd00f73d7ff358edd6c09a3c27c",
+      "exp6450-policy-34": "sha256:be88884c86678922ef93b530d87f5a6aae36173ba190ac33901af787446653a9",
+      "exp6450-policy-35": "sha256:01cfeb59090c9ab0e9a93e533fbeacffd124548dd29967ea78f23280610b0834"
+    },
+    "sealed_before_inference": true,
+    "sha256": "sha256:f77bac334cca1c373182c45babbf3a21398e2e32cd3aa390694e971049aa7df7",
+    "size_bytes": 57889
+  },
+  "sota_corpus_ready_score": 0.0,
+  "status": "blocked",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6450_sota_fixed_policy_candidate_corpus.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6450_sota_fixed_policy_candidate_corpus.py -m pytest tests/python/test_experiment_6450_sota_fixed_policy_candidate_corpus.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6450_sota_fixed_policy_candidate_corpus.py --fail-under=100 --show-missing",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "detail": "Interrupted after 7:21 because unrelated workers crashed; summary before interrupt reported 130 failed, 9605 passed, 7 skipped, 14 errors. Observed unrelated Z3 segfault and JAX abort.",
+      "exit_code": 2,
+      "status": "failed_interrupted_unrelated_suite_crashes"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6450_sota_fixed_policy_candidate_corpus.py",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6450_sota_fixed_policy_candidate_corpus --date 20260815 --validate",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6450_sota_fixed_policy_candidate_corpus.json",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6450_sota_fixed_policy_candidate_corpus.json",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/determination_preservation_lint.py",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/root_clutter_sweep.py",
+      "detail": "Exit 0 with existing warning for tracked non-allowlist root file skills-lock.json.",
+      "exit_code": 0,
+      "status": "passed_with_existing_warning"
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6450_sota_fixed_policy_candidate_corpus --date 20260815",
+      "detail": "Command completed and wrote a fail-closed blocked artifact before inference because free_vram precondition failed.",
+      "exit_code": 0,
+      "status": "passed_blocked_free_vram"
+    }
+  ],
+  "verifier_is_oracle": true
+}
