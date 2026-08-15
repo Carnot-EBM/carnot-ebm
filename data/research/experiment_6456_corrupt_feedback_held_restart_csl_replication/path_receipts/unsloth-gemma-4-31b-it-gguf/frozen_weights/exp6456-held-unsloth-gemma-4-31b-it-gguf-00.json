@@ -1,0 +1,241 @@
+{
+  "head_transition": {
+    "input_hash": "sha256:5d3d9e2d7fd76225dd7d65e668acb413cc59527cc37623e4e8e287e16728658d",
+    "output_hash": "sha256:dd80d954a6cd568edda6ee31d9b2b2fd4e201a695f051533b7124661e9cd7477",
+    "parent_hash": "sha256:f501c4470c3b80c10f54cf008e52cef34720e2919b948d3382c5675509a37f19",
+    "receipt_hash": "sha256:252d2227e3c3a0d9604f74652c186a3eba2fd72a2ba72aeed08934e68573039a",
+    "receipt_type": "head_transition",
+    "schema": "carnot.experiment_6456.corrupt_feedback_held_restart_csl.v1.transaction_receipt"
+  },
+  "path": {
+    "expected_path_hash": "sha256:e6dafbe484e71a4132d38c77f03e8ab2619b21915f7d00e9251ee955932736b4",
+    "observed_path_hash": "sha256:e6dafbe484e71a4132d38c77f03e8ab2619b21915f7d00e9251ee955932736b4",
+    "path_hash_matches": true,
+    "stages": [
+      {
+        "code_hash": "sha256:030a05790bb71f37d9db1690d0b0a152a4ec7d9bed433cfc81eae6789467dbeb",
+        "configuration_hash": "sha256:96f23792900cfa99a62bf53f5896313d6cc41124b9463106a818117140ee03af",
+        "input_hash": "sha256:9ed036648932ece00d2e480ade748c57956da9432274936fe47315160b23031f",
+        "monotonic_end_ns": 1884667342728050,
+        "monotonic_start_ns": 1884667342727550,
+        "output_hash": "sha256:1548ced7498da9bef8537a493468b5b6debb3682aeaffe7fa1274803c307dc2b",
+        "output_payload": {
+          "candidate_hashes": [
+            "sha256:48f87faa031cd53605ac1414e854eea0960c40ed70901f56447836f0fa00a3a2",
+            "sha256:21e709feeb649f3899b12d9d2022c3297745f6abe68c8fadb4083b0286cf920f",
+            "sha256:ed292e5bc1b9724a898d10740deb3d1afe9223b099e6debea26d96d7804dc405",
+            "sha256:6ca4a2e27c01870a30cbb8bd95949e73de27e8a8b984943bad9f1ba3779ac590"
+          ],
+          "model": "unsloth/gemma-4-31B-it-GGUF",
+          "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "raw_event_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-00",
+          "raw_sha256": "sha256:9ed036648932ece00d2e480ade748c57956da9432274936fe47315160b23031f"
+        },
+        "parent_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "schema_version": "carnot.path_receipt.v1",
+        "stage_hash": "sha256:0549c964a09982cff950c3b17e4e6695ad92cbe4942969633d2972dcfe5d4836",
+        "stage_id": "00-raw_generation_bytes",
+        "stage_index": 0,
+        "stage_name": "raw_generation_bytes",
+        "terminal_exact_outcome": null,
+        "unit_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-00"
+      },
+      {
+        "code_hash": "sha256:030a05790bb71f37d9db1690d0b0a152a4ec7d9bed433cfc81eae6789467dbeb",
+        "configuration_hash": "sha256:96f23792900cfa99a62bf53f5896313d6cc41124b9463106a818117140ee03af",
+        "input_hash": "sha256:1548ced7498da9bef8537a493468b5b6debb3682aeaffe7fa1274803c307dc2b",
+        "monotonic_end_ns": 1884667342729050,
+        "monotonic_start_ns": 1884667342728550,
+        "output_hash": "sha256:b8221561c60892e410651510401091510cf5266e3b0d96cd0228cc41aae9f4c0",
+        "output_payload": {
+          "candidate_count": 4,
+          "parsed_candidate_ids": [
+            "candidate_0",
+            "candidate_1",
+            "candidate_2",
+            "candidate_3"
+          ],
+          "unit_hash": "sha256:435cb6bc9210bd1680a6adc5eba0523305a5a0b8df9a446550795fd79b34253e"
+        },
+        "parent_hash": "sha256:0549c964a09982cff950c3b17e4e6695ad92cbe4942969633d2972dcfe5d4836",
+        "schema_version": "carnot.path_receipt.v1",
+        "stage_hash": "sha256:87a1af224ce3f87e79bc376a3c1118dc99af2885aa068a5a2275657364d05b50",
+        "stage_id": "01-parse_output",
+        "stage_index": 1,
+        "stage_name": "parse_output",
+        "terminal_exact_outcome": null,
+        "unit_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-00"
+      },
+      {
+        "code_hash": "sha256:030a05790bb71f37d9db1690d0b0a152a4ec7d9bed433cfc81eae6789467dbeb",
+        "configuration_hash": "sha256:96f23792900cfa99a62bf53f5896313d6cc41124b9463106a818117140ee03af",
+        "input_hash": "sha256:b8221561c60892e410651510401091510cf5266e3b0d96cd0228cc41aae9f4c0",
+        "monotonic_end_ns": 1884667342730050,
+        "monotonic_start_ns": 1884667342729550,
+        "output_hash": "sha256:e5f4961f1703ce4d4fb5ea1b7d8b660d54c60b58fdc80dd499d0a2c0e8ed6ca4",
+        "output_payload": {
+          "bindings": {
+            "must_bind": "exp6456_entity_1_00",
+            "target_slot": "exp6456_slot_12"
+          },
+          "clause_combination": [
+            "exp6456_clause_family_1",
+            "restart_scope_1",
+            "binding_shift_1"
+          ],
+          "facts": {
+            "constraint_topic": "exp6456_binding_topic_2",
+            "fresh_binding": "exp6456_entity_1_00->slot_12",
+            "new_fact": "exp6456_unsloth-gemma-4-31b-it-gguf_held_fact_00"
+          },
+          "protected_case": {
+            "case_id": "exp6456-protected-unsloth-gemma-4-31b-it-gguf-00",
+            "forbidden_action": "touch_protected_shortcut"
+          }
+        },
+        "parent_hash": "sha256:87a1af224ce3f87e79bc376a3c1118dc99af2885aa068a5a2275657364d05b50",
+        "schema_version": "carnot.path_receipt.v1",
+        "stage_hash": "sha256:f5d5e8ccc280ffcab0a13664e7c8d52035ed285bc186eadc67d50e0b5bf40c99",
+        "stage_id": "02-typed_facts",
+        "stage_index": 2,
+        "stage_name": "typed_facts",
+        "terminal_exact_outcome": null,
+        "unit_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-00"
+      },
+      {
+        "code_hash": "sha256:030a05790bb71f37d9db1690d0b0a152a4ec7d9bed433cfc81eae6789467dbeb",
+        "configuration_hash": "sha256:96f23792900cfa99a62bf53f5896313d6cc41124b9463106a818117140ee03af",
+        "input_hash": "sha256:e5f4961f1703ce4d4fb5ea1b7d8b660d54c60b58fdc80dd499d0a2c0e8ed6ca4",
+        "monotonic_end_ns": 1884667342731050,
+        "monotonic_start_ns": 1884667342730550,
+        "output_hash": "sha256:88062e7b209f71e280d2fb24ce63d563efc7036171c01803b65a8ca1abfd8778",
+        "output_payload": {
+          "arm": "frozen_weights",
+          "pre_update_weights": {
+            "abstain_guard": 0.0,
+            "protected_shortcut": 0.0,
+            "route_first": 0.0,
+            "verified_binding": 0.0
+          },
+          "selected_candidate_hash": "sha256:48f87faa031cd53605ac1414e854eea0960c40ed70901f56447836f0fa00a3a2",
+          "selected_features": [
+            "route_first"
+          ],
+          "teacher_evidence_hash": "sha256:81d5ed1039a3b5d2f332b1f8ddedd6ee44c3032f89302d6c61a986e766b152e1"
+        },
+        "parent_hash": "sha256:f5d5e8ccc280ffcab0a13664e7c8d52035ed285bc186eadc67d50e0b5bf40c99",
+        "schema_version": "carnot.path_receipt.v1",
+        "stage_hash": "sha256:ae36c008b158e0281244330085b80f770df6eeeb5d62e90b57840c5e9139abae",
+        "stage_id": "03-energy_input",
+        "stage_index": 3,
+        "stage_name": "energy_input",
+        "terminal_exact_outcome": null,
+        "unit_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-00"
+      },
+      {
+        "code_hash": "sha256:030a05790bb71f37d9db1690d0b0a152a4ec7d9bed433cfc81eae6789467dbeb",
+        "configuration_hash": "sha256:96f23792900cfa99a62bf53f5896313d6cc41124b9463106a818117140ee03af",
+        "input_hash": "sha256:88062e7b209f71e280d2fb24ce63d563efc7036171c01803b65a8ca1abfd8778",
+        "monotonic_end_ns": 1884667342732050,
+        "monotonic_start_ns": 1884667342731550,
+        "output_hash": "sha256:aea5875199edba7a581e2aa7de69d69fc9af7dc0ec52f579aa4e931c2f1e9980",
+        "output_payload": {
+          "candidate_hash": "sha256:48f87faa031cd53605ac1414e854eea0960c40ed70901f56447836f0fa00a3a2",
+          "checker": "deterministic_binding_policy_checker_v1",
+          "model": "unsloth/gemma-4-31B-it-GGUF",
+          "unit_hash": "sha256:435cb6bc9210bd1680a6adc5eba0523305a5a0b8df9a446550795fd79b34253e"
+        },
+        "parent_hash": "sha256:ae36c008b158e0281244330085b80f770df6eeeb5d62e90b57840c5e9139abae",
+        "schema_version": "carnot.path_receipt.v1",
+        "stage_hash": "sha256:b510696d3bcc903f23387b634598c5aef67a5c8a28218155dc581c743c773f28",
+        "stage_id": "04-checker_request",
+        "stage_index": 4,
+        "stage_name": "checker_request",
+        "terminal_exact_outcome": null,
+        "unit_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-00"
+      },
+      {
+        "code_hash": "sha256:030a05790bb71f37d9db1690d0b0a152a4ec7d9bed433cfc81eae6789467dbeb",
+        "configuration_hash": "sha256:96f23792900cfa99a62bf53f5896313d6cc41124b9463106a818117140ee03af",
+        "input_hash": "sha256:aea5875199edba7a581e2aa7de69d69fc9af7dc0ec52f579aa4e931c2f1e9980",
+        "monotonic_end_ns": 1884667342733050,
+        "monotonic_start_ns": 1884667342732550,
+        "output_hash": "sha256:6a3451ab8d0cb7f38c0c979827a8d768701742d84c6254777ebd7713e9b5e9da",
+        "output_payload": {
+          "corruption_scheduled": false,
+          "transport_status": "ok",
+          "transport_wrapper_hash": "sha256:2d86ccbb0236d7fba8a028e15ddb628f08734cc73feeccf82fe8961f30addfae"
+        },
+        "parent_hash": "sha256:b510696d3bcc903f23387b634598c5aef67a5c8a28218155dc581c743c773f28",
+        "schema_version": "carnot.path_receipt.v1",
+        "stage_hash": "sha256:1d832e7eeb9cd5741c9202c35d1bcae04489be6dcaaa73208a51a353aa44c5ca",
+        "stage_id": "05-checker_transport",
+        "stage_index": 5,
+        "stage_name": "checker_transport",
+        "terminal_exact_outcome": null,
+        "unit_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-00"
+      },
+      {
+        "code_hash": "sha256:030a05790bb71f37d9db1690d0b0a152a4ec7d9bed433cfc81eae6789467dbeb",
+        "configuration_hash": "sha256:96f23792900cfa99a62bf53f5896313d6cc41124b9463106a818117140ee03af",
+        "input_hash": "sha256:6a3451ab8d0cb7f38c0c979827a8d768701742d84c6254777ebd7713e9b5e9da",
+        "monotonic_end_ns": 1884667342734050,
+        "monotonic_start_ns": 1884667342733550,
+        "output_hash": "sha256:76d9a6739644d8f311423510c45aea9efc9398a09b42f1e20038fa8e829a7f9b",
+        "output_payload": {
+          "abstained": false,
+          "exact_outcome": false,
+          "protected_ok": true,
+          "violation_codes": [
+            "wrong_binding"
+          ]
+        },
+        "parent_hash": "sha256:1d832e7eeb9cd5741c9202c35d1bcae04489be6dcaaa73208a51a353aa44c5ca",
+        "schema_version": "carnot.path_receipt.v1",
+        "stage_hash": "sha256:c2a070155e7550a202f899728b51547f5a1782c704ccaad1b95ba5ca5c407b7f",
+        "stage_id": "06-checker_response",
+        "stage_index": 6,
+        "stage_name": "checker_response",
+        "terminal_exact_outcome": null,
+        "unit_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-00"
+      },
+      {
+        "code_hash": "sha256:030a05790bb71f37d9db1690d0b0a152a4ec7d9bed433cfc81eae6789467dbeb",
+        "configuration_hash": "sha256:96f23792900cfa99a62bf53f5896313d6cc41124b9463106a818117140ee03af",
+        "input_hash": "sha256:76d9a6739644d8f311423510c45aea9efc9398a09b42f1e20038fa8e829a7f9b",
+        "monotonic_end_ns": 1884667342735050,
+        "monotonic_start_ns": 1884667342734550,
+        "output_hash": "sha256:f64a8435270b7f221b3f184c87659077bef3042f55f403def45f656acbc5b6e9",
+        "output_payload": {
+          "observed_verdict": "exact_fail",
+          "terminal_exact_outcome": false,
+          "update_magnitude": 0.0,
+          "update_sign": 0
+        },
+        "parent_hash": "sha256:c2a070155e7550a202f899728b51547f5a1782c704ccaad1b95ba5ca5c407b7f",
+        "schema_version": "carnot.path_receipt.v1",
+        "stage_hash": "sha256:6fb100c5b2d544ea7965373c5a437cfec320bf0d20a123e86ef1d4f039a3f3b5",
+        "stage_id": "07-final_verdict",
+        "stage_index": 7,
+        "stage_name": "final_verdict",
+        "terminal_exact_outcome": false,
+        "unit_id": "exp6456-held-unsloth-gemma-4-31b-it-gguf-00"
+      }
+    ],
+    "validation": {
+      "accepted": true,
+      "errors": [],
+      "stage_count": 8,
+      "stage_names": [
+        "raw_generation_bytes",
+        "parse_output",
+        "typed_facts",
+        "energy_input",
+        "checker_request",
+        "checker_transport",
+        "checker_response",
+        "final_verdict"
+      ]
+    }
+  }
+}

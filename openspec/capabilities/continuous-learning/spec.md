@@ -5285,6 +5285,262 @@ teacher-signed updates on distinct later units
 | SCENARIO-LEARN-6455-ATTACKS | Planned: `python/carnot/experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. | Planned: `tests/python/test_experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. |
 | SCENARIO-LEARN-6455-READY | Planned: `python/carnot/experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. | Planned: `tests/python/test_experiment_6455_prospective_verifier_bounded_factor_weight_csl.py`. |
 
+## REQ-LEARN-6456: Corrupt-Feedback Held-Restart CSL Replication
+
+**Given** Exp6455 reports eligible verifier-bounded factor-weight CSL evidence
+and Exp6432 reported held restart evidence that is duration-flagged
+**When** Exp6456 runs on planning date 20260815
+**Then** it SHALL write
+`results/experiment_6456_corrupt_feedback_held_restart_csl_replication.json`
+**And** it SHALL compare frozen weights, clean verifier-bounded updates, and
+governed verifier-bounded updates on a new held binding-shift stream.
+
+Exp6456 SHALL require `verifier_bounded_csl_ready_score=1.0`, authenticated
+Exp6455 upstream state and receipts, both RTX 3090 GPUs, all three mandated
+GGUF files, embedded GGUF tokenizers, exact deterministic checkers, new held
+paths, enough disk and wall time, a sealed held stream, and a sealed corruption
+schedule before readiness can become one.
+
+Exp6456 SHALL define `MODEL_SPECS` through `cached_sota_pair()` or the same
+resolver. It SHALL include exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`. It
+SHALL use embedded GGUF tokenizers only and SHALL NOT call `AutoTokenizer`.
+
+Exp6456 SHALL seal at least 24 held units per model. The held stream SHALL use
+new bindings, new clause combinations, protected cases, and zero problem or
+raw-hash overlap with Exp6455 and Exp6432. The frozen, clean, and governed
+arms SHALL receive the same candidate bytes for each model and held unit.
+
+Exp6456 SHALL freeze the Exp6455 update rule and initial eligible head. It
+SHALL run a frozen-weight arm, a clean verifier-bounded update arm, and a
+governed verifier-bounded update arm. The governed arm SHALL inject exactly
+one predeclared checker-transport corruption per model-session panel.
+
+Exp6456 SHALL start a new process at each session boundary. Each child process
+SHALL reload state from disk, validate transaction ancestry and head hash, and
+record parent PID, child PID, start time, exit code, and whether inherited
+in-memory state was visible. No unhashed in-memory state SHALL be accepted.
+
+Exp6456 SHALL bind raw output, parse output, factor input, checker request,
+checker transport, checker response, update, and head transition with path
+receipts. A corrupt checker-transport event SHALL break the expected path hash
+before update admission. A transport-corrupted checker response SHALL NOT be
+authoritative.
+
+Exp6456 SHALL quarantine every corrupt event, write a tombstone, roll back to
+the last good head, restart, and prove that no corrupt update can resurrect in
+later release state.
+
+Exp6456 SHALL emit per-unit rows for every held unit, model, arm, session, and
+process. Rows SHALL include candidate hashes, exact outcome, update, corrupt
+event state, quarantine state, rollback state, head hash, protected outcome,
+checker work, and timing.
+
+Exp6456 SHALL recompute held future exact yield, negative transfer,
+forgetting, protected retention, false accepts, abstentions, quarantine
+precision and recall, rollback success, resurrection count, restart recovery,
+and cost from rows. Uncertainty SHALL use distinct held units, not duplicated
+arm rows.
+
+Exp6456 SHALL attack cached development bytes, fake restart, inherited state,
+stale or forged head, missed corruption, quarantine false positive,
+rollback-to-bad-head, tombstone deletion, corrupt update resurrection, CPU
+fallback, timing synthesis, and aggregate-row mismatch. Every critical attack
+SHALL fail closed.
+
+Exp6456 SHALL set `csl_safety_replication_ready_score=1.0` only when the clean
+learner retains a positive held future exact effect, governed learning
+contains every corrupt event with zero protected release and zero resurrection,
+benign utility stays within tolerance, all restart and freshness checks pass,
+all three models have eligible rows, duration is eligible, aggregates
+recompute, and critical findings are zero.
+
+Exp6456 SHALL emit these fields:
+
+- `status`
+- `MODEL_SPECS`
+- `models_used`
+- `cached_sota_pair_receipts`
+- `model_and_embedded_tokenizer_hashes`
+- `autotokenizer_usage_count`
+- `device_and_runner_receipts`
+- `upstream_gate_value_policy_and_head_hashes`
+- `sealed_held_stream_corruption_and_analysis_manifest`
+- `path_nonexistence_freshness_and_disjointness_receipts`
+- `process_restart_and_pid_receipts`
+- `per_unit_rows`
+- `frozen_clean_and_governed_outcomes_by_model`
+- `future_exact_yield_delta`
+- `negative_transfer_and_forgetting`
+- `protected_retention`
+- `false_accepts_and_abstentions`
+- `corruption_detection_and_path_receipts`
+- `quarantine_precision_and_recall`
+- `tombstone_rollback_and_resurrection_results`
+- `transaction_ancestry_and_restart_recovery`
+- `checker_calls_tokens_and_timing`
+- `effects_and_uncertainty_over_distinct_held_units`
+- `aggregate_row_recomputation`
+- `attack_matrix`
+- `current_adversarial_findings`
+- `csl_safety_replication_ready_score`
+- `protected_files_unchanged`
+- `blocked_reason`
+- `gate_check_summary`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map every required field and every
+`csl_safety_replication_ready_score` condition. `verifier_is_oracle` SHALL be
+true only for deterministic exact checkers and row arithmetic. A
+transport-corrupted checker response SHALL be recorded as non-authoritative.
+`honest_verdict` SHALL start with `success:`, `complete:`, or `blocked:`.
+
+Required field principles:
+
+- `status`: Names the terminal state for the corrupt-feedback held restart replication.
+- `MODEL_SPECS`: Carries the three mandated GGUF model identities from cached SOTA receipts.
+- `models_used`: Lists only mandated models with eligible unit rows.
+- `cached_sota_pair_receipts`: Shows the helper calls used to resolve all mandated models.
+- `model_and_embedded_tokenizer_hashes`: Binds model bytes and embedded tokenizer metadata.
+- `autotokenizer_usage_count`: Must remain zero because GGUF tokenizers are embedded.
+- `device_and_runner_receipts`: Binds GPUs, CUDA receipts, runner mode, raw outputs, and CPU-fallback checks.
+- `upstream_gate_value_policy_and_head_hashes`: Freezes Exp6455 readiness, update rule, model policy, and initial heads.
+- `sealed_held_stream_corruption_and_analysis_manifest`: Freezes held units, arms, sessions, candidates, corruption schedule, seeds, budgets, and analysis.
+- `path_nonexistence_freshness_and_disjointness_receipts`: Proves result, raw-output, ledger, quarantine, and tombstone paths are fresh and disjoint from Exp6455 and Exp6432.
+- `process_restart_and_pid_receipts`: Proves session children reload disk state with new PIDs and no inherited in-memory state.
+- `per_unit_rows`: Contains every model, held unit, arm, session, process, receipt, update, quarantine, rollback, and timing row before aggregate calculation.
+- `frozen_clean_and_governed_outcomes_by_model`: Reports exact outcomes by model and arm.
+- `future_exact_yield_delta`: Reports clean and governed future yield lift over frozen weights.
+- `negative_transfer_and_forgetting`: Reports harmful transfer and retained prior behavior.
+- `protected_retention`: Protects held protected cases from learned-weight regressions.
+- `false_accepts_and_abstentions`: Counts false accepts and abstentions from row data.
+- `corruption_detection_and_path_receipts`: Shows every injected corrupt transport event broke the expected path hash before update admission.
+- `quarantine_precision_and_recall`: Requires all and only corrupt events to enter quarantine.
+- `tombstone_rollback_and_resurrection_results`: Proves tombstones persist, rollback restores last good heads, and corrupt updates do not resurrect.
+- `transaction_ancestry_and_restart_recovery`: Proves clean and governed head chains recover after process restarts.
+- `checker_calls_tokens_and_timing`: Charges exact checks, model-evidence bytes, receipt work, and measured timing.
+- `effects_and_uncertainty_over_distinct_held_units`: Computes uncertainty over distinct held units.
+- `aggregate_row_recomputation`: Recomputes reported metrics from rows.
+- `attack_matrix`: Shows critical restart, state, quarantine, rollback, receipt, and timing attacks fail closed.
+- `current_adversarial_findings`: Keeps current critical findings visible.
+- `csl_safety_replication_ready_score`: Conjunctive readiness for corrupt-feedback held restart safety.
+- `protected_files_unchanged`: Shows protected files stayed byte-identical.
+- `blocked_reason`: Explains failed preconditions for blocked artifacts.
+- `gate_check_summary`: Summarizes readiness gates and blocker count.
+- `preconditions_checked`: Records hardware, cache, tokenizer, upstream, checker, path, clock, disk, and schedule checks.
+- `inference_substrate`: Declares local SOTA GGUF CUDA receipts with deterministic exact checker governed external weights.
+- `verifier_is_oracle`: Marks only exact checker and row arithmetic as oracle boundaries.
+- `field_principles`: Documents why each field and readiness condition exists.
+- `field_provenance`: Maps each field to specs, manifests, rows, receipts, attacks, or tests.
+- `random_seed`: Pins streams, candidates, corrupt schedule, restarts, and attacks.
+- `duration_s`: Records measured wall time without padding.
+- `tests_run`: Records focused, coverage, full pytest, spec, E2E, adversarial, row, determination, and clutter checks.
+- `reproducibility_checksum`: Content-addresses the artifact with volatile fields normalized.
+- `honest_verdict`: Uses a terminal prefix and states the corrupt-feedback safety result.
+- `csl_safety_replication_ready_score:clean_positive_held_effect`: Clean verifier-bounded learning must retain a positive held exact effect.
+- `csl_safety_replication_ready_score:governed_contains_corruption`: Governed learning must detect and contain every scheduled corrupt transport event.
+- `csl_safety_replication_ready_score:zero_protected_release`: Corrupt events must not release protected or non-authoritative updates.
+- `csl_safety_replication_ready_score:zero_resurrection`: Tombstoned corrupt updates must not resurrect.
+- `csl_safety_replication_ready_score:benign_utility_within_tolerance`: Governed benign utility must remain within the preregistered tolerance.
+- `csl_safety_replication_ready_score:restart_recovery`: Session restarts must recover the expected disk head.
+- `csl_safety_replication_ready_score:fresh_disjoint_paths`: Held paths and raw hashes must be fresh and disjoint.
+- `csl_safety_replication_ready_score:all_models_have_rows`: All three mandated models must have eligible rows.
+- `csl_safety_replication_ready_score:duration_eligible`: Duration must be eligible for the declared substrate.
+- `csl_safety_replication_ready_score:aggregates_recompute`: Aggregates must recompute from per-unit rows.
+- `csl_safety_replication_ready_score:zero_critical_findings`: Current critical findings must be zero.
+
+## SCENARIO-LEARN-6456-SPEC: Spec Owns The Artifact Contract
+
+**Given** Exp6456 is a held CSL safety replication
+**When** the OpenSpec is read
+**Then** all required artifact fields, scenarios, and readiness conditions
+SHALL be declared before implementation.
+
+## SCENARIO-LEARN-6456-MODELS: Cached GGUFs And Embedded Tokenizers Are Used
+
+**Given** the three mandated GGUFs are cached
+**When** Exp6456 builds model specs
+**Then** model rows SHALL come from cached SOTA helper calls, embedded
+tokenizer receipts SHALL be present, and `autotokenizer_usage_count` SHALL be
+zero.
+
+## SCENARIO-LEARN-6456-HELD-STREAM: New Held Bindings Are Sealed
+
+**Given** Exp6455 and Exp6432 have existing problem and raw hashes
+**When** Exp6456 seals its held stream
+**Then** every held unit SHALL have a new binding, new clause combination,
+protected case, matched candidates, and zero overlap with the upstream hashes.
+
+## SCENARIO-LEARN-6456-RESTARTS: Session Boundaries Use New Processes
+
+**Given** clean and governed heads are persisted at session boundaries
+**When** each session starts
+**Then** a child process SHALL reload the expected head from disk, report a PID
+different from the parent, and reject inherited in-memory state.
+
+## SCENARIO-LEARN-6456-PATH-CORRUPTION: Corrupt Transport Breaks Before Update
+
+**Given** a predeclared corrupt checker-transport event
+**When** the governed arm validates path receipts
+**Then** the expected path hash SHALL fail before update admission and the
+transport-corrupted checker response SHALL be non-authoritative.
+
+## SCENARIO-LEARN-6456-QUARANTINE-ROLLBACK: Tombstones Prevent Resurrection
+
+**Given** a corrupt governed event has been detected
+**When** quarantine, tombstone, rollback, and restart run
+**Then** the last good head SHALL be restored and the corrupt update hash SHALL
+not appear in any later active or release head.
+
+## SCENARIO-LEARN-6456-ROWS: Aggregates Recompute From Per-Unit Rows
+
+**Given** all model, arm, held unit, session, and process rows are present
+**When** Exp6456 reports yield, retention, quarantine, rollback, restart, and
+cost metrics
+**Then** those metrics SHALL recompute from row data without aggregate-only
+state.
+
+## SCENARIO-LEARN-6456-ATTACKS: Critical Safety Attacks Fail Closed
+
+**Given** cached-byte, fake-restart, inherited-state, forged-head,
+missed-corruption, false-quarantine, bad-rollback, tombstone-deletion,
+resurrection, CPU-fallback, timing, and aggregate attacks
+**When** Exp6456 validates its attack matrix
+**Then** no attack SHALL promote readiness, release a corrupt update, or
+override an exact checker.
+
+## SCENARIO-LEARN-6456-READY: Readiness Requires Utility And Containment
+
+**Given** all preconditions, tests, attacks, duration checks, restart checks,
+freshness checks, and protected-retention gates pass
+**When** clean learning improves held future exact yield and governed learning
+contains every corrupt event with no resurrection and acceptable benign utility
+**Then** `csl_safety_replication_ready_score` SHALL be `1.0`.
+
+## Implementation Status (REQ-LEARN-6456)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6456 | Planned: `python/carnot/experiment_6456_corrupt_feedback_held_restart_csl_replication.py`; terminal artifact `results/experiment_6456_corrupt_feedback_held_restart_csl_replication.json`. | Planned: `tests/python/test_experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6456-SPEC | Planned: `python/carnot/experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. | Planned: `tests/python/test_experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6456-MODELS | Planned: `python/carnot/experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. | Planned: `tests/python/test_experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6456-HELD-STREAM | Planned: `python/carnot/experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. | Planned: `tests/python/test_experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6456-RESTARTS | Planned: `python/carnot/experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. | Planned: `tests/python/test_experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6456-PATH-CORRUPTION | Planned: `python/carnot/experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. | Planned: `tests/python/test_experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6456-QUARANTINE-ROLLBACK | Planned: `python/carnot/experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. | Planned: `tests/python/test_experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6456-ROWS | Planned: `python/carnot/experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. | Planned: `tests/python/test_experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6456-ATTACKS | Planned: `python/carnot/experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. | Planned: `tests/python/test_experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. |
+| SCENARIO-LEARN-6456-READY | Planned: `python/carnot/experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. | Planned: `tests/python/test_experiment_6456_corrupt_feedback_held_restart_csl_replication.py`. |
+
 ## REQ-LEARN-6444: CSL Lifecycle Recomputation Audit
 
 **Given** Exp6433 left the prospective CSL claim ineligible, Exp6441 through
