@@ -9,25 +9,9 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 2 |
+| CHECKABLE | 7 |
 | AGGREGATE_ONLY | 4 |
-| CANNOT_DETERMINE | 2 |
-
-## experiment_6428_clean_write_time_factor_admission_ab.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The `exact_admission` arm improved future exact yield over `frozen` by 0.083333333 without increasing contamination or reducing protected retention.
-
-## WHAT IS MISSING
-nothing; `"aggregate_recomputation_receipts.by_cell"` records arm-level metrics for each cell, and `"atomic_disposition_records.rows"` provides row-level dispositions and reasons.
-
-## THE CHECK A READER CANNOT DO
-none
+| CANNOT_DETERMINE | 1 |
 
 ## experiment_6429_constraint_saturation_verification_cost_ab.json
 
@@ -37,13 +21,13 @@ none
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-Selective verification matched always-refine accuracy while achieving lower median and tail cost.
+Selective verification matched always-refine accuracy with lower median and tail cost.
 
 ## WHAT IS MISSING
-Actual per-unit records under `"per_unit_rows"` containing each row’s arm, verdict accuracy, checker use, and elapsed cost; `"field_principles"` and `"field_provenance"` mention `"per_unit_rows"`, but the written artifact only supplies aggregates such as `"arms"`, `"by_constraint_count"`, and `"by_constraint_count_interaction_model"`.
+Actual per-unit metric rows are missing: `per_unit_rows` is named in `field_principles` and `field_provenance`, but no `per_unit_rows` array is present in the written artifact; only aggregates such as `arms`, `by_constraint_count`, `by_constraint_count_interaction_model`, and `selective_vs_always_median_and_tail_cost_deltas` are referenced or summarized.
 
 ## THE CHECK A READER CANNOT DO
-Did selective refinement match always-refine accuracy and reduce cost broadly across matched rows, or was the aggregate advantage driven by a few units or degenerate controls?
+Can each underlying row show that `selective_refine` matched `always_refine` accuracy while reducing cost, rather than the aggregate being driven by a few rows or degenerate cases?
 
 ## experiment_6430_prospective_write_once_memory_capacity_frontier.json
 
@@ -53,29 +37,29 @@ Did selective refinement match always-refine accuracy and reduce cost broadly ac
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-Capacity 16 is the best nonzero memory capacity, achieving utility 0.59 and future exact yield 0.75, outperforming the other capacities.
+Capacity 16 is the best nonzero memory capacity/frontier point, with higher utility than smaller capacities and better utility than capacity 32.
 
 ## WHAT IS MISSING
-Per-event, per-capacity metric rows showing each capacity arm’s outcome or utility contribution; `"capacity_utility_frontier.rows"` contains only capacity-level aggregates, while `"chronological_manifest_path_hash_event_session_drift_restart_expiry_supersession_counts_and_partition_seals.events"` records event attributes but not outcomes for each capacity, and `"all_recomputed_from_per_unit_rows": true` plus `"per_unit_row_hash"` merely assert and hash unshown rows.
+Per-unit metric rows by capacity, e.g. rows containing `event_id`, `capacity`, `selection_success` or `future_exact_yield` contribution, `coverage`, `retention`, `write_precision`, and `utility`; present fields include aggregate `capacity_utility_frontier.rows`, `recomputed_capacity_results.by_capacity`, and only a `per_unit_row_hash`.
 
 ## THE CHECK A READER CANNOT DO
-Did capacity 16 outperform capacity 8 broadly across the 40 future events, or was its higher aggregate utility driven by only a few events?
+A reader cannot tell whether capacity 16’s reported `future_exact_yield: 0.75` came from broad per-event improvement or a small subset/outlier pattern hidden behind the aggregate.
 
 ## experiment_6431_controlled_memory_interference_ab.json
 
-**CANNOT_DETERMINE**
+**CHECKABLE**
 
 ## VERDICT
-CANNOT_DETERMINE
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-The authority-aware arm outperformed the capacity-matched baseline, with higher `"future_exact_yield"` (0.75 versus 0.15) and fewer exposure and downstream-use failures.
+The authority-aware retrieval/write-control arm outperformed the capacity-matched baseline on future exact yield and failure counts.
 
 ## WHAT IS MISSING
-The complete `"cells"` array: `"cell_count"` says 400, but the artifact ends mid-row at `"n"` and does not provide all per-unit records or the remainder containing any final verdict or gate fields.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-Can all reported `"by_arm"` values be recomputed from the full 400 per-unit cells, rather than being driven by omitted rows or outliers?
+none
 
 ## experiment_6432_held_shift_process_restart_csl_replication.json
 
@@ -85,13 +69,13 @@ Can all reported `"by_arm"` values be recomputed from the full 400 per-unit cell
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-Selected-capacity memory beat frozen memory on held future exact yield by 0.819444444 while satisfying readiness and safety gates.
+The artifact claims `selected_capacity_memory` achieved a positive held future exact yield delta over `frozen_memory` and readiness was met.
 
 ## WHAT IS MISSING
-The actual `"per_unit_rows"` array containing each event’s arm, identifiers, and metrics is missing; only `"aggregate_recomputation_receipts"`, `"recomputed_results.by_arm"`, aggregated `"cells"` with `n: 4`, `"effective_sample_sizes_and_uncertainty.rows"`, and a `"per_unit_row_hash"` are present.
+`per_unit_rows` with one row per held event/unit and its metrics; present fields include `aggregate_recomputation_receipts.recomputed_results.by_arm`, `aggregate_recomputation_receipts.recomputed_results.cells`, `effective_sample_sizes_and_uncertainty.rows`, and `per_unit_row_hash`, but those are aggregates or receipts, not the actual rows.
 
 ## THE CHECK A READER CANNOT DO
-Were the selected arm’s 59 successes broadly paired across individual held events, or concentrated in particular units while other units showed no improvement or no headroom?
+Can the 59/72 selected-capacity successes be traced across individual held events to rule out concentration in a few sessions or degenerate frozen-control rows?
 
 ## experiment_6433_csl_row_recomputation_safety_audit.json
 
@@ -101,7 +85,7 @@ Were the selected arm’s 59 successes broadly paired across individual held eve
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The prospective CSL claim remains ineligible because exp6432 triggered the critical `DURATION_TOO_SHORT` adversarial check.
+The row recomputation audit completed, but the prospective CSL claim remains ineligible.
 
 ## WHAT IS MISSING
 nothing
@@ -120,12 +104,92 @@ CANNOT_DETERMINE
 no claim
 
 ## WHAT IS MISSING
-the artifact contents; no fields are present after `---ARTIFACT---`
+the artifact content itself; no fields are present, including any per-unit rows or `gate_check_summary`
 
 ## THE CHECK A READER CANNOT DO
-Does the artifact make a comparative claim or report a blocked verdict with a diagnostic?
+A reader cannot tell whether there was a comparative claim, a blocked verdict, or any recorded diagnostic from this artifact.
 
 ## experiment_6435_v553_adversarial_capstone.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The artifact claims the V553 batch is complete but blocked: 10 of 11 upstream tasks completed, exp6434 is missing/malformed, public factor eligibility is allowed, and other claim classes are ineligible with listed blockers.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6440_inducer_h2h_qwen38_vs_gemma31b.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+No valid head-to-head comparison was made because the comparison arms were incomplete/truncated.
+
+## WHAT IS MISSING
+nothing; the blocker is recorded in `"both_arms_complete": false`, `"honest_verdict"`, `"completeness"`, and `"per_game_detail_side_by_side"` showing `"gemma31b"` and `"qwen38_27b"` with no completed cells.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_1644_cerce_ledger.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The artifact claims the task completed because the CERCE ledger was added/implemented.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_1736_kanele_synth.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+experiment 1736 succeeded with a generated bitfile and simulated Vivado success
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_1767_e2e_qwen.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The artifact reports aggregate metrics for experiment 1767: latency_ms 150.5, parse_rate 0.95, energy_score 0.88 over 100 prompts.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6436_v554_terminal_handoff_and_queue_preflight.json
 
 **AGGREGATE_ONLY**
 
@@ -133,10 +197,10 @@ Does the artifact make a comparative claim or report a blocked verdict with a di
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-Clean exact write-time factor admission improved future yield without contamination or retention harm and is eligible for a public factor claim.
+The artifact claims V553 narrow factor evidence is eligible while verification-cost, prospective CSL, ARC reachability, public ARC, and hardware claims remain blocked by flagged, underpowered, missing, or unauthenticated evidence.
 
 ## WHAT IS MISSING
-The actual per-unit Exp6428 A/B metric rows: unit identifiers, arm assignments, baseline and treatment future-yield values, contamination outcomes, and retention outcomes. The artifact only records `"row_availability": {"per_unit_rows_present": true, "row_count": 144}` for a separate upstream artifact; its own `"per_unit_rows"` contains task and claim-decision summaries, not experimental measurements.
+Per-unit evidence rows are missing: the artifact has `"v553_terminal_rows"`, `"v553_flagged_artifacts"`, `"v553_underpowered_artifacts"`, `"row_availability"`, `"row_count"`, and `"rows_embedded_in_primary_artifact"`, but no actual per-row metrics for the claimed improvements or gates.
 
 ## THE CHECK A READER CANNOT DO
-Was the reported future-yield improvement broad across the 144 units, or driven by a few outliers or units with unequal headroom?
+A reader cannot check whether the claimed “improved future yield” or “lower median and tail cost” effects were broad across units or driven by one/few outliers.
