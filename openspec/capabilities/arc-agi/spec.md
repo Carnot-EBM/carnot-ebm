@@ -849,6 +849,136 @@ level solve claims, solve registry writes, default promotion, and public claim
 eligibility are all absent, and every no-solve, regression, attack, and
 readiness field has a principle.
 
+### REQ-ARC-ARM-6458: Representation-Objective Generalization A/B
+
+Experiment 6458 SHALL recover the failed Exp6434 state-key reachability work
+with bounded shards, atomic checkpoints, and resume. It SHALL measure held live
+policy decisions only. It SHALL not attempt, claim, or credit a public game or
+level solve.
+
+The producer SHALL freeze deterministic tuning, safety, and held game rosters
+from readable immutable observation/action transition traces. Tuning and held
+rosters SHALL be disjoint and hash-recorded. The producer MAY tune only generic
+state suffix thresholds and objective weights on the tuning roster. It SHALL
+evaluate held rows after those values are frozen.
+
+The producer SHALL compare four matched arms:
+`current_state_key_current_objective`,
+`collision_suffix_current_objective`,
+`collision_suffix_reachability_objective`, and
+`collision_suffix_shuffled_objective_placebo`. The only representation
+treatment SHALL be the generic collision-certified suffix. The only objective
+treatment SHALL be a reachability-aware objective computed from visible prior
+actions and tuning evidence. The placebo SHALL use the same suffix and a
+seeded shuffled objective.
+
+The producer SHALL use only observations, action IDs, action coordinates, and
+post-action next-state observations present in the immutable trace corpus. It
+SHALL not read game source, run offline ground-truth BFS, inject hidden state,
+create or consume a per-game `GameAdapter`, use outer-loop reverse engineering,
+or read a recorded next state before the action is frozen.
+
+The producer SHALL run bounded CPU shards by roster, game, prefix, seed, and
+arm. It SHALL cap each cell, checkpoint atomically after every cell, print
+progress, resume completed cells without repeating them, and always write a
+terminal partial or complete artifact. Each held row SHALL include the game,
+trace prefix, seed, arm, state collision, legal-action set, chosen action,
+recorded next-state reachability, policy influence, state count, action cost,
+timeout, and checkpoint receipt.
+
+Experiment 6458 SHALL write
+`results/experiment_6458_arc_representation_objective_generalization_ab.json`
+with `status`, `registry_precheck_and_hash`,
+`no_game_or_level_solve_claim`, `solve_registry_unchanged`,
+`game_source_access_count`, `offline_ground_truth_bfs_count`,
+`per_game_adapter_count`, `canonical_live_path_receipts`,
+`tuning_and_held_roster_manifest_and_disjointness`,
+`arm_objective_and_suffix_precommitment`,
+`shard_budgets_and_checkpoint_manifest`,
+`resume_and_terminal_partial_receipts`, `per_unit_rows`,
+`collision_rates_by_arm`, `legal_action_coverage_by_arm`,
+`held_next_state_reachability_by_arm`, `policy_influence_by_arm`,
+`action_cost_timeout_and_regression_results`,
+`paired_effects_and_uncertainty`, `aggregate_row_recomputation`,
+`attack_matrix`, `current_adversarial_findings`,
+`arc_objective_generalization_ready_score`, `protected_files_unchanged`,
+`blocked_reason`, `gate_check_summary`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `field_principles`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+The artifact SHALL set `verifier_is_oracle=false`. Recorded next-state
+transitions are post-action evaluation evidence. They SHALL not be used as a
+pre-action oracle. The artifact SHALL set `no_game_or_level_solve_claim=true`,
+`solve_registry_unchanged=true`, `game_source_access_count=0`,
+`offline_ground_truth_bfs_count=0`, and `per_game_adapter_count=0`. It SHALL
+not add `solve_provenance`.
+
+`arc_objective_generalization_ready_score` SHALL equal 1.0 only when the
+combined generic suffix and reachability objective reduces collisions and
+improves held recorded next-state reachability or legal policy choice over both
+single-change arms, does not regress the frozen safety roster, all claims
+recompute from held rows, provenance boundaries pass, a nonzero held sample
+completes, and critical findings are zero. Otherwise the score SHALL be zero
+and `gate_check_summary` SHALL name the failed gate.
+
+### SCENARIO-ARC-ARM-6458-PRECONDITIONS
+
+**Given** the solve registry, live ARC entrypoints, immutable traces, and a
+writable results directory
+**When** Exp6458 starts
+**Then** it records the registry hash, confirms no solve claim, imports the
+canonical adapter-bypassed live path, confirms readable observation/action
+traces, confirms no game-source access and no adapter use, checks a monotonic
+clock, checks atomic checkpoint writes, and records explicit shard budgets.
+
+### SCENARIO-ARC-ARM-6458-DISJOINT-TUNING-HELD
+
+**Given** all readable trace games
+**When** Exp6458 freezes rosters
+**Then** tuning, safety, and held rosters are deterministic, hash-recorded,
+tuning and held games are disjoint, and held evaluation uses only the
+precommitted suffix threshold and objective weights.
+
+### SCENARIO-ARC-ARM-6458-MATCHED-ARMS
+
+**Given** a held game, prefix, and seed
+**When** Exp6458 evaluates policy choices
+**Then** all four arms use the same observation prefix, legal-action set, seed,
+and action budget. Only the representation and objective names differ.
+
+### SCENARIO-ARC-ARM-6458-CHECKPOINT-RESUME
+
+**Given** a partially completed checkpoint
+**When** Exp6458 resumes
+**Then** completed cells are not repeated, each new cell is atomically
+checkpointed, progress is printed, and a terminal partial or complete artifact
+is written.
+
+### SCENARIO-ARC-ARM-6458-ROWS-RECOMPUTE
+
+**Given** held per-unit rows
+**When** aggregate metrics are recomputed
+**Then** collision rates, legal-action coverage, held next-state reachability,
+policy choice changes, action cost, regressions, timeout rate, and paired
+effects are reproduced from those rows without aggregate-only evidence.
+
+### SCENARIO-ARC-ARM-6458-ATTACKS-FAIL-CLOSED
+
+**Given** tuning-held leakage, source access, adapter use, oracle next-state
+access before action, registry mutation, completed-cell repetition, checkpoint
+truncation, placebo bias, timeout exclusion, and aggregate-row mismatch attacks
+**When** Exp6458 validates readiness
+**Then** each critical attack fails closed before readiness can be one.
+
+### SCENARIO-ARC-ARM-6458-NO-SOLVE-OR-PROMOTION
+
+**Given** the completed Exp6458 artifact
+**When** it is validated
+**Then** source access, offline BFS, per-game adapters, solve claims, solve
+provenance, registry writes, and public solve credit are absent, and every
+field and readiness condition has a principle.
+
 ## REQ-ARC-BENCH-6267: One held-out ARC number that can move
 
 The ARC loop MUST maintain a single comparable measurement of live-agent
