@@ -36596,3 +36596,114 @@ candidate.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6174 | Planned (`python/carnot/experiment_6174_cctu_authentic_k8_pool.py`, `results/experiment_6174_cctu_authentic_k8_pool.json`) | Planned (`tests/python/test_experiment_6174_cctu_authentic_k8_pool.py`) |
+
+### REQ-VERIFY-6449: Generation-To-Verdict Path Receipt Contract V555
+
+Carnot SHALL provide a reusable versioned path-receipt helper and Exp6449 at
+`python/carnot/experiment_6449_generation_to_verdict_path_receipt_contract.py`
+that writes
+`results/experiment_6449_generation_to_verdict_path_receipt_contract.json`
+without calling an LLM, downloading a model, using an external judge, or
+modifying `scripts/research_conductor.py`. Exp6449 SHALL use readable nonzero
+immutable fixture bytes from the checked-in Exp6427 fixture corpus and a
+deterministic exact checker. If fixture bytes, checker code, atomic local
+storage, a monotonic clock, or new output paths are unavailable, Exp6449 SHALL
+write a terminal blocked artifact that records every failed precondition in
+`preconditions_checked`, `blocked_reason`, and `gate_check_summary`.
+
+The reusable path receipt SHALL bind every unit/control path through these
+ordered stages: raw generation bytes, parse output, typed facts, energy input,
+checker request, checker transport, checker response, and final verdict. Each
+stage receipt SHALL include a stable stage id, stage name, parent hash, input
+hash, output hash, code hash, configuration hash, monotonic start/end timing,
+stage hash, and terminal exact outcome field. The validator SHALL reject
+missing stages, duplicate stage ids, parent-hash breaks, stage reordering,
+silent input mutation between adjacent stages, unknown code hashes, and final
+verdict payloads that do not recompute from the checker response.
+
+Exp6449 SHALL replay at least 24 independent fixture units through three
+matched controls: identity path, one disclosed injected transport wrapper, and
+restored-wrapper path. `per_unit_rows` SHALL contain every unit and control and
+SHALL list every stage hash, changed boundary, expected verdict, observed
+verdict, localization result, and replay timing. The injected control SHALL
+change only its declared checker-transport boundary while preserving the exact
+checker verdict. The restored-wrapper control SHALL reproduce the identity
+terminal hash and verdict for every unit.
+
+The attack matrix SHALL include wrapper insertion, parser substitution, stale
+checker response, missing stage, reordered stage, replayed raw bytes under
+another unit id, forged parent hash, and aggregate-row mismatch. Every attack
+SHALL fail closed before `path_receipt_ready_score` can be `1.0`.
+`path_receipt_ready_score` SHALL be a bare `1.0` only when every control
+localizes correctly, all identity and restored rows replay, all required
+attacks are detected, final verdicts recompute from checker output, aggregate
+rows recompute from `per_unit_rows`, protected files are unchanged, and current
+critical adversarial findings are zero.
+
+The terminal artifact SHALL include `status`, `receipt_schema_and_version`,
+`fixture_manifest_and_hashes`, `code_and_configuration_hashes`,
+`control_precommitment`, `per_unit_rows`, `identity_replay_results`,
+`injected_boundary_results`, `restored_boundary_results`,
+`stage_chain_validation`, `terminal_verdict_recomputation`, `attack_matrix`,
+`current_adversarial_findings`, `aggregate_row_recomputation`,
+`path_receipt_ready_score`, `protected_files_unchanged`, `blocked_reason`,
+`gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `receipt_schema_and_version`: pins the reusable path-receipt schema and stage order.
+- `fixture_manifest_and_hashes`: binds immutable fixture files and unit ids before replay.
+- `code_and_configuration_hashes`: binds parser, fact normalizer, energy builder, checker, wrapper policy, and final verdict code/config.
+- `control_precommitment`: freezes identity, injected-wrapper, and restored-wrapper controls before rows are built.
+- `per_unit_rows`: all unit/control rows and all stage hashes are retained, not sampled away.
+- `identity_replay_results`: identity rows must replay from fixture bytes.
+- `injected_boundary_results`: injected rows may change only the declared checker-transport boundary.
+- `restored_boundary_results`: restored rows must reproduce identity terminal hashes and verdicts.
+- `stage_chain_validation`: missing, duplicate, reordered, parent-broken, mutated, or unknown-code stages fail closed.
+- `terminal_verdict_recomputation`: final verdicts must recompute exactly from checker responses.
+- `attack_matrix`: every named attack must be detected.
+- `aggregate_row_recomputation`: aggregate counts must recompute from per-unit rows.
+- `path_receipt_ready_score`: bare `1.0` only when all replay, localization, attack, aggregate, protected-file, and finding gates pass.
+- `inference_substrate`: use `deterministic_fixture_path_receipt_replay_no_llm`.
+- `verifier_is_oracle`: true only for deterministic fixture checker and row arithmetic.
+- `honest_verdict`: use a terminal `success:`/`complete:` prefix for a completed run and `blocked_` only for failed preconditions.
+
+#### SCENARIO-VERIFY-6449-CHAIN: Stage Chain Rejects Boundary Tampering
+
+Given a versioned path receipt over immutable fixture bytes,
+when any stage is missing, duplicated, reordered, supplied with an invalid
+parent hash, supplied with an input hash that does not match the prior stage
+output, supplied with an unknown code hash, or given a final verdict that does
+not recompute from the checker response,
+then the validator SHALL reject the receipt and report the exact failing
+boundary instead of accepting the path.
+
+#### SCENARIO-VERIFY-6449-CONTROLS: Matched Controls Localize The Wrapper Boundary
+
+Given at least 24 independent fixture units,
+when identity, disclosed injected-wrapper, and restored-wrapper controls are
+replayed,
+then identity and restored controls have identical terminal hashes and verdicts,
+the injected control changes only the declared checker-transport boundary while
+preserving the deterministic checker verdict, and every per-unit row records
+stage hashes, changed boundary, expected and observed verdict, localization
+result, and replay timing.
+
+#### SCENARIO-VERIFY-6449-ATTACKS: Path Receipt Attacks Fail Closed
+
+Given wrapper insertion, parser substitution, stale checker response, missing
+stage, reordered stage, replayed raw bytes under another unit id, forged parent
+hash, and aggregate-row mismatch attacks,
+when Exp6449 evaluates the attack matrix,
+then every attack is detected, final verdicts still recompute from checker
+responses for accepted rows only, aggregate rows recompute from `per_unit_rows`,
+and `path_receipt_ready_score` remains below `1.0` unless all critical findings
+are zero.
+
+## Implementation Status (REQ-VERIFY-6449)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6449 | Planned (`python/carnot/experiment_6449_generation_to_verdict_path_receipt_contract.py`, `results/experiment_6449_generation_to_verdict_path_receipt_contract.json`) | Planned (`tests/python/test_experiment_6449_generation_to_verdict_path_receipt_contract.py`) |
