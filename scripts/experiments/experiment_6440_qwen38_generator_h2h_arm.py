@@ -89,6 +89,30 @@ N_CTX = 65536
 # The live agent's retry count. LocalGGUFProposer.tries defaults to 3 and the live induce
 # path passes tries=self.tries; exp5726's cell overrides it to 1 for its own question.
 LIVE_TRIES = 3
+
+# SAMPLING SEED, per (arm-family, trial). Added 2026-08-16 after tracing why this design needs 3
+# trials at all.
+#
+# THE PROBLEM, from LocalGGUFProposer.sampling_seed's own docstring: every generation goes out at
+# `temperature = 0.2 + 0.1*attempt` with NO seed field, and llama-server reads an absent seed as
+# -1 = "pick a fresh random one". The harness `seed` argument seeds random/numpy in the driver and
+# never reaches the server's sampler. Measured cost: "2 of 5 cells diverge under IDENTICAL CODE --
+# a 40% nondeterminism rate... at least as large as any treatment effect yet measured on this
+# path, so an A/B here is uninterpretable without an A/A control no matter how many cells it runs."
+#
+# WHY THE SEED MUST VARY WITH TRIAL, not be one fixed value. `sampling_seed` composes
+# `base * 1000 + attempt`, where attempt is the RETRY index. A single base for the whole arm would
+# give trial 0, 1 and 2 identical seeds and collapse three replicates into one measurement
+# repeated three times -- destroying the very thing TRIALS exists for.
+#
+# WHY BOTH ARMS SHARE THE SEQUENCE. Identical seeds per (game, trial) make this a PAIRED
+# comparison: the two models see the same sampling randomness on the same cell, so the noise that
+# dominates this pipeline is differenced out instead of averaged over. That is strictly stronger
+# than what 3 unpinned trials could ever give.
+#
+# The A/A arms take an offset base so they explore different draws of the same distribution --
+# that difference IS the measurement.
+SEED_BASE = {"gemma31b": 100, "qwen38_27b": 100, "gemma31b_aa": 700, "qwen38_27b_aa": 700}
 BUDGET = 16384  # exp5726/5760/5764 completion budget
 
 # PER-ARM BUDGET (2026-08-15). The shared 16384 is NOT equal compute across these models, and
@@ -142,6 +166,29 @@ ARMS: dict[str, dict[str, Any]] = {
     # different quantisation and its result would not be readable against the 11-0-2 tally.
     # Port is explicit and distinct for the same reason the other two are: 8919 is held by an AMD
     # iGPU 9B server, and a mis-pointed proposer silently measures the wrong model.
+    # A/A CONTROL ARMS. Same GGUF, same everything, DIFFERENT seed base. Running a model against
+    # ITSELF measures the noise floor of this pipeline, which the proposer's own docstring says is
+    # ~40% cell divergence under identical code and "at least as large as any treatment effect yet
+    # measured on this path". Without this number a Qwen-vs-gemma gap is unreadable.
+    "gemma31b_aa": {
+        "label": "gemma-4-31B-it (A/A)",
+        "repo_substr": "gemma-4-31B-it",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "gguf": (
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/"
+            "snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+        ),
+        "port": 8988,
+        "quant": "Q4_K_M",
+    },
+    "qwen38_27b_aa": {
+        "label": "qwen3.8-27B (A/A)",
+        "repo_substr": "Qwen3.8-27B",
+        "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+        "gguf": None,
+        "port": 8989,
+        "quant": "Q4_K_M",
+    },
     "qwen38_27b": {
         "label": "qwen3.8-27B",
         "repo_substr": "Qwen3.8-27B",
@@ -660,7 +707,14 @@ def main() -> int:
                 log(f"WEDGE {wedge}")
                 break
 
-            log(f"RUN {args.arm} {game} trial={t} (residency={res} MiB, probe={lv['s']}s)")
+            # Per-cell, before the induce: base varies with TRIAL so replicates stay distinct,
+            # and is identical across the two compared arms so the comparison is paired.
+            os.environ["CARNOT_ARC_GENERATOR_SEED"] = str(SEED_BASE.get(args.arm, 100) + int(t))
+            log(
+                f"RUN {args.arm} {game} trial={t} "
+                f"(residency={res} MiB, probe={lv['s']}s, "
+                f"seed_base={os.environ['CARNOT_ARC_GENERATOR_SEED']})"
+            )
             c0 = time.time()
             try:
                 row = run_reason_cell_budget(
