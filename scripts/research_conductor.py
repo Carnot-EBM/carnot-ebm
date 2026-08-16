@@ -4846,6 +4846,37 @@ def research_step(
                 except Exception as _e:
                     logger.warning("Artifact convention audit failed (non-fatal): %s", _e)
 
+            # Contradiction escalation (REQ-OPS-CONTRADICTION-6272). Cheap detectors for rows
+            # that disagree with THEMSELVES, escalating to an adversarial reviewer when they fire.
+            #
+            # Detect-only here, deliberately. The detectors cost nothing and their output is a
+            # fact; escalation costs ~300k tokens a review and belongs behind an operator running
+            # `--escalate` on something that looks worth it. A milestone close that silently spent
+            # a million tokens on reviews would be the kind of unbounded autonomous cost this
+            # project has no budget mechanism for.
+            #
+            # Wired after a session where three manual second opinions found what the loop's own
+            # machinery missed -- most damagingly a prompt directive specifying the wrong engine
+            # arity, which set induce_ok=True while every scored transition raised and was
+            # skipped, leaving cell_recall computed over an empty set. Twelve cells were reported
+            # as a model weakness before a review found it. The detector below catches that exact
+            # pair for free.
+            if not dry_run:
+                try:
+                    subprocess.run(
+                        [
+                            sys.executable,
+                            str(PROJECT_ROOT / "scripts" / "contradiction_escalation.py"),
+                            "--recent",
+                            "12",
+                        ],
+                        cwd=PROJECT_ROOT,
+                        timeout=300,
+                        check=False,
+                    )
+                except Exception as _e:
+                    logger.warning("Contradiction escalation failed (non-fatal): %s", _e)
+
             # ARC held-out benchmark (REQ-ARC-BENCH-6267). The one ARC number that can still move.
             #
             # `reproducible_total_levels` is pinned at 183 of 183 -- every public game is cleared
