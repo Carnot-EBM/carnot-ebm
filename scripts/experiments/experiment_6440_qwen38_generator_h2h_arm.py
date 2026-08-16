@@ -430,6 +430,10 @@ def main() -> int:
     ap.add_argument("--arm", required=True, choices=sorted(ARMS))
     ap.add_argument("--shard", required=True)
     ap.add_argument("--meta", required=True)
+    # Optional overrides for targeted follow-up probes (e.g. measuring one game's convergence
+    # rate at extra seed bases). Absent, behaviour is exactly the full-roster arm.
+    ap.add_argument("--games", help="comma-separated subset of ROSTER to run")
+    ap.add_argument("--seed-base", type=int, help="override SEED_BASE for this arm")
     args = ap.parse_args()
     arm = ARMS[args.arm]
     # Resolve once, here, so every downstream use (server launch, /props identity check, the
@@ -454,7 +458,14 @@ def main() -> int:
         LLAMA_SERVER,
         run_reason_cell_budget,
     )
-    from carnot.experiment_5760_cegis_refinement_induction_ab import ROSTER, TRIALS  # noqa: E402
+    from carnot.experiment_5760_cegis_refinement_induction_ab import (  # noqa: E402
+        TRIALS,
+    )
+    from carnot.experiment_5760_cegis_refinement_induction_ab import (
+        ROSTER as _ROSTER_DEFAULT,
+    )
+
+    ROSTER = list(_ROSTER_DEFAULT)
 
     # ---- NAME THE REQUIRED SYMBOLS EXPLICITLY (operator 2026-08-15: "tune the prompt or we may
     # end up wasting the effort") -------------------------------------------------------------
@@ -478,10 +489,25 @@ def main() -> int:
     # and this is exp6440's protocol decision to make.
     import carnot.experiment_5714_think_mode_rescoped_ab as _t5714  # noqa: E402
 
+    # THE ARITY IS THREE, NOT TWO. `engine(grid, action, data)` is what every consumer calls:
+    # WorldModelVerifier.score (arc_executable_world_model.py:1818), plan_in_model (:7749, :7800),
+    # and score_goal_predicate_consistency (:2402). arc_engine_static_validation.py:119-121 states
+    # it outright -- "the engine signature the whole ARC world-model apparatus assumes".
+    #
+    # This directive shipped with TWO args on 2026-08-15 and silently destroyed every cell that
+    # obeyed it: the engine loads, satisfies `def engine`, sets induce_ok=True, and then raises
+    # TypeError on EVERY transition inside score(), which counts the raise and skips the row --
+    # so cell_recall is computed over an empty list and comes out 0.0. Verified by executing the
+    # engines on disk: sp80's raises, sb26's (which followed the prompt BODY's 3-arg form instead
+    # of this directive) runs and scored 0.66.
+    #
+    # The prompt body already said three (induce_prompt, :3324), so the model was handed
+    # CONTRADICTORY signatures and each cell resolved it by coin-flip. That is the whole
+    # explanation for "induce_ok=True with cell_recall 0.0" on tr87 and sp80.
     _REQUIRED_SYMBOL_DIRECTIVE = (
         "\n\nReturn ONLY one ```python code block. It MUST define exactly these two TOP-LEVEL "
         "functions, spelled exactly:\n"
-        "    def engine(grid, action):            # returns the next grid\n"
+        "    def engine(grid, action, data):      # returns the next grid\n"
         "    def is_level_complete(grid):         # returns True on a win\n"
         "Do not rename them. Do not wrap them in a class. A different name is rejected.\n"
     )
@@ -596,6 +622,15 @@ def main() -> int:
         return 2
 
     # ---- Windows (identical corpus for both arms; built from the same offline fixtures) ----
+    if args.games:
+        _want = [g.strip() for g in args.games.split(",") if g.strip()]
+        _unknown = [g for g in _want if g not in ROSTER]
+        if _unknown:
+            # Refuse rather than silently running a subset -- a typo'd game name that quietly
+            # becomes "run nothing" is the kind of null this project keeps mistaking for a result.
+            log(f"FATAL: --games names {_unknown} which are not in ROSTER {list(ROSTER)}")
+            return 3
+        ROSTER = _want  # noqa: F841 -- rebound below via the loop's use
     log(f"building {len(ROSTER)} windows...")
     windows: dict[str, Any] = {}
     for g in ROSTER:
@@ -709,7 +744,8 @@ def main() -> int:
 
             # Per-cell, before the induce: base varies with TRIAL so replicates stay distinct,
             # and is identical across the two compared arms so the comparison is paired.
-            os.environ["CARNOT_ARC_GENERATOR_SEED"] = str(SEED_BASE.get(args.arm, 100) + int(t))
+            _base = args.seed_base if args.seed_base is not None else SEED_BASE.get(args.arm, 100)
+            os.environ["CARNOT_ARC_GENERATOR_SEED"] = str(_base + int(t))
             log(
                 f"RUN {args.arm} {game} trial={t} "
                 f"(residency={res} MiB, probe={lv['s']}s, "
@@ -738,7 +774,11 @@ def main() -> int:
                 # Stamped per row, not just in the meta: a row that travels on its own must
                 # carry the budget that produced it, or a later reader compares 16384-cells
                 # against 32768-cells without knowing.
-                row["budget"] = ARM_BUDGET.get(args.arm, BUDGET)
+                # The ACTUAL n_predict, not the retired ARM_BUDGET map. This stamped 32768/16384
+                # while every row's own induce_detail said `HIT n_predict=49152` -- inverting the
+                # field's stated purpose, which is that a row travelling alone carries the budget
+                # that produced it.
+                row["budget"] = N_CTX - 16384
                 row["is_memorizing"] = ms["is_memorizing"]
             except Exception as exc:
                 row = {
