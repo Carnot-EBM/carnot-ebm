@@ -567,8 +567,34 @@ def main() -> int:
         # returned ok=True with both symbols at tries=3 (2,786 s) and overran at tries=1.
         #
         # Symmetric: both arms get 3. Gemma will simply not need the extra two.
+        # codeonly_eligible=True, to switch ON the repetition control this run was missing.
+        #
+        # WHAT IT DOES *NOT* DO: it does not restore the fence or the codeonly directive. With
+        # think mode on (the shipped default), generate() routes into its `_think_on` branch --
+        # "no directive, no pre-opened fence" (arc_executable_world_model.py:6873-6874) -- so the
+        # PROMPT TEXT IS BYTE-IDENTICAL to what the previous cells saw. This is not a prompt
+        # change.
+        #
+        # WHAT IT DOES DO: `_engine_induce_call = bool(codeonly_eligible) and "engine" in required`
+        # (:6885) gates `repeat_penalty=1.1, repeat_last_n=256` (:6922-6926). With False we were
+        # running with NO decode-level repetition control at all, against a failure mode that is
+        # almost entirely `stop_type=limit`.
+        #
+        # MEASURED, docs/research-notes/arc-induce-repeat-penalty-confirm-2026-07-31.md, 36 paired
+        # attempts on gemma-4-31B:
+        #     usable engines      13/36 -> 22/36  (1.69x, NOT the "triples" its own headline
+        #                                          claimed -- corrigendum C1 in that note)
+        #     hit the token cap   20/36 -> 2/36   <- our dominant failure mode
+        #     missing_return      13    -> 2
+        #     wall per attempt    100.3s -> 47.2s
+        # Attempt-matched sign test p=0.049; clustered by game p=0.125. HONEST LIMIT: quality did
+        # NOT move -- the strict out-of-sample funnel was 4/18 vs 4/18. This buys usable engines,
+        # not better ones.
+        #
+        # Symmetric: both arms take the same path, and gemma's own numbers above are where the
+        # effect was measured.
         ok_, code_ = prop_.generate(
-            prompt, ("engine", "is_level_complete"), tries=LIVE_TRIES, codeonly_eligible=False
+            prompt, ("engine", "is_level_complete"), tries=LIVE_TRIES, codeonly_eligible=True
         )
         if not ok_:
             return False, code_
