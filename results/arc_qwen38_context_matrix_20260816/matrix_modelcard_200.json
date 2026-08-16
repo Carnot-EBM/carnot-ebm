@@ -1,0 +1,12 @@
+{
+  "game": "tu93",
+  "n_ctx": 131072,
+  "answer_budget": 114688,
+  "call": "ARM-EXACT (directive + required symbols + tries=3 + codeonly_eligible=True)",
+  "ok": true,
+  "elapsed_s": 1816.6,
+  "len": 2831,
+  "def_engine_3arg": true,
+  "def_is_level_complete": true,
+  "detail_head": "import numpy as np\n\n\ndef engine(grid, action, data):\n    g = np.array(grid, copy=True)\n    H, W = g.shape\n\n    # Locate the 3x3 player sprite: eight 9s and one 4.\n    best = None\n    if H >= 3 and W >= 3:\n        ys, xs = np.where(g == 4)\n        for er, ec in zip(ys.tolist(), xs.tolist()):\n            # Possible offsets of the single 4 inside the 3x3 sprite:\n            # up, down, left, right.\n "
+}

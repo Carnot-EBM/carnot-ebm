@@ -1,0 +1,14 @@
+{
+  "game": "tu93",
+  "n_ctx": 65536,
+  "room_for_answer": 49765,
+  "ok": true,
+  "elapsed_s": 1200.5,
+  "content_len": 1843,
+  "has_think_close": false,
+  "has_python_fence": false,
+  "n_fences": 0,
+  "extracted_len": 1843,
+  "compiles": true,
+  "content_tail": "     elif action == 3:\n                grid[nr, nc - 1] = 4\n            elif action == 4:\n                grid[nr, nc + 1] = 4\n\n    # fuel bar on row 63 drains from the right end\n    if H > 63:\n        idx = np.where(grid[63] == 6)[0]\n        if len(idx):\n            grid[63, int(idx[-1])] = 0\n\n    return grid\n\n\ndef is_level_complete(grid):\n    p = _find_player(grid)\n    if p is None:\n        return False\n    r, c = p\n    # winning cell: board cell (10, 8) -> fine-grid center (46, 40)\n    if r == 46 and c == 40:\n        bar = int(np.sum(grid[63] == 6))\n        return bar <= 41\n    return False"
+}

@@ -84,7 +84,44 @@ GPU_UUIDS = (
 )
 GPU_INDEX = "0,1"
 GPU1_UUID = GPU_UUIDS[1]  # kept: the artifact field `gpu_uuid_proven` still reports it
-N_CTX = 65536
+N_CTX = 131072
+
+# WHY 131072 AND --parallel 1 (measured 2026-08-16, the 2x3 paired sampling matrix).
+#
+# At n_ctx 65536 the arm overran tu93 on 5 of 5 draws. At 131072 it succeeded on 6 of 6, across
+# BOTH sampling conditions (shipped 0.2 ladder and Qwen's model-card 0.6/0.95/20) and three seeds
+# each. Sampling made no difference to success and greedy was marginally faster, so the cause was
+# the budget alone -- the vendor's endless-thinking-repetition warning does not apply here.
+#
+# THE ARM'S OWN ADDITIONS ARE WHAT OVERFLOWED IT. A plain induce call finishes in ~41.4k tokens
+# (measured at two budgets, 0.5% apart). The arm's call -- symbol directive + required symbols +
+# retries -- needs ~58-63k. Seed 100 used 57,932 against a 49,152 ceiling. The budget was never
+# re-sized after those additions were made, and every "Qwen fails to terminate" reading was the
+# model hitting that wall.
+#
+# --parallel 1 IS WHAT MAKES IT AFFORDABLE. llama-server defaulted to n_parallel=4, so `-c` was
+# divided four ways across slots for a workload that issues one request at a time. Giving the
+# whole pool to a single slot doubled usable context for 1.3 GB: 9,752+10,574 MiB at 4x65536
+# versus 11,096+11,936 MiB at 1x131072.
+LLAMA_PARALLEL = 1
+
+# PROMPT RESERVE, sized from the LARGEST measured prompt rather than the one game I probed.
+#
+# Measured 2026-08-16, all 13 roster prompts tokenised with the model's own vocab, including the
+# required-symbol directive the arm appends:
+#     tr87 20,173   ft09 17,802   lp85 16,467   sk48 16,074   tu93 15,846
+#     r11l 12,672   re86 11,902   g50t 11,756   ar25 11,612   sb26 11,065
+#     cd82  7,688   vc33  7,452   sp80  5,492
+#
+# The reserve was 16,384 -- fitted to tu93's 15,846 because tu93 is the game I happened to probe.
+# THREE games exceed it: tr87 by 3,789 tokens, ft09 by 1,418, lp85 by 83. On those the requested
+# n_predict was larger than the room actually left, so the generation was truncated by the pool
+# rather than by its own budget -- a spurious overrun indistinguishable in the shard from a real
+# one, and exactly the defect this whole investigation was about, one level down.
+#
+# 28672 = the largest prompt (20,173) plus ~8k margin. Leaves 102,400 tokens to answer in, against
+# the ~58-63k the arm's call was measured to need.
+PROMPT_RESERVE = 28672
 
 # The live agent's retry count. LocalGGUFProposer.tries defaults to 3 and the live induce
 # path passes tries=self.tries; exp5726's cell overrides it to 1 for its own question.
@@ -349,6 +386,9 @@ def launch(arm: dict[str, Any], llama_server: Path) -> tuple[subprocess.Popen, d
     # -sm layer -ts 1,1 splits the model evenly. No MTP on either arm, so no draft override.
     if "-sm" not in args:
         args += ["-sm", "layer", "-ts", "1,1"]
+    # One slot, so `-c` is the context this run actually gets rather than a pool divided four ways.
+    if "--parallel" not in args:
+        args += ["--parallel", str(LLAMA_PARALLEL)]
     env = dict(os.environ, CUDA_VISIBLE_DEVICES=str(GPU_INDEX))
     log(f"  launch: CUDA_VISIBLE_DEVICES={GPU_INDEX} {' '.join(args)}")
     t0 = time.time()
@@ -727,7 +767,7 @@ def main() -> int:
             # was never given.
             # Room to answer: n_ctx minus the largest prompt we build. The measured tu93 prompt
             # is 15,771 tokens; 16384 is that rounded up with margin.
-            max_tokens=N_CTX - 16384,
+            max_tokens=N_CTX - PROMPT_RESERVE,
             # 3600s, because the measured Qwen3.8 induction took 1200s and the old 1800s left too
             # little headroom for a slower game. A timeout here does not raise -- it returns
             # (False, msg) and the cell records a silent non-answer, which is exactly the failure
@@ -789,7 +829,7 @@ def main() -> int:
                     # Symmetric across arms. ARM_BUDGET existed to work around the 32768
                     # context ceiling; with n_ctx 65536 on two cards both models get the same
                     # room, which is what makes the comparison readable.
-                    budget=N_CTX - 16384,
+                    budget=N_CTX - PROMPT_RESERVE,
                 )
                 try:
                     src = (E3_DIR / game / "world_model.py").read_text()
@@ -804,7 +844,7 @@ def main() -> int:
                 # while every row's own induce_detail said `HIT n_predict=49152` -- inverting the
                 # field's stated purpose, which is that a row travelling alone carries the budget
                 # that produced it.
-                row["budget"] = N_CTX - 16384
+                row["budget"] = N_CTX - PROMPT_RESERVE
                 row["is_memorizing"] = ms["is_memorizing"]
             except Exception as exc:
                 row = {
