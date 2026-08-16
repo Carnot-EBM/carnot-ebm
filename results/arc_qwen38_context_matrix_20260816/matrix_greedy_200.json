@@ -1,0 +1,12 @@
+{
+  "game": "tu93",
+  "n_ctx": 131072,
+  "answer_budget": 114688,
+  "call": "ARM-EXACT (directive + required symbols + tries=3 + codeonly_eligible=True)",
+  "ok": true,
+  "elapsed_s": 2347.8,
+  "len": 2454,
+  "def_engine_3arg": true,
+  "def_is_level_complete": true,
+  "detail_head": "import numpy as np\n\n\ndef engine(grid, action, data):\n    g = np.asarray(grid).copy()\n    H, W = g.shape\n\n    if action not in (1, 2, 3, 4):\n        return g\n\n    # Find the player: a 3x3 block containing eight 9s and one other pixel.\n    pr = pc = None\n    for r in range(H - 2):\n        for c in range(W - 2):\n            b = g[r:r + 3, c:c + 3]\n            if int((b == 9).sum()) == 8:\n            "
+}

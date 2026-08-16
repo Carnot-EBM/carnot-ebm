@@ -1,0 +1,12 @@
+{
+  "game": "tu93",
+  "n_ctx": 131072,
+  "answer_budget": 114688,
+  "call": "ARM-EXACT (directive + required symbols + tries=3 + codeonly_eligible=True)",
+  "ok": true,
+  "elapsed_s": 2447.0,
+  "len": 4655,
+  "def_engine_3arg": true,
+  "def_is_level_complete": true,
+  "detail_head": "import numpy as np\n\ndef engine(grid, action, data):\n    g = np.array(grid, dtype=np.int32, copy=True)\n    if g.ndim != 2:\n        return g\n    H, W = g.shape\n    if H == 0 or W == 0:\n        return g\n\n    dirs = {\n        1: (-6, 0, (0, 1)),   # up\n        2: (6, 0, (2, 1)),    # down\n        3: (0, -6, (1, 0)),   # left\n        4: (0, 6, (1, 2)),    # right\n    }\n\n    completed = False\n    should"
+}

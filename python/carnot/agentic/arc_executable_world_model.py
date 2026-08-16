@@ -6915,6 +6915,38 @@ class LocalGGUFProposer:
                 "temperature": 0.2 + 0.1 * attempt,
                 "cache_prompt": True,
             }
+            # OPT-IN SAMPLING OVERRIDE (2026-08-16). Absent all three env vars this block is a
+            # no-op and the payload is byte-identical to before -- the same default-off contract
+            # as `sampling_seed`, and for the same reason: changing how the SCORED agent samples
+            # is a behaviour change, not a measurement change.
+            #
+            # WHY IT EXISTS. The ladder above is near-greedy (0.2/0.3/0.4) and we send no top_p,
+            # top_k or penalties at all. Qwen3's own model card warns that near-greedy decoding on
+            # their thinking builds produces ENDLESS THINKING REPETITION, and recommends
+            # temperature 0.6 / top_p 0.95 / top_k 20. Endless thinking is exactly the observed
+            # failure -- Qwen3.8 overran its budget on 5 of 5 tu93 draws while a plain call on the
+            # same prompt terminates at ~41k tokens. That is external evidence, not measured here,
+            # which is precisely why this ships as an opt-in probe rather than a default change.
+            #
+            # The +0.1 ladder's original job -- decorrelating retries -- is now done by
+            # `sampling_seed(attempt)`, so pinning a constant temperature no longer costs
+            # diversity.
+            _t_override = os.environ.get("CARNOT_ARC_INDUCE_TEMPERATURE")
+            if _t_override:
+                try:
+                    _payload["temperature"] = float(_t_override)
+                except ValueError:
+                    pass  # malformed env must never take down a live episode
+            for _env, _key, _cast in (
+                ("CARNOT_ARC_INDUCE_TOP_P", "top_p", float),
+                ("CARNOT_ARC_INDUCE_TOP_K", "top_k", int),
+            ):
+                _v = os.environ.get(_env)
+                if _v:
+                    try:
+                        _payload[_key] = _cast(_v)
+                    except ValueError:
+                        pass
             # See _INDUCE_REPEAT_PENALTY: breaks the decode-level repetition loop that is the
             # dominant induce failure. Scoped to the ENGINE induce prompt -- the same condition
             # as the defect gate, and the only prompt shape Phase 1 measured. 1.0 restores the

@@ -1,0 +1,12 @@
+{
+  "game": "tu93",
+  "n_ctx": 131072,
+  "answer_budget": 114688,
+  "call": "ARM-EXACT (directive + required symbols + tries=3 + codeonly_eligible=True)",
+  "ok": true,
+  "elapsed_s": 1495.7,
+  "len": 4221,
+  "def_engine_3arg": true,
+  "def_is_level_complete": true,
+  "detail_head": "import numpy as np\n\n\ndef engine(grid, action, data):\n    g = np.array(grid, dtype=np.int64, copy=True)\n    H, W = g.shape\n\n    # Locate the player: a full 3x3 block made of colors 9 and exactly one 4.\n    player = None\n    ys, xs = np.where(g == 4)\n    for y, x in zip(ys.tolist(), xs.tolist()):\n        y = int(y)\n        x = int(x)\n        for dy in (-2, -1, 0):\n            r = y + dy\n            "
+}
