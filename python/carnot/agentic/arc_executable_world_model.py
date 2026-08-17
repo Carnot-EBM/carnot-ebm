@@ -7446,6 +7446,25 @@ class LocalGGUFProposer:
         previous_level_complete_grid: Optional[np.ndarray] = None,
         win_transition: Optional[Transition] = None,
     ) -> tuple[bool, str]:
+        # OPT-IN TOOL-CALLING LOOP (REQ-ARC-WMTE-6460, 2026-08-17, DEFAULT OFF). Unset ->
+        # this block is dead and induction is byte-identical to the shipped single-shot.
+        # The loop replaces mental grid simulation (the ~95%-of-decode think channel)
+        # with in-process tool execution; see arc_induction_tool_loop's docstring. A
+        # loop failure returns (False, ...) and we FALL THROUGH to the shipped path,
+        # so the worst case is today's behaviour plus the loop's bounded cost.
+        if os.environ.get("CARNOT_ARC_INDUCE_TOOL_LOOP") == "1":
+            from carnot.agentic.arc_induction_tool_loop import induce_with_tool_loop
+
+            ok_tool, note_tool = induce_with_tool_loop(
+                self,
+                game,
+                list(trans),
+                int(cell),
+                previous_level_complete_grid=previous_level_complete_grid,
+                win_transition=win_transition,
+            )
+            if ok_tool:
+                return ok_tool, note_tool
         base = induce_prompt(
             game,
             trans,

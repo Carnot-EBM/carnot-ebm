@@ -145,3 +145,11 @@ CHECK_TIMED_OUT
 
 - **New top-five entrant:** **egangu** is **#5 at 2.01**. No submission-linked public code, notebook, dataset, discussion, or writeup was found. **Exploit/general-purpose classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/egangu/code)
 
+## 2026-08-17 13:39 UTC -- NEW
+
+- **New top-five entrant:** **rellik13** is **#4 at 2.53**. No submission-linked public code or technique disclosure was found. **Classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- **Fufront-RyanX-AGI-Team — newly discovered artifact:** Its public dataset contains **7,525 pre-recorded actions across 25 named public games** plus a `TraceReplayAgent` that loads the matching `{game_id}.json` and executes the fixed sequence. No evidence connects this artifact to its current hidden-game submission. **Classification: (a) EXPLOIT/HARDCODED; not transferable to unseen games.** [Dataset](https://www.kaggle.com/datasets/ryanxatlasai/arc-agi3-traces-v3)
+
+- **Kevin E R MILLE (#6) — newly discovered public “Sophia” notebook:** A CPU-only, model-free online explorer restricts itself to declared legal actions, suppresses `ACTION7` when alternatives exist, retires action arms after eight frame-level no-ops, and chooses the least-tried action for each exact frame hash weighted by its observed effect rate with 10% random exploration. Clicks target small changed regions or one occupied cell per non-background 4×4 block, retaining 25% uniform-random coverage and preferentially revisiting responsive targets. No source reading or per-game policy hardcoding appears; linkage to the current submission is unconfirmed. **Classification: (b) GENERAL-PURPOSE.** [Notebook](https://www.kaggle.com/code/kevinermille/arc3-sophia-no-action7-v1)
+

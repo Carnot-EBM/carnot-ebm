@@ -1,0 +1,139 @@
+{
+  "probe": "tool_loop_v2_tb2048",
+  "arm": "tb2048",
+  "gpu": "1",
+  "think_budget": 2048,
+  "single_card": true,
+  "leak_fixed": true,
+  "seed": 101,
+  "game": "tu93",
+  "ok": true,
+  "note": "local gguf (GPU server) wrote world_model.py (tool loop: early_stop_non_improving, 12 turns, 9 visible mismatches)",
+  "wall_s": 692.0,
+  "stats": {
+    "turns": 12,
+    "decode_tokens_total": 24790,
+    "decode_tokens_per_turn": [
+      2680,
+      2228,
+      2227,
+      2227,
+      2227,
+      2138,
+      190,
+      274,
+      2227,
+      2227,
+      2908,
+      3237
+    ],
+    "tool_calls_total": 20,
+    "tool_calls_by_name": {
+      "run_engine_on_transitions": 3,
+      "query_region": 17
+    },
+    "tool_calls_per_turn": [
+      [
+        "run_engine_on_transitions"
+      ],
+      [
+        "query_region",
+        "query_region"
+      ],
+      [
+        "query_region",
+        "query_region"
+      ],
+      [
+        "query_region",
+        "query_region"
+      ],
+      [
+        "query_region",
+        "query_region"
+      ],
+      [
+        "query_region"
+      ],
+      [
+        "query_region",
+        "query_region"
+      ],
+      [
+        "query_region",
+        "query_region"
+      ],
+      [
+        "query_region",
+        "query_region"
+      ],
+      [
+        "query_region",
+        "query_region"
+      ],
+      [
+        "run_engine_on_transitions"
+      ],
+      [
+        "run_engine_on_transitions"
+      ]
+    ],
+    "tool_call_parse_failures": 0,
+    "unparsed_tool_call_text_turns": 0,
+    "candidates_scored": 3,
+    "force_engine_nudges": 0,
+    "terminated_by": "early_stop_non_improving",
+    "final_answer_seen": false,
+    "wall_s": 692.01,
+    "turns_completed": 12,
+    "mismatch_trajectory": [
+      9,
+      9,
+      9
+    ],
+    "holdout_trajectory": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "best_visible_mismatches": 9,
+    "best_holdout_accuracy": 0.0,
+    "best_is_memorizing": false
+  },
+  "full_window_accuracy": 0.0,
+  "full_window_cell_recall": 0.2077,
+  "held_out_tail_accuracy": 0.0,
+  "held_out_tail_cell_recall": 0.2053,
+  "memorization_scan": {
+    "engine_source_found": true,
+    "n_large_int_literals": 0,
+    "n_window_coord_literals": 0,
+    "is_memorizing": false
+  },
+  "engine_source_chars": 1544,
+  "singleshot_reference": {
+    "decode_tokens_median": 61000,
+    "tu93_recorded_heldout": [
+      0.0,
+      1.0,
+      1.0
+    ],
+    "tu93_recorded_mem": [
+      true,
+      false,
+      false
+    ],
+    "tu93_recorded_elapsed_s": [
+      1521.2,
+      1602.1,
+      2194.9
+    ]
+  },
+  "kill_criteria": {
+    "decode_total": 24790,
+    "decode_below_50pct_of_median": true,
+    "parse_fail_rate": 0.0,
+    "parse_fail_under_20pct": true,
+    "memorizing": false
+  }
+}

@@ -26023,3 +26023,63 @@ restore the store file byte-identically.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6410 | `python/carnot/agentic/arc_recall_gated_resample.py` (pure decision + keep rule); wired in `python/carnot/agentic/arc_competition_agent.py` (`_maybe_recall_gated_resample`, called on the plain branch of `_induce_and_plan` right after `WorldModelVerifier.score`). Hidden-state branch deliberately not covered: all measured collapse cells (tu93/tr87/sp80) route through the plain branch, and that branch's candidate-pool trust selection is a different failure surface. | `tests/python/test_arc_recall_gated_resample.py` (16/16: decision unit tests incl. the quiet-window and seed-pinned refusals; agent-helper integration with a fake proposer and `E3_DIR` -> tmp_path incl. recovery, byte-identical restore, budget cap, induce-failure degradation, and a mirror-consistency check against the plain gate); 102 pre-existing tests over the touched gate/policy paths stay green. |
+
+### REQ-ARC-WMTE-6460: Tool-Calling Induction Loop (Default OFF, Awaiting Probe Verdict)
+
+Single-shot induction on the Qwen3.8-27B generator decodes 38k-94k tokens per call
+(median ~61k). ~95% of that is the think channel, spent mentally simulating grid
+transforms against the observed transitions. Decode is ~15x more expensive than
+prefill on the scored card, so replacing mental simulation with actual execution is
+the cost lever.
+
+The proposer SHALL support a tool-calling induction loop (default OFF,
+`CARNOT_ARC_INDUCE_TOOL_LOOP=1`) in which the model calls four in-process tools:
+
+1. `run_engine_on_transitions(code)` — runs a candidate engine on the observed
+   window; returns bounded mismatches, static defects, a hardcoded-coordinate scan,
+   and an AGGREGATE-ONLY held-out score (2-3 tail rows withheld from the test set).
+2. `query_region(t, r0, r1, c0, c1, which)` — plain integer cells, no RLE decoding.
+3. `diff_grids(t)` — the changed cells of one transition, with the action.
+4. `run_goal_on_states(code)` — runs a candidate goal predicate on observed grids.
+
+The tools are plain functions plus JSON schemas (MCP as vocabulary, not transport).
+The live loop calls them directly in-process; a FastMCP registration exists for dev
+use only, behind `carnot.mcp.server`'s optional import.
+
+Termination SHALL be layered: hard turn cap (12), a per-turn thinking budget
+(`thinking_budget_tokens`, default 3072), the induce timeout as a wall-clock
+deadline, best-so-far monotone accept (fewest visible mismatches wins at any cap),
+and early stop after 2 consecutive non-improving candidates. A loop that produces no
+scoreable engine SHALL fall back to the shipped single-shot induce.
+
+The memorization trap is mitigated IN the tool, not after it: the mismatch report
+carries the experiment-5760 hardcoded-coordinate scan and warns the model, and the
+held-out rows are never shown cell-by-cell. The loop records tool-call parse rate
+per run (`last_tool_loop_stats`), because Qwen3.8 routes through llama.cpp's generic
+PEG autoparser whose tool-call reliability was unverified at design time.
+
+#### SCENARIO-ARC-WMTE-6460-1 (default off)
+
+Given the env flag unset, induce() SHALL be byte-identical to the shipped
+single-shot path and the loop module SHALL never be consulted.
+
+#### SCENARIO-ARC-WMTE-6460-2 (zero-mismatch accept)
+
+Given a tool-round candidate with zero visible mismatches, the loop SHALL write it
+and stop.
+
+#### SCENARIO-ARC-WMTE-6460-3 (fallback)
+
+Given no parseable engine by the cap, induce() SHALL run the shipped single-shot
+path; failure is never worse than today.
+
+#### SCENARIO-ARC-WMTE-6460-4 (parse accounting)
+
+Given a malformed tool call, the loop SHALL count it, return the error as the tool
+result, and continue.
+
+## Implementation Status (REQ-ARC-WMTE-6460)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6460 | `python/carnot/agentic/arc_induction_tools.py` (registry + session + schemas + memorization scan); `python/carnot/agentic/arc_induction_tool_loop.py` (loop + termination + stats); hook at the top of `LocalGGUFProposer.induce` in `python/carnot/agentic/arc_executable_world_model.py`, env-gated, fall-through on failure. | `tests/python/test_arc_induction_tool_loop.py` (10/10: env-unset bomb pin, zero-mismatch accept, turn-cap fallback to single-shot, parse-failure accounting, early stop, aggregate-only held-out, memorization flag, dispatch coverage, region/diff round-trip). |

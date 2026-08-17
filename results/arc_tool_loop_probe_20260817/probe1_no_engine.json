@@ -1,0 +1,67 @@
+{
+  "probe": "tool_loop_single_cell_tu93_qwen38",
+  "seed": 101,
+  "game": "tu93",
+  "ok": false,
+  "note": "tool loop: no scoreable engine (turn_cap)",
+  "wall_s": 967.8,
+  "stats": {
+    "turns": 12,
+    "decode_tokens_total": 33920,
+    "decode_tokens_per_turn": [
+      3181,
+      3263,
+      3189,
+      3429,
+      3607,
+      3162,
+      189,
+      367,
+      3429,
+      3425,
+      3250,
+      3429
+    ],
+    "tool_calls_total": 44,
+    "tool_calls_by_name": {
+      "diff_grids": 12,
+      "query_region": 32
+    },
+    "tool_call_parse_failures": 0,
+    "unparsed_tool_call_text_turns": 0,
+    "candidates_scored": 0,
+    "terminated_by": "turn_cap",
+    "final_answer_seen": false,
+    "wall_s": 967.75,
+    "turns_completed": 12
+  },
+  "heldout_accuracy": null,
+  "cell_recall": null,
+  "memorization_scan": null,
+  "engine_source_chars": 0,
+  "singleshot_reference": {
+    "decode_tokens_median": 61000,
+    "tu93_recorded_heldout": [
+      0.0,
+      1.0,
+      1.0
+    ],
+    "tu93_recorded_mem": [
+      true,
+      false,
+      false
+    ],
+    "tu93_recorded_elapsed_s": [
+      1521.2,
+      1602.1,
+      2194.9
+    ]
+  },
+  "kill_criteria": {
+    "decode_below_50pct_of_median": false,
+    "decode_total": 33920,
+    "parse_fail_rate": 0.0,
+    "parse_fail_under_20pct": true,
+    "memorizing": null
+  }
+}

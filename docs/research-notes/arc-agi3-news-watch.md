@@ -153,3 +153,9 @@ CHECK_TIMED_OUT
 
 CHECK_TIMED_OUT
 
+## 2026-08-17 13:15 UTC -- NEW
+
+- **Leaderboard shakeup:** Lord Han Solo now leads at **2.76**, followed by **cstl (2.70)**, **Daniel Franzen (2.58)**, and **rellik13 (2.53)**. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+- Organizers clarified that final-selected notebooks **will not be rerun**: private scores are fixed during the original submission run. Every run evaluates both leaderboard halves, but only the public half is displayed; ARC-AGI-3’s runtime limit is **9 hours**. [Official Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/729985)
+- Kaggle is investigating **RTX Pro 6000 capacity constraints** causing queued submissions and says it is working to free additional resources. [Official Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/735147)
+
