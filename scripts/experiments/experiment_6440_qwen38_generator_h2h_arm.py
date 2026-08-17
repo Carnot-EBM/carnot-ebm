@@ -384,7 +384,9 @@ def launch(arm: dict[str, Any], llama_server: Path) -> tuple[subprocess.Popen, d
         "off",
     ]
     # -sm layer -ts 1,1 splits the model evenly. No MTP on either arm, so no draft override.
-    if "-sm" not in args:
+    # Only when this arm actually has two cards: `-ts 1,1` against a single visible device tells
+    # llama.cpp to split across a device that is not there.
+    if "-sm" not in args and "," in str(GPU_INDEX):
         args += ["-sm", "layer", "-ts", "1,1"]
     # One slot, so `-c` is the context this run actually gets rather than a pool divided four ways.
     if "--parallel" not in args:
@@ -474,8 +476,25 @@ def main() -> int:
     # rate at extra seed bases). Absent, behaviour is exactly the full-roster arm.
     ap.add_argument("--games", help="comma-separated subset of ROSTER to run")
     ap.add_argument("--seed-base", type=int, help="override SEED_BASE for this arm")
+    # SINGLE-CARD MODE (added 2026-08-17). The defaults above layer-split one model across both
+    # cards, which serialises decode and measured 14% slower than one card holding the whole model
+    # (41.05 vs 35.5 tok/s). Pinning an arm to ONE card lets the two arms run CONCURRENTLY, one per
+    # card, which is 2.31x the throughput of the split for this workload. n_ctx has to move with it
+    # because a single 24 GB card holds Qwen3.8 to 131072 but gemma-4-31B only to 65536; both are
+    # far above what either model's generations need, so neither arm is starved by the difference.
+    # Ports must differ between concurrent arms or the second silently measures the first's server.
+    ap.add_argument("--gpu", help="CUDA_VISIBLE_DEVICES for this arm, e.g. '0'. Default: both.")
+    ap.add_argument("--n-ctx", type=int, help="override N_CTX for this arm")
+    ap.add_argument("--port", type=int, help="override the arm's llama-server port")
     args = ap.parse_args()
+    global GPU_INDEX, N_CTX
+    if args.gpu:
+        GPU_INDEX = args.gpu
+    if args.n_ctx:
+        N_CTX = args.n_ctx
     arm = ARMS[args.arm]
+    if args.port:
+        arm["port"] = args.port
     # Resolve once, here, so every downstream use (server launch, /props identity check, the
     # recorded artifact) reads the SAME path. Resolving at each use site is how two of them end up
     # pointing at different snapshots.

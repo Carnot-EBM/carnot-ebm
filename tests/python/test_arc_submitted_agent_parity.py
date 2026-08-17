@@ -236,13 +236,20 @@ def test_req_capstone_4744_submitted_config_declares_frozen_qwen_generator():
     # GPU hardware") plus the measured 1.398x decode win on the bundled binary. So it is written
     # here as a literal. If a future operator directive turns scored MTP off, this line is SUPPOSED
     # to go red -- that is the notification, and it is what the tautology suppressed.
-    assert frozen["mtp"] is True
-    assert frozen["spec_type"] == "draft-mtp"
+    # THE NOTIFICATION FIRED, 2026-08-17, exactly as the paragraph above intends. The generator
+    # moved to Qwen3.8-27B, for which no MTP draft head is published, so scored MTP is off and the
+    # literal moves with it. This is not a knob someone flipped for convenience: kernel v19 resolved
+    # mtp=False at run time and reported the config/run disagreement itself. The cost is real and
+    # accepted -- roughly 1.8x slower decode than gemma's speculative path. `spec_type` is DERIVED
+    # from the mtp flag, so it follows to None; asserting it separately keeps the pair honest,
+    # because a None mtp with a live "draft-mtp" spec_type would be a config that cannot run.
+    assert frozen["mtp"] is False
+    assert frozen["spec_type"] is None
     # Separately, pin that the constant the config is DERIVED from still says the same thing. This
     # is the "did somebody flip the knob" check; the two lines above are the "what does the
     # submission actually launch with" check. Keeping them apart is what makes either one able to
     # fail on its own.
-    assert ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT == "1"
+    assert ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT == "0"
     # The draft is a DIFFERENT FILE from the weights. Asserting only "mtp is True" is what would
     # let `--model-draft` drift back onto the main GGUF -- accepted by llama.cpp, warned about,
     # then served with speculation silently disabled and no other observable difference.
