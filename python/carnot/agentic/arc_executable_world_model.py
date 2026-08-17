@@ -3666,9 +3666,15 @@ class CodexProposer:
 # QAT (2026-07-31, operator directive after the head-to-head below). The repo substring is
 # the QAT one specifically: "gemma-4-31B-it" alone matches BOTH cache dirs
 # (`...-it-GGUF` and `...-it-qat-GGUF`) and would resolve ambiguously.
-ARC_LIVE_GENERATOR_REPO_SUBSTR = "gemma-4-31B-it-qat"
-ARC_LIVE_GENERATOR_MODEL_ID = "unsloth/gemma-4-31B-it-qat-GGUF"
-ARC_LIVE_GENERATOR_MODEL_FILENAME = "gemma-4-31B-it-qat-UD-Q4_K_XL.gguf"
+# MOVED 2026-08-16 by operator directive, gemma-4-31B-it-qat -> Qwen3.8-27B. What the swap costs,
+# measured, so it is not rediscovered later: Qwen3.8 writes far longer completions (49,244-83,544
+# tokens against gemma's ~6,584) and no MTP draft head ships for it, so speculative decoding turns
+# off. Together that is roughly 17x the wall clock per induction on the scored card -- about 49% of
+# the 12h eval budget against gemma's 3%. It is bought with better induction quality on the three
+# games measured head to head so far, which is thin evidence; see the h2h evidence directory.
+ARC_LIVE_GENERATOR_REPO_SUBSTR = "Qwen3.8-27B"
+ARC_LIVE_GENERATOR_MODEL_ID = "unsloth/Qwen3.8-27B-GGUF"
+ARC_LIVE_GENERATOR_MODEL_FILENAME = "Qwen3.8-27B-Q4_K_M.gguf"
 # WHY QAT, AND WHY NOT FOR QUALITY. A 20-game x 3-trial head-to-head against the shipped
 # Q4_K_M (results/outer_loop_arc_qat_vs_q4km_h2h_20260731.json) came back INDISTINGUISHABLE:
 # mean-B 6-6 with 8 ties, exact two-sided sign test p = 1.0 over 12 discordant pairs (min

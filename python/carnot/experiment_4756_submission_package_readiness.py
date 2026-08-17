@@ -89,11 +89,18 @@ TERMINAL_PREFIXES = ("success_", "passed_", "complete_", "blocked_")
 # failure mode of a missing head is a silent ~1.4x slowdown, not an error: the kernel correctly
 # drops the flags, the run completes, and nothing downstream distinguishes it from a fast run.
 # Making it a gate precondition is the only place that difference becomes visible before submission.
+# 2026-08-16: retargeted to the Qwen3.8-27B generator. Two things changed at once here.
+# First, the generator moved. Second, this set had DRIFTED from what the kernel actually attaches:
+# it required `carnot-gemma4-31b-it-gguf` + `carnot-gemma4-31b-mtp-head` while
+# kernel-metadata.json requested the single combined `carnot-gemma4-31b-it-qat-gguf`, so
+# `datasets_attached` was False and the readiness gate reported the package blocked on datasets
+# that were never going to appear. That drift is what test_exp4756_required_datasets_match_what_
+# the_kernel_actually_attaches exists to catch, and it was failing before this edit.
+# No MTP head entry: none ships for Qwen3.8-27B, so requiring one would recreate the same drift.
 REQUIRED_DATASETS = {
     "iancblenke/carnot-agent-code",
     "iancblenke/carnot-llamacpp-mtp-binary",
-    "iancblenke/carnot-gemma4-31b-it-gguf",
-    "iancblenke/carnot-gemma4-31b-mtp-head",
+    "iancblenke/carnot-qwen38-27b-gguf",
 }
 REQUIRED_COMPETITION = "arc-prize-2026-arc-agi-3"
 

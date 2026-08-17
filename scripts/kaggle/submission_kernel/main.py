@@ -201,10 +201,21 @@ server = next(iter(inp.rglob("llama-server")), None)
 # the 491 MB head as the generator would load, serve, and answer nonsense -- a silent failure.
 # Now: the head is identified POSITIVELY and excluded from the main-model candidates, and the main
 # model must match its own canonical filename stem.
-_HEAD_SUBSTR = "mtp-gemma-4-31B-it"
+# 2026-08-16: generator moved gemma-4-31B -> Qwen3.8-27B. The structure above is unchanged and
+# still matters -- the head is excluded POSITIVELY and the main model must match its own name, so
+# neither is chosen by rglob order. Note no MTP draft head ships for Qwen3.8-27B today, so `_heads`
+# is expected to be empty and MTP resolves off. That costs roughly 1.8x decode speed against
+# gemma's speculative path, which is a known and accepted part of this swap. The head arm is kept
+# rather than deleted so that attaching a Qwen3.8 draft head later needs no code change.
+# `mtp-` rather than a model-specific head name. A head must be excluded from the main-model
+# candidates NO MATTER WHICH MODEL IT DRAFTS FOR -- a leftover gemma head under /kaggle/input must
+# not be bindable as the Qwen main model. Pinning the head string to one model reintroduced exactly
+# the silent failure described above, and the order-independence test caught it.
+_HEAD_SUBSTR = "mtp-"
+_MAIN_SUBSTR = "Qwen3.8-27B"
 _all_ggufs = list(inp.rglob("*.gguf"))
 _heads = [g for g in _all_ggufs if _HEAD_SUBSTR in g.name]
-_mains = [g for g in _all_ggufs if _HEAD_SUBSTR not in g.name and "gemma-4-31B" in g.name] or [
+_mains = [g for g in _all_ggufs if _HEAD_SUBSTR not in g.name and _MAIN_SUBSTR in g.name] or [
     g for g in _all_ggufs if _HEAD_SUBSTR not in g.name
 ]
 gguf = _mains[0] if _mains else None
@@ -341,8 +352,17 @@ if server and gguf:
     # (572s at n_ctx 32768 on a 3090, single-stream) with margin for the live path's 4 shared
     # slots running slower per-request; a timeout firing silently degrades the agent to LLM-off
     # rather than erroring, so under-shooting this is a silent-failure risk, not just slowness.
-    os.environ.setdefault("CARNOT_ARC_INDUCE_MAX_TOKENS", "8192")
-    os.environ.setdefault("CARNOT_ARC_INDUCE_TIMEOUT", "1200")
+    # RAISED AGAIN 2026-08-16 for the Qwen3.8-27B generator, which is a reasoning model and
+    # writes far longer completions than gemma-4-31B. Seven measured inductions ran 49,244 to
+    # 83,544 tokens (median 61,284), so 8192 covers 0 of 7 and 65,536 covers only 4 of 7 -- a
+    # truncated completion is an unusable engine, not a slow one. 131,072 covers all seven with
+    # margin for the tail we have not sampled, and stays inside the model's own trained context
+    # (qwen35.context_length = 262144). max_tokens is a CAP: unused headroom costs pool VRAM,
+    # never wall clock. Timeout follows the same logic -- the worst measured Qwen3.8 induction is
+    # ~1053s on this card at one stream, and a timeout that fires degrades the agent to LLM-off
+    # silently, so it is set well clear of that rather than close to it.
+    os.environ.setdefault("CARNOT_ARC_INDUCE_MAX_TOKENS", "131072")
+    os.environ.setdefault("CARNOT_ARC_INDUCE_TIMEOUT", "2400")
     # READ the context-pool size and completion budget from the SHIPPED defaults instead of
     # repeating literals here. The old code printed "ctx=16384" and probed with -c 16384 as
     # hardcoded strings; if the agent's own default had moved, the probe would have validated

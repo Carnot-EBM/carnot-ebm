@@ -82,10 +82,23 @@ def test_no_submission_gate_still_names_a_retired_generator_dataset(kernel_metad
     and it is not covered by the source-level pin sweep in test_arc_live_generator_pin.py (that
     sweep looks at `repo_substr=` / `_resolve_gguf(` / the canonical constants, none of which
     appear in a dataset slug)."""
+    from carnot.agentic import arc_executable_world_model as wm
     from carnot.experiment_4756_submission_package_readiness import REQUIRED_DATASETS
 
+    # DERIVED FROM THE PIN, not a hardcoded model name. This assertion used to read
+    # `"qwen" not in slug`, which was correct only while gemma-4-31B was pinned and silently
+    # inverted the moment the pin moved to Qwen3.8-27B on 2026-08-16 -- the test would then forbid
+    # the very generator being shipped. Naming the RETIRED families relative to the live pin means
+    # the next swap needs no edit here.
+    live = wm.ARC_LIVE_GENERATOR_MODEL_ID.lower()
+    retired = [
+        fam for fam in ("qwen35-9b", "qwen3.5-9b", "gemma4-31b", "gemma-4-31b") if fam not in live
+    ]
     for slug in sorted(REQUIRED_DATASETS) + sorted(kernel_metadata["dataset_sources"]):
-        assert "qwen" not in slug.lower(), f"retired generator dataset still referenced: {slug}"
+        for fam in retired:
+            assert fam not in slug.lower(), (
+                f"retired generator dataset still referenced: {slug} (live pin is {live})"
+            )
 
 
 def test_the_submitted_config_and_the_kernel_agree_on_the_model_dataset(kernel_metadata) -> None:
