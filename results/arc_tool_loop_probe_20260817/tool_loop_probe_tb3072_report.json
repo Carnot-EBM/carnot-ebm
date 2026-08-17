@@ -1,0 +1,111 @@
+{
+  "probe": "tool_loop_v2_tb3072",
+  "arm": "tb3072",
+  "gpu": "0",
+  "think_budget": 3072,
+  "single_card": true,
+  "leak_fixed": true,
+  "seed": 101,
+  "game": "tu93",
+  "ok": true,
+  "note": "local gguf (GPU server) wrote world_model.py (tool loop: zero_mismatches, 5 turns, 0 visible mismatches)",
+  "wall_s": 410.0,
+  "stats": {
+    "turns": 5,
+    "decode_tokens_total": 14714,
+    "decode_tokens_per_turn": [
+      3154,
+      3235,
+      370,
+      4017,
+      3938
+    ],
+    "tool_calls_total": 14,
+    "tool_calls_by_name": {
+      "diff_grids": 9,
+      "query_region": 3,
+      "run_engine_on_transitions": 2
+    },
+    "tool_calls_per_turn": [
+      [
+        "diff_grids",
+        "diff_grids",
+        "diff_grids"
+      ],
+      [
+        "diff_grids",
+        "diff_grids",
+        "diff_grids",
+        "diff_grids",
+        "diff_grids",
+        "diff_grids"
+      ],
+      [
+        "query_region",
+        "query_region",
+        "query_region"
+      ],
+      [
+        "run_engine_on_transitions"
+      ],
+      [
+        "run_engine_on_transitions"
+      ]
+    ],
+    "tool_call_parse_failures": 0,
+    "unparsed_tool_call_text_turns": 0,
+    "candidates_scored": 2,
+    "force_engine_nudges": 1,
+    "terminated_by": "zero_mismatches",
+    "final_answer_seen": false,
+    "wall_s": 409.97,
+    "turns_completed": 5,
+    "mismatch_trajectory": [
+      2,
+      0
+    ],
+    "holdout_trajectory": [
+      0.5,
+      1.0
+    ],
+    "best_visible_mismatches": 0,
+    "best_holdout_accuracy": 1.0,
+    "best_is_memorizing": false
+  },
+  "full_window_accuracy": 1.0,
+  "full_window_cell_recall": 1.0,
+  "held_out_tail_accuracy": 1.0,
+  "held_out_tail_cell_recall": 1.0,
+  "memorization_scan": {
+    "engine_source_found": true,
+    "n_large_int_literals": 0,
+    "n_window_coord_literals": 0,
+    "is_memorizing": false
+  },
+  "engine_source_chars": 1783,
+  "singleshot_reference": {
+    "decode_tokens_median": 61000,
+    "tu93_recorded_heldout": [
+      0.0,
+      1.0,
+      1.0
+    ],
+    "tu93_recorded_mem": [
+      true,
+      false,
+      false
+    ],
+    "tu93_recorded_elapsed_s": [
+      1521.2,
+      1602.1,
+      2194.9
+    ]
+  },
+  "kill_criteria": {
+    "decode_total": 14714,
+    "decode_below_50pct_of_median": true,
+    "parse_fail_rate": 0.0,
+    "parse_fail_under_20pct": true,
+    "memorizing": false
+  }
+}

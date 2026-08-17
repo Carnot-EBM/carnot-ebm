@@ -52908,6 +52908,14 @@
         "acknowledged_on": "2026-08-17",
         "reason": "The 2026-08-17 change adds ONE opt-in field to the chat induce payload: `thinking_budget_tokens`, sent only when CARNOT_ARC_INDUCE_THINKING_BUDGET is set to a positive integer. Unset -- which is the default and the state every artifact here was built under -- the request body is byte-identical to before the change, pinned by tests/python/test_arc_induce_thinking_budget.py::test_absent_env_sends_no_thinking_budget. No other behaviour, symbol or default was touched, so this drift cannot move any number in this artifact.",
         "evidence": "Diff is +19/-0 inside LocalGGUFProposer._chat_complete_request, adding one conditional that sets payload['thinking_budget_tokens'] only when CARNOT_ARC_INDUCE_THINKING_BUDGET parses to a positive int. Established inert three ways: (1) tests/python/test_arc_induce_thinking_budget.py::test_absent_env_sends_no_thinking_budget asserts the request body carries no such key when the var is unset, and test_malformed_or_nonpositive_env_is_ignored covers '0', '-5', '' and a non-numeric value; (2) no existing symbol, default, or control-flow branch was modified, so every code path this artifact exercised is unchanged; (3) neither this artifact nor its build command sets that environment variable, so the new branch cannot be taken during a rebuild. 7 tests pass."
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "5286ff4f4969617dea411c5023d8b8b1a9c681d3268221278b418b8b15e64393",
+        "sha256_now": "f33be95b895d712ff49ae76937a7e20d9f9646f16d01c7df216f162b936f102c",
+        "acknowledged_on": "2026-08-17",
+        "reason": "The 2026-08-17 tool-loop change adds ONE env-gated hook (+19 lines) at the top of LocalGGUFProposer.induce: when CARNOT_ARC_INDUCTION_TOOL_LOOP is enabled it delegates to arc_induction_tool_loop, and on any failure it falls through to the existing single-shot path. Unset -- the default, and the state every artifact here was built under -- induce() runs exactly as before.",
+        "evidence": "tool_loop_enabled() returns False with no environment set, verified by direct call. tests/python/test_arc_induction_tool_loop.py (20 passing, run independently) pins default-off inertness and the fall-through. No existing symbol, default or branch was modified; the hook is an early opt-in return. Neither these artifacts nor their build commands set that variable, so the new path cannot be taken during a rebuild."
       }
     ]
   },
