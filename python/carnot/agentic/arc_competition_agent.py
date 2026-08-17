@@ -8119,7 +8119,10 @@ class E3AgentPolicy:
         from carnot.agentic import arc_executable_world_model as e3
         from carnot.agentic import arc_recall_gated_resample as rgr
 
-        if not rgr.resample_enabled():
+        # REQ-ARC-WMTE-6470: `CARNOT_ARC_INDUCE_TOOL_LOOP=repair` activates this same
+        # gate, with the seeded tool loop as the re-draw instead of a blind generation.
+        tool_repair = rgr.tool_repair_active()
+        if not (rgr.resample_enabled() or tool_repair):
             return engine, is_done, vr
         # Lazily-initialized per-policy (= per-game-episode) budget counter. Lazy so this
         # change does not have to edit __init__, which other in-flight work is editing.
@@ -8129,10 +8132,12 @@ class E3AgentPolicy:
             n_changing=int(vr.n_changing),
             downstream_rejects=self._plain_trust_rejects(vr),
             resamples_used_this_game=used,
+            tool_repair=tool_repair,
         )
         record: dict = {
             "fired": bool(decision.fire),
             "reason": decision.reason,
+            "via_tool_loop": bool(tool_repair),
             "original_cell_recall": round(float(vr.cell_recall), 4),
             "original_accuracy": round(float(vr.accuracy), 4),
             "n_changing": int(vr.n_changing),
@@ -8148,7 +8153,37 @@ class E3AgentPolicy:
             old_code = store_path.read_text()
         except OSError:
             old_code = None
-        ok, msg = self._proposer().induce(self.short, induce_rows, self.cell, **induce_kwargs)
+        if tool_repair:
+            # REQ-ARC-WMTE-6470: seeded tool-loop repair. The snapshot IS the failed
+            # engine this gate just measured, so it seeds the loop's candidate zero and
+            # the loop cannot return a candidate with more visible mismatches than it.
+            from carnot.agentic.arc_induction_tool_loop import induce_with_tool_loop
+
+            prop = self._proposer()
+            ok, msg = induce_with_tool_loop(
+                prop,
+                self.short,
+                list(induce_rows),
+                self.cell,
+                previous_level_complete_grid=induce_kwargs.get("previous_level_complete_grid"),
+                win_transition=induce_kwargs.get("win_transition"),
+                seed_engine_code=old_code,
+            )
+            loop_stats = dict(getattr(prop, "last_tool_loop_stats", {}) or {})
+            record["tool_loop"] = {
+                k: loop_stats.get(k)
+                for k in (
+                    "turns",
+                    "terminated_by",
+                    "candidates_scored",
+                    "best_visible_mismatches",
+                    "seed_visible_mismatches",
+                    "decode_tokens_total",
+                    "tool_call_parse_failures",
+                )
+            }
+        else:
+            ok, msg = self._proposer().induce(self.short, induce_rows, self.cell, **induce_kwargs)
         if not ok:
             record["outcome"] = "resample_induce_failed"
             record["error"] = str(msg)[:160]

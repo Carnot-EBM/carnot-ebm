@@ -8942,6 +8942,14 @@
         "acknowledged_on": "2026-08-17",
         "reason": "The 2026-08-17 tool-loop change adds ONE env-gated hook (+19 lines) at the top of LocalGGUFProposer.induce: when CARNOT_ARC_INDUCTION_TOOL_LOOP is enabled it delegates to arc_induction_tool_loop, and on any failure it falls through to the existing single-shot path. Unset -- the default, and the state every artifact here was built under -- induce() runs exactly as before.",
         "evidence": "tool_loop_enabled() returns False with no environment set, verified by direct call. tests/python/test_arc_induction_tool_loop.py (20 passing, run independently) pins default-off inertness and the fall-through. No existing symbol, default or branch was modified; the hook is an early opt-in return. Neither these artifacts nor their build commands set that variable, so the new path cannot be taken during a rebuild."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
+        "sha256_now": "46e0c5f1df72b81fca6e2d38297af4766ae2266a60563553b533f197a8cb8426",
+        "acknowledged_on": "2026-08-17",
+        "reason": "The 2026-08-17 repair-mode change touches only _maybe_recall_gated_resample: when CARNOT_ARC_INDUCE_TOOL_LOOP=repair, the REQ-6410 recall-gated resample routes its re-draw through the tool loop instead of a plain re-induce. Both gates are default OFF -- the resample itself requires CARNOT_ARC_RECALL_RESAMPLE, and repair additionally requires the tool-loop var set to the literal 'repair'. With neither set, the method returns on its existing early path and behaviour is byte-identical.",
+        "evidence": "tests/python/test_arc_tool_loop_repair.py (12 tests) pins BOTH inertness conditions, including that induce() is byte-identical because its hook recognises only '1'. 43 tests green across the repair, resample and tool-loop suites. No existing symbol, default or branch was modified; the change is an added conditional inside a method that is itself gated off. None of these artifacts, nor their build commands, set either variable, so the new path cannot execute during a rebuild."
       }
     ]
   },
