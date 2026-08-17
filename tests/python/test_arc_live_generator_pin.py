@@ -185,15 +185,15 @@ def test_submitted_config_records_both_operator_dataset_uploads(mods) -> None:
     landed". The flags stay in the config either way -- they are the record the readiness gate
     reads, not a one-time to-do.
     """
-    # 2026-08-16: the generator moved to Qwen3.8-27B, so this assertion returns to the FIRST role
-    # the docstring above describes -- recording an upload that has not happened yet. The
-    # ~16 GB `carnot-qwen38-27b-gguf` dataset does not exist; only the operator can create it, and
-    # the kernel push fails at dataset resolution until they do. Flip this to True in the same
-    # commit that records the upload, exactly as 2026-07-28 did for gemma.
+    # 2026-08-16 the generator moved to Qwen3.8-27B and this briefly returned to the FIRST role the
+    # docstring describes -- recording an outstanding upload. 2026-08-17 it landed: the private
+    # `carnot-qwen38-27b-gguf` dataset holds 17,106,775,008 bytes, verified byte-identical to the
+    # local GGUF once Kaggle finished indexing. So the assertion flips back to "records that it
+    # landed", the same arc gemma went through on 2026-07-28.
     agent, _wm = mods
     frozen = agent.SUBMITTED_AGENT_CONFIG["frozen_generator"]
     assert frozen["kaggle_dataset_slug"] == "iancblenke/carnot-qwen38-27b-gguf"
-    assert frozen["kaggle_dataset_uploaded"] is False
+    assert frozen["kaggle_dataset_uploaded"] is True
     # No MTP draft head ships for Qwen3.8-27B, so there is no second dataset. That is a measured
     # cost of the swap (gemma's head bought roughly 1.8x decode), not a missing upload -- so the
     # slug is None and the uploaded flag is False, and they must not disagree with each other.

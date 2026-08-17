@@ -8423,13 +8423,12 @@ SUBMITTED_AGENT_CONFIG = {
         # one. `kernel-metadata.json` has been re-pointed at `iancblenke/carnot-gemma4-31b-it-gguf`,
         # which DOES NOT EXIST YET and must be uploaded. This field records that dependency in the
         # config the readiness experiment reads, so it cannot be forgotten silently.
-        # OPERATOR ACTION REQUIRED before the next submission (2026-08-16, generator moved to
-        # Qwen3.8-27B). Same shape as the 2026-07-28 gemma dependency recorded below it: the
-        # kernel attaches the model as a DATASET, and this one does NOT EXIST YET. The operator
-        # must create and upload `iancblenke/carnot-qwen38-27b-gguf` (~16 GB) before the kernel
-        # push can resolve its dataset sources. Recorded here so it cannot be forgotten silently.
+        # Uploaded 2026-08-17 on operator instruction: iancblenke/carnot-qwen38-27b-gguf, private,
+        # 17,106,775,008 bytes, verified byte-identical to the local GGUF after Kaggle finished
+        # indexing it. The flag recorded the dependency while it was outstanding, exactly as it did
+        # for gemma before 2026-07-28, and flips here in the commit that records the upload.
         "kaggle_dataset_slug": "iancblenke/carnot-qwen38-27b-gguf",
-        "kaggle_dataset_uploaded": False,
+        "kaggle_dataset_uploaded": True,
         # No MTP draft head exists for Qwen3.8-27B, so speculative decoding is off and there is no
         # second dataset to require. This is a real cost of the swap, not an oversight: gemma's
         # head bought roughly 1.8x decode speed. Left as None rather than deleted so the readiness
