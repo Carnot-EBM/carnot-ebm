@@ -129,3 +129,19 @@ CHECK_TIMED_OUT
 
 - **New top-five entrant:** **BambooCopter Analytics** (`cky666`, `kilin173`, `oliverwp`, `paradox23`, `ronglinlu`) is **#5 at 1.64**. No submission-linked ARC-AGI-3 code or technique disclosure was found. **Exploit/general-purpose classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [member code](https://www.kaggle.com/cky666/code), [member code](https://www.kaggle.com/kilin173/code), [member code](https://www.kaggle.com/oliverwp/code), [member code](https://www.kaggle.com/paradox23/code), [member code](https://www.kaggle.com/ronglinlu/code)
 
+## 2026-08-15 13:33 UTC -- NEW
+
+- **New top-five entrant:** **Daniel Franzen** (`dfranzen`) is **#2 at 2.58**. No submission-linked ARC-AGI-3 code or writeup was found. **Exploit/general-purpose classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/dfranzen/code)
+
+- **New top-five entrant:** **Nikita Sorokin** (`nikitasorokin`) is **#3 at 2.10**. No public notebooks, datasets, repositories, discussions, or technique disclosures were found for this submission. **Classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/nikitasorokin/code)
+
+- **New top-five entrant:** **Yusaku Muroya** (`ymuroya47`) is **#4 at 1.98**. His public notebooks are unrelated to ARC-AGI-3; no submission-linked method was found. **Classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/ymuroya47/code)
+
+- **New top-five entrant:** **AbeLincoln1865** (`abelincoln1865`) is **#5 at 1.90**. No public ARC-AGI-3 code or technique writeup was found. **Classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/abelincoln1865/code)
+
+## 2026-08-16 13:31 UTC -- NEW
+
+- **New top-five entrant:** **Fufront-RyanX-AGI-Team** (`ryanxatlasai`) is **#3 at 2.25**. No submission-linked public code or technique disclosure was found. **Exploit/general-purpose classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/ryanxatlasai/code)
+
+- **New top-five entrant:** **egangu** is **#5 at 2.01**. No submission-linked public code, notebook, dataset, discussion, or writeup was found. **Exploit/general-purpose classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/egangu/code)
+
