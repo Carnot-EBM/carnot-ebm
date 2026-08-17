@@ -1,5 +1,33 @@
 # Carnot — Changelog
 
+## 2026-08-17 (outer-loop subagent, generated-engine call guard, REQ-ARC-WMTE-6400)
+
+**Instruction:** team-lead task — "Build a guard that stops LLM-generated world-model engines
+from hanging or OOM-ing the ARC agent, plus tests proving it fires."
+
+**Incident.** A generated sb26 engine held a non-terminating, unboundedly-allocating flood fill
+(`flood(r, c, val)` called without `visited`). One `plan_in_model` click candidate entered the
+loop; the arm process reached ~78 GB RSS and earlyoom killed it. Twice, same seed. Nothing
+bounded ONE engine call's cost — `max_nodes`/`max_depth` only bound the call COUNT, and
+`signal.alarm` cannot help because the scored eval runs one thread per game (signals deliver
+only on the main thread).
+
+**Change.** New `python/carnot/agentic/arc_engine_call_guard.py`: a daemon watchdog thread
+bounds each generated-engine call's wall time (default 5 s) and RSS growth (default 1024 MB),
+raising `EngineCallTimeout`/`EngineCallMemoryExceeded` inside the offending thread via
+`PyThreadState_SetAsyncExc` — works off the main thread, re-fires if generated code swallows
+it. Wired into `plan_in_model` (both branches, `engine` + `is_level_complete`; new
+`termination_reason` value `engine_guard_tripped` + diagnostics key `engine_guard_trips`),
+`WorldModelVerifier.score`, and `offpath_structural_energy`, each with a trip limit (default 3)
+so a hanging engine costs seconds, not timeout × candidates. Known non-coverage stated in the
+module docstring: a single never-returning C-level call, a single giant C allocation.
+
+**Tests.** `tests/python/test_arc_engine_call_guard.py` (9/9): the preserved incident engine
+(fixture `tests/python/fixtures/sb26_generated_world_model_hang.py`, byte-identical body) is
+converted to a handled trip in a subprocess under RLIMIT_AS; off-main-thread firing; memory
+channel; no false positive on normal engines (~4 µs/call overhead measured); wired-path abort.
+95 pre-existing tests over the touched paths stay green.
+
 ## 2026-08-08 (outer-loop, ARC live-agent improvement plan Phase 0a-0d)
 
 **Instruction:** "Build me a plan that I can follow to try the best remaining possibilities" for
@@ -16775,3 +16803,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
 - 2026-08-15: Bounded ARC representation-objective generalization A/B without solve claim (✅ Complete) — honest_verdict=complete: Exp6458 audit finished with readiness gates unmet: frozen_safety_roster_not_regressed; results/experiment_6458_arc_representation_objective_generalization_ab.json
 - 2026-08-15: V555 adversarial capstone and reconciliation (⚠️ Blocked) — honest_verdict=complete_blocked: V555 capstone complete; no requested science, public ARC, or hardware claim is eligible; results/experiment_6459_v555_adversarial_capstone.json
 - 2026-08-15: Operational retrospective for 2026.08.555: 10 experiments completed in 40.2 reconstructed minutes, and 7 were compute-bound. Fresh SOTA fixed-policy candidate corpus set the tail at 33.56 minutes, but no phase record explains its duration. The locked task-level field does not identify compute-period GPU idling, and the data does not show concurrent model loading or runner selection. Add task-linked phase and GPU telemetry, concurrency and dispatch receipts, and readiness-aware GPU scheduling. Estimated savings: 0%, because no measured alternative run is available. Artifact: results/operational_retro_2026_08_555.json.
+- 2026-08-17: [outer-loop teammate] Recall-gated induction resample (REQ-ARC-WMTE-6410, default OFF). One bounded re-draw when a live induction draw is BOTH catastrophic on fitted-window recall (< 0.6, >= 3 changing rows) AND already rejected by the trust gate. Trust-subordinate by construction: it never ranks or discards an engine the pipeline would use, which is what defuses the in-sample-recall memorization trap (a coordinate-hardcoding engine scores 1.0 by construction; measured discriminator in results/arc_qwen38_h2h_partial_20260817). Keeps the re-draw only if it passes trust, restores the engine store byte-identically otherwise, refuses under a pinned generator seed, caps at 1 retry/call and 2/game. New: python/carnot/agentic/arc_recall_gated_resample.py, tests/python/test_arc_recall_gated_resample.py (16/16); wired in arc_competition_agent._induce_and_plan plain branch. Ships dark pending a measured A/B of the wall-clock trade (each firing costs a full generation).

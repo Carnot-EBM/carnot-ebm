@@ -19,6 +19,15 @@ SHIPPED DEFAULT after exp6216's live-path A/B reproduced cleanly on a fresh, unf
 (deadline misses 6 -> 0 across 6 games, 0 harmful regressions, promotion_ready_score=1.0,
 mutation-proven). Tests below that exercised the "flag off" path via the BARE default now pass
 `budget_aware_search=False` explicitly; a new test in each section pins the new bare default.
+
+2026-08-17 seam update (gate-timeout fix). `_ingest` no longer re-runs the batch
+`budget_exhaustion_estimate` over the whole buffer each action (that was O(n^2) per run and
+77% of a profiled gate game's wall clock). It now feeds `IncrementalBudgetExhaustionEstimator`
+one frame at a time. The three producer tests that intercepted the old batch-function seam now
+intercept the estimator class; each test's CONTRACT is unchanged (flag gates the work, no mask
+means no work, the returned value is adopted, an estimator error yields None and never a crash).
+Output equivalence between the two implementations is asserted separately, step for step, in
+tests/python/test_arc_budget_estimator_incremental_equivalence.py.
 """
 
 from __future__ import annotations
@@ -82,13 +91,23 @@ def test_ingest_appends_every_frame_regardless_of_flag():
 
 
 def test_ingest_computes_estimate_only_when_flag_on_and_mask_present(monkeypatch):
+    # 2026-08-17 seam update: intercept the incremental estimator class instead of the
+    # retired per-action batch call. The contract under test is the same: no admitted
+    # mask means no estimator work; an admitted mask means the estimate is adopted.
     called = {"n": 0}
 
-    def _fake_estimate(grids, mask, **kwargs):
-        called["n"] += 1
-        return {"actions_remaining_estimate": 42.0, "verdict": "estimate"}
+    class _FakeEstimator:
+        def __init__(self, mask: object, **kwargs: object) -> None:
+            pass
 
-    monkeypatch.setattr(agent, "budget_exhaustion_estimate", _fake_estimate)
+        def observe(self, frame: object) -> None:
+            pass
+
+        def estimate(self) -> dict:
+            called["n"] += 1
+            return {"actions_remaining_estimate": 42.0, "verdict": "estimate"}
+
+    monkeypatch.setattr(agent, "IncrementalBudgetExhaustionEstimator", _FakeEstimator)
 
     explorer = StepwiseExplorer(budget_aware_search=True)
     frame = np.zeros((4, 4), dtype=np.int16)
@@ -107,10 +126,21 @@ def test_ingest_computes_estimate_only_when_flag_on_and_mask_present(monkeypatch
 
 
 def test_ingest_never_calls_estimator_when_flag_off(monkeypatch):
+    # 2026-08-17 seam update: same contract as before (flag off -> zero estimator
+    # work); the interception point is now the estimator class constructor.
     called = {"n": 0}
-    monkeypatch.setattr(
-        agent, "budget_exhaustion_estimate", lambda *a, **k: called.update(n=called["n"] + 1) or {}
-    )
+
+    class _FakeEstimator:
+        def __init__(self, mask: object, **kwargs: object) -> None:
+            called["n"] += 1
+
+        def observe(self, frame: object) -> None:
+            pass
+
+        def estimate(self) -> dict:
+            return {}
+
+    monkeypatch.setattr(agent, "IncrementalBudgetExhaustionEstimator", _FakeEstimator)
     explorer = StepwiseExplorer(budget_aware_search=False)  # flag explicitly off
     explorer.hud_mask = np.ones((4, 4), dtype=bool)
     explorer._ingest(np.zeros((4, 4), dtype=np.int16))
@@ -118,14 +148,25 @@ def test_ingest_never_calls_estimator_when_flag_off(monkeypatch):
 
 
 def test_ingest_estimator_exception_yields_none_not_a_crash(monkeypatch):
-    def _raises(*a, **k):
-        raise RuntimeError("boom")
+    # 2026-08-17 seam update: same contract (an estimator error yields None, never a
+    # crash), plus the new recovery detail: the broken estimator is discarded so the
+    # next frame rebuilds from the raw buffer, matching the old stateless retry.
+    class _RaisingEstimator:
+        def __init__(self, mask: object, **kwargs: object) -> None:
+            pass
 
-    monkeypatch.setattr(agent, "budget_exhaustion_estimate", _raises)
+        def observe(self, frame: object) -> None:
+            raise RuntimeError("boom")
+
+        def estimate(self) -> dict:
+            raise RuntimeError("boom")
+
+    monkeypatch.setattr(agent, "IncrementalBudgetExhaustionEstimator", _RaisingEstimator)
     explorer = StepwiseExplorer(budget_aware_search=True)
     explorer.hud_mask = np.ones((4, 4), dtype=bool)
     explorer._ingest(np.zeros((4, 4), dtype=np.int16))  # must not raise
     assert explorer.actions_remaining_estimate is None
+    assert explorer._budget_estimator is None  # discarded -> next frame rebuilds
 
 
 # --------------------------------------------------------------------------- #

@@ -1777,6 +1777,20 @@ class WorldModelVerifier:
         n_engine_raised = 0
         engine_raise_kinds: dict[str, int] = {}
         n_output_equals_input = 0
+        # ENGINE-CALL GUARD (REQ-ARC-WMTE-6400): this loop runs a GENERATED engine
+        # once per transition, on the live scored path, BEFORE plan_in_model ever
+        # sees it. A non-terminating call here hangs the per-game thread the same
+        # way (the sb26 incident class). A trip counts as an engine raise; past the
+        # trip limit the remaining rows are charged as raises WITHOUT running them.
+        from carnot.agentic.arc_engine_call_guard import (
+            EngineCallGuardError,
+            guard_max_trips,
+            guarded_call,
+        )
+
+        engine_guard_trips = 0
+        engine_guard_trip_limit = guard_max_trips()
+        engine_guard_skip_kind = "EngineCallGuardError"
         # REQ-ARC-WMTE-6010: resolve the mask's status from the TRANSITIONS ALONE, before the
         # engine runs. Deriving it inside the loop (the first version of this code) made the
         # status depend on ENGINE behaviour: an engine that raised on every transition, or an
@@ -1814,14 +1828,34 @@ class WorldModelVerifier:
                 n_levelup_excluded += 1
                 continue
             n_engine_called += 1
+            if engine_guard_trips >= engine_guard_trip_limit:
+                # The engine already proved non-terminating on this corpus. Charge
+                # the row as a raise (same accounting as the except branch below)
+                # instead of paying another full timeout for a known hang.
+                n_engine_raised += 1
+                engine_raise_kinds[engine_guard_skip_kind] = (
+                    engine_raise_kinds.get(engine_guard_skip_kind, 0) + 1
+                )
+                if len(mism) < max_mismatch:
+                    mism.append(
+                        {"i": i, "action": t.action, "error": "engine_guard_trip_limit_reached"}
+                    )
+                continue
             try:
-                pred = np.asarray(engine(t.grid.copy(), t.action, t.data))
+                pred = np.asarray(guarded_call(engine, t.grid.copy(), t.action, t.data))
             except Exception as e:  # a crashing engine fails the transition
                 # REQ-ARC-WMTE-6042: COUNT the raise, do not only sample it. `mism` is capped at
                 # `max_mismatch` (default 8), so reading the raise count off the mismatch list
                 # silently censors every raise past the cap -- an engine that raises on all 40
                 # rows is indistinguishable there from one that raises on 8. The count and the
                 # exception KINDS are recorded separately and uncapped.
+                #
+                # REQ-ARC-WMTE-6400: a guard trip (hang / memory blowup) lands here
+                # too -- the row produced no answer, so raise accounting is the
+                # honest conversion. The trip is ALSO counted toward the limit above.
+                if isinstance(e, EngineCallGuardError):
+                    engine_guard_trips += 1
+                    engine_guard_skip_kind = type(e).__name__
                 n_engine_raised += 1
                 kind = type(e).__name__
                 engine_raise_kinds[kind] = engine_raise_kinds.get(kind, 0) + 1
@@ -1961,16 +1995,33 @@ class WorldModelVerifier:
     ) -> float:
         """REQ-ARC-WMTE-4791: score candidate predictions without reading true next grids."""
 
+        # ENGINE-CALL GUARD (REQ-ARC-WMTE-6400): same generated-engine exposure and
+        # same conversion as `score` above -- a trip scores the row inf, and past
+        # the trip limit remaining rows score inf without running the engine.
+        from carnot.agentic.arc_engine_call_guard import (
+            EngineCallGuardError,
+            guard_max_trips,
+            guarded_call,
+        )
+
+        engine_guard_trips = 0
+        engine_guard_trip_limit = guard_max_trips()
         energies: list[float] = []
         for t in self.transitions:
+            if engine_guard_trips >= engine_guard_trip_limit:
+                energies.append(float("inf"))
+                continue
             try:
-                pred = np.asarray(engine(t.grid.copy(), t.action, t.data))
+                pred = np.asarray(guarded_call(engine, t.grid.copy(), t.action, t.data))
                 if hasattr(energy_scorer, "transition_energy"):
                     value = energy_scorer.transition_energy(t.grid, t.action, t.data, pred)
                 else:
                     value = energy_scorer(t.grid, t.action, t.data, pred)
                 value_f = float(value)
                 energies.append(value_f if value_f == value_f else float("inf"))
+            except EngineCallGuardError:
+                engine_guard_trips += 1
+                energies.append(float("inf"))
             except Exception:
                 energies.append(float("inf"))
         if not energies:
@@ -7748,7 +7799,20 @@ def plan_in_model(
     got structurally CLOSE to the induced goal (min << initial, "coherent but ran out of budget")
     or never moved toward it at all (min ~= initial, "the model's rollout doesn't structurally
     connect toward the goal"). Backward-compatible: ``diagnostics=None`` (the default) changes
-    nothing about the search or the return value."""
+    nothing about the search or the return value.
+
+    ENGINE-CALL GUARD (2026-08-17, REQ-ARC-WMTE-6400). ``engine`` and
+    ``is_level_complete`` are LLM-generated. Nothing here bounded ONE call's cost:
+    a generated sb26 engine contained a non-terminating, allocating flood fill, and
+    a single click candidate drove the per-game process to ~78 GB RSS and an OOM
+    kill. Both callables now run through ``arc_engine_call_guard.guarded_call``,
+    which raises inside the calling thread (works off the main thread, where
+    ``signal.alarm`` silently cannot). A trip skips the candidate; after
+    ``guard_max_trips()`` trips the search is abandoned, because a hanging engine
+    usually hangs on many inputs and each trip costs a full timeout. This adds a
+    fourth ``termination_reason`` value, ``"engine_guard_tripped"``, and a new
+    always-populated diagnostics key ``engine_guard_trips`` (int). Return values
+    are unchanged on every path a guard trip does not touch."""
     # `None` means "no caller opinion" -> the shared default (or its env override). An EXPLICIT
     # `max_depth` still wins outright, so every existing test and diagnostic caller that pins a
     # horizon keeps pinning it. Resolved HERE rather than in the signature default so the env
@@ -7768,6 +7832,20 @@ def plan_in_model(
     # docstring: without this the frontier draining at the cap is indistinguishable from the
     # frontier draining because there was nothing left to search, and those mean opposite things.
     depth_truncated_nodes = 0
+
+    # ENGINE-CALL GUARD (REQ-ARC-WMTE-6400): every `engine`/`is_level_complete`
+    # call below runs LLM-generated code with no bound of its own. One generated
+    # sb26 call hung forever while allocating (~78 GB, OOM kill). `guarded_call`
+    # bounds ONE call's wall time and RSS growth; `max_nodes` only bounds COUNT.
+    from carnot.agentic.arc_engine_call_guard import (
+        EngineCallGuardError,
+        guard_max_trips,
+        guarded_call,
+    )
+
+    engine_guard_trips = 0
+    engine_guard_abort = False
+    engine_guard_trip_limit = guard_max_trips()
 
     if goal_energy is not None:
         # BEST-FIRST by goal-energy: descend toward the induced goal predicate.
@@ -7791,7 +7869,16 @@ def plan_in_model(
                 continue
             for c in _model_candidates(grid):
                 try:
-                    ng = np.asarray(engine(grid.copy(), c["action"], c["data"]))
+                    ng = np.asarray(guarded_call(engine, grid.copy(), c["action"], c["data"]))
+                except EngineCallGuardError:
+                    # A hanging engine usually hangs on many inputs. Skip this
+                    # candidate; at the trip limit abandon the whole search rather
+                    # than paying a full timeout for thousands of candidates.
+                    engine_guard_trips += 1
+                    if engine_guard_trips >= engine_guard_trip_limit:
+                        engine_guard_abort = True
+                        break
+                    continue
                 except Exception:
                     continue
                 nodes += 1
@@ -7803,7 +7890,7 @@ def plan_in_model(
                 seen.add(key)
                 npath = path + [c]
                 try:
-                    if bool(is_level_complete(ng)):
+                    if bool(guarded_call(is_level_complete, ng)):
                         if diagnostics is not None:
                             diagnostics["is_level_complete_was_none"] = False
                             diagnostics["nodes_expanded"] = nodes
@@ -7812,13 +7899,25 @@ def plan_in_model(
                             diagnostics["used_goal_energy_search"] = True
                             diagnostics["initial_goal_energy"] = initial_energy
                             diagnostics["min_goal_energy_observed"] = min_energy
+                            diagnostics["engine_guard_trips"] = engine_guard_trips
                         return npath
+                except EngineCallGuardError:
+                    # The goal predicate is generated too, so it carries the same
+                    # hang exposure. Unlike the plain-exception `pass`, skip the
+                    # state: pushing it would only re-run the hang on every pop.
+                    engine_guard_trips += 1
+                    if engine_guard_trips >= engine_guard_trip_limit:
+                        engine_guard_abort = True
+                        break
+                    continue
                 except Exception:
                     pass
                 ng_energy = _h(ng)
                 if ng_energy < min_energy:
                     min_energy = ng_energy
                 heapq.heappush(heap, (ng_energy, next(counter), ng, npath))
+            if engine_guard_abort:
+                break
         if diagnostics is not None:
             diagnostics["is_level_complete_was_none"] = False
             diagnostics["nodes_expanded"] = nodes
@@ -7826,8 +7925,11 @@ def plan_in_model(
             diagnostics["initial_goal_energy"] = initial_energy
             diagnostics["min_goal_energy_observed"] = min_energy
             diagnostics["depth_truncated_nodes"] = depth_truncated_nodes
-            diagnostics["termination_reason"] = _termination_reason(
-                nodes, max_nodes, depth_truncated_nodes
+            diagnostics["engine_guard_trips"] = engine_guard_trips
+            diagnostics["termination_reason"] = (
+                "engine_guard_tripped"
+                if engine_guard_abort
+                else _termination_reason(nodes, max_nodes, depth_truncated_nodes)
             )
         return None
 
@@ -7842,7 +7944,14 @@ def plan_in_model(
             continue
         for c in _model_candidates(grid):
             try:
-                ng = np.asarray(engine(grid.copy(), c["action"], c["data"]))
+                ng = np.asarray(guarded_call(engine, grid.copy(), c["action"], c["data"]))
+            except EngineCallGuardError:
+                # Same trip policy as the goal-energy branch above.
+                engine_guard_trips += 1
+                if engine_guard_trips >= engine_guard_trip_limit:
+                    engine_guard_abort = True
+                    break
+                continue
             except Exception:
                 continue
             nodes += 1
@@ -7854,24 +7963,37 @@ def plan_in_model(
             seen.add(key)
             npath = path + [c]
             try:
-                if bool(is_level_complete(ng)):
+                if bool(guarded_call(is_level_complete, ng)):
                     if diagnostics is not None:
                         diagnostics["is_level_complete_was_none"] = False
                         diagnostics["nodes_expanded"] = nodes
                         diagnostics["termination_reason"] = "plan_found"
                         diagnostics["depth_truncated_nodes"] = depth_truncated_nodes
                         diagnostics["used_goal_energy_search"] = False
+                        diagnostics["engine_guard_trips"] = engine_guard_trips
                     return npath
+            except EngineCallGuardError:
+                # Same trip policy as the goal-energy branch above.
+                engine_guard_trips += 1
+                if engine_guard_trips >= engine_guard_trip_limit:
+                    engine_guard_abort = True
+                    break
+                continue
             except Exception:
                 pass
             q.append((ng, npath))
+        if engine_guard_abort:
+            break
     if diagnostics is not None:
         diagnostics["is_level_complete_was_none"] = False
         diagnostics["nodes_expanded"] = nodes
         diagnostics["used_goal_energy_search"] = False
         diagnostics["depth_truncated_nodes"] = depth_truncated_nodes
-        diagnostics["termination_reason"] = _termination_reason(
-            nodes, max_nodes, depth_truncated_nodes
+        diagnostics["engine_guard_trips"] = engine_guard_trips
+        diagnostics["termination_reason"] = (
+            "engine_guard_tripped"
+            if engine_guard_abort
+            else _termination_reason(nodes, max_nodes, depth_truncated_nodes)
         )
     return None
 

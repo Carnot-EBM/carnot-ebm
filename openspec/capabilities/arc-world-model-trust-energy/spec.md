@@ -25893,3 +25893,133 @@ structured-state single game (`state["unsatisfied_targets"] == 0`, one game, n=6
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6260 | `scripts/experiments/experiment_6260_goal_only_induction_ab.py`; consumes `replay_win_transition` and the two-sided scorer from REQ-ARC-WMTE-6257. | `results/experiment_6260_goal_only_induction_ab.json` — 0 of 4 non-degenerate; the leak control (`previous_level_complete_grid=None`) is recorded in the artifact as `leakage_control`. |
+
+### REQ-ARC-WMTE-6400: Generated-Engine Call Guard — Bound One Call's Time and Memory
+
+**Origin (2026-08-17).** The harness executed LLM-generated engines in-process with no
+bound on one call's cost. A generated sb26 engine held a flood fill that called
+`flood(r, c, val)` without `visited`, so any click on a >=2-cell same-valued component
+never terminated and never stopped allocating. The arm process reached ~78 GB RSS,
+exhausted swap, and earlyoom killed it. Twice, same seed. `max_nodes` and `max_depth`
+bound the NUMBER of engine calls; nothing bounded ONE call. The flood bug is
+incidental: any generated code with a non-terminating or superlinear path does this.
+
+The guard SHALL live at the call boundary around every generated-engine invocation on
+the live scored path (`plan_in_model`'s `engine` and `is_level_complete` calls, and
+`WorldModelVerifier.score` / `offpath_structural_energy`, which run the generated
+engine before planning). Module: `python/carnot/agentic/arc_engine_call_guard.py`.
+
+The guard SHALL NOT use `signal.alarm`. The scored eval runs one thread per game, and
+CPython delivers signals only on the main thread. An alarm armed in a worker thread
+never fires. That is a guard that looks armed and protects nothing. The mechanism
+SHALL work off the main thread: a daemon watchdog thread polls registered calls and
+raises `EngineCallTimeout` / `EngineCallMemoryExceeded` inside the offending thread
+via `PyThreadState_SetAsyncExc`, re-firing every poll if generated code swallows it.
+
+Guard exceptions SHALL derive from `Exception`, so a trip lands in the existing
+per-candidate `except Exception` handling and skips the candidate. After
+`guard_max_trips()` trips (default 3, env `CARNOT_ARC_ENGINE_GUARD_MAX_TRIPS`) a
+search SHALL abandon the engine: `plan_in_model` returns None with the new
+`termination_reason` value `"engine_guard_tripped"` and always-populated diagnostics
+key `engine_guard_trips`; `score` charges remaining rows as raises without running
+them. Budgets: env `CARNOT_ARC_ENGINE_CALL_TIMEOUT_S` (default 5.0 s) and
+`CARNOT_ARC_ENGINE_CALL_RSS_DELTA_MB` (default 1024). Kill switch:
+`CARNOT_ARC_ENGINE_CALL_GUARD=0`.
+
+**Honest scope, stated plainly.** Catches: non-terminating pure-Python loops (in any
+thread), non-allocating spin loops, unbounded pure-Python allocation, and
+swallow-and-continue generated code. Does NOT catch: one C-level call that never
+returns to bytecode (or never releases the GIL), or one single giant C-level
+allocation. RSS attribution is process-wide, so a concurrent thread's allocation can
+over-report; the error direction is a skipped candidate, never a dead process.
+
+#### SCENARIO-ARC-WMTE-6400-SB26-HANG-CONVERTED
+
+Given the preserved sb26 incident engine (fixture
+`tests/python/fixtures/sb26_generated_world_model_hang.py`) and a grid with a 2-cell
+same-valued block, a guarded click call SHALL raise a guard exception instead of
+hanging, and `plan_in_model` over the same module SHALL return None with
+`termination_reason == "engine_guard_tripped"`.
+
+#### SCENARIO-ARC-WMTE-6400-OFF-MAIN-THREAD
+
+Given a guarded non-allocating spin loop running in a worker thread (the scored
+eval's one-thread-per-game shape), the guard SHALL raise `EngineCallTimeout` in that
+worker thread and the thread SHALL terminate.
+
+#### SCENARIO-ARC-WMTE-6400-NO-FALSE-POSITIVE
+
+Given a well-behaved engine, guarded calls SHALL return identical results with zero
+trips, and `plan_in_model` SHALL still find plans with `engine_guard_trips == 0`.
+Measured overhead: ~4 microseconds per guarded call (500 calls: 2.2 ms guarded vs
+0.2 ms bare).
+
+## Implementation Status (REQ-ARC-WMTE-6400)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6400 | `python/carnot/agentic/arc_engine_call_guard.py` (watchdog + `guarded_call`); wired in `python/carnot/agentic/arc_executable_world_model.py` (`plan_in_model` both branches, `WorldModelVerifier.score`, `offpath_structural_energy`). | `tests/python/test_arc_engine_call_guard.py` (9/9, including the sb26 incident fixture in a subprocess under RLIMIT_AS, an off-main-thread hang, a memory-channel trip, and no-false-positive checks); 95 pre-existing tests over the touched paths stay green. |
+
+### REQ-ARC-WMTE-6410: Recall-Gated Induction Resample — One Bounded Re-Draw on a Catastrophic, Already-Rejected Draw
+
+Live induction is single-shot. Measured over 13 scored cells (5 games x 3 seeds),
+roughly 1 in 4 draws collapses on fitted-window recall (0.0 / 0.294 / 0.354
+observed) while the same game passes at every other seed. The trust gate contains
+the damage (a collapsed engine is never planned with) but converts it into a lost
+model-planning opportunity. The pipeline's own A/A note documents a ~40%
+cell-divergence floor under identical code, so a collapse is usually a sample
+failure a fresh draw recovers.
+
+The agent SHALL support one bounded induction re-draw (default OFF,
+`CARNOT_ARC_RECALL_RESAMPLE=1`), on the plain (non-hidden-state) branch of
+`_induce_and_plan`, that fires only when ALL of:
+
+1. The downstream trust gate would REJECT the draw (the structural defense against
+   the memorization trap: fitted-window recall is IN-SAMPLE, a coordinate-hardcoding
+   engine scores 1.0 by construction, so the gate must never rank or discard an
+   engine the pipeline would use).
+2. Graded changed-cell recall is catastrophic (`< 0.6` by default), never a
+   near-ceiling difference — the region where in-sample selection favors memorizers
+   is deliberately out of scope.
+3. The window has real evidence (`n_changing >= 3`); `cell_recall` is 0.0 by
+   definition on a quiet window, where a re-draw cannot help.
+4. Budgets remain: 1 retry per induce call (constant), a per-game cap (default 2).
+5. The sampler is not seed-pinned (`CARNOT_ARC_GENERATOR_SEED` unset): a pinned
+   re-call replays identical tokens, so the gate refuses rather than paying a full
+   generation for a byte-identical answer.
+
+The kept engine SHALL be the re-draw iff it passes the trust gate, else the better
+of the two rejects by recall (satisficing, not maximizing — two usable engines are
+never compared). When the original is kept, the engine store file SHALL be restored
+byte-identically, because the re-draw's induce call overwrote it and later loads
+read the file. The attempt row SHALL record both rounds and the outcome under
+`recall_resample`.
+
+This is disjoint from the `generate()` defect re-ask (REQ-ARC-WMTE-6042 family):
+that fires inside the generation call on static defects and dry-run raises; this
+fires after acceptance on behavioral evidence — an engine that runs cleanly and
+predicts wrong.
+
+#### SCENARIO-ARC-WMTE-6410-1 (default off)
+
+Given the env flag unset, no decision fires and the scored path is byte-identical.
+
+#### SCENARIO-ARC-WMTE-6410-2 (trust-subordinate)
+
+Given an engine the trust gate accepts, the gate SHALL NOT fire at any recall.
+
+#### SCENARIO-ARC-WMTE-6410-7 (recovery)
+
+Given a rejected recall-0.0 draw and a passing re-draw, the agent SHALL keep the
+re-draw and plan with its verdict.
+
+#### SCENARIO-ARC-WMTE-6410-8 (restore)
+
+Given a re-draw no better than the original, the agent SHALL keep the original and
+restore the store file byte-identically.
+
+## Implementation Status (REQ-ARC-WMTE-6410)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6410 | `python/carnot/agentic/arc_recall_gated_resample.py` (pure decision + keep rule); wired in `python/carnot/agentic/arc_competition_agent.py` (`_maybe_recall_gated_resample`, called on the plain branch of `_induce_and_plan` right after `WorldModelVerifier.score`). Hidden-state branch deliberately not covered: all measured collapse cells (tu93/tr87/sp80) route through the plain branch, and that branch's candidate-pool trust selection is a different failure surface. | `tests/python/test_arc_recall_gated_resample.py` (16/16: decision unit tests incl. the quiet-window and seed-pinned refusals; agent-helper integration with a fake proposer and `E3_DIR` -> tmp_path incl. recovery, byte-identical restore, budget cap, induce-failure degradation, and a mirror-consistency check against the plain gate); 102 pre-existing tests over the touched gate/policy paths stay green. |

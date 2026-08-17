@@ -359,6 +359,13 @@ extend-exclude = [
     # model actually emitted. Linting them is a category error, and auto-fixing them would
     # silently edit the measurement record.
     "results/arc_qwen38_h2h_partial_20260817",
+    # An INCIDENT FIXTURE, not source. It is the LLM-generated engine that OOM-killed the agent,
+    # preserved byte-identical so a regression test can prove the engine-call guard catches it.
+    # `ruff format` would rewrite it and quietly break that identity, which is the whole value.
+    "tests/python/fixtures/sb26_generated_world_model_hang.py",
+    # Preserved LLM-generated engines from the stopped head-to-head. Evidence of what the model
+    # emitted, kept byte-identical; formatting them would edit the measurement record.
+    "results/arc_qwen38_h2h_stopped_20260817",
 ]
 
 [tool.ruff.lint]

@@ -39,6 +39,7 @@ from carnot.agentic.arc_dense_curiosity_progress import DenseCuriosityProgress
 from carnot.agentic.arc_hud_bar_detector import (
     HUD_MASK_GUARD_MAX_SPLIT_NODES,
     DeferredMaskActivation,
+    IncrementalBudgetExhaustionEstimator,
     MaskCollapseGuard,
     budget_exhaustion_estimate,
     mask_summary,
@@ -2012,6 +2013,13 @@ class StepwiseExplorer:
         # separately capped -- worst case a few MB of uint8 frames, negligible.
         self._budget_frames: list[Any] = []
         self.actions_remaining_estimate: Optional[float] = None
+        # 2026-08-17 gate-timeout fix state: one incremental estimator, fed each
+        # buffered frame exactly once (`_fed` counts how many it has consumed).
+        # Rebuilt from the buffer when the admitted mask object changes, and on
+        # any estimator error, so failure recovery matches the old stateless call.
+        self._budget_estimator: Optional[IncrementalBudgetExhaustionEstimator] = None
+        self._budget_estimator_mask: Optional[Any] = None
+        self._budget_estimator_fed: int = 0
         self.generic_causal_primitive = coerce_generic_causal_primitive(generic_causal_primitive)
         self.amortized_first_contact_prior = coerce_amortized_first_contact_prior(
             amortized_first_contact_prior
@@ -3662,12 +3670,35 @@ class StepwiseExplorer:
         # (no HUD region ever admitted this episode) the estimate stays None, matching
         # `budget_exhaustion_estimate`'s own no-mask abstain path.
         self._budget_frames.append(latest)
+        # 2026-08-17 gate-timeout fix (REQ-ARC-WMTE-6180). The old call here ran
+        # `budget_exhaustion_estimate` over the WHOLE buffer on every action --
+        # O(n^2) per run, 77% of a profiled gate game's wall clock. The
+        # incremental estimator folds each frame once and returns the same
+        # values (equivalence is test-asserted step for step). The batch
+        # function stays the reference implementation for offline callers.
         if self.budget_aware_search_enabled and self.hud_mask is not None:
             try:
-                self.actions_remaining_estimate = budget_exhaustion_estimate(
-                    self._budget_frames, self.hud_mask
-                )["actions_remaining_estimate"]
+                if (
+                    self._budget_estimator is None
+                    or self._budget_estimator_mask is not self.hud_mask
+                ):
+                    # New or replaced mask (deferred activation assigns a fresh
+                    # array): rebuild once from the buffer, then stay O(1)/frame.
+                    self._budget_estimator = IncrementalBudgetExhaustionEstimator(self.hud_mask)
+                    self._budget_estimator_mask = self.hud_mask
+                    self._budget_estimator_fed = 0
+                while self._budget_estimator_fed < len(self._budget_frames):
+                    self._budget_estimator.observe(self._budget_frames[self._budget_estimator_fed])
+                    self._budget_estimator_fed += 1
+                self.actions_remaining_estimate = self._budget_estimator.estimate()[
+                    "actions_remaining_estimate"
+                ]
             except Exception:
+                # Discard the estimator so the next frame rebuilds from the raw
+                # buffer -- the same retry-from-scratch the stateless call had.
+                self._budget_estimator = None
+                self._budget_estimator_mask = None
+                self._budget_estimator_fed = 0
                 self.actions_remaining_estimate = None
         else:
             self.actions_remaining_estimate = None
@@ -7813,6 +7844,21 @@ class E3AgentPolicy:
                 # distinguishable in the artifact from a mask that was never requested.
                 _hud_mask, _hud_reason = self._world_model_hud_mask()
                 vr = e3.WorldModelVerifier(active_transitions, hud_mask=_hud_mask).score(engine)
+                # REQ-ARC-WMTE-6410 (default OFF): one bounded re-draw when this draw collapsed
+                # AND the trust gate below would reject it anyway. Placed BEFORE the gate logic
+                # so everything downstream reads the KEPT engine's verdict unchanged. The gate
+                # never touches an engine the trust gate would accept -- see
+                # arc_recall_gated_resample's docstring for why that dodges the memorization trap.
+                engine, is_done, vr = self._maybe_recall_gated_resample(
+                    attempt=attempt,
+                    transitions=active_transitions,
+                    hud_mask=_hud_mask,
+                    engine=engine,
+                    is_done=is_done,
+                    vr=vr,
+                    induce_rows=_induce_rows,
+                    induce_kwargs=_induce_kwargs,
+                )
                 # CARNOT_ARC_TRUST_METRIC=cell_recall gates on GRADED changed-cell recall instead of the
                 # exact-FULL-GRID match (the coordinated-redesign lever for the 0.08 wall: exact-match reads
                 # ~0 for an imperfect-but-useful induced model and gates it out -> the induce->plan path is a
@@ -8010,6 +8056,129 @@ class E3AgentPolicy:
             attempt["exception"] = repr(induce_exc)[:300]
             return
 
+    @staticmethod
+    def _plain_trust_rejects(vr) -> bool:
+        """Would the plain-branch trust gate in `_induce_and_plan` reject this verdict?
+
+        Mirrors the inline logic there (change gate when enabled, else the metric-selected
+        value against 0.5) so the resample can only ever fire on an engine that gate is
+        about to refuse. If that inline logic changes, change this with it."""
+        import os
+
+        from carnot.agentic import arc_executable_world_model as e3
+
+        change_gate = e3.change_gate_decision(vr)
+        if change_gate["gate_enabled"]:
+            return not bool(change_gate["passed"])
+        metric = os.environ.get("CARNOT_ARC_TRUST_METRIC", "exact")
+        gate_value = vr.cell_recall if metric == "cell_recall" else vr.accuracy
+        return float(gate_value) < 0.5
+
+    def _restore_engine_store(self, old_code, record: dict) -> None:
+        """Put the pre-resample engine text back when the second draw was not kept.
+
+        The resample's induce call overwrote the per-game store file; keeping the old
+        ENGINE OBJECT does not restore the FILE, and later loads read the file. Restoring
+        makes "kept original" mean the store state today's pipeline would have had."""
+        if old_code is None:
+            return
+        from carnot.agentic import arc_executable_world_model as e3
+
+        store_path = e3.E3_DIR / self.short / "world_model.py"
+        try:
+            current = store_path.read_text()
+        except OSError:
+            current = None
+        if current == old_code:
+            return
+        try:
+            # Same guarded write path as every induce: refuses tracked-evidence writes
+            # from inside a test, exactly like the write it is undoing.
+            e3._guard_engine_write(store_path.parent)
+            store_path.parent.mkdir(parents=True, exist_ok=True)
+            store_path.write_text(old_code)
+            record["engine_store_restored"] = True
+        except Exception as exc:
+            record["engine_store_restore_failed"] = repr(exc)[:160]
+
+    def _maybe_recall_gated_resample(
+        self,
+        *,
+        attempt: dict,
+        transitions,
+        hud_mask,
+        engine,
+        is_done,
+        vr,
+        induce_rows,
+        induce_kwargs,
+    ):
+        """REQ-ARC-WMTE-6410: one bounded induction re-draw on a catastrophic, already-
+        rejected draw. Returns the kept (engine, is_done, vr); on the common path (flag
+        off, or no fire) the inputs come back untouched and no LLM call happens."""
+        from carnot.agentic import arc_executable_world_model as e3
+        from carnot.agentic import arc_recall_gated_resample as rgr
+
+        if not rgr.resample_enabled():
+            return engine, is_done, vr
+        # Lazily-initialized per-policy (= per-game-episode) budget counter. Lazy so this
+        # change does not have to edit __init__, which other in-flight work is editing.
+        used = int(getattr(self, "_recall_resamples_used", 0))
+        decision = rgr.decide_resample(
+            cell_recall=float(vr.cell_recall),
+            n_changing=int(vr.n_changing),
+            downstream_rejects=self._plain_trust_rejects(vr),
+            resamples_used_this_game=used,
+        )
+        record: dict = {
+            "fired": bool(decision.fire),
+            "reason": decision.reason,
+            "original_cell_recall": round(float(vr.cell_recall), 4),
+            "original_accuracy": round(float(vr.accuracy), 4),
+            "n_changing": int(vr.n_changing),
+        }
+        attempt["recall_resample"] = record
+        if not decision.fire:
+            return engine, is_done, vr
+        self._recall_resamples_used = used + 1
+        # Snapshot the store BEFORE the re-draw overwrites it, so "keep original" can
+        # restore it byte-identically (see _restore_engine_store for why the file matters).
+        store_path = e3.E3_DIR / self.short / "world_model.py"
+        try:
+            old_code = store_path.read_text()
+        except OSError:
+            old_code = None
+        ok, msg = self._proposer().induce(self.short, induce_rows, self.cell, **induce_kwargs)
+        if not ok:
+            record["outcome"] = "resample_induce_failed"
+            record["error"] = str(msg)[:160]
+            self._restore_engine_store(old_code, record)
+            return engine, is_done, vr
+        try:
+            new_engine, new_is_done = e3.load_engine(self.short)
+        except Exception as exc:
+            record["outcome"] = "resample_engine_load_failed"
+            record["error"] = repr(exc)[:160]
+            self._restore_engine_store(old_code, record)
+            return engine, is_done, vr
+        new_vr = e3.WorldModelVerifier(transitions, hud_mask=hud_mask).score(new_engine)
+        record["resample_cell_recall"] = round(float(new_vr.cell_recall), 4)
+        record["resample_accuracy"] = round(float(new_vr.accuracy), 4)
+        new_passes = not self._plain_trust_rejects(new_vr)
+        if rgr.keep_resample(
+            new_passes_downstream=new_passes,
+            new_cell_recall=float(new_vr.cell_recall),
+            old_cell_recall=float(vr.cell_recall),
+        ):
+            record["outcome"] = "kept_resample"
+            record["resample_passes_trust"] = bool(new_passes)
+            # Same or-pattern as the trust-selection path: never downgrade a goal
+            # predicate to None just because the re-draw omitted one.
+            return new_engine, (new_is_done or is_done), new_vr
+        record["outcome"] = "kept_original"
+        self._restore_engine_store(old_code, record)
+        return engine, is_done, vr
+
     def generator_liveness_witness(self) -> dict:
         """The per-game GENERATOR-LIVENESS row for THIS policy instance.
 
@@ -8154,6 +8323,11 @@ class E3AgentPolicy:
                         # region.
                         "legacy_accuracy_would_pass_at_live_threshold",
                         "noop_ok_is_vacuous",
+                        # REQ-ARC-WMTE-6410. The resample gate's own record (fired/reason/
+                        # both rounds' recall/outcome). Projected on day one so it is never
+                        # the next computed-and-discarded channel this list keeps closing.
+                        # Small fixed-key dict; absent when the flag is off.
+                        "recall_resample",
                     )
                     if k in a
                 }

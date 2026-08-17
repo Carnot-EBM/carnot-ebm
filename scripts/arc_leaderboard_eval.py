@@ -41,6 +41,21 @@ import time
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
+
+
+def _write_json_atomic(out: Path, payload: str) -> None:
+    """Write a result file so a crash or a concurrent writer cannot leave it half-written.
+
+    The submission gate runs this script for 8 games at once, so the old bare `write_text`
+    (truncate, then write) could interleave two runs into spliced JSON. Writing a temp file in
+    the same directory and renaming is atomic on POSIX, so a reader sees the old file or the new
+    one, never a mixture.
+    """
+    tmp = out.with_name(f".{out.name}.{os.getpid()}.tmp")
+    tmp.write_text(payload)
+    tmp.replace(out)
+
+
 sys.path.insert(0, str(REPO / "python"))
 
 from arcengine import GameAction
@@ -1046,12 +1061,33 @@ def main() -> int:
         if games_mode == "oracle"
         else f"complete_leaderboard_eval_{total_levels}_levels_{len(gaps)}_gaps"
     )
-    out = (
-        REPO
-        / "results"
-        / ("arc_live_oracle_gap.json" if games_mode == "oracle" else "arc_leaderboard_eval.json")
+    # WHERE THIS RUN'S RECORD GOES, AND WHY IT IS NOT ALWAYS THE TRACKED FILE (2026-08-17).
+    #
+    # These two tracked files hold a FULL-SWEEP record. This script used to overwrite them on
+    # every completed run, with no flag and no opt-out, so a `--only <game>` run replaced a
+    # 25-game sweep with a single row. That is not hypothetical: the real 25-game sweep from
+    # 2026-07-19 (f2b82c89a6) was destroyed that way and the 1-row remnant was committed on
+    # 2026-08-07 by adada4146e, losing the record for ten days. No guard could see it, because
+    # the writer is the sanctioned measurement harness rather than a test.
+    #
+    # Worse, the submission gate runs this script for 8 games through a thread pool, so every
+    # completing subprocess was a concurrent writer to one path, non-atomically.
+    #
+    # So: a subset run writes a RUN-SCOPED file and leaves the sweep alone. Only a genuine full
+    # sweep may claim the tracked path, and it does so atomically.
+    _is_subset = bool(only)
+    _sweep_name = (
+        "arc_live_oracle_gap.json" if games_mode == "oracle" else "arc_leaderboard_eval.json"
     )
-    out.write_text(
+    if _is_subset:
+        _runs = REPO / "results" / (_sweep_name[: -len(".json")] + "_runs")
+        _runs.mkdir(parents=True, exist_ok=True)
+        _tag = "-".join(sorted(only.split(","))) if only else "subset"
+        out = _runs / f"{_tag}-{os.getpid()}.json"
+    else:
+        out = REPO / "results" / _sweep_name
+    _write_json_atomic(
+        out,
         json.dumps(
             {
                 "experiment": "arc_live_oracle_gap"
@@ -1071,7 +1107,7 @@ def main() -> int:
                 "honest_verdict": verdict,
             },
             indent=2,
-        )
+        ),
     )
     print(f"  wrote {out.relative_to(REPO)}", flush=True)
     return 0
