@@ -500,11 +500,20 @@ def region_hud_evidence(
     segment_seen: set[bytes] = set()
     segment_first: Optional[bytes] = None
 
+    # 2026-08-17: carry the previous frame's signatures across iterations instead of
+    # recomputing them in the transition branch below. Signatures are pure functions of
+    # (grid, mask), so the carried bytes equal the recomputed bytes -- this halves the
+    # loop's cost without changing any output (found while root-causing the
+    # submission-gate timeout regression; the per-action caller is now incremental too).
+    prev_region_sig: Optional[bytes] = None
+    prev_complement_sig: Optional[bytes] = None
     for index, grid in enumerate(prepared):
         if grid is None:
             # Episode break: a terminal / unusable frame ends the monotonicity segment.
             segment_seen = set()
             segment_first = None
+            prev_region_sig = None
+            prev_complement_sig = None
             continue
         region = _region_signature(grid, mask_arr)
         complement = _complement_signature(grid, mask_arr)
@@ -524,11 +533,14 @@ def region_hud_evidence(
             segment_seen.add(region)
 
         if index == 0 or prepared[index - 1] is None:
+            prev_region_sig = region
+            prev_complement_sig = complement
             continue
-        previous = prepared[index - 1]
         n_transitions += 1
-        region_changed = region != _region_signature(previous, mask_arr)
-        complement_changed = complement != _complement_signature(previous, mask_arr)
+        region_changed = region != prev_region_sig
+        complement_changed = complement != prev_complement_sig
+        prev_region_sig = region
+        prev_complement_sig = complement
         if not complement_changed:
             n_complement_static += 1
             if region_changed:
@@ -764,6 +776,237 @@ def budget_exhaustion_estimate(
     out["verdict"] = "estimate"
     out["reason"] = "linear_projection"
     return out
+
+
+class IncrementalBudgetExhaustionEstimator:
+    """Per-frame incremental form of `region_hud_evidence` + `budget_exhaustion_estimate`.
+
+    WHY THIS EXISTS (2026-08-17). The live explorer called both batch functions
+    on the WHOLE frame history once per action. That is O(n^2) per run, and a
+    profiled submission-gate game spent 77% of its wall clock inside it -- the
+    root cause of the gate's 3-timeout / lost-m0r0 refusal.
+
+    Both batch functions fold left over the frame sequence. This class keeps
+    that fold's state and updates it once per new frame. `evidence()` and
+    `estimate()` return the exact dicts the batch functions return for the
+    frames observed so far. The equivalence test drives both implementations
+    step for step and asserts dict equality at every step
+    (tests/python/test_arc_budget_estimator_incremental_equivalence.py).
+
+    Contract, matching the one live call site (`StepwiseExplorer._ingest`):
+    no `actions` labels (so `ubiquity_is_pooled` is always True), and a frame
+    must not be mutated after `observe()`. The batch functions are unchanged
+    and remain the reference implementation.
+    """
+
+    def __init__(
+        self,
+        mask: Any,
+        *,
+        evidence_min_transitions: int = REGION_EVIDENCE_MIN_TRANSITIONS,
+        min_ubiquity: float = REGION_EVIDENCE_MIN_UBIQUITY,
+        max_revisits: int = REGION_EVIDENCE_MAX_REVISITS,
+        estimate_min_transitions: int = BUDGET_ESTIMATE_MIN_TRANSITIONS,
+    ) -> None:
+        mask_arr = np.asarray(mask, dtype=bool) if mask is not None else None
+        self._mask_arr: Optional[np.ndarray] = mask_arr
+        self._mask_ok = bool(mask_arr is not None and bool(mask_arr.any()))
+        self._region_size = int(mask_arr.sum()) if mask_arr is not None else 0
+        self._evidence_min_transitions = int(evidence_min_transitions)
+        self._min_ubiquity = float(min_ubiquity)
+        self._max_revisits = int(max_revisits)
+        self._estimate_min_transitions = int(estimate_min_transitions)
+        # Stage-2 fold state. Field for field, this is `region_hud_evidence`'s
+        # loop state; the prev-signature pair replaces that loop's recompute of
+        # the previous frame's signatures (same bytes, computed once).
+        self._region_values: set[bytes] = set()
+        self._complement_values: set[bytes] = set()
+        self._n_transitions = 0
+        self._n_complement_static = 0
+        self._n_complement_static_region_changed = 0
+        self._per_action_total: dict[Any, int] = {}
+        self._per_action_changed: dict[Any, int] = {}
+        self._revisits = 0
+        self._segment_seen: set[bytes] = set()
+        self._segment_first: Optional[bytes] = None
+        self._prev_region: Optional[bytes] = None
+        self._prev_complement: Optional[bytes] = None
+        # Stage-3 fold state. Mirrors `_segment_frames` + the fraction list of
+        # the LAST segment: an unusable frame CLOSES the segment but keeps its
+        # data until the next usable frame opens a new one, like the batch.
+        self._seg_open = False
+        self._seg_first_sig: Optional[bytes] = None
+        self._seg_first_region: Optional[np.ndarray] = None
+        self._seg_fractions: list[float] = []
+        self._have_segment = False
+
+    def observe(self, frame: Any) -> None:
+        """Fold one new frame into the state. Cost is one frame's signatures."""
+
+        if not self._mask_ok:
+            return
+        mask_arr = self._mask_arr
+        assert mask_arr is not None  # _mask_ok guarantees this; narrows the type
+        g = _as_grid(frame)
+        if g is None or g.shape != mask_arr.shape:
+            # Same effect as a None entry in the batch `prepared` list: the
+            # evidence segment resets, no transition is counted, and the
+            # Stage-3 segment closes (its fractions stay readable).
+            self._segment_seen = set()
+            self._segment_first = None
+            self._prev_region = None
+            self._prev_complement = None
+            self._seg_open = False
+            return
+        region = _region_signature(g, mask_arr)
+        complement = _complement_signature(g, mask_arr)
+        self._region_values.add(region)
+        self._complement_values.add(complement)
+
+        if self._segment_first is None:
+            self._segment_first = region
+            self._segment_seen = {region}
+        elif region == self._segment_first:
+            # A monotone counter that returned to its reset value is a NEW
+            # segment, not a revisit -- same restart rule as the batch.
+            self._segment_seen = {region}
+        elif region in self._segment_seen:
+            self._revisits += 1
+        else:
+            self._segment_seen.add(region)
+
+        if self._prev_region is not None:
+            self._n_transitions += 1
+            region_changed = region != self._prev_region
+            complement_changed = complement != self._prev_complement
+            if not complement_changed:
+                self._n_complement_static += 1
+                if region_changed:
+                    self._n_complement_static_region_changed += 1
+            # The live call passes no action labels, so every transition lands
+            # under the single None label, exactly as the batch does.
+            self._per_action_total[None] = self._per_action_total.get(None, 0) + 1
+            if region_changed:
+                self._per_action_changed[None] = self._per_action_changed.get(None, 0) + 1
+        self._prev_region = region
+        self._prev_complement = complement
+
+        # Stage-3 segment fold: open a new segment after a break, or when the
+        # region returns to the segment's first value (`_segment_frames` rule).
+        if not self._seg_open or region == self._seg_first_sig:
+            self._seg_open = True
+            self._seg_first_sig = region
+            self._seg_first_region = g[mask_arr].copy()
+            self._seg_fractions = [0.0]
+            self._have_segment = True
+        else:
+            diverged = int(np.count_nonzero(g[mask_arr] != self._seg_first_region))
+            self._seg_fractions.append(diverged / self._region_size)
+
+    def evidence(self) -> dict:
+        """Return exactly what `region_hud_evidence(frames_so_far, mask)` returns."""
+
+        out: dict[str, Any] = {
+            "verdict": "abstain",
+            "reason": "no_mask",
+            "n_transitions": 0,
+            "n_complement_static": 0,
+            "n_complement_static_region_changed": 0,
+            "independent_tick_rate": None,
+            "ubiquity": None,
+            "ubiquity_is_pooled": True,
+            "per_action_change_rate": {},
+            "revisits": 0,
+            "n_distinct_region_values": 0,
+            "n_distinct_complement_values": 0,
+            "min_transitions": self._evidence_min_transitions,
+        }
+        if not self._mask_ok:
+            return out
+        out["n_transitions"] = int(self._n_transitions)
+        out["n_complement_static"] = int(self._n_complement_static)
+        out["n_complement_static_region_changed"] = int(self._n_complement_static_region_changed)
+        out["revisits"] = int(self._revisits)
+        out["n_distinct_region_values"] = int(len(self._region_values))
+        out["n_distinct_complement_values"] = int(len(self._complement_values))
+        if self._n_complement_static:
+            out["independent_tick_rate"] = round(
+                self._n_complement_static_region_changed / self._n_complement_static, 4
+            )
+        rates = {
+            label: (self._per_action_changed.get(label, 0) / total)
+            for label, total in self._per_action_total.items()
+            if total >= 2
+        }
+        out["per_action_change_rate"] = {
+            (str(label) if label is not None else "unlabelled"): round(rate, 4)
+            for label, rate in rates.items()
+        }
+        if rates:
+            out["ubiquity"] = round(min(rates.values()), 4)
+
+        if self._n_transitions < self._evidence_min_transitions:
+            out["reason"] = "insufficient_transitions"
+            return out
+        if out["ubiquity"] is None:
+            out["reason"] = "no_action_class_tried_twice"
+            return out
+        if float(out["ubiquity"]) < self._min_ubiquity:
+            out["verdict"] = "refuse"
+            out["reason"] = "region_not_action_ubiquitous"
+            return out
+        if int(self._revisits) > self._max_revisits:
+            out["verdict"] = "refuse"
+            out["reason"] = "region_value_revisited_in_episode"
+            return out
+        out["verdict"] = "admit"
+        out["reason"] = "action_ubiquitous_and_monotone"
+        return out
+
+    def estimate(self) -> dict:
+        """Return exactly what `budget_exhaustion_estimate(frames_so_far, mask)` returns."""
+
+        out: dict[str, Any] = {
+            "verdict": "abstain",
+            "reason": "no_mask",
+            "fill_fraction": None,
+            "rate_per_transition": None,
+            "actions_remaining_estimate": None,
+            "n_transitions": 0,
+        }
+        if not self._mask_ok:
+            return out
+        ev = self.evidence()
+        if ev.get("verdict") != "admit":
+            out["reason"] = f"underlying_region_evidence_{ev.get('verdict', 'unknown')}"
+            return out
+        if self._region_size <= 0:
+            out["reason"] = "empty_mask"
+            return out
+        if not self._have_segment:
+            out["reason"] = "no_usable_frame"
+            return out
+        fractions = self._seg_fractions
+        out["fill_fraction"] = round(fractions[-1], 4)
+        out["n_transitions"] = int(len(fractions) - 1)
+        if len(fractions) - 1 < self._estimate_min_transitions:
+            out["reason"] = "insufficient_transitions"
+            return out
+        window = fractions[-(self._estimate_min_transitions + 1) :]
+        xs = np.arange(len(window), dtype=float)
+        ys = np.asarray(window, dtype=float)
+        # Same windowed least-squares fit as the batch, over the same values.
+        slope = float(np.polyfit(xs, ys, 1)[0])
+        out["rate_per_transition"] = round(slope, 6)
+        if slope <= 0.0:
+            out["verdict"] = "estimate"
+            out["reason"] = "non_positive_rate_no_projection"
+            return out
+        remaining = max(0.0, (1.0 - fractions[-1]) / slope)
+        out["actions_remaining_estimate"] = round(remaining, 2)
+        out["verdict"] = "estimate"
+        out["reason"] = "linear_projection"
+        return out
 
 
 # ---------------------------------------------------------------------------

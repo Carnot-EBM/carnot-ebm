@@ -301,3 +301,9 @@ results/arc_engine_validation_20260731/harness/capture/*/e3/
 # results/experiment_5852_three_family_paired_embeddings.json (637 KB, still tracked) and
 # results/experiment_5853_paired_embedding_integrity_audit.json. Only bulk float data left git.
 results/experiment_5852_three_family_paired_embeddings.rows.jsonl
+
+# Per-run eval outputs. `arc_leaderboard_eval.py` writes a run-scoped file here instead of
+# clobbering the tracked full-sweep record (see that script's write site). These are transient
+# measurements, not the research record, so they stay out of git.
+results/arc_live_oracle_gap_runs/
+results/arc_leaderboard_eval_runs/
