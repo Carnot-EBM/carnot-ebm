@@ -120,14 +120,18 @@ def test_the_kernel_requests_a_machine_shape_that_can_hold_the_new_generator(
     correct for an 18.3 GB gemma-4-31B plus its KV pool -- the same arithmetic that makes the
     local 3090 need an FFN offload.
 
-    CAVEAT, recorded here because it is load-bearing and UNVERIFIED: the exact string
-    `NvidiaRtxPro6000` could not be confirmed against an authoritative enum. Kaggle's own
-    `kernels_metadata.md` documents the field only by example (`NvidiaTeslaT4`, `NvidiaTeslaP100`,
-    `Tpu1VmV38`) and the installed `kagglesdk` carries no machine-shape enum to check against. The
-    evidence it rests on is `external/arc-m1-3rd-forge/kernel-metadata.json`, which is a
-    server-serialized pull of a real published kernel (it carries a server-assigned `id_no`) and
-    uses that exact spelling. That is good corroboration, not proof. It MUST be confirmed on the
-    operator's next submission.
+    CAVEAT RESOLVED 2026-08-16 -- the string works and the card is real. This docstring used to
+    say `NvidiaRtxPro6000` was UNVERIFIED, resting only on a serialized pull of another team's
+    kernel, and that it MUST be confirmed on the next submission. It has been. Kernel version 18
+    printed, from its own run:
+
+        LLM GPU HARDWARE: 'NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 97250 MiB'
+
+    So Kaggle honours the request and grants a 96 GB-class card. Retrieve it any time with
+    `kaggle kernels output iancblenke/carnot-arc-agi3-submission`; the agent prints that line on
+    every run for exactly this purpose. Note the stale counter-evidence that used to muddy this:
+    `results/kaggle_env_probe.json` reports a Tesla P100 16GB, but it is from 2026-06-18 and from
+    a DIFFERENT kernel that requested no machine shape. It does not describe this one.
     """
     shape = kernel_metadata.get("machine_shape")
     assert shape == "NvidiaRtxPro6000", shape
