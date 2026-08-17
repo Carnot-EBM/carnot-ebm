@@ -355,6 +355,10 @@ extend-exclude = [
     "results/arc_e3",
     "results/arc_e3_origin_fixtures",
     "results/arc_gemma31b_migration_evidence_20260728",
+    # Same reason as the line above: raw LLM-induced engines kept as evidence of what the
+    # model actually emitted. Linting them is a category error, and auto-fixing them would
+    # silently edit the measurement record.
+    "results/arc_qwen38_h2h_partial_20260817",
 ]
 
 [tool.ruff.lint]

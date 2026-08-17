@@ -51930,3 +51930,81 @@ substrate declaration, and terminal verdict prefix is present.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6448 | Planned (`python/carnot/experiment_6448_v555_terminal_handoff_and_queue_integrity.py`, `results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json`) | Planned (`tests/python/test_experiment_6448_v555_terminal_handoff_and_queue_integrity.py`) |
+
+### REQ-REPORT-6460: V555 Terminal Evidence Freeze And V556 Queue Integrity
+
+The Exp6460 workflow SHALL freeze one terminal row for each V555 task from
+Exp6448 through Exp6459. Each row SHALL record task ID, deliverable path, byte
+count, artifact state, status, `honest_verdict`, gate summary, readiness
+fields, and final claim eligibility. Missing and zero-byte artifacts SHALL stay
+visible. The workflow SHALL NOT repair, rerun, or strengthen V555 evidence.
+
+The workflow SHALL validate the V556 queue as exactly thirteen tasks in
+conductor order, all in milestone `2026.08.556`, with unique task IDs, unique
+`results/*.json` deliverables, no retired task ID, and no dependency or gate
+upstream that points to a retired or absent task. It SHALL record both active
+and staged roadmap path receipts. If `research-roadmap-next.yaml` is absent
+after activation, the workflow SHALL validate the active V556 roadmap and
+preserve the missing staged receipt.
+
+The workflow SHALL validate the Pydantic roadmap schema, prior-failure
+validator, exclusion-manifest linter, structured gate audit, duplicate ID and
+deliverable checks, gate producer required-field contracts, prompt terminal
+lines, comparative row contracts, blocked artifact contracts, and mandatory
+local GGUF model policy. It SHALL set `v556_queue_integrity_score=1.0` only
+when every validation surface passes and protected inputs remain
+byte-identical. Otherwise it SHALL emit a terminal blocked status, set the score
+to `0.0`, and populate `gate_check_summary` with the failed check, expected
+condition, observed value, and evidence path.
+
+The Exp6460 artifact SHALL include, at minimum, `status`,
+`v555_terminal_rows`, `active_roadmap_hash`, `staged_roadmap_hash`,
+`task_count`, `task_ids_in_order`, `unique_id_and_deliverable_check`,
+`milestone_consistency_check`, `schema_validation`,
+`prior_failure_validation`, `exclusion_manifest_validation`,
+`structured_gate_validation`, `gate_producer_contract_rows`,
+`model_policy_validation`, `per_unit_rows`, `prompt_terminal_line_validation`,
+`protected_files_unchanged`, `v556_queue_integrity_score`, `blocked_reason`,
+`gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`.
+`verifier_is_oracle` SHALL be false.
+
+#### SCENARIO-REPORT-6460-V555-FREEZE: V555 Evidence Is Frozen As Found
+
+**Given** V555 recorded tasks Exp6448 through Exp6459
+**When** Exp6460 builds terminal rows
+**Then** it records twelve rows, preserves missing, blocked, null, and
+complete artifacts, and does not create or edit any V555 result.
+
+#### SCENARIO-REPORT-6460-V556-QUEUE: V556 Queue Must Be Exact
+
+**Given** the V556 roadmap names milestone `2026.08.556`
+**When** Exp6460 validates queue identity
+**Then** it requires the exact thirteen Exp6460 through Exp6472 task IDs,
+ordered by experiment number, with thirteen unique result JSON deliverables.
+
+#### SCENARIO-REPORT-6460-GATES-PRIORS-MODELS: Contracts Are Cross-Checked
+
+**Given** V556 tasks include gates, rerun declarations, comparisons, blocked
+contracts, and local GGUF model prompts
+**When** Exp6460 validates the roadmap
+**Then** each gate upstream exists and declares the exact field, every declared
+rerun has the four required prior-failure fields, each live-LLM task declares a
+mandatory GGUF with cached local resolution and embedded tokenizer use, and
+each comparative task requires `per_unit_rows`.
+
+#### SCENARIO-REPORT-6460-SCHEMA: Artifact Is Machine-Checkable
+
+**Given** the Exp6460 artifact is emitted
+**When** its schema is validated
+**Then** every required field, field principle, field provenance entry,
+blocked diagnostic, protected-file receipt, command receipt, checksum,
+substrate declaration, and terminal verdict prefix is present.
+
+## Implementation Status (REQ-REPORT-6460)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6460 | Planned (`python/carnot/experiment_6460_v556_terminal_handoff_and_queue_integrity.py`, `results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json`) | Planned (`tests/python/test_experiment_6460_v556_terminal_handoff_and_queue_integrity.py`) |
