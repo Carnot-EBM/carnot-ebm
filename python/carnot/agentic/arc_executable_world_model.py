@@ -6105,6 +6105,27 @@ class LocalGGUFProposer:
         _seed = self.sampling_seed(attempt)
         if _seed is not None:
             payload["seed"] = _seed
+        # OPT-IN THINKING BUDGET (2026-08-17, default OFF -- unset means byte-identical requests).
+        #
+        # On a reasoning generator the think channel is the bulk of the tokens: measured
+        # completions of 38k-94k where the final answer is 1-8k. `thinking_budget_tokens` is a
+        # per-request llama.cpp field (server-common.cpp reads it into reasoning_budget) that
+        # forces `</think>` after N think tokens and lets the model still answer. That is NOT the
+        # same as capping `max_tokens`, which hard-truncates mid-answer and produced dead cells
+        # in earlier work -- the difference is a graceful close versus a cut.
+        #
+        # Deliberately not enabled by default. Independent review argues thinking HELPS held-out
+        # accuracy on the incumbent generator (gemma /think, exp6221: 0.196 vs 0.083), so a cap is
+        # a mitigation for a long-completion model, not a general win. Wired so it can be measured
+        # without another code change; the A/B is a separate decision.
+        _think_budget = os.environ.get("CARNOT_ARC_INDUCE_THINKING_BUDGET")
+        if _think_budget:
+            try:
+                _tb = int(_think_budget)
+            except ValueError:
+                _tb = 0
+            if _tb > 0:
+                payload["thinking_budget_tokens"] = _tb
         if stop:
             payload["stop"] = list(stop)
         req = urllib.request.Request(
