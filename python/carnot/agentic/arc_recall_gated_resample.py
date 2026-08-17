@@ -66,11 +66,19 @@ _THRESHOLD_ENV = "CARNOT_ARC_RECALL_RESAMPLE_THRESHOLD"
 _MIN_CHANGING_ENV = "CARNOT_ARC_RECALL_RESAMPLE_MIN_CHANGING"
 _MAX_PER_GAME_ENV = "CARNOT_ARC_RECALL_RESAMPLE_MAX_PER_GAME"
 _GENERATOR_SEED_ENV = "CARNOT_ARC_GENERATOR_SEED"
+_TOOL_LOOP_ENV = "CARNOT_ARC_INDUCE_TOOL_LOOP"
 
 
 def resample_enabled() -> bool:
     """Default OFF: the scored path is byte-identical until an operator opts in."""
     return str(os.environ.get(_ENABLE_ENV, "")).strip().lower() in {"1", "true", "yes", "on"}
+
+
+def tool_repair_active() -> bool:
+    """REQ-ARC-WMTE-6470: `CARNOT_ARC_INDUCE_TOOL_LOOP=repair` activates this gate with
+    the seeded tool loop as the re-draw. Read here (not just at the call site) so the
+    decision function can honor repair enablement without a second env contract."""
+    return str(os.environ.get(_TOOL_LOOP_ENV, "")).strip().lower() == "repair"
 
 
 def resample_threshold() -> float:
@@ -131,20 +139,29 @@ def decide_resample(
     downstream_rejects: bool,
     resamples_used_this_game: int,
     retries_used_this_call: int = 0,
+    tool_repair: bool = False,
 ) -> ResampleDecision:
     """Should this induce call spend one more generation? Pure; the caller supplies
     the downstream trust verdict so this module never re-implements the gate.
 
     Check order is the audit order: each early refusal names the cheapest reason
     that makes the later, more expensive questions moot.
+
+    `tool_repair` (REQ-ARC-WMTE-6470, default False = behaviour unchanged): the
+    re-draw will be the SEEDED TOOL LOOP, not a blind re-generation. Two rules move:
+    enablement is satisfied by repair mode alone, and the seed-pinned refusal is
+    skipped -- that refusal exists because a pinned blind re-draw replays the same
+    tokens for a full generation's cost, while the loop's multi-turn conversation is
+    a different token stream by construction. Every safety rule (trust-subordinate,
+    budgets, evidence floor, catastrophic-only) applies identically in both modes.
     """
-    if not resample_enabled():
+    if not (resample_enabled() or tool_repair):
         return ResampleDecision(False, "disabled")
     if not downstream_rejects:
         # The structural safety property: an engine the pipeline would use is
         # never re-rolled, so no selection happens among usable engines.
         return ResampleDecision(False, "downstream_accepted_engine")
-    if generator_seed_pinned():
+    if generator_seed_pinned() and not tool_repair:
         return ResampleDecision(False, "seed_pinned_resample_would_reproduce")
     if retries_used_this_call >= MAX_RETRIES_PER_CALL:
         return ResampleDecision(False, "per_call_retry_exhausted")
@@ -154,6 +171,8 @@ def decide_resample(
         return ResampleDecision(False, "insufficient_changing_evidence")
     if float(cell_recall) >= resample_threshold():
         return ResampleDecision(False, "recall_not_catastrophic")
+    if tool_repair:
+        return ResampleDecision(True, "catastrophic_recall_tool_loop_repair")
     return ResampleDecision(True, "catastrophic_recall_resample")
 
 

@@ -1,1273 +1,1281 @@
 {
- "experiment": "outer_loop_arc_gateway_rescore_20260726",
- "title": "Gateway-accurate re-scoring: the uncharged-RESET defect, bounded over 1401 recorded rows and then MEASURED exactly on matched live re-runs",
- "run_date": "2026-07-29T14:36:02Z",
- "schema": "carnot.arc_gateway_rescore.v1",
- "defect_under_measurement": {
-  "gateway_charges_a_reset": "arc_agi/scorecard.py:701-704 inc_reset_count -> `self.resets[i] += 1` AND `self.actions[i] += 1`; reached from update_scorecard:839-843",
-  "our_harness_charged_zero": "scripts/arc_leaderboard_eval.py -- `actions += 1` lived ONLY in the non-RESET branch (fixed additively 2026-07-26; the pre-existing `actions` semantics are unchanged, new fields were added alongside)",
-  "why_it_is_squared": "per-level charge is a DIFFERENCE of cumulative CHARGED counts (scorecard.py:479 `level_actions = actions_at_level - prev_actions`), and the per-level score is min((baseline/level_actions)**2 * 100, 115) (:168-171) -- so a reset taken BEFORE a level-up lands in that level's denominator and is squared",
-  "reset_replay_is_not_a_rare_path": "arc_competition_agent.py:969-970 -- RESET + replay is described as 'the ONLY navigation'; :3339 records 'every backtrack RESET-replayed from root'",
-  "a_LARGER_defect_ruled_out_from_source": {
-   "the_risk": "the gateway consumes `actions_by_level` POSITIONALLY -- `level, actions_at_level = actions_by_level[level_idx]` (scorecard.py:477) IGNORES the stored level number. `Card.set_levels_completed` (:706-713) appends an entry whenever levels_completed CHANGES, in either direction. So if a RESET dropped levels_completed back toward 0, it would insert a spurious entry and shift every subsequent level's charge by one slot -- corrupting the per-level attribution far more than the one-action charge does.",
-   "verdict": "DOES NOT MATERIALIZE, verified from the installed engine source",
-   "evidence": "arcengine/base_game.py:308-328 -- `reset()` dispatches to `full_reset()` only when `_action_count == 0` or the state is WIN; otherwise it calls `level_reset()`, which re-clones the CURRENT level and does NOT touch `_score` (:325-328). `levels_completed` is `_score` (:244,:255). Therefore every MID-RUN reset preserves levels_completed, appends no entry, and the positional consumption stays aligned.",
-   "residual_edge_case_stated_not_hidden": "a reset at `_action_count == 0` IS a full_reset (`_score = 0`), and on the gateway side `update_scorecard`:836-839 routes a full_reset to `new_play()` -- a NEW card index whose action count starts at 0 -- rather than to `inc_reset_count()`. That path is the run's opening reset, before any level-up, so it cannot corrupt an attribution; but a policy that contrived a mid-run full_reset would score as a separate play, and this analysis does not cover that."
+  "experiment": "outer_loop_arc_gateway_rescore_20260726",
+  "title": "Gateway-accurate re-scoring: the uncharged-RESET defect, bounded over 1401 recorded rows and then MEASURED exactly on matched live re-runs",
+  "run_date": "2026-07-29T14:36:02Z",
+  "schema": "carnot.arc_gateway_rescore.v1",
+  "defect_under_measurement": {
+    "gateway_charges_a_reset": "arc_agi/scorecard.py:701-704 inc_reset_count -> `self.resets[i] += 1` AND `self.actions[i] += 1`; reached from update_scorecard:839-843",
+    "our_harness_charged_zero": "scripts/arc_leaderboard_eval.py -- `actions += 1` lived ONLY in the non-RESET branch (fixed additively 2026-07-26; the pre-existing `actions` semantics are unchanged, new fields were added alongside)",
+    "why_it_is_squared": "per-level charge is a DIFFERENCE of cumulative CHARGED counts (scorecard.py:479 `level_actions = actions_at_level - prev_actions`), and the per-level score is min((baseline/level_actions)**2 * 100, 115) (:168-171) -- so a reset taken BEFORE a level-up lands in that level's denominator and is squared",
+    "reset_replay_is_not_a_rare_path": "arc_competition_agent.py:969-970 -- RESET + replay is described as 'the ONLY navigation'; :3339 records 'every backtrack RESET-replayed from root'",
+    "a_LARGER_defect_ruled_out_from_source": {
+      "the_risk": "the gateway consumes `actions_by_level` POSITIONALLY -- `level, actions_at_level = actions_by_level[level_idx]` (scorecard.py:477) IGNORES the stored level number. `Card.set_levels_completed` (:706-713) appends an entry whenever levels_completed CHANGES, in either direction. So if a RESET dropped levels_completed back toward 0, it would insert a spurious entry and shift every subsequent level's charge by one slot -- corrupting the per-level attribution far more than the one-action charge does.",
+      "verdict": "DOES NOT MATERIALIZE, verified from the installed engine source",
+      "evidence": "arcengine/base_game.py:308-328 -- `reset()` dispatches to `full_reset()` only when `_action_count == 0` or the state is WIN; otherwise it calls `level_reset()`, which re-clones the CURRENT level and does NOT touch `_score` (:325-328). `levels_completed` is `_score` (:244,:255). Therefore every MID-RUN reset preserves levels_completed, appends no entry, and the positional consumption stays aligned.",
+      "residual_edge_case_stated_not_hidden": "a reset at `_action_count == 0` IS a full_reset (`_score = 0`), and on the gateway side `update_scorecard`:836-839 routes a full_reset to `new_play()` -- a NEW card index whose action count starts at 0 -- rather than to `inc_reset_count()`. That path is the run's opening reset, before any level-up, so it cannot corrupt an attribution; but a policy that contrived a mid-run full_reset would score as a separate play, and this analysis does not cover that."
+    },
+    "three_units_never_conflated": {
+      "offline_actions": "our harness `actions`; EXCLUDES resets. The unit every recorded `efficiency` is in.",
+      "frames": "loop iterations; INCLUDES resets.",
+      "gateway_charged": "non-RESET moves PLUS resets. The ONLY unit the competition score is a function of.",
+      "identity_asserted": "gateway_charged == frames == offline_actions + n_resets"
+    }
   },
-  "three_units_never_conflated": {
-   "offline_actions": "our harness `actions`; EXCLUDES resets. The unit every recorded `efficiency` is in.",
-   "frames": "loop iterations; INCLUDES resets.",
-   "gateway_charged": "non-RESET moves PLUS resets. The ONLY unit the competition score is a function of.",
-   "identity_asserted": "gateway_charged == frames == offline_actions + n_resets"
-  }
- },
- "corpora_that_cannot_be_rescored_at_all": [
-  {
-   "glob": "results/cptb_20260726_cells/*.jsonl.gz",
-   "n_files": 32,
-   "n_cells": 1713,
-   "reason": "declares `action_count_convention: resets_excluded_run_game_native` but records NO reset count and NO level_up_actions -- the quantity the correction needs was never persisted, so these cells CANNOT be gateway-re-scored at any width. Reported as a coverage hole."
-  }
- ],
- "headline": {
-  "question": "By how much are our ARC score estimates optimistic because the offline harness did not charge RESETs, and is the answer materially different from zero?",
-  "answer_from_bounds_alone": "THE BOUND IS TOO WIDE TO ANSWER THE HEADLINE QUESTION. Per cell the worst case erases between 0% and 95.7% of the offline score (median 11.4%), and its best case is 0% BY CONSTRUCTION -- so bounds alone can establish neither that the optimism is material nor that it is negligible. This is a real answer, and it is exactly what justifies the per-level instrumentation in Part B.",
-  "answer_from_exact_measurement": "MATERIALLY DIFFERENT FROM ZERO BUT SMALL. On 44 matched live cells spanning 11 games and 2 budgets, the optimism is 4.62% of the per-game score at the median and at most 16.80%; 42/44 cells are non-zero, and the only two zeros are structural (the 115 cap absorbing a single reset), not rounding. On the GAME as the replication unit (n=11) the median is 4.92%, range 1.81%-16.66% -- the same answer, so it does not rest on which games were repeated. In absolute terms the correction is 0.0004 score points at the median (max 0.0955), which is small only because most of these games score near zero to begin with.",
-  "why_reality_sits_at_the_optimistic_end_of_the_bound": "level-ups happen EARLY and the resets concentrate in the POST-SOLVE TAIL, which is free. Measured across both budgets: whole-run reset counts of 3-110, but only a fraction land before a level-up (vc33 b2000: 1 of 88; ft09: 4 of 110), and those that do land on an already-large denominator. The worst-case bound assumed ALL resets precede a level-up, which is not how this agent behaves. The counter-example matters too: r11l charges 72-74 of its ~109 resets BEFORE its single level-up and is correspondingly the worst-hit game at 15.4-17.5%.",
-  "dose_response_the_correction_tracks_resets_before_the_levelup": "not the whole-run reset count. r11l (109 resets, 72 before) is hit 4x harder than ft09/seed-20260725 (110 resets, 4 before). Any future estimate of this correction must use the per-level attribution, not `n_resets` -- which is exactly why the bound over `n_resets` alone was uninformative.",
-  "no_conclusion_reordered": "a single-digit-percent haircut on the efficiency term does not change the settled structural facts: DEPTH dominates (1/2/4/8 of 8 levels -> 2.78/8.33/27.78/100), a per-game score can never exceed 100, and the post-solve tail is free. It does mean every per-level efficiency figure this project quotes should be read as an upper estimate, with the size of the overstatement now measured rather than unknown."
- },
- "cross_check_against_the_actual_hidden_score": {
-  "actual_hidden_score": 0.08,
-  "actual_hidden_score_ref": "public leaderboard 0.08, 2026-06-19 23:40Z, ref 53862349, 'carnot v1.1', kernel v3 (flat v3->v5); recorded ops/known-issues.md:3275",
-  "offline_public_set_mean_per_game": {
-   "n": 57,
-   "min": 0.03899,
-   "p25": 0.086189,
-   "median": 0.088299,
-   "p75": 0.228819,
-   "max": 0.445457,
-   "mean": 0.141893
-  },
-  "worst_case_public_set_mean_per_game": {
-   "n": 57,
-   "min": 0.016519,
-   "p25": 0.03459,
-   "median": 0.056849,
-   "p75": 0.082244,
-   "max": 0.389471,
-   "mean": 0.083445
-  },
-  "does_the_correction_narrow_the_gap": false,
-  "verdict": "NO -- AND THE HONEST READING IS THAT THIS TEST HAS ALMOST NO POWER, SO ITS NON-CORROBORATION IS NOT EVIDENCE AGAINST THE CORRECTION EITHER. The offline PUBLIC-set mean-per-game score is 0.0883 at the median, which is already near-identical to the actual HIDDEN score of 0.08. Applying the worst-case reset correction moves it DOWN to 0.0568 -- AWAY from the observed value, not toward it. So on this evidence the correction does not explain any offline-vs-hidden gap.",
-  "why_the_test_has_almost_no_power": [
-   "DIFFERENT GAME SETS. The offline corpus is the 25 PUBLIC games; 0.08 was scored on HIDDEN OOD games. The two numbers landing near each other is a coincidence of very different mechanisms, not a calibration.",
-   "DIFFERENT DOMINANT TERM. The hidden score is dominated by whether the agent wins ANY level at all (held-out proxy first_win_rate_integrated = 0.04, CI [0,0], ops/known-issues.md:3275-3279), whereas 11 of 25 public games reach a level. The reset correction only touches the efficiency of levels that WERE solved, so it cannot move a score whose limiting factor is winning nothing.",
-   "DIFFERENT AGENT CONFIGURATION. Every recorded row is the LLM-OFF arm; the submitted kernel ran with the generator enabled.",
-   "A ONE-POINT COMPARISON. One hidden submission is a single observation with no interval; nothing about it can distinguish a 5% efficiency correction."
-  ],
-  "what_would_make_this_test_informative": "gateway-charged re-scoring of a HIDDEN-set run's own per-level reset attribution, which requires the instrumentation to be present in a submitted kernel -- an operator decision, not measurable from here."
- },
- "scope_and_power": {
-  "part_a_scope": "485 of 1401 recorded rows carry both a level-up and a reset count",
-  "part_b_scope": "44 matched live cells with a level-up, across 11 games ['cd82', 'dc22', 'ft09', 'lf52', 'lp85', 'r11l', 's5i5', 'sp80', 'su15', 'tu93', 'vc33'], budgets [400, 2000], seeds [20260724, 20260725, 20260726]",
-  "single_game_concentration_warning": "the Part A corpus score is heavily concentrated: vc33 alone carries the large per-game scores (median offline 2.09 vs <0.03 for most games), so a corpus-level relative delta is a statement about vc33 more than about the corpus. Part B's per-cell numbers are reported individually for exactly this reason -- read the per-cell table, not only the median.",
-  "what_this_does_NOT_measure": [
-   "the hidden set. Every number here is the 25 public games via the offline arcade.",
-   "the LLM-ON configuration.",
-   "whether a policy could actually have produced the worst-case reset placement -- the Part A bound is accounting-only and therefore conservative (a true lower bound on the score).",
-   "the 1713 cptb cells and 375 budget-sweep rows, which record no reset count at all."
-  ]
- },
- "what_was_NOT_changed": [
-  "no SUBMITTED_* flag and no MAX_ACTIONS value was touched -- this measures and reports; the flag decision is the operator's",
-  "the pre-existing `efficiency` field keeps its offline (reset-free) semantics; the gateway number is a NEW field `efficiency_gateway_charged` alongside it",
-  "no historical artifact's recorded numbers were rewritten; results/outer_loop_arc_early_stop_grace_sweep_20260726.json was REBUILT because the freshness lint correctly flagged the arc_leaderboard_eval.py edit, and the deep diff moved ZERO measured numbers (only run_date/git_head/provenance/checksum)",
-  "nothing was submitted to ARC or Kaggle"
- ],
- "independent_implementation_crosscheck": {
-  "peer_artifact": "results/outer_loop_arc_reset_charge_attribution_20260726.json",
-  "available": true,
-  "peer_sha256": "cf2ae7ad2ea0debab2e55c45dce4e2d8ad58d4320f568db3755ad7aa0ec3dd5d",
-  "field_by_field_peer_vs_mine": {
-   "n_rows_total": {
-    "peer": 1401,
-    "mine": 1401,
-    "agree": true
-   },
-   "n_cells_bounded": {
-    "peer": 485,
-    "mine": 485,
-    "agree": true
-   },
-   "upstream_measurement_wall_s": {
-    "peer": 9126.0,
-    "mine": 9126.0,
-    "agree": true
-   },
-   "worst_case_rel_loss_median": {
-    "peer": 0.113725,
-    "mine": 0.113725,
-    "agree": true
-   },
-   "worst_case_rel_loss_max": {
-    "peer": 0.956551,
-    "mine": 0.956551,
-    "agree": true
-   },
-   "worst_case_abs_width_max": {
-    "peer": 4.290855,
-    "mine": 4.290855,
-    "agree": true
-   },
-   "frames_identity_holds_on_all_rows": {
-    "peer": true,
-    "mine": true,
-    "agree": true
-   }
-  },
-  "n_agreeing": 7,
-  "n_compared": 7,
-  "verdict": "TWO INDEPENDENT IMPLEMENTATIONS AGREE on the corpus size, the bounded-cell count, the frames identity, the upstream measurement clock, and the worst-case relative-loss distribution -- despite different worst-case search methods (exact DP here; exhaustive-for-2-levels + coordinate-descent there) and separately written scorer drivers.",
-  "peer_qualifier_adopted": {
-   "finding": "the peer identified a SECOND clamp this analysis had not isolated: the game-level `min(., max_weights/total_weights*100)` clamp (scorecard.py:204-206). A cell sitting on it has its score set by DEPTH, so extra charged actions cost it NOTHING until a completed level's own (baseline/charged)^2*100 term falls below 100. The peer counts 17 such cells.",
-   "why_it_matters_here": "it is a second, independent reason the exact correction lands near the optimistic end of the bound -- alongside the per-level 115 cap isolated here (the sp80 true-zero cell) and the free post-solve tail."
-  },
-  "where_the_two_differ_in_coverage": "the peer's exact-vs-bound part has 4 cells; this artifact's has 44 across 11 games and 2 budgets, so the distributional statements here are better powered. Conversely the peer measures reset COMPOSITION (where resets come from and which are avoidable), which this artifact does not."
- },
- "scorer_fidelity_crosschecks": {
-  "reset_charge_through_full_chain": {
-   "no_resets_score": 33.333333,
-   "five_resets_before_levelup_score": 14.814815,
-   "reset_is_charged": true,
-   "note": "5 resets before the level-up inflate level 1 from 10 to 15 charged actions"
-  },
-  "post_solve_tail_is_free_through_full_chain": {
-   "tail_0_score": 33.333333,
-   "tail_530_frames_incl_30_resets_score": 33.333333,
-   "tail_is_free": true
-  },
-  "calculator_vs_full_chain_per_signature": {
-   "n_distinct_signatures": 87,
-   "n_agree": 87,
-   "failures": [],
-   "agreement": 1.0,
-   "principle": "Path 1 drives EnvironmentScoreCalculator as _calculate_score does; path 2 builds a real Scorecard/Card through the REAL mutators and scores via from_scorecard. Both are the installed scorer, neither is a paraphrase of the formula. Cell-by-cell agreement is what makes any downstream sensitivity claim mean anything."
-  }
- },
- "part_a_bounds_over_recorded_rows": {
-  "inference_substrate": "aggregation_from_upstream_artifacts",
-  "measurement_wall_s": 9126.0,
-  "measurement_wall_s_principle": "the SUM of each upstream row FILE's own elapsed_s -- the clock of the runs being re-scored. NOT this analyser's runtime (that is duration_s) and NOT the sum of per-cell wall_s (which undercounts ~25%).",
-  "row_sources": [
-   {
-    "path": "results/early_stop_sweep_20260726/rows_b2000.json",
-    "elapsed_s": 4067.4,
-    "n_rows": 450,
-    "sha256": "361aee5362d9f9f8018a37dd204cec1b3ba060e5ac24cd774eccbf78194ae3b1"
-   },
-   {
-    "path": "results/early_stop_sweep_20260726/rows_b400.json",
-    "elapsed_s": 1686.0,
-    "n_rows": 450,
-    "sha256": "a9ff27eba4aea489583a9912d11176b2245008eb5d7dc9708a0a6b66d8ade43f"
-   },
-   {
-    "path": "results/early_stop_sweep_20260726/rows_b4000_stress.json",
-    "elapsed_s": 1984.4,
-    "n_rows": 156,
-    "sha256": "024b8edd8d2dbb1d988e1b0ddde6f2e86d4481bfb7e835b6709d81a78c19f41b"
-   },
-   {
-    "path": "results/early_stop_sweep_20260726/rows_b400_g350.json",
-    "elapsed_s": 276.4,
-    "n_rows": 75,
-    "sha256": "9b56959d7e2134bf8c6111f648edda686ff16610a7cc8efa4b354f582a0c53c8"
-   },
-   {
-    "path": "results/early_stop_sweep_20260726/rows_contention_conc_1.json",
-    "elapsed_s": 152.1,
-    "n_rows": 30,
-    "sha256": "846eba0c1a50ec9619c786b4d453fd007bd55af7cd575983df9e45761e912c12"
-   },
-   {
-    "path": "results/early_stop_sweep_20260726/rows_contention_conc_2.json",
-    "elapsed_s": 153.2,
-    "n_rows": 30,
-    "sha256": "8298ff22b66ce392e69d7bd71802e6661306ab02a88fcb8e954b15e27cc15f2e"
-   },
-   {
-    "path": "results/early_stop_sweep_20260726/rows_contention_conc_3.json",
-    "elapsed_s": 150.1,
-    "n_rows": 30,
-    "sha256": "151183261790294e4297a4c17216c9bc6189bec72010daafdc98d3456d398bd2"
-   },
-   {
-    "path": "results/early_stop_sweep_20260726/rows_contention_serial.json",
-    "elapsed_s": 95.8,
-    "n_rows": 30,
-    "sha256": "f5f333fa0741fe419f9da8a8712e4019c6ef711648cc202a06c340eea454bd5b"
-   },
-   {
-    "path": "results/early_stop_sweep_20260726/rows_reproduction.json",
-    "elapsed_s": 560.6,
-    "n_rows": 150,
-    "sha256": "187351188c9baf0653811031b0e78fae053db72f1cb572b8b985e7c201170e0b"
-   }
-  ],
-  "n_rows_total": 1401,
-  "n_rows_with_a_levelup_and_reset_count": 485,
-  "n_rows_no_levelup_score_zero_either_way": 916,
-  "n_rows_unrescorable": 0,
-  "why_only_a_bound": "the persisted rows record a WHOLE-RUN `n_resets` only. The correction needs the resets attributed PER LEVEL, because the scorer differences cumulative counts. BEST case = every reset lands after the last level-up, where it costs EXACTLY nothing (an incomplete level scores 0.0 whatever it is charged, scorecard.py:178-183) -> the score is unchanged. WORST case = an exact DP allocation of all n_resets across the completed levels.",
-  "worst_case_method": "exact dynamic programming over (level, resets-used). A greedy-on-marginals allocation is computed independently as a cross-check and DISAGREES on 7/485 cells -- always by finding a HIGHER (less pessimal) score, because the 115 cap creates a flat region with zero marginal that greedy refuses to spend into. The DP is therefore the reported bound; greedy is reported as a witness that the naive method is wrong here, not averaged with it.",
-  "greedy_vs_dp_disagreements": 7,
-  "greedy_never_beat_dp": true,
-  "abs_delta_offline_minus_worst_score_points": {
-   "n": 485,
-   "min": 0.0,
-   "p25": 0.000404,
-   "median": 0.000928,
-   "p75": 0.020519,
-   "max": 4.290855,
-   "mean": 0.14421
-  },
-  "rel_delta_fraction_of_offline_score_erased": {
-   "n": 485,
-   "min": 0.0,
-   "p25": 0.062752,
-   "median": 0.113725,
-   "p75": 0.258557,
-   "max": 0.956551,
-   "mean": 0.204208
-  },
-  "verdict": "THE BOUND IS TOO WIDE TO ANSWER THE HEADLINE QUESTION. Per cell the worst case erases between 0% and 95.7% of the offline score (median 11.4%), and its best case is 0% BY CONSTRUCTION -- so bounds alone can establish neither that the optimism is material nor that it is negligible. This is a real answer, and it is exactly what justifies the per-level instrumentation in Part B.",
-  "mechanism_note_cap_region": {
-   "n_cells_whose_first_level_is_at_the_115_cap": 17,
-   "note": "a level solved FASTER than the human baseline by >7.2% sits at the 115 cap, so its score has the most headroom to lose -- and conversely the cap ABSORBS a small reset charge with zero score change. Both effects are visible in Part B."
-  }
- },
- "part_b_exact_attribution_live": {
-  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
-  "part_b_measurement_wall_s": 523.526,
-  "sources": [
-   {
-    "path": "results/early_stop_sweep_20260726/rows_exact_attribution.json",
-    "measurement_wall_s": 79.684,
-    "sha256": "2538fa6d89f2117aff32832219875628dc1ed672544534e1a78fcd664e6a27bb"
-   },
-   {
-    "path": "results/early_stop_sweep_20260726/rows_exact_attribution_b2000.json",
-    "measurement_wall_s": 443.842,
-    "sha256": "cc64fe0e05ffe1e75f332967728fe0114ddd7018a668e508ab0fb84db011fbd4"
-   }
-  ],
-  "n_cells_run": 48,
-  "n_cells_with_a_levelup": 44,
-  "matched_reproduction_witness": {
-   "n_cells_matching_a_recorded_row": 48,
-   "n_fully_matched_on_efficiency_AND_reset_count": 48,
-   "mismatches": [],
-   "principle": "an UNMATCHED re-run would compare two different agents and confound the reset delta with the configuration difference. Reproducing each recorded row's own `efficiency` AND `n_resets` exactly is the witness that the exact gateway numbers attach to the recorded corpus."
-  },
-  "identity_violations": 0,
-  "baselines_nonzero_on_every_cell": true,
-  "baselines_channel_note": "baselines are read via arc_leaderboard_eval._baseline_actions, which goes through `getattr(env, 'info', env)`. A prior agent read `getattr(env, 'baseline_actions')` directly -- a DEAD CHANNEL that summed to 0.0 and made both charge models agree, reading as a clean null. Asserted non-zero per cell here so that cannot recur.",
-  "resets_before_levelups_observed": [
-   {
-    "game": "vc33",
-    "seed": 20260724,
-    "budget": 400,
-    "n_resets_whole_run": 13,
-    "resets_before_each_levelup": [
-     1,
-     1
-    ],
-    "offline_efficiency_unrounded": 2.08973113,
-    "gateway_efficiency_unrounded": 1.9955471,
-    "abs_optimism": 0.09418403,
-    "rel_optimism": 0.04506993
-   },
-   {
-    "game": "vc33",
-    "seed": 20260725,
-    "budget": 400,
-    "n_resets_whole_run": 9,
-    "resets_before_each_levelup": [
-     1,
-     6
-    ],
-    "offline_efficiency_unrounded": 0.62199344,
-    "gateway_efficiency_unrounded": 0.5658871,
-    "abs_optimism": 0.05610634,
-    "rel_optimism": 0.09020406
-   },
-   {
-    "game": "vc33",
-    "seed": 20260726,
-    "budget": 400,
-    "n_resets_whole_run": 12,
-    "resets_before_each_levelup": [
-     1,
-     12
-    ],
-    "offline_efficiency_unrounded": 0.79902925,
-    "gateway_efficiency_unrounded": 0.70349628,
-    "abs_optimism": 0.09553298,
-    "rel_optimism": 0.1195613
-   },
-   {
-    "game": "sp80",
-    "seed": 20260724,
-    "budget": 400,
-    "n_resets_whole_run": 13,
-    "resets_before_each_levelup": [
-     12
-    ],
-    "offline_efficiency_unrounded": 0.05779675,
-    "gateway_efficiency_unrounded": 0.05406893,
-    "abs_optimism": 0.00372782,
-    "rel_optimism": 0.06449879
-   },
-   {
-    "game": "sp80",
-    "seed": 20260725,
-    "budget": 400,
-    "n_resets_whole_run": 11,
-    "resets_before_each_levelup": [
-     8
-    ],
-    "offline_efficiency_unrounded": 0.1267985,
-    "gateway_efficiency_unrounded": 0.11871785,
-    "abs_optimism": 0.00808065,
-    "rel_optimism": 0.0637283
-   },
-   {
-    "game": "sp80",
-    "seed": 20260726,
-    "budget": 400,
-    "n_resets_whole_run": 10,
-    "resets_before_each_levelup": [
-     1
-    ],
-    "offline_efficiency_unrounded": 4.76190476,
-    "gateway_efficiency_unrounded": 4.76190476,
-    "abs_optimism": 0.0,
-    "rel_optimism": 0.0
-   },
-   {
-    "game": "tu93",
-    "seed": 20260724,
-    "budget": 400,
-    "n_resets_whole_run": 11,
-    "resets_before_each_levelup": [
-     8
-    ],
-    "offline_efficiency_unrounded": 0.00719121,
-    "gateway_efficiency_unrounded": 0.00685871,
-    "abs_optimism": 0.0003325,
-    "rel_optimism": 0.04623645
-   },
-   {
-    "game": "tu93",
-    "seed": 20260725,
-    "budget": 400,
-    "n_resets_whole_run": 11,
-    "resets_before_each_levelup": [
-     8
-    ],
-    "offline_efficiency_unrounded": 0.00719121,
-    "gateway_efficiency_unrounded": 0.00685871,
-    "abs_optimism": 0.0003325,
-    "rel_optimism": 0.04623645
-   },
-   {
-    "game": "tu93",
-    "seed": 20260726,
-    "budget": 400,
-    "n_resets_whole_run": 11,
-    "resets_before_each_levelup": [
-     8
-    ],
-    "offline_efficiency_unrounded": 0.00719121,
-    "gateway_efficiency_unrounded": 0.00685871,
-    "abs_optimism": 0.0003325,
-    "rel_optimism": 0.04623645
-   },
-   {
-    "game": "lp85",
-    "seed": 20260726,
-    "budget": 400,
-    "n_resets_whole_run": 3,
-    "resets_before_each_levelup": [
-     1
-    ],
-    "offline_efficiency_unrounded": 0.17361111,
-    "gateway_efficiency_unrounded": 0.16861537,
-    "abs_optimism": 0.00499574,
-    "rel_optimism": 0.02877547
-   },
-   {
-    "game": "cd82",
-    "seed": 20260725,
-    "budget": 400,
-    "n_resets_whole_run": 14,
-    "resets_before_each_levelup": [
-     5
-    ],
-    "offline_efficiency_unrounded": 0.40325752,
-    "gateway_efficiency_unrounded": 0.38273892,
-    "abs_optimism": 0.0205186,
-    "rel_optimism": 0.05088213
-   },
-   {
-    "game": "cd82",
-    "seed": 20260724,
-    "budget": 2000,
-    "n_resets_whole_run": 47,
-    "resets_before_each_levelup": [
-     30,
-     46
-    ],
-    "offline_efficiency_unrounded": 0.02680002,
-    "gateway_efficiency_unrounded": 0.02478112,
-    "abs_optimism": 0.00201891,
-    "rel_optimism": 0.07533225
-   },
-   {
-    "game": "cd82",
-    "seed": 20260725,
-    "budget": 2000,
-    "n_resets_whole_run": 49,
-    "resets_before_each_levelup": [
-     5
-    ],
-    "offline_efficiency_unrounded": 0.40325752,
-    "gateway_efficiency_unrounded": 0.38273892,
-    "abs_optimism": 0.0205186,
-    "rel_optimism": 0.05088213
-   },
-   {
-    "game": "cd82",
-    "seed": 20260726,
-    "budget": 2000,
-    "n_resets_whole_run": 51,
-    "resets_before_each_levelup": [
-     33
-    ],
-    "offline_efficiency_unrounded": 0.01806355,
-    "gateway_efficiency_unrounded": 0.01679903,
-    "abs_optimism": 0.00126453,
-    "rel_optimism": 0.07000429
-   },
-   {
-    "game": "dc22",
-    "seed": 20260724,
-    "budget": 2000,
-    "n_resets_whole_run": 33,
-    "resets_before_each_levelup": [
-     32
-    ],
-    "offline_efficiency_unrounded": 0.00521999,
-    "gateway_efficiency_unrounded": 0.00503744,
-    "abs_optimism": 0.00018254,
-    "rel_optimism": 0.03496996
-   },
-   {
-    "game": "dc22",
-    "seed": 20260725,
-    "budget": 2000,
-    "n_resets_whole_run": 35,
-    "resets_before_each_levelup": [
-     34
-    ],
-    "offline_efficiency_unrounded": 0.00552572,
-    "gateway_efficiency_unrounded": 0.005315,
-    "abs_optimism": 0.00021072,
-    "rel_optimism": 0.03813444
-   },
-   {
-    "game": "dc22",
-    "seed": 20260726,
-    "budget": 2000,
-    "n_resets_whole_run": 34,
-    "resets_before_each_levelup": [
-     33
-    ],
-    "offline_efficiency_unrounded": 0.00513892,
-    "gateway_efficiency_unrounded": 0.00495516,
-    "abs_optimism": 0.00018377,
-    "rel_optimism": 0.03575976
-   },
-   {
-    "game": "ft09",
-    "seed": 20260724,
-    "budget": 2000,
-    "n_resets_whole_run": 18,
-    "resets_before_each_levelup": [
-     18
-    ],
-    "offline_efficiency_unrounded": 0.00229898,
-    "gateway_efficiency_unrounded": 0.00225727,
-    "abs_optimism": 4.171e-05,
-    "rel_optimism": 0.01814478
-   },
-   {
-    "game": "ft09",
-    "seed": 20260725,
-    "budget": 2000,
-    "n_resets_whole_run": 110,
-    "resets_before_each_levelup": [
-     4
-    ],
-    "offline_efficiency_unrounded": 0.0511236,
-    "gateway_efficiency_unrounded": 0.05015215,
-    "abs_optimism": 0.00097145,
-    "rel_optimism": 0.01900194
-   },
-   {
-    "game": "ft09",
-    "seed": 20260726,
-    "budget": 2000,
-    "n_resets_whole_run": 29,
-    "resets_before_each_levelup": [
-     11
-    ],
-    "offline_efficiency_unrounded": 0.00546757,
-    "gateway_efficiency_unrounded": 0.005374,
-    "abs_optimism": 9.357e-05,
-    "rel_optimism": 0.01711365
-   },
-   {
-    "game": "lf52",
-    "seed": 20260724,
-    "budget": 2000,
-    "n_resets_whole_run": 51,
-    "resets_before_each_levelup": [
-     9
-    ],
-    "offline_efficiency_unrounded": 0.00300599,
-    "gateway_efficiency_unrounded": 0.0029384,
-    "abs_optimism": 6.759e-05,
-    "rel_optimism": 0.02248523
-   },
-   {
-    "game": "lf52",
-    "seed": 20260725,
-    "budget": 2000,
-    "n_resets_whole_run": 54,
-    "resets_before_each_levelup": [
-     10
-    ],
-    "offline_efficiency_unrounded": 0.00299077,
-    "gateway_efficiency_unrounded": 0.00291638,
-    "abs_optimism": 7.439e-05,
-    "rel_optimism": 0.02487465
-   },
-   {
-    "game": "lf52",
-    "seed": 20260726,
-    "budget": 2000,
-    "n_resets_whole_run": 76,
-    "resets_before_each_levelup": [
-     8
-    ],
-    "offline_efficiency_unrounded": 0.00365208,
-    "gateway_efficiency_unrounded": 0.0035716,
-    "abs_optimism": 8.048e-05,
-    "rel_optimism": 0.02203789
-   },
-   {
-    "game": "lp85",
-    "seed": 20260724,
-    "budget": 2000,
-    "n_resets_whole_run": 59,
-    "resets_before_each_levelup": [
-     7
-    ],
-    "offline_efficiency_unrounded": 0.00387769,
-    "gateway_efficiency_unrounded": 0.00376107,
-    "abs_optimism": 0.00011662,
-    "rel_optimism": 0.03007346
-   },
-   {
-    "game": "lp85",
-    "seed": 20260725,
-    "budget": 2000,
-    "n_resets_whole_run": 58,
-    "resets_before_each_levelup": [
-     7
-    ],
-    "offline_efficiency_unrounded": 0.00389479,
-    "gateway_efficiency_unrounded": 0.0037774,
-    "abs_optimism": 0.00011738,
-    "rel_optimism": 0.0301382
-   },
-   {
-    "game": "lp85",
-    "seed": 20260726,
-    "budget": 2000,
-    "n_resets_whole_run": 63,
-    "resets_before_each_levelup": [
-     1
-    ],
-    "offline_efficiency_unrounded": 0.17361111,
-    "gateway_efficiency_unrounded": 0.16861537,
-    "abs_optimism": 0.00499574,
-    "rel_optimism": 0.02877547
-   },
-   {
-    "game": "r11l",
-    "seed": 20260724,
-    "budget": 2000,
-    "n_resets_whole_run": 108,
-    "resets_before_each_levelup": [
-     72
-    ],
-    "offline_efficiency_unrounded": 0.00397976,
-    "gateway_efficiency_unrounded": 0.00332151,
-    "abs_optimism": 0.00065824,
-    "rel_optimism": 0.16539821
-   },
-   {
-    "game": "r11l",
-    "seed": 20260725,
-    "budget": 2000,
-    "n_resets_whole_run": 109,
-    "resets_before_each_levelup": [
-     73
-    ],
-    "offline_efficiency_unrounded": 0.00393825,
-    "gateway_efficiency_unrounded": 0.003282,
-    "abs_optimism": 0.00065625,
-    "rel_optimism": 0.16663581
-   },
-   {
-    "game": "r11l",
-    "seed": 20260726,
-    "budget": 2000,
-    "n_resets_whole_run": 110,
-    "resets_before_each_levelup": [
-     74
-    ],
-    "offline_efficiency_unrounded": 0.00390754,
-    "gateway_efficiency_unrounded": 0.00325089,
-    "abs_optimism": 0.00065665,
-    "rel_optimism": 0.16804803
-   },
-   {
-    "game": "s5i5",
-    "seed": 20260724,
-    "budget": 2000,
-    "n_resets_whole_run": 102,
-    "resets_before_each_levelup": [
-     12
-    ],
-    "offline_efficiency_unrounded": 0.00313851,
-    "gateway_efficiency_unrounded": 0.00301564,
-    "abs_optimism": 0.00012287,
-    "rel_optimism": 0.03914789
-   },
-   {
-    "game": "s5i5",
-    "seed": 20260725,
-    "budget": 2000,
-    "n_resets_whole_run": 54,
-    "resets_before_each_levelup": [
-     23
-    ],
-    "offline_efficiency_unrounded": 0.00085197,
-    "gateway_efficiency_unrounded": 0.00081866,
-    "abs_optimism": 3.331e-05,
-    "rel_optimism": 0.03909521
-   },
-   {
-    "game": "s5i5",
-    "seed": 20260726,
-    "budget": 2000,
-    "n_resets_whole_run": 68,
-    "resets_before_each_levelup": [
-     21
-    ],
-    "offline_efficiency_unrounded": 0.00099263,
-    "gateway_efficiency_unrounded": 0.00095437,
-    "abs_optimism": 3.826e-05,
-    "rel_optimism": 0.03854614
-   },
-   {
-    "game": "sp80",
-    "seed": 20260724,
-    "budget": 2000,
-    "n_resets_whole_run": 50,
-    "resets_before_each_levelup": [
-     12
-    ],
-    "offline_efficiency_unrounded": 0.05779675,
-    "gateway_efficiency_unrounded": 0.05406893,
-    "abs_optimism": 0.00372782,
-    "rel_optimism": 0.06449879
-   },
-   {
-    "game": "sp80",
-    "seed": 20260725,
-    "budget": 2000,
-    "n_resets_whole_run": 48,
-    "resets_before_each_levelup": [
-     8
-    ],
-    "offline_efficiency_unrounded": 0.1267985,
-    "gateway_efficiency_unrounded": 0.11871785,
-    "abs_optimism": 0.00808065,
-    "rel_optimism": 0.0637283
-   },
-   {
-    "game": "sp80",
-    "seed": 20260726,
-    "budget": 2000,
-    "n_resets_whole_run": 50,
-    "resets_before_each_levelup": [
-     1
-    ],
-    "offline_efficiency_unrounded": 4.76190476,
-    "gateway_efficiency_unrounded": 4.76190476,
-    "abs_optimism": 0.0,
-    "rel_optimism": 0.0
-   },
-   {
-    "game": "su15",
-    "seed": 20260724,
-    "budget": 2000,
-    "n_resets_whole_run": 43,
-    "resets_before_each_levelup": [
-     14
-    ],
-    "offline_efficiency_unrounded": 0.00499571,
-    "gateway_efficiency_unrounded": 0.00470736,
-    "abs_optimism": 0.00028835,
-    "rel_optimism": 0.05771958
-   },
-   {
-    "game": "su15",
-    "seed": 20260725,
-    "budget": 2000,
-    "n_resets_whole_run": 47,
-    "resets_before_each_levelup": [
-     16
-    ],
-    "offline_efficiency_unrounded": 0.00344199,
-    "gateway_efficiency_unrounded": 0.0032531,
-    "abs_optimism": 0.00018889,
-    "rel_optimism": 0.05487788
-   },
-   {
-    "game": "su15",
-    "seed": 20260726,
-    "budget": 2000,
-    "n_resets_whole_run": 40,
-    "resets_before_each_levelup": [
-     13
-    ],
-    "offline_efficiency_unrounded": 0.00535891,
-    "gateway_efficiency_unrounded": 0.00506094,
-    "abs_optimism": 0.00029798,
-    "rel_optimism": 0.05560392
-   },
-   {
-    "game": "tu93",
-    "seed": 20260724,
-    "budget": 2000,
-    "n_resets_whole_run": 90,
-    "resets_before_each_levelup": [
-     8,
-     78
-    ],
-    "offline_efficiency_unrounded": 0.00797609,
-    "gateway_efficiency_unrounded": 0.00755971,
-    "abs_optimism": 0.00041638,
-    "rel_optimism": 0.05220317
-   },
-   {
-    "game": "tu93",
-    "seed": 20260725,
-    "budget": 2000,
-    "n_resets_whole_run": 90,
-    "resets_before_each_levelup": [
-     8,
-     78
-    ],
-    "offline_efficiency_unrounded": 0.00797609,
-    "gateway_efficiency_unrounded": 0.00755971,
-    "abs_optimism": 0.00041638,
-    "rel_optimism": 0.05220317
-   },
-   {
-    "game": "tu93",
-    "seed": 20260726,
-    "budget": 2000,
-    "n_resets_whole_run": 90,
-    "resets_before_each_levelup": [
-     8,
-     78
-    ],
-    "offline_efficiency_unrounded": 0.00797609,
-    "gateway_efficiency_unrounded": 0.00755971,
-    "abs_optimism": 0.00041638,
-    "rel_optimism": 0.05220317
-   },
-   {
-    "game": "vc33",
-    "seed": 20260724,
-    "budget": 2000,
-    "n_resets_whole_run": 88,
-    "resets_before_each_levelup": [
-     1,
-     1
-    ],
-    "offline_efficiency_unrounded": 2.08973113,
-    "gateway_efficiency_unrounded": 1.9955471,
-    "abs_optimism": 0.09418403,
-    "rel_optimism": 0.04506993
-   },
-   {
-    "game": "vc33",
-    "seed": 20260725,
-    "budget": 2000,
-    "n_resets_whole_run": 73,
-    "resets_before_each_levelup": [
-     1,
-     6
-    ],
-    "offline_efficiency_unrounded": 0.62199344,
-    "gateway_efficiency_unrounded": 0.5658871,
-    "abs_optimism": 0.05610634,
-    "rel_optimism": 0.09020406
-   },
-   {
-    "game": "vc33",
-    "seed": 20260726,
-    "budget": 2000,
-    "n_resets_whole_run": 66,
-    "resets_before_each_levelup": [
-     1,
-     12
-    ],
-    "offline_efficiency_unrounded": 0.79902925,
-    "gateway_efficiency_unrounded": 0.70349628,
-    "abs_optimism": 0.09553298,
-    "rel_optimism": 0.1195613
-   }
-  ],
-  "abs_optimism_score_points": {
-   "n": 44,
-   "min": 0.0,
-   "p25": 0.000121,
-   "median": 0.000416,
-   "p75": 0.004996,
-   "max": 0.095533,
-   "mean": 0.013111
-  },
-  "rel_optimism_fraction_of_offline_score": {
-   "n": 44,
-   "min": 0.0,
-   "p25": 0.030122,
-   "median": 0.046236,
-   "p75": 0.063921,
-   "max": 0.168048,
-   "mean": 0.055543
-  },
-  "rel_optimism_PER_GAME_the_replication_unit": {
-   "n": 11,
-   "min": 0.018145,
-   "p25": 0.032592,
-   "median": 0.04922,
-   "p75": 0.062086,
-   "max": 0.166636,
-   "mean": 0.05734,
-   "n_games": 11,
-   "per_game_median": {
-    "cd82": 0.060443,
-    "dc22": 0.03576,
-    "ft09": 0.018145,
-    "lf52": 0.022485,
-    "lp85": 0.029424,
-    "r11l": 0.166636,
-    "s5i5": 0.039095,
-    "sp80": 0.063728,
-    "su15": 0.055604,
-    "tu93": 0.04922,
-    "vc33": 0.090204
-   },
-   "agrees_with_the_per_cell_median": true,
-   "principle": "if the per-game and per-cell medians diverged, the per-cell number would be an artifact of which games got repeated. They agree here (4.92% vs 4.62%), so the conclusion survives the unit change -- but the per-game n is 11, not 44, and any interval should be computed on 11.",
-   "n_distinct_values_per_game": {
-    "cd82": 3,
-    "dc22": 3,
-    "ft09": 3,
-    "lf52": 3,
-    "lp85": 3,
-    "r11l": 3,
-    "s5i5": 3,
-    "sp80": 3,
-    "su15": 3,
-    "tu93": 2,
-    "vc33": 3
-   },
-   "seed_degeneracy_note": "tu93 yields only 2 distinct optimism values across 6 cells (identical across all three seeds at each budget) -- its explorer is effectively deterministic on this game, so its 3 seeds are 1 observation, not 3."
-  },
-  "n_cells_with_zero_optimism": 2,
-  "n_cells_with_nonzero_optimism": 42,
-  "precision_hazard_found_and_corrected": {
-   "n_cells_whose_delta_the_4dp_rounding_erased": 2,
-   "cells": [
+  "corpora_that_cannot_be_rescored_at_all": [
     {
-     "game": "ft09",
-     "seed": 20260724,
-     "budget": 2000,
-     "rounded_rel_optimism": 0.0,
-     "unrounded_rel_optimism": 0.01814478
+      "glob": "results/cptb_20260726_cells/*.jsonl.gz",
+      "n_files": 32,
+      "n_cells": 1713,
+      "reason": "declares `action_count_convention: resets_excluded_run_game_native` but records NO reset count and NO level_up_actions -- the quantity the correction needs was never persisted, so these cells CANNOT be gateway-re-scored at any width. Reported as a coverage hole."
+    }
+  ],
+  "headline": {
+    "question": "By how much are our ARC score estimates optimistic because the offline harness did not charge RESETs, and is the answer materially different from zero?",
+    "answer_from_bounds_alone": "THE BOUND IS TOO WIDE TO ANSWER THE HEADLINE QUESTION. Per cell the worst case erases between 0% and 95.7% of the offline score (median 11.4%), and its best case is 0% BY CONSTRUCTION -- so bounds alone can establish neither that the optimism is material nor that it is negligible. This is a real answer, and it is exactly what justifies the per-level instrumentation in Part B.",
+    "answer_from_exact_measurement": "MATERIALLY DIFFERENT FROM ZERO BUT SMALL. On 44 matched live cells spanning 11 games and 2 budgets, the optimism is 4.62% of the per-game score at the median and at most 16.80%; 42/44 cells are non-zero, and the only two zeros are structural (the 115 cap absorbing a single reset), not rounding. On the GAME as the replication unit (n=11) the median is 4.92%, range 1.81%-16.66% -- the same answer, so it does not rest on which games were repeated. In absolute terms the correction is 0.0004 score points at the median (max 0.0955), which is small only because most of these games score near zero to begin with.",
+    "why_reality_sits_at_the_optimistic_end_of_the_bound": "level-ups happen EARLY and the resets concentrate in the POST-SOLVE TAIL, which is free. Measured across both budgets: whole-run reset counts of 3-110, but only a fraction land before a level-up (vc33 b2000: 1 of 88; ft09: 4 of 110), and those that do land on an already-large denominator. The worst-case bound assumed ALL resets precede a level-up, which is not how this agent behaves. The counter-example matters too: r11l charges 72-74 of its ~109 resets BEFORE its single level-up and is correspondingly the worst-hit game at 15.4-17.5%.",
+    "dose_response_the_correction_tracks_resets_before_the_levelup": "not the whole-run reset count. r11l (109 resets, 72 before) is hit 4x harder than ft09/seed-20260725 (110 resets, 4 before). Any future estimate of this correction must use the per-level attribution, not `n_resets` -- which is exactly why the bound over `n_resets` alone was uninformative.",
+    "no_conclusion_reordered": "a single-digit-percent haircut on the efficiency term does not change the settled structural facts: DEPTH dominates (1/2/4/8 of 8 levels -> 2.78/8.33/27.78/100), a per-game score can never exceed 100, and the post-solve tail is free. It does mean every per-level efficiency figure this project quotes should be read as an upper estimate, with the size of the overstatement now measured rather than unknown."
+  },
+  "cross_check_against_the_actual_hidden_score": {
+    "actual_hidden_score": 0.08,
+    "actual_hidden_score_ref": "public leaderboard 0.08, 2026-06-19 23:40Z, ref 53862349, 'carnot v1.1', kernel v3 (flat v3->v5); recorded ops/known-issues.md:3275",
+    "offline_public_set_mean_per_game": {
+      "n": 57,
+      "min": 0.03899,
+      "p25": 0.086189,
+      "median": 0.088299,
+      "p75": 0.228819,
+      "max": 0.445457,
+      "mean": 0.141893
+    },
+    "worst_case_public_set_mean_per_game": {
+      "n": 57,
+      "min": 0.016519,
+      "p25": 0.03459,
+      "median": 0.056849,
+      "p75": 0.082244,
+      "max": 0.389471,
+      "mean": 0.083445
+    },
+    "does_the_correction_narrow_the_gap": false,
+    "verdict": "NO -- AND THE HONEST READING IS THAT THIS TEST HAS ALMOST NO POWER, SO ITS NON-CORROBORATION IS NOT EVIDENCE AGAINST THE CORRECTION EITHER. The offline PUBLIC-set mean-per-game score is 0.0883 at the median, which is already near-identical to the actual HIDDEN score of 0.08. Applying the worst-case reset correction moves it DOWN to 0.0568 -- AWAY from the observed value, not toward it. So on this evidence the correction does not explain any offline-vs-hidden gap.",
+    "why_the_test_has_almost_no_power": [
+      "DIFFERENT GAME SETS. The offline corpus is the 25 PUBLIC games; 0.08 was scored on HIDDEN OOD games. The two numbers landing near each other is a coincidence of very different mechanisms, not a calibration.",
+      "DIFFERENT DOMINANT TERM. The hidden score is dominated by whether the agent wins ANY level at all (held-out proxy first_win_rate_integrated = 0.04, CI [0,0], ops/known-issues.md:3275-3279), whereas 11 of 25 public games reach a level. The reset correction only touches the efficiency of levels that WERE solved, so it cannot move a score whose limiting factor is winning nothing.",
+      "DIFFERENT AGENT CONFIGURATION. Every recorded row is the LLM-OFF arm; the submitted kernel ran with the generator enabled.",
+      "A ONE-POINT COMPARISON. One hidden submission is a single observation with no interval; nothing about it can distinguish a 5% efficiency correction."
+    ],
+    "what_would_make_this_test_informative": "gateway-charged re-scoring of a HIDDEN-set run's own per-level reset attribution, which requires the instrumentation to be present in a submitted kernel -- an operator decision, not measurable from here."
+  },
+  "scope_and_power": {
+    "part_a_scope": "485 of 1401 recorded rows carry both a level-up and a reset count",
+    "part_b_scope": "44 matched live cells with a level-up, across 11 games ['cd82', 'dc22', 'ft09', 'lf52', 'lp85', 'r11l', 's5i5', 'sp80', 'su15', 'tu93', 'vc33'], budgets [400, 2000], seeds [20260724, 20260725, 20260726]",
+    "single_game_concentration_warning": "the Part A corpus score is heavily concentrated: vc33 alone carries the large per-game scores (median offline 2.09 vs <0.03 for most games), so a corpus-level relative delta is a statement about vc33 more than about the corpus. Part B's per-cell numbers are reported individually for exactly this reason -- read the per-cell table, not only the median.",
+    "what_this_does_NOT_measure": [
+      "the hidden set. Every number here is the 25 public games via the offline arcade.",
+      "the LLM-ON configuration.",
+      "whether a policy could actually have produced the worst-case reset placement -- the Part A bound is accounting-only and therefore conservative (a true lower bound on the score).",
+      "the 1713 cptb cells and 375 budget-sweep rows, which record no reset count at all."
+    ]
+  },
+  "what_was_NOT_changed": [
+    "no SUBMITTED_* flag and no MAX_ACTIONS value was touched -- this measures and reports; the flag decision is the operator's",
+    "the pre-existing `efficiency` field keeps its offline (reset-free) semantics; the gateway number is a NEW field `efficiency_gateway_charged` alongside it",
+    "no historical artifact's recorded numbers were rewritten; results/outer_loop_arc_early_stop_grace_sweep_20260726.json was REBUILT because the freshness lint correctly flagged the arc_leaderboard_eval.py edit, and the deep diff moved ZERO measured numbers (only run_date/git_head/provenance/checksum)",
+    "nothing was submitted to ARC or Kaggle"
+  ],
+  "independent_implementation_crosscheck": {
+    "peer_artifact": "results/outer_loop_arc_reset_charge_attribution_20260726.json",
+    "available": true,
+    "peer_sha256": "cf2ae7ad2ea0debab2e55c45dce4e2d8ad58d4320f568db3755ad7aa0ec3dd5d",
+    "field_by_field_peer_vs_mine": {
+      "n_rows_total": {
+        "peer": 1401,
+        "mine": 1401,
+        "agree": true
+      },
+      "n_cells_bounded": {
+        "peer": 485,
+        "mine": 485,
+        "agree": true
+      },
+      "upstream_measurement_wall_s": {
+        "peer": 9126.0,
+        "mine": 9126.0,
+        "agree": true
+      },
+      "worst_case_rel_loss_median": {
+        "peer": 0.113725,
+        "mine": 0.113725,
+        "agree": true
+      },
+      "worst_case_rel_loss_max": {
+        "peer": 0.956551,
+        "mine": 0.956551,
+        "agree": true
+      },
+      "worst_case_abs_width_max": {
+        "peer": 4.290855,
+        "mine": 4.290855,
+        "agree": true
+      },
+      "frames_identity_holds_on_all_rows": {
+        "peer": true,
+        "mine": true,
+        "agree": true
+      }
+    },
+    "n_agreeing": 7,
+    "n_compared": 7,
+    "verdict": "TWO INDEPENDENT IMPLEMENTATIONS AGREE on the corpus size, the bounded-cell count, the frames identity, the upstream measurement clock, and the worst-case relative-loss distribution -- despite different worst-case search methods (exact DP here; exhaustive-for-2-levels + coordinate-descent there) and separately written scorer drivers.",
+    "peer_qualifier_adopted": {
+      "finding": "the peer identified a SECOND clamp this analysis had not isolated: the game-level `min(., max_weights/total_weights*100)` clamp (scorecard.py:204-206). A cell sitting on it has its score set by DEPTH, so extra charged actions cost it NOTHING until a completed level's own (baseline/charged)^2*100 term falls below 100. The peer counts 17 such cells.",
+      "why_it_matters_here": "it is a second, independent reason the exact correction lands near the optimistic end of the bound -- alongside the per-level 115 cap isolated here (the sp80 true-zero cell) and the free post-solve tail."
+    },
+    "where_the_two_differ_in_coverage": "the peer's exact-vs-bound part has 4 cells; this artifact's has 44 across 11 games and 2 budgets, so the distributional statements here are better powered. Conversely the peer measures reset COMPOSITION (where resets come from and which are avoidable), which this artifact does not."
+  },
+  "scorer_fidelity_crosschecks": {
+    "reset_charge_through_full_chain": {
+      "no_resets_score": 33.333333,
+      "five_resets_before_levelup_score": 14.814815,
+      "reset_is_charged": true,
+      "note": "5 resets before the level-up inflate level 1 from 10 to 15 charged actions"
+    },
+    "post_solve_tail_is_free_through_full_chain": {
+      "tail_0_score": 33.333333,
+      "tail_530_frames_incl_30_resets_score": 33.333333,
+      "tail_is_free": true
+    },
+    "calculator_vs_full_chain_per_signature": {
+      "n_distinct_signatures": 87,
+      "n_agree": 87,
+      "failures": [],
+      "agreement": 1.0,
+      "principle": "Path 1 drives EnvironmentScoreCalculator as _calculate_score does; path 2 builds a real Scorecard/Card through the REAL mutators and scores via from_scorecard. Both are the installed scorer, neither is a paraphrase of the formula. Cell-by-cell agreement is what makes any downstream sensitivity claim mean anything."
+    }
+  },
+  "part_a_bounds_over_recorded_rows": {
+    "inference_substrate": "aggregation_from_upstream_artifacts",
+    "measurement_wall_s": 9126.0,
+    "measurement_wall_s_principle": "the SUM of each upstream row FILE's own elapsed_s -- the clock of the runs being re-scored. NOT this analyser's runtime (that is duration_s) and NOT the sum of per-cell wall_s (which undercounts ~25%).",
+    "row_sources": [
+      {
+        "path": "results/early_stop_sweep_20260726/rows_b2000.json",
+        "elapsed_s": 4067.4,
+        "n_rows": 450,
+        "sha256": "361aee5362d9f9f8018a37dd204cec1b3ba060e5ac24cd774eccbf78194ae3b1"
+      },
+      {
+        "path": "results/early_stop_sweep_20260726/rows_b400.json",
+        "elapsed_s": 1686.0,
+        "n_rows": 450,
+        "sha256": "a9ff27eba4aea489583a9912d11176b2245008eb5d7dc9708a0a6b66d8ade43f"
+      },
+      {
+        "path": "results/early_stop_sweep_20260726/rows_b4000_stress.json",
+        "elapsed_s": 1984.4,
+        "n_rows": 156,
+        "sha256": "024b8edd8d2dbb1d988e1b0ddde6f2e86d4481bfb7e835b6709d81a78c19f41b"
+      },
+      {
+        "path": "results/early_stop_sweep_20260726/rows_b400_g350.json",
+        "elapsed_s": 276.4,
+        "n_rows": 75,
+        "sha256": "9b56959d7e2134bf8c6111f648edda686ff16610a7cc8efa4b354f582a0c53c8"
+      },
+      {
+        "path": "results/early_stop_sweep_20260726/rows_contention_conc_1.json",
+        "elapsed_s": 152.1,
+        "n_rows": 30,
+        "sha256": "846eba0c1a50ec9619c786b4d453fd007bd55af7cd575983df9e45761e912c12"
+      },
+      {
+        "path": "results/early_stop_sweep_20260726/rows_contention_conc_2.json",
+        "elapsed_s": 153.2,
+        "n_rows": 30,
+        "sha256": "8298ff22b66ce392e69d7bd71802e6661306ab02a88fcb8e954b15e27cc15f2e"
+      },
+      {
+        "path": "results/early_stop_sweep_20260726/rows_contention_conc_3.json",
+        "elapsed_s": 150.1,
+        "n_rows": 30,
+        "sha256": "151183261790294e4297a4c17216c9bc6189bec72010daafdc98d3456d398bd2"
+      },
+      {
+        "path": "results/early_stop_sweep_20260726/rows_contention_serial.json",
+        "elapsed_s": 95.8,
+        "n_rows": 30,
+        "sha256": "f5f333fa0741fe419f9da8a8712e4019c6ef711648cc202a06c340eea454bd5b"
+      },
+      {
+        "path": "results/early_stop_sweep_20260726/rows_reproduction.json",
+        "elapsed_s": 560.6,
+        "n_rows": 150,
+        "sha256": "187351188c9baf0653811031b0e78fae053db72f1cb572b8b985e7c201170e0b"
+      }
+    ],
+    "n_rows_total": 1401,
+    "n_rows_with_a_levelup_and_reset_count": 485,
+    "n_rows_no_levelup_score_zero_either_way": 916,
+    "n_rows_unrescorable": 0,
+    "why_only_a_bound": "the persisted rows record a WHOLE-RUN `n_resets` only. The correction needs the resets attributed PER LEVEL, because the scorer differences cumulative counts. BEST case = every reset lands after the last level-up, where it costs EXACTLY nothing (an incomplete level scores 0.0 whatever it is charged, scorecard.py:178-183) -> the score is unchanged. WORST case = an exact DP allocation of all n_resets across the completed levels.",
+    "worst_case_method": "exact dynamic programming over (level, resets-used). A greedy-on-marginals allocation is computed independently as a cross-check and DISAGREES on 7/485 cells -- always by finding a HIGHER (less pessimal) score, because the 115 cap creates a flat region with zero marginal that greedy refuses to spend into. The DP is therefore the reported bound; greedy is reported as a witness that the naive method is wrong here, not averaged with it.",
+    "greedy_vs_dp_disagreements": 7,
+    "greedy_never_beat_dp": true,
+    "abs_delta_offline_minus_worst_score_points": {
+      "n": 485,
+      "min": 0.0,
+      "p25": 0.000404,
+      "median": 0.000928,
+      "p75": 0.020519,
+      "max": 4.290855,
+      "mean": 0.14421
+    },
+    "rel_delta_fraction_of_offline_score_erased": {
+      "n": 485,
+      "min": 0.0,
+      "p25": 0.062752,
+      "median": 0.113725,
+      "p75": 0.258557,
+      "max": 0.956551,
+      "mean": 0.204208
+    },
+    "verdict": "THE BOUND IS TOO WIDE TO ANSWER THE HEADLINE QUESTION. Per cell the worst case erases between 0% and 95.7% of the offline score (median 11.4%), and its best case is 0% BY CONSTRUCTION -- so bounds alone can establish neither that the optimism is material nor that it is negligible. This is a real answer, and it is exactly what justifies the per-level instrumentation in Part B.",
+    "mechanism_note_cap_region": {
+      "n_cells_whose_first_level_is_at_the_115_cap": 17,
+      "note": "a level solved FASTER than the human baseline by >7.2% sits at the 115 cap, so its score has the most headroom to lose -- and conversely the cap ABSORBS a small reset charge with zero score change. Both effects are visible in Part B."
+    }
+  },
+  "part_b_exact_attribution_live": {
+    "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+    "part_b_measurement_wall_s": 523.526,
+    "sources": [
+      {
+        "path": "results/early_stop_sweep_20260726/rows_exact_attribution.json",
+        "measurement_wall_s": 79.684,
+        "sha256": "2538fa6d89f2117aff32832219875628dc1ed672544534e1a78fcd664e6a27bb"
+      },
+      {
+        "path": "results/early_stop_sweep_20260726/rows_exact_attribution_b2000.json",
+        "measurement_wall_s": 443.842,
+        "sha256": "cc64fe0e05ffe1e75f332967728fe0114ddd7018a668e508ab0fb84db011fbd4"
+      }
+    ],
+    "n_cells_run": 48,
+    "n_cells_with_a_levelup": 44,
+    "matched_reproduction_witness": {
+      "n_cells_matching_a_recorded_row": 48,
+      "n_fully_matched_on_efficiency_AND_reset_count": 48,
+      "mismatches": [],
+      "principle": "an UNMATCHED re-run would compare two different agents and confound the reset delta with the configuration difference. Reproducing each recorded row's own `efficiency` AND `n_resets` exactly is the witness that the exact gateway numbers attach to the recorded corpus."
+    },
+    "identity_violations": 0,
+    "baselines_nonzero_on_every_cell": true,
+    "baselines_channel_note": "baselines are read via arc_leaderboard_eval._baseline_actions, which goes through `getattr(env, 'info', env)`. A prior agent read `getattr(env, 'baseline_actions')` directly -- a DEAD CHANNEL that summed to 0.0 and made both charge models agree, reading as a clean null. Asserted non-zero per cell here so that cannot recur.",
+    "resets_before_levelups_observed": [
+      {
+        "game": "vc33",
+        "seed": 20260724,
+        "budget": 400,
+        "n_resets_whole_run": 13,
+        "resets_before_each_levelup": [
+          1,
+          1
+        ],
+        "offline_efficiency_unrounded": 2.08973113,
+        "gateway_efficiency_unrounded": 1.9955471,
+        "abs_optimism": 0.09418403,
+        "rel_optimism": 0.04506993
+      },
+      {
+        "game": "vc33",
+        "seed": 20260725,
+        "budget": 400,
+        "n_resets_whole_run": 9,
+        "resets_before_each_levelup": [
+          1,
+          6
+        ],
+        "offline_efficiency_unrounded": 0.62199344,
+        "gateway_efficiency_unrounded": 0.5658871,
+        "abs_optimism": 0.05610634,
+        "rel_optimism": 0.09020406
+      },
+      {
+        "game": "vc33",
+        "seed": 20260726,
+        "budget": 400,
+        "n_resets_whole_run": 12,
+        "resets_before_each_levelup": [
+          1,
+          12
+        ],
+        "offline_efficiency_unrounded": 0.79902925,
+        "gateway_efficiency_unrounded": 0.70349628,
+        "abs_optimism": 0.09553298,
+        "rel_optimism": 0.1195613
+      },
+      {
+        "game": "sp80",
+        "seed": 20260724,
+        "budget": 400,
+        "n_resets_whole_run": 13,
+        "resets_before_each_levelup": [
+          12
+        ],
+        "offline_efficiency_unrounded": 0.05779675,
+        "gateway_efficiency_unrounded": 0.05406893,
+        "abs_optimism": 0.00372782,
+        "rel_optimism": 0.06449879
+      },
+      {
+        "game": "sp80",
+        "seed": 20260725,
+        "budget": 400,
+        "n_resets_whole_run": 11,
+        "resets_before_each_levelup": [
+          8
+        ],
+        "offline_efficiency_unrounded": 0.1267985,
+        "gateway_efficiency_unrounded": 0.11871785,
+        "abs_optimism": 0.00808065,
+        "rel_optimism": 0.0637283
+      },
+      {
+        "game": "sp80",
+        "seed": 20260726,
+        "budget": 400,
+        "n_resets_whole_run": 10,
+        "resets_before_each_levelup": [
+          1
+        ],
+        "offline_efficiency_unrounded": 4.76190476,
+        "gateway_efficiency_unrounded": 4.76190476,
+        "abs_optimism": 0.0,
+        "rel_optimism": 0.0
+      },
+      {
+        "game": "tu93",
+        "seed": 20260724,
+        "budget": 400,
+        "n_resets_whole_run": 11,
+        "resets_before_each_levelup": [
+          8
+        ],
+        "offline_efficiency_unrounded": 0.00719121,
+        "gateway_efficiency_unrounded": 0.00685871,
+        "abs_optimism": 0.0003325,
+        "rel_optimism": 0.04623645
+      },
+      {
+        "game": "tu93",
+        "seed": 20260725,
+        "budget": 400,
+        "n_resets_whole_run": 11,
+        "resets_before_each_levelup": [
+          8
+        ],
+        "offline_efficiency_unrounded": 0.00719121,
+        "gateway_efficiency_unrounded": 0.00685871,
+        "abs_optimism": 0.0003325,
+        "rel_optimism": 0.04623645
+      },
+      {
+        "game": "tu93",
+        "seed": 20260726,
+        "budget": 400,
+        "n_resets_whole_run": 11,
+        "resets_before_each_levelup": [
+          8
+        ],
+        "offline_efficiency_unrounded": 0.00719121,
+        "gateway_efficiency_unrounded": 0.00685871,
+        "abs_optimism": 0.0003325,
+        "rel_optimism": 0.04623645
+      },
+      {
+        "game": "lp85",
+        "seed": 20260726,
+        "budget": 400,
+        "n_resets_whole_run": 3,
+        "resets_before_each_levelup": [
+          1
+        ],
+        "offline_efficiency_unrounded": 0.17361111,
+        "gateway_efficiency_unrounded": 0.16861537,
+        "abs_optimism": 0.00499574,
+        "rel_optimism": 0.02877547
+      },
+      {
+        "game": "cd82",
+        "seed": 20260725,
+        "budget": 400,
+        "n_resets_whole_run": 14,
+        "resets_before_each_levelup": [
+          5
+        ],
+        "offline_efficiency_unrounded": 0.40325752,
+        "gateway_efficiency_unrounded": 0.38273892,
+        "abs_optimism": 0.0205186,
+        "rel_optimism": 0.05088213
+      },
+      {
+        "game": "cd82",
+        "seed": 20260724,
+        "budget": 2000,
+        "n_resets_whole_run": 47,
+        "resets_before_each_levelup": [
+          30,
+          46
+        ],
+        "offline_efficiency_unrounded": 0.02680002,
+        "gateway_efficiency_unrounded": 0.02478112,
+        "abs_optimism": 0.00201891,
+        "rel_optimism": 0.07533225
+      },
+      {
+        "game": "cd82",
+        "seed": 20260725,
+        "budget": 2000,
+        "n_resets_whole_run": 49,
+        "resets_before_each_levelup": [
+          5
+        ],
+        "offline_efficiency_unrounded": 0.40325752,
+        "gateway_efficiency_unrounded": 0.38273892,
+        "abs_optimism": 0.0205186,
+        "rel_optimism": 0.05088213
+      },
+      {
+        "game": "cd82",
+        "seed": 20260726,
+        "budget": 2000,
+        "n_resets_whole_run": 51,
+        "resets_before_each_levelup": [
+          33
+        ],
+        "offline_efficiency_unrounded": 0.01806355,
+        "gateway_efficiency_unrounded": 0.01679903,
+        "abs_optimism": 0.00126453,
+        "rel_optimism": 0.07000429
+      },
+      {
+        "game": "dc22",
+        "seed": 20260724,
+        "budget": 2000,
+        "n_resets_whole_run": 33,
+        "resets_before_each_levelup": [
+          32
+        ],
+        "offline_efficiency_unrounded": 0.00521999,
+        "gateway_efficiency_unrounded": 0.00503744,
+        "abs_optimism": 0.00018254,
+        "rel_optimism": 0.03496996
+      },
+      {
+        "game": "dc22",
+        "seed": 20260725,
+        "budget": 2000,
+        "n_resets_whole_run": 35,
+        "resets_before_each_levelup": [
+          34
+        ],
+        "offline_efficiency_unrounded": 0.00552572,
+        "gateway_efficiency_unrounded": 0.005315,
+        "abs_optimism": 0.00021072,
+        "rel_optimism": 0.03813444
+      },
+      {
+        "game": "dc22",
+        "seed": 20260726,
+        "budget": 2000,
+        "n_resets_whole_run": 34,
+        "resets_before_each_levelup": [
+          33
+        ],
+        "offline_efficiency_unrounded": 0.00513892,
+        "gateway_efficiency_unrounded": 0.00495516,
+        "abs_optimism": 0.00018377,
+        "rel_optimism": 0.03575976
+      },
+      {
+        "game": "ft09",
+        "seed": 20260724,
+        "budget": 2000,
+        "n_resets_whole_run": 18,
+        "resets_before_each_levelup": [
+          18
+        ],
+        "offline_efficiency_unrounded": 0.00229898,
+        "gateway_efficiency_unrounded": 0.00225727,
+        "abs_optimism": 4.171e-05,
+        "rel_optimism": 0.01814478
+      },
+      {
+        "game": "ft09",
+        "seed": 20260725,
+        "budget": 2000,
+        "n_resets_whole_run": 110,
+        "resets_before_each_levelup": [
+          4
+        ],
+        "offline_efficiency_unrounded": 0.0511236,
+        "gateway_efficiency_unrounded": 0.05015215,
+        "abs_optimism": 0.00097145,
+        "rel_optimism": 0.01900194
+      },
+      {
+        "game": "ft09",
+        "seed": 20260726,
+        "budget": 2000,
+        "n_resets_whole_run": 29,
+        "resets_before_each_levelup": [
+          11
+        ],
+        "offline_efficiency_unrounded": 0.00546757,
+        "gateway_efficiency_unrounded": 0.005374,
+        "abs_optimism": 9.357e-05,
+        "rel_optimism": 0.01711365
+      },
+      {
+        "game": "lf52",
+        "seed": 20260724,
+        "budget": 2000,
+        "n_resets_whole_run": 51,
+        "resets_before_each_levelup": [
+          9
+        ],
+        "offline_efficiency_unrounded": 0.00300599,
+        "gateway_efficiency_unrounded": 0.0029384,
+        "abs_optimism": 6.759e-05,
+        "rel_optimism": 0.02248523
+      },
+      {
+        "game": "lf52",
+        "seed": 20260725,
+        "budget": 2000,
+        "n_resets_whole_run": 54,
+        "resets_before_each_levelup": [
+          10
+        ],
+        "offline_efficiency_unrounded": 0.00299077,
+        "gateway_efficiency_unrounded": 0.00291638,
+        "abs_optimism": 7.439e-05,
+        "rel_optimism": 0.02487465
+      },
+      {
+        "game": "lf52",
+        "seed": 20260726,
+        "budget": 2000,
+        "n_resets_whole_run": 76,
+        "resets_before_each_levelup": [
+          8
+        ],
+        "offline_efficiency_unrounded": 0.00365208,
+        "gateway_efficiency_unrounded": 0.0035716,
+        "abs_optimism": 8.048e-05,
+        "rel_optimism": 0.02203789
+      },
+      {
+        "game": "lp85",
+        "seed": 20260724,
+        "budget": 2000,
+        "n_resets_whole_run": 59,
+        "resets_before_each_levelup": [
+          7
+        ],
+        "offline_efficiency_unrounded": 0.00387769,
+        "gateway_efficiency_unrounded": 0.00376107,
+        "abs_optimism": 0.00011662,
+        "rel_optimism": 0.03007346
+      },
+      {
+        "game": "lp85",
+        "seed": 20260725,
+        "budget": 2000,
+        "n_resets_whole_run": 58,
+        "resets_before_each_levelup": [
+          7
+        ],
+        "offline_efficiency_unrounded": 0.00389479,
+        "gateway_efficiency_unrounded": 0.0037774,
+        "abs_optimism": 0.00011738,
+        "rel_optimism": 0.0301382
+      },
+      {
+        "game": "lp85",
+        "seed": 20260726,
+        "budget": 2000,
+        "n_resets_whole_run": 63,
+        "resets_before_each_levelup": [
+          1
+        ],
+        "offline_efficiency_unrounded": 0.17361111,
+        "gateway_efficiency_unrounded": 0.16861537,
+        "abs_optimism": 0.00499574,
+        "rel_optimism": 0.02877547
+      },
+      {
+        "game": "r11l",
+        "seed": 20260724,
+        "budget": 2000,
+        "n_resets_whole_run": 108,
+        "resets_before_each_levelup": [
+          72
+        ],
+        "offline_efficiency_unrounded": 0.00397976,
+        "gateway_efficiency_unrounded": 0.00332151,
+        "abs_optimism": 0.00065824,
+        "rel_optimism": 0.16539821
+      },
+      {
+        "game": "r11l",
+        "seed": 20260725,
+        "budget": 2000,
+        "n_resets_whole_run": 109,
+        "resets_before_each_levelup": [
+          73
+        ],
+        "offline_efficiency_unrounded": 0.00393825,
+        "gateway_efficiency_unrounded": 0.003282,
+        "abs_optimism": 0.00065625,
+        "rel_optimism": 0.16663581
+      },
+      {
+        "game": "r11l",
+        "seed": 20260726,
+        "budget": 2000,
+        "n_resets_whole_run": 110,
+        "resets_before_each_levelup": [
+          74
+        ],
+        "offline_efficiency_unrounded": 0.00390754,
+        "gateway_efficiency_unrounded": 0.00325089,
+        "abs_optimism": 0.00065665,
+        "rel_optimism": 0.16804803
+      },
+      {
+        "game": "s5i5",
+        "seed": 20260724,
+        "budget": 2000,
+        "n_resets_whole_run": 102,
+        "resets_before_each_levelup": [
+          12
+        ],
+        "offline_efficiency_unrounded": 0.00313851,
+        "gateway_efficiency_unrounded": 0.00301564,
+        "abs_optimism": 0.00012287,
+        "rel_optimism": 0.03914789
+      },
+      {
+        "game": "s5i5",
+        "seed": 20260725,
+        "budget": 2000,
+        "n_resets_whole_run": 54,
+        "resets_before_each_levelup": [
+          23
+        ],
+        "offline_efficiency_unrounded": 0.00085197,
+        "gateway_efficiency_unrounded": 0.00081866,
+        "abs_optimism": 3.331e-05,
+        "rel_optimism": 0.03909521
+      },
+      {
+        "game": "s5i5",
+        "seed": 20260726,
+        "budget": 2000,
+        "n_resets_whole_run": 68,
+        "resets_before_each_levelup": [
+          21
+        ],
+        "offline_efficiency_unrounded": 0.00099263,
+        "gateway_efficiency_unrounded": 0.00095437,
+        "abs_optimism": 3.826e-05,
+        "rel_optimism": 0.03854614
+      },
+      {
+        "game": "sp80",
+        "seed": 20260724,
+        "budget": 2000,
+        "n_resets_whole_run": 50,
+        "resets_before_each_levelup": [
+          12
+        ],
+        "offline_efficiency_unrounded": 0.05779675,
+        "gateway_efficiency_unrounded": 0.05406893,
+        "abs_optimism": 0.00372782,
+        "rel_optimism": 0.06449879
+      },
+      {
+        "game": "sp80",
+        "seed": 20260725,
+        "budget": 2000,
+        "n_resets_whole_run": 48,
+        "resets_before_each_levelup": [
+          8
+        ],
+        "offline_efficiency_unrounded": 0.1267985,
+        "gateway_efficiency_unrounded": 0.11871785,
+        "abs_optimism": 0.00808065,
+        "rel_optimism": 0.0637283
+      },
+      {
+        "game": "sp80",
+        "seed": 20260726,
+        "budget": 2000,
+        "n_resets_whole_run": 50,
+        "resets_before_each_levelup": [
+          1
+        ],
+        "offline_efficiency_unrounded": 4.76190476,
+        "gateway_efficiency_unrounded": 4.76190476,
+        "abs_optimism": 0.0,
+        "rel_optimism": 0.0
+      },
+      {
+        "game": "su15",
+        "seed": 20260724,
+        "budget": 2000,
+        "n_resets_whole_run": 43,
+        "resets_before_each_levelup": [
+          14
+        ],
+        "offline_efficiency_unrounded": 0.00499571,
+        "gateway_efficiency_unrounded": 0.00470736,
+        "abs_optimism": 0.00028835,
+        "rel_optimism": 0.05771958
+      },
+      {
+        "game": "su15",
+        "seed": 20260725,
+        "budget": 2000,
+        "n_resets_whole_run": 47,
+        "resets_before_each_levelup": [
+          16
+        ],
+        "offline_efficiency_unrounded": 0.00344199,
+        "gateway_efficiency_unrounded": 0.0032531,
+        "abs_optimism": 0.00018889,
+        "rel_optimism": 0.05487788
+      },
+      {
+        "game": "su15",
+        "seed": 20260726,
+        "budget": 2000,
+        "n_resets_whole_run": 40,
+        "resets_before_each_levelup": [
+          13
+        ],
+        "offline_efficiency_unrounded": 0.00535891,
+        "gateway_efficiency_unrounded": 0.00506094,
+        "abs_optimism": 0.00029798,
+        "rel_optimism": 0.05560392
+      },
+      {
+        "game": "tu93",
+        "seed": 20260724,
+        "budget": 2000,
+        "n_resets_whole_run": 90,
+        "resets_before_each_levelup": [
+          8,
+          78
+        ],
+        "offline_efficiency_unrounded": 0.00797609,
+        "gateway_efficiency_unrounded": 0.00755971,
+        "abs_optimism": 0.00041638,
+        "rel_optimism": 0.05220317
+      },
+      {
+        "game": "tu93",
+        "seed": 20260725,
+        "budget": 2000,
+        "n_resets_whole_run": 90,
+        "resets_before_each_levelup": [
+          8,
+          78
+        ],
+        "offline_efficiency_unrounded": 0.00797609,
+        "gateway_efficiency_unrounded": 0.00755971,
+        "abs_optimism": 0.00041638,
+        "rel_optimism": 0.05220317
+      },
+      {
+        "game": "tu93",
+        "seed": 20260726,
+        "budget": 2000,
+        "n_resets_whole_run": 90,
+        "resets_before_each_levelup": [
+          8,
+          78
+        ],
+        "offline_efficiency_unrounded": 0.00797609,
+        "gateway_efficiency_unrounded": 0.00755971,
+        "abs_optimism": 0.00041638,
+        "rel_optimism": 0.05220317
+      },
+      {
+        "game": "vc33",
+        "seed": 20260724,
+        "budget": 2000,
+        "n_resets_whole_run": 88,
+        "resets_before_each_levelup": [
+          1,
+          1
+        ],
+        "offline_efficiency_unrounded": 2.08973113,
+        "gateway_efficiency_unrounded": 1.9955471,
+        "abs_optimism": 0.09418403,
+        "rel_optimism": 0.04506993
+      },
+      {
+        "game": "vc33",
+        "seed": 20260725,
+        "budget": 2000,
+        "n_resets_whole_run": 73,
+        "resets_before_each_levelup": [
+          1,
+          6
+        ],
+        "offline_efficiency_unrounded": 0.62199344,
+        "gateway_efficiency_unrounded": 0.5658871,
+        "abs_optimism": 0.05610634,
+        "rel_optimism": 0.09020406
+      },
+      {
+        "game": "vc33",
+        "seed": 20260726,
+        "budget": 2000,
+        "n_resets_whole_run": 66,
+        "resets_before_each_levelup": [
+          1,
+          12
+        ],
+        "offline_efficiency_unrounded": 0.79902925,
+        "gateway_efficiency_unrounded": 0.70349628,
+        "abs_optimism": 0.09553298,
+        "rel_optimism": 0.1195613
+      }
+    ],
+    "abs_optimism_score_points": {
+      "n": 44,
+      "min": 0.0,
+      "p25": 0.000121,
+      "median": 0.000416,
+      "p75": 0.004996,
+      "max": 0.095533,
+      "mean": 0.013111
+    },
+    "rel_optimism_fraction_of_offline_score": {
+      "n": 44,
+      "min": 0.0,
+      "p25": 0.030122,
+      "median": 0.046236,
+      "p75": 0.063921,
+      "max": 0.168048,
+      "mean": 0.055543
+    },
+    "rel_optimism_PER_GAME_the_replication_unit": {
+      "n": 11,
+      "min": 0.018145,
+      "p25": 0.032592,
+      "median": 0.04922,
+      "p75": 0.062086,
+      "max": 0.166636,
+      "mean": 0.05734,
+      "n_games": 11,
+      "per_game_median": {
+        "cd82": 0.060443,
+        "dc22": 0.03576,
+        "ft09": 0.018145,
+        "lf52": 0.022485,
+        "lp85": 0.029424,
+        "r11l": 0.166636,
+        "s5i5": 0.039095,
+        "sp80": 0.063728,
+        "su15": 0.055604,
+        "tu93": 0.04922,
+        "vc33": 0.090204
+      },
+      "agrees_with_the_per_cell_median": true,
+      "principle": "if the per-game and per-cell medians diverged, the per-cell number would be an artifact of which games got repeated. They agree here (4.92% vs 4.62%), so the conclusion survives the unit change -- but the per-game n is 11, not 44, and any interval should be computed on 11.",
+      "n_distinct_values_per_game": {
+        "cd82": 3,
+        "dc22": 3,
+        "ft09": 3,
+        "lf52": 3,
+        "lp85": 3,
+        "r11l": 3,
+        "s5i5": 3,
+        "sp80": 3,
+        "su15": 3,
+        "tu93": 2,
+        "vc33": 3
+      },
+      "seed_degeneracy_note": "tu93 yields only 2 distinct optimism values across 6 cells (identical across all three seeds at each budget) -- its explorer is effectively deterministic on this game, so its 3 seeds are 1 observation, not 3."
+    },
+    "n_cells_with_zero_optimism": 2,
+    "n_cells_with_nonzero_optimism": 42,
+    "precision_hazard_found_and_corrected": {
+      "n_cells_whose_delta_the_4dp_rounding_erased": 2,
+      "cells": [
+        {
+          "game": "ft09",
+          "seed": 20260724,
+          "budget": 2000,
+          "rounded_rel_optimism": 0.0,
+          "unrounded_rel_optimism": 0.01814478
+        },
+        {
+          "game": "s5i5",
+          "seed": 20260726,
+          "budget": 2000,
+          "rounded_rel_optimism": 0.0,
+          "unrounded_rel_optimism": 0.03854614
+        }
+      ],
+      "principle": "`run_game` rounds both efficiency fields to 4 decimals. On small-score cells that rounding turns a real optimism into an exact 0.0000, which reads as a clean null -- the same failure class as a dead diagnostic channel. Every statistic above is recomputed UNROUNDED from the cell's own per-level charge vectors; the rounded fields are retained in the row files but not used here.",
+      "the_only_STRUCTURAL_zeros": "sp80 seed 20260726 at both b400 and b2000: exactly 1 reset preceded its level-up, and that level is a SUPERHUMAN solve (27 agent vs 39 human actions) sitting at the 115 cap, which absorbs the extra charge with no score change. This is a genuine zero, not a rounding one."
+    }
+  },
+  "honest_verdict": "complete_gateway_rescore_reset_charge_optimism_measured_bound_too_wide_to_conclude_0_to_95pct_but_exact_matched_measurement_puts_it_at_median_0.0462_max_0.1680_of_per_game_score_42_of_44_cells_nonzero_material_but_small_no_conclusion_reordered_hidden_score_crosscheck_underpowered_does_NOT_corroborate",
+  "honest_verdict_principle": "terminal `complete_` prefix per the Verdict Terminal-Prefix Discipline; the verdict states BOTH that the bound could not answer the question and what the exact measurement found, and states plainly that the reality cross-check did not corroborate.",
+  "verifier_is_oracle": true,
+  "verifier_is_oracle_principle": "the 'verifier' here IS the installed competition scorer -- the executable oracle that defines the score. This is execution-grounded measurement, NOT an oracle-distinct verifier-moat claim, and it must never be headlined as one.",
+  "solve_provenance": "development_proxy",
+  "solve_provenance_principle": "Part B re-runs the offline dev twin on PUBLIC games to measure accounting, not to claim a solve. No new level is claimed; no registry entry is added.",
+  "arc_solve_claim": false,
+  "random_seed": 20260726,
+  "random_seeds_used": [
+    20260724,
+    20260725,
+    20260726
+  ],
+  "preconditions_checked": [
+    {
+      "resource": "installed arc_agi scorer importable",
+      "available": true
     },
     {
-     "game": "s5i5",
-     "seed": 20260726,
-     "budget": 2000,
-     "rounded_rel_optimism": 0.0,
-     "unrounded_rel_optimism": 0.03854614
+      "resource": "recorded early-stop row corpora present",
+      "available": true
+    },
+    {
+      "resource": "per-level human baselines non-zero",
+      "available": true
     }
-   ],
-   "principle": "`run_game` rounds both efficiency fields to 4 decimals. On small-score cells that rounding turns a real optimism into an exact 0.0000, which reads as a clean null -- the same failure class as a dead diagnostic channel. Every statistic above is recomputed UNROUNDED from the cell's own per-level charge vectors; the rounded fields are retained in the row files but not used here.",
-   "the_only_STRUCTURAL_zeros": "sp80 seed 20260726 at both b400 and b2000: exactly 1 reset preceded its level-up, and that level is a SUPERHUMAN solve (27 agent vs 39 human actions) sitting at the 115 cap, which absorbs the extra charge with no score change. This is a genuine zero, not a rounding one."
-  }
- },
- "honest_verdict": "complete_gateway_rescore_reset_charge_optimism_measured_bound_too_wide_to_conclude_0_to_95pct_but_exact_matched_measurement_puts_it_at_median_0.0462_max_0.1680_of_per_game_score_42_of_44_cells_nonzero_material_but_small_no_conclusion_reordered_hidden_score_crosscheck_underpowered_does_NOT_corroborate",
- "honest_verdict_principle": "terminal `complete_` prefix per the Verdict Terminal-Prefix Discipline; the verdict states BOTH that the bound could not answer the question and what the exact measurement found, and states plainly that the reality cross-check did not corroborate.",
- "verifier_is_oracle": true,
- "verifier_is_oracle_principle": "the 'verifier' here IS the installed competition scorer -- the executable oracle that defines the score. This is execution-grounded measurement, NOT an oracle-distinct verifier-moat claim, and it must never be headlined as one.",
- "solve_provenance": "development_proxy",
- "solve_provenance_principle": "Part B re-runs the offline dev twin on PUBLIC games to measure accounting, not to claim a solve. No new level is claimed; no registry entry is added.",
- "arc_solve_claim": false,
- "random_seed": 20260726,
- "random_seeds_used": [
-  20260724,
-  20260725,
-  20260726
- ],
- "preconditions_checked": [
-  {
-   "resource": "installed arc_agi scorer importable",
-   "available": true
-  },
-  {
-   "resource": "recorded early-stop row corpora present",
-   "available": true
-  },
-  {
-   "resource": "per-level human baselines non-zero",
-   "available": true
-  }
- ],
- "git_head": "a283217433c2e4b69781a293a6d17a32f47f8855",
- "provenance": {
+  ],
   "git_head": "a283217433c2e4b69781a293a6d17a32f47f8855",
-  "code": [
-   {
-    "path": "scripts/arc_gateway_rescore.py",
-    "sha256": "b232f19a7ff8c32bb207703001650639438de78d6c20a44f7a9b75d628c95370",
-    "bytes": 21859,
-    "mtime_utc": "2026-07-27T00:04:02Z"
-   },
-   {
-    "path": "scripts/arc_gateway_exact_attribution.py",
-    "sha256": "b401b6367c794c47b1719bf360bed37150ddd30d1435034619bb881fc08a8348",
-    "bytes": 6977,
-    "mtime_utc": "2026-07-26T23:28:49Z"
-   },
-   {
-    "path": "scripts/analyze_arc_gateway_rescore.py",
-    "sha256": "1e6611431826041c24df65fb659de19e2a118eafd96d338b37ceb9e75936e154",
-    "bytes": 45412,
-    "mtime_utc": "2026-07-27T00:04:02Z"
-   },
-   {
-    "path": "scripts/arc_leaderboard_eval.py",
-    "sha256": "04d09695c4eb4e59e85d16be5d7526e3c224bcc0bfe16af5bc5e74fb22deda02",
-    "bytes": 53382,
-    "mtime_utc": "2026-07-27T05:03:34Z"
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
-    "bytes": 376234,
-    "mtime_utc": "2026-07-29T14:20:59Z"
-   }
-  ],
-  "rows_sources": {
-   "recorded_rows": [
-    {
-     "path": "results/early_stop_sweep_20260726/rows_b2000.json",
-     "sha256": "361aee5362d9f9f8018a37dd204cec1b3ba060e5ac24cd774eccbf78194ae3b1"
+  "provenance": {
+    "git_head": "a283217433c2e4b69781a293a6d17a32f47f8855",
+    "code": [
+      {
+        "path": "scripts/arc_gateway_rescore.py",
+        "sha256": "b232f19a7ff8c32bb207703001650639438de78d6c20a44f7a9b75d628c95370",
+        "bytes": 21859,
+        "mtime_utc": "2026-07-27T00:04:02Z"
+      },
+      {
+        "path": "scripts/arc_gateway_exact_attribution.py",
+        "sha256": "b401b6367c794c47b1719bf360bed37150ddd30d1435034619bb881fc08a8348",
+        "bytes": 6977,
+        "mtime_utc": "2026-07-26T23:28:49Z"
+      },
+      {
+        "path": "scripts/analyze_arc_gateway_rescore.py",
+        "sha256": "1e6611431826041c24df65fb659de19e2a118eafd96d338b37ceb9e75936e154",
+        "bytes": 45412,
+        "mtime_utc": "2026-07-27T00:04:02Z"
+      },
+      {
+        "path": "scripts/arc_leaderboard_eval.py",
+        "sha256": "04d09695c4eb4e59e85d16be5d7526e3c224bcc0bfe16af5bc5e74fb22deda02",
+        "bytes": 53382,
+        "mtime_utc": "2026-07-27T05:03:34Z"
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "bytes": 376234,
+        "mtime_utc": "2026-07-29T14:20:59Z"
+      }
+    ],
+    "rows_sources": {
+      "recorded_rows": [
+        {
+          "path": "results/early_stop_sweep_20260726/rows_b2000.json",
+          "sha256": "361aee5362d9f9f8018a37dd204cec1b3ba060e5ac24cd774eccbf78194ae3b1"
+        },
+        {
+          "path": "results/early_stop_sweep_20260726/rows_b400.json",
+          "sha256": "a9ff27eba4aea489583a9912d11176b2245008eb5d7dc9708a0a6b66d8ade43f"
+        },
+        {
+          "path": "results/early_stop_sweep_20260726/rows_b4000_stress.json",
+          "sha256": "024b8edd8d2dbb1d988e1b0ddde6f2e86d4481bfb7e835b6709d81a78c19f41b"
+        },
+        {
+          "path": "results/early_stop_sweep_20260726/rows_b400_g350.json",
+          "sha256": "9b56959d7e2134bf8c6111f648edda686ff16610a7cc8efa4b354f582a0c53c8"
+        },
+        {
+          "path": "results/early_stop_sweep_20260726/rows_contention_conc_1.json",
+          "sha256": "846eba0c1a50ec9619c786b4d453fd007bd55af7cd575983df9e45761e912c12"
+        },
+        {
+          "path": "results/early_stop_sweep_20260726/rows_contention_conc_2.json",
+          "sha256": "8298ff22b66ce392e69d7bd71802e6661306ab02a88fcb8e954b15e27cc15f2e"
+        },
+        {
+          "path": "results/early_stop_sweep_20260726/rows_contention_conc_3.json",
+          "sha256": "151183261790294e4297a4c17216c9bc6189bec72010daafdc98d3456d398bd2"
+        },
+        {
+          "path": "results/early_stop_sweep_20260726/rows_contention_serial.json",
+          "sha256": "f5f333fa0741fe419f9da8a8712e4019c6ef711648cc202a06c340eea454bd5b"
+        },
+        {
+          "path": "results/early_stop_sweep_20260726/rows_reproduction.json",
+          "sha256": "187351188c9baf0653811031b0e78fae053db72f1cb572b8b985e7c201170e0b"
+        }
+      ],
+      "exact_attribution_rows": [
+        {
+          "path": "results/early_stop_sweep_20260726/rows_exact_attribution.json",
+          "sha256": "2538fa6d89f2117aff32832219875628dc1ed672544534e1a78fcd664e6a27bb"
+        },
+        {
+          "path": "results/early_stop_sweep_20260726/rows_exact_attribution_b2000.json",
+          "sha256": "cc64fe0e05ffe1e75f332967728fe0114ddd7018a668e508ab0fb84db011fbd4"
+        }
+      ]
     },
-    {
-     "path": "results/early_stop_sweep_20260726/rows_b400.json",
-     "sha256": "a9ff27eba4aea489583a9912d11176b2245008eb5d7dc9708a0a6b66d8ade43f"
-    },
-    {
-     "path": "results/early_stop_sweep_20260726/rows_b4000_stress.json",
-     "sha256": "024b8edd8d2dbb1d988e1b0ddde6f2e86d4481bfb7e835b6709d81a78c19f41b"
-    },
-    {
-     "path": "results/early_stop_sweep_20260726/rows_b400_g350.json",
-     "sha256": "9b56959d7e2134bf8c6111f648edda686ff16610a7cc8efa4b354f582a0c53c8"
-    },
-    {
-     "path": "results/early_stop_sweep_20260726/rows_contention_conc_1.json",
-     "sha256": "846eba0c1a50ec9619c786b4d453fd007bd55af7cd575983df9e45761e912c12"
-    },
-    {
-     "path": "results/early_stop_sweep_20260726/rows_contention_conc_2.json",
-     "sha256": "8298ff22b66ce392e69d7bd71802e6661306ab02a88fcb8e954b15e27cc15f2e"
-    },
-    {
-     "path": "results/early_stop_sweep_20260726/rows_contention_conc_3.json",
-     "sha256": "151183261790294e4297a4c17216c9bc6189bec72010daafdc98d3456d398bd2"
-    },
-    {
-     "path": "results/early_stop_sweep_20260726/rows_contention_serial.json",
-     "sha256": "f5f333fa0741fe419f9da8a8712e4019c6ef711648cc202a06c340eea454bd5b"
-    },
-    {
-     "path": "results/early_stop_sweep_20260726/rows_reproduction.json",
-     "sha256": "187351188c9baf0653811031b0e78fae053db72f1cb572b8b985e7c201170e0b"
-    }
-   ],
-   "exact_attribution_rows": [
-    {
-     "path": "results/early_stop_sweep_20260726/rows_exact_attribution.json",
-     "sha256": "2538fa6d89f2117aff32832219875628dc1ed672544534e1a78fcd664e6a27bb"
-    },
-    {
-     "path": "results/early_stop_sweep_20260726/rows_exact_attribution_b2000.json",
-     "sha256": "cc64fe0e05ffe1e75f332967728fe0114ddd7018a668e508ab0fb84db011fbd4"
-    }
-   ]
+    "freshness_acknowledgements": [
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "sha256_now": "ff0cd7aa09a9e6b77e7b5073e5a57f1fdf4fce5c87651744f22feaed846a04de",
+        "reason": "One change, inside the DEFAULT-OFF CARNOT_ARC_PLAIN_PATH_GOAL_SATISFIABILITY_CHECK branch, and within it only the string written to attempt['skipped'] -- so that a budget-exhausted goal gate is no longer recorded as a disproved predicate. Control flow is identical: both cases still return.",
+        "evidence": "The edit is a label substitution guarded by an env var that is unset by default; the surrounding `if not goal_check.get('satisfiable'): ... return` structure is byte-identical. `git diff` on the file is 20 insertions / 1 deletion, of which 12 lines are comment. No artifact in this set exercises that branch (none sets the env var), and no numeric field is touched on any path.",
+        "acknowledged_at_commit": "2bad77981445ee690fb502080fdd6d753b244699",
+        "acknowledged_date": "2026-07-30",
+        "why_not_rebuilt": "rebuilding would overwrite this artifact's MEASURED timings, which are not reproducible -- the previous commit did exactly that to four artifacts and 132 timing values had to be restored from git history this session. Inertness here is established by direct measurement (see evidence), so a rebuild would trade recorded facts for a formality. The rebuild_command remains recorded for anyone who wants rebuild-strength proof."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "ff0cd7aa09a9e6b77e7b5073e5a57f1fdf4fce5c87651744f22feaed846a04de",
+        "sha256_now": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
+        "reason": "One change, and it is a LABEL ONLY, inside the DEFAULT-OFF `CARNOT_ARC_PLAIN_PATH_GOAL_SATISFIABILITY_CHECK` branch: the skip-string allow-list gains `goal_unreached_within_depth` alongside `degenerate_goal_predicate` and `goal_unreached_within_budget`, so the goal gate's new third termination is DISCLOSED rather than flattened back to \"your win condition is degenerate\". Control flow is byte-identical -- all three kinds still take the same `return`, and the else-branch still writes `degenerate_goal_predicate`.",
+        "evidence": "`git diff` on the file is 14 insertions / 1 deletion, of which 7 lines are comment and the rest is one tuple literal reflowed to three members. The enclosing `if not goal_check.get('satisfiable'): ... return` structure is unchanged. The branch is guarded by an env var that is unset by default, and no artifact in this registered set sets it, so the edited lines are not reachable in any of these runs at all. No numeric field is written on any path. Pinned by `tests/python/test_arc_goal_gate_depth_vs_degenerate_2026_07_31.py::test_agent_plain_path_allow_list_discloses_the_depth_kind`, whose mutation M5_plain_path_flattens_the_depth_kind is KILLED (`results/arc_goal_gate_depth_20260731/mutation_check.json`).",
+        "acknowledged_at_commit": "7d81fa816bb35173f2daae0a01bfad6602290389",
+        "acknowledged_date": "2026-07-31",
+        "why_not_rebuilt": "Rebuilding would overwrite MEASURED, non-reproducible timings and live-run records in these artifacts; a previous commit did exactly that to four of them and 132 timing values had to be restored from git history. Inertness here is established by direct differential measurement (see evidence), so a rebuild would trade recorded facts for a formality. Any recorded `rebuild_command` still stands for anyone who wants rebuild-strength proof."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "sha256_now": "e4ff6dc9f3f266636bf3c51938680d99b04cfead5c3589775af3d46b88a84463",
+        "acknowledged_on": "2026-08-01",
+        "reason": "The 2026-08-01 win-transition fix adds an OPTIONAL parameter `win_transition=None` to `_transitions_block` / `induce_prompt` / both proposers' `induce`, plus a `_win_transition` field on E3AgentPolicy and one call site passing it. With the parameter absent, `_transitions_block` performs its historical scan of `trans` unchanged, so behaviour can differ ONLY on the live agent's induce call after a level-up. No other code path is reachable from the change.",
+        "evidence": "ARGUED FROM A BYTE-IDENTITY PROOF, NOT FROM A COMPLETED REBUILD -- disclosed rather than implied. A rebuild differential over the six rebuildable artifacts was launched and only the first (experiment_6011) had completed when this was written; that one showed ZERO substantive movement with all 20 differences being provenance bookkeeping a rebuild deletes. For THIS artifact the evidence is instead direct: `induce_prompt` output is BYTE-IDENTICAL to the renderer recovered from git on all six captured games, so any caller that does not supply the new optional parameter produces the same prompt it did before. Supplying it requires a live level-up, which this artifact's producing code path does not perform. Weaker than a completed rebuild and labelled so."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "e4ff6dc9f3f266636bf3c51938680d99b04cfead5c3589775af3d46b88a84463",
+        "sha256_now": "36dc03639d7b068aa5dfaf5ec401b0d461460aebfaab0c370229e5a9fa4a4968",
+        "acknowledged_on": "2026-08-02",
+        "reason": "REQ-ARC-WMTE-6071 adds an exact-label inert-action memory to StepwiseExplorer, DEFAULT OFF (SUBMITTED_INERT_LABEL_DEFER_ENABLED = False, env CARNOT_ARC_INERT_LABEL_DEFER unset). With the flag off `_inert_label_keep_indices` returns None on its first branch, so `_pop_untested_inner` executes the pre-6071 draw and consumes the same number of values from `self._fd_rng`. The other three touched sites are: a module-level import, three SUBMITTED_* constants plus five zeroed fire-counters in __init__, an `_ingest` observe hook guarded on `inert_label_memory is not None`, and a new `inert_label_defer_diagnostics()` accessor. No line was removed and no existing decision changed.",
+        "evidence": "PROVEN BY DIFFERENTIAL, not by argument. git HEAD's arc_competition_agent.py was swapped into THIS checkout (same untracked assets, same models/, nothing else running) and the scored E3AgentPolicy was run over all 25 public games at budget 2000, seed 20260802, LLM off: 25 of 25 games produced a BYTE-IDENTICAL action trace (sha256 of the ordered action labels) against the post-6071 flag-off arm. The source was restored and its sha256 re-verified. results/arc_inert_label_defer_20260802/arc_inert_label_defer.json records the accompanying A/A noise floor: 75 of 75 same-config pairs identical, i.e. the agent is deterministic here, so the 25/25 is a proof and not a coincidence. NOTE FOR THE NEXT AUTHOR: a git-worktree differential does NOT work for this agent -- a fresh worktree lacks untracked assets the live path reads (results/experiment_4629_live_frame_change_cnn.pt among them) and diverges on 19 of 25 games for reasons that have nothing to do with the change under test."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "36dc03639d7b068aa5dfaf5ec401b0d461460aebfaab0c370229e5a9fa4a4968",
+        "sha256_now": "8406b89ab202056116460404b9a2edbf3b6d5611b49712d464549b1ef88baa5d",
+        "reason": "REQ-ARC-WMTE-6083 puts the 2026-08-01 win-transition SUPPLY behind a default-OFF env gate (CARNOT_ARC_SUPPLY_WIN_TRANSITION, _SUPPLY_WIN_TRANSITION_DEFAULT = '0'). The only behavioural edit is at the single `_induce_and_plan` induce call site: where HEAD passed `win_transition=self._win_transition` unconditionally, the call now builds an empty kwargs dict and adds that keyword ONLY when the gate is on. With the gate unset -- the shipped state -- the call is `induce(short, active_transitions, cell)`, which is byte-identical to the call this artifact's own numbers were produced by (the keyword did not exist before 2026-08-01). Everything else added is a module-level helper plus comments; no other symbol, branch or default is touched.",
+        "evidence": "PROVEN BY MEASUREMENT AT THE RECEIVING END, not argued from the diff. The delta HEAD->now can only matter if `self._win_transition` was ever NON-None where HEAD passed it. It was not: results/outer_loop_arc_win_transition_exposure_20260802.json instruments the live scored path (E3AgentPolicy.next_move driven by scripts/arc_leaderboard_eval.py:run_game) over the 25 public games at budgets 400 and 2000 -- 103 cells, 128 induce calls, 0 coverage gaps -- and every one of the 98 calls that REACHED this call site had `_win_transition is None` (exact skip-string partition, ZERO off-diagonal cells; independent structural discriminator, 0 mismatches/128). A direct instrument on the proposer's own `induce` across the five level-banking games recorded the keyword arriving as None on 4 of 4 calls from arc_competition_agent.py:6429 and absent on the other 12. Since `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, passing None and omitting the keyword are the same computation -- so HEAD and the gated-OFF code build an IDENTICAL prompt on every call this corpus observed. Confirmed end-to-end besides: vc33/400 run with the flag unset, with it '0', and with it '1' gives levels=2 / actions=387 in all cases, and tests/python/test_arc_win_transition_supply_gate_2026_08_02.py asserts both directions (18 assertions), including that OFF OMITS the keyword rather than passing None. LIMIT DISCLOSED: this is inertness on the measured live path, not a proof for a caller that supplies a non-None win transition -- no such caller exists on the live path today, and if one is added the acknowledgement's pinned hash will already have expired."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "sha256_now": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
+        "acknowledged_on": "2026-08-03",
+        "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
+        "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF. The change is two imports plus a single branch in E3AgentPolicy: `_induce_rows = active_transitions`, replaced by the held-out-stripped list ONLY when `cegis_accept_split_enabled()` reads CARNOT_ARC_CEGIS_ACCEPT_SPLIT as truthy. That variable is unset in every path that produced this artifact, so the induce() call receives the identical object it received before. No threshold, no ordering, no seed, no control flow moves.",
+        "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
+        "why_not_rebuilt": "No rebuild_command is registered for this artifact, so a rebuild is not available at all; the acknowledgement path is the only sanctioned move. See the evidence field for why the change is inert."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
+        "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+        "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
+        "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+        "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
+        "acknowledged_on": "2026-08-07",
+        "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's own analysis script self-declares the invariant at line 676: \"no SUBMITTED_* flag and no MAX_ACTIONS value was touched -- this measures and reports\".",
+        "evidence": "grep -n 'no SUBMITTED_\\* flag and no MAX_ACTIONS' scripts/analyze_arc_gateway_rescore.py: 1 hit, line 676."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
+        "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
+        "acknowledged_on": "2026-08-07",
+        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
+        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
+        "sha256_now": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
+        "acknowledged_on": "2026-08-07",
+        "reason": "REQ-ARC-WMTE-TRAJ-TRANSFER-1 (lever #2). Two changes to arc_competition_agent.py: (1) a new cascade stage in E3AgentPolicy._induce_and_plan, gated behind self.trajectory_transfer_enabled (default False, env CARNOT_ARC_TRAJECTORY_TRANSFER unset in every path that produced this artifact) -- with the flag off this branch never executes, dead code by construction. (2) trace-capture in _begin_level_goal_episode DOES run unconditionally on every level-up, but is STRICTLY ADDITIVE: three new instance attributes (_completed_level_trace, _completed_level_first_grid, _completed_level_cell) computed from data already in memory (self.transitions, self.plan) via read-only list comprehensions; no pre-existing attribute, return value, or side effect is altered, and the added computation is a handful of dict-comprehension iterations, not a measurable wall-clock or resource cost.",
+        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: the cascade stage is inside `if self.trajectory_transfer_enabled and ...`; the trace-capture writes only three NEW attribute names (grepped: no existing symbol of the same name in the pre-change file) and reads existing values without mutating them. tests/python/test_arc_trajectory_transfer_cascade.py::test_flag_off_never_touches_trajectory_transfer_or_llm_reinduction mechanically pins that flag-off falls through to the LLM tier exactly as before."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
+        "sha256_now": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
+        "acknowledged_on": "2026-08-07",
+        "reason": "REQ-ARC-WMTE-6180-WIRING (lever #5). Three changes to arc_competition_agent.py, all in StepwiseExplorer: (1) a new __init__ kwarg + _fd_gate resolution (self.budget_aware_search_enabled, default False -- no artifact producing this corpus sets CARNOT_ARC_BUDGET_AWARE_SEARCH); (2) _ingest appends every frame to a new self._budget_frames buffer UNCONDITIONALLY -- strictly additive (new attribute, read-only append of data already in scope, no pre-existing attribute/return value/side effect touched) -- but the ESTIMATE computation that consumes it is itself gated behind the flag, so with the flag off nothing about the search's OBSERVABLE behavior changes; (3) _frontier's depth_cost substitution is explicitly gated ('depth_cost = budget_aware_path_cost_weight(...) if self.budget_aware_search_enabled else depth') -- with the flag off this is the literal `depth` expression, byte-identical to before this lever, not an argument-shaped no-op that happens to reduce to the same value.",
+        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: every new branch checked against `self.budget_aware_search_enabled`; the one unconditional addition (_budget_frames append) is a single list.append() with no other effect. tests/python/test_arc_budget_aware_search_live_wiring.py::test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set and ::test_frontier_never_calls_budget_aware_weight_when_flag_off mechanically pin the flag-off byte-identity property by intercepting the call (not just checking the returned value)."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
+        "sha256_now": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130",
+        "acknowledged_on": "2026-08-08",
+        "reason": "REQ-ARC-WMTE-6220 (fix1 of the 2026-08-08 adversarial-review fix pass). Threads SUBMITTED_EARLY_STOP_GRACE through E3AgentPolicy.__init__ into StepwiseExplorer (previously dead code -- read nowhere), adds it to SUBMITTED_AGENT_CONFIG, and wires it into make_carnot_agent's real construction call. Every historical artifact in this corpus records agent behavior from BEFORE this fix, when early-stopping was structurally unreachable regardless of the constant's value -- so every recorded run already reflects 'early-stopping inactive,' the exact behavior this fix's DEFAULT preserves for any caller that already worked around the dead constant. The fix changes FUTURE agent runs only; it cannot retroactively alter what already happened, so no number in this artifact is stale.",
+        "evidence": "grep -rn early_stop_grace across scripts/ and python/ (excluding the fix's own files) shows scripts/arc_scored_path_early_stop_sweep.py already documents the exact bug this fix closes (\"read NOWHERE\") and works around it by setting the parameter directly on the constructed StepwiseExplorer instance (run_cell(early_stop_grace=grace)), never through E3AgentPolicy's constructor -- the new code path this fix adds. Any artifact whose row data came from that sweep script, or from any other game run before this commit, is therefore unaffected: the mechanism this fix activates was not exercised when those numbers were produced."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130",
+        "sha256_now": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
+        "acknowledged_on": "2026-08-08",
+        "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
+        "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
+        "sha256_now": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
+        "acknowledged_on": "2026-08-08",
+        "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
+        "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
+        "sha256_now": "0617d759eab6d62f7731c0c1ff0548e9203f1fc043e76bcf15f8c4174449a07b",
+        "acknowledged_on": "2026-08-08",
+        "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
+        "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value)."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "sha256_now": "5666e3a5205e4bb4d07a485d019219d739474ba8577ec795a94817f24b471bb7",
+        "acknowledged_on": "2026-08-08",
+        "reason": "REQ-ARC-WMTE-6223/6224 (2026-08-08): fixed a bug where plan-step execution never recorded a Transition (self._prev was populated only in next_move()'s two plan-step branches, via a new _track_prev_for_transition call), and a bug where level-up / STALL-path reinduction planned from self.root_grid instead of a new _plan_start_grid local. Both changes are confined inside E3AgentPolicy: the two next_move() plan-step call sites, and _induce_and_plan()'s internal grid selection. Its rebuild chain (arc_gateway_rescore.py -> arc_gateway_exact_attribution.py -> analyze_arc_gateway_rescore.py) has exactly one live-cell function, arc_gateway_exact_attribution.py:run_cell, which sets os.environ['CARNOT_ARC_DISABLE_INDUCTION']='1' (line 64) before its E3AgentPolicy(...) construction (line 69). Neither arc_gateway_rescore.py nor analyze_arc_gateway_rescore.py constructs E3AgentPolicy or calls next_move/_induce_and_plan at all (grep: no match in either file).",
+        "evidence": "The artifact's own `inference_substrate` is `aggregation_from_upstream_artifacts`, consistent with the only live component (arc_gateway_exact_attribution.py) running with induction structurally disabled. Grep: `grep -n E3AgentPolicy scripts/arc_gateway_rescore.py scripts/analyze_arc_gateway_rescore.py` -> no matches; `grep -n CARNOT_ARC_DISABLE_INDUCTION scripts/arc_gateway_exact_attribution.py` -> line 64, preceding the line-69 construction."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "5666e3a5205e4bb4d07a485d019219d739474ba8577ec795a94817f24b471bb7",
+        "sha256_now": "11f495a67424393cf2e7246d1e8979f1e02b0669c9baeeb25e2e78495af3710e",
+        "acknowledged_on": "2026-08-08",
+        "reason": "REQ-ARC-WMTE-6225/6226 (2026-08-08): fixed a never-empty floor on the discriminative frontier prune (StepwiseExplorer._frontier), and memoized two per-node frontier scoring keys (_goal_bias_score, _action_effect_frontier_key) on the node dict. Same reachability argument as the immediately-prior 6223/6224 acknowledgement pass on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or runs with CARNOT_ARC_DISABLE_INDUCTION=1 set before construction so the explorer never reaches _frontier's discriminative-prune branch with a live game in flight, or (for the one genuinely live-LLM artifact) its own recorded data shows zero induction attempts across every cell of every arm. See that acknowledgement entry (same path, sha256_was == this entry's sha256_was) for the full per-script grep evidence.",
+        "evidence": "Re-verified for this second edit: `git diff arc_competition_agent.py` between the 6223/6224 commit and this one touches only StepwiseExplorer.__init__ (two new counters), set_goal_bias, _goal_bias_score, _action_effect_frontier_key, and _frontier's pruning loop -- none of which are reachable from any of this artifact's dependency scripts any more than the previous edit was (same grep results: no E3AgentPolicy construction, or construction gated behind CARNOT_ARC_DISABLE_INDUCTION=1, or zero recorded induction attempts)."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "sha256_now": "c4b142e5ae099329fa43e4eba443c8e5dbb1a3b7bc60b138cb5e715a2fc5f9a9",
+        "acknowledged_on": "2026-08-08",
+        "reason": "REQ-ARC-WMTE-6229 (2026-08-08): bounded re-induction on renewed stall, gated off by default behind CARNOT_ARC_BOUNDED_REINDUCTION (unset in every one of this artifact's rebuild paths), plus always-on generator_liveness_witness() diagnostic fields. Same reachability argument as the 6223/6224/6225/6226 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or runs with CARNOT_ARC_DISABLE_INDUCTION=1 set before construction (so _should_enter_induction's new branch, gated on `stalled`, is never reached because the whole induction machinery is structurally unreachable), or its own recorded data shows zero induction attempts across every cell of every arm. See the matching prior acknowledgement entry (same path) for the full per-script grep evidence.",
+        "evidence": "Same grep/self-measured evidence as the prior 6223-6226 acknowledgement passes on this path; the new code in this commit (the __init__/level-boundary attempt-count resets, the _should_enter_induction branch, generator_liveness_witness fields) is confined to E3AgentPolicy methods none of these scripts reach any more than the prior edits were."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "sha256_now": "2102adecb1e9073cd62cffc1b215d1065fd08dbaf76f9d168a08e6af047b033e",
+        "acknowledged_on": "2026-08-08",
+        "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
+        "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were."
+      },
+      {
+        "path": "scripts/analyze_arc_gateway_rescore.py",
+        "sha256_was": "1e6611431826041c24df65fb659de19e2a118eafd96d338b37ceb9e75936e154",
+        "sha256_now": "bc0b837d34779fe205f3d86401a4fb3a572ab3df44c91b9e1bdfc0317d6619ef",
+        "acknowledged_on": "2026-08-08",
+        "reason": "Freshness-lint self-fix (2026-08-08, ops/known-issues.md 'A related, systemic defect', FIXED note): this analyser script gained an import of, and one call to, a new helper preserve_freshness_acknowledgements(art, out_path) in scripts/analyze_scored_path_lever_ab.py. The helper's only effect is to copy forward provenance.freshness_acknowledgements from whatever is ALREADY ON DISK at out_path into a FUTURE rebuild's provenance dict, before that future rebuild's write -- it cannot retroactively change any value already computed and written into THIS artifact. Reachability argument holds by construction (the diff is a no-op for any artifact that isn't itself being freshly rebuilt at this exact moment), not by per-script inspection.",
+        "evidence": "git diff on the analyser script: an import line + one line calling preserve_freshness_acknowledgements(<art>, <out_path>) immediately before the pre-existing write call, with no other lines touched. Verified via a real scratch dry-run per script (copy the real tracked artifact to /tmp, rebuild against that scratch path, confirm freshness_acknowledgements survives while other provenance fields correctly refresh) -- see the commit message and ops/known-issues.md's FIXED note for the full per-script verification record."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "sha256_now": "01eb74db2c8a9c163142fb083ad1356000930e61bc6025d3d6e0a8bc985a18c6",
+        "acknowledged_on": "2026-08-08",
+        "reason": "REQ-ARC-WMTE-6198 Phase 0b fix (2026-08-08, adversarial review): gated the two remaining unconditional reasoning-suppressing code fences (the split-induce engine-half fallback and _goal_only_prompt) on induce_think_on(), matching the already-gated combined-induce prompt; added repeat_penalty/repeat_last_n forwarding to _chat_complete_request (previously silently dropped on the chat-completions route, which every think-mode call is forced through); corrected three stale 'default OFF' comments after the 2026-08-08 think-mode default flip. None of these changes touch this artifact's own measured code path -- verified by the same reachability argument used for the prior acknowledgement rounds on this file pair this session (grep confirms this artifact's own script does not import/call induce_think_on, _chat_complete_request, or _goal_only_prompt in a way this fix's diff affects).",
+        "evidence": "git diff on both source files: the diff is confined to induce()'s split-fallback prompt suffix, _goal_only_prompt's return string, _chat_complete_request's signature/payload/retry call, its one call site inside generate(), and 4 comment-only corrections -- confirmed via `git diff -U0` hunk inspection before this acknowledgement was written."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "sha256_now": "36cbc4102a453bc4fa7342e9cf3ddfda4287ab94e73963220ecc27fd7f0c8548",
+        "acknowledged_on": "2026-08-08",
+        "reason": "Live-agent adversarial review Phase 0c fix (2026-08-08): (1) _observe_level_boundary now captures the graded-goal-bias win-state exemplar from the last-admitted transition's PRE-action grid instead of grid_of(latest) (the frame returned by the winning action itself, which already showed the NEXT level's opening board -- an inverted gradient under CARNOT_ARC_GRADED_GOAL_BIAS=1). (2) _induce_and_plan now resets self.plan/self.pi to []/0 at entry, plus a bounds guard on the induce branch's _next_plan_move() call, fixing a stale self.pi=1 left behind by a just-consumed one-step CARNOT_ARC_ACTIVE_PROBE=1 probe plan (silently skipped the next plan's first step, or IndexError on a second one-step plan). Both changes are no-ops for this artifact: _induce_and_plan's body only ever WRITES self.plan/self.pi after the reset line, never reads the incoming value (grep-verified), and this artifact's generating script(s) and its own recorded config never set CARNOT_ARC_GRADED_GOAL_BIAS=1 or CARNOT_ARC_ACTIVE_PROBE=1 (grep-verified against both the script source and this artifact's own JSON).",
+        "evidence": "git diff -U0 on arc_competition_agent.py: confined to _observe_level_boundary's completed_grid capture, _induce_and_plan's entry reset, and the induce branch's `if self.plan and self.pi < len(self.plan):` guard. `grep -c 'active_probe\\|graded_goal'` on this artifact's generating script(s) and on this artifact's own JSON both return 0."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "sha256_now": "79316a60396f3549efbfb983f358f8f2def898b8b37c8c14ab9118ab80f37dcc",
+        "acknowledged_on": "2026-08-08",
+        "reason": "Phase 1b promotion (2026-08-08): SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED flipped False->True (REQ-ARC-WMTE-6234). This artifact predates the lever entirely -- the trajectory-transfer cascade stage (arc_competition_agent.py lines ~6780-6810, added 2026-08-07 per its own \"LEVER #2 (2026-08-07...)\" comment) did not exist in the codebase when this artifact was measured (dated 2026-07-26/27), so its default value now cannot change what was measured then.",
+        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to the SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED constant, its comment block, and the SUBMITTED_AGENT_CONFIG dict entry that mirrors it -- no other line changed."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "sha256_now": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
+        "acknowledged_on": "2026-08-09",
+        "reason": "REQ-ARC-WMTE-6243 (2026-08-09): added SUBMITTED_THINK_ARM_FALLBACK_ENABLED (default False), the resolver `self.think_arm_fallback_enabled` in E3AgentPolicy.__init__, and a new wrapper method `_execute_bounded_llm_reinduction_with_arm_fallback` used at both _induce_and_plan call sites. This artifact's own generating script never sets CARNOT_ARC_THINK_ARM_FALLBACK (grep-verified), so the new flag resolves to its default-off value, under which the wrapper calls execute_bounded_llm_reinduction exactly once and returns its outcome unmodified -- byte-identical to the pre-change call sites for every code path this artifact exercises.",
+        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to: one new module constant + its env-override block in __init__ (near the sibling trajectory_transfer_enabled resolver), one new method inserted before _induce_and_plan, two call sites changed from `execute_bounded_llm_reinduction(...)` to `self._execute_bounded_llm_reinduction_with_arm_fallback(attempt, ...)` with identical kwargs, and two new entries in the SUBMITTED_AGENT_CONFIG status dict. No existing function body was modified."
+      },
+      {
+        "path": "scripts/arc_leaderboard_eval.py",
+        "sha256_was": "04d09695c4eb4e59e85d16be5d7526e3c224bcc0bfe16af5bc5e74fb22deda02",
+        "sha256_now": "2c41f6878d4fa5bf7b517d152a068ff83026befe37783e8232b259c68b05c512",
+        "acknowledged_on": "2026-08-17",
+        "reason": "Single-commit window db5f1cd0fb (2026-08-17). The diff is confined to main()'s output-path selection and a new _write_json_atomic helper. Both run AFTER every measured value is finalized: subset runs now write run-scoped files under results/*_runs/ instead of overwriting the tracked sweep, and the final write is atomic. No scoring, budget, or row-content code changed, so no number this artifact records can move.",
+        "evidence": "git diff 4c74d32cc0dd..db5f1cd0fb -- scripts/arc_leaderboard_eval.py is +42/-6 lines: the _write_json_atomic def plus the out-path block in main() after the verdict is computed. Read in full this session. Rebuilds of outer_loop_arc_early_stop_grace_sweep_20260726.json and outer_loop_arc_max_actions_answer_20260726.json under this file reproduced every measured number exactly (2026-08-17)."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "sha256_now": "b206de0e0c793ee099eb35efeef2281018336dd2423d09dbc5f16d0b86fb0b64",
+        "acknowledged_on": "2026-08-17",
+        "reason": "Seven-commit window 7396dd46..db5f1cd0 (2026-08-09..17, +611/-13). Every addition is unreachable in this artifact's configuration: target-licensed route shadow (constructor default False), two-sided goal contract (CARNOT_ARC_TWO_SIDED_GOAL_CONTRACT unset -> coerce returns None), active reward machine (CARNOT_ARC_ACTIVE_REWARD_MACHINE unset -> every new call site returns immediately), recall-gated resample (resample_enabled() default OFF -> first-line return, inputs untouched). The one always-on change swaps the O(n^2) budget-exhaustion batch call for an incremental estimator that is test-asserted step-for-step output-identical. The rest is SUBMITTED_AGENT_CONFIG metadata (Kaggle dataset slugs) and diagnostics keys. This artifact's numbers derive from rows frozen on disk, which this window cannot rewrite. NOTE, stated for honesty: live-default promotions in the EARLIER, already-acknowledged window (early_stop_grace=1300 wired 2026-08-08; explorer changes 08-03..08-09) mean a fresh re-MEASUREMENT of 2026-07 cells is known to differ (see the gateway-card re-run finding, 2026-08-17); this acknowledgement covers the recorded numbers, not a claim that current live behavior matches July's.",
+        "evidence": "Full window diff read this session. Default-off resolution verified in source: coerce_two_sided_goal_contract (arc_two_sided_goal_contract.py:357), resample_enabled (arc_recall_gated_resample.py:71). Equivalence tests tests/python/test_arc_budget_estimator_incremental_equivalence.py + test_arc_budget_aware_search_live_wiring.py: 21 passed 2026-08-17. Fixture re-execution: exp6012 rebuilt through this exact file at b206de0e reproduced every measured number (2026-08-17)."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "b206de0e0c793ee099eb35efeef2281018336dd2423d09dbc5f16d0b86fb0b64",
+        "sha256_now": "46e0c5f1df72b81fca6e2d38297af4766ae2266a60563553b533f197a8cb8426",
+        "acknowledged_on": "2026-08-17",
+        "reason": "The 2026-08-17 repair-mode change touches only _maybe_recall_gated_resample: when CARNOT_ARC_INDUCE_TOOL_LOOP=repair, the REQ-6410 recall-gated resample routes its re-draw through the tool loop instead of a plain re-induce. Both gates are default OFF -- the resample itself requires CARNOT_ARC_RECALL_RESAMPLE, and repair additionally requires the tool-loop var set to the literal 'repair'. With neither set, the method returns on its existing early path and behaviour is byte-identical.",
+        "evidence": "tests/python/test_arc_tool_loop_repair.py (12 tests) pins BOTH inertness conditions, including that induce() is byte-identical because its hook recognises only '1'. 43 tests green across the repair, resample and tool-loop suites. No existing symbol, default or branch was modified; the change is an added conditional inside a method that is itself gated off. None of these artifacts, nor their build commands, set either variable, so the new path cannot execute during a rebuild."
+      }
+    ]
   },
-  "freshness_acknowledgements": [
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
-    "sha256_now": "ff0cd7aa09a9e6b77e7b5073e5a57f1fdf4fce5c87651744f22feaed846a04de",
-    "reason": "One change, inside the DEFAULT-OFF CARNOT_ARC_PLAIN_PATH_GOAL_SATISFIABILITY_CHECK branch, and within it only the string written to attempt['skipped'] -- so that a budget-exhausted goal gate is no longer recorded as a disproved predicate. Control flow is identical: both cases still return.",
-    "evidence": "The edit is a label substitution guarded by an env var that is unset by default; the surrounding `if not goal_check.get('satisfiable'): ... return` structure is byte-identical. `git diff` on the file is 20 insertions / 1 deletion, of which 12 lines are comment. No artifact in this set exercises that branch (none sets the env var), and no numeric field is touched on any path.",
-    "acknowledged_at_commit": "2bad77981445ee690fb502080fdd6d753b244699",
-    "acknowledged_date": "2026-07-30",
-    "why_not_rebuilt": "rebuilding would overwrite this artifact's MEASURED timings, which are not reproducible -- the previous commit did exactly that to four artifacts and 132 timing values had to be restored from git history this session. Inertness here is established by direct measurement (see evidence), so a rebuild would trade recorded facts for a formality. The rebuild_command remains recorded for anyone who wants rebuild-strength proof."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "ff0cd7aa09a9e6b77e7b5073e5a57f1fdf4fce5c87651744f22feaed846a04de",
-    "sha256_now": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
-    "reason": "One change, and it is a LABEL ONLY, inside the DEFAULT-OFF `CARNOT_ARC_PLAIN_PATH_GOAL_SATISFIABILITY_CHECK` branch: the skip-string allow-list gains `goal_unreached_within_depth` alongside `degenerate_goal_predicate` and `goal_unreached_within_budget`, so the goal gate's new third termination is DISCLOSED rather than flattened back to \"your win condition is degenerate\". Control flow is byte-identical -- all three kinds still take the same `return`, and the else-branch still writes `degenerate_goal_predicate`.",
-    "evidence": "`git diff` on the file is 14 insertions / 1 deletion, of which 7 lines are comment and the rest is one tuple literal reflowed to three members. The enclosing `if not goal_check.get('satisfiable'): ... return` structure is unchanged. The branch is guarded by an env var that is unset by default, and no artifact in this registered set sets it, so the edited lines are not reachable in any of these runs at all. No numeric field is written on any path. Pinned by `tests/python/test_arc_goal_gate_depth_vs_degenerate_2026_07_31.py::test_agent_plain_path_allow_list_discloses_the_depth_kind`, whose mutation M5_plain_path_flattens_the_depth_kind is KILLED (`results/arc_goal_gate_depth_20260731/mutation_check.json`).",
-    "acknowledged_at_commit": "7d81fa816bb35173f2daae0a01bfad6602290389",
-    "acknowledged_date": "2026-07-31",
-    "why_not_rebuilt": "Rebuilding would overwrite MEASURED, non-reproducible timings and live-run records in these artifacts; a previous commit did exactly that to four of them and 132 timing values had to be restored from git history. Inertness here is established by direct differential measurement (see evidence), so a rebuild would trade recorded facts for a formality. Any recorded `rebuild_command` still stands for anyone who wants rebuild-strength proof."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
-    "sha256_now": "e4ff6dc9f3f266636bf3c51938680d99b04cfead5c3589775af3d46b88a84463",
-    "acknowledged_on": "2026-08-01",
-    "reason": "The 2026-08-01 win-transition fix adds an OPTIONAL parameter `win_transition=None` to `_transitions_block` / `induce_prompt` / both proposers' `induce`, plus a `_win_transition` field on E3AgentPolicy and one call site passing it. With the parameter absent, `_transitions_block` performs its historical scan of `trans` unchanged, so behaviour can differ ONLY on the live agent's induce call after a level-up. No other code path is reachable from the change.",
-    "evidence": "ARGUED FROM A BYTE-IDENTITY PROOF, NOT FROM A COMPLETED REBUILD -- disclosed rather than implied. A rebuild differential over the six rebuildable artifacts was launched and only the first (experiment_6011) had completed when this was written; that one showed ZERO substantive movement with all 20 differences being provenance bookkeeping a rebuild deletes. For THIS artifact the evidence is instead direct: `induce_prompt` output is BYTE-IDENTICAL to the renderer recovered from git on all six captured games, so any caller that does not supply the new optional parameter produces the same prompt it did before. Supplying it requires a live level-up, which this artifact's producing code path does not perform. Weaker than a completed rebuild and labelled so."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "e4ff6dc9f3f266636bf3c51938680d99b04cfead5c3589775af3d46b88a84463",
-    "sha256_now": "36dc03639d7b068aa5dfaf5ec401b0d461460aebfaab0c370229e5a9fa4a4968",
-    "acknowledged_on": "2026-08-02",
-    "reason": "REQ-ARC-WMTE-6071 adds an exact-label inert-action memory to StepwiseExplorer, DEFAULT OFF (SUBMITTED_INERT_LABEL_DEFER_ENABLED = False, env CARNOT_ARC_INERT_LABEL_DEFER unset). With the flag off `_inert_label_keep_indices` returns None on its first branch, so `_pop_untested_inner` executes the pre-6071 draw and consumes the same number of values from `self._fd_rng`. The other three touched sites are: a module-level import, three SUBMITTED_* constants plus five zeroed fire-counters in __init__, an `_ingest` observe hook guarded on `inert_label_memory is not None`, and a new `inert_label_defer_diagnostics()` accessor. No line was removed and no existing decision changed.",
-    "evidence": "PROVEN BY DIFFERENTIAL, not by argument. git HEAD's arc_competition_agent.py was swapped into THIS checkout (same untracked assets, same models/, nothing else running) and the scored E3AgentPolicy was run over all 25 public games at budget 2000, seed 20260802, LLM off: 25 of 25 games produced a BYTE-IDENTICAL action trace (sha256 of the ordered action labels) against the post-6071 flag-off arm. The source was restored and its sha256 re-verified. results/arc_inert_label_defer_20260802/arc_inert_label_defer.json records the accompanying A/A noise floor: 75 of 75 same-config pairs identical, i.e. the agent is deterministic here, so the 25/25 is a proof and not a coincidence. NOTE FOR THE NEXT AUTHOR: a git-worktree differential does NOT work for this agent -- a fresh worktree lacks untracked assets the live path reads (results/experiment_4629_live_frame_change_cnn.pt among them) and diverges on 19 of 25 games for reasons that have nothing to do with the change under test."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "36dc03639d7b068aa5dfaf5ec401b0d461460aebfaab0c370229e5a9fa4a4968",
-    "sha256_now": "8406b89ab202056116460404b9a2edbf3b6d5611b49712d464549b1ef88baa5d",
-    "reason": "REQ-ARC-WMTE-6083 puts the 2026-08-01 win-transition SUPPLY behind a default-OFF env gate (CARNOT_ARC_SUPPLY_WIN_TRANSITION, _SUPPLY_WIN_TRANSITION_DEFAULT = '0'). The only behavioural edit is at the single `_induce_and_plan` induce call site: where HEAD passed `win_transition=self._win_transition` unconditionally, the call now builds an empty kwargs dict and adds that keyword ONLY when the gate is on. With the gate unset -- the shipped state -- the call is `induce(short, active_transitions, cell)`, which is byte-identical to the call this artifact's own numbers were produced by (the keyword did not exist before 2026-08-01). Everything else added is a module-level helper plus comments; no other symbol, branch or default is touched.",
-    "evidence": "PROVEN BY MEASUREMENT AT THE RECEIVING END, not argued from the diff. The delta HEAD->now can only matter if `self._win_transition` was ever NON-None where HEAD passed it. It was not: results/outer_loop_arc_win_transition_exposure_20260802.json instruments the live scored path (E3AgentPolicy.next_move driven by scripts/arc_leaderboard_eval.py:run_game) over the 25 public games at budgets 400 and 2000 -- 103 cells, 128 induce calls, 0 coverage gaps -- and every one of the 98 calls that REACHED this call site had `_win_transition is None` (exact skip-string partition, ZERO off-diagonal cells; independent structural discriminator, 0 mismatches/128). A direct instrument on the proposer's own `induce` across the five level-banking games recorded the keyword arriving as None on 4 of 4 calls from arc_competition_agent.py:6429 and absent on the other 12. Since `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, passing None and omitting the keyword are the same computation -- so HEAD and the gated-OFF code build an IDENTICAL prompt on every call this corpus observed. Confirmed end-to-end besides: vc33/400 run with the flag unset, with it '0', and with it '1' gives levels=2 / actions=387 in all cases, and tests/python/test_arc_win_transition_supply_gate_2026_08_02.py asserts both directions (18 assertions), including that OFF OMITS the keyword rather than passing None. LIMIT DISCLOSED: this is inertness on the measured live path, not a proof for a caller that supplies a non-None win transition -- no such caller exists on the live path today, and if one is added the acknowledgement's pinned hash will already have expired."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
-    "sha256_now": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
-    "acknowledged_on": "2026-08-03",
-    "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
-    "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF. The change is two imports plus a single branch in E3AgentPolicy: `_induce_rows = active_transitions`, replaced by the held-out-stripped list ONLY when `cegis_accept_split_enabled()` reads CARNOT_ARC_CEGIS_ACCEPT_SPLIT as truthy. That variable is unset in every path that produced this artifact, so the induce() call receives the identical object it received before. No threshold, no ordering, no seed, no control flow moves.",
-    "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
-    "why_not_rebuilt": "No rebuild_command is registered for this artifact, so a rebuild is not available at all; the acknowledgement path is the only sanctioned move. See the evidence field for why the change is inert."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
-    "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
-    "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
-    "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
-    "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
-    "acknowledged_on": "2026-08-07",
-    "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's own analysis script self-declares the invariant at line 676: \"no SUBMITTED_* flag and no MAX_ACTIONS value was touched -- this measures and reports\".",
-    "evidence": "grep -n 'no SUBMITTED_\\* flag and no MAX_ACTIONS' scripts/analyze_arc_gateway_rescore.py: 1 hit, line 676."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
-    "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
-    "acknowledged_on": "2026-08-07",
-    "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
-    "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
-    "sha256_now": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
-    "acknowledged_on": "2026-08-07",
-    "reason": "REQ-ARC-WMTE-TRAJ-TRANSFER-1 (lever #2). Two changes to arc_competition_agent.py: (1) a new cascade stage in E3AgentPolicy._induce_and_plan, gated behind self.trajectory_transfer_enabled (default False, env CARNOT_ARC_TRAJECTORY_TRANSFER unset in every path that produced this artifact) -- with the flag off this branch never executes, dead code by construction. (2) trace-capture in _begin_level_goal_episode DOES run unconditionally on every level-up, but is STRICTLY ADDITIVE: three new instance attributes (_completed_level_trace, _completed_level_first_grid, _completed_level_cell) computed from data already in memory (self.transitions, self.plan) via read-only list comprehensions; no pre-existing attribute, return value, or side effect is altered, and the added computation is a handful of dict-comprehension iterations, not a measurable wall-clock or resource cost.",
-    "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: the cascade stage is inside `if self.trajectory_transfer_enabled and ...`; the trace-capture writes only three NEW attribute names (grepped: no existing symbol of the same name in the pre-change file) and reads existing values without mutating them. tests/python/test_arc_trajectory_transfer_cascade.py::test_flag_off_never_touches_trajectory_transfer_or_llm_reinduction mechanically pins that flag-off falls through to the LLM tier exactly as before."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
-    "sha256_now": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
-    "acknowledged_on": "2026-08-07",
-    "reason": "REQ-ARC-WMTE-6180-WIRING (lever #5). Three changes to arc_competition_agent.py, all in StepwiseExplorer: (1) a new __init__ kwarg + _fd_gate resolution (self.budget_aware_search_enabled, default False -- no artifact producing this corpus sets CARNOT_ARC_BUDGET_AWARE_SEARCH); (2) _ingest appends every frame to a new self._budget_frames buffer UNCONDITIONALLY -- strictly additive (new attribute, read-only append of data already in scope, no pre-existing attribute/return value/side effect touched) -- but the ESTIMATE computation that consumes it is itself gated behind the flag, so with the flag off nothing about the search's OBSERVABLE behavior changes; (3) _frontier's depth_cost substitution is explicitly gated ('depth_cost = budget_aware_path_cost_weight(...) if self.budget_aware_search_enabled else depth') -- with the flag off this is the literal `depth` expression, byte-identical to before this lever, not an argument-shaped no-op that happens to reduce to the same value.",
-    "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: every new branch checked against `self.budget_aware_search_enabled`; the one unconditional addition (_budget_frames append) is a single list.append() with no other effect. tests/python/test_arc_budget_aware_search_live_wiring.py::test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set and ::test_frontier_never_calls_budget_aware_weight_when_flag_off mechanically pin the flag-off byte-identity property by intercepting the call (not just checking the returned value)."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
-    "sha256_now": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130",
-    "acknowledged_on": "2026-08-08",
-    "reason": "REQ-ARC-WMTE-6220 (fix1 of the 2026-08-08 adversarial-review fix pass). Threads SUBMITTED_EARLY_STOP_GRACE through E3AgentPolicy.__init__ into StepwiseExplorer (previously dead code -- read nowhere), adds it to SUBMITTED_AGENT_CONFIG, and wires it into make_carnot_agent's real construction call. Every historical artifact in this corpus records agent behavior from BEFORE this fix, when early-stopping was structurally unreachable regardless of the constant's value -- so every recorded run already reflects 'early-stopping inactive,' the exact behavior this fix's DEFAULT preserves for any caller that already worked around the dead constant. The fix changes FUTURE agent runs only; it cannot retroactively alter what already happened, so no number in this artifact is stale.",
-    "evidence": "grep -rn early_stop_grace across scripts/ and python/ (excluding the fix's own files) shows scripts/arc_scored_path_early_stop_sweep.py already documents the exact bug this fix closes (\"read NOWHERE\") and works around it by setting the parameter directly on the constructed StepwiseExplorer instance (run_cell(early_stop_grace=grace)), never through E3AgentPolicy's constructor -- the new code path this fix adds. Any artifact whose row data came from that sweep script, or from any other game run before this commit, is therefore unaffected: the mechanism this fix activates was not exercised when those numbers were produced."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130",
-    "sha256_now": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
-    "acknowledged_on": "2026-08-08",
-    "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
-    "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
-    "sha256_now": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
-    "acknowledged_on": "2026-08-08",
-    "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
-    "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
-    "sha256_now": "0617d759eab6d62f7731c0c1ff0548e9203f1fc043e76bcf15f8c4174449a07b",
-    "acknowledged_on": "2026-08-08",
-    "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
-    "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value)."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
-    "sha256_now": "5666e3a5205e4bb4d07a485d019219d739474ba8577ec795a94817f24b471bb7",
-    "acknowledged_on": "2026-08-08",
-    "reason": "REQ-ARC-WMTE-6223/6224 (2026-08-08): fixed a bug where plan-step execution never recorded a Transition (self._prev was populated only in next_move()'s two plan-step branches, via a new _track_prev_for_transition call), and a bug where level-up / STALL-path reinduction planned from self.root_grid instead of a new _plan_start_grid local. Both changes are confined inside E3AgentPolicy: the two next_move() plan-step call sites, and _induce_and_plan()'s internal grid selection. Its rebuild chain (arc_gateway_rescore.py -> arc_gateway_exact_attribution.py -> analyze_arc_gateway_rescore.py) has exactly one live-cell function, arc_gateway_exact_attribution.py:run_cell, which sets os.environ['CARNOT_ARC_DISABLE_INDUCTION']='1' (line 64) before its E3AgentPolicy(...) construction (line 69). Neither arc_gateway_rescore.py nor analyze_arc_gateway_rescore.py constructs E3AgentPolicy or calls next_move/_induce_and_plan at all (grep: no match in either file).",
-    "evidence": "The artifact's own `inference_substrate` is `aggregation_from_upstream_artifacts`, consistent with the only live component (arc_gateway_exact_attribution.py) running with induction structurally disabled. Grep: `grep -n E3AgentPolicy scripts/arc_gateway_rescore.py scripts/analyze_arc_gateway_rescore.py` -> no matches; `grep -n CARNOT_ARC_DISABLE_INDUCTION scripts/arc_gateway_exact_attribution.py` -> line 64, preceding the line-69 construction."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "5666e3a5205e4bb4d07a485d019219d739474ba8577ec795a94817f24b471bb7",
-    "sha256_now": "11f495a67424393cf2e7246d1e8979f1e02b0669c9baeeb25e2e78495af3710e",
-    "acknowledged_on": "2026-08-08",
-    "reason": "REQ-ARC-WMTE-6225/6226 (2026-08-08): fixed a never-empty floor on the discriminative frontier prune (StepwiseExplorer._frontier), and memoized two per-node frontier scoring keys (_goal_bias_score, _action_effect_frontier_key) on the node dict. Same reachability argument as the immediately-prior 6223/6224 acknowledgement pass on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or runs with CARNOT_ARC_DISABLE_INDUCTION=1 set before construction so the explorer never reaches _frontier's discriminative-prune branch with a live game in flight, or (for the one genuinely live-LLM artifact) its own recorded data shows zero induction attempts across every cell of every arm. See that acknowledgement entry (same path, sha256_was == this entry's sha256_was) for the full per-script grep evidence.",
-    "evidence": "Re-verified for this second edit: `git diff arc_competition_agent.py` between the 6223/6224 commit and this one touches only StepwiseExplorer.__init__ (two new counters), set_goal_bias, _goal_bias_score, _action_effect_frontier_key, and _frontier's pruning loop -- none of which are reachable from any of this artifact's dependency scripts any more than the previous edit was (same grep results: no E3AgentPolicy construction, or construction gated behind CARNOT_ARC_DISABLE_INDUCTION=1, or zero recorded induction attempts)."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
-    "sha256_now": "c4b142e5ae099329fa43e4eba443c8e5dbb1a3b7bc60b138cb5e715a2fc5f9a9",
-    "acknowledged_on": "2026-08-08",
-    "reason": "REQ-ARC-WMTE-6229 (2026-08-08): bounded re-induction on renewed stall, gated off by default behind CARNOT_ARC_BOUNDED_REINDUCTION (unset in every one of this artifact's rebuild paths), plus always-on generator_liveness_witness() diagnostic fields. Same reachability argument as the 6223/6224/6225/6226 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or runs with CARNOT_ARC_DISABLE_INDUCTION=1 set before construction (so _should_enter_induction's new branch, gated on `stalled`, is never reached because the whole induction machinery is structurally unreachable), or its own recorded data shows zero induction attempts across every cell of every arm. See the matching prior acknowledgement entry (same path) for the full per-script grep evidence.",
-    "evidence": "Same grep/self-measured evidence as the prior 6223-6226 acknowledgement passes on this path; the new code in this commit (the __init__/level-boundary attempt-count resets, the _should_enter_induction branch, generator_liveness_witness fields) is confined to E3AgentPolicy methods none of these scripts reach any more than the prior edits were."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
-    "sha256_now": "2102adecb1e9073cd62cffc1b215d1065fd08dbaf76f9d168a08e6af047b033e",
-    "acknowledged_on": "2026-08-08",
-    "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
-    "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were."
-   },
-   {
-    "path": "scripts/analyze_arc_gateway_rescore.py",
-    "sha256_was": "1e6611431826041c24df65fb659de19e2a118eafd96d338b37ceb9e75936e154",
-    "sha256_now": "bc0b837d34779fe205f3d86401a4fb3a572ab3df44c91b9e1bdfc0317d6619ef",
-    "acknowledged_on": "2026-08-08",
-    "reason": "Freshness-lint self-fix (2026-08-08, ops/known-issues.md 'A related, systemic defect', FIXED note): this analyser script gained an import of, and one call to, a new helper preserve_freshness_acknowledgements(art, out_path) in scripts/analyze_scored_path_lever_ab.py. The helper's only effect is to copy forward provenance.freshness_acknowledgements from whatever is ALREADY ON DISK at out_path into a FUTURE rebuild's provenance dict, before that future rebuild's write -- it cannot retroactively change any value already computed and written into THIS artifact. Reachability argument holds by construction (the diff is a no-op for any artifact that isn't itself being freshly rebuilt at this exact moment), not by per-script inspection.",
-    "evidence": "git diff on the analyser script: an import line + one line calling preserve_freshness_acknowledgements(<art>, <out_path>) immediately before the pre-existing write call, with no other lines touched. Verified via a real scratch dry-run per script (copy the real tracked artifact to /tmp, rebuild against that scratch path, confirm freshness_acknowledgements survives while other provenance fields correctly refresh) -- see the commit message and ops/known-issues.md's FIXED note for the full per-script verification record."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
-    "sha256_now": "01eb74db2c8a9c163142fb083ad1356000930e61bc6025d3d6e0a8bc985a18c6",
-    "acknowledged_on": "2026-08-08",
-    "reason": "REQ-ARC-WMTE-6198 Phase 0b fix (2026-08-08, adversarial review): gated the two remaining unconditional reasoning-suppressing code fences (the split-induce engine-half fallback and _goal_only_prompt) on induce_think_on(), matching the already-gated combined-induce prompt; added repeat_penalty/repeat_last_n forwarding to _chat_complete_request (previously silently dropped on the chat-completions route, which every think-mode call is forced through); corrected three stale 'default OFF' comments after the 2026-08-08 think-mode default flip. None of these changes touch this artifact's own measured code path -- verified by the same reachability argument used for the prior acknowledgement rounds on this file pair this session (grep confirms this artifact's own script does not import/call induce_think_on, _chat_complete_request, or _goal_only_prompt in a way this fix's diff affects).",
-    "evidence": "git diff on both source files: the diff is confined to induce()'s split-fallback prompt suffix, _goal_only_prompt's return string, _chat_complete_request's signature/payload/retry call, its one call site inside generate(), and 4 comment-only corrections -- confirmed via `git diff -U0` hunk inspection before this acknowledgement was written."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
-    "sha256_now": "36cbc4102a453bc4fa7342e9cf3ddfda4287ab94e73963220ecc27fd7f0c8548",
-    "acknowledged_on": "2026-08-08",
-    "reason": "Live-agent adversarial review Phase 0c fix (2026-08-08): (1) _observe_level_boundary now captures the graded-goal-bias win-state exemplar from the last-admitted transition's PRE-action grid instead of grid_of(latest) (the frame returned by the winning action itself, which already showed the NEXT level's opening board -- an inverted gradient under CARNOT_ARC_GRADED_GOAL_BIAS=1). (2) _induce_and_plan now resets self.plan/self.pi to []/0 at entry, plus a bounds guard on the induce branch's _next_plan_move() call, fixing a stale self.pi=1 left behind by a just-consumed one-step CARNOT_ARC_ACTIVE_PROBE=1 probe plan (silently skipped the next plan's first step, or IndexError on a second one-step plan). Both changes are no-ops for this artifact: _induce_and_plan's body only ever WRITES self.plan/self.pi after the reset line, never reads the incoming value (grep-verified), and this artifact's generating script(s) and its own recorded config never set CARNOT_ARC_GRADED_GOAL_BIAS=1 or CARNOT_ARC_ACTIVE_PROBE=1 (grep-verified against both the script source and this artifact's own JSON).",
-    "evidence": "git diff -U0 on arc_competition_agent.py: confined to _observe_level_boundary's completed_grid capture, _induce_and_plan's entry reset, and the induce branch's `if self.plan and self.pi < len(self.plan):` guard. `grep -c 'active_probe\\|graded_goal'` on this artifact's generating script(s) and on this artifact's own JSON both return 0."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
-    "sha256_now": "79316a60396f3549efbfb983f358f8f2def898b8b37c8c14ab9118ab80f37dcc",
-    "acknowledged_on": "2026-08-08",
-    "reason": "Phase 1b promotion (2026-08-08): SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED flipped False->True (REQ-ARC-WMTE-6234). This artifact predates the lever entirely -- the trajectory-transfer cascade stage (arc_competition_agent.py lines ~6780-6810, added 2026-08-07 per its own \"LEVER #2 (2026-08-07...)\" comment) did not exist in the codebase when this artifact was measured (dated 2026-07-26/27), so its default value now cannot change what was measured then.",
-    "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to the SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED constant, its comment block, and the SUBMITTED_AGENT_CONFIG dict entry that mirrors it -- no other line changed."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
-    "sha256_now": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
-    "acknowledged_on": "2026-08-09",
-    "reason": "REQ-ARC-WMTE-6243 (2026-08-09): added SUBMITTED_THINK_ARM_FALLBACK_ENABLED (default False), the resolver `self.think_arm_fallback_enabled` in E3AgentPolicy.__init__, and a new wrapper method `_execute_bounded_llm_reinduction_with_arm_fallback` used at both _induce_and_plan call sites. This artifact's own generating script never sets CARNOT_ARC_THINK_ARM_FALLBACK (grep-verified), so the new flag resolves to its default-off value, under which the wrapper calls execute_bounded_llm_reinduction exactly once and returns its outcome unmodified -- byte-identical to the pre-change call sites for every code path this artifact exercises.",
-    "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to: one new module constant + its env-override block in __init__ (near the sibling trajectory_transfer_enabled resolver), one new method inserted before _induce_and_plan, two call sites changed from `execute_bounded_llm_reinduction(...)` to `self._execute_bounded_llm_reinduction_with_arm_fallback(attempt, ...)` with identical kwargs, and two new entries in the SUBMITTED_AGENT_CONFIG status dict. No existing function body was modified."
-   },
-   {
-    "path": "scripts/arc_leaderboard_eval.py",
-    "sha256_was": "04d09695c4eb4e59e85d16be5d7526e3c224bcc0bfe16af5bc5e74fb22deda02",
-    "sha256_now": "2c41f6878d4fa5bf7b517d152a068ff83026befe37783e8232b259c68b05c512",
-    "acknowledged_on": "2026-08-17",
-    "reason": "Single-commit window db5f1cd0fb (2026-08-17). The diff is confined to main()'s output-path selection and a new _write_json_atomic helper. Both run AFTER every measured value is finalized: subset runs now write run-scoped files under results/*_runs/ instead of overwriting the tracked sweep, and the final write is atomic. No scoring, budget, or row-content code changed, so no number this artifact records can move.",
-    "evidence": "git diff 4c74d32cc0dd..db5f1cd0fb -- scripts/arc_leaderboard_eval.py is +42/-6 lines: the _write_json_atomic def plus the out-path block in main() after the verdict is computed. Read in full this session. Rebuilds of outer_loop_arc_early_stop_grace_sweep_20260726.json and outer_loop_arc_max_actions_answer_20260726.json under this file reproduced every measured number exactly (2026-08-17)."
-   },
-   {
-    "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
-    "sha256_now": "b206de0e0c793ee099eb35efeef2281018336dd2423d09dbc5f16d0b86fb0b64",
-    "acknowledged_on": "2026-08-17",
-    "reason": "Seven-commit window 7396dd46..db5f1cd0 (2026-08-09..17, +611/-13). Every addition is unreachable in this artifact's configuration: target-licensed route shadow (constructor default False), two-sided goal contract (CARNOT_ARC_TWO_SIDED_GOAL_CONTRACT unset -> coerce returns None), active reward machine (CARNOT_ARC_ACTIVE_REWARD_MACHINE unset -> every new call site returns immediately), recall-gated resample (resample_enabled() default OFF -> first-line return, inputs untouched). The one always-on change swaps the O(n^2) budget-exhaustion batch call for an incremental estimator that is test-asserted step-for-step output-identical. The rest is SUBMITTED_AGENT_CONFIG metadata (Kaggle dataset slugs) and diagnostics keys. This artifact's numbers derive from rows frozen on disk, which this window cannot rewrite. NOTE, stated for honesty: live-default promotions in the EARLIER, already-acknowledged window (early_stop_grace=1300 wired 2026-08-08; explorer changes 08-03..08-09) mean a fresh re-MEASUREMENT of 2026-07 cells is known to differ (see the gateway-card re-run finding, 2026-08-17); this acknowledgement covers the recorded numbers, not a claim that current live behavior matches July's.",
-    "evidence": "Full window diff read this session. Default-off resolution verified in source: coerce_two_sided_goal_contract (arc_two_sided_goal_contract.py:357), resample_enabled (arc_recall_gated_resample.py:71). Equivalence tests tests/python/test_arc_budget_estimator_incremental_equivalence.py + test_arc_budget_aware_search_live_wiring.py: 21 passed 2026-08-17. Fixture re-execution: exp6012 rebuilt through this exact file at b206de0e reproduced every measured number (2026-08-17)."
-   }
-  ]
- },
- "duration_s": 1.748,
- "duration_s_principle": "THIS ANALYSER'S runtime only. It is NOT the measurement clock -- Part A's clock is `measurement_wall_s` (sum of upstream row-file elapsed_s) and Part B's is `part_b_measurement_wall_s`. Conflating them is the 2026-07-26 failure this field's annotation exists to prevent.",
- "inference_substrate": "aggregation_from_upstream_artifacts",
- "inference_substrate_principle": "the artifact as a whole is an aggregation over persisted rows plus a cited live sub-measurement; the live half declares its own substrate inside `part_b_exact_attribution_live`.",
- "reproducibility_checksum": "8e2123304c6120873fd80eb4d56716b287ec3d6f541e68ad04b864c5b9dad325"
+  "duration_s": 1.748,
+  "duration_s_principle": "THIS ANALYSER'S runtime only. It is NOT the measurement clock -- Part A's clock is `measurement_wall_s` (sum of upstream row-file elapsed_s) and Part B's is `part_b_measurement_wall_s`. Conflating them is the 2026-07-26 failure this field's annotation exists to prevent.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_principle": "the artifact as a whole is an aggregation over persisted rows plus a cited live sub-measurement; the live half declares its own substrate inside `part_b_exact_attribution_live`.",
+  "reproducibility_checksum": "8e2123304c6120873fd80eb4d56716b287ec3d6f541e68ad04b864c5b9dad325"
 }

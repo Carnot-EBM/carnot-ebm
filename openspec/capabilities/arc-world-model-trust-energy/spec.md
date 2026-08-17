@@ -26083,3 +26083,67 @@ result, and continue.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6460 | `python/carnot/agentic/arc_induction_tools.py` (registry + session + schemas + memorization scan); `python/carnot/agentic/arc_induction_tool_loop.py` (loop + termination + stats); hook at the top of `LocalGGUFProposer.induce` in `python/carnot/agentic/arc_executable_world_model.py`, env-gated, fall-through on failure. | `tests/python/test_arc_induction_tool_loop.py` (10/10: env-unset bomb pin, zero-mismatch accept, turn-cap fallback to single-shot, parse-failure accounting, early stop, aggregate-only held-out, memorization flag, dispatch coverage, region/diff round-trip). |
+
+### REQ-ARC-WMTE-6470: Repair-Mode Tool Loop (Default OFF)
+
+The first paired tool-loop A/B (2026-08-17) was invalid: the measurement harness
+monkeypatches the induce path with a direct `generate()` call, so the `induce()`
+hook never ran and the arm measured single-shot induction under a 3072-token
+thinking cap. The paired signal that survives from earlier valid probes: the loop
+converged where single-shot failed (tu93), and single-shot's clean cells need no
+help. That motivates a REPAIR shape rather than a replacement shape.
+
+With `CARNOT_ARC_INDUCE_TOOL_LOOP=repair` the pipeline SHALL:
+
+1. Run the shipped single-shot induction unchanged. The `induce()` tool-loop hook
+   only recognizes the value `1`, so `repair` leaves `induce()` byte-identical.
+2. Reuse the recall-gated resample machinery (REQ-ARC-WMTE-6410) as the fire
+   decision: trust-subordinate, catastrophic-only, evidence-floored, budgeted.
+   Repair fires ONLY on a draw the downstream trust gate already rejects.
+3. Route the re-draw through `induce_with_tool_loop` instead of a blind second
+   generation, seeded with the failed engine (`seed_engine_code`): the seed is
+   scored as candidate zero, the opening prompt carries the seed code plus its
+   measured mismatch report, and the monotone accept can never return a candidate
+   with more visible mismatches than the seed.
+4. Bypass the seed-pinned refusal for the tool re-draw only. A pinned sampler seed
+   reproduces a BLIND re-draw byte-for-byte, which is why REQ-6410 refuses there.
+   The tool loop's conversation is a different token stream with per-turn seeds,
+   so a pinned seed does not make the repair a paid no-op.
+5. Keep REQ-6410's keep/restore semantics: the repaired engine is kept only if it
+   passes trust or improves recall; otherwise the store is restored byte-identically.
+
+`CARNOT_ARC_INDUCE_TOOL_LOOP=1` (replace mode) and `CARNOT_ARC_RECALL_RESAMPLE=1`
+(blind resample) are unchanged by this REQ.
+
+#### SCENARIO-ARC-WMTE-6470-1 (default off)
+
+Given `CARNOT_ARC_INDUCE_TOOL_LOOP` unset, the repair path SHALL never be
+consulted and `decide_resample` behaviour SHALL be unchanged.
+
+#### SCENARIO-ARC-WMTE-6470-2 (repair value does not engage replace mode)
+
+Given `CARNOT_ARC_INDUCE_TOOL_LOOP=repair`, `induce()` SHALL be byte-identical to
+the shipped single-shot path (the loop is not consulted at induce time).
+
+#### SCENARIO-ARC-WMTE-6470-3 (trust-subordinate repair)
+
+Given a catastrophic, trust-rejected draw and repair mode on, the resample helper
+SHALL run the tool loop seeded with the failed engine and keep the result under
+REQ-6410's keep rule. Given a trust-ACCEPTED draw, repair SHALL NOT fire.
+
+#### SCENARIO-ARC-WMTE-6470-4 (seed-pinned still fires)
+
+Given `CARNOT_ARC_GENERATOR_SEED` set and repair mode on, the decision SHALL fire
+(reason `catastrophic_recall_tool_loop_repair`); given blind-resample mode only,
+the seed-pinned refusal SHALL be preserved.
+
+#### SCENARIO-ARC-WMTE-6470-5 (monotone seed floor)
+
+Given a seeded loop whose tool rounds produce only worse candidates, the accepted
+engine SHALL be the seed itself (never a regression on visible mismatches).
+
+## Implementation Status (REQ-ARC-WMTE-6470)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6470 | `python/carnot/agentic/arc_induction_tool_loop.py` (`tool_loop_repair_enabled`, `seed_engine_code` seeding + repair preamble + seed floor); `python/carnot/agentic/arc_recall_gated_resample.py` (`tool_repair` kwarg: enablement, seed-pin bypass, distinct fire reason); `python/carnot/agentic/arc_competition_agent.py` (`_maybe_recall_gated_resample` routes the fired re-draw through the seeded loop and records loop stats on the attempt row). | `tests/python/test_arc_tool_loop_repair.py` (inertness pins for unset + repair-at-induce; decision-matrix pins incl. seed-pin bypass asymmetry; seeded-loop floor; agent-helper integration: repair recovery, worse-candidate restore, trust-subordination). |

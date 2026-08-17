@@ -54,6 +54,14 @@ def tool_loop_enabled() -> bool:
     return os.environ.get("CARNOT_ARC_INDUCE_TOOL_LOOP") == "1"
 
 
+def tool_loop_repair_enabled() -> bool:
+    """REPAIR mode (REQ-ARC-WMTE-6470): single-shot stays primary; the recall-gated
+    resample (REQ-ARC-WMTE-6410) routes its re-draw through this loop, seeded with the
+    failed engine. Deliberately a DIFFERENT value of the same env var, so the two modes
+    are mutually exclusive by construction and `induce()`'s `== "1"` hook stays dead."""
+    return os.environ.get("CARNOT_ARC_INDUCE_TOOL_LOOP") == "repair"
+
+
 def _turn_cap() -> int:
     try:
         return max(1, int(os.environ.get("CARNOT_ARC_INDUCE_TOOL_TURNS", DEFAULT_TURN_CAP)))
@@ -246,6 +254,7 @@ def induce_with_tool_loop(
     *,
     previous_level_complete_grid: Optional[np.ndarray] = None,
     win_transition: Optional[Any] = None,
+    seed_engine_code: Optional[str] = None,
 ) -> tuple[bool, str]:
     """Run tool-assisted induction. Returns (True, note) after writing world_model.py,
     or (False, reason) -- in which case the caller runs the shipped single-shot path.
@@ -281,10 +290,46 @@ def induce_with_tool_loop(
         k=_induce_transitions_k(),
         include_playbook_exemplars=getattr(proposer, "include_playbook_exemplars", False),
     )
+    # REPAIR SEEDING (REQ-ARC-WMTE-6470). Score the failed engine as candidate zero and
+    # show the model the code WITH its measured mismatch report. Two properties follow:
+    # the monotone accept can never return something with more visible mismatches than
+    # the seed (the floor), and the model starts from a concrete measured diagnosis
+    # instead of a blank page.
+    seed_note = ""
+    seed_report: Optional[dict[str, Any]] = None
+    if seed_engine_code:
+        seed_report = session.run_engine_on_transitions(seed_engine_code)
+        if seed_report.get("ok"):
+            brief = {
+                k: seed_report.get(k)
+                for k in (
+                    "n_transitions_tested",
+                    "n_correct",
+                    "accuracy",
+                    "cell_recall",
+                    "mismatches",
+                    "held_out",
+                    "memorization_scan",
+                )
+            }
+            seed_note = (
+                "\n\nREPAIR MODE. A previous attempt produced the engine below. Its "
+                "measured report on the observed transitions:\n"
+                + json.dumps(brief, default=str)
+                + "\n\nPrevious engine:\n```python\n"
+                + seed_engine_code.strip()
+                + "\n```\nFix THIS engine using the mismatch report. Do not start from "
+                "scratch unless the report shows the approach itself is wrong."
+            )
     messages: list[dict[str, Any]] = [
-        {"role": "user", "content": base + "\n\n" + _TOOL_INSTRUCTIONS}
+        {"role": "user", "content": base + "\n\n" + _TOOL_INSTRUCTIONS + seed_note}
     ]
     stats: dict[str, Any] = {
+        "seeded": bool(seed_engine_code),
+        "seed_scoreable": bool(seed_report.get("ok")) if seed_report is not None else None,
+        "seed_visible_mismatches": (
+            session.candidates[-1].visible_mismatches if session.candidates else None
+        ),
         "turns": 0,
         "decode_tokens_total": 0,
         "decode_tokens_per_turn": [],
@@ -350,6 +395,14 @@ def induce_with_tool_loop(
         return ok, note
 
     best_mismatches: Optional[int] = None
+    if session.candidates:
+        # The seed is the floor: a tool-round candidate only counts as improvement if it
+        # beats the seed's visible-mismatch count.
+        best_mismatches = session.candidates[-1].visible_mismatches
+        if best_mismatches == 0:
+            # The caller fired repair on a catastrophic-recall draw, yet the seed fits the
+            # visible split exactly -- nothing for a mismatch-driven loop to iterate on.
+            return _finish("seed_zero_mismatches")
     non_improving = 0
     cap = _turn_cap()
     early_after = _early_stop_after()
