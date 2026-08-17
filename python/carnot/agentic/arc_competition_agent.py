@@ -8423,15 +8423,19 @@ SUBMITTED_AGENT_CONFIG = {
         # one. `kernel-metadata.json` has been re-pointed at `iancblenke/carnot-gemma4-31b-it-gguf`,
         # which DOES NOT EXIST YET and must be uploaded. This field records that dependency in the
         # config the readiness experiment reads, so it cannot be forgotten silently.
-        "kaggle_dataset_slug": "iancblenke/carnot-gemma4-31b-it-gguf",
-        # Uploaded by the operator 2026-07-28 (17 GB, private). The flag above recorded the
-        # dependency precisely so this moment could not be missed; it has now happened.
-        "kaggle_dataset_uploaded": True,
-        # The MTP draft head is a SECOND dataset, because it is a second file. Uploaded the same
-        # day (491 MB, private). Recorded separately from the weights slug so the readiness gate
-        # can require both -- a missing head is a silent ~1.4x slowdown, not an error.
-        "kaggle_mtp_head_dataset_slug": "iancblenke/carnot-gemma4-31b-mtp-head",
-        "kaggle_mtp_head_dataset_uploaded": True,
+        # OPERATOR ACTION REQUIRED before the next submission (2026-08-16, generator moved to
+        # Qwen3.8-27B). Same shape as the 2026-07-28 gemma dependency recorded below it: the
+        # kernel attaches the model as a DATASET, and this one does NOT EXIST YET. The operator
+        # must create and upload `iancblenke/carnot-qwen38-27b-gguf` (~16 GB) before the kernel
+        # push can resolve its dataset sources. Recorded here so it cannot be forgotten silently.
+        "kaggle_dataset_slug": "iancblenke/carnot-qwen38-27b-gguf",
+        "kaggle_dataset_uploaded": False,
+        # No MTP draft head exists for Qwen3.8-27B, so speculative decoding is off and there is no
+        # second dataset to require. This is a real cost of the swap, not an oversight: gemma's
+        # head bought roughly 1.8x decode speed. Left as None rather than deleted so the readiness
+        # gate keeps reporting the field, and so attaching a head later is a value change here.
+        "kaggle_mtp_head_dataset_slug": None,
+        "kaggle_mtp_head_dataset_uploaded": False,
     },
     "feature_router_enabled": False,
     "explore_diversity_default": False,

@@ -74,7 +74,7 @@ def mods(monkeypatch):
     return agent, wm
 
 
-def test_the_canonical_pin_is_gemma_4_31b(mods) -> None:
+def test_the_canonical_pin_is_qwen38_27b(mods) -> None:
     """Updated 2026-07-31: the pin moved from Q4_K_M to the QAT quant of the SAME model.
 
     Not a generator change -- gemma-4-31B-it either way, so every retired-marker assertion
@@ -87,9 +87,9 @@ def test_the_canonical_pin_is_gemma_4_31b(mods) -> None:
     cache directories and would resolve ambiguously.
     """
     agent, wm = mods
-    assert wm.ARC_LIVE_GENERATOR_REPO_SUBSTR == "gemma-4-31B-it-qat"
-    assert wm.ARC_LIVE_GENERATOR_MODEL_ID == "unsloth/gemma-4-31B-it-qat-GGUF"
-    assert wm.ARC_LIVE_GENERATOR_MODEL_FILENAME == "gemma-4-31B-it-qat-UD-Q4_K_XL.gguf"
+    assert wm.ARC_LIVE_GENERATOR_REPO_SUBSTR == "Qwen3.8-27B"
+    assert wm.ARC_LIVE_GENERATOR_MODEL_ID == "unsloth/Qwen3.8-27B-GGUF"
+    assert wm.ARC_LIVE_GENERATOR_MODEL_FILENAME == "Qwen3.8-27B-Q4_K_M.gguf"
     for marker in RETIRED_GENERATOR_MARKERS:
         assert marker not in wm.ARC_LIVE_GENERATOR_REPO_SUBSTR
         assert marker not in wm.ARC_LIVE_GENERATOR_MODEL_ID
@@ -185,15 +185,20 @@ def test_submitted_config_records_both_operator_dataset_uploads(mods) -> None:
     landed". The flags stay in the config either way -- they are the record the readiness gate
     reads, not a one-time to-do.
     """
+    # 2026-08-16: the generator moved to Qwen3.8-27B, so this assertion returns to the FIRST role
+    # the docstring above describes -- recording an upload that has not happened yet. The
+    # ~16 GB `carnot-qwen38-27b-gguf` dataset does not exist; only the operator can create it, and
+    # the kernel push fails at dataset resolution until they do. Flip this to True in the same
+    # commit that records the upload, exactly as 2026-07-28 did for gemma.
     agent, _wm = mods
     frozen = agent.SUBMITTED_AGENT_CONFIG["frozen_generator"]
-    assert frozen["kaggle_dataset_slug"] == "iancblenke/carnot-gemma4-31b-it-gguf"
-    assert frozen["kaggle_dataset_uploaded"] is True
-    # The head is a SEPARATE dataset because it is a separate file. Tracked separately so a missing
-    # head -- whose only symptom is a ~1.4x slower run, never an error -- is visible before a
-    # submission rather than after it.
-    assert frozen["kaggle_mtp_head_dataset_slug"] == "iancblenke/carnot-gemma4-31b-mtp-head"
-    assert frozen["kaggle_mtp_head_dataset_uploaded"] is True
+    assert frozen["kaggle_dataset_slug"] == "iancblenke/carnot-qwen38-27b-gguf"
+    assert frozen["kaggle_dataset_uploaded"] is False
+    # No MTP draft head ships for Qwen3.8-27B, so there is no second dataset. That is a measured
+    # cost of the swap (gemma's head bought roughly 1.8x decode), not a missing upload -- so the
+    # slug is None and the uploaded flag is False, and they must not disagree with each other.
+    assert frozen["kaggle_mtp_head_dataset_slug"] is None
+    assert frozen["kaggle_mtp_head_dataset_uploaded"] is False
     assert frozen["kaggle_mtp_head_dataset_slug"] != frozen["kaggle_dataset_slug"]
 
 
