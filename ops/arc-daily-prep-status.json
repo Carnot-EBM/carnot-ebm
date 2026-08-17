@@ -1,8 +1,8 @@
 {
-  "kernel_version": "18",
+  "kernel_version": "19",
   "note": "the automated prep script's own 24x15s poll exited with save_run='?' before the kernel genuinely finished; manually polled to KernelWorkerStatus.COMPLETE and confirmed submission.parquet present via `kaggle kernels output` before correcting this file to reflect ground truth. Kernel v9 bundles REQ-ARC-FCP-5699-35's graduated fixes (default-on stall-refactor-loop, max_tokens/timeout 4096/600, structural reminder) via the re-versioned iancblenke/carnot-agent-code dataset.",
   "parquet_ok": false,
-  "prepped_at": "2026-08-16T13:37Z",
+  "prepped_at": "2026-08-17T03:44Z",
   "prior_submission_scores": {
     "2026-06-30": 0.08,
     "2026-07-15": 0.12
@@ -21,5 +21,5 @@
       "submitted_at": "2026-07-16T19:37:35Z"
     }
   ],
-  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 18"
+  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 19"
 }

@@ -3705,7 +3705,14 @@ ARC_LIVE_GENERATOR_MTP_DEFAULT = "0"
 # to flip a single shared constant before submitting silently ships the slower configuration, and
 # nothing anywhere reports it -- the run just takes ~1.4x longer per induction. Naming both makes
 # the divergence a fact the tests can pin instead of a step in a runbook.
-ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT = "1"
+# FLIPPED TO "0" 2026-08-17 with the move to Qwen3.8-27B, which has no MTP draft head published.
+# Kernel v19 caught the disagreement at runtime and named it exactly: "SUBMITTED_AGENT_CONFIG
+# declares mtp=True but this kernel resolved mtp=False ... the readiness gates describe a
+# configuration this run is NOT using". Leaving it at "1" costs nothing at run time (the kernel
+# resolves head_present=False and proceeds without speculative decoding) but it makes every
+# readiness gate report a config that is not the one running, which is the precise failure this
+# constant's own comment above warns about, pointed the other way.
+ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT = "0"
 # The MTP head is a SEPARATE FILE, not a section of the main GGUF. Both the filename and the
 # substring are named here because the Kaggle kernel matches by name against an order-undefined
 # `rglob`, and the head and the main model are both `*.gguf` under the same mount root.
