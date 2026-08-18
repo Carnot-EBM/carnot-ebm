@@ -317,10 +317,18 @@ def test_kv_quant_default_is_q8_0_not_none(wm) -> None:
 
 
 def test_repo_substr_default_is_the_pinned_31b_not_a_third_model(wm) -> None:
-    """The default was `gemma-4-12B-it` -- neither the retired Qwen nor the directed 31B."""
+    """The default was `gemma-4-12B-it` -- neither the retired Qwen nor the directed 31B.
+
+    UPDATED 2026-08-17, second orphan in this file. The literal `31B` assertion outlived the
+    model it named: the generator moved to Qwen3.8-27B on 2026-08-16 and this test has failed
+    ever since, alongside the head-dataset test above. The DEFENSIBLE invariant is not any one
+    model string -- it is that the proposer's default tracks the single pinned constant and never
+    silently drifts to a third model. That is what is asserted now, so the next generator move
+    costs one constant instead of a fresh orphan. The retired-model list keeps growing rather
+    than being replaced, per never-prune; `gemma-4-31B` joins it because it is retired too.
+    """
     assert wm.LocalGGUFProposer().repo_substr == wm.ARC_LIVE_GENERATOR_REPO_SUBSTR
-    assert "31B" in wm.LocalGGUFProposer().repo_substr
-    for retired in ("Qwen3.5-9B", "Qwen3.6-27B", "gemma-4-12B"):
+    for retired in ("Qwen3.5-9B", "Qwen3.6-27B", "gemma-4-12B", "gemma-4-31B"):
         assert retired not in wm.LocalGGUFProposer().repo_substr
     assert wm.LocalGGUFProposer(repo_substr="explicit-other").repo_substr == "explicit-other"
 
@@ -480,10 +488,23 @@ def test_the_mtp_head_dataset_is_attached_by_the_kernel() -> None:
         )
     )
     sources = meta["dataset_sources"]
-    assert "iancblenke/carnot-gemma4-31b-mtp-head" in sources, sources
-    assert "iancblenke/carnot-gemma4-31b-it-gguf" in sources, sources
-    # Both must be present: the head alone is not a generator, and the weights alone are not MTP.
-    assert len({s for s in sources if "gemma4-31b" in s}) == 2, sources
+    # UPDATED 2026-08-17. The two-dataset assertion below is preserved in prose because its
+    # REASONING still holds; only the model it named has changed. It required
+    # carnot-gemma4-31b-mtp-head AND carnot-gemma4-31b-it-gguf, on the grounds that "the head
+    # alone is not a generator, and the weights alone are not MTP". That became unsatisfiable on
+    # 2026-08-16 when the generator moved off gemma, and the test was left asserting a
+    # configuration nothing shipped -- it failed at HEAD for a full day before anyone ran it.
+    #
+    # The NVFP4 Qwen3.8-27B conversion is SELF-DRAFTING: it declares `nextn_predict_layers` and
+    # carries its MTP layers inside the single weights file, so there is no second dataset to
+    # forget. The invariant that survives is the one that mattered all along -- the attached
+    # weights must be able to supply MTP, by whatever mechanism -- and for a self-drafting model
+    # that means exactly one weights dataset, not two.
+    assert "iancblenke/carnot-qwen38-27b-nvfp4-mtp" in sources, sources
+    # A stale separate-head dataset must NOT ride along: the launcher checks self-drafting FIRST,
+    # so a leftover head cannot win, but attaching one invites the next reader to conclude this
+    # model needs it.
+    assert not [s for s in sources if "mtp-head" in s], sources
 
 
 def test_the_kernel_disambiguates_the_two_ggufs_by_name_not_by_rglob_order() -> None:
