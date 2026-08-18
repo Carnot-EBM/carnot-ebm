@@ -318,6 +318,38 @@ if _vllm_cfg is not None:
         os.environ.pop("CARNOT_ARC_LLM_BACKEND", None)
         os.environ.pop("CARNOT_ARC_VLLM_MODEL_DIR", None)
     if os.environ.get("CARNOT_ARC_LLM_BACKEND") == "vllm":
+        # STAGE THE PRE-BUILT FLASHINFER AOT CACHE. Without this the engine dies at startup:
+        # kernel v28 spent 295 s reaching `Engine core initialization failed`, which is the same
+        # signature bench v12 produced before the cache existed. vLLM's native SM120 FP4 GEMM is
+        # JIT-compiled by flashinfer on first use, and that build fails offline inside flashinfer's
+        # own vendored cutlass/cccl -- not for want of a toolkit. The bench series settled it by
+        # compiling the module in a matched container (CUDA 13.0.88, python 3.12, same wheels) and
+        # shipping it as the carnot-flashinfer-aot-sm120 dataset; vLLM then finds the .so already
+        # built and skips the JIT. Bench v13 and v15 are the runs that prove it.
+        #
+        # RECONSTRUCT THE CACHE KEY BY NAME, NEVER BY PATH DEPTH. Bench v8 staged one level too
+        # shallow and v9 discovered why a fixed `parents[N]` cannot work: Kaggle's dataset mount
+        # depth is NOT stable across runs, so the same dataset appeared at different depths. What
+        # is stable is that the arch dir is `parents[2]` OF THE .so, and the version half of the
+        # key comes from the flashinfer that was just installed rather than from the mount.
+        _aot = next(iter(inp.rglob("fp4_gemm_cutlass_sm120.so")), None)
+        if _aot is not None:
+            try:
+                import flashinfer as _fi
+
+                _arch = _aot.parents[2]
+                _dst = Path("/root/.cache/flashinfer") / _fi.__version__ / _arch.name
+                shutil.copytree(_arch, _dst, dirs_exist_ok=True)
+                print(f"LLM BACKEND: vllm AOT cache staged {_arch} -> {_dst}", flush=True)
+            except Exception as _ae:
+                print(f"LLM BACKEND: vllm AOT cache staging FAILED ({_ae!r}); the engine will "
+                      "re-attempt the JIT and is expected to fail -- the agent falls back to "
+                      "LLM-OFF, not to llama.cpp, because the backend is already selected.",
+                      flush=True)
+        else:
+            print("LLM BACKEND: vllm AOT cache NOT FOUND under /kaggle/input. Native FP4 will "
+                  "re-attempt the JIT that failed in bench v12 and kernel v28. Attach "
+                  "iancblenke/carnot-flashinfer-aot-sm120 in kernel-metadata.json.", flush=True)
         print(f"LLM BACKEND: vllm (model={_vllm_cfg.parent}, cuda_home={_cu})", flush=True)
 else:
     print("LLM BACKEND: llama.cpp (no safetensors model dir attached)", flush=True)
@@ -642,6 +674,24 @@ if server and gguf:
                 print("LLM VLLM PROBE FAILED TO START: "
                       f"{_vp.server_failure_diagnostics or 'no diagnostic recorded'}. The agent "
                       "will retry on its own and, failing that, run LLM-OFF.", flush=True)
+                # SAVE THE SERVER LOG. `_note_server_failure` caps each diagnostic at 400
+                # characters, which on kernel v28 captured only the outer `AsyncMPClient` stack
+                # and cut off the actual cause above it -- enough to know the engine died, not
+                # enough to know why, and the log itself lives in /tmp and dies with the kernel.
+                # Copying it into the output makes the next failure diagnosable from the artifacts
+                # alone instead of needing another run to reproduce.
+                try:
+                    import tempfile as _vtf
+
+                    _vsrc = Path(_vtf.gettempdir()) / "vllm_server_8919.log"
+                    if _vsrc.exists():
+                        shutil.copy(_vsrc, "/kaggle/working/vllm_server.log")
+                        print(f"LLM VLLM SERVER LOG saved ({_vsrc.stat().st_size} bytes) to "
+                              "/kaggle/working/vllm_server.log", flush=True)
+                    else:
+                        print(f"LLM VLLM SERVER LOG absent at {_vsrc}", flush=True)
+                except Exception as _vle:
+                    print(f"LLM VLLM SERVER LOG copy failed: {_vle!r}", flush=True)
             else:
                 # Admission, read rather than generated. A refusal here means the pool is too small
                 # for a worst-case induce prompt, which is the fault worth knowing before scoring.
