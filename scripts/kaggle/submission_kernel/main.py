@@ -254,6 +254,46 @@ def _is_head(name: str) -> bool:
     return name.lower().startswith(_HEAD_SUBSTR)
 
 
+# VLLM BACKEND SELECTION (REQ-ARC-WMTE-6510, operator-directed 2026-08-18). Default OFF: with
+# no safetensors model dir attached this whole block is inert and the GGUF path below runs
+# exactly as before. When the NVFP4 safetensors dataset IS attached, select vLLM -- measured on
+# this card at 651.8 tok/s aggregate (k=32, native FP4 + fp8 KV) against 228.3 for the best
+# llama.cpp config and ~52 for what shipped, which takes the induction budget from does-not-fit
+# to ~2.6h of the 11.5h cap.
+#
+# Resolve by rglob, never by fixed depth: Kaggle's dataset mount depth is NOT stable across runs
+# (observed directly -- one run served the version dir, the next served its child).
+_vllm_cfg = next((c for c in inp.rglob("config.json") if list(c.parent.glob("*.safetensors"))), None)
+if _vllm_cfg is not None:
+    os.environ["CARNOT_ARC_LLM_BACKEND"] = "vllm"
+    os.environ["CARNOT_ARC_VLLM_MODEL_DIR"] = str(_vllm_cfg.parent)
+    # The two environment repairs the benchmark proved necessary, both applied BEFORE the agent
+    # starts so flashinfer's startup JIT of the native SM120 FP4 GEMM can compile and link:
+    #   1. pip resolves an INCOHERENT CUDA stack (nvcc 13.3 against 13.0 headers) -> the wheels
+    #      dataset pins the coherent 13.0.x five, and CUDA_HOME/PATH point at it.
+    #   2. `ld` wants unversioned libcudart.so / libcuda.so; the wheels ship only .so.13 and the
+    #      driver only .so.1 -> symlink both into a dir on LIBRARY_PATH, locating the driver via
+    #      ldconfig rather than guessing a path.
+    _cu = next((Path(b) / "nvidia" / "cu13" for b in
+                ("/usr/local/lib/python3.12/dist-packages", "/usr/lib/python3/dist-packages")
+                if (Path(b) / "nvidia" / "cu13" / "bin" / "nvcc").exists()), None)
+    if _cu is not None:
+        os.environ["CUDA_HOME"] = os.environ["CUDA_PATH"] = str(_cu)
+        os.environ["PATH"] = f"{_cu}/bin:" + os.environ.get("PATH", "")
+        _ldl = Path("/kaggle/working/ldlinks"); _ldl.mkdir(exist_ok=True)
+        _driver = next((l.split()[-1] for l in subprocess.run(
+            ["ldconfig", "-p"], capture_output=True, text=True).stdout.splitlines()
+            if "libcuda.so" in l), None)
+        for _n, _src in (("libcudart.so", _cu / "lib" / "libcudart.so.13"),
+                         ("libcuda.so", Path(_driver) if _driver else None)):
+            if _src and Path(_src).exists() and not (_ldl / _n).exists():
+                (_ldl / _n).symlink_to(_src)
+        os.environ["LIBRARY_PATH"] = f"{_ldl}:{_cu}/lib:" + os.environ.get("LIBRARY_PATH", "")
+        os.environ["LD_LIBRARY_PATH"] = f"{_cu}/lib:" + os.environ.get("LD_LIBRARY_PATH", "")
+    print(f"LLM BACKEND: vllm (model={_vllm_cfg.parent}, cuda_home={_cu})", flush=True)
+else:
+    print("LLM BACKEND: llama.cpp (no safetensors model dir attached)", flush=True)
+
 _all_ggufs = list(inp.rglob("*.gguf"))
 _heads = [g for g in _all_ggufs if _is_head(g.name)]
 _mains = [g for g in _all_ggufs if not _is_head(g.name) and _MAIN_SUBSTR in g.name] or [
