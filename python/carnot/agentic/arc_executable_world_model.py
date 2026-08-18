@@ -3855,6 +3855,33 @@ def _is_mtp_head_file(name: str) -> bool:
     return Path(name).name.lower().startswith("mtp-")
 
 
+# The GGUF metadata key a SELF-DRAFTING model declares. Seen as `qwen35.nextn_predict_layers`;
+# the prefix is the architecture string, so match the suffix and never the whole key.
+_BAKED_MTP_METADATA_KEY = b"nextn_predict_layers"
+# GGUF puts its metadata block at the head of the file, so a bounded read finds the key without
+# loading 23 GB of weights. 8 MiB clears the metadata of every model this project ships.
+_GGUF_METADATA_SCAN_BYTES = 8 * 1024 * 1024
+
+
+def _gguf_declares_baked_mtp(path: str | Path) -> bool:
+    """True if this GGUF carries its own MTP layers and needs no separate draft head.
+
+    Two different things are both called "MTP". gemma-4-31B-it has NO MTP layers in its main
+    weights and needs `--model-draft <a separate head file>`. A self-drafting build (for example
+    the NVFP4 Qwen3.8-27B conversion) has the head baked in and declares `nextn_predict_layers`,
+    so it takes `--spec-type draft-mtp` ALONE. Passing `--model-draft` for that second kind would
+    reintroduce the exact silent failure documented in `_ensure_server`.
+
+    Fails CLOSED: any read error returns False, which costs the speedup and never enables
+    speculation on a model that cannot do it.
+    """
+    try:
+        with open(path, "rb") as fh:
+            return _BAKED_MTP_METADATA_KEY in fh.read(_GGUF_METADATA_SCAN_BYTES)
+    except OSError:
+        return False
+
+
 def _resolve_gguf(repo_substr: str) -> Optional[str]:
     """Find a cached GGUF weight file for an open-weight SOTA model (offline).
 
@@ -6518,8 +6545,24 @@ class LocalGGUFProposer:
         self.last_mtp_draft_path = ""
         self.mtp_disabled_reason = ""
         if self.mtp:
-            head = self.mtp_model_path or _resolve_mtp_head()
-            if head and Path(head).exists() and _is_mtp_head_file(Path(head).name):
+            # SELF-DRAFTING MODEL FIRST. If the main weights declare their own MTP layers, the
+            # correct launch is `--spec-type draft-mtp` with NO `--model-draft` at all. This is a
+            # different shape from the head case below, not a fallback to it: handing such a model
+            # a `--model-draft` -- even a real head -- is not what it wants, and handing it its own
+            # path is the silent-degradation trap this block exists to prevent. Checked before head
+            # resolution so a stale head left under /kaggle/input cannot outrank a baked-in head.
+            if _gguf_declares_baked_mtp(path):
+                args += ["--spec-type", "draft-mtp"]
+                self.last_mtp_draft_path = "<baked-in>"
+                _note_generator_selection(
+                    f"MTP: {Path(path).name} declares its own MTP layers; launching "
+                    "--spec-type draft-mtp with no separate draft head."
+                )
+            elif (
+                (head := (self.mtp_model_path or _resolve_mtp_head()))
+                and Path(head).exists()
+                and _is_mtp_head_file(Path(head).name)
+            ):
                 args += ["--spec-type", "draft-mtp", "--model-draft", head]
                 self.last_mtp_draft_path = str(head)
             else:

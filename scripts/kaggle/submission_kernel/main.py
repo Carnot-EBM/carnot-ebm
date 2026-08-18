@@ -239,10 +239,25 @@ server = next(iter(inp.rglob("llama-server")), None)
 # the silent failure described above, and the order-independence test caught it.
 _HEAD_SUBSTR = "mtp-"
 _MAIN_SUBSTR = "Qwen3.8-27B"
+
+
+# A draft head is marked by the mtp- PREFIX, case-insensitively -- never by mtp appearing
+# anywhere in the name. Mirrors _is_mtp_head_file in arc_executable_world_model.py; this file
+# cannot import it, because the kernel resolves the GGUF before the carnot package is importable.
+#
+# The distinction is load-bearing here, not pedantic. A SELF-DRAFTING model is named
+# Qwen3.8-27B-NVFP4-MTP-HIGHEST.gguf -- it CONTAINS MTP- and it IS the 23 GB main model. The
+# previous plain substring test was case-sensitive, so it classified that file correctly only
+# because upstream happened to capitalise MTP. A lowercase rename would have made the only main
+# candidate vanish, leaving gguf = None and the whole LLM tier silently dead.
+def _is_head(name: str) -> bool:
+    return name.lower().startswith(_HEAD_SUBSTR)
+
+
 _all_ggufs = list(inp.rglob("*.gguf"))
-_heads = [g for g in _all_ggufs if _HEAD_SUBSTR in g.name]
-_mains = [g for g in _all_ggufs if _HEAD_SUBSTR not in g.name and _MAIN_SUBSTR in g.name] or [
-    g for g in _all_ggufs if _HEAD_SUBSTR not in g.name
+_heads = [g for g in _all_ggufs if _is_head(g.name)]
+_mains = [g for g in _all_ggufs if not _is_head(g.name) and _MAIN_SUBSTR in g.name] or [
+    g for g in _all_ggufs if not _is_head(g.name)
 ]
 gguf = _mains[0] if _mains else None
 mtp_head = _heads[0] if _heads else None
