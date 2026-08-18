@@ -4791,3 +4791,44 @@ is special" with "clicks do not survive window construction". The second reading
 larger blast radius: every click-based game would induce on degenerate transitions, score
 `cell_recall 1.0` on them, and fail silently. Discriminating test is cheap — check whether
 ACTION6 appears in ANY other cached window's action set. Recorded as open; not yet tested.
+
+**RESOLVED 2026-08-18 (same session): clicks are NOT lost in window construction.** The
+one-line discriminating test ran over every cached window on disk, and the systemic reading
+is refuted by direct evidence rather than by argument:
+
+| game | window actions |
+|---|---|
+| ar25 | 2, 3 |
+| lp85 | 0 |
+| sb26 | 5, 6 |
+| sp80 | 4, 5 |
+| tr87 | 1, 2, 4 |
+| tu93 | 1, 2, 3, 4 |
+| vc33 | 6 |
+
+`vc33` is the decisive case — a click-only game whose cached window is ACTION6 and nothing
+else, every click preserved. `sb26` carries clicks too. In all seven, window actions equal
+full-trajectory actions, so the builder filters nothing. The confound that made this worth
+asking (lp85 was the only click game in the A/B's four-game set) is broken by a click-only
+control the set happened to lack. Every click-based induction window in the cache except
+lp85's is training on real gameplay.
+
+**What the question narrows to.** The builder did not drop lp85's clicks; it recorded a
+DIFFERENT SOLVE than the registry's. The registry's reproduced solve is 96 clicks over 8
+levels. `exp5717`'s `build_window` recorded a 5-transition all-RESET trajectory whose final
+transition flips level 0 to 1, and ACCEPTED it. So the open question is why that path
+produced and accepted a reset-only route to L1 in a game whose real mechanics are
+click-only — a degenerate solve, or a spurious level-flip after resets.
+
+**The residual systemic risk is now a different one, and it is worth stating.** If
+`build_window` accepts a window on a LEVEL-FLIP criterion, and a level flip can occur after
+a reset, then the accept criterion — not the action encoding — is the thing that can admit a
+degenerate window, on ANY game rather than only click-based ones. lp85 may simply be where it
+bit first. That is untested and is recorded as the open question rather than asserted; the
+distinction that matters for testing it is whether lp85's L1 genuinely advances on reset
+(game mechanics, and a real discovery) or whether the level counter is being misread (a
+builder defect with corpus-wide reach).
+
+Nothing in the two-layer discriminator above needs revising. lp85's window is degenerate
+INPUT, not degraded ENCODING, and `cell_recall 1.0` on it is honest measurement of a
+worthless corpus — which is exactly the case layer 1 catches before induction runs.
