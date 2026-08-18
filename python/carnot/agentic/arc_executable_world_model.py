@@ -3763,7 +3763,18 @@ ARC_LIVE_GENERATOR_MTP_DEFAULT = "0"
 # resolves head_present=False and proceeds without speculative decoding) but it makes every
 # readiness gate report a config that is not the one running, which is the precise failure this
 # constant's own comment above warns about, pointed the other way.
-ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT = "0"
+# FLIPPED BACK TO "1" 2026-08-17 (later the same day, operator-directed) with the move to the
+# NVFP4 Qwen3.8-27B conversion. The "0" above was correct for exactly one reason -- that model
+# had no published draft head -- and that reason is now gone: the NVFP4 build carries its own MTP
+# layers and declares `nextn_predict_layers` in its GGUF, so `_gguf_declares_baked_mtp` resolves
+# it and `_ensure_server` emits `--spec-type draft-mtp` with no separate head. Head presence is
+# therefore no longer the right question to ask about this model; self-drafting is.
+# The v19 disagreement this constant's comment describes does NOT return: that fired because the
+# config CLAIMED mtp=True while the kernel resolved False. Here both read True, and the run is
+# verifiable rather than assumed -- llama.cpp prints `adding speculative implementation
+# 'draft-mtp'` when speculation is genuinely wired, and this file already greps for that marker.
+# Confirm it in the save-run log before trusting the speedup; tok/s is otherwise the only tell.
+ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT = "1"
 # The MTP head is a SEPARATE FILE, not a section of the main GGUF. Both the filename and the
 # substring are named here because the Kaggle kernel matches by name against an order-undefined
 # `rglob`, and the head and the main model are both `*.gguf` under the same mount root.

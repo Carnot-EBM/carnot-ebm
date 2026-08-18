@@ -238,7 +238,7 @@ server = next(iter(inp.rglob("llama-server")), None)
 # not be bindable as the Qwen main model. Pinning the head string to one model reintroduced exactly
 # the silent failure described above, and the order-independence test caught it.
 _HEAD_SUBSTR = "mtp-"
-_MAIN_SUBSTR = "Qwen3.8-27B"
+_MAIN_SUBSTR = "Qwen3.8-27B-NVFP4"
 
 
 # A draft head is marked by the mtp- PREFIX, case-insensitively -- never by mtp appearing
