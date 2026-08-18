@@ -36,6 +36,10 @@ def _live_generator_pins() -> tuple[str, str]:
 
 
 _LIVE_MODEL_ID, _LIVE_REPO_SUBSTR = _live_generator_pins()
+# The gate matches a CACHED gguf against the live repo substring, so a fixture path naming a
+# previous model makes `cached_gguf_matches` False and the whole gate read as broken. Derived
+# for the same reason as the model pins above.
+_LIVE_GGUF_PATH = f"/models/{_LIVE_REPO_SUBSTR}-Q4_K_M.gguf"
 
 
 def _submitted_config() -> dict[str, Any]:
@@ -84,7 +88,7 @@ def _preconditions() -> dict[str, Any]:
         "agents_md_read": True,
         "codex_md_read": True,
         "pinned_generator_gguf_cached": True,
-        "pinned_generator_gguf_paths": ["/models/gemma-4-31B-it-Q4_K_M.gguf"],
+        "pinned_generator_gguf_paths": [_LIVE_GGUF_PATH],
         "offline_arcade_ok": True,
         "make_carnot_agent_import_ok": True,
         "spec_has_req_4754": True,
@@ -297,7 +301,7 @@ def test_scenario_arc_wmte_4754_run_writes_artifact_and_blocks(tmp_path: Path) -
     (tmp_path / mod.SPEC_RELATIVE_PATH).write_text("REQ-ARC-WMTE-4754\n", encoding="utf-8")
     (tmp_path / "scripts" / "kaggle" / "submission_kernel").mkdir(parents=True)
     (tmp_path / "scripts" / "kaggle" / "submission_kernel" / "main.py").write_text(
-        "gemma-4-31B-it CARNOT_ARC_GGUF_PATH\n", encoding="utf-8"
+        f"{_LIVE_REPO_SUBSTR} CARNOT_ARC_GGUF_PATH\n", encoding="utf-8"
     )
     (tmp_path / "python" / "carnot" / "agentic").mkdir(parents=True)
     (tmp_path / "python" / "carnot" / "agentic" / "arc_competition_agent.py").write_text(
@@ -329,7 +333,7 @@ def test_scenario_arc_wmte_4754_run_writes_artifact_and_blocks(tmp_path: Path) -
 
     artifact = mod.run(
         tmp_path,
-        gguf_finder=lambda: ["/models/gemma-4-31B-it-Q4_K_M.gguf"],
+        gguf_finder=lambda: [_LIVE_GGUF_PATH],
         offline_arcade_checker=lambda: {"offline_arcade_ok": True},
         agent_import_checker=lambda: {"make_carnot_agent_import_ok": True},
         agent_smoke_runner=lambda _gate: {
