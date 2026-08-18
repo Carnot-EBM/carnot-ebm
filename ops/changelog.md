@@ -43,6 +43,31 @@ the lever is not trusted, being the same confound that produced the withdrawn ma
 null. If the skip arm loses either cell, the lever retires and tu93 t0 is recorded as a
 single-cell anomaly.
 
+**RESOLVED same day -- the lever is RETIRED and tu93 t0 IS the single-cell anomaly.** Six paired
+cells, in-wave, same code state, same pinned per-cell seeds. Seeded -> skip: tu93 t0
+0.0656 -> 1.0 (skip wins), sp80 t1 1.0 -> 1.0 (tie), sb26 t0 1.0 -> 0.9906 (seed), ar25 t2
+1.0 -> **0.0** (seed, catastrophically), vc33 t0 1.0 -> 0.9549 (seed), tr87 t0 0.354 -> 0.452
+(skip, marginal, neither converges). The broad trigger is refuted outright: it would forfeit
+ar25 t2 entirely, and that seed is 93% cell-right while wrong somewhere on every row, so
+"mismatches equal visible rows" was never a noise signal. The narrow trigger splits its
+two-cell population 1-1 with nothing measured separating the cells, so there is no rule to
+ship. The anchoring MECHANISM is withdrawn: a seed's mismatch profile does not predict when
+seeding hurts.
+tu93 t0's skip win is nonetheless real and fully out-of-sample -- tail recall 1.0, tail accuracy
+1.0, memorisation scan clean. It is a genuine engine that no statable trigger can reach, which
+is why it is recorded as an anomaly rather than a lever.
+SECONDARY FINDING, and it strengthens the shipped default independently of quality: seeding is
+also CHEAPER. Across the same 6 cells the skip arm spent 134.1 minutes (mean 22.4, with three
+12-turn cap burns at 39.9, 34.9 and 24.1) against the seeded arm's 52.5 minutes (mean 8.7) --
+2.6x. Converged seeded runs finish at zero mismatches by turn 7; blank-page runs on these cells
+grind the cap.
+One bonus: ar25 t2's skip trajectory reproduced the earlier cross-wave run step for step under
+the same pinned seeds, which retroactively shows those unseeded rows were replayable rather than
+confounded. Running the paired wave was still correct -- the confound could not be ruled out in
+advance -- but the earlier evidence turned out to be sound.
+No code was written for this lever, so retirement costs nothing; the negative result is the
+deliverable.
+
 **Correction 1 -- the marginal-band null is withdrawn.** The finding that seeded repair gains
 nothing in the 0.6-0.95 band, called independently confirmed three times, was measured on an arm
 with a broken submission nudge. Fixed arm: 5 of 7 seeded repairs to zero visible mismatches;
