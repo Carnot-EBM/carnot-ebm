@@ -290,7 +290,35 @@ if _vllm_cfg is not None:
                 (_ldl / _n).symlink_to(_src)
         os.environ["LIBRARY_PATH"] = f"{_ldl}:{_cu}/lib:" + os.environ.get("LIBRARY_PATH", "")
         os.environ["LD_LIBRARY_PATH"] = f"{_cu}/lib:" + os.environ.get("LD_LIBRARY_PATH", "")
-    print(f"LLM BACKEND: vllm (model={_vllm_cfg.parent}, cuda_home={_cu})", flush=True)
+    # OFFLINE INSTALL. enable_internet is false, so vLLM comes from the attached wheel closure
+    # (196 wheels, measured 108 s). Resolved in a glibc-2.31 container against python 3.12 so
+    # every wheel is compatible with this image; --no-index makes a missing wheel fail loudly
+    # here rather than silently reaching for PyPI.
+    _whl = next(iter(inp.rglob("vllm-*.whl")), None)
+    if _whl is not None:
+        _t0 = time.time()
+        _pip = subprocess.run(
+            [sys.executable, "-m", "pip", "install", "--no-index",
+             f"--find-links={_whl.parent}", "vllm"],
+            capture_output=True, text=True, timeout=3600,
+        )
+        print(f"LLM BACKEND: vllm pip install rc={_pip.returncode} in {time.time()-_t0:.0f}s",
+              flush=True)
+        if _pip.returncode != 0:
+            # Fall back to llama.cpp rather than proceeding with a half-installed backend: the
+            # GGUF path below is fully functional and attached, so a failed install costs
+            # throughput, not the run.
+            print(f"LLM BACKEND: vllm install FAILED, falling back to llama.cpp\n"
+                  f"{_pip.stderr[-1500:]}", flush=True)
+            os.environ.pop("CARNOT_ARC_LLM_BACKEND", None)
+            os.environ.pop("CARNOT_ARC_VLLM_MODEL_DIR", None)
+    else:
+        print("LLM BACKEND: vllm selected but NO WHEELS attached; falling back to llama.cpp",
+              flush=True)
+        os.environ.pop("CARNOT_ARC_LLM_BACKEND", None)
+        os.environ.pop("CARNOT_ARC_VLLM_MODEL_DIR", None)
+    if os.environ.get("CARNOT_ARC_LLM_BACKEND") == "vllm":
+        print(f"LLM BACKEND: vllm (model={_vllm_cfg.parent}, cuda_home={_cu})", flush=True)
 else:
     print("LLM BACKEND: llama.cpp (no safetensors model dir attached)", flush=True)
 
