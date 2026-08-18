@@ -14,6 +14,30 @@ REPO = Path(__file__).resolve().parents[2]
 SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
 
 
+def _scored_mtp_on() -> bool:
+    """Read the scored-MTP answer from the constant the module's own gate reads, so the fixture and
+    the gate cannot drift apart. See the comment at the `mtp` key below for why this is derived
+    here and pinned as a literal elsewhere."""
+    from carnot.agentic.arc_executable_world_model import ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT
+
+    return ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT != "0"
+
+
+_SCORED_MTP_ON = _scored_mtp_on()
+
+
+def _live_generator_pins() -> tuple[str, str]:
+    from carnot.agentic.arc_executable_world_model import (
+        ARC_LIVE_GENERATOR_MODEL_ID,
+        ARC_LIVE_GENERATOR_REPO_SUBSTR,
+    )
+
+    return ARC_LIVE_GENERATOR_MODEL_ID, ARC_LIVE_GENERATOR_REPO_SUBSTR
+
+
+_LIVE_MODEL_ID, _LIVE_REPO_SUBSTR = _live_generator_pins()
+
+
 def _submitted_config() -> dict[str, Any]:
     return {
         "policy": "E3AgentPolicy",
@@ -21,11 +45,25 @@ def _submitted_config() -> dict[str, Any]:
         "target_levels": 3,
         "live_submit_package_path": "results/experiment_4643_submission_package_operator_resubmit.json",
         "frozen_generator": {
-            "model_id": "unsloth/gemma-4-31B-it-GGUF",
-            "repo_substr": "gemma-4-31B-it",
-            "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
-            "mtp": True,
-            "spec_type": "draft-mtp",
+            # DERIVED for the same reason as `mtp` below. These were literals naming
+            # `gemma-4-31B-it`, and they went stale when the generator moved to Qwen3.8-27B: the
+            # gate compares the config against the live constants, so a fixture pinned to the
+            # previous model made a correct gate report `..._confirmation_failed_gate`. That
+            # failure was live at HEAD before this change and had nothing to do with MTP; it was
+            # simply never noticed, because nothing runs this file on the migration's path.
+            "model_id": _LIVE_MODEL_ID,
+            "repo_substr": _LIVE_REPO_SUBSTR,
+            "model_filename": f"{_LIVE_REPO_SUBSTR}-Q4_K_M.gguf",
+            # DERIVED, NOT LITERAL (2026-08-18). This fixture stands in for the frozen config so
+            # the module's GATE LOGIC can be exercised; it is not where the scored MTP contract
+            # lives. That contract is pinned as a literal in
+            # `tests/python/test_arc_submitted_agent_parity.py`, deliberately, so it goes red when
+            # someone flips the knob. Hardcoding `True` here as well meant one constant was pinned
+            # by two tests that disagreed, and this one failed for a reason that had nothing to do
+            # with what it checks -- the gate compares the config against the constant, so a
+            # fixture frozen to the old value makes a correct gate look broken.
+            "mtp": _SCORED_MTP_ON,
+            "spec_type": "draft-mtp" if _SCORED_MTP_ON else None,
             "kv_quant": "q8_0",
             "no_think_prefix": "",
             "llama_server_kind": "cuda-12.8-binary",
