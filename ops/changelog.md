@@ -27,6 +27,22 @@ dead approach that a blank page escaped. In the marginal band, where seeds are c
 converts 3 of 3. Candidate lever, not implemented, n=1: skip the seed when its visible
 mismatches equal the visible row count.
 
+**CORRECTION, same day, appended rather than rewritten -- the anchoring claim above is
+overstated and its counterexample was already in the data.** sb26 t0's seed also had recall
+0.0, and it converted to 1.0. So a recall-zero seed did NOT block conversion there, and the
+record on near-noise seeds is 1 of 2, not a rule. The paragraph above reads tu93 t0 as evidence
+for a mechanism when it is a single cell with a sibling that behaves the opposite way. Both
+facts were reported in the same table; the tension between them was missed.
+The two candidate triggers, sized from banked data: "visible mismatches equal visible row
+count" qualifies 5 cells, of which the SEEDED arm already converted 4 -- skipping the seed there
+would forfeit cells where it demonstrably helped, and ar25 t2's seed is 93% cell-right while
+wrong somewhere on every row, so that trigger does not mean "noise" at all. "Seed recall below
+0.1" qualifies exactly 2 cells (tu93 t0, sb26 t0) with a seeded record of 1 of 2. A paired
+6-cell skip-arm measurement is running to settle both; the cross-wave comparison that motivated
+the lever is not trusted, being the same confound that produced the withdrawn marginal-band
+null. If the skip arm loses either cell, the lever retires and tu93 t0 is recorded as a
+single-cell anomaly.
+
 **Correction 1 -- the marginal-band null is withdrawn.** The finding that seeded repair gains
 nothing in the 0.6-0.95 band, called independently confirmed three times, was measured on an arm
 with a broken submission nudge. Fixed arm: 5 of 7 seeded repairs to zero visible mismatches;
