@@ -173,6 +173,32 @@ sys.path.insert(0, str(carnot))
 # specific) -> expected to transfer to the hidden eval games' own structure-missed wins.
 os.environ["CARNOT_ARC_EXPLORE_DIVERSITY"] = "1"
 
+# SEEDED TOOL-LOOP REPAIR (operator-enabled 2026-08-17, REQ-ARC-WMTE-6470). When an induced
+# engine is rejected by the trust layer AND its cell_recall is below the 0.6 gate, re-run
+# induction ONCE as a tool-calling loop seeded with the failed engine, instead of accepting a
+# useless engine. Measured on 4 seeded catastrophic cells: 2 convert outright to recall 1.0 /
+# accuracy 1.0 and flip trust reject -> accept (sb26, tail 1.0, memorisation scan clean; sp80,
+# scan clean, no scoreable tail exists on that window), 2 return their seed unchanged. Stated as
+# a conversion rate on purpose -- the arithmetic mean of +0.44 describes no cell in the set.
+# COST OF A MISS, accepted: ~9-11 min and one of two per-game slots, because the counter
+# increments when the repair FIRES, before the outcome exists. Bounded by the turn cap below.
+# SAFE BY CONSTRUCTION, and confirmed empirically at 7 of 7: the loop is seeded with the failed
+# engine and cannot return a candidate with more visible mismatches, so no run regressed below
+# its seed. A trust-ACCEPTED engine is never re-rolled (`decide_resample` returns
+# `downstream_accepted_engine` first), so this can only act on engines the pipeline was going to
+# discard anyway.
+# THIS IS AN ENGINE-QUALITY LEVER, NOT A LEVELS LEVER. The induced goal predicate has never
+# fired on a real win state (0 of 31), so levels are won by exploration, not by planning. Expect
+# better engines, not more levels.
+# Set HERE rather than as a code default deliberately: the evidence is scored-path evidence. The
+# conductor runs orders of magnitude more inductions, where ~10 min per miss is a different
+# trade-off that nobody has measured. Code default stays OFF and its tests still pin that.
+os.environ["CARNOT_ARC_INDUCE_TOOL_LOOP"] = "repair"
+# Turn cap 12 -> 8. Every win across both arms converged by turn 7 (unseeded 3,3,4,4,5,6; seeded
+# 3,5,5,6,7). Seven runs burned the 12-turn cap at 17-24 min each and not one recovered. So 8
+# preserves all 11 observed wins and cuts each cap-burner by a third.
+os.environ["CARNOT_ARC_INDUCE_TOOL_TURNS"] = "8"
+
 # --- generator (LLM tier) resolution + LOUD visibility (2026-06-21) --------------------------------
 # The v3=0.08 run could NOT be diagnosed because nothing logged whether the Qwen generator loaded or
 # silently degraded to the CPU graph-explore cascade (env vars were set inside `if server and gguf:`
