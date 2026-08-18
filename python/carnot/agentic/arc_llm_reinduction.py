@@ -32,7 +32,37 @@ from carnot.agentic.arc_world_model_trust_energy import (
 )
 
 
-MAX_REFINEMENT_ROUNDS = 3
+def _max_refinement_rounds_default() -> int:
+    """How many refine attempts a stall may spend. CAPPED 3 -> 1 on 2026-08-17, operator-approved.
+
+    Rounds beyond the first are measurably HARMFUL, not merely useless: exp5760 measured
+    mean_delta_heldout 0.0 and exp5766 measured pooled_mean_delta_heldout -0.0598, with 0 of 83
+    cells improved. They fired on 39 of 39 stalls at roughly 319 s each, about 58% of all stall
+    wall clock, and all 8 partial round-0 engines collapsed to exactly 0.0.
+
+    The cause is REQ-ARC-WMTE-6091: the refine prompt never contains the engine being repaired
+    (zero of 454 substantive source lines reach it), so a "refinement" round is a blind
+    re-induction from at most 5 mismatches -- LESS evidence than round 0 had. Fixing that is a
+    separate lever (`CARNOT_ARC_REFACTOR_SHOW_ENGINE`, default off, exp6091 measured show-engine
+    0.518 against blind 0.059 and single-shot 0.437 but returned blocked_underpowered).
+
+    Capping loses ~nothing the deployed engine keeps: engine retention rolls the store back to the
+    best round, usually round 0, so a later round's rewrite mostly never lands on disk. Raise via
+    CARNOT_ARC_MAX_REFINEMENT_ROUNDS to restore the old behaviour or to test a fix.
+    """
+    raw = os.environ.get("CARNOT_ARC_MAX_REFINEMENT_ROUNDS")
+    if raw:
+        try:
+            v = int(raw)
+        except ValueError:
+            return 1
+        # 0 would disable refinement entirely, which is a different change than this cap;
+        # clamp to at least 1 so the first round always runs.
+        return max(1, v)
+    return 1
+
+
+MAX_REFINEMENT_ROUNDS = _max_refinement_rounds_default()
 
 
 @dataclass
@@ -1186,6 +1216,93 @@ def _repair_degenerate_goal(
 
 _RETENTION_ENV = "CARNOT_ARC_ENGINE_RETENTION"
 
+# ==============================================================================================
+# REQ-ARC-WMTE-6480: TOOL-ROUTED CEGIS REFINEMENT (default OFF)
+# ==============================================================================================
+#
+# WHY. The shipped refactor round is measured-destructive: across exp5760 + exp5766 (84
+# refinement cells, three generators) a refactor round improved held-out accuracy 0 times and
+# collapsed every partially-correct engine to 0.0 (8 of 8 partial cells). REQ-ARC-WMTE-6091
+# found the cause: `refactor_prompt` never contained the engine being fixed, so the round is a
+# blind re-induction from at most 5 mismatches. exp6091 measured the show-engine fix (change
+# fidelity 0.059 -> 0.518, vs single-shot 0.437; underpowered N).
+#
+# THIS FLAG routes refactor rounds through the induction tool loop's REPAIR mode instead
+# (arc_induction_tool_loop.induce_with_tool_loop, seed_engine_code=the failed engine). The
+# model then sees the engine AND its measured mismatch report, and can EXECUTE each candidate
+# repair (`run_engine_on_transitions`) before submitting it. The loop's monotone accept keeps
+# the best-scoring candidate, with the seed as the floor -- so a tool round cannot return
+# something with more visible mismatches than the engine it started from, which is exactly the
+# guarantee the blind text round lacks.
+#
+# DEFAULT OFF. Unset, `execute_bounded_llm_reinduction` is byte-identical to the shipped
+# path and this module never imports the tool loop. On any failure (proposer without a server
+# transport, tool loop error, no seed on disk) the round falls back to the shipped text
+# refactor, so the worst case is today's behaviour plus bounded cost.
+
+_CEGIS_TOOL_LOOP_ENV = "CARNOT_ARC_CEGIS_TOOL_LOOP"
+
+
+def cegis_tool_loop_enabled() -> bool:
+    """REQ-ARC-WMTE-6480: tool-routed refinement is OFF unless explicitly enabled."""
+
+    return os.environ.get(_CEGIS_TOOL_LOOP_ENV) == "1"
+
+
+# The transport surface the tool loop drives. A scripted/experiment proposer without these
+# attributes cannot run the loop; the round then falls back to the shipped text refactor.
+_TOOL_LOOP_PROPOSER_ATTRS = (
+    "_url",
+    "_ensure_server",
+    "_write_world_model",
+    "max_tokens",
+    "timeout",
+)
+
+
+def _tool_loop_refactor(
+    proposer: Any,
+    game: str,
+    corpus: Sequence[Any],
+    cell: int,
+    *,
+    previous_level_complete_grid: np.ndarray | None = None,
+    hud_mask: Any = None,
+) -> tuple[bool, str, dict[str, Any]] | None:
+    """Run ONE refinement round through the tool loop, seeded with the engine on disk.
+
+    Returns (ok, message, stats), or None when the round cannot be attempted at all
+    (no seed engine on disk, proposer lacks the transport surface, import failure).
+    On (False, ...) the caller runs the shipped text refactor -- fallback, not failure.
+    `corpus` must be the refinement corpus (acceptance rows already withheld by the
+    caller when the acceptance split is on), so the tool session can only ever show
+    the model rows the text path could also draw counterexamples from.
+    """
+
+    seed = _read_engine_source(game)
+    if not seed or not seed.strip():
+        return None
+    if not all(hasattr(proposer, attr) for attr in _TOOL_LOOP_PROPOSER_ATTRS):
+        return None
+    try:
+        from carnot.agentic.arc_induction_tool_loop import induce_with_tool_loop
+    except Exception:  # pragma: no cover - import failure degrades to the shipped path
+        return None
+    try:
+        ok, message = induce_with_tool_loop(
+            proposer,
+            game,
+            list(corpus),
+            int(cell),
+            previous_level_complete_grid=previous_level_complete_grid,
+            seed_engine_code=seed,
+            hud_mask=hud_mask,
+        )
+    except Exception as exc:  # noqa: BLE001 - a loop bug must not take down refinement
+        ok, message = False, f"tool loop raised {type(exc).__name__}: {exc}"
+    stats = dict(getattr(proposer, "last_tool_loop_stats", None) or {})
+    return bool(ok), str(message), stats
+
 
 def engine_retention_enabled() -> bool:
     """REQ-ARC-WMTE-6035: retention is ON unless explicitly disabled (see the block above)."""
@@ -1540,6 +1657,9 @@ def execute_bounded_llm_reinduction(
 
     for round_index in range(rounds_limit):
         round_no = round_index + 1
+        # REQ-ARC-WMTE-6480: per-round tool-loop stats; stays None on induce rounds and
+        # whenever the tool loop did not run, so flag-off rows are byte-identical.
+        tool_stats: dict[str, Any] | None = None
         if round_index == 0:
             ok, message = _call_induce(
                 proposer,
@@ -1550,14 +1670,34 @@ def execute_bounded_llm_reinduction(
             )
             action = "induce"
         else:
-            ok, message = proposer.refactor(game, _counterexample_result(last_counterexample))
             action = "refactor"
+            ok = False
+            message = ""
+            # REQ-ARC-WMTE-6480 (default OFF): route the round through the tool loop's
+            # repair mode. On any failure the shipped text refactor below still runs.
+            if cegis_tool_loop_enabled():
+                attempt = _tool_loop_refactor(
+                    proposer,
+                    game,
+                    refinement_corpus,
+                    int(cell),
+                    previous_level_complete_grid=previous_level_complete_grid,
+                    hud_mask=hud_mask,
+                )
+                if attempt is not None:
+                    ok, message, tool_stats = attempt
+                    if ok:
+                        action = "refactor_tool_loop"
+            if not ok:
+                ok, message = proposer.refactor(game, _counterexample_result(last_counterexample))
 
         row: dict[str, Any] = {
             "round": round_no,
             "action": action,
             "proposer_ok": bool(ok),
         }
+        if tool_stats is not None:
+            row["tool_loop"] = tool_stats
         if message:
             row["message"] = str(message)[:240]
         if not ok:

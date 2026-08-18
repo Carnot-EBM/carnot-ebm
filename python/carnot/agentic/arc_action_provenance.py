@@ -126,6 +126,11 @@ TOP_BRANCHES: tuple[str, ...] = (
     "induce.plan_needs_reset",
     # phase == "induce" produced NO plan: fall straight back to the explorer.
     "induce.no_plan.explorer",
+    # phase == "induce" DEFERRED by the cross-level carry (REQ-ARC-XLEVEL-CARRY-1,
+    # flag-gated, default off): the boundary reinduction lacked enough new-level
+    # evidence to verify a carried engine, so this action gathers one more tracked
+    # transition via the explorer and the reinduction stays pending.
+    "induce.carry_deferred.explorer",
     # phase == "execute": a step off an already-installed plan.
     "execute.plan_step",
     # plan exhausted or never existed: back to the explorer.

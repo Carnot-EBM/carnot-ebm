@@ -1,0 +1,232 @@
+{
+ "experiment": "outer_loop_arc_cross_level_carry_ab_20260817",
+ "title": "Paired live-path A/B: cross-level verified engine carry (replay proposer)",
+ "run_date": "2026-08-17",
+ "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+ "llm_enabled": false,
+ "random_seeds_used": [
+  20260724
+ ],
+ "budget": 4000,
+ "arms": [
+  "off",
+  "on"
+ ],
+ "duration_s": 95.78,
+ "provenance": {
+  "agent_sha256": "73b672666976c846d62bcfbdea7eb6da862cfb172658d215cf2d60b8c6b98566",
+  "harness": "scripts/arc_leaderboard_eval.py:run_game",
+  "proposer": "ReplayProposer over recorded h2h engine sources (no LLM)"
+ },
+ "n_cells": 2,
+ "paired": [
+  {
+   "game": "tu93",
+   "seed": 20260724,
+   "levels_off": 2,
+   "levels_on": 2,
+   "actions_off": 1455,
+   "actions_on": 1455,
+   "actions_delta_on_minus_off": 0,
+   "induce_calls_off": 4,
+   "induce_calls_on": 4,
+   "carry_fires_on": 0,
+   "carry_engaged_on": true
+  }
+ ],
+ "cells": [
+  {
+   "game": "tu93",
+   "seed": 20260724,
+   "arm": "off",
+   "budget": 4000,
+   "engine_source_replayed": "results/arc_qwen38_h2h_partial_20260817/engine_snapshots/e3_qwen38_27b__tu93__2bbd3f775cd4.py",
+   "wall_s": 31.03,
+   "levels_reached": 2,
+   "per_level_actions": [
+    {
+     "level": 0,
+     "agent_actions": 43,
+     "human_actions": 19,
+     "completed": true
+    },
+    {
+     "level": 1,
+     "agent_actions": 160,
+     "human_actions": 16,
+     "completed": true
+    },
+    {
+     "level": 2,
+     "agent_actions": 1252,
+     "human_actions": 34,
+     "completed": false
+    },
+    {
+     "level": 3,
+     "agent_actions": 0,
+     "human_actions": 42,
+     "completed": false
+    },
+    {
+     "level": 4,
+     "agent_actions": 0,
+     "human_actions": 123,
+     "completed": false
+    },
+    {
+     "level": 5,
+     "agent_actions": 0,
+     "human_actions": 80,
+     "completed": false
+    },
+    {
+     "level": 6,
+     "agent_actions": 0,
+     "human_actions": 14,
+     "completed": false
+    },
+    {
+     "level": 7,
+     "agent_actions": 0,
+     "human_actions": 23,
+     "completed": false
+    },
+    {
+     "level": 8,
+     "agent_actions": 0,
+     "human_actions": 111,
+     "completed": false
+    }
+   ],
+   "actions_total": 1455,
+   "carry_flag_resolved": false,
+   "n_induction_attempts": 3,
+   "n_levelup_reinduction_attempts": 2,
+   "proposer_induce_calls": 4,
+   "proposer_refactor_calls": 3,
+   "carry_attempt_rows": [],
+   "carry_fires": 0,
+   "attempt_engine_sources": [
+    null,
+    null,
+    null
+   ],
+   "attempt_skipped": [
+    "proposer_failed",
+    "proposer_failed",
+    "proposer_failed"
+   ]
+  },
+  {
+   "game": "tu93",
+   "seed": 20260724,
+   "arm": "on",
+   "budget": 4000,
+   "engine_source_replayed": "results/arc_qwen38_h2h_partial_20260817/engine_snapshots/e3_qwen38_27b__tu93__2bbd3f775cd4.py",
+   "wall_s": 60.87,
+   "levels_reached": 2,
+   "per_level_actions": [
+    {
+     "level": 0,
+     "agent_actions": 43,
+     "human_actions": 19,
+     "completed": true
+    },
+    {
+     "level": 1,
+     "agent_actions": 160,
+     "human_actions": 16,
+     "completed": true
+    },
+    {
+     "level": 2,
+     "agent_actions": 1252,
+     "human_actions": 34,
+     "completed": false
+    },
+    {
+     "level": 3,
+     "agent_actions": 0,
+     "human_actions": 42,
+     "completed": false
+    },
+    {
+     "level": 4,
+     "agent_actions": 0,
+     "human_actions": 123,
+     "completed": false
+    },
+    {
+     "level": 5,
+     "agent_actions": 0,
+     "human_actions": 80,
+     "completed": false
+    },
+    {
+     "level": 6,
+     "agent_actions": 0,
+     "human_actions": 14,
+     "completed": false
+    },
+    {
+     "level": 7,
+     "agent_actions": 0,
+     "human_actions": 23,
+     "completed": false
+    },
+    {
+     "level": 8,
+     "agent_actions": 0,
+     "human_actions": 111,
+     "completed": false
+    }
+   ],
+   "actions_total": 1455,
+   "carry_flag_resolved": true,
+   "n_induction_attempts": 3,
+   "n_levelup_reinduction_attempts": 2,
+   "proposer_induce_calls": 4,
+   "proposer_refactor_calls": 3,
+   "carry_attempt_rows": [
+    {
+     "reason_field": "level_up_reinduction",
+     "fired": false,
+     "carried_from": {
+      "induced_at_goal_level": 1,
+      "heldout_accuracy": 0.625,
+      "accepted_by_heldout_verifier": false,
+      "selected_candidate_name": "loaded_world_model.py"
+     },
+     "min_transitions_bar": 4,
+     "reason": "insufficient_new_level_evidence",
+     "verify_n_transitions": 1
+    },
+    {
+     "reason_field": "level_up_reinduction",
+     "fired": false,
+     "carried_from": {
+      "induced_at_goal_level": 2,
+      "heldout_accuracy": 0.0,
+      "accepted_by_heldout_verifier": false,
+      "selected_candidate_name": "loaded_world_model.py"
+     },
+     "min_transitions_bar": 4,
+     "reason": "insufficient_new_level_evidence",
+     "verify_n_transitions": 1
+    }
+   ],
+   "carry_fires": 0,
+   "attempt_engine_sources": [
+    null,
+    null,
+    null
+   ],
+   "attempt_skipped": [
+    "proposer_failed",
+    "proposer_failed",
+    "proposer_failed"
+   ]
+  }
+ ]
+}

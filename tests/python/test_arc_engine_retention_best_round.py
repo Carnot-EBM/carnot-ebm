@@ -34,12 +34,30 @@ import numpy as np
 import pytest
 
 from carnot.agentic import arc_executable_world_model as e3
+from carnot.agentic import arc_llm_reinduction as _reinduction
 from carnot.agentic.arc_executable_world_model import Transition
 from carnot.agentic.arc_llm_reinduction import (
     _retention_signal,
     engine_retention_enabled,
     execute_bounded_llm_reinduction,
 )
+
+
+@pytest.fixture(autouse=True)
+def _multi_round_cap(monkeypatch):
+    """Retention only has meaning across MULTIPLE rounds, so these tests need the pre-cap bound.
+
+    MAX_REFINEMENT_ROUNDS was capped 3 -> 1 on 2026-08-17 (operator-approved: rounds past the
+    first measured pooled-negative on held-out). At 1 the executor never reaches a second round,
+    so "retain the BEST round" has nothing to choose between and every test here fails on a
+    round-count assertion rather than on the behaviour it is checking.
+
+    Raising the bound for this module keeps these tests measuring retention. It does not weaken
+    the cap: the shipped default is pinned separately by
+    tests/python/test_arc_refinement_rounds_cap.py, and the executor reads the module global at
+    call time so patching it is sufficient.
+    """
+    monkeypatch.setattr(_reinduction, "MAX_REFINEMENT_ROUNDS", 3)
 
 
 GAME = "retn"

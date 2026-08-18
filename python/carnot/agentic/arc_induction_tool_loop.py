@@ -87,6 +87,18 @@ def _early_stop_after() -> int:
         return DEFAULT_EARLY_STOP_AFTER
 
 
+def _stall_turn_cap() -> int:
+    """Consecutive turns WITHOUT a new engine submission before the loop aborts.
+    0 (the default) disables the cap. Measured motivation: every 12-turn failure in
+    the 13-cell A/B submitted only 1-2 candidates and spent the other turns
+    inspecting -- the early-stop counter never sees those turns, so they burn
+    10+ minutes per cell that a stall cap ends at the fallback instead."""
+    try:
+        return max(0, int(os.environ.get("CARNOT_ARC_INDUCE_TOOL_STALL_TURNS", 0)))
+    except ValueError:
+        return 0
+
+
 _TOOL_INSTRUCTIONS = """
 You have TOOLS. Use them instead of simulating grids in your head:
 
@@ -255,6 +267,7 @@ def induce_with_tool_loop(
     previous_level_complete_grid: Optional[np.ndarray] = None,
     win_transition: Optional[Any] = None,
     seed_engine_code: Optional[str] = None,
+    hud_mask: Any = None,
 ) -> tuple[bool, str]:
     """Run tool-assisted induction. Returns (True, note) after writing world_model.py,
     or (False, reason) -- in which case the caller runs the shipped single-shot path.
@@ -276,7 +289,10 @@ def induce_with_tool_loop(
             return False, "tool loop: generator server unavailable"
     except Exception as exc:  # noqa: BLE001
         return False, f"tool loop: server ensure raised {type(exc).__name__}: {exc}"
-    session = InductionToolSession(list(trans), cell=int(cell))
+    # `hud_mask` threads through so a CEGIS caller (REQ-ARC-WMTE-6480) grades candidates on
+    # the same HUD-collapsed comparison its own gate uses. None (every prior caller) is
+    # byte-identical to before.
+    session = InductionToolSession(list(trans), cell=int(cell), hud_mask=hud_mask)
     # The prompt shows the VISIBLE rows only. Rendering the full window would hand the
     # model the held-out tail's deltas in-prompt and quietly defeat the aggregate-only
     # held-out score -- the exact leak the CEGIS acceptance split (REQ-ARC-WMTE-6090)
@@ -406,6 +422,16 @@ def induce_with_tool_loop(
     non_improving = 0
     cap = _turn_cap()
     early_after = _early_stop_after()
+    stall_cap = _stall_turn_cap()
+    stats["stall_cap"] = stall_cap
+    # Turns since the model last SUBMITTED an engine (any submission resets it, even a
+    # non-improving one -- non-improving submissions are the early-stop counter's job).
+    turns_since_submission = 0
+    # THE MODEL's submissions, distinct from the candidate ledger. In repair mode the
+    # SEED occupies candidate zero, so a `session.candidates`-based nudge test can never
+    # fire and the probe-1 defect (inspect forever, submit nothing) comes back through
+    # the seeded door -- measured: a seeded cell went 12 turns with zero submissions.
+    model_submitted = False
     for turn in range(cap):
         remaining = deadline - time.time()
         if remaining <= 0:
@@ -477,11 +503,22 @@ def induce_with_tool_loop(
                 return _finish("zero_mismatches")
             if non_improving >= early_after:
                 return _finish("early_stop_non_improving")
+            # Any submission counts as engagement, even a non-improving or failed one:
+            # the stall cap targets inspection-only turns, not slow convergence.
+            if "run_engine_on_transitions" in turn_names:
+                turns_since_submission = 0
+                model_submitted = True
+            else:
+                turns_since_submission += 1
+            if stall_cap > 0 and turns_since_submission >= stall_cap:
+                return _finish("stall_turns")
             # THE PROBE-1 FAILURE MODE, ANSWERED HERE. The model can perceive forever
             # (44 diff/query calls, zero engines, measured) because every inspection
             # turn looks locally productive. After the inspection budget, demand a
             # candidate: only engines submitted to the verifier count for anything.
-            if not session.candidates and stats["turns"] >= _force_engine_turn():
+            # `model_submitted`, NOT `session.candidates`: the repair seed pre-fills the
+            # ledger, and a ledger-based test let seeded runs inspect forever unnudged.
+            if not model_submitted and stats["turns"] >= _force_engine_turn():
                 messages.append({"role": "user", "content": _FORCE_ENGINE_NUDGE})
                 stats["force_engine_nudges"] += 1
             continue
@@ -497,6 +534,10 @@ def induce_with_tool_loop(
         if _looks_like_unparsed_tool_call(content):
             stats["unparsed_tool_call_text_turns"] += 1
         stats["tool_calls_per_turn"].append([])  # keep the per-turn record aligned
+        # A turn with no tool call and no final answer is a stall turn too.
+        turns_since_submission += 1
+        if stall_cap > 0 and turns_since_submission >= stall_cap:
+            return _finish("stall_turns")
         # No tool call, no final code: one nudge, bounded by the turn cap.
         messages.append({"role": "assistant", "content": content})
         messages.append(

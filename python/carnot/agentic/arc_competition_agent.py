@@ -384,6 +384,26 @@ SUBMITTED_HAZARD_MOVE_PRUNER_MODE = (
 # reverts to the pre-promotion (disabled) behavior.
 SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED = True
 
+# CROSS-LEVEL VERIFIED ENGINE CARRY (2026-08-17, REQ-ARC-XLEVEL-CARRY-1, DEFAULT OFF).
+# On a level-up reinduction, before paying for a fresh LLM induction, re-verify the PREVIOUS
+# level's induced engine against the NEW level's own observed transitions. Measured basis
+# (results/arc_cross_level_retention_20260817/): cross-level dynamics persistence is
+# GAME-DEPENDENT -- next-level transitions showing effect classes already seen on the prior
+# level range from ~98% (tu93) through ~54-66% (vc33/cd82/r11l) to 0% (ft09/lp85). That is
+# exactly why the carry is verification-gated per boundary instead of assumed.
+# The carry is EARNED per level, never assumed: it fires only when the carried engine predicts
+# the new level's observed transitions at the same accuracy bar a fresh induction must clear,
+# the carried goal is not already true at the plan start, and a plan exists in the carried
+# model. Default OFF pending a paired actions-to-levelup A/B; CARNOT_ARC_CROSS_LEVEL_ENGINE_CARRY=1
+# enables. When it fires it saves one full LLM induction call (the per-level induction cost
+# that scales with LEVELS, not games).
+SUBMITTED_CROSS_LEVEL_ENGINE_CARRY_ENABLED = False
+# Defer cap for the carry's evidence-gathering (see _attempt_cross_level_engine_carry): a
+# RESET-looping explorer adds frames without adding transitions, so an uncapped defer could
+# starve the boundary induction indefinitely. After this many defers the status-quo LLM
+# path runs regardless of evidence size.
+_CARRY_MAX_REINDUCTION_DEFERS = 12
+
 # THINK-ARM FALLBACK (REQ-ARC-WMTE-6243, 2026-08-09). exp6221 (the Phase 2a expanded-roster A/B,
 # REQ-ARC-WMTE-6242) found the admission-rate gate NOT MET on the sign test as a whole, but its
 # per-game breakdown surfaced a genuine, differently-shaped signal the gate itself is blind to:
@@ -5461,6 +5481,23 @@ class E3AgentPolicy:
             )
             == "1"
         )
+        # REQ-ARC-XLEVEL-CARRY-1 (2026-08-17): the previous level's LLM-induced engine + goal,
+        # retained across the level boundary so the carry stage in `_induce_and_plan` can
+        # re-verify them on the new level's transitions. Retention is unconditional (cheap
+        # references, strictly additive state); the CONSUMER is flag-gated, mirroring the
+        # Lever #2 trace-capture pattern above.
+        self._carried_engine: Any = None
+        self._carried_goal: Any = None
+        self._carried_engine_meta: dict[str, Any] = {}
+        self._carry_defer_reinduction = False
+        self._carry_reinduction_defers = 0
+        self.cross_level_engine_carry_enabled = (
+            os.environ.get(
+                "CARNOT_ARC_CROSS_LEVEL_ENGINE_CARRY",
+                "1" if SUBMITTED_CROSS_LEVEL_ENGINE_CARRY_ENABLED else "0",
+            )
+            == "1"
+        )
         # REQ-ARC-WMTE-6243: resolved once here, same rationale as trajectory_transfer_enabled
         # above -- this fires once per induce-and-plan call, not the per-action hot path.
         self.think_arm_fallback_enabled = (
@@ -5756,6 +5793,9 @@ class E3AgentPolicy:
         self._episode_dsl_transition_start = len(self._dsl_transitions)
         self.induced = False
         self._induction_attempt_count = 0
+        # REQ-ARC-XLEVEL-CARRY-1: the carry's evidence-defer budget is per level.
+        self._carry_reinduction_defers = 0
+        self._carry_defer_reinduction = False
         self._transitions_at_last_induction_attempt = self._episode_transition_start
         self.plan = []
         self.pi = 0
@@ -6916,6 +6956,21 @@ class E3AgentPolicy:
             self._induction_attempt_count += 1
             self._transitions_at_last_induction_attempt = len(self.transitions)
             self._induce_and_plan()
+            # REQ-ARC-XLEVEL-CARRY-1 defer (flag-gated: only the carry stage ever sets this).
+            # The boundary reinduction fired with too little new-level evidence to verify a
+            # carried engine (measured: every boundary arrives with ONE transition). Un-latch
+            # and keep the reinduction pending, take one real explore action WITH transition
+            # tracking (so the evidence window actually grows), and re-enter next call. A
+            # defer is not an induction attempt, so it hands back its attempt-count tick.
+            if self._carry_defer_reinduction:
+                self._carry_defer_reinduction = False
+                self.induced = False
+                self._induction_attempt_count -= 1
+                self.phase = "explore"
+                mv = self.explorer.next_move(frames, latest)
+                self._track_prev_for_transition(mv, latest)
+                self._prov_top = "induce.carry_deferred.explorer"
+                return mv
             self._level_reinduction_pending = False
             self.phase = "execute" if self.plan else "explore"
             self._prev = None
@@ -7045,6 +7100,131 @@ class E3AgentPolicy:
             "fallback_produced_engine": fallback_produced_engine,
         }
         return fallback_outcome if fallback_produced_engine else outcome
+
+    def _retain_cross_level_engine(self, outcome: Any) -> None:
+        """REQ-ARC-XLEVEL-CARRY-1: keep the just-induced engine + goal for the next level.
+
+        `getattr` with defaults, not attribute access: existing tests stub the reinduction
+        outcome with partial namespaces, and retention must never change their behavior.
+        Retains only when an engine exists -- a failed induction must not evict a good
+        carried engine from an earlier level with None."""
+
+        engine = getattr(outcome, "engine", None)
+        if engine is None:
+            return
+        self._carried_engine = engine
+        self._carried_goal = getattr(outcome, "goal_predicate", None)
+        self._carried_engine_meta = {
+            "induced_at_goal_level": self._current_goal_level,
+            "heldout_accuracy": getattr(outcome, "heldout_accuracy", None),
+            "accepted_by_heldout_verifier": bool(
+                getattr(outcome, "accepted_by_heldout_verifier", False)
+            ),
+            "selected_candidate_name": str(getattr(outcome, "selected_candidate_name", "")),
+        }
+
+    def _attempt_cross_level_engine_carry(self, active_transitions, plan_start_grid) -> dict:
+        """REQ-ARC-XLEVEL-CARRY-1 (2026-08-17, default OFF): verified engine carry at a
+        level boundary.
+
+        The previous level's engine is re-verified on the NEW level's own transitions --
+        none of which it was fit to, so this is the cleanest held-out check in the file.
+        It must clear the same accuracy bar a fresh induction must clear (default 1.0;
+        CARNOT_ARC_CROSS_LEVEL_CARRY_MIN_ACCURACY overrides for A/B exploration only).
+        The carried goal must not already be true at the plan start (the bogus-instant-win
+        guard the ttt-prior branch learned the hard way), and a plan must actually exist
+        in the carried model. Every exit path records a reason so a zero-fire cell is
+        auditable rather than uninterpretable (the exp5836 dead-observe-channel lesson)."""
+
+        import os
+
+        import numpy as np
+
+        from carnot.agentic import arc_executable_world_model as e3
+
+        diag: dict[str, Any] = {"fired": False}
+        engine = self._carried_engine
+        if engine is None:
+            diag["reason"] = "no_carried_engine"
+            return diag
+        diag["carried_from"] = dict(self._carried_engine_meta)
+        # MINIMUM EVIDENCE: `_should_enter_induction` fires the level-up reinduction after as
+        # little as ONE post-boundary transition -- measured, not hypothetical: every boundary
+        # in the 2026-08-17 replay-proposer A/B arrived here with verify_n_transitions=1. A
+        # 1.0 accuracy on one row is a coin toss, so the stage DEFERS: the caller re-arms the
+        # boundary reinduction and the explorer takes one more real action, until a few rows
+        # of the new level's own evidence exist. Bounded by the defer cap below, because a
+        # RESET-looping explorer adds frames without adding transitions -- after the cap the
+        # status-quo LLM path runs regardless.
+        try:
+            min_rows = int(os.environ.get("CARNOT_ARC_CROSS_LEVEL_CARRY_MIN_TRANSITIONS", "4"))
+        except ValueError:
+            min_rows = 4
+        diag["min_transitions_bar"] = min_rows
+        if len(active_transitions) < min_rows:
+            diag["verify_n_transitions"] = len(active_transitions)
+            if self._carry_reinduction_defers < _CARRY_MAX_REINDUCTION_DEFERS:
+                self._carry_reinduction_defers += 1
+                diag["deferred"] = True
+                diag["defers_used"] = self._carry_reinduction_defers
+                diag["reason"] = "insufficient_new_level_evidence_deferred"
+            else:
+                diag["reason"] = "insufficient_new_level_evidence_defer_budget_exhausted"
+            return diag
+        try:
+            bar = float(os.environ.get("CARNOT_ARC_CROSS_LEVEL_CARRY_MIN_ACCURACY", "1.0"))
+        except ValueError:
+            bar = 1.0
+        mask, mask_reason = self._world_model_hud_mask()
+        diag["hud_mask_reason"] = mask_reason
+        try:
+            vr = e3.WorldModelVerifier(list(active_transitions), hud_mask=mask).score(engine)
+        except Exception as exc:
+            diag["reason"] = "carried_engine_verification_raised"
+            diag["error"] = repr(exc)[:160]
+            return diag
+        diag["verify_accuracy"] = round(float(vr.accuracy), 4)
+        diag["verify_change_fidelity"] = round(float(vr.change_fidelity), 4)
+        diag["verify_n_transitions"] = len(active_transitions)
+        diag["min_accuracy_bar"] = bar
+        if float(vr.accuracy) < bar:
+            diag["reason"] = "carried_engine_failed_new_level_verification"
+            return diag
+        goal = self._carried_goal
+        if goal is None:
+            diag["reason"] = "no_carried_goal"
+            return diag
+        if plan_start_grid is None:
+            diag["reason"] = "no_plan_start_grid"
+            return diag
+        try:
+            if bool(goal(np.asarray(plan_start_grid))):
+                diag["reason"] = "carried_goal_already_true_at_start"
+                return diag
+        except Exception as exc:
+            diag["reason"] = "carried_goal_raised"
+            diag["error"] = repr(exc)[:160]
+            return diag
+        plan_diag: dict[str, Any] = {}
+        try:
+            plan = self._call_plan_in_model(
+                e3.plan_in_model, engine, goal, plan_start_grid, diagnostics=plan_diag
+            )
+        except Exception as exc:
+            diag["reason"] = "plan_in_carried_model_raised"
+            diag["error"] = repr(exc)[:160]
+            return diag
+        diag["plan_diagnostics"] = plan_diag
+        if not plan:
+            diag["reason"] = "no_plan_in_carried_model"
+            return diag
+        self.plan = list(plan)
+        # Plan-found is the positive evidence that gates the bias install, matching the
+        # ttt-prior branch's REQ-ARC-FCP-5699-38 gating -- never install on a flat search.
+        self._install_goal_bias(goal)
+        diag["fired"] = True
+        diag["plan_length"] = len(plan)
+        return diag
 
     def _induce_and_plan(self):
         import os
@@ -7333,6 +7513,28 @@ class E3AgentPolicy:
                     # level, or a level won before this policy tracked one) -- distinguishable
                     # from "ran and declined", per the fire-counter discipline above.
                     attempt["trajectory_transfer"] = {"skipped": "no_completed_level_trace"}
+                # CROSS-LEVEL VERIFIED ENGINE CARRY (REQ-ARC-XLEVEL-CARRY-1, DEFAULT OFF).
+                # Placed AFTER trajectory transfer (the already-shipped cheap tier keeps its
+                # priority) and BEFORE the LLM call it exists to avoid. Flag-off rows stay
+                # byte-identical: no key is recorded unless the flag is on, matching the
+                # REQ-ARC-WMTE-6480 tool-loop precedent.
+                if self.cross_level_engine_carry_enabled:
+                    carry = self._attempt_cross_level_engine_carry(
+                        active_transitions, _plan_start_grid
+                    )
+                    attempt["cross_level_engine_carry"] = carry
+                    if carry.get("fired"):
+                        attempt["planned"] = True
+                        attempt["plan_length"] = int(carry.get("plan_length") or 0)
+                        attempt["engine_source"] = "cross_level_engine_carry"
+                        return
+                    if carry.get("deferred"):
+                        # Not enough new-level evidence to verify against yet. Skip the
+                        # LLM this attempt; next_move's defer handler re-arms the boundary
+                        # reinduction and gathers one more tracked transition.
+                        self._carry_defer_reinduction = True
+                        attempt["skipped"] = "cross_level_carry_deferred_for_evidence"
+                        return
                 structural_goal_provider = None
                 try:
                     from carnot.agentic.arc_value_learner import structural_alignment_goal_candidate
@@ -7389,6 +7591,9 @@ class E3AgentPolicy:
                         os.environ.get("CARNOT_ARC_GOAL_EXEMPLAR_GRADING") == "1"
                     ),
                 )
+                # REQ-ARC-XLEVEL-CARRY-1: retain the engine this induction produced, so the
+                # NEXT level boundary can try re-verifying it before paying for the LLM again.
+                self._retain_cross_level_engine(outcome)
                 attempt.update(
                     {
                         "model_specs": outcome.model_specs,
@@ -7536,6 +7741,9 @@ class E3AgentPolicy:
                     attempt["stall_refactor_loop_error"] = repr(stall_exc)[:160]
                     stall_outcome = None
                 if stall_outcome is not None:
+                    # REQ-ARC-XLEVEL-CARRY-1: a stall-induced engine is also this level's
+                    # engine -- retain it for the next level boundary's carry attempt.
+                    self._retain_cross_level_engine(stall_outcome)
                     attempt.update(
                         {
                             "model_specs": stall_outcome.model_specs,

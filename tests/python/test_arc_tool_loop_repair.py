@@ -487,3 +487,38 @@ def test_helper_blind_mode_still_uses_blind_induce(tmp_path, monkeypatch):
     assert proposer.calls == 1
     assert attempt["recall_resample"]["via_tool_loop"] is False
     assert attempt["recall_resample"]["reason"] == "catastrophic_recall_resample"
+
+
+def test_seeded_loop_nudge_fires_on_model_inaction_despite_seed_candidate(
+    monkeypatch, proposer, tmp_path
+):
+    """The force-engine nudge must fire in SEEDED mode too. The seed pre-fills the
+    candidate ledger, so a `session.candidates`-based nudge test could never fire and
+    the probe-1 defect (inspect forever, submit nothing) returned through the seeded
+    door -- measured on a real seeded cell: 12 turns, zero submissions. The nudge now
+    keys on MODEL submissions, and this pins that."""
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "repair")
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_FORCE_ENGINE_TURN", "2")
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_TURNS", "4")
+    inspect_only = _chat_reply(
+        {
+            "role": "assistant",
+            "tool_calls": [_tool_call("diff_grids", json.dumps({"t": 0}), "d1")],
+        },
+        tokens=10,
+    )
+    fake = _FakeHTTP(chat_replies=[inspect_only])
+    _patch_http(monkeypatch, fake)
+    ok, note = loop_mod.induce_with_tool_loop(
+        proposer, "ndgame", _mover_window(), 1, seed_engine_code=FLAWED_SEED_CODE
+    )
+    stats = proposer.last_tool_loop_stats
+    assert stats["seeded"] is True
+    assert stats["candidates_scored"] >= 1  # the seed occupies the ledger
+    # The load-bearing pin: nudges fired even though the ledger was non-empty.
+    assert stats["force_engine_nudges"] >= 1
+    sent = json.dumps(fake.chat_payloads[-1])
+    assert "MUST be run_engine_on_transitions" in sent
+    # The seed is still the monotone-accept floor at the cap.
+    assert ok
+    assert (tmp_path / "ndgame" / "world_model.py").exists()

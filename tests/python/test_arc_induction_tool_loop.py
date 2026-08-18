@@ -498,3 +498,86 @@ def test_query_region_and_diff_grids_round_trip():
     assert big["ok"]  # 36 cells, under the cap
     out_of_range = session.diff_grids(99)
     assert out_of_range["ok"] is False
+
+
+# ---------------------------------------------------------------------------------
+# Stall cap (CARNOT_ARC_INDUCE_TOOL_STALL_TURNS): abort inspection-only stretches
+# ---------------------------------------------------------------------------------
+
+
+def _inspect_reply(call_id="d1"):
+    return _chat_reply(
+        {
+            "role": "assistant",
+            "tool_calls": [_tool_call("diff_grids", json.dumps({"t": 0}), call_id)],
+        },
+        tokens=10,
+    )
+
+
+def _submit_reply(code, call_id):
+    return _chat_reply(
+        {
+            "role": "assistant",
+            "tool_calls": [
+                _tool_call("run_engine_on_transitions", json.dumps({"code": code}), call_id)
+            ],
+        },
+        tokens=10,
+    )
+
+
+def test_stall_cap_unset_is_inert_inspection_runs_to_turn_cap(monkeypatch, proposer):
+    """DEFAULT-OFF PIN. With the stall env unset, a candidate followed by endless
+    inspection turns terminates by the TURN CAP exactly as before the lever existed."""
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_TURNS", "5")
+    monkeypatch.delenv("CARNOT_ARC_INDUCE_TOOL_STALL_TURNS", raising=False)
+    fake = _FakeHTTP(chat_replies=[_submit_reply(IDENTITY_CODE, "c1"), _inspect_reply()])
+    _patch_http(monkeypatch, fake)
+    ok, _ = proposer.induce("stgame0", _mover_window(), 1)
+    assert ok  # the identity candidate is still the monotone-accept best
+    stats = proposer.last_tool_loop_stats
+    assert stats["stall_cap"] == 0
+    assert stats["terminated_by"] == "turn_cap"
+    assert stats["turns"] == 5
+
+
+def test_stall_cap_aborts_after_inspection_only_turns_and_keeps_best(
+    monkeypatch, proposer, tmp_path
+):
+    """With the cap set, two consecutive inspection-only turns after the submission end
+    the loop with `stall_turns`, and the best candidate so far still lands on disk."""
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_STALL_TURNS", "2")
+    fake = _FakeHTTP(chat_replies=[_submit_reply(IDENTITY_CODE, "c1"), _inspect_reply()])
+    _patch_http(monkeypatch, fake)
+    ok, note = proposer.induce("stgame1", _mover_window(), 1)
+    assert ok
+    stats = proposer.last_tool_loop_stats
+    assert stats["terminated_by"] == "stall_turns"
+    assert stats["turns"] == 3  # submit, inspect, inspect
+    assert (tmp_path / "stgame1" / "world_model.py").exists()
+    assert "stall_turns" in note
+
+
+def test_stall_cap_resets_on_every_submission_so_slow_convergence_survives(monkeypatch, proposer):
+    """A submission on every other turn keeps resetting the stall counter: the loop must
+    end via the early-stop (non-improving) rule, never via the stall cap."""
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_STALL_TURNS", "2")
+    fake = _FakeHTTP(
+        chat_replies=[
+            _submit_reply(IDENTITY_CODE, "c1"),
+            _inspect_reply(),
+            _submit_reply(IDENTITY_CODE, "c2"),
+            _inspect_reply(),
+            _submit_reply(IDENTITY_CODE, "c3"),
+        ]
+    )
+    _patch_http(monkeypatch, fake)
+    ok, _ = proposer.induce("stgame2", _mover_window(), 1)
+    assert ok
+    stats = proposer.last_tool_loop_stats
+    assert stats["terminated_by"] == "early_stop_non_improving"
+    assert stats["turns"] == 5
