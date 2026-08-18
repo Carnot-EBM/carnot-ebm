@@ -1,5 +1,67 @@
 # Carnot — Changelog
 
+## 2026-08-17 (outer-loop, seeded repair evidence + three corrections, commits 71014c8af5 / 51df5d093f)
+
+**Instruction:** operator — give the induction generator tools rather than drop Qwen3.8, then
+"seeded with repair by default", then hold the default "until the seeded number lands".
+
+**Shipped.** Refinement rounds capped 3 -> 1 with an env escape hatch (rounds past the first
+measured pooled -0.0598 over 83 cells and consumed ~58% of stall wall-clock). CEGIS tool loop
+wired, default OFF, with the diagnosis that zero of 454 engine source lines reach the refine
+prompt. Cross-level engine carry, default OFF. Honest reason label when the recall gate is
+vacuous. Kernel v21 prepped.
+
+**Seeded repair, the number the operator held the default for.** Catastrophic band (<0.6),
+seeded, nudge-fixed, n=4: 2 cells convert outright (sb26 t0 0.0 -> 1.0 with tail 1.0 and
+mem-scan clean; sp80 t1 0.294 -> 1.0, mem clean, no scoreable tail exists because the window's
+single tail row IS the excluded level-up row), 2 unchanged (tu93 t0 +0.066 with accuracy still
+0.0; tr87 t0 exactly +0.0, returning the seed). Reported as a conversion rate, not a pooled
+mean: the arithmetic mean of +0.44 describes no cell in the set. A failed fire costs ~9-11
+minutes and one of two per-game budget slots, because the counter increments at fire time.
+Floor semantics held in 7 of 7 seeded runs -- no run regressed below its seed.
+
+**Seeding helps when the seed is nearly right and hurts when it is nearly noise.** tu93 t0
+UNSEEDED reached recall 1.0 / accuracy 0.727; SEEDED on the same cell it reached 0.066. The seed
+was a structured but entirely wrong engine, and "repair this engine" anchored the model to a
+dead approach that a blank page escaped. In the marginal band, where seeds are close, seeding
+converts 3 of 3. Candidate lever, not implemented, n=1: skip the seed when its visible
+mismatches equal the visible row count.
+
+**Correction 1 -- the marginal-band null is withdrawn.** The finding that seeded repair gains
+nothing in the 0.6-0.95 band, called independently confirmed three times, was measured on an arm
+with a broken submission nudge. Fixed arm: 5 of 7 seeded repairs to zero visible mismatches;
+broken arm: 0 of 3. The gate's justification is therefore open, not settled, though the shipped
+0.6 default still stands on separate reachability grounds.
+
+**Correction 2 -- the cross-level carry A/B is a VACUOUS null.** `carry_fires` is 0 in all 9
+paired cells, so the -0.6 actions out of ~1450 is RNG noise rather than evidence about carrying
+knowledge. The ON-arm rows show a `min_accuracy_bar` of 1.0 against carried-engine accuracy of
+0.25-0.5. Carried engines do not transfer. Do not tune that bar: any defensible lower value
+still rejects them.
+
+**Correction 3 -- the committed +0.054 is superseded, not retracted.** It was measured unseeded
+while the shipped path seeds. It survives on its own corpus (one cell, sp80 t1, whose conversion
+the seeded path reproduces exactly), but it is too narrow to describe the lever. The honest
+replacement is the conversion framing above. This closes a debt carried all session.
+
+**Bound on the whole class of work.** The induced goal predicate has never fired on a real win
+state: 0 of 31 across 49 engine evaluations, with `n_planned` 0 of 136 and 33 of 33 on-disk goal
+predicates constant. Verified NOT to be the `n_win_states=0` corpus artifact -- the captures hold
+31 genuine level-ups. So on the default configuration levels are won by exploration, and
+engine-quality levers are not levels levers. The qualifier matters: `CARNOT_ARC_STRUCTURED_NAV=1`
+(opt-in, already built) measured tu93 L0 -> L1, and the 0-of-136 measures the LLM path with that
+flag off.
+
+**Record-keeping.** Commit 71014c8af5 swept up another agent's in-flight nudge fix and stall-cap
+lever without naming them; 51df5d093f corrects that forward rather than by amending. Staging used
+explicit paths, and the hole was diffing only the unfamiliar ones -- the rule that would have
+caught it is to diff every staged path.
+
+**Open, for the operator.** Enable `repair` at the shipped 0.6 gate with the turn cap at 8
+(preserves all 11 observed wins, cuts each cap-burner by a third); Kaggle `--submit-only
+--kver 21`; the generator pin. Also unresolved: `MAX_ACTIONS` disagrees across three sites, and
+`scripts/arc_competition_validate.py` imports the module-level 200 while the agent ships 2000.
+
 ## 2026-08-17 (outer-loop subagent, generated-engine call guard, REQ-ARC-WMTE-6400)
 
 **Instruction:** team-lead task — "Build a guard that stops LLM-generated world-model engines
