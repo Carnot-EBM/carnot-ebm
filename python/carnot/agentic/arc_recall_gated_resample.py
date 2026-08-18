@@ -169,8 +169,18 @@ def decide_resample(
         return ResampleDecision(False, "per_game_budget_exhausted")
     if int(n_changing) < resample_min_changing():
         return ResampleDecision(False, "insufficient_changing_evidence")
-    if float(cell_recall) >= resample_threshold():
+    threshold = resample_threshold()
+    if float(cell_recall) >= threshold:
         return ResampleDecision(False, "recall_not_catastrophic")
+    # HONEST REASON LABEL. A threshold above 1.0 makes the recall test vacuous (recall
+    # cannot exceed 1.0), turning the effective fire condition into "trust rejected the
+    # engine". Recording `catastrophic_recall` on a recall-1.0/accuracy-0.0 cell would
+    # write the opposite of the truth into the audit field, so the reason names the
+    # condition that actually fired.
+    if threshold > 1.0:
+        if tool_repair:
+            return ResampleDecision(True, "trust_rejected_tool_loop_repair")
+        return ResampleDecision(True, "trust_rejected_resample")
     if tool_repair:
         return ResampleDecision(True, "catastrophic_recall_tool_loop_repair")
     return ResampleDecision(True, "catastrophic_recall_resample")
