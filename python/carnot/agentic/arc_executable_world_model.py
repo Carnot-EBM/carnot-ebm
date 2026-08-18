@@ -3775,7 +3775,21 @@ ARC_LIVE_GENERATOR_MTP_DEFAULT = "0"
 # verifiable rather than assumed -- llama.cpp prints `adding speculative implementation
 # 'draft-mtp'` when speculation is genuinely wired, and this file already greps for that marker.
 # Confirm it in the save-run log before trusting the speedup; tok/s is otherwise the only tell.
-ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT = "1"
+# FLIPPED TO "0" AGAIN 2026-08-18, and this time the save-run answered the question the paragraph
+# above says to ask. Kernel v27 reported `mtp_requested=False mtp_engaged=False` and printed the
+# config/run disagreement banner verbatim -- the same v19 failure the comment above predicted would
+# NOT return. Two things changed under it:
+#   * The scored path is vLLM now, not llama.cpp. `_ensure_vllm_server` deliberately does not
+#     configure speculation, so on the path that actually scores, mtp is False as a matter of fact,
+#     whatever this constant says.
+#   * MTP is the WRONG config for the fallback path too, on measurement rather than taste. The eval
+#     runs one thread per game, and at k=16 llama.cpp served 228.3 tok/s with MTP off against 108.8
+#     with it on. Speculation and batching compete for the same compute; batching wins at the
+#     concurrency this eval produces.
+# So "0" is now correct on both paths at once -- honest on the vLLM path, and faster on the
+# llama.cpp fallback. `tests/python/test_arc_submitted_agent_parity.py` pins the literal False and
+# went red on the "1" above, which is how this regression surfaced.
+ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT = "0"
 # The MTP head is a SEPARATE FILE, not a section of the main GGUF. Both the filename and the
 # substring are named here because the Kaggle kernel matches by name against an order-undefined
 # `rglob`, and the head and the main model are both `*.gguf` under the same mount root.

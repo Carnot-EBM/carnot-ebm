@@ -461,8 +461,31 @@ def test_local_and_scored_mtp_defaults_are_distinct_named_constants(wm) -> None:
     """They are two different hardware answers to the same question. Collapsing them into one is
     how a submission silently ships the slower configuration: nothing reports it, the run just
     takes ~1.4x longer per induction."""
+    # UPDATED 2026-08-18. The docstring's reasoning is unchanged and still the point of the test;
+    # what changed is that the two constants now happen to hold the SAME value, and the earlier
+    # version of this test could not express that without going red.
+    #
+    # Separate NAMES is the property worth pinning. Equal VALUES is a fact about today's hardware
+    # answers, not a violation: two questions can have the same answer without becoming one
+    # question. The old assertion pinned the values as though the divergence itself were the
+    # contract, so the moment the scored answer moved to "0" it went red for a reason unrelated to
+    # anything it was protecting -- and it disagreed with
+    # `test_arc_submitted_agent_parity.py`, which pins `frozen["mtp"] is False` off the same
+    # constant. Two tests asserting opposite things about one value is not double coverage.
+    #
+    # Why the scored answer is "0" now: the scored path runs vLLM, which does not configure
+    # speculation at all, and the llama.cpp fallback measured FASTER without it at the concurrency
+    # this eval produces (228.3 tok/s at k=16 with MTP off, against 108.8 with it on -- speculation
+    # and batching compete for the same compute). The "~1.4x win" in the old comment was a
+    # single-stream number on gemma with a real draft head; it was never wrong, it was just
+    # measured in a regime the scored run does not operate in.
     assert wm.ARC_LIVE_GENERATOR_MTP_DEFAULT == "0"  # 24 GB dev card: offload cost > MTP gain
-    assert wm.ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT == "1"  # 96 GB scored card: pure ~1.4x win
+    assert wm.ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT == "0"  # scored path is vLLM: no speculation
+    # The names must stay distinct even when the values agree -- that is the actual contract, and
+    # it is what stops someone "simplifying" the pair into one constant an operator must remember
+    # to flip.
+    assert "ARC_LIVE_GENERATOR_MTP_DEFAULT" in vars(wm)
+    assert "ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT" in vars(wm)
 
 
 def test_mtp_default_on_reads_the_env_against_the_local_constant(wm, monkeypatch) -> None:
