@@ -49,6 +49,7 @@ never-prune rule. Read the `superseded_by` field before acting on anything here.
 | [Carried engines do not transfer](/okf/claims/carried-engines-do-not-transfer.md) | stable |
 | [llama.cpp batches 4.37x; MTP suppresses it](/okf/claims/llamacpp-batches-mtp-suppresses.md) | stable |
 | [Arm was confounded with GPU lane](/okf/claims/gpu-lane-confound.md) | stable |
+| [vLLM native FP4: 651.8 tok/s at k=32, 12.5x shipped](/okf/claims/vllm-native-fp4-blackwell.md) | stable |
 
 ## Submissions
 
