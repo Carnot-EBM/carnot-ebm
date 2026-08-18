@@ -1,0 +1,1571 @@
+{
+ "experiment": "outer_loop_arc_cross_level_retention_20260817",
+ "title": "Cross-level retention: sink decomposition + what-persists continuity tests",
+ "run_date": "2026-08-17",
+ "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+ "llm_enabled": false,
+ "random_seeds_used": [
+  20260724,
+  20260725,
+  20260726
+ ],
+ "budget": 4000,
+ "duration_s": 196.7,
+ "provenance": {
+  "agent_sha256": "0011efb72e775fa8c64486995cf4c9e96656139d8a4a3017a8a49c3be3951277",
+  "harness": "scripts/arc_leaderboard_eval.py:run_game",
+  "policy_recipe": "arc_per_level_reset_attribution_capture.py run_cell, reproduced",
+  "engine_archives": [
+   "results/arc_qwen38_h2h_stopped_20260817/engine_archive",
+   "results/arc_qwen38_h2h_partial_20260817/engine_snapshots"
+  ]
+ },
+ "n_cells": 9,
+ "cells": [
+  {
+   "game": "tu93",
+   "seed": 20260724,
+   "budget": 4000,
+   "wall_s": 5.41,
+   "levels_reached": 2,
+   "per_level_actions": [
+    {
+     "level": 0,
+     "agent_actions": 345,
+     "human_actions": 19,
+     "completed": true
+    },
+    {
+     "level": 1,
+     "agent_actions": 109,
+     "human_actions": 16,
+     "completed": true
+    },
+    {
+     "level": 2,
+     "agent_actions": 1242,
+     "human_actions": 34,
+     "completed": false
+    },
+    {
+     "level": 3,
+     "agent_actions": 0,
+     "human_actions": 42,
+     "completed": false
+    },
+    {
+     "level": 4,
+     "agent_actions": 0,
+     "human_actions": 123,
+     "completed": false
+    },
+    {
+     "level": 5,
+     "agent_actions": 0,
+     "human_actions": 80,
+     "completed": false
+    },
+    {
+     "level": 6,
+     "agent_actions": 0,
+     "human_actions": 14,
+     "completed": false
+    },
+    {
+     "level": 7,
+     "agent_actions": 0,
+     "human_actions": 23,
+     "completed": false
+    },
+    {
+     "level": 8,
+     "agent_actions": 0,
+     "human_actions": 111,
+     "completed": false
+    }
+   ],
+   "actions_total": 1696,
+   "n_transitions": 1692,
+   "level_windows": {
+    "0": {
+     "n": 344,
+     "repeat_state_action": 38,
+     "repeat_state_action_fraction": 0.1105,
+     "noop_fraction": 0.0203,
+     "novel_next_state_fraction": 0.8401,
+     "n_distinct_effect_classes": 16
+    },
+    "1": {
+     "n": 108,
+     "repeat_state_action": 50,
+     "repeat_state_action_fraction": 0.463,
+     "noop_fraction": 0.0,
+     "novel_next_state_fraction": 0.4815,
+     "n_distinct_effect_classes": 15
+    },
+    "2": {
+     "n": 1240,
+     "repeat_state_action": 1064,
+     "repeat_state_action_fraction": 0.8581,
+     "noop_fraction": 0.0,
+     "novel_next_state_fraction": 0.1105,
+     "n_distinct_effect_classes": 16
+    }
+   },
+   "cross_level": [
+    {
+     "prev_level": 0,
+     "next_level": 1,
+     "n_prev": 344,
+     "n_next": 108,
+     "effect_class_carryover_weighted": 0.9722,
+     "effect_classes_next": 15,
+     "effect_classes_next_already_seen": 12,
+     "nav_prev_error": "ValueError('not enough values to unpack (expected 2, got 1)')",
+     "nav_next_on_next": {
+      "label": "ceiling",
+      "n_transitions": 108,
+      "accuracy": 0.0,
+      "cell_recall": 0.3536,
+      "change_fidelity": 0.3536,
+      "goal_fired_on_win_states": "0/1",
+      "goal_false_positive_rate": 0.0
+     },
+     "archived_engines": [
+      {
+       "source": "results/arc_qwen38_h2h_partial_20260817/engine_snapshots/e3_qwen38_27b__tu93__2bbd3f775cd4.py",
+       "on_prev": {
+        "label": "prev",
+        "n_transitions": 344,
+        "accuracy": 0.4665,
+        "cell_recall": 0.7446,
+        "change_fidelity": 0.7391,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       },
+       "on_next": {
+        "label": "next",
+        "n_transitions": 108,
+        "accuracy": 0.271,
+        "cell_recall": 0.4107,
+        "change_fidelity": 0.4074,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       }
+      }
+     ]
+    },
+    {
+     "prev_level": 1,
+     "next_level": 2,
+     "n_prev": 108,
+     "n_next": 1240,
+     "effect_class_carryover_weighted": 0.996,
+     "effect_classes_next": 16,
+     "effect_classes_next_already_seen": 12,
+     "nav_fit_prev_is_nav": true,
+     "nav_prev_on_prev": {
+      "label": "in_sample",
+      "n_transitions": 108,
+      "accuracy": 0.0,
+      "cell_recall": 0.3536,
+      "change_fidelity": 0.3536,
+      "goal_fired_on_win_states": "0/1",
+      "goal_false_positive_rate": 0.0
+     },
+     "nav_prev_on_next": {
+      "label": "transfer",
+      "n_transitions": 1240,
+      "accuracy": 0.0,
+      "cell_recall": 0.2629,
+      "change_fidelity": 0.2628,
+      "goal_fired_on_win_states": "0/0",
+      "goal_false_positive_rate": 0.0
+     },
+     "nav_next_on_next": {
+      "label": "ceiling",
+      "n_transitions": 1240,
+      "accuracy": 0.0,
+      "cell_recall": 0.2629,
+      "change_fidelity": 0.2628,
+      "goal_fired_on_win_states": "0/0",
+      "goal_false_positive_rate": 0.0
+     },
+     "archived_engines": [
+      {
+       "source": "results/arc_qwen38_h2h_partial_20260817/engine_snapshots/e3_qwen38_27b__tu93__2bbd3f775cd4.py",
+       "on_prev": {
+        "label": "prev",
+        "n_transitions": 108,
+        "accuracy": 0.271,
+        "cell_recall": 0.4107,
+        "change_fidelity": 0.4074,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       },
+       "on_next": {
+        "label": "next",
+        "n_transitions": 1240,
+        "accuracy": 0.0589,
+        "cell_recall": 0.3052,
+        "change_fidelity": 0.3051,
+        "goal_fired_on_win_states": "0/0",
+        "goal_false_positive_rate": 0.0
+       }
+      }
+     ]
+    }
+   ],
+   "navigation_diagnostics": {
+    "navigation_attempts": 97,
+    "exact_shortest_path_hits": 25,
+    "partial_forward_walk_hits": 0,
+    "similarity_forward_walk_hits": 0,
+    "forward_walk_hits": 25,
+    "reset_replay_fallbacks": 72,
+    "forward_edges_recorded": 241,
+    "forward_navigation_steps": 101,
+    "reset_replay_steps": 1244,
+    "forward_walk_hit_rate": 0.25773195876288657,
+    "similarity_retrieval_enabled": false,
+    "similarity_buckets": 0,
+    "similarity_indexed_states": 0,
+    "similarity_candidates_considered": 0,
+    "similarity_router_accepts": 0,
+    "similarity_router_rejects": 0,
+    "similarity_value_checks": 0,
+    "similarity_goal_checks": 0,
+    "similarity_world_model_verifier_checks": 0,
+    "instrumented": true,
+    "uninstrumented_reason": null
+   }
+  },
+  {
+   "game": "tu93",
+   "seed": 20260725,
+   "budget": 4000,
+   "wall_s": 2.93,
+   "levels_reached": 2,
+   "per_level_actions": [
+    {
+     "level": 0,
+     "agent_actions": 345,
+     "human_actions": 19,
+     "completed": true
+    },
+    {
+     "level": 1,
+     "agent_actions": 109,
+     "human_actions": 16,
+     "completed": true
+    },
+    {
+     "level": 2,
+     "agent_actions": 1242,
+     "human_actions": 34,
+     "completed": false
+    },
+    {
+     "level": 3,
+     "agent_actions": 0,
+     "human_actions": 42,
+     "completed": false
+    },
+    {
+     "level": 4,
+     "agent_actions": 0,
+     "human_actions": 123,
+     "completed": false
+    },
+    {
+     "level": 5,
+     "agent_actions": 0,
+     "human_actions": 80,
+     "completed": false
+    },
+    {
+     "level": 6,
+     "agent_actions": 0,
+     "human_actions": 14,
+     "completed": false
+    },
+    {
+     "level": 7,
+     "agent_actions": 0,
+     "human_actions": 23,
+     "completed": false
+    },
+    {
+     "level": 8,
+     "agent_actions": 0,
+     "human_actions": 111,
+     "completed": false
+    }
+   ],
+   "actions_total": 1696,
+   "n_transitions": 1692,
+   "level_windows": {
+    "0": {
+     "n": 344,
+     "repeat_state_action": 38,
+     "repeat_state_action_fraction": 0.1105,
+     "noop_fraction": 0.0203,
+     "novel_next_state_fraction": 0.8401,
+     "n_distinct_effect_classes": 16
+    },
+    "1": {
+     "n": 108,
+     "repeat_state_action": 50,
+     "repeat_state_action_fraction": 0.463,
+     "noop_fraction": 0.0,
+     "novel_next_state_fraction": 0.4815,
+     "n_distinct_effect_classes": 15
+    },
+    "2": {
+     "n": 1240,
+     "repeat_state_action": 1064,
+     "repeat_state_action_fraction": 0.8581,
+     "noop_fraction": 0.0,
+     "novel_next_state_fraction": 0.1105,
+     "n_distinct_effect_classes": 16
+    }
+   },
+   "cross_level": [
+    {
+     "prev_level": 0,
+     "next_level": 1,
+     "n_prev": 344,
+     "n_next": 108,
+     "effect_class_carryover_weighted": 0.9722,
+     "effect_classes_next": 15,
+     "effect_classes_next_already_seen": 12,
+     "nav_prev_error": "ValueError('not enough values to unpack (expected 2, got 1)')",
+     "nav_next_on_next": {
+      "label": "ceiling",
+      "n_transitions": 108,
+      "accuracy": 0.0,
+      "cell_recall": 0.3536,
+      "change_fidelity": 0.3536,
+      "goal_fired_on_win_states": "0/1",
+      "goal_false_positive_rate": 0.0
+     },
+     "archived_engines": [
+      {
+       "source": "results/arc_qwen38_h2h_partial_20260817/engine_snapshots/e3_qwen38_27b__tu93__2bbd3f775cd4.py",
+       "on_prev": {
+        "label": "prev",
+        "n_transitions": 344,
+        "accuracy": 0.4665,
+        "cell_recall": 0.7446,
+        "change_fidelity": 0.7391,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       },
+       "on_next": {
+        "label": "next",
+        "n_transitions": 108,
+        "accuracy": 0.271,
+        "cell_recall": 0.4107,
+        "change_fidelity": 0.4074,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       }
+      }
+     ]
+    },
+    {
+     "prev_level": 1,
+     "next_level": 2,
+     "n_prev": 108,
+     "n_next": 1240,
+     "effect_class_carryover_weighted": 0.996,
+     "effect_classes_next": 16,
+     "effect_classes_next_already_seen": 12,
+     "nav_fit_prev_is_nav": true,
+     "nav_prev_on_prev": {
+      "label": "in_sample",
+      "n_transitions": 108,
+      "accuracy": 0.0,
+      "cell_recall": 0.3536,
+      "change_fidelity": 0.3536,
+      "goal_fired_on_win_states": "0/1",
+      "goal_false_positive_rate": 0.0
+     },
+     "nav_prev_on_next": {
+      "label": "transfer",
+      "n_transitions": 1240,
+      "accuracy": 0.0,
+      "cell_recall": 0.2629,
+      "change_fidelity": 0.2628,
+      "goal_fired_on_win_states": "0/0",
+      "goal_false_positive_rate": 0.0
+     },
+     "nav_next_on_next": {
+      "label": "ceiling",
+      "n_transitions": 1240,
+      "accuracy": 0.0,
+      "cell_recall": 0.2629,
+      "change_fidelity": 0.2628,
+      "goal_fired_on_win_states": "0/0",
+      "goal_false_positive_rate": 0.0
+     },
+     "archived_engines": [
+      {
+       "source": "results/arc_qwen38_h2h_partial_20260817/engine_snapshots/e3_qwen38_27b__tu93__2bbd3f775cd4.py",
+       "on_prev": {
+        "label": "prev",
+        "n_transitions": 108,
+        "accuracy": 0.271,
+        "cell_recall": 0.4107,
+        "change_fidelity": 0.4074,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       },
+       "on_next": {
+        "label": "next",
+        "n_transitions": 1240,
+        "accuracy": 0.0589,
+        "cell_recall": 0.3052,
+        "change_fidelity": 0.3051,
+        "goal_fired_on_win_states": "0/0",
+        "goal_false_positive_rate": 0.0
+       }
+      }
+     ]
+    }
+   ],
+   "navigation_diagnostics": {
+    "navigation_attempts": 97,
+    "exact_shortest_path_hits": 25,
+    "partial_forward_walk_hits": 0,
+    "similarity_forward_walk_hits": 0,
+    "forward_walk_hits": 25,
+    "reset_replay_fallbacks": 72,
+    "forward_edges_recorded": 241,
+    "forward_navigation_steps": 101,
+    "reset_replay_steps": 1244,
+    "forward_walk_hit_rate": 0.25773195876288657,
+    "similarity_retrieval_enabled": false,
+    "similarity_buckets": 0,
+    "similarity_indexed_states": 0,
+    "similarity_candidates_considered": 0,
+    "similarity_router_accepts": 0,
+    "similarity_router_rejects": 0,
+    "similarity_value_checks": 0,
+    "similarity_goal_checks": 0,
+    "similarity_world_model_verifier_checks": 0,
+    "instrumented": true,
+    "uninstrumented_reason": null
+   }
+  },
+  {
+   "game": "tu93",
+   "seed": 20260726,
+   "budget": 4000,
+   "wall_s": 3.36,
+   "levels_reached": 2,
+   "per_level_actions": [
+    {
+     "level": 0,
+     "agent_actions": 345,
+     "human_actions": 19,
+     "completed": true
+    },
+    {
+     "level": 1,
+     "agent_actions": 109,
+     "human_actions": 16,
+     "completed": true
+    },
+    {
+     "level": 2,
+     "agent_actions": 1242,
+     "human_actions": 34,
+     "completed": false
+    },
+    {
+     "level": 3,
+     "agent_actions": 0,
+     "human_actions": 42,
+     "completed": false
+    },
+    {
+     "level": 4,
+     "agent_actions": 0,
+     "human_actions": 123,
+     "completed": false
+    },
+    {
+     "level": 5,
+     "agent_actions": 0,
+     "human_actions": 80,
+     "completed": false
+    },
+    {
+     "level": 6,
+     "agent_actions": 0,
+     "human_actions": 14,
+     "completed": false
+    },
+    {
+     "level": 7,
+     "agent_actions": 0,
+     "human_actions": 23,
+     "completed": false
+    },
+    {
+     "level": 8,
+     "agent_actions": 0,
+     "human_actions": 111,
+     "completed": false
+    }
+   ],
+   "actions_total": 1696,
+   "n_transitions": 1692,
+   "level_windows": {
+    "0": {
+     "n": 344,
+     "repeat_state_action": 38,
+     "repeat_state_action_fraction": 0.1105,
+     "noop_fraction": 0.0203,
+     "novel_next_state_fraction": 0.8401,
+     "n_distinct_effect_classes": 16
+    },
+    "1": {
+     "n": 108,
+     "repeat_state_action": 50,
+     "repeat_state_action_fraction": 0.463,
+     "noop_fraction": 0.0,
+     "novel_next_state_fraction": 0.4815,
+     "n_distinct_effect_classes": 15
+    },
+    "2": {
+     "n": 1240,
+     "repeat_state_action": 1064,
+     "repeat_state_action_fraction": 0.8581,
+     "noop_fraction": 0.0,
+     "novel_next_state_fraction": 0.1105,
+     "n_distinct_effect_classes": 16
+    }
+   },
+   "cross_level": [
+    {
+     "prev_level": 0,
+     "next_level": 1,
+     "n_prev": 344,
+     "n_next": 108,
+     "effect_class_carryover_weighted": 0.9722,
+     "effect_classes_next": 15,
+     "effect_classes_next_already_seen": 12,
+     "nav_prev_error": "ValueError('not enough values to unpack (expected 2, got 1)')",
+     "nav_next_on_next": {
+      "label": "ceiling",
+      "n_transitions": 108,
+      "accuracy": 0.0,
+      "cell_recall": 0.3536,
+      "change_fidelity": 0.3536,
+      "goal_fired_on_win_states": "0/1",
+      "goal_false_positive_rate": 0.0
+     },
+     "archived_engines": [
+      {
+       "source": "results/arc_qwen38_h2h_partial_20260817/engine_snapshots/e3_qwen38_27b__tu93__2bbd3f775cd4.py",
+       "on_prev": {
+        "label": "prev",
+        "n_transitions": 344,
+        "accuracy": 0.4665,
+        "cell_recall": 0.7446,
+        "change_fidelity": 0.7391,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       },
+       "on_next": {
+        "label": "next",
+        "n_transitions": 108,
+        "accuracy": 0.271,
+        "cell_recall": 0.4107,
+        "change_fidelity": 0.4074,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       }
+      }
+     ]
+    },
+    {
+     "prev_level": 1,
+     "next_level": 2,
+     "n_prev": 108,
+     "n_next": 1240,
+     "effect_class_carryover_weighted": 0.996,
+     "effect_classes_next": 16,
+     "effect_classes_next_already_seen": 12,
+     "nav_fit_prev_is_nav": true,
+     "nav_prev_on_prev": {
+      "label": "in_sample",
+      "n_transitions": 108,
+      "accuracy": 0.0,
+      "cell_recall": 0.3536,
+      "change_fidelity": 0.3536,
+      "goal_fired_on_win_states": "0/1",
+      "goal_false_positive_rate": 0.0
+     },
+     "nav_prev_on_next": {
+      "label": "transfer",
+      "n_transitions": 1240,
+      "accuracy": 0.0,
+      "cell_recall": 0.2629,
+      "change_fidelity": 0.2628,
+      "goal_fired_on_win_states": "0/0",
+      "goal_false_positive_rate": 0.0
+     },
+     "nav_next_on_next": {
+      "label": "ceiling",
+      "n_transitions": 1240,
+      "accuracy": 0.0,
+      "cell_recall": 0.2629,
+      "change_fidelity": 0.2628,
+      "goal_fired_on_win_states": "0/0",
+      "goal_false_positive_rate": 0.0
+     },
+     "archived_engines": [
+      {
+       "source": "results/arc_qwen38_h2h_partial_20260817/engine_snapshots/e3_qwen38_27b__tu93__2bbd3f775cd4.py",
+       "on_prev": {
+        "label": "prev",
+        "n_transitions": 108,
+        "accuracy": 0.271,
+        "cell_recall": 0.4107,
+        "change_fidelity": 0.4074,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       },
+       "on_next": {
+        "label": "next",
+        "n_transitions": 1240,
+        "accuracy": 0.0589,
+        "cell_recall": 0.3052,
+        "change_fidelity": 0.3051,
+        "goal_fired_on_win_states": "0/0",
+        "goal_false_positive_rate": 0.0
+       }
+      }
+     ]
+    }
+   ],
+   "navigation_diagnostics": {
+    "navigation_attempts": 97,
+    "exact_shortest_path_hits": 25,
+    "partial_forward_walk_hits": 0,
+    "similarity_forward_walk_hits": 0,
+    "forward_walk_hits": 25,
+    "reset_replay_fallbacks": 72,
+    "forward_edges_recorded": 241,
+    "forward_navigation_steps": 101,
+    "reset_replay_steps": 1244,
+    "forward_walk_hit_rate": 0.25773195876288657,
+    "similarity_retrieval_enabled": false,
+    "similarity_buckets": 0,
+    "similarity_indexed_states": 0,
+    "similarity_candidates_considered": 0,
+    "similarity_router_accepts": 0,
+    "similarity_router_rejects": 0,
+    "similarity_value_checks": 0,
+    "similarity_goal_checks": 0,
+    "similarity_world_model_verifier_checks": 0,
+    "instrumented": true,
+    "uninstrumented_reason": null
+   }
+  },
+  {
+   "game": "vc33",
+   "seed": 20260724,
+   "budget": 4000,
+   "wall_s": 4.11,
+   "levels_reached": 2,
+   "per_level_actions": [
+    {
+     "level": 0,
+     "agent_actions": 15,
+     "human_actions": 7,
+     "completed": true
+    },
+    {
+     "level": 1,
+     "agent_actions": 42,
+     "human_actions": 18,
+     "completed": true
+    },
+    {
+     "level": 2,
+     "agent_actions": 1223,
+     "human_actions": 44,
+     "completed": false
+    },
+    {
+     "level": 3,
+     "agent_actions": 0,
+     "human_actions": 61,
+     "completed": false
+    },
+    {
+     "level": 4,
+     "agent_actions": 0,
+     "human_actions": 131,
+     "completed": false
+    },
+    {
+     "level": 5,
+     "agent_actions": 0,
+     "human_actions": 34,
+     "completed": false
+    },
+    {
+     "level": 6,
+     "agent_actions": 0,
+     "human_actions": 152,
+     "completed": false
+    }
+   ],
+   "actions_total": 1280,
+   "n_transitions": 1277,
+   "level_windows": {
+    "0": {
+     "n": 15,
+     "repeat_state_action": 0,
+     "repeat_state_action_fraction": 0.0,
+     "noop_fraction": 0.0,
+     "novel_next_state_fraction": 1.0,
+     "n_distinct_effect_classes": 5
+    },
+    "1": {
+     "n": 41,
+     "repeat_state_action": 0,
+     "repeat_state_action_fraction": 0.0,
+     "noop_fraction": 0.0,
+     "novel_next_state_fraction": 1.0,
+     "n_distinct_effect_classes": 6
+    },
+    "2": {
+     "n": 1221,
+     "repeat_state_action": 700,
+     "repeat_state_action_fraction": 0.5733,
+     "noop_fraction": 0.095,
+     "novel_next_state_fraction": 0.4333,
+     "n_distinct_effect_classes": 15
+    }
+   },
+   "cross_level": [
+    {
+     "prev_level": 0,
+     "next_level": 1,
+     "n_prev": 15,
+     "n_next": 41,
+     "effect_class_carryover_weighted": 0.3415,
+     "effect_classes_next": 6,
+     "effect_classes_next_already_seen": 2,
+     "nav_fit_prev_is_nav": false,
+     "archived_engines": [
+      {
+       "source": "results/arc_qwen38_h2h_stopped_20260817/engine_archive/e3_w1_qwen38_27b__vc33__555380ff6347.py",
+       "on_prev": {
+        "label": "prev",
+        "n_transitions": 15,
+        "accuracy": 0.0,
+        "cell_recall": 0.3392,
+        "change_fidelity": 0.3379,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       },
+       "on_next": {
+        "label": "next",
+        "n_transitions": 41,
+        "accuracy": 0.0,
+        "cell_recall": 0.0,
+        "change_fidelity": 0.0,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       }
+      }
+     ]
+    },
+    {
+     "prev_level": 1,
+     "next_level": 2,
+     "n_prev": 41,
+     "n_next": 1221,
+     "effect_class_carryover_weighted": 0.7701,
+     "effect_classes_next": 15,
+     "effect_classes_next_already_seen": 4,
+     "nav_fit_prev_is_nav": false,
+     "archived_engines": [
+      {
+       "source": "results/arc_qwen38_h2h_stopped_20260817/engine_archive/e3_w1_qwen38_27b__vc33__555380ff6347.py",
+       "on_prev": {
+        "label": "prev",
+        "n_transitions": 41,
+        "accuracy": 0.0,
+        "cell_recall": 0.0,
+        "change_fidelity": 0.0,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       },
+       "on_next": {
+        "label": "next",
+        "n_transitions": 1221,
+        "accuracy": 0.095,
+        "cell_recall": 0.0,
+        "change_fidelity": 0.0,
+        "goal_fired_on_win_states": "0/0",
+        "goal_false_positive_rate": 0.0
+       }
+      }
+     ]
+    }
+   ],
+   "navigation_diagnostics": {
+    "navigation_attempts": 92,
+    "exact_shortest_path_hits": 14,
+    "partial_forward_walk_hits": 0,
+    "similarity_forward_walk_hits": 0,
+    "forward_walk_hits": 14,
+    "reset_replay_fallbacks": 78,
+    "forward_edges_recorded": 505,
+    "forward_navigation_steps": 25,
+    "reset_replay_steps": 596,
+    "forward_walk_hit_rate": 0.15217391304347827,
+    "similarity_retrieval_enabled": false,
+    "similarity_buckets": 0,
+    "similarity_indexed_states": 0,
+    "similarity_candidates_considered": 0,
+    "similarity_router_accepts": 0,
+    "similarity_router_rejects": 0,
+    "similarity_value_checks": 0,
+    "similarity_goal_checks": 0,
+    "similarity_world_model_verifier_checks": 0,
+    "instrumented": true,
+    "uninstrumented_reason": null
+   }
+  },
+  {
+   "game": "vc33",
+   "seed": 20260725,
+   "budget": 4000,
+   "wall_s": 6.22,
+   "levels_reached": 2,
+   "per_level_actions": [
+    {
+     "level": 0,
+     "agent_actions": 20,
+     "human_actions": 7,
+     "completed": true
+    },
+    {
+     "level": 1,
+     "agent_actions": 112,
+     "human_actions": 18,
+     "completed": true
+    },
+    {
+     "level": 2,
+     "agent_actions": 1242,
+     "human_actions": 44,
+     "completed": false
+    },
+    {
+     "level": 3,
+     "agent_actions": 0,
+     "human_actions": 61,
+     "completed": false
+    },
+    {
+     "level": 4,
+     "agent_actions": 0,
+     "human_actions": 131,
+     "completed": false
+    },
+    {
+     "level": 5,
+     "agent_actions": 0,
+     "human_actions": 34,
+     "completed": false
+    },
+    {
+     "level": 6,
+     "agent_actions": 0,
+     "human_actions": 152,
+     "completed": false
+    }
+   ],
+   "actions_total": 1374,
+   "n_transitions": 1371,
+   "level_windows": {
+    "0": {
+     "n": 20,
+     "repeat_state_action": 0,
+     "repeat_state_action_fraction": 0.0,
+     "noop_fraction": 0.0,
+     "novel_next_state_fraction": 1.0,
+     "n_distinct_effect_classes": 5
+    },
+    "1": {
+     "n": 111,
+     "repeat_state_action": 12,
+     "repeat_state_action_fraction": 0.1081,
+     "noop_fraction": 0.0,
+     "novel_next_state_fraction": 0.9099,
+     "n_distinct_effect_classes": 6
+    },
+    "2": {
+     "n": 1240,
+     "repeat_state_action": 566,
+     "repeat_state_action_fraction": 0.4565,
+     "noop_fraction": 0.075,
+     "novel_next_state_fraction": 0.5524,
+     "n_distinct_effect_classes": 15
+    }
+   },
+   "cross_level": [
+    {
+     "prev_level": 0,
+     "next_level": 1,
+     "n_prev": 20,
+     "n_next": 111,
+     "effect_class_carryover_weighted": 0.4414,
+     "effect_classes_next": 6,
+     "effect_classes_next_already_seen": 2,
+     "nav_fit_prev_is_nav": false,
+     "archived_engines": [
+      {
+       "source": "results/arc_qwen38_h2h_stopped_20260817/engine_archive/e3_w1_qwen38_27b__vc33__555380ff6347.py",
+       "on_prev": {
+        "label": "prev",
+        "n_transitions": 20,
+        "accuracy": 0.0,
+        "cell_recall": 0.3021,
+        "change_fidelity": 0.2462,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       },
+       "on_next": {
+        "label": "next",
+        "n_transitions": 111,
+        "accuracy": 0.0,
+        "cell_recall": 0.0,
+        "change_fidelity": 0.0,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       }
+      }
+     ]
+    },
+    {
+     "prev_level": 1,
+     "next_level": 2,
+     "n_prev": 111,
+     "n_next": 1240,
+     "effect_class_carryover_weighted": 0.7044,
+     "effect_classes_next": 15,
+     "effect_classes_next_already_seen": 4,
+     "nav_fit_prev_is_nav": false,
+     "archived_engines": [
+      {
+       "source": "results/arc_qwen38_h2h_stopped_20260817/engine_archive/e3_w1_qwen38_27b__vc33__555380ff6347.py",
+       "on_prev": {
+        "label": "prev",
+        "n_transitions": 111,
+        "accuracy": 0.0,
+        "cell_recall": 0.0,
+        "change_fidelity": 0.0,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       },
+       "on_next": {
+        "label": "next",
+        "n_transitions": 1240,
+        "accuracy": 0.075,
+        "cell_recall": 0.0,
+        "change_fidelity": 0.0,
+        "goal_fired_on_win_states": "0/0",
+        "goal_false_positive_rate": 0.0
+       }
+      }
+     ]
+    }
+   ],
+   "navigation_diagnostics": {
+    "navigation_attempts": 73,
+    "exact_shortest_path_hits": 9,
+    "partial_forward_walk_hits": 0,
+    "similarity_forward_walk_hits": 0,
+    "forward_walk_hits": 9,
+    "reset_replay_fallbacks": 64,
+    "forward_edges_recorded": 656,
+    "forward_navigation_steps": 11,
+    "reset_replay_steps": 490,
+    "forward_walk_hit_rate": 0.1232876712328767,
+    "similarity_retrieval_enabled": false,
+    "similarity_buckets": 0,
+    "similarity_indexed_states": 0,
+    "similarity_candidates_considered": 0,
+    "similarity_router_accepts": 0,
+    "similarity_router_rejects": 0,
+    "similarity_value_checks": 0,
+    "similarity_goal_checks": 0,
+    "similarity_world_model_verifier_checks": 0,
+    "instrumented": true,
+    "uninstrumented_reason": null
+   }
+  },
+  {
+   "game": "vc33",
+   "seed": 20260726,
+   "budget": 4000,
+   "wall_s": 10.51,
+   "levels_reached": 2,
+   "per_level_actions": [
+    {
+     "level": 0,
+     "agent_actions": 15,
+     "human_actions": 7,
+     "completed": true
+    },
+    {
+     "level": 1,
+     "agent_actions": 330,
+     "human_actions": 18,
+     "completed": true
+    },
+    {
+     "level": 2,
+     "agent_actions": 1254,
+     "human_actions": 44,
+     "completed": false
+    },
+    {
+     "level": 3,
+     "agent_actions": 0,
+     "human_actions": 61,
+     "completed": false
+    },
+    {
+     "level": 4,
+     "agent_actions": 0,
+     "human_actions": 131,
+     "completed": false
+    },
+    {
+     "level": 5,
+     "agent_actions": 0,
+     "human_actions": 34,
+     "completed": false
+    },
+    {
+     "level": 6,
+     "agent_actions": 0,
+     "human_actions": 152,
+     "completed": false
+    }
+   ],
+   "actions_total": 1599,
+   "n_transitions": 1596,
+   "level_windows": {
+    "0": {
+     "n": 15,
+     "repeat_state_action": 0,
+     "repeat_state_action_fraction": 0.0,
+     "noop_fraction": 0.0,
+     "novel_next_state_fraction": 1.0,
+     "n_distinct_effect_classes": 5
+    },
+    "1": {
+     "n": 329,
+     "repeat_state_action": 49,
+     "repeat_state_action_fraction": 0.1489,
+     "noop_fraction": 0.0,
+     "novel_next_state_fraction": 0.8663,
+     "n_distinct_effect_classes": 6
+    },
+    "2": {
+     "n": 1252,
+     "repeat_state_action": 575,
+     "repeat_state_action_fraction": 0.4593,
+     "noop_fraction": 0.0831,
+     "novel_next_state_fraction": 0.5503,
+     "n_distinct_effect_classes": 15
+    }
+   },
+   "cross_level": [
+    {
+     "prev_level": 0,
+     "next_level": 1,
+     "n_prev": 15,
+     "n_next": 329,
+     "effect_class_carryover_weighted": 0.3556,
+     "effect_classes_next": 6,
+     "effect_classes_next_already_seen": 2,
+     "nav_fit_prev_is_nav": false,
+     "archived_engines": [
+      {
+       "source": "results/arc_qwen38_h2h_stopped_20260817/engine_archive/e3_w1_qwen38_27b__vc33__555380ff6347.py",
+       "on_prev": {
+        "label": "prev",
+        "n_transitions": 15,
+        "accuracy": 0.0,
+        "cell_recall": 0.2826,
+        "change_fidelity": 0.2816,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       },
+       "on_next": {
+        "label": "next",
+        "n_transitions": 329,
+        "accuracy": 0.0,
+        "cell_recall": 0.0,
+        "change_fidelity": 0.0,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       }
+      }
+     ]
+    },
+    {
+     "prev_level": 1,
+     "next_level": 2,
+     "n_prev": 329,
+     "n_next": 1252,
+     "effect_class_carryover_weighted": 0.7152,
+     "effect_classes_next": 15,
+     "effect_classes_next_already_seen": 4,
+     "nav_fit_prev_is_nav": false,
+     "archived_engines": [
+      {
+       "source": "results/arc_qwen38_h2h_stopped_20260817/engine_archive/e3_w1_qwen38_27b__vc33__555380ff6347.py",
+       "on_prev": {
+        "label": "prev",
+        "n_transitions": 329,
+        "accuracy": 0.0,
+        "cell_recall": 0.0,
+        "change_fidelity": 0.0,
+        "goal_fired_on_win_states": "0/1",
+        "goal_false_positive_rate": 0.0
+       },
+       "on_next": {
+        "label": "next",
+        "n_transitions": 1252,
+        "accuracy": 0.0831,
+        "cell_recall": 0.0,
+        "change_fidelity": 0.0,
+        "goal_fired_on_win_states": "0/0",
+        "goal_false_positive_rate": 0.0
+       }
+      }
+     ]
+    }
+   ],
+   "navigation_diagnostics": {
+    "navigation_attempts": 98,
+    "exact_shortest_path_hits": 40,
+    "partial_forward_walk_hits": 0,
+    "similarity_forward_walk_hits": 0,
+    "forward_walk_hits": 40,
+    "reset_replay_fallbacks": 58,
+    "forward_edges_recorded": 697,
+    "forward_navigation_steps": 100,
+    "reset_replay_steps": 546,
+    "forward_walk_hit_rate": 0.40816326530612246,
+    "similarity_retrieval_enabled": false,
+    "similarity_buckets": 0,
+    "similarity_indexed_states": 0,
+    "similarity_candidates_considered": 0,
+    "similarity_router_accepts": 0,
+    "similarity_router_rejects": 0,
+    "similarity_value_checks": 0,
+    "similarity_goal_checks": 0,
+    "similarity_world_model_verifier_checks": 0,
+    "instrumented": true,
+    "uninstrumented_reason": null
+   }
+  },
+  {
+   "game": "cd82",
+   "seed": 20260724,
+   "budget": 4000,
+   "wall_s": 13.1,
+   "levels_reached": 2,
+   "per_level_actions": [
+    {
+     "level": 0,
+     "agent_actions": 741,
+     "human_actions": 55,
+     "completed": true
+    },
+    {
+     "level": 1,
+     "agent_actions": 1038,
+     "human_actions": 8,
+     "completed": true
+    },
+    {
+     "level": 2,
+     "agent_actions": 1288,
+     "human_actions": 41,
+     "completed": false
+    },
+    {
+     "level": 3,
+     "agent_actions": 0,
+     "human_actions": 21,
+     "completed": false
+    },
+    {
+     "level": 4,
+     "agent_actions": 0,
+     "human_actions": 23,
+     "completed": false
+    },
+    {
+     "level": 5,
+     "agent_actions": 0,
+     "human_actions": 23,
+     "completed": false
+    }
+   ],
+   "actions_total": 3067,
+   "n_transitions": 3063,
+   "level_windows": {
+    "0": {
+     "n": 740,
+     "repeat_state_action": 98,
+     "repeat_state_action_fraction": 0.1324,
+     "noop_fraction": 0.223,
+     "novel_next_state_fraction": 0.6473,
+     "n_distinct_effect_classes": 17
+    },
+    "1": {
+     "n": 1037,
+     "repeat_state_action": 133,
+     "repeat_state_action_fraction": 0.1283,
+     "noop_fraction": 0.2276,
+     "novel_next_state_fraction": 0.7194,
+     "n_distinct_effect_classes": 38
+    },
+    "2": {
+     "n": 1286,
+     "repeat_state_action": 209,
+     "repeat_state_action_fraction": 0.1625,
+     "noop_fraction": 0.1952,
+     "novel_next_state_fraction": 0.7659,
+     "n_distinct_effect_classes": 208
+    }
+   },
+   "cross_level": [
+    {
+     "prev_level": 0,
+     "next_level": 1,
+     "n_prev": 740,
+     "n_next": 1037,
+     "effect_class_carryover_weighted": 0.7266,
+     "effect_classes_next": 38,
+     "effect_classes_next_already_seen": 16,
+     "nav_fit_prev_is_nav": true,
+     "nav_prev_on_prev": {
+      "label": "in_sample",
+      "n_transitions": 740,
+      "accuracy": 0.1516,
+      "cell_recall": 0.2758,
+      "change_fidelity": 0.2016,
+      "goal_fired_on_win_states": "0/1",
+      "goal_false_positive_rate": 0.0
+     },
+     "nav_prev_on_next": {
+      "label": "transfer",
+      "n_transitions": 1037,
+      "accuracy": 0.1795,
+      "cell_recall": 0.1854,
+      "change_fidelity": 0.1363,
+      "goal_fired_on_win_states": "0/1",
+      "goal_false_positive_rate": 0.0
+     }
+    },
+    {
+     "prev_level": 1,
+     "next_level": 2,
+     "n_prev": 1037,
+     "n_next": 1286,
+     "effect_class_carryover_weighted": 0.4763,
+     "effect_classes_next": 208,
+     "effect_classes_next_already_seen": 16,
+     "nav_fit_prev_is_nav": false,
+     "nav_next_on_next": {
+      "label": "ceiling",
+      "n_transitions": 1286,
+      "accuracy": 0.182,
+      "cell_recall": 0.0086,
+      "change_fidelity": 0.0024,
+      "goal_fired_on_win_states": "0/0",
+      "goal_false_positive_rate": 0.0
+     }
+    }
+   ],
+   "navigation_diagnostics": {
+    "navigation_attempts": 70,
+    "exact_shortest_path_hits": 12,
+    "partial_forward_walk_hits": 0,
+    "similarity_forward_walk_hits": 0,
+    "forward_walk_hits": 12,
+    "reset_replay_fallbacks": 58,
+    "forward_edges_recorded": 1092,
+    "forward_navigation_steps": 27,
+    "reset_replay_steps": 194,
+    "forward_walk_hit_rate": 0.17142857142857143,
+    "similarity_retrieval_enabled": false,
+    "similarity_buckets": 0,
+    "similarity_indexed_states": 0,
+    "similarity_candidates_considered": 0,
+    "similarity_router_accepts": 0,
+    "similarity_router_rejects": 0,
+    "similarity_value_checks": 0,
+    "similarity_goal_checks": 0,
+    "similarity_world_model_verifier_checks": 0,
+    "instrumented": true,
+    "uninstrumented_reason": null
+   }
+  },
+  {
+   "game": "cd82",
+   "seed": 20260725,
+   "budget": 4000,
+   "wall_s": 5.32,
+   "levels_reached": 1,
+   "per_level_actions": [
+    {
+     "level": 0,
+     "agent_actions": 189,
+     "human_actions": 55,
+     "completed": true
+    },
+    {
+     "level": 1,
+     "agent_actions": 1271,
+     "human_actions": 8,
+     "completed": false
+    },
+    {
+     "level": 2,
+     "agent_actions": 0,
+     "human_actions": 41,
+     "completed": false
+    },
+    {
+     "level": 3,
+     "agent_actions": 0,
+     "human_actions": 21,
+     "completed": false
+    },
+    {
+     "level": 4,
+     "agent_actions": 0,
+     "human_actions": 23,
+     "completed": false
+    },
+    {
+     "level": 5,
+     "agent_actions": 0,
+     "human_actions": 23,
+     "completed": false
+    }
+   ],
+   "actions_total": 1460,
+   "n_transitions": 1457,
+   "level_windows": {
+    "0": {
+     "n": 188,
+     "repeat_state_action": 11,
+     "repeat_state_action_fraction": 0.0585,
+     "noop_fraction": 0.2128,
+     "novel_next_state_fraction": 0.7553,
+     "n_distinct_effect_classes": 17
+    },
+    "1": {
+     "n": 1269,
+     "repeat_state_action": 160,
+     "repeat_state_action_fraction": 0.1261,
+     "noop_fraction": 0.2254,
+     "novel_next_state_fraction": 0.7139,
+     "n_distinct_effect_classes": 38
+    }
+   },
+   "cross_level": [
+    {
+     "prev_level": 0,
+     "next_level": 1,
+     "n_prev": 188,
+     "n_next": 1269,
+     "effect_class_carryover_weighted": 0.7121,
+     "effect_classes_next": 38,
+     "effect_classes_next_already_seen": 16,
+     "nav_fit_prev_is_nav": true,
+     "nav_prev_on_prev": {
+      "label": "in_sample",
+      "n_transitions": 188,
+      "accuracy": 0.1604,
+      "cell_recall": 0.2447,
+      "change_fidelity": 0.1787,
+      "goal_fired_on_win_states": "0/1",
+      "goal_false_positive_rate": 0.0
+     },
+     "nav_prev_on_next": {
+      "label": "transfer",
+      "n_transitions": 1269,
+      "accuracy": 0.1828,
+      "cell_recall": 0.1812,
+      "change_fidelity": 0.1319,
+      "goal_fired_on_win_states": "0/0",
+      "goal_false_positive_rate": 0.0
+     }
+    }
+   ],
+   "navigation_diagnostics": {
+    "navigation_attempts": 37,
+    "exact_shortest_path_hits": 3,
+    "partial_forward_walk_hits": 0,
+    "similarity_forward_walk_hits": 0,
+    "forward_walk_hits": 3,
+    "reset_replay_fallbacks": 34,
+    "forward_edges_recorded": 515,
+    "forward_navigation_steps": 3,
+    "reset_replay_steps": 53,
+    "forward_walk_hit_rate": 0.08108108108108109,
+    "similarity_retrieval_enabled": false,
+    "similarity_buckets": 0,
+    "similarity_indexed_states": 0,
+    "similarity_candidates_considered": 0,
+    "similarity_router_accepts": 0,
+    "similarity_router_rejects": 0,
+    "similarity_value_checks": 0,
+    "similarity_goal_checks": 0,
+    "similarity_world_model_verifier_checks": 0,
+    "instrumented": true,
+    "uninstrumented_reason": null
+   }
+  },
+  {
+   "game": "cd82",
+   "seed": 20260726,
+   "budget": 4000,
+   "wall_s": 7.82,
+   "levels_reached": 1,
+   "per_level_actions": [
+    {
+     "level": 0,
+     "agent_actions": 893,
+     "human_actions": 55,
+     "completed": true
+    },
+    {
+     "level": 1,
+     "agent_actions": 1278,
+     "human_actions": 8,
+     "completed": false
+    },
+    {
+     "level": 2,
+     "agent_actions": 0,
+     "human_actions": 41,
+     "completed": false
+    },
+    {
+     "level": 3,
+     "agent_actions": 0,
+     "human_actions": 21,
+     "completed": false
+    },
+    {
+     "level": 4,
+     "agent_actions": 0,
+     "human_actions": 23,
+     "completed": false
+    },
+    {
+     "level": 5,
+     "agent_actions": 0,
+     "human_actions": 23,
+     "completed": false
+    }
+   ],
+   "actions_total": 2171,
+   "n_transitions": 2168,
+   "level_windows": {
+    "0": {
+     "n": 892,
+     "repeat_state_action": 117,
+     "repeat_state_action_fraction": 0.1312,
+     "noop_fraction": 0.2085,
+     "novel_next_state_fraction": 0.6525,
+     "n_distinct_effect_classes": 17
+    },
+    "1": {
+     "n": 1276,
+     "repeat_state_action": 171,
+     "repeat_state_action_fraction": 0.134,
+     "noop_fraction": 0.2132,
+     "novel_next_state_fraction": 0.7202,
+     "n_distinct_effect_classes": 38
+    }
+   },
+   "cross_level": [
+    {
+     "prev_level": 0,
+     "next_level": 1,
+     "n_prev": 892,
+     "n_next": 1276,
+     "effect_class_carryover_weighted": 0.7261,
+     "effect_classes_next": 38,
+     "effect_classes_next_already_seen": 16,
+     "nav_fit_prev_is_nav": true,
+     "nav_prev_on_prev": {
+      "label": "in_sample",
+      "n_transitions": 892,
+      "accuracy": 0.1616,
+      "cell_recall": 0.2684,
+      "change_fidelity": 0.1958,
+      "goal_fired_on_win_states": "0/1",
+      "goal_false_positive_rate": 0.0
+     },
+     "nav_prev_on_next": {
+      "label": "transfer",
+      "n_transitions": 1276,
+      "accuracy": 0.1638,
+      "cell_recall": 0.2035,
+      "change_fidelity": 0.1492,
+      "goal_fired_on_win_states": "0/0",
+      "goal_false_positive_rate": 0.0
+     }
+    }
+   ],
+   "navigation_diagnostics": {
+    "navigation_attempts": 79,
+    "exact_shortest_path_hits": 24,
+    "partial_forward_walk_hits": 0,
+    "similarity_forward_walk_hits": 0,
+    "forward_walk_hits": 24,
+    "reset_replay_fallbacks": 55,
+    "forward_edges_recorded": 695,
+    "forward_navigation_steps": 47,
+    "reset_replay_steps": 179,
+    "forward_walk_hit_rate": 0.3037974683544304,
+    "similarity_retrieval_enabled": false,
+    "similarity_buckets": 0,
+    "similarity_indexed_states": 0,
+    "similarity_candidates_considered": 0,
+    "similarity_router_accepts": 0,
+    "similarity_router_rejects": 0,
+    "similarity_value_checks": 0,
+    "similarity_goal_checks": 0,
+    "similarity_world_model_verifier_checks": 0,
+    "instrumented": true,
+    "uninstrumented_reason": null
+   }
+  }
+ ]
+}

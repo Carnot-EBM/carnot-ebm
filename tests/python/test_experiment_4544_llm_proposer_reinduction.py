@@ -83,11 +83,29 @@ def test_req_arc_wmte_4544_spec_declares_required_artifact_contract() -> None:
         assert principle in spec
 
 
-def test_req_arc_wmte_4544_bounded_refinement_stops_on_reachable_plan() -> None:
-    """REQ-ARC-WMTE-4544: refinement retries are bounded and stop after a reachable plan."""
+def test_req_arc_wmte_4544_bounded_refinement_stops_on_reachable_plan(monkeypatch) -> None:
+    """REQ-ARC-WMTE-4544: refinement retries are bounded and stop after a reachable plan.
+
+    EARLY-STOP needs at least two rounds to be observable: round 1 returns a stuck engine, round 2
+    returns a progressing one, and the property is that the loop halts there instead of spending
+    its remaining budget. The shipped cap became 1 on 2026-08-17 (rounds past the first measured
+    pooled-negative on held-out), which makes early-stop untestable at the default.
+
+    So this raises the cap through CARNOT_ARC_MAX_REFINEMENT_ROUNDS, which exists for exactly this
+    -- testing a multi-round mechanism without editing source. The default stays 1 and is pinned
+    separately by tests/python/test_arc_refinement_rounds_cap.py.
+    """
+
+    import importlib
+
+    monkeypatch.setenv("CARNOT_ARC_MAX_REFINEMENT_ROUNDS", "3")
+    import carnot.agentic.arc_llm_reinduction as _reinduction
+
+    importlib.reload(_reinduction)
 
     from carnot.agentic.arc_executable_world_model import Transition
-    from carnot.agentic.arc_llm_reinduction import execute_bounded_llm_reinduction
+
+    execute_bounded_llm_reinduction = _reinduction.execute_bounded_llm_reinduction
 
     class FakeProposer:
         model_specs = "Qwen3.5-9B-MTP GGUF (/models/Qwen3.5-9B-Q4_K_M.gguf)"
@@ -171,11 +189,25 @@ def test_req_arc_wmte_4544_bounded_refinement_stops_on_reachable_plan() -> None:
     }
 
 
-def test_req_arc_wmte_4544_bounded_refinement_caps_at_three_rounds() -> None:
-    """SCENARIO-ARC-WMTE-4544: an unreachable plan cannot exceed the K<=3 loop bound."""
+def test_req_arc_wmte_4544_bounded_refinement_caps_at_the_round_bound() -> None:
+    """SCENARIO-ARC-WMTE-4544: an unreachable plan cannot exceed the loop bound.
+
+    The property under test is that refinement is BOUNDED, not that the bound is any particular
+    number. It was written when the bound was 3 and asserted 3 literally; the bound became 1 on
+    2026-08-17 (operator-approved) because rounds past the first measured pooled-negative on
+    held-out. Derived from MAX_REFINEMENT_ROUNDS so it tests the property and moves with the
+    constant, instead of going red every time the operator retunes the cap.
+
+    Note `execute_bounded_llm_reinduction` clamps with min(max_rounds, MAX_REFINEMENT_ROUNDS), so
+    the module constant is a hard ceiling even against an explicit caller argument. That is
+    deliberate: it guarantees the cap holds no matter who calls.
+    """
 
     from carnot.agentic.arc_executable_world_model import Transition
-    from carnot.agentic.arc_llm_reinduction import execute_bounded_llm_reinduction
+    from carnot.agentic.arc_llm_reinduction import (
+        MAX_REFINEMENT_ROUNDS,
+        execute_bounded_llm_reinduction,
+    )
 
     class NeverProposer:
         model_specs = "Qwen3.5-9B-MTP GGUF (/models/Qwen3.5-9B-Q4_K_M.gguf)"
@@ -216,8 +248,10 @@ def test_req_arc_wmte_4544_bounded_refinement_caps_at_three_rounds() -> None:
     )
 
     assert result.planned is False
-    assert result.refinement_rounds_used == 3
-    assert [row["round"] for row in result.rounds] == [1, 2, 3]
+    # Asked for 3; the ceiling decides. Both assertions derive from the constant so the bound is
+    # what is tested, not the number that happened to be shipped when this was written.
+    assert result.refinement_rounds_used == MAX_REFINEMENT_ROUNDS
+    assert [row["round"] for row in result.rounds] == list(range(1, MAX_REFINEMENT_ROUNDS + 1))
     assert result.skipped == "degenerate_goal_predicate"
 
 
