@@ -62,6 +62,27 @@ def tool_loop_repair_enabled() -> bool:
     return os.environ.get("CARNOT_ARC_INDUCE_TOOL_LOOP") == "repair"
 
 
+def _lean_prompt_k() -> Optional[int]:
+    """How many transitions to RENDER when the retrieval index supplies the rest.
+
+    None (unset, the default) means "render whatever the normal resolver says", which is
+    byte-identical to the behaviour before REQ-ARC-WMTE-6500 existed. A positive integer
+    is the number of exemplars to show; the model is told to fetch the rest by tool.
+
+    Zero is rejected on purpose. A prompt with no worked example asks the model to write
+    an engine before it has seen a single transition rendered, and the tool descriptions
+    alone do not convey the grid encoding. Floor at 1.
+    """
+    raw = os.environ.get("CARNOT_ARC_INDUCE_LEAN_PROMPT")
+    if not raw:
+        return None
+    try:
+        v = int(raw)
+    except ValueError:
+        return None
+    return max(1, v)
+
+
 def _turn_cap() -> int:
     try:
         return max(1, int(os.environ.get("CARNOT_ARC_INDUCE_TOOL_TURNS", DEFAULT_TURN_CAP)))
@@ -297,15 +318,33 @@ def induce_with_tool_loop(
     # model the held-out tail's deltas in-prompt and quietly defeat the aggregate-only
     # held-out score -- the exact leak the CEGIS acceptance split (REQ-ARC-WMTE-6090)
     # was built to close.
+    # LEAN PROMPT (REQ-ARC-WMTE-6500, default OFF). Rendering every transition is the
+    # largest single driver of prompt size, and prefill -- not decode -- is what the K=4
+    # concurrency probe timed out on at 17k prompt tokens. With the retrieval index the
+    # model can be shown a couple of exemplars and asked to FETCH the rest, so the served
+    # prompt shrinks while the evidence available to it does not.
+    # Default OFF and byte-identical when unset: this trades prompt size for extra turns,
+    # and whether that trade helps or hurts induction quality is unmeasured. It is a
+    # concurrency lever, not a quality one, and must be A/B'd before it ships.
+    _lean = _lean_prompt_k()
     base = induce_prompt(
         game,
         list(session.visible),
         int(cell),
         previous_level_complete_grid=previous_level_complete_grid,
         win_transition=win_transition,
-        k=_induce_transitions_k(),
+        k=_lean if _lean is not None else _induce_transitions_k(),
         include_playbook_exemplars=getattr(proposer, "include_playbook_exemplars", False),
     )
+    if _lean is not None:
+        base += (
+            f"\n\nNOTE: only {_lean} of {len(session.visible)} observed transitions are shown "
+            "above, to keep this prompt small. The REST ARE AVAILABLE VIA TOOLS and you are "
+            "expected to fetch them: call list_transitions first to see every transition's "
+            "action, shape, changed-cell count and change bounding box, then query_region or "
+            "diff_grids on the ones that matter. Do NOT infer a rule from the shown transitions "
+            "alone -- they are a sample, not the evidence.\n"
+        )
     # REPAIR SEEDING (REQ-ARC-WMTE-6470). Score the failed engine as candidate zero and
     # show the model the code WITH its measured mismatch report. Two properties follow:
     # the monotone accept can never return something with more visible mismatches than

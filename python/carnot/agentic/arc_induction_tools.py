@@ -264,6 +264,53 @@ class InductionToolSession:
 
     # ---- tool: query_region ------------------------------------------------------
 
+    def list_transitions(self) -> dict[str, Any]:
+        """Compact index of the VISIBLE transitions: what exists, without the grids.
+
+        REQ-ARC-WMTE-6500. This is the retrieval half of the tool set. The other tools
+        VERIFY a candidate against data the prompt already contained; this one lets the
+        prompt stop containing it. Rendering every transition is the largest single
+        driver of prompt size, and prefill is what the K=4 concurrency probe timed out
+        on -- so a model that can ask "which transitions exist and which ones changed a
+        lot" and then `query_region` only those is cheaper to serve at concurrency.
+
+        Bounded to `self.visible` for the same reason every other tool is: the held-out
+        tail is scored aggregate-only, and an index that revealed its shape would leak
+        the thing the split exists to protect. Grids are deliberately NOT returned --
+        this is an index, and returning them would rebuild the prompt it replaces.
+        """
+        self.calls.append({"tool": "list_transitions"})
+        rows: list[dict[str, Any]] = []
+        for i, tr in enumerate(self.visible):
+            before = np.asarray(tr.grid)
+            after = np.asarray(tr.next_grid)
+            h, w = before.shape[:2]
+            if before.shape == after.shape:
+                changed = int(np.count_nonzero(before != after))
+                ch = np.argwhere(before != after)
+                bbox = (
+                    [
+                        int(ch[:, 0].min()),
+                        int(ch[:, 1].min()),
+                        int(ch[:, 0].max()),
+                        int(ch[:, 1].max()),
+                    ]
+                    if ch.size
+                    else None
+                )
+            else:
+                changed, bbox = -1, None  # shape change: -1 means "differs structurally"
+            rows.append(
+                {
+                    "t": i,
+                    "action": int(getattr(tr, "action", -1)),
+                    "shape": [int(h), int(w)],
+                    "changed_cells": changed,
+                    "changed_bbox": bbox,
+                }
+            )
+        return {"ok": True, "n_visible": len(rows), "transitions": rows}
+
     def query_region(
         self, t: int, r0: int, r1: int, c0: int, c1: int, which: str = "before"
     ) -> dict[str, Any]:
@@ -484,6 +531,20 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
             },
         },
     },
+    {
+        "type": "function",
+        "function": {
+            "name": "list_transitions",
+            "description": (
+                "Index of the observed transitions WITHOUT their grids: for each, the index t, "
+                "the action, the grid shape, how many cells changed, and the bounding box of the "
+                "change (changed_cells -1 means the shape itself changed). Call this FIRST to see "
+                "what evidence exists, then use query_region or diff_grids on the transitions that "
+                "matter. Cheaper than reading every grid."
+            ),
+            "parameters": {"type": "object", "properties": {}},
+        },
+    },
 ]
 
 TOOL_NAMES = tuple(s["function"]["name"] for s in TOOL_SCHEMAS)
@@ -506,6 +567,7 @@ def dispatch_tool(session: InductionToolSession, name: str, arguments: str) -> d
         "query_region": session.query_region,
         "diff_grids": session.diff_grids,
         "run_goal_on_states": session.run_goal_on_states,
+        "list_transitions": session.list_transitions,
     }.get(name)
     if fn is None:
         return {"ok": False, "error": f"unknown tool {name!r}; available: {list(TOOL_NAMES)}"}
