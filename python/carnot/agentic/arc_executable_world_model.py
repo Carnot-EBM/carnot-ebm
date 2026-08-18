@@ -31,6 +31,7 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -3893,6 +3894,58 @@ def _gguf_declares_baked_mtp(path: str | Path) -> bool:
         return False
 
 
+# --- vLLM backend (REQ-ARC-WMTE-6510, operator-directed migration 2026-08-18) -----------------
+#
+# A SECOND backend, not a replacement. The dev 3090s are sm_86 and cannot execute NVFP4 at all,
+# so llama.cpp stays the local/conductor default and every existing test keeps pinning it. vLLM
+# is selected only where it was measured to win: the Kaggle Blackwell kernel, where native FP4 +
+# fp8 KV + continuous batching measured 651.8 tok/s aggregate at k=32 against 228.3 for the best
+# llama.cpp config and ~52 for what shipped before (see okf/claims/vllm-native-fp4-blackwell.md).
+# Default UNSET keeps the llama.cpp path byte-identical.
+
+_VLLM_BACKEND_ENV = "CARNOT_ARC_LLM_BACKEND"
+_VLLM_MODEL_DIR_ENV = "CARNOT_ARC_VLLM_MODEL_DIR"
+_VLLM_MAX_SEQS_ENV = "CARNOT_ARC_VLLM_MAX_SEQS"
+
+
+def _vllm_backend_active() -> bool:
+    """True only on the explicit opt-in. Anything else -- unset, empty, llamacpp, typo -- is the
+    llama.cpp path, so a broken env var cannot silently migrate the generator."""
+    return os.environ.get(_VLLM_BACKEND_ENV, "").strip().lower() == "vllm"
+
+
+def _resolve_vllm_model_dir() -> Optional[str]:
+    """The safetensors MODEL DIRECTORY for the vLLM backend (config.json + *.safetensors).
+
+    Precedence mirrors `_resolve_gguf`: the explicit env pin wins (the Kaggle kernel sets it
+    after resolving by rglob -- dataset mount depth is NOT stable across runs, so fixed-depth
+    paths are forbidden); otherwise scan /kaggle/input the same way the kernel does. No
+    HuggingFace-cache fallback on purpose: this backend only exists where the weights ship as an
+    attached dataset, and a silent cache hit on a dev box would run vLLM somewhere it was never
+    validated."""
+    env = (os.environ.get(_VLLM_MODEL_DIR_ENV) or "").strip()
+    if env and Path(env).is_dir() and (Path(env) / "config.json").exists():
+        return env
+    root = Path("/kaggle/input")
+    if root.exists():
+        for cfg in root.rglob("config.json"):
+            if any(cfg.parent.glob("*.safetensors")):
+                return str(cfg.parent)
+    return None
+
+
+def _vllm_max_seqs() -> int:
+    """Concurrent-sequence cap for the vLLM server. Default 24: at capped production session
+    length (~54k tokens) fp8 KV fits ~22 concurrent in the ~61 GB KV budget, and the measured
+    scaling curve is already bending by k=32 -- so 24 sits inside both the memory and the
+    diminishing-returns envelope. Floor at 1, malformed values fall back."""
+    raw = os.environ.get(_VLLM_MAX_SEQS_ENV)
+    try:
+        return max(1, int(raw)) if raw else 24
+    except (TypeError, ValueError):
+        return 24
+
+
 def _resolve_gguf(repo_substr: str) -> Optional[str]:
     """Find a cached GGUF weight file for an open-weight SOTA model (offline).
 
@@ -6480,7 +6533,154 @@ class LocalGGUFProposer:
         if len(self.orphaned_child_cleanups) < 24:
             self.orphaned_child_cleanups.append(diagnostic[:400])
 
+    def _ensure_vllm_server(self) -> bool:
+        """Launch or reuse a vLLM OpenAI server (REQ-ARC-WMTE-6510). Kaggle-Blackwell only.
+
+        Deliberately self-contained: health, reuse and launch live here so the llama.cpp path
+        above is byte-untouched and its tests keep meaning what they meant. The launch recipe is
+        the one PROVEN by bench v13/v15 on the actual scored card -- native FP4 selected
+        (`FlashInferCutlassNvFp4LinearKernel` in the log), fp8 KV engaged and measured free, and
+        the toolchain/linker environment (coherent 13.0.x pip CUDA + dev-symlinks) prepared by
+        the kernel BEFORE the agent starts, not here.
+
+        MTP is deliberately NOT configured on this backend: batching was measured to beat
+        speculation decisively at concurrency (llama.cpp: 228.3 batched vs 108.8 MTP-on at k=16),
+        and vLLM's own MTP interaction with batching is unmeasured. Recorded on the instance so a
+        run cannot silently believe it had speculation.
+        """
+        self.last_mtp_draft_path = ""
+        self.mtp_disabled_reason = (
+            "vllm_backend: MTP not configured (batching beats speculation at concurrency; unmeasured under vLLM)"
+            if self.mtp
+            else ""
+        )
+        model_dir = _resolve_vllm_model_dir()
+        if not model_dir:
+            self._note_server_failure(
+                "vllm backend active but no safetensors model dir resolved "
+                f"(set {_VLLM_MODEL_DIR_ENV} or attach the dataset)"
+            )
+            return False
+        if self._healthy() and self._vllm_reusable(model_dir):
+            return True
+        self._terminate_stale_proc("replacing server for vllm launch")
+        # max-model-len from the SAME admission arithmetic the llama.cpp path uses, expressed
+        # per-sequence: prompt + completion + slack. PagedAttention shares the pool, so this is
+        # a per-request ceiling rather than a divided static pool.
+        max_len = int(_INDUCE_WORST_CASE_PROMPT_TOKENS + self.max_tokens + 2048)
+        args = [
+            sys.executable,
+            "-m",
+            "vllm.entrypoints.openai.api_server",
+            "--model",
+            model_dir,
+            "--served-model-name",
+            "m",
+            "--max-model-len",
+            str(max_len),
+            "--gpu-memory-utilization",
+            "0.90",
+            "--max-num-seqs",
+            str(_vllm_max_seqs()),
+            "--kv-cache-dtype",
+            "fp8",
+            "--port",
+            str(self.port),
+            "--host",
+            "127.0.0.1",
+        ]
+        self.last_launch_argv = list(args)
+        self.generator_server_path = f"vllm:{model_dir}"
+        log_path = Path(tempfile.gettempdir()) / f"vllm_server_{self.port}.log"
+        lf = open(log_path, "ab")
+        self._proc = subprocess.Popen(args, stdout=lf, stderr=subprocess.STDOUT)
+        # Weights (23 GB) + torch.compile + CUDA-graph capture: measured cold boots run minutes,
+        # not seconds. 240 * 5s = 20 min ceiling, generous but bounded.
+        for _ in range(240):
+            time.sleep(5)
+            if self._healthy():
+                return True
+            if self._proc.poll() is not None:
+                break
+        tail = ""
+        try:
+            tail = log_path.read_bytes()[-1500:].decode(errors="replace")
+        except OSError:
+            pass
+        self._note_server_failure(f"vllm server failed to become healthy; log tail: {tail}"[:400])
+        return False
+
+    def _vllm_reusable(self, model_dir: str) -> bool:
+        """Reuse check for a running vLLM server: same policy as `_reusable` (refuse rather than
+        adopt), sourced from /v1/models because vLLM serves no /props. The served id is the model
+        path when launched with --model <dir>; --served-model-name aliases it as 'm', so match
+        either. max_model_len is checked with the same >= rule as the n_ctx check."""
+        import json as _json
+        import urllib.request
+
+        try:
+            with urllib.request.urlopen(self._url() + "/v1/models", timeout=3) as r:
+                data = _json.load(r)
+        except Exception:
+            self.reuse_model_check = "unobserved_v1_models_unreachable"
+            return True  # same fail-open as /props-unreadable in _reusable
+        rows = data.get("data") if isinstance(data, dict) else None
+        row = rows[0] if isinstance(rows, list) and rows else {}
+        served = str(row.get("id") or "")
+        root = str(row.get("root") or "")
+        if served and served not in ("m",) and model_dir not in (served, root):
+            self.reuse_model_check = f"refused_wrong_model observed={served} want={model_dir}"
+            return False
+        self.reuse_model_check = "match"
+        mml = row.get("max_model_len")
+        need = int(_INDUCE_WORST_CASE_PROMPT_TOKENS + self.max_tokens + 2048)
+        if isinstance(mml, int) and mml > 0:
+            self.observed_server_n_ctx = int(mml)
+            if mml < need:
+                self.reuse_n_ctx_check = f"refused_smaller_pool observed={mml} want={need}"
+                return False
+            self.reuse_n_ctx_check = "match" if mml == need else "larger_ok"
+        else:
+            self.reuse_n_ctx_check = "unobserved_props_unreachable"
+        return True
+
+    def _vllm_raw_completion(self, payload: dict) -> dict:
+        """POST the llama.cpp-shaped raw payload to vLLM's /v1/completions and return the answer
+        RESHAPED to llama.cpp's response contract, so `_record_completion_diagnostics` and every
+        downstream truncation check keep working unchanged: `content` from choices[0].text,
+        `stop_type` mapped from finish_reason (length->limit, stop->eos), and
+        `timings.predicted_n` from usage.completion_tokens."""
+        import json as _json
+        import urllib.request
+
+        body = _json.dumps(
+            {
+                "model": "m",
+                "prompt": payload.get("prompt", ""),
+                "max_tokens": int(payload.get("n_predict") or self.max_tokens),
+                "temperature": float(payload.get("temperature", 0.0)),
+                **({"seed": payload["seed"]} if "seed" in payload else {}),
+                **({"stop": payload["stop"]} if payload.get("stop") else {}),
+            }
+        ).encode()
+        req = urllib.request.Request(
+            self._url() + "/v1/completions", data=body, headers={"Content-Type": "application/json"}
+        )
+        with urllib.request.urlopen(req, timeout=self.timeout) as r:
+            d = _json.load(r)
+        ch = (d.get("choices") or [{}])[0]
+        fr = str(ch.get("finish_reason") or "")
+        usage = d.get("usage") or {}
+        return {
+            "content": str(ch.get("text") or ""),
+            "stop_type": {"length": "limit", "stop": "eos"}.get(fr, fr),
+            "truncated": False,
+            "timings": {"predicted_n": usage.get("completion_tokens")},
+        }
+
     def _ensure_server(self) -> bool:
+        if _vllm_backend_active():
+            return self._ensure_vllm_server()
         if self._healthy():
             if self._reusable():
                 return True  # reuse an already-running server (loaded model)
@@ -7131,6 +7331,13 @@ class LocalGGUFProposer:
                         repeat_penalty=_payload.get("repeat_penalty"),
                         repeat_last_n=_payload.get("repeat_last_n"),
                     )
+                elif _vllm_backend_active():
+                    # THE INDUCE PATH under the vLLM backend. Same translation as the
+                    # complete_text route: /v1/completions in, llama.cpp-shaped reply out, so
+                    # `_record_completion_diagnostics` and the truncation/limit diagnostics that
+                    # gate every induction keep reading the fields they were written against.
+                    _response = self._vllm_raw_completion(_payload)
+                    text = _response.get("content", "")
                 else:
                     req = urllib.request.Request(
                         self._url() + "/completion",
@@ -7319,6 +7526,10 @@ class LocalGGUFProposer:
                     temperature=temperature,
                     stop=stop,
                 )
+            elif _vllm_backend_active():
+                # vLLM serves no llama.cpp /completion; translate to /v1/completions and reshape
+                # the reply to llama.cpp's contract so truncation detection is unchanged.
+                _response = self._vllm_raw_completion(payload)
             else:
                 req = urllib.request.Request(
                     self._url() + "/completion",
