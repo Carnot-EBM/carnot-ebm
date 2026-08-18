@@ -48,6 +48,36 @@ gemma-4-31B-it migration that last touched the stale fixture) ·
 `python/carnot/experiment_4754_submitted_agent_config.py` · CLAUDE.md "Tests Must Run and
 Assert".
 
+**RESOLVED 2026-08-18, same day — and one claim above was WRONG. Correcting rather than
+editing, per never-prune.**
+
+The entry says "the project has no working mechanical answer to whether the package is
+consistent with what will run." That is false, and I should have checked before writing it.
+Running the gate directly against the REAL `SUBMITTED_AGENT_CONFIG` and the REAL model cache
+returns `intact: True`, with all three of `submitted_config_declares_pinned_generator`,
+`cached_gguf_matches` and `submission_entrypoint_resolves_generator` True. **The gate logic was
+healthy the whole time and would have answered a live readiness question correctly.** What was
+broken was the TESTS' synthetic inputs. The distinction matters: a broken gate means the
+submission is unguarded, while stale test fixtures mean the guard works but its regression
+suite does not — a real defect, and a much smaller one than what this entry originally claimed.
+
+Fixed by deriving every generator-identity fixture from the live constants instead of repeating
+them as literals. Four stale literals were involved, and only the first was found by the initial
+diagnosis:
+
+1. `frozen_generator.model_id` / `repo_substr` / `model_filename` (both files)
+2. the cached-gguf path handed to `gguf_finder` (`/models/gemma-4-31B-it-Q4_K_M.gguf`)
+3. the synthetic submission-entrypoint text (`"gemma-4-31B-it CARNOT_ARC_GGUF_PATH"`)
+4. `mtp` / `spec_type` in the exp4744 fixture and its three assertions
+
+The scored-MTP contract stays a LITERAL in exactly one place,
+`tests/python/test_arc_submitted_agent_parity.py`, so flipping the knob still goes red there.
+Repeating it as a second literal here is what let two tests assert opposite values of one
+constant.
+
+Result: 144 passed, 0 failed over the same selection that was 7 red at HEAD. The "next step"
+above is complete; no further work is queued from this entry.
+
 ### NEW 2026-08-08 (Phase 0a of the ARC live-agent improvement plan): a corrected artifact's fabrication-gate quarantine cannot be re-admitted by the lever-portfolio gate — a real, filed gap, not fixed
 
 **What was attempted.** Per `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md`

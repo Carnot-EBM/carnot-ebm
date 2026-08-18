@@ -12,6 +12,25 @@ from pathlib import Path
 from typing import Any
 
 from carnot import experiment_4744_submission_package_readiness as mod
+from carnot.agentic.arc_executable_world_model import (
+    ARC_LIVE_GENERATOR_MODEL_ID as _LIVE_MODEL_ID,
+)
+from carnot.agentic.arc_executable_world_model import (
+    ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT as _SCORED_MTP,
+)
+from carnot.agentic.arc_executable_world_model import (
+    ARC_LIVE_GENERATOR_REPO_SUBSTR as _LIVE_REPO_SUBSTR,
+)
+
+# DERIVED FROM THE LIVE CONSTANTS, NOT LITERALS (2026-08-18). This fixture stands in for the
+# frozen generator so the readiness gate's LOGIC can be exercised. The gate compares the config
+# against these same constants, so literals naming a previous model make a CORRECT gate report
+# `frozen_generator_confirmed: False` -- which is what happened when the generator moved to
+# Qwen3.8-27B and these five tests went red without anyone noticing. The scored-MTP CONTRACT is
+# pinned as a literal in `tests/python/test_arc_submitted_agent_parity.py`, deliberately and in
+# exactly one place; duplicating it here as a second literal is what let two tests disagree about
+# one constant.
+_SCORED_MTP_ON = _SCORED_MTP != "0"
 
 
 JsonDict = dict[str, Any]
@@ -21,9 +40,9 @@ SUBMITTED_AGENT_CONFIG_FIXTURE: JsonDict = {
     "policy": "E3AgentPolicy",
     "cascade": True,
     "frozen_generator": {
-        "model_id": "unsloth/gemma-4-31B-it-GGUF",
-        "repo_substr": "gemma-4-31B-it",
-        "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
+        "model_id": _LIVE_MODEL_ID,
+        "repo_substr": _LIVE_REPO_SUBSTR,
+        "model_filename": f"{_LIVE_REPO_SUBSTR}-Q4_K_M.gguf",
         "model_path_env": "CARNOT_ARC_GGUF_PATH",
         "server_path_env": "CARNOT_LLAMA_SERVER",
         "llama_server_kind": "cuda-12.8-binary",
@@ -34,8 +53,8 @@ SUBMITTED_AGENT_CONFIG_FIXTURE: JsonDict = {
             "libggml",
             "libggml-cuda",
         ],
-        "mtp": True,
-        "spec_type": "draft-mtp",
+        "mtp": _SCORED_MTP_ON,
+        "spec_type": "draft-mtp" if _SCORED_MTP_ON else None,
         "kv_quant": "q8_0",
         "no_think_prefix": "",
         "max_tokens": 2560,
@@ -96,7 +115,7 @@ def _parity(ok: bool = True) -> JsonDict:
 
 
 def _manifest(tmp_path: Path, *, complete: bool = True) -> JsonDict:
-    model = tmp_path / "gemma-4-31B-it-Q4_K_M.gguf"
+    model = tmp_path / f"{_LIVE_REPO_SUBSTR}-Q4_K_M.gguf"
     server = tmp_path / "llama-server"
     if complete:
         shared = [
@@ -140,9 +159,9 @@ def test_scenario_capstone_4744_confirms_frozen_generator_from_submitted_config(
     config = mod.frozen_generator_config_from_submitted(SUBMITTED_AGENT_CONFIG_FIXTURE)
 
     assert config["confirmed"] is True
-    assert config["model_id"] == "unsloth/gemma-4-31B-it-GGUF"
-    assert config["repo_substr"] == "gemma-4-31B-it"
-    assert config["mtp"] is True
+    assert config["model_id"] == _LIVE_MODEL_ID
+    assert config["repo_substr"] == _LIVE_REPO_SUBSTR
+    assert config["mtp"] is _SCORED_MTP_ON
     assert config["kv_quant"] == "q8_0"
     assert config["max_tokens"] >= 2048
     assert config["no_think_prefix"] == ""
