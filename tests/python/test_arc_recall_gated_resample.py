@@ -418,3 +418,32 @@ def test_trust_rejects_mirror_matches_plain_gate():
     good = lambda grid, action, data: np.full_like(np.asarray(grid), 5)  # noqa: E731
     assert E3AgentPolicy._plain_trust_rejects(_score(identity, trans)) is True
     assert E3AgentPolicy._plain_trust_rejects(_score(good, trans)) is False
+
+
+def test_vacuous_threshold_fires_with_trust_rejected_reason(monkeypatch):
+    """A threshold above 1.0 makes the recall test vacuous, so the fire reason must say
+    what actually fired (trust rejection), not `catastrophic_recall` -- which on a
+    recall-1.0/accuracy-0.0 cell would write the opposite of the truth into the audit
+    field. Default-threshold behaviour is pinned unchanged by the existing tests."""
+    import carnot.agentic.arc_recall_gated_resample as rgr
+
+    monkeypatch.setenv("CARNOT_ARC_RECALL_RESAMPLE_THRESHOLD", "1.01")
+    d = rgr.decide_resample(
+        cell_recall=1.0,  # perfect recall, yet trust rejected on accuracy
+        n_changing=11,
+        downstream_rejects=True,
+        resamples_used_this_game=0,
+        tool_repair=True,
+    )
+    assert d.fire is True
+    assert d.reason == "trust_rejected_tool_loop_repair"
+    monkeypatch.setenv("CARNOT_ARC_RECALL_RESAMPLE", "1")
+    d2 = rgr.decide_resample(
+        cell_recall=0.93,
+        n_changing=11,
+        downstream_rejects=True,
+        resamples_used_this_game=0,
+        tool_repair=False,
+    )
+    assert d2.fire is True
+    assert d2.reason == "trust_rejected_resample"
