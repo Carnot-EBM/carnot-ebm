@@ -1,5 +1,67 @@
 # Carnot — Changelog
 
+## 2026-08-18 (outer-loop, vLLM backend + probe + readiness gates, commits b24debc9c6 .. 69521df1e9)
+
+**Instruction:** operator — "ship the vllm migration", then "go for it", then "close the gap".
+
+**Measured first.** vLLM with native SM120 FP4 and fp8 KV reached 651.8 tok/s aggregate at
+k=32 on the scored Blackwell card, against 228.3 for the best llama.cpp config and ~52 for
+what ships. Single stream is a wash (56.1 vs 52.2) — the entire win is continuous batching
+plus native FP4 at concurrency.
+
+**Shipped as a SECOND backend, not a replacement.** The dev 3090s are sm_86 and cannot
+execute NVFP4 at all, so llama.cpp stays the local and conductor path. Zero existing tests
+changed; 13 new tests; 104 llama.cpp-pinning tests pass unchanged.
+
+**The probe was testing the wrong backend.** The kernel's pre-flight check launches its own
+llama-server, so on the vLLM path it printed `LLM GENERATOR HEALTHY` about a process the
+scored agent never touches — v27 reported healthy while the vLLM engine had never started.
+A backend-aware probe now calls the agent's OWN `_ensure_vllm_server` and
+`_vllm_raw_completion`, because the response-translation layer is the only unproven part and
+a hand-rolled HTTP probe would pass while it was broken. It found the truth on its first run.
+
+**The unsafe failure mode, and the one that mattered most.** A vLLM server that failed to
+start left `CARNOT_ARC_LLM_BACKEND` set, so every induction went to a dead server and the
+agent would have scored with NO generator — strictly worse than the llama.cpp config already
+shipping. Had the slot been spent on v28, v29 or v30 it would have bought an LLM-OFF run.
+The probe now demotes to llama.cpp on a failed start; v31 confirmed the demotion live.
+
+**Four environment defects, each a fixed path or ordering assumption in a layout nobody
+promised:** the flashinfer AOT cache dataset was never attached to the scored kernel (v28);
+the CUDA 13 toolchain was probed BEFORE the install that provides it, so `cuda_home=None`
+appeared in three consecutive runs before it was read (v29); the symlink prep looked in
+`lib` when the wheels use `lib64` (v30); and libcuda was sought via `ldconfig`, which lists
+none in that container, when the CUDA wheels ship a stub for exactly this purpose (v31).
+Diagnosing any of them was only possible because `_note_server_failure` caps diagnostics at
+400 characters and the server log dies with the kernel — so the log is now saved to the
+kernel output, a fix that paid for itself on the very next run.
+
+**Scored MTP back to `"0"`.** Commit `e7b3628d88` had set it to `"1"` for the NVFP4 GGUF's
+baked MTP layers and broke the parity test that pins the contract; the regression went
+unnoticed until the probe work, and v27 had reported the config/run disagreement itself.
+`"0"` is correct on both paths: vLLM configures no speculation, and the llama.cpp fallback
+measured FASTER without it at this eval's concurrency (228.3 vs 108.8 tok/s at k=16 —
+speculation and batching compete for the same compute).
+
+**Submission readiness gates repaired, 7 red at HEAD to 0.** Found incidentally and filed
+first as "the gates are broken", which was WRONG and is corrected in `ops/known-issues.md`:
+running the gate against the real config and real cache returns `intact: True`, so the gate
+logic was healthy and only its test fixtures were stale — four literals left behind by the
+gemma-4-31B-it to Qwen3.8-27B migration. All now derive from the live constants.
+
+**GAP-6260 logged (HIGH), from the goal-defect A/B running alongside.** Offline replay found
+all six lp85 cells, both arms, model-inert at the planning root: the win predicate was never
+CONSULTED, 37 nodes expanded, queue exhausted far under budget. `cell_recall = 1.0` passed an
+engine nothing can plan in. Cause is a window-build artifact — every action in lp85's cached
+window is RESET, which the planner's vocabulary cannot express — while the registry records
+lp85 as click-only with a 96-click full clear. Discriminator is two-layer: a static
+window-actions-subset-of-vocabulary test costing zero engine calls, then root-liveness. The
+systemic reading (clicks lost in windowing) was tested over all seven cached windows and
+REFUTED — vc33 is click-only and its window is ACTION6 throughout.
+
+**Not done.** vLLM has not yet served on Kaggle; v32 is in flight. The submission slot is
+unspent and remains operator-only.
+
 ## 2026-08-17 (outer-loop, seeded repair evidence + three corrections, commits 71014c8af5 / 51df5d093f)
 
 **Instruction:** operator — give the induction generator tools rather than drop Qwen3.8, then
