@@ -271,6 +271,42 @@ if server and gguf:
     run_server = Path("/kaggle/working/llama-server")
     shutil.copy2(server, run_server)
     os.chmod(run_server, 0o755)
+
+    # PRE-LAUNCH PROBE (2026-08-18). v23's generator died with COMPLETELY EMPTY stderr, and the
+    # kernel's own guess -- "likely OOM" -- was refuted by its own fit line (needed 52168 MiB of
+    # 97250 free). An empty stderr means the process never got far enough to log, which a real OOM
+    # never does. Everything checkable locally was eliminated (all shared objects resolve from the
+    # dataset directory with system paths stripped), so the remaining candidates are environmental
+    # and NOT observable from a dev box: the CUDA runtime major version against this image's
+    # driver, most likely.
+    #
+    # So stop guessing and make the run say it. `--version` loads the full shared-object graph and
+    # touches the CUDA runtime, but allocates no model, so it separates "the binary cannot start
+    # here" from "the model did not fit" -- the exact ambiguity that cost a submission cycle.
+    # Cheap (well under a second), and it prints whether or not the launch later succeeds.
+    try:
+        _probe = subprocess.run(
+            [str(run_server), "--version"],
+            capture_output=True,
+            text=True,
+            timeout=60,
+            env={**os.environ, "LD_LIBRARY_PATH": f"{server.parent}:" + os.environ.get("LD_LIBRARY_PATH", "")},
+        )
+        print(
+            f"LLM TIER SERVER PROBE: rc={_probe.returncode} "
+            f"stdout={_probe.stdout.strip()[:200]!r} stderr={_probe.stderr.strip()[:600]!r}",
+            flush=True,
+        )
+    except Exception as _exc:  # never let a diagnostic break the run it is diagnosing
+        print(f"LLM TIER SERVER PROBE: raised {_exc!r}", flush=True)
+    try:
+        _drv = subprocess.run(
+            ["nvidia-smi", "--query-gpu=driver_version,name", "--format=csv,noheader"],
+            capture_output=True, text=True, timeout=60,
+        )
+        print(f"LLM TIER DRIVER: {_drv.stdout.strip()[:200]!r} rc={_drv.returncode}", flush=True)
+    except Exception as _exc:
+        print(f"LLM TIER DRIVER: raised {_exc!r}", flush=True)
     os.environ["LD_LIBRARY_PATH"] = f"{server.parent}:" + os.environ.get("LD_LIBRARY_PATH", "")
     os.environ["CARNOT_LLAMA_SERVER"] = str(run_server)
     os.environ["CARNOT_ARC_GGUF_PATH"] = str(gguf)
