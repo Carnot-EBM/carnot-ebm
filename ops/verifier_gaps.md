@@ -4748,3 +4748,46 @@ positive result this metric ever produces.
 - **priority:** HIGH. It sits upstream of goal quality and upstream of node budget — on lp85 a
   primary hit was structurally impossible in both arms regardless of the lever, so this defect
   can silently void an A/B's power on a whole game while every gate reads green.
+
+**UPDATE 2026-08-18 (same session): the discriminator is TWO-LAYER, and the cheaper layer
+is the one that would have saved the corpus.** Follow-up replay work by the A/B's own
+harness found the mechanism behind lp85's inertness, and it is not dynamics deadness:
+EVERY action in lp85's cached window is action 0 (RESET), while `_model_candidates`
+enumerates actions 1-5 plus clicks. The planner's vocabulary cannot express the window's
+only action. The node count closes the arithmetic exactly — 37 nodes is one full candidate
+sweep from the root (5 keyboard + 32 clicks), every one a no-op against an engine that only
+ever saw resets. `cell_recall = 1.0` is HONEST here: the engine faithfully models what it
+was shown. What it was shown is not gameplay.
+
+So the check is:
+
+- **Layer 1 — STATIC, zero engine calls.** Is `set(window actions)` a subset of the
+  planner's candidate vocabulary? This catches lp85 BEFORE induction spends a single token,
+  and catches any future window whose observed actions the planner cannot emit. Credit to
+  the A/B harness (`repair-extend`), which proposed it; it strictly dominates root-liveness
+  as a first filter because it needs no engine to exist yet.
+- **Layer 2 — root-liveness**, as originally specified above, for windows that pass layer 1.
+  Does the induced engine yield at least one novel successor from the planning root across
+  the candidate sweep (~37 guarded calls)? This catches genuine dynamics deadness that
+  vocabulary cannot explain.
+
+The open question in the original entry is RESOLVED and the answer was neither branch.
+lp85's window IS its full trajectory (`window[0] == full_traj[0]`, 5 of 5 transitions), so
+the engine was trained at the planning root — not a distribution mismatch. And ar25's window
+IS a late slice (`window[0] == full_traj[3]`) yet its engine generalizes back to the root and
+plans to a real level-up, so the mismatch exists in the design but did not bite where it can
+be measured. The real cause was a WINDOW-BUILD artifact, which is this project's own
+foundational ARC rule biting again: an offline null may be a corpus artifact, not a
+capability limit.
+
+**NEW OPEN QUESTION, wider than this gap — are click actions lost in window construction?**
+`ops/arc_solve_registry.yaml` records lp85 as `action_model: 'click-only [ACTION6]'`, 8 levels
+reproduced, `full_game_clear: true`, with a 96-click sequence banked. So lp85's real solve is
+clicks, and the cached window contains none — the window did not capture a degraded version
+of lp85's gameplay, it captured none of it. The three games that came out clean are ar25
+{2,3}, sp80 {4,5} and tr87 {1,2,4} — all keyboard, no ACTION6 in any of them. lp85 is the
+only click-based game in the set and the only one that failed, which perfectly confounds "lp85
+is special" with "clicks do not survive window construction". The second reading has a much
+larger blast radius: every click-based game would induce on degenerate transitions, score
+`cell_recall 1.0` on them, and fail silently. Discriminating test is cheap — check whether
+ACTION6 appears in ANY other cached window's action set. Recorded as open; not yet tested.
