@@ -320,12 +320,24 @@ if _vllm_cfg is not None:
             _driver = next((l.split()[-1] for l in subprocess.run(
                 ["ldconfig", "-p"], capture_output=True, text=True).stdout.splitlines()
                 if "libcuda.so" in l), None)
-            for _n, _src in (("libcudart.so", _cu / "lib" / "libcudart.so.13"),
+            # LIB DIR BY SEARCH, NOT BY GUESS. This said `_cu / "lib"`, and the cu13 wheels put
+            # their libraries in `lib64` -- so `libcudart.so.13` was never found, no symlink was
+            # made, and kernel v30 compiled all 17 objects then died at the link step with
+            # `/usr/bin/ld: cannot find -lcuda`. Same failure class as the AOT cache key: a fixed
+            # path that happens to be wrong, in a layout nobody promised us.
+            _libdir = next((_cu / _c for _c in ("lib64", "lib")
+                            if any((_cu / _c).glob("libcudart.so*"))), _cu / "lib64")
+            for _n, _src in (("libcudart.so", next(iter(sorted(_libdir.glob("libcudart.so.*"))), None)),
                              ("libcuda.so", Path(_driver) if _driver else None)):
                 if _src and Path(_src).exists() and not (_ldl / _n).exists():
                     (_ldl / _n).symlink_to(_src)
-            os.environ["LIBRARY_PATH"] = f"{_ldl}:{_cu}/lib:" + os.environ.get("LIBRARY_PATH", "")
-            os.environ["LD_LIBRARY_PATH"] = f"{_cu}/lib:" + os.environ.get("LD_LIBRARY_PATH", "")
+            # `ld` reads LIBRARY_PATH left to right, so the symlink dir must come FIRST -- the
+            # wheels' own lib64 has only versioned .so.13 files and a libcuda stub, neither of
+            # which satisfies a bare -lcuda / -lcudart.
+            os.environ["LIBRARY_PATH"] = f"{_ldl}:{_libdir}:" + os.environ.get("LIBRARY_PATH", "")
+            os.environ["LD_LIBRARY_PATH"] = f"{_libdir}:" + os.environ.get("LD_LIBRARY_PATH", "")
+            print(f"LLM BACKEND: vllm linker prep libdir={_libdir} driver={_driver} "
+                  f"links={sorted(p.name for p in _ldl.iterdir())}", flush=True)
         if _cu is None:
             print("LLM BACKEND: vllm CUDA 13 toolchain NOT FOUND after install. flashinfer"
                   " will fall back to the image CUDA 12 and fail with 'No supported CUDA"
@@ -356,8 +368,9 @@ if _vllm_cfg is not None:
                 print(f"LLM BACKEND: vllm AOT cache staged {_arch} -> {_dst}", flush=True)
             except Exception as _ae:
                 print(f"LLM BACKEND: vllm AOT cache staging FAILED ({_ae!r}); the engine will "
-                      "re-attempt the JIT and is expected to fail -- the agent falls back to "
-                      "LLM-OFF, not to llama.cpp, because the backend is already selected.",
+                      "re-attempt the JIT and is expected to fail. The probe below detects that and "
+                      "DEMOTES the run to llama.cpp, so this costs throughput rather than "
+                      "the generator.",
                       flush=True)
         else:
             print("LLM BACKEND: vllm AOT cache NOT FOUND under /kaggle/input. Native FP4 will "
@@ -705,6 +718,23 @@ if server and gguf:
                         print(f"LLM VLLM SERVER LOG absent at {_vsrc}", flush=True)
                 except Exception as _vle:
                     print(f"LLM VLLM SERVER LOG copy failed: {_vle!r}", flush=True)
+                # DEMOTE TO llama.cpp RATHER THAN LETTING THE AGENT RUN LLM-OFF.
+                # Until now a vLLM server that failed to start was the WORST of the three
+                # outcomes: the install had succeeded, so `CARNOT_ARC_LLM_BACKEND` stayed set,
+                # every induction call went to a dead server, and the agent scored with no
+                # generator at all -- strictly worse than the llama.cpp config that was already
+                # shipping. The install-failure path above already demotes; a start-failure did
+                # not, which is backwards, because by this point we have STRONGER evidence the
+                # backend is unusable, not weaker.
+                # The llama.cpp env (CARNOT_LLAMA_SERVER / CARNOT_ARC_GGUF_PATH) is set
+                # unconditionally further down, so unsetting these two is the whole demotion.
+                # Its probe was skipped for this run, so it goes in unprobed -- acceptable: an
+                # unprobed path that is known to work beats a probed one that is known to be dead.
+                os.environ.pop("CARNOT_ARC_LLM_BACKEND", None)
+                os.environ.pop("CARNOT_ARC_VLLM_MODEL_DIR", None)
+                print("LLM BACKEND: DEMOTED vllm -> llama.cpp for this run (server never became "
+                      "healthy). The scored agent will induce through the GGUF path, slower but "
+                      "alive. Read /kaggle/working/vllm_server.log for the cause.", flush=True)
             else:
                 # Admission, read rather than generated. A refusal here means the pool is too small
                 # for a worst-case induce prompt, which is the fault worth knowing before scoring.
