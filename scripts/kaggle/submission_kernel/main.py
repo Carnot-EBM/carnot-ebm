@@ -267,29 +267,6 @@ _vllm_cfg = next((c for c in inp.rglob("config.json") if list(c.parent.glob("*.s
 if _vllm_cfg is not None:
     os.environ["CARNOT_ARC_LLM_BACKEND"] = "vllm"
     os.environ["CARNOT_ARC_VLLM_MODEL_DIR"] = str(_vllm_cfg.parent)
-    # The two environment repairs the benchmark proved necessary, both applied BEFORE the agent
-    # starts so flashinfer's startup JIT of the native SM120 FP4 GEMM can compile and link:
-    #   1. pip resolves an INCOHERENT CUDA stack (nvcc 13.3 against 13.0 headers) -> the wheels
-    #      dataset pins the coherent 13.0.x five, and CUDA_HOME/PATH point at it.
-    #   2. `ld` wants unversioned libcudart.so / libcuda.so; the wheels ship only .so.13 and the
-    #      driver only .so.1 -> symlink both into a dir on LIBRARY_PATH, locating the driver via
-    #      ldconfig rather than guessing a path.
-    _cu = next((Path(b) / "nvidia" / "cu13" for b in
-                ("/usr/local/lib/python3.12/dist-packages", "/usr/lib/python3/dist-packages")
-                if (Path(b) / "nvidia" / "cu13" / "bin" / "nvcc").exists()), None)
-    if _cu is not None:
-        os.environ["CUDA_HOME"] = os.environ["CUDA_PATH"] = str(_cu)
-        os.environ["PATH"] = f"{_cu}/bin:" + os.environ.get("PATH", "")
-        _ldl = Path("/kaggle/working/ldlinks"); _ldl.mkdir(exist_ok=True)
-        _driver = next((l.split()[-1] for l in subprocess.run(
-            ["ldconfig", "-p"], capture_output=True, text=True).stdout.splitlines()
-            if "libcuda.so" in l), None)
-        for _n, _src in (("libcudart.so", _cu / "lib" / "libcudart.so.13"),
-                         ("libcuda.so", Path(_driver) if _driver else None)):
-            if _src and Path(_src).exists() and not (_ldl / _n).exists():
-                (_ldl / _n).symlink_to(_src)
-        os.environ["LIBRARY_PATH"] = f"{_ldl}:{_cu}/lib:" + os.environ.get("LIBRARY_PATH", "")
-        os.environ["LD_LIBRARY_PATH"] = f"{_cu}/lib:" + os.environ.get("LD_LIBRARY_PATH", "")
     # OFFLINE INSTALL. enable_internet is false, so vLLM comes from the attached wheel closure
     # (196 wheels, measured 108 s). Resolved in a glibc-2.31 container against python 3.12 so
     # every wheel is compatible with this image; --no-index makes a missing wheel fail loudly
@@ -318,6 +295,42 @@ if _vllm_cfg is not None:
         os.environ.pop("CARNOT_ARC_LLM_BACKEND", None)
         os.environ.pop("CARNOT_ARC_VLLM_MODEL_DIR", None)
     if os.environ.get("CARNOT_ARC_LLM_BACKEND") == "vllm":
+        # CUDA ENV **AFTER** THE INSTALL, NOT BEFORE. This block used to run ahead of the
+        # pip install, which is why kernel v29 failed: `nvidia-cu13` ARRIVES WITH the vLLM
+        # wheel closure, so probing for its nvcc beforehand always found nothing, `_cu` was
+        # None, CUDA_HOME was never set, and flashinfer fell back to the image's CUDA 12 --
+        # `RuntimeError: No supported CUDA architectures found for major versions [12]`.
+        # The AOT cache had staged correctly by then; a staged kernel cache does not help a
+        # toolchain that cannot name the architecture. The `cuda_home=None` in v27/v28/v29's
+        # own backend line was the tell, printed three times before it was read.
+        # The two environment repairs the benchmark proved necessary, both applied BEFORE the agent
+        # starts so flashinfer's startup JIT of the native SM120 FP4 GEMM can compile and link:
+        #   1. pip resolves an INCOHERENT CUDA stack (nvcc 13.3 against 13.0 headers) -> the wheels
+        #      dataset pins the coherent 13.0.x five, and CUDA_HOME/PATH point at it.
+        #   2. `ld` wants unversioned libcudart.so / libcuda.so; the wheels ship only .so.13 and the
+        #      driver only .so.1 -> symlink both into a dir on LIBRARY_PATH, locating the driver via
+        #      ldconfig rather than guessing a path.
+        _cu = next((Path(b) / "nvidia" / "cu13" for b in
+                    ("/usr/local/lib/python3.12/dist-packages", "/usr/lib/python3/dist-packages")
+                    if (Path(b) / "nvidia" / "cu13" / "bin" / "nvcc").exists()), None)
+        if _cu is not None:
+            os.environ["CUDA_HOME"] = os.environ["CUDA_PATH"] = str(_cu)
+            os.environ["PATH"] = f"{_cu}/bin:" + os.environ.get("PATH", "")
+            _ldl = Path("/kaggle/working/ldlinks"); _ldl.mkdir(exist_ok=True)
+            _driver = next((l.split()[-1] for l in subprocess.run(
+                ["ldconfig", "-p"], capture_output=True, text=True).stdout.splitlines()
+                if "libcuda.so" in l), None)
+            for _n, _src in (("libcudart.so", _cu / "lib" / "libcudart.so.13"),
+                             ("libcuda.so", Path(_driver) if _driver else None)):
+                if _src and Path(_src).exists() and not (_ldl / _n).exists():
+                    (_ldl / _n).symlink_to(_src)
+            os.environ["LIBRARY_PATH"] = f"{_ldl}:{_cu}/lib:" + os.environ.get("LIBRARY_PATH", "")
+            os.environ["LD_LIBRARY_PATH"] = f"{_cu}/lib:" + os.environ.get("LD_LIBRARY_PATH", "")
+        if _cu is None:
+            print("LLM BACKEND: vllm CUDA 13 toolchain NOT FOUND after install. flashinfer"
+                  " will fall back to the image CUDA 12 and fail with 'No supported CUDA"
+                  " architectures found for major versions [12]'. This is kernel v29's"
+                  " failure exactly.", flush=True)
         # STAGE THE PRE-BUILT FLASHINFER AOT CACHE. Without this the engine dies at startup:
         # kernel v28 spent 295 s reaching `Engine core initialization failed`, which is the same
         # signature bench v12 produced before the cache existed. vLLM's native SM120 FP4 GEMM is
