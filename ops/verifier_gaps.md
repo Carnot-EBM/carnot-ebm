@@ -4702,3 +4702,49 @@ implement (one extra counter, one extra field), and it is a precondition for tru
 positive result this metric ever produces.
 
 **status: open.**
+
+---
+
+### GAP-6260: root-liveness — no verifier asks whether an induced engine can be planned in at all
+
+- **status:** open
+- **evidence:** the 2026-08-18 goal-defect-check paired A/B (`repair-extend`, task #22). Offline
+  deterministic replay of the banked `plan_in_model` searches classified all six lp85 cells, in
+  BOTH arms, as model-inert at the planning root: `goal_calls = 0` (the win predicate was never
+  CONSULTED, not consulted-and-False), `nodes_expanded = 37`, termination `queue_exhausted` at a
+  fraction of the 20000-node budget. The mechanism is in the loop body — `is_level_complete` is
+  evaluated only on NOVEL child states, and the induced engine produces zero novel successors
+  from the root, so every action maps back to an already-seen state. Replay determinism was
+  proven, not assumed, against a banked plan-True control (`ar25 t0`: banked
+  `plan_found=True, plan_len=15`; replay identical).
+- **failure mode:** `WorldModelVerifier` passed these engines at `cell_recall = 1.0`. That number
+  is computed over the induction window's own transitions, so an engine can be a perfect fit
+  there and still be IDENTITY DYNAMICS at the state planning actually starts from. The verifier
+  certifies a model that cannot be planned in, and nothing downstream distinguishes "the planner
+  searched and found nothing" from "the planner had nowhere to go." Every existing family scores
+  the model against observed transitions; none scores it against the search's entry point.
+- **missing discriminator:** does the induced engine produce at least one NOVEL successor state
+  from the planning root — and more usefully, how many distinct states are reachable within a
+  small expansion budget? A branching factor of zero at the root is the degenerate case; a very
+  low one is the same defect in weaker form.
+- **candidate design:** cheap and mechanical, no learning required. Expand the root under all
+  available actions, hash the resulting states, and count the novel ones. Gate or down-rank an
+  engine that yields zero. Because it is a handful of engine calls it can run BEFORE the search
+  rather than as a post-hoc diagnostic, which is what makes it a live-path lever rather than a
+  reporting field: on an unseen game the agent would learn immediately that its induced model is
+  unusable and could re-induce instead of burning its node budget on a dead engine.
+- **why it generalizes:** this is not an lp85 quirk. Any game whose induction window is selected
+  from a late trajectory slice can produce an engine that fits its window and is inert at the
+  root, and the failure is SILENT — a clean verifier score, a completed search, and no plan. It
+  therefore fits the ARC-AGI-3 Generalization-Testing Floor's reusable-primitive-hardening class:
+  a METHOD fix that should help on any future unseen game, not a per-game adapter.
+- **open question feeding the design:** whether the inertness sits at the game's true start state
+  or at the induction window's first frame. The replay root is `full_traj[0]` of the cached
+  window, so if that window is a late slice the two are different states. If it is inert at the
+  window start, the engine is degenerate outright; if it is live inside its window but inert at
+  the game root, the defect is a DISTRIBUTION MISMATCH between where induction fits and where
+  planning begins, and the fix is a root-inclusive induction window rather than (or in addition
+  to) this verifier. Referred back to `repair-extend`; this entry does not assume the answer.
+- **priority:** HIGH. It sits upstream of goal quality and upstream of node budget — on lp85 a
+  primary hit was structurally impossible in both arms regardless of the lever, so this defect
+  can silently void an A/B's power on a whole game while every gate reads green.
