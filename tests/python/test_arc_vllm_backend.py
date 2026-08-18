@@ -204,3 +204,49 @@ def test_reuse_fails_open_when_v1_models_is_unreachable(monkeypatch) -> None:
     monkeypatch.setattr(urllib.request, "urlopen", _boom)
     assert p._vllm_reusable("/want/model") is True
     assert p.reuse_model_check == "unobserved_v1_models_unreachable"
+
+
+# SCENARIO-ARC-WMTE-6510-HEALTH
+def test_vllm_health_is_status_not_body(monkeypatch) -> None:
+    """vLLM answers /health with 200 and an EMPTY body; llama.cpp answers `{"status":"ok"}`.
+
+    `_healthy()` returns `b"ok" in r.read()`, so on vLLM it is False forever regardless of how
+    healthy the server is. Kernel v32 is the incident: the server logged `Application startup
+    complete` and served 157 consecutive `GET /health` 200s while the launcher waited out its full
+    20-minute budget and then reported `server_up=False`. This pins the status check so a future
+    edit cannot quietly reintroduce the body check on this backend.
+    """
+    p = wm.LocalGGUFProposer.__new__(wm.LocalGGUFProposer)
+    p.port, p.timeout, p.max_tokens = 9, 30, 4096
+
+    class _Resp:
+        def __init__(self, status, body):
+            self.status, self._b = status, body
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def read(self):
+            return self._b
+
+    import urllib.request
+
+    # the exact v32 shape: 200, empty body
+    monkeypatch.setattr(urllib.request, "urlopen", lambda *a, **kw: _Resp(200, b""))
+    assert p._vllm_healthy() is True, "200 with an empty body IS healthy on vLLM"
+    # and the old body check would have said otherwise, which is the whole point
+    assert (b"ok" in b"") is False
+
+    monkeypatch.setattr(urllib.request, "urlopen", lambda *a, **kw: _Resp(503, b""))
+    assert p._vllm_healthy() is False
+
+    def _boom(*a, **kw):
+        raise OSError("connection refused")
+
+    monkeypatch.setattr(urllib.request, "urlopen", _boom)
+    assert p._vllm_healthy() is False, (
+        "unreachable is not healthy (unlike the reuse check, which fails open)"
+    )

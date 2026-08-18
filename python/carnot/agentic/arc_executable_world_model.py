@@ -6575,7 +6575,7 @@ class LocalGGUFProposer:
                 f"(set {_VLLM_MODEL_DIR_ENV} or attach the dataset)"
             )
             return False
-        if self._healthy() and self._vllm_reusable(model_dir):
+        if self._vllm_healthy() and self._vllm_reusable(model_dir):
             return True
         self._terminate_stale_proc("replacing server for vllm launch")
         # max-model-len from the SAME admission arithmetic the llama.cpp path uses, expressed
@@ -6612,7 +6612,7 @@ class LocalGGUFProposer:
         # not seconds. 240 * 5s = 20 min ceiling, generous but bounded.
         for _ in range(240):
             time.sleep(5)
-            if self._healthy():
+            if self._vllm_healthy():
                 return True
             if self._proc.poll() is not None:
                 break
@@ -6623,6 +6623,28 @@ class LocalGGUFProposer:
             pass
         self._note_server_failure(f"vllm server failed to become healthy; log tail: {tail}"[:400])
         return False
+
+    def _vllm_healthy(self) -> bool:
+        """Health for vLLM is HTTP 200 on /health with an EMPTY body.
+
+        `_healthy()` returns `b"ok" in r.read()`, which is right for llama.cpp -- it answers
+        `{"status":"ok"}`. vLLM answers 200 and no body, so that check is False forever no matter
+        how healthy the server is. Kernel v32 is the proof: the server logged `Application startup
+        complete`, then served 157 consecutive `GET /health` 200s while the launcher waited out its
+        full 20-minute budget and reported `server_up=False`.
+
+        Worth naming plainly, because this file already contains the lesson: the whole point of the
+        backend-aware pre-flight probe is that a llama.cpp-shaped check reports the wrong thing
+        about vLLM -- and a llama.cpp-shaped health check was left sitting inside the vLLM launcher
+        while that probe was being written.
+        """
+        import urllib.request
+
+        try:
+            with urllib.request.urlopen(self._url() + "/health", timeout=3) as r:
+                return 200 <= int(r.status) < 300
+        except Exception:
+            return False
 
     def _vllm_reusable(self, model_dir: str) -> bool:
         """Reuse check for a running vLLM server: same policy as `_reusable` (refuse rather than
