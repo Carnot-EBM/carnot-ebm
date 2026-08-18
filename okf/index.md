@@ -47,6 +47,8 @@ never-prune rule. Read the `superseded_by` field before acting on anything here.
 | [The goal predicate never fires on a real win](/okf/claims/goal-predicate-never-fires.md) | stable |
 | [Seeded repair converts catastrophic cells](/okf/claims/seeded-repair-converts.md) | stable |
 | [Carried engines do not transfer](/okf/claims/carried-engines-do-not-transfer.md) | stable |
+| [llama.cpp batches 4.37x; MTP suppresses it](/okf/claims/llamacpp-batches-mtp-suppresses.md) | stable |
+| [Arm was confounded with GPU lane](/okf/claims/gpu-lane-confound.md) | stable |
 
 ## Submissions
 
