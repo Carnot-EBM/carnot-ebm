@@ -317,9 +317,25 @@ if _vllm_cfg is not None:
             os.environ["CUDA_HOME"] = os.environ["CUDA_PATH"] = str(_cu)
             os.environ["PATH"] = f"{_cu}/bin:" + os.environ.get("PATH", "")
             _ldl = Path("/kaggle/working/ldlinks"); _ldl.mkdir(exist_ok=True)
-            _driver = next((l.split()[-1] for l in subprocess.run(
-                ["ldconfig", "-p"], capture_output=True, text=True).stdout.splitlines()
-                if "libcuda.so" in l), None)
+            # libcuda: PREFER THE STUB, and never depend on ldconfig alone. v31 printed
+            # `driver=None links=['libcudart.so']` -- `ldconfig -p` listed no libcuda in this
+            # container, so no symlink was made and `-lcuda` still had nothing to resolve.
+            # Linking against the CUDA wheels' own stub is the standard answer and needs no
+            # driver at all: the stub exists precisely to satisfy the linker, and the real
+            # driver is bound at load time. Ordered stub first, then ldconfig, then the usual
+            # driver locations, so a miss in any one of them is not fatal.
+            _driver = None
+            for _cand in list(_cu.glob("lib*/stubs/libcuda.so")):
+                _driver = str(_cand); break
+            if _driver is None:
+                _driver = next((l.split()[-1] for l in subprocess.run(
+                    ["ldconfig", "-p"], capture_output=True, text=True).stdout.splitlines()
+                    if "libcuda.so" in l), None)
+            if _driver is None:
+                _driver = next((str(p) for _g in ("/usr/lib/x86_64-linux-gnu/libcuda.so*",
+                                                  "/usr/local/nvidia/lib64/libcuda.so*",
+                                                  "/usr/lib64/libcuda.so*")
+                                for p in sorted(Path("/").glob(_g.lstrip("/")))), None)
             # LIB DIR BY SEARCH, NOT BY GUESS. This said `_cu / "lib"`, and the cu13 wheels put
             # their libraries in `lib64` -- so `libcudart.so.13` was never found, no symlink was
             # made, and kernel v30 compiled all 17 objects then died at the link step with
@@ -334,10 +350,16 @@ if _vllm_cfg is not None:
             # `ld` reads LIBRARY_PATH left to right, so the symlink dir must come FIRST -- the
             # wheels' own lib64 has only versioned .so.13 files and a libcuda stub, neither of
             # which satisfies a bare -lcuda / -lcudart.
-            os.environ["LIBRARY_PATH"] = f"{_ldl}:{_libdir}:" + os.environ.get("LIBRARY_PATH", "")
-            os.environ["LD_LIBRARY_PATH"] = f"{_libdir}:" + os.environ.get("LD_LIBRARY_PATH", "")
+            # BOTH lib AND lib64, plus the stub dirs. v31 resolved `_libdir` to `lib` while
+            # flashinfer's own link line passes `-L<cu13>/lib64 -L<cu13>/lib64/stubs`, so the two
+            # layouts coexist and guessing either one alone loses.
+            _alldirs = [str(_ldl)] + [str(d) for d in
+                                      (_cu / "lib64", _cu / "lib", _cu / "lib64" / "stubs",
+                                       _cu / "lib" / "stubs") if d.is_dir()]
+            os.environ["LIBRARY_PATH"] = ":".join(_alldirs) + ":" + os.environ.get("LIBRARY_PATH", "")
+            os.environ["LD_LIBRARY_PATH"] = ":".join(_alldirs[1:]) + ":" + os.environ.get("LD_LIBRARY_PATH", "")
             print(f"LLM BACKEND: vllm linker prep libdir={_libdir} driver={_driver} "
-                  f"links={sorted(p.name for p in _ldl.iterdir())}", flush=True)
+                  f"links={sorted(p.name for p in _ldl.iterdir())} dirs={_alldirs}", flush=True)
         if _cu is None:
             print("LLM BACKEND: vllm CUDA 13 toolchain NOT FOUND after install. flashinfer"
                   " will fall back to the image CUDA 12 and fail with 'No supported CUDA"
