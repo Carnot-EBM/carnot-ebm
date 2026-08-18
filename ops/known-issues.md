@@ -4,6 +4,50 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-08-18: the submission readiness gates are RED, and have been since the gemma to Qwen3.8-27B migration
+
+**What is wrong.** Six tests in the exp4744 / exp4754 readiness-gate family fail. They were
+already red at HEAD before the vLLM probe work of the same day, so this is a standing defect,
+not a regression from it:
+
+- `test_experiment_4744_submission_package_readiness.py` (5 failures) —
+  `..._schema_rejects_required_field_and_boolean_drift`,
+  `..._blocks_missing_manifest_resources`,
+  `..._confirms_frozen_generator_from_submitted_config`,
+  `..._ready_artifact_has_pass_checklist`,
+  `..._runner_writes_checksum_stable_artifact`
+- `test_experiment_4754_submitted_agent_config.py` (1 failure) —
+  `test_scenario_arc_wmte_4754_run_writes_artifact_and_blocks`, which reports
+  `complete_437_submitted_config_confirmation_failed_gate` where the test expects
+  `success_437_validated_levers_integrated_entrypoint_green`
+
+**Why it matters more than an ordinary red test.** These two modules ARE the submission
+readiness gates. Their job is to confirm that `SUBMITTED_AGENT_CONFIG` describes the run the
+kernel actually launches, before a slot is spent. While they are red, the project has no
+working mechanical answer to "is the package consistent with what will run" — the check that
+exists reports failure for every configuration, correct or not, so it cannot distinguish them.
+That is the trusted-and-silent shape inverted: loud, and therefore ignorable.
+
+**Diagnosed cause (partial).** The gates compare the config against the live generator
+constants. The generator moved to `unsloth/Qwen3.8-27B-GGUF` and the fixtures still named
+`gemma-4-31B-it`, so a correct config read as a mismatch. The exp4754 fixture was fixed
+2026-08-18 (it now derives model and MTP from the live constants) and that test STILL fails, so
+at least one further cause remains unfound. The exp4744 five were not investigated.
+
+**Not fixed here, deliberately.** Found while closing an unrelated gap; fixing a six-test gate
+family is its own task, and quietly widening scope at the end of a session is how a
+half-corrected gate ships looking green. Filed instead.
+
+**Next step.** Read the exp4754 gate's returned dict (`submitted_config_declares_pinned_generator`,
+`cached_gguf_matches`, `submission_entrypoint_resolves_generator`) to see which of the three is
+False, then work outward to the exp4744 five. Do this BEFORE the next submission, not after.
+
+**Cross-references:** commit `aff58da21b` (the vLLM probe work that surfaced it, and the
+HEAD-baseline comparison proving these are pre-existing) · commit `cfca5de955` (the
+gemma-4-31B-it migration that last touched the stale fixture) ·
+`python/carnot/experiment_4754_submitted_agent_config.py` · CLAUDE.md "Tests Must Run and
+Assert".
+
 ### NEW 2026-08-08 (Phase 0a of the ARC live-agent improvement plan): a corrected artifact's fabrication-gate quarantine cannot be re-admitted by the lever-portfolio gate — a real, filed gap, not fixed
 
 **What was attempted.** Per `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md`
