@@ -159,3 +159,11 @@ CHECK_TIMED_OUT
 - Organizers clarified that final-selected notebooks **will not be rerun**: private scores are fixed during the original submission run. Every run evaluates both leaderboard halves, but only the public half is displayed; ARC-AGI-3’s runtime limit is **9 hours**. [Official Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/729985)
 - Kaggle is investigating **RTX Pro 6000 capacity constraints** causing queued submissions and says it is working to free additional resources. [Official Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/735147)
 
+## 2026-08-18 13:16 UTC -- check failed
+
+CHECK_TIMED_OUT
+
+## 2026-08-19 13:15 UTC -- check failed
+
+CHECK_TIMED_OUT
+
