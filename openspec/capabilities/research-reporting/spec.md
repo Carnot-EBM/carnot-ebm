@@ -52008,3 +52008,93 @@ substrate declaration, and terminal verdict prefix is present.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6460 | Planned (`python/carnot/experiment_6460_v556_terminal_handoff_and_queue_integrity.py`, `results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json`) | Planned (`tests/python/test_experiment_6460_v556_terminal_handoff_and_queue_integrity.py`) |
+
+### REQ-REPORT-6461: V556 SOTA Source And Benchmark Receipt
+
+The Exp6461 workflow SHALL produce one reproducible primary-source receipt for
+V556 SOTA ingestion. It SHALL recheck the requested 2025-2026 source surfaces:
+arXiv release metadata for energy-based reasoning, constraints, Ising,
+hallucination, KAN, guided decoding, hardware sampling, and continual
+learning; Semantic Scholar citation trails for `arXiv:2507.02092` and
+`arXiv:2512.15605`; OpenReview; Hugging Face Papers; GitHub; Extropic
+first-party pages; Logical Intelligence first-party pages; and the ARC-AGI-3
+leaderboard.
+
+For every source URL queried, the workflow SHALL record network availability,
+query timestamp, source URL, HTTP state, response byte count, and response
+SHA-256 hash. Semantic Scholar rows SHALL preserve returned paper titles and
+identifiers and SHALL NOT invent citation counts when a response is
+rate-limited or omits a count. The ARC receipt SHALL distinguish a rendered
+primary leaderboard or first-party loaded leaderboard data from search snippets
+or cached numbers.
+
+The workflow SHALL emit `per_unit_rows` for every source. Each row SHALL record
+previous state, current state, evidence hash, relevance, and disposition. Every
+finding SHALL be classified as `experiment_hook`, `watch-only`, `duplicate`,
+`retired scope`, or `unavailable substrate`. The workflow SHALL NOT claim
+execution of unavailable products, hardware, private APIs, or model weights.
+
+The Exp6461 artifact SHALL include, at minimum, `status`, `query_manifest`,
+`source_timestamps_and_hashes`, `arxiv_release_boundary`,
+`ebt_citation_rows`, `arm_ebm_citation_rows`, `openreview_rows`,
+`huggingface_rows`, `github_rows`, `extropic_first_party_status`,
+`logical_intelligence_first_party_status`,
+`rendered_arc_leaderboard_receipt`, `per_unit_rows`, `promoted_findings`,
+`duplicates_and_retired_scopes`, `unavailable_substrates`,
+`protected_files_unchanged`, `blocked_reason`, `gate_check_summary`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL equal `web_and_bibliographic_search_only`.
+`verifier_is_oracle` SHALL be false. If `status` starts with `blocked`, then
+`blocked_reason` and `gate_check_summary` SHALL name the failed gate.
+
+#### SCENARIO-REPORT-6461-1: Source Receipts Are Reproducible
+
+**Given** Exp6461 queries a source URL
+**When** it records the receipt
+**Then** the row includes network availability, query timestamp, URL, HTTP
+state, byte count, and response hash.
+
+#### SCENARIO-REPORT-6461-2: ArXiv Boundary Is Primary-Sourced
+
+**Given** the V556 planner names late 2026-08-13 arXiv papers
+**When** Exp6461 rechecks arXiv
+**Then** it records the latest available release boundary and promotes only
+source-backed experiment hooks.
+
+#### SCENARIO-REPORT-6461-3: Citation Trails Preserve Returned Identity
+
+**Given** Semantic Scholar returns citation rows for EBT and ARM-EBM papers
+**When** Exp6461 parses the citation responses
+**Then** it preserves returned titles and identifiers and records rate limits
+without invented counts.
+
+#### SCENARIO-REPORT-6461-4: ARC Score Comes From Primary Rendered Data
+
+**Given** a public ARC leaderboard score is requested
+**When** Exp6461 verifies the leaderboard
+**Then** it records the primary rendered page or loaded first-party data and
+marks search snippets and cached numbers as unusable evidence.
+
+#### SCENARIO-REPORT-6461-5: Unavailable Substrates Stay Non-Executable
+
+**Given** Extropic, Logical Intelligence, or other first-party pages describe
+products or hardware unavailable to the local runner
+**When** Exp6461 classifies findings
+**Then** it records them as unavailable substrates and makes no execution
+claim.
+
+#### SCENARIO-REPORT-6461-6: Artifact Schema Is Complete
+
+**Given** the Exp6461 artifact is emitted
+**When** its schema is validated
+**Then** every required field, field principle, field provenance entry,
+protected-file receipt, command receipt, checksum, substrate declaration, and
+terminal verdict prefix is present.
+
+## Implementation Status (REQ-REPORT-6461)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6461 | Planned (`python/carnot/experiment_6461_v556_sota_source_and_benchmark_delta.py`, `results/experiment_6461_v556_sota_source_and_benchmark_delta.json`) | Planned (`tests/python/test_experiment_6461_v556_sota_source_and_benchmark_delta.py`) |
