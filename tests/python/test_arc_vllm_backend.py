@@ -49,17 +49,23 @@ def test_backend_switch_is_exact_opt_in(monkeypatch, value, expected) -> None:
 
 
 def test_max_seqs_default_and_floor(monkeypatch) -> None:
-    """24 is chosen from the measurement, not taste: fp8 KV fits ~22 concurrent sessions at
-    capped production length in the ~61 GB KV budget, and the scaling curve is already bending by
-    k=32 (16->32 gained only 1.35x). Malformed values fall back rather than raising."""
+    """8 is chosen from the measurement, not taste, and was LOWERED FROM 24 on 2026-08-19.
+
+    The old value was sized against memory and diminishing returns. What actually binds is the
+    scored per-call timeout of 2400 s: aggregate throughput at concurrency is bought by lowering
+    the PER-STREAM rate, so more sessions means each induction takes longer against a fixed
+    ceiling, and a fired timeout loses that induction entirely. Nine real Qwen3.8-27B inductions
+    measured 36406 to 83444 generated tokens, median 62490. At k=24 the MEDIAN exceeds the
+    timeout (2648 s); at k=8 even the maximum fits (2086 s), still ~6.1x the configuration this
+    replaces. Malformed values fall back rather than raising."""
     monkeypatch.delenv("CARNOT_ARC_VLLM_MAX_SEQS", raising=False)
-    assert wm._vllm_max_seqs() == 24
+    assert wm._vllm_max_seqs() == 8
     monkeypatch.setenv("CARNOT_ARC_VLLM_MAX_SEQS", "8")
     assert wm._vllm_max_seqs() == 8
     monkeypatch.setenv("CARNOT_ARC_VLLM_MAX_SEQS", "0")
     assert wm._vllm_max_seqs() == 1
     monkeypatch.setenv("CARNOT_ARC_VLLM_MAX_SEQS", "garbage")
-    assert wm._vllm_max_seqs() == 24
+    assert wm._vllm_max_seqs() == 8
 
 
 def test_model_dir_requires_a_real_config(monkeypatch, tmp_path) -> None:
