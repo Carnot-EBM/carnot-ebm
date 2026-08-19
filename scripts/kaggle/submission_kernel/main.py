@@ -586,6 +586,14 @@ if server and gguf:
     # never wall clock. Timeout follows the same logic -- the worst measured Qwen3.8 induction is
     # ~1053s on this card at one stream, and a timeout that fires degrades the agent to LLM-off
     # silently, so it is set well clear of that rather than close to it.
+    # KEEP THE AGENT'S SERVER LOG. `_ensure_server()` already writes llama.cpp's stderr to a
+    # file under this directory, and `_ensure_vllm_server()` now honours the same knob -- but
+    # the default is the container's /tmp, so the log dies with the run. Three scored runs were
+    # undiagnosable for exactly that reason until one was copied out by hand. Pointing it at the
+    # output directory costs about a megabyte and makes every future run answerable from its own
+    # artifacts, including the question this was added for: how long real inductions actually
+    # take, which is recoverable from the server's own `eval time` lines.
+    os.environ.setdefault("CARNOT_ARC_SERVER_LOG_DIR", "/kaggle/working")
     os.environ.setdefault("CARNOT_ARC_INDUCE_MAX_TOKENS", "131072")
     os.environ.setdefault("CARNOT_ARC_INDUCE_TIMEOUT", "2400")
     # READ the context-pool size and completion budget from the SHIPPED defaults instead of
