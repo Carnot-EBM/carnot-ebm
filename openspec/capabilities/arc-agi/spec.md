@@ -979,6 +979,106 @@ truncation, placebo bias, timeout exclusion, and aggregate-row mismatch attacks
 provenance, registry writes, and public solve credit are absent, and every
 field and readiness condition has a principle.
 
+### REQ-ARC-ARM-6471: Generic Safety Shield for Frozen ARC Objective
+
+Experiment 6471 SHALL freeze the best Exp6458 representation, objective,
+runtime trace roster, safety roster, and row reducer. It SHALL add a generic
+safety veto with a conservative fallback. It SHALL make no game or level solve
+claim.
+
+The producer SHALL compare five matched arms on leave-one-game-out runtime
+trace rows: `baseline_current_policy`, `objective_only_frozen_exp6458`,
+`shielded_objective_generic_fallback`, `ablated_shield_objective_no_veto`, and
+`shuffled_shield_objective_control`. Each arm SHALL use the same game, trace
+prefix, seed, legal-action set, and action budget. The shield SHALL derive each
+decision from live-reachable runtime features only. It SHALL not use game
+identity, per-game thresholds, hidden state, game source, offline
+ground-truth search, or a per-game adapter.
+
+The producer SHALL run bounded CPU shards with atomic checkpoints and resume.
+It SHALL write a terminal partial or complete artifact. Each row SHALL include
+the game, trace, arm, decision, shield reason, legal action, reachability
+metric, safety result, timing, and provenance counts.
+
+Experiment 6471 SHALL write
+`results/experiment_6471_arc_generic_safety_shield_objective_ab.json` with
+`status`, `registry_precheck`, `no_solve_claim`,
+`frozen_representation_objective_and_roster_hashes`,
+`leave_one_game_out_manifest`, `generic_shield_and_fallback_hash`,
+`canonical_reducer_hash`, `checkpoint_and_resume_receipts`, `per_unit_rows`,
+`reachability_by_arm`, `legal_action_results_by_arm`,
+`safety_roster_results_by_arm`, `g50t_safety_result`,
+`aggregate_row_recomputation`, `source_and_adapter_access_receipts`,
+`attack_matrix`, `current_adversarial_findings`,
+`arc_safety_shield_ready_score`, `protected_files_unchanged`,
+`blocked_reason`, `gate_check_summary`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `field_principles`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+The artifact SHALL set `no_solve_claim=true`. It SHALL omit
+`solve_provenance`. It SHALL set `verifier_is_oracle=false`. The ready score
+SHALL equal 1.0 only when shielded held reachability preserves or improves the
+objective-only arm, the full frozen safety roster does not regress, `g50t`
+does not regress, stored aggregates exactly equal the canonical row reducer,
+source and adapter receipts are clean, protected files are unchanged, all
+critical attacks fail closed, and current critical findings are zero.
+
+### SCENARIO-ARC-ARM-6471-PRECHECK-AND-FREEZE
+
+**Given** the solve registry, Exp6458 artifact, immutable runtime traces, and
+a writable results directory
+**When** Exp6471 starts
+**Then** it records the registry hash, confirms no solve claim, freezes the
+Exp6458 representation, objective, safety roster, leave-one-game-out splits,
+shield, fallback, and canonical reducer hashes, and records that the registry
+will not be updated.
+
+### SCENARIO-ARC-ARM-6471-GENERIC-SHIELD
+
+**Given** a live runtime feature row with legal actions, prior action history,
+and frozen objective and baseline actions
+**When** the generic shield evaluates the objective action
+**Then** it vetoes only from game-blind runtime features, falls back to a legal
+baseline action, records the shield reason, and does not read source, adapters,
+hidden state, or recorded next state before the action is frozen.
+
+### SCENARIO-ARC-ARM-6471-MATCHED-ROWS
+
+**Given** a leave-one-game-out fold, trace prefix, and seed
+**When** Exp6471 evaluates all arms
+**Then** baseline, objective-only, shielded, ablated-shield, and shuffled-shield
+rows use the same observation prefix, legal-action set, seed, and action cost.
+
+### SCENARIO-ARC-ARM-6471-CHECKPOINT-RESUME
+
+**Given** a partially completed checkpoint
+**When** Exp6471 resumes
+**Then** completed cells are skipped, new cells are atomically checkpointed, and
+a terminal partial or complete artifact is written.
+
+### SCENARIO-ARC-ARM-6471-ROWS-RECOMPUTE
+
+**Given** Exp6471 per-unit rows
+**When** the canonical reducer recomputes aggregates
+**Then** reachability, legal-action results, safety roster results, `g50t`,
+paired deltas, and row checksums exactly equal the stored aggregate fields.
+
+### SCENARIO-ARC-ARM-6471-ATTACKS-FAIL-CLOSED
+
+**Given** source access, game identity leakage, per-game thresholds, adapter
+use, unreachable solver routing, duplicate solve claim, safety suppression, and
+aggregate mismatch attacks
+**When** Exp6471 validates readiness
+**Then** each critical attack fails closed before readiness can be one.
+
+### SCENARIO-ARC-ARM-6471-NO-SOLVE-OR-PROMOTION
+
+**Given** the completed Exp6471 artifact
+**When** it is validated
+**Then** source access, offline BFS, per-game adapters, solve claims, solve
+provenance, registry writes, and public solve credit are absent.
+
 ## REQ-ARC-BENCH-6267: One held-out ARC number that can move
 
 The ARC loop MUST maintain a single comparable measurement of live-agent
