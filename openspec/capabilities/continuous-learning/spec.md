@@ -6097,6 +6097,144 @@ files are unchanged, and tests pass
 | SCENARIO-LEARN-6469-ATTACKS | Planned: `python/carnot/experiment_6469_unique_event_csl_corruption_restart.py`. | Planned: `tests/python/test_experiment_6469_unique_event_csl_corruption_restart.py`. |
 | SCENARIO-LEARN-6469-READY | Planned: `python/carnot/experiment_6469_unique_event_csl_corruption_restart.py`. | Planned: `tests/python/test_experiment_6469_unique_event_csl_corruption_restart.py`. |
 
+## REQ-LEARN-6470: Independent Unique-Event CSL Audit
+
+**Given** Exp6457 denied the prior CSL claim and Exp6468 plus Exp6469 update
+the raw-output and lifecycle contracts
+**When** Exp6470 runs on planning date 20260819
+**Then** it SHALL write
+`results/experiment_6470_independent_unique_event_csl_audit.json`
+**And** it SHALL independently recompute every V556 CSL claim from checked-in
+raw files, immutable event rows, and lifecycle rows.
+
+Exp6470 SHALL inventory Exp6457, Exp6468, Exp6469, all referenced raw files,
+and lifecycle sidecars before it grants eligibility. Missing, zero-byte,
+blocked, malformed, null, or positive evidence SHALL remain visible in the
+audit artifact.
+
+Exp6470 SHALL recompute raw hashes, event ids, unit bindings, partition
+membership, held disjointness, exposure chronology, exact-veto ordering, write
+effects, protected retention, rollback, restart, non-resurrection, duration,
+and row aggregates from disk. It SHALL not import Exp6468 or Exp6469 reducer
+functions for these claims.
+
+Exp6470 SHALL require exactly one raw path and hash per credited event. Equal
+or replayed bytes SHALL count as raw reuse. Raw reuse SHALL remove those events
+from credited acquisition counts and SHALL block CSL eligibility.
+
+Exp6470 SHALL set `csl_audit_eligible_score=1.0` only when all raw evidence
+exists, every credited event is unique, exact veto precedes every write, held
+exposure is zero, effects recompute, lifecycle attacks fail closed, protected
+cases do not regress, duration is plausible for the declared substrates, and
+critical discrepancies are zero.
+
+Exp6470 SHALL emit these fields:
+
+- `status`
+- `upstream_artifact_inventory`
+- `raw_file_inventory_and_hashes`
+- `independent_event_identity_recomputation`
+- `independent_exposure_ledger`
+- `exact_veto_order_recomputation`
+- `per_unit_rows`
+- `audit_rows`
+- `independent_effect_recomputation`
+- `protected_case_recomputation`
+- `rollback_restart_and_non_resurrection_replay`
+- `duration_recomputation`
+- `upstream_vs_independent_field_comparison`
+- `aggregate_row_recomputation`
+- `attack_matrix`
+- `current_adversarial_findings`
+- `critical_discrepancies`
+- `csl_audit_eligible_score`
+- `protected_files_unchanged`
+- `blocked_reason`
+- `gate_check_summary`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map every required field and every
+`csl_audit_eligible_score` condition. `verifier_is_oracle` SHALL be true only
+for independent exact-checker, hash, chronology, and arithmetic recomputation.
+Upstream summaries, model raw text, learned weights, and claimed gates SHALL
+NOT be oracles.
+
+## SCENARIO-LEARN-6470-INVENTORY: Evidence Is Frozen Before Audit
+
+**Given** Exp6457, Exp6468, and Exp6469 artifacts cite raw or lifecycle files
+**When** Exp6470 inventories evidence
+**Then** each path SHALL report presence, byte length, SHA-256, and malformed
+or zero-byte status before any eligibility score is computed.
+
+## SCENARIO-LEARN-6470-IDENTITY: One Credited Event Has One Raw
+
+**Given** V556 event and raw-output rows
+**When** Exp6470 recomputes event identity from disk
+**Then** each credited event SHALL bind one event id, one unit id, one raw
+path, and one raw hash. Duplicate ids, duplicate hashes, missing paths, or
+path/hash mismatches SHALL create audit rows and block eligibility.
+
+## SCENARIO-LEARN-6470-CHRONOLOGY: Held Evidence Stays Sealed
+
+**Given** Exp6468 and Exp6469 exposure ledgers
+**When** Exp6470 replays chronology
+**Then** future-held outcome exposure and held contamination counters SHALL be
+zero before generation, parsing, update admission, and restart.
+
+## SCENARIO-LEARN-6470-VETO: Exact Veto Precedes Writes
+
+**Given** per-unit rows with checker and write receipts
+**When** Exp6470 recomputes write ordering
+**Then** every admitted write SHALL have a successful exact-checker receipt
+that ran before the write. A failed or absent checker receipt SHALL leave the
+post-state head equal to the pre-state head.
+
+## SCENARIO-LEARN-6470-EFFECTS: Rows Own Effects And Retention
+
+**Given** V556 per-unit rows
+**When** Exp6470 recomputes effects, protected retention, and aggregate rows
+**Then** independent values SHALL match upstream aggregate fields exactly or
+the mismatch SHALL appear in `upstream_vs_independent_field_comparison`.
+
+## SCENARIO-LEARN-6470-LIFECYCLE: Corruption Cannot Resurrect
+
+**Given** Exp6469 lifecycle rows and tombstone receipts
+**When** Exp6470 replays corrupt feedback, exact-veto bypass, wrong binding,
+rollback, restart, and non-resurrection attacks
+**Then** each corrupt event SHALL be quarantined, tombstoned, rolled back
+before release, and absent from active heads after restart.
+
+## SCENARIO-LEARN-6470-READY: Eligibility Is Conjunctive
+
+**Given** raw evidence, unique event identity, zero held exposure, exact-veto
+ordering, recomputed effects, protected retention, lifecycle safety, duration,
+and attack replay all pass
+**When** Exp6470 computes its final gate
+**Then** `csl_audit_eligible_score` SHALL be `1.0`; otherwise it SHALL be
+`0.0` with `critical_discrepancies` and `gate_check_summary` populated.
+
+## Implementation Status (REQ-LEARN-6470)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6470 | Planned: `python/carnot/experiment_6470_independent_unique_event_csl_audit.py`; terminal artifact `results/experiment_6470_independent_unique_event_csl_audit.json`. | Planned: `tests/python/test_experiment_6470_independent_unique_event_csl_audit.py`. |
+| SCENARIO-LEARN-6470-INVENTORY | Planned: `python/carnot/experiment_6470_independent_unique_event_csl_audit.py`. | Planned: `tests/python/test_experiment_6470_independent_unique_event_csl_audit.py`. |
+| SCENARIO-LEARN-6470-IDENTITY | Planned: `python/carnot/experiment_6470_independent_unique_event_csl_audit.py`. | Planned: `tests/python/test_experiment_6470_independent_unique_event_csl_audit.py`. |
+| SCENARIO-LEARN-6470-CHRONOLOGY | Planned: `python/carnot/experiment_6470_independent_unique_event_csl_audit.py`. | Planned: `tests/python/test_experiment_6470_independent_unique_event_csl_audit.py`. |
+| SCENARIO-LEARN-6470-VETO | Planned: `python/carnot/experiment_6470_independent_unique_event_csl_audit.py`. | Planned: `tests/python/test_experiment_6470_independent_unique_event_csl_audit.py`. |
+| SCENARIO-LEARN-6470-EFFECTS | Planned: `python/carnot/experiment_6470_independent_unique_event_csl_audit.py`. | Planned: `tests/python/test_experiment_6470_independent_unique_event_csl_audit.py`. |
+| SCENARIO-LEARN-6470-LIFECYCLE | Planned: `python/carnot/experiment_6470_independent_unique_event_csl_audit.py`. | Planned: `tests/python/test_experiment_6470_independent_unique_event_csl_audit.py`. |
+| SCENARIO-LEARN-6470-READY | Planned: `python/carnot/experiment_6470_independent_unique_event_csl_audit.py`. | Planned: `tests/python/test_experiment_6470_independent_unique_event_csl_audit.py`. |
+
 ## REQ-LEARN-6444: CSL Lifecycle Recomputation Audit
 
 **Given** Exp6433 left the prospective CSL claim ineligible, Exp6441 through
