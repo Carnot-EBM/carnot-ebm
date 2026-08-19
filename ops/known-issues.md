@@ -44,6 +44,53 @@ the kernel already logs enough to recover, and compare against the per-stream ra
 concurrency the eval actually produces. Either the margin is comfortable and this entry closes,
 or the two constants need to be set from one another rather than independently.
 
+**CORRECTED 2026-08-18, SAME EVENING — THE CAP-RATIO FRAMING ABOVE IS WRONG. Left in place
+per never-prune; read this before acting on any of it.**
+
+I quoted `main.py:589-590` without reading the comment at `:583-588` directly above them, which
+explains why those two numbers were chosen:
+
+> "max_tokens is a CAP: unused headroom costs pool VRAM, never wall clock. Timeout follows the
+> same logic -- the worst measured Qwen3.8 induction is ~1053s on this card at one stream, and a
+> timeout that fires degrades the agent to LLM-off silently, so it is set well clear of that
+> rather than close to it."
+
+So `131072` is a VRAM ceiling, not a budget anyone intends to spend, and dividing it by the
+timeout is not a risk computation. The number the entry above says is unavailable — how long a
+real scored induction runs — is recorded two lines up: **~1053 s against a 2400 s timeout, 2.3x
+headroom**, chosen deliberately clear of the measured worst case.
+
+Worse, the codebase had already done this exact division and explained it. `main.py:686-688`
+records kernel v27's banner performing 131072-over-900s, diagnosing it as arithmetic rather than
+a fault, and the probe was rebuilt so it no longer generates to the cap at all. Filing the ratio
+would have re-raised an alarm this repository already caught and designed out. Caught by
+`repair-extend-2` before it reached the operator.
+
+**THE FINDING THAT SURVIVES, driven by an OBSERVED length rather than a ceiling.** Convert the
+1053 s worst case into tokens at the measured single-stream rate (~55,000 at 52.2 tok/s), then
+re-time that same induction at the per-stream rates measured across concurrency:
+
+| concurrency | per-stream tok/s | ~55k tokens | vs 2400 s |
+|---|---|---|---|
+| k=1 | 52.2 | 1053 s | fits |
+| k=4 | 45.2 | 1216 s | fits |
+| k=16 | 30.2 | 1820 s | fits |
+| **k=24 (the shipped `_vllm_max_seqs()` default)** | ~25.3 | **2173 s** | fits, 9% margin |
+| k=32 | 20.4 | 2694 s | OVER |
+
+The worst observed induction fits at every concurrency up to and including the shipped default,
+and exceeds the timeout at k=32. The margin at k=24 is 9%, which is thin but not a defect.
+
+Caveats that bound how hard to push this: the throughput figures are from this session's bench on
+the scored card; 1053 s is a single worst-case observation at one stream, so the token count is a
+back-conversion rather than a measurement; the k=24 rate is interpolated between measured k=16 and
+k=32; and the concurrency the submission actually reaches is unknown — the eval runs one thread
+per game, so if it never approaches k=32 none of this fires.
+
+**Revised next step.** Do not change either constant. Measure actual induce durations and the
+real concurrency on a scored save-run, and revisit only if `_vllm_max_seqs()` is ever raised
+above 24.
+
 **Cross-references:** the 2026-08-18 vLLM backend work (commits `b24debc9c6` through
 `dbfc2ea703`) for the per-stream-versus-aggregate measurements · the same day's goal-defect A/B,
 which hit the identical ratio problem in its own harness at 102400/3600 and is where the shape
