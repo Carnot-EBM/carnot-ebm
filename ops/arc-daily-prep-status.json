@@ -1,14 +1,14 @@
 {
-  "kernel_version": "21",
-  "note": "the automated prep script's own 24x15s poll exited with save_run='?' before the kernel genuinely finished; manually polled to KernelWorkerStatus.COMPLETE and confirmed submission.parquet present via `kaggle kernels output` before correcting this file to reflect ground truth. Kernel v9 bundles REQ-ARC-FCP-5699-35's graduated fixes (default-on stall-refactor-loop, max_tokens/timeout 4096/600, structural reminder) via the re-versioned iancblenke/carnot-agent-code dataset.",
-  "parquet_ok": false,
-  "prepped_at": "2026-08-17T18:34Z",
+  "kernel_version": "37",
+  "note": "v37 verified by hand after the prep script's own short poll exited with save_run='?' and parquet=MISSING -- the same false alarm seen on v9/v22/v27, where the script's wait is shorter than the kernel's runtime. Ground truth from `kaggle kernels status` (COMPLETE) and `kaggle kernels output` (submission.parquet present, 2648 bytes, 1x4, columns row_id/game_id/end_of_game/score). Stack validated in the same run: vLLM server up in 425s, admission exact at max_model_len 155472, 8/8 concurrent requests round-tripped through the llama.cpp response translation, server config max_num_seqs=8, flashinfer AOT cache staged, CUDA 13 toolchain resolved. Prepared only -- submission is operator-only per CLAUDE.md Operator-Only External Publication.",
+  "parquet_ok": true,
+  "prepped_at": "2026-08-19T13:42Z",
   "prior_submission_scores": {
     "2026-06-30": 0.08,
     "2026-07-15": 0.12
   },
-  "ready_for_operator_submit": false,
-  "save_run": "?",
+  "ready_for_operator_submit": true,
+  "save_run": "KernelWorkerStatus.COMPLETE",
   "submission_history": [
     {
       "kernel_version": "9",
@@ -21,5 +21,5 @@
       "submitted_at": "2026-07-16T19:37:35Z"
     }
   ],
-  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 21"
+  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 37"
 }
