@@ -7839,6 +7839,20 @@ class LocalGGUFProposer:
             if induce_think_on()
             else "\n\nReturn ONLY one ```python code block with engine + is_level_complete.\n```python\n"
         )
+        # GAP-6260 layer 1, before a token is spent. A window whose actions the planner cannot
+        # emit yields an engine nothing can plan in, however well it scores on its own window.
+        self.last_window_vocabulary_violation = sorted(
+            window_actions_outside_planner_vocabulary(trans)
+        )
+        if self.last_window_vocabulary_violation:
+            print(
+                "WINDOW VOCABULARY VIOLATION: actions "
+                f"{self.last_window_vocabulary_violation} appear in this window and the in-model "
+                "planner cannot emit them. The induced engine will model transitions the planner "
+                "never asks for, and may be inert at the planning root even at cell_recall 1.0. "
+                "Inducing anyway -- see ops/verifier_gaps.md GAP-6260.",
+                flush=True,
+            )
         ok, code = self.generate(
             base + _induce_suffix,
             ("engine", "is_level_complete"),
@@ -7999,6 +8013,45 @@ def _extract_python(text: str) -> str:
 # ---------------------------------------------------------------------------
 # plan in the verified model, execute in reality, halt on divergence
 # ---------------------------------------------------------------------------
+
+
+# The action ids the in-model planner can actually emit: the five keyboard actions plus a click.
+# `_model_candidates` below is the authority; this mirrors its action set so a window can be
+# checked WITHOUT a grid, which is what lets the check run before induction spends a token.
+# `tests/python/test_arc_window_vocabulary.py` asserts the two stay in agreement.
+_PLANNER_ACTION_VOCABULARY = frozenset({1, 2, 3, 4, 5, 6})
+
+
+def window_actions_outside_planner_vocabulary(trans: list) -> set:
+    """Actions present in an induction window that the in-model planner CANNOT emit.
+
+    WHY THIS EXISTS (GAP-6260, 2026-08-18). An induced engine is only useful if the planner can
+    drive it, and the planner's move set is `_model_candidates`: actions 1-5 plus clicks. A window
+    whose observed actions fall outside that set teaches the engine transitions the planner will
+    never ask for, so the engine can score a perfect `cell_recall` on its own window and still be
+    unplannable.
+
+    That is not hypothetical. Every action in lp85's cached window is 0 (RESET), which the planner
+    does not plan through, so its induced engine produced ZERO novel successors from the planning
+    root: 37 nodes expanded -- exactly one candidate sweep of no-ops -- the win predicate never
+    consulted, and the search exhausted its queue far under budget. Six A/B cells across both arms
+    were spent on it. `cell_recall = 1.0` was honest; what it measured was not gameplay.
+
+    This is the CHEAP half of the two-layer check in `ops/verifier_gaps.md` GAP-6260. It costs no
+    engine calls and no generation, so it can run BEFORE induction rather than diagnosing the
+    wreckage after. The second layer -- does the induced engine yield a novel successor from the
+    root -- needs an engine and is not implemented here.
+
+    REPORTS, DOES NOT BLOCK. Returning the offending actions lets the caller log, record, or skip;
+    it deliberately does not abort induction on its own, because refusing to induce is a live-path
+    behaviour change that wants its own measurement first.
+    """
+    actions = set()
+    for t in list(trans or []):
+        a = getattr(t, "action", None)
+        if isinstance(a, (int, np.integer)):
+            actions.add(int(a))
+    return actions - _PLANNER_ACTION_VOCABULARY
 
 
 def _model_candidates(grid: np.ndarray) -> list[dict]:
