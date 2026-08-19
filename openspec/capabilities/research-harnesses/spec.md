@@ -5936,6 +5936,127 @@ and readiness stays below `1.0` for any accepted attack.
 |---|---|---|
 | REQ-INFRA-6462 | Planned: `python/carnot/experiment_6462_sota_raw_persistence_uniqueness_canary.py`; terminal artifact `results/experiment_6462_sota_raw_persistence_uniqueness_canary.json`. | Planned: `tests/python/test_experiment_6462_sota_raw_persistence_uniqueness_canary.py`. |
 
+## REQ-INFRA-6463: SOTA Fixed-Policy Candidate Corpus V2 SHALL Use Sealed Four-Way Partitions And One Raw Event File Per Candidate
+
+Carnot SHALL provide Exp6463 at
+`python/carnot/experiment_6463_sota_fixed_policy_candidate_corpus_v2.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6463_sota_fixed_policy_candidate_corpus_v2 --date 20260819`
+SHALL write
+`results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json`.
+
+Exp6463 SHALL first read the Exp6462 canary artifact. It SHALL stop before
+model resolution or inference unless `raw_persistence_canary_ready_score` is
+`1.0`. A failed pre-gate SHALL emit `blocked_gate_check_failed`,
+`gate_check_summary`, and all required empty evidence fields.
+
+Exp6463 SHALL use only these local GGUF model ids through cached local
+resolution and embedded tokenizer checks: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL never call `AutoTokenizer` for a
+GGUF. It SHALL not make a model-ranking claim.
+
+Exp6463 SHALL seal at least 48 fixed-policy units before inference across
+development, allocation-held, selection-held, and audit-held partitions: 12
+units in each partition.
+The sealed manifest SHALL hash each problem, each partition membership, and
+each precommitted candidate label before generation. Held labels and partition
+membership SHALL not enter prompts.
+
+For each sealed unit and each mandated model, Exp6463 SHALL generate at least
+three candidate plans. Each candidate SHALL receive a fresh event id and a final
+raw path before generation. The raw bytes SHALL be written with a same-directory
+temporary file, fsync where supported, atomic rename, and post-rename SHA-256
+and byte-count verification before parsing. A checkpoint SHALL be written after
+each event. Resume SHALL skip completed events and SHALL not repeat generation
+for any completed event.
+
+Exp6463 SHALL parse each raw candidate once with the fixed parser. It SHALL
+record parse failures without repair, reprompt, grammar retry, or parser retry.
+Parsed candidates SHALL run through the deterministic simulator and exact
+checker. Every `per_unit_rows` row SHALL include the unit, partition, model,
+candidate, event id, raw path and hash, parse result, exact result, device
+receipt, and timing.
+
+Exp6463 SHALL report eligible rows, parse failures, exact outcomes, candidate
+headroom, event identity, and aggregate checks only from `per_unit_rows`. Each
+held partition SHALL have mixed exact outcomes and positive candidate-selection
+headroom before readiness can be positive. Exact successes and parse failures
+SHALL be grouped by model without ranking models.
+
+Exp6463 SHALL attack zero-byte files, event reuse, candidate cloning, held
+exposure, membership reassignment, parser repair, CPU fallback, exact-veto
+bypass, and aggregate mismatch. Each critical attack SHALL fail closed.
+`sota_corpus_ready_score` SHALL be `1.0` only when all mandated models have
+eligible rows, every normal event is provenance-complete, partitions stayed
+sealed, labels recompute, every held split has headroom, CPU fallback is zero,
+protected files are unchanged, and critical findings are zero.
+
+The terminal artifact SHALL include `status`, `MODEL_SPECS`, `models_used`,
+`cached_sota_pair_receipts`,
+`model_file_and_embedded_tokenizer_hashes`, `autotokenizer_usage_count`,
+`device_and_runner_receipts`, `sealed_problem_and_partition_manifest`,
+`exposure_ledger`, `checkpoint_and_resume_receipts`, `raw_output_manifest`,
+`event_identity_manifest`, `fixed_parser_and_checker_hashes`,
+`per_unit_rows`, `eligible_rows_by_model_and_partition`,
+`parse_failures_by_model`, `exact_outcomes_by_model_and_partition`,
+`candidate_headroom_by_partition`, `one_event_one_path_one_hash_check`,
+`cpu_fallback_count`, `aggregate_row_recomputation`, `attack_matrix`,
+`current_adversarial_findings`, `sota_corpus_ready_score`,
+`protected_files_unchanged`, `blocked_reason`, `gate_check_summary`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+`verifier_is_oracle` SHALL be true only for the deterministic simulator,
+checker, and row arithmetic. The model and parser SHALL not be oracles.
+
+### SCENARIO-INFRA-6463-1: Pre-Gate And Four-Way Seal
+
+GIVEN the Exp6462 canary artifact and the three mandated GGUF families
+WHEN Exp6463 starts
+THEN it blocks before model generation if the canary ready score is not `1.0`
+AND otherwise writes a sealed 12/12/12/12 development, allocation-held,
+selection-held, and audit-held manifest before inference.
+
+**Spec traces:** REQ-INFRA-6463
+
+### SCENARIO-INFRA-6463-2: Event Raw Bytes Persist Before Fixed Parse
+
+GIVEN sealed units, models, and candidate ids
+WHEN Exp6463 generates candidates
+THEN each event has one fresh event id, one allocated raw path, one nonzero raw
+file hash, one fixed parse attempt, no parser repair, and one checkpoint write
+after the event.
+
+**Spec traces:** REQ-INFRA-6463
+
+### SCENARIO-INFRA-6463-3: Exact Labels And Held Headroom Recompute
+
+GIVEN immutable `per_unit_rows`
+WHEN Exp6463 reports exact outcomes and candidate headroom
+THEN exact labels recompute from the deterministic simulator and each held
+partition has mixed exact outcomes plus positive candidate-selection headroom.
+
+**Spec traces:** REQ-INFRA-6463
+
+### SCENARIO-INFRA-6463-4: Event Identity And Adversarial Controls Fail Closed
+
+GIVEN attacks for zero-byte files, event reuse, candidate cloning, held
+exposure, membership reassignment, parser repair, CPU fallback, exact-veto
+bypass, and aggregate mismatch
+WHEN Exp6463 validates the artifact
+THEN every attack is detected, readiness is zero for any accepted attack, and
+the artifact makes no model-ranking claim.
+
+**Spec traces:** REQ-INFRA-6463
+
+## Implementation Status (REQ-INFRA-6463)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6463 | Planned: `python/carnot/experiment_6463_sota_fixed_policy_candidate_corpus_v2.py`; terminal artifact `results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json`. | Planned: `tests/python/test_experiment_6463_sota_fixed_policy_candidate_corpus_v2.py`. |
+
 ## REQ-INFRA-6351: V547 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
 
 Carnot SHALL build Exp6351 as a deterministic V547 post-marker source sweep

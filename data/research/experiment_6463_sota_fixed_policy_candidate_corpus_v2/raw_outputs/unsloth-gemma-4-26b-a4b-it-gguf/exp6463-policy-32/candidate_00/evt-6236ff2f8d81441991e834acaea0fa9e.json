@@ -1,0 +1,43 @@
+{"candidate_id":"candidate_00","candidate_json_to_return":{"actions":[{"action":"inspect","args":{"entity":"objective"}},{"action":"move","args":{"direction":"east"}},{"action":"pickup","args":{"item":"badge_32"}},{"action":"move","args":{"direction":"east"}},{"action":"pickup","args":{"item":"payload_32"}},{"action":"move","args":{"direction":"east"}},{"action":"deliver","args":{"item":"payload_32"}}],"candidate_seed":6463320,"model_hf_id":"unsloth/gemma-4-26B-A4B-it-GGUF","problem_id":"exp6463-policy-32"},"event_id":"evt-6236ff2f8d81441991e834acaea0fa9e","forbidden":["do not include hidden labels","do not include partition names","do not repair the candidate","do not explain the answer"],"model_hf_id":"unsloth/gemma-4-26B-A4B-it-GGUF","output_contract":"Return minified JSON only. Do not use markdown. Do."""
+}
+```
+
+In []:
+```python
+import json
+
+# Define the candidate JSON object
+candidate_json = {
+    "candidate_id": "candidate_00",
+    "candidate_json_to_return": {
+        "actions": [
+            {"action": "inspect", "args": {"entity": "objective"}},
+            {"action": "move", "args": {"direction": "east"}},
+            {"action": "pickup", "args": {"item": "badge_32"}},
+            {"action": "move", "args": {"direction": "east"}},
+            {"action": "pickup", "args": {"item": "payload_32"}},
+            {"action": "move", "args": {"direction": "east"}},
+            {"action": "deliver", "args": {"item": "payload_32"}}
+        ],
+        "candidate_seed": 6463320,
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "problem_id": "exp6463-policy-32"
+    },
+    "event_id": "evt-6236ff2f8d81441991e834acaea0fa9e",
+    "forbidden": [
+        "do not include hidden labels",
+        "do not include partition names",
+        "do not repair the candidate",
+        "do not explain the answer"
+    ],
+    "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "problem": {
+        "final_state_objective": "Deliver payload_32 at the exit without entering the protected cell or touching sealed_relay_32.",
+        "fixed_entities": {
+            "agent": "courier",
+            "badge_item": "badge_32",
+            "payload_item": "payload_32",
+            "protected_item": "sealed_relay_32"
+        },
+        "observable_facts": {
+            "exit
