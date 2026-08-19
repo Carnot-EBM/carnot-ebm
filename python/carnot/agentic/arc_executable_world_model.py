@@ -3973,9 +3973,32 @@ def _vllm_max_seqs() -> int:
         24       23.6       2648 s OVER 3536 s OVER ~567 tok/s   <- the old default
         32       20.4       3063 s OVER 4090 s OVER ~652 tok/s
 
-    At 24 the MEDIAN induction exceeds the timeout, not merely the tail. 8 is the highest
-    concurrency at which even the longest observed induction fits, and it still runs ~6.1x the
+    At 24 the MEDIAN induction exceeds the timeout, not merely the tail. 8 still runs ~6.1x the
     throughput of the llama.cpp configuration this replaces.
+
+    CORRECTION, hours later the same night. The line above used to claim 8 is "the highest
+    concurrency at which even the longest observed induction fits". That was true of the longest
+    COMPLETED induction (83,444 tokens, 2086 s at k=8) and false in general, because the length
+    distribution is RIGHT-CENSORED BY THIS VERY TIMEOUT. Three draws in that corpus were cancelled
+    at 3599 s and never produced an `eval time` line, so they are invisible to any distribution
+    built from completed calls. The largest reached 100,988 generated tokens -- 98.6% of the
+    102,400 cap -- and was still climbing when the client killed it. At k=8 that draw needs 2525 s
+    against a 2400 s ceiling: OVER.
+
+    So no concurrency guarantees the tail fits, and none can, because the mechanism that would
+    record the tail is the mechanism that destroys it. 8 is a risk/throughput choice, not a
+    guarantee. For reference, at the measured per-stream rates:
+
+                    83,444 (max completed)   >=100,988 (censored)   131,072 (the cap)
+        k=4              1846 s ok                 2234 s ok             2900 s OVER
+        k=8              2086 s ok                 2525 s OVER           3277 s OVER
+        k=16             2763 s OVER               3344 s OVER           4340 s OVER
+
+    THE BETTER LEVER IS PROBABLY THE TIMEOUT, NOT THIS CONSTANT. `CARNOT_ARC_INDUCE_TIMEOUT` is
+    2400 s and `CARNOT_ARC_INDUCE_MAX_TOKENS` is 131,072, and the two were set independently -- so
+    the budget cannot be spent inside the window at ANY concurrency, including k=1. Making them
+    consistent (about 3277 s at k=8) would cover the full cap without giving up throughput.
+    Operator decision, not taken here.
 
     HONEST LIMITS. The draws were produced on a dev 3090 under the A/B's think envelope, not the
     scored 131072-token one, so the length distribution transfers only as an estimate; the k=8
