@@ -153,3 +153,26 @@ CHECK_TIMED_OUT
 
 - **Kevin E R MILLE (#6) — newly discovered public “Sophia” notebook:** A CPU-only, model-free online explorer restricts itself to declared legal actions, suppresses `ACTION7` when alternatives exist, retires action arms after eight frame-level no-ops, and chooses the least-tried action for each exact frame hash weighted by its observed effect rate with 10% random exploration. Clicks target small changed regions or one occupied cell per non-background 4×4 block, retaining 25% uniform-random coverage and preferentially revisiting responsive targets. No source reading or per-game policy hardcoding appears; linkage to the current submission is unconfirmed. **Classification: (b) GENERAL-PURPOSE.** [Notebook](https://www.kaggle.com/code/kevinermille/arc3-sophia-no-action7-v1)
 
+## 2026-08-18 13:40 UTC -- NEW
+
+- **New top-five entrant:** **Tanaka Ai24** is now **#5 at 2.35**. Their older public Duck derivatives add:
+
+  - A compact action/outcome ledger—step, level, action, frame change, level change—exposed to the Python tool for detecting repeated no-ops. Its reported 25-game validation averaged 0.83, and a later kernel removed it.
+  - A batch guard that stops before repeating a direction after the preceding identical move produced no visible change, plus a 60→90-second analyzer-yield allowance.
+
+  These kernels predate the current submission, so score linkage is unconfirmed. **Classification: (b) GENERAL-PURPOSE; no source reading or per-game hardcoding.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [safety kernel](https://www.kaggle.com/code/tanakaai24/arc3-qwen3-6-duck-lb117-safety-v1), [trajectory kernel](https://www.kaggle.com/code/tanakaai24/arc3-qwen3-6-duck-compact-trajectory-v1)
+
+- **Samrish B (#8) — newly discovered TAAF graft stack:** Their public notebook enables a report-only efficiency layer that detects exact net-zero round trips, ≥8-action frame stagnation, and repeated exact-state revisits, then injects quadratic action-cost pressure into the LLM prompt. It also truncates homogeneous action batches after two consecutive zero-reward no-ops with unchanged frames and legal actions. **Classification: (b) GENERAL-PURPOSE; runtime observations only.** Current-submission linkage is unconfirmed. [Notebook](https://www.kaggle.com/code/samrishb/just-resubmission-rn-working-on-experiments), [source bundle](https://www.kaggle.com/datasets/thtennant/taaf-kaggle-source-share-fork)
+
+  **POSSIBLE CARNOT LEVER:** Add session-level cycle/stagnation pressure to generator context; Carnot’s existing filter handles individual known-dead actions but not long net-zero round trips.
+
+  The same bundle contains—but the visible notebook does not enable—an exact-fingerprint cross-clone trace bank: one scout publishes pruned completed-level trajectories, sibling clones replay them, and replay aborts on first divergence. **Classification: (a) NO source/hardcoding; (b) CONDITIONAL—general over runtime-detected repeats, but useless on a singleton unseen game.**
+
+  **POSSIBLE CARNOT LEVER:** A divergence-gated, run-local exact-clone plan bank could reuse solved prefixes across anonymized duplicate evaluation runs.
+
+## 2026-08-19 13:33 UTC -- NEW
+
+- **New top-five entrant:** **Jonathan Wang2022** is now **#3 at 2.59**. No public ARC-AGI-3 notebook, dataset, discussion, repository, or writeup was found. **Classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/jonathanwang2022/code)
+
+- **New top-five entrant:** **Junhua Yang** is now **#5 at 2.57**. No submission-linked ARC-AGI-3 code or technique disclosure was found. His documented ARC-AGI-1/2 DSL work does not establish the current ARC-AGI-3 method. **Classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/junhuay/code)
+
