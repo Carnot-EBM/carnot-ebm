@@ -16070,3 +16070,5 @@ code |
 | 2026-08-19 17:27 UTC | Gated on Exp6465 objective causality: held exact-c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6465-representation-objective-causal-ab-v |
 | 2026-08-19 17:54 UTC | Prospective unique-event verifier-bounded continuo | OK | 89 passed, 1 warning in 8.99s |
 | 2026-08-19 17:56 UTC | Gated on Exp6465 objective causality: held exact-c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6465-representation-objective-causal-ab-v |
+| 2026-08-19 18:24 UTC | Gated on Exp6468 CSL readiness: unique-event corru | OK | 88 passed, 1 warning in 9.14s |
+| 2026-08-19 18:26 UTC | Gated on Exp6465 objective causality: held exact-c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6465-representation-objective-causal-ab-v |
