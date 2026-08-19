@@ -1,0 +1,1605 @@
+{
+  "experiment": "goal_defect_reask_and_goal_dedup_paired_ab",
+  "run_date": "2026-08-19",
+  "generated_at": "2026-08-19T13:29:11Z",
+  "schema": "carnot.arc_live_path_flag_ab.v1",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_note": "Declared for what THIS ARTIFACT does, not for what the corpus did. Building it reads JSONL the cells already wrote, replays banked searches on CPU, and formats tables. It loads no model and makes no server call. The CORPUS underneath it IS live GGUF generation -- 21 real generation calls, the longest 3106.6 s -- and that wall time is reported separately as corpus_wall_s rather than as this artifact's duration.",
+  "duration_s": 0.469,
+  "corpus_wall_s": 89192.2,
+  "duration_note": "duration_s is this artifact's own build time, which is what the substrate declaration covers. corpus_wall_s is the sum of per-cell driver wall time across both arms; it is not elapsed session time, because the arms run concurrently on separate GPUs.",
+  "cited_upstream_inputs": [
+    {
+      "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/repair_widen/goalab2/shard_control.jsonl",
+      "sha256": "8d370632addcc8f346a5a23e4a6ca123968159a83ee1feb474c59a21830f2749",
+      "imported": "control arm per-cell rows"
+    },
+    {
+      "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/repair_widen/goalab2/shard_treatment.jsonl",
+      "sha256": "bad4ba986514f669a2a4de29ce381c599e0b392bdb87cfd91ce035045ee9be03",
+      "imported": "treatment arm per-cell rows"
+    },
+    {
+      "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/repair_widen/goalab2/goal_during_search_replay.jsonl",
+      "sha256": "dac3c0e59191ca9cae12aa98160483825429e52e3b14a640c9f1693357c80b8d",
+      "imported": "offline replay classification"
+    },
+    {
+      "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/repair_widen/goalab2/constancy_table.jsonl",
+      "sha256": "4ef57d9a8d84145ebbe3b1a73e0fd8680a61b94abc99b9f052ba6694a210a87f",
+      "imported": "shipped-gate probe rerun per cell"
+    },
+    {
+      "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/repair_widen/goalab2/call_times.jsonl",
+      "sha256": "807e841d886a81a5c69f6ac12725ed77c482bc5148d03a383188ef33b81035e1",
+      "imported": "per-cell max generation-call time"
+    },
+    {
+      "path": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/repair_widen/window_meta.json",
+      "sha256": "5c17216d7c22fe6a77d90ea2e3cb74fe50fd13701c253149c151cc9ba8224845",
+      "imported": "per-game window transition counts"
+    }
+  ],
+  "random_seeds_used": [
+    100,
+    101,
+    102
+  ],
+  "random_seed": 100,
+  "seed_note": "CARNOT_ARC_GENERATOR_SEED = 100 + trial, set per cell. Both arms use the same seed on the same cell, which is what makes the comparison paired.",
+  "reproducibility_checksum": "8fb687566e63d44c86b49b6bfe5bd4d00840359d54a3e2c46ac37f0df9367b0a",
+  "git_head": "23f302ad19f0915a66d941928d98f8d59748c8cf",
+  "code_provenance": {
+    "why_this_field_exists": "A paired A/B that spans a code change to its OWN INSTRUMENT is invalid with nothing looking wrong, so the corpus states its code identity explicitly rather than leaving a reader to assume it. The gate under test lives in arc_executable_world_model.py, which was edited during this run.",
+    "phase_1_ran": "00d642cfca, which was HEAD at 14:30:41 when both phase-1 runners launched. Python caches imports, so later edits could not reach those processes.",
+    "phase_2_pinned_to": "feac25a354, via a detached worktree at /home/ianblenke/.claude/jobs/ad0c053d/tmp/abpin and PYTHONPATH.",
+    "the_pin_is_not_literally_phase_1_head": "feac25a354 is timestamped 22:14:58; phase 1 launched at 14:30:41. Four commits touched the instrument file in between (b24debc9c6, aff58da21b, dbfc2ea703, 85dc5a5a85). The pin is therefore NOT phase-1 HEAD, and saying so matters more than the convenience of claiming it is.",
+    "why_the_delta_is_inert_for_this_ab": "Diffed 00d642cfca against feac25a354 on arc_executable_world_model.py: 248 insertions, 1 deletion, and ZERO lines matching the gate or induce path (_goal_defects, _goal_probe*, _induce_defect*, def generate, def induce, engine_transitions). The additions are the vLLM backend, gated behind _vllm_backend_active() which reads CARNOT_ARC_LLM_BACKEND -- never set by run_cells.py and absent from the running phase-1 process environment. The single deletion changes ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT from 1 to 0, a scored-path default this A/B overrides by passing mtp=False explicitly.",
+    "the_pin_mechanism_had_to_be_repaired": "The launcher's PYTHONPATH pin was DEFEATED by run_cells.py's own sys.path.insert(0, REPO/'python'), which outranks PYTHONPATH. Verified empirically under the launcher's exact environment: the import resolved to the working tree and _goal_probe_sample (the post-change marker) was present. run_cells.py now selects the carnot path from CARNOT_AB_PIN_PYTHON or a PYTHONPATH entry containing carnot/__init__.py, falling back to the working tree, and prints '[pin] carnot loaded from <path>' as its first line so the phase-2 logs carry proof rather than intent. A mitigation that reports success without being verified end to end is the same failure class as the truncation check that reported the wrong field.",
+    "the_runner_script_also_differs_between_phases": "Stated by the corpus rather than left for a reader to find in a diff. Phase 1 ran a run_cells.py whose import line was an unconditional sys.path.insert(0, REPO/'python'). Phase 2 runs one that adds a _carnot_path() helper choosing between CARNOT_AB_PIN_PYTHON, a PYTHONPATH entry containing carnot/__init__.py, and that same fallback, plus a '[pin] carnot loaded from <path>' log line. The change is confined to IMPORT RESOLUTION and one log line; no experiment logic, no arm config, no gate, no metric. Phase 1's processes had already loaded the old file into memory, so the edit could not reach them -- which is the same import-caching property that made the original hazard invisible, working in our favour this time.",
+    "discarded_cell_ar25_t2_treatment": {
+      "status": "DISCARDED, not missing. A gap a reader can see explained.",
+      "what_happened": "The treatment arm's llama-server died mid-generation at 22:37:45 ('Received second interrupt'). A DIFFERENT binary took over port 8997 in the same second: build-hip/bin/llama-server, sha256 abec2db9, the ROCm build. Our pinned server is a byte-identical copy of the CUDA build, sha256 c609c463. Both RTX 3090s went to 0% and 2 MiB while the AMD integrated GPU went to 100%. The cell's first calls had run on the 3090 under CUDA, so it was straddling two hardware substrates.",
+      "mechanism": "NOT a runner relaunch -- run_cells.py pins SERVER to the CUDA copy and its _launch() appends a line to the arm log, and neither happened. The MODULE relaunched it: LocalGGUFProposer._ensure_server() resolves its own binary via _generator_server_and_env() and writes to its own log path. The runner never set CARNOT_LLAMA_SERVER, so that resolver picked whatever it found, and it found the ROCm build. The PYTHONPATH code pin could not have helped: this is BINARY resolution, not module resolution.",
+      "why_discarding_costs_nothing": "ar25 t2 had no treatment row, so it was never in the paired set -- the analysis uses five pairs either way. Completing it would have ADDED a sixth pair whose treatment half ran on different hardware from the other five.",
+      "how_it_was_nearly_invisible": "No launch line in the arm log, and the substitute server wrote to none of our logs -- server_treatment_8997.log stopped growing at 22:37:45. Every instrument said the run was healthy. It was found only because the last line of a log tailed for an unrelated reason happened to be the death message. Third correlated-blind-spot case in this corpus and the worst: the substitute wrote to nothing we were watching.",
+      "fix_applied_for_phase_2": "The launcher now exports CARNOT_LLAMA_SERVER (the CUDA copy) and CARNOT_ARC_SERVER_LOG_DIR (goalab2), so a module-side relaunch uses the right binary AND becomes visible as a new log file."
+    },
+    "phase_2_verified_from_proc_not_from_logs": "Both runners: PYTHONPATH to the pinned worktree, CARNOT_LLAMA_SERVER, and CARNOT_ARC_SERVER_LOG_DIR present in /proc/<pid>/environ. Both servers: binary sha256 c609c463 (the CUDA copy), each parented to its own runner, CUDA_VISIBLE_DEVICES=0 for treatment and 1 for control -- lanes SWAPPED from phase 1 as designed. Both 3090s at 96% and 21182 MiB; iGPU at 1%. Verified from the processes themselves rather than from what the launcher printed, which is the lesson the defeated pin taught.",
+    "next_harness_should_pin_the_device_per_arm": "RESIDUAL EXPOSURE, detected and monitored rather than fixed mid-run. The device pin lives only in the env dict run_cells.py hands to Popen. A module-side _ensure_server() relaunch builds its OWN launch_env -- arc_executable_world_model.py:5270 constructs dict(os.environ, CUDA_VISIBLE_DEVICES=...) from its own device selection -- and the runners carry no CARNOT_ARC_GENERATOR_CUDA_GPU to steer it (verified absent: count 0 on both). So a relaunch could get the RIGHT BINARY on the WRONG CARD and silently destroy the lane swap, which is the whole point of phase 2. Not changed mid-run: the knob needs per-arm values, the launcher exports globally, and both servers are correct as they stand, so a restart to prevent a hypothetical is the worse trade. NEXT HARNESS: each arm exports CARNOT_ARC_GENERATOR_CUDA_GPU with its own value, so a module relaunch INHERITS the lane instead of picking one.",
+    "the_pin_also_moved_the_game_corpus": {
+      "what_broke": "arc_solver_kit.py:54 sets ENV_DIR = REPO / 'environment_files', derived from the MODULE's own location. Pinning carnot into the worktree moved the offline game directory with it -- to an empty one, because environment_files/ is gitignored (.gitignore:265, 0 tracked files). Every phase-2 cell before the fix logged 'Game <id> not found in scanned environments. Available games: []'.",
+      "what_it_voided": "_execute_plan_measure() could not open a real env, so on those rows reached_levelup, actions_to_levelup, start_hv, best_hv and hv_progress are MEASUREMENT FAILURES, not results -- confirmed by actions_to_levelup and hv_progress both being null, which means the function never ran. reached_levelup is the PRIMARY endpoint, so phase 2 could not measure the primary at all while this held. plan_found and every window-derived metric (goal_predicate_accuracy, levelup_positive_recall, cell_recall, re-asks) are UNAFFECTED: they need no env.",
+      "affected_rows": [
+        "control sp80 t0",
+        "control sp80 t1",
+        "treatment sp80 t0"
+      ],
+      "fix": "abpin/environment_files symlinked to the repo's copy. Legitimate because the game files are gitignored DATA, byte-identical either way, and never part of what the pin exists to freeze -- the pin holds the GATE code constant, and relocating the game corpus was an accident of __file__-derived paths. Verified under the pin: 25 games visible, sp80 and tr87 present, and _goal_probe_sample still absent so the gate pin is intact.",
+      "disposition": "The affected rows are quarantined to a sidecar and RE-RUN after the grid drains (rerun_env_broken_rows.py, which refuses to run while any runner is alive). The rows are preserved rather than deleted: they are evidence of what the broken configuration produced.",
+      "re_run_is_pairwise": "If EITHER arm's row for a (game, trial) is affected, BOTH are re-run. A re-run is a FRESH DRAW, not a repair of the old row, and the paired design rests on both arms sharing a first draw -- the pairing witness the subsequence analysis established. Re-running one arm alone would leave a pair whose halves came from different generations, inside a corpus whose entire point is paired comparison. So control sp80 t1 drags treatment sp80 t1 with it even if treatment t1 lands clean. Cost: one extra cell.",
+      "re_run_rows_are_new_cells_not_corrected_ones": "Re-run rows were produced at a different wall time, under the symlinked environment, from FRESH DRAWS. They are not the original cells repaired. Whether a fresh draw reproduces the original is an OPEN QUESTION rather than an assumption: no `seed` field appears in the generation request payload, so identical output across runs is not guaranteed by the harness. If the re-run draws differ from the originals despite the same CARNOT_ARC_GENERATOR_SEED, that is recorded rather than smoothed over -- the quarantined originals are kept precisely so the comparison can be made.",
+      "post_re_run_verification_required": "Two checks before a regenerated pair may enter the primary: (1) the env opened, start_hv or actions_to_levelup non-null on every new row; (2) the pairing survived, i.e. the pair still shows the FIRST-DRAW MATCH -- the same generated-token count on the shared draw across arms, as phase-1 t0 matched at 42174. A pair failing (2) must not enter the primary until it is explained."
+    },
+    "verification_marker": "_goal_probe_sample is ABSENT under the pinned worktree and PRESENT in the working tree, so its absence is the positive signal that phase-2 code matches the phase-1 gate."
+  },
+  "model_specs": {
+    "generator": "unsloth/Qwen3.8-27B-GGUF",
+    "quant": "Q4_K_M",
+    "n_ctx": 131072,
+    "max_tokens": 102400,
+    "tries": 3,
+    "think_mode": true,
+    "kv_quant": "q8_0",
+    "server": "llama.cpp b9606, one instance per arm, one GPU per arm"
+  },
+  "generator_is_the_live_pin": "unsloth/Qwen3.8-27B-GGUF IS the live ARC generator pin: ARC_LIVE_GENERATOR_REPO_SUBSTR / ARC_LIVE_GENERATOR_MODEL_ID at arc_executable_world_model.py:3727-3728, set by commit 8dff05a1fd on 2026-08-16. The scored Kaggle kernel runs the same family as NVFP4.",
+  "transfer_scope": "The EFFECT SIZE transfers to the submission as configured today, because the corpus ran the shipping generator. It does NOT transfer to a gemma-4-31B configuration, because draw quality is generator-dependent. The GATE-GEOMETRY MECHANISM transfers to any generator, being arithmetic over window length.",
+  "preconditions_checked": [
+    {
+      "resource": "Qwen3.8-27B-Q4_K_M GGUF cached",
+      "available": true
+    },
+    {
+      "resource": "llama-server healthy on the arm's port before each cell",
+      "available": true
+    },
+    {
+      "resource": "per-game window cache on disk",
+      "available": true
+    },
+    {
+      "resource": "captured engine per completed cell",
+      "available": true
+    }
+  ],
+  "design": {
+    "lever_a": "CARNOT_ARC_INDUCE_GOAL_DEFECT_CHECK=1 (goal-defect re-ask)",
+    "lever_b": "CARNOT_ARC_GOAL_DEDUP=1 (goal dedup)",
+    "games": [
+      "ar25",
+      "lp85",
+      "sp80",
+      "tr87"
+    ],
+    "trials_per_game": 3,
+    "arms": 2,
+    "pairing": "same game, same trial, same seed, same window; arms differ only by the two flags",
+    "lane_alternation": "Phase 1 ran control on GPU 0 and treatment on GPU 1; phase 2 swaps them, so arm is never confounded with the faster card."
+  },
+  "window_probe_geometry": {
+    "lp85": {
+      "n_transitions": 5,
+      "n_probe_grids_available": 10,
+      "win_transition_index": [
+        4
+      ],
+      "win_frame_grid_index": 9,
+      "gate_probe_cap": 12,
+      "win_visible_to_gate": true,
+      "window_actions": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "ar25": {
+      "n_transitions": 12,
+      "n_probe_grids_available": 24,
+      "win_transition_index": [
+        11
+      ],
+      "win_frame_grid_index": 23,
+      "gate_probe_cap": 12,
+      "win_visible_to_gate": false,
+      "window_actions": [
+        3,
+        3,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "sp80": {
+      "n_transitions": 4,
+      "n_probe_grids_available": 8,
+      "win_transition_index": [
+        3
+      ],
+      "win_frame_grid_index": 7,
+      "gate_probe_cap": 12,
+      "win_visible_to_gate": true,
+      "window_actions": [
+        4,
+        4,
+        4,
+        5
+      ]
+    },
+    "tr87": {
+      "n_transitions": 12,
+      "n_probe_grids_available": 24,
+      "win_transition_index": [
+        11
+      ],
+      "win_frame_grid_index": 23,
+      "gate_probe_cap": 12,
+      "win_visible_to_gate": false,
+      "window_actions": [
+        4,
+        2,
+        2,
+        4,
+        1,
+        1,
+        1,
+        4,
+        2,
+        4,
+        2,
+        2
+      ]
+    }
+  },
+  "gate_blindness": {
+    "mechanism": "The shipped goal-defect gate probes is_level_complete on the first 12 grids, taken as (grid, next_grid) per transition, so it reads transitions 0 to 5 only. Every window ends at its level flip, so the win frame is grid index 2n-1 for a window of n transitions. It is inside the cap only when n <= 6.",
+    "threshold_n_transitions_visible": 6,
+    "consequence": "On a window of 7 or more transitions a CORRECT predicate, one true only on win frames, is necessarily constant-False across everything the gate looks at, so the gate must re-ask it. To read non-constant there a predicate has to fire on a non-win frame in the first six transitions. On long windows the gate rejects correct predicates and rewards early false positives, then accepts the last draw unchecked when its budget of 2 runs out.",
+    "measurement_is_not_blind": "score_goal_predicate_consistency and _levelup_positive_recall both score the WHOLE window. That is why a cell can record probe goal_constant True and levelup_positive_recall 1.0 at once. The harness can see the repair; the gate cannot.",
+    "one_line_form": "The gate samples the HEAD of a window when the only positive is at the TAIL. The probe is not too small; it is pointed at the wrong end.",
+    "recommended_fix": "Include the FINAL transition in the probe, or sample head and tail. Raising _GOAL_PROBE_MAX_GRIDS only works until a window is longer than the new number.",
+    "two_twelves": "WINDOW_K = 12 caps the builder at 12 TRANSITIONS (experiment_5717_playbook_exemplars_stall_induction_ab.py:60, and build_window returns 'the k transitions ending at the L0->L1 boundary'). _GOAL_PROBE_MAX_GRIDS = 12 caps the probe at 12 GRIDS. Same number, different units: a capped window is exactly twice the probe's reach, so the probe reads exactly the first half and the win is always in the second. Six of the thirteen games sit exactly at the builder cap. Verified, not inferred.",
+    "games_gate_can_see_win": [
+      "cd82",
+      "ft09",
+      "lp85",
+      "r11l",
+      "sp80",
+      "vc33"
+    ],
+    "games_gate_is_blind_on": [
+      "ar25",
+      "g50t",
+      "re86",
+      "sb26",
+      "sk48",
+      "tr87",
+      "tu93"
+    ],
+    "blast_radius": "7 of 13 games in window_meta.json",
+    "population": "13 GAMES from window_meta.json -- a per-game population, not per-cell",
+    "scope_note": "Measured over every game in window_meta.json, not only the four A/B games. This is arithmetic over window length and does not depend on the generator.",
+    "per_game": {
+      "ar25": {
+        "n_transitions": 12,
+        "n_probe_grids_available": 24,
+        "win_transition_index": [
+          11
+        ],
+        "win_frame_grid_index": 23,
+        "gate_probe_cap": 12,
+        "win_visible_to_gate": false,
+        "window_actions": [
+          3,
+          3,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "win_index_source": "measured_from_window_pickle"
+      },
+      "lp85": {
+        "n_transitions": 5,
+        "n_probe_grids_available": 10,
+        "win_transition_index": [
+          4
+        ],
+        "win_frame_grid_index": 9,
+        "gate_probe_cap": 12,
+        "win_visible_to_gate": true,
+        "window_actions": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "win_index_source": "measured_from_window_pickle"
+      },
+      "sb26": {
+        "n_transitions": 9,
+        "n_probe_grids_available": 18,
+        "win_transition_index": [
+          8
+        ],
+        "win_frame_grid_index": 17,
+        "gate_probe_cap": 12,
+        "win_visible_to_gate": false,
+        "window_actions": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          5
+        ],
+        "win_index_source": "measured_from_window_pickle"
+      },
+      "sp80": {
+        "n_transitions": 4,
+        "n_probe_grids_available": 8,
+        "win_transition_index": [
+          3
+        ],
+        "win_frame_grid_index": 7,
+        "gate_probe_cap": 12,
+        "win_visible_to_gate": true,
+        "window_actions": [
+          4,
+          4,
+          4,
+          5
+        ],
+        "win_index_source": "measured_from_window_pickle"
+      },
+      "tr87": {
+        "n_transitions": 12,
+        "n_probe_grids_available": 24,
+        "win_transition_index": [
+          11
+        ],
+        "win_frame_grid_index": 23,
+        "gate_probe_cap": 12,
+        "win_visible_to_gate": false,
+        "window_actions": [
+          4,
+          2,
+          2,
+          4,
+          1,
+          1,
+          1,
+          4,
+          2,
+          4,
+          2,
+          2
+        ],
+        "win_index_source": "measured_from_window_pickle"
+      },
+      "tu93": {
+        "n_transitions": 12,
+        "n_probe_grids_available": 24,
+        "win_transition_index": [
+          11
+        ],
+        "win_frame_grid_index": 23,
+        "gate_probe_cap": 12,
+        "win_visible_to_gate": false,
+        "window_actions": [
+          2,
+          2,
+          3,
+          3,
+          2,
+          4,
+          4,
+          2,
+          4,
+          1,
+          4,
+          2
+        ],
+        "win_index_source": "measured_from_window_pickle"
+      },
+      "vc33": {
+        "n_transitions": 3,
+        "n_probe_grids_available": 6,
+        "win_transition_index": [
+          2
+        ],
+        "win_frame_grid_index": 5,
+        "gate_probe_cap": 12,
+        "win_visible_to_gate": true,
+        "window_actions": [
+          6,
+          6,
+          6
+        ],
+        "win_index_source": "measured_from_window_pickle"
+      },
+      "re86": {
+        "n_transitions": 12,
+        "n_probe_grids_available": 24,
+        "win_transition_index": [
+          11
+        ],
+        "win_frame_grid_index": 23,
+        "gate_probe_cap": 12,
+        "win_visible_to_gate": false,
+        "window_actions": null,
+        "win_index_source": "inferred_from_n_transitions"
+      },
+      "sk48": {
+        "n_transitions": 12,
+        "n_probe_grids_available": 24,
+        "win_transition_index": [
+          11
+        ],
+        "win_frame_grid_index": 23,
+        "gate_probe_cap": 12,
+        "win_visible_to_gate": false,
+        "window_actions": null,
+        "win_index_source": "inferred_from_n_transitions"
+      },
+      "g50t": {
+        "n_transitions": 12,
+        "n_probe_grids_available": 24,
+        "win_transition_index": [
+          11
+        ],
+        "win_frame_grid_index": 23,
+        "gate_probe_cap": 12,
+        "win_visible_to_gate": false,
+        "window_actions": null,
+        "win_index_source": "inferred_from_n_transitions"
+      },
+      "r11l": {
+        "n_transitions": 3,
+        "n_probe_grids_available": 6,
+        "win_transition_index": [
+          2
+        ],
+        "win_frame_grid_index": 5,
+        "gate_probe_cap": 12,
+        "win_visible_to_gate": true,
+        "window_actions": null,
+        "win_index_source": "inferred_from_n_transitions"
+      },
+      "cd82": {
+        "n_transitions": 5,
+        "n_probe_grids_available": 10,
+        "win_transition_index": [
+          4
+        ],
+        "win_frame_grid_index": 9,
+        "gate_probe_cap": 12,
+        "win_visible_to_gate": true,
+        "window_actions": null,
+        "win_index_source": "inferred_from_n_transitions"
+      },
+      "ft09": {
+        "n_transitions": 4,
+        "n_probe_grids_available": 8,
+        "win_transition_index": [
+          3
+        ],
+        "win_frame_grid_index": 7,
+        "gate_probe_cap": 12,
+        "win_visible_to_gate": true,
+        "window_actions": null,
+        "win_index_source": "inferred_from_n_transitions"
+      }
+    }
+  },
+  "primary_all_cells": {
+    "n_pairs": 11,
+    "control_plan_found": 8,
+    "treatment_plan_found": 4,
+    "control_plan_found_nondegenerate": 7,
+    "treatment_plan_found_nondegenerate": 4,
+    "control_real_levelups": 4,
+    "treatment_real_levelups": 2
+  },
+  "primary_criterion1_excluded": {
+    "n_pairs": 8,
+    "control_plan_found": 8,
+    "treatment_plan_found": 4,
+    "control_plan_found_nondegenerate": 7,
+    "treatment_plan_found_nondegenerate": 4,
+    "control_real_levelups": 4,
+    "treatment_real_levelups": 2
+  },
+  "primary_reported_both_ways": true,
+  "mechanism_the_class_delta_table": {
+    "read_this_first": "DETERMINISM 23 of 23. Every banked search reproduces exactly offline across both phases, which is what licenses classifying them at all.",
+    "table": {
+      "goal_true_plan_found": "control 8   treatment 4   delta -4",
+      "model_inert_no_novel_states": "control 3   treatment 4   delta +1",
+      "goal_false_on_entire_reachable_set": "control 0   treatment 2   delta +2",
+      "goal_never_true_in_budget": "control 1   treatment 1   delta  0"
+    },
+    "balanced_classes_are_not_evidence": "goal_never_true_in_budget is 1 and 1, so it cannot be part of the harm. tr87 t2 sits there and is therefore NOT differentiating evidence -- it is removed from the harm narrative. It also carries the weaker inference of the two: exhausting a NODE BUDGET without the goal firing does not establish the goal is unsatisfiable, only that the search did not reach a satisfying state in time. Only goal_false_on_entire_reachable_set establishes unsatisfiability, because that one exhausted the reachable set.",
+    "the_dominant_harm_is_goal_degradation_engine_intact": "The treatment-EXCLUSIVE class is goal_false_on_entire_reachable_set: +2, and ZERO in control. Both members have an engine that is not the problem -- ar25 t1 treatment cell_recall 1.0 against control 0.8397, treatment's engine is BETTER; tr87 t0 identical at 0.9026 in both arms. Engine fine or better, search runs to exhaustion, goal false over everything reachable, no control cell in that state at all.",
+    "engine_destruction_is_secondary_and_is_one_cell": "model_inert is +1, not +4. Three of treatment's four inert cells are lp85, which is inert in BOTH arms from the window artifact and is criterion-1 excluded. The arm difference is ar25 t0 ALONE -- the vivid cell_recall 1.0 -> 0.0 case. Real, and one cell.",
+    "emphasis_corrected": "This analysis led for most of its life with 'the re-ask discards a working engine', which is one cell. The class that is exclusive to treatment, and doubles it, is the one where the engine is untouched and the GOAL is the variable. So goal degradation is the PRIMARY measured harm and engine destruction is the secondary ar25 mechanism. This also closes what looked like an anomaly: ar25 t1, where treatment's engine was BETTER and the plan was still lost, is not an exception -- it is a member of the dominant class."
+  },
+  "secondary_ADJUDICATED_and_it_is_a_null": {
+    "the_cell": "sp80 t1 -- the only cell with a re-asked goal, a trustworthy engine, and a measured outcome in BOTH arms. Registered as the adjudication check before phase 2 existed.",
+    "result": {
+      "control": "goal 0.75 / 0.0  (defective, constant-False signature)  re-asks 0  plan_len 4  reach TRUE  actions_to_levelup 4",
+      "treatment": "goal 1.0  / 1.0  (re-asked once)                        re-asks 1  plan_len 4  reach TRUE  actions_to_levelup 4"
+    },
+    "verdict": "NULL. The re-ask moved the goal metrics from 0.75/0.0 to 1.0/1.0 and moved the OUTCOME NOT AT ALL: identical plan length, identical action count, both reaching a real level-up. The defective goal was SUFFICIENT; the repaired one was not better for planning. The registered question is answered, and answered AGAINST the secondary rather than left open.",
+    "it_confirms_the_metric_retraction": "This is the strongest evidence in the corpus that goal_predicate_accuracy and levelup_positive_recall do not track planning value. They moved a full 0.25 and 1.0 while the thing they are supposed to predict did not move at all. The retraction made hours earlier -- that a grading which scores a constant-False predicate at 1.0 cannot be evidence for or against goal repair -- is now supported by an outcome measurement rather than by argument.",
+    "sp80_is_a_clean_three_cell_null": "t0 both arms plan_len 10, no level-up. t1 both reach, lever firing in one arm only. t2 both reach, lever not firing. Three trials, no arm difference on any. The win-VISIBLE stratum reports NO EFFECT, against the win-invisible games where the harm lives -- which is what the gate geometry predicts and the cleanest form the stratified result could take."
+  },
+  "re_run_verification_both_checks_passed": {
+    "check_1_first_draw_match": "control sp80 t1's re-run first draw is 36,406 -- IDENTICAL to the pre-re-run baseline recorded before anything was touched, and to treatment sp80 t1's preserved first draw. The pairing survived.",
+    "check_2_t0_shape": "sp80 t0 re-ran as [61951, 47817] in BOTH arms -- two draws each, identical token counts to the originals. Matching first draws would not have been sufficient; the pair's STRUCTURE is preserved too.",
+    "draws_reproduced_exactly_which_retires_an_open_caveat": "All five re-run draws reproduced their original token counts exactly, in both arms. The corpus had carried an OPEN QUESTION -- no `seed` field reaches the generation payload, so identical output across runs was not guaranteed by the harness -- and it is now answered with data for these cells: the draws are reproducible. That is what makes the re-run rows comparable to the originals rather than merely fresh.",
+    "env_now_measured_on_all_six": "All six sp80 rows verdict env_ran. The three env-broken primaries are gone and reached_levelup is a MEASUREMENT on every sp80 cell."
+  },
+  "every_cell_has_an_account": "UNUSUAL AND WORTH STATING: the corpus has no unexplained cells. lp85 t0-t2, both arms -- inert from the window artifact, criterion-1 excluded. ar25 t0 -- engine destroyed. ar25 t1 -- goal false on the reachable set, engine BETTER in treatment. ar25 t2 -- control-only, treatment discarded on the substrate swap. sp80 t0 -- env-broken both arms, re-run. sp80 t1 -- the adjudication cell. sp80 t2 -- a clean null, the lever did not fire. tr87 t0 -- uninterpretable on four converging defects, which is itself a determination. tr87 t1 -- two re-asks, engine degraded. tr87 t2 -- in a balanced class, therefore not evidence. The two cells called unexplained during analysis closed by DIFFERENT routes: ar25 t1 as a member of a class not yet drawn, tr87 t0 as over-determined. Across roughly twelve hours this corpus produced an apparent anomaly about once an hour, and every one resolved into either a defect in our own instruments or a member of a class we had not yet drawn. NONE resolved into 'the lever did something we cannot describe'.",
+  "headline_plans_not_levelups": "PLANS IS THE HEADLINE, NOT LEVEL-UPS. plan_found is the larger, less noisy signal, it does not depend on the three env-broken primaries, and it was never voided by anything. Reported with the degeneracy gate applied: control 7 of 12 against treatment 4 of 11. Ungated it reads 8 of 12, but control tr87 t0's 'plan' is plan_len 1 from a constant-True goal and is not evidence of planning. Excluding tr87 t0 entirely -- it carries four defects, see its own field -- it is 7 of 11 against 4 of 10. ALL THREE FRAMINGS AGREE IN DIRECTION, which is worth more than any one of them, and is stronger for having survived a correction that moved a cell out of the numerator.",
+  "plan_found_is_weaker_than_it_looks": "plan_found is satisfied by any predicate the search can make true, including one true immediately. A constant-True goal terminates the BFS on its first expansion and books a plan of length 1. ALWAYS REPORT plan_len BESIDE plan_found, and treat plan_len 1 as the search terminating rather than as planning. Every one of the four successive misreadings of tr87 t0 came from reading a summary field without the artifact behind it -- plan_found without plan_len, goal_predicate_accuracy without knowing what a constant predicate scores, an engine hash without checking which definition Python binds.",
+  "primary_interpretation": "UNDERPOWERED AND DIRECTIONALLY ADVERSE. The counts are consistent with the mechanism and do not establish it. The evidence that carries weight is the mechanism: the engine body differs between arms in every paired cell, and ar25 t0 goes from cell_recall 1.0 with a defective goal and a real level-up, to cell_recall 0.0 with a perfect goal and no plan, on the same game, trial and seed. Do not state 'the lever is harmful' from the counts alone.",
+  "primary_stratified_by_win_visibility": {
+    "note": "Win-visibility is a property of the window: shared by both arms, fixed before induction, untouched by the lever, so it is safe to condition on. Registered before phase 2. DESCRIPTIVE and mechanism-consistent, NOT an inferential test. No p-value is computed.",
+    "the_visible_stratum_is_one_game": "After criterion 1 the visible stratum is ONE GAME, sp80, three trials, against ar25 plus tr87, six trials. lp85 is the only other win-visible game and it is exactly the game criterion 1 removes. 'Stratified by win-visibility' invites a reader to picture a balanced contrast; the truth is a single game carrying a stratum, so the descriptive-only caveat is doing more work than it appears.",
+    "sp80_carries_three_non_independent_items": "If sp80 behaves as the mechanism predicts it simultaneously populates the visible stratum, adjudicates the secondary, and satisfies prediction 1's falsifier. Those are three registered items ticked by ONE game's three trials, from one generator on one corpus. They share a single data source and stand or fall together. They are NOT three converging pieces of evidence; reading them that way overstates by roughly a factor of three.",
+    "failure_branch_precommitted": "Registered in PREREGISTERED_EXCLUSION.md Addendum 3 before any sp80 row existed. If sp80 is root-inert, criterion-1 dirty, or otherwise unusable: the visible stratum is reported EMPTY and the cleanest test NOT OBTAINED; lp85 is NOT substituted back in; no reweighting, no pooling across strata, no post-hoc stratifier; the secondary stays unadjudicated.",
+    "visible_stratum_status": "obtained",
+    "win_visible": {
+      "games": [
+        "sp80"
+      ],
+      "n_pairs": 3,
+      "control_plan_found": 3,
+      "treatment_plan_found": 3,
+      "control_plan_found_nondegenerate": 3,
+      "treatment_plan_found_nondegenerate": 3,
+      "control_real_levelups": 2,
+      "treatment_real_levelups": 2,
+      "treatment_reasks": [
+        0,
+        1,
+        0
+      ]
+    },
+    "win_invisible": {
+      "games": [
+        "ar25",
+        "tr87"
+      ],
+      "n_pairs": 5,
+      "control_plan_found": 5,
+      "treatment_plan_found": 1,
+      "control_plan_found_nondegenerate": 4,
+      "treatment_plan_found_nondegenerate": 1,
+      "control_real_levelups": 2,
+      "treatment_real_levelups": 0,
+      "treatment_reasks": [
+        2,
+        2,
+        0,
+        2,
+        2
+      ]
+    }
+  },
+  "criterion2_dropped_as_exclusion": "Criterion 2 (engine root-inertness) was PRE-REGISTERED as an exclusion and is deliberately NOT used as one. The pre-registration assumed the lever left dynamics alone; it does not. Root-inertness is therefore an outcome the treatment causes, and conditioning on a post-treatment variable would remove treatment's own bad draws from the comparison and bias the result toward null-or-favourable. It is reported below as an OUTCOME per arm instead. Saying why it was dropped is worth more than the number would have been.",
+  "exclusion_preregistered_at": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/repair_widen/goalab2/PREREGISTERED_EXCLUSION.md",
+  "exclusion_criterion_1_window_vocabulary": {
+    "rule": "A window whose action set is not a subset of the planner's candidate vocabulary (_model_candidates: actions 1-5 plus action-6 clicks) is excluded in BOTH arms. Static and window-level, so it cannot move with the arm.",
+    "per_game": {
+      "ar25": {
+        "actions": [
+          2,
+          3
+        ],
+        "outside_vocabulary": [],
+        "violation": false
+      },
+      "lp85": {
+        "actions": [
+          0
+        ],
+        "outside_vocabulary": [
+          0
+        ],
+        "violation": true
+      },
+      "sb26": {
+        "actions": [
+          5,
+          6
+        ],
+        "outside_vocabulary": [],
+        "violation": false
+      },
+      "sp80": {
+        "actions": [
+          4,
+          5
+        ],
+        "outside_vocabulary": [],
+        "violation": false
+      },
+      "tr87": {
+        "actions": [
+          1,
+          2,
+          4
+        ],
+        "outside_vocabulary": [],
+        "violation": false
+      },
+      "tu93": {
+        "actions": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "outside_vocabulary": [],
+        "violation": false
+      },
+      "vc33": {
+        "actions": [
+          6
+        ],
+        "outside_vocabulary": [],
+        "violation": false
+      },
+      "re86": {
+        "actions": null,
+        "outside_vocabulary": null,
+        "violation": null,
+        "note": "no window pickle on disk; action set not measured"
+      },
+      "sk48": {
+        "actions": null,
+        "outside_vocabulary": null,
+        "violation": null,
+        "note": "no window pickle on disk; action set not measured"
+      },
+      "g50t": {
+        "actions": null,
+        "outside_vocabulary": null,
+        "violation": null,
+        "note": "no window pickle on disk; action set not measured"
+      },
+      "r11l": {
+        "actions": null,
+        "outside_vocabulary": null,
+        "violation": null,
+        "note": "no window pickle on disk; action set not measured"
+      },
+      "cd82": {
+        "actions": null,
+        "outside_vocabulary": null,
+        "violation": null,
+        "note": "no window pickle on disk; action set not measured"
+      },
+      "ft09": {
+        "actions": null,
+        "outside_vocabulary": null,
+        "violation": null,
+        "note": "no window pickle on disk; action set not measured"
+      }
+    },
+    "resolved_note": "The pre-registration measured lp85 and deferred ar25, sp80 and tr87 to this same one-line test. Measured now: lp85 is the only violation, its window being entirely action 0 (RESET), which the planner does not plan through. ar25, sp80 and tr87 are clean, so criterion 1 excludes nothing in phase 2."
+  },
+  "criterion2_as_outcome": {
+    "population_note": "Reported over BOTH populations because the unfiltered pair is diluted. lp85 contributes 3 of 3 inert to EACH arm, and its inertness has a known non-lever cause -- the RESET-only window -- so including it flattens exactly the arm difference this measure exists to show. LEAD WITH THE CRITERION-1 PAIR.",
+    "criterion1_kept": {
+      "control_inert": 0,
+      "control_of": 9,
+      "treatment_inert": 1,
+      "treatment_of": 8,
+      "population": "criterion-1-kept cells only (the games where the lever can operate)"
+    },
+    "all_replayed_cells": {
+      "control_inert": 3,
+      "control_of": 12,
+      "treatment_inert": 4,
+      "treatment_of": 11,
+      "population": "every replayed cell, including criterion-1-excluded lp85"
+    },
+    "arm_dependent": true,
+    "reading": "Engine root-inertness reported as a RESULT of the lever, not as a filter. The pre-registration's stated expectation -- that the lever re-asks the goal and not the dynamics -- is FALSIFIED. induce()'s happy path is one combined engine+goal call and a goal re-ask discards the whole candidate, so the engine is a fresh draw in the treatment arm."
+  },
+  "preregistration_expectation_falsified": true,
+  "per_cell": [
+    {
+      "game": "ar25",
+      "trial": 0,
+      "phase": 1,
+      "win_visible_to_gate": false,
+      "control": {
+        "plan_found": true,
+        "plan_len": 15,
+        "plan_is_degenerate": false,
+        "reached_levelup": true,
+        "actions_to_levelup": 15,
+        "cell_recall": 1.0,
+        "goal_predicate_accuracy": 0.9167,
+        "levelup_positive_recall": 0.0,
+        "gpu": "0",
+        "wall_s": 2575.2,
+        "replay_classification": "goal_true_plan_found",
+        "probe_goal_constant": true
+      },
+      "treatment": {
+        "plan_found": false,
+        "plan_len": 0,
+        "plan_is_degenerate": false,
+        "reached_levelup": false,
+        "actions_to_levelup": null,
+        "cell_recall": 0.0,
+        "goal_predicate_accuracy": 1.0,
+        "levelup_positive_recall": 1.0,
+        "gpu": "1",
+        "wall_s": 8254.8,
+        "replay_classification": "model_inert_no_novel_states",
+        "probe_goal_constant": true,
+        "goal_defect_reasks": 2
+      }
+    },
+    {
+      "game": "ar25",
+      "trial": 1,
+      "phase": 1,
+      "win_visible_to_gate": false,
+      "control": {
+        "plan_found": true,
+        "plan_len": 15,
+        "plan_is_degenerate": false,
+        "reached_levelup": true,
+        "actions_to_levelup": 15,
+        "cell_recall": 0.8397,
+        "goal_predicate_accuracy": 0.9167,
+        "levelup_positive_recall": 0.0,
+        "gpu": "0",
+        "wall_s": 2614.1,
+        "replay_classification": "goal_true_plan_found",
+        "probe_goal_constant": true
+      },
+      "treatment": {
+        "plan_found": false,
+        "plan_len": 0,
+        "plan_is_degenerate": false,
+        "reached_levelup": false,
+        "actions_to_levelup": null,
+        "cell_recall": 1.0,
+        "goal_predicate_accuracy": 0.9167,
+        "levelup_positive_recall": 0.0,
+        "gpu": "1",
+        "wall_s": 6266.0,
+        "replay_classification": "goal_false_on_entire_reachable_set",
+        "probe_goal_constant": true,
+        "goal_defect_reasks": 2
+      }
+    },
+    {
+      "game": "lp85",
+      "trial": 0,
+      "phase": 1,
+      "win_visible_to_gate": true,
+      "control": {
+        "plan_found": false,
+        "plan_len": 0,
+        "plan_is_degenerate": false,
+        "reached_levelup": false,
+        "actions_to_levelup": null,
+        "cell_recall": 1.0,
+        "goal_predicate_accuracy": 0.8,
+        "levelup_positive_recall": 0.0,
+        "gpu": "0",
+        "wall_s": 1324.5,
+        "replay_classification": "model_inert_no_novel_states",
+        "probe_goal_constant": true
+      },
+      "treatment": {
+        "plan_found": false,
+        "plan_len": 0,
+        "plan_is_degenerate": false,
+        "reached_levelup": false,
+        "actions_to_levelup": null,
+        "cell_recall": 1.0,
+        "goal_predicate_accuracy": 1.0,
+        "levelup_positive_recall": 1.0,
+        "gpu": "1",
+        "wall_s": 2979.2,
+        "replay_classification": "model_inert_no_novel_states",
+        "probe_goal_constant": false,
+        "goal_defect_reasks": 1
+      }
+    },
+    {
+      "game": "lp85",
+      "trial": 1,
+      "phase": 1,
+      "win_visible_to_gate": true,
+      "control": {
+        "plan_found": false,
+        "plan_len": 0,
+        "plan_is_degenerate": false,
+        "reached_levelup": false,
+        "actions_to_levelup": null,
+        "cell_recall": 1.0,
+        "goal_predicate_accuracy": 0.8,
+        "levelup_positive_recall": 0.0,
+        "gpu": "0",
+        "wall_s": 1261.8,
+        "replay_classification": "model_inert_no_novel_states",
+        "probe_goal_constant": true
+      },
+      "treatment": {
+        "plan_found": false,
+        "plan_len": 0,
+        "plan_is_degenerate": false,
+        "reached_levelup": false,
+        "actions_to_levelup": null,
+        "cell_recall": 0.9454,
+        "goal_predicate_accuracy": 1.0,
+        "levelup_positive_recall": 1.0,
+        "gpu": "1",
+        "wall_s": 2174.0,
+        "replay_classification": "model_inert_no_novel_states",
+        "probe_goal_constant": false,
+        "goal_defect_reasks": 1
+      }
+    },
+    {
+      "game": "lp85",
+      "trial": 2,
+      "phase": 1,
+      "win_visible_to_gate": true,
+      "control": {
+        "plan_found": false,
+        "plan_len": 0,
+        "plan_is_degenerate": false,
+        "reached_levelup": false,
+        "actions_to_levelup": null,
+        "cell_recall": 1.0,
+        "goal_predicate_accuracy": 0.8,
+        "levelup_positive_recall": 0.0,
+        "gpu": "0",
+        "wall_s": 1351.1,
+        "replay_classification": "model_inert_no_novel_states",
+        "probe_goal_constant": true
+      },
+      "treatment": {
+        "plan_found": false,
+        "plan_len": 0,
+        "plan_is_degenerate": false,
+        "reached_levelup": false,
+        "actions_to_levelup": null,
+        "cell_recall": 1.0,
+        "goal_predicate_accuracy": 0.8,
+        "levelup_positive_recall": 0.0,
+        "gpu": "1",
+        "wall_s": 3901.3,
+        "replay_classification": "model_inert_no_novel_states",
+        "probe_goal_constant": true,
+        "goal_defect_reasks": 1
+      }
+    },
+    {
+      "game": "sp80",
+      "trial": 0,
+      "phase": 2,
+      "win_visible_to_gate": true,
+      "control": {
+        "plan_found": true,
+        "plan_len": 10,
+        "plan_is_degenerate": false,
+        "reached_levelup": false,
+        "actions_to_levelup": null,
+        "cell_recall": 0.2941,
+        "goal_predicate_accuracy": 1.0,
+        "levelup_positive_recall": 1.0,
+        "gpu": "1",
+        "wall_s": 3306.9,
+        "replay_classification": "goal_true_plan_found",
+        "probe_goal_constant": false
+      },
+      "treatment": {
+        "plan_found": true,
+        "plan_len": 10,
+        "plan_is_degenerate": false,
+        "reached_levelup": false,
+        "actions_to_levelup": null,
+        "cell_recall": 0.2941,
+        "goal_predicate_accuracy": 1.0,
+        "levelup_positive_recall": 1.0,
+        "gpu": "0",
+        "wall_s": 3637.7,
+        "replay_classification": "goal_true_plan_found",
+        "probe_goal_constant": false,
+        "goal_defect_reasks": 0
+      }
+    },
+    {
+      "game": "sp80",
+      "trial": 1,
+      "phase": 2,
+      "win_visible_to_gate": true,
+      "control": {
+        "plan_found": true,
+        "plan_len": 4,
+        "plan_is_degenerate": false,
+        "reached_levelup": true,
+        "actions_to_levelup": 4,
+        "cell_recall": 1.0,
+        "goal_predicate_accuracy": 0.75,
+        "levelup_positive_recall": 0.0,
+        "gpu": "1",
+        "wall_s": 1042.3,
+        "replay_classification": "goal_true_plan_found",
+        "probe_goal_constant": true
+      },
+      "treatment": {
+        "plan_found": true,
+        "plan_len": 4,
+        "plan_is_degenerate": false,
+        "reached_levelup": true,
+        "actions_to_levelup": 4,
+        "cell_recall": 1.0,
+        "goal_predicate_accuracy": 1.0,
+        "levelup_positive_recall": 1.0,
+        "gpu": "0",
+        "wall_s": 3626.0,
+        "replay_classification": "goal_true_plan_found",
+        "probe_goal_constant": false,
+        "goal_defect_reasks": 1
+      }
+    },
+    {
+      "game": "sp80",
+      "trial": 2,
+      "phase": 2,
+      "win_visible_to_gate": true,
+      "control": {
+        "plan_found": true,
+        "plan_len": 4,
+        "plan_is_degenerate": false,
+        "reached_levelup": true,
+        "actions_to_levelup": 4,
+        "cell_recall": 1.0,
+        "goal_predicate_accuracy": 1.0,
+        "levelup_positive_recall": 1.0,
+        "gpu": "1",
+        "wall_s": 2296.8,
+        "replay_classification": "goal_true_plan_found",
+        "probe_goal_constant": false
+      },
+      "treatment": {
+        "plan_found": true,
+        "plan_len": 4,
+        "plan_is_degenerate": false,
+        "reached_levelup": true,
+        "actions_to_levelup": 4,
+        "cell_recall": 1.0,
+        "goal_predicate_accuracy": 1.0,
+        "levelup_positive_recall": 1.0,
+        "gpu": "0",
+        "wall_s": 2170.6,
+        "replay_classification": "goal_true_plan_found",
+        "probe_goal_constant": false,
+        "goal_defect_reasks": 0
+      }
+    },
+    {
+      "game": "tr87",
+      "trial": 0,
+      "phase": 2,
+      "win_visible_to_gate": false,
+      "control": {
+        "plan_found": true,
+        "plan_len": 1,
+        "plan_is_degenerate": true,
+        "reached_levelup": false,
+        "actions_to_levelup": null,
+        "cell_recall": 0.9026,
+        "goal_predicate_accuracy": 0.0833,
+        "levelup_positive_recall": 1.0,
+        "gpu": "1",
+        "wall_s": 7329.5,
+        "replay_classification": "goal_true_plan_found",
+        "probe_goal_constant": true
+      },
+      "treatment": {
+        "plan_found": false,
+        "plan_len": 0,
+        "plan_is_degenerate": false,
+        "reached_levelup": false,
+        "actions_to_levelup": null,
+        "cell_recall": 0.9026,
+        "goal_predicate_accuracy": 1.0,
+        "levelup_positive_recall": 1.0,
+        "gpu": "0",
+        "wall_s": 6595.9,
+        "replay_classification": "goal_false_on_entire_reachable_set",
+        "probe_goal_constant": true,
+        "goal_defect_reasks": 0
+      }
+    },
+    {
+      "game": "tr87",
+      "trial": 1,
+      "phase": 2,
+      "win_visible_to_gate": false,
+      "control": {
+        "plan_found": true,
+        "plan_len": 5,
+        "plan_is_degenerate": false,
+        "reached_levelup": false,
+        "actions_to_levelup": null,
+        "cell_recall": 0.7415,
+        "goal_predicate_accuracy": 0.9167,
+        "levelup_positive_recall": 0.0,
+        "gpu": "1",
+        "wall_s": 1205.1,
+        "replay_classification": "goal_true_plan_found",
+        "probe_goal_constant": true
+      },
+      "treatment": {
+        "plan_found": true,
+        "plan_len": 11,
+        "plan_is_degenerate": false,
+        "reached_levelup": false,
+        "actions_to_levelup": null,
+        "cell_recall": 0.539,
+        "goal_predicate_accuracy": 1.0,
+        "levelup_positive_recall": 1.0,
+        "gpu": "0",
+        "wall_s": 7057.9,
+        "replay_classification": "goal_true_plan_found",
+        "probe_goal_constant": true,
+        "goal_defect_reasks": 2
+      }
+    },
+    {
+      "game": "tr87",
+      "trial": 2,
+      "phase": 2,
+      "win_visible_to_gate": false,
+      "control": {
+        "plan_found": true,
+        "plan_len": 7,
+        "plan_is_degenerate": false,
+        "reached_levelup": false,
+        "actions_to_levelup": null,
+        "cell_recall": 0.9091,
+        "goal_predicate_accuracy": 0.9167,
+        "levelup_positive_recall": 0.0,
+        "gpu": "1",
+        "wall_s": 1307.4,
+        "replay_classification": "goal_true_plan_found",
+        "probe_goal_constant": true
+      },
+      "treatment": {
+        "plan_found": false,
+        "plan_len": 0,
+        "plan_is_degenerate": false,
+        "reached_levelup": false,
+        "actions_to_levelup": null,
+        "cell_recall": 0.9091,
+        "goal_predicate_accuracy": 0.9167,
+        "levelup_positive_recall": 0.0,
+        "gpu": "0",
+        "wall_s": 6361.7,
+        "replay_classification": "goal_never_true_in_budget",
+        "probe_goal_constant": true,
+        "goal_defect_reasks": 2
+      }
+    }
+  ],
+  "lever_fire_audit": {
+    "population": "ALL paired and unpaired cells, deliberately unfiltered. This audit asks whether the lever fired at all, so it wants every cell it can get; criterion 1 is about whether the PLANNER can act, which is a different question.",
+    "control_generations_per_cell": "6 cells, 8 generations. Five cells drew ONCE; control ar25 t2 drew THREE times with re-asks 0, which is the tries=3 content-retry path, not a re-ask. So 'control re-asks 0' does NOT mean one generation per control cell, and that cell is also the slowest in the corpus at 10552 s -- three long draws, no plan. Stated here so the arm contrast is not read as one-draw against three-draw.",
+    "control_goal_reasks": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "treatment_goal_reasks": [
+      1,
+      1,
+      1,
+      2,
+      2,
+      1,
+      0,
+      0,
+      2,
+      2,
+      0
+    ],
+    "control_total": 0,
+    "treatment_total": 12,
+    "dedup_counter_total": 1,
+    "dedup_status": "exercised",
+    "dedup_note": "CORRECTED at corpus close. Dedup is EXERCISED, not unexercised: dedup_engine_half_kept_delta = 1 on treatment tr87 t0, the only non-zero dedup counter in either shard. The phase-1 'unexercised' reading was true of phase 1 and false of the corpus. See dedup_single_observation below -- the instance is confounded with a timeout and cannot support a claim about normal operation."
+  },
+  "reasks_by_gate_visibility": {
+    "True": {
+      "games": [
+        "lp85",
+        "sp80"
+      ],
+      "n_cells": 6,
+      "reasks_per_cell": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        0
+      ],
+      "mean_reasks": 0.6667
+    },
+    "False": {
+      "games": [
+        "ar25",
+        "tr87"
+      ],
+      "n_cells": 5,
+      "reasks_per_cell": [
+        2,
+        2,
+        0,
+        2,
+        2
+      ],
+      "mean_reasks": 1.6
+    }
+  },
+  "reasks_by_gate_visibility_population": "ALL treatment cells, deliberately unfiltered, INCLUDING criterion-1-excluded lp85. The gate's behaviour depends only on window geometry -- where the win frame sits against the 12-grid probe -- while criterion 1 is about the planner's action vocabulary. Different properties, so filtering here would discard a valid observation of the gate. This is NOT the same population as the stratified primary, which IS criterion-1 filtered because it measures planning outcomes.",
+  "timeout_instrumentation": {
+    "client_timeout_s": 3600.0,
+    "max_tokens": 102400,
+    "breakeven_tok_s_for_full_budget": 28.4,
+    "observed_tok_s_min_median_max": [
+      23.01,
+      31.54,
+      33.52
+    ],
+    "longest_call_s": 3107.4,
+    "any_row_truncated": true,
+    "timeout_fired": {
+      "count_corpus_wide": 3,
+      "all_three": "control phase-1 ar25 t2 (task 262261, 3599 s, n_decoded 77,804); control phase-2 tr87 t0 (task 208676, 3599 s, n_decoded 100,988); treatment phase-2 tr87 t0 (task 266172, 3599 s, n_decoded 76,112). Each ran to 3599 s against the 3600 s client timeout. tr87 t0 lost a draw in BOTH arms.",
+      "largest_censored_draw": "100,988 generated tokens and STILL CLIMBING when killed -- 98.6% of the 102,400 cap. This is the corpus's true largest observation and it is censored, so max_observed 83,444 is well below a known-larger draw.",
+      "where": "control ar25 t2, the first of its four attempts",
+      "evidence": "server_control_8996.log: 'W srv stop: cancel task, id_task = 262261', followed by 'slot release: id 0 | task 262261 | stop processing: n_tokens = 89427, truncated = 0'. The task ran 3599 s against the 3600 s client timeout.",
+      "count_across_corpus": "exactly 1; treatment has none; both logs scanned",
+      "effect_on_the_cell": "control ar25 t2's 10552 s decomposes as 3599 cancelled + 3029 + 3107 + 778. It lost its first attempt to the timeout, so it had fewer usable attempts than any other cell in the corpus. It is a TIMEOUT-AFFECTED row, not merely a slow one, and must not be analysed as a slow one.",
+      "absent_from_the_length_distribution": "A cancelled call emits no `eval time` line, so its ~78k generated tokens are NOT in the distribution above. The distribution is therefore of COMPLETED generations and is left-censored at the timeout by construction."
+    },
+    "retracted_claim": "An earlier version of this artifact recorded any_row_truncated: false, citing 'truncated = 0 on every slot-release line'. That was measuring the wrong signal and is RETRACTED. The server's `truncated` counter reports CONTEXT truncation; it reads 0 on the very release line of the call the client killed at the timeout. A client-side cancellation is visible only as `srv stop: cancel task`. Recorded rather than silently corrected, because a check that returns the right-sounding answer while watching the wrong field is worse than no check.",
+    "server_truncated_counter": "0 on every slot-release line in both logs -- which means no CONTEXT truncation, and says nothing about client-side cancellation. See retracted_claim.",
+    "scope": "METHODS LIMITATION OF THIS CORPUS, NOT A DEFECT IN SHIPPED CODE.",
+    "harness_local": "max_tokens 102400 and timeout 3600 are this rig's constants, at run_cells.py:148 and :186. The SHIPPED live path uses max_tokens 4096 (both LocalGGUFProposer construction sites in arc_competition_agent.py) against a derived 600 s timeout, which needs only 6.83 tok/s. Measured throughput is 23.0 to 33.5 tok/s, so the live configuration has 3.4x to 4.9x headroom and this near-coincidence does not exist there.",
+    "reading": "No row is truncated. Within this rig the margin is structural rather than incidental: a full 102400-token budget needs 28.44 tok/s to finish inside 3600 s and measured throughput straddles that, with 6 of 21 generation calls too slow to have completed a full budget in time. The corpus survived because the model stopped early -- the largest generation was 81812 tokens, 80% of the cap -- not because of timeout headroom. The budget cannot be spent at observed throughput.",
+    "scored_kernel_sets_its_own_pair": "The scored Kaggle kernel overrides both constants by env before the agent starts: CARNOT_ARC_INDUCE_MAX_TOKENS 131072 and CARNOT_ARC_INDUCE_TIMEOUT 2400, at scripts/kaggle/submission_kernel/main.py:589-590. Spending that full budget inside that window would need 54.6 tok/s. Stated as arithmetic only, and it is NOT the same claim as the rig limitation above, because the kernel's own comment at :585-588 says max_tokens there is a CAP whose unused headroom 'costs pool VRAM, never wall clock' -- it is not a target to be spent. The same comment records the wall-clock number that actually governs: the worst measured Qwen3.8 induction on that card is ~1053 s at one stream, against the 2400 s timeout. The kernel also already made this exact division once, for a 900 s probe ceiling, and its comment at :686-688 classifies the result as 'arithmetic, not a serving fault'. No severity claim is made here.",
+    "scored_concurrency_finding": {
+      "framing": "The useful question is not whether the 131072 cap can be spent -- it is a VRAM ceiling, not a target. It is whether the induction length actually OBSERVED fits the 2400 s timeout at the concurrency that ships.",
+      "observed_induction": "Worst measured Qwen3.8 induction on the scored card is ~1053 s at one stream (submission_kernel/main.py:587). Back-converting at the single-stream rate gives ~55k tokens. CORROBORATED INDEPENDENTLY: _vllm_max_seqs()'s own docstring (arc_executable_world_model.py:3952) cites 'capped production session length (~54k tokens)'. Two different routes to the same figure.",
+      "shipped_concurrency": "_vllm_max_seqs() defaults to 24, not 32 (arc_executable_world_model.py:3951-3960).",
+      "unit_warning": "Every length here is GENERATED tokens, read from the server's `eval time` lines. The release line's `n_tokens` is prompt PLUS generated and is 14% larger; mixing the two overstates every projection by that much.",
+      "observed_generated_length_distribution": {
+        "n_generations": 28,
+        "unit": "generated tokens (NOT prompt+generated)",
+        "percentile_conventions": {
+          "median_nearest_rank": 55588,
+          "median_interpolated": 57417.0,
+          "p75_nearest_rank": 70944,
+          "p75_interpolated": 70981.8,
+          "note": "Reported under both conventions because they disagree where it matters. At the k=24 rate of 23.6 tok/s the median is 2355 s (FITS) by nearest rank and 2433 s (over) interpolated, so the median claim FLIPS on the convention and is not reportable as a finding. p75 is 3012 s and 3011 s respectively -- stable, and over the timeout either way."
+        },
+        "min": 24678,
+        "median": 55588,
+        "p75": 70944,
+        "max_observed": 83444,
+        "max_true": "unknown, at least the observed max -- see right_censoring",
+        "n_above_70k": 9,
+        "max_as_pct_of_cap": 81.5,
+        "all_values": [
+          24678,
+          30382,
+          34059,
+          36406,
+          37859,
+          37859,
+          40167,
+          40167,
+          42174,
+          42174,
+          47817,
+          47817,
+          53412,
+          55588,
+          59246,
+          61951,
+          61951,
+          67581,
+          68961,
+          70944,
+          70944,
+          71095,
+          71095,
+          73815,
+          74929,
+          78717,
+          81812,
+          83444
+        ]
+      },
+      "table_length_vs_concurrency": {
+        "median 55588": {
+          "k=1": "991 s fits",
+          "k=4": "1230 s fits",
+          "k=16": "1841 s fits",
+          "k=24": "2355 s fits (k=24 INTERPOLATED)",
+          "k=32": "2725 s OVER the 2400 s timeout"
+        },
+        "p75 70944": {
+          "k=1": "1265 s fits",
+          "k=4": "1570 s fits",
+          "k=16": "2349 s fits",
+          "k=24": "3006 s OVER the 2400 s timeout (k=24 INTERPOLATED)",
+          "k=32": "3478 s OVER the 2400 s timeout"
+        },
+        "max observed 83444": {
+          "k=1": "1487 s fits",
+          "k=4": "1846 s fits",
+          "k=16": "2763 s OVER the 2400 s timeout",
+          "k=24": "3536 s OVER the 2400 s timeout (k=24 INTERPOLATED)",
+          "k=32": "4090 s OVER the 2400 s timeout"
+        }
+      },
+      "read_in_this_order": "P75 IS THE FINDING: 71,095 generated at the shipped k=24 rate is 3012 s, 26% over the 2400 s timeout. That is outside any plausible interpolation error and does not depend on a tail event. THE MEDIAN IS NOT REPORTABLE AT ALL, and this is stronger than calling it a boundary case. It FLIPS on the percentile convention: 55,588 by nearest rank gives 2355 s, which FITS; 57,417 interpolated gives 2433 s, which does not. A claim that changes sign with the definition of median is not a finding. The per-stream rate is itself interpolated, so the uncertainty is larger still. Do not state that the median call exceeds the timeout. THE MAX IS THE TAIL: 83,444 is over from k=16 up.",
+      "right_censoring": {
+        "statement": "The distribution is RIGHT-CENSORED BY THE VERY TIMEOUT UNDER ANALYSIS. A draw long enough to exceed 3600 s is cancelled, emits no `eval time` line, and is deleted from the sample by the instrument. So the observed maximum of 83,444 is not the maximum -- it is the largest draw that happened to FIT.",
+        "the_censored_draw": "Task 262261 reached n_decoded 77,804 and was still climbing when it was killed. Its true length is unknown and unbounded above. Verified: 1,189 log lines mention that task and ZERO are `eval time` lines.",
+        "magnitude_is_small_except_at_the_tail": "Inserting the censored draw at its LOWER BOUND of 77,804 gives n=23. p75 is UNCHANGED at 71,095 -- the 17th of 22 and the 18th of 23 both land there. The MEDIAN MOVES under both conventions: nearest rank 55,588 to 59,246, and interpolated 57,417 to 59,246 (at odd n the interpolated value collapses onto the 12th). That crosses the k=24 threshold, 2355 s to 2510 s. So censoring is real, its direction is optimistic, it is negligible at p75, and it moves the median across the timeout.",
+        "the_max_is_a_lower_bound_not_an_estimate": "Max OBSERVED is 83,444. The TRUE maximum is unknown and is AT LEAST 83,444, because one draw was destroyed mid-flight at 77,804 and was still climbing. With a right-censored observation the sample maximum bounds the true maximum from below; it does not estimate it.",
+        "three_independent_reasons_the_median_is_not_reportable": "(1) it flips on the percentile convention; (2) it flips on whether the censored draw is counted; (3) it sits inside the interpolation error of the per-stream rate. The three are independent, so any one would justify dropping it and three make it unarguable.",
+        "structural_point": "We cannot characterise the right tail at all, because the mechanism that would record it is the mechanism that destroys it. Any tail statement here is a statement about completed draws only."
+      },
+      "the_1053s_figure_may_be_a_survivor_statistic": "The kernel comment's '~1053 s worst measured induction' is a worst case among COMPLETED inductions. A cancelled scored induction would be equally invisible there, by the same mechanism that hid ours. Checked, and reported with its limits: zero `cancel task` events across scored kernel logs v27 to v33. Those are save-runs rather than full scored plays, so this is weak evidence -- but it is evidence, and it is better than assuming the figure is uncensored.",
+      "duplicate_values_are_not_a_double_count": "Five lengths appear in both arms. Not a double count: each maps to a DISTINCT task id in a DISTINCT server log. THE INVARIANT IS A SUBSEQUENCE, not per-cell first-draw alignment. Control's completed draws are an exact ORDERED SUBSEQUENCE of treatment's: 42174, 37859, 40167, 71095, 70944 appear in treatment at positions 0, 2, 4, 7, 10, in the same relative order, with treatment's extra draws interleaved between them. The three control values that do not appear (73815, 81812, 24678) are all ar25 t2, which treatment has not finished -- so the match is 5 of 5 among COMPARABLE cells, not 3 of 5. That is a strong pairing witness: the two arms draw from the same deterministic sequence and treatment inserts extra draws into it, which is exactly what a lever that re-asks should look like. OPEN: why the shared draw sits at position 2 in the ar25 cells and position 1 in the lp85 cells. Matching lengths imply a matching temperature, hence a matching attempt index, so the position difference needs another cause. Two named candidates, unchased: whether treatment's attempt-0 prompt differs from control's, and whether `cache_prompt: true` makes a draw depend on the slot's prior state. Recorded as open rather than resolved. Robustness: quantiles over the 17 DISTINCT values match the 22 pooled ones.",
+      "but_the_envelopes_differ": "The scored comment's ~1053 s worst case implies its inductions run far shorter than this rig's typical. Those facts coexist only if the envelopes differ: this rig injects think mode and a 102400 budget, the scored path runs its own prefix and 131072. So the claim is that LENGTH is the dominant term in the margin and this rig's distribution would not fit at k=24 -- and that the scored path's own length distribution is unmeasured. That is a request for one measurement, not a defect claim.",
+      "prefill_note": "The client timeout covers prefill as well as decode, so dividing generated tokens by the decode rate slightly understates call time. Measured prompt eval is 0.6-0.7 s at the median and about 10 s on the ~12k-token prompts of the largest calls, against 2740 s of decode -- under 1%.",
+      "margin_is_method_dependent": "Interpolating PER-STREAM rate linearly between k=16 and k=32 gives 25.3 tok/s, 2175 s, a 9% margin. Interpolating AGGREGATE throughput and dividing by k gives 23.6 tok/s, 2325 s, a 3% margin. Per-stream rate is CONVEX in k (the chord at k=16 sits at 34.5 against a measured 30.2), so a chord OVERESTIMATES the rate between measured points -- the per-stream method is the optimistic end. Quote the range 3% to 9%, and prefer 3% if a single number is needed.",
+      "conclusion": "Length is the dominant term in the margin, this rig's length distribution would not fit at k=24, and we do not know the scored path's distribution. That is a request for one measurement, not a defect claim.",
+      "supersedes": "An earlier reading of this block concluded the worst observed induction fits at every concurrency through the shipped 24. That rested on a ~55k length back-converted from the scored comment's 1053 s worst case. Measured lengths from this rig are longer, so the conclusion is replaced rather than kept alongside. What survives from it: raising _vllm_max_seqs() above 24 makes any length worse, and k=1 and k=4 fit at every observed length.",
+      "caveats": [
+        "The concurrency throughput figures are the team lead's measurements on the scored card; not measured by this experiment.",
+        "1053 s is ONE worst-case observation at one stream. The token count is a back-conversion, though it now agrees with an independent figure in the codebase.",
+        "The concurrency the submission actually runs at is unknown to this experiment; if it never approaches the cap this never fires."
+      ],
+      "consequence_if_it_fires": "The kernel comment states it: a timeout that fires degrades the agent to LLM-off silently."
+    },
+    "lane_effect_measured_not_assumed": "Median decode is 31.7 tok/s on GPU 0 and 33.3 tok/s on GPU 1: MEASURED at under 5%, and GPU 1 is the marginally faster lane. The phase-2 lane swap therefore costs little. This replaces the assumed 8-11% lane gap the swap was originally designed around; the swap remains correct, but as cheap insurance rather than as correction of a large confound.",
+    "per_cell": [
+      {
+        "arm": "control",
+        "phase": 1,
+        "segment": 1,
+        "game": "lp85",
+        "trial": 0,
+        "complete": true,
+        "n_calls": 1,
+        "max_call_s": 1321.0,
+        "pct_of_client_timeout": 36.7
+      },
+      {
+        "arm": "control",
+        "phase": 1,
+        "segment": 1,
+        "game": "lp85",
+        "trial": 1,
+        "complete": true,
+        "n_calls": 1,
+        "max_call_s": 1259.7,
+        "pct_of_client_timeout": 35.0
+      },
+      {
+        "arm": "control",
+        "phase": 1,
+        "segment": 1,
+        "game": "lp85",
+        "trial": 2,
+        "complete": true,
+        "n_calls": 1,
+        "max_call_s": 1349.1,
+        "pct_of_client_timeout": 37.5
+      },
+      {
+        "arm": "control",
+        "phase": 1,
+        "segment": 1,
+        "game": "ar25",
+        "trial": 0,
+        "complete": true,
+        "n_calls": 1,
+        "max_call_s": 2570.8,
+        "pct_of_client_timeout": 71.4
+      },
+      {
+        "arm": "control",
+        "phase": 1,
+        "segment": 1,
+        "game": "ar25",
+        "trial": 1,
+        "complete": true,
+        "n_calls": 1,
+        "max_call_s": 2610.0,
+        "pct_of_client_timeout": 72.5
+      },
+      {
+        "arm": "control",
+        "phase": 1,
+        "segment": 1,
+        "game": "ar25",
+        "trial": 2,
+        "complete": true,
+        "n_calls": 3,
+        "max_call_s": 3107.4,
+        "pct_of_client_timeout": 86.3
+      },
+      {
+        "arm": "control",
+        "phase": 2,
+        "segment": 1,
+        "game": "sp80",
+        "trial": 0,
+        "complete": true,
+        "n_calls": 2,
+        "max_call_s": 1892.9,
+        "pct_of_client_timeout": 52.6
+      },
+      {
+        "arm": "control",
+        "phase": 2,
+        "segment": 1,
+        "game": "sp80",
+        "trial": 1,
+        "complete": true,
+        "n_calls": 1,
+        "max_call_s": 1040.5,
+        "pct_of_client_timeout": 28.9
+      },
+      {
+        "arm": "treatment",
+        "phase": 1,
+        "segment": 1,
+        "game": "lp85",
+        "trial": 0,
+        "complete": true,
+        "n_calls": 2,
+        "max_call_s": 1677.0,
+        "pct_of_client_timeout": 46.6
+      },
+      {
+        "arm": "treatment",
+        "phase": 1,
+        "segment": 1,
+        "game": "lp85",
+        "trial": 1,
+        "complete": true,
+        "n_calls": 2,
+        "max_call_s": 1145.6,
+        "pct_of_client_timeout": 31.8
+      },
+      {
+        "arm": "treatment",
+        "phase": 1,
+        "segment": 1,
+        "game": "lp85",
+        "trial": 2,
+        "complete": true,
+        "n_calls": 3,
+        "max_call_s": 1759.0,
+        "pct_of_client_timeout": 48.9
+      },
+      {
+        "arm": "treatment",
+        "phase": 1,
+        "segment": 1,
+        "game": "ar25",
+        "trial": 0,
+        "complete": true,
+        "n_calls": 3,
+        "max_call_s": 3098.6,
+        "pct_of_client_timeout": 86.1
+      },
+      {
+        "arm": "treatment",
+        "phase": 1,
+        "segment": 1,
+        "game": "ar25",
+        "trial": 1,
+        "complete": true,
+        "n_calls": 3,
+        "max_call_s": 2276.3,
+        "pct_of_client_timeout": 63.2
+      },
+      {
+        "arm": "treatment",
+        "phase": 1,
+        "segment": 1,
+        "game": "ar25",
+        "trial": 2,
+        "complete": false,
+        "n_calls": 2,
+        "max_call_s": 2741.1,
+        "pct_of_client_timeout": 76.1
+      },
+      {
+        "arm": "treatment",
+        "phase": 2,
+        "segment": 1,
+        "game": "sp80",
+        "trial": 0,
+        "complete": true,
+        "n_calls": 2,
+        "max_call_s": 2020.0,
+        "pct_of_client_timeout": 56.1
+      }
+    ]
+  },
+  "determinism_witness": {
+    "population": "ALL replayed cells, deliberately unfiltered. Determinism is a property of the replay harness, so it wants maximum coverage and criterion 1 is irrelevant to it.",
+    "cells_replayed": 23,
+    "plan_found_mismatches": 0,
+    "note": "plan_in_model is a deterministic FIFO BFS over a pure engine with no RNG, and the engine is captured per cell, so a banked search replays exactly offline. Every replayed cell reproduced its banked plan_found and plan_len. Without this the classification would be void."
+  },
+  "positive_control": {
+    "population": "all paired cells",
+    "present": true,
+    "evidence": [
+      {
+        "cell": "ar25 t0",
+        "plan_len": 15,
+        "actions_to_levelup": 15
+      },
+      {
+        "cell": "ar25 t1",
+        "plan_len": 15,
+        "actions_to_levelup": 15
+      },
+      {
+        "cell": "sp80 t1",
+        "plan_len": 4,
+        "actions_to_levelup": 4
+      },
+      {
+        "cell": "sp80 t2",
+        "plan_len": 4,
+        "actions_to_levelup": 4
+      }
+    ],
+    "note": "Guards against reading a degenerate corpus as a negative result. The control arm reaches real level-ups, verified by the level counter in a fresh real env, so the corpus has headroom and the instrument is not inert overall."
+  },
+  "secondary_goal_repair": {
+    "claim": "The re-ask changes the accepted predicate from constant-False to one that fires on the post-win frame. The shipped metrics score that as an improvement. Whether it IS an improvement is not established by this corpus.",
+    "why_not_established": "_levelup_positive_recall grades is_level_complete(t.next_grid) on level-up rows. On a level-up row next_grid is the NEXT LEVEL'S OPENING BOARD, because the completing action re-lays the playfield atomically with winning, so a CORRECT predicate should be FALSE there. The module says grading on next_grid 'penalised correctness' and measured the winning step rewriting 3527 of 4096 cells on ka59. So recall 1.0 means the predicate fires on the post-win re-layout, not that it recognizes wins.",
+    "independence_problem": "The engine and the goal predicate are emitted BY THE SAME PROPOSER IN THE SAME CALL, so their mutual consistency is, in the module's own words, 'the EXPECTED confabulation mode, not an independent check'. A metric agreeing with the thing it grades, both drawn from one generation, is the shape of a result that looks strong and is not.",
+    "why_the_alternative_grading_does_not_rescue_it": "Under the engine-counterfactual grading, ALL SEVEN cells that pass the trust gate score EXACTLY 1.0 -- including control's constant-False predicates. A grading that scores a constant-False predicate at 1.0 cannot be evidence for or against goal repair. This closes the secondary more firmly than the next_grid argument alone, because it shows the alternative grading fails too rather than merely differing.",
+    "engine_counterfactual_path_measured": "score_goal_predicate_consistency HAS an engine-passing branch that grades the win row on engine(t.grid, t.action, t.data), gated on engine fidelity >= 0.5 AND corroboration on the winning action. Our call site (arc_actions_to_progress.py:1125) passes no engine, so this is a CALL-SITE choice, not a missing capability. Run on all 11 captured cells it does NOT adjudicate: 7 of 11 pass the trust gate and ALL 7 score exactly 1.0, including control's constant-False predicates. The other 4 decline honestly. Under next_grid grading control lp85 reads 0.8 and treatment 1.0; under the counterfactual both read 1.0. Neither grading separates the arms trustworthily. _levelup_positive_recall has NO engine-passing variant at all.",
+    "adjudicable_in_this_corpus": false,
+    "adjudication_check_registered": "Registered before phase 2: a cell with BOTH goal_defect_reasks_delta >= 1 AND a paired high-cell_recall engine would be the one place the secondary could be tested. sp80 is the candidate. If no such cell appears the secondary stays unadjudicated and is reported as such."
+  },
+  "dedup_single_observation": {
+    "where": "treatment tr87 t0, the only dedup fire in 23 cells",
+    "what_the_branch_does": "arc_executable_world_model.py:7968 -- when the engine half of a SPLIT induction already carries a structurally valid is_level_complete, the branch RETURNS early and the focused goal-only call at :7983 never runs. It replaces a generation call; it does not modify the engine.",
+    "the_evidence_is_a_nine_line_diff": "The two arms' captured engines differ by EXACTLY nine lines and nothing else. control/tr87_t0.py is 381 lines, treatment/tr87_t0.py is 372, and the first 372 are byte-identical -- same engine, same engine-half predicate. Control alone carries a SECOND is_level_complete appended at the end, which binds because Python takes the last definition. That appended function is the goal-only call's output. Dedup's entire effect on this cell is the absence of those nine lines.",
+    "the_two_predicates": {
+      "treatment_kept_by_dedup": "64x64 shape gate, all of row 63 == 1, count of colour 11 >= 20, then g[4,15]==11 or g[51,7]==11 -- two hardcoded cell positions. A memorised frame signature.",
+      "control_from_the_focused_call": "count(7) > 0 and count(8) == 0 -- a simple invariant.",
+      "outcome": "control found a plan; treatment did not."
+    },
+    "mechanism_determined_causal_effect_not": "DETERMINED, by three independent lines: the source (early return), the counter (1 vs 0), and the artifacts (identical engine, one extra appended predicate in control). NOT DETERMINED: whether the goal difference CAUSED the lost plan. n=1, and both arms of this cell lost a draw to a client timeout, so the cell is disturbed independently of the lever.",
+    "consistent_with_the_shipped_caveat": "The dedup docstring records that its own measurement established a VALIDITY asymmetry, 'NOT that the preserved predicate scores better on the goal gate -- there it is 2 against 1 across 23 cells, which is noise.' This observation is consistent with that: the preserved predicate was not better."
+  },
+  "hypothesis_not_a_finding_both_levers_change_the_goal_the_planner_gets": "HYPOTHESIS, with only its goal-defect half supported. Both levers change WHICH GOAL PREDICATE the planner ends up with, and in every measured cell the substitute was worse for planning: goal-defect swaps the whole candidate to get a different goal and loses the engine as collateral (engine hash differs 5 of 5 in phase 1, cell_recall 1.0 -> 0.0 on ar25 t0); dedup keeps a predicate that was already there instead of drawing a focused one (tr87 t0). DIFFERENT MECHANISMS, same net direction. The goal-defect side rests on 4 cells; the dedup side on 1 confounded cell. An earlier framing -- 'both levers substitute a salvaged artifact for a fresh draw' -- was RETRACTED: dedup substitutes a predicate for a CALL and leaves the engine untouched, so the salvage framing does not fit it.",
+  "wall_clock_cost_of_the_lever": {
+    "finding": "THE COST IS THE EXTRA DRAWS, AND NOTHING ELSE DETECTABLE. Three claims, each supported, none of them a ratio: (1) the lever's wall-clock cost is proportional to the extra draws it triggers; (2) STRATIFIED BY GAME there is no detectable per-draw difference in either direction; (3) draw count is not set by re-asks alone. Do not quote a pooled per-draw figure -- see the composition artifact.",
+    "per_draw_decomposition": {
+      "why": "Cell duration is the wrong normalisation, because the arms did different amounts of work: control drew once on most cells, treatment two or three times. Dividing generation time by DRAWS removes that and asks whether a draw is more expensive in the treatment arm. It is not.",
+      "generation_seconds_per_draw": {
+        "lp85 t0": "control 1321 (1 draw)  treatment 1488 (2 draws)",
+        "lp85 t1": "control 1260 (1 draw)  treatment 1084 (2 draws)",
+        "lp85 t2": "control 1349 (1 draw)  treatment 1298 (3 draws)",
+        "ar25 t0": "control 2571 (1 draw)  treatment 2746 (3 draws)",
+        "ar25 t1": "control 2610 (1 draw)  treatment 2086 (3 draws)",
+        "ar25 t2": "control 2305 (3 draws, cancelled call excluded)  treatment running"
+      },
+      "stratified_by_game_this_is_the_number": "lp85: control 1310 s/draw (n=3) against treatment 1291 s/draw (n=7), 1.4%. ar25: control 2419 s/draw (n=5) against treatment 2416 s/draw (n=6), 0.1%. WITHIN EACH GAME THE ARMS ARE INDISTINGUISHABLE. The lp85 residual of 1.4% is SMALLER THAN THE LANE EFFECT -- treatment ran on GPU 1 in phase 1 and GPU 1 measures about 5% faster on median decode -- so neither stratum is a speedup in either direction.",
+      "pooled_is_a_composition_artifact_do_not_quote_it": "Pooled, control is 2003 s/draw over 8 draws and treatment 1811 s/draw over 13, which looks like treatment being 9.6% FASTER. It is not. The arms have different game mixes -- control 37.5% lp85 draws, treatment 53.8% -- and lp85 draws cost ~1300 s against ar25's ~2400 s, so the arm with more lp85 draws shows a lower average regardless of speed. This is SIMPSON'S PARADOX: the pooled gap reverses nothing and explains nothing, it is entirely composition. Named explicitly so a reader cannot re-derive 9.6% from the per-cell table above and take it for real. A re-asking lever speeding generation up would need an explanation; the honest finding is that it does neither.",
+      "what_this_supports": "The cell-duration gaps of 3.2x and 2.4x are 'treatment made three draws where control made one', which is definitional: a lever that re-asks costs the price of the re-asks, with no per-draw penalty and no per-draw benefit.",
+      "method": "Generation seconds are summed per cell from the server logs under the CORRECTED start-based attribution, not cell wall time, so search and replay are excluded. Control ar25 t2's cancelled call is absent from both the numerator and the draw count, because it emits no eval line and produced no usable draw.",
+      "per_draw_time_is_game_bound": "lp85 draws run 1084-1488 s and ar25 draws 2086-2746 s in BOTH arms, so per-draw cost tracks the game, not the arm. This is the MECHANISM behind the composition artifact above: because per-draw cost is game-bound, any pooled per-draw average is a weighted average of game mix, not of arm."
+    },
+    "evidence_ar25": {
+      "control_t0": "2575.2 s, 0 re-asks",
+      "control_t1": "2614.1 s, 0 re-asks",
+      "control_t2": "10552.4 s, 0 re-asks",
+      "treatment_t0": "8254.8 s, 2 re-asks",
+      "treatment_t1": "6266.0 s, 2 re-asks"
+    },
+    "reading": "On the two completed PAIRED ar25 cells treatment is substantially slower: 2575 s against 8255 s on t0, and 2614 s against 6266 s on t1. But the number of DRAWS is not set by re-asks -- control ar25 t2 drew three times with ZERO re-asks via the content-retry path -- so duration is driven by how many draws a cell happens to need and how long each runs, with the re-ask only one contributor. At two completed paired cells on one game, that is not enough to attribute a ratio to the lever. Do NOT compute a cost ratio from arm means.",
+    "correction_the_cancelled_call_forced": "An earlier version of this block led with 'the slowest cell in the corpus is a CONTROL cell with zero re-asks'. That rested on control ar25 t2's 10552 s, of which 3599 s is a call the CLIENT CANCELLED at the timeout. Removing the dead call leaves ~6914 s of live generation, against treatment ar25 t0's ~8228 s -- so treatment, not control, holds the slowest LIVE-generation cell and the original sentence was an artifact of counting a cancelled call as work. RETRACTED. What survives is the narrower and still useful point: draw COUNT is independent of re-asks, demonstrated by a three-draw zero-re-ask control cell.",
+    "what_would_measure_it": "Per-call generation time attributed to the re-ask specifically, over enough cells that draw-length variance averages out. call_times.jsonl has the per-call data; this corpus does not have the cell count."
+  },
+  "methods_lesson_the_mechanism_and_the_artifact_side_by_side_unconnected": "THREE times in this session an analysis was refuted by something the same analyst had already written down. (1) The strata were built from all paired cells while the sentence describing them said 'after criterion 1'. (2) A pooled per-draw average was quoted in the same block as the observation 'per-draw time tracks the GAME, not the arm' -- which is precisely why the pooled figure is invalid. (3) The sp80 secondary was called ADJUDICATED on goal_predicate_accuracy and levelup_positive_recall, hours after this same artifact recorded that a grading scoring a constant-False predicate at 1.0 cannot be evidence for or against goal repair. The failure is not ignorance of the mechanism -- the mechanism was written down and sitting adjacent. It is that both halves look correct in isolation, so review does not catch it. All three were caught by a second reader holding the two sentences together. The structural fix is to state a mechanism AS the explanation of the artifact it governs, not as an observation beside it.",
+  "methods_lesson_hardening_a_check_can_make_its_false_positive_more_authoritative": "The env-verdict check was about to be WRONG IN THE MOST CONFIDENT DIRECTION, and its two rounds of hardening are what would have made that dangerous. A cell that finds NO PLAN never calls _execute_plan_measure at all (the `if plan and err is None:` guard), so every env-derived field is null LEGITIMATELY -- nine rows in this corpus are in that state. The check would have reported such a row as broken. It had already been hardened twice: once to survive the hv_fn-is-None branch, once to state that the benign cause was RULED OUT. Each hardening made the false positive read as MORE authoritative, not less. A check that says 'I have excluded the innocent explanations' is precisely the check nobody argues with when it is wrong. The fix was an ordering one: ask whether there was anything to measure BEFORE asking whether the measurement worked.",
+  "methods_lesson_verify_a_mitigation_on_the_axes_it_moves_not_just_its_own": "The code pin was verified by asserting _goal_probe_sample was absent -- the correct marker for the thing the pin was FOR, and it was genuinely correct on that axis. But a pin that relocates a PACKAGE relocates every __file__-derived path inside it, and nobody asked what else derived from that root. ENV_DIR did, so the mitigation that protected the gate silently broke the primary endpoint. Verifying a mitigation on its intended axis says NOTHING about the axes it also moved. Sits next to the correlated-blind-spot note: that one is about instruments sharing a source, this one is about a fix having a blast radius wider than its purpose.",
+  "methods_lesson_a_mitigation_is_not_one_until_observed_working": "The code pin protecting this corpus REPORTED SUCCESS WITHOUT WORKING. The launcher printed its PYTHONPATH and the importing process then loaded the working tree anyway, because run_cells.py's own sys.path.insert(0, ...) outranks PYTHONPATH. So the REMEDY had the same property as the hazard it was written to close: a confirmation line that was believed, and a check that reported clean while watching the wrong thing. Both were caught the same way -- by executing the thing in the environment it would run in, rather than reading it. A mitigation is not a mitigation until it has been OBSERVED working there. The corrected pin therefore emits its proof from the importing process itself, not from the script that launched it.",
+  "methods_limitation_correlated_blind_spots": "Three instruments here -- the length distribution, the per-cell call table, and the truncation check -- all read the SAME family of server log lines: `eval time`, `release`, `print_timing`. A client-cancelled call is invisible to all three at once, which is why ONE defect produced TWO retractions rather than one. The completeness of the call inventory was ASSUMED rather than checked. The check that would have caught it, and which any future version of this harness should run, is comparing call COUNT against the runner's own attempt log rather than trusting the server log to be self-describing. Correlated blind spots do not announce themselves as gaps; they announce themselves as agreement between instruments.",
+  "recommendations": [
+    "Point the goal-defect probe at the TAIL of the window, or at head and tail, so the win frame is always in it. Do not just raise _GOAL_PROBE_MAX_GRIDS.",
+    "Gate the ACCEPT on engine quality, or re-ask the goal ALONE rather than the whole candidate. With _defect_gate_owns_attempts default off, the final draw is accepted unchecked, so the lever can discard a good engine and nothing notices. That is the actual defect behind the observed harm.",
+    "Do not ship CARNOT_ARC_INDUCE_GOAL_DEFECT_CHECK=1 on long-window games until the probe geometry is fixed; those are exactly the games it degrades."
+  ],
+  "claims_new_arc_solve": false,
+  "arc_registry_untouched": true,
+  "arc_note": "This is a flag A/B on the induce path, not a solve attempt. No new level is claimed and ops/arc_solve_registry.yaml is not modified. reached_levelup is used only as the paired outcome metric.",
+  "verifier_is_oracle": null,
+  "verifier_is_oracle_note": "Not applicable: no verifier-value or moat claim is made here. The comparison is between two configurations of the same induce path.",
+  "honest_verdict": "complete_goal_defect_reask_directionally_harmful_on_win_invisible_games_dedup_exercised_once_and_confounded_secondary_adjudicated_null",
+  "verdict_expanded": "The corpus ran to completion: 23 cells, determinism 23 of 23 on offline replay. PRIMARY, plans with the degeneracy gate applied: control 7 of 11 against treatment 4 of 11. Real level-ups: control 4, treatment 2. Stratified on the pre-treatment win-visibility axis, the split is the mechanism's own prediction -- win-VISIBLE (sp80) 2 against 2, NO effect; win-INVISIBLE (ar25, tr87) 2 against 0. MECHANISM: the goal-defect probe reads the first 12 grids, which is transitions 0-5, while every window ends at its level flip, so the win frame sits at grid 2n-1 and is visible only when n <= 6. Blind on 7 of 13 games. The dominant measured harm is GOAL DEGRADATION WITH THE ENGINE INTACT (+2 treatment-exclusive class, engine better or identical in both members); engine destruction is one cell. SECONDARY: ADJUDICATED NULL on sp80 t1 -- the re-ask moved the goal metrics 0.75/0.0 to 1.0/1.0 and the outcome not at all. DEDUP: exercised once, post-timeout, confounded; mechanism determined, causal effect not. This is a DIRECTIONAL result at n=11 pairs on 4 games, not a powered one.",
+  "acceptance_gate_passed": true,
+  "acceptance_gate_note": "The gate was: does the corpus interpretably measure the two flags? YES -- the lever fired (12 re-asks against 0 in control), determinism is 23/23, every cell has an account, and both the primary and the secondary have answers. It is NOT a gate on the levers being good; they are not.",
+  "field_provenance": {
+    "duration_s": {
+      "principle": "Real generation costs wall-clock time; a short duration under a live substrate is the load-bearing fabrication signal.",
+      "satisfied_by": "sum of per-cell wall_s_driver measured by the runner"
+    },
+    "reproducibility_checksum": {
+      "principle": "Content hash of the inputs catches silent corpus drift between this artifact and any replication.",
+      "satisfied_by": "sha256 over both shards, the replay file, and the constancy table"
+    },
+    "random_seeds_used": {
+      "principle": "Without the seed no third party can re-run the cell; paired seeds are also what makes the arms comparable.",
+      "satisfied_by": "CARNOT_ARC_GENERATOR_SEED = 100 + trial, recorded per cell"
+    },
+    "determinism_witness": {
+      "principle": "An offline classification of a banked search is only meaningful if the replay reproduces the banked outcome.",
+      "satisfied_by": "plan_found and plan_len compared per cell against the shard"
+    },
+    "lever_fire_audit": {
+      "principle": "A gate number from an arm whose fire counts are zero is not a measurement; an unexercised branch is not a null.",
+      "satisfied_by": "per-cell re-ask deltas and wrapped dedup counters"
+    },
+    "inert_excluded_is_confounded": {
+      "principle": "An exclusion that moves with the arm cannot be read as a clean effect, so the confound is stated rather than hidden behind a tidy number.",
+      "satisfied_by": "per-arm criterion-2 inert counts from the offline replay"
+    },
+    "model_specs_deviation": {
+      "principle": "A result measured off the standing generator has bounded external validity; saying so is what keeps the number from being over-read.",
+      "satisfied_by": "comparison against the 2026-07-28 operator directive"
+    }
+  },
+  "population_assertions": [
+    {
+      "claim": "strata are built after criterion 1, so lp85 is in neither",
+      "holds": true,
+      "detail": "visible=['sp80'] invisible=['ar25', 'tr87']"
+    },
+    {
+      "claim": "criterion-1-kept excludes every criterion-1 violator",
+      "holds": true,
+      "detail": "games kept=['ar25', 'sp80', 'tr87']"
+    },
+    {
+      "claim": "criterion-2 filtered denominator is a subset of the unfiltered one",
+      "holds": true,
+      "detail": "c1={'control': 9, 'treatment': 8} all={'control': 12, 'treatment': 11}"
+    },
+    {
+      "claim": "lever-fire audit is over ALL cells, so it is at least as large as the paired set",
+      "holds": true,
+      "detail": "rows=12+11 paired=11"
+    },
+    {
+      "claim": "gate-visibility re-ask split is unfiltered, so it may include lp85",
+      "holds": true,
+      "detail": "split total=11 treatment rows=11"
+    },
+    {
+      "claim": "determinism coverage is unfiltered, counting every replayed cell",
+      "holds": true,
+      "detail": "cells_replayed=23"
+    },
+    {
+      "claim": "gate-blindness population is games, not cells",
+      "holds": true,
+      "detail": "games=13 meta=13"
+    }
+  ]
+}
