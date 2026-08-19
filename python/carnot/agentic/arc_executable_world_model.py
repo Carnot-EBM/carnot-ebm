@@ -3949,15 +3949,47 @@ def _resolve_vllm_model_dir() -> Optional[str]:
 
 
 def _vllm_max_seqs() -> int:
-    """Concurrent-sequence cap for the vLLM server. Default 24: at capped production session
-    length (~54k tokens) fp8 KV fits ~22 concurrent in the ~61 GB KV budget, and the measured
-    scaling curve is already bending by k=32 -- so 24 sits inside both the memory and the
-    diminishing-returns envelope. Floor at 1, malformed values fall back."""
+    """Concurrent-sequence cap for the vLLM server. Default 8, LOWERED FROM 24 on 2026-08-19.
+
+    WHY IT WAS 24: fp8 KV fits ~22 concurrent sessions at a capped ~54k-token length in the
+    ~61 GB KV budget, and the throughput curve is already bending by k=32. Both still true. The
+    number was chosen against MEMORY and DIMINISHING RETURNS, and neither is what binds.
+
+    WHAT BINDS IS THE PER-CALL TIMEOUT. The scored kernel sets CARNOT_ARC_INDUCE_TIMEOUT=2400,
+    and aggregate throughput at concurrency is bought by LOWERING the per-stream rate -- so the
+    more sessions run, the longer each induction takes, against a fixed per-call ceiling. A
+    timeout that fires does not slow the run, it loses that induction: `generate()` fails and the
+    agent proceeds with no world model for that call.
+
+    THE LENGTHS ARE MEASURED, not assumed. Nine real Qwen3.8-27B inductions from the 2026-08-18
+    goal-defect A/B, in generated tokens: 36406, 47817, 57492, 61951, 62490, 69095, 70944, 78851,
+    83444 -- median 62,490 and max 83,444. Against per-stream rates measured on the scored
+    Blackwell card:
+
+        k    tok/s/stream   median      max        aggregate
+        4        45.2       1383 s ok   1846 s ok  ~181 tok/s
+        8        40.0       1562 s ok   2086 s ok  ~320 tok/s   <- the default
+        16       30.2       2069 s ok   2763 s OVER ~483 tok/s
+        24       23.6       2648 s OVER 3536 s OVER ~567 tok/s   <- the old default
+        32       20.4       3063 s OVER 4090 s OVER ~652 tok/s
+
+    At 24 the MEDIAN induction exceeds the timeout, not merely the tail. 8 is the highest
+    concurrency at which even the longest observed induction fits, and it still runs ~6.1x the
+    throughput of the llama.cpp configuration this replaces.
+
+    HONEST LIMITS. The draws were produced on a dev 3090 under the A/B's think envelope, not the
+    scored 131072-token one, so the length distribution transfers only as an estimate; the k=8
+    and k=24 per-stream rates are interpolated between measured k=4, k=16 and k=32; and the eval's
+    real concurrency is the number of games in flight, which may never reach either value. Raising
+    this above 8 without re-measuring induction length is the specific thing not to do.
+
+    Floor at 1, malformed values fall back.
+    """
     raw = os.environ.get(_VLLM_MAX_SEQS_ENV)
     try:
-        return max(1, int(raw)) if raw else 24
+        return max(1, int(raw)) if raw else 8
     except (TypeError, ValueError):
-        return 24
+        return 8
 
 
 def _resolve_gguf(repo_substr: str) -> Optional[str]:
