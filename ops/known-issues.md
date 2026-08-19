@@ -4,6 +4,67 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-08-18: the goal-defect gate samples the HEAD of a window when the only positive is at the TAIL
+
+**The defect.** `_GOAL_PROBE_MAX_GRIDS = 12` makes the shipped goal-defect gate probe the
+induced `is_level_complete` on the first 12 grids of a window. Grids are ordered
+(grid, next_grid) per transition, so 12 grids is the first SIX transitions. Every window
+ends at its level flip by construction, so the win frame is always the LAST grid, at index
+`2*(n-1)+1`. The win is therefore visible to the gate only when `2n-1 < 12`, i.e. only for
+windows of six transitions or fewer.
+
+| game | transitions | win grid index | visible to the gate |
+|---|---|---|---|
+| lp85 | 5 | 9 | yes |
+| sp80 | 4 | 7 | yes |
+| ar25 | 12 | 23 | NO |
+| tr87 | 12 | 23 | NO |
+
+**Why it inverts the gate.** On a long window a CORRECT predicate — one that is True only on
+win frames — is necessarily constant-False across everything the gate can see, so the gate
+rejects it and re-asks. To read as non-constant the predicate must fire on a NON-win frame
+inside the first six transitions. The gate therefore rejects correct predicates and rewards
+early false positives, on exactly the windows where induction is hardest. When its re-ask
+budget (`_GOAL_DEFECT_REASKS`, 2) is spent, the third draw is accepted unchecked, because
+`_defect_gate_owns_attempts` defaults off.
+
+**Why that is worse than a wasted re-ask.** The re-ask is NOT goal-only. `_split_induce`
+does not exist — it appears only in comments. The live `induce()` path is a single combined
+`generate(base, ("engine", "is_level_complete"))`, and the goal gate arms on that combined
+call, so a goal re-ask REGENERATES THE WORLD MODEL TOO. Measured, not inferred: function-level
+hashes of the captured engines differ in 5 of 5 paired A/B cells; ar25 t0's control engine is
+136 lines and its treatment engine is 47 with a different helper set. So on a long window the
+gate spends both re-asks it should never have needed, discards a working engine each time, and
+accepts the last draw blind. In ar25 t0 that turned `cell_recall=1.0` with a defective goal —
+which found a plan and a real level-up in 15 actions — into `cell_recall=0.0` with a perfect
+goal, which found nothing. A good goal over a broken model plans nothing.
+
+**Evidence.** The 2026-08-18 goal-defect A/B, phase 1 (lp85 + ar25, 6 cells per arm). Control
+took 2 real level-ups, treatment 0. `reached_levelup` is a real level counter against a fresh
+env (`arc_actions_to_progress.py:1025`), not a heuristic. Treat 2-versus-0 at n=6 per arm as
+UNDERPOWERED and directionally adverse; the mechanism above is what carries the finding, not
+the counts. The apparent contradiction in the constancy table — treatment ar25 t0 reading
+`goal_constant=True` on the probe and `levelup_positive_recall=1.0` on the window at once — is
+both readings being correct: the gate reads 12 grids, the metrics read the whole window. The
+harness can tell the goal was repaired. The gate cannot.
+
+**Status: the flag is DEFAULT-OFF, so there is no live impact today.** It is recorded because
+it degrades precisely the games with the longest windows, which are the ones that most need
+induction help, and because it would do so silently — a run would show re-asks firing and a
+plausible accepted predicate, with the discarded engine invisible.
+
+**Suggested fix, not yet made.** Include the FINAL transition in the probe, or sample head and
+tail. Do NOT simply raise `_GOAL_PROBE_MAX_GRIDS`: that repairs the symptom only until a window
+is longer than the new number, and the probe would still be pointed at the wrong end. Consider
+also turning `_defect_gate_owns_attempts` on so the last draw is not accepted unchecked, and
+separately whether a goal re-ask should be able to regenerate the engine at all.
+
+**Cross-references:** `ops/verifier_gaps.md` GAP-6260 (the sibling finding from the same A/B —
+`cell_recall = 1.0` certifying an engine nothing can plan in) ·
+`/home/ianblenke/.claude/jobs/ad0c053d/tmp/repair_widen/goalab2/PREREGISTERED_EXCLUSION.md`
+(the pre-registration and its addendum, which registers falsifiable phase-2 predictions from
+this mechanism before the data existed) · CLAUDE.md "Adversarial Artifact Verification".
+
 ### NEW 2026-08-18: the submission readiness gates are RED, and have been since the gemma to Qwen3.8-27B migration
 
 **What is wrong.** Six tests in the exp4744 / exp4754 readiness-gate family fail. They were
