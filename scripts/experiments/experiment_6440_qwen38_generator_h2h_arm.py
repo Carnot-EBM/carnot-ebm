@@ -877,6 +877,13 @@ def main() -> int:
             row["elapsed_s"] = round(time.time() - c0, 2)
             row["residency_mib_at_cell_start"] = res
             row["server_n_ctx"] = N_CTX
+            # Which cards served this cell. `server_n_ctx` was already recorded, so a context change
+            # was always visible -- but a cell run on one card versus two looked identical in the
+            # shard. A caller that passes `--gpu 1` silently gets a different substrate, and on
+            # 2026-08-19 one did: the gemma arm segfaulted on a single card at this context while
+            # the qwen arm fit and kept running, so the two arms would have been compared across
+            # different hardware with nothing in the data to show it.
+            row["gpu_index"] = GPU_INDEX
             with shard.open("a") as f:  # PER-CELL cache write
                 f.write(json.dumps(row) + "\n")
             done[(game, t)] = row
