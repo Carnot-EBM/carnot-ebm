@@ -5,11 +5,22 @@
   "prepped_at": "2026-08-19T13:42Z",
   "prior_submission_scores": {
     "2026-06-30": 0.08,
-    "2026-07-15": 0.12
+    "2026-07-15": 0.12,
+    "2026-08-10": 0.02,
+    "2026-08-11": 0.09
   },
   "ready_for_operator_submit": true,
   "save_run": "KernelWorkerStatus.COMPLETE",
   "submission_history": [
+    {
+      "description": "carnot daily 2026-08-19",
+      "kernel_version": "37",
+      "local_gate_result_at_submit": "PASS (IMPROVED): CORE per-level efficiency 2.1605 vs baseline 2.1605; solved 7, median actions/solve 1739, timed_out 0; bonus solves cd82/ft09/su15",
+      "note": "First submission on the vLLM NVFP4 backend. Validated end to end by the v37 save-run: server up in 425s, admission exact at max_model_len 155472, 8/8 concurrent requests round-tripped through the llama.cpp response translation, server max_num_seqs=8, flashinfer AOT cache staged, CUDA 13 toolchain resolved, demotion to llama.cpp proven live on v31 if the server fails to start. Concurrency lowered 24 -> 8 because at 24 the MEDIAN measured induction (62,490 generated tokens) exceeds the scored 2400s timeout. CAVEAT the gate printed itself: proposer_config_mismatch=true -- the offline gate sets CARNOT_ARC_DISABLE_INDUCTION=1 and measures a bare-explorer lower bound, so it confirms no regression in the EXPLORER and says nothing about the induction path, which is what this submission changed. Operator authorised the submit explicitly; CLAUDE.md Operator-Only External Publication otherwise reserves the action to the operator.",
+      "submission_ref": 55625457,
+      "submitted": true,
+      "submitted_at": "2026-08-19T14:26:29Z"
+    },
     {
       "kernel_version": "9",
       "local_gate_result_at_submit": "PASS (IMPROVED): core per-level efficiency 2.412 vs baseline 2.412 (7/8 core games solved, matching baseline); bonus solves on cd82/ft09/su15 not counted in the strict core comparison",
@@ -21,5 +32,7 @@
       "submitted_at": "2026-07-16T19:37:35Z"
     }
   ],
-  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 37"
+  "submission_ref": 55625457,
+  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 37",
+  "submitted": true
 }
