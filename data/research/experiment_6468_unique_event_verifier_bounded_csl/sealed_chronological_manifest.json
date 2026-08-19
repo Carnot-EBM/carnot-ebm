@@ -1,0 +1,55 @@
+{
+  "analysis_frozen_before_inference": true,
+  "arms": [
+    "frozen_factor_weights",
+    "self_signed_updates",
+    "verifier_bounded_exact_sign_updates"
+  ],
+  "budgets": {
+    "learning_rate": 0.25,
+    "max_update_magnitude": 0.25,
+    "weight_cap": 2.0
+  },
+  "date": "20260819",
+  "interval_counts_by_model": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "development": 6,
+      "future_held": 8,
+      "prospective_update": 10
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "development": 6,
+      "future_held": 8,
+      "prospective_update": 10
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "development": 6,
+      "future_held": 8,
+      "prospective_update": 10
+    }
+  },
+  "intervals": [
+    {
+      "end": 5,
+      "interval": "development",
+      "start": 0
+    },
+    {
+      "end": 15,
+      "interval": "prospective_update",
+      "start": 6
+    },
+    {
+      "end": 23,
+      "interval": "future_held",
+      "start": 16
+    }
+  ],
+  "manifest_hash": "sha256:5791d7ce8c24ec3e943fcb34354e7849adb8087adf8e05cad8e5c10f95d2ead6",
+  "random_seed": 6468,
+  "schema": "carnot.experiment_6468.unique_event_verifier_bounded_csl.v1.sealed_chronological_manifest",
+  "sealed": true,
+  "split_overlap_count": 0,
+  "unit_count": 72,
+  "units_per_model": 24
+}
