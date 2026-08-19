@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.556",
+  "generated_at": "2026-08-19T19:31:07Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 29.1,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 6,
+  "slowest_experiments": [
+    {
+      "experiment": "Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2",
+      "duration_minutes": 22.69,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V556 primary-source freshness receipt",
+      "duration_minutes": 1.88,
+      "compute_bound": false
+    },
+    {
+      "experiment": "SOTA raw persistence and unique-event canary",
+      "duration_minutes": 1.77,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Prospective unique-event verifier-bounded continuous self-learning",
+      "duration_minutes": 1.72,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp6468 CSL readiness: unique-event corruption and restart replication",
+      "duration_minutes": 0.72,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 11 experiments in 29.1 minutes, including 6 compute-bound experiments. The 22.69-minute provenance-complete fixed-policy corpus v2 set the execution tail, while the locked task-level GPU-idle indicator remained false.",
+  "bottlenecks_identified": [
+    "The provenance-complete fixed-policy corpus v2 consumed 22.69 of 29.1 minutes. Its label identifies a canary-readiness dependency, but the data does not separate readiness wait, setup, inference, or persistence time.",
+    "Disk-mtime reconstruction ranks experiment duration but does not provide task-scoped phase or GPU telemetry. The cause of the compute tail and the efficiency of accelerator use therefore cannot be measured."
+  ],
+  "improvements_suggested": [
+    "Add a readiness-aware preflight that records gate evaluation separately and lets the scheduler run independent ready work while a dependency remains unresolved.",
+    "Record phase boundaries and task-scoped GPU samples from experiment start through completion so waiting time can be separated from accelerator work.",
+    "Record loaded-model concurrency and runner selection for each compute task. Select DualGPURunner only when two or more models run in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Separate readiness checks from measured execution and dispatch other ready work during unresolved gates.",
+    "Add experiment-linked phase timing and GPU duty-cycle receipts.",
+    "Add model-count and runner-selection receipts, with DualGPURunner routing for parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The available data identifies the tail but does not establish its internal cause, compute-period GPU efficiency, or parallel model loading. A defensible savings rate cannot be calculated from this single reconstructed run, so the estimate remains zero."
+}
