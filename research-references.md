@@ -35120,3 +35120,131 @@ boundary.
   game or level solve claim.
 
 <!-- V556-PLANNER-REFRESH-20260815-END -->
+
+## V557 planner refresh - 2026-08-19
+
+<!-- V557-PLANNER-REFRESH-20260819-START -->
+
+This refresh covers the arXiv releases from 2026-08-14 through 2026-08-18.
+It also rechecked OpenReview, Hugging Face Papers, Semantic Scholar citation
+trails, GitHub Trending, Extropic, and Logical Intelligence. Exact executable
+checks remain the only release authority. Learned signals may propose, rank,
+route, or abstain.
+
+### Promising primary findings
+
+- **An Omitted Mode Is a Rare Rule: The Sampling-Verification Danger Law in
+  Continuous Code World Models** - arXiv:2608.17956,
+  https://arxiv.org/abs/2608.17956; submitted 2026-08-18. The paper proves
+  that sampled transition agreement certifies only sampled support. It also
+  shows large failures when rare reset modes are outside that support. Carnot
+  hook: audit whether a held protocol identifies the claimed intervention
+  before running a model. Preserve constructive collision witnesses. Do not
+  promote a sampled pass to a global safety claim.
+- **Mixture-of-Expert Blocks Contain Strong Hallucination Detection Signals**
+  - arXiv:2608.17687, https://arxiv.org/abs/2608.17687; submitted 2026-08-18.
+  InnerExpert combines router entropy, expert disagreement, expert use, and
+  transformer signals for token-level detection. It reports up to 0.91
+  answer-level and 0.76 token-level AUROC. Carnot hook: record MoE routing
+  signals only as optional diagnostics when the local runner exposes them.
+  The paper trains on LLM-judge labels, so the detector may not become exact
+  release authority. Do not modify llama.cpp or reopen a hidden-state scorer
+  lane merely to reproduce it.
+- **Translating finite-domain integer constraint models to CP/SMT/ILP/PB/SAT
+  solvers with CPMpy** - arXiv:2608.15143,
+  https://arxiv.org/abs/2608.15143; submitted 2026-08-15. The work defines a
+  modular transformation waterfall from one high-level finite-domain model to
+  several exact solver families. It highlights negation, auxiliary variables,
+  and nonlinear linearization as translation risks. Carnot hook: define a
+  small backend-neutral exact constraint record and verify backend parity on
+  immutable cases before using its scalar violation count as energy. Keep the
+  exact solver result authoritative.
+- **Repair, Not Improvement: Decomposing Constrained Decoding in Tool-Call
+  Abstention** - arXiv:2608.13959,
+  https://arxiv.org/abs/2608.13959; submitted 2026-08-14. The study separates
+  stopping behavior from valid-token restriction. It finds that constrained
+  decoding repairs unreadable form but does not recover semantic judgments on
+  abstention. Carnot hook: do not count format validity as reasoning gain. The
+  retired grammar and finite-ID lanes stay closed.
+- **Beyond Local Accuracy: A Protocol-Level Identifiability Audit for
+  Controlled LLM Reasoning Evaluation** - arXiv:2608.13326,
+  https://arxiv.org/abs/2608.13326; submitted 2026-08-13. The paper tests
+  whether an observation support separates policies with different target
+  effects. Its structural audit needs no model calls and emits collision
+  witnesses when the protocol is not identifying. Carnot hook: run this audit
+  before any held causal routing claim. A non-identifying protocol must block
+  the claim, not trigger more inference.
+- **ER-KANs: Efficient and Robust Kolmogorov-Arnold Networks for Data-Scarce
+  Scientific Machine Learning** - arXiv:2608.14773,
+  https://arxiv.org/abs/2608.14773; submitted 2026-08-14. ER-KAN combines
+  shared Gaussian bases, curriculum noise, and entropy-weighted regularization.
+  Its 595-parameter model degrades less under noise in the reported analytic
+  tasks, while the authors also report a Burgers-equation failure. Carnot hook:
+  keep the noise-degradation ratio for a future compact-energy benchmark. A
+  new KAN train does not close V557's current evidence gaps.
+- **Test-Time Adaptation with Online Personalized Energy-Based Cache for Fine-
+  Grained Video Expression Recognition** - arXiv:2608.06467,
+  https://arxiv.org/abs/2608.06467; submitted 2026-08-06. EB-CaP combines an
+  online energy-based cache with entropy and diversity gates. Carnot hook: use
+  confidence and diversity only to decide which exact-verified events enter a
+  bounded factor cache. Test capacity, interference, restart, and future exact
+  yield. The cache cannot bypass exact write admission.
+
+### Hardware and secondary-source checks
+
+- **Extropic:** the 2026-08-03 full-stack update,
+  https://extropic.ai/writing/from-one-to-one-billion, announces Torx, the
+  Thermalizers compiler preview, and a live early-access GPU simulator API. It
+  states that Z1 is taped out with 269,568 p-bits, 16-neighbor connectivity,
+  over 50 MHz sampling, and under one watt. Z1 sticks, cards, and clusters are
+  planned for 2027 early access. Carnot has no authenticated device or API
+  credential. V557 may perform an anonymous capability preflight, but it must
+  not claim TSU execution, latency, energy, or availability.
+- **Digital probabilistic hardware:** **CN101 - A Digital Thermodynamic
+  Computer for Generative AI**, arXiv:2608.00754,
+  https://arxiv.org/abs/2608.00754, demonstrates a fabricated digital
+  thermodynamic prototype. **A scalable and resource-efficient pipelined
+  p-computer for probabilistic Ising machines**, arXiv:2607.21077,
+  https://arxiv.org/abs/2607.21077, reports a dense FPGA p-bit pipeline.
+  These results strengthen the case for a fixed-width factor and sampler ABI.
+  They do not justify a new local board claim or FPGA redesign.
+- **Semantic Scholar:** the 2026-08-19 public API exposed 30 arXiv-indexed EBT
+  citing records and seven ARM-EBM citing records. New EBT records include
+  Self-Explainable Latent Reasoning (`2608.13570`) and a tabular anomaly EBM
+  (`2608.14186`). Neither supplies an exact local verifier or changes the
+  current experiment order. Counts can differ from total citation counts when
+  records lack arXiv identifiers.
+- **OpenReview:** current ICLR, ICML, and TMLR records repeat Spilled Energy,
+  Panini structured memory, energy-guided test-time scaling, and exact-penalty
+  non-forgetting constraints. These support structured memory and protected-
+  case retention. They do not replace executable checkers.
+- **Hugging Face Papers:** current verification pages add no stronger local
+  exact-authority baseline. Recent verifier and memory work supports per-event
+  evidence, abstention, and held future evaluation.
+- **GitHub Trending:** the current weekly Python page contains general agent,
+  inference, and repository tools. It exposes no new EBM, exact-constraint,
+  KAN, or sampler dependency that should enter V557.
+- **Logical Intelligence:** public Kona and Aleph pages still describe global
+  constraint scoring and formal verification. They expose no public Kona
+  weights, reproducible architecture, or documented local runner. Kona remains
+  a product comparator only.
+
+### V557 planning impact
+
+- Freeze and audit the V556 corpus contract before any rerun. If the stored
+  label commitments do not predate inference, retire that corpus lineage.
+- Add a zero-inference protocol-identifiability gate and constructive collision
+  witnesses before a new causal exact-routing claim.
+- Build a small backend-neutral exact constraint record and compare exact
+  solver results with its scalar violation energy on immutable units.
+- Move the V556 continuous learner into a default-off production shadow path.
+  Test a bounded cache, cross-domain chronological exposure, retention,
+  corruption, rollback, and restart with exact write admission.
+- Integrate the ARC shield as a default-off live-path component. Credit only
+  executed policy influence on runtime traces. Make no game or level solve
+  claim.
+- Use the dual RTX 3090 system for mandated GGUF runs. Use CPU replay for
+  contract, exact solver, and ARC checks. Schedule no board redesign or TSU
+  performance claim.
+
+<!-- V557-PLANNER-REFRESH-20260819-END -->

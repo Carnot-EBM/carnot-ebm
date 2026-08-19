@@ -9,56 +9,8 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 11 |
+| CHECKABLE | 7 |
 | AGGREGATE_ONLY | 1 |
-
-## experiment_6458_arc_representation_objective_generalization_ab.checkpoints.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing; the artifact includes per-cell rows under `"cells"` with fields such as `"row_id"`, `"arm"`, `"game"`, `"seed"`, `"prefix_id"`, `"chosen_action"`, `"recorded_next_state_reachability"`, `"policy_influence"`, and `"timeout"`.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6458_arc_representation_objective_generalization_ab.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The audit completed but readiness gates were unmet because `frozen_safety_roster_not_regressed` failed.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6459_v555_adversarial_capstone.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-the artifact is complete-blocked because the V555 queue/prior-failure validation gate failed.
-
-## WHAT IS MISSING
-nothing; `"status"`, `"artifact_state"`, `"honest_verdict"`, `"readiness_fields"`, and `"gate_check_summary"` are present, including `"failed_check"`, `"expected_condition"`, and `"observed_value"`.
-
-## THE CHECK A READER CANNOT DO
-none
 
 ## experiment_1644_cerce_ledger.json
 
@@ -68,7 +20,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims the CERCE ledger was added/implemented and the task completed.
+The CERCE ledger was added, implemented, and is ready.
 
 ## WHAT IS MISSING
 nothing
@@ -84,7 +36,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The model achieved latency_ms 150.5, parse_rate 0.95, and energy_score 0.88 over 100 prompts.
+no claim
 
 ## WHAT IS MISSING
 nothing
@@ -100,7 +52,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Experiment 1736 reports success: `bitfile_generated: true`, utilization, `wns: 1.25`, and `honest_verdict: "vivado_simulated_success"`.
+Experiment 1736 reports `"honest_verdict": "vivado_simulated_success"` and is excluded from headline aggregation as adversarially flagged.
 
 ## WHAT IS MISSING
 nothing
@@ -108,7 +60,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_2031.json
+## experiment_6469_unique_event_csl_corruption_restart.json
 
 **CHECKABLE**
 
@@ -116,7 +68,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims a successful run with best_candidate "Thus, we can see it." and min_energy 0.0.
+Clean unique-event CSL improved exact yield over the frozen baseline while all corrupt events were blocked, quarantined, rolled back, and remained non-resurrecting after restart.
 
 ## WHAT IS MISSING
 nothing
@@ -124,7 +76,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+## experiment_6470_independent_unique_event_csl_audit.json
 
 **CHECKABLE**
 
@@ -132,7 +84,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Gemma31B beat Qwen27B on the decisive coverage criterion, with 12/13 nonzero games versus 4/13 and coverage p=0.007812.
+All seven critical attacks fail closed, and independently recomputed event aggregates match the reported upstream fields.
 
 ## WHAT IS MISSING
 nothing
@@ -140,7 +92,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6011_world_model_change_gate_four_arm.json
+## experiment_6471_arc_generic_safety_shield_objective_ab.checkpoints.json
 
 **CHECKABLE**
 
@@ -148,15 +100,15 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims a four-arm world-model verification matrix was scored across per-seed rows, with gate-enabled arms failing for `degenerate_engine_no_correct_changed_cells` and gate-disabled arms passing because `gate_disabled`.
+no claim
 
 ## WHAT IS MISSING
-nothing; per-unit `rows` are present with `game`, `seed`, `cell`, `arms`, `passed`, `reason`, `change_fidelity`, `correct_changed_cells`, `min_correct_changed_cells`, `noop_hallucination_rate`, and related diagnostic values.
+nothing; `"cells"` contains per-unit records identified by `"row_id"` with `"arm"`, `"game"`, `"seed"`, `"prefix_id"`, and `"recorded_next_state_reachability"`.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6012_hidden_state_trust_gate_hole.json
+## experiment_6471_arc_generic_safety_shield_objective_ab.json
 
 **CHECKABLE**
 
@@ -164,23 +116,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The hidden-state trust gate admits spurious writer arms that REQ-6011 rejects.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6013_hidden_state_change_gate_closure.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The artifact claims the change gate closes the hidden-state coverage hole by passing clean/base arms and rejecting degenerate or hallucinating control arms across game/seed rows.
+The generic safety shield passed all readiness gates without making a level-solve claim.
 
 ## WHAT IS MISSING
 nothing
@@ -188,7 +124,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_10003_goal_defect_dedup_ab.json
+## experiment_6472_v556_adversarial_capstone.json
 
 **AGGREGATE_ONLY**
 
@@ -196,10 +132,10 @@ none
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-Control found nondegenerate plans more often than treatment: 7 of 12 vs 4 of 11, directionally adverse.
+The V556 capstone claims continuous-learning and ARC eligibility based on improved future exact yield and preserved-or-improved held reachability.
 
 ## WHAT IS MISSING
-The artifact has `"per_cell"` rows for 11 paired cells, but the headline denominator uses 12 control cells; the missing per-unit row is the control-only `"ar25 t2"` condition with fields like `"plan_found"`, `"plan_len"`, and `"plan_is_degenerate"`.
+Per-unit arm/control metric rows for exp6468–exp6471; the artifact provides only aggregate assertions such as `"verifier_beats_frozen_future_yield": true`, `"clean_future_exact_effect": true`, `"effects_recompute": true`, and `"shield_preserves_or_improves_held_reachability": true`, while its detailed `"rows"` contain inventory, gate, or file-identity data rather than comparative outcomes.
 
 ## THE CHECK A READER CANNOT DO
-Can the reported 7/12 control nondegenerate-plan count be reproduced from the listed per-cell rows, including the unpaired control-only ar25 trial 2 cell?
+Did the claimed improvement occur broadly across held units, or was the aggregate result driven by one outlier while other units tied, regressed, or had no headroom?
