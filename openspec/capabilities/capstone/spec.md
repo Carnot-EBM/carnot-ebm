@@ -3759,3 +3759,64 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-6459 | Planned (`python/carnot/experiment_6459_v555_adversarial_capstone.py`, `results/experiment_6459_v555_adversarial_capstone.json`) | Planned (`tests/python/test_experiment_6459_v555_adversarial_capstone.py`) |
+
+- REQ-CAPSTONE-6472: The V556 adversarial capstone workflow SHALL read
+  Exp6459 and every expected Exp6460 through Exp6471 artifact from disk,
+  plus each referenced raw output file when the upstream artifact names one.
+  It SHALL not import upstream reducers or promote any claim from readiness
+  fields alone. It SHALL preserve missing, zero-byte, blocked, partial,
+  complete, adversarial, and repeated-prior evidence as separate rows. It
+  SHALL recompute gate contracts, raw byte counts, raw hashes, event identity,
+  path chains, partition membership, held exposure, device receipts, grounding,
+  allocation, energy, CSL, ARC, and aggregate row consistency from local rows
+  and local files. It SHALL write
+  `results/experiment_6472_v556_adversarial_capstone.json`.
+- The required Exp6472 artifact field set is: `status`,
+  `upstream_artifact_inventory`, `gate_contract_recomputation`,
+  `raw_file_and_event_identity_recomputation`,
+  `device_and_model_receipt_recomputation`, `per_unit_rows`,
+  `independent_grounding_objective_allocation_and_energy_recomputation`,
+  `independent_csl_recomputation`, `independent_arc_recomputation`,
+  `aggregate_row_recomputation`, `attack_matrix`,
+  `current_adversarial_findings`, `critical_discrepancies`,
+  `repeated_prior_verdict_retirements`, `determination_preservation`,
+  `science_claim_eligible`, `continuous_learning_claim_eligible`,
+  `arc_claim_eligible`, `hardware_claim_eligible`, `reconciliation_changes`,
+  `v556_capstone_ready_score`, `protected_files_unchanged`, `blocked_reason`,
+  `gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+  `verifier_is_oracle`, `field_principles`, `field_provenance`,
+  `random_seed`, `duration_s`, `tests_run`, `reproducibility_checksum`, and
+  `honest_verdict`.
+- SCENARIO-CAPSTONE-6472-INVENTORY: Given the repository state on planning
+  date 20260819, when the capstone runs, then it SHALL emit one inventory row
+  for Exp6459 and each expected V556 task slot from Exp6460 through Exp6472.
+  Missing Exp6465 and Exp6467 artifacts and blocked Exp6464 and Exp6466
+  artifacts SHALL remain blocked or missing evidence, not scientific nulls.
+- SCENARIO-CAPSTONE-6472-RECOMPUTATION: The artifact SHALL recompute gate
+  outcomes from the named upstream fields, recompute raw file size and SHA-256
+  from disk for every referenced raw path, recompute one-event and one-path
+  uniqueness, recompute device CPU-fallback counts from rows, and recompute
+  corpus, CSL, and ARC aggregates from per-unit rows.
+- SCENARIO-CAPSTONE-6472-CLAIM-ELIGIBILITY: The artifact SHALL decide
+  science, continuous-learning, ARC, and hardware claim eligibility as separate
+  fields. A branch can be eligible only when all required local evidence for
+  that branch is present, row-recomputed, clean under current adversarial
+  checks, and not retired by `retire_if_same_verdict`. Readiness fields alone
+  SHALL never promote a branch.
+- SCENARIO-CAPSTONE-6472-ATTACKS: The artifact SHALL include attack rows for
+  zero-byte persistence, event cloning, hidden CPU fallback, held leakage,
+  free probes, energy-as-oracle, exact-veto bypass, corrupt restart, source
+  access, solve duplication, aggregate mismatch, protected-file mutation, and
+  prior-verdict repetition. Each row SHALL state whether the attack was
+  detected, failed closed, and promoted a claim.
+- SCENARIO-CAPSTONE-6472-FIELD-PRINCIPLES: The artifact SHALL include
+  `field_principles` and `field_provenance` for every required field.
+  `verifier_is_oracle` SHALL be true only for independent local hash,
+  exact-checker, registry, and row arithmetic checks. `honest_verdict` SHALL
+  start with a terminal prefix and name the separate claim eligibility states.
+
+## Implementation Status (REQ-CAPSTONE-6472)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-6472 | Planned (`python/carnot/experiment_6472_v556_adversarial_capstone.py`, `results/experiment_6472_v556_adversarial_capstone.json`) | Planned (`tests/python/test_experiment_6472_v556_adversarial_capstone.py`) |
