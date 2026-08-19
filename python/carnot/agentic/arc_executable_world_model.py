@@ -4442,6 +4442,41 @@ _GOAL_PROBE_TIMEOUT_S = 10.0
 _GOAL_PROBE_MAX_GRIDS = 12
 
 
+def _goal_probe_sample(grids: list) -> list:
+    """Grids to run the goal predicate on: HEAD AND TAIL, never the head alone.
+
+    WHY THIS EXISTS (REQ-ARC-WMTE-6530, 2026-08-18). The probe used to take
+    `grids[:_GOAL_PROBE_MAX_GRIDS]`, the first 12. Grids are appended (grid, next_grid) per
+    transition, so 12 grids is the first SIX transitions -- and every window is built to END at
+    its level flip, so the win frame is always the LAST grid. The win was therefore visible only
+    for windows of six transitions or fewer.
+
+    That inverts the check on longer windows. A CORRECT predicate -- one true only on win frames
+    -- reads constant-False across everything the probe can see, so it is rejected and re-asked,
+    while a predicate that fires early on a non-win frame reads non-constant and is kept. The
+    gate rejected correct predicates and rewarded false positives, on exactly the windows where
+    induction is hardest. Measured over `window_meta.json`: 7 of 13 games have more than six
+    transitions, and the builder caps windows at `WINDOW_K = 12` TRANSITIONS while this cap is 12
+    GRIDS -- the same number in two different units, so a capped window is exactly twice the
+    probe's reach and the probe read the half that can never hold the win.
+
+    The fix is not a bigger cap. A bigger number repairs the symptom until some window outgrows
+    it, and the probe would still be pointed at the wrong end. Sampling both ends fixes it for
+    any length at the same cost: the budget is split, the head keeps the early-frame coverage the
+    original had, and the tail guarantees the win frame is always included.
+
+    Cost is unchanged -- at most `_GOAL_PROBE_MAX_GRIDS` grids are returned, which is what bounds
+    the hang exposure the caller's docstring describes. Order is preserved and duplicates are
+    dropped, so a window at or under the cap probes exactly what it always did.
+    """
+    cap = _GOAL_PROBE_MAX_GRIDS
+    if len(grids) <= cap:
+        return list(grids)
+    head = cap // 2
+    tail = cap - head
+    return list(grids[:head]) + list(grids[-tail:])
+
+
 class _GoalProbeTimeout(Exception):
     """The goal probe exceeded its wall-clock ceiling. Deliberately NOT a defect verdict: a
     probe that could not finish is an absence of evidence, and the caller converts it to
@@ -6605,7 +6640,20 @@ class LocalGGUFProposer:
         ]
         self.last_launch_argv = list(args)
         self.generator_server_path = f"vllm:{model_dir}"
-        log_path = Path(tempfile.gettempdir()) / f"vllm_server_{self.port}.log"
+        # Honour CARNOT_ARC_SERVER_LOG_DIR, the same knob the llama.cpp launch below uses. On
+        # Kaggle the kernel points it at /kaggle/working so the server log survives the run --
+        # in /tmp it dies with the container, which is what made three failed scored runs
+        # undiagnosable until the log was copied out by hand.
+        import os as _os
+
+        log_path = (
+            Path(_os.environ.get("CARNOT_ARC_SERVER_LOG_DIR", tempfile.gettempdir()))
+            / f"vllm_server_{self.port}.log"
+        )
+        try:
+            log_path.parent.mkdir(parents=True, exist_ok=True)
+        except OSError:
+            log_path = Path(tempfile.gettempdir()) / f"vllm_server_{self.port}.log"
         lf = open(log_path, "ab")
         self._proc = subprocess.Popen(args, stdout=lf, stderr=subprocess.STDOUT)
         # Weights (23 GB) + torch.compile + CUDA-graph capture: measured cold boots run minutes,
@@ -7144,7 +7192,7 @@ class LocalGGUFProposer:
             probe = ns.get("is_level_complete")
             if probe is None:
                 return sorted(set(defects))
-            for g in grids[:_GOAL_PROBE_MAX_GRIDS]:
+            for g in _goal_probe_sample(grids):
                 try:
                     v = probe(np.asarray(g))
                 except _GoalProbeTimeout:
