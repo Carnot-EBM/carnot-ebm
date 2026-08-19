@@ -5931,6 +5931,172 @@ self-signed updates
 | SCENARIO-LEARN-6468-ATTACKS | Implemented: `python/carnot/experiment_6468_unique_event_verifier_bounded_csl.py`. | Implemented: `tests/python/test_experiment_6468_unique_event_verifier_bounded_csl.py`. |
 | SCENARIO-LEARN-6468-READY | Implemented: `python/carnot/experiment_6468_unique_event_verifier_bounded_csl.py`. | Implemented: `tests/python/test_experiment_6468_unique_event_verifier_bounded_csl.py`. |
 
+## REQ-LEARN-6469: Unique-Event CSL Corruption Restart
+
+**Given** Exp6468 reports `unique_event_csl_ready_score == 1.0`
+**When** Exp6469 runs on planning date 20260819
+**Then** it SHALL write
+`results/experiment_6469_unique_event_csl_corruption_restart.json`
+**And** it SHALL test new held binding-shift events after a real process
+restart.
+
+Exp6469 SHALL stop before generation if the Exp6468 gate is absent or below
+one. A stopped run SHALL emit `gate_check_summary`, `blocked_reason`, and
+`honest_verdict` with a `blocked:` prefix.
+
+Exp6469 SHALL use exactly the three mandated cached GGUF model ids:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL resolve paths through the cached
+helper. It SHALL use embedded GGUF tokenizer receipts only.
+
+Exp6469 SHALL seal a new held manifest before event generation. The manifest
+SHALL use new unit ids and raw-event identities. Its unit ids and raw hashes
+SHALL have zero overlap with Exp6468 exposure, event, and raw-output ledgers.
+
+Exp6469 SHALL start a new process after the manifest seal. The child SHALL
+load only the committed store head and receipt chain. The artifact SHALL record
+parent PID, child PID, start times, head hash, model receipts, and device
+receipts.
+
+Exp6469 SHALL generate new raw events for clean and governed arms. The exact
+checker SHALL run before every write. A missing, corrupt, forged, or bypassed
+checker receipt SHALL veto the write before state release.
+
+Exp6469 SHALL inject five corruptions at named boundaries: forged pass,
+replayed raw output, wrong-unit binding, corrupt checker response, and
+interrupted write. Each corrupt event SHALL be quarantined and tombstoned
+before rollback. Rollback SHALL restore the last valid head.
+
+Exp6469 SHALL restart again after rollback. No tombstoned head, forged pass,
+wrong binding, replayed raw output, corrupt checker response, or partial write
+SHALL appear in active state or future exact outcomes after restart.
+
+Exp6469 SHALL attack stale head, forged tombstone, wrong event binding,
+replay, partial atomic write, exact-veto bypass, held contamination, and
+aggregate mismatch. Every attack SHALL fail closed.
+
+Exp6469 SHALL set `corruption_restart_ready_score=1.0` only when clean learning
+retains a future exact effect, every corrupt event is blocked before release,
+rollback restores the last valid head, restart cannot resurrect corruption,
+and all held events are unique.
+
+Exp6469 SHALL emit these fields:
+
+- `status`
+- `MODEL_SPECS`
+- `models_used`
+- `cached_sota_pair_receipts`
+- `model_file_and_embedded_tokenizer_hashes`
+- `device_and_runner_receipts`
+- `upstream_csl_hash`
+- `sealed_new_held_manifest`
+- `exposure_disjointness_receipts`
+- `process_restart_receipts`
+- `raw_output_manifest`
+- `event_identity_manifest`
+- `corruption_precommitment`
+- `exact_veto_before_write_receipts`
+- `per_unit_rows`
+- `lifecycle_rows`
+- `quarantine_tombstone_and_rollback_receipts`
+- `non_resurrection_check`
+- `clean_and_corrupt_effects`
+- `protected_case_retention`
+- `aggregate_row_recomputation`
+- `attack_matrix`
+- `current_adversarial_findings`
+- `corruption_restart_ready_score`
+- `protected_files_unchanged`
+- `blocked_reason`
+- `gate_check_summary`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map every required field and every
+`corruption_restart_ready_score` condition. `verifier_is_oracle` SHALL be true
+only for deterministic checker output, hash-chain checks, lifecycle checks,
+and row arithmetic. Model raw text, learned weights, and corruption payloads
+SHALL NOT be oracles.
+
+## SCENARIO-LEARN-6469-GATE: Exp6468 Gate Blocks The Run
+
+**Given** Exp6468 is missing, malformed, or below readiness one
+**When** Exp6469 checks the upstream gate
+**Then** it SHALL stop before held event generation and write a blocked
+artifact with `gate_check_summary`.
+
+## SCENARIO-LEARN-6469-MANIFEST: New Held Events Are Disjoint
+
+**Given** Exp6468 exposure and event ledgers are present
+**When** Exp6469 seals its held manifest and raw events
+**Then** new unit ids, event ids, and raw hashes SHALL have zero overlap with
+Exp6468 evidence.
+
+## SCENARIO-LEARN-6469-RESTART: Child Loads Only The Committed Head
+
+**Given** the sealed manifest and committed store head
+**When** Exp6469 starts the child process
+**Then** the child PID SHALL differ from the parent PID and the recovered head
+SHALL match the committed head from disk.
+
+## SCENARIO-LEARN-6469-CORRUPTION: Exact Veto Runs Before Write
+
+**Given** forged pass, replay, wrong binding, corrupt checker response, and
+interrupted write events
+**When** admission runs
+**Then** each corrupt event SHALL be rejected before release.
+
+## SCENARIO-LEARN-6469-ROLLBACK: Tombstone Precedes Rollback
+
+**Given** a corrupt event computes a rejected child head
+**When** quarantine, tombstone, and rollback run
+**Then** the tombstone SHALL be written before rollback and rollback SHALL
+restore the last valid head.
+
+## SCENARIO-LEARN-6469-NON-RESURRECTION: Restart Cannot Revive Corruption
+
+**Given** tombstoned corrupt heads and a post-rollback restart
+**When** Exp6469 reloads state
+**Then** no corrupt or tombstoned head SHALL appear in active state or future
+exact outcomes.
+
+## SCENARIO-LEARN-6469-ATTACKS: Lifecycle Attacks Fail Closed
+
+**Given** stale head, forged tombstone, wrong binding, replay, partial write,
+exact-veto bypass, held contamination, and aggregate mismatch attacks
+**When** Exp6469 validates readiness
+**Then** no attack SHALL promote readiness or release corrupt state.
+
+## SCENARIO-LEARN-6469-READY: Readiness Is Conjunctive
+
+**Given** clean learning has a positive future exact effect, corrupt events are
+contained, rollback is exact, restart is clean, events are unique, protected
+files are unchanged, and tests pass
+**When** Exp6469 computes readiness
+**Then** `corruption_restart_ready_score` SHALL be `1.0`.
+
+## Implementation Status (REQ-LEARN-6469)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6469 | Planned: `python/carnot/experiment_6469_unique_event_csl_corruption_restart.py`; terminal artifact `results/experiment_6469_unique_event_csl_corruption_restart.json`. | Planned: `tests/python/test_experiment_6469_unique_event_csl_corruption_restart.py`. |
+| SCENARIO-LEARN-6469-GATE | Planned: `python/carnot/experiment_6469_unique_event_csl_corruption_restart.py`. | Planned: `tests/python/test_experiment_6469_unique_event_csl_corruption_restart.py`. |
+| SCENARIO-LEARN-6469-MANIFEST | Planned: `python/carnot/experiment_6469_unique_event_csl_corruption_restart.py`. | Planned: `tests/python/test_experiment_6469_unique_event_csl_corruption_restart.py`. |
+| SCENARIO-LEARN-6469-RESTART | Planned: `python/carnot/experiment_6469_unique_event_csl_corruption_restart.py`. | Planned: `tests/python/test_experiment_6469_unique_event_csl_corruption_restart.py`. |
+| SCENARIO-LEARN-6469-CORRUPTION | Planned: `python/carnot/experiment_6469_unique_event_csl_corruption_restart.py`. | Planned: `tests/python/test_experiment_6469_unique_event_csl_corruption_restart.py`. |
+| SCENARIO-LEARN-6469-ROLLBACK | Planned: `python/carnot/experiment_6469_unique_event_csl_corruption_restart.py`. | Planned: `tests/python/test_experiment_6469_unique_event_csl_corruption_restart.py`. |
+| SCENARIO-LEARN-6469-NON-RESURRECTION | Planned: `python/carnot/experiment_6469_unique_event_csl_corruption_restart.py`. | Planned: `tests/python/test_experiment_6469_unique_event_csl_corruption_restart.py`. |
+| SCENARIO-LEARN-6469-ATTACKS | Planned: `python/carnot/experiment_6469_unique_event_csl_corruption_restart.py`. | Planned: `tests/python/test_experiment_6469_unique_event_csl_corruption_restart.py`. |
+| SCENARIO-LEARN-6469-READY | Planned: `python/carnot/experiment_6469_unique_event_csl_corruption_restart.py`. | Planned: `tests/python/test_experiment_6469_unique_event_csl_corruption_restart.py`. |
+
 ## REQ-LEARN-6444: CSL Lifecycle Recomputation Audit
 
 **Given** Exp6433 left the prospective CSL claim ineligible, Exp6441 through
