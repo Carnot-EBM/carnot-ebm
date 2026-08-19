@@ -61,11 +61,19 @@ The blind set is the LONG-window games — the ones where induction is hardest a
 predicate is worth the most. An initial sweep over the 7 cached windows on disk put this at 4 of
 7; the full metadata covers 13 games and gives 7 blind.
 
-Worth a look but NOT verified: six of the seven blind games sit at exactly 12 transitions, which
-looks like a builder cap rather than a coincidence. If windows are capped at 12 transitions then
-every capped window is exactly twice the length the probe can reach, since 12 transitions is 24
-grids and the 12-grid probe covers 6. Two constants that are both "12" and mean different things.
-No such cap constant was located by grep; sb26 at 9 shows not every long window hits it.
+**VERIFIED, was recorded as a hypothesis hours earlier:** the cap is
+`WINDOW_K = 12` at `python/carnot/experiment_5717_playbook_exemplars_stall_induction_ab.py:60`,
+and `build_window(game, k=WINDOW_K)` returns the k transitions ENDING AT the L0->L1 boundary.
+So the builder caps a window at 12 TRANSITIONS while the gate caps its probe at 12 GRIDS -- the
+same number in two different units. A capped window is therefore exactly TWICE the probe's
+reach, and the probe reads the half that can never contain the win, because the win is always at
+the boundary the window ends on. Six of the seven blind games sit exactly at the cap; sb26 at 9
+is under it and blind anyway, so the cap is a sufficient condition for blindness rather than the
+only route to it.
+
+Independently re-derived: two agents read `window_meta.json` separately and agree on all 13
+games. Visibility is measured from the trajectory pickle for 7 games (win confirmed at the last
+transition in each) and inferred from `n_transitions` for the remaining 6.
 
 This half is arithmetic over window length, so unlike the effect size it is NOT scoped to the
 generator: it behaves identically under gemma-4-31B or any other model.
