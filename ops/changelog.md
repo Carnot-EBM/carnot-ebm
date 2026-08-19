@@ -1,5 +1,58 @@
 # Carnot — Changelog
 
+## 2026-08-19 (outer-loop, goal-defect + dedup paired A/B landed, commit 7df7dfb4ca)
+
+**Instruction:** operator — "run the goal-defect A/B tonight", then "all 3" on the follow-up
+work, then "yes" to lowering vLLM concurrency.
+
+**Result: the goal-defect re-ask lever is directionally harmful, and the corpus explains itself.**
+Plans, degeneracy-gated: control 7, treatment 4. Real level-ups: 4 against 2. Stratified by
+whether the gate can SEE the win frame — win-visible sp80 shows NO effect (2 vs 2 across three
+trials), win-invisible ar25 and tr87 carry all the harm (2 vs 0). That split is the mechanism's
+own prediction. 23 of 23 offline replays reproduce their banked search, so the classification
+holds across both phases.
+
+**The mechanism is the gate's geometry.** `_GOAL_PROBE_MAX_GRIDS = 12` reads the first six
+transitions; every window is built to END at its level flip, so the win frame is always last. On
+any window longer than six transitions a CORRECT predicate reads constant-False across everything
+the probe sees and is rejected, while one firing early on a non-win frame is kept. 7 of 13 games
+in `window_meta.json` exceed that. Fixed forward the same day — `_goal_probe_sample` now splits
+the budget between head and tail.
+
+**The harm is primarily GOAL DEGRADATION, not engine destruction.** Differencing the replay
+classes: `goal_false_on_entire_reachable_set` is +2 and exclusive to treatment;
+`model_inert` is +1, since three of treatment's four are lp85 which is inert in BOTH arms from a
+window artifact; `goal_never_true_in_budget` is balanced 1/1 and is therefore not evidence. The
+vivid case — ar25 t0 going `cell_recall` 1.0 to 0.0 — is a single cell. This corrects an emphasis
+the analysis carried for most of its life.
+
+**The secondary is adjudicated and it is a NULL.** sp80 t1 is the only cell with a re-asked goal,
+a trustworthy engine, and a measured outcome in both arms: the re-ask moved the goal metrics from
+0.75/0.0 to 1.0/1.0 and moved the outcome NOT AT ALL — identical plan length, identical action
+count, both reaching a real level-up. That independently confirms the retraction the artifact
+carries: `_levelup_positive_recall` grades the frame AFTER the win, and here it moved a full 1.0
+while the thing it is supposed to predict did not move.
+
+**The dedup lever fired exactly once**, post-timeout and confounded. It is EXERCISED rather than
+unexercised — correcting the phase-1 finding — but one instance can support no claim about its
+effect.
+
+**What went wrong is in the artifact alongside what was found:** a cell discarded after a live
+generator server was silently replaced by a ROCm build on the integrated GPU; three client-timeout
+cancellations including a right-censored draw at 100,988 tokens; an environment-lookup break
+caused by an outer-loop code pin; a degenerate control plan from a constant-True predicate; and
+four superseded readings of one cell. The common cause of all four readings: a summary field read
+without the artifact behind it.
+
+**Shipped alongside:** `GAP-6260` layer 1 (window actions checked against the planner vocabulary
+before induction spends a token), the goal-probe head-and-tail fix, the scored server log
+surviving its run, and vLLM concurrency lowered 24 to 8 — at 24 the MEDIAN measured induction
+exceeded the scored 2400 s timeout.
+
+**Not done.** The submission slot is unspent and remains operator-only. The conductor has been
+stopped since 2026-08-15 with 13 tasks queued on milestone 2026.08.556; restarting it is an
+operator decision and was not taken.
+
 ## 2026-08-18 (outer-loop, vLLM backend + probe + readiness gates, commits b24debc9c6 .. 69521df1e9)
 
 **Instruction:** operator — "ship the vllm migration", then "go for it", then "close the gap".
