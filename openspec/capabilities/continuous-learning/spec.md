@@ -5707,6 +5707,230 @@ or materially mismatched
 | SCENARIO-LEARN-6457-SAFETY | Planned: `python/carnot/experiment_6457_independent_verifier_bounded_csl_audit.py`. | Planned: `tests/python/test_experiment_6457_independent_verifier_bounded_csl_audit.py`. |
 | SCENARIO-LEARN-6457-READY | Planned: `python/carnot/experiment_6457_independent_verifier_bounded_csl_audit.py`. | Planned: `tests/python/test_experiment_6457_independent_verifier_bounded_csl_audit.py`. |
 
+## REQ-LEARN-6468: Unique-Event Verifier-Bounded CSL
+
+**Given** Exp6455 reported a positive verifier-bounded factor-weight effect
+and Exp6457 found cloned raw output evidence and an exact-veto weakness
+**When** Exp6468 runs on planning date 20260819
+**Then** it SHALL write
+`results/experiment_6468_unique_event_verifier_bounded_csl.json`
+**And** it SHALL compare frozen factor weights, self-signed updates, and
+verifier-bounded exact-sign updates on a fresh sealed chronological stream.
+
+Exp6468 SHALL require both RTX 3090 GPUs, cached mandatory GGUF models,
+embedded GGUF tokenizer metadata, new raw-output paths, an empty event-id
+registry, and a sealed development, prospective-update, and future-held split
+before readiness can become one.
+
+Exp6468 SHALL define `MODEL_SPECS` through cached local resolution. It SHALL
+include exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL use embedded GGUF tokenizers only.
+It SHALL not call `AutoTokenizer`. Legacy models may appear only as
+smoke-test policy entries and not as headline rows.
+
+Exp6468 SHALL seal development, prospective-update, and future-held units
+before inference. It SHALL write an exposure ledger before inference. The
+ledger SHALL prove that future-held outcomes are not exposed to model prompts,
+state snapshots, update admission, or parsing.
+
+Exp6468 SHALL generate exactly one fresh raw model output for each event. It
+SHALL persist and hash raw bytes before parsing. Each event id SHALL be
+non-empty and unique. No candidate row, arm row, event row, or per-unit row
+SHALL reuse another event's raw hash.
+
+Exp6468 SHALL run the deterministic exact checker before any write admission.
+An admitted write SHALL include the checker receipt, pre-state head, write
+decision, post-state head, and rollback pointer. A failed checker-authority receipt SHALL leave the persistent head unchanged.
+
+Exp6468 SHALL apply bounded external factor-weight updates only after exact
+checker authority is present. The exact outcome SHALL choose update direction.
+Model confidence MAY scale only the nonnegative magnitude. The base GGUF files
+SHALL remain frozen.
+
+Exp6468 SHALL emit per-unit rows and event rows. Rows SHALL include chronology,
+raw hash, arm, pre-state, checker result, write decision, post-state, future
+exact outcome, and rollback pointer. Aggregates SHALL recompute from these
+rows.
+
+Exp6468 SHALL attack cloned raw output, duplicate event id, held exposure,
+self-signed false pass, exact-veto bypass, future leakage, protected-case
+regression, and aggregate mismatch. Every critical attack SHALL fail closed.
+
+Exp6468 SHALL set `unique_event_csl_ready_score=1.0` only when one-to-one
+event provenance holds, exact veto precedes every write, the verifier-bounded
+arm improves future exact yield over both frozen and self-signed arms,
+protected cases do not regress, model files are immutable, CPU fallback is
+zero, aggregates recompute from rows, and critical attacks fail closed.
+
+Exp6468 SHALL emit these fields:
+
+- `status`
+- `MODEL_SPECS`
+- `models_used`
+- `cached_sota_pair_receipts`
+- `model_file_and_embedded_tokenizer_hashes`
+- `autotokenizer_usage_count`
+- `device_and_runner_receipts`
+- `sealed_chronological_manifest`
+- `exposure_ledger`
+- `update_rule_and_bounds`
+- `raw_output_manifest`
+- `event_identity_manifest`
+- `exact_veto_before_write_receipts`
+- `per_unit_rows`
+- `event_rows`
+- `effect_by_arm_and_interval`
+- `protected_case_retention`
+- `write_and_rollback_counts`
+- `one_event_one_raw_hash_check`
+- `cpu_fallback_count`
+- `aggregate_row_recomputation`
+- `attack_matrix`
+- `current_adversarial_findings`
+- `unique_event_csl_ready_score`
+- `protected_files_unchanged`
+- `blocked_reason`
+- `gate_check_summary`
+- `preconditions_checked`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_principles`
+- `field_provenance`
+- `random_seed`
+- `duration_s`
+- `tests_run`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+`field_principles` SHALL map every required field and every
+`unique_event_csl_ready_score` condition. `verifier_is_oracle` SHALL be true
+only for deterministic checker authority, chronology checks, and row
+arithmetic. The self-signed arm, factor ranker, parser, and model confidence
+SHALL NOT be oracles. `honest_verdict` SHALL start with `success:`,
+`complete:`, or `blocked:`.
+
+Required field principles:
+
+- `status`: Names the terminal state for the unique-event CSL run.
+- `MODEL_SPECS`: Carries the three mandated cached GGUF model identities.
+- `models_used`: Lists only mandated models with eligible live event rows.
+- `cached_sota_pair_receipts`: Shows the cached local resolver calls.
+- `model_file_and_embedded_tokenizer_hashes`: Binds model bytes and embedded tokenizer metadata.
+- `autotokenizer_usage_count`: Must remain zero because GGUF tokenizers are embedded.
+- `device_and_runner_receipts`: Binds GPUs, CUDA, llama.cpp, generation calls, and CPU fallback checks.
+- `sealed_chronological_manifest`: Freezes units, intervals, arms, seeds, and budgets before inference.
+- `exposure_ledger`: Proves held outcomes are not visible before inference or update admission.
+- `update_rule_and_bounds`: Pins exact-sign authority, confidence magnitude use, and bounds.
+- `raw_output_manifest`: Proves raw bytes were persisted and validated before parse.
+- `event_identity_manifest`: Proves event ids are non-empty and unique.
+- `exact_veto_before_write_receipts`: Proves checker authority precedes each admitted write.
+- `per_unit_rows`: Contains row data before aggregate calculation.
+- `event_rows`: Contains one generation event for each per-unit row.
+- `effect_by_arm_and_interval`: Reports exact yield by arm and chronological interval.
+- `protected_case_retention`: Blocks utility that harms protected cases.
+- `write_and_rollback_counts`: Counts admitted writes, vetoes, and rollback pointers.
+- `one_event_one_raw_hash_check`: Proves no raw hash is cloned across rows.
+- `cpu_fallback_count`: Must be zero for ready live local GGUF evidence.
+- `aggregate_row_recomputation`: Recomputes reported metrics from rows.
+- `attack_matrix`: Shows critical event, veto, leakage, and aggregate attacks fail closed.
+- `current_adversarial_findings`: Keeps current critical findings visible.
+- `unique_event_csl_ready_score`: Conjunctive readiness for unique-event exact-veto CSL.
+- `protected_files_unchanged`: Shows conductor, ops, traceability, and upstream evidence stayed byte-identical.
+- `blocked_reason`: Explains failed preconditions for blocked artifacts.
+- `gate_check_summary`: Summarizes readiness gates and blockers.
+- `preconditions_checked`: Records hardware, cache, tokenizer, path, event-id, split, and checker checks.
+- `inference_substrate`: Declares local SOTA GGUF live inference with exact-checker-governed external weights.
+- `verifier_is_oracle`: Marks only deterministic checker, chronology, and row arithmetic as oracle boundaries.
+- `field_principles`: Documents why each field and readiness condition exists.
+- `field_provenance`: Maps fields to specs, manifests, rows, receipts, attacks, or tests.
+- `random_seed`: Pins streams, events, prompts, updates, and attacks.
+- `duration_s`: Records measured wall time without padding.
+- `tests_run`: Records focused, coverage, full pytest, spec, row, adversarial, and E2E checks.
+- `reproducibility_checksum`: Content-addresses the artifact with volatile fields normalized.
+- `honest_verdict`: Uses a terminal prefix and states the exact-veto boundary.
+
+## SCENARIO-LEARN-6468-SPEC: Spec Owns The Unique-Event Contract
+
+**Given** Exp6468 is an FR-11 continuous-learning experiment
+**When** the OpenSpec is read
+**Then** all required artifact fields, scenarios, attacks, and readiness
+conditions SHALL be declared before implementation.
+
+## SCENARIO-LEARN-6468-MODELS: Cached GGUFs And Embedded Tokenizers Are Used
+
+**Given** the three mandated GGUFs are cached
+**When** Exp6468 builds model specs
+**Then** model rows SHALL come from cached local SOTA helper calls, embedded
+tokenizer receipts SHALL be present, and `autotokenizer_usage_count` SHALL be
+zero.
+
+## SCENARIO-LEARN-6468-SEALED-SPLIT: Exposure Is Recorded Before Inference
+
+**Given** development, prospective-update, and future-held units are sealed
+**When** Exp6468 starts inference
+**Then** the exposure ledger SHALL already exist and SHALL show zero held
+outcome exposure.
+
+## SCENARIO-LEARN-6468-UNIQUE-EVENTS: One Event Has One Raw Hash
+
+**Given** event rows for all model, interval, and arm combinations
+**When** Exp6468 validates provenance
+**Then** event ids SHALL be unique, raw hashes SHALL be unique, and each
+per-unit row SHALL reference exactly one event row.
+
+## SCENARIO-LEARN-6468-EXACT-VETO: Checker Authority Precedes Writes
+
+**Given** a candidate update and a pre-state head
+**When** checker authority is absent or failed
+**Then** the write SHALL be rejected and the post-state head SHALL equal the
+pre-state head.
+
+## SCENARIO-LEARN-6468-UPDATE-RULE: Exact Outcome Owns Direction
+
+**Given** model confidence and exact outcome disagree
+**When** the verifier-bounded arm updates weights
+**Then** the update sign SHALL equal the exact outcome sign, and model
+confidence SHALL only scale nonnegative magnitude.
+
+## SCENARIO-LEARN-6468-AGGREGATES: Rows Own The Effect
+
+**Given** per-unit rows and event rows are present
+**When** Exp6468 reports arm effects, retention, writes, and raw provenance
+**Then** those metrics SHALL recompute from rows without aggregate-only state.
+
+## SCENARIO-LEARN-6468-ATTACKS: Critical Event Attacks Fail Closed
+
+**Given** cloned raw output, duplicate event id, held exposure, self-signed
+false pass, exact-veto bypass, future leakage, protected regression, or
+aggregate mismatch attacks
+**When** Exp6468 validates its attack matrix
+**Then** no attack SHALL promote readiness or admit an unchecked write.
+
+## SCENARIO-LEARN-6468-READY: Readiness Requires Future Exact Gain
+
+**Given** one-to-one event provenance, exact-veto-before-write receipts,
+protected retention, immutable models, zero CPU fallback, row recomputation,
+and fail-closed attacks
+**When** verifier-bounded updates improve future exact yield over frozen and
+self-signed updates
+**Then** `unique_event_csl_ready_score` SHALL be `1.0`.
+
+## Implementation Status (REQ-LEARN-6468)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6468 | Implemented: `python/carnot/experiment_6468_unique_event_verifier_bounded_csl.py`; terminal artifact `results/experiment_6468_unique_event_verifier_bounded_csl.json`. | Implemented: `tests/python/test_experiment_6468_unique_event_verifier_bounded_csl.py`. |
+| SCENARIO-LEARN-6468-SPEC | Implemented: `python/carnot/experiment_6468_unique_event_verifier_bounded_csl.py`. | Implemented: `tests/python/test_experiment_6468_unique_event_verifier_bounded_csl.py`. |
+| SCENARIO-LEARN-6468-MODELS | Implemented: `python/carnot/experiment_6468_unique_event_verifier_bounded_csl.py`. | Implemented: `tests/python/test_experiment_6468_unique_event_verifier_bounded_csl.py`. |
+| SCENARIO-LEARN-6468-SEALED-SPLIT | Implemented: `python/carnot/experiment_6468_unique_event_verifier_bounded_csl.py`. | Implemented: `tests/python/test_experiment_6468_unique_event_verifier_bounded_csl.py`. |
+| SCENARIO-LEARN-6468-UNIQUE-EVENTS | Implemented: `python/carnot/experiment_6468_unique_event_verifier_bounded_csl.py`. | Implemented: `tests/python/test_experiment_6468_unique_event_verifier_bounded_csl.py`. |
+| SCENARIO-LEARN-6468-EXACT-VETO | Implemented: `python/carnot/experiment_6468_unique_event_verifier_bounded_csl.py`. | Implemented: `tests/python/test_experiment_6468_unique_event_verifier_bounded_csl.py`. |
+| SCENARIO-LEARN-6468-UPDATE-RULE | Implemented: `python/carnot/experiment_6468_unique_event_verifier_bounded_csl.py`. | Implemented: `tests/python/test_experiment_6468_unique_event_verifier_bounded_csl.py`. |
+| SCENARIO-LEARN-6468-AGGREGATES | Implemented: `python/carnot/experiment_6468_unique_event_verifier_bounded_csl.py`. | Implemented: `tests/python/test_experiment_6468_unique_event_verifier_bounded_csl.py`. |
+| SCENARIO-LEARN-6468-ATTACKS | Implemented: `python/carnot/experiment_6468_unique_event_verifier_bounded_csl.py`. | Implemented: `tests/python/test_experiment_6468_unique_event_verifier_bounded_csl.py`. |
+| SCENARIO-LEARN-6468-READY | Implemented: `python/carnot/experiment_6468_unique_event_verifier_bounded_csl.py`. | Implemented: `tests/python/test_experiment_6468_unique_event_verifier_bounded_csl.py`. |
+
 ## REQ-LEARN-6444: CSL Lifecycle Recomputation Audit
 
 **Given** Exp6433 left the prospective CSL claim ineligible, Exp6441 through
