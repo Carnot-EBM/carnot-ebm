@@ -59,8 +59,24 @@ window-actions-subset-of-vocabulary test costing zero engine calls, then root-li
 systemic reading (clicks lost in windowing) was tested over all seven cached windows and
 REFUTED — vc33 is click-only and its window is ACTION6 throughout.
 
-**Not done.** vLLM has not yet served on Kaggle; v32 is in flight. The submission slot is
-unspent and remains operator-only.
+**RESOLVED at v33 — vLLM serves.** The line below said v32 was in flight; it and v31 failed,
+and v33 is the one that worked. `server_up=True in 415s`, admission exact
+(`observed_max_model_len=155472`, `need=155472`), and `24/24` requests round-tripped through
+`_vllm_raw_completion` at a worst-case 17,238-token prompt. Two more defects fell out on the
+way: libcuda was sought through `ldconfig`, which lists none in that container, when the CUDA
+wheels ship a stub for exactly this purpose; and — the one that would have failed every run from
+v28 onward on its own — `_ensure_vllm_server` called `_healthy()`, which returns
+`b"ok" in r.read()` because llama.cpp answers `{"status":"ok"}`. vLLM answers 200 with an EMPTY
+body. Kernel v32 logged `Application startup complete` and then served 157 consecutive
+`GET /health` 200s while the launcher waited out its full 20-minute budget and reported failure.
+A llama.cpp-shaped check inside the vLLM launcher, written while building a probe whose whole
+purpose was catching that class of mismatch.
+
+**Six kernel versions, five of them fixed-path or ordering assumptions in a layout nobody
+promised.** Diagnosable only because the server log was saved to the kernel output at v28, a fix
+that paid for itself on the very next run.
+
+**Not done.** The submission slot is unspent and remains operator-only.
 
 ## 2026-08-17 (outer-loop, seeded repair evidence + three corrections, commits 71014c8af5 / 51df5d093f)
 
