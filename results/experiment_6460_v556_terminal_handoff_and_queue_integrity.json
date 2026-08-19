@@ -1,0 +1,1546 @@
+{
+  "status": "complete_blocked_v556_queue_integrity_failed",
+  "v555_terminal_rows": [
+    {
+      "task_id": "exp6448-v555-terminal-handoff-and-queue-integrity",
+      "deliverable_path": "results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json",
+      "byte_count": 96892,
+      "artifact_state": "blocked",
+      "status": "complete_blocked_v555_queue_integrity_failed",
+      "honest_verdict": "complete_blocked_v555_queue_integrity_failed: V554 terminal facts are preserved but a V555 queue contract failed",
+      "gate_summary": {
+        "failed_check": "prior_failure_validation",
+        "expected_condition": "prior_failure_validation.ok is true",
+        "observed_value": {
+          "ok": false,
+          "required_rerun_task_ids": [
+            "exp6449-generation-to-verdict-path-receipt-contract",
+            "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
+            "exp6453-held-verifier-budget-allocation-ab",
+            "exp6454-held-exact-constraint-energy-selection-ab",
+            "exp6456-corrupt-feedback-held-restart-csl-replication",
+            "exp6457-independent-verifier-bounded-csl-audit",
+            "exp6458-arc-representation-objective-generalization-ab"
+          ],
+          "missing_required_rerun_task_ids": [],
+          "required_prior_failure_rows": [
+            {
+              "task_id": "exp6449-generation-to-verdict-path-receipt-contract",
+              "present_in_roadmap": true,
+              "experiment_id": "exp6437-generation-to-verdict-receipt-replay-contract",
+              "verdict": "blocked_gate_check_failed",
+              "addressed_by": "This task is ungated, runs directly on immutable nonzero V553 fixtures, and validates identity, injected-boundary, and restored-boundary controls without depending on queue readiness.",
+              "retire_if_same_verdict": true,
+              "complete": true,
+              "failure_reason": null
+            },
+            {
+              "task_id": "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
+              "present_in_roadmap": true,
+              "experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
+              "verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+              "addressed_by": "This task fills a fixed predeclared predicate inventory and executes a fixed rule program; it does not generate ConstraintIR, a schema, a solver, or a finite answer channel, and it scores exact semantics rather than structural validity.",
+              "retire_if_same_verdict": true,
+              "complete": true,
+              "failure_reason": null
+            },
+            {
+              "task_id": "exp6453-held-verifier-budget-allocation-ab",
+              "present_in_roadmap": true,
+              "experiment_id": "exp6429-constraint-saturation-verification-cost-ab",
+              "verdict": "complete: selective verification matched always-refine accuracy with lower median and tail cost",
+              "addressed_by": "This rerun freezes the allocator before a sealed held split, charges probe cost, uses enough distinct units per budget cell, adds a constructed zero-gain control, and enforces the live duration and row-recomputation rules that made Exp6429 ineligible.",
+              "retire_if_same_verdict": true,
+              "complete": true,
+              "failure_reason": null
+            },
+            {
+              "task_id": "exp6454-held-exact-constraint-energy-selection-ab",
+              "present_in_roadmap": true,
+              "experiment_id": "exp1006-energy-selection-ssd",
+              "verdict": "blocked_gate_check_failed",
+              "addressed_by": "Never executed a comparison -- blocked at its own pre-gate, so it recorded no evidence about energy selection. This task is gated on Exp6452's objective-causality result and runs only if that lands.",
+              "retire_if_same_verdict": true,
+              "complete": true,
+              "failure_reason": null
+            },
+            {
+              "task_id": "exp6454-held-exact-constraint-energy-selection-ab",
+              "present_in_roadmap": true,
+              "experiment_id": "exp5708-sota-exact-constraint-canary",
+              "verdict": "blocked: parse_failures",
+              "addressed_by": "Blocked on candidate parsing, not on the selection question. This task consumes Exp6450's already-parsed reserved held partition instead of re-parsing SOTA output.",
+              "retire_if_same_verdict": true,
+              "complete": true,
+              "failure_reason": null
+            },
+            {
+              "task_id": "exp6454-held-exact-constraint-energy-selection-ab",
+              "present_in_roadmap": true,
+              "experiment_id": "exp6205-held-code-selection-v2",
+              "verdict": "blocked_gate_check_failed",
+              "addressed_by": "Also never ran; blocked on an upstream readiness score. Same gating class, different upstream, and this task's upstream (Exp6452) is in the same milestone rather than a prior one.",
+              "retire_if_same_verdict": true,
+              "complete": true,
+              "failure_reason": null
+            },
+            {
+              "task_id": "exp6454-held-exact-constraint-energy-selection-ab",
+              "present_in_roadmap": true,
+              "experiment_id": "exp787-sstar-energy-ranked-code-selection",
+              "verdict": "energy_prefilter_efficient",
+              "addressed_by": "The one prior that DID run, and it was POSITIVE (energy prefilter efficient), so it is not a failure this task repeats. What is different: a frozen learned objective from Exp6452 and a held partition the objective never saw, rather than a hand-specified prefilter on development rows.",
+              "retire_if_same_verdict": true,
+              "complete": true,
+              "failure_reason": null
+            },
+            {
+              "task_id": "exp6456-corrupt-feedback-held-restart-csl-replication",
+              "present_in_roadmap": true,
+              "experiment_id": "exp6432-held-shift-process-restart-csl-replication",
+              "verdict": "complete: held-shift process-restart replication improved future exact yield",
+              "addressed_by": "This rerun uses a different verifier-bounded external weight learner, new held bytes from all three mandatory GGUFs, an injected corrupt-feedback transport event, receipt-based quarantine, tombstone rollback, and real restart and duration receipts.",
+              "retire_if_same_verdict": true,
+              "complete": true,
+              "failure_reason": null
+            },
+            {
+              "task_id": "exp6457-independent-verifier-bounded-csl-audit",
+              "present_in_roadmap": true,
+              "experiment_id": "exp6433-csl-row-recomputation-safety-audit",
+              "verdict": "complete_null: V553 row recomputation audit completed; prospective CSL claim remains ineligible",
+              "addressed_by": "This audit evaluates a different verifier-bounded external weight mechanism with exact-sign updates, a new held corruption-and-restart replication, independent reducers, and current duration checks.",
+              "retire_if_same_verdict": true,
+              "complete": true,
+              "failure_reason": null
+            },
+            {
+              "task_id": "exp6457-independent-verifier-bounded-csl-audit",
+              "present_in_roadmap": true,
+              "experiment_id": "exp6444-csl-lifecycle-recomputation-audit",
+              "verdict": "complete_blocked: V554 CSL lifecycle recomputation audit blocked by missing or failed upstream evidence",
+              "addressed_by": "This audit remains ungated but reads the independently executable Exp6455 branch and the directly gated Exp6456 branch; it preserves missing evidence and retires the scope if the same blocked determination repeats.",
+              "retire_if_same_verdict": true,
+              "complete": true,
+              "failure_reason": null
+            },
+            {
+              "task_id": "exp6458-arc-representation-objective-generalization-ab",
+              "present_in_roadmap": true,
+              "experiment_id": "exp6434-arc-state-key-reachability-ab",
+              "verdict": "no_honest_verdict: zero-byte artifact after hard wall-clock failure",
+              "addressed_by": "This recovery splits the roster into bounded CPU shards, writes atomic checkpoints after every cell, resumes without repeating finished cells, accepts a terminal partial artifact, and separates state representation from objective quality.",
+              "retire_if_same_verdict": true,
+              "complete": true,
+              "failure_reason": null
+            }
+          ],
+          "operator_override_rows": [
+            {
+              "task_id": "exp6448-v555-terminal-handoff-and-queue-integrity",
+              "operator_override_present": true,
+              "cites_standing_transition_directive": true,
+              "value": "2026-05-29 operator directive (standing): routine milestone-transition work scope-matches prior handoffs by construction. This task hands off V554 and validates the new V555 queue; no previous task could validate this milestone."
+            },
+            {
+              "task_id": "exp6459-v555-adversarial-capstone",
+              "operator_override_present": true,
+              "cites_standing_transition_directive": true,
+              "value": "2026-05-29 operator directive (standing): routine milestone-transition task -- false-positive scope-match; a VN adversarial capstone scope-matches every prior capstone by construction and is structurally never a doomed rerun. This instance reconciles V555, which no prior capstone can have done."
+            }
+          ],
+          "failures": [],
+          "validate_prior_failures": {
+            "schema_errors": [],
+            "prior_failure_violations": [
+              "Task 'exp6448-v555-terminal-handoff-and-queue-integrity' ('V554 terminal handoff and V555 queue integrity') matches archived experiments ['exp6363-v548-terminal-handoff-and-queue-preflight', 'exp6377-v549-terminal-handoff-and-queue-preflight', 'exp6391-v550-terminal-handoff-and-queue-preflight', 'exp6404-v551-terminal-handoff-and-queue-preflight', 'exp6410-v552-terminal-handoff-and-queue-preflight'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope",
+              "Task 'exp6455-prospective-verifier-bounded-factor-weight-csl' ('Prospective verifier-bounded factor-weight continuous self-learning') matches archived experiments ['exp5735-zero-gate-kan-continuous-self-learning', 'exp5749-csl-render-matched-mechanism-audit', 'exp5867-prospective-certified-continuous-learning', 'exp5882-shortcut-resistant-continuous-self-learning', 'exp5895-shortcut-safe-continuous-self-learning'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope",
+              "Task 'exp6459-v555-adversarial-capstone' ('V555 adversarial capstone and reconciliation') matches archived experiments ['exp6155-v533-capstone-reconciliation', 'exp6168-v534-capstone-reconciliation', 'exp6196-v536-capstone', 'exp6224-v538-adversarial-capstone', 'exp6238-v539-adversarial-capstone'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope"
+            ]
+          },
+          "gate_audit_prior_missing": 5,
+          "gate_audit_failure_details": [
+            "PRIOR_FAILURES_COVERAGE exp6448-v555-terminal-handoff-and-queue-integrity: title matches prior tasks ['exp5849-transition-v521', 'exp5863-transition-v522', 'exp5877-transition-v523', 'exp5890-transition-v524', 'exp5890-transition-v524'] but prior_failures is missing or empty",
+            "PRIOR_FAILURES_COVERAGE exp6450-sota-fixed-policy-candidate-corpus: title matches prior tasks ['exp6160-sota-decision-calibration-corpus', 'exp6195-arc-task-aware-prospective-fresh-transition', 'exp6263-clean-sota-event-replay-bridge', 'exp6414-fresh-three-family-factor-event-corpus', 'exp6427-fresh-constraint-saturation-factor-corpus'] but prior_failures is missing or empty",
+            "PRIOR_FAILURES_COVERAGE exp6452-representation-objective-causal-ab: title matches prior tasks ['exp5720-sota-attested-exact-envelope-canary', 'exp5722-fr11-compliance-recovery-rollback-canary', 'exp5726-arc-epistemic-ledger-live-ab', 'exp5734-sota-exact-proposal-stream', 'exp5741-arc-generic-primitive-live-ab'] but prior_failures is missing or empty",
+            "PRIOR_FAILURES_COVERAGE exp6455-prospective-verifier-bounded-factor-weight-csl: title matches prior tasks ['exp5721-fr11-memops-lifecycle-shadow-stream', 'exp5735-zero-gate-kan-continuous-self-learning', 'exp5749-csl-render-matched-mechanism-audit', 'exp5750-dependent-task-continuous-self-learning', 'exp5787-validation-gated-constraint-skill-ab'] but prior_failures is missing or empty",
+            "PRIOR_FAILURES_COVERAGE exp6459-v555-adversarial-capstone: title matches prior tasks ['exp5931-v526-capstone-reconciliation', 'exp5931-v526-capstone-reconciliation', 'exp5973-v528-capstone-reconciliation', 'exp6123-v530-capstone-reconciliation', 'exp6155-v533-capstone-reconciliation'] but prior_failures is missing or empty"
+          ],
+          "gate_audit_passed": false
+        },
+        "evidence_path": "research-roadmap.yaml"
+      },
+      "readiness_fields": {
+        "v555_queue_integrity_score": 0.0
+      },
+      "final_claim_eligibility": {
+        "eligible": false,
+        "blockers": [
+          "prior_failure_validation: prior_failure_validation.ok is true"
+        ],
+        "scope": "exp6448-v555-terminal-handoff-and-queue-integrity"
+      }
+    },
+    {
+      "task_id": "exp6449-generation-to-verdict-path-receipt-contract",
+      "deliverable_path": "results/experiment_6449_generation_to_verdict_path_receipt_contract.json",
+      "byte_count": 1389320,
+      "artifact_state": "complete",
+      "status": "success",
+      "honest_verdict": "success: path receipt controls localized and critical attacks failed closed",
+      "gate_summary": "all preconditions passed",
+      "readiness_fields": {
+        "path_receipt_ready_score": 1.0
+      },
+      "final_claim_eligibility": {
+        "eligible": true,
+        "blockers": [],
+        "scope": "path receipt"
+      }
+    },
+    {
+      "task_id": "exp6450-sota-fixed-policy-candidate-corpus",
+      "deliverable_path": "results/experiment_6450_sota_fixed_policy_candidate_corpus.json",
+      "byte_count": 7032040,
+      "artifact_state": "complete",
+      "status": "complete_with_findings",
+      "honest_verdict": "complete: fixed-policy candidate corpus finished but readiness gate stayed closed",
+      "gate_summary": "readiness closed: raw_output_uniqueness",
+      "readiness_fields": {
+        "sota_corpus_ready_score": 0.0
+      },
+      "final_claim_eligibility": {
+        "eligible": false,
+        "blockers": [
+          "no_claim_promoted_by_exp6460"
+        ],
+        "scope": "exp6450-sota-fixed-policy-candidate-corpus"
+      }
+    },
+    {
+      "task_id": "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
+      "deliverable_path": "results/experiment_6451_typed_fact_grounding_fixed_policy_logic_ab.json",
+      "byte_count": 872,
+      "artifact_state": "blocked",
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "gate_summary": "1 of 1 gate(s) failed; first failure: exp6450-sota-fixed-policy-candidate-corpus.sota_corpus_ready_score (actual=0.0 == expected=1.0)",
+      "readiness_fields": {},
+      "final_claim_eligibility": {
+        "eligible": false,
+        "blockers": [
+          "blocked_artifact"
+        ],
+        "scope": "exp6451-typed-fact-grounding-fixed-policy-logic-ab"
+      }
+    },
+    {
+      "task_id": "exp6452-representation-objective-causal-ab",
+      "deliverable_path": "results/experiment_6452_representation_objective_causal_ab.json",
+      "byte_count": null,
+      "artifact_state": "missing",
+      "status": "missing",
+      "honest_verdict": null,
+      "gate_summary": null,
+      "readiness_fields": {},
+      "final_claim_eligibility": {
+        "eligible": false,
+        "blockers": [
+          "missing_artifact"
+        ],
+        "scope": "exp6452-representation-objective-causal-ab"
+      }
+    },
+    {
+      "task_id": "exp6453-held-verifier-budget-allocation-ab",
+      "deliverable_path": "results/experiment_6453_held_verifier_budget_allocation_ab.json",
+      "byte_count": 863,
+      "artifact_state": "blocked",
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "gate_summary": "1 of 1 gate(s) failed; first failure: exp6450-sota-fixed-policy-candidate-corpus.sota_corpus_ready_score (actual=0.0 == expected=1.0)",
+      "readiness_fields": {},
+      "final_claim_eligibility": {
+        "eligible": false,
+        "blockers": [
+          "blocked_artifact"
+        ],
+        "scope": "exp6453-held-verifier-budget-allocation-ab"
+      }
+    },
+    {
+      "task_id": "exp6454-held-exact-constraint-energy-selection-ab",
+      "deliverable_path": "results/experiment_6454_held_exact_constraint_energy_selection_ab.json",
+      "byte_count": null,
+      "artifact_state": "missing",
+      "status": "missing",
+      "honest_verdict": null,
+      "gate_summary": null,
+      "readiness_fields": {},
+      "final_claim_eligibility": {
+        "eligible": false,
+        "blockers": [
+          "missing_artifact"
+        ],
+        "scope": "exp6454-held-exact-constraint-energy-selection-ab"
+      }
+    },
+    {
+      "task_id": "exp6455-prospective-verifier-bounded-factor-weight-csl",
+      "deliverable_path": "results/experiment_6455_prospective_verifier_bounded_factor_weight_csl.json",
+      "byte_count": 1158734,
+      "artifact_state": "complete",
+      "status": "success_ready",
+      "honest_verdict": "success: verifier-bounded exact-sign factor weights improved future exact yield",
+      "gate_summary": {
+        "failed_check_count": 0,
+        "failed_checks": [],
+        "gates": {
+          "all_three_models_have_rows": true,
+          "bounded_weight_growth": true,
+          "chronology_respected": true,
+          "duration_checks_pass": true,
+          "no_protected_retention_regression": true,
+          "verifier_beats_frozen_future_yield": true,
+          "verifier_beats_or_is_safer_than_teacher": true,
+          "zero_critical_findings": true,
+          "zero_false_accepts": true
+        },
+        "summary": "all readiness gates passed"
+      },
+      "readiness_fields": {
+        "verifier_bounded_csl_ready_score": 1.0
+      },
+      "final_claim_eligibility": {
+        "eligible": false,
+        "blockers": [
+          "v555_csl_claim_invalidated_by_exp6457"
+        ],
+        "scope": "continuous self-learning"
+      }
+    },
+    {
+      "task_id": "exp6456-corrupt-feedback-held-restart-csl-replication",
+      "deliverable_path": "results/experiment_6456_corrupt_feedback_held_restart_csl_replication.json",
+      "byte_count": 4570516,
+      "artifact_state": "complete",
+      "status": "success_ready",
+      "honest_verdict": "success: Exp6456 clean learning improved held exact yield and governed learning detected, quarantined, tombstoned, rolled back, and prevented resurrection of all transport-corrupted feedback events.",
+      "gate_summary": {
+        "all_ready_gates_passed": true,
+        "blockers": [],
+        "checks": {
+          "aggregates_recompute": true,
+          "all_models_have_rows": true,
+          "benign_utility_within_tolerance": true,
+          "clean_positive_held_effect": true,
+          "duration_eligible": true,
+          "fresh_disjoint_paths": true,
+          "governed_contains_corruption": true,
+          "restart_recovery": true,
+          "zero_critical_findings": true,
+          "zero_protected_release": true,
+          "zero_resurrection": true
+        },
+        "failed_check_count": 0,
+        "readiness_conditions": [
+          "clean_positive_held_effect",
+          "governed_contains_corruption",
+          "zero_protected_release",
+          "zero_resurrection",
+          "benign_utility_within_tolerance",
+          "restart_recovery",
+          "fresh_disjoint_paths",
+          "all_models_have_rows",
+          "duration_eligible",
+          "aggregates_recompute",
+          "zero_critical_findings"
+        ]
+      },
+      "readiness_fields": {
+        "csl_safety_replication_ready_score": 1.0
+      },
+      "final_claim_eligibility": {
+        "eligible": false,
+        "blockers": [
+          "v555_csl_claim_invalidated_by_exp6457"
+        ],
+        "scope": "continuous self-learning"
+      }
+    },
+    {
+      "task_id": "exp6457-independent-verifier-bounded-csl-audit",
+      "deliverable_path": "results/experiment_6457_independent_verifier_bounded_csl_audit.json",
+      "byte_count": 834832,
+      "artifact_state": "complete",
+      "status": "complete_null",
+      "honest_verdict": "complete: independent verifier-bounded CSL audit did not grant eligibility",
+      "gate_summary": {
+        "failed_check_count": 2,
+        "failed_checks": [
+          "raw_outputs_unique_and_partitions_disjoint",
+          "zero_current_critical_findings"
+        ],
+        "gates": {
+          "duration_and_substrate_eligible": true,
+          "held_positive_effect_recomputes": true,
+          "prospective_positive_effect_recomputes": true,
+          "raw_outputs_unique_and_partitions_disjoint": false,
+          "required_upstream_evidence_exists": true,
+          "safety_and_restart_gates_pass": true,
+          "update_direction_authority": true,
+          "verification_commands_pass": true,
+          "zero_current_critical_findings": false,
+          "zero_material_mismatch": true
+        },
+        "summary": "failed: raw_outputs_unique_and_partitions_disjoint, zero_current_critical_findings"
+      },
+      "readiness_fields": {
+        "csl_audit_ready_score": 0.0
+      },
+      "final_claim_eligibility": {
+        "eligible": false,
+        "blockers": [
+          "no_claim_promoted_by_exp6460"
+        ],
+        "scope": "exp6457-independent-verifier-bounded-csl-audit"
+      }
+    },
+    {
+      "task_id": "exp6458-arc-representation-objective-generalization-ab",
+      "deliverable_path": "results/experiment_6458_arc_representation_objective_generalization_ab.json",
+      "byte_count": 1053224,
+      "artifact_state": "complete",
+      "status": "complete_null",
+      "honest_verdict": "complete: Exp6458 audit finished with readiness gates unmet: frozen_safety_roster_not_regressed",
+      "gate_summary": {
+        "all_ready_gates_passed": false,
+        "checks": {
+          "claims_recompute_from_held_rows": true,
+          "combined_improves_over_single_change_arms": true,
+          "combined_reduces_collisions": true,
+          "critical_findings_zero": true,
+          "frozen_safety_roster_not_regressed": false,
+          "nonzero_held_sample_completed": true,
+          "placebo_not_promoted": true,
+          "provenance_boundaries_pass": true
+        },
+        "failed_gates": [
+          "frozen_safety_roster_not_regressed"
+        ],
+        "frozen_safety_roster": {
+          "not_regressed": false,
+          "reachability_by_arm": {
+            "collision_suffix_current_objective": {
+              "rate": 0.1875,
+              "reachable": 3,
+              "rows": 16
+            },
+            "collision_suffix_reachability_objective": {
+              "rate": 0.5,
+              "reachable": 8,
+              "rows": 16
+            },
+            "collision_suffix_shuffled_objective_placebo": {
+              "rate": 0.1875,
+              "reachable": 3,
+              "rows": 16
+            },
+            "current_state_key_current_objective": {
+              "rate": 0.25,
+              "reachable": 4,
+              "rows": 16
+            }
+          },
+          "regressed_games": [
+            "g50t"
+          ],
+          "safety_game_count": 2,
+          "safety_row_count": 64
+        },
+        "readiness_conditions": [
+          "combined_reduces_collisions",
+          "combined_improves_over_single_change_arms",
+          "frozen_safety_roster_not_regressed",
+          "claims_recompute_from_held_rows",
+          "provenance_boundaries_pass",
+          "nonzero_held_sample_completed",
+          "critical_findings_zero"
+        ]
+      },
+      "readiness_fields": {
+        "arc_objective_generalization_ready_score": 0.0
+      },
+      "final_claim_eligibility": {
+        "eligible": false,
+        "blockers": [
+          "frozen_safety_roster_regressed"
+        ],
+        "scope": "ARC safety"
+      }
+    },
+    {
+      "task_id": "exp6459-v555-adversarial-capstone",
+      "deliverable_path": "results/experiment_6459_v555_adversarial_capstone.json",
+      "byte_count": 5429031,
+      "artifact_state": "blocked",
+      "status": "complete_blocked",
+      "honest_verdict": "complete_blocked: V555 capstone complete; no requested science, public ARC, or hardware claim is eligible",
+      "gate_summary": {
+        "eligible_claims": [],
+        "ineligible_claims": [
+          "typed_grounding_claim_eligibility",
+          "objective_causal_claim_eligibility",
+          "held_allocation_claim_eligibility",
+          "energy_selection_claim_eligibility",
+          "prospective_csl_claim_eligibility",
+          "held_csl_safety_claim_eligibility",
+          "internal_arc_generalization_claim_eligibility",
+          "public_arc_claim_eligibility",
+          "hardware_claim_eligibility"
+        ],
+        "failed_claim_gate_count": 9
+      },
+      "readiness_fields": {
+        "v555_capstone_ready_score": 1.0
+      },
+      "final_claim_eligibility": {
+        "eligible": false,
+        "blockers": [
+          "typed_grounding_claim_eligibility:exp6451_blocked_gate_check_failed,exp6451_typed_grounding_ready_score_not_1; objective_causal_claim_eligibility:exp6452_artifact_missing,typed_grounding_ineligible; held_allocation_claim_eligibility:exp6453_blocked_gate_check_failed,exp6453_held_allocation_ready_score_not_1; energy_selection_claim_eligibility:exp6454_artifact_missing,objective_causal_ineligible; prospective_csl_claim_eligibility:exp6457_csl_audit_ready_score_not_1,exp6457_current_critical_attack_open; held_csl_safety_claim_eligibility:exp6457_csl_audit_ready_score_not_1,exp6457_current_critical_attack_open; internal_arc_generalization_claim_eligibility:exp6458_arc_ready_score_not_1; public_arc_claim_eligibility:v555_contains_no_public_arc_evidence_task,exp6458_declares_no_game_or_level_solve_claim; hardware_claim_eligibility:v555_contains_no_hardware_evidence_task"
+        ],
+        "scope": "exp6459-v555-adversarial-capstone"
+      }
+    }
+  ],
+  "active_roadmap_hash": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+    "present": true,
+    "sha256": "sha256:c27172370cde68ef2a7d1478b64bb79cc39797a35f37ac9404ef0ed5b6bf7791",
+    "size_bytes": 67908,
+    "milestone": "2026.08.556"
+  },
+  "staged_roadmap_hash": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml",
+    "present": false,
+    "sha256": null,
+    "size_bytes": null,
+    "milestone": null
+  },
+  "task_count": 13,
+  "task_ids_in_order": [
+    "exp6460-v556-terminal-handoff-and-queue-integrity",
+    "exp6461-v556-primary-source-freshness-receipt",
+    "exp6462-sota-raw-persistence-uniqueness-canary",
+    "exp6463-sota-fixed-policy-candidate-corpus-v2",
+    "exp6464-fixed-slot-grounding-exact-logic-ab",
+    "exp6465-representation-objective-causal-ab-v2",
+    "exp6466-held-verifier-budget-allocation-v2",
+    "exp6467-held-exact-constraint-energy-selection-v2",
+    "exp6468-unique-event-verifier-bounded-csl",
+    "exp6469-unique-event-csl-corruption-restart",
+    "exp6470-independent-unique-event-csl-audit",
+    "exp6471-arc-generic-safety-shield-objective-ab",
+    "exp6472-v556-adversarial-capstone"
+  ],
+  "unique_id_and_deliverable_check": {
+    "ok": true,
+    "task_count": 13,
+    "expected_task_count": 13,
+    "expected_task_ids": [
+      "exp6460-v556-terminal-handoff-and-queue-integrity",
+      "exp6461-v556-primary-source-freshness-receipt",
+      "exp6462-sota-raw-persistence-uniqueness-canary",
+      "exp6463-sota-fixed-policy-candidate-corpus-v2",
+      "exp6464-fixed-slot-grounding-exact-logic-ab",
+      "exp6465-representation-objective-causal-ab-v2",
+      "exp6466-held-verifier-budget-allocation-v2",
+      "exp6467-held-exact-constraint-energy-selection-v2",
+      "exp6468-unique-event-verifier-bounded-csl",
+      "exp6469-unique-event-csl-corruption-restart",
+      "exp6470-independent-unique-event-csl-audit",
+      "exp6471-arc-generic-safety-shield-objective-ab",
+      "exp6472-v556-adversarial-capstone"
+    ],
+    "missing_expected_task_ids": [],
+    "extra_task_ids": [],
+    "duplicate_task_ids": [],
+    "unique_task_ids": true,
+    "duplicate_deliverables": [],
+    "unique_deliverables": true,
+    "deliverable_failures": [],
+    "execution_order_ok": true,
+    "retired_task_ids": []
+  },
+  "milestone_consistency_check": {
+    "ok": true,
+    "roadmap_milestone": "2026.08.556",
+    "expected_milestone": "2026.08.556",
+    "failures": []
+  },
+  "schema_validation": {
+    "ok": true,
+    "errors": []
+  },
+  "prior_failure_validation": {
+    "ok": true,
+    "prior_failure_rows": [
+      {
+        "task_id": "exp6460-v556-terminal-handoff-and-queue-integrity",
+        "experiment_id": "exp6448-v555-terminal-handoff-and-queue-integrity",
+        "verdict": "complete_blocked_v555_queue_integrity_failed: V554 terminal facts are preserved but a V555 queue contract failed",
+        "addressed_by": "This handoff targets a new milestone and directly adds the prior-failure declarations that Exp6448 found missing. It validates 13 V556 tasks and a different staged roadmap hash.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6461-v556-primary-source-freshness-receipt",
+        "experiment_id": "exp5838-v520-source-delta-ingestion",
+        "verdict": "complete: no accepted post-V520 source deltas; references unchanged",
+        "addressed_by": "This receipt covers a new 2026-08-15 cutoff, the late 2026-08-13 arXiv release, current EBT and ARM-EBM citation trails, and the open rendered ARC leaderboard issue. A null delta remains an acceptable result.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6462-sota-raw-persistence-uniqueness-canary",
+        "experiment_id": "exp6450-sota-fixed-policy-candidate-corpus",
+        "verdict": "complete: fixed-policy candidate corpus finished but readiness gate stayed closed",
+        "addressed_by": "This task is a small persistence canary, not a full corpus. It writes one atomic file per generation, verifies nonzero bytes before parse, binds one event ID to one raw hash, and injects the zero-byte and clone failures that Exp6450 exposed.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6463-sota-fixed-policy-candidate-corpus-v2",
+        "experiment_id": "exp6450-sota-fixed-policy-candidate-corpus",
+        "verdict": "complete: fixed-policy candidate corpus finished but readiness gate stayed closed",
+        "addressed_by": "This rerun depends on a live persistence canary, checkpoints after each generation, four presealed partitions, one event/path/hash binding, and explicit nonzero-byte and candidate-diversity gates before downstream readiness.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6464-fixed-slot-grounding-exact-logic-ab",
+        "experiment_id": "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
+        "verdict": "blocked_gate_check_failed",
+        "addressed_by": "The prior task never ran. This task consumes the repaired corpus-v2 bytes, uses no new LLM call, and requires exact false-accept and task-success rows from a fixed predicate inventory and solver.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6464-fixed-slot-grounding-exact-logic-ab",
+        "experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
+        "verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+        "addressed_by": "This task does not generate ConstraintIR, a schema, or a solver. It maps existing bytes to fixed typed slots and executes a predeclared exact rule program.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6465-representation-objective-causal-ab-v2",
+        "experiment_id": "exp6452-representation-objective-causal-ab",
+        "verdict": "no_honest_verdict: artifact missing after upstream gate cascade",
+        "addressed_by": "The prior task never ran. This task has a repaired same-milestone grounding prerequisite, freezes facts and candidate bytes, and tests only predeclared objectives with row-level active, ablated, and shuffled controls.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6466-held-verifier-budget-allocation-v2",
+        "experiment_id": "exp6453-held-verifier-budget-allocation-ab",
+        "verdict": "blocked_gate_check_failed",
+        "addressed_by": "The prior task never ran. This task consumes the repaired corpus-v2 allocation-held split and freezes the policy on development rows before equal-cost held evaluation.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6466-held-verifier-budget-allocation-v2",
+        "experiment_id": "exp6429-constraint-saturation-verification-cost-ab",
+        "verdict": "complete: selective verification matched always-refine accuracy with lower median and tail cost",
+        "addressed_by": "This rerun uses enough distinct held units, charges probe cost, includes harmful-flip and zero-gain controls, and enforces live duration and row recomputation.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6467-held-exact-constraint-energy-selection-v2",
+        "experiment_id": "exp6454-held-exact-constraint-energy-selection-ab",
+        "verdict": "no_honest_verdict: artifact missing after upstream gate cascade",
+        "addressed_by": "The prior task never ran. This task has a repaired same-milestone objective prerequisite and uses untouched selection-held rows with a frozen objective and matched controls.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6467-held-exact-constraint-energy-selection-v2",
+        "experiment_id": "exp1006-energy-selection-ssd",
+        "verdict": "blocked_gate_check_failed",
+        "addressed_by": "The prior comparison never ran. This task runs only after a same-milestone objective-causality artifact passes.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6467-held-exact-constraint-energy-selection-v2",
+        "experiment_id": "exp5708-sota-exact-constraint-canary",
+        "verdict": "blocked: parse_failures",
+        "addressed_by": "This task consumes already parsed, provenance-complete corpus rows instead of reparsing SOTA output.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6467-held-exact-constraint-energy-selection-v2",
+        "experiment_id": "exp6205-held-code-selection-v2",
+        "verdict": "blocked_gate_check_failed",
+        "addressed_by": "The prior task never ran. This task uses a current same-milestone producer with an exact gate field and an untouched fixed-policy held split.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6468-unique-event-verifier-bounded-csl",
+        "experiment_id": "exp6455-prospective-verifier-bounded-factor-weight-csl",
+        "verdict": "success: verifier-bounded exact-sign factor weights improved future exact yield",
+        "addressed_by": "The V555 audit found generation reuse and an open exact-veto attack. This task requires one live raw generation per event, exact veto before write admission, an exposure ledger, and attack-clean one-to-one event provenance.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6468-unique-event-verifier-bounded-csl",
+        "experiment_id": "exp6457-independent-verifier-bounded-csl-audit",
+        "verdict": "complete: independent verifier-bounded CSL audit did not grant eligibility",
+        "addressed_by": "The learning mechanism now removes the two audit blockers: cloned raw generations cannot count as distinct events, and an exact-veto failure must block the write before persistent state changes.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6469-unique-event-csl-corruption-restart",
+        "experiment_id": "exp6456-corrupt-feedback-held-restart-csl-replication",
+        "verdict": "success: Exp6456 clean learning improved held exact yield and governed learning detected, quarantined, tombstoned, rolled back, and prevented resurrection of all transport-corrupted feedback events.",
+        "addressed_by": "The V555 audit invalidated the upstream event substrate. This replication uses new unique held generations, exact veto before write, raw-hash disjointness, forged-pass and wrong-binding attacks, and real process restart receipts.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6469-unique-event-csl-corruption-restart",
+        "experiment_id": "exp6432-held-shift-process-restart-csl-replication",
+        "verdict": "complete: held-shift process-restart replication improved future exact yield",
+        "addressed_by": "This task uses a different unique-event external factor learner, all mandatory GGUFs, explicit corrupt checker transport, and attack-clean duration and restart evidence.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6470-independent-unique-event-csl-audit",
+        "experiment_id": "exp6457-independent-verifier-bounded-csl-audit",
+        "verdict": "complete: independent verifier-bounded CSL audit did not grant eligibility",
+        "addressed_by": "This audit evaluates a changed unique-event mechanism with exact-veto-first admission, new raw files, an exposure ledger, independent lifecycle reducers, and explicit one-to-one event checks.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6470-independent-unique-event-csl-audit",
+        "experiment_id": "exp6433-csl-row-recomputation-safety-audit",
+        "verdict": "complete_null: V553 row recomputation audit completed; prospective CSL claim remains ineligible",
+        "addressed_by": "This audit reads a different mechanism and requires unique live event provenance, current duration evidence, and new corruption and restart rows.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6471-arc-generic-safety-shield-objective-ab",
+        "experiment_id": "exp6458-arc-representation-objective-generalization-ab",
+        "verdict": "complete: Exp6458 audit finished with readiness gates unmet: frozen_safety_roster_not_regressed",
+        "addressed_by": "This task freezes the prior representation and objective, adds a generic leave-one-game-out safety veto and conservative fallback, and uses one canonical reducer to prevent the two aggregate mismatches found by the V555 capstone.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "exp6472-v556-adversarial-capstone",
+        "experiment_id": "exp6459-v555-adversarial-capstone",
+        "verdict": "complete_blocked: V555 capstone complete; no requested science, public ARC, or hardware claim is eligible",
+        "addressed_by": "This capstone audits a new V556 evidence set whose planned repairs are unique raw events, exact-veto-first learning, a rebuilt corpus, causal routing stages, and a generic ARC safety shield.",
+        "retire_if_same_verdict": true,
+        "complete": true,
+        "failure_reason": null
+      }
+    ],
+    "operator_override_rows": [
+      {
+        "task_id": "exp6460-v556-terminal-handoff-and-queue-integrity",
+        "operator_override_present": true,
+        "cites_standing_transition_directive": true,
+        "value": "2026-05-29 operator directive (standing): routine milestone-transition work matches prior handoffs by construction. This task hands off V555 and validates the new V556 queue."
+      },
+      {
+        "task_id": "exp6472-v556-adversarial-capstone",
+        "operator_override_present": true,
+        "cites_standing_transition_directive": true,
+        "value": "2026-05-29 operator directive (standing): milestone capstones repeat an audit shape by construction. This capstone audits only V556 evidence and preserves all earlier determinations."
+      }
+    ],
+    "failures": [],
+    "validate_prior_failures": {
+      "schema_errors": [],
+      "prior_failure_violations": []
+    },
+    "gate_audit_prior_missing": 0,
+    "gate_audit_failure_details": [],
+    "gate_audit_passed": true
+  },
+  "exclusion_manifest_validation": {
+    "ok": true,
+    "hard_exclusion_count": 0,
+    "risk_count": 0,
+    "risks": []
+  },
+  "structured_gate_validation": {
+    "ok": true,
+    "gate_count": 6,
+    "gate_failures": [],
+    "dependency_failures": [],
+    "retired_references": [],
+    "gate_order_failures": [],
+    "structured_gate_expressions": [
+      "gate:exp6463-sota-fixed-policy-candidate-corpus-v2:exp6462-sota-raw-persistence-uniqueness-canary.raw_persistence_canary_ready_score==1.0",
+      "gate:exp6464-fixed-slot-grounding-exact-logic-ab:exp6463-sota-fixed-policy-candidate-corpus-v2.sota_corpus_ready_score==1.0",
+      "gate:exp6465-representation-objective-causal-ab-v2:exp6464-fixed-slot-grounding-exact-logic-ab.fixed_slot_grounding_ready_score==1.0",
+      "gate:exp6466-held-verifier-budget-allocation-v2:exp6463-sota-fixed-policy-candidate-corpus-v2.sota_corpus_ready_score==1.0",
+      "gate:exp6467-held-exact-constraint-energy-selection-v2:exp6465-representation-objective-causal-ab-v2.objective_causal_ready_score==1.0",
+      "gate:exp6469-unique-event-csl-corruption-restart:exp6468-unique-event-verifier-bounded-csl.unique_event_csl_ready_score==1.0"
+    ]
+  },
+  "gate_producer_contract_rows": [
+    {
+      "consumer_task_id": "exp6463-sota-fixed-policy-candidate-corpus-v2",
+      "upstream": "exp6462-sota-raw-persistence-uniqueness-canary",
+      "artifact_field": "raw_persistence_canary_ready_score",
+      "operator": "==",
+      "expected_value": 1.0,
+      "producer_task_id": "exp6462-sota-raw-persistence-uniqueness-canary",
+      "producer_deliverable": "results/experiment_6462_sota_raw_persistence_uniqueness_canary.json",
+      "producer_declares_artifact_field": true,
+      "gate_ok": true,
+      "failure_reason": null
+    },
+    {
+      "consumer_task_id": "exp6464-fixed-slot-grounding-exact-logic-ab",
+      "upstream": "exp6463-sota-fixed-policy-candidate-corpus-v2",
+      "artifact_field": "sota_corpus_ready_score",
+      "operator": "==",
+      "expected_value": 1.0,
+      "producer_task_id": "exp6463-sota-fixed-policy-candidate-corpus-v2",
+      "producer_deliverable": "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+      "producer_declares_artifact_field": true,
+      "gate_ok": true,
+      "failure_reason": null
+    },
+    {
+      "consumer_task_id": "exp6465-representation-objective-causal-ab-v2",
+      "upstream": "exp6464-fixed-slot-grounding-exact-logic-ab",
+      "artifact_field": "fixed_slot_grounding_ready_score",
+      "operator": "==",
+      "expected_value": 1.0,
+      "producer_task_id": "exp6464-fixed-slot-grounding-exact-logic-ab",
+      "producer_deliverable": "results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json",
+      "producer_declares_artifact_field": true,
+      "gate_ok": true,
+      "failure_reason": null
+    },
+    {
+      "consumer_task_id": "exp6466-held-verifier-budget-allocation-v2",
+      "upstream": "exp6463-sota-fixed-policy-candidate-corpus-v2",
+      "artifact_field": "sota_corpus_ready_score",
+      "operator": "==",
+      "expected_value": 1.0,
+      "producer_task_id": "exp6463-sota-fixed-policy-candidate-corpus-v2",
+      "producer_deliverable": "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+      "producer_declares_artifact_field": true,
+      "gate_ok": true,
+      "failure_reason": null
+    },
+    {
+      "consumer_task_id": "exp6467-held-exact-constraint-energy-selection-v2",
+      "upstream": "exp6465-representation-objective-causal-ab-v2",
+      "artifact_field": "objective_causal_ready_score",
+      "operator": "==",
+      "expected_value": 1.0,
+      "producer_task_id": "exp6465-representation-objective-causal-ab-v2",
+      "producer_deliverable": "results/experiment_6465_representation_objective_causal_ab_v2.json",
+      "producer_declares_artifact_field": true,
+      "gate_ok": true,
+      "failure_reason": null
+    },
+    {
+      "consumer_task_id": "exp6469-unique-event-csl-corruption-restart",
+      "upstream": "exp6468-unique-event-verifier-bounded-csl",
+      "artifact_field": "unique_event_csl_ready_score",
+      "operator": "==",
+      "expected_value": 1.0,
+      "producer_task_id": "exp6468-unique-event-verifier-bounded-csl",
+      "producer_deliverable": "results/experiment_6468_unique_event_verifier_bounded_csl.json",
+      "producer_declares_artifact_field": true,
+      "gate_ok": true,
+      "failure_reason": null
+    }
+  ],
+  "model_policy_validation": {
+    "ok": true,
+    "llm_task_ids": [
+      "exp6462-sota-raw-persistence-uniqueness-canary",
+      "exp6463-sota-fixed-policy-candidate-corpus-v2",
+      "exp6468-unique-event-verifier-bounded-csl",
+      "exp6469-unique-event-csl-corruption-restart"
+    ],
+    "expected_llm_task_ids": [
+      "exp6462-sota-raw-persistence-uniqueness-canary",
+      "exp6463-sota-fixed-policy-candidate-corpus-v2",
+      "exp6468-unique-event-verifier-bounded-csl",
+      "exp6469-unique-event-csl-corruption-restart"
+    ],
+    "mandated_gguf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "failures": []
+  },
+  "per_unit_rows": {
+    "ok": true,
+    "task_ids_missing_flag": [],
+    "comparative_task_ids": [
+      "exp6464-fixed-slot-grounding-exact-logic-ab",
+      "exp6465-representation-objective-causal-ab-v2",
+      "exp6466-held-verifier-budget-allocation-v2",
+      "exp6467-held-exact-constraint-energy-selection-v2",
+      "exp6468-unique-event-verifier-bounded-csl",
+      "exp6470-independent-unique-event-csl-audit",
+      "exp6471-arc-generic-safety-shield-objective-ab"
+    ],
+    "per_unit_failures": [],
+    "blocked_summary_failures": [],
+    "failures": []
+  },
+  "prompt_terminal_line_validation": {
+    "ok": true,
+    "checked_task_count": 13,
+    "failures": []
+  },
+  "protected_files_unchanged": {
+    "ok": true,
+    "rows": {
+      "CLAUDE.md": {
+        "before": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "after": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "unchanged": true
+      },
+      "CODEX.md": {
+        "before": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "after": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "unchanged": true
+      },
+      "_bmad/architecture.md": {
+        "before": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8",
+        "after": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8",
+        "unchanged": true
+      },
+      "_bmad/prd.md": {
+        "before": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a",
+        "after": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a",
+        "unchanged": true
+      },
+      "openspec/capabilities/research-reporting/spec.md": {
+        "before": "sha256:906e94b065fe340034b99dd7d8c1333bff500f914e4d2049af6e8eb18609c10f",
+        "after": "sha256:906e94b065fe340034b99dd7d8c1333bff500f914e4d2049af6e8eb18609c10f",
+        "unchanged": true
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "before": "sha256:7d2b34064d22619b224ac302e452dd877effaf283860b761e0df47a074acb8a4",
+        "after": "sha256:7d2b34064d22619b224ac302e452dd877effaf283860b761e0df47a074acb8a4",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "before": "sha256:94c4b0330bfec25511be14cc1835975c4ac7e694e91803588db73c49110a4d71",
+        "after": "sha256:94c4b0330bfec25511be14cc1835975c4ac7e694e91803588db73c49110a4d71",
+        "unchanged": true
+      },
+      "ops/conductor-log.md": {
+        "before": "sha256:4661bb6f3257cc49041b2d23d8801eeadb693bde74f55aa83759cecbb98c7244",
+        "after": "sha256:4661bb6f3257cc49041b2d23d8801eeadb693bde74f55aa83759cecbb98c7244",
+        "unchanged": true
+      },
+      "ops/e2e-test-plan.md": {
+        "before": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "after": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "unchanged": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "before": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "after": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "unchanged": true
+      },
+      "ops/known-issues.md": {
+        "before": "sha256:90ab4af68722758ce393a11dd85d4eb559623abad4e549b9c0db30eb5c2767aa",
+        "after": "sha256:90ab4af68722758ce393a11dd85d4eb559623abad4e549b9c0db30eb5c2767aa",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "unchanged": true
+      },
+      "research-complete.yaml": {
+        "before": "sha256:29b5cdcdcb1e6ba500f785204be8f2e0253721e6211104ffa6371a76b4dd8449",
+        "after": "sha256:29b5cdcdcb1e6ba500f785204be8f2e0253721e6211104ffa6371a76b4dd8449",
+        "unchanged": true
+      },
+      "research-program.md": {
+        "before": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "after": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "unchanged": true
+      },
+      "research-roadmap-next.yaml": {
+        "before": null,
+        "after": null,
+        "unchanged": true
+      },
+      "research-roadmap.yaml": {
+        "before": "sha256:c27172370cde68ef2a7d1478b64bb79cc39797a35f37ac9404ef0ed5b6bf7791",
+        "after": "sha256:c27172370cde68ef2a7d1478b64bb79cc39797a35f37ac9404ef0ed5b6bf7791",
+        "unchanged": true
+      },
+      "results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json": {
+        "before": "sha256:6fb0662a90acf0c42df077772258e11b602fd0477ee1e330df0ceb8ab31efe03",
+        "after": "sha256:6fb0662a90acf0c42df077772258e11b602fd0477ee1e330df0ceb8ab31efe03",
+        "unchanged": true
+      },
+      "results/experiment_6449_generation_to_verdict_path_receipt_contract.json": {
+        "before": "sha256:c7e1f171c515d05973859574f68b636839c12d4a70ab43e9796d034171ee9735",
+        "after": "sha256:c7e1f171c515d05973859574f68b636839c12d4a70ab43e9796d034171ee9735",
+        "unchanged": true
+      },
+      "results/experiment_6450_sota_fixed_policy_candidate_corpus.json": {
+        "before": "sha256:920d59b13973d95486b67c08ef7f2598f9fd2eaaa66d991229964383f60d492e",
+        "after": "sha256:920d59b13973d95486b67c08ef7f2598f9fd2eaaa66d991229964383f60d492e",
+        "unchanged": true
+      },
+      "results/experiment_6451_typed_fact_grounding_fixed_policy_logic_ab.json": {
+        "before": "sha256:276e5e63f95ef6bcc160f65ac445ac99b5dfd4fe52dc29d874067ba04f848952",
+        "after": "sha256:276e5e63f95ef6bcc160f65ac445ac99b5dfd4fe52dc29d874067ba04f848952",
+        "unchanged": true
+      },
+      "results/experiment_6452_representation_objective_causal_ab.json": {
+        "before": null,
+        "after": null,
+        "unchanged": true
+      },
+      "results/experiment_6453_held_verifier_budget_allocation_ab.json": {
+        "before": "sha256:6e66acb9bf2cc47e7ee67c320a3d9b23053e839e5514524a045acad287bdbc9f",
+        "after": "sha256:6e66acb9bf2cc47e7ee67c320a3d9b23053e839e5514524a045acad287bdbc9f",
+        "unchanged": true
+      },
+      "results/experiment_6454_held_exact_constraint_energy_selection_ab.json": {
+        "before": null,
+        "after": null,
+        "unchanged": true
+      },
+      "results/experiment_6455_prospective_verifier_bounded_factor_weight_csl.json": {
+        "before": "sha256:50d5e0db010486184fb1b2842703f7334e949f75248a396af3bf474ec7b15dbc",
+        "after": "sha256:50d5e0db010486184fb1b2842703f7334e949f75248a396af3bf474ec7b15dbc",
+        "unchanged": true
+      },
+      "results/experiment_6456_corrupt_feedback_held_restart_csl_replication.json": {
+        "before": "sha256:fd58e8bdd93fe9f0b7243737abb1902c6eb141916e7bc7cfb882b47c8d8e4194",
+        "after": "sha256:fd58e8bdd93fe9f0b7243737abb1902c6eb141916e7bc7cfb882b47c8d8e4194",
+        "unchanged": true
+      },
+      "results/experiment_6457_independent_verifier_bounded_csl_audit.json": {
+        "before": "sha256:fcbca28810efcae6554e6a00242b24856985886e3a2a22acd7e37694d735d221",
+        "after": "sha256:fcbca28810efcae6554e6a00242b24856985886e3a2a22acd7e37694d735d221",
+        "unchanged": true
+      },
+      "results/experiment_6458_arc_representation_objective_generalization_ab.json": {
+        "before": "sha256:bef86750bc56577d9e37c5ed82e9a7c86f3622ceb6c559856a0fcc88c69fde54",
+        "after": "sha256:bef86750bc56577d9e37c5ed82e9a7c86f3622ceb6c559856a0fcc88c69fde54",
+        "unchanged": true
+      },
+      "results/experiment_6459_v555_adversarial_capstone.json": {
+        "before": "sha256:3392c38efac4211227320e5ce32a9127df77cb9b0a1d4a14f624f424aded79d3",
+        "after": "sha256:3392c38efac4211227320e5ce32a9127df77cb9b0a1d4a14f624f424aded79d3",
+        "unchanged": true
+      },
+      "scripts/adversarial_verify.py": {
+        "before": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+        "after": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+        "unchanged": true
+      },
+      "scripts/artifact_convention_audit.py": {
+        "before": "sha256:40bac7c305857f7f7264c7d019615913e229777e6148d8d865ef81731d538d75",
+        "after": "sha256:40bac7c305857f7f7264c7d019615913e229777e6148d8d865ef81731d538d75",
+        "unchanged": true
+      },
+      "scripts/audit_roadmap_gates.py": {
+        "before": "sha256:c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9",
+        "after": "sha256:c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9",
+        "unchanged": true
+      },
+      "scripts/conductor_gates.py": {
+        "before": "sha256:7f20adf70913d4b122b855df1df485415f3e279f44cae59b29037e63efa4f9c8",
+        "after": "sha256:7f20adf70913d4b122b855df1df485415f3e279f44cae59b29037e63efa4f9c8",
+        "unchanged": true
+      },
+      "scripts/exclusion_manifest_lint.py": {
+        "before": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+        "after": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+        "unchanged": true
+      },
+      "scripts/roadmap_schema.py": {
+        "before": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+        "after": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+        "unchanged": true
+      },
+      "scripts/root_clutter_sweep.py": {
+        "before": "sha256:be83376d4820e8f254bd341a9b4f7683454db8af7f69998887267e502c343402",
+        "after": "sha256:be83376d4820e8f254bd341a9b4f7683454db8af7f69998887267e502c343402",
+        "unchanged": true
+      },
+      "scripts/validate_prior_failures.py": {
+        "before": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
+        "after": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
+        "unchanged": true
+      }
+    }
+  },
+  "v556_queue_integrity_score": 0.0,
+  "blocked_reason": "tests_run: expected every tests_run.exit_code is 0",
+  "gate_check_summary": {
+    "failed_check": "tests_run",
+    "expected_condition": "every tests_run.exit_code is 0",
+    "observed_value": [
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "exit_code": 3,
+        "summary": "209 failed, 14219 passed, 14 skipped, 145 warnings, 14 errors in 455.57s; xdist workers crashed; Z3 segmentation fault observed; final internal error at tests/python/test_compliance_checker.py::TestComplianceEnergyCheckerTrain::test_train_custom_lr"
+      }
+    ],
+    "evidence_path": "/tmp/carnot_exp6460_test_receipts.json",
+    "failed_checks": [
+      {
+        "failed_check": "tests_run",
+        "expected_condition": "every tests_run.exit_code is 0",
+        "observed_value": [
+          {
+            "command": ".venv/bin/pytest tests/python -q",
+            "exit_code": 3,
+            "summary": "209 failed, 14219 passed, 14 skipped, 145 warnings, 14 errors in 455.57s; xdist workers crashed; Z3 segmentation fault observed; final internal error at tests/python/test_compliance_checker.py::TestComplianceEnergyCheckerTrain::test_train_custom_lr"
+          }
+        ],
+        "evidence_path": "/tmp/carnot_exp6460_test_receipts.json"
+      }
+    ]
+  },
+  "preconditions_checked": {
+    "schema": "carnot.experiment_6460.v556_terminal_handoff_and_queue_integrity.v1",
+    "experiment_id": "exp6460-v556-terminal-handoff-and-queue-integrity",
+    "date": "20260819",
+    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "selected_roadmap_path": "research-roadmap.yaml",
+    "roadmap_selection_note": "active research-roadmap.yaml contains V556; staged file is absent after activation",
+    "git_status_before": [
+      " M ops/artifact_convention_audit_report.md",
+      " M python/carnot/experiment_6460_v556_terminal_handoff_and_queue_integrity.py",
+      " M tests/python/test_experiment_6460_v556_terminal_handoff_and_queue_integrity.py",
+      "?? results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json"
+    ],
+    "before_hashes": {
+      "research-roadmap.yaml": "sha256:c27172370cde68ef2a7d1478b64bb79cc39797a35f37ac9404ef0ed5b6bf7791",
+      "research-roadmap-next.yaml": null,
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:7d2b34064d22619b224ac302e452dd877effaf283860b761e0df47a074acb8a4",
+      "research-complete.yaml": "sha256:29b5cdcdcb1e6ba500f785204be8f2e0253721e6211104ffa6371a76b4dd8449",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "_bmad/prd.md": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a",
+      "_bmad/architecture.md": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+      "scripts/roadmap_schema.py": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+      "scripts/validate_prior_failures.py": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
+      "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+      "scripts/audit_roadmap_gates.py": "sha256:c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9",
+      "scripts/conductor_gates.py": "sha256:7f20adf70913d4b122b855df1df485415f3e279f44cae59b29037e63efa4f9c8",
+      "scripts/adversarial_verify.py": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+      "scripts/artifact_convention_audit.py": "sha256:40bac7c305857f7f7264c7d019615913e229777e6148d8d865ef81731d538d75",
+      "scripts/root_clutter_sweep.py": "sha256:be83376d4820e8f254bd341a9b4f7683454db8af7f69998887267e502c343402",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "ops/conductor-log.md": "sha256:4661bb6f3257cc49041b2d23d8801eeadb693bde74f55aa83759cecbb98c7244",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "ops/known-issues.md": "sha256:90ab4af68722758ce393a11dd85d4eb559623abad4e549b9c0db30eb5c2767aa",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "ops/changelog.md": "sha256:94c4b0330bfec25511be14cc1835975c4ac7e694e91803588db73c49110a4d71",
+      "openspec/capabilities/research-reporting/spec.md": "sha256:906e94b065fe340034b99dd7d8c1333bff500f914e4d2049af6e8eb18609c10f",
+      "results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json": "sha256:6fb0662a90acf0c42df077772258e11b602fd0477ee1e330df0ceb8ab31efe03",
+      "results/experiment_6449_generation_to_verdict_path_receipt_contract.json": "sha256:c7e1f171c515d05973859574f68b636839c12d4a70ab43e9796d034171ee9735",
+      "results/experiment_6450_sota_fixed_policy_candidate_corpus.json": "sha256:920d59b13973d95486b67c08ef7f2598f9fd2eaaa66d991229964383f60d492e",
+      "results/experiment_6451_typed_fact_grounding_fixed_policy_logic_ab.json": "sha256:276e5e63f95ef6bcc160f65ac445ac99b5dfd4fe52dc29d874067ba04f848952",
+      "results/experiment_6452_representation_objective_causal_ab.json": null,
+      "results/experiment_6453_held_verifier_budget_allocation_ab.json": "sha256:6e66acb9bf2cc47e7ee67c320a3d9b23053e839e5514524a045acad287bdbc9f",
+      "results/experiment_6454_held_exact_constraint_energy_selection_ab.json": null,
+      "results/experiment_6455_prospective_verifier_bounded_factor_weight_csl.json": "sha256:50d5e0db010486184fb1b2842703f7334e949f75248a396af3bf474ec7b15dbc",
+      "results/experiment_6456_corrupt_feedback_held_restart_csl_replication.json": "sha256:fd58e8bdd93fe9f0b7243737abb1902c6eb141916e7bc7cfb882b47c8d8e4194",
+      "results/experiment_6457_independent_verifier_bounded_csl_audit.json": "sha256:fcbca28810efcae6554e6a00242b24856985886e3a2a22acd7e37694d735d221",
+      "results/experiment_6458_arc_representation_objective_generalization_ab.json": "sha256:bef86750bc56577d9e37c5ed82e9a7c86f3622ceb6c559856a0fcc88c69fde54",
+      "results/experiment_6459_v555_adversarial_capstone.json": "sha256:3392c38efac4211227320e5ce32a9127df77cb9b0a1d4a14f624f424aded79d3"
+    },
+    "after_hashes": {
+      "research-roadmap.yaml": "sha256:c27172370cde68ef2a7d1478b64bb79cc39797a35f37ac9404ef0ed5b6bf7791",
+      "research-roadmap-next.yaml": null,
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:7d2b34064d22619b224ac302e452dd877effaf283860b761e0df47a074acb8a4",
+      "research-complete.yaml": "sha256:29b5cdcdcb1e6ba500f785204be8f2e0253721e6211104ffa6371a76b4dd8449",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "_bmad/prd.md": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a",
+      "_bmad/architecture.md": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+      "scripts/roadmap_schema.py": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+      "scripts/validate_prior_failures.py": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
+      "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+      "scripts/audit_roadmap_gates.py": "sha256:c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9",
+      "scripts/conductor_gates.py": "sha256:7f20adf70913d4b122b855df1df485415f3e279f44cae59b29037e63efa4f9c8",
+      "scripts/adversarial_verify.py": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+      "scripts/artifact_convention_audit.py": "sha256:40bac7c305857f7f7264c7d019615913e229777e6148d8d865ef81731d538d75",
+      "scripts/root_clutter_sweep.py": "sha256:be83376d4820e8f254bd341a9b4f7683454db8af7f69998887267e502c343402",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "ops/conductor-log.md": "sha256:4661bb6f3257cc49041b2d23d8801eeadb693bde74f55aa83759cecbb98c7244",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "ops/known-issues.md": "sha256:90ab4af68722758ce393a11dd85d4eb559623abad4e549b9c0db30eb5c2767aa",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "ops/changelog.md": "sha256:94c4b0330bfec25511be14cc1835975c4ac7e694e91803588db73c49110a4d71",
+      "openspec/capabilities/research-reporting/spec.md": "sha256:906e94b065fe340034b99dd7d8c1333bff500f914e4d2049af6e8eb18609c10f",
+      "results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json": "sha256:6fb0662a90acf0c42df077772258e11b602fd0477ee1e330df0ceb8ab31efe03",
+      "results/experiment_6449_generation_to_verdict_path_receipt_contract.json": "sha256:c7e1f171c515d05973859574f68b636839c12d4a70ab43e9796d034171ee9735",
+      "results/experiment_6450_sota_fixed_policy_candidate_corpus.json": "sha256:920d59b13973d95486b67c08ef7f2598f9fd2eaaa66d991229964383f60d492e",
+      "results/experiment_6451_typed_fact_grounding_fixed_policy_logic_ab.json": "sha256:276e5e63f95ef6bcc160f65ac445ac99b5dfd4fe52dc29d874067ba04f848952",
+      "results/experiment_6452_representation_objective_causal_ab.json": null,
+      "results/experiment_6453_held_verifier_budget_allocation_ab.json": "sha256:6e66acb9bf2cc47e7ee67c320a3d9b23053e839e5514524a045acad287bdbc9f",
+      "results/experiment_6454_held_exact_constraint_energy_selection_ab.json": null,
+      "results/experiment_6455_prospective_verifier_bounded_factor_weight_csl.json": "sha256:50d5e0db010486184fb1b2842703f7334e949f75248a396af3bf474ec7b15dbc",
+      "results/experiment_6456_corrupt_feedback_held_restart_csl_replication.json": "sha256:fd58e8bdd93fe9f0b7243737abb1902c6eb141916e7bc7cfb882b47c8d8e4194",
+      "results/experiment_6457_independent_verifier_bounded_csl_audit.json": "sha256:fcbca28810efcae6554e6a00242b24856985886e3a2a22acd7e37694d735d221",
+      "results/experiment_6458_arc_representation_objective_generalization_ab.json": "sha256:bef86750bc56577d9e37c5ed82e9a7c86f3622ceb6c559856a0fcc88c69fde54",
+      "results/experiment_6459_v555_adversarial_capstone.json": "sha256:3392c38efac4211227320e5ce32a9127df77cb9b0a1d4a14f624f424aded79d3"
+    },
+    "active_roadmap": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "present": true,
+      "sha256": "sha256:c27172370cde68ef2a7d1478b64bb79cc39797a35f37ac9404ef0ed5b6bf7791",
+      "size_bytes": 67908,
+      "milestone": "2026.08.556"
+    },
+    "staged_roadmap": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml",
+      "present": false,
+      "sha256": null,
+      "size_bytes": null,
+      "milestone": null
+    },
+    "v555_artifacts": [
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json",
+        "present": true,
+        "sha256": "sha256:6fb0662a90acf0c42df077772258e11b602fd0477ee1e330df0ceb8ab31efe03",
+        "size_bytes": 96892
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6449_generation_to_verdict_path_receipt_contract.json",
+        "present": true,
+        "sha256": "sha256:c7e1f171c515d05973859574f68b636839c12d4a70ab43e9796d034171ee9735",
+        "size_bytes": 1389320
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6450_sota_fixed_policy_candidate_corpus.json",
+        "present": true,
+        "sha256": "sha256:920d59b13973d95486b67c08ef7f2598f9fd2eaaa66d991229964383f60d492e",
+        "size_bytes": 7032040
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6451_typed_fact_grounding_fixed_policy_logic_ab.json",
+        "present": true,
+        "sha256": "sha256:276e5e63f95ef6bcc160f65ac445ac99b5dfd4fe52dc29d874067ba04f848952",
+        "size_bytes": 872
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6452_representation_objective_causal_ab.json",
+        "present": false,
+        "sha256": null,
+        "size_bytes": null
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6453_held_verifier_budget_allocation_ab.json",
+        "present": true,
+        "sha256": "sha256:6e66acb9bf2cc47e7ee67c320a3d9b23053e839e5514524a045acad287bdbc9f",
+        "size_bytes": 863
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6454_held_exact_constraint_energy_selection_ab.json",
+        "present": false,
+        "sha256": null,
+        "size_bytes": null
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6455_prospective_verifier_bounded_factor_weight_csl.json",
+        "present": true,
+        "sha256": "sha256:50d5e0db010486184fb1b2842703f7334e949f75248a396af3bf474ec7b15dbc",
+        "size_bytes": 1158734
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6456_corrupt_feedback_held_restart_csl_replication.json",
+        "present": true,
+        "sha256": "sha256:fd58e8bdd93fe9f0b7243737abb1902c6eb141916e7bc7cfb882b47c8d8e4194",
+        "size_bytes": 4570516
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6457_independent_verifier_bounded_csl_audit.json",
+        "present": true,
+        "sha256": "sha256:fcbca28810efcae6554e6a00242b24856985886e3a2a22acd7e37694d735d221",
+        "size_bytes": 834832
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6458_arc_representation_objective_generalization_ab.json",
+        "present": true,
+        "sha256": "sha256:bef86750bc56577d9e37c5ed82e9a7c86f3622ceb6c559856a0fcc88c69fde54",
+        "size_bytes": 1053224
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6459_v555_adversarial_capstone.json",
+        "present": true,
+        "sha256": "sha256:3392c38efac4211227320e5ce32a9127df77cb9b0a1d4a14f624f424aded79d3",
+        "size_bytes": 5429031
+      }
+    ],
+    "v555_missing_or_zero_byte": [
+      {
+        "task_id": "exp6452-representation-objective-causal-ab",
+        "deliverable_path": "results/experiment_6452_representation_objective_causal_ab.json",
+        "byte_count": null,
+        "artifact_state": "missing",
+        "status": "missing",
+        "honest_verdict": null,
+        "gate_summary": null,
+        "readiness_fields": {},
+        "final_claim_eligibility": {
+          "eligible": false,
+          "blockers": [
+            "missing_artifact"
+          ],
+          "scope": "exp6452-representation-objective-causal-ab"
+        }
+      },
+      {
+        "task_id": "exp6454-held-exact-constraint-energy-selection-ab",
+        "deliverable_path": "results/experiment_6454_held_exact_constraint_energy_selection_ab.json",
+        "byte_count": null,
+        "artifact_state": "missing",
+        "status": "missing",
+        "honest_verdict": null,
+        "gate_summary": null,
+        "readiness_fields": {},
+        "final_claim_eligibility": {
+          "eligible": false,
+          "blockers": [
+            "missing_artifact"
+          ],
+          "scope": "exp6454-held-exact-constraint-energy-selection-ab"
+        }
+      }
+    ],
+    "exclusion_manifest": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "present": true,
+      "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "size_bytes": 47866
+    },
+    "roadmap_schema": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/roadmap_schema.py",
+      "present": true,
+      "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+      "size_bytes": 9371
+    },
+    "protected_files": [
+      "research-roadmap.yaml",
+      "research-roadmap-next.yaml",
+      "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "research-complete.yaml",
+      "research-program.md",
+      "_bmad/prd.md",
+      "_bmad/architecture.md",
+      "CODEX.md",
+      "CLAUDE.md",
+      "scripts/roadmap_schema.py",
+      "scripts/validate_prior_failures.py",
+      "scripts/exclusion_manifest_lint.py",
+      "scripts/audit_roadmap_gates.py",
+      "scripts/conductor_gates.py",
+      "scripts/adversarial_verify.py",
+      "scripts/artifact_convention_audit.py",
+      "scripts/root_clutter_sweep.py",
+      "ops/e2e-test-plan.md",
+      "ops/conductor-log.md",
+      "ops/exclusion_manifest.yaml",
+      "ops/known-issues.md",
+      "ops/status.md",
+      "ops/changelog.md",
+      "openspec/capabilities/research-reporting/spec.md",
+      "results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json",
+      "results/experiment_6449_generation_to_verdict_path_receipt_contract.json",
+      "results/experiment_6450_sota_fixed_policy_candidate_corpus.json",
+      "results/experiment_6451_typed_fact_grounding_fixed_policy_logic_ab.json",
+      "results/experiment_6452_representation_objective_causal_ab.json",
+      "results/experiment_6453_held_verifier_budget_allocation_ab.json",
+      "results/experiment_6454_held_exact_constraint_energy_selection_ab.json",
+      "results/experiment_6455_prospective_verifier_bounded_factor_weight_csl.json",
+      "results/experiment_6456_corrupt_feedback_held_restart_csl_replication.json",
+      "results/experiment_6457_independent_verifier_bounded_csl_audit.json",
+      "results/experiment_6458_arc_representation_objective_generalization_ab.json",
+      "results/experiment_6459_v555_adversarial_capstone.json"
+    ],
+    "research_compute_started": false,
+    "science_task_depends_on_readiness_score": false
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "verifier_is_oracle": false,
+  "field_principles": {
+    "status": "The status states whether the V556 queue passed or failed closed.",
+    "v555_terminal_rows": "Each V555 task row preserves its exact artifact state.",
+    "active_roadmap_hash": "The activated roadmap identity is content-addressed.",
+    "staged_roadmap_hash": "A missing staged roadmap stays visible after activation.",
+    "task_count": "V556 readiness requires exactly thirteen tasks.",
+    "task_ids_in_order": "Conductor order must stay deterministic.",
+    "unique_id_and_deliverable_check": "IDs and result JSON deliverables define the queue.",
+    "milestone_consistency_check": "Every task must belong to milestone 2026.08.556.",
+    "schema_validation": "The Pydantic roadmap schema must accept the queue.",
+    "prior_failure_validation": "Rerun scopes must state the prior verdict and retirement rule.",
+    "exclusion_manifest_validation": "Retired IDs and hard exclusion risks block the queue.",
+    "structured_gate_validation": "Every gate must name a valid upstream task, field, operator, and value.",
+    "gate_producer_contract_rows": "Each gate field must be declared by its producer artifact contract.",
+    "model_policy_validation": "LLM tasks must use local GGUF policy without headline legacy paths.",
+    "per_unit_rows": "Comparative evidence needs row-level records, not aggregates only.",
+    "prompt_terminal_line_validation": "Rendered prompts must end with the conductor and push prohibition.",
+    "protected_files_unchanged": "The audit must not mutate protected inputs.",
+    "v556_queue_integrity_score": "The scalar gate is one only when every queue contract passes.",
+    "blocked_reason": "A failed queue audit must name every failed readiness condition.",
+    "gate_check_summary": "Blocked diagnostics must show expected and observed values.",
+    "preconditions_checked": "Input files, state, and substrate are recorded before conclusions.",
+    "inference_substrate": "This task reads repository evidence without a model call.",
+    "verifier_is_oracle": "The audit validates contracts and proves no scientific claim.",
+    "field_principles": "Every required field and acceptance gate has a stated purpose.",
+    "field_provenance": "Every required field identifies its source kind.",
+    "random_seed": "No random sampling is used by this deterministic audit.",
+    "duration_s": "Wall time is measured without padding.",
+    "tests_run": "Verification commands and exit codes stay attached to the artifact.",
+    "reproducibility_checksum": "The normalized payload is content-addressed.",
+    "honest_verdict": "The verdict uses a terminal prefix and states the queue boundary.",
+    "acceptance_gate:v556_queue_integrity_score": "The queue-integrity scalar must fail closed unless all validation surfaces pass."
+  },
+  "field_provenance": {
+    "status": "derived",
+    "v555_terminal_rows": "derived",
+    "active_roadmap_hash": "measured",
+    "staged_roadmap_hash": "measured",
+    "task_count": "derived",
+    "task_ids_in_order": "upstream",
+    "unique_id_and_deliverable_check": "derived",
+    "milestone_consistency_check": "derived",
+    "schema_validation": "derived",
+    "prior_failure_validation": "derived",
+    "exclusion_manifest_validation": "derived",
+    "structured_gate_validation": "derived",
+    "gate_producer_contract_rows": "derived",
+    "model_policy_validation": "derived",
+    "per_unit_rows": "derived",
+    "prompt_terminal_line_validation": "derived",
+    "protected_files_unchanged": "measured",
+    "v556_queue_integrity_score": "derived",
+    "blocked_reason": "derived",
+    "gate_check_summary": "derived",
+    "preconditions_checked": "measured",
+    "inference_substrate": "constant",
+    "verifier_is_oracle": "constant",
+    "field_principles": "constant",
+    "field_provenance": "constant",
+    "random_seed": "constant",
+    "duration_s": "measured",
+    "tests_run": "measured",
+    "reproducibility_checksum": "derived",
+    "honest_verdict": "derived"
+  },
+  "random_seed": null,
+  "duration_s": 0.04393333429470658,
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6460_v556_terminal_handoff_and_queue_integrity.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "summary": "6 passed in 56.37s"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6460_v556_terminal_handoff_and_queue_integrity.py -m pytest tests/python/test_experiment_6460_v556_terminal_handoff_and_queue_integrity.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "summary": "6 passed in 103.40s"
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6460_v556_terminal_handoff_and_queue_integrity.py --fail-under=100 --show-missing",
+      "exit_code": 0,
+      "summary": "100% coverage for python/carnot/experiment_6460_v556_terminal_handoff_and_queue_integrity.py"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6460_v556_terminal_handoff_and_queue_integrity.py",
+      "exit_code": 0,
+      "summary": "OK: All tests reference specification requirements."
+    },
+    {
+      "command": ".venv/bin/python -c 'import yaml; from pathlib import Path; from scripts.roadmap_schema import Roadmap; Roadmap.model_validate(yaml.safe_load(Path(\"research-roadmap.yaml\").read_text()))'",
+      "exit_code": 0,
+      "summary": "research-roadmap.yaml schema validation passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+      "exit_code": 0,
+      "summary": "[OK] research-roadmap.yaml -- no schema errors, no prior_failures violations"
+    },
+    {
+      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+      "exit_code": 0,
+      "summary": "Exclusion-manifest lint clean: research-roadmap.yaml"
+    },
+    {
+      "command": ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml --complete research-complete.yaml",
+      "exit_code": 0,
+      "summary": "roadmap_gate_audit_passed=true; n_gate_upstream_checks=6; n_prior_failures_missing=0; n_tasks_audited=13"
+    },
+    {
+      "command": ".venv/bin/python scripts/artifact_convention_audit.py",
+      "exit_code": 0,
+      "summary": "artifact-convention-audit wrote ops/artifact_convention_audit_report.md; CHECKABLE=11, AGGREGATE_ONLY=1, BLOCKED_WITHOUT_DIAGNOSTIC=0, CANNOT_DETERMINE=0, UNKNOWN=0"
+    },
+    {
+      "command": ".venv/bin/python scripts/root_clutter_sweep.py",
+      "exit_code": 0,
+      "summary": "quarantine=0; delete=0; warning tracked non-allowlist root file: skills-lock.json"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 3,
+      "summary": "209 failed, 14219 passed, 14 skipped, 145 warnings, 14 errors in 455.57s; xdist workers crashed; Z3 segmentation fault observed; final internal error at tests/python/test_compliance_checker.py::TestComplianceEnergyCheckerTrain::test_train_custom_lr"
+    }
+  ],
+  "reproducibility_checksum": "sha256:35c06c6edb73451058fc5ff21fed82ddbf6297ccc33918fd0e73e74cf73b4501",
+  "honest_verdict": "complete_blocked_v556_queue_integrity_failed: V555 terminal facts are preserved but a V556 queue contract failed"
+}

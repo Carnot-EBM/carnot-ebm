@@ -28,7 +28,7 @@ def _report() -> dict[str, object]:
     if _REPORT_CACHE is None:
         _REPORT_CACHE = mod.build_report(
             REPO,
-            date="20260815",
+            date="20260819",
             command_receipts=[{"command": "focused", "exit_code": 0}],
             before_hashes=mod.protected_hashes(REPO),
             duration_s=1.0,
@@ -42,6 +42,8 @@ def test_req_report_6460_spec_declares_required_contract() -> None:
     text = SPEC.read_text(encoding="utf-8")
     section = text[text.index("REQ-REPORT-6460") :]
 
+    assert mod.RUN_DATE == "20260819"
+    assert "--date 20260819" in mod.RUN_COMMAND
     for marker in (
         "SCENARIO-REPORT-6460-V555-FREEZE",
         "SCENARIO-REPORT-6460-V556-QUEUE",
@@ -268,7 +270,7 @@ def test_scenario_report_6460_schema_write_and_validation_edges(
             "honest_verdict": "complete: patched",
         },
     )
-    assert mod.main(["--date", "20260815"]) == 0
+    assert mod.main(["--date", "20260819"]) == 0
     assert mod.RESULT_RELATIVE_PATH.name in capsys.readouterr().out
 
 
@@ -321,7 +323,7 @@ def test_req_report_6460_helper_edges_and_dirty_queue_validation(
     checks = mod.validate_v556_queue_data(
         active_data,
         REPO,
-        "20260815",
+        "20260819",
         roadmap_path=mod.ACTIVE_ROADMAP_RELATIVE_PATH,
         retired_exp_ids=set(),
     )
@@ -347,7 +349,7 @@ def test_req_report_6460_helper_edges_and_dirty_queue_validation(
     dirty_checks = mod.validate_v556_queue_data(
         dirty,
         REPO,
-        "20260815",
+        "20260819",
         roadmap_path=mod.ACTIVE_ROADMAP_RELATIVE_PATH,
         retired_exp_ids={6448},
     )
@@ -368,7 +370,7 @@ def test_req_report_6460_helper_edges_and_dirty_queue_validation(
     per_unit_checks = mod.validate_v556_queue_data(
         bad_per_unit,
         REPO,
-        "20260815",
+        "20260819",
         roadmap_path=mod.ACTIVE_ROADMAP_RELATIVE_PATH,
         retired_exp_ids=set(),
     )
@@ -472,7 +474,7 @@ def test_req_report_6460_helper_edges_and_dirty_queue_validation(
     retired_gate_checks = mod.validate_v556_queue_data(
         retired_gate,
         REPO,
-        "20260815",
+        "20260819",
         roadmap_path=mod.ACTIVE_ROADMAP_RELATIVE_PATH,
         retired_exp_ids={6448},
     )
@@ -495,7 +497,7 @@ def test_req_report_6460_helper_edges_and_dirty_queue_validation(
     late_gate_checks = mod.validate_v556_queue_data(
         late_gate,
         REPO,
-        "20260815",
+        "20260819",
         roadmap_path=mod.ACTIVE_ROADMAP_RELATIVE_PATH,
         retired_exp_ids=set(),
     )
@@ -538,7 +540,7 @@ def test_req_report_6460_helper_edges_and_dirty_queue_validation(
     monkeypatch.setattr(mod, "protected_hashes", lambda root: {"x": "sha256:x"})
     blocked_report = mod.build_report(
         tmp_path,
-        date="20260815",
+        date="20260819",
         command_receipts=[{"command": "focused", "exit_code": 0}],
         before_hashes={"x": "sha256:x"},
         duration_s=0.1,
@@ -563,10 +565,10 @@ def test_req_report_6460_helper_edges_and_dirty_queue_validation(
     monkeypatch.setattr(mod, "validate_report", lambda report: [])
     monkeypatch.setattr(mod, "write_report", lambda report, root: writes.append(report))
 
-    report = mod.run(date="20260815", root=REPO, write=True)
+    report = mod.run(date="20260819", root=REPO, write=True)
     assert report["command_receipts"] == [{"command": "external"}]
     assert writes == [report]
 
     monkeypatch.setattr(mod, "validate_report", lambda report: ["bad"])
     with pytest.raises(ValueError, match="bad"):
-        mod.run(date="20260815", root=REPO, write=False, command_receipts=[{"command": "c"}])
+        mod.run(date="20260819", root=REPO, write=False, command_receipts=[{"command": "c"}])
