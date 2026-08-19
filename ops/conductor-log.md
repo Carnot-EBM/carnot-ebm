@@ -16068,3 +16068,5 @@ code |
 | 2026-08-19 17:25 UTC | Gated on Exp6464 grounding readiness: representati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6464-fixed-slot-grounding-exact-logic-ab) |
 | 2026-08-19 17:25 UTC | Gated on Exp6463 corpus readiness: held verifier b | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6463-sota-fixed-policy-candidate-corpus |
 | 2026-08-19 17:27 UTC | Gated on Exp6465 objective causality: held exact-c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6465-representation-objective-causal-ab-v |
+| 2026-08-19 17:54 UTC | Prospective unique-event verifier-bounded continuo | OK | 89 passed, 1 warning in 8.99s |
+| 2026-08-19 17:56 UTC | Gated on Exp6465 objective causality: held exact-c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6465-representation-objective-causal-ab-v |
