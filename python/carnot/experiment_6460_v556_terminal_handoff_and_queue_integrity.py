@@ -47,7 +47,7 @@ JsonMap = Mapping[str, Any]
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MILESTONE_V555 = "2026.08.555"
 MILESTONE_V556 = "2026.08.556"
-RUN_DATE = "20260815"
+RUN_DATE = "20260819"
 EXPERIMENT_ID = "exp6460-v556-terminal-handoff-and-queue-integrity"
 SCHEMA = "carnot.experiment_6460.v556_terminal_handoff_and_queue_integrity.v1"
 RESULT_RELATIVE_PATH = Path(
@@ -157,7 +157,7 @@ RUN_COMMAND = (
     "cd /home/ianblenke/github.com/ianblenke/carnot && "
     ".venv/bin/python -m "
     "carnot.experiment_6460_v556_terminal_handoff_and_queue_integrity "
-    "--date 20260815"
+    "--date 20260819"
 )
 FOCUSED_TEST_COMMAND = (
     ".venv/bin/pytest "
@@ -188,7 +188,7 @@ DEFAULT_TEST_COMMANDS = (
     "'",
     ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
     ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
-    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap-next.yaml --complete research-complete.yaml",
+    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml --complete research-complete.yaml",
     ".venv/bin/python scripts/artifact_convention_audit.py",
     ".venv/bin/python scripts/root_clutter_sweep.py",
     ".venv/bin/pytest tests/python -q",
