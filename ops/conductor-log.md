@@ -16058,3 +16058,4 @@ code |
 | 2026-08-19 15:17 UTC | V556 primary-source freshness receipt | OK | 88 passed, 1 warning in 7.26s |
 | 2026-08-19 15:53 UTC | SOTA raw persistence and unique-event canary | OK | 86 passed, 1 warning in 15.47s |
 | 2026-08-19 17:12 UTC | Gated on Exp6462 canary readiness: provenance-comp | OK | 88 passed, 1 warning in 92.39s (0:01:32) |
+| 2026-08-19 17:14 UTC | Gated on Exp6463 corpus readiness: fixed-slot grou | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6463-sota-fixed-policy-candidate-corpus |
