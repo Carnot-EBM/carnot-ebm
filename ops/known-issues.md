@@ -48,6 +48,28 @@ the counts. The apparent contradiction in the constancy table — treatment ar25
 both readings being correct: the gate reads 12 grids, the metrics read the whole window. The
 harness can tell the goal was repaired. The gate cannot.
 
+**BLAST RADIUS, measured 2026-08-18 over `window_meta.json` — 7 of 13 games, not 4 of 7.**
+The threshold is exact: a window of `n` transitions puts its win frame at grid index `2n-1`,
+the probe cap is 12 grids, so the gate can see the win only when `n <= 6`. At 7 transitions or
+more it is blind, always, on every game. Measured per game:
+
+| gate sees the win (n<=6) | gate is blind (n>=7) |
+|---|---|
+| vc33 3, r11l 3, sp80 4, ft09 4, lp85 5, cd82 5 | sb26 9, ar25 12, re86 12, sk48 12, tu93 12, tr87 12, g50t 12 |
+
+The blind set is the LONG-window games — the ones where induction is hardest and a working goal
+predicate is worth the most. An initial sweep over the 7 cached windows on disk put this at 4 of
+7; the full metadata covers 13 games and gives 7 blind.
+
+Worth a look but NOT verified: six of the seven blind games sit at exactly 12 transitions, which
+looks like a builder cap rather than a coincidence. If windows are capped at 12 transitions then
+every capped window is exactly twice the length the probe can reach, since 12 transitions is 24
+grids and the 12-grid probe covers 6. Two constants that are both "12" and mean different things.
+No such cap constant was located by grep; sb26 at 9 shows not every long window hits it.
+
+This half is arithmetic over window length, so unlike the effect size it is NOT scoped to the
+generator: it behaves identically under gemma-4-31B or any other model.
+
 **Status: the flag is DEFAULT-OFF, so there is no live impact today.** It is recorded because
 it degrades precisely the games with the longest windows, which are the ones that most need
 induction help, and because it would do so silently — a run would show re-asks firing and a
