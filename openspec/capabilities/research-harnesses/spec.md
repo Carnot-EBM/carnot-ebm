@@ -5821,6 +5821,121 @@ the artifact makes no model-ranking claim.
 |---|---|---|
 | REQ-INFRA-6450 | Planned: `python/carnot/experiment_6450_sota_fixed_policy_candidate_corpus.py`; terminal artifact `results/experiment_6450_sota_fixed_policy_candidate_corpus.json`. | Planned: `tests/python/test_experiment_6450_sota_fixed_policy_candidate_corpus.py`. |
 
+## REQ-INFRA-6462: SOTA Raw Persistence Canary SHALL Bind One Event To One Durable Raw Path Before Parsing
+
+Carnot SHALL provide Exp6462 at
+`python/carnot/experiment_6462_sota_raw_persistence_uniqueness_canary.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6462_sota_raw_persistence_uniqueness_canary --date 20260819`
+SHALL write
+`results/experiment_6462_sota_raw_persistence_uniqueness_canary.json`.
+
+Exp6462 SHALL run a small live matrix across the three mandated GGUF model ids:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL use `cached_sota_pair()` or the
+same cache resolver. It SHALL use embedded GGUF tokenizers only. It SHALL never
+call `AutoTokenizer` for a GGUF repository. Legacy models MAY appear only in
+blocked or smoke-test records and SHALL NOT supply canary rows.
+
+Before inference, Exp6462 SHALL fail closed unless both RTX 3090 GPUs are
+visible, each mandated model file is cached and hashed, each embedded tokenizer
+loads, free VRAM and disk pass, a monotonic clock is available, the result path
+and raw-output tree are fresh, and protected files are hashed. If any gate
+fails, Exp6462 SHALL write a blocked artifact with `blocked_reason`,
+`gate_check_summary`, and `preconditions_checked`. It SHALL run no generation
+after a failed precondition.
+
+Exp6462 SHALL seal at least four fixed units before generation. For each unit
+and each mandated model, it SHALL generate at least two independent outputs
+with frozen prompts, decoding settings, and seeds. Before each generation it
+SHALL allocate the final raw path and event id. The raw bytes SHALL be written
+to a same-directory temporary file, flushed and fsynced where supported,
+atomically renamed, and verified by byte count and SHA-256 before parsing.
+
+Every normal generation row SHALL bind event id, unit id, model file hash,
+embedded tokenizer hash, device samples, prompt hash, raw hash, parse hash,
+checker hash, verdict, raw path, and atomic-write receipt through the Exp6449
+path receipt stages. Text equality across two live outputs SHALL be diagnostic
+only. It SHALL NOT be used as event uniqueness. Event uniqueness SHALL come
+from one-to-one event, path, and durable hash binding.
+
+Exp6462 SHALL emit `per_unit_rows` for every normal generation and every
+injected attack. The attack matrix SHALL cover zero-byte rename, stale
+preexisting path, reused event id, same raw path under two rows, cloned
+candidate row, model substitution, CPU fallback, and receipt reordering. Each
+critical attack SHALL fail closed. `raw_persistence_canary_ready_score` SHALL be
+`1.0` only when every normal generation has nonzero durable bytes, every normal
+row has a one-event/one-path/one-hash binding, every path receipt validates
+before parse, CPU fallback count is zero, all reported aggregates recompute
+from rows, protected files are unchanged, and all critical attacks fail closed.
+
+The terminal artifact SHALL include `status`, `MODEL_SPECS`, `models_used`,
+`cached_sota_pair_receipts`,
+`model_file_and_embedded_tokenizer_hashes`, `autotokenizer_usage_count`,
+`device_and_runner_receipts`, `sealed_unit_manifest`,
+`event_path_allocation_receipts`, `atomic_write_receipts`,
+`raw_output_manifest`, `per_unit_rows`,
+`one_event_one_path_one_hash_check`, `nonzero_durable_byte_check`,
+`raw_text_equality_diagnostic`, `cpu_fallback_count`, `attack_matrix`,
+`aggregate_row_recomputation`, `current_adversarial_findings`,
+`raw_persistence_canary_ready_score`, `protected_files_unchanged`,
+`blocked_reason`, `gate_check_summary`, `preconditions_checked`,
+`inference_substrate`, `verifier_is_oracle`, `field_principles`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+`verifier_is_oracle` SHALL be true only for byte count checks, SHA-256 checks,
+receipt-chain validation, and exact checker arithmetic over the row bindings.
+It SHALL NOT make model-output semantics an oracle.
+
+### SCENARIO-INFRA-6462-1: Preconditions Fail Closed Before Inference
+
+GIVEN the three mandated GGUF families and a fresh output location
+WHEN Exp6462 starts
+THEN it blocks before inference if any GPU, VRAM, cache, tokenizer, disk,
+clock, or fresh-path precondition fails
+AND it records each failed gate in `preconditions_checked`,
+`blocked_reason`, and `gate_check_summary`.
+
+**Spec traces:** REQ-INFRA-6462
+
+### SCENARIO-INFRA-6462-2: Raw Bytes Persist Atomically Before Parse
+
+GIVEN a sealed unit, model, seed, and allocated event id
+WHEN Exp6462 stores the generated raw output
+THEN the final path is allocated before generation, a temporary file is renamed
+atomically, durable byte count and SHA-256 are verified before parse, and the
+row records the allocation and write receipts.
+
+**Spec traces:** REQ-INFRA-6462
+
+### SCENARIO-INFRA-6462-3: Path Receipts Bind Event Identity
+
+GIVEN normal canary rows
+WHEN Exp6462 builds the Exp6449-style path chain
+THEN every row binds event id, unit id, model hash, tokenizer hash, device
+sample hash, prompt hash, raw hash, parse hash, checker hash, and verdict
+without using raw text equality as event identity.
+
+**Spec traces:** REQ-INFRA-6462
+
+### SCENARIO-INFRA-6462-4: Persistence And Identity Attacks Fail Closed
+
+GIVEN zero-byte rename, stale preexisting path, reused event id, same raw path,
+cloned candidate row, model substitution, CPU fallback, and receipt reordering
+attacks
+WHEN Exp6462 validates the canary rows
+THEN every attack is rejected, `per_unit_rows` retains the injected attack row,
+and readiness stays below `1.0` for any accepted attack.
+
+**Spec traces:** REQ-INFRA-6462
+
+## Implementation Status (REQ-INFRA-6462)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6462 | Planned: `python/carnot/experiment_6462_sota_raw_persistence_uniqueness_canary.py`; terminal artifact `results/experiment_6462_sota_raw_persistence_uniqueness_canary.json`. | Planned: `tests/python/test_experiment_6462_sota_raw_persistence_uniqueness_canary.py`. |
+
 ## REQ-INFRA-6351: V547 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
 
 Carnot SHALL build Exp6351 as a deterministic V547 post-marker source sweep
