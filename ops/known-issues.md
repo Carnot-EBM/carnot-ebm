@@ -4,6 +4,51 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-08-18: the scored induce budget cannot be spent inside the scored induce timeout, and concurrency widens the gap
+
+**The arithmetic.** `scripts/kaggle/submission_kernel/main.py:589-590` sets
+`CARNOT_ARC_INDUCE_MAX_TOKENS=131072` and `CARNOT_ARC_INDUCE_TIMEOUT=2400` by env before the
+agent starts. Both are honoured — the two `LocalGGUFProposer` construction sites in
+`arc_competition_agent.py` (lines 1326 and 6364) read the max-tokens env with a 4096 default,
+and `_default_induce_timeout_s()` reads the timeout env. Spending the full budget inside the
+window therefore needs **54.6 tok/s**. Measured on the actual scored Blackwell card, 2026-08-18:
+
+| config | per-stream tok/s | time for 131072 tokens | vs 2400 s |
+|---|---|---|---|
+| llama.cpp, single stream | 52.2 | 2511 s | over |
+| vLLM, single stream | 56.1 | 2336 s | 3% margin |
+| vLLM k=4 (180.6 aggregate) | 45.2 | 2903 s | over |
+| vLLM k=16 (482.9 aggregate) | 30.2 | 4344 s | over |
+| vLLM k=32 (651.8 aggregate) | 20.4 | 6435 s | far over |
+
+**The ceiling is unreachable at every measured concurrency, and it gets worse as concurrency
+rises** — which is intrinsic, not incidental: aggregate throughput is bought by lowering the
+per-stream rate, and the timeout is per-call. The vLLM backend shipped today therefore widens
+this gap in exchange for the throughput it buys. The eval runs one thread per game, so the
+operative concurrency is the number of games in flight.
+
+**What is NOT claimed.** Whether this ever fires depends on how long real scored inductions
+run, which is not measured here. If they land at a few thousand tokens it never bites. The
+2026-08-18 A/B saw one generation reach 81,812 tokens on this same generator, which at 20 tok/s
+would be roughly 4,000 s — but that was under that rig's own 102400-token budget and think
+envelope, not the scored configuration, so it is suggestive and does not transfer. No severity
+claim is made and no failure has been observed on the scored path.
+
+**Why it is worth recording anyway.** The failure would be silent in the direction that matters.
+`arc_executable_world_model.py:5274` already warns in its own words that a fired induce timeout
+makes "generate() fail and the agent run LLM-OFF" — so a long induction does not produce a
+degraded answer, it produces no generator, and the row looks ordinary afterwards.
+
+**Cheap next step, not taken.** Measure actual induce token counts on a scored save-run, which
+the kernel already logs enough to recover, and compare against the per-stream rate at the
+concurrency the eval actually produces. Either the margin is comfortable and this entry closes,
+or the two constants need to be set from one another rather than independently.
+
+**Cross-references:** the 2026-08-18 vLLM backend work (commits `b24debc9c6` through
+`dbfc2ea703`) for the per-stream-versus-aggregate measurements · the same day's goal-defect A/B,
+which hit the identical ratio problem in its own harness at 102400/3600 and is where the shape
+was first noticed · `arc_executable_world_model.py:5274` for the LLM-OFF consequence.
+
 ### NEW 2026-08-18: the goal-defect gate samples the HEAD of a window when the only positive is at the TAIL
 
 **The defect.** `_GOAL_PROBE_MAX_GRIDS = 12` makes the shipped goal-defect gate probe the
