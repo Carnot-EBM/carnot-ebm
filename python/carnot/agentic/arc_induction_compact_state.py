@@ -79,7 +79,13 @@ def _state_budget_tokens() -> int:
 
 def code_sha8(code: str) -> str:
     """Fingerprint of a candidate's source. Detects the model re-submitting a
-    refuted engine after compaction -- the primary too-lossy failure signal."""
+    refuted engine after compaction -- the primary too-lossy failure signal.
+
+    Telemetry only, never a behaviour gate. 8 hex chars = 32 bits: collision odds
+    are ~1.5e-7 per session and ~5e-6 across a 30-cell A/B -- fine for a counter,
+    not for control flow. It hashes the exact stripped text, so a comment-only or
+    reformatted resubmission hashes differently: the counter UNDER-counts semantic
+    duplicates by design. Do not read it as a semantic-equivalence counter."""
     return hashlib.sha256(code.strip().encode()).hexdigest()[:8]
 
 
@@ -90,17 +96,27 @@ def _estimate_tokens(obj: Any) -> int:
     return len(json.dumps(obj, default=str)) // 3
 
 
+def _as_count(v: Any) -> Optional[int]:
+    """Coerce a server-reported token count to int. Some backends emit floats
+    (17000.0); rejecting those would silently disable the trigger. bool is a
+    subclass of int in Python and is never a token count -- refuse it."""
+    if isinstance(v, bool):
+        return None
+    if isinstance(v, (int, float)):
+        return int(v)
+    return None
+
+
 def measured_prompt_tokens(raw: dict[str, Any]) -> Optional[int]:
     """The server's measured prompt size for one response. `usage.prompt_tokens`
     first (both backends return it), `timings.prompt_n` as the llama-server
     fallback -- the prompt-side mirror of the loop's `_completion_tokens`."""
     usage = raw.get("usage") if isinstance(raw.get("usage"), dict) else {}
-    pt = usage.get("prompt_tokens")
-    if isinstance(pt, int):
+    pt = _as_count(usage.get("prompt_tokens"))
+    if pt is not None:
         return pt
     timings = raw.get("timings") if isinstance(raw.get("timings"), dict) else {}
-    n = timings.get("prompt_n")
-    return n if isinstance(n, int) else None
+    return _as_count(timings.get("prompt_n"))
 
 
 def _code_head(code: str) -> str:
@@ -120,6 +136,29 @@ def _first_mismatch_line(report: dict[str, Any]) -> Optional[str]:
     if not isinstance(mismatches, list) or not mismatches:
         return None
     return json.dumps(mismatches[0], default=str)[:_ROW_TEXT_CAP]
+
+
+def _result_dispatch_key(name: str, result: dict[str, Any]) -> Optional[str]:
+    """Canonical identity of one inspection fetch, derived from the RESULT, not
+    the raw arguments. Raw-argument keys under-count: `query_region` with an
+    explicit `which="before"` and the same call with `which` omitted return the
+    same cells but serialize to different kwargs, so a real post-compaction
+    re-fetch would count zero. The result carries the CLIPPED, defaulted view the
+    model actually received, so two fetches of the same cells always key equal."""
+    if name == "list_transitions":
+        return "list_transitions"
+    if name == "diff_grids":
+        return f"diff_grids:t={result.get('t')}"
+    if name == "query_region":
+        rows = result.get("rows") or []
+        r0 = int(result.get("r0") or 0)
+        c0 = int(result.get("c0") or 0)
+        n_cols = len(rows[0]) if rows else 0
+        return (
+            f"query_region:t={result.get('t')},which={result.get('which')},"
+            f"r={r0}-{r0 + len(rows)},c={c0}-{c0 + n_cols}"
+        )
+    return None
 
 
 @dataclass
@@ -166,10 +205,11 @@ class EvidenceLedger:
         if not isinstance(kwargs, dict):
             kwargs = {}
         if name in _INSPECTION_TOOLS:
-            key = name + ":" + json.dumps(kwargs, sort_keys=True, default=str)
-            if self._pre_compaction_keys is not None and key in self._pre_compaction_keys:
-                stats["refetch_tool_calls_post_compaction"] += 1
-            self._seen_keys.add(key)
+            key = _result_dispatch_key(name, result)
+            if key is not None:
+                if self._pre_compaction_keys is not None and key in self._pre_compaction_keys:
+                    stats["refetch_tool_calls_post_compaction"] += 1
+                self._seen_keys.add(key)
         if name == "run_engine_on_transitions":
             code = str(kwargs.get("code") or "")
             if code_sha8(code) in self._seen_candidate_sha8:
@@ -225,11 +265,17 @@ def build_carried_state(
     session: Any, ledger: EvidenceLedger, *, turn: int, budget_tokens: int
 ) -> tuple[dict[str, Any], bool]:
     """Assemble the ONE carried-state message body, mechanically. Returns
-    (state, floor_hit). Eviction order when the budget binds (design section 7):
-    regions oldest-first, diffs oldest-first, inert transition rows, middle
-    candidate rows. Never evicted: best.code, the session line, the envelope,
-    candidate row 0 (the repair seed), the best row, and the last two rows.
-    On a floor bind the state ships whole -- fail toward completeness, visibly."""
+    (state, floor_hit). Eviction order when the budget binds (design section 7,
+    plus the 2026-08-19 review addendum): regions oldest-first, diffs oldest-first,
+    inert transition rows, goal-probe rows oldest-first, middle candidate rows.
+    Never evicted: best.code, the session line, the envelope, candidate row 0
+    (the repair seed), the best row, and the last two rows.
+
+    KEEP-SET SHORT-CIRCUIT. When the never-evict core alone busts the budget,
+    no eviction can reach it -- so the state ships WHOLE, digests intact, with
+    floor_hit. Evicting recoverable evidence for zero gain would only make a
+    floor-bound state worse. `budget.tokens_floor` records that irreducible core
+    size, so a floor_hit artifact shows how far over budget the core is."""
     candidates = list(session.candidates)
     best = session.best_candidate()
     best_idx = next((i for i, c in enumerate(candidates) if c is best), None)
@@ -253,10 +299,11 @@ def build_carried_state(
     regions = list(ledger.regions)
     diffs = list(ledger.diffs)
     trans = list(ledger.transitions_index)
-    evicted = {"regions": 0, "diffs": 0, "transitions": 0, "candidates": 0}
+    probes = list(ledger.goal_probes)
+    evicted = {"regions": 0, "diffs": 0, "transitions": 0, "goal_probes": 0, "candidates": 0}
     floor_hit = False
 
-    def _assemble() -> dict[str, Any]:
+    def _assemble(regions_, diffs_, trans_, probes_, cand_rows_) -> dict[str, Any]:
         return {
             "v": 1,
             "kind": CARRIED_STATE_KIND,
@@ -278,36 +325,58 @@ def build_carried_state(
                     "is_memorizing": best.is_memorizing,
                 }
             ),
-            "candidates": list(cand_rows),
+            "candidates": list(cand_rows_),
             "evidence": {
-                "transitions_index": list(trans),
-                "diffs_fetched": list(diffs),
-                "regions_fetched": list(regions),
-                "goal_probes": list(ledger.goal_probes),
+                "transitions_index": list(trans_),
+                "diffs_fetched": list(diffs_),
+                "regions_fetched": list(regions_),
+                "goal_probes": list(probes_),
             },
-            "budget": {"tokens_est": 0, "evicted": dict(evicted)},
+            "budget": {"tokens_est": 0, "tokens_floor": 0, "evicted": dict(evicted)},
         }
 
-    state = _assemble()
-    while _estimate_tokens(state) > budget_tokens:
-        if regions:
-            regions.pop(0)
-            evicted["regions"] += 1
-        elif diffs:
-            diffs.pop(0)
-            evicted["diffs"] += 1
-        elif any(row.get("changed") == 0 for row in trans):
-            trans.pop(next(i for i, row in enumerate(trans) if row.get("changed") == 0))
-            evicted["transitions"] += 1
-        elif any(row["idx"] not in keep for row in cand_rows):
-            cand_rows.pop(next(i for i, row in enumerate(cand_rows) if row["idx"] not in keep))
-            evicted["candidates"] += 1
-        else:
-            # Nothing evictable is left. Ship the state whole; NEVER truncate
-            # best.code -- a truncated engine is worse than a long prompt.
-            floor_hit = True
-            break
-        state = _assemble()
+    # The irreducible core: everything evictable removed. Sizing it FIRST is the
+    # short-circuit test, and its estimate is also the final tokens_floor value.
+    floor_est = _estimate_tokens(
+        _assemble(
+            [],
+            [],
+            [r for r in trans if r.get("changed") != 0],
+            [],
+            [row for row in cand_rows if row["idx"] in keep],
+        )
+    )
+    if floor_est > budget_tokens:
+        # Even the keep-set alone does not fit. Ship whole, digests intact;
+        # NEVER truncate best.code -- a truncated engine is worse than a long
+        # prompt, and destroying re-fetchable digests here gains nothing.
+        floor_hit = True
+        state = _assemble(regions, diffs, trans, probes, cand_rows)
+    else:
+        state = _assemble(regions, diffs, trans, probes, cand_rows)
+        while _estimate_tokens(state) > budget_tokens:
+            if regions:
+                regions.pop(0)
+                evicted["regions"] += 1
+            elif diffs:
+                diffs.pop(0)
+                evicted["diffs"] += 1
+            elif any(row.get("changed") == 0 for row in trans):
+                trans.pop(next(i for i, row in enumerate(trans) if row.get("changed") == 0))
+                evicted["transitions"] += 1
+            elif probes:
+                probes.pop(0)
+                evicted["goal_probes"] += 1
+            elif any(row["idx"] not in keep for row in cand_rows):
+                cand_rows.pop(next(i for i, row in enumerate(cand_rows) if row["idx"] not in keep))
+                evicted["candidates"] += 1
+            else:
+                # Unreachable: the short-circuit above guarantees the fully-evicted
+                # state fits. Kept as a loop guard against estimate drift.
+                floor_hit = True
+                break
+            state = _assemble(regions, diffs, trans, probes, cand_rows)
+    state["budget"]["tokens_floor"] = floor_est
     state["budget"]["tokens_est"] = _estimate_tokens(state)
     return state, floor_hit
 
@@ -317,32 +386,59 @@ def rebuild_messages(
 ) -> Optional[list[dict[str, Any]]]:
     """One compaction event: [base message (verbatim)] + [carried state] + [tail].
 
-    The tail starts at the LAST assistant message, so it carries that turn's tool
-    results and any trailing user nudge -- one complete round, atomically. A `tool`
-    message always follows the assistant turn holding its `tool_call_id`, so the
-    rebuild can never orphan one. Returns None when no assistant turn exists yet."""
-    last_assistant = None
+    The tail starts at the last assistant turn that CARRIES TOOL_CALLS -- the last
+    tool round the design keeps verbatim, because it holds the mismatch report the
+    model is about to act on. Everything after that turn is carried too: its tool
+    results, and any trailing prose assistant turn or user nudge, which are part of
+    the current reasoning step (dropping a nudge would orphan an instruction the
+    model has not answered yet). A `tool` message always follows the assistant turn
+    holding its `tool_call_id`, so the rebuild can never orphan one. Returns None
+    when no tool round exists yet -- the caller then leaves `messages` untouched.
+
+    KNOWN SHAPE: the rebuild puts two consecutive `user` messages at the head
+    (base, carried state). ChatML/Qwen accepts that; a strict-role-alternation
+    template rejects the request, which surfaces as `terminated_by=transport_error`
+    with `transport_error_on_compacted_request` set, and the single-shot fallback.
+
+    Serializes with default=str, matching `_estimate_tokens`: the two paths must
+    agree, or a leaf that passed sizing could raise here, out of the loop."""
+    last_tool_round = None
     for i in range(len(messages) - 1, -1, -1):
-        if messages[i].get("role") == "assistant":
-            last_assistant = i
+        if messages[i].get("role") == "assistant" and messages[i].get("tool_calls"):
+            last_tool_round = i
             break
-    if last_assistant is None:
+    if last_tool_round is None:
         return None
-    carried = {"role": "user", "content": json.dumps(state)}
-    return [messages[0], carried] + messages[last_assistant:]
+    carried = {"role": "user", "content": json.dumps(state, default=str)}
+    return [messages[0], carried] + messages[last_tool_round:]
+
+
+# Design section 10: expected <= 3 compaction events per loop, "alarm above 5".
+# The loop raises the alarm (a stats flag + a logged warning) past this count.
+COMPACTION_ALARM_THRESHOLD = 5
 
 
 @dataclass
 class CompactionController:
     """Trigger state for threshold-based compaction. Compaction is an EVENT, not a
     per-turn rewrite: between events the loop stays append-only, so the server's
-    prefix cache keeps covering everything already prefilled."""
+    prefix cache keeps covering everything already prefilled.
+
+    THRASH FLOOR. When the compacted prompt itself (base + state + tail) sits at
+    or above baseline + growth, the design rule alone re-fires on every turn --
+    each rebuild pays the state+tail re-prefill to drop a single round, which
+    forfeits the prefix-cache benefit threshold-triggering exists to keep. So a
+    RE-fire additionally requires `growth` of NEW transcript since the last
+    rebuild, measured from the first post-rebuild prompt size. The FIRST fire
+    keeps the design's exact turn-0 rule."""
 
     enabled: bool
     growth_tokens: int
     state_budget_tokens: int
     baseline_prompt_tokens: Optional[int] = None
     last_prompt_tokens: Optional[int] = None
+    post_rebuild_prompt_tokens: Optional[int] = None
+    _awaiting_post_rebuild: bool = False
 
     @classmethod
     def from_env(cls) -> "CompactionController":
@@ -354,25 +450,36 @@ class CompactionController:
 
     def note_response(self, raw: dict[str, Any]) -> Optional[int]:
         """Record one response's measured prompt size. The first measurement is the
-        baseline (the turn-0 prompt); a missing measurement changes nothing, which
-        fails toward NO compaction."""
+        baseline (the turn-0 prompt); the first measurement after a rebuild is the
+        thrash floor's reference point. A missing measurement changes nothing,
+        which fails toward NO compaction."""
         pt = measured_prompt_tokens(raw)
         if pt is not None:
             if self.baseline_prompt_tokens is None:
                 self.baseline_prompt_tokens = pt
+            if self._awaiting_post_rebuild:
+                self.post_rebuild_prompt_tokens = pt
+                self._awaiting_post_rebuild = False
             self.last_prompt_tokens = pt
         return pt
 
     def should_compact(self) -> bool:
-        """True when the PREVIOUS response's measured prompt crossed baseline +
-        growth. Measured, never estimated."""
+        """True when the PREVIOUS response's measured prompt crossed the threshold.
+        Measured, never estimated. Threshold: baseline + growth (the design rule),
+        raised to post-rebuild-floor + growth after the first event (the thrash
+        floor above)."""
         if not self.enabled:
             return False
         if self.baseline_prompt_tokens is None or self.last_prompt_tokens is None:
             return False
-        return self.last_prompt_tokens >= self.baseline_prompt_tokens + self.growth_tokens
+        threshold = self.baseline_prompt_tokens + self.growth_tokens
+        if self.post_rebuild_prompt_tokens is not None:
+            threshold = max(threshold, self.post_rebuild_prompt_tokens + self.growth_tokens)
+        return self.last_prompt_tokens >= threshold
 
     def note_rebuild(self) -> None:
-        """Forget the pre-rebuild measurement. The trigger must not re-fire on a
-        stale value; it waits for a fresh post-rebuild measurement."""
+        """Forget the pre-rebuild measurement (the trigger must not re-fire on a
+        stale value) and arm the thrash floor: the NEXT measurement is the
+        compacted prompt's size, the re-fire reference point."""
         self.last_prompt_tokens = None
+        self._awaiting_post_rebuild = True

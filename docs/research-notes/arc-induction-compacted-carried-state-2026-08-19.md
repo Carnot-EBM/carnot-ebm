@@ -346,6 +346,60 @@ All with real assertions, none skipped, none touching tracked state
 - `python/carnot/agentic/arc_induction_tool_loop.py` — the loop (REQ-ARC-WMTE-6460, 6470, 6500 hooks).
 - `python/carnot/agentic/arc_induction_tools.py` — tool caps, holdout split, candidate ledger.
 - `python/carnot/agentic/arc_recall_gated_resample.py` — repair-mode fire path; the ~40% A/A divergence floor.
-- `openspec/capabilities/arc-world-model-trust-energy/spec.md` — REQ-ARC-WMTE-6400..6510 lineage; 6520 proposed here.
+- `openspec/capabilities/arc-world-model-trust-energy/spec.md` — holds REQ-ARC-WMTE-6400..6470
+  plus this note's 6540. NOTE: 6500/6510/6520/6530 exist in code and tests but have NO spec
+  entries yet — that is pre-existing spec debt, not a fact about spec.md. (This line first
+  claimed a "6400..6510 lineage" and "6520 proposed here" — both stale, the exact
+  cross-reference error the header warns about. Corrected 2026-08-19; see the addendum.)
 - `docs/research-notes/arc-induction-wall-consolidated-2026-08-12.md` — why induction levers need A/Bs with per-row data.
 - CLAUDE.md: Simplified Technical English; Principle-Annotated Artifact Fields; Tests Must Run and Assert; Adversarial Artifact Verification + Sample-Size Rigor; never-prune.
+
+## 15. Implementation addendum (2026-08-19, post adversarial review) — append-only
+
+The design shipped as REQ-ARC-WMTE-6540 (commit `d3e9f8cf52`, module
+`arc_induction_compact_state.py`, tests `test_arc_induction_compact_state.py`).
+An adversarial review found nine defects across the first implementation AND
+this note. The corrections, each also reflected in the spec text:
+
+1. **Tail definition (design defect in the first implementation, not the
+   note).** The first rebuild started the tail at the last assistant turn of
+   ANY kind. When a prose turn crossed the threshold, the last TOOL round —
+   the mismatch report Section 3 guarantees stays verbatim — was compacted to
+   a digest. Fixed: the tail starts at the last assistant turn WITH
+   tool_calls and carries everything after it. A trailing prose turn or user
+   nudge is part of the current reasoning step and rides along.
+2. **Eviction pattern list was narrower than its concept (a defect in THIS
+   note).** Section 7 omitted `goal_probes`, so probe rows were unevictable;
+   they now evict oldest-first between the inert transition rows and the
+   middle candidate rows. And when the never-evict core alone busts the
+   budget, the old loop destroyed every digest for zero gain before declaring
+   the floor; a keep-set short-circuit now ships the state whole, digests
+   intact, with `budget.tokens_floor` recording the irreducible core size.
+3. **Compaction thrash at default knobs (a gap in Section 8's analysis).** A
+   compacted prompt that already sits at baseline+growth re-fires every turn
+   (a probe measured 10 events in 11 turns), forfeiting the prefix-cache
+   benefit that justifies threshold-triggering. A re-fire now also requires
+   `growth` of new transcript beyond the first post-rebuild measurement. The
+   Section 10 "alarm above 5" row is now implemented:
+   `compaction_thrash_alarm` in stats plus a logged warning.
+4. **Refetch keys normalize on RESULT fields**, not raw kwargs — tool-side
+   defaults (`which` omitted vs explicit) and clipping made real re-fetches
+   key differently and silently under-count.
+5. **Two consecutive user messages** (base, carried state) are the rebuild's
+   shape. Strict-role-alternation templates reject that request; the failure
+   lands as `terminated_by=transport_error` with
+   `transport_error_on_compacted_request: true`, distinguishable from the
+   orphan case Section 10 originally assigned to that signal.
+6. **`code_sha8` caveats documented**: 32-bit telemetry fingerprint, never a
+   behaviour gate; exact-text hash, so the duplicate counter under-counts
+   semantic duplicates.
+7. **Cross-reference fixes in this note**: Section 14's spec.md line claimed
+   a "6400..6510 lineage" and "6520 proposed here" — spec.md holds
+   6400..6470 (+6540 now), and this note proposes 6540. Corrected in place,
+   correction recorded here.
+8. **Token-count coercion**: float `prompt_tokens` from a backend no longer
+   silently disables the trigger; and the carried-state serialization uses
+   the same `default=str` as the sizing estimate, so a leaf that passes
+   sizing can never raise at injection.
+
+The measurement plan (Section 11) is unchanged. Still no default flip.

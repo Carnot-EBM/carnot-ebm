@@ -26177,26 +26177,50 @@ is behind the enablement check.
    prompt size (`usage.prompt_tokens`, fallback `timings.prompt_n`) reaches
    the first measured prompt size plus `CARNOT_ARC_INDUCE_TOOL_COMPACT_GROWTH`
    (default 8192). After a rebuild the trigger SHALL NOT re-fire on the stale
-   pre-rebuild measurement; it waits for a fresh one.
+   pre-rebuild measurement; it waits for a fresh one. THRASH FLOOR
+   (2026-08-19 review): a RE-fire additionally requires `growth` of new
+   transcript beyond the first post-rebuild measurement -- without it, a
+   compacted prompt that already sits at the design threshold re-fires on
+   every turn (a probe measured 10 events in 11 turns) and forfeits the
+   prefix-cache benefit. Past `COMPACTION_ALARM_THRESHOLD` (5) events the
+   loop SHALL set `compaction_thrash_alarm` and log a warning.
 3. A rebuild replaces `messages` with `[base message (verbatim, immutable)] +
-   [carried-state user message] + [tail]`. The tail is the last COMPLETE
-   round: the last assistant turn, its tool results, and any trailing user
-   nudge. A `tool` message SHALL always follow the assistant message that
-   carries its `tool_call_id`; the compaction unit is one complete round,
-   atomically.
+   [carried-state user message] + [tail]`. The tail starts at the last
+   assistant turn that CARRIES TOOL_CALLS -- the last tool round, whose
+   mismatch report the model is about to act on -- and carries everything
+   after it: the round's tool results, any trailing prose assistant turn,
+   and any user nudge (part of the current reasoning step). A `tool` message
+   SHALL always follow the assistant message that carries its `tool_call_id`;
+   the compaction unit is one complete tool round, atomically. When no tool
+   round exists yet, no rebuild happens. KNOWN SHAPE: a rebuild yields two
+   consecutive `user` messages (base, carried state); a strict-role-alternation
+   chat template rejects that request, which surfaces as
+   `terminated_by=transport_error` with `transport_error_on_compacted_request:
+   true` and the shipped single-shot fallback.
 4. When the state exceeds `CARNOT_ARC_INDUCE_TOOL_COMPACT_STATE_BUDGET`
    (default 2048 tokens, chars/3 estimate), rows are evicted in a fixed order:
    `regions_fetched` oldest first, then `diffs_fetched` oldest first, then
-   `transitions_index` rows with `changed == 0`, then middle `candidates`
-   rows. Never evicted: `best.code`, the session line, the envelope, candidate
-   row 0 (the repair seed), the best row, and the last two rows. If the state
-   still does not fit, it ships whole with `compact_floor_hit: true` -- fail
-   toward completeness, visibly.
+   `transitions_index` rows with `changed == 0`, then `goal_probes` oldest
+   first (2026-08-19 review: the original list omitted them, so probe rows
+   were unevictable), then middle `candidates` rows. Never evicted:
+   `best.code`, the session line, the envelope, candidate row 0 (the repair
+   seed), the best row, and the last two rows. KEEP-SET SHORT-CIRCUIT
+   (2026-08-19 review): when the never-evict core alone exceeds the budget,
+   the state ships WHOLE with `compact_floor_hit: true` and NOTHING evicted --
+   destroying re-fetchable digests cannot help a floor-bound state.
+   `budget.tokens_floor` records the irreducible core's estimate so a floor
+   artifact shows how far over budget the core is. Fail toward completeness,
+   visibly.
 5. Counters in `last_tool_loop_stats`, all mechanical: `prompt_tokens_per_turn`
    (telemetry, recorded unconditionally -- it never alters a request payload),
-   `compactions`, `compact_floor_hit`, `refetch_tool_calls_post_compaction`
-   (an inspection dispatch key fetched before a compaction and repeated after
-   it), and `duplicate_candidate_submissions` (a `code_sha8` submitted twice).
+   `compactions`, `compact_floor_hit`, `compaction_thrash_alarm`,
+   `refetch_tool_calls_post_compaction` (an inspection fetch repeated after a
+   compaction, keyed on RESULT fields -- t/which/clipped bounds -- so tool-side
+   argument defaults and clipping cannot hide a real re-fetch), and
+   `duplicate_candidate_submissions` (a `code_sha8` submitted twice; exact-text
+   fingerprint, so it under-counts semantic duplicates).
+   `transport_error_on_compacted_request` is set when the failing request was
+   the first after a rebuild.
 6. Existing protections are preserved: `reasoning_content` stays dropped on
    feedback, and the per-turn `thinking_budget_tokens` stays on every request.
    Repair mode (REQ-ARC-WMTE-6470) needs no special case: the seed occupies
@@ -26208,16 +26232,22 @@ Given the env flag unset, the message stream SHALL be byte-identical to today's
 append-only transcript, no compaction SHALL occur, and the rebuild machinery
 SHALL never be consulted.
 
-#### SCENARIO-ARC-WMTE-6540-2 (threshold trigger, no stale re-fire)
+#### SCENARIO-ARC-WMTE-6540-2 (threshold trigger, no stale re-fire, thrash floor)
 
 Given a measured prompt size crossing turn-0 plus growth, the loop SHALL
 compact exactly once before the next request. Given no fresh measurement after
-the rebuild, the trigger SHALL NOT re-fire on the stale value.
+the rebuild, the trigger SHALL NOT re-fire on the stale value. Given a
+post-rebuild prompt still at or above the design threshold, the trigger SHALL
+NOT re-fire until the measured prompt grows by `growth` beyond the first
+post-rebuild measurement, and past 5 events the loop SHALL raise
+`compaction_thrash_alarm`.
 
 #### SCENARIO-ARC-WMTE-6540-3 (conversation validity)
 
 Given a rebuild, every `tool` message's `tool_call_id` SHALL resolve to a
-preceding assistant turn, and the tail SHALL be the last complete round.
+preceding assistant turn, and the tail SHALL be the last complete TOOL round
+(the last assistant turn with tool_calls, everything after it carried),
+including when a prose assistant turn arrived after that round.
 
 #### SCENARIO-ARC-WMTE-6540-4 (round-trip fidelity)
 
@@ -26227,8 +26257,9 @@ best candidate's code verbatim and one ledger row per candidate.
 #### SCENARIO-ARC-WMTE-6540-5 (eviction order and floor)
 
 Given a state over budget, rows SHALL be evicted in the fixed order with the
-never-evict set intact. Given a floor bind, the state SHALL ship whole with
-`compact_floor_hit: true` and `best.code` untruncated.
+never-evict set intact. Given a keep-set core that alone exceeds the budget,
+the state SHALL ship whole with `compact_floor_hit: true`, `best.code`
+untruncated, and NO digest evicted.
 
 #### SCENARIO-ARC-WMTE-6540-6 (repair seed survives)
 
@@ -26239,4 +26270,4 @@ SHALL survive eviction.
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-ARC-WMTE-6540 | `python/carnot/agentic/arc_induction_compact_state.py` (`EvidenceLedger` digests, `build_carried_state` + eviction order, `rebuild_messages`, `CompactionController` trigger, env readers); wired in `python/carnot/agentic/arc_induction_tool_loop.py` (controller + ledger creation, seed registration, the `compact.enabled` rebuild branch at the top of the turn loop, per-dispatch `ledger.observe`, unconditional `prompt_tokens_per_turn` telemetry). | `tests/python/test_arc_induction_compact_state.py` (env-unset byte-identical pin with a rebuild bomb; threshold trigger + stale-measurement no-refire + refetch counter; tool_call_id pairing after rebuild; round-trip fidelity; eviction order, keep-set, floor; repair seed row 0 in the live carried state; duplicate-submission counter with compaction off; env-reader defaults). |
+| REQ-ARC-WMTE-6540 | `python/carnot/agentic/arc_induction_compact_state.py` (`EvidenceLedger` digests + result-derived refetch keys, `build_carried_state` + eviction order + keep-set short-circuit + `tokens_floor`, `rebuild_messages` tool-round tail, `CompactionController` trigger + thrash floor, env readers); wired in `python/carnot/agentic/arc_induction_tool_loop.py` (controller + ledger creation, seed registration, the `compact.enabled` rebuild branch + thrash alarm at the top of the turn loop, per-dispatch `ledger.observe`, unconditional `prompt_tokens_per_turn` telemetry, `transport_error_on_compacted_request` attribution). | `tests/python/test_arc_induction_compact_state.py` (env-unset byte-identical pin with a rebuild bomb; threshold trigger + exact boundary + stale-measurement no-refire + thrash floor + alarm; refetch counter incl. tool-side-default normalization; tool_call_id pairing after rebuild incl. the prose-turn-follows case; round-trip fidelity; eviction cascade incl. goal probes, keep-set, floor short-circuit through the live loop; failed-result guard; dedupe pins; repair seed row 0; duplicate-submission counter; transport-error attribution; env-reader + measurement-coercion pins). Each guard condition mutation-proven red/green per the QA-Layer agent-side rules. |
