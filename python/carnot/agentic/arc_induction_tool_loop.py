@@ -31,6 +31,7 @@ and must be visible, not inferred.
 from __future__ import annotations
 
 import json
+import logging
 import os
 import time
 import urllib.request
@@ -39,6 +40,7 @@ from typing import Any, Optional
 import numpy as np
 
 from carnot.agentic.arc_induction_compact_state import (
+    COMPACTION_ALARM_THRESHOLD,
     CompactionController,
     EvidenceLedger,
     build_carried_state,
@@ -49,6 +51,8 @@ from carnot.agentic.arc_induction_tools import (
     InductionToolSession,
     dispatch_tool,
 )
+
+_LOG = logging.getLogger(__name__)
 
 DEFAULT_TURN_CAP = 12
 DEFAULT_THINK_BUDGET = 3072
@@ -408,6 +412,7 @@ def induce_with_tool_loop(
         "duplicate_candidate_submissions": 0,
         "compactions": 0,
         "compact_floor_hit": False,
+        "compaction_thrash_alarm": False,
         "refetch_tool_calls_post_compaction": 0,
         "terminated_by": "",
         "final_answer_seen": False,
@@ -504,6 +509,7 @@ def induce_with_tool_loop(
         # the master gate). Threshold-triggered off the previous response's MEASURED
         # prompt size, never per-turn, so between events the transcript stays
         # append-only and the server's prefix cache keeps working.
+        compacted_this_turn = False
         if compact.enabled and compact.should_compact():
             state, floor_hit = build_carried_state(
                 session, ledger, turn=stats["turns"], budget_tokens=compact.state_budget_tokens
@@ -511,9 +517,23 @@ def induce_with_tool_loop(
             rebuilt = rebuild_messages(messages, state)
             if rebuilt is not None:
                 messages = rebuilt
+                compacted_this_turn = True
                 stats["compactions"] += 1
                 if floor_hit:
                     stats["compact_floor_hit"] = True
+                if (
+                    stats["compactions"] > COMPACTION_ALARM_THRESHOLD
+                    and not stats["compaction_thrash_alarm"]
+                ):
+                    # Design section 10: expected <= 3 events per loop, alarm above
+                    # 5. Thrash means the trigger or the growth cap is wrong for
+                    # this cell -- say so actively, not only in the artifact.
+                    stats["compaction_thrash_alarm"] = True
+                    _LOG.warning(
+                        "tool-loop compaction thrash: %d events (alarm threshold %d)",
+                        stats["compactions"],
+                        COMPACTION_ALARM_THRESHOLD,
+                    )
                 ledger.note_compaction()
                 compact.note_rebuild()
         try:
@@ -525,6 +545,12 @@ def induce_with_tool_loop(
             )
         except Exception as exc:  # noqa: BLE001 - transport failure -> clean fallback
             stats["transport_error"] = f"{type(exc).__name__}: {exc}"[:300]
+            if compacted_this_turn:
+                # The failing request was the FIRST after a rebuild. A strict
+                # role-alternation chat template rejects the rebuild's consecutive
+                # user messages, and that failure must be distinguishable from the
+                # orphaned-tool-message case plain transport_error also signals.
+                stats["transport_error_on_compacted_request"] = True
             return _finish("transport_error")
         stats["turns"] += 1
         choice = (raw.get("choices") or [{}])[0]
