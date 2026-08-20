@@ -8262,6 +8262,17 @@ class E3AgentPolicy:
             # unchanged: still swallow, still return, still no crash on the live path.
             attempt["skipped"] = "exception"
             attempt["exception"] = repr(induce_exc)[:300]
+            # RECORD WHERE, NOT ONLY WHAT (2026-08-19). The repr above gives the type and the
+            # message; it does not say which call site raised. The try block spans many induce
+            # stages, so "TypeError(...)" alone leaves a reader guessing among them. An offline
+            # play run on 2026-08-19 hit this on all three games and the repr was not even
+            # reachable downstream, so the whole diagnosis was "something threw once".
+            # This is a cold path -- it runs at most once per induction attempt, on failure --
+            # so the local import and the format cost nothing that matters. Control flow is
+            # unchanged: still swallow, still return, still no crash on the live path.
+            import traceback as _tb
+
+            attempt["traceback"] = _tb.format_exc()[-2000:]
             return
 
     @staticmethod

@@ -589,6 +589,16 @@ def test_induction_exception_is_recorded_with_its_repr(monkeypatch) -> None:
     assert "induction blew up inside the try" in attempt["exception"], attempt
     assert sys.exc_info()[0] is None, "the exception must not propagate"
 
+    # The repr says WHAT raised; the traceback says WHERE. The try block spans many induce
+    # stages, so without frames a reader has to guess which one. Added 2026-08-19 after an
+    # offline play run skipped induction by exception on three of three games and left no way
+    # to tell which call site was responsible.
+    tb = attempt.get("traceback", "")
+    assert tb, f"the handler records no traceback -- the frame record is not live: {attempt}"
+    assert "RuntimeError: induction blew up inside the try" in tb, tb
+    assert "boom" in tb, f"the raising frame must appear in the traceback: {tb}"
+    assert len(tb) <= 2000, "the traceback must stay bounded"
+
 
 # --- 2026-07-27 ADVERSARIAL REVIEW: the witness must MEASURE, not echo -------------------
 # Findings 1 and 11 of the review of commit 776161963. Both are the SAME defect class the

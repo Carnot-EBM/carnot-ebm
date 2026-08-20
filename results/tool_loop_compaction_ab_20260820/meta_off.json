@@ -1,0 +1,103 @@
+{
+  "arm": "off",
+  "arm_wall_s": 7401.12,
+  "cells_completed": 13,
+  "cells_missing": [],
+  "cells_total": 13,
+  "compaction_env": "<unset>",
+  "cuda_visible_devices": "0",
+  "e3_dir": "results/tool_loop_compaction_ab_20260820/e3_off",
+  "ended_iso": "2026-08-20T05:45:02Z",
+  "gguf": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+  "gpu0_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+  "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+  "induce_timeout_s": 2400,
+  "kv_quant": "q8_0",
+  "max_tokens_per_turn": 4096,
+  "n_ctx": 106496,
+  "port_requested": 8983,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "resource": "gguf_cached_qwen38_27b_q4km"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "resource": "llama_server_binary"
+    },
+    {
+      "available": true,
+      "detail": "{\"libcuda\": true, \"libcublas\": true, \"libamdhip64\": false}",
+      "resource": "server_binary_is_cuda_build"
+    },
+    {
+      "available": true,
+      "detail": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "resource": "gpu0_on_pci_bus"
+    },
+    {
+      "available": true,
+      "detail": "no pre-existing server on our port",
+      "resource": "port_8983_free"
+    }
+  ],
+  "quantisation": "Q4_K_M",
+  "roster": [
+    "tu93",
+    "tr87",
+    "sp80",
+    "sb26",
+    "re86",
+    "g50t",
+    "r11l",
+    "cd82",
+    "ar25",
+    "lp85",
+    "sk48",
+    "vc33",
+    "ft09"
+  ],
+  "seed_base": 100,
+  "server": {
+    "completion_probe": {
+      "alive": true,
+      "content": "5?\n\n<think>\nThe user is",
+      "s": 0.27
+    },
+    "generator_server_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "launch_argv": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "-m",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "-ngl",
+      "999",
+      "-c",
+      "106496",
+      "--port",
+      "8983",
+      "--host",
+      "127.0.0.1",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0"
+    ],
+    "pid": 1909251,
+    "port_actual": 8983,
+    "props_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+    "residency_mib_gpu0": 20664,
+    "stderr_log": "results/tool_loop_compaction_ab_20260820/server_logs/carnot_llama_server_logs/llama_server_p8983_1787197301.log"
+  },
+  "server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+  "server_binary_linkage": {
+    "libamdhip64": false,
+    "libcublas": true,
+    "libcuda": true
+  },
+  "started_iso": "2026-08-20T03:41:41Z",
+  "status": "complete",
+  "trial": 0,
+  "wedge": null
+}
