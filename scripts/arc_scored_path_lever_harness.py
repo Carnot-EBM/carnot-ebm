@@ -718,6 +718,21 @@ def run_cell(
     row["induction_skipped"] = dict(
         collections.Counter(a.get("skipped") for a in atts if a.get("skipped"))
     )
+    # CARRY THE MESSAGE, NOT ONLY THE TALLY (2026-08-19). The counter above counts the CATEGORY
+    # string, so an attempt that raised reads `{"exception": 1}` -- the word, with the content
+    # dropped. The agent stores the type, message and (since today) the traceback on the same
+    # attempt dict one layer down; this row simply never read them. An offline play run over
+    # ar25/tr87/tu93 skipped induction by exception on all three games and produced no way to
+    # learn what threw.
+    row["induction_exceptions"] = dict(
+        collections.Counter(a.get("exception") for a in atts if a.get("exception"))
+    )
+    row["induction_tracebacks"] = [a["traceback"] for a in atts if a.get("traceback")][:3]
+    # A cell whose every induction attempt raised is not a measurement of the LLM tier -- it is a
+    # record of a broken one. Mark it, so it cannot be averaged in as an ordinary low score.
+    row["induction_all_attempts_raised"] = bool(atts) and all(
+        a.get("skipped") == "exception" for a in atts
+    )
     row["induction_planned"] = sum(1 for a in atts if a.get("planned"))
     row["induction_engine_sources"] = dict(
         collections.Counter(a.get("engine_source") for a in atts if a.get("engine_source"))

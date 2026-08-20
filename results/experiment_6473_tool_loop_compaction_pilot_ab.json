@@ -1,0 +1,626 @@
+{
+  "arm_meta": {
+    "off": {
+      "arm": "off",
+      "arm_wall_s": 7401.12,
+      "cells_completed": 13,
+      "cells_missing": [],
+      "cells_total": 13,
+      "compaction_env": "<unset>",
+      "cuda_visible_devices": "0",
+      "e3_dir": "results/tool_loop_compaction_ab_20260820/e3_off",
+      "ended_iso": "2026-08-20T05:45:02Z",
+      "gguf": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "gpu0_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "induce_timeout_s": 2400,
+      "kv_quant": "q8_0",
+      "max_tokens_per_turn": 4096,
+      "n_ctx": 106496,
+      "port_requested": 8983,
+      "preconditions_checked": [
+        {
+          "available": true,
+          "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "resource": "gguf_cached_qwen38_27b_q4km"
+        },
+        {
+          "available": true,
+          "detail": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "resource": "llama_server_binary"
+        },
+        {
+          "available": true,
+          "detail": "{\"libcuda\": true, \"libcublas\": true, \"libamdhip64\": false}",
+          "resource": "server_binary_is_cuda_build"
+        },
+        {
+          "available": true,
+          "detail": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "resource": "gpu0_on_pci_bus"
+        },
+        {
+          "available": true,
+          "detail": "no pre-existing server on our port",
+          "resource": "port_8983_free"
+        }
+      ],
+      "quantisation": "Q4_K_M",
+      "roster": [
+        "tu93",
+        "tr87",
+        "sp80",
+        "sb26",
+        "re86",
+        "g50t",
+        "r11l",
+        "cd82",
+        "ar25",
+        "lp85",
+        "sk48",
+        "vc33",
+        "ft09"
+      ],
+      "seed_base": 100,
+      "server": {
+        "completion_probe": {
+          "alive": true,
+          "content": "5?\n\n<think>\nThe user is",
+          "s": 0.27
+        },
+        "generator_server_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "launch_argv": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "-m",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "-ngl",
+          "999",
+          "-c",
+          "106496",
+          "--port",
+          "8983",
+          "--host",
+          "127.0.0.1",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0"
+        ],
+        "pid": 1909251,
+        "port_actual": 8983,
+        "props_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "residency_mib_gpu0": 20664,
+        "stderr_log": "results/tool_loop_compaction_ab_20260820/server_logs/carnot_llama_server_logs/llama_server_p8983_1787197301.log"
+      },
+      "server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "server_binary_linkage": {
+        "libamdhip64": false,
+        "libcublas": true,
+        "libcuda": true
+      },
+      "started_iso": "2026-08-20T03:41:41Z",
+      "status": "complete",
+      "trial": 0,
+      "wedge": null
+    },
+    "on": {
+      "arm": "on",
+      "arm_wall_s": 10779.47,
+      "cells_completed": 13,
+      "cells_missing": [],
+      "cells_total": 13,
+      "compaction_env": "1",
+      "cuda_visible_devices": "0",
+      "e3_dir": "results/tool_loop_compaction_ab_20260820/e3_on",
+      "ended_iso": "2026-08-20T09:41:20Z",
+      "gguf": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "gpu0_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "induce_timeout_s": 2400,
+      "kv_quant": "q8_0",
+      "max_tokens_per_turn": 4096,
+      "n_ctx": 106496,
+      "port_requested": 8983,
+      "preconditions_checked": [
+        {
+          "available": true,
+          "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "resource": "gguf_cached_qwen38_27b_q4km"
+        },
+        {
+          "available": true,
+          "detail": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "resource": "llama_server_binary"
+        },
+        {
+          "available": true,
+          "detail": "{\"libcuda\": true, \"libcublas\": true, \"libamdhip64\": false}",
+          "resource": "server_binary_is_cuda_build"
+        },
+        {
+          "available": true,
+          "detail": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "resource": "gpu0_on_pci_bus"
+        },
+        {
+          "available": true,
+          "detail": "no pre-existing server on our port",
+          "resource": "port_8983_free"
+        }
+      ],
+      "quantisation": "Q4_K_M",
+      "roster": [
+        "tu93",
+        "tr87",
+        "sp80",
+        "sb26",
+        "re86",
+        "g50t",
+        "r11l",
+        "cd82",
+        "ar25",
+        "lp85",
+        "sk48",
+        "vc33",
+        "ft09"
+      ],
+      "seed_base": 100,
+      "server": {
+        "completion_probe": {
+          "alive": true,
+          "content": "5?\n\n<think>\nThe user is",
+          "s": 0.28
+        },
+        "generator_server_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "launch_argv": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "-m",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "-ngl",
+          "999",
+          "-c",
+          "106496",
+          "--port",
+          "8983",
+          "--host",
+          "127.0.0.1",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0"
+        ],
+        "pid": 2445751,
+        "port_actual": 8983,
+        "props_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "residency_mib_gpu0": 20664,
+        "stderr_log": "results/tool_loop_compaction_ab_20260820/server_logs/carnot_llama_server_logs/llama_server_p8983_1787208100.log"
+      },
+      "server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "server_binary_linkage": {
+        "libamdhip64": false,
+        "libcublas": true,
+        "libcuda": true
+      },
+      "started_iso": "2026-08-20T06:41:40Z",
+      "status": "complete",
+      "trial": 0,
+      "wedge": null
+    }
+  },
+  "cells": {
+    "definition": "13 games (exp5760 roster) x trial 0, paired seeds (base 100)",
+    "off_completed": 13,
+    "on_completed": 13
+  },
+  "design_note": "docs/research-notes/arc-induction-compacted-carried-state-2026-08-19.md",
+  "duration_s": 18180.59,
+  "experiment": 6473,
+  "experiment_id": "exp6473-tool-loop-compaction-pilot-ab",
+  "field_provenance": {
+    "phase0.end_of_loop_prompt_tokens": {
+      "principle": "Measured usage.prompt_tokens from the server, never estimated; replaces the design note's Section-1 transcript-growth estimates."
+    },
+    "phase1_gates.G_P": {
+      "principle": "The kill condition: a parse-rate collapse under the new prompt shape sits in the PEG autoparser and no knob retune fixes it."
+    },
+    "phase1_gates.G_Q.pilot_disclaimer": {
+      "principle": "Sample-Size Rigor: 13 cells under a ~40% A/A divergence floor cannot support a quality claim; the field exists so nobody reads one into it."
+    },
+    "reproducibility_checksum": {
+      "principle": "SHA256 over both shards: any silent row edit changes it."
+    }
+  },
+  "honest_verdict": "complete: compaction pilot A/B measured on 13 paired live cells; one or more gates FAIL (G-Q is a pilot signal, never a claim)",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": {
+    "generator": "unsloth/Qwen3.8-27B-GGUF",
+    "gguf": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+    "gpu": "GPU 0 only (RTX 3090; GPU 1 reserved by an unrelated experiment)",
+    "gpu0_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+    "kv_quant": "q8_0",
+    "n_ctx": 106496,
+    "quantisation": "Q4_K_M",
+    "residency_proof_off": 20664,
+    "residency_proof_on": 20664,
+    "server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "server_binary_linkage": {
+      "libamdhip64": false,
+      "libcublas": true,
+      "libcuda": true
+    }
+  },
+  "phase0": {
+    "cells_crossing_default_trigger": 8,
+    "cells_exceeding_25k": 5,
+    "end_of_loop_prompt_tokens": {
+      "max": 37713,
+      "median": 18753,
+      "min": 8321
+    },
+    "n_cells_measured": 13,
+    "per_cell": [
+      {
+        "crossed_default_trigger": false,
+        "end_of_loop_prompt_tokens": 16236,
+        "exceeded_25k": false,
+        "game": "tu93",
+        "growth_tokens": 7125,
+        "terminated_by": "early_stop_non_improving",
+        "turn0_prompt_tokens": 9111,
+        "turns": 7
+      },
+      {
+        "crossed_default_trigger": true,
+        "end_of_loop_prompt_tokens": 34738,
+        "exceeded_25k": true,
+        "game": "tr87",
+        "growth_tokens": 24523,
+        "terminated_by": "early_stop_non_improving",
+        "turn0_prompt_tokens": 10215,
+        "turns": 11
+      },
+      {
+        "crossed_default_trigger": false,
+        "end_of_loop_prompt_tokens": 8321,
+        "exceeded_25k": false,
+        "game": "sp80",
+        "growth_tokens": 4477,
+        "terminated_by": "zero_mismatches",
+        "turn0_prompt_tokens": 3844,
+        "turns": 4
+      },
+      {
+        "crossed_default_trigger": false,
+        "end_of_loop_prompt_tokens": 10891,
+        "exceeded_25k": false,
+        "game": "sb26",
+        "growth_tokens": 4663,
+        "terminated_by": "transport_error",
+        "turn0_prompt_tokens": 6228,
+        "turns": 4
+      },
+      {
+        "crossed_default_trigger": false,
+        "end_of_loop_prompt_tokens": 14313,
+        "exceeded_25k": false,
+        "game": "re86",
+        "growth_tokens": 6945,
+        "terminated_by": "early_stop_non_improving",
+        "turn0_prompt_tokens": 7368,
+        "turns": 6
+      },
+      {
+        "crossed_default_trigger": true,
+        "end_of_loop_prompt_tokens": 34928,
+        "exceeded_25k": true,
+        "game": "g50t",
+        "growth_tokens": 28301,
+        "terminated_by": "early_stop_non_improving",
+        "turn0_prompt_tokens": 6627,
+        "turns": 12
+      },
+      {
+        "crossed_default_trigger": true,
+        "end_of_loop_prompt_tokens": 15874,
+        "exceeded_25k": false,
+        "game": "r11l",
+        "growth_tokens": 8846,
+        "terminated_by": "early_stop_non_improving",
+        "turn0_prompt_tokens": 7028,
+        "turns": 6
+      },
+      {
+        "crossed_default_trigger": true,
+        "end_of_loop_prompt_tokens": 25243,
+        "exceeded_25k": true,
+        "game": "cd82",
+        "growth_tokens": 19915,
+        "terminated_by": "early_stop_non_improving",
+        "turn0_prompt_tokens": 5328,
+        "turns": 6
+      },
+      {
+        "crossed_default_trigger": true,
+        "end_of_loop_prompt_tokens": 18753,
+        "exceeded_25k": false,
+        "game": "ar25",
+        "growth_tokens": 11803,
+        "terminated_by": "early_stop_non_improving",
+        "turn0_prompt_tokens": 6950,
+        "turns": 6
+      },
+      {
+        "crossed_default_trigger": true,
+        "end_of_loop_prompt_tokens": 37713,
+        "exceeded_25k": true,
+        "game": "lp85",
+        "growth_tokens": 28639,
+        "terminated_by": "early_stop_non_improving",
+        "turn0_prompt_tokens": 9074,
+        "turns": 9
+      },
+      {
+        "crossed_default_trigger": true,
+        "end_of_loop_prompt_tokens": 31511,
+        "exceeded_25k": true,
+        "game": "sk48",
+        "growth_tokens": 22980,
+        "terminated_by": "early_stop_non_improving",
+        "turn0_prompt_tokens": 8531,
+        "turns": 11
+      },
+      {
+        "crossed_default_trigger": true,
+        "end_of_loop_prompt_tokens": 21471,
+        "exceeded_25k": false,
+        "game": "vc33",
+        "growth_tokens": 16372,
+        "terminated_by": "transport_error",
+        "turn0_prompt_tokens": 5099,
+        "turns": 9
+      },
+      {
+        "crossed_default_trigger": false,
+        "end_of_loop_prompt_tokens": 15983,
+        "exceeded_25k": false,
+        "game": "ft09",
+        "growth_tokens": 6630,
+        "terminated_by": "zero_mismatches",
+        "turn0_prompt_tokens": 9353,
+        "turns": 5
+      }
+    ],
+    "stop_rule": {
+      "text": "if measured end-of-loop context rarely exceeds ~25k, STOP before Phase 1",
+      "threshold_tokens": 25000
+    }
+  },
+  "phase1_gates": {
+    "G_M": {
+      "cells": [
+        {
+          "bound": 22190,
+          "game": "ar25",
+          "on_compactions": 1,
+          "on_max_prompt_tokens": 17922,
+          "pass": true
+        },
+        {
+          "bound": 20568,
+          "game": "cd82",
+          "on_compactions": 2,
+          "on_max_prompt_tokens": 24309,
+          "pass": false
+        },
+        {
+          "bound": 21867,
+          "game": "g50t",
+          "on_compactions": 1,
+          "on_max_prompt_tokens": 17312,
+          "pass": true
+        },
+        {
+          "bound": 24314,
+          "game": "lp85",
+          "on_compactions": 2,
+          "on_max_prompt_tokens": 27245,
+          "pass": false
+        },
+        {
+          "bound": 22268,
+          "game": "r11l",
+          "on_compactions": 0,
+          "on_max_prompt_tokens": 15874,
+          "pass": true
+        },
+        {
+          "bound": 23771,
+          "game": "sk48",
+          "on_compactions": 1,
+          "on_max_prompt_tokens": 25202,
+          "pass": false
+        },
+        {
+          "bound": 25455,
+          "game": "tr87",
+          "on_compactions": 2,
+          "on_max_prompt_tokens": 22916,
+          "pass": true
+        },
+        {
+          "bound": 20339,
+          "game": "vc33",
+          "on_compactions": 1,
+          "on_max_prompt_tokens": 15804,
+          "pass": true
+        }
+      ],
+      "pass": false
+    },
+    "G_P": {
+      "delta_pp": -0.13,
+      "median_unparsed_turns_off": 0,
+      "median_unparsed_turns_on": 0,
+      "off": {
+        "parse_failures": 2,
+        "rate": 0.011,
+        "tool_calls": 182
+      },
+      "on": {
+        "parse_failures": 2,
+        "rate": 0.0097,
+        "tool_calls": 206
+      },
+      "pass": true,
+      "power_note": "13 cells pool a few hundred tool calls per arm: ~80% power for a 5pp shift; do not claim tighter than the data supports"
+    },
+    "G_Q": {
+      "n_paired": 13,
+      "on_wins_or_ties": 13,
+      "pass": true,
+      "per_cell_delta": [
+        {
+          "game": "ar25",
+          "on_minus_off": 0.0
+        },
+        {
+          "game": "cd82",
+          "on_minus_off": 0.0
+        },
+        {
+          "game": "ft09",
+          "on_minus_off": 0.0
+        },
+        {
+          "game": "g50t",
+          "on_minus_off": 0.0
+        },
+        {
+          "game": "lp85",
+          "on_minus_off": 0.0
+        },
+        {
+          "game": "r11l",
+          "on_minus_off": 0.0
+        },
+        {
+          "game": "re86",
+          "on_minus_off": 0.0
+        },
+        {
+          "game": "sb26",
+          "on_minus_off": 0.0
+        },
+        {
+          "game": "sk48",
+          "on_minus_off": 0.0
+        },
+        {
+          "game": "sp80",
+          "on_minus_off": 0.0
+        },
+        {
+          "game": "tr87",
+          "on_minus_off": 0.0
+        },
+        {
+          "game": "tu93",
+          "on_minus_off": 0.0
+        },
+        {
+          "game": "vc33",
+          "on_minus_off": 0.0
+        }
+      ],
+      "pilot_disclaimer": "PILOT SIGNAL ONLY: 13 cells sit on a documented ~40% A/A cell-divergence floor under identical code; this number detects only gross regressions and is never a headline claim. Claim-grade needs >=30 paired cells (Phase 2).",
+      "pooled_on_minus_off": 0.0
+    },
+    "G_W": {
+      "median_wall_s_off": 650.85,
+      "median_wall_s_on": 722.05,
+      "pass": false,
+      "ratio": 1.1094
+    },
+    "advisory_refetch": {
+      "inspection_calls_on_arm": 177,
+      "pass_advisory": true,
+      "ratio": 0.1243,
+      "refetch_tool_calls_post_compaction": 22,
+      "threshold": 0.2
+    },
+    "compaction_mechanics": {
+      "cells_with_any_compaction": 7,
+      "compactions_per_cell": {
+        "ar25": 1,
+        "cd82": 2,
+        "ft09": 0,
+        "g50t": 1,
+        "lp85": 2,
+        "r11l": 0,
+        "re86": 0,
+        "sb26": 0,
+        "sk48": 1,
+        "sp80": 0,
+        "tr87": 2,
+        "tu93": 0,
+        "vc33": 1
+      },
+      "duplicate_candidate_submissions_off": 1,
+      "duplicate_candidate_submissions_on": 1,
+      "floor_hits": 0,
+      "thrash_alarms": 0
+    },
+    "paired_cells": [
+      "ar25",
+      "cd82",
+      "ft09",
+      "g50t",
+      "lp85",
+      "r11l",
+      "re86",
+      "sb26",
+      "sk48",
+      "sp80",
+      "tr87",
+      "tu93",
+      "vc33"
+    ]
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "resource": "gguf_cached_qwen38_27b_q4km"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "resource": "llama_server_binary"
+    },
+    {
+      "available": true,
+      "detail": "{\"libcuda\": true, \"libcublas\": true, \"libamdhip64\": false}",
+      "resource": "server_binary_is_cuda_build"
+    },
+    {
+      "available": true,
+      "detail": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "resource": "gpu0_on_pci_bus"
+    },
+    {
+      "available": true,
+      "detail": "no pre-existing server on our port",
+      "resource": "port_8983_free"
+    },
+    {
+      "available": true,
+      "detail": "nvidia-smi per-PID residency on GPU 0's UUID, checked per cell",
+      "resource": "gpu0_residency_verified_per_arm"
+    }
+  ],
+  "random_seed": 100,
+  "reproducibility_checksum": "c22fefc8e0bfe068c99b1e393b6601e065e7434a622a709f863a1149c223977a",
+  "req": "REQ-ARC-WMTE-6540",
+  "run_date": "2026-08-20T10:26:57Z",
+  "title": "Compacted carried state for the induction tool loop: Phase 0 + Phase 1 pilot A/B"
+}
