@@ -38,6 +38,12 @@ from typing import Any, Optional
 
 import numpy as np
 
+from carnot.agentic.arc_induction_compact_state import (
+    CompactionController,
+    EvidenceLedger,
+    build_carried_state,
+    rebuild_messages,
+)
 from carnot.agentic.arc_induction_tools import (
     TOOL_SCHEMAS,
     InductionToolSession,
@@ -395,11 +401,30 @@ def induce_with_tool_loop(
         "unparsed_tool_call_text_turns": 0,
         "candidates_scored": 0,
         "force_engine_nudges": 0,
+        # REQ-ARC-WMTE-6540 counters. The first two record on every run: telemetry
+        # never alters a request payload, and the OFF arm of the A/B needs the same
+        # baseline. The last three only move when CARNOT_ARC_INDUCE_TOOL_COMPACT=1.
+        "prompt_tokens_per_turn": [],
+        "duplicate_candidate_submissions": 0,
+        "compactions": 0,
+        "compact_floor_hit": False,
+        "refetch_tool_calls_post_compaction": 0,
         "terminated_by": "",
         "final_answer_seen": False,
         "wall_s": 0.0,
     }
     proposer.last_tool_loop_stats = stats
+    # CARRIED-STATE COMPACTION (REQ-ARC-WMTE-6540, default OFF). The ledger digests
+    # every tool result and the controller reads the server's MEASURED prompt size.
+    # The ONLY code that can rewrite `messages` is the `compact.enabled` branch at
+    # the top of the turn loop -- with the env var unset, that branch is dead and
+    # the message stream is byte-identical to today.
+    compact = CompactionController.from_env()
+    ledger = EvidenceLedger()
+    if seed_engine_code and seed_report is not None and seed_report.get("ok"):
+        # The seed occupies candidate ledger row 0 (repair mode, REQ-ARC-WMTE-6470):
+        # its fingerprint makes a later re-submission count as a duplicate.
+        ledger.record_engine_report(seed_engine_code, seed_report)
 
     def _finish(reason: str) -> tuple[bool, str]:
         stats["terminated_by"] = reason
@@ -475,6 +500,22 @@ def induce_with_tool_loop(
         remaining = deadline - time.time()
         if remaining <= 0:
             return _finish("deadline")
+        # COMPACTION EVENT (REQ-ARC-WMTE-6540, default OFF -- `compact.enabled` is
+        # the master gate). Threshold-triggered off the previous response's MEASURED
+        # prompt size, never per-turn, so between events the transcript stays
+        # append-only and the server's prefix cache keeps working.
+        if compact.enabled and compact.should_compact():
+            state, floor_hit = build_carried_state(
+                session, ledger, turn=stats["turns"], budget_tokens=compact.state_budget_tokens
+            )
+            rebuilt = rebuild_messages(messages, state)
+            if rebuilt is not None:
+                messages = rebuilt
+                stats["compactions"] += 1
+                if floor_hit:
+                    stats["compact_floor_hit"] = True
+                ledger.note_compaction()
+                compact.note_rebuild()
         try:
             raw = _post_chat(
                 proposer,
@@ -492,6 +533,9 @@ def induce_with_tool_loop(
         n_tok = _completion_tokens(raw)
         stats["decode_tokens_total"] += n_tok
         stats["decode_tokens_per_turn"].append(n_tok)
+        # Prompt-size telemetry (REQ-ARC-WMTE-6540 Phase 0): recorded on every run,
+        # both A/B arms. None when the server returned no measurement.
+        stats["prompt_tokens_per_turn"].append(compact.note_response(raw))
         content = str(msg.get("content") or "")
         tool_calls = msg.get("tool_calls") or []
 
@@ -514,6 +558,9 @@ def induce_with_tool_loop(
                 stats["tool_calls_total"] += 1
                 turn_names.append(name)
                 stats["tool_calls_by_name"][name] = stats["tool_calls_by_name"].get(name, 0) + 1
+                # Evidence digest + re-fetch/duplicate counters (REQ-ARC-WMTE-6540).
+                # Pure bookkeeping over the result dict; never touches `messages`.
+                ledger.observe(name, args, result, stats)
                 err = str(result.get("error") or "")
                 if "unparseable JSON arguments" in err or "unknown tool" in err:
                     stats["tool_call_parse_failures"] += 1

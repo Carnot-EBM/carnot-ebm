@@ -26147,3 +26147,96 @@ engine SHALL be the seed itself (never a regression on visible mismatches).
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6470 | `python/carnot/agentic/arc_induction_tool_loop.py` (`tool_loop_repair_enabled`, `seed_engine_code` seeding + repair preamble + seed floor); `python/carnot/agentic/arc_recall_gated_resample.py` (`tool_repair` kwarg: enablement, seed-pin bypass, distinct fire reason); `python/carnot/agentic/arc_competition_agent.py` (`_maybe_recall_gated_resample` routes the fired re-draw through the seeded loop and records loop stats on the attempt row). | `tests/python/test_arc_tool_loop_repair.py` (inertness pins for unset + repair-at-induce; decision-matrix pins incl. seed-pin bypass asymmetry; seeded-loop floor; agent-helper integration: repair recovery, worse-candidate restore, trust-subordination). |
+
+### REQ-ARC-WMTE-6540: Compacted Carried State for the Tool-Calling Induction Loop (Default OFF)
+
+The tool loop's `messages` list grows every round: the assistant tool-call turn
+plus one full tool-result JSON per call. Over 12 turns the transcript plausibly
+adds 15k-50k tokens on top of a 10k-17k base prompt. Context length binds three
+scored-run costs: decode rate, concurrent streams (KV cache per stream), and
+queue wait against the fixed per-call timeout. Every induction tool is a
+deterministic pure function of the fixed transition window, so an old tool
+result is not information -- it is a re-fetchable fact that costs one cheap
+prefill round to recover. Design note:
+`docs/research-notes/arc-induction-compacted-carried-state-2026-08-19.md`.
+
+With `CARNOT_ARC_INDUCE_TOOL_COMPACT=1` the loop SHALL compact the transcript on
+a measured-size threshold. Unset, or any value other than `"1"`, SHALL be
+byte-identical to today's message stream: the only code that rewrites `messages`
+is behind the enablement check.
+
+1. The carried state is ONE user message, built MECHANICALLY from
+   `session.candidates`, the raw tool results, and the loop's own stats. No LLM
+   summarizes anything. The state keeps the best candidate's code VERBATIM
+   (never truncated), one compact ledger row per candidate (scores,
+   `code_sha8`, `code_head`, `first_mismatch`), bounded evidence digests
+   (transitions index, diffs, regions, goal probes), and the session-fixed
+   facts.
+2. The trigger is threshold-based, not per-turn, so prefix caching survives
+   between events. Compaction fires when the PREVIOUS response's measured
+   prompt size (`usage.prompt_tokens`, fallback `timings.prompt_n`) reaches
+   the first measured prompt size plus `CARNOT_ARC_INDUCE_TOOL_COMPACT_GROWTH`
+   (default 8192). After a rebuild the trigger SHALL NOT re-fire on the stale
+   pre-rebuild measurement; it waits for a fresh one.
+3. A rebuild replaces `messages` with `[base message (verbatim, immutable)] +
+   [carried-state user message] + [tail]`. The tail is the last COMPLETE
+   round: the last assistant turn, its tool results, and any trailing user
+   nudge. A `tool` message SHALL always follow the assistant message that
+   carries its `tool_call_id`; the compaction unit is one complete round,
+   atomically.
+4. When the state exceeds `CARNOT_ARC_INDUCE_TOOL_COMPACT_STATE_BUDGET`
+   (default 2048 tokens, chars/3 estimate), rows are evicted in a fixed order:
+   `regions_fetched` oldest first, then `diffs_fetched` oldest first, then
+   `transitions_index` rows with `changed == 0`, then middle `candidates`
+   rows. Never evicted: `best.code`, the session line, the envelope, candidate
+   row 0 (the repair seed), the best row, and the last two rows. If the state
+   still does not fit, it ships whole with `compact_floor_hit: true` -- fail
+   toward completeness, visibly.
+5. Counters in `last_tool_loop_stats`, all mechanical: `prompt_tokens_per_turn`
+   (telemetry, recorded unconditionally -- it never alters a request payload),
+   `compactions`, `compact_floor_hit`, `refetch_tool_calls_post_compaction`
+   (an inspection dispatch key fetched before a compaction and repeated after
+   it), and `duplicate_candidate_submissions` (a `code_sha8` submitted twice).
+6. Existing protections are preserved: `reasoning_content` stays dropped on
+   feedback, and the per-turn `thinking_budget_tokens` stays on every request.
+   Repair mode (REQ-ARC-WMTE-6470) needs no special case: the seed occupies
+   candidate row 0 and survives eviction.
+
+#### SCENARIO-ARC-WMTE-6540-1 (default off, byte-identical)
+
+Given the env flag unset, the message stream SHALL be byte-identical to today's
+append-only transcript, no compaction SHALL occur, and the rebuild machinery
+SHALL never be consulted.
+
+#### SCENARIO-ARC-WMTE-6540-2 (threshold trigger, no stale re-fire)
+
+Given a measured prompt size crossing turn-0 plus growth, the loop SHALL
+compact exactly once before the next request. Given no fresh measurement after
+the rebuild, the trigger SHALL NOT re-fire on the stale value.
+
+#### SCENARIO-ARC-WMTE-6540-3 (conversation validity)
+
+Given a rebuild, every `tool` message's `tool_call_id` SHALL resolve to a
+preceding assistant turn, and the tail SHALL be the last complete round.
+
+#### SCENARIO-ARC-WMTE-6540-4 (round-trip fidelity)
+
+Given a session with scored candidates, the carried state SHALL contain the
+best candidate's code verbatim and one ledger row per candidate.
+
+#### SCENARIO-ARC-WMTE-6540-5 (eviction order and floor)
+
+Given a state over budget, rows SHALL be evicted in the fixed order with the
+never-evict set intact. Given a floor bind, the state SHALL ship whole with
+`compact_floor_hit: true` and `best.code` untruncated.
+
+#### SCENARIO-ARC-WMTE-6540-6 (repair seed survives)
+
+Given a seeded (repair-mode) session, candidate row 0 SHALL be the seed and
+SHALL survive eviction.
+
+## Implementation Status (REQ-ARC-WMTE-6540)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6540 | `python/carnot/agentic/arc_induction_compact_state.py` (`EvidenceLedger` digests, `build_carried_state` + eviction order, `rebuild_messages`, `CompactionController` trigger, env readers); wired in `python/carnot/agentic/arc_induction_tool_loop.py` (controller + ledger creation, seed registration, the `compact.enabled` rebuild branch at the top of the turn loop, per-dispatch `ledger.observe`, unconditional `prompt_tokens_per_turn` telemetry). | `tests/python/test_arc_induction_compact_state.py` (env-unset byte-identical pin with a rebuild bomb; threshold trigger + stale-measurement no-refire + refetch counter; tool_call_id pairing after rebuild; round-trip fidelity; eviction order, keep-set, floor; repair seed row 0 in the live carried state; duplicate-submission counter with compaction off; env-reader defaults). |
