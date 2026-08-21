@@ -16231,3 +16231,4 @@ code |
 | 2026-08-21 14:01 UTC | Milestone 2026.08.559 activated | OK | 5 tasks queued |
 | 2026-08-21 14:22 UTC | V559 latent-energy SOTA ingestion and method mappi | OK | 90 passed, 1 warning in 11.42s |
 | 2026-08-21 14:41 UTC | Non-generation representation receipt contract | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-21 14:59 UTC | Online cache transition and anytime-valid evidence | OK | 87 passed, 1 warning in 12.31s |
