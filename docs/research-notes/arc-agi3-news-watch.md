@@ -171,3 +171,13 @@ CHECK_TIMED_OUT
 
 - **Leaderboard shakeup:** **cstl** now leads at **3.57**; **Lord Han Solo** is second at **2.76**, **The AGI Boys** third at **2.66**, **Jonathan Wang2022** fourth at **2.59**, and **Daniel Franzen** fifth at **2.58**. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
 
+## 2026-08-21 13:11 UTC -- NEW
+
+- Leaderboard shakeup: Tufa Labs is now #2 at 2.97; Akhil Tolani entered at #4 with 2.73; AbeLincoln1865 entered at #5 with 2.72. Lord Han Solo fell to #3, while The AGI Boys, Jonathan Wang2022, and Daniel Franzen fell to #6–#8. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- Kaggle added RTX 6000 (`g4-standard-48`) machines to the competition’s hardware pool. [Competition overview](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/overview/description)
+
+- Scoring clarification: a valid non-RESET action counts toward both efficiency scoring and the action budget even when it leaves the frame unchanged. The host confirmed the scored server matches offline competition mode. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/718638)
+
+- The host published an analysis of 500 failed submissions: roughly one-third had no traceable visible notebook error, while almost 20% required a GPU but had none enabled; all other identified causes were individually below 5%. [Kaggle host post](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
+

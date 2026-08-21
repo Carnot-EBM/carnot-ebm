@@ -6227,3 +6227,10 @@ The critical path for milestone .250:
 - theme: zero-resolution synthesis work exposed a timing-observability gap, not an accelerator bottleneck
 - key result: no compute-bound work occurred; idle GPUs were correct, and no DualGPURunner requirement arose
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.558
+
+- exp_range: no data available this milestone
+- theme: zero-resolution synthesis-only execution exposed a live timing-receipt gap without an accelerator bottleneck
+- key result: no compute-bound work ran; GPU idleness was correct and no DualGPURunner requirement arose
+- acceptance: no data available this milestone
