@@ -1656,13 +1656,21 @@ def run(
     result_path: str | Path = REPO_ROOT / RESULT_RELATIVE_PATH,
     test_exit_codes: Mapping[str, int | None] | None = None,
 ) -> JsonDict:
+    # MEASURE THE WORK, NOT THE ARGUMENT LIST (fixed 2026-08-21). This read
+    # `duration_s=max(time.monotonic() - start, 0.0001)` as an ARGUMENT to build_artifact, so the
+    # elapsed time was evaluated BEFORE build_artifact ran any of the work it was meant to time.
+    # The stored value was always exactly the 0.0001 floor, whatever the real runtime.
+    # `duration_s`' own declared principle is that wall time catches a comparison that skipped the
+    # expensive path -- a constant can never do that. Compute the artifact first, then stamp the
+    # real elapsed time onto it.
     start = time.monotonic()
     artifact = build_artifact(
         root=REPO_ROOT,
         run_date=date,
-        duration_s=max(time.monotonic() - start, 0.0001),
+        duration_s=0.0001,
         tests_run=test_exit_codes,
     )
+    artifact["duration_s"] = max(time.monotonic() - start, 0.0001)
     write_artifact(artifact, result_path)
     return artifact
 
