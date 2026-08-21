@@ -37067,3 +37067,133 @@ and `exact_constraint_record_ready_score` are derived from rows only.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6477 | Planned (`python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py`, `results/experiment_6477_backend_neutral_exact_constraint_record.json`) | Planned (`tests/python/test_experiment_6477_backend_neutral_exact_constraint_record.py`) |
+
+### REQ-VERIFY-6478: Identifiable Held Exact-Energy Selection V557
+
+Carnot SHALL provide Exp6478 at
+`python/carnot/experiment_6478_identifiable_held_exact_energy_selection.py`.
+The workflow SHALL write
+`results/experiment_6478_identifiable_held_exact_energy_selection.json` by
+selecting among frozen solver-grounded candidates. It SHALL NOT call an LLM,
+train a verifier, mutate source model weights, modify
+`scripts/research_conductor.py`, or let scalar energy replace exact backend
+validation.
+
+Exp6478 SHALL pre-gate on
+`results/experiment_6474_protocol_identifiability_and_receipt_preflight.json`
+having `protocol_identifying_score == 1.0` and
+`results/experiment_6477_backend_neutral_exact_constraint_record.json` having
+`exact_constraint_record_ready_score == 1.0`. A failed gate SHALL emit
+`status=blocked_gate_check_failed`, include `gate_check_summary`, set
+`held_exact_energy_selection_ready_score=0.0`, and stop before opening held
+candidate outcomes.
+
+Exp6478 SHALL seal development and held finite-domain units, candidate bytes,
+exact labels, seeds, scalar energy formula, protected weights, tie rules, arms,
+and analysis before held results are reduced. Candidate sets SHALL be built from
+deterministic valid-solution perturbations. Held units SHALL include at least
+one protected-clause pattern, one negation pattern, and one objective-conflict
+pattern. The actual frozen manifest SHALL be rechecked through the Exp6474
+identifiability API before held labels are reported.
+
+Exp6478 SHALL evaluate five matched arms on identical candidates and identical
+candidate work: first candidate, deterministic random, shuffled energy,
+unweighted violation count, and the Exp6477 scalar exact-constraint energy.
+Final correctness SHALL come only from exact backend validation. Each selected
+candidate SHALL report exact success, harmful flips, recovered failures,
+protected-clause success, ties, no-headroom rows, protected violations, and
+work. One row per unit, seed, arm, and candidate SHALL contain enough candidate
+metadata to recompute the selected outcome.
+
+Exp6478 SHALL run attacks for held leakage, result-dependent weights, shuffled
+labels, tie manipulation, energy-sign reversal, matched work totals with
+different protected violations, and aggregate mismatch. The terminal artifact
+SHALL include `status`, `upstream_identifiability_hash`,
+`upstream_constraint_record_hash`, `development_and_held_precommitment`,
+`frozen_energy_formula_and_tie_rules`, `protocol_recheck_receipt`,
+`per_unit_rows`, `exact_success_by_arm`,
+`harmful_flips_and_recovered_failures`, `protected_clause_results`,
+`paired_effects_and_intervals`, `no_headroom_and_tie_rows`,
+`aggregate_row_recomputation`, `attack_matrix`,
+`held_exact_energy_selection_ready_score`, `protected_files_unchanged`,
+`gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL be
+`exact_solver_held_candidate_selection_no_llm`. `verifier_is_oracle` SHALL be
+true only for exact backend checks and row arithmetic.
+
+Required field principles:
+
+- `status`: A terminal status distinguishes a completed held comparison from a gate-only artifact.
+- `upstream_identifiability_hash`: The hash binds the causal claim to the exact protocol proof that authorized evaluation.
+- `upstream_constraint_record_hash`: The hash binds energy and exact validation to the same backend-neutral semantics.
+- `development_and_held_precommitment`: A sealed split prevents result-dependent tuning or candidate replacement.
+- `frozen_energy_formula_and_tie_rules`: Precommitted scoring and ties prevent favorable held decisions after labels open.
+- `protocol_recheck_receipt`: Rechecking the actual manifest catches drift from the policy class audited upstream.
+- `per_unit_rows`: Unit, seed, arm, and candidate rows make every selection and paired effect reproducible.
+- `exact_success_by_arm`: Final exact outcome, not energy or format validity, is the headline decision metric.
+- `harmful_flips_and_recovered_failures`: Both directions prevent net gains from hiding damage to previously correct selections.
+- `protected_clause_results`: Protected outcomes ensure scalar energy does not trade away load-bearing constraints.
+- `paired_effects_and_intervals`: Paired intervals distinguish stable held effects from a few favorable units.
+- `no_headroom_and_tie_rows`: Explicit no-headroom and tie accounting prevents impossible wins from entering the headline.
+- `aggregate_row_recomputation`: Independent row reduction catches selected-candidate or headline inconsistencies.
+- `attack_matrix`: Leakage, sign, tie, and protected-violation attacks test the main ways an energy result can be gamed.
+- `held_exact_energy_selection_ready_score`: A conjunctive score promotes only a positive, protected, identifying held exact-decision gain.
+- `protected_files_unchanged`: The comparison cannot improve by rewriting exact checkers, manifests, or conductor logic.
+- `gate_check_summary`: A blocked task must name the upstream field, operator, expected value, observed value, and path.
+- `preconditions_checked`: Gate, split, backend, and candidate receipts prove the experiment was safe to start.
+- `inference_substrate`: Declaring exact_solver_held_candidate_selection_no_llm prevents solver candidates from being described as LLM outputs.
+- `verifier_is_oracle`: Only exact backend validation determines final correctness; energy remains a selector.
+- `field_principles`: A principle map carries the causal and authority boundaries into the artifact.
+- `field_provenance`: Hashes, row IDs, and reducer receipts make every result field traceable.
+- `random_seed`: Declared seeds reproduce candidate perturbations and deterministic-random controls.
+- `duration_s`: Wall time catches comparisons that skipped exact backend or attack execution.
+- `tests_run`: Executed commands prove the held reducer and adversarial controls ran.
+- `reproducibility_checksum`: The checksum binds upstream gates, manifests, formula, candidates, code, and result.
+- `honest_verdict`: The verdict states positive, null, negative, or blocked evidence without promoting selector energy as authority.
+
+#### SCENARIO-VERIFY-6478-GATES: Upstream Gates Fail Closed
+
+Given upstream Exp6474 and Exp6477 artifacts,
+when either required score is not exactly `1.0`,
+then Exp6478 emits `blocked_gate_check_failed`, reports the failed path and
+observed value in `gate_check_summary`, sets readiness to `0.0`, and does not
+open held candidate outcomes.
+
+#### SCENARIO-VERIFY-6478-PRECOMMITMENT: Candidate Manifest Is Sealed
+
+Given development and held finite-domain units,
+when Exp6478 builds deterministic candidate perturbations,
+then the split, candidate bytes, exact labels, seeds, protected weights, energy
+formula, arms, tie rules, and analysis plan are hashed before held reduction.
+
+#### SCENARIO-VERIFY-6478-MATCHED-SELECTION: Arms Share Candidates And Work
+
+Given a frozen held candidate manifest,
+when Exp6478 runs first, deterministic-random, shuffled-energy,
+violation-count, and exact-energy arms,
+then every arm sees identical candidate ids, identical work totals, and exact
+backend validation determines final success.
+
+#### SCENARIO-VERIFY-6478-ROWS: Aggregates Recompute From Candidate Rows
+
+Given unit, seed, arm, and candidate rows,
+when the reducer recomputes selected candidates and paired effects,
+then exact success, harmful flips, recovered failures, protected results, ties,
+no-headroom rows, and readiness match the artifact.
+
+#### SCENARIO-VERIFY-6478-ATTACKS: Held Selection Attacks Fail Closed
+
+Given leakage, result-dependent weights, shuffled labels, tie manipulation,
+energy-sign reversal, protected-violation work mismatch, and aggregate mismatch
+attacks,
+when Exp6478 evaluates the attack matrix,
+then every attack is detected and no attack can increase
+`held_exact_energy_selection_ready_score`.
+
+## Implementation Status (REQ-VERIFY-6478)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6478 | Planned (`python/carnot/experiment_6478_identifiable_held_exact_energy_selection.py`, `results/experiment_6478_identifiable_held_exact_energy_selection.json`) | Planned (`tests/python/test_experiment_6478_identifiable_held_exact_energy_selection.py`) |
