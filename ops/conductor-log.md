@@ -16240,3 +16240,4 @@ code |
 | 2026-08-21 17:24 UTC | Immutable early-to-final exact solver trajectory c | OK | 88 passed, 1 warning in 14.75s |
 | 2026-08-21 17:44 UTC | Leakage-neutral early-to-final trajectory energy b | FLAGGED | adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT — result quarantined, |
 | 2026-08-21 18:10 UTC | Prospective local-SOTA atomic constraint factor pr | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-21 18:31 UTC | Exact executed-replay audit of atomic factor causa | OK | 87 passed, 1 warning in 12.63s |
