@@ -1,0 +1,47 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.558",
+  "generated_at": "2026-08-21T13:10:31Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.0,
+  "experiments_completed": 3,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Immutable prospective constraint stream commitment",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V557 evidence freeze and V558 branch preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Monotonic task phase and concurrency receipt contract",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 3 synthesis-only experiments in 0.0 total minutes, with 0 compute-bound experiments. The idle GPU snapshot is therefore not a compute-task utilization fault, and no parallel multi-model DualGPURunner requirement applies.",
+  "bottlenecks_identified": [
+    "No execution bottleneck was measurable because all 3 experiments were synthesis-only and the supplied timing resolution reported 0 minutes per experiment.",
+    "Timing observability depended on disk-mtime reconstruction after the live git-log path found no milestone commits, so no phase-level duration cause was available."
+  ],
+  "improvements_suggested": [
+    "Emit task-linked monotonic phase timestamps and a durable timing receipt during each experiment so milestone analysis does not depend on disk-mtime reconstruction.",
+    "Include compute classification, concurrent model count, and runner selection in each timing receipt so GPU utilization and DualGPURunner eligibility are auditable.",
+    "Include stable experiment IDs and acceptance counts in the milestone-scoped timing export so operational documentation does not require unavailable-data placeholders.",
+    "Keep synthesis-only work off the GPU dispatch path and reserve GPU scheduling for explicitly compute-bound work."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Write live task-linked phase and duration receipts for every experiment.",
+    "Record compute classification, model concurrency, GPU activity, and runner selection in one dispatch receipt.",
+    "Export stable experiment IDs and acceptance counts with the milestone timing data."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence supports a narrow conclusion: execution showed no measurable delay, while coarse fallback timing limited causal analysis. The savings estimate remains conservative because no measured counterfactual was supplied."
+}
