@@ -37707,6 +37707,157 @@ boundary violation.
 | SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS | Planned (`python/carnot/experiment_6491_sota_factor_proposal_stream.py`) | Planned (`tests/python/test_experiment_6491_sota_factor_proposal_stream.py`) |
 | SCENARIO-VERIFY-6491-ROWS | Planned (`python/carnot/experiment_6491_sota_factor_proposal_stream.py`) | Planned (`tests/python/test_experiment_6491_sota_factor_proposal_stream.py`) |
 
+### REQ-VERIFY-6492: Executed-Replay Factor Causal Audit V560
+
+Carnot SHALL provide Exp6492 at
+`python/carnot/experiment_6492_factor_causal_replay.py`. The command
+`.venv/bin/python -m carnot.experiment_6492_factor_causal_replay --date 20260821`
+SHALL write `results/experiment_6492_factor_causal_replay.json`.
+The workflow SHALL pre-gate on
+`results/experiment_6489_solver_trajectory_commitment.json` reporting
+`trajectory_contract_ready_score == 1.0` and
+`results/experiment_6491_sota_factor_proposal_stream.json` reporting
+`factor_proposal_stream_ready_score == 1.0`. It SHALL also record the
+requested Exp6478 held exact-energy artifact path, the observed canonical
+Exp6478 artifact path, file hashes, fields, expected values, observed values,
+and pass states before any replay rows are reduced.
+
+Exp6492 SHALL freeze eligible development and held replay events, accepted and
+nonaccepted proposal dispositions, factor and control matching rules, replay
+seeds, solver configuration, search-work metrics, validity metrics, confidence
+procedure, and harmful-flip definition before execution. The frozen manifest
+SHALL name compiler rejection, timeout, infeasibility, no-headroom, and
+zero-effect as terminal row states. These states SHALL remain rows and SHALL
+not be dropped.
+
+For each accepted proposal, Exp6492 SHALL replay the same committed solver
+state with the factor absent and present. Each replay row SHALL record the
+event id, raw trajectory hash, factor id, arm, seed, solver backend,
+configuration, termination, final assignment, final validity, exact outcome,
+state hash, expansions, exact-check calls, wall time, and replay row hash.
+Exact solver replay SHALL be the only outcome authority. Judge scores, model
+confidence, human judgment, and proposal text quality SHALL NOT be causal
+labels.
+
+Exp6492 SHALL construct random syntactically valid controls, structural
+controls matched by arity and feature footprint, duplicate controls, and
+no-factor controls. The controls SHALL match proposal opportunities, admitted
+event count, and exposure dose. The control rows SHALL preserve model
+proposals, rejected proposals, compiler timeouts, infeasible factors,
+no-headroom events, and zero-effect rows as explicit observations.
+
+Exp6492 SHALL report paired per-event deltas, family and proposing-model
+cells, predeclared row-derived confidence intervals, exact-validity parity,
+persistence, harmful flips, and aggregate recomputation from replay rows. It
+SHALL set `factor_causal_audit_complete_score=1.0` only when all eligible
+proposals and matched controls are accounted for. It SHALL set
+`causal_factor_signal_ready_score=1.0` only when held paired benefit is
+positive beyond matched controls, exact-validity parity holds, harmful flips
+are zero, and every headline recomputes from rows.
+
+The terminal artifact SHALL include `status`, `upstream_gate_receipts`,
+`frozen_replay_manifest`, `factor_eligibility_rows`, `replay_rows`,
+`dose_matching_rows`, `control_matching_rows`, `paired_effect_rows`,
+`family_model_cells`, `confidence_intervals`, `harmful_flip_rows`,
+`factor_causal_audit_complete_score`, `causal_factor_signal_ready_score`,
+`per_unit_rows`, `aggregate_row_recomputation`, `gate_check_summary`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`. `inference_substrate` SHALL be
+`exact_counterfactual_solver_replay_no_llm`. `verifier_is_oracle` SHALL be
+true for exact solver validity and outcomes.
+
+Required field principles:
+
+- `status`: Terminal causal-replay state.
+- `upstream_gate_receipts`: Both upstream artifacts and exact gate values.
+- `frozen_replay_manifest`: Events, controls, metrics, seeds, and decision rules.
+- `factor_eligibility_rows`: Every proposal, including reject and no-proposal outcomes.
+- `replay_rows`: Per event, factor, arm, seed, solver outcome, work, validity, and timing.
+- `dose_matching_rows`: Proposal opportunities, admissions, and exposures by arm.
+- `control_matching_rows`: Random, structural, duplicate, and no-factor matches.
+- `paired_effect_rows`: Exact add/drop deltas per event.
+- `family_model_cells`: Disaggregated effects by family and proposing model.
+- `confidence_intervals`: Predeclared row-derived intervals.
+- `harmful_flip_rows`: Every validity or exact-outcome regression.
+- `factor_causal_audit_complete_score`: Execution-completeness gate field.
+- `causal_factor_signal_ready_score`: Same-roadmap positive-signal gate field.
+- `per_unit_rows`: Required event/factor/arm/seed rows.
+- `aggregate_row_recomputation`: Every headline recomputed from replay rows.
+- `gate_check_summary`: Exact gate evaluation or blocked_* reason and observed value.
+- `preconditions_checked`: Commitment, proposals, controls, and exact backends.
+- `protected_files_unchanged`: Active roadmap and conductor unchanged.
+- `inference_substrate`: exact_counterfactual_solver_replay_no_llm.
+- `verifier_is_oracle`: True for exact solver validity and outcomes.
+- `field_principles`: Reason for every causal and dose field.
+- `field_provenance`: Raw trajectory hashes, proposal bytes, solver receipts, and reducers.
+- `random_seed`: Control construction and replay seeds.
+- `duration_s`: Measured replay and task wall time.
+- `tests_run`: Commands and exit codes.
+- `reproducibility_checksum`: Hash over manifest, factors, controls, and replay rows.
+- `honest_verdict`: complete_positive, complete_null, disqualified, or blocked_* with diagnostics.
+
+#### SCENARIO-VERIFY-6492-GATES: Upstream Gates Are Exact
+
+Given Exp6489 and Exp6491 artifacts exist and the Exp6478 held exact-energy
+path may have an operator-provided alias,
+when Exp6492 starts,
+then it records exact artifact paths, aliases, hashes, fields, expected
+values, observed values, and gate states before replay execution.
+
+#### SCENARIO-VERIFY-6492-FROZEN-MANIFEST: Replay Rules Predate Execution
+
+Given committed solver trajectories and proposal rows,
+when Exp6492 builds its manifest,
+then eligible events, noneligible dispositions, controls, dose rules, work
+metrics, validity metrics, interval procedure, and harmful-flip definition are
+frozen before any replay outcome is reduced.
+
+#### SCENARIO-VERIFY-6492-ADD-DROP: Exact Replay Owns Outcomes
+
+Given an accepted atomic factor for a committed solver state,
+when Exp6492 executes add/drop replay,
+then absent and present arms use the same event, seed, solver configuration,
+and exact backend while recording state hashes, termination, final solution,
+validity, expansions, exact-check calls, and wall time.
+
+#### SCENARIO-VERIFY-6492-CONTROLS-DOSE: Controls Match Exposure
+
+Given model proposal opportunities and accepted factors,
+when Exp6492 constructs random, structural, duplicate, and no-factor controls,
+then each control family reports matched opportunity counts, admitted event
+counts, exposure dose, and explicit zero-admission rows when the model stream
+contains no accepted factors.
+
+#### SCENARIO-VERIFY-6492-NO-JUDGE: No Score Substitutes For Replay
+
+Given model scores, confidence text, or human preference fields are present or
+absent upstream,
+when Exp6492 reduces causal credit,
+then no such field supplies a causal label and exact solver replay remains the
+only oracle.
+
+#### SCENARIO-VERIFY-6492-ROWS: Gates Recompute From Rows
+
+Given eligibility rows, replay rows, control rows, dose rows, paired effects,
+family cells, intervals, and harmful flips,
+when the reducer recomputes Exp6492 aggregates,
+then completeness, signal readiness, validity parity, harmful flips, and
+headline deltas derive from rows only.
+
+## Implementation Status (REQ-VERIFY-6492)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6492 | Planned (`python/carnot/experiment_6492_factor_causal_replay.py`, `results/experiment_6492_factor_causal_replay.json`) | Planned (`tests/python/test_experiment_6492_factor_causal_replay.py`) |
+| SCENARIO-VERIFY-6492-GATES | Planned (`python/carnot/experiment_6492_factor_causal_replay.py`) | Planned (`tests/python/test_experiment_6492_factor_causal_replay.py`) |
+| SCENARIO-VERIFY-6492-FROZEN-MANIFEST | Planned (`python/carnot/experiment_6492_factor_causal_replay.py`) | Planned (`tests/python/test_experiment_6492_factor_causal_replay.py`) |
+| SCENARIO-VERIFY-6492-ADD-DROP | Planned (`python/carnot/experiment_6492_factor_causal_replay.py`) | Planned (`tests/python/test_experiment_6492_factor_causal_replay.py`) |
+| SCENARIO-VERIFY-6492-CONTROLS-DOSE | Planned (`python/carnot/experiment_6492_factor_causal_replay.py`) | Planned (`tests/python/test_experiment_6492_factor_causal_replay.py`) |
+| SCENARIO-VERIFY-6492-NO-JUDGE | Planned (`python/carnot/experiment_6492_factor_causal_replay.py`) | Planned (`tests/python/test_experiment_6492_factor_causal_replay.py`) |
+| SCENARIO-VERIFY-6492-ROWS | Planned (`python/carnot/experiment_6492_factor_causal_replay.py`) | Planned (`tests/python/test_experiment_6492_factor_causal_replay.py`) |
+
 ### REQ-VERIFY-6486: Three-Family Forced-Candidate Representation Stream
 
 Carnot SHALL provide Exp6486 at
