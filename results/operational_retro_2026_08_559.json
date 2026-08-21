@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.559",
+  "generated_at": "2026-08-21T15:47:00Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 3.5,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Three-family forced-candidate representation stream",
+      "duration_minutes": 3.49,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independent representation integrity and shortcut audit",
+      "duration_minutes": 0.02,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Non-generation representation receipt contract",
+      "duration_minutes": 0.01,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V559 latent-energy SOTA ingestion and method mapping",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Online cache transition and anytime-valid evidence contract",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Five experiments completed in 3.5 minutes, including two compute-bound tasks. The 3.49-minute Three-family forced-candidate representation stream dominated the reconstructed timing; the preserved task classification does not mark GPU idle, and model concurrency is not recorded.",
+  "bottlenecks_identified": [
+    "The Three-family forced-candidate representation stream consumed 3.49 of the 3.5 reconstructed minutes; no phase breakdown is available to identify the causal stage.",
+    "Disk-mtime fallback timing and the absence of task-linked GPU, model-count, and dispatch receipts prevent diagnosis of the compute tail."
+  ],
+  "improvements_suggested": [
+    "Record monotonic task and phase timestamps directly in each experiment artifact instead of relying on disk-mtime reconstruction.",
+    "Sample GPU utilization while each compute-bound task is active and attach the samples to that task's receipt.",
+    "Record model count and runner selection so DualGPURunner eligibility and engagement are auditable."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add experiment-scoped monotonic phase timing around the forced-candidate representation stream.",
+    "Emit task-correlated GPU samples for every compute-bound experiment.",
+    "Emit model-concurrency and runner-selection receipts before inference starts."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The point-in-time idle snapshot cannot be tied to either compute-bound task, so it does not override the preserved no-idle classification. The evidence supports an observability upgrade, but not a defensible forecast of reduced wall time."
+}
