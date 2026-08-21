@@ -1079,6 +1079,154 @@ aggregate mismatch attacks
 **Then** source access, offline BFS, per-game adapters, solve claims, solve
 provenance, registry writes, and public solve credit are absent.
 
+### REQ-ARC-ARM-6499: Conservative Prefix-Energy Progress Alignment
+
+Experiment 6499 SHALL replay frozen public ARC prefixes from the live agent's
+own recorded attempts. It SHALL test whether conservative prefix energy aligns
+with later recorded live-agent progress beyond simple controls. It SHALL not
+change policy, inspect game source, build a per-game adapter, run offline
+ground-truth BFS, or claim a new game or level solve.
+
+The producer SHALL evaluate the Exp6488 upstream gate before it reads rows. The
+receipt SHALL record the path, hash, field, expected value, observed value, type,
+and pass state. The producer SHALL run a solve-registry precheck before prefix
+selection. The precheck SHALL record the registry path, hash, and already
+reproduced games and levels.
+
+The producer SHALL freeze games, levels, seeds, prefix checkpoints, horizon,
+energy version, progress metric, controls, statistical tests, and exclusion rules
+before replay. It SHALL use only prefixes with live-path receipts from the scored
+agent or the offline live twin. It SHALL reject source-derived traces,
+exhaustive offline search, development proxy adapters, duplicate prefixes, and
+duplicate credited solves.
+
+The producer SHALL compute energy from the frozen prefix only. It SHALL not
+change later actions. It SHALL compare energy with step count, action count,
+valid-action fraction, state size, novelty, and shuffled-energy controls. It
+SHALL report per game, level, prefix, seed, horizon, and control rows. It SHALL
+also report roster coverage, headroom, confidence intervals, calibration, safety
+regressions, and leave-one-game-out directional stability. No regressing game
+may be removed from the aggregate.
+
+Experiment 6499 SHALL write
+`results/experiment_6499_arc_energy_progress_alignment.json` with `status`,
+`upstream_gate_receipt`, `arc_registry_precheck`, `frozen_roster_manifest`,
+`live_path_receipts`, `solve_provenance`, `rows`, `roster_coverage_rows`,
+`incremental_alignment_rows`, `leave_one_game_out_rows`,
+`confidence_intervals`, `safety_regression_rows`, `arc_attack_matrix`,
+`no_policy_change_receipt`, `no_new_solve_claim`,
+`arc_alignment_execution_complete_score`,
+`arc_energy_alignment_ready_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `gate_check_summary`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`. It MAY also
+write `calibration_rows` when they are row-derived.
+
+The field principles SHALL be:
+`status`: Terminal ARC alignment diagnostic state.
+`upstream_gate_receipt`: Exp6488 path, hash, field, expected, and observed
+value.
+`arc_registry_precheck`: Registry path, hash, and already reproduced
+games/levels.
+`frozen_roster_manifest`: Games, levels, seeds, prefixes, horizons, energy,
+metrics, controls, and exclusions.
+`live_path_receipts`: Proof that each prefix came from the reachable live agent
+path.
+`solve_provenance`: live_agent_self_discovery for live prefixes; this task
+makes no new solve claim.
+`rows`: Per game, level, prefix, seed, horizon, energy, progress, and control
+metrics.
+`roster_coverage_rows`: Coverage and headroom by game and level.
+`incremental_alignment_rows`: Energy contribution beyond simple controls.
+`leave_one_game_out_rows`: Held directional stability.
+`confidence_intervals`: Predeclared row-derived uncertainty.
+`safety_regression_rows`: Invalidity and any game-level regression signals.
+`arc_attack_matrix`: Leakage, source, adapter, filtering, duplicate, redefine,
+threshold, and mutation attacks.
+`no_policy_change_receipt`: Proof that replay did not alter live actions.
+`no_new_solve_claim`: True.
+`arc_alignment_execution_complete_score`: Execution-completeness field.
+`arc_energy_alignment_ready_score`: Same-roadmap policy gate field.
+`per_unit_rows`: Required game/level/prefix/seed/horizon/control rows.
+`aggregate_row_recomputation`: Every alignment and readiness headline
+recomputed from rows.
+`gate_check_summary`: Exact gate evaluation or blocked_* reason and observed
+value.
+`preconditions_checked`: Lineage lock, registry, live path, roster, and energy
+version.
+`protected_files_unchanged`: Active roadmap and conductor unchanged.
+`inference_substrate`: frozen_live_arc_prefix_replay_no_new_llm.
+`verifier_is_oracle`: False for energy; exact environment feedback is
+authoritative for recorded progress.
+`field_principles`: Reason for each provenance, alignment, and safety field.
+`field_provenance`: Trace hashes, registry, environment receipts, and reducers.
+`random_seed`: Frozen roster and interval seeds.
+`duration_s`: Measured replay and task wall time.
+`tests_run`: Commands and exit codes.
+`reproducibility_checksum`: Hash over gate, registry, roster, traces, and rows.
+`honest_verdict`: complete_positive, complete_null, disqualified, or blocked_*
+with gate_check_summary.
+`calibration_rows`: Calibration bins keep the alignment signal inspectable.
+
+The artifact SHALL set
+`inference_substrate=frozen_live_arc_prefix_replay_no_new_llm`,
+`verifier_is_oracle=false`, and `no_new_solve_claim=true`.
+`solve_provenance` SHALL state `live_agent_self_discovery` for accepted live
+prefixes and SHALL state that the task makes no new solve claim.
+`arc_alignment_execution_complete_score` SHALL equal 1.0 only when every frozen
+row and attack is accounted for. `arc_energy_alignment_ready_score` SHALL equal
+1.0 only when energy has positive held incremental alignment beyond controls,
+leave-one-game-out direction is stable, roster coverage and headroom are
+adequate, and no safety-regression signal exists. Otherwise it SHALL be zero.
+
+### SCENARIO-ARC-ARM-6499-LIVE-PREFIX-PROVENANCE
+
+**Given** frozen prefix candidates and live ARC entrypoint receipts
+**When** Exp6499 selects rows
+**Then** every accepted prefix has a live-agent receipt, a trace hash, no source
+access, no offline BFS, no adapter use, and no duplicate prefix or solve claim.
+
+### SCENARIO-ARC-ARM-6499-FROZEN-ROSTER-AND-PRECHECK
+
+**Given** the Exp6488 lineage gate and solve registry
+**When** Exp6499 starts
+**Then** it records the exact upstream gate value, registry hash, already
+reproduced games and levels, frozen games, levels, seeds, horizons, energy
+version, progress metric, controls, tests, and exclusions before replay.
+
+### SCENARIO-ARC-ARM-6499-DIRECT-PROGRESS-ALIGNMENT
+
+**Given** frozen live prefix rows
+**When** Exp6499 computes conservative prefix energy
+**Then** later progress is measured from the existing frozen trace without
+changing subsequent actions, and every row records game, level, prefix, seed,
+horizon, energy, progress, and control metrics.
+
+### SCENARIO-ARC-ARM-6499-CONFOUND-CONTROLS
+
+**Given** per-prefix energy and later progress rows
+**When** Exp6499 recomputes alignment
+**Then** it compares energy against step count, action count, valid-action
+fraction, state size, novelty, and shuffled-energy controls, and it reports
+incremental alignment, confidence intervals, calibration, and leave-one-game-out
+direction from rows.
+
+### SCENARIO-ARC-ARM-6499-ATTACKS-FAIL-CLOSED
+
+**Given** future-outcome leakage, source access, per-game features, roster
+filtering, duplicate prefix, solved-level duplication, progress redefinition,
+post-hoc thresholding, and policy mutation attacks
+**When** Exp6499 validates readiness
+**Then** every critical attack fails closed before readiness can be one.
+
+### SCENARIO-ARC-ARM-6499-NO-SOLVE-BOUNDARY
+
+**Given** the completed Exp6499 artifact
+**When** it is validated
+**Then** source access, offline BFS, per-game adapters, policy changes, registry
+writes, solve claims, and new public solve credit are absent.
+
 ## REQ-ARC-BENCH-6267: One held-out ARC number that can move
 
 The ARC loop MUST maintain a single comparable measurement of live-agent
