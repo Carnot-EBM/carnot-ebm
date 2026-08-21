@@ -119,6 +119,35 @@ COMP = "/kaggle/input/competitions/arc-prize-2026-arc-agi-3"
 # and whatever it spawns per game) inherit this through normal environment inheritance.
 os.environ.setdefault("CARNOT_ARC_SERVER_LOG_DIR", "/kaggle/working")
 
+# THE INDUCED-ENGINE STORE MUST BE WRITABLE (2026-08-20). Measured, not guessed: an offline play
+# run over ar25/tr87/tu93 on the Blackwell card raised on EVERY induction attempt of every game --
+#
+#   OSError: [Errno 30] Read-only file system:
+#     '/kaggle/input/datasets/iancblenke/carnot-agent-code/results'
+#     at (E3_DIR / game).mkdir(parents=True, exist_ok=True)
+#
+# `E3_DIR` defaults to `REPO / "results" / "arc_e3"`, and `REPO` is
+# `Path(__file__).resolve().parents[3]` (arc_executable_world_model.py). Here the carnot package
+# lives INSIDE the read-only dataset mount, so REPO resolves under /kaggle/input and the store is
+# unwritable. Deriving the root from `__file__` is normally the correct habit; it is exactly what
+# breaks when the code ships as a read-only dataset.
+#
+# WHY IT COST SO MUCH. The failure lands AFTER generation. The LLM produced the whole world model
+# -- 310k-485k tokens per game, 99.8% of wall clock, zero generation errors -- and the engine was
+# then thrown away at the persist step, the exception swallowed, and the game played on with no
+# world model. On tu93 that left roughly 7 seconds of actual search out of 8,687.
+#
+# `setdefault` so an operator override still wins. Set before the agent is imported, since E3_DIR
+# is bound at import time.
+os.environ.setdefault("CARNOT_ARC_E3_DIR", "/kaggle/working/arc_e3")
+try:
+    Path(os.environ["CARNOT_ARC_E3_DIR"]).mkdir(parents=True, exist_ok=True)
+except OSError as _e:
+    # Never let the pre-create be the thing that kills the run. The agent creates the per-game
+    # subdirectory itself; this only front-loads the failure so it is visible in the log rather
+    # than surfacing mid-eval as a swallowed induce exception, which is how it hid for three runs.
+    print(f"WARNING: could not pre-create CARNOT_ARC_E3_DIR: {_e!r}", flush=True)
+
 # 1) competition-provided wheels, offline (mirrors the canonical control notebook)
 subprocess.run(
     [
