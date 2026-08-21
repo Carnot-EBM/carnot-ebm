@@ -415,6 +415,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     DETERMINISTIC_REPRESENTATION_CONTRACT_NO_LLM_SUBSTRATE,
     DETERMINISTIC_TRANSITION_CONTRACT_NO_LLM_SUBSTRATE,
     DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE,
+    "artifact_reducer_no_llm",
     "cached_exp5567_responses_no_llm",
     "cached_fixture_replay_no_llm",
     "cached_sota_event_energy_calibration",
