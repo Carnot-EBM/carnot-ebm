@@ -52214,3 +52214,102 @@ and the terminal verdict uses a valid prefix.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6473 | Planned (`python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py`, `results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json`) | Planned (`tests/python/test_experiment_6473_v556_terminal_evidence_and_retirement_boundary.py`) |
+
+### REQ-REPORT-6475: V557 Primary Source And Product State Receipt
+
+The Exp6475 workflow SHALL produce a dated primary-source receipt for the
+V557 planning date `20260821`. It SHALL recheck arXiv releases from
+2026-08-14 through 2026-08-18 for EBM, constraint, Ising, hallucination, KAN,
+guided-decoding, hardware-sampling, and continual-learning clusters. It SHALL
+also recheck Semantic Scholar citation trails for `arXiv:2507.02092` and
+`arXiv:2512.15605`, OpenReview, Hugging Face Papers, GitHub Trending,
+Extropic first-party pages, Logical Intelligence first-party pages, and the
+rendered ARC leaderboard.
+
+For every source URL queried, Exp6475 SHALL record network availability, query
+timestamp, source URL, HTTP state, response byte count, response SHA-256 hash,
+and cache path. Semantic Scholar rows SHALL report arXiv-indexed records
+separately from returned totals. If a route is rate-limited or blocked, the
+workflow SHALL record a source-specific blocked row and SHALL NOT invent
+counts.
+
+Extropic Z1, Torx, Thermalizers, simulator, and API claims SHALL be recorded
+only as first-party product claims. Logical Intelligence Kona and Aleph claims
+SHALL be recorded only as first-party product context unless public weights
+and a reproducible local runner exist. The ARC receipt SHALL distinguish the
+rendered display state from snippets and cached local records. No source row
+SHALL be promoted as model, product, API, ARC, or hardware execution evidence.
+
+The Exp6475 artifact SHALL be written to
+`results/experiment_6475_v557_primary_source_and_product_state.json` with
+`inference_substrate=primary_source_receipt_no_model_execution`.
+`verifier_is_oracle` SHALL be false except for response identity and hash
+checks. A blocked verdict SHALL require `gate_check_summary` rows that name
+the failed URL, expected response, observed response, and cached evidence.
+
+The artifact SHALL include, at minimum, `status`, `query_manifest`,
+`source_timestamps_and_hashes`, `arxiv_release_boundary`,
+`ebt_citation_rows`, `arm_ebm_citation_rows`, `openreview_rows`,
+`huggingface_rows`, `github_rows`, `extropic_first_party_status`,
+`logical_intelligence_first_party_status`,
+`rendered_arc_leaderboard_receipt`, `per_unit_rows`, `promoted_findings`,
+`unavailable_substrates`, `protected_files_unchanged`,
+`gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`,
+`random_seed`, `duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`. `field_principles` SHALL cover every required field with
+the task prompt principle. `field_provenance` SHALL name URL, response hash,
+row ID, constant, or deterministic reducer sources for every required field.
+
+#### SCENARIO-REPORT-6475-RECEIPTS: Source Rows Are Current And Cached
+
+**Given** Exp6475 queries the requested source set
+**When** it records source receipts
+**Then** every requested source has a current row or a source-specific blocked
+row with network state, timestamp, URL, HTTP state, response hash, and cache
+path.
+
+#### SCENARIO-REPORT-6475-ARXIV: Release Boundary Is Dated
+
+**Given** the requested arXiv window is 2026-08-14 through 2026-08-18
+**When** Exp6475 parses arXiv rows
+**Then** it records only rows inside that boundary as current release
+findings and prevents older papers from becoming a new milestone delta.
+
+#### SCENARIO-REPORT-6475-CITATIONS: Citation Counts Stay Auditable
+
+**Given** Semantic Scholar returns EBT and ARM-EBM citation responses
+**When** Exp6475 parses citation trails
+**Then** it emits paper-level rows and reports arXiv-indexed counts
+separately from total counts without inventing counts after rate limits.
+
+#### SCENARIO-REPORT-6475-PRODUCTS: Product Claims Stay Non-Executable
+
+**Given** Extropic and Logical Intelligence first-party pages describe
+products, APIs, devices, weights, or runners
+**When** Exp6475 records their status
+**Then** it records them as source claims and unavailable substrates unless
+authenticated local credentials, weights, or devices are present.
+
+#### SCENARIO-REPORT-6475-ARC: Rendered Leaderboard Is Not Runtime Proof
+
+**Given** the ARC leaderboard is requested
+**When** Exp6475 records the rendered public state
+**Then** it separates displayed state from snippets and cached local records
+and makes no Carnot ARC execution claim.
+
+#### SCENARIO-REPORT-6475-SCHEMA: Artifact Is Terminal And Bounded
+
+**Given** source rows, product rows, protected hashes, field maps, and command
+receipts are assembled
+**When** Exp6475 validates the artifact
+**Then** every required field has a principle and provenance entry, protected
+files remain byte-identical, the checksum matches, the terminal verdict uses
+`complete_*` or `success_*` for complete receipts, and no source row is
+promoted as execution evidence.
+
+## Implementation Status (REQ-REPORT-6475)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6475 | Planned (`python/carnot/experiment_6475_v557_primary_source_and_product_state.py`, `results/experiment_6475_v557_primary_source_and_product_state.json`) | Planned (`tests/python/test_experiment_6475_v557_primary_source_and_product_state.py`) |
