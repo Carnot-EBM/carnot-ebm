@@ -167,3 +167,7 @@ CHECK_TIMED_OUT
 
 CHECK_TIMED_OUT
 
+## 2026-08-20 13:12 UTC -- NEW
+
+- **Leaderboard shakeup:** **cstl** now leads at **3.57**; **Lord Han Solo** is second at **2.76**, **The AGI Boys** third at **2.66**, **Jonathan Wang2022** fourth at **2.59**, and **Daniel Franzen** fifth at **2.58**. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+

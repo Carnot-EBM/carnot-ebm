@@ -1,0 +1,7 @@
+{
+  "why_stopped": "Stopped deliberately at 2 single cells and 13 tool cells. The single arm needed 4,238s per cell against the tool arm's 598s mean, so 39 paired cells would have taken about 46 hours. A read of the code found a cheaper and more decisive question: the scored vLLM server is launched with NO --enable-auto-tool-choice and NO --tool-call-parser flag, and the tool loop only executes tool_calls the SERVER lifts out of the model's text. If that is right, the tool loop -- and therefore compaction -- cannot run at all on the scored backend, which decides whether either arm of this A/B is even reachable in the scored run.",
+  "what_the_banked_cells_support": "A small paired signal only. tu93 trial 0: single-shot produced a MEMORIZING engine scoring 0.0 on both visible fit and holdout; the tool loop produced a non-memorizing engine at 0.625 holdout. Across 13 tool cells, mean holdout 0.234 with 1 of 13 memorizing. Suggestive that the tool loop resists memorization, and NOT sufficient for any ranking claim.",
+  "what_they_do_NOT_support": "Any claim that one induction path generalizes better than the other. n=2 paired.",
+  "design_note": "The equalized design itself worked: both arms saw the same 9 visible rows and were scored on the same 9-row holdout (3-row tail plus same-level full_traj rows), which replaced the old 2-row holdout whose scores could only be 0, 0.5 or 1.",
+  "resumable": "Yes. Both shards resume per cell; nothing needs re-running."
+}
