@@ -4967,6 +4967,52 @@ def _dogfood_verify_generated_code() -> None:
         logger.debug("DOGFOOD: Skipped due to error: %s", e)
 
 
+def _run_audit_with_receipt(
+    name: str,
+    cmd: list[str],
+    receipt: Path | None,
+    timeout: int,
+) -> bool:
+    """Run an audit subprocess and verify it PROVED it ran (REQ-CONDUCTOR-RECEIPT-1).
+
+    The truth signal is the RECEIPT — the report file the audit writes as
+    its last act — never the exit code. The QA-layer audit died at this
+    caller's 900s timeout on every milestone close after 2026-07-29 while
+    check=False + except Exception reported nothing, and its rotation
+    offset kept advancing: coverage accounting moved while zero coverage
+    happened. A stale or missing receipt now writes a BLOCK line to the
+    tracked conductor log — journald retention on this host is a few
+    hours, so logger.warning alone is not a durable failure record.
+    receipt=None falls back to the exit code, for tools with no single
+    report file (e.g. the adversarial-verify backfill sweep).
+    """
+    start = time.time()
+    failure = ""
+    returncode: int | None = None
+    try:
+        proc = subprocess.run(cmd, cwd=PROJECT_ROOT, timeout=timeout, check=False)
+        returncode = proc.returncode
+    except subprocess.TimeoutExpired:
+        failure = f"timeout after {timeout}s"
+    except Exception as exc:  # noqa: BLE001
+        failure = f"launcher error: {exc}"
+    if receipt is None:
+        ok = not failure and returncode == 0
+        detail = failure or f"rc={returncode}"
+    else:
+        # 1s slack for filesystem timestamp granularity (SCENARIO-CONDUCTOR-RECEIPT-2).
+        try:
+            fresh = receipt.stat().st_mtime >= start - 1.0
+        except OSError:
+            fresh = False
+        ok = fresh
+        detail = failure or f"rc={returncode}; receipt not (re)written: {receipt.name}"
+    if not ok:
+        logger.warning("Audit '%s' produced no fresh receipt (%s)", name, detail)
+        log_step(f"Audit receipt STALE: {name}", "BLOCK", detail)
+    return ok
+
+
 def research_step(
     push: bool = True,
     dry_run: bool = False,
@@ -5043,25 +5089,22 @@ def research_step(
             # Non-fatal: even if the audit fails (gemini quota, network),
             # the milestone-close path continues.
             if not dry_run:
-                try:
-                    logger.info("Running adversarial landing-page audit...")
-                    subprocess.run(
-                        [
-                            sys.executable,
-                            str(PROJECT_ROOT / "scripts" / "pages_adversarial_audit.py"),
-                            # 2026-06-08: adversarial agent on Claude Opus 4.8 (was gemini); 2026-06-30:
-                            # AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT env-routable for quota-conserve windows.
-                            "--model",
-                            AGENT_TYPE_AUDIT,
-                            "--model-name",
-                            AGENT_MODEL_AUDIT,
-                        ],
-                        cwd=PROJECT_ROOT,
-                        timeout=720,
-                        check=False,
-                    )
-                except Exception as _e:
-                    logger.warning("Adversarial audit failed (non-fatal): %s", _e)
+                logger.info("Running adversarial landing-page audit...")
+                _run_audit_with_receipt(
+                    "pages-adversarial-audit",
+                    [
+                        sys.executable,
+                        str(PROJECT_ROOT / "scripts" / "pages_adversarial_audit.py"),
+                        # 2026-06-08: adversarial agent on Claude Opus 4.8 (was gemini); 2026-06-30:
+                        # AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT env-routable for quota-conserve windows.
+                        "--model",
+                        AGENT_TYPE_AUDIT,
+                        "--model-name",
+                        AGENT_MODEL_AUDIT,
+                    ],
+                    receipt=PROJECT_ROOT / "ops" / "docs_audit_report.md",
+                    timeout=720,
+                )
 
             # Verifier authenticity audit (per CLAUDE.md "Verifier
             # Authenticity Discipline" 2026-05-21). Independent LLM
@@ -5074,27 +5117,24 @@ def research_step(
             # ~5-10 minutes max; the linter at scripts/verifier_
             # authenticity_lint.py catches gaming patterns every commit.
             if not dry_run:
-                try:
-                    logger.info("Running verifier authenticity audit...")
-                    subprocess.run(
-                        [
-                            sys.executable,
-                            str(PROJECT_ROOT / "scripts" / "verifier_authenticity_audit.py"),
-                            "--limit",
-                            "20",
-                            # 2026-06-08: adversarial agent on Claude Opus 4.8 (was gemini); 2026-06-30:
-                            # AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT env-routable for quota-conserve windows.
-                            "--model",
-                            AGENT_TYPE_AUDIT,
-                            "--model-name",
-                            AGENT_MODEL_AUDIT,
-                        ],
-                        cwd=PROJECT_ROOT,
-                        timeout=900,
-                        check=False,
-                    )
-                except Exception as _e:
-                    logger.warning("Verifier authenticity audit failed (non-fatal): %s", _e)
+                logger.info("Running verifier authenticity audit...")
+                _run_audit_with_receipt(
+                    "verifier-authenticity-audit",
+                    [
+                        sys.executable,
+                        str(PROJECT_ROOT / "scripts" / "verifier_authenticity_audit.py"),
+                        "--limit",
+                        "20",
+                        # 2026-06-08: adversarial agent on Claude Opus 4.8 (was gemini); 2026-06-30:
+                        # AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT env-routable for quota-conserve windows.
+                        "--model",
+                        AGENT_TYPE_AUDIT,
+                        "--model-name",
+                        AGENT_MODEL_AUDIT,
+                    ],
+                    receipt=PROJECT_ROOT / "ops" / "verifier_authenticity_audit_report.md",
+                    timeout=900,
+                )
 
             # QA-layer authenticity audit (2026-07-03 operator question: "shouldn't
             # the adversarial agent be catching these?" -- after a single outer-loop
@@ -5113,25 +5153,30 @@ def research_step(
             # 150+ risky-function chunks; rotation ensures successive runs advance
             # through the whole corpus instead of always re-auditing the same head-slice).
             if not dry_run:
-                try:
-                    logger.info("Running QA-layer authenticity audit...")
-                    subprocess.run(
-                        [
-                            sys.executable,
-                            str(PROJECT_ROOT / "scripts" / "qa_layer_authenticity_audit.py"),
-                            "--limit",
-                            "20",
-                            "--model",
-                            AGENT_TYPE_AUDIT,
-                            "--model-name",
-                            AGENT_MODEL_AUDIT,
-                        ],
-                        cwd=PROJECT_ROOT,
-                        timeout=900,
-                        check=False,
-                    )
-                except Exception as _e:
-                    logger.warning("QA-layer authenticity audit failed (non-fatal): %s", _e)
+                logger.info("Running QA-layer authenticity audit...")
+                # --budget-seconds is INSIDE the 900s kill timeout on purpose
+                # (REQ-CONDUCTOR-RECEIPT-1): a deadline the audit knows about
+                # produces a PARTIAL report + a rotation advance matching the
+                # units actually reviewed; the caller's timeout produces
+                # nothing — which is how this audit went silent for 23 days
+                # while its rotation offset advanced 20 units per close.
+                _run_audit_with_receipt(
+                    "qa-layer-authenticity-audit",
+                    [
+                        sys.executable,
+                        str(PROJECT_ROOT / "scripts" / "qa_layer_authenticity_audit.py"),
+                        "--limit",
+                        "20",
+                        "--budget-seconds",
+                        "750",
+                        "--model",
+                        AGENT_TYPE_AUDIT,
+                        "--model-name",
+                        AGENT_MODEL_AUDIT,
+                    ],
+                    receipt=PROJECT_ROOT / "ops" / "qa_layer_authenticity_audit_report.md",
+                    timeout=900,
+                )
 
             # Artifact convention audit (2026-08-13). The four audits above review CODE and
             # DOCS; none reviews the ARTIFACTS, which ARE the research record. Asks one
@@ -5145,24 +5190,21 @@ def research_step(
             # cases, because "is this claim checkable" is semantic. Bounded with --recent so a
             # milestone close stays cheap. Never edits, never blocks; the operator decides.
             if not dry_run:
-                try:
-                    subprocess.run(
-                        [
-                            sys.executable,
-                            str(PROJECT_ROOT / "scripts" / "artifact_convention_audit.py"),
-                            "--recent",
-                            "8",
-                            "--agent-type",
-                            AGENT_TYPE_AUDIT,
-                            "--model-name",
-                            AGENT_MODEL_AUDIT,
-                        ],
-                        cwd=PROJECT_ROOT,
-                        timeout=900,
-                        check=False,
-                    )
-                except Exception as _e:
-                    logger.warning("Artifact convention audit failed (non-fatal): %s", _e)
+                _run_audit_with_receipt(
+                    "artifact-convention-audit",
+                    [
+                        sys.executable,
+                        str(PROJECT_ROOT / "scripts" / "artifact_convention_audit.py"),
+                        "--recent",
+                        "8",
+                        "--agent-type",
+                        AGENT_TYPE_AUDIT,
+                        "--model-name",
+                        AGENT_MODEL_AUDIT,
+                    ],
+                    receipt=PROJECT_ROOT / "ops" / "artifact_convention_audit_report.md",
+                    timeout=900,
+                )
 
             # Contradiction escalation (REQ-OPS-CONTRADICTION-6272). Cheap detectors for rows
             # that disagree with THEMSELVES, escalating to an adversarial reviewer when they fire.
@@ -5180,20 +5222,17 @@ def research_step(
             # as a model weakness before a review found it. The detector below catches that exact
             # pair for free.
             if not dry_run:
-                try:
-                    subprocess.run(
-                        [
-                            sys.executable,
-                            str(PROJECT_ROOT / "scripts" / "contradiction_escalation.py"),
-                            "--recent",
-                            "12",
-                        ],
-                        cwd=PROJECT_ROOT,
-                        timeout=300,
-                        check=False,
-                    )
-                except Exception as _e:
-                    logger.warning("Contradiction escalation failed (non-fatal): %s", _e)
+                _run_audit_with_receipt(
+                    "contradiction-escalation",
+                    [
+                        sys.executable,
+                        str(PROJECT_ROOT / "scripts" / "contradiction_escalation.py"),
+                        "--recent",
+                        "12",
+                    ],
+                    receipt=PROJECT_ROOT / "ops" / "contradiction_escalation_report.md",
+                    timeout=300,
+                )
 
             # ARC held-out benchmark (REQ-ARC-BENCH-6267). The one ARC number that can still move.
             #
@@ -5209,34 +5248,32 @@ def research_step(
             # minute; `--all` is for promotion. Never blocks; it exists so the flag ledger has
             # something to select on.
             if not dry_run:
-                try:
-                    subprocess.run(
-                        [
-                            sys.executable,
-                            str(PROJECT_ROOT / "scripts" / "arc_bench.py"),
-                            "--quiet",
-                            "--out",
-                            str(PROJECT_ROOT / "ops" / "arc_bench_latest.json"),
-                        ],
-                        cwd=PROJECT_ROOT,
-                        timeout=1800,
-                        check=False,
-                    )
-                    # Keep the flag ledger's view of the agent current. Discovery is a source
-                    # scan, so a capability shipped behind a new flag this milestone is tracked
-                    # from the moment it lands rather than whenever someone remembers.
-                    subprocess.run(
-                        [
-                            sys.executable,
-                            str(PROJECT_ROOT / "scripts" / "arc_flag_ledger.py"),
-                            "--discover",
-                        ],
-                        cwd=PROJECT_ROOT,
-                        timeout=120,
-                        check=False,
-                    )
-                except Exception as _e:
-                    logger.warning("ARC held-out benchmark failed (non-fatal): %s", _e)
+                _run_audit_with_receipt(
+                    "arc-heldout-bench",
+                    [
+                        sys.executable,
+                        str(PROJECT_ROOT / "scripts" / "arc_bench.py"),
+                        "--quiet",
+                        "--out",
+                        str(PROJECT_ROOT / "ops" / "arc_bench_latest.json"),
+                    ],
+                    receipt=PROJECT_ROOT / "ops" / "arc_bench_latest.json",
+                    timeout=1800,
+                )
+                # Keep the flag ledger's view of the agent current. Discovery is a source
+                # scan, so a capability shipped behind a new flag this milestone is tracked
+                # from the moment it lands rather than whenever someone remembers.
+                # --discover saves the ledger unconditionally, so the ledger IS its receipt.
+                _run_audit_with_receipt(
+                    "arc-flag-ledger-discover",
+                    [
+                        sys.executable,
+                        str(PROJECT_ROOT / "scripts" / "arc_flag_ledger.py"),
+                        "--discover",
+                    ],
+                    receipt=PROJECT_ROOT / "ops" / "arc_flag_ledger.yaml",
+                    timeout=120,
+                )
 
             # ARC live-agent self-solve audit (2026-06-22 operator directive, 2nd
             # recurrence: "aggressively caught and stopped"). Hostile review that the
@@ -5249,27 +5286,24 @@ def research_step(
             # commit-time HARD STOP is scripts/arc_orphan_solver_lint.py; the
             # per-artifact catch is adversarial_verify.check_arc_outer_loop_solve.
             if not dry_run:
-                try:
-                    logger.info("Running ARC live-agent self-solve audit...")
-                    subprocess.run(
-                        [
-                            sys.executable,
-                            str(PROJECT_ROOT / "scripts" / "arc_self_solve_audit.py"),
-                            "--since-days",
-                            "7",
-                            # 2026-06-08: adversarial agent on Claude Opus 4.8; 2026-06-30:
-                            # AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT env-routable for quota-conserve windows.
-                            "--model",
-                            AGENT_TYPE_AUDIT,
-                            "--model-name",
-                            AGENT_MODEL_AUDIT,
-                        ],
-                        cwd=PROJECT_ROOT,
-                        timeout=900,
-                        check=False,
-                    )
-                except Exception as _e:
-                    logger.warning("ARC self-solve audit failed (non-fatal): %s", _e)
+                logger.info("Running ARC live-agent self-solve audit...")
+                _run_audit_with_receipt(
+                    "arc-self-solve-audit",
+                    [
+                        sys.executable,
+                        str(PROJECT_ROOT / "scripts" / "arc_self_solve_audit.py"),
+                        "--since-days",
+                        "7",
+                        # 2026-06-08: adversarial agent on Claude Opus 4.8; 2026-06-30:
+                        # AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT env-routable for quota-conserve windows.
+                        "--model",
+                        AGENT_TYPE_AUDIT,
+                        "--model-name",
+                        AGENT_MODEL_AUDIT,
+                    ],
+                    receipt=PROJECT_ROOT / "ops" / "arc_self_solve_audit_report.md",
+                    timeout=900,
+                )
 
             # Adversarial-verify completion-gate BACKSTOP (2026-05-31 operator
             # directive). The fabrication gate in _log_experiment_completion only
@@ -5284,23 +5318,23 @@ def research_step(
             # (recent-window only) to avoid retroactively mislabeling legitimate
             # old coincidental-metric findings. Non-fatal.
             if not dry_run:
-                try:
-                    logger.info("Running adversarial-verify completion-gate backstop...")
-                    subprocess.run(
-                        [
-                            sys.executable,
-                            str(PROJECT_ROOT / "scripts" / "adversarial_verify.py"),
-                            "--backfill",
-                            "--apply",
-                            "--since-hours",
-                            "24",
-                        ],
-                        cwd=PROJECT_ROOT,
-                        timeout=300,
-                        check=False,
-                    )
-                except Exception as _e:
-                    logger.warning("Adversarial backstop failed (non-fatal): %s", _e)
+                logger.info("Running adversarial-verify completion-gate backstop...")
+                # No single report file to use as a receipt — the backfill
+                # stamps artifacts in place — so receipt=None falls back to
+                # the exit code (REQ-CONDUCTOR-RECEIPT-1).
+                _run_audit_with_receipt(
+                    "adversarial-verify-backfill",
+                    [
+                        sys.executable,
+                        str(PROJECT_ROOT / "scripts" / "adversarial_verify.py"),
+                        "--backfill",
+                        "--apply",
+                        "--since-hours",
+                        "24",
+                    ],
+                    receipt=None,
+                    timeout=300,
+                )
 
             logger.info("No research-roadmap-next.yaml — launching planning agent")
             if dry_run:
