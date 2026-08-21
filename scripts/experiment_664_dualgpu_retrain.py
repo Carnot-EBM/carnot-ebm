@@ -32,9 +32,12 @@ _REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 
+from carnot.experiment_artifacts import atomic_write_json
 from carnot.pipeline.env_autofix import apply_env_autofix
 from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog
 from scripts.experiment_template import ExperimentTemplate
+
+_DELIVERABLE = "results/experiment_664_dualgpu_retrain.json"
 
 
 # ---------------------------------------------------------------------------
@@ -69,6 +72,10 @@ def _monitor_gpus(readings: list, stop_event: threading.Event, interval_s: float
         except Exception:
             pass
         time.sleep(interval_s)
+
+
+def _write_artifact(artifact: dict) -> None:
+    atomic_write_json(_DELIVERABLE, artifact, root=_REPO_ROOT, indent=2)
 
 
 # ---------------------------------------------------------------------------
@@ -156,7 +163,7 @@ def main() -> None:
     tmpl = ExperimentTemplate(
         exp_id=664,
         title="DualGPU Parallel EORM+JEPA Retrain",
-        deliverable="results/experiment_664_dualgpu_retrain.json",
+        deliverable=_DELIVERABLE,
         requires_gpu=True,
     )
 
@@ -180,10 +187,7 @@ def main() -> None:
             },
             status="ci_stub",
         )
-        output_path = os.path.join(_REPO_ROOT, "results", "experiment_664_dualgpu_retrain.json")
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        with open(output_path, "w") as f:
-            json.dump(artifact, f, indent=2)
+        _write_artifact(artifact)
         tmpl.assert_deliverable_written()
         return
 
@@ -215,10 +219,7 @@ def main() -> None:
             },
             status="blocked",
         )
-        output_path = os.path.join(_REPO_ROOT, "results", "experiment_664_dualgpu_retrain.json")
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        with open(output_path, "w") as f:
-            json.dump(artifact, f, indent=2)
+        _write_artifact(artifact)
         tmpl.assert_deliverable_written()
         return
 
@@ -296,10 +297,7 @@ def main() -> None:
         },
         status="success",
     )
-    output_path = os.path.join(_REPO_ROOT, "results", "experiment_664_dualgpu_retrain.json")
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, "w") as f:
-        json.dump(artifact, f, indent=2)
+    _write_artifact(artifact)
 
     tmpl.assert_deliverable_written()
 

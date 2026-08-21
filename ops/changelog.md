@@ -1,5 +1,17 @@
 # Carnot — Changelog
 
+## 2026-08-21 (test regression fix: no-LLM substrate floors and isolated hardware tests)
+
+- Fixed `scripts/adversarial_verify.py` so recognized no-LLM substrate aliases that lack a
+  specialized floor get a nonzero JSON-work duration floor, clearing the false
+  `SUBSTRATE_HAS_NO_DURATION_FLOOR` warning for `simulation` while preserving the
+  deterministic-verifier floor for `deterministic_pipeline_integration_no_llm`.
+- Updated ARC generator tests to handle the current default think/chat route without weakening the
+  re-ask wiring assertions, and made the sampler-seed source contract count actual seed assignment
+  sites rather than vLLM forwarding reads.
+- Redirected the KV260 blocked-path test artifact to `tmp_path` so the tracked-results guard is
+  respected. `scripts/research_conductor.py` was not modified.
+
 ## 2026-08-19 (outer-loop, goal-defect + dedup paired A/B landed, commit 7df7dfb4ca)
 
 **Instruction:** operator — "run the goal-defect A/B tonight", then "all 3" on the follow-up
@@ -17054,3 +17066,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
 - 2026-08-21: V556 corpus label-commitment forensic and retirement adjudication (✅ Complete) — honest_verdict=complete: retire_lineage because Exp6463 lacks immutable pre-inference held label and membership proof; no new inference or labels were created; results/experiment_6476_v556_corpus_label_commitment_forensic.json
 - 2026-08-21: Backend-neutral finite-domain exact constraint record (✅ Complete) — honest_verdict=complete: Z3 and exhaustive replay agree within the declared finite-domain record; scalar energy remains diagnostic only; results/experiment_6477_backend_neutral_exact_constraint_record.json
 - 2026-08-21: Gated on Exp6474 identifiability and Exp6477 parity: held exact-energy final-selection A/B (✅ Complete) — honest_verdict=complete_positive: exact-energy selection improves held exact success over first and shuffled controls; exact backend remains the oracle; results/experiment_6478_identifiable_held_exact_energy_selection.json
+- 2026-08-21: Operational retrospective for 2026.08.557: 6 synthesis-only experiments completed in 0.0 minutes at the supplied resolution, and no compute-bound experiment ran. The idle GPU snapshot therefore does not show a task-level fault, and no concurrent-model DualGPURunner issue applies. The next tooling step is persistent monotonic phase timing plus dependency-safe concurrency receipts for synthesis jobs. Estimated savings: 0%, because no measurable timing counterfactual exists. Artifact: results/operational_retro_2026_08_557.json.

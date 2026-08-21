@@ -16112,3 +16112,5 @@ code |
 | 2026-08-21 04:59 UTC | Gated on Exp6474 identifiability and Exp6477 parit | OK | 88 passed, 1 warning in 14.03s |
 | 2026-08-21 06:22 UTC | Default-off VerifyRepairPipeline factor-cache shad | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: 
 +             |
+| 2026-08-21 07:12 UTC | Default-off VerifyRepairPipeline factor-cache shad | FAIL | Post-tests failed: 1 failed, 167 passed, 1 warning in 13.04s |
+| 2026-08-21 07:14 UTC | Default-off VerifyRepairPipeline factor-cache shad | OK | Deliverable already exists in repo |

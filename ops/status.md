@@ -1,6 +1,14 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-31 (REVIEW RESPONSE — all 15 adversarial-review findings applied, none
+**Last Updated:** 2026-08-21 (test regression fix: `simulation` and other recognized no-LLM
+substrate aliases now receive a nonzero JSON-work floor instead of
+`SUBSTRATE_HAS_NO_DURATION_FLOOR`; `deterministic_pipeline_integration_no_llm`
+uses the deterministic-verifier floor. Focused regressions pass: adversarial
+substrate + pipeline tests `76 passed, 1 warning`; ARC wiring/seed tests `22
+passed`; KV260 hardware tests `4 passed`; full adversarial verifier group `365
+passed`. No changes were made to `scripts/research_conductor.py`.)
+
+Prior: 2026-07-31 (REVIEW RESPONSE — all 15 adversarial-review findings applied, none
 argued back. One code change: the depth/`queue_exhausted` conflation Phase 3 fixed in the goal gate
 ALSO lived in `plan_in_model`, the planner the gate guards, and Phase 3's own evidence file was the
 proof. Split there too, proven inert by 600-case differential execution against git HEAD — 0

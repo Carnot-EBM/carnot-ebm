@@ -114,7 +114,16 @@ def _seq_urlopen(monkeypatch: pytest.MonkeyPatch, contents: list[str]) -> list:
 
     def fake(req, timeout=None):  # noqa: ANN001
         bodies.append(json.loads(req.data.decode()))
-        return _FakeResp(json.dumps({"content": next(it)}).encode())
+        content = next(it)
+        return _FakeResp(
+            json.dumps(
+                {
+                    "content": content,
+                    "stop_type": "eos",
+                    "choices": [{"message": {"content": content}, "finish_reason": "stop"}],
+                }
+            ).encode()
+        )
 
     monkeypatch.setattr(urllib.request, "urlopen", fake)
     return bodies

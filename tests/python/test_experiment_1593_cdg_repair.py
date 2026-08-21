@@ -122,6 +122,8 @@ def test_contract_failure_categories() -> None:
     assert "parse" in cats
     assert "certificate" in cats
     assert "final_accept" in cats
+
+
 def test_contract_failure_categories_extended() -> None:
     case_safe = {
         "row_type": "contract_case",
@@ -155,12 +157,16 @@ def test_contract_failure_categories_extended() -> None:
 
     assert exp._root_cause_category(["final_accept"]) == "final_accept"
 
+
 def test_req_verify_1593_runner_blocks_no_failing_cases(tmp_path: Path) -> None:
     e2e_manifest = tmp_path / "runtime_contract_e2e.jsonl"
     repair_artifact = tmp_path / "missing_repair.json"
     output = tmp_path / "experiment_1593_cdg_repair.json"
     cdg_manifest = tmp_path / "cdg_1593.jsonl"
-    exp._write_jsonl(e2e_manifest, [{"row_type": "contract_case", "expected_label": True, "final_deterministic_accept": True}])
+    exp._write_jsonl(
+        e2e_manifest,
+        [{"row_type": "contract_case", "expected_label": True, "final_deterministic_accept": True}],
+    )
 
     artifact = exp.run_experiment(
         project_root=tmp_path,
@@ -172,8 +178,10 @@ def test_req_verify_1593_runner_blocks_no_failing_cases(tmp_path: Path) -> None:
     assert artifact["status"] == "blocked"
     assert "no_failing_cases" in artifact["blockers"]
 
+
 def test_load_repair_evidence_continue() -> None:
     import tempfile
+
     with tempfile.TemporaryDirectory() as tmpdir:
         root = Path(tmpdir)
         repair_artifact_path = root / "repair_artifact.json"
@@ -183,7 +191,17 @@ def test_load_repair_evidence_continue() -> None:
         ev = exp._load_repair_evidence(root, repair_artifact_path)
         assert ev == {"repair_rows_by_case": {}}
 
-def test_main(monkeypatch: pytest.MonkeyPatch) -> None:
+
+def test_main(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     import sys
-    monkeypatch.setattr(sys, "argv", ["--e2e-manifest", "missing.jsonl"])
-    assert exp.main(["--e2e-manifest", "missing.jsonl"]) == 0
+
+    argv = [
+        "--e2e-manifest",
+        "missing.jsonl",
+        "--output",
+        str(tmp_path / "experiment_1593_cdg_repair.json"),
+        "--cdg-manifest",
+        str(tmp_path / "cdg_1593.jsonl"),
+    ]
+    monkeypatch.setattr(sys, "argv", argv)
+    assert exp.main(argv) == 0

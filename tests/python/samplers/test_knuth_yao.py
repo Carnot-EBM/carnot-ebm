@@ -6,11 +6,15 @@ Spec coverage: REQ-SAMPLE-2043, SCENARIO-SAMPLE-2043
 from __future__ import annotations
 
 import json
+import os
+import subprocess
+import sys
 from pathlib import Path
 
 import numpy as np
 import pytest
 
+from carnot.experiment_artifacts import ARTIFACT_ROOT_ENV
 from scripts.experiment_template import REQUIRED_RESULT_FIELDS
 
 from carnot.samplers.knuth_yao import KnuthYaoSampler, run_statistical_parity_test
@@ -115,15 +119,30 @@ def test_req_sample_2043_10000_sample_parity_against_standard_rng() -> None:
     assert report["bit_metrics"]["average_bits_per_sample"] < 3.0
 
 
-def test_scenario_sample_2043_run_experiment_writes_terminal_artifact(tmp_path: Path) -> None:
+def test_scenario_sample_2043_run_experiment_writes_terminal_artifact(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """SCENARIO-SAMPLE-2043: Exp 2043 writes the statistical parity artifact."""
-    import scripts.experiment_2043_aia_knuth_yao as exp2043
-
+    monkeypatch.setenv(ARTIFACT_ROOT_ENV, str(tmp_path))
     output_path = tmp_path / "experiment_2043_aia_knuth_yao.json"
-    artifact = exp2043.run_experiment(output_path=output_path)
+    env = os.environ.copy()
+    env[ARTIFACT_ROOT_ENV] = str(tmp_path)
+    subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            (
+                "from scripts.experiment_2043_aia_knuth_yao import run_experiment; "
+                f"run_experiment(output_path={str(output_path)!r})"
+            ),
+        ],
+        check=True,
+        cwd=Path(__file__).resolve().parents[3],
+        env=env,
+    )
 
     assert output_path.exists()
-    assert json.loads(output_path.read_text()) == artifact
+    artifact = json.loads(output_path.read_text())
     for field in REQUIRED_RESULT_FIELDS:
         assert field in artifact
     assert artifact["experiment"] == 2043

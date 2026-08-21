@@ -6220,3 +6220,10 @@ The critical path for milestone .250:
 - theme: readiness-dependent corpus execution formed the operational tail under reconstructed timing
 - key result: the milestone record identifies the long compute path, but it cannot attribute phase costs, grade task-time GPU use, or show a missed parallel multi-model runner dispatch
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.557
+
+- exp_range: exp6474-exp6477 (visible gate-reference bounds only; the complete milestone range is not available)
+- theme: zero-resolution synthesis work exposed a timing-observability gap, not an accelerator bottleneck
+- key result: no compute-bound work occurred; idle GPUs were correct, and no DualGPURunner requirement arose
+- acceptance: no data available this milestone

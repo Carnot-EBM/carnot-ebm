@@ -8,15 +8,15 @@ from the per-game adapter `hand_verifier`. If that verifier returns THE SAME VAL
 the exact defect that invalidated the `accuracy` endpoint, where a positive control showed a total
 answer leak could not move it off 0.0.
 
-It is the common case, not a corner. An AST census of `arc_game_adapters.py` finds 4 of the 22
+It is the common case, not a corner. An AST census of `arc_game_adapters.py` finds 7
 adaptered public games shipping a literal constant:
 
-    cn04, ka59, sp80, su15   ->   hand_verifier=lambda _game, _frame=None: 0.0
+    cn04, ka59, sc25, sp80, su15, tn36, wa30   ->   hand_verifier=lambda ...: 0.0
 
-plus 3 of the 25 survey games with no adapter at all: 7 of 25 immovable by construction. In the
-24-cell retention A/B that was 8 cells (33%) whose 0.0 was pooled with real observations inside a
-rank correlation, an entropy figure, a zero-count distribution and a discordance tally. Excluding
-them moved the headline correlation from +0.0929 to -0.0040.
+In the 24-cell retention A/B, literal stubs and adapterless games were immovable by construction:
+their 0.0 was pooled with real observations inside a rank correlation, an entropy figure, a
+zero-count distribution and a discordance tally. Excluding them moved the headline correlation from
++0.0929 to -0.0040.
 
 Note that `ka59` -- the control game used for the goal-gate acceptance test -- is one of the stubs.
 
@@ -37,7 +37,7 @@ from carnot.agentic import arc_actions_to_progress as atp
 
 # The literal-constant stubs, verified by AST census against arc_game_adapters.py. Asserted below
 # rather than trusted, so this list cannot silently drift out of date.
-_KNOWN_CONSTANT_STUBS = {"cn04", "ka59", "sp80", "su15"}
+_KNOWN_CONSTANT_STUBS = {"cn04", "ka59", "sc25", "sp80", "su15", "tn36", "wa30"}
 
 
 class _FakeFrame:

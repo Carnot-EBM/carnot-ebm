@@ -6,6 +6,7 @@ Spec coverage: REQ-SAMPLE-3105, SCENARIO-SAMPLE-3105
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -13,6 +14,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+from carnot.experiment_artifacts import ARTIFACT_ROOT_ENV
 from scripts.experiment_template import REQUIRED_RESULT_FIELDS
 
 from carnot.samplers.clut_random_variate import (
@@ -140,6 +142,8 @@ def test_req_sample_3105_microbench_reports_cpu_timing_and_error() -> None:
 def test_scenario_sample_3105_experiment_writes_terminal_artifact(tmp_path: Path) -> None:
     """SCENARIO-SAMPLE-3105: Exp 3105 writes the claim-bounded JSON artifact."""
     output_path = tmp_path / "experiment_3105_clut_random_variate_sampler_microbench_v1.json"
+    env = os.environ.copy()
+    env[ARTIFACT_ROOT_ENV] = str(tmp_path)
     subprocess.run(
         [
             sys.executable,
@@ -152,6 +156,7 @@ def test_scenario_sample_3105_experiment_writes_terminal_artifact(tmp_path: Path
         ],
         check=True,
         cwd=Path(__file__).resolve().parents[3],
+        env=env,
     )
 
     assert output_path.exists()

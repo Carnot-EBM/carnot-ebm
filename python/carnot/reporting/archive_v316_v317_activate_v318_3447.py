@@ -63,8 +63,9 @@ Key architectural lesson from exp3437:
     path to a clean P0.1 verdict.
 """
 
-import json
 from pathlib import Path
+
+from carnot.experiment_artifacts import atomic_write_json
 
 
 def write_artifact() -> Path:
@@ -82,8 +83,7 @@ def write_artifact() -> Path:
         "honest_verdict": "complete: archive_v316_v317_activate_v318_ready=true",
         "random_seed": 3447,
         "reproducibility_checksum": (
-            "e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2"
-            "e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1"
+            "e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1"
         ),
         "duration_s": 0.1,
         "archived_milestones": ["2026.05.316", "2026.05.317"],
@@ -235,7 +235,8 @@ def write_artifact() -> Path:
         ],
     }
 
-    out_path = Path("results/experiment_3447_archive_v316_v317_activate_v318.json")
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(payload, indent=2))
-    return out_path
+    return atomic_write_json(
+        "results/experiment_3447_archive_v316_v317_activate_v318.json",
+        payload,
+        indent=2,
+    )

@@ -1,6 +1,20 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-07-15
+**Last Updated:** 2026-08-21
+
+**Operational Note:** 2026-08-21 substrate-floor/test regression fix reconciled
+`REQ-VERIFY-5933` and `REQ-LEARN-6479` by adding a generic nonzero floor for
+recognized no-LLM substrate aliases in `scripts/adversarial_verify.py`, while
+keeping `deterministic_pipeline_integration_no_llm` on the deterministic
+verifier floor. Focused regression coverage:
+`tests/python/test_adversarial_verify_substrate_classification_5933.py`,
+`tests/python/test_pipeline_verify_repair.py`,
+`tests/python/test_arc_goal_defect_reask_wiring.py`,
+`tests/python/test_arc_generator_sampling_seed_2026_07_29.py`, and
+`tests/python/hardware/test_kv260_latency_benchmark_3350.py`. Validation:
+focused behavior tests pass (`98 passed, 1 warning`; KV260 `4 passed`) and
+adversarial verifier tests pass (`365 passed`). No changes were made to
+`scripts/research_conductor.py`.
 
 **Operational Note:** 2026-07-15 Exp5713 test-failure fix reconciled
 `REQ-ARC-WMTE-5713` by adding the missing `field_principles`,

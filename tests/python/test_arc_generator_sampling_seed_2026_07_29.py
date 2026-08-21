@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from typing import Any
 
 import pytest
@@ -167,10 +168,9 @@ def test_all_three_generation_paths_consult_sampling_seed() -> None:
     assert src.count("self.sampling_seed(") == 3, (
         "a generation path was added or removed without wiring the sampler seed"
     )
-    # `payload["seed"]` is a substring of `_payload["seed"]`, so this one count covers both
-    # spellings and equals the number of assignment sites. (A first draft summed the two counts
-    # and double-counted the underscore spelling -- 4 where the truth was 3.)
-    assert src.count('payload["seed"]') == 3
+    # Count assignment sites only. Reads such as vLLM payload forwarding must not look like a
+    # fourth generation path.
+    assert len(re.findall(r'^\s*_?payload\["seed"\]\s*=', src, flags=re.MULTILINE)) == 3
 
 
 def test_the_chat_template_route_gets_the_per_attempt_seed_too() -> None:

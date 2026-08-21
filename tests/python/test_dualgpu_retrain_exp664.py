@@ -106,10 +106,13 @@ def _run_main_ci_stub(tmp_path):
 
 def _find_output(tmp_path):
     """Find the written artifact in tmp_path (handles results/ subdir or root)."""
+    artifact_root = os.environ.get("CARNOT_EXPERIMENT_ARTIFACT_ROOT")
     candidates = [
         tmp_path / "results" / "experiment_664_dualgpu_retrain.json",
         tmp_path / "experiment_664_dualgpu_retrain.json",
     ]
+    if artifact_root:
+        candidates.append(pathlib.Path(artifact_root) / "experiment_664_dualgpu_retrain.json")
     for p in candidates:
         if p.exists():
             return p

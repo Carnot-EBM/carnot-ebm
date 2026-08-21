@@ -16,6 +16,7 @@ import pytest
 
 from carnot.pipeline import abstention_http_rest as rest
 from carnot.pipeline import certified_abstention_surface as abstention
+from carnot.pipeline import second_pair_detector as spd
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -35,9 +36,27 @@ def _repair_candidates() -> list[dict[str, object]]:
             "domain": "math",
             "text": "We compute 8 + 5 = 13.",
             "confidence_error": 0.5,
-            "ensemble_energy": 0.7,
+            "ensemble_energy": 0.5,
         },
     ]
+
+
+def _domain_examples(domain: str = "math", *, n: int = 80) -> list[spd.LabeledDetectorExample]:
+    examples: list[spd.LabeledDetectorExample] = []
+    for idx in range(n):
+        label = 1 if idx < n // 2 else 0
+        ensemble = 0.95 - 0.004 * idx if label else 0.05 + 0.001 * (idx - n // 2)
+        confidence_error = 0.82 - 0.003 * idx if label else 0.18 + 0.001 * (idx - n // 2)
+        examples.append(
+            spd.LabeledDetectorExample(
+                domain=domain,
+                label=label,
+                ensemble_energy=ensemble,
+                confidence_error=confidence_error,
+                example_id=f"{domain}-3810-{idx}",
+            )
+        )
+    return examples
 
 
 @contextmanager
@@ -48,6 +67,7 @@ def _running_server(
     server = rest.make_server(
         ("127.0.0.1", 0),
         root=ROOT,
+        examples=_domain_examples(),
         certified_threshold_path=threshold_path,
     )
     thread = threading.Thread(target=server.serve_forever, daemon=True)
@@ -89,8 +109,7 @@ def _write_threshold_artifact(path: Path, *, threshold: float) -> None:
                 "coverage_at_operating_point": 0.998218,
                 "certified_risk_bound": 0.037646,
                 "certification_method": (
-                    "split-conformal (Hoeffding upper bound, assumes exchangeability, "
-                    "delta=0.05)"
+                    "split-conformal (Hoeffding upper bound, assumes exchangeability, delta=0.05)"
                 ),
                 "n_calibration": 2619,
             },

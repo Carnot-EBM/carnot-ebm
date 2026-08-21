@@ -6809,6 +6809,11 @@ The artifact SHALL report baseline import and output receipts, default-off
 compatibility rows, shadow decision rows, exact write-admission rows,
 persistence, rollback, tombstone receipts, attacks, protected file hashes,
 test receipts, and a conjunctive `factor_cache_shadow_adapter_ready_score`.
+The artifact SHALL declare
+`inference_substrate="deterministic_pipeline_integration_no_llm"`, and
+`scripts/adversarial_verify.py` SHALL classify that substrate with a nonzero
+deterministic duration floor instead of treating it as live model inference or
+an unknown substrate.
 
 ### SCENARIO-LEARN-6479-EXACT-ADMIT: Exact Checker Owns Writes
 

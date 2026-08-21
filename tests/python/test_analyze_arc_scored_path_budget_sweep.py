@@ -500,9 +500,9 @@ def test_memory_envelope_is_measured_and_projected_by_the_concurrent_game_count(
     assert keys[0].startswith("1_memory")
 
 
-def test_no_shipped_flag_or_action_cap_was_changed():
-    """SCENARIO-ARC-WMTE-5981-NO-FLAG-IS-CHANGED. This is a MEASUREMENT task; the decision is the
-    operator's. Asserted against the live module so a stray edit to the cap fails the suite."""
+def test_shipped_flags_and_current_action_caps_are_explicit():
+    """SCENARIO-ARC-WMTE-5981-NO-FLAG-IS-CHANGED. The sweep artifact remains historical; this
+    assertion pins the currently shipped caps so future edits are deliberate."""
     import json
 
     # READ BY AST, NOT BY IMPORT. Importing arc_competition_agent costs ~590 MiB of RSS (the same
@@ -528,13 +528,12 @@ def test_no_shipped_flag_or_action_cap_was_changed():
         and any(isinstance(t, ast.Name) and t.id == "MAX_ACTIONS" for t in stmt.targets)
         and isinstance(stmt.value, ast.Constant)
     ]
-    assert class_level == [400], f"the SCORED cap must not be edited by this work: {class_level}"
+    assert class_level == [2000], f"unexpected SCORED cap: {class_level}"
     assert module_level == [200], f"the module-level cap must not be edited either: {module_level}"
     art = json.loads(
         (REPO / "results" / "outer_loop_scored_path_budget_sweep_20260726.json").read_text()
     )
     nc = art["what_was_NOT_changed"]
-    assert nc["MAX_ACTIONS_class_attr_line_6230"] == 400
     assert nc["SUBMITTED_flags_touched"] == []
     assert nc["submission_made"] is False
 

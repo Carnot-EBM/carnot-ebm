@@ -1,0 +1,1350 @@
+{
+  "adapter_api_and_schema_hash": {
+    "adapter_module_sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b",
+    "api_methods": [
+      "__module__",
+      "__doc__",
+      "__init__",
+      "next_chronology_index",
+      "state_hash",
+      "load",
+      "observe",
+      "exact_admit",
+      "propose_rank",
+      "tombstone",
+      "rollback",
+      "save",
+      "close",
+      "state_summary",
+      "_reject_reason",
+      "_cache_write_for",
+      "_commit_cache_write",
+      "_quarantine_receipt",
+      "_bounded_magnitude",
+      "_base_row",
+      "_append_row",
+      "_restore_checkpoint",
+      "_restore_from_rows",
+      "__dict__",
+      "__weakref__"
+    ],
+    "api_version": "carnot.fr11.factor_cache_shadow_adapter.v1",
+    "pipeline_module_sha256": "sha256:88c79ad334f35d1692d8b3a30d4f2cca955e296237f62a9bde9d2014e81c3f6d",
+    "schema_hash": "sha256:0fda2f136dcf1607125343f6828d33d36352e670b6eb4668263cf5ce5666c55d"
+  },
+  "aggregate_row_recomputation": {
+    "checks": {
+      "attack_matrix": true,
+      "default_off_compatibility": true,
+      "exact_write_admission": true,
+      "persistence": true,
+      "protected_files": true,
+      "shadow_public_outputs": true,
+      "tests": true
+    },
+    "failed_checks": [],
+    "matches_reported": true,
+    "row_hashes": {
+      "admission": "sha256:76ab027fb032e1ab2deb1e4bd23e61accb65ed6113bf541ab6ecf91e6db4bd18",
+      "attacks": "sha256:5b7a8e984f5ea158c0f092e684ab071505de1509c9bf71df1f32830d85976236",
+      "default_off": "sha256:847c263873c6a716facf1c0e6f1f608e0756d1f7a541f4276a53456f58edf41a",
+      "per_unit": "sha256:619d07c60fd8ec1a5b59e87ab99f007d670ad1994d285de6aa39eae7f6b6abeb",
+      "shadow": "sha256:62596bcdc1edff824f7231ff4feb77882c9c250ffff81bc08704a836f88b2c38"
+    }
+  },
+  "attack_matrix": {
+    "all_critical_attacks_fail_closed": true,
+    "attack_count": 10,
+    "readiness_promoted_attack_count": 0,
+    "row_hash": "sha256:5b7a8e984f5ea158c0f092e684ab071505de1509c9bf71df1f32830d85976236",
+    "rows": [
+      {
+        "attack_id": "release_bypass",
+        "fail_closed": true,
+        "reason": "shadow write did not change exact release decision",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "write_before_check",
+        "fail_closed": true,
+        "reason": "duplicate_event_id",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "duplicate_event_id",
+        "fail_closed": true,
+        "reason": "duplicate_event_id",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "duplicate_raw_event",
+        "fail_closed": true,
+        "reason": "duplicate_event_id",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "wrong_unit",
+        "fail_closed": true,
+        "reason": "duplicate_event_id",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "forged_pass",
+        "fail_closed": true,
+        "reason": "duplicate_event_id",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "stale_cache",
+        "fail_closed": true,
+        "reason": "duplicate_event_id",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "tombstone_eviction",
+        "fail_closed": true,
+        "reason": "tombstoned_event",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "adapter_exception",
+        "fail_closed": true,
+        "reason": "adapter_exception",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "default_on_environment_leakage",
+        "fail_closed": true,
+        "reason": "environment_variable_did_not_enable_factor_cache",
+        "status": "failed_closed"
+      }
+    ]
+  },
+  "baseline_import_and_output_receipts": {
+    "constructor_signature": "(self, model: 'str | None' = None, domains: 'list[str] | None' = None, max_repairs: 'int' = 3, extractor: 'ConstraintExtractor | None' = None, semantic_grounding_verifier: 'SemanticGroundingVerifier | None' = None, semantic_verifier_v2: 'SemanticVerifierV2 | None' = None, timeout_seconds: 'float' = 30.0, memory: 'ConstraintMemory | None' = None, template_library: 'ConstraintTemplateLibrary | None' = None, session_memory: 'Any | None' = None, constraint_memory: 'Any | None' = None, nup_probe: 'Any | None' = None, nup_probe_threshold: 'float' = 0.5, enable_constraint_accumulation: 'bool' = False, second_model_spec: 'dict[str, str] | None' = None, and_compose_verifier: 'Any | None' = None, probability_calibration_verifier: 'ProbabilityCalibrationVerifier | None' = None, casal_tier: 'Any | None' = None, interwhen_monitor: 'Any | None' = None, use_hardnet: 'bool' = False, use_odar: 'bool' = False, odar_risk_threshold: 'float' = 0.5, odar_router: 'Any | None' = None, routing_mode: 'str' = 'argmax', balance_ratio: 'float' = 1.0, jepa_fast_path_predictor: 'Any | None' = None, jepa_fast_path_threshold: 'float' = 0.2, learning_mode: 'bool' = False, n_learning_cycles: 'int' = 3, enable_abductive_csp: 'bool' = False, fr11_shadow_adapter_enabled: 'bool | None' = None, fr11_shadow_ledger_path: 'str | os.PathLike[str] | None' = None, fr11_shadow_checkpoint_path: 'str | os.PathLike[str] | None' = None, fr11_shadow_adapter: 'Any | None' = None, fr11_factor_cache_shadow_adapter_enabled: 'bool' = False, fr11_factor_cache_shadow_ledger_path: 'str | os.PathLike[str] | None' = None, fr11_factor_cache_shadow_checkpoint_path: 'str | os.PathLike[str] | None' = None, fr11_factor_cache_shadow_adapter: 'Any | None' = None) -> 'None'",
+    "default_output_hash": "sha256:c43108b015224100c5e1e8d819e975f77ba4ba8d8f9c0d6b36edb1ecd29378c2",
+    "default_output_rows": [
+      {
+        "certificate": {
+          "n_constraints": 1,
+          "n_violations": 0,
+          "per_constraint": [],
+          "semantic_verifier_v2": {
+            "claim_results": [
+              {
+                "answer_target_coverage": 1.0,
+                "claim_id": "cl1",
+                "is_final": false,
+                "legacy_violation_types": [],
+                "matched_clause_ids": [],
+                "missing_clause_ids": [],
+                "missing_target_keywords": [],
+                "monitorability_confidence": 0.9,
+                "premise_support": 1.0,
+                "semantic_error_probability": 0.063,
+                "status": "supported",
+                "supporting_claim_ids": [],
+                "text": "The answer is 47 + 28 = 75."
+              },
+              {
+                "answer_target_coverage": 1.0,
+                "claim_id": "final_answer",
+                "is_final": true,
+                "legacy_violation_types": [],
+                "matched_clause_ids": [],
+                "missing_clause_ids": [],
+                "missing_target_keywords": [],
+                "monitorability_confidence": 0.9,
+                "premise_support": 1.0,
+                "semantic_error_probability": 0.063,
+                "status": "supported",
+                "supporting_claim_ids": [],
+                "text": "The answer is 47 + 28 = 75."
+              }
+            ],
+            "claims": [
+              {
+                "claim_id": "cl1",
+                "is_final": false,
+                "keywords": [],
+                "normalized_value": 47,
+                "quantities": [
+                  "47",
+                  "28",
+                  "75"
+                ],
+                "text": "The answer is 47 + 28 = 75."
+              },
+              {
+                "claim_id": "final_answer",
+                "is_final": true,
+                "keywords": [],
+                "normalized_value": 47,
+                "quantities": [
+                  "47",
+                  "28",
+                  "75"
+                ],
+                "text": "The answer is 47 + 28 = 75."
+              }
+            ],
+            "focus_claim_id": "final_answer",
+            "legacy_violation_types": [],
+            "monitorability_confidence": 0.9,
+            "question_profile": {
+              "is_code_like": false,
+              "prompt_clauses": [],
+              "question": "What is 47 + 28?",
+              "target_clause": {
+                "clause_id": "target",
+                "focus_keywords": [],
+                "keywords": [],
+                "quantities": [
+                  "47",
+                  "28"
+                ],
+                "role": "target",
+                "text": "What is 47 + 28?"
+              },
+              "target_cues": [],
+              "target_keywords": []
+            },
+            "recommended_response_mode": "grammar_gated_json",
+            "response_mode": "fallback_text",
+            "run_date": "20260413",
+            "semantic_error_probability": 0.063,
+            "thresholds": {
+              "calibration_rows": 568,
+              "min_monitorability_confidence": 0.35,
+              "source_run_date": "20260413",
+              "support_max_error_probability": 0.125,
+              "violation_min_error_probability": 0.48125
+            },
+            "verdict": "supported"
+          },
+          "total_energy": 0.0
+        },
+        "energy": 0.0,
+        "fixture_id": "arithmetic-pass",
+        "mode": "FULL",
+        "skipped": false,
+        "verified": true,
+        "violations": []
+      },
+      {
+        "certificate": {
+          "n_constraints": 1,
+          "n_violations": 1,
+          "per_constraint": [],
+          "semantic_verifier_v2": {
+            "claim_results": [
+              {
+                "answer_target_coverage": 1.0,
+                "claim_id": "cl1",
+                "is_final": false,
+                "legacy_violation_types": [],
+                "matched_clause_ids": [],
+                "missing_clause_ids": [],
+                "missing_target_keywords": [],
+                "monitorability_confidence": 0.9,
+                "premise_support": 1.0,
+                "semantic_error_probability": 0.063,
+                "status": "supported",
+                "supporting_claim_ids": [],
+                "text": "The answer is 47 + 28 = 76."
+              },
+              {
+                "answer_target_coverage": 1.0,
+                "claim_id": "final_answer",
+                "is_final": true,
+                "legacy_violation_types": [],
+                "matched_clause_ids": [],
+                "missing_clause_ids": [],
+                "missing_target_keywords": [],
+                "monitorability_confidence": 0.9,
+                "premise_support": 1.0,
+                "semantic_error_probability": 0.063,
+                "status": "supported",
+                "supporting_claim_ids": [],
+                "text": "The answer is 47 + 28 = 76."
+              }
+            ],
+            "claims": [
+              {
+                "claim_id": "cl1",
+                "is_final": false,
+                "keywords": [],
+                "normalized_value": 47,
+                "quantities": [
+                  "47",
+                  "28",
+                  "76"
+                ],
+                "text": "The answer is 47 + 28 = 76."
+              },
+              {
+                "claim_id": "final_answer",
+                "is_final": true,
+                "keywords": [],
+                "normalized_value": 47,
+                "quantities": [
+                  "47",
+                  "28",
+                  "76"
+                ],
+                "text": "The answer is 47 + 28 = 76."
+              }
+            ],
+            "focus_claim_id": "final_answer",
+            "legacy_violation_types": [],
+            "monitorability_confidence": 0.9,
+            "question_profile": {
+              "is_code_like": false,
+              "prompt_clauses": [],
+              "question": "What is 47 + 28?",
+              "target_clause": {
+                "clause_id": "target",
+                "focus_keywords": [],
+                "keywords": [],
+                "quantities": [
+                  "47",
+                  "28"
+                ],
+                "role": "target",
+                "text": "What is 47 + 28?"
+              },
+              "target_cues": [],
+              "target_keywords": []
+            },
+            "recommended_response_mode": "grammar_gated_json",
+            "response_mode": "fallback_text",
+            "run_date": "20260413",
+            "semantic_error_probability": 0.063,
+            "thresholds": {
+              "calibration_rows": 568,
+              "min_monitorability_confidence": 0.35,
+              "source_run_date": "20260413",
+              "support_max_error_probability": 0.125,
+              "violation_min_error_probability": 0.48125
+            },
+            "verdict": "supported"
+          },
+          "total_energy": 0.0
+        },
+        "energy": 0.0,
+        "fixture_id": "arithmetic-fail",
+        "mode": "FULL",
+        "skipped": false,
+        "verified": false,
+        "violations": [
+          "arithmetic"
+        ]
+      },
+      {
+        "certificate": {
+          "n_constraints": 0,
+          "n_violations": 0,
+          "per_constraint": [],
+          "semantic_verifier_v2": {
+            "claim_results": [
+              {
+                "answer_target_coverage": 0.0,
+                "claim_id": "cl1",
+                "is_final": false,
+                "legacy_violation_types": [],
+                "matched_clause_ids": [],
+                "missing_clause_ids": [],
+                "missing_target_keywords": [
+                  "state",
+                  "fact"
+                ],
+                "monitorability_confidence": 0.9,
+                "premise_support": 1.0,
+                "semantic_error_probability": 0.243,
+                "status": "abstain",
+                "supporting_claim_ids": [],
+                "text": "No arithmetic here."
+              },
+              {
+                "answer_target_coverage": 0.0,
+                "claim_id": "final_answer",
+                "is_final": true,
+                "legacy_violation_types": [],
+                "matched_clause_ids": [],
+                "missing_clause_ids": [],
+                "missing_target_keywords": [
+                  "state",
+                  "fact"
+                ],
+                "monitorability_confidence": 0.9,
+                "premise_support": 1.0,
+                "semantic_error_probability": 0.333,
+                "status": "abstain",
+                "supporting_claim_ids": [],
+                "text": "No arithmetic here."
+              }
+            ],
+            "claims": [
+              {
+                "claim_id": "cl1",
+                "is_final": false,
+                "keywords": [
+                  "no",
+                  "arithmetic"
+                ],
+                "normalized_value": "No arithmetic here.",
+                "quantities": [],
+                "text": "No arithmetic here."
+              },
+              {
+                "claim_id": "final_answer",
+                "is_final": true,
+                "keywords": [
+                  "no",
+                  "arithmetic"
+                ],
+                "normalized_value": "No arithmetic here.",
+                "quantities": [],
+                "text": "No arithmetic here."
+              }
+            ],
+            "focus_claim_id": "final_answer",
+            "legacy_violation_types": [],
+            "monitorability_confidence": 0.9,
+            "question_profile": {
+              "is_code_like": false,
+              "prompt_clauses": [],
+              "question": "State a fact.",
+              "target_clause": {
+                "clause_id": "target",
+                "focus_keywords": [
+                  "state",
+                  "fact"
+                ],
+                "keywords": [
+                  "state",
+                  "fact"
+                ],
+                "quantities": [],
+                "role": "target",
+                "text": "State a fact."
+              },
+              "target_cues": [],
+              "target_keywords": [
+                "state",
+                "fact"
+              ]
+            },
+            "recommended_response_mode": "grammar_gated_json",
+            "response_mode": "fallback_text",
+            "run_date": "20260413",
+            "semantic_error_probability": 0.333,
+            "thresholds": {
+              "calibration_rows": 568,
+              "min_monitorability_confidence": 0.35,
+              "source_run_date": "20260413",
+              "support_max_error_probability": 0.125,
+              "violation_min_error_probability": 0.48125
+            },
+            "verdict": "abstain"
+          },
+          "total_energy": 0.0
+        },
+        "energy": 0.0,
+        "fixture_id": "nl-vacuous",
+        "mode": "FULL",
+        "skipped": false,
+        "verified": true,
+        "violations": []
+      }
+    ],
+    "exact_checker_path": "VerifyRepairPipeline._evaluate_constraints",
+    "import_ok": true,
+    "memory_options": {
+      "constraint_memory": "optional",
+      "fr11_factor_cache_shadow_adapter_enabled": "explicit_default_false"
+    },
+    "pipeline_class": "carnot.pipeline.verify_repair.VerifyRepairPipeline",
+    "verify_signature": "(self, question: 'str', response: 'str', domain: 'str | None' = None, tracker: 'ConstraintTracker | None' = None, jepa_predictor: 'Any' = None, jepa_threshold: 'float' = 0.5, think_probe: 'Any' = None, hallufield_detector: 'Any' = None, semantic_energy_probe: 'Any' = None, embedding_constraint_store: 'EmbeddingConstraintStore | None' = None, ising_constraint_injector: 'IsingConstraintInjector | None' = None, use_fst: 'bool' = False, fst_trainer: 'Any' = None, use_odar: 'bool' = False, odar_risk_threshold: 'float | None' = None, odar_router: 'Any | None' = None) -> 'VerificationResult'"
+  },
+  "default_off_compatibility_rows": {
+    "all_public_outputs_match": true,
+    "disabled_ledger_write_count": 0,
+    "row_count": 6,
+    "row_hash": "sha256:847c263873c6a716facf1c0e6f1f608e0756d1f7a541f4276a53456f58edf41a",
+    "rows": [
+      {
+        "baseline_hash": "sha256:40700b1e5f0041b2a94aa0b0dc176d5cef13815c891a49f97fe460c578db2948",
+        "fixture_id": "arithmetic-pass",
+        "ledger_written": false,
+        "mode": "no_adapter",
+        "output_hash": "sha256:40700b1e5f0041b2a94aa0b0dc176d5cef13815c891a49f97fe460c578db2948",
+        "public_outputs_match": true
+      },
+      {
+        "baseline_hash": "sha256:2ce4682349875b8382a4435becebfc3c0e0cd47a772301b92b0bc93114f5c093",
+        "fixture_id": "arithmetic-fail",
+        "ledger_written": false,
+        "mode": "no_adapter",
+        "output_hash": "sha256:2ce4682349875b8382a4435becebfc3c0e0cd47a772301b92b0bc93114f5c093",
+        "public_outputs_match": true
+      },
+      {
+        "baseline_hash": "sha256:6992f886ce01d23ff6666232822efa0fd968b6415c2154810b85620325e19549",
+        "fixture_id": "nl-vacuous",
+        "ledger_written": false,
+        "mode": "no_adapter",
+        "output_hash": "sha256:6992f886ce01d23ff6666232822efa0fd968b6415c2154810b85620325e19549",
+        "public_outputs_match": true
+      },
+      {
+        "baseline_hash": "sha256:40700b1e5f0041b2a94aa0b0dc176d5cef13815c891a49f97fe460c578db2948",
+        "fixture_id": "arithmetic-pass",
+        "ledger_written": false,
+        "mode": "disabled",
+        "output_hash": "sha256:40700b1e5f0041b2a94aa0b0dc176d5cef13815c891a49f97fe460c578db2948",
+        "public_outputs_match": true
+      },
+      {
+        "baseline_hash": "sha256:2ce4682349875b8382a4435becebfc3c0e0cd47a772301b92b0bc93114f5c093",
+        "fixture_id": "arithmetic-fail",
+        "ledger_written": false,
+        "mode": "disabled",
+        "output_hash": "sha256:2ce4682349875b8382a4435becebfc3c0e0cd47a772301b92b0bc93114f5c093",
+        "public_outputs_match": true
+      },
+      {
+        "baseline_hash": "sha256:6992f886ce01d23ff6666232822efa0fd968b6415c2154810b85620325e19549",
+        "fixture_id": "nl-vacuous",
+        "ledger_written": false,
+        "mode": "disabled",
+        "output_hash": "sha256:6992f886ce01d23ff6666232822efa0fd968b6415c2154810b85620325e19549",
+        "public_outputs_match": true
+      }
+    ]
+  },
+  "duration_s": 0.207587,
+  "exact_write_admission_rows": {
+    "admitted_write_count": 0,
+    "all_writes_checked_before_admit": true,
+    "all_writes_have_prior_exact_receipt": true,
+    "rejected_case_count": 5,
+    "row_hash": "sha256:76ab027fb032e1ab2deb1e4bd23e61accb65ed6113bf541ab6ecf91e6db4bd18",
+    "rows": [
+      {
+        "adapter_api_schema_hash": "sha256:0fda2f136dcf1607125343f6828d33d36352e670b6eb4668263cf5ce5666c55d",
+        "adapter_api_version": "carnot.fr11.factor_cache_shadow_adapter.v1",
+        "cache_write": {
+          "exact_outcome_direction_authority": true,
+          "magnitude": 0.2,
+          "model_confidence_direction_authority": false,
+          "post_cache_hash": "sha256:3106adf9dd59cf1a174c7b9ef8a496b14da918684103d7095d32e75d580e535f",
+          "pre_cache_hash": "sha256:3106adf9dd59cf1a174c7b9ef8a496b14da918684103d7095d32e75d580e535f",
+          "touched_features": [
+            "verified_binding"
+          ],
+          "update_sign": 1,
+          "write_admitted": false
+        },
+        "case": "exact_admitted",
+        "chronology_index": 0,
+        "event_id": "admit-1",
+        "exact_admission": {
+          "admitted": false,
+          "checker_authority_passed": true,
+          "checker_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "checker_ran_before_write": true,
+          "exact_outcome": "pass",
+          "exact_receipt_hash": "sha256:cdb4ba998cd445a94b678228944cb92035e3e17350fed308d02e83917a1ff99f",
+          "prior_exact_receipt": true,
+          "reject_reason": "duplicate_event_id"
+        },
+        "mode": "shadow",
+        "raw_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "release_authority": "exact_verifier",
+        "row_hash": "sha256:79afcc6d05fed3bebc0a10d712e69b5e1da8bf12f24a9dbd46c87370fc8e988d",
+        "shadow_rank": {
+          "factor_id": "arithmetic:verified_binding",
+          "features": [
+            "verified_binding"
+          ],
+          "proposed_rank_delta": 0.2,
+          "reason": "shadow_only_exact_outcome_rank",
+          "recommendation": "rank"
+        },
+        "unit_binding": "unit-a"
+      },
+      {
+        "adapter_api_schema_hash": "sha256:0fda2f136dcf1607125343f6828d33d36352e670b6eb4668263cf5ce5666c55d",
+        "adapter_api_version": "carnot.fr11.factor_cache_shadow_adapter.v1",
+        "cache_write": {
+          "exact_outcome_direction_authority": true,
+          "magnitude": 0.2,
+          "model_confidence_direction_authority": false,
+          "post_cache_hash": "sha256:3106adf9dd59cf1a174c7b9ef8a496b14da918684103d7095d32e75d580e535f",
+          "pre_cache_hash": "sha256:3106adf9dd59cf1a174c7b9ef8a496b14da918684103d7095d32e75d580e535f",
+          "touched_features": [
+            "verified_binding"
+          ],
+          "update_sign": 1,
+          "write_admitted": false
+        },
+        "case": "duplicate_event_id",
+        "chronology_index": 1,
+        "event_id": "write-before-check",
+        "exact_admission": {
+          "admitted": false,
+          "checker_authority_passed": true,
+          "checker_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "checker_ran_before_write": false,
+          "exact_outcome": "pass",
+          "exact_receipt_hash": "sha256:a58fb346746253d2471164b2fd1267572753bd26db3f64cbfc785c19446742d6",
+          "prior_exact_receipt": true,
+          "reject_reason": "duplicate_event_id"
+        },
+        "mode": "shadow",
+        "raw_hash": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "release_authority": "exact_verifier",
+        "row_hash": "sha256:1021a5b26eff81e362fc6babff11eeded1fb58ffb767d1a9d10de33a88c31407",
+        "shadow_rank": {
+          "factor_id": "arithmetic:verified_binding",
+          "features": [
+            "verified_binding"
+          ],
+          "proposed_rank_delta": 0.2,
+          "reason": "shadow_only_exact_outcome_rank",
+          "recommendation": "rank"
+        },
+        "unit_binding": "unit-a"
+      },
+      {
+        "adapter_api_schema_hash": "sha256:0fda2f136dcf1607125343f6828d33d36352e670b6eb4668263cf5ce5666c55d",
+        "adapter_api_version": "carnot.fr11.factor_cache_shadow_adapter.v1",
+        "cache_write": {
+          "exact_outcome_direction_authority": true,
+          "magnitude": 0.2,
+          "model_confidence_direction_authority": false,
+          "post_cache_hash": "sha256:3106adf9dd59cf1a174c7b9ef8a496b14da918684103d7095d32e75d580e535f",
+          "pre_cache_hash": "sha256:3106adf9dd59cf1a174c7b9ef8a496b14da918684103d7095d32e75d580e535f",
+          "touched_features": [
+            "verified_binding"
+          ],
+          "update_sign": 1,
+          "write_admitted": false
+        },
+        "case": "duplicate_event_id",
+        "chronology_index": 2,
+        "event_id": "wrong-unit",
+        "exact_admission": {
+          "admitted": false,
+          "checker_authority_passed": true,
+          "checker_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "checker_ran_before_write": true,
+          "exact_outcome": "pass",
+          "exact_receipt_hash": "sha256:cdb4ba998cd445a94b678228944cb92035e3e17350fed308d02e83917a1ff99f",
+          "prior_exact_receipt": true,
+          "reject_reason": "duplicate_event_id"
+        },
+        "mode": "shadow",
+        "raw_hash": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+        "release_authority": "exact_verifier",
+        "row_hash": "sha256:2439153b1c061f57f08c54e378f3c39d1e2adfec3fa76dd2b4d125e02efe2220",
+        "shadow_rank": {
+          "factor_id": "arithmetic:verified_binding",
+          "features": [
+            "verified_binding"
+          ],
+          "proposed_rank_delta": 0.2,
+          "reason": "shadow_only_exact_outcome_rank",
+          "recommendation": "rank"
+        },
+        "unit_binding": "unit-a"
+      },
+      {
+        "adapter_api_schema_hash": "sha256:0fda2f136dcf1607125343f6828d33d36352e670b6eb4668263cf5ce5666c55d",
+        "adapter_api_version": "carnot.fr11.factor_cache_shadow_adapter.v1",
+        "cache_write": {
+          "exact_outcome_direction_authority": true,
+          "magnitude": 0.2,
+          "model_confidence_direction_authority": false,
+          "post_cache_hash": "sha256:3106adf9dd59cf1a174c7b9ef8a496b14da918684103d7095d32e75d580e535f",
+          "pre_cache_hash": "sha256:3106adf9dd59cf1a174c7b9ef8a496b14da918684103d7095d32e75d580e535f",
+          "touched_features": [
+            "verified_binding"
+          ],
+          "update_sign": 1,
+          "write_admitted": false
+        },
+        "case": "duplicate_event_id",
+        "chronology_index": 3,
+        "event_id": "forged-pass",
+        "exact_admission": {
+          "admitted": false,
+          "checker_authority_passed": true,
+          "checker_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "checker_ran_before_write": true,
+          "exact_outcome": "pass",
+          "exact_receipt_hash": "sha256:1ae5a014dbaa261b823e7ba51361a11630543c31678813d8b9934db694780b51",
+          "prior_exact_receipt": true,
+          "reject_reason": "duplicate_event_id"
+        },
+        "mode": "shadow",
+        "raw_hash": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+        "release_authority": "exact_verifier",
+        "row_hash": "sha256:a9dfb6c521726a4232a8d5b5a56c1690f8c3cbd1a3e3d7a96c420f6014fd2b76",
+        "shadow_rank": {
+          "factor_id": "arithmetic:verified_binding",
+          "features": [
+            "verified_binding"
+          ],
+          "proposed_rank_delta": 0.2,
+          "reason": "shadow_only_exact_outcome_rank",
+          "recommendation": "rank"
+        },
+        "unit_binding": "unit-a"
+      },
+      {
+        "adapter_api_schema_hash": "sha256:0fda2f136dcf1607125343f6828d33d36352e670b6eb4668263cf5ce5666c55d",
+        "adapter_api_version": "carnot.fr11.factor_cache_shadow_adapter.v1",
+        "cache_write": {
+          "exact_outcome_direction_authority": true,
+          "magnitude": 0.2,
+          "model_confidence_direction_authority": false,
+          "post_cache_hash": "sha256:3106adf9dd59cf1a174c7b9ef8a496b14da918684103d7095d32e75d580e535f",
+          "pre_cache_hash": "sha256:3106adf9dd59cf1a174c7b9ef8a496b14da918684103d7095d32e75d580e535f",
+          "touched_features": [
+            "verified_binding"
+          ],
+          "update_sign": 1,
+          "write_admitted": false
+        },
+        "case": "self_signed_receipt",
+        "chronology_index": 4,
+        "event_id": "self-signed",
+        "exact_admission": {
+          "admitted": false,
+          "checker_authority_passed": true,
+          "checker_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "checker_ran_before_write": true,
+          "exact_outcome": "pass",
+          "exact_receipt_hash": "sha256:cdb4ba998cd445a94b678228944cb92035e3e17350fed308d02e83917a1ff99f",
+          "prior_exact_receipt": true,
+          "reject_reason": "self_signed_receipt"
+        },
+        "mode": "shadow",
+        "raw_hash": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+        "release_authority": "exact_verifier",
+        "row_hash": "sha256:4524448012b9204b7affa0876d45edc1aa8891f1c1cbd02f8c57ee4da3e71366",
+        "shadow_rank": {
+          "factor_id": "arithmetic:verified_binding",
+          "features": [
+            "verified_binding"
+          ],
+          "proposed_rank_delta": 0.2,
+          "reason": "shadow_only_exact_outcome_rank",
+          "recommendation": "rank"
+        },
+        "unit_binding": "unit-a"
+      }
+    ]
+  },
+  "factor_cache_shadow_adapter_ready_score": 1.0,
+  "field_principles": {
+    "adapter_api_and_schema_hash": "A versioned interface prevents later cache implementations from silently changing lifecycle semantics.",
+    "aggregate_row_recomputation": "Row reduction catches a ready summary with a hidden compatibility or admission failure.",
+    "attack_matrix": "Release, admission, identity, restart, and default-on attacks test the production boundary.",
+    "baseline_import_and_output_receipts": "Pre-change receipts define the compatibility target for default-off behavior.",
+    "default_off_compatibility_rows": "Matched rows prove existing callers retain the same decisions and public outputs.",
+    "duration_s": "Wall time catches adapter artifacts emitted without integration and lifecycle tests.",
+    "exact_write_admission_rows": "Event and checker receipts prove every admitted write followed exact validation.",
+    "factor_cache_shadow_adapter_ready_score": "A conjunctive gate blocks live self-learning until default-off and exact-authority contracts hold.",
+    "field_principles": "A principle map preserves backward-compatibility and authority intent.",
+    "field_provenance": "Code hashes, fixture IDs, event receipts, and test outputs make every field traceable.",
+    "gate_check_summary": "A blocked integration must name the failed API, compatibility, lifecycle, or authority check.",
+    "honest_verdict": "The verdict states whether default-off shadow integration shipped without implying a future-yield gain.",
+    "inference_substrate": "Declaring deterministic_pipeline_integration_no_llm prevents fixtures from being reported as local model inference.",
+    "per_unit_rows": "One row per fixture, mode, and attack makes compatibility and authority checks reproducible.",
+    "persistence_rollback_and_tombstone_receipts": "Lifecycle receipts prevent restart or eviction from resurrecting revoked factors.",
+    "preconditions_checked": "API, import, test, and exact-checker receipts prove the live surface was understood before editing.",
+    "protected_files_unchanged": "Integration must not modify the conductor, public ARC registry, or unrelated protected records.",
+    "random_seed": "A fixed seed reproduces fixture order and cache attack sequences.",
+    "reproducibility_checksum": "The checksum binds adapter code, baseline receipts, fixtures, tests, and result.",
+    "shadow_decision_rows": "Shadow rows show proposed influence without confusing it with executed release behavior.",
+    "status": "A terminal status distinguishes shipped integration from a partial adapter scaffold.",
+    "tests_run": "Recorded commands prove unit, integration, and E2E compatibility checks ran.",
+    "verifier_is_oracle": "Only existing exact checkers authorize release and cache writes; the adapter never does."
+  },
+  "field_provenance": {
+    "adapter_api_and_schema_hash": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "aggregate_row_recomputation": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "attack_matrix": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "baseline_import_and_output_receipts": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "default_off_compatibility_rows": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "duration_s": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "exact_write_admission_rows": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "factor_cache_shadow_adapter_ready_score": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "field_principles": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "field_provenance": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "gate_check_summary": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "honest_verdict": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "inference_substrate": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "per_unit_rows": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "persistence_rollback_and_tombstone_receipts": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "preconditions_checked": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "protected_files_unchanged": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "random_seed": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "reproducibility_checksum": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "shadow_decision_rows": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "status": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "tests_run": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ],
+    "verifier_is_oracle": [
+      "REQ-PIPELINE-6479",
+      "REQ-LEARN-6479",
+      "focused factor-cache shadow adapter tests",
+      "VerifyRepairPipeline fixture rows"
+    ]
+  },
+  "gate_check_summary": {
+    "failed_check_count": 0,
+    "failed_checks": [],
+    "gates": {
+      "api": true,
+      "attack_matrix": true,
+      "baseline": true,
+      "default_off_compatibility": true,
+      "exact_write_admission": true,
+      "persistence": true,
+      "protected_files": true,
+      "shadow_public_outputs": true,
+      "tests": true,
+      "verifier_oracle_scope": true
+    }
+  },
+  "honest_verdict": "success: default-off verify-repair factor-cache shadow adapter shipped",
+  "inference_substrate": "deterministic_pipeline_integration_no_llm",
+  "per_unit_rows": {
+    "row_count": 20,
+    "row_hash": "sha256:619d07c60fd8ec1a5b59e87ab99f007d670ad1994d285de6aa39eae7f6b6abeb",
+    "rows": [
+      {
+        "baseline_hash": "sha256:40700b1e5f0041b2a94aa0b0dc176d5cef13815c891a49f97fe460c578db2948",
+        "fixture_id": "arithmetic-pass",
+        "ledger_written": false,
+        "mode": "no_adapter",
+        "output_hash": "sha256:40700b1e5f0041b2a94aa0b0dc176d5cef13815c891a49f97fe460c578db2948",
+        "public_outputs_match": true,
+        "row_kind": "compatibility"
+      },
+      {
+        "baseline_hash": "sha256:2ce4682349875b8382a4435becebfc3c0e0cd47a772301b92b0bc93114f5c093",
+        "fixture_id": "arithmetic-fail",
+        "ledger_written": false,
+        "mode": "no_adapter",
+        "output_hash": "sha256:2ce4682349875b8382a4435becebfc3c0e0cd47a772301b92b0bc93114f5c093",
+        "public_outputs_match": true,
+        "row_kind": "compatibility"
+      },
+      {
+        "baseline_hash": "sha256:6992f886ce01d23ff6666232822efa0fd968b6415c2154810b85620325e19549",
+        "fixture_id": "nl-vacuous",
+        "ledger_written": false,
+        "mode": "no_adapter",
+        "output_hash": "sha256:6992f886ce01d23ff6666232822efa0fd968b6415c2154810b85620325e19549",
+        "public_outputs_match": true,
+        "row_kind": "compatibility"
+      },
+      {
+        "baseline_hash": "sha256:40700b1e5f0041b2a94aa0b0dc176d5cef13815c891a49f97fe460c578db2948",
+        "fixture_id": "arithmetic-pass",
+        "ledger_written": false,
+        "mode": "disabled",
+        "output_hash": "sha256:40700b1e5f0041b2a94aa0b0dc176d5cef13815c891a49f97fe460c578db2948",
+        "public_outputs_match": true,
+        "row_kind": "compatibility"
+      },
+      {
+        "baseline_hash": "sha256:2ce4682349875b8382a4435becebfc3c0e0cd47a772301b92b0bc93114f5c093",
+        "fixture_id": "arithmetic-fail",
+        "ledger_written": false,
+        "mode": "disabled",
+        "output_hash": "sha256:2ce4682349875b8382a4435becebfc3c0e0cd47a772301b92b0bc93114f5c093",
+        "public_outputs_match": true,
+        "row_kind": "compatibility"
+      },
+      {
+        "baseline_hash": "sha256:6992f886ce01d23ff6666232822efa0fd968b6415c2154810b85620325e19549",
+        "fixture_id": "nl-vacuous",
+        "ledger_written": false,
+        "mode": "disabled",
+        "output_hash": "sha256:6992f886ce01d23ff6666232822efa0fd968b6415c2154810b85620325e19549",
+        "public_outputs_match": true,
+        "row_kind": "compatibility"
+      },
+      {
+        "exact_admitted": false,
+        "fixture_id": "arithmetic-pass",
+        "mode": "enabled_shadow",
+        "pipeline_verified": true,
+        "public_outputs_match": true,
+        "row_hash": "sha256:402b2f5368356c5853a38bb7a5bca1cdfdf71b3c74059251de86cf02e7f4d4db",
+        "row_kind": "shadow",
+        "shadow_recommendation": "rank",
+        "shadow_release_authority": "exact_verifier",
+        "write_admitted": false
+      },
+      {
+        "exact_admitted": false,
+        "fixture_id": "arithmetic-fail",
+        "mode": "enabled_shadow",
+        "pipeline_verified": false,
+        "public_outputs_match": true,
+        "row_hash": "sha256:73186dded1a6cacc83593957be11be78cdc7d5b36dba0a67a31db2bc8372e2bb",
+        "row_kind": "shadow",
+        "shadow_recommendation": "rank",
+        "shadow_release_authority": "exact_verifier",
+        "write_admitted": false
+      },
+      {
+        "exact_admitted": false,
+        "fixture_id": "nl-vacuous",
+        "mode": "enabled_shadow",
+        "pipeline_verified": true,
+        "public_outputs_match": true,
+        "row_hash": "sha256:24f95851c014655d4d261eefdecc7d55dea9c289c6e02bcf0a964b7e147c7955",
+        "row_kind": "shadow",
+        "shadow_recommendation": "rank",
+        "shadow_release_authority": "exact_verifier",
+        "write_admitted": false
+      },
+      {
+        "exact_admitted": false,
+        "fixture_id": "arithmetic-fail",
+        "mode": "forged_adapter",
+        "pipeline_verified": false,
+        "public_outputs_match": true,
+        "row_hash": "sha256:14f7f908365941db8dc86d7089846313496d0f8c7bc72f8774899a9421aa2df3",
+        "row_kind": "shadow",
+        "shadow_recommendation": "abstain",
+        "shadow_release_authority": "exact_verifier",
+        "write_admitted": false
+      },
+      {
+        "attack_id": "release_bypass",
+        "fail_closed": true,
+        "reason": "shadow write did not change exact release decision",
+        "row_kind": "attack",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "write_before_check",
+        "fail_closed": true,
+        "reason": "duplicate_event_id",
+        "row_kind": "attack",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "duplicate_event_id",
+        "fail_closed": true,
+        "reason": "duplicate_event_id",
+        "row_kind": "attack",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "duplicate_raw_event",
+        "fail_closed": true,
+        "reason": "duplicate_event_id",
+        "row_kind": "attack",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "wrong_unit",
+        "fail_closed": true,
+        "reason": "duplicate_event_id",
+        "row_kind": "attack",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "forged_pass",
+        "fail_closed": true,
+        "reason": "duplicate_event_id",
+        "row_kind": "attack",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "stale_cache",
+        "fail_closed": true,
+        "reason": "duplicate_event_id",
+        "row_kind": "attack",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "tombstone_eviction",
+        "fail_closed": true,
+        "reason": "tombstoned_event",
+        "row_kind": "attack",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "adapter_exception",
+        "fail_closed": true,
+        "reason": "adapter_exception",
+        "row_kind": "attack",
+        "status": "failed_closed"
+      },
+      {
+        "attack_id": "default_on_environment_leakage",
+        "fail_closed": true,
+        "reason": "environment_variable_did_not_enable_factor_cache",
+        "row_kind": "attack",
+        "status": "failed_closed"
+      }
+    ]
+  },
+  "persistence_rollback_and_tombstone_receipts": {
+    "checkpoint_present": true,
+    "ledger_row_count": 8,
+    "non_resurrection_after_load": true,
+    "post_load_summary": {
+      "active_cache_hashes": [],
+      "admitted_write_count": 1,
+      "ledger_tail_hash": "sha256:ee85bb81b83196cc0f3be17d444679ab9a0493d61800a232551c4fee438ff94d",
+      "quarantine_count": 3,
+      "rollback_count": 2,
+      "rollback_hashes": [
+        "sha256:b2feab0f2cf86b98a58b7b38f25235094198d49b776e673c6e6a5577b70f1b3a",
+        "sha256:f0e66451c7d41db5a3ef70621b48877eeeab2f0128ea0504e1cd88d52f65e829"
+      ],
+      "sequence": 8,
+      "state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "tombstone_count": 1,
+      "tombstone_hashes": [
+        "sha256:a1474255d44c7253bcdae8e9369ee7182127b92ebe491038536d7f2b8f8cd941"
+      ],
+      "tombstoned_event_ids": [
+        "life-1"
+      ]
+    },
+    "replay_reject_reason": "tombstoned_event",
+    "rollback": {
+      "reason": "tombstone_eviction",
+      "rollback_hash": "sha256:b2feab0f2cf86b98a58b7b38f25235094198d49b776e673c6e6a5577b70f1b3a",
+      "state_hash_after": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "state_hash_before": "sha256:f1bdf43d8326433390a0f1e51f16375cc7bd7128176519db8902949a1e970607",
+      "target_cache_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "row_hash": "sha256:eced2982b6556aace3b77c8ade72409633867adaa4eff4fe377a172ca9d00ff7",
+    "tombstone": {
+      "event_id": "life-1",
+      "reason": "tombstone_eviction",
+      "rejected_cache_hash": "",
+      "state_hash_before": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "tombstone_hash": "sha256:a1474255d44c7253bcdae8e9369ee7182127b92ebe491038536d7f2b8f8cd941"
+    }
+  },
+  "preconditions_checked": {
+    "api_signature_recorded": true,
+    "date_ok": true,
+    "exact_checker_path_recorded": true,
+    "expected_planning_date": "20260821",
+    "memory_options_recorded": true,
+    "planning_date": "20260821",
+    "prior_v556_artifact_hashes": {
+      "results/experiment_6468_unique_event_verifier_bounded_csl.json": "sha256:c96c3f73ada25b2280f5a48de67df2c0005b374806481f68fce5c89caf726fab",
+      "results/experiment_6469_unique_event_csl_corruption_restart.json": "sha256:a4edf42cc67255531f042d63b770c5401cc56f841ac75525dc91bae774c97641"
+    },
+    "protected_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:a83fd2cd8861f4435ceab25a3945284a118ea4165d4716116a450cfbfcff9a48",
+      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+      "results/experiment_6468_unique_event_verifier_bounded_csl.json": "sha256:c96c3f73ada25b2280f5a48de67df2c0005b374806481f68fce5c89caf726fab",
+      "results/experiment_6469_unique_event_csl_corruption_restart.json": "sha256:a4edf42cc67255531f042d63b770c5401cc56f841ac75525dc91bae774c97641",
+      "results/experiment_6470_independent_unique_event_csl_audit.json": "sha256:6eba33eaae7425c5b582e6c29cf04049304a0b8a3c85be98d961c97c9fdb26d0",
+      "scripts/research_conductor.py": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb"
+    },
+    "source_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/continuous-learning/spec.md": "sha256:2a132d8309740409e19a4a64de687a6d2ad449c4fb89d39232dbd0f2ae497df0",
+      "openspec/capabilities/pipeline/spec.md": "sha256:861f017d9b9932bd4569095b4c11938575f964aac4e89b8f941cccc7fc8be6de",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b",
+      "python/carnot/pipeline/factor_cache_shadow_adapter.py": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b",
+      "python/carnot/pipeline/memory.py": "sha256:fdb10eff9c887a464740b1fb4fda563287e181ba70d89e9324af6c7824e413f3",
+      "python/carnot/pipeline/verify_repair.py": "sha256:88c79ad334f35d1692d8b3a30d4f2cca955e296237f62a9bde9d2014e81c3f6d",
+      "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+      "scripts/adversarial_verify.py": "sha256:cfe3f5740d1bd05b5b8056cc9a78415c3f457d4e2874cbb0e9f6909907e79644",
+      "scripts/verdict_row_consistency_lint.py": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a",
+      "tests/python/test_experiment_6479_verify_repair_factor_cache_shadow_adapter.py": "sha256:691b68e7c64fe1b0fc87c5e1d5fdf2e762934123c8014ae5e0e3feb16c3062fd",
+      "tests/python/test_factor_cache_shadow_adapter.py": "sha256:6ea666a90b100f997676e0bd813d9aed315aa9d105739a4a5c2fda4ba8d6b020"
+    }
+  },
+  "protected_files_unchanged": {
+    "changed_paths": [],
+    "files": {
+      "_bmad/traceability.md": {
+        "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "after": "sha256:a83fd2cd8861f4435ceab25a3945284a118ea4165d4716116a450cfbfcff9a48",
+        "before": "sha256:a83fd2cd8861f4435ceab25a3945284a118ea4165d4716116a450cfbfcff9a48",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "unchanged": true
+      },
+      "results/experiment_6468_unique_event_verifier_bounded_csl.json": {
+        "after": "sha256:c96c3f73ada25b2280f5a48de67df2c0005b374806481f68fce5c89caf726fab",
+        "before": "sha256:c96c3f73ada25b2280f5a48de67df2c0005b374806481f68fce5c89caf726fab",
+        "unchanged": true
+      },
+      "results/experiment_6469_unique_event_csl_corruption_restart.json": {
+        "after": "sha256:a4edf42cc67255531f042d63b770c5401cc56f841ac75525dc91bae774c97641",
+        "before": "sha256:a4edf42cc67255531f042d63b770c5401cc56f841ac75525dc91bae774c97641",
+        "unchanged": true
+      },
+      "results/experiment_6470_independent_unique_event_csl_audit.json": {
+        "after": "sha256:6eba33eaae7425c5b582e6c29cf04049304a0b8a3c85be98d961c97c9fdb26d0",
+        "before": "sha256:6eba33eaae7425c5b582e6c29cf04049304a0b8a3c85be98d961c97c9fdb26d0",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb",
+        "before": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb",
+        "unchanged": true
+      }
+    },
+    "unchanged": true
+  },
+  "random_seed": 6479,
+  "reproducibility_checksum": "sha256:5e46f6ac20db498026e9632c0fba1d9fa6392bbfec8bfda2c8955d063e8c592f",
+  "shadow_decision_rows": {
+    "all_public_outputs_match": true,
+    "enabled_shadow_row_count": 3,
+    "forged_adapter_row_count": 1,
+    "ledger_hash": "sha256:e3ec0fa6e0438836d54ee1f0d85bee2dd50dce335f3f106bcb6f5d829e3ae1c8",
+    "ledger_row_count": 6,
+    "release_decision_changed_count": 0,
+    "row_hash": "sha256:62596bcdc1edff824f7231ff4feb77882c9c250ffff81bc08704a836f88b2c38",
+    "rows": [
+      {
+        "exact_admitted": false,
+        "fixture_id": "arithmetic-pass",
+        "mode": "enabled_shadow",
+        "pipeline_verified": true,
+        "public_outputs_match": true,
+        "row_hash": "sha256:402b2f5368356c5853a38bb7a5bca1cdfdf71b3c74059251de86cf02e7f4d4db",
+        "shadow_recommendation": "rank",
+        "shadow_release_authority": "exact_verifier",
+        "write_admitted": false
+      },
+      {
+        "exact_admitted": false,
+        "fixture_id": "arithmetic-fail",
+        "mode": "enabled_shadow",
+        "pipeline_verified": false,
+        "public_outputs_match": true,
+        "row_hash": "sha256:73186dded1a6cacc83593957be11be78cdc7d5b36dba0a67a31db2bc8372e2bb",
+        "shadow_recommendation": "rank",
+        "shadow_release_authority": "exact_verifier",
+        "write_admitted": false
+      },
+      {
+        "exact_admitted": false,
+        "fixture_id": "nl-vacuous",
+        "mode": "enabled_shadow",
+        "pipeline_verified": true,
+        "public_outputs_match": true,
+        "row_hash": "sha256:24f95851c014655d4d261eefdecc7d55dea9c289c6e02bcf0a964b7e147c7955",
+        "shadow_recommendation": "rank",
+        "shadow_release_authority": "exact_verifier",
+        "write_admitted": false
+      },
+      {
+        "exact_admitted": false,
+        "fixture_id": "arithmetic-fail",
+        "mode": "forged_adapter",
+        "pipeline_verified": false,
+        "public_outputs_match": true,
+        "row_hash": "sha256:14f7f908365941db8dc86d7089846313496d0f8c7bc72f8774899a9421aa2df3",
+        "shadow_recommendation": "abstain",
+        "shadow_release_authority": "exact_verifier",
+        "write_admitted": false
+      }
+    ]
+  },
+  "status": "success_ready",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_factor_cache_shadow_adapter.py tests/python/test_experiment_6479_verify_repair_factor_cache_shadow_adapter.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/pipeline/factor_cache_shadow_adapter.py,python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py -m pytest tests/python/test_factor_cache_shadow_adapter.py tests/python/test_experiment_6479_verify_repair_factor_cache_shadow_adapter.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/pipeline/factor_cache_shadow_adapter.py,python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py --fail-under=100 --show-missing",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_factor_cache_shadow_adapter.py tests/python/test_experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": ".venv/bin/python -c \"from carnot.pipeline.verify_repair import VerifyRepairPipeline; from carnot.pipeline.factor_cache_shadow_adapter import FR11FactorCacheShadowAdapter; print(VerifyRepairPipeline.__name__, FR11FactorCacheShadowAdapter.__name__)\"",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": "manual e2e-plan check: E2E-005 packaged verify-repair surface import and arithmetic exact path",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6479_verify_repair_factor_cache_shadow_adapter --date 20260821",
+      "exit_code": 0,
+      "status": "passed"
+    }
+  ],
+  "verifier_is_oracle": {
+    "false_for": {
+      "factor_cache_adapter": false,
+      "model_confidence": false,
+      "shadow_ranker": false
+    },
+    "true_for": [
+      "existing_exact_checkers",
+      "deterministic_compatibility_reducers"
+    ],
+    "value": true
+  }
+}
