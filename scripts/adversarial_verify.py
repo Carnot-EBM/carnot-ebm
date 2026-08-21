@@ -304,6 +304,9 @@ ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S = (
 # the generic 60s live_llm_inference floor calibrated for full generation). Per CLAUDE.md
 # "Inference-Substrate Declaration Discipline" -- the forward-only 6th legal value.
 LLM_EMBEDDING_EXTRACTION_SUBSTRATE = "live_llm_embedding_extraction"
+LOCAL_SOTA_FIXED_SEQUENCE_REPRESENTATION_SUBSTRATE = (
+    "live_local_sota_gguf_fixed_sequence_representation"
+)
 LLM_EMBEDDING_EXTRACTION_MIN_DURATION_S = (
     2.0  # model load + >=1 single-pass embedding, even on the smallest SOTA GGUF
 )
@@ -426,6 +429,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
 LIVE_MODEL_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     LIVE_LLM_SUBSTRATE,
     LLM_EMBEDDING_EXTRACTION_SUBSTRATE,
+    LOCAL_SOTA_FIXED_SEQUENCE_REPRESENTATION_SUBSTRATE,
     LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE,
     NATIVE_GGUF_BACKEND_BISECT_SUBSTRATE,
     "actual_capability_bound_adapter_disabled_e3_local_mandated_gguf_public_llama_cpp_cuda",
@@ -2254,7 +2258,9 @@ def _is_llm_embedding_extraction(d: dict[str, Any]) -> bool:
     schema-prefix fallback -- this class was introduced 2026-07-03, so there is no pre-discipline
     history to backfill). See LLM_EMBEDDING_EXTRACTION_SUBSTRATE for the exemplar incident (exp5178).
     """
-    return _inference_substrate_matches(d, LLM_EMBEDDING_EXTRACTION_SUBSTRATE)
+    return _inference_substrate_matches(
+        d, LLM_EMBEDDING_EXTRACTION_SUBSTRATE
+    ) or _inference_substrate_matches(d, LOCAL_SOTA_FIXED_SEQUENCE_REPRESENTATION_SUBSTRATE)
 
 
 def _is_log_analysis_local_timing(d: dict[str, Any]) -> bool:

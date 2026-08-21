@@ -37202,6 +37202,148 @@ count, raw-output state, and attack summary derive from rows only.
 |---|---|---|
 | REQ-VERIFY-6482 | Planned (`python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py`, `results/experiment_6482_immutable_prospective_constraint_stream_commitment.json`) | Planned (`tests/python/test_experiment_6482_immutable_prospective_constraint_stream_commitment.py`) |
 
+### REQ-VERIFY-6486: Three-Family Forced-Candidate Representation Stream
+
+Carnot SHALL provide Exp6486 at
+`python/carnot/experiment_6486_three_family_forced_candidate_representations.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6486_three_family_forced_candidate_representations --date 20260821`
+SHALL write
+`results/experiment_6486_three_family_forced_candidate_representations.json`.
+
+Before any model load, Exp6486 SHALL verify that Exp6482 has
+`prospective_contract_ready_score == 1.0`, Exp6482 materialized hashes match
+its committed manifest files, Exp6484 has
+`non_generation_surface_contract_ready_score == 1.0`, both RTX 3090 devices are
+visible, all three mandated GGUF cache paths exist, embedded GGUF tokenizers
+load through llama.cpp, disk and memory are sufficient, and no retired
+generated-answer path is selected. If any precondition fails, Exp6486 SHALL
+write `status="blocked_precondition"`, set
+`prospective_representation_stream_ready_score=0.0`, include
+`gate_check_summary`, and SHALL NOT load a model.
+
+Exp6486 SHALL call `cached_sota_pair()` and SHALL include all three headline
+GGUF families in `MODEL_SPECS`: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL construct at least one exact
+correct candidate and at least two controlled-wrong candidates for each
+Exp6482 unit from the sealed finite-domain witness, finite variable bounds,
+and protected clauses. It SHALL freeze candidate bytes and hashes before first
+model access.
+
+Exp6486 SHALL use only an embedding or fixed-sequence final-layer forward
+interface. It SHALL add a call guard that fails the run if generation,
+completion, chat completion, grammar decoding, parser retry, or generated
+answer code runs. For each unit, candidate, family, seed, and split, Exp6486
+SHALL persist one raw vector file before any transform and SHALL record native
+dimension, vector norm, token length, candidate length, family, model hash,
+prompt hash, candidate hash, split, seed, device, and monotonic phase receipt.
+Development and held storage SHALL remain separate. Transform-design metadata
+SHALL not inspect held labels or held vectors.
+
+Readiness SHALL be row-derived. Exp6486 SHALL set
+`prospective_representation_stream_ready_score=1.0` only when all three
+headline families have complete unique raw rows, all contract checks pass,
+held isolation passes, raw vectors were written once, and no generation call
+occurred. The terminal artifact SHALL set
+`inference_substrate="live_local_sota_gguf_fixed_sequence_representation"` and
+`verifier_is_oracle=false`.
+
+The terminal artifact SHALL include `status`, `MODEL_SPECS`,
+`model_execution_receipts`, `candidate_commitment_manifest`,
+`upstream_commitment_hashes`, `raw_vector_manifest`, `no_generation_receipts`,
+`family_separation_receipts`, `held_isolation_receipt`,
+`phase_concurrency_receipts`, `prospective_representation_stream_ready_score`,
+`per_unit_rows`, `aggregate_row_recomputation`, `protected_files_unchanged`,
+`gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: Terminal representation-stream state.
+- `MODEL_SPECS`: All three mandated headline GGUF definitions.
+- `model_execution_receipts`: Authenticated model, device, load, and forward-pass receipts.
+- `candidate_commitment_manifest`: Candidate bytes and hashes fixed before model access.
+- `upstream_commitment_hashes`: Exp6482 and Exp6484 hashes.
+- `raw_vector_manifest`: Once-only raw vector paths and hashes.
+- `no_generation_receipts`: Call-guard proof that no generation path ran.
+- `family_separation_receipts`: Native dimensions and separate family cells.
+- `held_isolation_receipt`: No held use during transform design.
+- `phase_concurrency_receipts`: Task-local resource and monotonic phase receipts.
+- `prospective_representation_stream_ready_score`: Same-roadmap downstream gate field.
+- `per_unit_rows`: Unit, candidate, family, seed, and split rows.
+- `aggregate_row_recomputation`: Coverage and readiness recomputed from rows.
+- `protected_files_unchanged`: Active roadmap and conductor unchanged.
+- `gate_check_summary`: Required for blocked_precondition or blocked_* verdicts.
+- `preconditions_checked`: GPU, cache, tokenizer, disk, contract, and commitment checks.
+- `inference_substrate`: `live_local_sota_gguf_fixed_sequence_representation` declares fixed-sequence local GGUF representation extraction.
+- `verifier_is_oracle`: False for the model representation; exact labels remain authority.
+- `field_principles`: Reason for every field.
+- `field_provenance`: Paths, hashes, devices, and reducers.
+- `random_seed`: Fixed candidate and execution seed.
+- `duration_s`: Measured full wall time.
+- `tests_run`: Executed validation and E2E commands.
+- `reproducibility_checksum`: Hash over models, candidates, raw rows, and code.
+- `honest_verdict`: States stream completeness without claiming representation quality.
+
+#### SCENARIO-VERIFY-6486-PRECONDITIONS: Missing Live Requirements Block Before Model Load
+
+Given Exp6482, Exp6484, GPU, model cache, tokenizer, disk, memory, or
+retirement checks fail,
+when Exp6486 starts,
+then it SHALL write `blocked_precondition`, include a gate-check summary, set
+readiness to `0.0`, and record no model-load receipt.
+
+#### SCENARIO-VERIFY-6486-CANDIDATES: Exact And Controlled-Wrong Candidates Are Frozen
+
+Given the Exp6482 sealed unit manifest,
+when Exp6486 builds candidate text,
+then every unit SHALL have one exact correct candidate and two controlled-wrong
+candidates, candidate bytes and hashes SHALL predate model access, and the
+candidate manifest SHALL bind prompt hash, split, seed, record hash, and
+protected clauses.
+
+#### SCENARIO-VERIFY-6486-NO-GENERATION: Guard Rejects Generation Interfaces
+
+Given the representation runner,
+when a generation, completion, chat completion, grammar decode, parser retry,
+or generated-answer method is called,
+then Exp6486 SHALL fail closed, record the prohibited call, and keep
+readiness at `0.0`.
+
+#### SCENARIO-VERIFY-6486-RAW-ROWS: Raw Vectors Are Written Once Per Cell
+
+Given all preconditions pass,
+when Exp6486 runs fixed-sequence representations,
+then each unit-candidate-family-seed-split cell SHALL have exactly one raw
+vector path, raw vector hash, native dimension, norm, token length, candidate
+length, model hash, prompt hash, candidate hash, device, and monotonic phase
+receipt before any transform metadata.
+
+#### SCENARIO-VERIFY-6486-FAMILY-HELD: Families And Held Data Stay Separate
+
+Given raw representation rows,
+when Exp6486 recomputes family and split receipts,
+then native dimensions SHALL remain per family, complete family cells SHALL be
+checked separately, and transform-design metadata SHALL not inspect held labels
+or held vectors.
+
+#### SCENARIO-VERIFY-6486-ARTIFACT: Readiness Recomputes From Rows
+
+Given candidate commitments, model receipts, raw vector rows, no-generation
+receipts, held-isolation receipts, protected file hashes, and test receipts,
+when Exp6486 writes the terminal artifact,
+then every required field SHALL have a principle and provenance, the
+reproducibility checksum SHALL match, protected files SHALL be unchanged, and
+readiness SHALL be `1.0` only when every row-derived gate passes.
+
+## Implementation Status (REQ-VERIFY-6486)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6486 | Planned (`python/carnot/experiment_6486_three_family_forced_candidate_representations.py`, `results/experiment_6486_three_family_forced_candidate_representations.json`) | Planned (`tests/python/test_experiment_6486_three_family_forced_candidate_representations.py`) |
+
 ### REQ-VERIFY-6478: Identifiable Held Exact-Energy Selection V557
 
 Carnot SHALL provide Exp6478 at
