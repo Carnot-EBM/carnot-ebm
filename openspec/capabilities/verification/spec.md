@@ -36834,3 +36834,117 @@ state, and `protocol_identifying_score` match the terminal artifact.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6474 | Planned (`python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py`, `results/experiment_6474_protocol_identifiability_and_receipt_preflight.json`) | Planned (`tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py`) |
+
+### REQ-VERIFY-6476: Corpus Label-Commitment Forensic V557
+
+Carnot SHALL provide Exp6476 at
+`python/carnot/experiment_6476_v556_corpus_label_commitment_forensic.py`.
+The workflow SHALL write
+`results/experiment_6476_v556_corpus_label_commitment_forensic.json` by
+auditing existing Exp6462 and Exp6463 on-disk evidence only. It SHALL NOT call
+an LLM, generate new model output, generate new labels, generate a new
+membership manifest, repair timestamps, modify `ops/exclusion_manifest.yaml`,
+or modify `scripts/research_conductor.py`.
+
+Exp6476 SHALL hash all existing Exp6462 and Exp6463 artifacts, raw files,
+checkpoints, manifests, source files, tests, and relevant git objects before
+adjudicating labels. It SHALL identify the first Exp6463 inference event from
+recorded raw-event timing and file evidence. This first event is the causal
+deadline for label and membership commitments.
+
+The forensic SHALL build one row per Exp6463 unit and partition. Each row SHALL
+record label hashes, membership hash, prompt hashes, first raw-event timing,
+checkpoint file timing, file metadata, git presence, and any signed or
+content-addressed precommit receipt. The row reducer SHALL distinguish a sealed
+unit list from sealed labels. It SHALL accept a positive held-unit commitment
+only when both exact label proof and partition-membership proof are immutable
+and predate the first inference event. Mutable mtime by itself SHALL NOT count
+as proof. A post-inference file or git commit that repeats labels SHALL NOT
+count as a precommitment.
+
+The attack matrix SHALL test reconstructed manifests, copied timestamps,
+post-inference git commits, label hashes without membership hashes, partial
+partition receipts, and path-only commitments. Every attack SHALL fail closed
+before `corpus_label_commitment_salvage_score` can be `1.0`.
+`corpus_label_commitment_salvage_score` SHALL be a bare `1.0` only if every
+held unit has immutable pre-inference label and membership proof. Otherwise it
+SHALL be `0.0` and `missing_or_posthoc_proof_rows` SHALL preserve constructive
+missing-proof rows. `corpus_lineage_disposition` SHALL be one of
+`salvage_existing_bytes`, `development_only`, or `retire_lineage`.
+
+The terminal artifact SHALL include `status`, `upstream_artifact_hashes`,
+`first_inference_event_receipt`, `label_and_membership_commitment_rows`,
+`file_time_and_git_receipts`, `missing_or_posthoc_proof_rows`,
+`attack_matrix`, `corpus_lineage_disposition`,
+`corpus_label_commitment_salvage_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `protected_files_unchanged`,
+`gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`,
+`random_seed`, `duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`. `inference_substrate` SHALL be
+`aggregation_from_upstream_artifacts`. `verifier_is_oracle` SHALL be true only
+for hash checks, git-object checks, and causal-order checks over recorded
+evidence.
+
+Required field principles:
+
+- `status`: A terminal forensic state distinguishes completed adjudication from an interrupted search for receipts.
+- `upstream_artifact_hashes`: Frozen hashes prevent the forensic from silently changing the evidence it evaluates.
+- `first_inference_event_receipt`: The earliest generation event defines the causal deadline for every valid commitment.
+- `label_and_membership_commitment_rows`: Per-unit rows distinguish sealed labels, sealed membership, and merely present later files.
+- `file_time_and_git_receipts`: Multiple clocks and git objects reduce reliance on mutable filesystem metadata.
+- `missing_or_posthoc_proof_rows`: Constructive failure rows show exactly why a held unit cannot be credited.
+- `attack_matrix`: Adversarial reconstructions test whether the forensic mistakenly accepts post-hoc evidence.
+- `corpus_lineage_disposition`: A finite disposition prevents an ambiguous corpus from returning as held evidence later.
+- `corpus_label_commitment_salvage_score`: A conjunctive score blocks salvage unless every held label and membership commitment predates inference.
+- `per_unit_rows`: Unit-level receipts let a reviewer reproduce the all-or-nothing salvage decision.
+- `aggregate_row_recomputation`: Row reduction catches a positive salvage summary with even one uncovered held unit.
+- `protected_files_unchanged`: The forensic cannot manufacture validity by editing the corpus, conductor, or protected records.
+- `gate_check_summary`: Any blocked forensic must name the missing evidence path and observed state.
+- `preconditions_checked`: Input hashes and path inventory prove the historical evidence was frozen before examination.
+- `inference_substrate`: Declaring aggregation_from_upstream_artifacts prevents historical replay from being reported as new SOTA inference.
+- `verifier_is_oracle`: Hash and causal-order checks are authoritative only for the recorded bytes and times.
+- `field_principles`: A principle map prevents later reinterpretation of a receipt field as stronger evidence.
+- `field_provenance`: Path, hash, git object, and reducer provenance make every adjudication traceable.
+- `random_seed`: A fixed seed reproduces attack and row ordering.
+- `duration_s`: Measured duration detects a forensic that emitted before reading the historical evidence.
+- `tests_run`: Executed tests prove the post-hoc and timestamp attacks were exercised.
+- `reproducibility_checksum`: The checksum binds the frozen historical evidence and forensic result.
+- `honest_verdict`: The verdict must state salvage, development-only use, or retirement without inventing a science result.
+
+#### SCENARIO-VERIFY-6476-CAUSAL-COMMITMENT: Held Proof Predates Inference
+
+Given a held Exp6463 unit has exact-label proof and partition-membership proof,
+when Exp6476 adjudicates the row,
+then the row is credited only if both proofs are immutable, content-bound to
+the unit, and older than the first Exp6463 inference event.
+
+#### SCENARIO-VERIFY-6476-POSTHOC-ATTACKS: Later Receipts Fail Closed
+
+Given a reconstructed manifest, a copied timestamp, a git commit after
+inference, a label-only hash, a partial partition receipt, or a path-only
+commitment,
+when Exp6476 evaluates the attack matrix,
+then the attack is detected and cannot increase
+`corpus_label_commitment_salvage_score`.
+
+#### SCENARIO-VERIFY-6476-ROWS: Aggregates Recompute From Unit Rows
+
+Given Exp6476 builds unit rows for development and held partitions,
+when the aggregate reducer recomputes held proof coverage,
+then `corpus_label_commitment_salvage_score` is `1.0` only when every held row
+has both label and membership proof before inference.
+
+#### SCENARIO-VERIFY-6476-NO-MUTATION: Forensic Does Not Manufacture Evidence
+
+Given Exp6462, Exp6463, conductor, exclusion, source, test, and spec paths are
+historical evidence,
+when Exp6476 runs,
+then those protected paths stay byte-identical and the artifact records no new
+inference, labels, membership manifest, or repaired timestamps.
+
+## Implementation Status (REQ-VERIFY-6476)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6476 | Implemented (`python/carnot/experiment_6476_v556_corpus_label_commitment_forensic.py`, `results/experiment_6476_v556_corpus_label_commitment_forensic.json`) | Implemented (`tests/python/test_experiment_6476_v556_corpus_label_commitment_forensic.py`) |
