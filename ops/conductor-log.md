@@ -16237,3 +16237,4 @@ code |
 | 2026-08-21 16:47 UTC | Plan milestone 2026.08.560 | OK | 14 tasks proposed |
 | 2026-08-21 16:49 UTC | Milestone 2026.08.560 activated | OK | 14 tasks queued |
 | 2026-08-21 17:08 UTC | V559 evidence decision ledger and V560 solver-traj | OK | 99 passed, 1 warning in 13.76s |
+| 2026-08-21 17:24 UTC | Immutable early-to-final exact solver trajectory c | OK | 88 passed, 1 warning in 14.75s |
