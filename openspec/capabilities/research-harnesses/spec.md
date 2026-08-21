@@ -6911,6 +6911,188 @@ with `complete_`.
 |---|---|---|
 | REQ-INFRA-6488 | Planned: `python/carnot/experiment_6488_v559_decision_ledger.py`; terminal artifact `results/experiment_6488_v559_decision_ledger.json`. | Planned: `tests/python/test_experiment_6488_v559_decision_ledger.py`. |
 
+## REQ-INFRA-6495: Restarted Factor-Pool Controller SHALL Decide Reuse, Spawn, Or Defer With Paired Evidence Processes
+
+Carnot SHALL provide Exp6495 at
+`python/carnot/experiment_6495_restarted_factor_pool_controller.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6495_restarted_factor_pool_controller --date 20260821`
+SHALL write
+`results/experiment_6495_restarted_factor_pool_controller.json`.
+
+Exp6495 SHALL evaluate the Exp6488 V560 lineage-lock gate before controller
+replay. It SHALL record the exact Exp6488 path, hash, field, expected value,
+and observed value. It SHALL hash Exp6479 and Exp6485 and record their
+readiness fields. The controller SHALL be deterministic. It SHALL NOT claim a
+learning benefit.
+
+The controller SHALL define frozen reuse and spawn nulls before adaptive
+events. It SHALL define one one-sided reuse evidence process and one one-sided
+spawn evidence process. Each process SHALL name its null, alternative,
+update rule, threshold, evidence-spending rule, and restart schedule. The
+controller SHALL define the minimum evidence count, reuse threshold, spawn
+threshold, and explicit indifference zone. Missing evidence, contradictory
+evidence, indifference-zone evidence, and outside-authority evidence SHALL
+defer or no-write.
+
+The controller SHALL apply factor and restart multiplicity correction to every
+charged update. The correction SHALL account for active factor count,
+candidate factor count, and restart epoch. A restart SHALL NOT spend a prior
+event twice. Restart state SHALL be replayable from durable rows and SHALL NOT
+resurrect a tombstone.
+
+The factor pool SHALL have precommitted active, quarantine, and restart
+capacity bounds. Eviction SHALL be deterministic. The rule SHALL sort by
+support score, last reuse index, and factor ID. Capacity overflow SHALL evict
+or no-write before a spawn. Active factors SHALL never exceed capacity.
+
+Every immutable event ID SHALL follow the Exp6485 identity pattern. Each event
+row SHALL bind schema version, task ID, chronology index, event type,
+monotonic receipt, parent state hash, event payload hash, authority, fixture
+label, and row hash. Every event SHALL have paired evidence update rows, one
+decision/action row, and one pool-state row.
+
+Durable writes, promotions, evictions, tombstones, rollbacks, and restarts
+SHALL require exact admission. A durable action SHALL bind the event ID,
+pre-state hash, post-state hash, exact admission hash, and durability receipt.
+No-write rows SHALL name the closed reason. Shadow or deferred actions SHALL
+not change the active pool.
+
+Exp6495 SHALL include deterministic positive, null, contradictory, recurrent,
+corrupted, duplicate, backdated, adaptive-peek, threshold-edit, rollback,
+resurrection, and capacity-overflow fixtures. It SHALL emit attacks for
+duplicate events, backdated events, repeated peeking, threshold editing,
+outside-authority writes, capacity overflow, rollback target corruption, and
+tombstone resurrection. Each attack SHALL fail closed.
+
+Readiness SHALL be recomputed from rows. Exp6495 SHALL set
+`factor_pool_controller_ready_score=1.0` only when paired evidence, exact
+admission, multiplicity, capacity, rollback, restart, protected-file, and
+attack invariants pass. It SHALL set
+`inference_substrate="deterministic_anytime_factor_pool_controller_no_llm"`.
+It SHALL set `verifier_is_oracle=true` only for deterministic fixtures and
+exact admission checks. It SHALL NOT modify `scripts/research_conductor.py` or
+`research-roadmap.yaml`.
+
+The terminal artifact SHALL include `status`, `upstream_gate_receipt`,
+`dependency_receipts`, `controller_spec`, `evidence_process_spec`,
+`multiplicity_spec`, `fixture_manifest`, `event_rows`,
+`evidence_update_rows`, `decision_action_rows`, `pool_state_rows`,
+`exact_admission_receipts`, `controller_attack_matrix`,
+`factor_pool_controller_ready_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `gate_check_summary`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+Field principles SHALL use this map:
+
+| Field | Principle |
+|---|---|
+| `status` | Terminal controller-contract state. |
+| `upstream_gate_receipt` | Exp6488 path, hash, field, expected, and observed value. |
+| `dependency_receipts` | Exp6479 and Exp6485 paths, hashes, and readiness fields. |
+| `controller_spec` | Frozen reuse, spawn, defer, capacity, rollback, and restart rules. |
+| `evidence_process_spec` | Both nulls, alternatives, updates, thresholds, spending, and restart schedule. |
+| `multiplicity_spec` | Factor and restart correction and accounting. |
+| `fixture_manifest` | Positive, null, contradictory, recurrent, and corrupt streams. |
+| `event_rows` | Immutable chronological fixture events. |
+| `evidence_update_rows` | Both one-sided process updates and spending per event. |
+| `decision_action_rows` | Reuse, spawn, defer, evict, rollback, restart, and no-write receipts. |
+| `pool_state_rows` | Bounded state after every action. |
+| `exact_admission_receipts` | Proof that writes require exact verification. |
+| `controller_attack_matrix` | Duplicate, peeking, authority, capacity, rollback, and resurrection attacks. |
+| `factor_pool_controller_ready_score` | Same-roadmap downstream gate field. |
+| `per_unit_rows` | Event, update, decision, state, and attack rows. |
+| `aggregate_row_recomputation` | Every transition count and ready score recomputed from rows. |
+| `gate_check_summary` | Exact gate evaluation or blocked_* reason and observed value. |
+| `preconditions_checked` | Lineage lock, adapter, transition contract, and durable store. |
+| `protected_files_unchanged` | Active roadmap and conductor unchanged. |
+| `inference_substrate` | deterministic_anytime_factor_pool_controller_no_llm. |
+| `verifier_is_oracle` | True only for deterministic fixtures and exact admission checks. |
+| `field_principles` | Reason for each sequential and lifecycle field. |
+| `field_provenance` | Contract versions, event hashes, action receipts, and reducers. |
+| `random_seed` | Fixed fixture and attack ordering seed. |
+| `duration_s` | Measured wall time. |
+| `tests_run` | Commands and exit codes. |
+| `reproducibility_checksum` | Hash over specs, fixtures, rows, and attacks. |
+| `honest_verdict` | complete_* when the mechanism is ready, otherwise blocked_* with gate_check_summary. |
+
+### SCENARIO-INFRA-6495-PAIRED-EVIDENCE: Reuse And Spawn Processes Spend Evidence Once
+
+GIVEN frozen reuse and spawn nulls, adaptive fixtures, and restart epochs
+WHEN Exp6495 emits `evidence_update_rows`
+THEN every event has one reuse update and one spawn update, each update has a
+unique spending token, thresholds match the frozen spec, and restart replay
+does not spend a prior token twice.
+
+**Spec traces:** REQ-INFRA-6495
+
+### SCENARIO-INFRA-6495-DECISIONS: Reuse, Spawn, And Defer Follow The Indifference Zone
+
+GIVEN positive, recurrent, null, contradictory, corrupted, and no-write
+fixtures
+WHEN Exp6495 emits `decision_action_rows`
+THEN reuse occurs only after reuse evidence clears its threshold, spawn occurs
+only after spawn evidence clears its threshold, and missing, contradictory,
+indifference-zone, or outside-authority evidence defers or no-writes.
+
+**Spec traces:** REQ-INFRA-6495
+
+### SCENARIO-INFRA-6495-CAPACITY: Active Factors Stay Bounded
+
+GIVEN a capacity-overflow fixture and a precommitted eviction rule
+WHEN the controller spawns a new factor at capacity
+THEN the deterministic eviction rule runs first, the active count stays within
+capacity, and the eviction receipt is durable and exact-admitted.
+
+**Spec traces:** REQ-INFRA-6495
+
+### SCENARIO-INFRA-6495-ROLLBACK-RESTART: Tombstones Survive Rollback And Restart
+
+GIVEN tombstone, rollback, and restart lifecycle rows
+WHEN the pool state is replayed from rows
+THEN rollback restores only non-tombstoned factors, restart hashes match, and
+no tombstoned factor becomes active.
+
+**Spec traces:** REQ-INFRA-6495
+
+### SCENARIO-INFRA-6495-ADMISSION: Durable Writes Require Exact Authority
+
+GIVEN durable writes and explicit no-write decisions
+WHEN exact admission receipts are validated
+THEN every durable action has matching exact authority, event ID, and state
+hashes, while shadow, deferred, missing-evidence, and outside-authority rows
+remain no-write.
+
+**Spec traces:** REQ-INFRA-6495
+
+### SCENARIO-INFRA-6495-ATTACKS: Controller Attacks Fail Closed
+
+GIVEN duplicate, backdated, adaptive-peek, threshold-edit, authority,
+capacity-overflow, rollback, and resurrection attacks
+WHEN the deterministic validator evaluates mutated rows
+THEN every attack fails closed and appears in `controller_attack_matrix`.
+
+**Spec traces:** REQ-INFRA-6495
+
+### SCENARIO-INFRA-6495-ARTIFACT: Terminal Artifact Is Row-Recomputed And Nonmutating
+
+GIVEN specs, fixtures, receipts, rows, attack rows, protected-file hashes, and
+test receipts
+WHEN Exp6495 writes the terminal artifact
+THEN every required field has a principle and provenance, the checksum matches,
+readiness is `1.0`, protected files are unchanged, and no learning gain is
+claimed.
+
+**Spec traces:** REQ-INFRA-6495
+
+## Implementation Status (REQ-INFRA-6495)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6495 | Planned: `python/carnot/experiment_6495_restarted_factor_pool_controller.py`; terminal artifact `results/experiment_6495_restarted_factor_pool_controller.json`. | Planned: `tests/python/test_experiment_6495_restarted_factor_pool_controller.py`. |
+
 ## REQ-INFRA-6351: V547 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
 
 Carnot SHALL build Exp6351 as a deterministic V547 post-marker source sweep
