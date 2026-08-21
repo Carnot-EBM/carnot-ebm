@@ -411,6 +411,20 @@ tasks:
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp6477-backend-neutral-exact-constraint-record
+    prior_failures:
+      - experiment_id: exp5708-sota-exact-constraint-canary
+        verdict: "blocked: parse_failures"
+        addressed_by: >-
+          The prior did not test the constraint idea at all. It ended with
+          parse_failure_count 47, i.e. the generator's output could not be parsed,
+          so no constraint record was ever produced or evaluated. That is a
+          transport failure, not evidence against the approach. What is different:
+          the live generator changed from the prior stack to Qwen3.8-27B
+          (2026-08-16), and the induce/persist path was repaired on 2026-08-20
+          (commit 1086c7e7cc) after it was found to raise on every attempt. This
+          task must therefore report parse_failure_count explicitly; if parsing
+          fails again at a comparable rate the approach is retired, not re-tried.
+        retire_if_same_verdict: true
     milestone: "2026.08.557"
     deliverable: results/experiment_6477_backend_neutral_exact_constraint_record.json
     title: "Backend-neutral finite-domain exact constraint record"
@@ -644,6 +658,20 @@ tasks:
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp6479-verify-repair-factor-cache-shadow-adapter
+    prior_failures:
+      - experiment_id: exp5789-constraint-skill-shadow-adapter
+        verdict: blocked_gate_check_failed
+        addressed_by: >-
+          The prior never executed. All 5 of its gates failed at
+          conductor_pre_gate, the first because the upstream artifact for
+          exp5788-constraint-skill-transfer-audit was not found. That upstream is
+          recorded in research-complete.yaml as "OK (conductor)" but its
+          deliverable was never written and has no add or delete record in git, so
+          the gate was correct to refuse and the shadow-adapter approach has never
+          been measured. What is different: this task carries NO gated_on field at
+          all. It builds on exp6468-6470, whose artifacts exist, so the dependency
+          that blocked the prior is gone rather than merely assumed satisfied.
+        retire_if_same_verdict: true
     milestone: "2026.08.557"
     deliverable: results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json
     title: "Default-off VerifyRepairPipeline factor-cache shadow adapter"
