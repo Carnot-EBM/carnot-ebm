@@ -1,0 +1,312 @@
+milestone: "2026.08.558"
+milestone_title: "Prospective Exact Energy, Guarded Harness Learning, and Live Metric Alignment"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+  - id: exp6480-v557-evidence-freeze-and-v558-branch-preflight
+    milestone: "2026.08.558"
+    deliverable: results/experiment_6480_v557_terminal_evidence_and_v558_preflight.json
+    title: "V557 evidence freeze and V558 branch preflight"
+    priority: critical
+    track: infrastructure
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 20
+    estimated_wall_time_min: 45
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp6460-v556-terminal-handoff-and-queue-integrity
+        verdict: "complete_blocked_v556_queue_integrity_failed: V555 terminal facts are preserved but a V556 queue contract failed"
+        addressed_by: "This task freezes seven completed V557 artifacts and exposes narrow branch readiness fields. It does not validate, activate, or transition a roadmap, and it cannot gate an unrelated branch."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Milestone V557 completed seven tasks. Exp6477 established a backend-neutral exact constraint record, Exp6478 reported positive exact-energy selection on 24 finite no-LLM unit-seed cells, and Exp6479 shipped a default-off factor-cache shadow adapter. Exp6476 retired the Exp6463 corpus lineage because held labels and membership lacked immutable pre-inference proof. V558 needs a stable boundary without another queue-transition task. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/research-program.md and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json
+      - {project_root}/results/experiment_6474_protocol_identifiability_and_receipt_preflight.json through {project_root}/results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json
+      - {project_root}/results/experiment_6471_arc_generic_safety_shield_objective_ab.json
+      - {project_root}/ops/exclusion_manifest.yaml, {project_root}/ops/conductor-log.md, and {project_root}/ops/known-issues.md
+      - {project_root}/scripts/verdict_row_consistency_lint.py, {project_root}/scripts/adversarial_verify.py, and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Freeze V557 terminal evidence, recompute its branch boundaries, and expose exact narrow readiness fields for the Exp6479 factor-cache adapter and Exp6471 ARC shield. Do not validate or activate a roadmap. Do not repair or rerun any V557 science task.
+
+      CONCRETE STEPS
+      0. Resolve the seven active V557 task IDs from the completed active roadmap. Record artifact path, size, hash, honest_verdict, readiness fields, and adversarial status. Record repository state before analysis.
+      1. Add or confirm REQ-INFRA-6480 and its SCENARIO entries. Write focused tests first.
+      2. Emit one row per V557 task. Treat missing, zero-byte, blocked, null, and complete artifacts as different terminal states.
+      3. Recompute the Exp6463 lineage retirement from Exp6476. State that V558 may create a new prospective lineage but may not reuse Exp6463 held evidence.
+      4. Recompute v557_factor_cache_ready_score only from Exp6479 factor_cache_shadow_adapter_ready_score and exact default-off, write-admission, persistence, rollback, and test gates.
+      5. Recompute v557_arc_shield_ready_score only from Exp6471 arc_safety_shield_ready_score, current adversarial status, and no-solve boundary.
+      6. Recompute exact-energy evidence status from Exp6477 and Exp6478 without extending the result to local-SOTA outputs.
+      7. Set staged_queue_validation_performed=false, roadmap_activation_performed=false, and unrelated_branch_gate_count=0.
+      8. Run focused tests, spec coverage, row-consistency lint, adversarial verification, and the applicable reporting checks from ops/e2e-test-plan.md. Record exit codes. Inspect git status after tests and report unrelated mutations.
+
+      Required deliverable: {project_root}/results/experiment_6480_v557_terminal_evidence_and_v558_preflight.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "A terminal status distinguishes a completed evidence freeze from an interrupted handoff."
+        v557_terminal_rows:
+          principle: "One row per active V557 task prevents missing or blocked evidence from disappearing in a summary."
+        artifact_hash_manifest:
+          principle: "Hashes bind each terminal determination to the exact evidence bytes."
+        retirement_boundary_rows:
+          principle: "Explicit rows keep the invalid Exp6463 lineage from returning under a new name."
+        exact_energy_evidence_boundary:
+          principle: "The boundary preserves Exp6478 as a finite no-LLM result and prevents a false local-SOTA claim."
+        v557_factor_cache_ready_score:
+          principle: "A narrow score gives later CSL work a same-roadmap gate without granting benefit or release authority."
+        v557_arc_shield_ready_score:
+          principle: "A narrow score confirms the generic no-solve shield without claiming policy improvement."
+        staged_queue_validation_performed:
+          principle: "A false value proves this task did not repeat the retired queue-transition scope."
+        roadmap_activation_performed:
+          principle: "A false value keeps evidence aggregation separate from conductor state changes."
+        unrelated_branch_gate_count:
+          principle: "Zero unrelated gates prevents an infrastructure result from suppressing independent science."
+        per_unit_rows:
+          principle: "Task rows make every aggregate and branch boundary independently checkable."
+        aggregate_row_recomputation:
+          principle: "Row-derived aggregates catch summaries that disagree with terminal evidence."
+        protected_files_unchanged:
+          principle: "The task must not alter the active roadmap, conductor, registry, or public results."
+        gate_check_summary:
+          principle: "Any blocked verdict names the failed check, expected value, observed value, and evidence path."
+        preconditions_checked:
+          principle: "Precondition receipts prove the expected artifacts and repository state existed before aggregation."
+        inference_substrate:
+          principle: "Declaring aggregation_from_upstream_artifacts prevents a no-model audit from being read as live inference."
+        verifier_is_oracle:
+          principle: "Only deterministic hashes and row arithmetic are authoritative in this task."
+        field_principles:
+          principle: "A field-to-principle map preserves the reason for every evidence field."
+        field_provenance:
+          principle: "Exact source paths and hashes make each value traceable."
+        random_seed:
+          principle: "A fixed seed makes attack ordering reproducible."
+        duration_s:
+          principle: "Measured wall time detects a bootstrap-only artifact."
+        tests_run:
+          principle: "Recorded commands distinguish executed checks from intended checks."
+        reproducibility_checksum:
+          principle: "A stable checksum detects later drift in inputs or the terminal artifact."
+        honest_verdict:
+          principle: "The verdict states completion and each branch boundary without promoting a science claim."
+      ACCEPTANCE GATES:
+        - condition: "All seven active V557 task IDs have a terminal row and artifact disposition."
+          principle: "Complete accounting prevents selection of only favorable evidence."
+        - condition: "staged_queue_validation_performed=false AND roadmap_activation_performed=false AND unrelated_branch_gate_count=0."
+          principle: "The condition prevents recurrence of the queue-transition and cascade failure shape."
+      Set inference_substrate=aggregation_from_upstream_artifacts. Set verifier_is_oracle=true only for hashes and deterministic row arithmetic. A blocked_* verdict requires gate_check_summary with check, expected value, observed value, and evidence path.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6480_v557_terminal_evidence_and_v558_preflight --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6481-monotonic-phase-concurrency-receipt-contract
+    milestone: "2026.08.558"
+    deliverable: results/experiment_6481_monotonic_phase_concurrency_receipt_contract.json
+    title: "Monotonic task phase and concurrency receipt contract"
+    priority: critical
+    track: infrastructure
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 90
+    agent_type: codex
+    model: gpt-5.5
+    prompt: |
+      CONTEXT
+      The V557 retrospective found that six of seven tasks were synthesis-bound at the supplied resolution. It recommended monotonic phase timing and dependency-safe concurrency receipts. Exp6474 already verifies queue, load, execution, exact-verification, and artifact phases. V558 needs a reusable extension that proves which task owned each process, resource interval, dependency hash, and output. It must not modify the conductor. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/python/carnot/task_runtime_receipts.py
+      - {project_root}/python/carnot/experiment_6426_task_scoped_runtime_receipt_contract.py and its tests
+      - {project_root}/python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py and its tests
+      - {project_root}/python/carnot/experiment_artifacts.py and {project_root}/python/carnot/terminal_artifacts.py
+      - relevant infrastructure OpenSpec files and {project_root}/_bmad/traceability.md
+      - {project_root}/scripts/verdict_row_consistency_lint.py, {project_root}/scripts/adversarial_verify.py, and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Implement a reusable monotonic phase and concurrency receipt API for experiment tasks. It must bind dependency artifact hashes, process identity, resource ownership, phase intervals, and output hashes to one task. It must detect impossible overlap and borrowed global activity. Do not wire it into scripts/research_conductor.py.
+
+      CONCRETE STEPS
+      0. Record current receipt APIs, schema hashes, clock sources, process identity fields, and repository state.
+      1. Add REQ-INFRA-6481 and SCENARIO entries for monotonic phases, dependency binding, resource ownership, concurrency overlap, and fail-closed validation. Write focused tests first.
+      2. Add a versioned receipt schema for queue_wait, dependency_resolution, resource_acquisition, model_or_fixture_load, execution, exact_verification, artifact_write, and resource_release.
+      3. Record task_id, attempt_id, PID, process start identity, monotonic start/end, wall-clock context, dependency paths and SHA-256 values, resource keys, output paths, output hashes, and exit state.
+      4. Implement a deterministic validator that rejects negative intervals, phase inversions, missing release, PID reuse, dependency hash changes, overlapping exclusive resource claims, output writes before execution, and receipts copied from another task.
+      5. Add positive fixtures for independent CPU overlap and serialized exclusive GPU ownership. Add attacks for borrowed nvidia-smi activity, stale dependency artifacts, duplicated attempt IDs, forged clocks, cross-task output paths, and parent-child PID confusion.
+      6. Emit one row per phase, dependency, resource interval, and attack. Recompute readiness from rows.
+      7. Keep the API optional and experiment-local. Do not change conductor dispatch, locks, scheduling, or active roadmap semantics.
+      8. Run focused tests, 100% task-module coverage, spec coverage, row lint, adversarial verification, and applicable infrastructure E2E checks. Inspect git status after tests.
+
+      Required deliverable: {project_root}/results/experiment_6481_monotonic_phase_concurrency_receipt_contract.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "A terminal status distinguishes a complete contract build from partial instrumentation."
+        receipt_schema_and_hash:
+          principle: "A versioned schema prevents later experiments from silently changing receipt meaning."
+        phase_rows:
+          principle: "Monotonic phase rows separate queue, load, execution, exact verification, and write time."
+        dependency_hash_rows:
+          principle: "Dependency hashes prove the task consumed the stated upstream bytes."
+        resource_ownership_rows:
+          principle: "Resource intervals attribute CPUs, GPUs, files, and locks to one task attempt."
+        concurrency_decision_rows:
+          principle: "Explicit decisions distinguish safe overlap from conflicting exclusive ownership."
+        process_identity_rows:
+          principle: "PID and process-start identity prevent stale or borrowed activity from being credited."
+        attack_matrix:
+          principle: "Constructive attacks test the known global-activity and time-order attribution failures."
+        phase_concurrency_receipt_ready_score:
+          principle: "A conjunctive score blocks reuse until all ownership and ordering attacks fail closed."
+        per_unit_rows:
+          principle: "Phase, dependency, resource, and attack rows make the contract independently auditable."
+        aggregate_row_recomputation:
+          principle: "Row-derived readiness catches summaries that omit a failing receipt."
+        protected_files_unchanged:
+          principle: "The receipt task must not alter conductor or active roadmap behavior."
+        gate_check_summary:
+          principle: "A blocked verdict identifies the exact contract or test check that failed."
+        preconditions_checked:
+          principle: "Preconditions prove required clocks, process metadata, and fixture paths were available."
+        inference_substrate:
+          principle: "Declaring deterministic_runtime_receipt_validation_no_llm prevents fixture activity from becoming a compute claim."
+        verifier_is_oracle:
+          principle: "Only schema, hash, process, and monotonic interval validation is authoritative."
+        field_principles:
+          principle: "A field-to-principle map carries the evidence design into later tasks."
+        field_provenance:
+          principle: "Per-field code and fixture paths make each value traceable."
+        random_seed:
+          principle: "A fixed seed reproduces attack and overlap scheduling."
+        duration_s:
+          principle: "Wall time catches a task that emitted without exercising concurrency fixtures."
+        tests_run:
+          principle: "Recorded commands prove the API and its attacks executed."
+        reproducibility_checksum:
+          principle: "The checksum binds schema, fixtures, implementation, and result."
+        honest_verdict:
+          principle: "The verdict states contract readiness without claiming conductor concurrency."
+      ACCEPTANCE GATES:
+        - condition: "phase_concurrency_receipt_ready_score == 1.0."
+          principle: "The contract is reusable only when all ordering, ownership, dependency, and attack checks pass."
+        - condition: "scripts/research_conductor.py and research-roadmap.yaml remain unchanged."
+          principle: "The task supplies reusable instrumentation without changing scheduler authority."
+      Set inference_substrate=deterministic_runtime_receipt_validation_no_llm. Set verifier_is_oracle=true only for deterministic receipt validation. A blocked_* verdict requires gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6481_monotonic_phase_concurrency_receipt_contract --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6482-immutable-prospective-constraint-stream-commitment
+    milestone: "2026.08.558"
+    deliverable: results/experiment_6482_immutable_prospective_constraint_stream_commitment.json
+    title: "Immutable prospective constraint stream commitment"
+    priority: critical
+    track: verification
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp6463-sota-fixed-policy-candidate-corpus-v2
+        verdict: "complete: fixed-policy corpus v2 finished but readiness gate stayed closed"
+        addressed_by: "This task creates labels, protected clauses, and split membership before any inference task. It records git-object and monotonic commitment receipts while the raw output directory is absent or empty. It does not salvage or read Exp6463 candidates."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      Exp6476 retired the Exp6463 lineage because every held unit lacked immutable proof that labels and membership predated inference. V558 needs a genuinely new prospective task stream. Exp6477 supplies a backend-neutral exact constraint record with Z3 and exhaustive parity. This task creates and seals the new stream but runs no LLM. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/research-program.md and the V558 section of {project_root}/research-references.md
+      - {project_root}/results/experiment_6476_v556_corpus_label_commitment_forensic.json
+      - {project_root}/results/experiment_6477_backend_neutral_exact_constraint_record.json
+      - {project_root}/python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py and focused tests
+      - {project_root}/python/carnot/task_runtime_receipts.py and the Exp6481 implementation if present
+      - relevant verification OpenSpec files, {project_root}/ops/exclusion_manifest.yaml, and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Create a new prospective multi-family finite-domain constraint stream. Seal exact labels, protected clauses, task-family membership, development and held membership, prompts, candidate-policy definitions, and seeds before any later model process starts. Prove backend parity and prove that no raw candidate output exists at commitment time.
+
+      CONCRETE STEPS
+      0. Confirm Exp6477 exact_constraint_record_ready_score=1.0, record its artifact hash, confirm the Exp6463 path is excluded, and record repository state.
+      1. Add REQ-VERIFY-6482 and SCENARIO entries for pre-inference label commitment, membership commitment, backend parity, empty raw-output state, and held isolation. Write focused tests first.
+      2. Create at least three task families with finite exact semantics, meaningful candidate headroom, protected clauses, and no dependence on private game source or a language-model judge.
+      3. Predeclare at least 48 units with a development, calibration, and held split. Keep at least 24 units held. Use family-balanced membership and fixed random seeds.
+      4. Compute exact labels, satisfying witnesses, protected violation IDs, and objective values with the backend-neutral record. Cross-check Z3 and exhaustive enumeration.
+      5. Write a versioned manifest under {project_root}/data/research/experiment_6482_prospective_constraint_stream/. Record file hashes, git blob receipts when available, and a monotonic commitment event.
+      6. Record that the future Exp6483 raw-output directory is absent or empty. Add an attack that places a fake earlier raw file and confirm readiness fails.
+      7. Add attacks for post-hoc label edits, split moves, duplicate units, family imbalance, objective sign changes, unsupported operations, held prompt leakage, and reuse of an Exp6463 hash.
+      8. Emit one row per unit, backend, split, commitment object, and attack. Recompute all aggregates from rows.
+      9. Set prospective_contract_ready_score=1.0 only when all labels and membership have pre-inference proof, backend parity passes, held leakage is zero, raw outputs are absent, and all attacks fail closed.
+      10. Run focused tests, 100% task-module coverage, spec coverage, row lint, adversarial verification, and applicable exact-verification E2E checks. Inspect git status after tests.
+
+      Required deliverable: {project_root}/results/experiment_6482_immutable_prospective_constraint_stream_commitment.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "A terminal status distinguishes a sealed prospective contract from a partial dataset."
+        prospective_stream_manifest:
+          principle: "A versioned manifest defines every unit, family, prompt, policy, seed, and split before inference."
+        label_commitment_receipts:
+          principle: "Immutable receipts prove exact labels existed before model output."
+        membership_commitment_receipts:
+          principle: "Immutable receipts prove development and held membership was not chosen after results."
+        protected_clause_manifest:
+          principle: "Protected clauses make harmful flips and safety regressions exact and replayable."
+        backend_parity_rows:
+          principle: "Z3 and exhaustive agreement prevents one solver translation from defining the labels alone."
+        raw_output_empty_state_receipt:
+          principle: "An empty future output path proves commitment preceded candidate generation."
+        held_isolation_receipt:
+          principle: "Held prompts, labels, and membership must not enter development selection logic."
+        headroom_manifest:
+          principle: "Predeclared candidate headroom prevents a later comparison on units where no arm can differ."
+        attack_matrix:
+          principle: "Attacks test post-hoc labels, split moves, leakage, unsupported semantics, and old-lineage reuse."
+        prospective_contract_ready_score:
+          principle: "A conjunctive score blocks all model inference unless the prospective evidence boundary is valid."
+        per_unit_rows:
+          principle: "Unit, backend, commitment, and attack rows allow independent replay."
+        aggregate_row_recomputation:
+          principle: "Row-derived aggregates catch a ready summary with one uncovered unit."
+        protected_files_unchanged:
+          principle: "The task must not alter exact checker authority, active roadmap, or conductor."
+        gate_check_summary:
+          principle: "A blocked verdict identifies the exact missing commitment or parity check."
+        preconditions_checked:
+          principle: "Preconditions prove the exact record, target directories, and repository state were known before sealing."
+        inference_substrate:
+          principle: "Declaring exact_solver_dataset_commitment_no_llm prevents a sealed fixture from being called model evidence."
+        verifier_is_oracle:
+          principle: "The exact backends are authoritative only within the declared finite-domain semantics."
+        field_principles:
+          principle: "A field-to-principle map prevents later reinterpretation of commitment evidence."
+        field_provenance:
+          principle: "Per-field paths, blob IDs, hashes, and reducer sources make every value traceable."
+        random_seed:
+          principle: "A fixed seed reproduces family balancing and split membership."
+        duration_s:
+          principle: "Wall time detects a manifest emitted without backend enumeration and attacks."
+        tests_run:
+          principle: "Recorded commands prove the dataset, commitment, and parity checks ran."
+        reproducibility_checksum:
+          principle: "The checksum binds all unit definitions, labels, splits, exact records, and code."
+        honest_verdict:
+          principle: "The verdict states whether the stream is prospectively usable without claiming any model result."
+      ACCEPTANCE GATES:
+        - condition: "prospective_contract_ready_score == 1.0."
+          principle: "No downstream model task may run when labels, membership, parity, or held isolation is unproven."
+        - condition: "Every held unit has label and membership proof that predates the first possible Exp6483 inference event."
+          principle: "The gate directly repairs the causal defect that retired Exp6463."
+      Set inference_substrate=exact_solver_dataset_commitment_no_llm. Set verifier_is_oracle=true only within the declared finite-domain record. A blocked_* verdict requires gate_check_summary.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6482_immutable_prospective_constraint_stream_commitment --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
