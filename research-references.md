@@ -35248,3 +35248,127 @@ route, or abstain.
   performance claim.
 
 <!-- V557-PLANNER-REFRESH-20260819-END -->
+
+## V558 planner refresh - 2026-08-21
+
+<!-- V558-PLANNER-REFRESH-20260821-START -->
+
+This refresh covers the arXiv releases from 2026-08-19 through 2026-08-20.
+It also rechecks the requested secondary and product sources. Exact executable
+checks remain the only release authority. A learned score, memory, cache, or
+language model may propose, rank, route, or abstain. It may not release an
+answer without the exact checker.
+
+### Promising primary findings
+
+- **Harness Continual Learning: Continual Adaptation Beyond Model Parameters**
+  - arXiv:2608.19013, https://arxiv.org/abs/2608.19013; submitted 2026-08-19.
+  The paper treats prompts, memories, tools, skills, and routing rules as the
+  changing state around a frozen model. Its guarded update loop separates
+  candidate generation from commitment. It checks present gain, historical
+  retention, and validity before an update becomes active. Carnot hook: treat
+  the Exp6479 factor cache as a versioned harness state. Compare a frozen arm
+  with an exact-gated adaptive arm on one chronological stream. Keep candidate
+  writes quarantined until exact future gain and retention checks pass.
+- **Phantom Gains: Auditing Self-Improvement Against a Measured Null** -
+  arXiv:2608.20290, https://arxiv.org/abs/2608.20290; submitted 2026-08-20.
+  The study shows that single-decode ledgers and unmeasured transition
+  thresholds can report changes on a frozen model. It replaces those claims
+  with per-problem exact tests against pooled baseline replicates and false-
+  discovery-rate control. Carnot hook: every acquisition, forgetting, and
+  harmful-flip statistic in a continuous-learning task must carry a frozen
+  replicate null. A transition is not a gain unless it clears that measured
+  floor on sealed units.
+- **Which Eviction Policy Should an LLM Cache Use? A Systematic Study Across
+  Workloads, Capacities, and Encoders** - arXiv:2608.20280,
+  https://arxiv.org/abs/2608.20280; submitted 2026-08-20. The paper finds LFU
+  to be the strongest simple policy in its 18 semantic-cache settings. It also
+  finds that only 2.1% to 3.9% of nominal semantic hits were answer-
+  substitutable at the studied threshold. Carnot hook: validate exact factor
+  applicability before comparing eviction policy. Compare LFU, LRU, and no-
+  eviction controls only on exact-admitted writes. Do not treat a semantic
+  cache hit as a valid factor reuse.
+- **Decision-Metric Alignment in Latent World Models: Diagnostics and Action-
+  Conditioned Objectives for MPC Planning** - arXiv:2608.18746,
+  https://arxiv.org/abs/2608.18746; submitted 2026-08-19. The work separates
+  decodable state from whether latent distance ranks plans by real progress.
+  It proposes Plan-Real and CEM-stage Spearman diagnostics before changing the
+  representation. Carnot hook: the ARC generalization slot should first test
+  whether the existing live-path energy ranks executed action prefixes by
+  measured progress. A representation probe is not evidence of policy value.
+- **Metrics That Write Themselves: Evolving an Evaluator from Its Own Blind
+  Spots** - arXiv:2608.18744, https://arxiv.org/abs/2608.18744; submitted
+  2026-08-19. EvalCEGAR searches for correct and incorrect outputs that the
+  current operator pool scores the same. It then asks for one named-defect
+  operator and validates that operator on unseen tasks. Carnot hook: use
+  constructive collision pairs to propose new diagnostic factors. Keep the
+  exact checker as final authority. Require held collision closure before a
+  proposed factor enters the shadow cache.
+- **Chain-of-Experience for Continual LLM Improvement** - arXiv:2608.18027,
+  https://arxiv.org/abs/2608.18027; submitted 2026-08-18. The paper reports
+  iterative test-time gains from stored experience across several feedback
+  types. It also reports that most gains arrive early. Carnot hook: use a
+  chronological exposure curve and stop adding writes when marginal exact
+  future yield reaches the frozen null. Do not infer acquisition from an
+  aggregate final score.
+- **Inducing Task Models from Computer-Use Traces** - arXiv:2608.20319,
+  https://arxiv.org/abs/2608.20319; submitted 2026-08-20. The method derives
+  auditable goal and procedure models from interleaved traces. Carnot hook:
+  retain typed provenance and task boundaries when compacting exact-verified
+  events into factors. This is a design reference, not a reason to add a new
+  trace-induction model in V558.
+
+### Secondary-source and product checks
+
+- **OpenReview:** **XSkill: Continual Learning from Experience and Skills in
+  Multimodal Agents**, https://openreview.net/forum?id=AjP1yvCyoG, supports
+  separate experience and skill stores with later-use feedback. **ABS:
+  Enforcing Constraint Satisfaction on Generated Sequences via Automata-
+  Guided Beam Search**, https://openreview.net/forum?id=3OUGEUVL6U, guarantees
+  automaton-level constraints. Neither result replaces exact semantic checks.
+  V558 will not reopen Carnot's retired grammar or finite-ID decoding lanes.
+- **Hugging Face Papers:** recent continual-learning pages emphasize harness
+  state, controlled task streams, and intended-path evidence. PAST-Bench and
+  AgentCL remain useful protocol references. They do not provide a stronger
+  exact authority than Carnot's local checkers.
+- **Semantic Scholar:** the unauthenticated EBT (`2507.02092`) request returned
+  HTTP 429 on 2026-08-21, so this refresh does not revise its last authenticated
+  count. The ARM-EBM (`2512.15605`) response returned eight total citations and
+  two influential citations. No new citation supplies a local exact verifier
+  or changes the authority boundary.
+- **GitHub:** the current search exposed the Apache-licensed ECD repository for
+  energy-based compositional diffusion planning,
+  https://github.com/GradientSpaces/ECD. Its README still marks evaluated code
+  and checkpoints as pending. Current trending and targeted searches expose no
+  new EBM, exact-constraint, KAN, or sampler dependency that should enter the
+  milestone.
+- **Extropic:** the 2026-08-03 first-party update still places Z1 sticks,
+  cards, and clusters in 2027 early access. The public software pages expose
+  Torx and `thrml`, but Carnot still has no authenticated XTR-0, Z1, or API
+  route. Schedule no TSU execution, power, latency, or availability claim.
+- **Logical Intelligence:** the current Kona 1.0 page still describes a global
+  constraint-enforcement layer below LLM interfaces. It exposes no public
+  weights, detailed reproducible architecture, or documented local runner.
+  Keep Kona as a product comparator only.
+- **KAN, Ising, FPGA, and digital probabilistic hardware:** the new release
+  adds domain-specific KAN and spin-system papers but no method that closes
+  Carnot's present causal, continuous-learning, or live ARC gaps on available
+  hardware. The 2026 KAN FPGA online-learning result remains a future compact
+  update reference. Schedule no KAN retrain, board redesign, or unchanged
+  hardware probe in V558.
+
+### Research boundary for V558 planning
+
+- Start with a prospective, immutable task and label contract. The retired
+  Exp6463 lineage cannot supply held evidence.
+- Measure exact-energy selection on fresh outputs from the mandated local GGUF
+  families. Compare against first, shuffled, and equal-budget controls.
+- Treat continuous learning as guarded harness evolution over the Exp6479
+  factor cache. Use a frozen replicate null, exact write admission, rollback,
+  restart, bounded capacity, and held future evaluation.
+- Test ARC through decision-metric alignment on the default-off live path.
+  Make no public game or level solve claim.
+- Use dual RTX 3090 GPUs for mandated GGUF generation and CPU exact replay.
+  Schedule no hardware task without a changed authenticated access state.
+
+<!-- V558-PLANNER-REFRESH-20260821-END -->

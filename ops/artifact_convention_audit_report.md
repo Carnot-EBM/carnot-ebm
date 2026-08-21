@@ -12,37 +12,21 @@ evidence the reviewer could not have read -- do NOT act on them.
 | CHECKABLE | 7 |
 | AGGREGATE_ONLY | 1 |
 
-## experiment_1644_cerce_ledger.json
+## experiment_3582_capstone_v329.json
 
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The CERCE ledger was added, implemented, and is ready.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_1767_e2e_qwen.json
-
-**CHECKABLE**
+**AGGREGATE_ONLY**
 
 ## VERDICT
-CHECKABLE
+AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-no claim
+A second pair of eyes provides real verifier lift within a math-only, domain-bound scope, despite not generalizing to code or facts.
 
 ## WHAT IS MISSING
-nothing
+Per-unit verifier and control-arm metric rows for each game, seed, cell, or condition; only aggregate conclusions such as `"second_pair_of_eyes_lift_real": true`, `"code_generalizes": false`, and `"facts_generalize": false` are present.
 
 ## THE CHECK A READER CANNOT DO
-none
+Did verifier lift occur broadly across units, or was the claimed improvement driven by one outlier or degenerate controls?
 
 ## experiment_1736_kanele_synth.json
 
@@ -52,7 +36,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Experiment 1736 reports `"honest_verdict": "vivado_simulated_success"` and is excluded from headline aggregation as adversarially flagged.
+Experiment 1736 reports a simulated Vivado success with a generated bitfile, while being flagged adversarial and excluded from headline aggregation.
 
 ## WHAT IS MISSING
 nothing
@@ -60,39 +44,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6469_unique_event_csl_corruption_restart.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Clean unique-event CSL improved exact yield over the frozen baseline while all corrupt events were blocked, quarantined, rolled back, and remained non-resurrecting after restart.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6470_independent_unique_event_csl_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-All seven critical attacks fail closed, and independently recomputed event aggregates match the reported upstream fields.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6471_arc_generic_safety_shield_objective_ab.checkpoints.json
+## experiment_3361_archive_v309_activate_v310.json
 
 **CHECKABLE**
 
@@ -103,12 +55,12 @@ CHECKABLE
 no claim
 
 ## WHAT IS MISSING
-nothing; `"cells"` contains per-unit records identified by `"row_id"` with `"arm"`, `"game"`, `"seed"`, `"prefix_id"`, and `"recorded_next_state_reachability"`.
+nothing
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6471_arc_generic_safety_shield_objective_ab.json
+## experiment_3377_archive_v310_activate_v311.json
 
 **CHECKABLE**
 
@@ -116,7 +68,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The generic safety shield passed all readiness gates without making a level-solve claim.
+The archive of milestone 2026.05.310 is complete and milestone 2026.05.311 is ready for activation.
 
 ## WHAT IS MISSING
 nothing
@@ -124,18 +76,66 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6472_v556_adversarial_capstone.json
+## experiment_3392_archive_v311_activate_v312.json
 
-**AGGREGATE_ONLY**
+**CHECKABLE**
 
 ## VERDICT
-AGGREGATE_ONLY
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V556 capstone claims continuous-learning and ARC eligibility based on improved future exact yield and preserved-or-improved held reachability.
+The v311 archive is complete and v312 activation is ready.
 
 ## WHAT IS MISSING
-Per-unit arm/control metric rows for exp6468–exp6471; the artifact provides only aggregate assertions such as `"verifier_beats_frozen_future_yield": true`, `"clean_future_exact_effect": true`, `"effects_recompute": true`, and `"shield_preserves_or_improves_held_reachability": true`, while its detailed `"rows"` contain inventory, gate, or file-identity data rather than comparative outcomes.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-Did the claimed improvement occur broadly across held units, or was the aggregate result driven by one outlier while other units tied, regressed, or had no headroom?
+none
+
+## experiment_833_constraint_delta_root_cause.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment claims the embedding constraint store’s write path is missing, evidenced by `"n_store_write_calls": 0` despite 10 retrieval calls.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6479_verify_repair_factor_cache_shadow_adapter.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The default-off verify-repair factor-cache shadow adapter shipped successfully and met all readiness gates.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_1644_cerce_ledger.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The CERCE ledger scaffolding was added and is ready, with no policy certificates, violations, FR11 events, or policy updates evaluated.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
