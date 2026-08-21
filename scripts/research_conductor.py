@@ -1923,6 +1923,143 @@ COMPLETE_FILE = PROJECT_ROOT / "research-complete.yaml"
 NEXT_ROADMAP_FILE = PROJECT_ROOT / "research-roadmap-next.yaml"
 NEXT_ROADMAP_FILE = PROJECT_ROOT / "research-roadmap-next.yaml"
 
+# Guard-stall recovery (REQ-CONDUCTOR-STALL-1). Before this shipped, an
+# activation refusal retried an identical activation every 2 minutes,
+# forever (~5,125 refusal lines, ~170 hours of dead loop time). Now:
+# quarantine the refused roadmap, replan with the guard's own violation
+# report, cap the replans, then park for the operator. State is a file so
+# the cap survives conductor restarts.
+ACTIVATION_REPLAN_CAP = 2
+REPLAN_STATE_FILE = PROJECT_ROOT / "ops" / ".activation_replan_state.json"
+ROADMAP_QUARANTINE_DIR = PROJECT_ROOT / "ops" / "roadmap-quarantine"
+KNOWN_ISSUES_FILE = PROJECT_ROOT / "ops" / "known-issues.md"
+
+
+def _load_replan_state() -> dict:
+    """Replan/park state for activation-refusal recovery (REQ-CONDUCTOR-STALL-1)."""
+    try:
+        state = json.loads(REPLAN_STATE_FILE.read_text())
+        if isinstance(state, dict):
+            return state
+    except Exception:
+        pass
+    return {}
+
+
+def _save_replan_state(state: dict) -> None:
+    """Persist replan/park state; a file so the cap survives restarts."""
+    try:
+        REPLAN_STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        REPLAN_STATE_FILE.write_text(json.dumps(state, indent=2))
+    except Exception as exc:
+        logger.warning("Could not persist replan state: %s", exc)
+
+
+def _roadmap_content_hash(text: str) -> str:
+    """Content fingerprint used to detect an operator hand-fix of a parked roadmap."""
+    return hashlib.sha256(text.encode()).hexdigest()
+
+
+def _activation_refusal_parked() -> bool:
+    """True when the pending roadmap is parked after exhausting its replan cap.
+
+    Auto-unpark (SCENARIO-CONDUCTOR-STALL-4): any content change to the
+    parked roadmap file — an operator hand-fix — voids the park and
+    restores a fresh replan budget. The next activation attempt then runs
+    the unchanged guard again.
+    """
+    state = _load_replan_state()
+    if not state.get("parked"):
+        return False
+    if not NEXT_ROADMAP_FILE.exists():
+        return False
+    try:
+        text = NEXT_ROADMAP_FILE.read_text()
+    except OSError:
+        return False
+    if _roadmap_content_hash(text) != state.get("roadmap_sha256"):
+        logger.info("Parked roadmap content changed — unparking with a fresh replan budget")
+        _save_replan_state({})
+        return False
+    return True
+
+
+def _handle_activation_refusal(next_milestone: str, violation_report: str, push: bool) -> None:
+    """Bounded replan-then-park recovery for activation refusals.
+
+    SAFETY PROPERTY (do not weaken): the replanned roadmap goes back
+    through the UNCHANGED activation guard on the next iteration. This
+    path never edits or relaxes any lint. It only hands the planner the
+    guard's own violation report, verbatim, so the planner can write the
+    structured `prior_failures:` / `operator_override:` block the guard
+    requires — the exact repair the operator did by hand twice in the
+    week before this shipped.
+
+    Flow (REQ-CONDUCTOR-STALL-1; design in docs/research-notes/
+    conductor-self-improvement-2026-08-21.md, mechanism 1):
+      refusal 1..CAP  -> quarantine the roadmap, replan with the report
+      refusal CAP+1   -> park: durable OPERATOR-ATTENTION records, idle
+    A parked roadmap unparks when its content changes (hand-fix).
+    """
+    state = _load_replan_state()
+    if state.get("milestone") != next_milestone:
+        state = {"milestone": next_milestone, "replans": 0, "parked": False}
+    if state.get("parked"):
+        return
+    replans = int(state.get("replans", 0))
+    if replans >= ACTIVATION_REPLAN_CAP:
+        # Park. The refused roadmap stays in place for inspection; the
+        # BLOCK line goes to the tracked conductor log because journald
+        # retention on this host is a few hours (not a durable record).
+        try:
+            state["roadmap_sha256"] = _roadmap_content_hash(NEXT_ROADMAP_FILE.read_text())
+        except OSError:
+            state["roadmap_sha256"] = ""
+        state["parked"] = True
+        _save_replan_state(state)
+        log_step(
+            f"OPERATOR-ATTENTION: {next_milestone} parked",
+            "BLOCK",
+            f"activation refused after {replans} replans; edit roadmap-next to unpark",
+        )
+        try:
+            stamp = datetime.now(UTC).strftime("%Y-%m-%d")
+            with open(KNOWN_ISSUES_FILE, "a") as f:
+                f.write(
+                    f"\n## OPERATOR-ATTENTION {stamp}: milestone {next_milestone} "
+                    f"activation PARKED\n\n"
+                    f"The activation guard refused this roadmap; {replans} bounded replans "
+                    f"with the verbatim violation report did not clear it "
+                    f"(REQ-CONDUCTOR-STALL-1).\n"
+                    f"The refused roadmap stays at research-roadmap-next.yaml. Quarantined "
+                    f"prior attempts sit under ops/roadmap-quarantine/. To resume: edit "
+                    f"research-roadmap-next.yaml (any content change unparks with a fresh "
+                    f"replan budget) or delete ops/.activation_replan_state.json.\n\n"
+                    f"Verbatim violation report from the last refusal:\n\n"
+                    f"```\n{violation_report}\n```\n"
+                )
+        except Exception as exc:
+            logger.warning("Could not append park entry to known-issues.md: %s", exc)
+        return
+    # Quarantine the refused roadmap, then replan ONCE with the guard's
+    # violation report embedded verbatim in the planner prompt.
+    try:
+        ROADMAP_QUARANTINE_DIR.mkdir(parents=True, exist_ok=True)
+        qpath = ROADMAP_QUARANTINE_DIR / f"roadmap-{next_milestone}-refusal{replans + 1}.yaml"
+        shutil.move(str(NEXT_ROADMAP_FILE), str(qpath))
+    except Exception as exc:
+        logger.error("Could not quarantine refused roadmap: %s", exc)
+        return
+    state["replans"] = replans + 1
+    state["parked"] = False
+    _save_replan_state(state)
+    log_step(
+        f"Activation replan {replans + 1}/{ACTIVATION_REPLAN_CAP}: {next_milestone}",
+        "OK",
+        f"refused roadmap quarantined to {qpath.name}; replanning with lint report",
+    )
+    _plan_next_milestone(push=push, replan_context=violation_report)
+
 
 def load_research_tasks() -> list[dict]:
     """Load pending research tasks from research-roadmap.yaml.
@@ -3882,6 +4019,14 @@ def _activate_next_roadmap(push: bool = True) -> bool:
         logger.info("No research-roadmap-next.yaml found — nothing to activate")
         return False
 
+    # Parked after exhausting the replan cap (REQ-CONDUCTOR-STALL-1,
+    # SCENARIO-CONDUCTOR-STALL-3): idle quietly — no re-lint, no log
+    # spam, no planner call. A content change to the roadmap file (an
+    # operator hand-fix) unparks automatically.
+    if _activation_refusal_parked():
+        logger.debug("Activation parked — awaiting operator edit of research-roadmap-next.yaml")
+        return False
+
     try:
         with open(NEXT_ROADMAP_FILE) as f:
             next_data = yaml.safe_load(f)
@@ -4054,6 +4199,19 @@ def _activate_next_roadmap(push: bool = True) -> bool:
                     f"first: {hard[0].violation_class} on {hard[0].task_id}. "
                     f"NEXT_ROADMAP_FILE left in place for operator inspection.",
                 )
+                # Bounded replan-then-park (REQ-CONDUCTOR-STALL-1). The
+                # guard above is UNCHANGED and re-checks any replanned
+                # roadmap; this only feeds the planner its error report.
+                _handle_activation_refusal(
+                    next_milestone,
+                    "exclusion-manifest lint HARD violations "
+                    f"(milestone {next_milestone}):\n"
+                    + "\n".join(
+                        f"- {r.violation_class}: task {r.task_id} ({r.task_title}) — {r.detail}"
+                        for r in hard
+                    ),
+                    push,
+                )
                 return False
         except Exception as _e:
             logger.warning(
@@ -4096,6 +4254,16 @@ def _activate_next_roadmap(push: bool = True) -> bool:
                         "2026. NEXT_ROADMAP_FILE left in place for operator "
                         "inspection or re-plan.",
                     )
+                    # Same bounded replan-then-park as the exclusion-manifest
+                    # refusal above (REQ-CONDUCTOR-STALL-1); guard unchanged.
+                    _handle_activation_refusal(
+                        next_milestone,
+                        "arc-levelup-guarantee lint: 0 level-up attempts "
+                        "(< 1 required). CLAUDE.md 'ARC-AGI-3 November-Submission "
+                        "Standing Floor' requires >=1 ARC-AGI-3 task every "
+                        "milestone through Nov 2026.",
+                        push,
+                    )
                     return False
 
                 # 2026-07-17: public-solving floor RETIRED (all 25 games cleared), redirected to
@@ -4135,6 +4303,9 @@ def _activate_next_roadmap(push: bool = True) -> bool:
             run_cmd(["git", "push", "origin", "main"], timeout=60)
 
         log_step(f"Milestone {next_milestone} activated", "OK", f"{len(next_tasks)} tasks queued")
+        # Activation succeeded: clear any replan/park state so the next
+        # milestone's refusal budget starts fresh (REQ-CONDUCTOR-STALL-1).
+        _save_replan_state({})
         return True
 
     except Exception as e:
@@ -4142,8 +4313,14 @@ def _activate_next_roadmap(push: bool = True) -> bool:
         return False
 
 
-def _plan_next_milestone(push: bool = True) -> bool:
+def _plan_next_milestone(push: bool = True, replan_context: str = "") -> bool:
     """Ask the configured agent to plan the next research milestone.
+
+    replan_context: non-empty on a guard-stall replan (REQ-CONDUCTOR-STALL-1,
+    SCENARIO-CONDUCTOR-STALL-1). Holds the activation guard's verbatim
+    violation report; it is prepended to the planner prompt so the planner
+    sees exactly what it got wrong. The replanned roadmap still goes back
+    through the unchanged guard.
 
     When all current tasks are done AND no research-roadmap-next.yaml exists,
     this function asks the configured agent to analyze completed work and propose the next
@@ -4454,6 +4631,24 @@ def _plan_next_milestone(push: bool = True) -> bool:
         f"- CalVer milestones: increment the seq number\n"
         f"- Each experiment must have a clear deliverable file path\n"
     )
+
+    # Guard-stall replan (REQ-CONDUCTOR-STALL-1): lead with the activation
+    # guard's verbatim violation report so the planner is corrected at the
+    # moment of error, with the exact structure it failed to produce.
+    if replan_context:
+        planning_prompt = (
+            "REPLAN AFTER ACTIVATION REFUSAL — READ THIS FIRST.\n"
+            "Your previous roadmap for this milestone was REFUSED by the\n"
+            "activation guard (exclusion-manifest / ARC-floor lints in the\n"
+            "conductor). The verbatim violation report follows. Fix EXACTLY\n"
+            "these violations: add the required `prior_failures:` block (all\n"
+            "four sub-fields) or a cited `operator_override:` where the task\n"
+            "is a legitimate continuation, or drop/rewrite the offending\n"
+            "tasks. The guard is UNCHANGED and re-checks the new roadmap.\n\n"
+            "----- BEGIN VIOLATION REPORT (verbatim) -----\n"
+            f"{replan_context}\n"
+            "----- END VIOLATION REPORT -----\n\n"
+        ) + planning_prompt
 
     # Planner benefits from Opus-class synthesis (big-context design of 12-13
     # coherent experiments). Set AGENT_MODEL_PLANNER=opus to enable; defaults to Sonnet.
@@ -4810,6 +5005,13 @@ def research_step(
         logger.info("All tasks in current milestone complete.")
 
         if NEXT_ROADMAP_FILE.exists():
+            # Parked after the replan cap (REQ-CONDUCTOR-STALL-1,
+            # SCENARIO-CONDUCTOR-STALL-3): idle without re-archiving and
+            # without re-running the guard every 2 minutes. An operator
+            # edit to the roadmap file unparks automatically.
+            if _activation_refusal_parked():
+                logger.info("Milestone transition parked for operator attention — idling")
+                return False
             # A next roadmap is ready — archive current and activate it
             logger.info("Found research-roadmap-next.yaml — transitioning milestones")
             _archive_current_milestone(push=push)
