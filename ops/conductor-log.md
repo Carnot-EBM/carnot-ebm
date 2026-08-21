@@ -16234,3 +16234,5 @@ code |
 | 2026-08-21 14:59 UTC | Online cache transition and anytime-valid evidence | OK | 87 passed, 1 warning in 12.31s |
 | 2026-08-21 15:21 UTC | Three-family forced-candidate representation strea | OK | 88 passed, 1 warning in 8.80s |
 | 2026-08-21 15:40 UTC | Independent representation integrity and shortcut  | FLAGGED | adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT, DURATION_TOO_SHORT — |
+| 2026-08-21 16:47 UTC | Plan milestone 2026.08.560 | OK | 14 tasks proposed |
+| 2026-08-21 16:49 UTC | Milestone 2026.08.560 activated | OK | 14 tasks queued |
