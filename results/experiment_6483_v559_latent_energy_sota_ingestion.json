@@ -1,0 +1,926 @@
+{
+  "status": "complete",
+  "source_cutoff_utc": "2026-08-21T14:08:45Z",
+  "query_receipts": [
+    {
+      "receipt_id": "repo_state",
+      "method": "git rev-parse HEAD and git status --porcelain=v1",
+      "query": "repository state before source ingestion",
+      "observed": "a93446aff98414646314938f6fed8ea8851f4494; clean before edits",
+      "checked_utc": "2026-08-21T13:50:00Z"
+    },
+    {
+      "receipt_id": "arxiv_helper_ebm",
+      "method": "scripts/sweep_clusters.py",
+      "command": ".venv/bin/python scripts/sweep_clusters.py 1 --max-results 8",
+      "query": "energy-based model, EBT, reasoning, verification, LLM",
+      "exit_code": 0
+    },
+    {
+      "receipt_id": "arxiv_helper_hardware",
+      "method": "scripts/sweep_clusters.py",
+      "command": ".venv/bin/python scripts/sweep_clusters.py 4 --max-results 8",
+      "query": "FPGA, Ising machine, thermodynamic, probabilistic computing, sampling",
+      "exit_code": 0
+    },
+    {
+      "receipt_id": "semantic_scholar_keyword_helper",
+      "method": "scripts/sweep_semscholar.py",
+      "command": ".venv/bin/python scripts/sweep_semscholar.py \"latent energy verifier exact verification KAN continual constraint learning\" --limit 8",
+      "query": "latent energy verifier exact verification KAN continual constraint learning",
+      "exit_code": 0,
+      "observed": "HTTP 429; zero arXiv IDs returned by helper."
+    },
+    {
+      "receipt_id": "sequential_primary_web_reads",
+      "method": "sequential web.open direct arXiv reads",
+      "query": "V559 primary source set plus coverage rows",
+      "observed": "primary_source_rows contains one row per checked primary record."
+    },
+    {
+      "receipt_id": "semantic_scholar_ebt_curl",
+      "method": "bounded curl to Semantic Scholar Graph API",
+      "query": "citations for ARXIV:2507.02092",
+      "exit_code": 0,
+      "observed": "HTTP 200 with 35 data rows."
+    },
+    {
+      "receipt_id": "semantic_scholar_arm_curl",
+      "method": "bounded curl to Semantic Scholar Graph API",
+      "query": "citations for ARXIV:2512.15605",
+      "exit_code": 0,
+      "observed": "HTTP 200 with 8 data rows."
+    },
+    {
+      "receipt_id": "network_method",
+      "method": "low concurrency web and helper reads",
+      "query": "no high-concurrency deep-research harness",
+      "observed": "No product, model, hardware, or ARC oracle was invoked."
+    }
+  ],
+  "primary_source_rows": [
+    {
+      "source_id": "arxiv_2608_20337",
+      "title": "Information on trajectories: martingales and random times",
+      "url": "https://arxiv.org/abs/2608.20337",
+      "date": "2026-08-20",
+      "submitted_utc": "2026-08-20T17:59:57Z",
+      "query_route": "arXiv cluster 1 plus direct sequential web read",
+      "relevance_area": "continual_constraint_learning",
+      "method_tag": "anytime_valid_eprocess",
+      "claim_boundary": "Use only as a design source for anytime-valid cache promotion and adaptive-peeking charges. It is not evidence that a Carnot cache update improves behavior.",
+      "source_note": "Exact martingale identities and random-time peeking penalty.",
+      "selected_for_mapping": true,
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "citation_validity": {
+        "resolvable_url": true,
+        "source_class": "primary",
+        "url_checked_utc": "2026-08-21T14:08:45Z",
+        "identity_fields": [
+          "source_id",
+          "title",
+          "url",
+          "date"
+        ]
+      },
+      "execution_claim": false
+    },
+    {
+      "source_id": "arxiv_2608_20316",
+      "title": "Pandora's AI Model Routing Box: Efficient Allocation with Costly Value Estimation",
+      "url": "https://arxiv.org/abs/2608.20316",
+      "date": "2026-08-20",
+      "submitted_utc": "2026-08-20T17:54:37Z",
+      "query_route": "arXiv cluster 1 plus direct sequential web read",
+      "relevance_area": "energy_guided_decisions",
+      "method_tag": "value_of_information_routing",
+      "claim_boundary": "Use as routing math for charged exact checks. Exact verification remains the authority and noisy estimates must be able to lose.",
+      "source_note": "Value-of-information policy for costly prediction estimates.",
+      "selected_for_mapping": true,
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "citation_validity": {
+        "resolvable_url": true,
+        "source_class": "primary",
+        "url_checked_utc": "2026-08-21T14:08:45Z",
+        "identity_fields": [
+          "source_id",
+          "title",
+          "url",
+          "date"
+        ]
+      },
+      "execution_claim": false
+    },
+    {
+      "source_id": "arxiv_2608_20274",
+      "title": "Break It Down, Pass It On: Cross-Task Skill Transfer in LLM Agents",
+      "url": "https://arxiv.org/abs/2608.20274",
+      "date": "2026-08-20",
+      "submitted_utc": "2026-08-20T17:12:08Z",
+      "query_route": "arXiv direct sequential web read from V559 planner refresh",
+      "relevance_area": "continual_constraint_learning",
+      "method_tag": "atomic_skill_reuse",
+      "claim_boundary": "Use subtask-level reuse as a factor-cache design control. Do not promote broad task-wide learned skills without exact applicability tests.",
+      "source_note": "Subtask-level text skills transfer better than broad task skills.",
+      "selected_for_mapping": true,
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "citation_validity": {
+        "resolvable_url": true,
+        "source_class": "primary",
+        "url_checked_utc": "2026-08-21T14:08:45Z",
+        "identity_fields": [
+          "source_id",
+          "title",
+          "url",
+          "date"
+        ]
+      },
+      "execution_claim": false
+    },
+    {
+      "source_id": "arxiv_2608_19564",
+      "title": "Remember, Verify, or Ask? Cross-Family Evaluation of Memory Commitment in LLM Agents",
+      "url": "https://arxiv.org/abs/2608.19564",
+      "date": "2026-08-20",
+      "submitted_utc": "2026-08-20T02:11:03Z",
+      "query_route": "arXiv direct sequential web read from V559 planner refresh",
+      "relevance_area": "continual_constraint_learning",
+      "method_tag": "actual_memory_action_audit",
+      "claim_boundary": "Use as an audit rule for durable action receipts. A stated memory decision is not a write, tombstone, rollback, or quarantine action.",
+      "source_note": "Memory label and tool-call agreement can diverge sharply.",
+      "selected_for_mapping": true,
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "citation_validity": {
+        "resolvable_url": true,
+        "source_class": "primary",
+        "url_checked_utc": "2026-08-21T14:08:45Z",
+        "identity_fields": [
+          "source_id",
+          "title",
+          "url",
+          "date"
+        ]
+      },
+      "execution_claim": false
+    },
+    {
+      "source_id": "arxiv_2608_20318",
+      "title": "AI4AI-Bench: Benchmarking LLM Agents in Algorithmic Design for Recursive Self-Improvement",
+      "url": "https://arxiv.org/abs/2608.20318",
+      "date": "2026-08-20",
+      "submitted_utc": "2026-08-20T17:56:59Z",
+      "query_route": "arXiv direct sequential web read from V559 planner refresh",
+      "relevance_area": "continual_constraint_learning",
+      "method_tag": "guarded_harness_learning_boundary",
+      "claim_boundary": "Use to separate harness-state changes from model-training claims. It is not a Carnot recursive self-improvement result.",
+      "source_note": "Frozen repos and hidden evaluators separate algorithm change from run change.",
+      "selected_for_mapping": false,
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "citation_validity": {
+        "resolvable_url": true,
+        "source_class": "primary",
+        "url_checked_utc": "2026-08-21T14:08:45Z",
+        "identity_fields": [
+          "source_id",
+          "title",
+          "url",
+          "date"
+        ]
+      },
+      "execution_claim": false
+    },
+    {
+      "source_id": "arxiv_2606_21646",
+      "title": "Energy-based Compositional Diffusion Planning",
+      "url": "https://arxiv.org/abs/2606.21646",
+      "date": "2026-06-19",
+      "submitted_utc": "2026-06-19T17:57:09Z",
+      "query_route": "arXiv cluster 1 plus GitHub follow-up",
+      "relevance_area": "neural_constraints",
+      "method_tag": "conservative_local_global_energy",
+      "claim_boundary": "Borrow only the conservative composition test. Do not adopt a diffusion planner or claim planning performance.",
+      "source_note": "Local bridge potentials must compose into a conservative global energy.",
+      "selected_for_mapping": true,
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "citation_validity": {
+        "resolvable_url": true,
+        "source_class": "primary",
+        "url_checked_utc": "2026-08-21T14:08:45Z",
+        "identity_fields": [
+          "source_id",
+          "title",
+          "url",
+          "date"
+        ]
+      },
+      "execution_claim": false
+    },
+    {
+      "source_id": "arxiv_2507_02092",
+      "title": "Energy-Based Transformers are Scalable Learners and Thinkers",
+      "url": "https://arxiv.org/abs/2507.02092",
+      "date": "2025-07-02",
+      "submitted_utc": "2025-07-02T19:17:29Z",
+      "query_route": "direct arXiv and Semantic Scholar citation recheck",
+      "relevance_area": "ebm_verification",
+      "method_tag": "learned_energy_as_verifier_context",
+      "claim_boundary": "Use as architecture context for energy-as-verifier. Do not claim EBT weights, pretraining, or live EBT execution.",
+      "source_note": "Prediction is framed as energy minimization over input-candidate pairs.",
+      "selected_for_mapping": false,
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "citation_validity": {
+        "resolvable_url": true,
+        "source_class": "primary",
+        "url_checked_utc": "2026-08-21T14:08:45Z",
+        "identity_fields": [
+          "source_id",
+          "title",
+          "url",
+          "date"
+        ]
+      },
+      "execution_claim": false
+    },
+    {
+      "source_id": "arxiv_2602_06737",
+      "title": "Optimized Piecewise Affine Abstractions of Neural Networks with Learnable Activation Functions",
+      "url": "https://arxiv.org/abs/2602.06737",
+      "date": "2026-08-02",
+      "submitted_utc": "2026-08-02T05:55:30Z",
+      "query_route": "direct arXiv read for KAN verification coverage",
+      "relevance_area": "kan",
+      "method_tag": "kan_pwa_verification_budget",
+      "claim_boundary": "Use as KAN certificate context only. Do not reopen the retired KAN replacement or KAN training lane.",
+      "source_note": "PWA abstractions support verification of networks that include KANs.",
+      "selected_for_mapping": false,
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "citation_validity": {
+        "resolvable_url": true,
+        "source_class": "primary",
+        "url_checked_utc": "2026-08-21T14:08:45Z",
+        "identity_fields": [
+          "source_id",
+          "title",
+          "url",
+          "date"
+        ]
+      },
+      "execution_claim": false
+    },
+    {
+      "source_id": "arxiv_2602_18145",
+      "title": "Detecting Contextual Hallucinations in LLMs with Frequency-Aware Attention",
+      "url": "https://arxiv.org/abs/2602.18145",
+      "date": "2026-02-20",
+      "submitted_utc": "2026-02-20T11:18:45Z",
+      "query_route": "direct arXiv read for hallucination-detection coverage",
+      "relevance_area": "hallucination_detection",
+      "method_tag": "attention_energy_hallucination_signal",
+      "claim_boundary": "Use as a diagnostic comparator only. It relies on attention access and cannot become an exact Carnot release authority.",
+      "source_note": "High-frequency attention energy is reported as a hallucination signal.",
+      "selected_for_mapping": false,
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "citation_validity": {
+        "resolvable_url": true,
+        "source_class": "primary",
+        "url_checked_utc": "2026-08-21T14:08:45Z",
+        "identity_fields": [
+          "source_id",
+          "title",
+          "url",
+          "date"
+        ]
+      },
+      "execution_claim": false
+    },
+    {
+      "source_id": "arxiv_2607_21077",
+      "title": "A scalable and resource-efficient pipelined p-computer for probabilistic Ising machines",
+      "url": "https://arxiv.org/abs/2607.21077",
+      "date": "2026-07-23",
+      "submitted_utc": "2026-07-23T09:09:39Z",
+      "query_route": "arXiv cluster 4 plus direct sequential web read",
+      "relevance_area": "probabilistic_hardware",
+      "method_tag": "pipelined_pcomputer_boundary",
+      "claim_boundary": "Use as hardware context for future p-bit comparison only. Carnot has not run this hardware and makes no speed or power claim.",
+      "source_note": "Pipelined FPGA p-computer for fully connected probabilistic Ising machines.",
+      "selected_for_mapping": false,
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "citation_validity": {
+        "resolvable_url": true,
+        "source_class": "primary",
+        "url_checked_utc": "2026-08-21T14:08:45Z",
+        "identity_fields": [
+          "source_id",
+          "title",
+          "url",
+          "date"
+        ]
+      },
+      "execution_claim": false
+    },
+    {
+      "source_id": "arxiv_2512_15605",
+      "title": "Autoregressive Language Models are Secretly Energy-Based Models",
+      "url": "https://arxiv.org/abs/2512.15605",
+      "date": "2026-05-25",
+      "submitted_utc": "2026-05-25T15:54:35Z",
+      "query_route": "direct arXiv and Semantic Scholar citation recheck",
+      "relevance_area": "ebm_verification",
+      "method_tag": "arm_ebm_theory_context",
+      "claim_boundary": "Use as theory context for ARM-EBM equivalence. It is not local evidence that current generated-answer lanes work.",
+      "source_note": "The current arXiv version is v4, last revised 2026-05-25.",
+      "selected_for_mapping": false,
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "citation_validity": {
+        "resolvable_url": true,
+        "source_class": "primary",
+        "url_checked_utc": "2026-08-21T14:08:45Z",
+        "identity_fields": [
+          "source_id",
+          "title",
+          "url",
+          "date"
+        ]
+      },
+      "execution_claim": false
+    }
+  ],
+  "secondary_source_rows": [
+    {
+      "source_id": "semantic_scholar_ebt_2507_02092",
+      "surface": "Semantic Scholar EBT",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,url,year,publicationDate,externalIds&limit=100",
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "endpoint_state": "HTTP 200",
+      "observed_citation_count": 35,
+      "citation_count_policy": "observed_count",
+      "claim_boundary": "35 rows were returned by the public API. No citation-derived Carnot task is promoted.",
+      "newest_relevant_records": [
+        "2608.14186",
+        "2608.13570",
+        "2607.17047"
+      ],
+      "execution_claim": false
+    },
+    {
+      "source_id": "semantic_scholar_arm_2512_15605",
+      "surface": "Semantic Scholar ARM-EBM",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,url,year,publicationDate,externalIds&limit=100",
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "endpoint_state": "HTTP 200",
+      "observed_citation_count": 8,
+      "citation_count_policy": "observed_count",
+      "claim_boundary": "Eight citing rows were returned. None reopens generated-answer or hidden-state scope.",
+      "newest_relevant_records": [
+        "2607.02154",
+        "2606.03089",
+        "2605.18871"
+      ],
+      "execution_claim": false
+    },
+    {
+      "source_id": "openreview_ebt_page",
+      "surface": "OpenReview",
+      "url": "https://openreview.net/forum?id=ZBj3Qp1bYg",
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "endpoint_state": "browser challenge page; search snippet confirmed EBT record",
+      "observed_citation_count": null,
+      "citation_count_policy": "not_returned",
+      "claim_boundary": "OpenReview is a publication surface here, not a runnable Carnot dependency.",
+      "execution_claim": false
+    },
+    {
+      "source_id": "huggingface_papers_ebt",
+      "surface": "Hugging Face Papers",
+      "url": "https://huggingface.co/papers/2507.02092",
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "endpoint_state": "HTTP page readable",
+      "observed_citation_count": null,
+      "citation_count_policy": "not_applicable",
+      "claim_boundary": "The page links paper, project, and GitHub context. It does not provide Carnot-executed EBT weights.",
+      "execution_claim": false
+    },
+    {
+      "source_id": "github_ecd_repository",
+      "surface": "GitHub",
+      "url": "https://github.com/GradientSpaces/ECD",
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "endpoint_state": "public repository page readable",
+      "observed_citation_count": null,
+      "citation_count_policy": "not_applicable",
+      "claim_boundary": "The repository supports source identity for ECD. Carnot does not run ECD code here.",
+      "execution_claim": false
+    },
+    {
+      "source_id": "extropic_z1_first_party",
+      "surface": "Extropic",
+      "url": "https://extropic.ai/writing/from-one-to-one-billion/",
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "endpoint_state": "first-party page readable",
+      "observed_citation_count": null,
+      "citation_count_policy": "not_applicable",
+      "claim_boundary": "Z1 is product and roadmap context. Carnot has no authenticated device or API route.",
+      "execution_claim": false
+    },
+    {
+      "source_id": "logical_intelligence_kona_first_party",
+      "surface": "Logical Intelligence",
+      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+      "checked_utc": "2026-08-21T14:08:45Z",
+      "endpoint_state": "first-party page readable",
+      "observed_citation_count": null,
+      "citation_count_policy": "not_applicable",
+      "claim_boundary": "Kona remains a product comparator. No local weights, runner, or architecture receipt is available.",
+      "execution_claim": false
+    }
+  ],
+  "method_mapping_rows": [
+    {
+      "mapping_id": "m1_anytime_valid_cache_promotion",
+      "source_id": "arxiv_2608_20337",
+      "source_url": "https://arxiv.org/abs/2608.20337",
+      "method": "Anytime-valid evidence process with adaptive-peeking charge.",
+      "current_carnot_surface": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+      "expected_test": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+      "failure_boundary": "Promotion fails if a held stream is inspected repeatedly without an e-process charge.",
+      "retired_scope_risk": "Does not reopen frozen Exp5895 or generated-answer CSL qualification.",
+      "candidate_next_task": "Exp6485 online cache transition and evidence-process contract.",
+      "execution_claim": false
+    },
+    {
+      "mapping_id": "m2_value_of_information_exact_routing",
+      "source_id": "arxiv_2608_20316",
+      "source_url": "https://arxiv.org/abs/2608.20316",
+      "method": "Value-of-information routing for charged exact verification.",
+      "current_carnot_surface": "python/carnot/experiment_6478_identifiable_held_exact_energy_selection.py",
+      "expected_test": "tests/python/test_experiment_6490_value_of_information_exact_checker_policy.py",
+      "failure_boundary": "Routing fails if a learned estimate overrides an exact verifier result.",
+      "retired_scope_risk": "Does not reuse finite-ID generated answers or parser repair.",
+      "candidate_next_task": "Exp6490 value-of-information exact-check policy.",
+      "execution_claim": false
+    },
+    {
+      "mapping_id": "m3_atomic_factor_reuse",
+      "source_id": "arxiv_2608_20274",
+      "source_url": "https://arxiv.org/abs/2608.20274",
+      "method": "Atomic factor reuse before task-wide bundle reuse.",
+      "current_carnot_surface": "python/carnot/learn/constraint_memory.py",
+      "expected_test": "tests/python/test_experiment_6491_guarded_factor_cache_evolution.py",
+      "failure_boundary": "Reuse fails if task-wide bundles transfer without exact applicability evidence.",
+      "retired_scope_risk": "Does not reopen broad self-learning or external text scorer lanes.",
+      "candidate_next_task": "Exp6491 guarded factor-cache evolution.",
+      "execution_claim": false
+    },
+    {
+      "mapping_id": "m4_actual_memory_action_receipts",
+      "source_id": "arxiv_2608_19564",
+      "source_url": "https://arxiv.org/abs/2608.19564",
+      "method": "Audit durable memory actions, not stated memory intent.",
+      "current_carnot_surface": "python/carnot/task_runtime_receipts.py",
+      "expected_test": "tests/python/test_experiment_6493_memory_action_audit.py",
+      "failure_boundary": "A stated remember/verify/ask decision is insufficient without a durable action receipt.",
+      "retired_scope_risk": "Does not patch Exp5253 provenance or infer write actions from text.",
+      "candidate_next_task": "Exp6493 actual memory-action audit.",
+      "execution_claim": false
+    },
+    {
+      "mapping_id": "m5_conservative_energy_composition",
+      "source_id": "arxiv_2606_21646",
+      "source_url": "https://arxiv.org/abs/2606.21646",
+      "method": "Conservative local-to-global energy composition audit.",
+      "current_carnot_surface": "python/carnot/phase3/compositional_energy.py",
+      "expected_test": "tests/python/test_experiment_6488_compact_latent_energy_controls.py",
+      "failure_boundary": "Composition fails if clause-local energies form a path-dependent cycle.",
+      "retired_scope_risk": "Does not adopt a diffusion planner or reopen generated planning output.",
+      "candidate_next_task": "Exp6488 compact latent-energy controls.",
+      "execution_claim": false
+    }
+  ],
+  "retired_scope_collision_rows": [
+    {
+      "scope_id": "finite_id_generated_answer_lane",
+      "source_refs": [
+        "arxiv_2608_20316",
+        "arxiv_2512_15605"
+      ],
+      "exclusion_source": "ops/exclusion_manifest.yaml:895-924",
+      "collision": true,
+      "decision": "closed",
+      "reason": "Routing and ARM-EBM theory do not reopen finite-ID or grammar generated-answer retries."
+    },
+    {
+      "scope_id": "kan_training_or_replacement_lane",
+      "source_refs": [
+        "arxiv_2602_06737"
+      ],
+      "exclusion_source": "research-references.md V559 planning impact",
+      "collision": true,
+      "decision": "deferred_boundary_only",
+      "reason": "KAN verification informs controls, but KAN training remains outside V559."
+    },
+    {
+      "scope_id": "tsu_or_kona_execution",
+      "source_refs": [
+        "extropic_z1_first_party",
+        "logical_intelligence_kona_first_party"
+      ],
+      "exclusion_source": "research-roadmap-vNEXT.md failed-scope discipline",
+      "collision": true,
+      "decision": "product_comparator_only",
+      "reason": "No authenticated local device, API, weights, runner, latency, or power evidence exists."
+    },
+    {
+      "scope_id": "hidden_state_or_attention_release_authority",
+      "source_refs": [
+        "arxiv_2602_18145"
+      ],
+      "exclusion_source": "research-references.md V559 planning impact",
+      "collision": true,
+      "decision": "diagnostic_only",
+      "reason": "Attention-energy hallucination signals are not exact release authority."
+    }
+  ],
+  "research_note_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v559-latent-energy-sota-ingestion.md",
+  "study_ledger_updates": [
+    {
+      "item": "Exp6483 V559 latent-energy SOTA ingestion",
+      "status": "INGESTED",
+      "path": "docs/research-notes/v559-latent-energy-sota-ingestion.md",
+      "sources": [
+        "arxiv_2608_20337",
+        "arxiv_2608_20316",
+        "arxiv_2608_20274",
+        "arxiv_2608_19564",
+        "arxiv_2608_20318",
+        "arxiv_2606_21646",
+        "arxiv_2507_02092",
+        "arxiv_2602_06737",
+        "arxiv_2602_18145",
+        "arxiv_2607_21077",
+        "arxiv_2512_15605"
+      ]
+    },
+    {
+      "item": "research-references.md",
+      "status": "unchanged",
+      "reason": "The V559 planner refresh already contains the source delta."
+    }
+  ],
+  "no_execution_claim": true,
+  "per_unit_rows": [
+    {
+      "row_type": "primary_source",
+      "row_id": "arxiv_2608_20337",
+      "source_id": "arxiv_2608_20337",
+      "url": "https://arxiv.org/abs/2608.20337",
+      "date": "2026-08-20",
+      "relevance_area": "continual_constraint_learning",
+      "selected_for_mapping": true,
+      "execution_claim": false
+    },
+    {
+      "row_type": "primary_source",
+      "row_id": "arxiv_2608_20316",
+      "source_id": "arxiv_2608_20316",
+      "url": "https://arxiv.org/abs/2608.20316",
+      "date": "2026-08-20",
+      "relevance_area": "energy_guided_decisions",
+      "selected_for_mapping": true,
+      "execution_claim": false
+    },
+    {
+      "row_type": "primary_source",
+      "row_id": "arxiv_2608_20274",
+      "source_id": "arxiv_2608_20274",
+      "url": "https://arxiv.org/abs/2608.20274",
+      "date": "2026-08-20",
+      "relevance_area": "continual_constraint_learning",
+      "selected_for_mapping": true,
+      "execution_claim": false
+    },
+    {
+      "row_type": "primary_source",
+      "row_id": "arxiv_2608_19564",
+      "source_id": "arxiv_2608_19564",
+      "url": "https://arxiv.org/abs/2608.19564",
+      "date": "2026-08-20",
+      "relevance_area": "continual_constraint_learning",
+      "selected_for_mapping": true,
+      "execution_claim": false
+    },
+    {
+      "row_type": "primary_source",
+      "row_id": "arxiv_2608_20318",
+      "source_id": "arxiv_2608_20318",
+      "url": "https://arxiv.org/abs/2608.20318",
+      "date": "2026-08-20",
+      "relevance_area": "continual_constraint_learning",
+      "selected_for_mapping": false,
+      "execution_claim": false
+    },
+    {
+      "row_type": "primary_source",
+      "row_id": "arxiv_2606_21646",
+      "source_id": "arxiv_2606_21646",
+      "url": "https://arxiv.org/abs/2606.21646",
+      "date": "2026-06-19",
+      "relevance_area": "neural_constraints",
+      "selected_for_mapping": true,
+      "execution_claim": false
+    },
+    {
+      "row_type": "primary_source",
+      "row_id": "arxiv_2507_02092",
+      "source_id": "arxiv_2507_02092",
+      "url": "https://arxiv.org/abs/2507.02092",
+      "date": "2025-07-02",
+      "relevance_area": "ebm_verification",
+      "selected_for_mapping": false,
+      "execution_claim": false
+    },
+    {
+      "row_type": "primary_source",
+      "row_id": "arxiv_2602_06737",
+      "source_id": "arxiv_2602_06737",
+      "url": "https://arxiv.org/abs/2602.06737",
+      "date": "2026-08-02",
+      "relevance_area": "kan",
+      "selected_for_mapping": false,
+      "execution_claim": false
+    },
+    {
+      "row_type": "primary_source",
+      "row_id": "arxiv_2602_18145",
+      "source_id": "arxiv_2602_18145",
+      "url": "https://arxiv.org/abs/2602.18145",
+      "date": "2026-02-20",
+      "relevance_area": "hallucination_detection",
+      "selected_for_mapping": false,
+      "execution_claim": false
+    },
+    {
+      "row_type": "primary_source",
+      "row_id": "arxiv_2607_21077",
+      "source_id": "arxiv_2607_21077",
+      "url": "https://arxiv.org/abs/2607.21077",
+      "date": "2026-07-23",
+      "relevance_area": "probabilistic_hardware",
+      "selected_for_mapping": false,
+      "execution_claim": false
+    },
+    {
+      "row_type": "primary_source",
+      "row_id": "arxiv_2512_15605",
+      "source_id": "arxiv_2512_15605",
+      "url": "https://arxiv.org/abs/2512.15605",
+      "date": "2026-05-25",
+      "relevance_area": "ebm_verification",
+      "selected_for_mapping": false,
+      "execution_claim": false
+    },
+    {
+      "row_type": "secondary_source",
+      "row_id": "semantic_scholar_ebt_2507_02092",
+      "source_id": "semantic_scholar_ebt_2507_02092",
+      "surface": "Semantic Scholar EBT",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,url,year,publicationDate,externalIds&limit=100",
+      "execution_claim": false
+    },
+    {
+      "row_type": "secondary_source",
+      "row_id": "semantic_scholar_arm_2512_15605",
+      "source_id": "semantic_scholar_arm_2512_15605",
+      "surface": "Semantic Scholar ARM-EBM",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,url,year,publicationDate,externalIds&limit=100",
+      "execution_claim": false
+    },
+    {
+      "row_type": "secondary_source",
+      "row_id": "openreview_ebt_page",
+      "source_id": "openreview_ebt_page",
+      "surface": "OpenReview",
+      "url": "https://openreview.net/forum?id=ZBj3Qp1bYg",
+      "execution_claim": false
+    },
+    {
+      "row_type": "secondary_source",
+      "row_id": "huggingface_papers_ebt",
+      "source_id": "huggingface_papers_ebt",
+      "surface": "Hugging Face Papers",
+      "url": "https://huggingface.co/papers/2507.02092",
+      "execution_claim": false
+    },
+    {
+      "row_type": "secondary_source",
+      "row_id": "github_ecd_repository",
+      "source_id": "github_ecd_repository",
+      "surface": "GitHub",
+      "url": "https://github.com/GradientSpaces/ECD",
+      "execution_claim": false
+    },
+    {
+      "row_type": "secondary_source",
+      "row_id": "extropic_z1_first_party",
+      "source_id": "extropic_z1_first_party",
+      "surface": "Extropic",
+      "url": "https://extropic.ai/writing/from-one-to-one-billion/",
+      "execution_claim": false
+    },
+    {
+      "row_type": "secondary_source",
+      "row_id": "logical_intelligence_kona_first_party",
+      "source_id": "logical_intelligence_kona_first_party",
+      "surface": "Logical Intelligence",
+      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+      "execution_claim": false
+    },
+    {
+      "row_type": "method_mapping",
+      "row_id": "m1_anytime_valid_cache_promotion",
+      "source_id": "arxiv_2608_20337",
+      "source_url": "https://arxiv.org/abs/2608.20337",
+      "current_carnot_surface": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+      "expected_test": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+      "execution_claim": false
+    },
+    {
+      "row_type": "method_mapping",
+      "row_id": "m2_value_of_information_exact_routing",
+      "source_id": "arxiv_2608_20316",
+      "source_url": "https://arxiv.org/abs/2608.20316",
+      "current_carnot_surface": "python/carnot/experiment_6478_identifiable_held_exact_energy_selection.py",
+      "expected_test": "tests/python/test_experiment_6490_value_of_information_exact_checker_policy.py",
+      "execution_claim": false
+    },
+    {
+      "row_type": "method_mapping",
+      "row_id": "m3_atomic_factor_reuse",
+      "source_id": "arxiv_2608_20274",
+      "source_url": "https://arxiv.org/abs/2608.20274",
+      "current_carnot_surface": "python/carnot/learn/constraint_memory.py",
+      "expected_test": "tests/python/test_experiment_6491_guarded_factor_cache_evolution.py",
+      "execution_claim": false
+    },
+    {
+      "row_type": "method_mapping",
+      "row_id": "m4_actual_memory_action_receipts",
+      "source_id": "arxiv_2608_19564",
+      "source_url": "https://arxiv.org/abs/2608.19564",
+      "current_carnot_surface": "python/carnot/task_runtime_receipts.py",
+      "expected_test": "tests/python/test_experiment_6493_memory_action_audit.py",
+      "execution_claim": false
+    },
+    {
+      "row_type": "method_mapping",
+      "row_id": "m5_conservative_energy_composition",
+      "source_id": "arxiv_2606_21646",
+      "source_url": "https://arxiv.org/abs/2606.21646",
+      "current_carnot_surface": "python/carnot/phase3/compositional_energy.py",
+      "expected_test": "tests/python/test_experiment_6488_compact_latent_energy_controls.py",
+      "execution_claim": false
+    },
+    {
+      "row_type": "retired_scope_collision",
+      "row_id": "finite_id_generated_answer_lane",
+      "decision": "closed",
+      "collision": true,
+      "execution_claim": false
+    },
+    {
+      "row_type": "retired_scope_collision",
+      "row_id": "kan_training_or_replacement_lane",
+      "decision": "deferred_boundary_only",
+      "collision": true,
+      "execution_claim": false
+    },
+    {
+      "row_type": "retired_scope_collision",
+      "row_id": "tsu_or_kona_execution",
+      "decision": "product_comparator_only",
+      "collision": true,
+      "execution_claim": false
+    },
+    {
+      "row_type": "retired_scope_collision",
+      "row_id": "hidden_state_or_attention_release_authority",
+      "decision": "diagnostic_only",
+      "collision": true,
+      "execution_claim": false
+    }
+  ],
+  "aggregate_row_recomputation": {
+    "primary_source_count": 11,
+    "secondary_source_count": 7,
+    "method_mapping_count": 5,
+    "retired_scope_collision_count": 4,
+    "resolvable_primary_url_count": 11,
+    "no_execution_row_count": 27,
+    "all_rows_no_execution": true,
+    "acceptance_gate_primary_sources": true,
+    "acceptance_gate_method_mappings": true,
+    "acceptance_gate_no_execution": true
+  },
+  "gate_check_summary": {
+    "all_gates_passed": true,
+    "gates": {
+      "at_least_five_primary_sources": true,
+      "at_least_three_method_mappings": true,
+      "no_execution_claimed": true
+    },
+    "failed_gates": [],
+    "blocked_reason": null
+  },
+  "preconditions_checked": {
+    "required_files": {
+      "AGENTS.md": true,
+      "CODEX.md": true,
+      "CLAUDE.md": true,
+      "research-program.md": true,
+      "research-references.md": true,
+      "research-studying.md": true,
+      "research-roadmap-vNEXT.md": true,
+      "search-layer-literature-2026-06-11.md": true,
+      "scripts/sweep_clusters.py": true,
+      "scripts/sweep_semscholar.py": true,
+      "ops/exclusion_manifest.yaml": true,
+      "ops/e2e-test-plan.md": true,
+      "openspec/capabilities/research-harnesses/spec.md": true
+    },
+    "all_required_files_present": true,
+    "search_helpers": {
+      "sweep_clusters.py": true,
+      "sweep_semscholar.py": true
+    },
+    "product_execution_oracle": false,
+    "network_method": "low_concurrency_helpers_plus_sequential_web_reads",
+    "source_cutoff_utc": "2026-08-21T14:08:45Z"
+  },
+  "inference_substrate": "primary_source_ingestion_no_product_execution",
+  "verifier_is_oracle": false,
+  "field_principles": {
+    "status": "A terminal status distinguishes completed source ingestion from a blocked source pass.",
+    "source_cutoff_utc": "The cutoff bounds which sources could affect the mapping.",
+    "query_receipts": "Query terms and helper commands make the source route reproducible.",
+    "primary_source_rows": "One row per checked primary record prevents summary-only citation claims.",
+    "secondary_source_rows": "Secondary and product rows stay separate from primary paper evidence.",
+    "method_mapping_rows": "Mapping rows connect each source to a current Carnot surface and falsifiable test.",
+    "retired_scope_collision_rows": "Collision rows prevent a citation from reopening excluded work by implication.",
+    "research_note_path": "The note path points to the human-readable method synthesis.",
+    "study_ledger_updates": "Ledger rows record what was ingested or deferred.",
+    "no_execution_claim": "A true value prevents paper review from becoming a model, product, hardware, or ARC claim.",
+    "per_unit_rows": "Source and mapping rows make the synthesis checkable.",
+    "aggregate_row_recomputation": "Row-derived counts catch missing or inflated summaries.",
+    "gate_check_summary": "Blocked verdicts name the missing source or mapping gate.",
+    "preconditions_checked": "Preconditions prove required files and helpers were read before synthesis.",
+    "inference_substrate": "Declaring primary_source_ingestion_no_product_execution states the evidence substrate.",
+    "verifier_is_oracle": "Paper claims are not oracles for Carnot behavior.",
+    "field_principles": "A field-to-principle map preserves the reason for every evidence field.",
+    "field_provenance": "URLs, file paths, and reducer sources make each value traceable.",
+    "random_seed": "A fixed seed reproduces ordering decisions.",
+    "duration_s": "Wall time shows the ingestion pass was measured.",
+    "tests_run": "Command receipts distinguish executed validation from intended checks.",
+    "reproducibility_checksum": "The checksum binds source identities and mapping rows.",
+    "honest_verdict": "The verdict states whether cited actionable mapping completed without execution."
+  },
+  "field_provenance": {
+    "status": "derived from gate_check_summary",
+    "source_cutoff_utc": "constant recorded after live source checks",
+    "query_receipts": "helper commands, web reads, and curl receipts from this task",
+    "primary_source_rows": "arXiv and primary paper URLs read during the task",
+    "secondary_source_rows": "Semantic Scholar, OpenReview, Hugging Face, GitHub, Extropic, and Logical rows",
+    "method_mapping_rows": "manual source-to-current-surface reducer in this module",
+    "retired_scope_collision_rows": "ops/exclusion_manifest.yaml and V559 roadmap boundaries",
+    "research_note_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v559-latent-energy-sota-ingestion.md",
+    "study_ledger_updates": "/home/ianblenke/github.com/ianblenke/carnot/research-studying.md",
+    "no_execution_claim": "constant from task boundary",
+    "per_unit_rows": "primary, secondary, mapping, and retired-scope rows",
+    "aggregate_row_recomputation": "recompute_aggregates_from_rows(per_unit_rows)",
+    "gate_check_summary": "gate_check_summary(aggregate_row_recomputation)",
+    "preconditions_checked": "required local file existence checks",
+    "inference_substrate": "constant source-ingestion substrate",
+    "verifier_is_oracle": "constant false for paper claims",
+    "field_principles": "REQ-INFRA-6483 field principle table",
+    "field_provenance": "this function",
+    "random_seed": "constant ordering seed",
+    "duration_s": "measured wall time passed to build_artifact",
+    "tests_run": "validation command receipts supplied to build_artifact",
+    "reproducibility_checksum": "sha256 over source identities and method mapping rows",
+    "honest_verdict": "derived from gate status and no-execution boundary"
+  },
+  "random_seed": 6483,
+  "duration_s": 0.005798,
+  "tests_run": {
+    "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6483_v559_latent_energy_sota_ingestion --date 20260821": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6483_v559_latent_energy_sota_ingestion.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6483_v559_latent_energy_sota_ingestion.py -m pytest tests/python/test_experiment_6483_v559_latent_energy_sota_ingestion.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6483_v559_latent_energy_sota_ingestion.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6483_v559_latent_energy_sota_ingestion.py": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6483_v559_latent_energy_sota_ingestion.json": 0,
+    ".venv/bin/python -m carnot.experiment_6483_v559_latent_energy_sota_ingestion --validate": 0,
+    "manual e2e-plan check: ops/e2e-test-plan.md has no product/model/ARC execution entry for Exp6483; source-ingestion artifact checks apply": 0
+  },
+  "reproducibility_checksum": "sha256:af0d16d8d0b67a3ff2736fe1376baf1c1fb75e18fd3c7eaae4bc307de7c5a719",
+  "honest_verdict": "success_v559_latent_energy_sota_mapping_completed_no_execution"
+}

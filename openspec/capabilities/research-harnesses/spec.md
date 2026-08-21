@@ -6343,6 +6343,138 @@ conductor behavior is changed.
 |---|---|---|
 | REQ-INFRA-6481 | Planned: `python/carnot/phase_concurrency_receipts.py` and `python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py`; terminal artifact `results/experiment_6481_monotonic_phase_concurrency_receipt_contract.json`. | Planned: `tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py`. |
 
+## REQ-INFRA-6483: V559 Latent-Energy SOTA Ingestion SHALL Map Sources To Bounded Experiments Without Execution
+
+Carnot SHALL provide Exp6483 at
+`python/carnot/experiment_6483_v559_latent_energy_sota_ingestion.py`. The
+command
+`.venv/bin/python -m carnot.experiment_6483_v559_latent_energy_sota_ingestion --date 20260821`
+SHALL write
+`results/experiment_6483_v559_latent_energy_sota_ingestion.json`.
+
+Exp6483 SHALL read the current research references, study ledger, V559 roadmap
+proposal, SOTA note, search helpers, exclusion manifest, and e2e test plan
+before source synthesis. It SHALL record the repository state, source cutoff
+time, query terms, helper commands, and network method. It SHALL confirm that
+the task has no product-execution oracle.
+
+Exp6483 SHALL use low-concurrency arXiv and Semantic Scholar helper routes and
+sequential web reads for the top primary sources. It SHALL cover EBM
+verification, neural constraints, Ising or probabilistic hardware,
+hallucination detection, KAN, energy-guided decisions, and continual
+constraint learning. It SHALL recheck EBT `2507.02092`, ARM-EBM `2512.15605`,
+OpenReview, Hugging Face Papers, Extropic, GitHub, and Logical Intelligence.
+
+Every primary source row SHALL record source identity, URL, date, query route,
+claim boundary, relevance area, and citation validity. Requested secondary or
+product surfaces SHALL be separate secondary rows. The workflow SHALL NOT
+fabricate a citation, citation count, product capability, hardware result,
+model result, ARC result, or execution result.
+
+Exp6483 SHALL select three to five source-backed methods. Each mapping row
+SHALL record the exact source, current Carnot surface, expected falsifiable
+test, failure boundary, retired-scope risk, and candidate next task. It SHALL
+emit retired-scope collision rows against `ops/exclusion_manifest.yaml`.
+It SHALL write the research note
+`docs/research-notes/v559-latent-energy-sota-ingestion.md` and update the study
+ledger without changing `research-references.md` unless a genuine source delta
+is found.
+
+The terminal artifact SHALL include `status`, `source_cutoff_utc`,
+`query_receipts`, `primary_source_rows`, `secondary_source_rows`,
+`method_mapping_rows`, `retired_scope_collision_rows`, `research_note_path`,
+`study_ledger_updates`, `no_execution_claim`, `per_unit_rows`,
+`aggregate_row_recomputation`, `gate_check_summary`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`primary_source_ingestion_no_product_execution`. `verifier_is_oracle` SHALL be
+false. `no_execution_claim` SHALL be true.
+
+Field principles SHALL use this map:
+
+| Field | Principle |
+|---|---|
+| `status` | A terminal status distinguishes completed source ingestion from a blocked source pass. |
+| `source_cutoff_utc` | The cutoff bounds which sources could affect the mapping. |
+| `query_receipts` | Query terms and helper commands make the source route reproducible. |
+| `primary_source_rows` | One row per checked primary record prevents summary-only citation claims. |
+| `secondary_source_rows` | Secondary and product rows stay separate from primary paper evidence. |
+| `method_mapping_rows` | Mapping rows connect each source to a current Carnot surface and falsifiable test. |
+| `retired_scope_collision_rows` | Collision rows prevent a citation from reopening excluded work by implication. |
+| `research_note_path` | The note path points to the human-readable method synthesis. |
+| `study_ledger_updates` | Ledger rows record what was ingested or deferred. |
+| `no_execution_claim` | A true value prevents paper review from becoming a model, product, hardware, or ARC claim. |
+| `per_unit_rows` | Source and mapping rows make the synthesis checkable. |
+| `aggregate_row_recomputation` | Row-derived counts catch missing or inflated summaries. |
+| `gate_check_summary` | Blocked verdicts name the missing source or mapping gate. |
+| `preconditions_checked` | Preconditions prove required files and helpers were read before synthesis. |
+| `inference_substrate` | Declaring primary_source_ingestion_no_product_execution states the evidence substrate. |
+| `verifier_is_oracle` | Paper claims are not oracles for Carnot behavior. |
+| `field_principles` | A field-to-principle map preserves the reason for every evidence field. |
+| `field_provenance` | URLs, file paths, and reducer sources make each value traceable. |
+| `random_seed` | A fixed seed reproduces ordering decisions. |
+| `duration_s` | Wall time shows the ingestion pass was measured. |
+| `tests_run` | Command receipts distinguish executed validation from intended checks. |
+| `reproducibility_checksum` | The checksum binds source identities and mapping rows. |
+| `honest_verdict` | The verdict states whether cited actionable mapping completed without execution. |
+
+### SCENARIO-INFRA-6483-SOURCE-IDENTITY: Source Rows Preserve Identity
+
+GIVEN Exp6483 checks primary paper records
+WHEN it emits `primary_source_rows`
+THEN at least five rows have resolvable URLs, dates, query routes, citation
+validity, relevance areas, and claim boundaries.
+
+**Spec traces:** REQ-INFRA-6483
+
+### SCENARIO-INFRA-6483-CITATION-VALIDITY: Citation Checks Do Not Invent Counts
+
+GIVEN Exp6483 rechecks EBT, ARM-EBM, OpenReview, Hugging Face Papers,
+Extropic, GitHub, and Logical Intelligence
+WHEN an endpoint omits a count or exposes product-only evidence
+THEN the row records the observed state without inventing citation counts or
+execution capability.
+
+**Spec traces:** REQ-INFRA-6483
+
+### SCENARIO-INFRA-6483-METHOD-MAPPING: Methods Map To Falsifiable Current Tests
+
+GIVEN three to five selected SOTA methods
+WHEN Exp6483 writes `method_mapping_rows`
+THEN each row names the source URL, current Carnot surface, expected test,
+failure boundary, retired-scope risk, and candidate next task.
+
+**Spec traces:** REQ-INFRA-6483
+
+### SCENARIO-INFRA-6483-NO-EXECUTION: Source Ingestion Has No Execution Oracle
+
+GIVEN Exp6483 reads papers and product pages only
+WHEN it validates the artifact
+THEN `no_execution_claim` is true, `inference_substrate` is
+`primary_source_ingestion_no_product_execution`,
+`verifier_is_oracle` is false, and no product, model, hardware, or ARC result
+is claimed.
+
+**Spec traces:** REQ-INFRA-6483
+
+### SCENARIO-INFRA-6483-ROWS: Aggregates Recompute From Rows
+
+GIVEN source rows, mapping rows, secondary rows, and retired-scope rows
+WHEN Exp6483 computes `aggregate_row_recomputation`
+THEN counts derive only from rows, acceptance gates require at least five
+primary rows and at least three mappings, and blocked verdicts include
+`gate_check_summary`.
+
+**Spec traces:** REQ-INFRA-6483
+
+## Implementation Status (REQ-INFRA-6483)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6483 | Planned: `python/carnot/experiment_6483_v559_latent_energy_sota_ingestion.py`; terminal artifact `results/experiment_6483_v559_latent_energy_sota_ingestion.json`. | Planned: `tests/python/test_experiment_6483_v559_latent_energy_sota_ingestion.py`. |
+
 ## REQ-INFRA-6351: V547 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
 
 Carnot SHALL build Exp6351 as a deterministic V547 post-marker source sweep

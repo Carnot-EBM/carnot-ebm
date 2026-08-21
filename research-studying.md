@@ -5732,3 +5732,15 @@ focused pass.
 CEGIS-refinement history (the standing hold this scan's Finding 2 respects) · arXiv:2605.13740
 (Pinductor) · arXiv:2606.11521 (counterexample-guided refinement, already partially adopted) ·
 `arcprize.org/results/anthropic-claude-opus-5` (Finding 1's primary source).
+
+<!-- EXP6483-V559-LATENT-ENERGY-SOTA-INGESTION-START -->
+## 2026-08-21 Exp 6483 - V559 latent-energy SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `results/experiment_6483_v559_latent_energy_sota_ingestion.json` and `docs/research-notes/v559-latent-energy-sota-ingestion.md`.
+
+- Source cutoff UTC: `2026-08-21T14:08:45Z`.
+- Primary source rows: arxiv_2608_20337, arxiv_2608_20316, arxiv_2608_20274, arxiv_2608_19564, arxiv_2608_20318, arxiv_2606_21646, arxiv_2507_02092, arxiv_2602_06737, arxiv_2602_18145, arxiv_2607_21077, arxiv_2512_15605.
+- Method mappings: m1_anytime_valid_cache_promotion, m2_value_of_information_exact_routing, m3_atomic_factor_reuse, m4_actual_memory_action_receipts, m5_conservative_energy_composition.
+- Guardrail: source ingestion only. No model, product, hardware, or ARC oracle ran.
+- Reference ledger: unchanged because the V559 planner refresh already records the source delta.
+<!-- EXP6483-V559-LATENT-ENERGY-SOTA-INGESTION-END -->
