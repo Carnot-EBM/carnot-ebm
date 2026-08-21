@@ -1,0 +1,3833 @@
+{
+  "aggregate_row_recomputation": {
+    "checks": {
+      "all_attacks_fail_closed": true,
+      "all_required_phase_rows_present": true,
+      "dependency_rows_present": true,
+      "output_rows_present": true,
+      "receipt_rows_validate": true,
+      "resource_rows_present": true,
+      "safe_cpu_overlap_decision_present": true,
+      "serialized_gpu_decision_present": true
+    },
+    "failed_checks": [],
+    "phase_concurrency_receipt_ready_score_from_rows": 1.0,
+    "row_count": 59,
+    "row_type_counts": {
+      "attack": 9,
+      "concurrency_decision": 2,
+      "dependency": 4,
+      "output": 4,
+      "phase": 32,
+      "process_identity": 4,
+      "resource_interval": 4
+    },
+    "validation_reasons": []
+  },
+  "attack_matrix": {
+    "all_critical_fail_closed": true,
+    "attack_count": 9,
+    "false_accept_count": 0,
+    "rows": [
+      {
+        "accepted": false,
+        "attack_id": "borrowed_nvidia_smi_activity",
+        "fail_closed": true,
+        "reasons": [
+          "borrowed_global_activity"
+        ],
+        "row_hash": "sha256:45d0b2114b0ed7732b098eab7e060958a9eee5fe5a980104a9148bda502cca9b",
+        "row_type": "attack"
+      },
+      {
+        "accepted": false,
+        "attack_id": "stale_dependency_artifact",
+        "fail_closed": true,
+        "reasons": [
+          "dependency_hash_changed"
+        ],
+        "row_hash": "sha256:0a1f9d29739c132f14941743c0c0914c163eeff5d20b28fc0db751baee4cb0a7",
+        "row_type": "attack"
+      },
+      {
+        "accepted": false,
+        "attack_id": "duplicated_attempt_id",
+        "fail_closed": true,
+        "reasons": [
+          "copied_receipt_task_mismatch",
+          "duplicated_attempt_id",
+          "process_identity_mismatch",
+          "process_identity_missing"
+        ],
+        "row_hash": "sha256:670997c32f120d5bdc629982355e9e290daefb093d663aa6c19d0e7af9758d4c",
+        "row_type": "attack"
+      },
+      {
+        "accepted": false,
+        "attack_id": "forged_clocks",
+        "fail_closed": true,
+        "reasons": [
+          "negative_interval"
+        ],
+        "row_hash": "sha256:f7bc65807754f7b540bd511f43b36340cae7143a10b5a789ffd12aa7856c0bfc",
+        "row_type": "attack"
+      },
+      {
+        "accepted": false,
+        "attack_id": "cross_task_output_path",
+        "fail_closed": true,
+        "reasons": [
+          "cross_task_output_path"
+        ],
+        "row_hash": "sha256:5e24e12f0ea4aff2db670c200ae84a1c16e770a4d90fa9c5e1cb2f4f3e4ba9e4",
+        "row_type": "attack"
+      },
+      {
+        "accepted": false,
+        "attack_id": "parent_child_pid_confusion",
+        "fail_closed": true,
+        "reasons": [
+          "parent_child_pid_confusion",
+          "process_identity_mismatch"
+        ],
+        "row_hash": "sha256:bd552b1bfb4197acaad88e43cfb226c6de1817928438b6f988ebc0e331ef75b9",
+        "row_type": "attack"
+      },
+      {
+        "accepted": false,
+        "attack_id": "pid_reuse",
+        "fail_closed": true,
+        "reasons": [
+          "pid_reuse",
+          "process_identity_mismatch"
+        ],
+        "row_hash": "sha256:e16da1a6a27776e988fa5c850fdc514f5884fac4dcaa82c61b85e5a2e3b61400",
+        "row_type": "attack"
+      },
+      {
+        "accepted": false,
+        "attack_id": "output_before_execution",
+        "fail_closed": true,
+        "reasons": [
+          "output_write_before_execution"
+        ],
+        "row_hash": "sha256:ff71cbf681dfef0c4fed8cd2c437b1943065e939fabbc1f019d5cbe740eff4e2",
+        "row_type": "attack"
+      },
+      {
+        "accepted": false,
+        "attack_id": "copied_receipt",
+        "fail_closed": true,
+        "reasons": [
+          "row_hash_mismatch",
+          "copied_receipt_task_mismatch",
+          "duplicated_attempt_id"
+        ],
+        "row_hash": "sha256:a6b33d44cbbf1409008a9eff6ecca072fe6e191dc82bb244b4b598db9208624d",
+        "row_type": "attack"
+      }
+    ],
+    "schema_version": "carnot.phase_concurrency_receipt.v1.attack_matrix"
+  },
+  "concurrency_decision_rows": [
+    {
+      "decision": "safe_overlap",
+      "exclusive": false,
+      "left_attempt_id": "attempt-cpu-a",
+      "left_task_id": "task-cpu-a",
+      "overlap": true,
+      "resource_key": "CPU:shared",
+      "right_attempt_id": "attempt-cpu-b",
+      "right_task_id": "task-cpu-b",
+      "row_hash": "sha256:b6c23ca4234f48a5ec0ec3f294b38f29981b3e5a020cc645b3f66b2bb308f841",
+      "row_type": "concurrency_decision",
+      "schema_version": "carnot.phase_concurrency_receipt.v1"
+    },
+    {
+      "decision": "serialized_exclusive",
+      "exclusive": true,
+      "left_attempt_id": "attempt-gpu-a",
+      "left_task_id": "task-gpu-a",
+      "overlap": false,
+      "resource_key": "GPU:0",
+      "right_attempt_id": "attempt-gpu-b",
+      "right_task_id": "task-gpu-b",
+      "row_hash": "sha256:d0cedfbbed9bc4d0811b4de38babe7df65cbb0057908b6867db500576b789f92",
+      "row_type": "concurrency_decision",
+      "schema_version": "carnot.phase_concurrency_receipt.v1"
+    }
+  ],
+  "dependency_hash_rows": [
+    {
+      "attempt_id": "attempt-cpu-a",
+      "hash_algorithm": "sha256",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "path": "/tmp/carnot-exp6481-fixtures/dependency.txt",
+      "phase": "dependency_resolution",
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:55a96ccf04307cf5287619871f50a7deabb70d3ceca7e6ccb9a23e121b920ca9",
+      "row_type": "dependency",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "sha256": "sha256:2044a8590a88c91126b66b35ca5441d44d06f7548a3b5b7ce296c486adef7719",
+      "task_id": "task-cpu-a"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "hash_algorithm": "sha256",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "path": "/tmp/carnot-exp6481-fixtures/dependency.txt",
+      "phase": "dependency_resolution",
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:21a3719370688541eea7fff64fe7207f52425f5715543ee4c38c4935858a080f",
+      "row_type": "dependency",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "sha256": "sha256:2044a8590a88c91126b66b35ca5441d44d06f7548a3b5b7ce296c486adef7719",
+      "task_id": "task-cpu-b"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "hash_algorithm": "sha256",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "path": "/tmp/carnot-exp6481-fixtures/dependency.txt",
+      "phase": "dependency_resolution",
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:c1519f27aad01d6d64164a8e61ca34f3e8afc2227a88d5cd21cd7175918d28bf",
+      "row_type": "dependency",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "sha256": "sha256:2044a8590a88c91126b66b35ca5441d44d06f7548a3b5b7ce296c486adef7719",
+      "task_id": "task-gpu-a"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "hash_algorithm": "sha256",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "path": "/tmp/carnot-exp6481-fixtures/dependency.txt",
+      "phase": "dependency_resolution",
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:b8d56581255f6f2ccfa5fe2ffa2c84aa56289a638a02de44aed0034e8d79cf5d",
+      "row_type": "dependency",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "sha256": "sha256:2044a8590a88c91126b66b35ca5441d44d06f7548a3b5b7ce296c486adef7719",
+      "task_id": "task-gpu-b"
+    }
+  ],
+  "duration_s": 0.16482741897925735,
+  "field_principles": {
+    "aggregate_row_recomputation": "Row-derived readiness catches summaries that omit a failing receipt.",
+    "attack_matrix": "Constructive attacks test the known global-activity and time-order attribution failures.",
+    "concurrency_decision_rows": "Explicit decisions distinguish safe overlap from conflicting exclusive ownership.",
+    "dependency_hash_rows": "Dependency hashes prove the task consumed the stated upstream bytes.",
+    "duration_s": "Wall time catches a task that emitted without exercising concurrency fixtures.",
+    "field_principles": "A field-to-principle map carries the evidence design into later tasks.",
+    "field_provenance": "Per-field code and fixture paths make each value traceable.",
+    "gate_check_summary": "A blocked verdict identifies the exact contract or test check that failed.",
+    "honest_verdict": "The verdict states contract readiness without claiming conductor concurrency.",
+    "inference_substrate": "Declaring deterministic_runtime_receipt_validation_no_llm prevents fixture activity from becoming a compute claim.",
+    "per_unit_rows": "Phase, dependency, resource, and attack rows make the contract independently auditable.",
+    "phase_concurrency_receipt_ready_score": "A conjunctive score blocks reuse until all ownership and ordering attacks fail closed.",
+    "phase_rows": "Monotonic phase rows separate queue, load, execution, exact verification, and write time.",
+    "preconditions_checked": "Preconditions prove required clocks, process metadata, and fixture paths were available.",
+    "process_identity_rows": "PID and process-start identity prevent stale or borrowed activity from being credited.",
+    "protected_files_unchanged": "The receipt task must not alter conductor or active roadmap behavior.",
+    "random_seed": "A fixed seed reproduces attack and overlap scheduling.",
+    "receipt_schema_and_hash": "A versioned schema prevents later experiments from silently changing receipt meaning.",
+    "reproducibility_checksum": "The checksum binds schema, fixtures, implementation, and result.",
+    "resource_ownership_rows": "Resource intervals attribute CPUs, GPUs, files, and locks to one task attempt.",
+    "status": "A terminal status distinguishes a complete contract build from partial instrumentation.",
+    "tests_run": "Recorded commands prove the API and its attacks executed.",
+    "verifier_is_oracle": "Only schema, hash, process, and monotonic interval validation is authoritative."
+  },
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "attack_matrix": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "concurrency_decision_rows": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "dependency_hash_rows": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "duration_s": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "field_principles": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "field_provenance": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "gate_check_summary": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "honest_verdict": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "inference_substrate": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "per_unit_rows": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "phase_concurrency_receipt_ready_score": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "phase_rows": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "preconditions_checked": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "process_identity_rows": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "protected_files_unchanged": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "random_seed": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "receipt_schema_and_hash": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "reproducibility_checksum": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "resource_ownership_rows": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "status": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "tests_run": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    },
+    "verifier_is_oracle": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b"
+        },
+        {
+          "path": "python/carnot/experiment_artifacts.py",
+          "sha256": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905"
+        },
+        {
+          "path": "python/carnot/phase_concurrency_receipts.py",
+          "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "python/carnot/terminal_artifacts.py",
+          "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+          "sha256": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6481"
+      ],
+      "value_source": "deterministic receipt rows and exact validation"
+    }
+  },
+  "gate_check_summary": {
+    "all_gates_passed": true,
+    "checks": {
+      "aggregate_ready_score_is_one": true,
+      "protected_files_unchanged": true
+    },
+    "failed_gates": []
+  },
+  "honest_verdict": "complete: reusable phase and concurrency receipt validation is ready; no conductor concurrency change is claimed",
+  "inference_substrate": "deterministic_runtime_receipt_validation_no_llm",
+  "per_unit_rows": [
+    {
+      "attempt_id": "attempt-cpu-a",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "__main__",
+        "50101"
+      ],
+      "command_hash": "sha256:405fec08ec0e229c47393e52e83476f0b15deec5a2d257c25986749782e0ebad",
+      "executable_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "executable_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:3cd846e4d80606affb119e11f603ee36289f93fc094f0cb8b3151d4999a98271",
+      "row_type": "process_identity",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000080000,
+      "monotonic_start_ns": 1000000000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "queue_wait",
+      "phase_index": 0,
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:7c8bad1fb701ff31afddc8e2b941cc76cd449d60b89333e08dfaac49d556035d",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219380Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219358Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000180000,
+      "monotonic_start_ns": 1000100000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "dependency_resolution",
+      "phase_index": 1,
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:745e563bcfac9ddd47051b6f61dc01fdad0e69b0f5f577f05831b168186d91ca",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219405Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219403Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000280000,
+      "monotonic_start_ns": 1000200000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "resource_acquisition",
+      "phase_index": 2,
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:9d217a79759f76aec029b0e0078e49775a9018c508ca79b83d63c5dd07663ad4",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219419Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219417Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000380000,
+      "monotonic_start_ns": 1000300000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "model_or_fixture_load",
+      "phase_index": 3,
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:2cb7e6cafb02ebadc54ffd739a541d35ca8c9cfa5a6a37286c40e76ef250121d",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219429Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219428Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000480000,
+      "monotonic_start_ns": 1000400000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "execution",
+      "phase_index": 4,
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:05917f07d75c30a5c9e08927351993c8812b019379dd51cb8260a91c96ccf173",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219439Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219438Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000580000,
+      "monotonic_start_ns": 1000500000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "exact_verification",
+      "phase_index": 5,
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:30d207a5074bea3e3bce1d373bab576ec836248ec937342b4ad3a99e5b29a2ab",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219448Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219447Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000680000,
+      "monotonic_start_ns": 1000600000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "artifact_write",
+      "phase_index": 6,
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:5de70cd1537fd4fb38318d63dd2ff33a48e8e19ec6dc36f7053be072dac96fef",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219459Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219458Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000780000,
+      "monotonic_start_ns": 1000700000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "resource_release",
+      "phase_index": 7,
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:ce7c4ff74364e96853f52cb614fcbaba9a789c5510139a1513fd10255efafac7",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219469Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219467Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "hash_algorithm": "sha256",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "path": "/tmp/carnot-exp6481-fixtures/dependency.txt",
+      "phase": "dependency_resolution",
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:55a96ccf04307cf5287619871f50a7deabb70d3ceca7e6ccb9a23e121b920ca9",
+      "row_type": "dependency",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "sha256": "sha256:2044a8590a88c91126b66b35ca5441d44d06f7548a3b5b7ce296c486adef7719",
+      "task_id": "task-cpu-a"
+    },
+    {
+      "acquired_in_phase": "resource_acquisition",
+      "activity_sample": {},
+      "attempt_id": "attempt-cpu-a",
+      "exclusive": false,
+      "monotonic_end_ns": 1000780000,
+      "monotonic_start_ns": 1000200000,
+      "owner_pid": 50101,
+      "owner_process_start_identity": "start-cpu-a",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "release_present": true,
+      "released_in_phase": "resource_release",
+      "resource_key": "CPU:shared",
+      "resource_type": "cpu",
+      "row_hash": "sha256:e9f25ca45439647c81cad4ddd4490de52e16cfc2aeecd0fdd0dff0db48f3621e",
+      "row_type": "resource_interval",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "output_byte_length": 40,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "path": "/tmp/carnot-exp6481-fixtures/outputs/attempt-cpu-a.txt",
+      "phase": "artifact_write",
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:33d04ef551ba53d419b2a8e1b25e3d80d2e2ff95db26b748d39d00cc0ac5fff4",
+      "row_type": "output",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "sha256": "sha256:baa7913150567df128c118908edb86a258bcc9e06215cd08effbe8fe4dae01cb",
+      "task_id": "task-cpu-a",
+      "write_monotonic_ns": 1000610000
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "__main__",
+        "50102"
+      ],
+      "command_hash": "sha256:9a3fe753c36532d779c9acaa43869ff6aab0933953501e750c24df4580f1e38f",
+      "executable_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "executable_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:7f91be681ebaf27f0d5779dab3d409cf7633d780e6841338e1b5fa6a1c08d19b",
+      "row_type": "process_identity",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000380000,
+      "monotonic_start_ns": 1000300000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "queue_wait",
+      "phase_index": 0,
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:8a4bbf54c67b3ade74d3e1cae31d2951bfd6324c7dc59c27b9adc7cb5078bd46",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219597Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219595Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000480000,
+      "monotonic_start_ns": 1000400000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "dependency_resolution",
+      "phase_index": 1,
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:340cfcff2fcd6cfe03653c0527d1f03031c94ffb0c7e6ec2092495cb325fbd25",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219606Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219605Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000580000,
+      "monotonic_start_ns": 1000500000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "resource_acquisition",
+      "phase_index": 2,
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:259b1b098fe26295f935957cfb3861baf662999240b4dbc8245037dcf30eaf01",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219615Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219614Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000680000,
+      "monotonic_start_ns": 1000600000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "model_or_fixture_load",
+      "phase_index": 3,
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:d6df68c8be48dc5165188f6be3333415c860f67e3844ec6bc2e0ce4508a2f319",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219625Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219623Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000780000,
+      "monotonic_start_ns": 1000700000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "execution",
+      "phase_index": 4,
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:93ba0cbd8148113746056f3729cd179da9d0dcbc0311f119eaed6ffef17e2163",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219636Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219634Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000880000,
+      "monotonic_start_ns": 1000800000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "exact_verification",
+      "phase_index": 5,
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:fc9731a5333715d6fcc05b62d26e0a76b0581f3b8064b8bc6f0f3426ffdc8811",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219645Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219643Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000980000,
+      "monotonic_start_ns": 1000900000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "artifact_write",
+      "phase_index": 6,
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:05695418b0c07f3dfaf53a814435d51bfa88db55931c536aa0bda387f95a26a6",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219653Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219652Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1001080000,
+      "monotonic_start_ns": 1001000000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "resource_release",
+      "phase_index": 7,
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:9e4fe12b0949c65aea0906b033f478dd7e66f53d66e7d2bb469a57a17995626f",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219662Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219660Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "hash_algorithm": "sha256",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "path": "/tmp/carnot-exp6481-fixtures/dependency.txt",
+      "phase": "dependency_resolution",
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:21a3719370688541eea7fff64fe7207f52425f5715543ee4c38c4935858a080f",
+      "row_type": "dependency",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "sha256": "sha256:2044a8590a88c91126b66b35ca5441d44d06f7548a3b5b7ce296c486adef7719",
+      "task_id": "task-cpu-b"
+    },
+    {
+      "acquired_in_phase": "resource_acquisition",
+      "activity_sample": {},
+      "attempt_id": "attempt-cpu-b",
+      "exclusive": false,
+      "monotonic_end_ns": 1001080000,
+      "monotonic_start_ns": 1000500000,
+      "owner_pid": 50102,
+      "owner_process_start_identity": "start-cpu-b",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "release_present": true,
+      "released_in_phase": "resource_release",
+      "resource_key": "CPU:shared",
+      "resource_type": "cpu",
+      "row_hash": "sha256:93325f37b0560564b0b4cc9d8f24938c945fcad7d4756028201e6c80b25efeee",
+      "row_type": "resource_interval",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "output_byte_length": 40,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "path": "/tmp/carnot-exp6481-fixtures/outputs/attempt-cpu-b.txt",
+      "phase": "artifact_write",
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:0817e6336121d761b42c2da35c8a27c2b93e4593447b0f6a1bd5b271171a0010",
+      "row_type": "output",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "sha256": "sha256:f93261e72bcd7d747a10225118b390b1fc22867fdb6ba7f62e586f7b65fc9bb8",
+      "task_id": "task-cpu-b",
+      "write_monotonic_ns": 1000910000
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "__main__",
+        "50201"
+      ],
+      "command_hash": "sha256:fdcdaf5a78d71ef18f99a04bc8191e227884ee74550b5790bc003fb87ca11981",
+      "executable_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "executable_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:1e38ac272b00ee4f82847495435bf03626f9d20edd3da2d7c0494f6182e4ac80",
+      "row_type": "process_identity",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 2000080000,
+      "monotonic_start_ns": 2000000000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "queue_wait",
+      "phase_index": 0,
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:1ab7b7095f99e5ee44e9fb619dacd1ee664dbed70bfa221558f0b65c61b022c7",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219735Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219733Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 2000180000,
+      "monotonic_start_ns": 2000100000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "dependency_resolution",
+      "phase_index": 1,
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:131d681d55db7c4c1d314f7c739b9b4961f1e5c2401ff7dad06ee9d4ec4dd760",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219744Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219743Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 2000280000,
+      "monotonic_start_ns": 2000200000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "resource_acquisition",
+      "phase_index": 2,
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:ae790d5239aeecbd958235c07c34ed9618fd9e319a827619c2f8db608c2857c3",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219753Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219751Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 2000380000,
+      "monotonic_start_ns": 2000300000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "model_or_fixture_load",
+      "phase_index": 3,
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:d7e90733e96fcbdee821ba0252c8274979caa61f49d68b0350a19bacdc164722",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219761Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219760Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 2000480000,
+      "monotonic_start_ns": 2000400000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "execution",
+      "phase_index": 4,
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:16adf089d8e301968bb9bb7bf14907d79803fb2039fea638c36f7d871d0d7215",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219771Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219770Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 2000580000,
+      "monotonic_start_ns": 2000500000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "exact_verification",
+      "phase_index": 5,
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:76f710c3cf17ad3a6e877274d1b3226fb72f56f31e74c1a3ea0db8c67a6ccdc9",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219779Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219778Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 2000680000,
+      "monotonic_start_ns": 2000600000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "artifact_write",
+      "phase_index": 6,
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:2a0ea8256c2c613c4a98649ac0cbd8ef03e73d962ced57f7bf74cbe6dedf87fb",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219789Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219787Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 2000780000,
+      "monotonic_start_ns": 2000700000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "resource_release",
+      "phase_index": 7,
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:9f4cebdb84ff2034f383a2270e38e1e7c842e27f226dfb342d75141e00c595c1",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219797Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219796Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "hash_algorithm": "sha256",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "path": "/tmp/carnot-exp6481-fixtures/dependency.txt",
+      "phase": "dependency_resolution",
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:c1519f27aad01d6d64164a8e61ca34f3e8afc2227a88d5cd21cd7175918d28bf",
+      "row_type": "dependency",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "sha256": "sha256:2044a8590a88c91126b66b35ca5441d44d06f7548a3b5b7ce296c486adef7719",
+      "task_id": "task-gpu-a"
+    },
+    {
+      "acquired_in_phase": "resource_acquisition",
+      "activity_sample": {
+        "memory_mb": 1024,
+        "pid": 50201,
+        "process_start_identity": "start-gpu-a",
+        "sample_monotonic_ns": 2000210000,
+        "source": "nvidia-smi-fixture"
+      },
+      "attempt_id": "attempt-gpu-a",
+      "exclusive": true,
+      "monotonic_end_ns": 2000780000,
+      "monotonic_start_ns": 2000200000,
+      "owner_pid": 50201,
+      "owner_process_start_identity": "start-gpu-a",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "release_present": true,
+      "released_in_phase": "resource_release",
+      "resource_key": "GPU:0",
+      "resource_type": "gpu",
+      "row_hash": "sha256:c824b71393addd960270cbc1c408e4b0bebd2c47b852b317ad9f7e24e3468ca0",
+      "row_type": "resource_interval",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "output_byte_length": 40,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "path": "/tmp/carnot-exp6481-fixtures/outputs/attempt-gpu-a.txt",
+      "phase": "artifact_write",
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:69ca8399c234014db57f8356d267f9f6ca5810cb550ba77b26a6594744229be3",
+      "row_type": "output",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "sha256": "sha256:bb6493641a7799b8ba70d685f70811290f24eb3f8d8b99363d8cd0e7f57609d7",
+      "task_id": "task-gpu-a",
+      "write_monotonic_ns": 2000610000
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "__main__",
+        "50202"
+      ],
+      "command_hash": "sha256:5d2180fceb6b0b953c5ef926494b25b3457dfcae3aed23657c63f8cc98486334",
+      "executable_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "executable_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:7dc3703f382086322ff5da1eb1747827534192249ed2a7a9f195642e7477e52b",
+      "row_type": "process_identity",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 3000080000,
+      "monotonic_start_ns": 3000000000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "queue_wait",
+      "phase_index": 0,
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:2f7eeeb745ae2436f6c8af5e1667ccfb0f5b332abbd36c11efdb326fa35da7c9",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219860Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219858Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 3000180000,
+      "monotonic_start_ns": 3000100000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "dependency_resolution",
+      "phase_index": 1,
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:ec04ff86b966f9f8ed89a96aad8366dee8d4a7aff6b706e9a0d93d4c92b9f011",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219868Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219867Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 3000280000,
+      "monotonic_start_ns": 3000200000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "resource_acquisition",
+      "phase_index": 2,
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:b4c4a601198eaf7c92dcdfb3329af60784305bebe347f37438efdf5b712b6b88",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219877Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219875Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 3000380000,
+      "monotonic_start_ns": 3000300000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "model_or_fixture_load",
+      "phase_index": 3,
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:267b70ef62673d106b8839dac17c95e0868d17da92a2093578c9753156b0d96f",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219885Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219884Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 3000480000,
+      "monotonic_start_ns": 3000400000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "execution",
+      "phase_index": 4,
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:e883c6d92bde69ad78d240f8f4ac9f0cfe8be10f0d334d0b555dddf00668eab9",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219894Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219892Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 3000580000,
+      "monotonic_start_ns": 3000500000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "exact_verification",
+      "phase_index": 5,
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:40c89a6a80866929bd52cc069f30440b9783a15a44e526bc5aa5851a7040dadf",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219902Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219901Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 3000680000,
+      "monotonic_start_ns": 3000600000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "artifact_write",
+      "phase_index": 6,
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:4ec4dffe4ae4c05893df1d19409366e8432dea7c97ce596e68015405b16b441e",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219911Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219909Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 3000780000,
+      "monotonic_start_ns": 3000700000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "resource_release",
+      "phase_index": 7,
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:240e7a074c0e59b169d0dbacc3921a4452a9aa44479dbb8fa43721288ae8f744",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219919Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219918Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "hash_algorithm": "sha256",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "path": "/tmp/carnot-exp6481-fixtures/dependency.txt",
+      "phase": "dependency_resolution",
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:b8d56581255f6f2ccfa5fe2ffa2c84aa56289a638a02de44aed0034e8d79cf5d",
+      "row_type": "dependency",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "sha256": "sha256:2044a8590a88c91126b66b35ca5441d44d06f7548a3b5b7ce296c486adef7719",
+      "task_id": "task-gpu-b"
+    },
+    {
+      "acquired_in_phase": "resource_acquisition",
+      "activity_sample": {
+        "memory_mb": 1024,
+        "pid": 50202,
+        "process_start_identity": "start-gpu-b",
+        "sample_monotonic_ns": 3000210000,
+        "source": "nvidia-smi-fixture"
+      },
+      "attempt_id": "attempt-gpu-b",
+      "exclusive": true,
+      "monotonic_end_ns": 3000780000,
+      "monotonic_start_ns": 3000200000,
+      "owner_pid": 50202,
+      "owner_process_start_identity": "start-gpu-b",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "release_present": true,
+      "released_in_phase": "resource_release",
+      "resource_key": "GPU:0",
+      "resource_type": "gpu",
+      "row_hash": "sha256:5193110cb8cbd69a567f449fb5724265ea7ff72b12b911213e6aee68999816e9",
+      "row_type": "resource_interval",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "output_byte_length": 40,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "path": "/tmp/carnot-exp6481-fixtures/outputs/attempt-gpu-b.txt",
+      "phase": "artifact_write",
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:89a60482123f44e9b2c3ddade9545bfd477b81f46ee0fc768a782f6c4a594601",
+      "row_type": "output",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "sha256": "sha256:1dca3ee06b956c2145eac5b12215ed236f67400210fa9d23932c73280bad97b9",
+      "task_id": "task-gpu-b",
+      "write_monotonic_ns": 3000610000
+    },
+    {
+      "decision": "safe_overlap",
+      "exclusive": false,
+      "left_attempt_id": "attempt-cpu-a",
+      "left_task_id": "task-cpu-a",
+      "overlap": true,
+      "resource_key": "CPU:shared",
+      "right_attempt_id": "attempt-cpu-b",
+      "right_task_id": "task-cpu-b",
+      "row_hash": "sha256:b6c23ca4234f48a5ec0ec3f294b38f29981b3e5a020cc645b3f66b2bb308f841",
+      "row_type": "concurrency_decision",
+      "schema_version": "carnot.phase_concurrency_receipt.v1"
+    },
+    {
+      "decision": "serialized_exclusive",
+      "exclusive": true,
+      "left_attempt_id": "attempt-gpu-a",
+      "left_task_id": "task-gpu-a",
+      "overlap": false,
+      "resource_key": "GPU:0",
+      "right_attempt_id": "attempt-gpu-b",
+      "right_task_id": "task-gpu-b",
+      "row_hash": "sha256:d0cedfbbed9bc4d0811b4de38babe7df65cbb0057908b6867db500576b789f92",
+      "row_type": "concurrency_decision",
+      "schema_version": "carnot.phase_concurrency_receipt.v1"
+    },
+    {
+      "accepted": false,
+      "attack_id": "borrowed_nvidia_smi_activity",
+      "fail_closed": true,
+      "reasons": [
+        "borrowed_global_activity"
+      ],
+      "row_hash": "sha256:45d0b2114b0ed7732b098eab7e060958a9eee5fe5a980104a9148bda502cca9b",
+      "row_type": "attack"
+    },
+    {
+      "accepted": false,
+      "attack_id": "stale_dependency_artifact",
+      "fail_closed": true,
+      "reasons": [
+        "dependency_hash_changed"
+      ],
+      "row_hash": "sha256:0a1f9d29739c132f14941743c0c0914c163eeff5d20b28fc0db751baee4cb0a7",
+      "row_type": "attack"
+    },
+    {
+      "accepted": false,
+      "attack_id": "duplicated_attempt_id",
+      "fail_closed": true,
+      "reasons": [
+        "copied_receipt_task_mismatch",
+        "duplicated_attempt_id",
+        "process_identity_mismatch",
+        "process_identity_missing"
+      ],
+      "row_hash": "sha256:670997c32f120d5bdc629982355e9e290daefb093d663aa6c19d0e7af9758d4c",
+      "row_type": "attack"
+    },
+    {
+      "accepted": false,
+      "attack_id": "forged_clocks",
+      "fail_closed": true,
+      "reasons": [
+        "negative_interval"
+      ],
+      "row_hash": "sha256:f7bc65807754f7b540bd511f43b36340cae7143a10b5a789ffd12aa7856c0bfc",
+      "row_type": "attack"
+    },
+    {
+      "accepted": false,
+      "attack_id": "cross_task_output_path",
+      "fail_closed": true,
+      "reasons": [
+        "cross_task_output_path"
+      ],
+      "row_hash": "sha256:5e24e12f0ea4aff2db670c200ae84a1c16e770a4d90fa9c5e1cb2f4f3e4ba9e4",
+      "row_type": "attack"
+    },
+    {
+      "accepted": false,
+      "attack_id": "parent_child_pid_confusion",
+      "fail_closed": true,
+      "reasons": [
+        "parent_child_pid_confusion",
+        "process_identity_mismatch"
+      ],
+      "row_hash": "sha256:bd552b1bfb4197acaad88e43cfb226c6de1817928438b6f988ebc0e331ef75b9",
+      "row_type": "attack"
+    },
+    {
+      "accepted": false,
+      "attack_id": "pid_reuse",
+      "fail_closed": true,
+      "reasons": [
+        "pid_reuse",
+        "process_identity_mismatch"
+      ],
+      "row_hash": "sha256:e16da1a6a27776e988fa5c850fdc514f5884fac4dcaa82c61b85e5a2e3b61400",
+      "row_type": "attack"
+    },
+    {
+      "accepted": false,
+      "attack_id": "output_before_execution",
+      "fail_closed": true,
+      "reasons": [
+        "output_write_before_execution"
+      ],
+      "row_hash": "sha256:ff71cbf681dfef0c4fed8cd2c437b1943065e939fabbc1f019d5cbe740eff4e2",
+      "row_type": "attack"
+    },
+    {
+      "accepted": false,
+      "attack_id": "copied_receipt",
+      "fail_closed": true,
+      "reasons": [
+        "row_hash_mismatch",
+        "copied_receipt_task_mismatch",
+        "duplicated_attempt_id"
+      ],
+      "row_hash": "sha256:a6b33d44cbbf1409008a9eff6ecca072fe6e191dc82bb244b4b598db9208624d",
+      "row_type": "attack"
+    }
+  ],
+  "phase_concurrency_receipt_ready_score": 1.0,
+  "phase_rows": [
+    {
+      "attempt_id": "attempt-cpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000080000,
+      "monotonic_start_ns": 1000000000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "queue_wait",
+      "phase_index": 0,
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:7c8bad1fb701ff31afddc8e2b941cc76cd449d60b89333e08dfaac49d556035d",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219380Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219358Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000180000,
+      "monotonic_start_ns": 1000100000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "dependency_resolution",
+      "phase_index": 1,
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:745e563bcfac9ddd47051b6f61dc01fdad0e69b0f5f577f05831b168186d91ca",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219405Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219403Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000280000,
+      "monotonic_start_ns": 1000200000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "resource_acquisition",
+      "phase_index": 2,
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:9d217a79759f76aec029b0e0078e49775a9018c508ca79b83d63c5dd07663ad4",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219419Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219417Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000380000,
+      "monotonic_start_ns": 1000300000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "model_or_fixture_load",
+      "phase_index": 3,
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:2cb7e6cafb02ebadc54ffd739a541d35ca8c9cfa5a6a37286c40e76ef250121d",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219429Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219428Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000480000,
+      "monotonic_start_ns": 1000400000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "execution",
+      "phase_index": 4,
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:05917f07d75c30a5c9e08927351993c8812b019379dd51cb8260a91c96ccf173",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219439Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219438Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000580000,
+      "monotonic_start_ns": 1000500000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "exact_verification",
+      "phase_index": 5,
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:30d207a5074bea3e3bce1d373bab576ec836248ec937342b4ad3a99e5b29a2ab",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219448Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219447Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000680000,
+      "monotonic_start_ns": 1000600000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "artifact_write",
+      "phase_index": 6,
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:5de70cd1537fd4fb38318d63dd2ff33a48e8e19ec6dc36f7053be072dac96fef",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219459Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219458Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000780000,
+      "monotonic_start_ns": 1000700000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "resource_release",
+      "phase_index": 7,
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:ce7c4ff74364e96853f52cb614fcbaba9a789c5510139a1513fd10255efafac7",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219469Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219467Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000380000,
+      "monotonic_start_ns": 1000300000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "queue_wait",
+      "phase_index": 0,
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:8a4bbf54c67b3ade74d3e1cae31d2951bfd6324c7dc59c27b9adc7cb5078bd46",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219597Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219595Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000480000,
+      "monotonic_start_ns": 1000400000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "dependency_resolution",
+      "phase_index": 1,
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:340cfcff2fcd6cfe03653c0527d1f03031c94ffb0c7e6ec2092495cb325fbd25",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219606Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219605Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000580000,
+      "monotonic_start_ns": 1000500000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "resource_acquisition",
+      "phase_index": 2,
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:259b1b098fe26295f935957cfb3861baf662999240b4dbc8245037dcf30eaf01",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219615Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219614Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000680000,
+      "monotonic_start_ns": 1000600000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "model_or_fixture_load",
+      "phase_index": 3,
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:d6df68c8be48dc5165188f6be3333415c860f67e3844ec6bc2e0ce4508a2f319",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219625Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219623Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000780000,
+      "monotonic_start_ns": 1000700000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "execution",
+      "phase_index": 4,
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:93ba0cbd8148113746056f3729cd179da9d0dcbc0311f119eaed6ffef17e2163",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219636Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219634Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000880000,
+      "monotonic_start_ns": 1000800000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "exact_verification",
+      "phase_index": 5,
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:fc9731a5333715d6fcc05b62d26e0a76b0581f3b8064b8bc6f0f3426ffdc8811",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219645Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219643Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1000980000,
+      "monotonic_start_ns": 1000900000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "artifact_write",
+      "phase_index": 6,
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:05695418b0c07f3dfaf53a814435d51bfa88db55931c536aa0bda387f95a26a6",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219653Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219652Z"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 1001080000,
+      "monotonic_start_ns": 1001000000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "resource_release",
+      "phase_index": 7,
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:9e4fe12b0949c65aea0906b033f478dd7e66f53d66e7d2bb469a57a17995626f",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219662Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219660Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 2000080000,
+      "monotonic_start_ns": 2000000000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "queue_wait",
+      "phase_index": 0,
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:1ab7b7095f99e5ee44e9fb619dacd1ee664dbed70bfa221558f0b65c61b022c7",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219735Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219733Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 2000180000,
+      "monotonic_start_ns": 2000100000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "dependency_resolution",
+      "phase_index": 1,
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:131d681d55db7c4c1d314f7c739b9b4961f1e5c2401ff7dad06ee9d4ec4dd760",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219744Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219743Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 2000280000,
+      "monotonic_start_ns": 2000200000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "resource_acquisition",
+      "phase_index": 2,
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:ae790d5239aeecbd958235c07c34ed9618fd9e319a827619c2f8db608c2857c3",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219753Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219751Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 2000380000,
+      "monotonic_start_ns": 2000300000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "model_or_fixture_load",
+      "phase_index": 3,
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:d7e90733e96fcbdee821ba0252c8274979caa61f49d68b0350a19bacdc164722",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219761Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219760Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 2000480000,
+      "monotonic_start_ns": 2000400000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "execution",
+      "phase_index": 4,
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:16adf089d8e301968bb9bb7bf14907d79803fb2039fea638c36f7d871d0d7215",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219771Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219770Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 2000580000,
+      "monotonic_start_ns": 2000500000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "exact_verification",
+      "phase_index": 5,
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:76f710c3cf17ad3a6e877274d1b3226fb72f56f31e74c1a3ea0db8c67a6ccdc9",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219779Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219778Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 2000680000,
+      "monotonic_start_ns": 2000600000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "artifact_write",
+      "phase_index": 6,
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:2a0ea8256c2c613c4a98649ac0cbd8ef03e73d962ced57f7bf74cbe6dedf87fb",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219789Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219787Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 2000780000,
+      "monotonic_start_ns": 2000700000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "resource_release",
+      "phase_index": 7,
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:9f4cebdb84ff2034f383a2270e38e1e7c842e27f226dfb342d75141e00c595c1",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a",
+      "wall_clock_end": "2026-08-21T12:43:06.219797Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219796Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 3000080000,
+      "monotonic_start_ns": 3000000000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "queue_wait",
+      "phase_index": 0,
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:2f7eeeb745ae2436f6c8af5e1667ccfb0f5b332abbd36c11efdb326fa35da7c9",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219860Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219858Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 3000180000,
+      "monotonic_start_ns": 3000100000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "dependency_resolution",
+      "phase_index": 1,
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:ec04ff86b966f9f8ed89a96aad8366dee8d4a7aff6b706e9a0d93d4c92b9f011",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219868Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219867Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 3000280000,
+      "monotonic_start_ns": 3000200000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "resource_acquisition",
+      "phase_index": 2,
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:b4c4a601198eaf7c92dcdfb3329af60784305bebe347f37438efdf5b712b6b88",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219877Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219875Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 3000380000,
+      "monotonic_start_ns": 3000300000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "model_or_fixture_load",
+      "phase_index": 3,
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:267b70ef62673d106b8839dac17c95e0868d17da92a2093578c9753156b0d96f",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219885Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219884Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 3000480000,
+      "monotonic_start_ns": 3000400000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "execution",
+      "phase_index": 4,
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:e883c6d92bde69ad78d240f8f4ac9f0cfe8be10f0d334d0b555dddf00668eab9",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219894Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219892Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 3000580000,
+      "monotonic_start_ns": 3000500000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "exact_verification",
+      "phase_index": 5,
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:40c89a6a80866929bd52cc069f30440b9783a15a44e526bc5aa5851a7040dadf",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219902Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219901Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 3000680000,
+      "monotonic_start_ns": 3000600000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "artifact_write",
+      "phase_index": 6,
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:4ec4dffe4ae4c05893df1d19409366e8432dea7c97ce596e68015405b16b441e",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219911Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219909Z"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "exit_state": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "monotonic_end_ns": 3000780000,
+      "monotonic_start_ns": 3000700000,
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "phase": "resource_release",
+      "phase_index": 7,
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:240e7a074c0e59b169d0dbacc3921a4452a9aa44479dbb8fa43721288ae8f744",
+      "row_type": "phase",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b",
+      "wall_clock_end": "2026-08-21T12:43:06.219919Z",
+      "wall_clock_start": "2026-08-21T12:43:06.219918Z"
+    }
+  ],
+  "preconditions_checked": {
+    "clock_sources": {
+      "monotonic": "time.monotonic_ns",
+      "wall_clock": "datetime.now(UTC)"
+    },
+    "current_process_identity": {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "carnot.phase_concurrency_receipts"
+      ],
+      "command_hash": "sha256:582b41922d2b541f688147f417b90a5ae5c7004e8cfc2b44818161e426aeb526",
+      "executable_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "executable_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+      "parent_pid": 3776285,
+      "parent_process_start_identity": "linux_proc_stat_starttime:241131559",
+      "pid": 3818508,
+      "process_start_identity": "linux_proc_stat_starttime:241209782"
+    },
+    "current_receipt_apis": {
+      "phase_concurrency_receipts": {
+        "payload": {
+          "clock_sources": [
+            "time.monotonic_ns",
+            "datetime.now(UTC)"
+          ],
+          "process_identity_fields": [
+            "pid",
+            "process_start_identity",
+            "parent_pid",
+            "parent_process_start_identity"
+          ],
+          "required_phases": [
+            "queue_wait",
+            "dependency_resolution",
+            "resource_acquisition",
+            "model_or_fixture_load",
+            "execution",
+            "exact_verification",
+            "artifact_write",
+            "resource_release"
+          ],
+          "row_types": [
+            "process_identity",
+            "phase",
+            "dependency",
+            "resource_interval",
+            "output",
+            "concurrency_decision",
+            "attack"
+          ],
+          "schema_version": "carnot.phase_concurrency_receipt.v1"
+        },
+        "schema_sha256": "sha256:501ffb767f59727ce102b7283c6e1ff721c78504d97026c4a14605833e0c041a",
+        "schema_version": "carnot.phase_concurrency_receipt.v1"
+      },
+      "task_runtime_receipts": {
+        "schema_sha256": "sha256:330cdd2000ac304f25e82ba5cae985e4cd90da2921f414e752e22510036400da",
+        "schema_version": "carnot.task_scoped_runtime_receipt.v1"
+      }
+    },
+    "date": "20260821",
+    "fixture_paths": {
+      "dependency_path": "/tmp/carnot-exp6481-fixtures/dependency.txt",
+      "fixture_root": "/tmp/carnot-exp6481-fixtures"
+    },
+    "planning_date": "20260821",
+    "process_identity_fields": [
+      "pid",
+      "process_start_identity",
+      "parent_pid",
+      "parent_process_start_identity"
+    ],
+    "repository_state": {
+      "head": "38e516787de8f4a1ab6039cc0b235ef5116be745",
+      "status_short": "M openspec/capabilities/research-harnesses/spec.md\n?? python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py\n?? python/carnot/phase_concurrency_receipts.py\n?? tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py"
+    },
+    "runtime": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "pid": 3818508,
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python": "3.12.13"
+    },
+    "source_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/research-harnesses/spec.md": "sha256:7ef7ec22356d043f44aeff97153ff39a27ee5fbfe1dcfa8c49c2a7a7e3d2a575",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py": "sha256:c1b36b6ad0597a28a5734550b6d84e2625a5e030ab8d90359de0a2d1bce7485b",
+      "python/carnot/experiment_artifacts.py": "sha256:090eb3053300da61ebb6dbb9f8728c57971bc67e92249bdc98ebc2fd571d0905",
+      "python/carnot/phase_concurrency_receipts.py": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97",
+      "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+      "python/carnot/terminal_artifacts.py": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
+      "scripts/adversarial_verify.py": "sha256:acf263acbc366de7155af3acec7c659feeed1d0cf4e5e376893fe861dd4e4475",
+      "scripts/verdict_row_consistency_lint.py": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a",
+      "tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py": "sha256:11b7ba8cf43ff0866cf2354f38b669bcc13166b11eb195253245c015101ec172"
+    }
+  },
+  "process_identity_rows": [
+    {
+      "attempt_id": "attempt-cpu-a",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "__main__",
+        "50101"
+      ],
+      "command_hash": "sha256:405fec08ec0e229c47393e52e83476f0b15deec5a2d257c25986749782e0ebad",
+      "executable_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "executable_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "row_hash": "sha256:3cd846e4d80606affb119e11f603ee36289f93fc094f0cb8b3151d4999a98271",
+      "row_type": "process_identity",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a"
+    },
+    {
+      "attempt_id": "attempt-cpu-b",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "__main__",
+        "50102"
+      ],
+      "command_hash": "sha256:9a3fe753c36532d779c9acaa43869ff6aab0933953501e750c24df4580f1e38f",
+      "executable_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "executable_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "row_hash": "sha256:7f91be681ebaf27f0d5779dab3d409cf7633d780e6841338e1b5fa6a1c08d19b",
+      "row_type": "process_identity",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b"
+    },
+    {
+      "attempt_id": "attempt-gpu-a",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "__main__",
+        "50201"
+      ],
+      "command_hash": "sha256:fdcdaf5a78d71ef18f99a04bc8191e227884ee74550b5790bc003fb87ca11981",
+      "executable_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "executable_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "row_hash": "sha256:1e38ac272b00ee4f82847495435bf03626f9d20edd3da2d7c0494f6182e4ac80",
+      "row_type": "process_identity",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a"
+    },
+    {
+      "attempt_id": "attempt-gpu-b",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "__main__",
+        "50202"
+      ],
+      "command_hash": "sha256:5d2180fceb6b0b953c5ef926494b25b3457dfcae3aed23657c63f8cc98486334",
+      "executable_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "executable_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "row_hash": "sha256:7dc3703f382086322ff5da1eb1747827534192249ed2a7a9f195642e7477e52b",
+      "row_type": "process_identity",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b"
+    }
+  ],
+  "protected_files_unchanged": {
+    "files": {
+      "research-roadmap.yaml": {
+        "after_sha256": "sha256:1422b7dbff294427f572d8e40f2271d6cbc9fafc10fb571cba5a18d1c668e9dc",
+        "before_sha256": "sha256:1422b7dbff294427f572d8e40f2271d6cbc9fafc10fb571cba5a18d1c668e9dc",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after_sha256": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb",
+        "before_sha256": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb",
+        "unchanged": true
+      }
+    },
+    "protected_files_unchanged": true
+  },
+  "random_seed": 6481,
+  "receipt_schema_and_hash": {
+    "payload": {
+      "clock_sources": [
+        "time.monotonic_ns",
+        "datetime.now(UTC)"
+      ],
+      "process_identity_fields": [
+        "pid",
+        "process_start_identity",
+        "parent_pid",
+        "parent_process_start_identity"
+      ],
+      "required_phases": [
+        "queue_wait",
+        "dependency_resolution",
+        "resource_acquisition",
+        "model_or_fixture_load",
+        "execution",
+        "exact_verification",
+        "artifact_write",
+        "resource_release"
+      ],
+      "row_types": [
+        "process_identity",
+        "phase",
+        "dependency",
+        "resource_interval",
+        "output",
+        "concurrency_decision",
+        "attack"
+      ],
+      "schema_version": "carnot.phase_concurrency_receipt.v1"
+    },
+    "schema_sha256": "sha256:501ffb767f59727ce102b7283c6e1ff721c78504d97026c4a14605833e0c041a",
+    "schema_version": "carnot.phase_concurrency_receipt.v1"
+  },
+  "reproducibility_checksum": "sha256:e9a8fdae4e5f360e3f29ba86d86d30d361912d0722f07f557c644aa1b1fb7cca",
+  "resource_ownership_rows": [
+    {
+      "acquired_in_phase": "resource_acquisition",
+      "activity_sample": {},
+      "attempt_id": "attempt-cpu-a",
+      "exclusive": false,
+      "monotonic_end_ns": 1000780000,
+      "monotonic_start_ns": 1000200000,
+      "owner_pid": 50101,
+      "owner_process_start_identity": "start-cpu-a",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "pid": 50101,
+      "process_start_identity": "start-cpu-a",
+      "release_present": true,
+      "released_in_phase": "resource_release",
+      "resource_key": "CPU:shared",
+      "resource_type": "cpu",
+      "row_hash": "sha256:e9f25ca45439647c81cad4ddd4490de52e16cfc2aeecd0fdd0dff0db48f3621e",
+      "row_type": "resource_interval",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-a"
+    },
+    {
+      "acquired_in_phase": "resource_acquisition",
+      "activity_sample": {},
+      "attempt_id": "attempt-cpu-b",
+      "exclusive": false,
+      "monotonic_end_ns": 1001080000,
+      "monotonic_start_ns": 1000500000,
+      "owner_pid": 50102,
+      "owner_process_start_identity": "start-cpu-b",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "pid": 50102,
+      "process_start_identity": "start-cpu-b",
+      "release_present": true,
+      "released_in_phase": "resource_release",
+      "resource_key": "CPU:shared",
+      "resource_type": "cpu",
+      "row_hash": "sha256:93325f37b0560564b0b4cc9d8f24938c945fcad7d4756028201e6c80b25efeee",
+      "row_type": "resource_interval",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-cpu-b"
+    },
+    {
+      "acquired_in_phase": "resource_acquisition",
+      "activity_sample": {
+        "memory_mb": 1024,
+        "pid": 50201,
+        "process_start_identity": "start-gpu-a",
+        "sample_monotonic_ns": 2000210000,
+        "source": "nvidia-smi-fixture"
+      },
+      "attempt_id": "attempt-gpu-a",
+      "exclusive": true,
+      "monotonic_end_ns": 2000780000,
+      "monotonic_start_ns": 2000200000,
+      "owner_pid": 50201,
+      "owner_process_start_identity": "start-gpu-a",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "pid": 50201,
+      "process_start_identity": "start-gpu-a",
+      "release_present": true,
+      "released_in_phase": "resource_release",
+      "resource_key": "GPU:0",
+      "resource_type": "gpu",
+      "row_hash": "sha256:c824b71393addd960270cbc1c408e4b0bebd2c47b852b317ad9f7e24e3468ca0",
+      "row_type": "resource_interval",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-a"
+    },
+    {
+      "acquired_in_phase": "resource_acquisition",
+      "activity_sample": {
+        "memory_mb": 1024,
+        "pid": 50202,
+        "process_start_identity": "start-gpu-b",
+        "sample_monotonic_ns": 3000210000,
+        "source": "nvidia-smi-fixture"
+      },
+      "attempt_id": "attempt-gpu-b",
+      "exclusive": true,
+      "monotonic_end_ns": 3000780000,
+      "monotonic_start_ns": 3000200000,
+      "owner_pid": 50202,
+      "owner_process_start_identity": "start-gpu-b",
+      "parent_pid": 49000,
+      "parent_process_start_identity": "parent-start:49000",
+      "pid": 50202,
+      "process_start_identity": "start-gpu-b",
+      "release_present": true,
+      "released_in_phase": "resource_release",
+      "resource_key": "GPU:0",
+      "resource_type": "gpu",
+      "row_hash": "sha256:5193110cb8cbd69a567f449fb5724265ea7ff72b12b911213e6aee68999816e9",
+      "row_type": "resource_interval",
+      "schema_version": "carnot.phase_concurrency_receipt.v1",
+      "task_id": "task-gpu-b"
+    }
+  ],
+  "status": "complete_phase_concurrency_receipt_contract",
+  "tests_run": {
+    "commands": [
+      "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6481_monotonic_phase_concurrency_receipt_contract --date 20260821",
+      ".venv/bin/pytest tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py -q --no-cov -n 0",
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/phase_concurrency_receipts.py,python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py -m pytest tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py -q --no-cov -n 0",
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/phase_concurrency_receipts.py,python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py --fail-under=100 --show-missing",
+      ".venv/bin/pytest tests/python -q",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py",
+      ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6481_monotonic_phase_concurrency_receipt_contract.json",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6481_monotonic_phase_concurrency_receipt_contract.json",
+      ".venv/bin/python -m carnot.experiment_6481_monotonic_phase_concurrency_receipt_contract --validate",
+      "manual e2e-plan check: ops/e2e-test-plan.md has no direct Exp6481 entry; receipt artifact lints apply"
+    ],
+    "results": []
+  },
+  "verifier_is_oracle": true
+}

@@ -382,6 +382,9 @@ WEB_BIBLIOGRAPHIC_SEARCH_ONLY_MIN_DURATION_S = 0.0001
 ARTIFACT_QA_LINT_TESTS_SUBSTRATE = "artifact_qa_lint_tests"
 ARTIFACT_QA_LINT_TESTS_MIN_DURATION_S = 0.0001
 DETERMINISTIC_QA_REGRESSION_NO_LLM_SUBSTRATE = "deterministic_qa_regression_no_llm"
+DETERMINISTIC_RUNTIME_RECEIPT_VALIDATION_NO_LLM_SUBSTRATE = (
+    "deterministic_runtime_receipt_validation_no_llm"
+)
 
 NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     VERIFIER_SCORING_SUBSTRATE,
@@ -395,6 +398,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE,
     ARTIFACT_QA_LINT_TESTS_SUBSTRATE,
     DETERMINISTIC_QA_REGRESSION_NO_LLM_SUBSTRATE,
+    DETERMINISTIC_RUNTIME_RECEIPT_VALIDATION_NO_LLM_SUBSTRATE,
     DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE,
     "cached_exp5567_responses_no_llm",
     "cached_fixture_replay_no_llm",
@@ -2748,6 +2752,9 @@ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
         _is_arc_live_agent_no_llm(d)
         or _is_log_analysis_local_timing(d)
         or _is_deterministic_smt_hint_validation(d)
+        or _inference_substrate_matches(
+            d, DETERMINISTIC_RUNTIME_RECEIPT_VALIDATION_NO_LLM_SUBSTRATE
+        )
     )
     # Some experiment scripts (24 in the corpus as of 2026-07-05, e.g. exp5262/exp5263) declare
     # the field as the uppercase Python-constant-style "MODEL_SPECS" rather than lowercase

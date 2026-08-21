@@ -208,6 +208,32 @@ def test_req_learn_6479_pipeline_integration_substrate_has_floor(
     assert "METHODOLOGY_MISSING" not in _flag_kinds(report)
 
 
+def test_req_infra_6481_runtime_receipt_validation_substrate_has_floor(
+    tmp_path: Path,
+) -> None:
+    """REQ-INFRA-6481: receipt validation is an audited no-LLM substrate."""
+
+    payload = _paired_payload("deterministic_runtime_receipt_validation_no_llm")
+    payload["random_seed"] = 6481
+
+    classification = av._classify_inference_substrate(payload)
+    floor = av.duration_floor_for_artifact(payload)
+    report = _report_for_payload(tmp_path, payload)
+
+    assert classification["kind"] == "no_llm"
+    assert classification["matched_value"] == (
+        "deterministic_runtime_receipt_validation_no_llm"
+    )
+    assert floor == {
+        "substrate": "deterministic_runtime_receipt_validation_no_llm",
+        "min_duration_s": av.NO_LLM_DECLARED_MIN_DURATION_S,
+        "reason": "no_llm_declared",
+    }
+    assert "SUBSTRATE_HAS_NO_DURATION_FLOOR" not in _flag_kinds(report)
+    assert "DURATION_TOO_SHORT" not in _flag_kinds(report)
+    assert "METHODOLOGY_MISSING" not in _flag_kinds(report)
+
+
 def test_req_verify_5933_real_exp5931_no_longer_gets_live_substrate_flags() -> None:
     report = av.verify_artifact(EXP5931)
 
