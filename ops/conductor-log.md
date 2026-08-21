@@ -16247,3 +16247,5 @@ code |
 | 2026-08-21 18:39 UTC | Gated on Exp6493 readiness: exact-checker compleme | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6493-gated-decomposed-trajectory-energy-a |
 | 2026-08-21 18:56 UTC | Restarted anytime-valid reuse-spawn-defer factor-p | OK | 87 passed, 1 warning in 11.12s |
 | 2026-08-21 18:58 UTC | Gated on Exp6493 readiness: exact-checker compleme | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6493-gated-decomposed-trajectory-energy-a |
+| 2026-08-21 19:14 UTC | Chronological exact-admitted continuous factor lea | OK | 87 passed, 1 warning in 10.86s |
+| 2026-08-21 19:16 UTC | Gated on Exp6493 readiness: exact-checker compleme | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6493-gated-decomposed-trajectory-energy-a |
