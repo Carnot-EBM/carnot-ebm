@@ -391,21 +391,15 @@ DETERMINISTIC_QA_REGRESSION_NO_LLM_SUBSTRATE = "deterministic_qa_regression_no_l
 DETERMINISTIC_RUNTIME_RECEIPT_VALIDATION_NO_LLM_SUBSTRATE = (
     "deterministic_runtime_receipt_validation_no_llm"
 )
-EXACT_SOLVER_DATASET_COMMITMENT_NO_LLM_SUBSTRATE = (
-    "exact_solver_dataset_commitment_no_llm"
-)
-EXACT_SOLVER_TRAJECTORY_RECORDING_NO_LLM_SUBSTRATE = (
-    "exact_solver_trajectory_recording_no_llm"
-)
+EXACT_SOLVER_DATASET_COMMITMENT_NO_LLM_SUBSTRATE = "exact_solver_dataset_commitment_no_llm"
+EXACT_SOLVER_TRAJECTORY_RECORDING_NO_LLM_SUBSTRATE = "exact_solver_trajectory_recording_no_llm"
 LOCAL_COMPACT_ENERGY_HEADS_NO_LLM_SUBSTRATE = (
     "local_compact_energy_heads_on_exact_solver_features_no_llm"
 )
 DETERMINISTIC_REPRESENTATION_CONTRACT_NO_LLM_SUBSTRATE = (
     "deterministic_representation_contract_no_llm"
 )
-DETERMINISTIC_TRANSITION_CONTRACT_NO_LLM_SUBSTRATE = (
-    "deterministic_transition_contract_no_llm"
-)
+DETERMINISTIC_TRANSITION_CONTRACT_NO_LLM_SUBSTRATE = "deterministic_transition_contract_no_llm"
 DETERMINISTIC_FACTOR_POOL_CONTROLLER_NO_LLM_SUBSTRATE = (
     "deterministic_anytime_factor_pool_controller_no_llm"
 )
@@ -2319,9 +2313,7 @@ def _is_local_sota_gguf_small_n(d: dict[str, Any]) -> bool:
 
     return _inference_substrate_matches(
         d, LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE
-    ) or _inference_substrate_matches(
-        d, LOCAL_LLAMA_CPP_GGUF_ATOMIC_FACTOR_PROPOSALS_SUBSTRATE
-    )
+    ) or _inference_substrate_matches(d, LOCAL_LLAMA_CPP_GGUF_ATOMIC_FACTOR_PROPOSALS_SUBSTRATE)
 
 
 def _is_deterministic_smt_hint_validation(d: dict[str, Any]) -> bool:
@@ -2801,9 +2793,7 @@ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
         or _inference_substrate_matches(
             d, DETERMINISTIC_RUNTIME_RECEIPT_VALIDATION_NO_LLM_SUBSTRATE
         )
-        or _inference_substrate_matches(
-            d, DETERMINISTIC_REPRESENTATION_CONTRACT_NO_LLM_SUBSTRATE
-        )
+        or _inference_substrate_matches(d, DETERMINISTIC_REPRESENTATION_CONTRACT_NO_LLM_SUBSTRATE)
     )
     # Some experiment scripts (24 in the corpus as of 2026-07-05, e.g. exp5262/exp5263) declare
     # the field as the uppercase Python-constant-style "MODEL_SPECS" rather than lowercase
@@ -3420,6 +3410,90 @@ def check_circular_moat_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
                 ),
             )
         )
+
+
+# --- Declared verdict class, cross-checked structurally (2026-08-21) ---------------------------------
+# The CLOSED enum. Closed on purpose: verdict semantics previously lived in four
+# drifting substring token lists, patched at least six times ('disqualified:' —
+# an honest negative — drew a critical flag in the week this shipped). An open
+# vocabulary here would just be list number five.
+_VERDICT_CLASSES = frozenset(
+    {"positive", "circular_positive", "null", "blocked", "disqualified", "partial"}
+)
+
+
+def check_verdict_class_consistency(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Cross-check a declared verdict_class against structural fields (REQ-CONDUCTOR-VERDICT-1).
+
+    Mechanism 4 of docs/research-notes/conductor-self-improvement-2026-08-21.md.
+    Declaration replaces inference: the artifact says which CLASS its verdict is,
+    and this check verifies the claim against fields the linter already reads —
+    no substring matching against honest_verdict, ever.
+
+    - a value outside the closed enum is CRITICAL;
+    - verifier_is_oracle=True forbids `positive`: the class must be
+      `circular_positive`, so a declared-circular result cannot carry a
+      research-win class into capstones/headlines (the exp6478 shape: an honest
+      artifact whose `complete_positive` prefix connoted a win downstream);
+    - a failed acceptance_gate_* self-report forbids `positive` and
+      `circular_positive`;
+    - the informative-`null` cross-check (flip_count == 0 forbids a meaningful
+      null) is NOT duplicated here — check_false_negative_risk already
+      implements it structurally.
+
+    Absent verdict_class draws no flag: adoption is forward-only via the
+    planner prompt, and the historical corpus carries only free-text verdicts.
+    """
+    vc = d.get("verdict_class")
+    if vc is None:
+        return
+    if not isinstance(vc, str) or vc not in _VERDICT_CLASSES:
+        flags.append(
+            Flag(
+                kind="VERDICT_CLASS_MISMATCH",
+                severity="critical",
+                detail=(
+                    f"verdict_class={vc!r} is outside the closed enum "
+                    f"{sorted(_VERDICT_CLASSES)}. The enum is closed on purpose — "
+                    "extending it per-artifact recreates the drifting-token-list "
+                    "problem this field replaces. Pick the nearest class and put "
+                    "the nuance in honest_verdict."
+                ),
+            )
+        )
+        return
+    if vc == "positive" and d.get("verifier_is_oracle") is True:
+        flags.append(
+            Flag(
+                kind="VERDICT_CLASS_MISMATCH",
+                severity="critical",
+                detail=(
+                    "verdict_class=positive but verifier_is_oracle=True: a circular "
+                    "(verifier==oracle) result must declare circular_positive so the "
+                    "circularity travels WITH the claim into capstones and headline "
+                    "aggregation. See CLAUDE.md 'Circularity / Oracle-Distinctness "
+                    "Discipline'."
+                ),
+            )
+        )
+    if vc in ("positive", "circular_positive"):
+        failed_gates = [
+            k
+            for k, v in d.items()
+            if isinstance(k, str) and k.startswith("acceptance_gate") and v is False
+        ]
+        if failed_gates:
+            flags.append(
+                Flag(
+                    kind="VERDICT_CLASS_MISMATCH",
+                    severity="critical",
+                    detail=(
+                        f"verdict_class={vc} but failed acceptance-gate self-report(s) "
+                        f"{failed_gates[:4]}: a failed gate forbids a positive class. "
+                        "Declare null/partial/blocked as appropriate."
+                    ),
+                )
+            )
 
 
 # --- ARC live-agent self-solve discipline (2026-06-22, operator-directed; 2nd recurrence) ------------
@@ -6236,6 +6310,7 @@ def verify_artifact(path: Path, *, declared: bool | None = None) -> dict[str, An
     check_degenerate_separation(d, flags)
     check_degenerate_controls(d, flags)
     check_circular_moat_overclaim(d, flags)
+    check_verdict_class_consistency(d, flags)
     check_moat_claim_rigor(d, flags)
     check_world_model_trust_degeneracy(d, flags)
     check_engine_selection_candidate_diversity(d, flags)
