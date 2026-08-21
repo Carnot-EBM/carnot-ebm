@@ -1,522 +1,301 @@
-# Research Roadmap V559: Prospective Latent Energy and Guarded Harness Learning
+# Research Roadmap V560: Trajectory Energy, Anytime Factor Memory, and ARC Decision Alignment
 
-**Milestone:** 2026.08.559  
-**Task range:** Exp6483 through Exp6496  
-**Planned tasks:** 14  
-**Phases:** 4
+**Milestone:** `2026.08.560`
+**Created:** 2026-08-21
+**Status:** proposed
+**Supersedes:** completed milestone `2026.08.559`
+**Execution manifest:** `research-roadmap-next.yaml`
 
 ## Executive summary
 
-V559 tests whether Carnot can move its exact finite-domain energy result onto
-an authentic local-SOTA representation surface without reopening a retired
-generated-answer path. It then tests whether exact-admitted factors can improve
-a chronological future stream under an anytime-valid promotion rule. A final
-branch asks whether a conservative energy ranks live ARC action prefixes by
-later progress before it can affect the default-off policy.
+V559 closed the forced-candidate hidden-representation branch honestly. Its receipt and transition contracts worked, but the prospective representation corpus did not support a scientific selector: candidate identifier length, candidate identity, and row-order parity each predicted the label perfectly, while token, prompt, and candidate lengths were absent from the raw evidence. That result is a lineage boundary, not a request to tune another hidden-state head.
 
-The milestone uses forced, exact-labeled candidates. It does not ask a model to
-generate a finite ID or structured answer. It extracts one runner-exposed
-final-layer representation for each fixed prompt-candidate pair. The exact
-checker remains the only authority.
+V560 moves to a different observable: exact solver trajectories. It asks whether early solver state predicts which constraints and assignments persist to a final exact solution, whether SOTA local models can propose atomic reusable factors whose causal value survives exact counterfactual replay, and whether an anytime-valid bounded factor pool can learn continuously without eroding future support. A separate ARC branch first measures whether the existing conservative prefix energy aligns with later live-agent progress; only a positive diagnostic may activate a default-off policy A/B.
 
-V559 includes one SOTA-ingestion task and two infrastructure tasks. This meets
-the planning reservations for a 10-task-or-larger milestone. It includes one
-continuous self-learning experiment. It schedules no FPGA task because KV260,
-GateMate, and PolarFire have reached their recorded terminal states.
+The milestone has 14 experiments in four phases:
 
-## What V557 and V558 proved
+1. commit a leakage-resistant solver-trajectory stream and evaluate early-to-final energy;
+2. use exact replay to validate model-proposed factors and route exact checks under charged budgets;
+3. execute restarted reuse/spawn/defer continuous learning with bounded capacity and future-support audits;
+4. diagnose ARC decision alignment, gate a live policy A/B, and independently reconcile the milestone.
 
-V557 supplied the first clean foundation for this milestone.
+No task depends on FPGA, TSU, Kona, remote APIs, or unavailable model weights. The dual RTX 3090 host is the required accelerator for the single local-GGUF proposal task; the exact-solver, controller, audit, and ARC tasks remain runnable on the current CPU/GPU stack.
 
-- Exp6474 showed that the frozen finite policy class identifies the target
-  exact-selection effect.
-- Exp6476 retired the Exp6463 candidate corpus. Its held labels and membership
-  did not have immutable pre-inference proof.
-- Exp6477 built a backend-neutral finite-domain constraint record. Z3 and
-  exhaustive enumeration agreed.
-- Exp6478 found a positive exact-energy selection effect on finite no-LLM held
-  units. The exact backend stayed authoritative.
-- Exp6479 shipped a default-off VerifyRepair factor-cache shadow adapter with
-  exact write admission, rollback, and persistence boundaries.
-- Exp6471 had already supplied a generic default-off ARC safety shield.
+## What V559 proved
 
-V558 did not run model or science compute. It closed three prerequisite gaps.
-
-- Exp6480 froze the V557 evidence boundary. It exposed narrow factor-cache and
-  ARC-shield readiness fields.
-- Exp6481 validated task-local phase and concurrency receipts. It did not
-  change conductor scheduling.
-- Exp6482 sealed a 48-unit prospective constraint stream. Exact labels, family
-  membership, split membership, protected clauses, and seeds predate model
-  access. At least 24 units are held. Z3 and exhaustive labels agree.
-
-The V558 operational retrospective records three synthesis tasks and no model
-compute. V559 must therefore earn every model, energy, learning, and ARC claim
-from new execution.
-
-## Retired branch correction
-
-The old V558 draft proposed free generated answers in Exp6483. The active V558
-roadmap did not execute that task. The exclusion manifest closes the same
-finite-ID and generated-answer transport mechanism after Exp5813. Parser,
-grammar, stop, and budget changes may not reopen it.
-
-The manifest preserves these distinct surfaces:
-
-- paired SOTA embeddings;
-- final-token or final-layer embedding verification;
-- exact constraint acquisition;
-- non-generation ARC world-feedback signals.
-
-V559 uses only those preserved surfaces. It also repairs the failures found by
-Exp5853. That audit disqualified the old paired embedding corpus because label
-permutations survived, norm and length controls failed, disaggregated cells
-failed, and raw model dimensions leaked family identity.
-
-## Three largest gaps to the PRD vision
-
-### Gap 1: exact energy has no authentic SOTA representation result
-
-Carnot has a positive finite exact-energy result. It does not yet have clean
-evidence on current local-SOTA representations. The older paired embedding
-artifact was disqualified. The generated-answer path is retired.
-
-V559 response: create forced correct and controlled-wrong candidate pairs from
-the sealed Exp6482 stream. Run all three mandated GGUF families. Keep families
-separate. Remove norm, length, position, and dimension shortcuts. Compare KAN,
-linear, and MLP energy readouts.
-
-### Gap 2: FR-11 lacks an anytime-valid production-shadow learning result
-
-Carnot has several positive replay results and one eligible V556 CSL result.
-It does not yet have a guarded production-shadow result on a prospectively
-sealed local-SOTA stream. Earlier audits found duplicate events, mismatched
-rows, and critical lifecycle findings.
-
-V559 response: treat the Exp6479 cache as versioned harness state. Admit only
-exact-verified atomic factors. Compare frozen, adaptive, and quarantine-only
-arms on one chronological stream. Use an anytime-valid evidence process for
-promotion and stopping. Audit actual durable actions, not stated decisions.
-
-### Gap 3: ARC energy is not proven to be a decision metric
-
-The live ARC path has a generic shield. Carnot has not shown that its energy
-ranks action prefixes by later environment progress. A decodable state or a
-lower local energy is not enough.
-
-V559 response: measure prefix-to-progress rank alignment on frozen adapter-free
-live traces. Add shuffled and distortion controls. Only a positive diagnostic
-may unlock a default-off executed-policy A/B. The branch claims no game or
-level solve.
-
-## Research inputs added for V559
-
-The 2026-08-21 source refresh in `research-references.md` adds four methods to
-the experiment design.
-
-| Source | Method used in V559 | Boundary |
+| Experiment | Durable result | V560 consequence |
 |---|---|---|
-| arXiv:2608.20337 | Anytime-valid evidence process and adaptive-peeking charge | No post-hoc fixed-horizon promotion |
-| arXiv:2608.20316 | Value-of-information exact-check routing | Exact result remains authority |
-| arXiv:2608.20274 | Atomic factor versus task-wide bundle comparison | Exact applicability before reuse |
-| arXiv:2608.19564 | Audit actual memory tool actions | Stated memory intent is not a write |
-| arXiv:2606.21646 and the ECD repository | Conservative local-to-global energy composition test | No diffusion planner adoption |
-| arXiv:2608.20318 | Separate harness learning from model training | No weight-learning claim |
+| Exp6483 | The local SOTA source map and evidence boundary were complete. | Preserve source and model provenance; do not confuse literature support with local evidence. |
+| Exp6484 | A non-generation representation receipt can bind model, runtime, raw bytes, prompt/candidate identity, and checksums. | Reuse the receipt discipline for any local-GGUF proposal event. |
+| Exp6485 | Cache transition, event-time action, multiplicity, restart, rollback, and held-future evidence have an executable contract. | Extend this contract with paired restarted reuse/spawn evidence processes. |
+| Exp6486 | Three exact-label families produced 432 prospective raw records. | The infrastructure can commit prospective evidence, but the rows are not selector-eligible. |
+| Exp6487 | Readiness was 0. Three shortcuts perfectly predicted labels; required length evidence was unavailable. | Retire the forced-candidate hidden-representation selector scope. Do not headline, repair, or silently reuse those rows. |
 
-The source scan also rechecked OpenReview, Hugging Face Papers, Semantic
-Scholar citations to EBT and ARM-EBM, GitHub, Extropic, and Logical
-Intelligence. It found no authenticated TSU route, public Kona runner, or new
-exact-authority baseline.
+The strongest adjacent completed results remain relevant:
+
+- Exp6478 established exact finite energy selection with a positive lower confidence bound and zero harmful flips.
+- Exp6479 provided a factor-cache adapter.
+- Exp6480 froze the failed Exp6463 fixed-policy lineage while allowing genuinely prospective replacement lineages.
+- Exp6481 defined phase receipts, and Exp6482 committed a 48-unit prospective exact stream across quota allocation, route ordering, and Boolean guards.
+- Exp6471 produced a generic default-off ARC safety shield reachable by the live agent, but Exp6458 showed that a broad policy claim without direct objective alignment was premature.
+- Exp6472 found continuous-learning and ARC engineering components present while scientific and hardware conclusions remained unearned.
+
+## The three largest gaps to the PRD vision
+
+### Gap 1: exact energy lacks a leakage-resistant learned signal on an authentic constraint process
+
+FR-12 requires verifiable reasoning, not a scorer whose apparent accuracy comes from answer position, identifier form, or corpus construction. Exact finite energy works, but V559 showed that forced candidates were a poor scientific substrate. V560 therefore learns only from early states emitted by exact solvers and labels them by persistence to the final exact solution. The final solver remains the oracle; learned energy may prioritize work but never release an answer.
+
+### Gap 2: FR-11 lacks executed, anytime-valid continuous self-learning
+
+Carnot has transition and cache contracts, but it has not yet shown an online factor pool making reuse/spawn/defer decisions over a chronological stream while controlling false actions across time, factor multiplicity, and restarts. V560 must execute that lifecycle, charge updates fairly, bound capacity, support rollback, and test whether current gains reshape future support adversely.
+
+### Gap 3: ARC energy is not yet a validated live-agent decision metric
+
+The generic safety shield is reachable, but the prior broad ARC objective did not clear its roster. Before changing policy, V560 measures whether prefix energy predicts later live-agent progress beyond simple controls on a frozen public roster. A policy A/B runs only if that direct alignment gate is positive. No offline ground-truth BFS, game-source reading, or hand-built per-game adapter can receive solve credit.
+
+Hardware acceleration remains strategically important, but it is not one of this milestone's three executable gaps: the local dual-GPU system is operational, while Extropic access, Kona weights, and FPGA integration evidence are unavailable or terminal for the present branch.
+
+## Research findings adopted for V560
+
+The 2026-08-21 literature refresh is recorded in `research-references.md`. The design adopts the following ideas without treating paper claims as local results:
+
+- **Evidence Before Expansion** ([arXiv:2608.19888](https://arxiv.org/abs/2608.19888)) frames reuse, spawn, and defer as two one-sided sequential tests separated by an indifference zone, with restarted anytime-valid evidence. Exp6495 adapts this to factor-memory actions.
+- **Learning Early-to-Final Solution Consistency for MILP** ([arXiv:2608.19953](https://arxiv.org/abs/2608.19953)) predicts whether early assignments survive to a final solve rather than guessing final assignments from static instance features. Exp6489-6490 use that boundary for exact solver trajectories.
+- **Credit Without Ground Truth** ([arXiv:2608.19760](https://arxiv.org/abs/2608.19760)) reports that judge scores, log probabilities, and confidence are unreliable substitutes for executed causal replay and warns about dose confounding. Exp6492 and Exp6496 use exact add/drop replay and matched admitted-event counts.
+- **Stopping and Routing LLM Judge Panels** ([arXiv:2608.19802](https://arxiv.org/abs/2608.19802)) separates copies, complements, and specialists under held cost. Exp6494 applies the complementarity question to exact checkers, not to model judges.
+- **Verifier-Induced Support Reshaping** ([arXiv:2608.00220](https://arxiv.org/abs/2608.00220)) shows that immediate verifier gains can reduce future support. Exp6496-6497 measure held-future quality and best-of-k support after online admission.
+- **ROC-n-reroll** ([arXiv:2507.12399](https://arxiv.org/abs/2507.12399)) cautions that low-budget verifier results need not predict high-budget selection. Exp6493-6494 report charged budget curves rather than a single operating point.
+- **Bandit-MoE** ([OpenReview forum](https://openreview.net/forum?id=o7HKyfd5mk)) motivates bounded expert pools because small KAN pools can resist forgetting while larger pools can become difficult to manage. Exp6497 treats capacity as an experimental variable.
+- **EVADE** ([arXiv:2608.18833](https://arxiv.org/abs/2608.18833)) motivates independent views and abstention. V560 uses independent exact replay and defer decisions rather than self-certification.
+- **Orthogonal JEPA** ([arXiv:2608.20065](https://arxiv.org/abs/2608.20065)) is retained as a Tier-3 predictive-verification direction, but V560 does not schedule another latent-representation experiment after the V559 integrity failure.
+- Extropic's Z1 update describes future high-connectivity probabilistic hardware, but availability is announced for 2027. It is architectural context only, not a local hardware claim.
 
 ## Target architecture
 
 ```text
-Exp6482 sealed exact stream
-  labels + splits + protected clauses + backend parity
-                 |
-                 v
-     Exp6484 non-generation surface contract
-                 |
-                 v
-  Exp6486 forced prompt-candidate representation pass
-   Qwen3.6-35B-A3B | Gemma4-31B | Gemma4-26B-A4B
-          separate family rows and raw hashes
-                 |
-                 v
-       Exp6487 independent integrity audit
-     no norm / length / dimension / label shortcut
-                 |
-        +--------+-------------------+
-        |                            |
-        v                            v
- Exp6488 compact latent energy   Exp6491 guarded CSL
- KAN vs linear vs MLP            exact-admitted factor cache
- conservative clause sum         anytime-valid promotion
-        |                            |
-        v                            v
- Exp6489 exact selection A/B     Exp6492 granularity and stress
- exact checker is authority      atomic vs broad, capacity, restart
-        |                            |
-        v                            v
- Exp6490 value-of-information    Exp6493 independent action audit
- exact-check allocation          write/quarantine/tombstone receipts
+ prospective exact instances (Exp6482 lineage)
+                    |
+                    v
+       exact solver trajectory recorder
+       early state ----------> final exact solution/oracle
+                    |                    |
+                    +---- persistence ---+
+                              labels
+                                |
+                 +--------------+---------------+
+                 |                              |
+                 v                              v
+      leakage-neutral trajectory       local SOTA GGUF models
+      energy (linear/MLP/KAN)           propose atomic factors only
+                 |                              |
+                 |                     exact compile + add/drop replay
+                 |                              |
+                 +--------------+---------------+
+                                v
+                    decomposed exact-grounded energy
+                                |
+                    exact checker VOI router
+                                |
+                 full exact solver remains authority
+                                |
+                                v
+          chronological restarted reuse/spawn/defer controller
+          bounded pool | rollback | multiplicity | future support
 
-Frozen adapter-free ARC traces
-                 |
-                 v
- Exp6494 conservative prefix-energy alignment diagnostic
-                 |
-          positive gate only
-                 v
- Exp6495 default-off executed-policy A/B
-       nonzero live influence, no solve claim
-
-All branches + Exp6483 source map + Exp6485 transition contract
-                 |
-                 v
-       Exp6496 adversarial capstone
+ frozen public ARC prefixes --> alignment diagnostic
+                                |
+                      positive alignment gate?
+                         no /          \ yes
+                    report null      default-off live A/B
+                                          |
+                               generic shield + live agent
+                               exact/public game feedback
 ```
 
-The architecture has two authority planes.
+The architecture has four hard boundaries:
 
-- The learned plane may propose, rank, route, cache, or abstain.
-- The exact plane validates finite-domain answers and controls release.
+1. local models may propose factors but cannot label, verify, or release solutions;
+2. exact trajectory outcomes and exact counterfactual replay are the scientific authority;
+3. continuous updates are chronological, default-off until admitted, and evaluated on future held units;
+4. ARC solve provenance, if any level is incidentally reached, must be `live_agent_self_discovery`.
 
-No result may move an exact checker into the learned plane.
+## Phase A: evidence boundary and solver-trajectory substrate
 
-## Phase 0: source and evidence contracts
+### Exp6488 - V559 decision ledger and V560 lineage lock
 
-### Exp6483 - V559 latent-energy SOTA ingestion
+Aggregate Exp6483-6487 from their raw evidence, freeze the invalid representation-selector scope, and state the allowed V560 lineage. The deliverable must distinguish reusable infrastructure from scientifically disqualified rows and give downstream tasks an exact `v560_lineage_lock_ready_score` field.
 
-Run the required focused ingestion pass. Read the current reference and study
-ledgers. Use the low-concurrency arXiv and Semantic Scholar sweep helpers. Read
-the top five to eight primary papers. Map three to five methods onto the
-current code and record failure boundaries. Update the study ledger and create
-one research note. Do not execute a product, model, hardware device, or ARC
-environment.
+**Deliverable:** `results/experiment_6488_v559_decision_ledger.json`
 
-Deliverable:
-`results/experiment_6483_v559_latent_energy_sota_ingestion.json`
+### Exp6489 - Immutable early-to-final solver trajectory commitment
 
-### Exp6484 - Non-generation representation receipt contract
+Instrument the exact backends already used by the Exp6482 three-family commitment. Persist early states, chronological decisions, final exact outcomes, identity-free features, split commitments, checksums, and a leakage audit before fitting any model. Labels express persistence to the final solution; they are not generated by an LLM.
 
-Build an infrastructure canary for the preserved paired-representation path.
-The contract must prove that candidate text was fixed before model access, no
-generation API was called, raw vectors were persisted once, each family kept
-its native dimension, and derived features carry source hashes. Add attacks
-for generated text, label access, duplicate writes, pooled dimensions, norm-
-only features, and altered candidates.
+**Deliverable:** `results/experiment_6489_solver_trajectory_commitment.json`
 
-Deliverable:
-`results/experiment_6484_non_generation_representation_receipt_contract.json`
+### Exp6490 - Leakage-neutral early-to-final trajectory energy baselines
 
-### Exp6485 - Online cache transition and evidence-process contract
+Compare analytical early energy, regularized linear, compact MLP, and compact KAN persistence heads on committed held trajectories and seeds. Audit instance identity, ordering, serialized length, norm, backend, and family shortcuts. Exp5853 and Exp6487 are explicit prior failures; a repeated no-signal or shortcut result retires this learned-trajectory branch.
 
-Build the second infrastructure slot. Validate append-only event IDs, actual
-write action receipts, exact admission, quarantine, tombstone, rollback,
-restart, and an anytime-valid evidence process. Add adaptive-peeking, duplicate
-event, backdated write, and resurrection attacks. This task uses fixtures. It
-does not claim learning benefit.
+**Deliverable:** `results/experiment_6490_trajectory_energy_baselines.json`
 
-Deliverable:
-`results/experiment_6485_online_cache_transition_eprocess_contract.json`
+### Exp6491 - Local-SOTA atomic factor proposal stream
 
-## Phase 1: prospective latent-energy science
+Use the mandated local GGUF models to propose one atomic, compilable factor at each development-only divergence event. Raw request/response bytes and model receipts are immutable. The model does not emit answers, see held labels, use a constrained answer grammar, or retry until accepted. Exact compilation may reject proposals. This is a new factor-proposal scope, not a rerun of the retired Exp6463 answer-policy corpus.
 
-### Exp6486 - Three-family forced-candidate representation stream
+**Deliverable:** `results/experiment_6491_sota_factor_proposal_stream.json`
 
-Read the sealed Exp6482 stream and the Exp6484 contract. Construct correct and
-controlled-wrong candidates from exact finite-domain witnesses. Freeze every
-candidate before model load. Use `cached_sota_pair()` and all three mandated
-GGUF families. Run embedding or final-layer forward passes only. Persist raw
-vectors once. Emit one row per unit, candidate, family, seed, and split.
+## Phase B: exact-grounded factor energy and checker routing
 
-Deliverable:
-`results/experiment_6486_three_family_forced_candidate_representations.json`
+### Exp6492 - Executed-replay factor causal audit
 
-### Exp6487 - Independent representation integrity audit
+For every accepted proposal, execute exact add/drop counterfactual replays on solver trajectories. Match random and structural-control factors, event counts, and exposure dose. Report per-event changes in exact search work, final validity, and harmful flips. No model-based judge may substitute for executed replay.
 
-Recompute Exp6486 from raw hashes with an independent reducer. Test label and
-pair permutations, claim flips, within-family cells, length, norm, position,
-prompt identity, candidate identity, and model-dimension leakage. The audit
-must fail closed when any shortcut can reproduce the headline.
+**Deliverable:** `results/experiment_6492_factor_causal_replay.json`
 
-Deliverable:
-`results/experiment_6487_representation_integrity_audit.json`
+### Exp6493 - Gated decomposed trajectory-energy A/B
 
-### Exp6488 - Compact KAN energy and conservative composition A/B
+Run only if Exp6490 finds a held trajectory signal and Exp6492 finds positive causal factor value. Compare exact analytical energy, learned persistence energy, decomposed energy, and matched controls across charged budget points. Full exact solving remains authority; the outcome is search-work reduction with validity parity, not a hardware-speed claim.
 
-Fit per-family compact KAN, linear, and size-matched MLP energy readouts on
-development units only. Use causal candidate pairs and exact labels. Compare
-held pair ranking, calibration, noise degradation, and shortcut residuals.
-Test whether clause-local energies compose into a path-independent global
-energy. Add cycle residual and boundary-reaction controls. Freeze all choices
-before held access.
+**Deliverable:** `results/experiment_6493_decomposed_trajectory_energy_ab.json`
 
-Deliverable:
-`results/experiment_6488_compact_kan_conservative_energy_ab.json`
+### Exp6494 - Gated exact-checker complementarity and value-of-information routing
 
-### Exp6489 - Prospective latent-energy exact-selection A/B
+Run only if Exp6493 establishes usable decomposed energy. Measure which exact checks behave as copies, complements, or specialists, including authentic runtime cost. Compare always-all, uniform, static, and value-of-information routing across fixed charged budgets. False release is forbidden.
 
-On held units, compare the frozen latent energy with first-candidate,
-deterministic-shuffled, linear, MLP, and exact-oracle-ceiling controls. Charge
-the same candidate budget. Use final exact success as the headline. Record
-harmful flips and protected-clause regressions per family.
+**Deliverable:** `results/experiment_6494_exact_checker_voi_router.json`
 
-Deliverable:
-`results/experiment_6489_prospective_latent_energy_selection_ab.json`
+## Phase C: continuous self-learning
 
-### Exp6490 - Value-of-information exact-verification allocation A/B
+### Exp6495 - Restarted reuse/spawn/defer factor-pool controller
 
-Run only if Exp6489 clears its promotion field. Learn the routing policy on
-development units. Compare value-of-information, uniform, uncertainty-only,
-and always-check controls under one charged exact-check budget. Add a noisy-
-estimate control and a constructed zero-gain cell.
+Extend the Exp6479 cache adapter and Exp6485 transition contract with paired one-sided restarted evidence processes and an explicit indifference zone. Implement event-time spending, factor/restart multiplicity, bounded capacity, rollback, defer, and deterministic corruption fixtures. This is a contract and implementation task, not yet a learning-effect claim.
 
-Deliverable:
-`results/experiment_6490_value_of_information_exact_check_allocation_ab.json`
+**Deliverable:** `results/experiment_6495_restarted_factor_pool_controller.json`
 
-## Phase 2: continuous self-learning
+### Exp6496 - Chronological continuous factor learning
 
-### Exp6491 - Guarded exact-admitted chronological harness CSL
+Execute the immutable proposal stream chronologically. Compare frozen, always-update, fixed-threshold, and restarted reuse/spawn/defer arms with matched admitted-event counts and exposure dose. Exact replay controls every write. Evaluate future held quality, best-of-k support, safety, pool actions, rollback, and restart behavior. This is the milestone's required continuous self-learning experiment.
 
-This is the required continuous self-learning experiment. Replay the authentic
-Exp6486 event stream through the default-off Exp6479 adapter. Compare a frozen
-cache, an exact-gated adaptive cache, and a quarantine-only control. Use atomic
-clause factors. Use the Exp6485 anytime-valid promotion rule. Keep model
-weights, prompts, splits, and exact checkers immutable.
+**Deliverable:** `results/experiment_6496_continuous_factor_learning.json`
 
-Deliverable:
-`results/experiment_6491_guarded_chronological_harness_csl.json`
+### Exp6497 - Bounded-capacity recurrence and support stress
 
-### Exp6492 - Factor granularity, capacity, and interference stress
+Stress small and larger pool capacities under recurring, shifted, and corrupted factor streams. Measure negative transfer, eviction quality, recovery after restart, future support, and validity. A null or adverse result is valid evidence and constrains the production design.
 
-Run only when Exp6491 has a ready protocol and at least one exact-admitted
-write. Compare atomic clause factors with task-wide bundles. Sweep bounded
-capacities with LFU, LRU, and random eviction. Include an unbounded diagnostic
-control. Test obsolete factors, binding shift, corruption, cross-family
-interference, process restart, and tombstone resurrection.
+**Deliverable:** `results/experiment_6497_factor_pool_support_stress.json`
 
-Deliverable:
-`results/experiment_6492_factor_granularity_capacity_interference_ab.json`
+### Exp6498 - Independent continuous-learning replay audit
 
-### Exp6493 - Independent CSL action and sequential-evidence audit
+Using an independent reducer, recompute chronological actions, evidence spending, multiplicity, matched dose, rollback, and future-support results from raw rows. The audit must distinguish execution completeness from eligibility for a continuous-learning scientific claim.
 
-Run even when a Phase 2 task is blocked or null. Reconstruct every event,
-actual durable action, exact admission decision, evidence-process update,
-promotion, eviction, rollback, tombstone, and restart state. Recompute the
-frozen null and adaptive-peeking charge. Grant claim eligibility only when raw
-events, durable state, and unit rows agree.
+**Deliverable:** `results/experiment_6498_csl_independent_audit.json`
 
-Deliverable:
-`results/experiment_6493_independent_csl_action_evidence_audit.json`
+## Phase D: ARC decision alignment and capstone
 
-## Phase 3: ARC decision alignment and capstone
+### Exp6499 - ARC prefix-energy-to-progress alignment diagnostic
 
-### Exp6494 - ARC conservative prefix-energy alignment diagnostic
+On a frozen public roster, correlate conservative prefix energy with later live-agent progress and compare against step count, action count, validity, and simple state-size controls. Perform the solve-registry precheck. This task changes no policy and claims no new game or level solve; its purpose is to establish whether energy is a useful decision metric.
 
-Use frozen adapter-free live-agent traces. Do not change policy. Test whether
-current shield terms plus an additive conservative prefix energy rank action
-prefixes by later environment progress. Use game-blind splits, shuffled energy,
-time-only, length-only, and constructive distortion controls. Run the ARC solve
-registry precheck. Record incidental level events with provenance. Claim no
-game or level solve.
+**Deliverable:** `results/experiment_6499_arc_energy_progress_alignment.json`
 
-Deliverable:
-`results/experiment_6494_arc_conservative_prefix_energy_alignment.json`
+### Exp6500 - Gated default-off live ARC policy A/B
 
-### Exp6495 - Gated default-off ARC energy-guided policy A/B
+Run only if Exp6499's held alignment gate is positive. Compare the generic energy shield off and on under matched games, seeds, and budgets using the reachable live-agent path. Measure progress, invalid actions, regressions, cost, and any incidental level reachability. Any solve provenance must be `live_agent_self_discovery`; source inspection, offline BFS, and per-game adapters are prohibited.
 
-Run only if Exp6494 reports positive alignment. Wire the generic metric behind
-a default-off flag on the reachable agent path. Use matched public games,
-seeds, budgets, and model state. Require nonzero executed influence. Stop on
-any frozen safety-roster regression. Record incidental level events. Claim no
-targeted solve and no registry update.
+**Deliverable:** `results/experiment_6500_arc_live_energy_policy_ab.json`
 
-Deliverable:
-`results/experiment_6495_arc_energy_guided_executed_policy_ab.json`
+### Exp6501 - V560 independent capstone and V561 handoff
 
-### Exp6496 - V559 adversarial capstone and reconciliation
+Recompute every headline from per-unit rows, verify gates and frozen-lineage exclusions, classify blocked versus valid-null outcomes, and report closure against the three gaps. Reconcile research, spec, traceability, status, and changelog documents. This task runs even when a scientific gate closes.
 
-Recompute each branch from unit rows and raw hashes. Run artifact convention,
-verdict-row, verifier-authenticity, and ARC provenance checks. Separate exact
-energy, allocation, CSL, ARC, hardware, and public claim eligibility. Reconcile
-OpenSpec, traceability, status, and changelog. Do not edit the active roadmap or
-conductor.
-
-Deliverable:
-`results/experiment_6496_v559_adversarial_capstone.json`
+**Deliverable:** `results/experiment_6501_v560_capstone.json`
 
 ## Dependency graph
 
 ```text
-exp6483 ----------------------------------------------------------+
-                                                                  |
-exp6484 -> exp6486 -> exp6487 -> exp6488 -> exp6489 -> exp6490    |
-                         |                                        |
-exp6485 -----------------+---------> exp6491 -> exp6492 -> exp6493|
-                                                                  |
-exp6480 V558 evidence -----------------------> exp6494 -> exp6495 |
-                                                                  |
-exp6483..exp6495 ----------------------------------------> exp6496
+6488 lineage lock
+ |-- 6489 trajectory commitment
+ |    |-- 6490 trajectory signal -----------+
+ |    |-- 6491 SOTA factor proposals        |
+ |         `-- 6492 exact causal replay ----+--> 6493 decomposed A/B
+ |                                                 `-- 6494 VOI router
+ |
+ |-- 6495 reuse/spawn/defer controller
+ |    `-- 6496 continuous learning
+ |         `-- 6497 capacity/support stress
+ |              `-- 6498 independent CSL audit
+ |
+ `-- 6499 ARC alignment
+      `-- [positive gate] 6500 live ARC policy A/B
+
+6488..6500 ---------------------------------------> 6501 capstone
 ```
 
-Structured conductor gates use only upstream tasks in this V559 roadmap.
-Completed V558 fields remain explicit in-task preconditions.
+Structured gates in `research-roadmap-next.yaml` are authoritative. Each gated field is named identically in the upstream task's required artifact fields. Exp6501 is deliberately ungated so a closed branch still receives a capstone record.
 
-| Downstream | Upstream field | Condition |
+## Hardware and model requirements
+
+| Resource | Tasks | Requirement |
 |---|---|---|
-| Exp6486 | Exp6484 `non_generation_surface_contract_ready_score` | equals 1.0 |
-| Exp6487 | Exp6486 `prospective_representation_stream_ready_score` | equals 1.0 |
-| Exp6488 | Exp6487 `representation_integrity_ready_score` | equals 1.0 |
-| Exp6489 | Exp6488 `latent_energy_promotion_score` | equals 1.0 |
-| Exp6490 | Exp6489 `prospective_latent_selection_promotion_score` | equals 1.0 |
-| Exp6491 | Exp6485 `online_transition_contract_ready_score` | equals 1.0 |
-| Exp6491 | Exp6487 `representation_integrity_ready_score` | equals 1.0 |
-| Exp6492 | Exp6491 `guarded_csl_protocol_ready_score` | equals 1.0 |
-| Exp6492 | Exp6491 `admitted_write_count` | greater than 0 |
-| Exp6495 | Exp6494 `arc_prefix_energy_promotion_score` | equals 1.0 |
+| Dual RTX 3090, 48 GB aggregate VRAM | Exp6491 | Load one local GGUF at a time through `llama_cpp`; prefer GPU offload and record actual layers/backend. |
+| Mandated local models | Exp6491 | Include `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF` in `MODEL_SPECS`; at least two distinct SOTA model families must produce evidence. |
+| CPU and existing exact backends | Exp6489-6490, Exp6492-6498 | Exact solver traces, replays, sequential evidence, and audits. Record real wall time but make no special-hardware speed claim. |
+| Existing ARC live runtime | Exp6499-6500 | Frozen public games, live-agent actions, generic shield, and registry precheck. |
+| FPGA / KV260 / ZCU104 | none | Not required; no milestone claim depends on unavailable bring-up. |
+| Extropic TSU / Z1 | none | No authenticated local access; paper and vendor claims remain external provenance only. |
+| Kona | none | No public runnable weights or local inference path assumed. |
 
-Exp6483, Exp6485, Exp6493, Exp6494, and Exp6496 do not depend on a V559
-science gate. They must emit bounded evidence even when another branch is
-blocked.
+For local GGUF inference, `llama_cpp` is the primary substrate and its embedded tokenizer is authoritative. `transformers.AutoTokenizer` must not be used against a GGUF repository. Legacy Qwen3.5-0.8B and gemma-4-E4B models may appear only as labeled CPU smoke checks and cannot support a headline.
 
-## Model policy
+## Evidence, safety, and retirement rules
 
-Exp6486 is the only task that loads a local LLM. Its `MODEL_SPECS` must include
-all three headline families:
-
-- `unsloth/Qwen3.6-35B-A3B-GGUF`;
-- `unsloth/gemma-4-31B-it-GGUF`;
-- `unsloth/gemma-4-26B-A4B-it-GGUF`.
-
-Exp6486 must call `cached_sota_pair()`. Legacy Qwen3.5-0.8B and
-gemma-4-E4B-it may run only as labeled CPU smoke controls. A legacy model may
-not supply a headline row or replace a missing mandated family.
-
-Exp6486 uses a forward or embedding interface on fixed candidate text. It must
-not call a generation method. All later tasks replay Exp6486 raw vectors or use
-deterministic exact and ARC logic.
-
-## Hardware requirements
-
-| Resource | Tasks | Requirement | Failure behavior |
-|---|---|---|---|
-| Dual RTX 3090, 24 GB each | Exp6486 | Both GPUs visible, authenticated CUDA receipt, cached GGUF paths, embedded tokenizers, RAM and disk precheck | Emit `blocked_precondition` before model load. Do not substitute a legacy model. |
-| CPU and RAM | Exp6483-6485, Exp6487-6496 | Exact solver replay, KAN/control fits, cache persistence, ARC trace replay, focused tests | Emit a bounded diagnostic and preserve partial checkpoints. |
-| Local storage | Exp6484-6493 | Immutable manifests, raw vectors, event ledgers, cache snapshots, hashes | Fail closed before model access when the committed path or space check fails. |
-| KV260, GateMate, PolarFire | None | All three boards reached their recorded terminal states in the V241-V260 evidence line | Make no new board, speed, power, or latency claim. |
-| Extropic TSU or Kona | None | No authenticated local device, API, weights, or runner | Keep as source comparators only. |
-
-The GPU task must use task-local resource ownership and monotonic phase
-receipts from Exp6481. A failed precondition is a valid terminal result when
-`gate_check_summary` names the check, expected value, observed value, and
-evidence path.
-
-## Statistical and evidence rules
-
-- Emit one row per unit, candidate, family, seed, arm, and condition.
-- Recompute every aggregate from those rows.
-- Keep model families separate. Do not concatenate native vector dimensions.
-- Freeze all transforms, thresholds, and policies before held access.
-- Use paired intervals for held arm differences.
-- Use a frozen replicate null for each CSL transition statistic.
-- Use an anytime-valid evidence process for adaptive promotion and stopping.
-- Charge exact checks, representation probes, and routing estimates.
-- Count harmful flips and protected regressions directly.
-- Treat no-headroom rows as no-headroom.
-- Preserve raw vectors and exact-checker inputs before summaries.
-- Use `gate_check_summary` for every `blocked_*` verdict.
-- Learned signals remain advisory. Exact checkers remain authoritative.
-
-## Failed-scope discipline
-
-V559 names the closest failed or retired evidence in each relevant YAML task.
-
-- Exp6483 addresses Exp6461's blocked source-receipt wording with a true
-  citation-backed method mapping and no execution claim.
-- Exp6484, Exp6486, Exp6487, and Exp6488 address Exp5853's paired embedding
-  disqualification with predeclared candidates, within-family analysis, and
-  explicit shortcut controls.
-- Exp6488 and Exp6489 name the MMLU-Pro hidden-state null from Exp5213. The new
-  mechanism uses a different prospective exact corpus and causal pairs.
-- Exp6490 names the Exp6466 gate block. Its upstream is a same-roadmap clean
-  non-generation stream and a positive selection gate.
-- Exp6491 and Exp6492 name the Exp5912 and Exp6433 failures. The new mechanism
-  is transactional harness learning with a prospective stream and an anytime-
-  valid promotion contract.
-- Exp6493 names Exp6457's failed integrity checks. It audits actual durable
-  actions and event uniqueness.
-- Exp6494 names Exp6458's safety-roster failure. It changes no representation
-  or state key and runs a diagnostic only.
-- Exp6495 names the retired Exp5253 provenance patch. It uses a new generic
-  decision metric and makes no solve claim.
-
-Each matching YAML entry includes `experiment_id`, `verdict`, `addressed_by`,
-and `retire_if_same_verdict: true`.
+- Every comparison emits per-unit rows sufficient to recompute its headline without rerunning the experiment.
+- Every artifact records `inference_substrate`, `verifier_is_oracle`, field provenance and principles, random seed, checksum, duration, tests, preconditions, protected-file checks, and `gate_check_summary`.
+- A blocked artifact uses `honest_verdict: blocked_*` and names the exact failed check and observed value in `gate_check_summary`.
+- Gated tasks do not reinterpret a missing artifact or missing field as a scientific null.
+- Exact solvers and exact replay are authorities. Learned energy, SOTA proposals, and cache actions are advisors.
+- Exp6490 carries the Exp5853 and Exp6487 prior failures. If the changed trajectory substrate produces the same no-signal/shortcut verdict, the branch retires mechanically.
+- Exp6491 carries Exp6463 as a prior failed scope and is permitted only because the deliverable has changed from answer-policy generation to atomic factor proposals on a new prospective solver stream.
+- Exp6493 and Exp6494 carry the blocked Exp6464/Exp6466 ancestry and must retire on the same verdict.
+- Exp6499 and Exp6500 carry Exp6458. They change the scope by measuring direct alignment before policy intervention and by relying on the shipped generic live-path shield.
+- ARC tasks run `ops/arc_solve_registry.yaml` and live-path prechecks before execution. They do not duplicate existing level solves.
+- Tests and probes may not leave scratch files in the repository root or mutate unrelated tracked files.
 
 ## Spec-anchored execution contract
 
-| Task group | Capability | Planned requirement range |
-|---|---|---|
-| Exp6483-6485 | research operations and infrastructure | REQ-INFRA-6483 through REQ-INFRA-6485 |
-| Exp6486-6490 | verification and verifiable reasoning | REQ-VERIFY-6486 through REQ-VERIFY-6490 |
-| Exp6491-6493 | continuous learning | REQ-LEARN-6491 through REQ-LEARN-6493 |
-| Exp6494-6495 | ARC live path | REQ-ARC-6494 through REQ-ARC-6495 |
-| Exp6496 | research reporting | REQ-REPORT-6496 |
+Before implementation work, each task must read `CODEX.md`, `CLAUDE.md`, the relevant capability spec, the upstream artifacts named in its prompt, and the cited existing modules/tests. If a required `openspec/capabilities/*/spec.md` or `REQ-*` anchor is absent, add or amend the spec before implementation and then add failing tests.
 
-Each requirement needs at least one `SCENARIO` entry, implementation evidence,
-focused tests, and traceability reconciliation. Each task must read the
-applicable checks in `ops/e2e-test-plan.md` before completion.
+Before reporting completion, each task must run its focused tests, the applicable lint and spec-coverage checks, relevant commands from `ops/e2e-test-plan.md`, and `git status --short`. Implementation-bearing tasks reconcile the applicable OpenSpec, `_bmad/traceability.md`, `ops/status.md`, and `ops/changelog.md`. No task may modify `research-roadmap.yaml` or `scripts/research_conductor.py`, and no task may push.
 
 ## Acceptance criteria
 
-The milestone is complete when all conditions hold.
+V560 is complete when all 14 task artifacts exist and the capstone can verify their gates and rows. Scientific success is deliberately separable from execution success:
 
-1. All 14 task IDs have terminal or explicit blocked artifacts.
-2. The generated-answer and finite-ID transport lane stays closed.
-3. Exp6486 runs all three mandated GGUF families or emits a pre-load block.
-4. Every comparative claim has per-unit rows and row-derived aggregates.
-5. Exp6487 rejects norm, length, label, pair, position, dimension, and family
-   identity shortcuts.
-6. Exp6488 reports KAN, linear, and MLP controls by model family.
-7. Exp6491 executes a chronological continuous self-learning protocol.
-8. Every persistent cache write has exact admission and actual-action proof.
-9. Every adaptive CSL claim uses an anytime-valid evidence process.
-10. ARC work uses the reachable live path, records registry precheck and
-    provenance, and makes no targeted solve claim.
-11. No learned signal becomes release authority.
-12. No new hardware performance or availability claim is made.
-13. Focused tests, spec coverage, row lint, adversarial verification, and
-    applicable E2E checks are recorded.
-14. OpenSpec, traceability, status, and changelog are reconciled without
-    editing `research-roadmap.yaml` or `scripts/research_conductor.py`.
+- **Trajectory-energy success:** Exp6490 finds held early-to-final signal that survives shortcut controls, and Exp6492 finds positive exact causal factor value without harmful flips.
+- **Routing success:** gated Exp6493 reduces charged exact search work with validity parity, and Exp6494 improves cost-adjusted checking without false release.
+- **Continuous-learning success:** Exp6496 completes chronological learning and improves future held utility without safety or support loss; Exp6497 and Exp6498 confirm capacity, recurrence, sequential evidence, and row integrity.
+- **ARC success:** Exp6499 finds held energy-to-progress alignment, then Exp6500 improves the frozen live objective without regression and with credited live-path provenance.
+- **Valid negative outcome:** any clean null, closed gate, support-loss finding, or retired branch is accepted if the contract, rows, provenance, and verdict remain complete.
 
 ## Explicit non-goals
 
-- Do not generate finite IDs or structured answers with a GGUF model.
-- Do not tune grammar, stop tokens, parser retries, or output budgets.
-- Do not reopen Phase D external generated-text scoring.
-- Do not pool raw representation dimensions across model families.
-- Do not train or fine-tune LLM weights.
-- Do not claim harness learning as model learning.
-- Do not target or claim an ARC game or level solve.
-- Do not update the ARC solve registry from incidental events.
-- Do not run unchanged FPGA or TSU probes.
-- Do not modify the active roadmap or conductor.
+- repairing or reusing the V559 forced-candidate representation corpus for a headline;
+- training a free-form answer generator or treating an LLM judge as an oracle;
+- claiming hardware acceleration from software wall-clock timing;
+- FPGA or thermodynamic-hardware bring-up without authenticated access;
+- public deployment, remote service calls, or pushing changes;
+- ARC source reading, offline exhaustive ground-truth BFS, per-game adapters, or duplicate level solves;
+- claiming autonomous continual learning from a controller fixture alone.
 
-## Expected V560 decision boundary
+## Expected V561 decision boundary
 
-V559 should leave one of three clean outcomes.
+The capstone should leave one of four explicit handoffs:
 
-- If the latent energy passes integrity and exact selection, V560 may test a
-  larger exact corpus or a verified repair loop on the same non-generation
-  surface.
-- If latent energy is null but guarded harness learning is positive, V560
-  should deepen exact factor memory and leave representation scoring closed.
-- If both are null, V560 should preserve the exact checker and factor cache as
-  useful infrastructure, retire the local-SOTA latent selector attempt, and
-  move to a new discriminator from the SOTA-ingestion map.
+1. **trajectory signal and continuous learning both positive:** scale the exact-grounded factor pool to a larger prospective constraint stream and begin a production-shadow integration plan;
+2. **trajectory signal positive, online learning unsafe or support-eroding:** freeze the learned scorer and research admission/capacity controls rather than scaling updates;
+3. **trajectory signal null after integrity passes:** retire compact learned energy for these families and invest in exact structural features or a new task distribution;
+4. **ARC alignment null or policy gate closed:** retain the generic safety shield only and stop treating the current energy as a progress objective.
 
-ARC policy work may continue only if Exp6494 proves decision alignment and
-Exp6495 records nonzero safe executed influence.
+Hardware work becomes a next milestone only when an authenticated device or runnable public substrate changes the execution boundary.

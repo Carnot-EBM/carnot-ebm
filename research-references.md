@@ -35478,3 +35478,114 @@ not release an answer without the exact checker.
   board probe or hardware performance claim.
 
 <!-- V559-PLANNER-REFRESH-20260821-END -->
+
+## V560 planner refresh - 2026-08-21
+
+<!-- V560-PLANNER-REFRESH-20260821-START -->
+
+This refresh covers the remaining 2026-08-20 arXiv release and rechecks every
+requested secondary source. Exact executable checks remain release authority.
+Learned signals may propose, rank, route, or abstain.
+
+### Promising primary findings
+
+- **Evidence Before Expansion: Reuse, Spawn, or Defer in Lifelong Expert
+  Pools** - arXiv:2608.19888, https://arxiv.org/abs/2608.19888; submitted
+  2026-08-20. The method gives reuse, spawn, and defer distinct sequential
+  meanings. It uses paired betting e-processes, an indifference zone, and a
+  restarted detector with O(log t) memory. Reported tests had no false reuse
+  or spawn after stream switches. Carnot hook: govern factor-cache reuse,
+  creation, and quarantine with lifetime-valid evidence. Spend error over
+  restarts and factor-creation order.
+- **Learning Early-to-Final Solution Consistency for MILP Acceleration** -
+  arXiv:2608.19953, https://arxiv.org/abs/2608.19953; submitted 2026-08-20.
+  The method predicts whether cheap early assignments persist in full-budget
+  solutions. It does not predict final assignments from static features.
+  Carnot hook: learn from exact solver trajectories and predict factor or
+  assignment persistence. The full exact solve remains authority.
+- **Orthogonal JEPA: Factorized Predictive States for Latent World Models** -
+  arXiv:2608.20065, https://arxiv.org/abs/2608.20065; submitted 2026-08-20.
+  Orthogonal predictive branches reduce redundant dominant directions and
+  preserve factor activity. Carnot hook: retain this as a Tier 3 design for
+  future predictive verification. V559's identity leakage makes a new latent
+  selector premature in V560.
+- **Credit Without Ground Truth: Auditing Step-Level Credit Assignment in LLM
+  Agents Against Executed Replay** - arXiv:2608.19760,
+  https://arxiv.org/abs/2608.19760; submitted 2026-08-20. LLM judges,
+  log-probability ratios, and confidence did not identify causal steps above
+  chance in its executed-replay audit. Training-arm results also confounded
+  credit with optimizer dose. Carnot hook: audit each learned factor by
+  counterfactual exact replay. Match admitted-event counts across learning
+  arms.
+- **Stopping and Routing LLM Judge Panels** - arXiv:2608.19802,
+  https://arxiv.org/abs/2608.19802; submitted 2026-08-20. The method labels
+  judges as copies, complements, or slice specialists, then stops when held
+  gain saturates. Carnot hook: route exact checkers by measured complementarity
+  and charged cost. Do not infer value from checker diversity alone.
+- **Verifier-Induced Support Reshaping in On-Policy Optimization** -
+  arXiv:2608.00220, https://arxiv.org/abs/2608.00220; submitted 2026-07-31.
+  Current-task pass@1 gains can reduce later best@k support. Its IFEval result
+  gained 6.5 points at pass@1 while losing 9.8 points at best@32. Carnot hook:
+  measure future exact-satisfying support after every online update. A current
+  gain cannot hide reduced future recoverability.
+- **ROC-n-reroll: How verifier imperfection affects test-time scaling** -
+  arXiv:2507.12399, https://arxiv.org/abs/2507.12399; revised 2026-08-17 and
+  published at ICLR 2026. Verifier ROC geometry determines rejection-sampling
+  and best-of-N gains. Low-budget behavior cannot predict high-budget results.
+  Carnot hook: report full charged-budget curves. Do not extrapolate from one
+  low-budget point.
+- **Ising Acceleration for Multi-Robot Multi-Target Planning** -
+  arXiv:2608.06803, https://arxiv.org/abs/2608.06803; submitted 2026-08-07.
+  The paper maps selected planning layers to real 45-spin CMOS Ising chips.
+  Its pipeline uses spin merging, coefficient quantization, and spin-budget
+  branching. Carnot hook: preserve a fixed-width factor and sampler ABI.
+  Without matching local hardware, this remains an architecture reference.
+- **EVADE: Evidence-Verified Agentic Diagnosis with Escape** -
+  arXiv:2608.18833, https://arxiv.org/abs/2608.18833; submitted 2026-08-19.
+  Cross-view agreement and abstention improved selective risk, while model
+  self-verification did not. Carnot hook: use independent exact views and
+  abstention. Do not ask one learned scorer to validate its own proposal.
+
+### Secondary-source and product checks
+
+- **OpenReview:** ICLR 2026 includes **Bandit-MoE: Diverse Knowledge
+  Acquisition through Bandit Routing for Continual Learning**,
+  https://openreview.net/forum?id=o7HKyfd5mk. Its KAN experts resist forgetting
+  with small expert pools, but optimization degrades as pools grow. This
+  supports bounded capacity and a reuse-before-spawn policy. It does not grant
+  KAN release authority.
+- **Hugging Face Papers:** the current verification feed highlights
+  verifier-induced support reshaping and links its public code,
+  https://huggingface.co/papers/2608.00220. No feed item supplies a stronger
+  local exact checker. The executable lesson is to measure future support, not
+  to import another learned verifier.
+- **Semantic Scholar:** the public API returned HTTP 429 during this refresh.
+  Retain V559's last authenticated snapshot of 35 EBT (`2507.02092`) and eight
+  ARM-EBM (`2512.15605`) citing records. Do not invent new counts.
+- **GitHub Trending and targeted searches:** the weekly Python board contains
+  no new EBM, KAN, constraint, or sampler dependency. NASA JPL's TaskSAT,
+  https://github.com/nasa-jpl/tasksat, is a useful exact temporal-constraint
+  reference. It does not justify expanding V560's dependency set.
+- **Extropic:** the August full-stack update remains current,
+  https://extropic.ai/writing/from-one-to-one-billion. Z1 has 269,568 p-bits,
+  16-neighbor connectivity, over 50 MHz sampling, and under one watt. Early
+  access remains planned for 2027. Carnot has no authenticated device route.
+- **Logical Intelligence:** the public Kona 1.0 page still describes a global,
+  continuous, editable trace energy,
+  https://logicalintelligence.com/kona-ebms-energy-based-models. It exposes no
+  weights, reproducible architecture, or local runner. Keep Kona as a product
+  comparator.
+
+### Research boundary implied by the refresh
+
+- Retire the V559 forced-candidate representation selector. Its corpus leaked
+  label identity through candidate identifiers and row order.
+- Prefer solver-trajectory features and exact counterfactual replay over a new
+  hidden-state discriminator.
+- Make continuous learning decide reuse, spawn, or defer under a restarted
+  e-process. Measure future support and bounded-capacity interference.
+- Route exact checks only after a held complementarity and cost study.
+- Keep hardware work at ABI and mapping level. Schedule no unauthenticated TSU
+  or unchanged FPGA task.
+
+<!-- V560-PLANNER-REFRESH-20260821-END -->
