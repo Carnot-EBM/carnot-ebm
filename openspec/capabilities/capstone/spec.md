@@ -3820,3 +3820,69 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-6472 | Planned (`python/carnot/experiment_6472_v556_adversarial_capstone.py`, `results/experiment_6472_v556_adversarial_capstone.json`) | Planned (`tests/python/test_experiment_6472_v556_adversarial_capstone.py`) |
+
+- REQ-CAPSTONE-6501: The V560 independent capstone workflow SHALL read the
+  active V560 roadmap, the V560 roadmap document, Exp6488 through Exp6500
+  artifacts available on disk, conductor log, completion ledger, exclusion
+  manifest, ARC registry, specs, and protected ops documents. It SHALL not
+  rerun missing science, repair upstream artifacts, create a new roadmap,
+  modify `research-roadmap.yaml`, or modify `scripts/research_conductor.py`.
+  It SHALL write `results/experiment_6501_v560_capstone.json`. It SHALL
+  classify each expected Exp6488 through Exp6500 outcome as complete,
+  valid_null, blocked_by_scientific_gate, broken_gate_contract, missing,
+  invalid, or disqualified. A valid closed gate SHALL stay evidence, not a
+  missing science result.
+- The required Exp6501 artifact field set is: `status`,
+  `milestone_manifest_rows`, `gate_contract_rows`,
+  `blocked_diagnostic_rows`, `headline_recomputation_rows`, `claim_rows`,
+  `trajectory_energy_claim_eligible`,
+  `continuous_learning_claim_eligible`, `arc_policy_claim_eligible`,
+  `hardware_claim_eligible`, `gap_closure_rows`,
+  `prior_failure_retirement_rows`, `exclusion_manifest_receipt`,
+  `model_authority_audit`, `csl_integrity_audit`, `arc_integrity_audit`,
+  `hardware_boundary`, `adversarial_attack_matrix`, `v561_handoff`,
+  `documentation_reconciliation_rows`, `v560_capstone_ready_score`,
+  `per_unit_rows`, `aggregate_row_recomputation`, `gate_check_summary`,
+  `preconditions_checked`, `protected_files_unchanged`,
+  `inference_substrate`, `verifier_is_oracle`, `field_principles`,
+  `field_provenance`, `random_seed`, `duration_s`, `tests_run`,
+  `reproducibility_checksum`, and `honest_verdict`.
+- SCENARIO-CAPSTONE-6501-INVENTORY: Given the repository state on planning
+  date 20260821, when the workflow runs, then it SHALL emit one manifest row
+  for every expected Exp6488 through Exp6500 task. It SHALL hash every present
+  artifact. It SHALL record the declared roadmap deliverable and the actual
+  evidence path when the conductor wrote a blocked-gate artifact with a
+  different name.
+- SCENARIO-CAPSTONE-6501-GATES: The artifact SHALL emit one
+  `gate_contract_rows` entry for every `gated_on` item in the V560 roadmap.
+  Each row SHALL name the downstream task, upstream task, upstream artifact
+  field, JSON pointer, expected value, observed value, observed type, and
+  result. For every blocked artifact, `blocked_diagnostic_rows` SHALL verify
+  that the diagnostic names the failed check, expected value, observed value,
+  upstream receipt path, and upstream receipt hash.
+- SCENARIO-CAPSTONE-6501-ROWS-AND-CLAIMS: The artifact SHALL recompute
+  task-level counts, readiness values, trajectory-energy shortcut outcomes,
+  harmful flips, factor replay dose, continuous-learning chronology, matched
+  dose, future support, ARC roster coverage, no-solve provenance, and safety
+  cells from rows or explicit blocked/null receipts. It SHALL emit one
+  `claim_rows` entry per experiment. Trajectory-energy, continuous-learning,
+  ARC policy, and hardware claim eligibility SHALL remain separate.
+- SCENARIO-CAPSTONE-6501-RETIREMENT-HANDOFF-ATTACKS: The artifact SHALL emit
+  prior-failure rows for V560 tasks, the exclusion-manifest receipt, an attack
+  matrix for gate, row, authority, leakage, lifecycle, support, ARC, and
+  hardware attacks, and exactly one V561 recommended branch for the observed
+  evidence combination. The handoff SHALL include retire, defer, and scale
+  actions plus required prerequisites and hardware boundaries.
+- SCENARIO-CAPSTONE-6501-FIELD-PRINCIPLES: The artifact SHALL include
+  `field_principles` and `field_provenance` for every required field.
+  `inference_substrate` SHALL be
+  `independent_milestone_artifact_replay_no_llm`. `verifier_is_oracle` SHALL
+  be true only for deterministic artifact, row, hash, and declared exact-domain
+  checks. Documentation reconciliation rows SHALL record deferred ops,
+  changelog, and traceability edits when the operator stop rule forbids them.
+
+## Implementation Status (REQ-CAPSTONE-6501)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-6501 | Planned (`python/carnot/experiment_6501_v560_capstone.py`, `results/experiment_6501_v560_capstone.json`) | Planned (`tests/python/test_experiment_6501_v560_capstone.py`) |
