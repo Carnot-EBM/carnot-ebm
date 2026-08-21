@@ -409,6 +409,9 @@ DETERMINISTIC_TRANSITION_CONTRACT_NO_LLM_SUBSTRATE = (
 DETERMINISTIC_FACTOR_POOL_CONTROLLER_NO_LLM_SUBSTRATE = (
     "deterministic_anytime_factor_pool_controller_no_llm"
 )
+DETERMINISTIC_FACTOR_POOL_SUPPORT_STRESS_NO_LLM_SUBSTRATE = (
+    "deterministic_factor_pool_stress_with_exact_evaluation_no_llm"
+)
 
 NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     VERIFIER_SCORING_SUBSTRATE,
@@ -429,6 +432,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     DETERMINISTIC_REPRESENTATION_CONTRACT_NO_LLM_SUBSTRATE,
     DETERMINISTIC_TRANSITION_CONTRACT_NO_LLM_SUBSTRATE,
     DETERMINISTIC_FACTOR_POOL_CONTROLLER_NO_LLM_SUBSTRATE,
+    DETERMINISTIC_FACTOR_POOL_SUPPORT_STRESS_NO_LLM_SUBSTRATE,
     "chronological_exact_admitted_factor_learning_no_new_llm",
     DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE,
     "artifact_reducer_no_llm",

@@ -208,6 +208,31 @@ def test_req_learn_6479_pipeline_integration_substrate_has_floor(
     assert "METHODOLOGY_MISSING" not in _flag_kinds(report)
 
 
+def test_req_cl_6497_factor_pool_support_stress_substrate_has_floor(
+    tmp_path: Path,
+) -> None:
+    """REQ-CL-6497: factor-pool support stress is an audited no-LLM substrate."""
+
+    substrate = "deterministic_factor_pool_stress_with_exact_evaluation_no_llm"
+    payload = _paired_payload(substrate)
+    payload["random_seed"] = 6497
+
+    classification = av._classify_inference_substrate(payload)
+    floor = av.duration_floor_for_artifact(payload)
+    report = _report_for_payload(tmp_path, payload)
+
+    assert classification["kind"] == "no_llm"
+    assert classification["matched_value"] == substrate
+    assert floor == {
+        "substrate": substrate,
+        "min_duration_s": av.NO_LLM_DECLARED_MIN_DURATION_S,
+        "reason": "no_llm_declared",
+    }
+    assert "SUBSTRATE_HAS_NO_DURATION_FLOOR" not in _flag_kinds(report)
+    assert "DURATION_TOO_SHORT" not in _flag_kinds(report)
+    assert "METHODOLOGY_MISSING" not in _flag_kinds(report)
+
+
 def test_req_infra_6481_runtime_receipt_validation_substrate_has_floor(
     tmp_path: Path,
 ) -> None:
