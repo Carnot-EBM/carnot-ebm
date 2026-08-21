@@ -6784,3 +6784,61 @@ relabeling of missing or blocked evidence as clean
 | SCENARIO-LEARN-6385-TERMINAL-CLASSES | Planned: `python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. | Planned: `tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. |
 | SCENARIO-LEARN-6385-UTILITY-BOUNDARY | Planned: `python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. | Planned: `tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. |
 | SCENARIO-LEARN-6385-READY | Planned: `python/carnot/experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. | Planned: `tests/python/test_experiment_6385_live_factor_learning_and_rollback_safety_audit.py`. |
+
+## REQ-LEARN-6479: Verify-Repair Factor Cache Shadow Adapter
+
+**Given** V556 unique-event verifier-bounded factor learning evidence
+**When** FR-11 learning is added to the production verify-repair surface
+**Then** Carnot SHALL provide a default-off factor-cache shadow adapter for
+`VerifyRepairPipeline`
+**And** the adapter SHALL preserve disabled behavior exactly.
+
+The adapter SHALL require a unique event id, raw hash, unit binding, checker
+hash, exact outcome, and chronological index before it admits any cache write.
+It SHALL reject self-signed receipts, duplicate event ids, duplicate raw
+events, wrong unit bindings, forged exact outcomes, stale cache heads, and
+write-before-check attempts.
+
+The adapter SHALL persist cache, tombstone, quarantine, and rollback state
+through atomic checkpoint writes. A tombstoned factor or event SHALL NOT
+resurrect after `load()` or `close()`.
+
+Exp6479 SHALL write
+`results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json`.
+The artifact SHALL report baseline import and output receipts, default-off
+compatibility rows, shadow decision rows, exact write-admission rows,
+persistence, rollback, tombstone receipts, attacks, protected file hashes,
+test receipts, and a conjunctive `factor_cache_shadow_adapter_ready_score`.
+
+### SCENARIO-LEARN-6479-EXACT-ADMIT: Exact Checker Owns Writes
+
+**Given** a proposed factor-cache write
+**When** the receipt is missing prior exact validation, has a forged pass, uses
+the wrong unit, replays a raw event, or reuses an event id
+**Then** the adapter SHALL abstain or quarantine the proposal
+**And** no cache write SHALL be admitted.
+
+### SCENARIO-LEARN-6479-RESTART: Tombstones Do Not Resurrect
+
+**Given** an admitted factor is tombstoned and rolled back
+**When** the adapter saves, closes, and loads from disk
+**Then** the tombstone and rollback state SHALL persist
+**And** the tombstoned event or factor SHALL remain absent from active cache
+state.
+
+### SCENARIO-LEARN-6479-ARTIFACT: Exp6479 Gates Are Conjunctive
+
+**Given** default-off compatibility, exact write admission, lifecycle
+persistence, attack closure, protected files, and tests
+**When** Exp6479 computes readiness
+**Then** `factor_cache_shadow_adapter_ready_score` SHALL be `1.0` only when all
+gates pass.
+
+## Implementation Status (REQ-LEARN-6479)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6479 | Planned: `python/carnot/pipeline/factor_cache_shadow_adapter.py`; `python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py`. | Planned: `tests/python/test_factor_cache_shadow_adapter.py`; `tests/python/test_experiment_6479_verify_repair_factor_cache_shadow_adapter.py`. |
+| SCENARIO-LEARN-6479-EXACT-ADMIT | Planned: `python/carnot/pipeline/factor_cache_shadow_adapter.py`. | Planned: `tests/python/test_factor_cache_shadow_adapter.py`. |
+| SCENARIO-LEARN-6479-RESTART | Planned: `python/carnot/pipeline/factor_cache_shadow_adapter.py`. | Planned: `tests/python/test_factor_cache_shadow_adapter.py`. |
+| SCENARIO-LEARN-6479-ARTIFACT | Planned: `python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py`. | Planned: `tests/python/test_experiment_6479_verify_repair_factor_cache_shadow_adapter.py`. |

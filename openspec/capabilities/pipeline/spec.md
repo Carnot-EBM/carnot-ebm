@@ -4550,3 +4550,27 @@ The pipeline MUST provide a function `compute_empirical_delta(results_dir: Path)
 **Then** it returns the correct float delta.
 
 **Spec traces:** REQ-PIPELINE-EMPIRICAL-DELTA
+
+### REQ-PIPELINE-6479: Default-Off Factor Cache Shadow Adapter
+
+`VerifyRepairPipeline` MUST expose a default-off FR-11 factor-cache shadow
+adapter option. When the option is absent or false, public verification
+decisions and certificates SHALL match the baseline path. Environment
+variables SHALL NOT enable this factor-cache adapter.
+
+When enabled, the adapter MAY observe exact verification receipts, propose
+cache writes, and record rank advice. It SHALL NOT release an answer or admit a
+cache write unless the existing exact checker supplied a prior exact receipt.
+
+The adapter interface SHALL be versioned and SHALL provide `observe`,
+`exact_admit`, `propose_rank`, `tombstone`, `rollback`, `save`, `load`, and
+`close`.
+
+### SCENARIO-PIPELINE-6479-SHADOW: Shadow Advice Preserves Release Behavior
+
+**Given** a baseline `VerifyRepairPipeline.verify()` call
+**When** the factor-cache shadow adapter is enabled
+**Then** the returned `verified`, `energy`, `violations`, `mode`, and
+non-shadow certificate fields SHALL match the baseline result
+**And** the adapter SHALL record its proposed rank or abstention only as shadow
+receipt data.
