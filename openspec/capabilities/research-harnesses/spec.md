@@ -6618,6 +6618,163 @@ model-quality claim.
 |---|---|---|
 | REQ-INFRA-6484 | Planned: `python/carnot/experiment_6484_non_generation_representation_receipt_contract.py`; terminal artifact `results/experiment_6484_non_generation_representation_receipt_contract.json`. | Planned: `tests/python/test_experiment_6484_non_generation_representation_receipt_contract.py`. |
 
+## REQ-INFRA-6485: Online Cache Transition E-Process Contracts SHALL Bind Chronological Events, Durable Actions, And Adaptive Evidence
+
+Carnot SHALL provide Exp6485 at
+`python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6485_online_cache_transition_eprocess_contract --date 20260821`
+SHALL write
+`results/experiment_6485_online_cache_transition_eprocess_contract.json`.
+
+The contract SHALL be deterministic and SHALL NOT claim a learning benefit.
+It SHALL record repository state and Exp6479 readiness before fixture replay.
+It SHALL confirm that it does not reuse the retired Exp5895 exact-slot
+requalification. It SHALL use the default-off Exp6479 factor-cache adapter as
+upstream readiness evidence only.
+
+The event schema SHALL be versioned and hash-bound. It SHALL define immutable
+event IDs and monotonic receipts for `observe`, `verify`, `propose`,
+`quarantine`, `admit`, `promote`, `evict`, `tombstone`, `rollback`, `restart`,
+and `no_write`. Each event row SHALL include chronology index, event type,
+parent state hash, event payload hash, authority, fixture label, and row hash.
+Event IDs SHALL be derived from the immutable event content. Event IDs SHALL
+not include mutable summaries or later outcomes.
+
+The action receipt schema SHALL distinguish actual durable actions from stated
+intent. Every event SHALL have either one durable action row or one explicit
+no-action row. Durable writes SHALL require exact admission authority and a
+matching event ID. Action rows SHALL include monotonic receipt index, action
+type, event ID, action hash, pre-state hash, post-state hash, admission hash,
+durability flag, and no-write reason when no durable action occurs.
+
+The evidence process SHALL define one fixed null before adaptive events. It
+SHALL define an update rule, promotion boundary, stopping boundary, and a
+geometric mixture over the allowed factor hypotheses. Every adaptive peek SHALL
+charge one evidence row. Fixed-horizon comparisons SHALL stay separate from
+adaptive decisions. Held events SHALL NOT tune the null, mixture weights,
+promotion boundary, or stopping boundary.
+
+Exp6485 SHALL emit one row per event, durable action or no-action, evidence
+update, state transition, restart, and attack. It SHALL include attacks for
+duplicate events, backdated writes, stated write without action, action without
+exact admission, threshold editing, repeated peeking, missing null, rollback
+omission, tombstone resurrection, and restart drift. Each attack SHALL fail
+closed.
+
+Readiness SHALL be recomputed from rows. Exp6485 SHALL set
+`online_transition_contract_ready_score=1.0` only when all event, action,
+evidence, lifecycle, restart, protected-file, and attack invariants pass.
+It SHALL set `inference_substrate="deterministic_transition_contract_no_llm"`.
+It SHALL set `verifier_is_oracle=true` only for exact fixture and receipt
+validation. It SHALL NOT modify `scripts/research_conductor.py` or
+`research-roadmap.yaml`.
+
+The terminal artifact SHALL include `status`, `event_schema`,
+`action_receipt_schema`, `evidence_process_spec`, `frozen_null_receipt`,
+`event_rows`, `action_rows`, `evidence_process_rows`, `lifecycle_rows`,
+`attack_matrix`, `online_transition_contract_ready_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `protected_files_unchanged`,
+`gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+Field principles SHALL use this map:
+
+| Field | Principle |
+|---|---|
+| `status` | Terminal transition-contract state. |
+| `event_schema` | Immutable chronological event schema. |
+| `action_receipt_schema` | Actual durable action schema. |
+| `evidence_process_spec` | Null, update, mixture, promotion, and stopping rules. |
+| `frozen_null_receipt` | Proof that the null predates adaptive events. |
+| `event_rows` | One row per fixture event. |
+| `action_rows` | One row per durable action or explicit no-action. |
+| `evidence_process_rows` | One row per sequential update and peek charge. |
+| `lifecycle_rows` | Admission, eviction, tombstone, rollback, and restart states. |
+| `attack_matrix` | Duplicate, peeking, authority, and resurrection attacks. |
+| `online_transition_contract_ready_score` | Same-roadmap downstream gate field. |
+| `per_unit_rows` | Event, action, update, and attack rows. |
+| `aggregate_row_recomputation` | Ready score recomputed from rows. |
+| `protected_files_unchanged` | Active roadmap and conductor unchanged. |
+| `gate_check_summary` | Required for any blocked_* verdict. |
+| `preconditions_checked` | Adapter and fixture prechecks. |
+| `inference_substrate` | deterministic_transition_contract_no_llm. |
+| `verifier_is_oracle` | True for exact fixture and receipt validation only. |
+| `field_principles` | Reason for every field. |
+| `field_provenance` | Source paths, hashes, and reducers. |
+| `random_seed` | Fixed fixture and attack seed. |
+| `duration_s` | Measured wall time. |
+| `tests_run` | Executed checks and exit codes. |
+| `reproducibility_checksum` | Hash over schemas, null, rows, and attacks. |
+| `honest_verdict` | States contract readiness without claiming a learning gain. |
+
+### SCENARIO-INFRA-6485-EVENTS: Immutable Chronological Events Fail Closed
+
+GIVEN fixture events for observe, verify, propose, quarantine, admit, promote,
+evict, tombstone, rollback, restart, and no-write
+WHEN the validator recomputes event IDs and monotonic order
+THEN IDs match immutable content, chronology is increasing, and duplicate or
+backdated events fail closed.
+
+**Spec traces:** REQ-INFRA-6485
+
+### SCENARIO-INFRA-6485-ACTIONS: Durable Actions Require Exact Admission
+
+GIVEN an event stream with admitted and rejected writes
+WHEN action receipts are validated
+THEN every event has exactly one action or no-action row, admitted writes bind
+to exact admission, and stated-write-without-action or action-without-admission
+attacks fail closed.
+
+**Spec traces:** REQ-INFRA-6485
+
+### SCENARIO-INFRA-6485-EPROCESS: Adaptive Peeks Are Charged
+
+GIVEN a frozen null, a geometric factor mixture, and sequential observations
+WHEN fixed-horizon and adaptive decisions are evaluated
+THEN each adaptive peek emits a charge row, fixed-horizon comparisons do not
+change thresholds, and threshold editing, repeated peeking, or missing-null
+attacks fail closed.
+
+**Spec traces:** REQ-INFRA-6485
+
+### SCENARIO-INFRA-6485-LIFECYCLE: Tombstones And Rollbacks Survive Restart
+
+GIVEN admission, eviction, tombstone, rollback, and restart lifecycle rows
+WHEN the state is replayed from rows
+THEN tombstoned events cannot resurrect, rollback omission is detected, and
+restart state hashes match the replayed state.
+
+**Spec traces:** REQ-INFRA-6485
+
+### SCENARIO-INFRA-6485-ATTACKS: Event, Authority, Peeking, And Resurrection Attacks Fail Closed
+
+GIVEN attacks for duplicate events, backdated writes, stated write without
+action, action without exact admission, threshold editing, repeated peeking,
+missing null, rollback omission, tombstone resurrection, and restart drift
+WHEN the deterministic validator evaluates mutated rows
+THEN every attack fails closed and appears in `attack_matrix`.
+
+**Spec traces:** REQ-INFRA-6485
+
+### SCENARIO-INFRA-6485-ARTIFACT: Terminal Artifact Is Row-Recomputed And Nonmutating
+
+GIVEN schemas, frozen null, fixture rows, attack rows, protected-file hashes,
+precondition checks, and command receipts
+WHEN Exp6485 writes the terminal artifact
+THEN every required field has a principle and provenance, the checksum matches,
+readiness is `1.0`, protected files are unchanged, and no learning gain is
+claimed.
+
+**Spec traces:** REQ-INFRA-6485
+
+## Implementation Status (REQ-INFRA-6485)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6485 | Planned: `python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py`; terminal artifact `results/experiment_6485_online_cache_transition_eprocess_contract.json`. | Planned: `tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py`. |
+
 ## REQ-INFRA-6351: V547 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
 
 Carnot SHALL build Exp6351 as a deterministic V547 post-marker source sweep
