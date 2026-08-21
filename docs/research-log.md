@@ -6245,6 +6245,6 @@ The critical path for milestone .250:
 ### Milestone 2026.08.560
 
 - exp_range: no data available this milestone
-- theme: a brief compute-bound proposal stream led a synthesis-heavy milestone under fallback timing
-- key result: the named compute leader took 1 minute, but phase cause, task-period GPU efficiency, and parallel-runner behavior remain unobserved
+- theme: accelerator inactivity accompanied the compute-bound tail of a short, synthesis-heavy milestone
+- key result: the sole listed compute-bound leader took 1 minute while both GPUs showed 0% utilization; no data available this milestone establishes parallel multi-model loading or a missed DualGPURunner dispatch
 - acceptance: no data available this milestone
