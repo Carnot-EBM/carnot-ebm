@@ -1054,6 +1054,165 @@ readiness gates.
 |-------------|--------|-------|
 | REQ-CL-6496 | Planned: `python/carnot/experiment_6496_continuous_factor_learning.py`; terminal artifact `results/experiment_6496_continuous_factor_learning.json`. | Planned: `tests/python/test_experiment_6496_continuous_factor_learning.py`. |
 
+## REQ-CL-6497: Bounded-Capacity Recurrence And Support Stress
+
+Carnot SHALL build Exp6497 at
+`python/carnot/experiment_6497_factor_pool_support_stress.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6497_factor_pool_support_stress --date 20260821`
+SHALL write
+`results/experiment_6497_factor_pool_support_stress.json`.
+
+Exp6497 SHALL evaluate the Exp6496 execution-completeness gate before stress
+replay. It SHALL record the Exp6496 path, file hash, field, expected value,
+observed value, observed value type, and pass flag. It SHALL use
+`csl_execution_complete_score=1.0` as the gate field. It SHALL NOT require a
+positive Exp6496 science score.
+
+Exp6497 SHALL freeze zero or frozen, small, medium, and deliberately overlarge
+pool capacities before replay. It SHALL also freeze recurrence schedules, shift
+points, corruption rates, seeds, horizons, budgets, metrics, and stopping
+rules. The manifest SHALL name negative transfer, eviction quality, recovery,
+exact validity, future utility, diversity, and best-of-k support as metrics.
+
+Exp6497 SHALL reuse the Exp6496 immutable events and actions as upstream
+receipts. It SHALL append deterministic recurrent, shifted, contradictory,
+duplicate, stale, and corrupt stress segments without inspecting held
+evaluation outcomes. Every capacity SHALL receive identical event
+opportunities in the same chronological order.
+
+Exp6497 SHALL charge every admission opportunity and exposure event. It SHALL
+record each event, capacity, action, occupancy, admission, and exposure. It
+SHALL also record eviction, tombstone, rollback, restart, recovery time, and
+pool occupancy lifecycle rows.
+
+Exp6497 SHALL evaluate exact validity, exact work, negative transfer, held
+future utility, diversity, and best-of-k support by family, horizon, capacity,
+and stress condition. It SHALL compute support from all planned future units,
+not only from survivor rows or aggregate rows.
+
+Exp6497 SHALL include attacks for unlimited growth, capacity off-by-one, stale
+resurrection, corrupt write, missing rollback, unequal exposure,
+survivor-only support, and aggregate-only reporting. Each attack SHALL fail
+closed before `support_stress_complete_score` can be one.
+
+Exp6497 SHALL set `support_stress_complete_score=1.0` only when every
+precommitted capacity and stress cell is row-accounted. It SHALL set
+`support_preserved_score=1.0` only when the recommended bounded capacity
+preserves predeclared future support and exact safety under all required stress
+cells.
+
+Exp6497 SHALL set
+`inference_substrate="deterministic_factor_pool_stress_with_exact_evaluation_no_llm"`.
+It SHALL set `verifier_is_oracle=true` only for exact validity and
+deterministic lifecycle checks.
+
+The terminal artifact SHALL include `status`, `upstream_gate_receipt`,
+`frozen_stress_manifest`, `stress_stream_rows`, `capacity_arm_rows`,
+`eviction_rollback_restart_rows`, `negative_transfer_rows`,
+`future_utility_rows`, `future_support_rows`, `stress_attack_matrix`,
+`recommended_capacity`, `support_stress_complete_score`,
+`support_preserved_score`, `per_unit_rows`, `aggregate_row_recomputation`,
+`gate_check_summary`, `preconditions_checked`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_principles`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Field principles SHALL use this map:
+
+| Field | Principle |
+|---|---|
+| `status` | Terminal stress-test state. |
+| `upstream_gate_receipt` | Exp6496 path, hash, execution field, expected, and observed value. |
+| `frozen_stress_manifest` | Capacities, schedules, shifts, corruption, horizons, budgets, metrics, and seeds. |
+| `stress_stream_rows` | Every recurrent, shifted, contradictory, stale, and corrupt event. |
+| `capacity_arm_rows` | Per capacity, event, action, occupancy, admission, and exposure. |
+| `eviction_rollback_restart_rows` | Lifecycle behavior and recovery time. |
+| `negative_transfer_rows` | Per future unit and stress cell regression. |
+| `future_utility_rows` | Exact work and validity by family/horizon/capacity/condition. |
+| `future_support_rows` | Diversity and best-of-k support across budgets and horizons. |
+| `stress_attack_matrix` | Growth, bounds, resurrection, corruption, dose, survivor, and aggregation attacks. |
+| `recommended_capacity` | Row-derived capacity recommendation or explicit none. |
+| `support_stress_complete_score` | Same-roadmap execution-completeness gate field. |
+| `support_preserved_score` | Support and safety result field. |
+| `per_unit_rows` | Required event/capacity/stress/future-unit/budget rows. |
+| `aggregate_row_recomputation` | Every headline, recommendation, and gate from rows. |
+| `gate_check_summary` | Exact gate evaluation or blocked_* reason and observed value. |
+| `preconditions_checked` | Complete chronological rows, controller, store, and exact backend. |
+| `protected_files_unchanged` | Active roadmap and conductor unchanged. |
+| `inference_substrate` | deterministic_factor_pool_stress_with_exact_evaluation_no_llm. |
+| `verifier_is_oracle` | True for exact validity and deterministic lifecycle checks only. |
+| `field_principles` | Reason for each capacity, stress, and support field. |
+| `field_provenance` | Upstream event receipts, synthetic stress rules, store actions, and reducers. |
+| `random_seed` | All stream, capacity, and evaluation seeds. |
+| `duration_s` | Measured execution and task wall time. |
+| `tests_run` | Commands and exit codes. |
+| `reproducibility_checksum` | Hash over gate, stress manifest, all rows, and attacks. |
+| `honest_verdict` | complete_positive, complete_null, disqualified, or blocked_* with gate_check_summary. |
+
+### SCENARIO-CL-6497-GATE: Exp6496 Execution Completeness Is The Upstream Gate
+
+GIVEN the Exp6496 terminal artifact exists
+WHEN Exp6497 evaluates its upstream gate
+THEN the receipt records `csl_execution_complete_score`, expected `1.0`, the
+observed value and type, and does not require
+`continuous_self_learning_ready_score` to be positive.
+
+**Spec traces:** REQ-CL-6497
+
+### SCENARIO-CL-6497-CAPACITY: Stress Cells Cover All Frozen Capacities
+
+GIVEN zero or frozen, small, medium, and overlarge capacity levels
+WHEN stress replay emits rows
+THEN each capacity receives every recurrent, shifted, contradictory, duplicate,
+stale, and corrupt event opportunity.
+
+**Spec traces:** REQ-CL-6497
+
+### SCENARIO-CL-6497-LIFECYCLE: Eviction, Rollback, Restart, And Recovery Are Rowed
+
+GIVEN capacity pressure, stale events, corrupt events, and restarts
+WHEN lifecycle rows are reduced
+THEN eviction, tombstone, rollback, restart, recovery time, and occupancy are
+row-accounted without stale resurrection or corrupt writes.
+
+**Spec traces:** REQ-CL-6497
+
+### SCENARIO-CL-6497-SUPPORT: Future Support Uses Planned Future Units
+
+GIVEN capacity replay completes
+WHEN negative transfer, future utility, and best-of-k support are reduced
+THEN every family, horizon, capacity, stress condition, future unit, and budget
+cell is represented before any support score can be positive.
+
+**Spec traces:** REQ-CL-6497
+
+### SCENARIO-CL-6497-ATTACKS: Stress Attacks Fail Closed
+
+GIVEN unlimited-growth, bounds, resurrection, corruption, rollback, exposure,
+survivor-only, and aggregate-only attacks
+WHEN the attack matrix is reduced
+THEN every attack fails closed and no support-preservation claim may ignore the
+attack rows.
+
+**Spec traces:** REQ-CL-6497
+
+### SCENARIO-CL-6497-ARTIFACT: Terminal Artifact Is Row-Recomputed
+
+GIVEN the manifest, upstream receipt, row tables, attacks, and protected-file
+checks
+WHEN Exp6497 writes its terminal artifact
+THEN every required field has a principle and provenance, the checksum matches,
+the recommendation is row-derived, and the verdict follows the support gates.
+
+**Spec traces:** REQ-CL-6497
+
+## Implementation Status (REQ-CL-6497)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6497 | Implemented: `python/carnot/experiment_6497_factor_pool_support_stress.py`; terminal artifact `results/experiment_6497_factor_pool_support_stress.json`. | Implemented: `tests/python/test_experiment_6497_factor_pool_support_stress.py`. |
+
 ## REQ-CSL-6318: Versioned Factor-Local Online Initializer
 
 **Given** a fresh sealed chronological exact-constraint stream in the same
