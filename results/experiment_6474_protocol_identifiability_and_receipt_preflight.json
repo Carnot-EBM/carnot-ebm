@@ -1,0 +1,3327 @@
+{
+  "aggregate_row_recomputation": {
+    "attack_rows_all_passed": true,
+    "changed_policy_class_detected": true,
+    "declared_support_collision_count": 0,
+    "declared_support_identifying": true,
+    "duplicate_support_identifying": true,
+    "nonidentifying_controls_have_witnesses": true,
+    "protocol_identifying_score_from_rows": 1.0,
+    "receipt_phase_count": 5,
+    "receipt_rows_conformant": true,
+    "row_count": 52,
+    "row_type_counts": {
+      "attack": 6,
+      "leave_one_support_out": 2,
+      "policy_pair": 34,
+      "receipt_phase": 5,
+      "support_condition": 5
+    }
+  },
+  "attack_matrix": {
+    "all_required_controls_passed": true,
+    "attack_count": 6,
+    "failed_attack_ids": [],
+    "rows": [
+      {
+        "attack_id": "empty_support",
+        "identifying": false,
+        "passed": true,
+        "row_type": "attack",
+        "witness_count": 5,
+        "witness_required": true
+      },
+      {
+        "attack_id": "leave_one_support_out",
+        "identifying": false,
+        "passed": true,
+        "row_type": "attack",
+        "witness_count": 2,
+        "witness_required": true
+      },
+      {
+        "attack_id": "duplicated_observation",
+        "identifying": true,
+        "passed": true,
+        "row_type": "attack",
+        "witness_count": 0,
+        "witness_required": false
+      },
+      {
+        "attack_id": "constant_estimand",
+        "identifying": true,
+        "passed": true,
+        "row_type": "attack",
+        "witness_count": 0,
+        "witness_required": false
+      },
+      {
+        "attack_id": "stale_declared_support",
+        "identifying": false,
+        "passed": true,
+        "row_type": "attack",
+        "witness_count": 2,
+        "witness_required": true
+      },
+      {
+        "attack_id": "changed_policy_class",
+        "identifying": false,
+        "passed": true,
+        "row_type": "attack",
+        "witness_count": 1,
+        "witness_required": true
+      }
+    ],
+    "schema_version": "carnot.experiment_6474.protocol_identifiability.v1.attack_matrix"
+  },
+  "collision_witnesses": [],
+  "duration_s": 0.0001,
+  "estimand_definition": {
+    "estimand_hash": "sha256:c0fddaea4318a7a2328020aa318db876a0dc6528ea77aa07e656607c8ef57105",
+    "estimand_id": "v557_held_selection_effect",
+    "estimand_type": "difference",
+    "left_cell": "rare_reset_outcome",
+    "right_cell": "held_control_outcome",
+    "schema_version": "carnot.experiment_6474.protocol_identifiability.v1.estimand",
+    "unit": "success_probability_point"
+  },
+  "field_principles": {
+    "aggregate_row_recomputation": "Independent reduction catches identifiability or conformance summaries that contradict rows.",
+    "attack_matrix": "Explicit attacks test empty, duplicate, stale, and changed-class failure modes before reuse.",
+    "collision_witnesses": "Constructive policy pairs turn a failed audit into replayable evidence instead of an opaque score.",
+    "duration_s": "Wall time catches a structural audit that never completed enumeration.",
+    "estimand_definition": "A named target effect prevents the audit from proving identifiability for the wrong claim.",
+    "field_principles": "A principle map carries design intent into later audits and artifacts.",
+    "field_provenance": "Per-field source paths and hashes prevent unsupported summary values.",
+    "gate_check_summary": "A blocked state must identify the failed structural or receipt check and its observed value.",
+    "honest_verdict": "The verdict states whether the protocol is identifying without converting class-relative proof into a global claim.",
+    "inference_substrate": "Declaring deterministic_synthetic_protocol_audit_no_llm prevents fixture enumeration from being reported as model evidence.",
+    "leave_one_support_out_rows": "Leave-one-out rows detect supports that appear sufficient only because a critical cell was not challenged.",
+    "minimum_identifying_support": "A minimal support exposes which observations are load-bearing for the causal claim.",
+    "observation_support_manifest": "The exact observed cells determine what behavioral differences the protocol can see.",
+    "per_unit_rows": "Pair, support, attack, and phase rows let an auditor recompute every conclusion.",
+    "policy_class_manifest": "A frozen finite policy class makes the scope of the identifiability claim explicit.",
+    "preconditions_checked": "Preflight receipts prove the declared policy class, reducer, and runtime schema existed before testing.",
+    "protected_files_unchanged": "The preflight must not alter protected evaluators or roadmap machinery.",
+    "protocol_identifying_score": "A conjunctive binary gate prevents downstream inference when the observation protocol cannot identify the target effect.",
+    "random_seed": "A fixed seed reproduces any support-search ordering and attack sampling.",
+    "reproducibility_checksum": "The checksum binds policy class, support, estimand, code, and result.",
+    "status": "A terminal status distinguishes a completed structural proof from an interrupted search.",
+    "task_scoped_receipt_rows": "Phase receipts attribute time, process, bytes, and exact verification to this task rather than global activity.",
+    "tests_run": "Recorded commands prove the reusable API and attacks were executed.",
+    "verifier_is_oracle": "Exhaustive finite enumeration and receipt arithmetic are exact within the frozen policy class only."
+  },
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "attack_matrix": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "collision_witnesses": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "duration_s": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "estimand_definition": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "field_principles": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "field_provenance": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "gate_check_summary": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "honest_verdict": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "inference_substrate": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "leave_one_support_out_rows": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "minimum_identifying_support": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "observation_support_manifest": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "per_unit_rows": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "policy_class_manifest": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "preconditions_checked": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "protected_files_unchanged": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "protocol_identifying_score": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "random_seed": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "reproducibility_checksum": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "status": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "task_scoped_receipt_rows": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "tests_run": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    },
+    "verifier_is_oracle": {
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/verification/spec.md",
+          "sha256": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-references.md",
+          "sha256": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+          "sha256": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+        }
+      ],
+      "spec_refs": [
+        "REQ-VERIFY-6474"
+      ],
+      "value_source": "deterministic finite enumeration and receipt arithmetic"
+    }
+  },
+  "gate_check_summary": {
+    "all_gates_passed": true,
+    "checks": {
+      "aggregate_rows_recomputed": true,
+      "attacks_passed": true,
+      "declared_support_has_no_cross_estimand_collision": true,
+      "minimum_support_verified": true,
+      "nonidentifying_controls_have_witnesses": true,
+      "protected_files_unchanged": true,
+      "receipt_phases_conformant": true
+    },
+    "failed_gates": []
+  },
+  "honest_verdict": "complete: declared V557 support identifies the target effect within the frozen finite policy class; no LLM was run",
+  "inference_substrate": "deterministic_synthetic_protocol_audit_no_llm",
+  "leave_one_support_out_rows": [
+    {
+      "first_witness": {
+        "observed_outcomes_left": {
+          "held_selected_outcome": 0
+        },
+        "observed_outcomes_right": {
+          "held_selected_outcome": 0
+        },
+        "observed_signature_left": [
+          [
+            "held_selected_outcome",
+            0
+          ]
+        ],
+        "observed_signature_right": [
+          [
+            "held_selected_outcome",
+            0
+          ]
+        ],
+        "policy_id_left": "control0_selected0",
+        "policy_id_right": "control1_selected0",
+        "support_condition_id": "leave_one_out_without:held_control_outcome",
+        "target_effect_delta": 1.0,
+        "target_effect_left": 0.0,
+        "target_effect_right": -1.0,
+        "witness_id": "leave_one_out_without:held_control_outcome:control0_selected0:control1_selected0"
+      },
+      "identifying": false,
+      "removed_cell": "held_control_outcome",
+      "row_type": "leave_one_support_out",
+      "support": [
+        "held_selected_outcome"
+      ],
+      "witness_count": 2
+    },
+    {
+      "first_witness": {
+        "observed_outcomes_left": {
+          "held_control_outcome": 0
+        },
+        "observed_outcomes_right": {
+          "held_control_outcome": 0
+        },
+        "observed_signature_left": [
+          [
+            "held_control_outcome",
+            0
+          ]
+        ],
+        "observed_signature_right": [
+          [
+            "held_control_outcome",
+            0
+          ]
+        ],
+        "policy_id_left": "control0_selected0",
+        "policy_id_right": "control0_selected1",
+        "support_condition_id": "leave_one_out_without:held_selected_outcome",
+        "target_effect_delta": -1.0,
+        "target_effect_left": 0.0,
+        "target_effect_right": 1.0,
+        "witness_id": "leave_one_out_without:held_selected_outcome:control0_selected0:control0_selected1"
+      },
+      "identifying": false,
+      "removed_cell": "held_selected_outcome",
+      "row_type": "leave_one_support_out",
+      "support": [
+        "held_control_outcome"
+      ],
+      "witness_count": 2
+    }
+  ],
+  "minimum_identifying_support": {
+    "candidate_cell_count": 3,
+    "second_pass_collision_count": 0,
+    "size": 2,
+    "smaller_support_rows": [
+      {
+        "identifying": false,
+        "size": 0,
+        "support": [],
+        "witness_count": 5
+      },
+      {
+        "identifying": false,
+        "size": 1,
+        "support": [
+          "held_control_outcome"
+        ],
+        "witness_count": 2
+      },
+      {
+        "identifying": false,
+        "size": 1,
+        "support": [
+          "held_selected_outcome"
+        ],
+        "witness_count": 2
+      },
+      {
+        "identifying": false,
+        "size": 1,
+        "support": [
+          "rare_reset_outcome"
+        ],
+        "witness_count": 2
+      }
+    ],
+    "subsets_enumerated_before_first_identifying": 5,
+    "support": [
+      "held_control_outcome",
+      "held_selected_outcome"
+    ],
+    "verified_by_exhaustive_enumeration": true
+  },
+  "observation_support_manifest": {
+    "candidate_cells": [
+      "held_control_outcome",
+      "held_selected_outcome",
+      "rare_reset_outcome"
+    ],
+    "canonical_support": [
+      "held_control_outcome",
+      "held_selected_outcome"
+    ],
+    "declared_support": [
+      "held_control_outcome",
+      "held_selected_outcome"
+    ],
+    "duplicate_observation_count": 0,
+    "observation_support_hash": "sha256:3711c9099c656ba53b10a8fac203f106f1b3fee407432f1b4dbfef40eecf0d87",
+    "schema_version": "carnot.experiment_6474.protocol_identifiability.v1.observation_support"
+  },
+  "per_unit_rows": [
+    {
+      "collision_count": 0,
+      "duplicate_observation_count": 0,
+      "identifying": true,
+      "row_type": "support_condition",
+      "support": [
+        "held_control_outcome",
+        "held_selected_outcome"
+      ],
+      "support_condition_id": "declared_minimum_support",
+      "witness_count": 0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 0
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 1
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "policy_id_left": "control0_selected0",
+      "policy_id_right": "control0_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "declared_minimum_support",
+      "target_effect_delta": -1.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": 1.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 0
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 0
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "policy_id_left": "control0_selected0",
+      "policy_id_right": "control1_selected0",
+      "row_type": "policy_pair",
+      "support_condition_id": "declared_minimum_support",
+      "target_effect_delta": 1.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": -1.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 0
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 1
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "policy_id_left": "control0_selected0",
+      "policy_id_right": "control1_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "declared_minimum_support",
+      "target_effect_delta": 0.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 1
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 0
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "policy_id_left": "control0_selected1",
+      "policy_id_right": "control1_selected0",
+      "row_type": "policy_pair",
+      "support_condition_id": "declared_minimum_support",
+      "target_effect_delta": 2.0,
+      "target_effect_left": 1.0,
+      "target_effect_right": -1.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 1
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 1
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "policy_id_left": "control0_selected1",
+      "policy_id_right": "control1_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "declared_minimum_support",
+      "target_effect_delta": 1.0,
+      "target_effect_left": 1.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 0
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 1
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "policy_id_left": "control1_selected0",
+      "policy_id_right": "control1_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "declared_minimum_support",
+      "target_effect_delta": -1.0,
+      "target_effect_left": -1.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "collision_count": 5,
+      "duplicate_observation_count": 0,
+      "identifying": false,
+      "row_type": "support_condition",
+      "support": [],
+      "support_condition_id": "empty_support",
+      "witness_count": 5
+    },
+    {
+      "cross_estimand_collision": true,
+      "observed_equal": true,
+      "observed_outcomes_left": {},
+      "observed_outcomes_right": {},
+      "observed_signature_left": [],
+      "observed_signature_right": [],
+      "policy_id_left": "control0_selected0",
+      "policy_id_right": "control0_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "empty_support",
+      "target_effect_delta": -1.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": 1.0
+    },
+    {
+      "cross_estimand_collision": true,
+      "observed_equal": true,
+      "observed_outcomes_left": {},
+      "observed_outcomes_right": {},
+      "observed_signature_left": [],
+      "observed_signature_right": [],
+      "policy_id_left": "control0_selected0",
+      "policy_id_right": "control1_selected0",
+      "row_type": "policy_pair",
+      "support_condition_id": "empty_support",
+      "target_effect_delta": 1.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": -1.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": true,
+      "observed_outcomes_left": {},
+      "observed_outcomes_right": {},
+      "observed_signature_left": [],
+      "observed_signature_right": [],
+      "policy_id_left": "control0_selected0",
+      "policy_id_right": "control1_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "empty_support",
+      "target_effect_delta": 0.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": true,
+      "observed_equal": true,
+      "observed_outcomes_left": {},
+      "observed_outcomes_right": {},
+      "observed_signature_left": [],
+      "observed_signature_right": [],
+      "policy_id_left": "control0_selected1",
+      "policy_id_right": "control1_selected0",
+      "row_type": "policy_pair",
+      "support_condition_id": "empty_support",
+      "target_effect_delta": 2.0,
+      "target_effect_left": 1.0,
+      "target_effect_right": -1.0
+    },
+    {
+      "cross_estimand_collision": true,
+      "observed_equal": true,
+      "observed_outcomes_left": {},
+      "observed_outcomes_right": {},
+      "observed_signature_left": [],
+      "observed_signature_right": [],
+      "policy_id_left": "control0_selected1",
+      "policy_id_right": "control1_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "empty_support",
+      "target_effect_delta": 1.0,
+      "target_effect_left": 1.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": true,
+      "observed_equal": true,
+      "observed_outcomes_left": {},
+      "observed_outcomes_right": {},
+      "observed_signature_left": [],
+      "observed_signature_right": [],
+      "policy_id_left": "control1_selected0",
+      "policy_id_right": "control1_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "empty_support",
+      "target_effect_delta": -1.0,
+      "target_effect_left": -1.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "collision_count": 0,
+      "duplicate_observation_count": 1,
+      "identifying": true,
+      "row_type": "support_condition",
+      "support": [
+        "held_control_outcome",
+        "held_selected_outcome"
+      ],
+      "support_condition_id": "duplicated_declared_support",
+      "witness_count": 0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 0
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 1
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "policy_id_left": "control0_selected0",
+      "policy_id_right": "control0_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "duplicated_declared_support",
+      "target_effect_delta": -1.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": 1.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 0
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 0
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "policy_id_left": "control0_selected0",
+      "policy_id_right": "control1_selected0",
+      "row_type": "policy_pair",
+      "support_condition_id": "duplicated_declared_support",
+      "target_effect_delta": 1.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": -1.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 0
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 1
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "policy_id_left": "control0_selected0",
+      "policy_id_right": "control1_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "duplicated_declared_support",
+      "target_effect_delta": 0.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 1
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 0
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "policy_id_left": "control0_selected1",
+      "policy_id_right": "control1_selected0",
+      "row_type": "policy_pair",
+      "support_condition_id": "duplicated_declared_support",
+      "target_effect_delta": 2.0,
+      "target_effect_left": 1.0,
+      "target_effect_right": -1.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 1
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 1
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "policy_id_left": "control0_selected1",
+      "policy_id_right": "control1_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "duplicated_declared_support",
+      "target_effect_delta": 1.0,
+      "target_effect_left": 1.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 0
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 1
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "policy_id_left": "control1_selected0",
+      "policy_id_right": "control1_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "duplicated_declared_support",
+      "target_effect_delta": -1.0,
+      "target_effect_left": -1.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "collision_count": 0,
+      "duplicate_observation_count": 0,
+      "identifying": true,
+      "row_type": "support_condition",
+      "support": [],
+      "support_condition_id": "constant_estimand_control",
+      "witness_count": 0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": true,
+      "observed_outcomes_left": {},
+      "observed_outcomes_right": {},
+      "observed_signature_left": [],
+      "observed_signature_right": [],
+      "policy_id_left": "control0_selected0",
+      "policy_id_right": "control0_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "constant_estimand_control",
+      "target_effect_delta": 0.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": true,
+      "observed_outcomes_left": {},
+      "observed_outcomes_right": {},
+      "observed_signature_left": [],
+      "observed_signature_right": [],
+      "policy_id_left": "control0_selected0",
+      "policy_id_right": "control1_selected0",
+      "row_type": "policy_pair",
+      "support_condition_id": "constant_estimand_control",
+      "target_effect_delta": 0.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": true,
+      "observed_outcomes_left": {},
+      "observed_outcomes_right": {},
+      "observed_signature_left": [],
+      "observed_signature_right": [],
+      "policy_id_left": "control0_selected0",
+      "policy_id_right": "control1_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "constant_estimand_control",
+      "target_effect_delta": 0.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": true,
+      "observed_outcomes_left": {},
+      "observed_outcomes_right": {},
+      "observed_signature_left": [],
+      "observed_signature_right": [],
+      "policy_id_left": "control0_selected1",
+      "policy_id_right": "control1_selected0",
+      "row_type": "policy_pair",
+      "support_condition_id": "constant_estimand_control",
+      "target_effect_delta": 0.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": true,
+      "observed_outcomes_left": {},
+      "observed_outcomes_right": {},
+      "observed_signature_left": [],
+      "observed_signature_right": [],
+      "policy_id_left": "control0_selected1",
+      "policy_id_right": "control1_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "constant_estimand_control",
+      "target_effect_delta": 0.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": true,
+      "observed_outcomes_left": {},
+      "observed_outcomes_right": {},
+      "observed_signature_left": [],
+      "observed_signature_right": [],
+      "policy_id_left": "control1_selected0",
+      "policy_id_right": "control1_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "constant_estimand_control",
+      "target_effect_delta": 0.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "collision_count": 1,
+      "duplicate_observation_count": 0,
+      "identifying": false,
+      "row_type": "support_condition",
+      "support": [
+        "held_control_outcome",
+        "held_selected_outcome"
+      ],
+      "support_condition_id": "attack_changed_policy_class",
+      "witness_count": 1
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 0
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 1
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "policy_id_left": "control0_selected0",
+      "policy_id_right": "control0_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "attack_changed_policy_class",
+      "target_effect_delta": -1.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": 1.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 0
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 0
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "policy_id_left": "control0_selected0",
+      "policy_id_right": "control1_selected0",
+      "row_type": "policy_pair",
+      "support_condition_id": "attack_changed_policy_class",
+      "target_effect_delta": 1.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": -1.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 0
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 1
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "policy_id_left": "control0_selected0",
+      "policy_id_right": "control1_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "attack_changed_policy_class",
+      "target_effect_delta": 0.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 0
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 1
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "policy_id_left": "control0_selected0",
+      "policy_id_right": "changed_class_rare_reset_drop",
+      "row_type": "policy_pair",
+      "support_condition_id": "attack_changed_policy_class",
+      "target_effect_delta": 0.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 1
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 0
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "policy_id_left": "control0_selected1",
+      "policy_id_right": "control1_selected0",
+      "row_type": "policy_pair",
+      "support_condition_id": "attack_changed_policy_class",
+      "target_effect_delta": 2.0,
+      "target_effect_left": 1.0,
+      "target_effect_right": -1.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 1
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 1
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "policy_id_left": "control0_selected1",
+      "policy_id_right": "control1_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "attack_changed_policy_class",
+      "target_effect_delta": 1.0,
+      "target_effect_left": 1.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": true,
+      "observed_equal": true,
+      "observed_outcomes_left": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 1
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 1
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "policy_id_left": "control0_selected1",
+      "policy_id_right": "changed_class_rare_reset_drop",
+      "row_type": "policy_pair",
+      "support_condition_id": "attack_changed_policy_class",
+      "target_effect_delta": 1.0,
+      "target_effect_left": 1.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 0
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 1
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "policy_id_left": "control1_selected0",
+      "policy_id_right": "control1_selected1",
+      "row_type": "policy_pair",
+      "support_condition_id": "attack_changed_policy_class",
+      "target_effect_delta": -1.0,
+      "target_effect_left": -1.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 0
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 1
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          0
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "policy_id_left": "control1_selected0",
+      "policy_id_right": "changed_class_rare_reset_drop",
+      "row_type": "policy_pair",
+      "support_condition_id": "attack_changed_policy_class",
+      "target_effect_delta": -1.0,
+      "target_effect_left": -1.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "cross_estimand_collision": false,
+      "observed_equal": false,
+      "observed_outcomes_left": {
+        "held_control_outcome": 1,
+        "held_selected_outcome": 1
+      },
+      "observed_outcomes_right": {
+        "held_control_outcome": 0,
+        "held_selected_outcome": 1
+      },
+      "observed_signature_left": [
+        [
+          "held_control_outcome",
+          1
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "observed_signature_right": [
+        [
+          "held_control_outcome",
+          0
+        ],
+        [
+          "held_selected_outcome",
+          1
+        ]
+      ],
+      "policy_id_left": "control1_selected1",
+      "policy_id_right": "changed_class_rare_reset_drop",
+      "row_type": "policy_pair",
+      "support_condition_id": "attack_changed_policy_class",
+      "target_effect_delta": 0.0,
+      "target_effect_left": 0.0,
+      "target_effect_right": 0.0
+    },
+    {
+      "first_witness": {
+        "observed_outcomes_left": {
+          "held_selected_outcome": 0
+        },
+        "observed_outcomes_right": {
+          "held_selected_outcome": 0
+        },
+        "observed_signature_left": [
+          [
+            "held_selected_outcome",
+            0
+          ]
+        ],
+        "observed_signature_right": [
+          [
+            "held_selected_outcome",
+            0
+          ]
+        ],
+        "policy_id_left": "control0_selected0",
+        "policy_id_right": "control1_selected0",
+        "support_condition_id": "leave_one_out_without:held_control_outcome",
+        "target_effect_delta": 1.0,
+        "target_effect_left": 0.0,
+        "target_effect_right": -1.0,
+        "witness_id": "leave_one_out_without:held_control_outcome:control0_selected0:control1_selected0"
+      },
+      "identifying": false,
+      "removed_cell": "held_control_outcome",
+      "row_type": "leave_one_support_out",
+      "support": [
+        "held_selected_outcome"
+      ],
+      "witness_count": 2
+    },
+    {
+      "first_witness": {
+        "observed_outcomes_left": {
+          "held_control_outcome": 0
+        },
+        "observed_outcomes_right": {
+          "held_control_outcome": 0
+        },
+        "observed_signature_left": [
+          [
+            "held_control_outcome",
+            0
+          ]
+        ],
+        "observed_signature_right": [
+          [
+            "held_control_outcome",
+            0
+          ]
+        ],
+        "policy_id_left": "control0_selected0",
+        "policy_id_right": "control0_selected1",
+        "support_condition_id": "leave_one_out_without:held_selected_outcome",
+        "target_effect_delta": -1.0,
+        "target_effect_left": 0.0,
+        "target_effect_right": 1.0,
+        "witness_id": "leave_one_out_without:held_selected_outcome:control0_selected0:control0_selected1"
+      },
+      "identifying": false,
+      "removed_cell": "held_selected_outcome",
+      "row_type": "leave_one_support_out",
+      "support": [
+        "held_control_outcome"
+      ],
+      "witness_count": 2
+    },
+    {
+      "attack_id": "empty_support",
+      "identifying": false,
+      "passed": true,
+      "row_type": "attack",
+      "witness_count": 5,
+      "witness_required": true
+    },
+    {
+      "attack_id": "leave_one_support_out",
+      "identifying": false,
+      "passed": true,
+      "row_type": "attack",
+      "witness_count": 2,
+      "witness_required": true
+    },
+    {
+      "attack_id": "duplicated_observation",
+      "identifying": true,
+      "passed": true,
+      "row_type": "attack",
+      "witness_count": 0,
+      "witness_required": false
+    },
+    {
+      "attack_id": "constant_estimand",
+      "identifying": true,
+      "passed": true,
+      "row_type": "attack",
+      "witness_count": 0,
+      "witness_required": false
+    },
+    {
+      "attack_id": "stale_declared_support",
+      "identifying": false,
+      "passed": true,
+      "row_type": "attack",
+      "witness_count": 2,
+      "witness_required": true
+    },
+    {
+      "attack_id": "changed_policy_class",
+      "identifying": false,
+      "passed": true,
+      "row_type": "attack",
+      "witness_count": 1,
+      "witness_required": true
+    },
+    {
+      "conformant": true,
+      "cpu_fallback": false,
+      "monotonic_end_ns": 2378147116003054,
+      "monotonic_start_ns": 2378147115998054,
+      "phase": "queue_wait",
+      "raw_output_hash": "sha256:410fecbefcd1c0a333aacfbcad7638bbb3c5612dc4849f3f9f1edcefb1ee31f8",
+      "row_type": "receipt_phase"
+    },
+    {
+      "conformant": true,
+      "cpu_fallback": false,
+      "monotonic_end_ns": 2378147116013054,
+      "monotonic_start_ns": 2378147116008054,
+      "phase": "model_load_or_fixture_load",
+      "raw_output_hash": "sha256:412931ff6104e1c65f5cd91abe13812b70c717b111d64079165f631005591828",
+      "row_type": "receipt_phase"
+    },
+    {
+      "conformant": true,
+      "cpu_fallback": false,
+      "monotonic_end_ns": 2378147116023054,
+      "monotonic_start_ns": 2378147116018054,
+      "phase": "execution",
+      "raw_output_hash": "sha256:d594555b4c93e5db23831815df0f7b5e341f24a9515360757880b894c34bd859",
+      "row_type": "receipt_phase"
+    },
+    {
+      "conformant": true,
+      "cpu_fallback": false,
+      "monotonic_end_ns": 2378147116033054,
+      "monotonic_start_ns": 2378147116028054,
+      "phase": "exact_verification",
+      "raw_output_hash": "sha256:82b8002a788b0839a5be9d2eddfa697665d092808774778f2dd824a0877ed401",
+      "row_type": "receipt_phase"
+    },
+    {
+      "conformant": true,
+      "cpu_fallback": false,
+      "monotonic_end_ns": 2378147116043054,
+      "monotonic_start_ns": 2378147116038054,
+      "phase": "artifact_write",
+      "raw_output_hash": "sha256:7d9b8f24ce9b6419659d1c7c7c24ff1b4381968beb5f745ac6b9557391f511cb",
+      "row_type": "receipt_phase"
+    }
+  ],
+  "policy_class_manifest": {
+    "candidate_observation_cells": [
+      "held_control_outcome",
+      "held_selected_outcome",
+      "rare_reset_outcome"
+    ],
+    "policies": [
+      {
+        "fixture_rule": "rare_reset_outcome equals held_selected_outcome in this finite class",
+        "outcomes": {
+          "held_control_outcome": 0,
+          "held_selected_outcome": 0,
+          "rare_reset_outcome": 0
+        },
+        "policy_family": "v557_held_selection_fixture",
+        "policy_id": "control0_selected0"
+      },
+      {
+        "fixture_rule": "rare_reset_outcome equals held_selected_outcome in this finite class",
+        "outcomes": {
+          "held_control_outcome": 0,
+          "held_selected_outcome": 1,
+          "rare_reset_outcome": 1
+        },
+        "policy_family": "v557_held_selection_fixture",
+        "policy_id": "control0_selected1"
+      },
+      {
+        "fixture_rule": "rare_reset_outcome equals held_selected_outcome in this finite class",
+        "outcomes": {
+          "held_control_outcome": 1,
+          "held_selected_outcome": 0,
+          "rare_reset_outcome": 0
+        },
+        "policy_family": "v557_held_selection_fixture",
+        "policy_id": "control1_selected0"
+      },
+      {
+        "fixture_rule": "rare_reset_outcome equals held_selected_outcome in this finite class",
+        "outcomes": {
+          "held_control_outcome": 1,
+          "held_selected_outcome": 1,
+          "rare_reset_outcome": 1
+        },
+        "policy_family": "v557_held_selection_fixture",
+        "policy_id": "control1_selected1"
+      }
+    ],
+    "policy_class_hash": "sha256:afae28a31e38c95b35a28548723807d18a511e8b5bf95befae985e0381169965",
+    "policy_count": 4,
+    "schema_version": "carnot.experiment_6474.protocol_identifiability.v1.policy_class"
+  },
+  "preconditions_checked": {
+    "available_exact_reducers": [
+      {
+        "module": "carnot.experiment_6474_protocol_identifiability_and_receipt_preflight",
+        "name": "group_policies_by_observed_outcomes",
+        "source_sha256": "sha256:7ac1f5ed30be64d9989de90d4b2d79fd8c498ad435e9a47cc9512dcf0fde9599"
+      },
+      {
+        "module": "carnot.experiment_6474_protocol_identifiability_and_receipt_preflight",
+        "name": "collision_witnesses",
+        "source_sha256": "sha256:3c96178e02e71be1ba68f9e788b04e6a3adbd14198f7bcaeed02d4e97a46afa6"
+      },
+      {
+        "module": "carnot.experiment_6474_protocol_identifiability_and_receipt_preflight",
+        "name": "audit_support",
+        "source_sha256": "sha256:d70c20940c5683492896a8a3e4a17228a0aa7577ecfdd6ffa69a9e4031dff9b4"
+      },
+      {
+        "module": "carnot.experiment_6474_protocol_identifiability_and_receipt_preflight",
+        "name": "synthesize_minimum_identifying_support",
+        "source_sha256": "sha256:424ea1a4efa68bc638622b1e0d983a5e41eb56ed33695520181aa6038424ce55"
+      },
+      {
+        "module": "carnot.experiment_6474_protocol_identifiability_and_receipt_preflight",
+        "name": "validate_task_scoped_receipt_rows",
+        "source_sha256": "sha256:4a72bc95456d2b4555f1f263adee18afa6c4a066566f2a8536f8bad9be9aa242"
+      },
+      {
+        "module": "carnot.experiment_6474_protocol_identifiability_and_receipt_preflight",
+        "name": "recompute_aggregates_from_rows",
+        "source_sha256": "sha256:2ad5e417cc399a788c7379fd00ac7963ee5d422c6000ff07ffb778eb81093e54"
+      },
+      {
+        "module": "carnot.task_runtime_receipts",
+        "name": "validate_contract_rows",
+        "source_sha256": "sha256:42076a6c0802dc9602510c18c69aeb378de59d34a2bb5eac1c16810cacc52f81"
+      },
+      {
+        "module": "carnot.task_runtime_receipts",
+        "name": "control_phase_counter",
+        "source_sha256": "sha256:1f61854fad909cb013d23901566a057d7697c73ffb1750b79096d1343c98c35e"
+      }
+    ],
+    "date": "20260821",
+    "existing_receipt_schema_hash": {
+      "payload": {
+        "default_required_phases": [
+          "queue_wait",
+          "model_load",
+          "generation",
+          "exact_verification",
+          "artifact_write"
+        ],
+        "exp6474_required_phases": [
+          "queue_wait",
+          "model_load_or_fixture_load",
+          "execution",
+          "exact_verification",
+          "artifact_write"
+        ],
+        "required_row_fields": [
+          "schema_version",
+          "task_id",
+          "control_id",
+          "phase",
+          "monotonic_start_ns",
+          "monotonic_end_ns",
+          "wall_clock_start",
+          "wall_clock_end",
+          "parent_pid",
+          "child_pids",
+          "command_hash",
+          "config_hash",
+          "model_hash",
+          "runner_selection",
+          "device_ids",
+          "concurrency_group",
+          "raw_output_hash",
+          "exit_status",
+          "attribution_confidence"
+        ],
+        "schema_version": "carnot.task_scoped_runtime_receipt.v1"
+      },
+      "schema_sha256": "sha256:1d720989332d38a4ebf4932e246bbfc4af09e03de219a3b58f0430d76a7aba6e",
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1"
+    },
+    "inference_substrate_checked": "deterministic_synthetic_protocol_audit_no_llm",
+    "llm_invocation_allowed": false,
+    "planning_date": "20260821",
+    "policy_class_fixture_hash": "sha256:afae28a31e38c95b35a28548723807d18a511e8b5bf95befae985e0381169965",
+    "repository_state": {
+      "head": "9ce526a8358ec9bc39be8051536bf587228f6e9a",
+      "status_short": "M openspec/capabilities/verification/spec.md\n?? python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py\n?? results/experiment_6474_protocol_identifiability_and_receipt_preflight.json\n?? tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py"
+    },
+    "runtime_dependencies": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "packages": {
+        "coverage": "7.14.1",
+        "hypothesis": "6.155.2",
+        "pluggy": "1.6.0",
+        "pytest": "9.0.3"
+      },
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python": "3.12.13"
+    },
+    "source_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/verification/spec.md": "sha256:013309577b7c589eed7709f2c099bbb585307c30bd6b0a2cade88a2cd0635a62",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py": "sha256:e424f508638e77782c278aec3c7342f4798c9efabd9add019068ee25b000051f",
+      "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+      "research-references.md": "sha256:5b387656966f1e25fa132075aa047d17b7f9f1d61f0c640bdbc90fa442b49147",
+      "scripts/adversarial_verify.py": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+      "scripts/verdict_row_consistency_lint.py": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a",
+      "tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py": "sha256:8f787f6e57353f4cde915cb272fe3d3fba8887481611ef5a33176da3b21ed32b"
+    }
+  },
+  "protected_files_unchanged": {
+    "changed_paths": [],
+    "files": {
+      "_bmad/traceability.md": {
+        "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "after": "sha256:a4677e13a499d4a6796299e885ac525e7e96dda6a77d66ed0e5d7637ec6988fb",
+        "before": "sha256:a4677e13a499d4a6796299e885ac525e7e96dda6a77d66ed0e5d7637ec6988fb",
+        "unchanged": true
+      },
+      "ops/e2e-test-plan.md": {
+        "after": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "before": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
+        "unchanged": true
+      },
+      "scripts/adversarial_verify.py": {
+        "after": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+        "before": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb",
+        "before": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb",
+        "unchanged": true
+      },
+      "scripts/verdict_row_consistency_lint.py": {
+        "after": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a",
+        "before": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a",
+        "unchanged": true
+      }
+    },
+    "unchanged": true
+  },
+  "protocol_identifying_score": 1.0,
+  "random_seed": 6474,
+  "reproducibility_checksum": "sha256:5c1d02cd43f048fbf7acd203c955748c4b42baf01510d0ec071d9b67ed8406f1",
+  "status": "complete",
+  "task_scoped_receipt_rows": {
+    "accepted": true,
+    "cpu_fallback_count": 0,
+    "observed_phases": [
+      "artifact_write",
+      "exact_verification",
+      "execution",
+      "model_load_or_fixture_load",
+      "queue_wait"
+    ],
+    "reasons": [],
+    "recomputed_duration_s": 2.5e-05,
+    "required_phase_count": 5,
+    "required_phases": [
+      "queue_wait",
+      "model_load_or_fixture_load",
+      "execution",
+      "exact_verification",
+      "artifact_write"
+    ],
+    "rows": [
+      {
+        "attribution_confidence": 1.0,
+        "blocked_reason": "",
+        "child_pids": [],
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6474_protocol_identifiability_and_receipt_preflight",
+          "queue_wait"
+        ],
+        "command_hash": "sha256:070c087aea80cbc0b34e4040110f2ed0d7efcfe5222c1161ade31ff2c989b2e8",
+        "concurrency_group": "exp6474-protocol-identifiability-and-receipt-preflight",
+        "config": {
+          "llm_invocation": false,
+          "phase": "queue_wait",
+          "seed": 6474
+        },
+        "config_hash": "sha256:937007b71d90b1e2ad9e3feb802bf99eea56dfd7d2dcadb4025181ba490d4ebb",
+        "control_id": "protocol_identifiability_preflight",
+        "cpu_fallback": false,
+        "device_ids": [
+          "CPU"
+        ],
+        "exit_status": {
+          "returncode": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        "gpu_samples": [],
+        "llm_invocation": false,
+        "model_hash": "sha256:a57f74f4cd858232f34765a60298a240c92cc139fb1e940489e08f0f80fb9433",
+        "model_identity": {
+          "hf_id": "deterministic/synthetic-protocol-audit-no-llm",
+          "model_identity_bound": true,
+          "model_sha256": "sha256:a57f74f4cd858232f34765a60298a240c92cc139fb1e940489e08f0f80fb9433"
+        },
+        "monotonic_end_ns": 2378147116003054,
+        "monotonic_start_ns": 2378147115998054,
+        "no_child_fixture_receipt": true,
+        "parent_pid": 1949610,
+        "phase": "queue_wait",
+        "phase_alias": "queue_wait",
+        "raw_output_byte_length": 80,
+        "raw_output_hash": "sha256:410fecbefcd1c0a333aacfbcad7638bbb3c5612dc4849f3f9f1edcefb1ee31f8",
+        "runner_selection": {
+          "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+          "runner_id": "exp6474-protocol-identifiability-and-receipt-preflight",
+          "selected": true,
+          "selection_hash": "sha256:f78f06bfd55521f8e9c188aa5e7e8d5730d7e0f2551f36f5a9ddf5bd6f03e6b1",
+          "substrate": "deterministic_synthetic_protocol_audit_no_llm"
+        },
+        "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+        "synthesized_runtime_fields": 0,
+        "task_id": "exp6474-protocol-identifiability-and-receipt-preflight",
+        "wall_clock_end": "2026-08-21T03:17:14.864319Z",
+        "wall_clock_start": "2026-08-21T03:17:14.864295Z"
+      },
+      {
+        "attribution_confidence": 1.0,
+        "blocked_reason": "",
+        "child_pids": [],
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6474_protocol_identifiability_and_receipt_preflight",
+          "model_load_or_fixture_load"
+        ],
+        "command_hash": "sha256:e59a504e4b611dd611ab72f9297d55b81b3531c8c04bc62f8cf5efa98df62b70",
+        "concurrency_group": "exp6474-protocol-identifiability-and-receipt-preflight",
+        "config": {
+          "llm_invocation": false,
+          "phase": "model_load_or_fixture_load",
+          "seed": 6474
+        },
+        "config_hash": "sha256:d1103473bedd48988e2a4e588820de1368ad17e83597761e35dc9b8226b7f369",
+        "control_id": "protocol_identifiability_preflight",
+        "cpu_fallback": false,
+        "device_ids": [
+          "CPU"
+        ],
+        "exit_status": {
+          "returncode": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        "gpu_samples": [],
+        "llm_invocation": false,
+        "model_hash": "sha256:a57f74f4cd858232f34765a60298a240c92cc139fb1e940489e08f0f80fb9433",
+        "model_identity": {
+          "hf_id": "deterministic/synthetic-protocol-audit-no-llm",
+          "model_identity_bound": true,
+          "model_sha256": "sha256:a57f74f4cd858232f34765a60298a240c92cc139fb1e940489e08f0f80fb9433"
+        },
+        "monotonic_end_ns": 2378147116013054,
+        "monotonic_start_ns": 2378147116008054,
+        "no_child_fixture_receipt": true,
+        "parent_pid": 1949610,
+        "phase": "model_load_or_fixture_load",
+        "phase_alias": "model_load_or_fixture_load",
+        "raw_output_byte_length": 96,
+        "raw_output_hash": "sha256:412931ff6104e1c65f5cd91abe13812b70c717b111d64079165f631005591828",
+        "runner_selection": {
+          "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+          "runner_id": "exp6474-protocol-identifiability-and-receipt-preflight",
+          "selected": true,
+          "selection_hash": "sha256:f78f06bfd55521f8e9c188aa5e7e8d5730d7e0f2551f36f5a9ddf5bd6f03e6b1",
+          "substrate": "deterministic_synthetic_protocol_audit_no_llm"
+        },
+        "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+        "synthesized_runtime_fields": 0,
+        "task_id": "exp6474-protocol-identifiability-and-receipt-preflight",
+        "wall_clock_end": "2026-08-21T03:17:14.883769Z",
+        "wall_clock_start": "2026-08-21T03:17:14.883764Z"
+      },
+      {
+        "attribution_confidence": 1.0,
+        "blocked_reason": "",
+        "child_pids": [],
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6474_protocol_identifiability_and_receipt_preflight",
+          "execution"
+        ],
+        "command_hash": "sha256:9aafb495f87b897203d9e6ed6743966d94ac55e40ec00c8655ef4108dfffd3d8",
+        "concurrency_group": "exp6474-protocol-identifiability-and-receipt-preflight",
+        "config": {
+          "llm_invocation": false,
+          "phase": "execution",
+          "seed": 6474
+        },
+        "config_hash": "sha256:8a041734dbc816c38aa9f08f051296932ab70c9d1adf9cd3c571b975c8e703c4",
+        "control_id": "protocol_identifiability_preflight",
+        "cpu_fallback": false,
+        "device_ids": [
+          "CPU"
+        ],
+        "exit_status": {
+          "returncode": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        "gpu_samples": [],
+        "llm_invocation": false,
+        "model_hash": "sha256:a57f74f4cd858232f34765a60298a240c92cc139fb1e940489e08f0f80fb9433",
+        "model_identity": {
+          "hf_id": "deterministic/synthetic-protocol-audit-no-llm",
+          "model_identity_bound": true,
+          "model_sha256": "sha256:a57f74f4cd858232f34765a60298a240c92cc139fb1e940489e08f0f80fb9433"
+        },
+        "monotonic_end_ns": 2378147116023054,
+        "monotonic_start_ns": 2378147116018054,
+        "no_child_fixture_receipt": true,
+        "parent_pid": 1949610,
+        "phase": "execution",
+        "phase_alias": "execution",
+        "raw_output_byte_length": 79,
+        "raw_output_hash": "sha256:d594555b4c93e5db23831815df0f7b5e341f24a9515360757880b894c34bd859",
+        "runner_selection": {
+          "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+          "runner_id": "exp6474-protocol-identifiability-and-receipt-preflight",
+          "selected": true,
+          "selection_hash": "sha256:f78f06bfd55521f8e9c188aa5e7e8d5730d7e0f2551f36f5a9ddf5bd6f03e6b1",
+          "substrate": "deterministic_synthetic_protocol_audit_no_llm"
+        },
+        "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+        "synthesized_runtime_fields": 0,
+        "task_id": "exp6474-protocol-identifiability-and-receipt-preflight",
+        "wall_clock_end": "2026-08-21T03:17:14.902139Z",
+        "wall_clock_start": "2026-08-21T03:17:14.902135Z"
+      },
+      {
+        "attribution_confidence": 1.0,
+        "blocked_reason": "",
+        "child_pids": [],
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6474_protocol_identifiability_and_receipt_preflight",
+          "exact_verification"
+        ],
+        "command_hash": "sha256:5cf77eb41806fee70a6cba0c5f65153fbe56f30b9a2ba808267ca21d896de3c1",
+        "concurrency_group": "exp6474-protocol-identifiability-and-receipt-preflight",
+        "config": {
+          "llm_invocation": false,
+          "phase": "exact_verification",
+          "seed": 6474
+        },
+        "config_hash": "sha256:a8ab8833fab25c38d6f49531f17deddfd9959771d8a38ff929d79d3e63039f16",
+        "control_id": "protocol_identifiability_preflight",
+        "cpu_fallback": false,
+        "device_ids": [
+          "CPU"
+        ],
+        "exit_status": {
+          "returncode": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        "gpu_samples": [],
+        "llm_invocation": false,
+        "model_hash": "sha256:a57f74f4cd858232f34765a60298a240c92cc139fb1e940489e08f0f80fb9433",
+        "model_identity": {
+          "hf_id": "deterministic/synthetic-protocol-audit-no-llm",
+          "model_identity_bound": true,
+          "model_sha256": "sha256:a57f74f4cd858232f34765a60298a240c92cc139fb1e940489e08f0f80fb9433"
+        },
+        "monotonic_end_ns": 2378147116033054,
+        "monotonic_start_ns": 2378147116028054,
+        "no_child_fixture_receipt": true,
+        "parent_pid": 1949610,
+        "phase": "exact_verification",
+        "phase_alias": "exact_verification",
+        "raw_output_byte_length": 88,
+        "raw_output_hash": "sha256:82b8002a788b0839a5be9d2eddfa697665d092808774778f2dd824a0877ed401",
+        "runner_selection": {
+          "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+          "runner_id": "exp6474-protocol-identifiability-and-receipt-preflight",
+          "selected": true,
+          "selection_hash": "sha256:f78f06bfd55521f8e9c188aa5e7e8d5730d7e0f2551f36f5a9ddf5bd6f03e6b1",
+          "substrate": "deterministic_synthetic_protocol_audit_no_llm"
+        },
+        "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+        "synthesized_runtime_fields": 0,
+        "task_id": "exp6474-protocol-identifiability-and-receipt-preflight",
+        "wall_clock_end": "2026-08-21T03:17:14.920580Z",
+        "wall_clock_start": "2026-08-21T03:17:14.920577Z"
+      },
+      {
+        "attribution_confidence": 1.0,
+        "blocked_reason": "",
+        "child_pids": [],
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "carnot.experiment_6474_protocol_identifiability_and_receipt_preflight",
+          "artifact_write"
+        ],
+        "command_hash": "sha256:8a08649bc9116d02178e1443534b775c93f7ae49ef78a38dbe1fe29df0a69281",
+        "concurrency_group": "exp6474-protocol-identifiability-and-receipt-preflight",
+        "config": {
+          "llm_invocation": false,
+          "phase": "artifact_write",
+          "seed": 6474
+        },
+        "config_hash": "sha256:9f08ffa93f59bb4add009b19f0730baecd8b9f2d24385aeb85bc3a1553cb146a",
+        "control_id": "protocol_identifiability_preflight",
+        "cpu_fallback": false,
+        "device_ids": [
+          "CPU"
+        ],
+        "exit_status": {
+          "returncode": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        "gpu_samples": [],
+        "llm_invocation": false,
+        "model_hash": "sha256:a57f74f4cd858232f34765a60298a240c92cc139fb1e940489e08f0f80fb9433",
+        "model_identity": {
+          "hf_id": "deterministic/synthetic-protocol-audit-no-llm",
+          "model_identity_bound": true,
+          "model_sha256": "sha256:a57f74f4cd858232f34765a60298a240c92cc139fb1e940489e08f0f80fb9433"
+        },
+        "monotonic_end_ns": 2378147116043054,
+        "monotonic_start_ns": 2378147116038054,
+        "no_child_fixture_receipt": true,
+        "parent_pid": 1949610,
+        "phase": "artifact_write",
+        "phase_alias": "artifact_write",
+        "raw_output_byte_length": 84,
+        "raw_output_hash": "sha256:7d9b8f24ce9b6419659d1c7c7c24ff1b4381968beb5f745ac6b9557391f511cb",
+        "runner_selection": {
+          "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+          "runner_id": "exp6474-protocol-identifiability-and-receipt-preflight",
+          "selected": true,
+          "selection_hash": "sha256:f78f06bfd55521f8e9c188aa5e7e8d5730d7e0f2551f36f5a9ddf5bd6f03e6b1",
+          "substrate": "deterministic_synthetic_protocol_audit_no_llm"
+        },
+        "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+        "synthesized_runtime_fields": 0,
+        "task_id": "exp6474-protocol-identifiability-and-receipt-preflight",
+        "wall_clock_end": "2026-08-21T03:17:14.939109Z",
+        "wall_clock_start": "2026-08-21T03:17:14.939105Z"
+      }
+    ]
+  },
+  "tests_run": {
+    "commands": [
+      ".venv/bin/pytest tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py -q --no-cov -n 0",
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py -m pytest tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py -q --no-cov -n 0",
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py --fail-under=100 --show-missing",
+      ".venv/bin/pytest tests/python -q",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py",
+      ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+      ".venv/bin/python -m carnot.experiment_6474_protocol_identifiability_and_receipt_preflight --validate",
+      "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6474_protocol_identifiability_and_receipt_preflight --date 20260821"
+    ],
+    "exit_codes": {
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py --fail-under=100 --show-missing": 0,
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py -m pytest tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py -q --no-cov -n 0": 0,
+      ".venv/bin/pytest tests/python -q": 2,
+      ".venv/bin/pytest tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py -q --no-cov -n 0": 0,
+      ".venv/bin/python -m carnot.experiment_6474_protocol_identifiability_and_receipt_preflight --validate": 0,
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6474_protocol_identifiability_and_receipt_preflight.json": 0,
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py": 0,
+      ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6474_protocol_identifiability_and_receipt_preflight.json": 0,
+      "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6474_protocol_identifiability_and_receipt_preflight --date 20260821": 0
+    }
+  },
+  "verifier_is_oracle": true
+}
