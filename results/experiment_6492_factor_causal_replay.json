@@ -1,0 +1,2351 @@
+{
+  "aggregate_row_recomputation": {
+    "accepted_model_factor_count": 0,
+    "admitted_control_count": 0,
+    "all_dose_rows_matched": true,
+    "all_expected_replays_present": true,
+    "causal_factor_signal_ready_score_from_rows": 0.0,
+    "compile_outcome_counts": {
+      "no_proposal": 2,
+      "reject": 2
+    },
+    "control_held_mean_delta_exact_check_calls": null,
+    "control_match_count": 4,
+    "dose_matching_row_count": 5,
+    "factor_causal_audit_complete_score_from_rows": 1.0,
+    "harmful_flip_count": 0,
+    "model_held_mean_delta_exact_check_calls": null,
+    "model_score_or_human_judgment_label_count": 0,
+    "paired_effect_row_count": 0,
+    "positive_held_effect_beyond_controls": false,
+    "proposal_opportunity_count": 4,
+    "replay_row_count": 0,
+    "row_count": 20,
+    "row_type_counts": {
+      "confidence_interval": 3,
+      "control_matching": 4,
+      "dose_matching": 5,
+      "factor_eligibility": 4,
+      "upstream_gate": 4
+    },
+    "structured_gate_count": 2,
+    "structured_gates_passed": true,
+    "validity_parity_all": true
+  },
+  "causal_factor_signal_ready_score": 0.0,
+  "confidence_intervals": {
+    "interval_count": 3,
+    "rows": [
+      {
+        "confidence": 0.95,
+        "confidence_interval_row_hash": "sha256:539b8aa6df04cc7303cfd7726788005eea02ef9454df721d3eb65618fc14899d",
+        "interval_id": "model_all_delta_exact_check_calls",
+        "lower": null,
+        "mean": null,
+        "method": "paired_row_min_max_interval_predeclared",
+        "n": 0,
+        "row_type": "confidence_interval",
+        "spec_refs": [
+          "REQ-VERIFY-6492"
+        ],
+        "upper": null
+      },
+      {
+        "confidence": 0.95,
+        "confidence_interval_row_hash": "sha256:08afa2c8a135c90589a2e1fe4b7b32f97f67569187458874949101a1dfa9ea98",
+        "interval_id": "model_held_delta_exact_check_calls",
+        "lower": null,
+        "mean": null,
+        "method": "paired_row_min_max_interval_predeclared",
+        "n": 0,
+        "row_type": "confidence_interval",
+        "spec_refs": [
+          "REQ-VERIFY-6492"
+        ],
+        "upper": null
+      },
+      {
+        "confidence": 0.95,
+        "confidence_interval_row_hash": "sha256:8a085f064a2a0701d60f578123112c403a3d03fe379b8521d918633df41b1177",
+        "interval_id": "controls_held_delta_exact_check_calls",
+        "lower": null,
+        "mean": null,
+        "method": "paired_row_min_max_interval_predeclared",
+        "n": 0,
+        "row_type": "confidence_interval",
+        "spec_refs": [
+          "REQ-VERIFY-6492"
+        ],
+        "upper": null
+      }
+    ],
+    "schema_version": "carnot.experiment_6492.factor_causal_replay.v1.confidence_intervals"
+  },
+  "control_matching_rows": [
+    {
+      "admitted_for_replay": false,
+      "control_factor_instance_id": "control:random_control:zero_admission",
+      "control_match_row_hash": "sha256:5c0b282d659ee65048febc7aec3abd0a95e76648f6afb3a89dbec5848efb33f7",
+      "control_type": "random_control",
+      "exposure_dose": 0,
+      "matched_arity": true,
+      "matched_feature_footprint": true,
+      "reason": "zero_model_admission_dose_match",
+      "row_type": "control_matching",
+      "source_factor_instance_id": null,
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    },
+    {
+      "admitted_for_replay": false,
+      "control_factor_instance_id": "control:structural_control:zero_admission",
+      "control_match_row_hash": "sha256:182fb9c57a0633284525108cd8e0726e118e7f3529c7602e272ca31ef37a6236",
+      "control_type": "structural_control",
+      "exposure_dose": 0,
+      "matched_arity": true,
+      "matched_feature_footprint": true,
+      "reason": "zero_model_admission_dose_match",
+      "row_type": "control_matching",
+      "source_factor_instance_id": null,
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    },
+    {
+      "admitted_for_replay": false,
+      "control_factor_instance_id": "control:duplicate_control:zero_admission",
+      "control_match_row_hash": "sha256:c998acca18997e50b052e0a7c9d387cbd3de237db4397dcd3b3f426ec64d43c2",
+      "control_type": "duplicate_control",
+      "exposure_dose": 0,
+      "matched_arity": true,
+      "matched_feature_footprint": true,
+      "reason": "zero_model_admission_dose_match",
+      "row_type": "control_matching",
+      "source_factor_instance_id": null,
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    },
+    {
+      "admitted_for_replay": false,
+      "control_factor_instance_id": "control:no_factor_control:zero_admission",
+      "control_match_row_hash": "sha256:3245b7f370aada3aeec279a3181a401776c30196454209dd6eb878a12f06259b",
+      "control_type": "no_factor_control",
+      "exposure_dose": 0,
+      "matched_arity": true,
+      "matched_feature_footprint": true,
+      "reason": "zero_model_admission_dose_match",
+      "row_type": "control_matching",
+      "source_factor_instance_id": null,
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    }
+  ],
+  "dose_matching_rows": [
+    {
+      "admitted_event_count": 0,
+      "arm": "model",
+      "dose_matched_to_model": true,
+      "dose_matching_row_hash": "sha256:102f2af369a75f5360e26d5666c96c7eb3c45964c10b6a98d7964e52177e22a8",
+      "equal_event_count_and_exposure": true,
+      "exposure_dose": 0,
+      "proposal_opportunity_count": 4,
+      "replay_event_count_per_factor": 0,
+      "row_type": "dose_matching",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    },
+    {
+      "admitted_event_count": 0,
+      "arm": "random_control",
+      "dose_matched_to_model": true,
+      "dose_matching_row_hash": "sha256:0d08214bfa95948244434eaded01cddb06e163fdc8681365ac4439685dd8d4d3",
+      "equal_event_count_and_exposure": true,
+      "exposure_dose": 0,
+      "proposal_opportunity_count": 4,
+      "replay_event_count_per_factor": 0,
+      "row_type": "dose_matching",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    },
+    {
+      "admitted_event_count": 0,
+      "arm": "structural_control",
+      "dose_matched_to_model": true,
+      "dose_matching_row_hash": "sha256:d524f4ab4606073afdce520ec79afd09517148f76e6f7193cb9f15c819e880e7",
+      "equal_event_count_and_exposure": true,
+      "exposure_dose": 0,
+      "proposal_opportunity_count": 4,
+      "replay_event_count_per_factor": 0,
+      "row_type": "dose_matching",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    },
+    {
+      "admitted_event_count": 0,
+      "arm": "duplicate_control",
+      "dose_matched_to_model": true,
+      "dose_matching_row_hash": "sha256:1700ead9493adbf6c6c4e5fb483a3f09fe6f4cfc88927bd898ef8667c2b1c305",
+      "equal_event_count_and_exposure": true,
+      "exposure_dose": 0,
+      "proposal_opportunity_count": 4,
+      "replay_event_count_per_factor": 0,
+      "row_type": "dose_matching",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    },
+    {
+      "admitted_event_count": 0,
+      "arm": "no_factor_control",
+      "dose_matched_to_model": true,
+      "dose_matching_row_hash": "sha256:9e7e065af0e11a1337fb5593ec6849f2784de3c1e20ae58b41e396072730c7b2",
+      "equal_event_count_and_exposure": true,
+      "exposure_dose": 0,
+      "proposal_opportunity_count": 4,
+      "replay_event_count_per_factor": 0,
+      "row_type": "dose_matching",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    }
+  ],
+  "duration_s": 0.208943,
+  "factor_causal_audit_complete_score": 1.0,
+  "factor_eligibility_rows": [
+    {
+      "admitted_for_replay": false,
+      "compile_outcome": "no_proposal",
+      "compile_row_hash": "sha256:44078cc61d4e8ab95ca8a089d3bee99d5fa6961531e8dc6a3dd9374a1f9338de",
+      "compiler_reason": "empty_response",
+      "eligibility": "not_eligible",
+      "eligibility_index": 0,
+      "eligibility_row_hash": "sha256:ed902a84715670a54520ce779c99c029ebd5da74ac43cdc45910c11cdf3911fb",
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "exposure_dose": 0,
+      "factor_id": null,
+      "factor_instance_id": "model:000:sha256:44078cc61d4e8ab95ca8a089d3bee99d5fa6961531e8dc6a3dd9374a1f9338de",
+      "factor_kind": null,
+      "factor_source": "model",
+      "human_judgment_used_as_label": false,
+      "model_family": "qwen",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_score_used_as_label": false,
+      "proposal_parse_status": "empty_response",
+      "proposal_row_hash": "sha256:9657cd3a65135bb9093ee187f823989bc7ab64f8a37c9a89cdc78ee3bd6f4f74",
+      "raw_response_sha256": "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+      "request_id": "exp6491-00-00-unsloth_qwen3_6_35b_a3b_gguf",
+      "row_type": "factor_eligibility",
+      "semantic_hash": null,
+      "semantic_payload": null,
+      "source_raw_row_hash": "sha256:e28aaf8e5d041c50cc896c4395648341b7bc6d057f79767c3a66e1526bfc14a3",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-FROZEN-MANIFEST"
+      ],
+      "terminal_row_state": "no_proposal"
+    },
+    {
+      "admitted_for_replay": false,
+      "compile_outcome": "no_proposal",
+      "compile_row_hash": "sha256:712731278bba261b5da102ba2fc0c7423fb57de84e5ffb2ee1d2676408e194d3",
+      "compiler_reason": "empty_response",
+      "eligibility": "not_eligible",
+      "eligibility_index": 1,
+      "eligibility_row_hash": "sha256:9d3bd40753edb7fbd9108b7e4325d4dda9cf988232d4330a81a8873bb896dc7c",
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "exposure_dose": 0,
+      "factor_id": null,
+      "factor_instance_id": "model:001:sha256:712731278bba261b5da102ba2fc0c7423fb57de84e5ffb2ee1d2676408e194d3",
+      "factor_kind": null,
+      "factor_source": "model",
+      "human_judgment_used_as_label": false,
+      "model_family": "qwen",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_score_used_as_label": false,
+      "proposal_parse_status": "empty_response",
+      "proposal_row_hash": "sha256:d4d871baca913666f2c91f33811726fb37435f6e4ba6c6212c558ac032ce47ee",
+      "raw_response_sha256": "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+      "request_id": "exp6491-00-01-unsloth_qwen3_6_35b_a3b_gguf",
+      "row_type": "factor_eligibility",
+      "semantic_hash": null,
+      "semantic_payload": null,
+      "source_raw_row_hash": "sha256:eca2afdc1df7d30f24a7328849cc10284e5fd6d7476a1be3a3d698a322097736",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-FROZEN-MANIFEST"
+      ],
+      "terminal_row_state": "no_proposal"
+    },
+    {
+      "admitted_for_replay": false,
+      "compile_outcome": "reject",
+      "compile_row_hash": "sha256:367624131beb348d1e57b511e9e3e8c19d5d4a2270a343f30d28ec828743d4a5",
+      "compiler_reason": "json_decode_error",
+      "eligibility": "not_eligible",
+      "eligibility_index": 2,
+      "eligibility_row_hash": "sha256:a0fbe58be264549f45d2d2799c815c5172671d84f50b1b2afca2d43d7a5636cc",
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "exposure_dose": 0,
+      "factor_id": null,
+      "factor_instance_id": "model:002:sha256:367624131beb348d1e57b511e9e3e8c19d5d4a2270a343f30d28ec828743d4a5",
+      "factor_kind": null,
+      "factor_source": "model",
+      "human_judgment_used_as_label": false,
+      "model_family": "gemma",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_score_used_as_label": false,
+      "proposal_parse_status": "json_decode_error",
+      "proposal_row_hash": "sha256:6cf7f686be42a4ca6a0308cf4583aed0d6302e370b8a460b074f31d5f01bc828",
+      "raw_response_sha256": "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+      "request_id": "exp6491-01-00-unsloth_gemma_4_26b_a4b_it_gguf",
+      "row_type": "factor_eligibility",
+      "semantic_hash": null,
+      "semantic_payload": null,
+      "source_raw_row_hash": "sha256:e28aaf8e5d041c50cc896c4395648341b7bc6d057f79767c3a66e1526bfc14a3",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-FROZEN-MANIFEST"
+      ],
+      "terminal_row_state": "compiler_reject"
+    },
+    {
+      "admitted_for_replay": false,
+      "compile_outcome": "reject",
+      "compile_row_hash": "sha256:14a7d9a603e2d11bd80a6c9289a8d14337258d3299af0ff1e7af1d729cd8db49",
+      "compiler_reason": "json_decode_error",
+      "eligibility": "not_eligible",
+      "eligibility_index": 3,
+      "eligibility_row_hash": "sha256:4ebeb30bf0ff84687e9a7a4e198dad10a9b5d948d64dbeaba7752efb7b949dd0",
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "exposure_dose": 0,
+      "factor_id": null,
+      "factor_instance_id": "model:003:sha256:14a7d9a603e2d11bd80a6c9289a8d14337258d3299af0ff1e7af1d729cd8db49",
+      "factor_kind": null,
+      "factor_source": "model",
+      "human_judgment_used_as_label": false,
+      "model_family": "gemma",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_score_used_as_label": false,
+      "proposal_parse_status": "json_decode_error",
+      "proposal_row_hash": "sha256:1bc75f150adf38bb1e5e302262c0e9c49d36a689d1023f96ce20adec31b9e3fd",
+      "raw_response_sha256": "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef",
+      "request_id": "exp6491-01-01-unsloth_gemma_4_26b_a4b_it_gguf",
+      "row_type": "factor_eligibility",
+      "semantic_hash": null,
+      "semantic_payload": null,
+      "source_raw_row_hash": "sha256:eca2afdc1df7d30f24a7328849cc10284e5fd6d7476a1be3a3d698a322097736",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-FROZEN-MANIFEST"
+      ],
+      "terminal_row_state": "compiler_reject"
+    }
+  ],
+  "family_model_cells": {
+    "cell_count": 0,
+    "rows": [],
+    "schema_version": "carnot.experiment_6492.factor_causal_replay.v1.family_model_cells"
+  },
+  "field_principles": {
+    "aggregate_row_recomputation": "Every headline recomputed from replay rows.",
+    "causal_factor_signal_ready_score": "Same-roadmap positive-signal gate field.",
+    "confidence_intervals": "Predeclared row-derived intervals.",
+    "control_matching_rows": "Random, structural, duplicate, and no-factor matches.",
+    "dose_matching_rows": "Proposal opportunities, admissions, and exposures by arm.",
+    "duration_s": "Measured replay and task wall time.",
+    "factor_causal_audit_complete_score": "Execution-completeness gate field.",
+    "factor_eligibility_rows": "Every proposal, including reject and no-proposal outcomes.",
+    "family_model_cells": "Disaggregated effects by family and proposing model.",
+    "field_principles": "Reason for every causal and dose field.",
+    "field_provenance": "Raw trajectory hashes, proposal bytes, solver receipts, and reducers.",
+    "frozen_replay_manifest": "Events, controls, metrics, seeds, and decision rules.",
+    "gate_check_summary": "Exact gate evaluation or blocked_* reason and observed value.",
+    "harmful_flip_rows": "Every validity or exact-outcome regression.",
+    "honest_verdict": "complete_positive, complete_null, disqualified, or blocked_* with diagnostics.",
+    "inference_substrate": "exact_counterfactual_solver_replay_no_llm.",
+    "paired_effect_rows": "Exact add/drop deltas per event.",
+    "per_unit_rows": "Required event/factor/arm/seed rows.",
+    "preconditions_checked": "Commitment, proposals, controls, and exact backends.",
+    "protected_files_unchanged": "Active roadmap and conductor unchanged.",
+    "random_seed": "Control construction and replay seeds.",
+    "replay_rows": "Per event, factor, arm, seed, solver outcome, work, validity, and timing.",
+    "reproducibility_checksum": "Hash over manifest, factors, controls, and replay rows.",
+    "status": "Terminal causal-replay state.",
+    "tests_run": "Commands and exit codes.",
+    "upstream_gate_receipts": "Both upstream artifacts and exact gate values.",
+    "verifier_is_oracle": "True for exact solver validity and outcomes."
+  },
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "causal_factor_signal_ready_score": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "confidence_intervals": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "control_matching_rows": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "dose_matching_rows": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "duration_s": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "factor_causal_audit_complete_score": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "factor_eligibility_rows": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "family_model_cells": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "field_principles": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "field_provenance": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "frozen_replay_manifest": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "gate_check_summary": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "harmful_flip_rows": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "honest_verdict": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "inference_substrate": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "paired_effect_rows": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "per_unit_rows": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "preconditions_checked": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "protected_files_unchanged": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "random_seed": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "replay_rows": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "reproducibility_checksum": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "status": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "tests_run": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "upstream_gate_receipts": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    },
+    "verifier_is_oracle": {
+      "proposal_response_hashes": [
+        "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef"
+      ],
+      "raw_trajectory_hash_count": 288,
+      "raw_trajectory_hash_sample": [
+        "sha256:cf866a9aecbdf7f59c5bd4e5ead17a48b70fd7f08cea8010d350295a06d1098a",
+        "sha256:aecb9b53d1d31f1dcec2b6fc987fdf8987a39d17343256153f0760df6e9b1b42",
+        "sha256:3f2dc26b7ee53eed5ddcb550db474e4a16fdebeb066a33ede18b9bcbb6ac37f1",
+        "sha256:ea52bda004c98e18af65a1f904571e9a1361717657821a1024500da99836719d",
+        "sha256:330e656ed9e9ec5ee566acaf16c01ca14ab4d4936d2b3350018179e51ee9eed5",
+        "sha256:17a8b6833cd8eb3b5949d621724b73775d4d9e930735d8a0ecb9e4717075ddca",
+        "sha256:1967cf8c9594a064614925bda183e7c7e908a2799943a736c2a3732c5d68dc1c",
+        "sha256:4ac7d33d56ad34a0abffedfdc451c32a8ebd34d46f2ebd99fd09e2ce6379fb49"
+      ],
+      "reducers": [
+        "factor_eligibility_rows",
+        "execute_replay",
+        "paired_effect_rows",
+        "recompute_aggregates_from_rows"
+      ],
+      "solver_receipts": [
+        "experiment_6477 finite-domain exact evaluator"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:1fda2c1e73b4ad233c707318d6179df9767f99821f081c9c5df0dd1fc8aba4ab",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py": "sha256:904c537b9f832e0d7b2df85f338a8c1d0185c3c9278f603b6bd36433471f0693",
+        "python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py": "sha256:91c70481b516febd619ab3277e3c47982e5e1e56da82a7265608138f9c24c58e",
+        "python/carnot/experiment_6492_factor_causal_replay.py": "sha256:b3ebd3491391d2cd63c0559f479ef4ce5f306e17a37b84d60e84c7ce85de8dd6",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "results/experiment_6478_identifiable_held_exact_energy_selection.json": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "results/experiment_6491_sota_factor_proposal_stream.json": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+        "tests/python/test_experiment_6492_factor_causal_replay.py": "sha256:ffdef9e95ff59c024dd24ff79dc5ff8d4e1626b4cc355623a5299edfef94d625"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ]
+    }
+  },
+  "frozen_replay_manifest": {
+    "confidence_procedure": "paired_row_min_max_interval_predeclared",
+    "control_seed": 6492001,
+    "control_types": [
+      "random_control",
+      "structural_control",
+      "duplicate_control",
+      "no_factor_control"
+    ],
+    "eligible_factor_count": 0,
+    "frozen_before_execution": true,
+    "frozen_replay_manifest_hash": "sha256:192389880373160b460e1651b19bbc52c829a43b0d050d71c77a413b1a692104",
+    "harmful_flip_definition": "Absent arm exact-validity true and present arm exact-validity false, or satisfiable absent outcome regresses under present factor.",
+    "judge_substitution_allowed": false,
+    "planning_date": "20260821",
+    "replay_arms": [
+      "absent",
+      "present"
+    ],
+    "replay_event_count_per_factor": 0,
+    "replay_event_groups": [],
+    "replay_seed": 6492002,
+    "schema_version": "carnot.experiment_6492.factor_causal_replay.v1.frozen_replay_manifest",
+    "solver_configuration": {
+      "backend": "exhaustive_prefix_replay",
+      "candidate_order": "finite_domain_lexicographic_after_committed_prefix",
+      "exact_backend_module": "experiment_6477_backend_neutral_exact_constraint_record",
+      "timeout_s": null
+    },
+    "terminal_row_states": [
+      "eligible",
+      "compiler_reject",
+      "compiler_timeout",
+      "compiler_duplicate",
+      "no_proposal",
+      "infeasible",
+      "no_headroom",
+      "zero_effect"
+    ],
+    "validity_metrics": [
+      "solver_outcome",
+      "final_validity",
+      "final_solution_hash"
+    ],
+    "work_metrics": [
+      "expansions",
+      "candidate_states_considered",
+      "exact_check_calls",
+      "wall_time_s"
+    ]
+  },
+  "gate_check_summary": {
+    "all_gates_passed": true,
+    "blocked_reason": "",
+    "checks": {
+      "exp6478_canonical_receipt_passed": true,
+      "no_judge_substitution": true,
+      "protected_files_unchanged": true,
+      "row_recomputed_complete": true,
+      "structured_upstream_gates_passed": true
+    },
+    "failed_gates": [],
+    "observed_values": {
+      "exp6478_canonical": {
+        "expected": 1.0,
+        "field": "held_exact_energy_selection_ready_score",
+        "gate_passed": true,
+        "observed": 1.0,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6478_identifiable_held_exact_energy_selection.json",
+        "structured_gate": false
+      },
+      "exp6478_requested": {
+        "expected": 1.0,
+        "field": "held_exact_energy_selection_ready_score",
+        "gate_passed": false,
+        "observed": null,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6478_held_exact_constraint_energy_selection.json",
+        "structured_gate": false
+      },
+      "exp6489": {
+        "expected": 1.0,
+        "field": "trajectory_contract_ready_score",
+        "gate_passed": true,
+        "observed": 1.0,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6489_solver_trajectory_commitment.json",
+        "structured_gate": true
+      },
+      "exp6491": {
+        "expected": 1.0,
+        "field": "factor_proposal_stream_ready_score",
+        "gate_passed": true,
+        "observed": 1.0,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream.json",
+        "structured_gate": true
+      }
+    }
+  },
+  "harmful_flip_rows": [],
+  "honest_verdict": "complete_null: all eligible proposals and controls are accounted for, but no positive held causal factor signal is present",
+  "inference_substrate": "exact_counterfactual_solver_replay_no_llm",
+  "paired_effect_rows": [],
+  "per_unit_rows": [
+    {
+      "artifact_id": "exp6489",
+      "expected": 1.0,
+      "field": "trajectory_contract_ready_score",
+      "gate_passed": true,
+      "observed": 1.0,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6489_solver_trajectory_commitment.json",
+      "per_unit_group": "gate",
+      "row_type": "upstream_gate",
+      "sha256": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+      "structured_gate": true
+    },
+    {
+      "artifact_id": "exp6491",
+      "expected": 1.0,
+      "field": "factor_proposal_stream_ready_score",
+      "gate_passed": true,
+      "observed": 1.0,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream.json",
+      "per_unit_group": "gate",
+      "row_type": "upstream_gate",
+      "sha256": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+      "structured_gate": true
+    },
+    {
+      "artifact_id": "exp6478_requested",
+      "expected": 1.0,
+      "field": "held_exact_energy_selection_ready_score",
+      "gate_passed": false,
+      "observed": null,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6478_held_exact_constraint_energy_selection.json",
+      "per_unit_group": "gate",
+      "row_type": "upstream_gate",
+      "sha256": null,
+      "structured_gate": false
+    },
+    {
+      "artifact_id": "exp6478_canonical",
+      "expected": 1.0,
+      "field": "held_exact_energy_selection_ready_score",
+      "gate_passed": true,
+      "observed": 1.0,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6478_identifiable_held_exact_energy_selection.json",
+      "per_unit_group": "gate",
+      "row_type": "upstream_gate",
+      "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+      "structured_gate": false
+    },
+    {
+      "admitted_for_replay": false,
+      "compile_outcome": "no_proposal",
+      "compile_row_hash": "sha256:44078cc61d4e8ab95ca8a089d3bee99d5fa6961531e8dc6a3dd9374a1f9338de",
+      "compiler_reason": "empty_response",
+      "eligibility": "not_eligible",
+      "eligibility_index": 0,
+      "eligibility_row_hash": "sha256:ed902a84715670a54520ce779c99c029ebd5da74ac43cdc45910c11cdf3911fb",
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "exposure_dose": 0,
+      "factor_id": null,
+      "factor_instance_id": "model:000:sha256:44078cc61d4e8ab95ca8a089d3bee99d5fa6961531e8dc6a3dd9374a1f9338de",
+      "factor_kind": null,
+      "factor_source": "model",
+      "human_judgment_used_as_label": false,
+      "model_family": "qwen",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_score_used_as_label": false,
+      "per_unit_group": "eligibility",
+      "proposal_parse_status": "empty_response",
+      "proposal_row_hash": "sha256:9657cd3a65135bb9093ee187f823989bc7ab64f8a37c9a89cdc78ee3bd6f4f74",
+      "raw_response_sha256": "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+      "request_id": "exp6491-00-00-unsloth_qwen3_6_35b_a3b_gguf",
+      "row_type": "factor_eligibility",
+      "semantic_hash": null,
+      "semantic_payload": null,
+      "source_raw_row_hash": "sha256:e28aaf8e5d041c50cc896c4395648341b7bc6d057f79767c3a66e1526bfc14a3",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-FROZEN-MANIFEST"
+      ],
+      "terminal_row_state": "no_proposal"
+    },
+    {
+      "admitted_for_replay": false,
+      "compile_outcome": "no_proposal",
+      "compile_row_hash": "sha256:712731278bba261b5da102ba2fc0c7423fb57de84e5ffb2ee1d2676408e194d3",
+      "compiler_reason": "empty_response",
+      "eligibility": "not_eligible",
+      "eligibility_index": 1,
+      "eligibility_row_hash": "sha256:9d3bd40753edb7fbd9108b7e4325d4dda9cf988232d4330a81a8873bb896dc7c",
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "exposure_dose": 0,
+      "factor_id": null,
+      "factor_instance_id": "model:001:sha256:712731278bba261b5da102ba2fc0c7423fb57de84e5ffb2ee1d2676408e194d3",
+      "factor_kind": null,
+      "factor_source": "model",
+      "human_judgment_used_as_label": false,
+      "model_family": "qwen",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_score_used_as_label": false,
+      "per_unit_group": "eligibility",
+      "proposal_parse_status": "empty_response",
+      "proposal_row_hash": "sha256:d4d871baca913666f2c91f33811726fb37435f6e4ba6c6212c558ac032ce47ee",
+      "raw_response_sha256": "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+      "request_id": "exp6491-00-01-unsloth_qwen3_6_35b_a3b_gguf",
+      "row_type": "factor_eligibility",
+      "semantic_hash": null,
+      "semantic_payload": null,
+      "source_raw_row_hash": "sha256:eca2afdc1df7d30f24a7328849cc10284e5fd6d7476a1be3a3d698a322097736",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-FROZEN-MANIFEST"
+      ],
+      "terminal_row_state": "no_proposal"
+    },
+    {
+      "admitted_for_replay": false,
+      "compile_outcome": "reject",
+      "compile_row_hash": "sha256:367624131beb348d1e57b511e9e3e8c19d5d4a2270a343f30d28ec828743d4a5",
+      "compiler_reason": "json_decode_error",
+      "eligibility": "not_eligible",
+      "eligibility_index": 2,
+      "eligibility_row_hash": "sha256:a0fbe58be264549f45d2d2799c815c5172671d84f50b1b2afca2d43d7a5636cc",
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "exposure_dose": 0,
+      "factor_id": null,
+      "factor_instance_id": "model:002:sha256:367624131beb348d1e57b511e9e3e8c19d5d4a2270a343f30d28ec828743d4a5",
+      "factor_kind": null,
+      "factor_source": "model",
+      "human_judgment_used_as_label": false,
+      "model_family": "gemma",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_score_used_as_label": false,
+      "per_unit_group": "eligibility",
+      "proposal_parse_status": "json_decode_error",
+      "proposal_row_hash": "sha256:6cf7f686be42a4ca6a0308cf4583aed0d6302e370b8a460b074f31d5f01bc828",
+      "raw_response_sha256": "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+      "request_id": "exp6491-01-00-unsloth_gemma_4_26b_a4b_it_gguf",
+      "row_type": "factor_eligibility",
+      "semantic_hash": null,
+      "semantic_payload": null,
+      "source_raw_row_hash": "sha256:e28aaf8e5d041c50cc896c4395648341b7bc6d057f79767c3a66e1526bfc14a3",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-FROZEN-MANIFEST"
+      ],
+      "terminal_row_state": "compiler_reject"
+    },
+    {
+      "admitted_for_replay": false,
+      "compile_outcome": "reject",
+      "compile_row_hash": "sha256:14a7d9a603e2d11bd80a6c9289a8d14337258d3299af0ff1e7af1d729cd8db49",
+      "compiler_reason": "json_decode_error",
+      "eligibility": "not_eligible",
+      "eligibility_index": 3,
+      "eligibility_row_hash": "sha256:4ebeb30bf0ff84687e9a7a4e198dad10a9b5d948d64dbeaba7752efb7b949dd0",
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "exposure_dose": 0,
+      "factor_id": null,
+      "factor_instance_id": "model:003:sha256:14a7d9a603e2d11bd80a6c9289a8d14337258d3299af0ff1e7af1d729cd8db49",
+      "factor_kind": null,
+      "factor_source": "model",
+      "human_judgment_used_as_label": false,
+      "model_family": "gemma",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_score_used_as_label": false,
+      "per_unit_group": "eligibility",
+      "proposal_parse_status": "json_decode_error",
+      "proposal_row_hash": "sha256:1bc75f150adf38bb1e5e302262c0e9c49d36a689d1023f96ce20adec31b9e3fd",
+      "raw_response_sha256": "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef",
+      "request_id": "exp6491-01-01-unsloth_gemma_4_26b_a4b_it_gguf",
+      "row_type": "factor_eligibility",
+      "semantic_hash": null,
+      "semantic_payload": null,
+      "source_raw_row_hash": "sha256:eca2afdc1df7d30f24a7328849cc10284e5fd6d7476a1be3a3d698a322097736",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-FROZEN-MANIFEST"
+      ],
+      "terminal_row_state": "compiler_reject"
+    },
+    {
+      "admitted_event_count": 0,
+      "arm": "model",
+      "dose_matched_to_model": true,
+      "dose_matching_row_hash": "sha256:102f2af369a75f5360e26d5666c96c7eb3c45964c10b6a98d7964e52177e22a8",
+      "equal_event_count_and_exposure": true,
+      "exposure_dose": 0,
+      "per_unit_group": "dose",
+      "proposal_opportunity_count": 4,
+      "replay_event_count_per_factor": 0,
+      "row_type": "dose_matching",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    },
+    {
+      "admitted_event_count": 0,
+      "arm": "random_control",
+      "dose_matched_to_model": true,
+      "dose_matching_row_hash": "sha256:0d08214bfa95948244434eaded01cddb06e163fdc8681365ac4439685dd8d4d3",
+      "equal_event_count_and_exposure": true,
+      "exposure_dose": 0,
+      "per_unit_group": "dose",
+      "proposal_opportunity_count": 4,
+      "replay_event_count_per_factor": 0,
+      "row_type": "dose_matching",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    },
+    {
+      "admitted_event_count": 0,
+      "arm": "structural_control",
+      "dose_matched_to_model": true,
+      "dose_matching_row_hash": "sha256:d524f4ab4606073afdce520ec79afd09517148f76e6f7193cb9f15c819e880e7",
+      "equal_event_count_and_exposure": true,
+      "exposure_dose": 0,
+      "per_unit_group": "dose",
+      "proposal_opportunity_count": 4,
+      "replay_event_count_per_factor": 0,
+      "row_type": "dose_matching",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    },
+    {
+      "admitted_event_count": 0,
+      "arm": "duplicate_control",
+      "dose_matched_to_model": true,
+      "dose_matching_row_hash": "sha256:1700ead9493adbf6c6c4e5fb483a3f09fe6f4cfc88927bd898ef8667c2b1c305",
+      "equal_event_count_and_exposure": true,
+      "exposure_dose": 0,
+      "per_unit_group": "dose",
+      "proposal_opportunity_count": 4,
+      "replay_event_count_per_factor": 0,
+      "row_type": "dose_matching",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    },
+    {
+      "admitted_event_count": 0,
+      "arm": "no_factor_control",
+      "dose_matched_to_model": true,
+      "dose_matching_row_hash": "sha256:9e7e065af0e11a1337fb5593ec6849f2784de3c1e20ae58b41e396072730c7b2",
+      "equal_event_count_and_exposure": true,
+      "exposure_dose": 0,
+      "per_unit_group": "dose",
+      "proposal_opportunity_count": 4,
+      "replay_event_count_per_factor": 0,
+      "row_type": "dose_matching",
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    },
+    {
+      "admitted_for_replay": false,
+      "control_factor_instance_id": "control:random_control:zero_admission",
+      "control_match_row_hash": "sha256:5c0b282d659ee65048febc7aec3abd0a95e76648f6afb3a89dbec5848efb33f7",
+      "control_type": "random_control",
+      "exposure_dose": 0,
+      "matched_arity": true,
+      "matched_feature_footprint": true,
+      "per_unit_group": "control",
+      "reason": "zero_model_admission_dose_match",
+      "row_type": "control_matching",
+      "source_factor_instance_id": null,
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    },
+    {
+      "admitted_for_replay": false,
+      "control_factor_instance_id": "control:structural_control:zero_admission",
+      "control_match_row_hash": "sha256:182fb9c57a0633284525108cd8e0726e118e7f3529c7602e272ca31ef37a6236",
+      "control_type": "structural_control",
+      "exposure_dose": 0,
+      "matched_arity": true,
+      "matched_feature_footprint": true,
+      "per_unit_group": "control",
+      "reason": "zero_model_admission_dose_match",
+      "row_type": "control_matching",
+      "source_factor_instance_id": null,
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    },
+    {
+      "admitted_for_replay": false,
+      "control_factor_instance_id": "control:duplicate_control:zero_admission",
+      "control_match_row_hash": "sha256:c998acca18997e50b052e0a7c9d387cbd3de237db4397dcd3b3f426ec64d43c2",
+      "control_type": "duplicate_control",
+      "exposure_dose": 0,
+      "matched_arity": true,
+      "matched_feature_footprint": true,
+      "per_unit_group": "control",
+      "reason": "zero_model_admission_dose_match",
+      "row_type": "control_matching",
+      "source_factor_instance_id": null,
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    },
+    {
+      "admitted_for_replay": false,
+      "control_factor_instance_id": "control:no_factor_control:zero_admission",
+      "control_match_row_hash": "sha256:3245b7f370aada3aeec279a3181a401776c30196454209dd6eb878a12f06259b",
+      "control_type": "no_factor_control",
+      "exposure_dose": 0,
+      "matched_arity": true,
+      "matched_feature_footprint": true,
+      "per_unit_group": "control",
+      "reason": "zero_model_admission_dose_match",
+      "row_type": "control_matching",
+      "source_factor_instance_id": null,
+      "spec_refs": [
+        "REQ-VERIFY-6492",
+        "SCENARIO-VERIFY-6492-CONTROLS-DOSE"
+      ]
+    },
+    {
+      "confidence": 0.95,
+      "confidence_interval_row_hash": "sha256:539b8aa6df04cc7303cfd7726788005eea02ef9454df721d3eb65618fc14899d",
+      "interval_id": "model_all_delta_exact_check_calls",
+      "lower": null,
+      "mean": null,
+      "method": "paired_row_min_max_interval_predeclared",
+      "n": 0,
+      "per_unit_group": "confidence_interval",
+      "row_type": "confidence_interval",
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ],
+      "upper": null
+    },
+    {
+      "confidence": 0.95,
+      "confidence_interval_row_hash": "sha256:08afa2c8a135c90589a2e1fe4b7b32f97f67569187458874949101a1dfa9ea98",
+      "interval_id": "model_held_delta_exact_check_calls",
+      "lower": null,
+      "mean": null,
+      "method": "paired_row_min_max_interval_predeclared",
+      "n": 0,
+      "per_unit_group": "confidence_interval",
+      "row_type": "confidence_interval",
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ],
+      "upper": null
+    },
+    {
+      "confidence": 0.95,
+      "confidence_interval_row_hash": "sha256:8a085f064a2a0701d60f578123112c403a3d03fe379b8521d918633df41b1177",
+      "interval_id": "controls_held_delta_exact_check_calls",
+      "lower": null,
+      "mean": null,
+      "method": "paired_row_min_max_interval_predeclared",
+      "n": 0,
+      "per_unit_group": "confidence_interval",
+      "row_type": "confidence_interval",
+      "spec_refs": [
+        "REQ-VERIFY-6492"
+      ],
+      "upper": null
+    }
+  ],
+  "preconditions_checked": {
+    "commitment_gate": {
+      "artifact_id": "exp6489",
+      "expected": 1.0,
+      "field": "trajectory_contract_ready_score",
+      "gate_passed": true,
+      "observed": 1.0,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6489_solver_trajectory_commitment.json",
+      "row_type": "upstream_gate",
+      "sha256": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+      "structured_gate": true
+    },
+    "controls": {
+      "control_seed": 6492001,
+      "control_types": [
+        "random_control",
+        "structural_control",
+        "duplicate_control",
+        "no_factor_control"
+      ],
+      "dose_rule": "equal proposal opportunities, admissions, replay events, and add/drop arms"
+    },
+    "exact_backends": {
+      "record_schema_version": "carnot.exact_constraint_record.v1",
+      "replay_backend": "exhaustive_prefix_replay",
+      "solver_configuration": {
+        "backend": "exhaustive_prefix_replay",
+        "candidate_order": "finite_domain_lexicographic_after_committed_prefix",
+        "exact_backend_module": "experiment_6477_backend_neutral_exact_constraint_record",
+        "timeout_s": null
+      }
+    },
+    "held_exact_energy_receipts": [
+      {
+        "artifact_id": "exp6478_requested",
+        "expected": 1.0,
+        "field": "held_exact_energy_selection_ready_score",
+        "gate_passed": false,
+        "observed": null,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6478_held_exact_constraint_energy_selection.json",
+        "row_type": "upstream_gate",
+        "sha256": null,
+        "structured_gate": false
+      },
+      {
+        "artifact_id": "exp6478_canonical",
+        "expected": 1.0,
+        "field": "held_exact_energy_selection_ready_score",
+        "gate_passed": true,
+        "observed": 1.0,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6478_identifiable_held_exact_energy_selection.json",
+        "row_type": "upstream_gate",
+        "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "structured_gate": false
+      }
+    ],
+    "judge_substitution_allowed": false,
+    "llm_invocation_allowed": false,
+    "planning_date": "20260821",
+    "proposal_gate": {
+      "artifact_id": "exp6491",
+      "expected": 1.0,
+      "field": "factor_proposal_stream_ready_score",
+      "gate_passed": true,
+      "observed": 1.0,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream.json",
+      "row_type": "upstream_gate",
+      "sha256": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+      "structured_gate": true
+    },
+    "protected_files": {
+      "active_roadmap_and_conductor_unchanged": true,
+      "changed_paths": [],
+      "files": {
+        "openspec/change-proposals/research-roadmap-vNEXT.md": {
+          "changed_in_worktree": false,
+          "sha256": "sha256:adfc77dc129ec7725e579492b2c5ba52424cf5800a60a1eadb2db53d93b6c047"
+        },
+        "research-roadmap-next.yaml": {
+          "changed_in_worktree": false,
+          "sha256": null
+        },
+        "scripts/research_conductor.py": {
+          "changed_in_worktree": false,
+          "sha256": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb"
+        }
+      }
+    },
+    "repository_state": {
+      "head": "070e64b1e1bde0321479e81caefbf726388e3bf7",
+      "status_short": "M openspec/capabilities/verification/spec.md\n?? python/carnot/experiment_6492_factor_causal_replay.py\n?? tests/python/test_experiment_6492_factor_causal_replay.py"
+    },
+    "run_date": "20260821",
+    "runtime_environment": {
+      "cpu_count": 24,
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python": "3.12.13"
+    }
+  },
+  "protected_files_unchanged": {
+    "active_roadmap_and_conductor_unchanged": true,
+    "changed_paths": [],
+    "files": {
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "changed_in_worktree": false,
+        "sha256": "sha256:adfc77dc129ec7725e579492b2c5ba52424cf5800a60a1eadb2db53d93b6c047"
+      },
+      "research-roadmap-next.yaml": {
+        "changed_in_worktree": false,
+        "sha256": null
+      },
+      "scripts/research_conductor.py": {
+        "changed_in_worktree": false,
+        "sha256": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb"
+      }
+    }
+  },
+  "random_seed": {
+    "base": 6492,
+    "control_seed": 6492001,
+    "replay_seed": 6492002
+  },
+  "replay_rows": [],
+  "reproducibility_checksum": "sha256:bdaa3295a09f20cc94b25a588674e8b2eb93c223d6e38c94f6f38b9058625a53",
+  "status": "complete_null",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6492_factor_causal_replay.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6492_factor_causal_replay.py -m pytest tests/python/test_experiment_6492_factor_causal_replay.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6492_factor_causal_replay.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6492_factor_causal_replay.py",
+      "exit_code": 0
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6492_factor_causal_replay --date 20260821",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6492_factor_causal_replay.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6492_factor_causal_replay.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6477_backend_neutral_exact_constraint_record.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6492_factor_causal_replay --validate",
+      "exit_code": 0
+    }
+  ],
+  "upstream_gate_receipts": [
+    {
+      "artifact_id": "exp6489",
+      "expected": 1.0,
+      "field": "trajectory_contract_ready_score",
+      "gate_passed": true,
+      "observed": 1.0,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6489_solver_trajectory_commitment.json",
+      "row_type": "upstream_gate",
+      "sha256": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+      "structured_gate": true
+    },
+    {
+      "artifact_id": "exp6491",
+      "expected": 1.0,
+      "field": "factor_proposal_stream_ready_score",
+      "gate_passed": true,
+      "observed": 1.0,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream.json",
+      "row_type": "upstream_gate",
+      "sha256": "sha256:2bcfecca77fe40dfbb1aeb23d762835ac98a4b85f2e3d2094c3ef4e0f4ee71ca",
+      "structured_gate": true
+    },
+    {
+      "artifact_id": "exp6478_requested",
+      "expected": 1.0,
+      "field": "held_exact_energy_selection_ready_score",
+      "gate_passed": false,
+      "observed": null,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6478_held_exact_constraint_energy_selection.json",
+      "row_type": "upstream_gate",
+      "sha256": null,
+      "structured_gate": false
+    },
+    {
+      "artifact_id": "exp6478_canonical",
+      "expected": 1.0,
+      "field": "held_exact_energy_selection_ready_score",
+      "gate_passed": true,
+      "observed": 1.0,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6478_identifiable_held_exact_energy_selection.json",
+      "row_type": "upstream_gate",
+      "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+      "structured_gate": false
+    }
+  ],
+  "verifier_is_oracle": true
+}
