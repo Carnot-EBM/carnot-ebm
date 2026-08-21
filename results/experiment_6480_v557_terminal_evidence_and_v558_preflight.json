@@ -1,0 +1,2734 @@
+{
+  "aggregate_row_recomputation": {
+    "absent_count": 0,
+    "all_aggregates_match_rows": true,
+    "arc_shield_ready_boundary": {
+      "allowed_input_fields": [
+        "arc_safety_shield_ready_score",
+        "current_adversarial_findings",
+        "no_solve_claim"
+      ],
+      "gates": [
+        {
+          "expected": 1.0,
+          "gate": "upstream_arc_safety_shield_ready_score",
+          "observed": 1.0,
+          "passed": true,
+          "source_field": "arc_safety_shield_ready_score"
+        },
+        {
+          "expected": "ran=true and critical_count=0",
+          "gate": "current_adversarial_status_clean",
+          "observed": {
+            "critical_count": 0,
+            "ran": true
+          },
+          "passed": true,
+          "source_field": "current_adversarial_findings"
+        },
+        {
+          "expected": true,
+          "gate": "no_solve_boundary",
+          "observed": true,
+          "passed": true,
+          "source_field": "no_solve_claim"
+        }
+      ],
+      "policy_improvement_claimed": false,
+      "score": 1.0,
+      "solve_claimed": false
+    },
+    "artifact_state_counts": {
+      "complete": 7
+    },
+    "checks": {
+      "all_v557_tasks_accounted": true,
+      "arc_shield_score_from_allowed_gates": true,
+      "artifact_hash_manifest_matches_rows": true,
+      "exact_energy_boundary_is_finite_no_llm_only": true,
+      "factor_cache_score_from_allowed_gates": true,
+      "no_queue_or_activation_flags": true,
+      "protected_files_unchanged": true,
+      "retirement_boundary_recomputed": true
+    },
+    "exact_energy": {
+      "boundary_statement": "Exp6478 supports a finite no-LLM exact-energy selection result and does not extend to local-SOTA outputs.",
+      "candidate_source": "finite_no_llm_unit_seed_protocol",
+      "exact_record_path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+      "exact_record_ready_score": 1.0,
+      "exact_record_sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+      "finite_no_llm_unit_seed_count": 24,
+      "harmful_flip_count_vs_first": 0,
+      "held_exact_energy_selection_ready_score": 1.0,
+      "inference_substrate": "exact_solver_held_candidate_selection_no_llm",
+      "local_sota_extension_claimed": false,
+      "local_sota_output_evidence_status": "not_supported_by_exp6478",
+      "selection_path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+      "selection_sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1"
+    },
+    "expected_task_count": 7,
+    "factor_cache_ready_boundary": {
+      "allowed_input_fields": [
+        "factor_cache_shadow_adapter_ready_score",
+        "default_off_compatibility_rows",
+        "exact_write_admission_rows",
+        "persistence_rollback_and_tombstone_receipts",
+        "persistence_rollback_and_tombstone_receipts",
+        "tests_run"
+      ],
+      "benefit_claimed": false,
+      "gates": [
+        {
+          "expected": 1.0,
+          "gate": "upstream_ready_score",
+          "observed": 1.0,
+          "passed": true,
+          "source_field": "factor_cache_shadow_adapter_ready_score"
+        },
+        {
+          "expected": "all_public_outputs_match=true and disabled_ledger_write_count=0",
+          "gate": "default_off_public_outputs_and_no_disabled_write",
+          "observed": {
+            "all_public_outputs_match": true,
+            "disabled_ledger_write_count": 0
+          },
+          "passed": true,
+          "source_field": "default_off_compatibility_rows"
+        },
+        {
+          "expected": "prior exact receipt and checked before admit",
+          "gate": "exact_write_admission",
+          "observed": {
+            "all_writes_checked_before_admit": true,
+            "all_writes_have_prior_exact_receipt": true
+          },
+          "passed": true,
+          "source_field": "exact_write_admission_rows"
+        },
+        {
+          "expected": "checkpoint present and ledger nonempty",
+          "gate": "persistence",
+          "observed": {
+            "checkpoint_present": true,
+            "ledger_row_count": 8
+          },
+          "passed": true,
+          "source_field": "persistence_rollback_and_tombstone_receipts"
+        },
+        {
+          "expected": true,
+          "gate": "rollback_and_tombstone_non_resurrection",
+          "observed": true,
+          "passed": true,
+          "source_field": "persistence_rollback_and_tombstone_receipts"
+        },
+        {
+          "expected": "all recorded exit codes are 0",
+          "gate": "tests",
+          "observed": {
+            ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/pipeline/factor_cache_shadow_adapter.py,python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py -m pytest tests/python/test_factor_cache_shadow_adapter.py tests/python/test_experiment_6479_verify_repair_factor_cache_shadow_adapter.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/pipeline/factor_cache_shadow_adapter.py,python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py --fail-under=100 --show-missing": 0,
+            ".venv/bin/pytest tests/python -q": 0,
+            ".venv/bin/pytest tests/python/test_factor_cache_shadow_adapter.py tests/python/test_experiment_6479_verify_repair_factor_cache_shadow_adapter.py -q --no-cov -n 0": 0,
+            ".venv/bin/python -c \"from carnot.pipeline.verify_repair import VerifyRepairPipeline; from carnot.pipeline.factor_cache_shadow_adapter import FR11FactorCacheShadowAdapter; print(VerifyRepairPipeline.__name__, FR11FactorCacheShadowAdapter.__name__)\"": 0,
+            ".venv/bin/python scripts/adversarial_verify.py results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json": 0,
+            ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_factor_cache_shadow_adapter.py tests/python/test_experiment_6479_verify_repair_factor_cache_shadow_adapter.py": 0,
+            ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json": 0,
+            "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6479_verify_repair_factor_cache_shadow_adapter --date 20260821": 0,
+            "manual e2e-plan check: E2E-005 packaged verify-repair surface import and arithmetic exact path": 0
+          },
+          "passed": true,
+          "source_field": "tests_run"
+        }
+      ],
+      "release_authority_granted": false,
+      "score": 1.0
+    },
+    "present_count": 7,
+    "retirement_count": 1,
+    "terminal_row_count": 7,
+    "zero_byte_count": 0
+  },
+  "artifact_hash_manifest": {
+    "absent_count": 0,
+    "absent_paths": [],
+    "expected_count": 7,
+    "present_count": 7,
+    "rows": [
+      {
+        "artifact_disposition": "complete_terminal_state",
+        "artifact_state": "complete",
+        "bytes": 75610,
+        "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+        "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+        "task_id": "exp6473-v556-terminal-evidence-and-retirement-boundary"
+      },
+      {
+        "artifact_disposition": "complete_terminal_state",
+        "artifact_state": "complete",
+        "bytes": 119339,
+        "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+        "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+        "task_id": "exp6474-protocol-identifiability-and-receipt-preflight"
+      },
+      {
+        "artifact_disposition": "complete_terminal_state",
+        "artifact_state": "complete",
+        "bytes": 290722,
+        "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+        "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+        "task_id": "exp6475-v557-primary-source-and-product-state"
+      },
+      {
+        "artifact_disposition": "complete_terminal_state",
+        "artifact_state": "complete",
+        "bytes": 1898236,
+        "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+        "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+        "task_id": "exp6476-v556-corpus-label-commitment-forensic"
+      },
+      {
+        "artifact_disposition": "complete_terminal_state",
+        "artifact_state": "complete",
+        "bytes": 244717,
+        "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+        "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+        "task_id": "exp6477-backend-neutral-exact-constraint-record"
+      },
+      {
+        "artifact_disposition": "complete_terminal_state",
+        "artifact_state": "complete",
+        "bytes": 1662428,
+        "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+        "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "task_id": "exp6478-identifiable-held-exact-energy-selection"
+      },
+      {
+        "artifact_disposition": "complete_terminal_state",
+        "artifact_state": "complete",
+        "bytes": 55994,
+        "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+        "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+        "task_id": "exp6479-verify-repair-factor-cache-shadow-adapter"
+      }
+    ],
+    "zero_byte_count": 0,
+    "zero_byte_paths": []
+  },
+  "duration_s": 0.114467,
+  "exact_energy_evidence_boundary": {
+    "boundary_statement": "Exp6478 supports a finite no-LLM exact-energy selection result and does not extend to local-SOTA outputs.",
+    "candidate_source": "finite_no_llm_unit_seed_protocol",
+    "exact_record_path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+    "exact_record_ready_score": 1.0,
+    "exact_record_sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+    "finite_no_llm_unit_seed_count": 24,
+    "harmful_flip_count_vs_first": 0,
+    "held_exact_energy_selection_ready_score": 1.0,
+    "inference_substrate": "exact_solver_held_candidate_selection_no_llm",
+    "local_sota_extension_claimed": false,
+    "local_sota_output_evidence_status": "not_supported_by_exp6478",
+    "selection_path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+    "selection_sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1"
+  },
+  "field_principles": {
+    "aggregate_row_recomputation": "Row-derived aggregates catch summaries that disagree with terminal evidence.",
+    "artifact_hash_manifest": "Hashes bind each terminal determination to the exact evidence bytes.",
+    "duration_s": "Measured wall time detects a bootstrap-only artifact.",
+    "exact_energy_evidence_boundary": "The boundary preserves Exp6478 as a finite no-LLM result and prevents a false local-SOTA claim.",
+    "field_principles": "A field-to-principle map preserves the reason for every evidence field.",
+    "field_provenance": "Exact source paths and hashes make each value traceable.",
+    "gate_check_summary": "Any blocked verdict names the failed check, expected value, observed value, and evidence path.",
+    "honest_verdict": "The verdict states completion and each branch boundary without promoting a science claim.",
+    "inference_substrate": "Declaring aggregation_from_upstream_artifacts prevents a no-model audit from being read as live inference.",
+    "per_unit_rows": "Task rows make every aggregate and branch boundary independently checkable.",
+    "preconditions_checked": "Precondition receipts prove the expected artifacts and repository state existed before aggregation.",
+    "protected_files_unchanged": "The task must not alter the active roadmap, conductor, registry, or public results.",
+    "random_seed": "A fixed seed makes attack ordering reproducible.",
+    "reproducibility_checksum": "A stable checksum detects later drift in inputs or the terminal artifact.",
+    "retirement_boundary_rows": "Explicit rows keep the invalid Exp6463 lineage from returning under a new name.",
+    "roadmap_activation_performed": "A false value keeps evidence aggregation separate from conductor state changes.",
+    "staged_queue_validation_performed": "A false value proves this task did not repeat the retired queue-transition scope.",
+    "status": "A terminal status distinguishes a completed evidence freeze from an interrupted handoff.",
+    "tests_run": "Recorded commands distinguish executed checks from intended checks.",
+    "unrelated_branch_gate_count": "Zero unrelated gates prevents an infrastructure result from suppressing independent science.",
+    "v557_arc_shield_ready_score": "A narrow score confirms the generic no-solve shield without claiming policy improvement.",
+    "v557_factor_cache_ready_score": "A narrow score gives later CSL work a same-roadmap gate without granting benefit or release authority.",
+    "v557_terminal_rows": "One row per active V557 task prevents missing or blocked evidence from disappearing in a summary.",
+    "verifier_is_oracle": "Only deterministic hashes and row arithmetic are authoritative in this task."
+  },
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "artifact_hash_manifest": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "duration_s": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "exact_energy_evidence_boundary": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "field_principles": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "field_provenance": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "gate_check_summary": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "honest_verdict": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "inference_substrate": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "per_unit_rows": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "preconditions_checked": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "protected_files_unchanged": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "random_seed": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "reproducibility_checksum": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "retirement_boundary_rows": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "roadmap_activation_performed": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "staged_queue_validation_performed": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "status": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "tests_run": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "unrelated_branch_gate_count": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "v557_arc_shield_ready_score": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "v557_factor_cache_ready_score": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "v557_terminal_rows": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    },
+    "verifier_is_oracle": {
+      "source_paths": [
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:bc3c4e74c03991f0baf0ea108dc7db6a8a471e68d5bb46d884087acc91f425b7",
+          "size_bytes": 368788
+        },
+        {
+          "path": "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:c9afeee6556e4340c0adfdc8031b19d5e54815513721ca4f75c19332922e1174",
+          "size_bytes": 41756
+        },
+        {
+          "path": "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+          "sha256": "sha256:32402737b39e5fb7176b0838133fd0689c1cabaa533c36dbc7e89886d9fc24c1",
+          "size_bytes": 15447
+        },
+        {
+          "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+          "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+          "size_bytes": 2707067
+        },
+        {
+          "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+          "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+          "size_bytes": 75610
+        },
+        {
+          "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+          "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+          "size_bytes": 119339
+        },
+        {
+          "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+          "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+          "size_bytes": 290722
+        },
+        {
+          "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+          "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+          "size_bytes": 1898236
+        },
+        {
+          "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+          "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+          "size_bytes": 244717
+        },
+        {
+          "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+          "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+          "size_bytes": 1662428
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+          "size_bytes": 55994
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6480"
+      ],
+      "value_source": "upstream artifact hashes and deterministic row arithmetic"
+    }
+  },
+  "gate_check_summary": {
+    "acceptance_gates": [
+      {
+        "condition": "All seven active V557 task IDs have a terminal row and artifact disposition.",
+        "passed": true
+      },
+      {
+        "condition": "staged_queue_validation_performed=false AND roadmap_activation_performed=false AND unrelated_branch_gate_count=0.",
+        "passed": true
+      }
+    ],
+    "blocked_verdict_checks": [],
+    "branch_gate_scores": {
+      "v557_arc_shield_ready_score": 1.0,
+      "v557_factor_cache_ready_score": 1.0
+    },
+    "failed_checks": []
+  },
+  "honest_verdict": "complete: V557 terminal evidence frozen; Exp6463 held lineage retired; Exp6478 remains finite no-LLM exact-energy evidence; factor-cache and ARC shield readiness are narrow preflight fields only.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "per_unit_rows": [
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json": null
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6473",
+      "artifact_state": "complete",
+      "branch": "terminal_boundary",
+      "bytes": 75610,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "terminal_artifact_loaded",
+        "evidence_path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+        "expected": "present",
+        "observed": "complete"
+      },
+      "honest_verdict": "complete: V556 terminal evidence frozen; science_claim_eligible=false; continuous_learning_claim_eligible=true; arc_claim_eligible=true; hardware_claim_eligible=false; retired_repeated_scopes=3; staged_queue_validation_performed=false; downstream_gate_count=0",
+      "load_error": "",
+      "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+      "readiness_fields": {},
+      "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+      "status": "complete_v556_terminal_evidence_and_retirement_boundary",
+      "task_id": "exp6473-v556-terminal-evidence-and-retirement-boundary",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6474_protocol_identifiability_and_receipt_preflight.json": 0
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6474",
+      "artifact_state": "complete",
+      "branch": "protocol_identifiability",
+      "bytes": 119339,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "all_gates",
+        "evidence_path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+        "expected": "passed",
+        "observed": "passed"
+      },
+      "honest_verdict": "complete: declared V557 support identifies the target effect within the frozen finite policy class; no LLM was run",
+      "load_error": "",
+      "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+      "readiness_fields": {
+        "protocol_identifying_score": 1.0
+      },
+      "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+      "status": "complete",
+      "task_id": "exp6474-protocol-identifiability-and-receipt-preflight",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {},
+        "critical_count": null,
+        "evidence_path": "results/experiment_6475_v557_primary_source_and_product_state.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6475",
+      "artifact_state": "complete",
+      "branch": "source_receipt",
+      "bytes": 290722,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "terminal_artifact_loaded",
+        "evidence_path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+        "expected": "present",
+        "observed": "complete"
+      },
+      "honest_verdict": "complete_primary_source_receipt: source pages identify current claims only; no product, hardware, model, API, or ARC execution path was invoked.",
+      "load_error": "",
+      "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+      "readiness_fields": {},
+      "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+      "status": "complete_primary_source_receipt",
+      "task_id": "exp6475-v557-primary-source-and-product-state",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6476_v556_corpus_label_commitment_forensic.json": 0
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6476",
+      "artifact_state": "complete",
+      "branch": "corpus_retirement",
+      "bytes": 1898236,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "all_held_units_have_label_precommit_proof",
+        "evidence_path": "data/research/experiment_6463_sota_fixed_policy_candidate_corpus_v2/manifest/fixed_policy_problems_v2.json",
+        "expected": true,
+        "observed": false
+      },
+      "honest_verdict": "complete: retire_lineage because Exp6463 lacks immutable pre-inference held label and membership proof; no new inference or labels were created",
+      "load_error": "",
+      "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+      "readiness_fields": {
+        "corpus_label_commitment_salvage_score": 0.0
+      },
+      "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+      "status": "complete_forensic_retire_lineage",
+      "task_id": "exp6476-v556-corpus-label-commitment-forensic",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6477_backend_neutral_exact_constraint_record.json": 0
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6477_backend_neutral_exact_constraint_record.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6477",
+      "artifact_state": "complete",
+      "branch": "exact_record",
+      "bytes": 244717,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "all_gates",
+        "evidence_path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+        "expected": "passed",
+        "observed": "passed"
+      },
+      "honest_verdict": "complete: Z3 and exhaustive replay agree within the declared finite-domain record; scalar energy remains diagnostic only",
+      "load_error": "",
+      "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+      "readiness_fields": {
+        "exact_constraint_record_ready_score": 1.0
+      },
+      "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+      "status": "complete",
+      "task_id": "exp6477-backend-neutral-exact-constraint-record",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6478_identifiable_held_exact_energy_selection.json": 0
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6478_identifiable_held_exact_energy_selection.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6478",
+      "artifact_state": "complete",
+      "branch": "exact_energy_selection",
+      "bytes": 1662428,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "terminal_artifact_loaded",
+        "evidence_path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+        "expected": "present",
+        "observed": "complete"
+      },
+      "honest_verdict": "complete_positive: exact-energy selection improves held exact success over first and shuffled controls; exact backend remains the oracle",
+      "load_error": "",
+      "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+      "readiness_fields": {
+        "held_exact_energy_selection_ready_score": 1.0
+      },
+      "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+      "status": "complete",
+      "task_id": "exp6478-identifiable-held-exact-energy-selection",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json": 0
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6479",
+      "artifact_state": "complete",
+      "branch": "factor_cache_adapter",
+      "bytes": 55994,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "terminal_artifact_loaded",
+        "evidence_path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+        "expected": "present",
+        "observed": "complete"
+      },
+      "honest_verdict": "success: default-off verify-repair factor-cache shadow adapter shipped",
+      "load_error": "",
+      "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+      "readiness_fields": {
+        "factor_cache_shadow_adapter_ready_score": 1.0
+      },
+      "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+      "status": "success_ready",
+      "task_id": "exp6479-verify-repair-factor-cache-shadow-adapter",
+      "zero_byte": false
+    }
+  ],
+  "preconditions_checked": {
+    "all_required_files_present": true,
+    "expected_v557_task_count": 7,
+    "planning_date": "20260821",
+    "protected_paths_hashed_before_aggregation": [
+      "scripts/research_conductor.py",
+      "research-roadmap.yaml",
+      "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "ops/conductor-log.md",
+      "ops/exclusion_manifest.yaml",
+      "ops/known-issues.md",
+      "ops/status.md",
+      "ops/changelog.md",
+      "_bmad/traceability.md",
+      "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+      "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+      "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+      "results/experiment_6475_v557_primary_source_and_product_state.json",
+      "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+      "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+      "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+      "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json"
+    ],
+    "repository_state_before_analysis": {
+      "head_sha": "d7fd4cef7b2b8bcc893163b4b22f7c0c77c8dac0",
+      "status_short": [
+        "M openspec/capabilities/research-harnesses/spec.md",
+        "?? python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+        "?? tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py"
+      ]
+    },
+    "required_files": {
+      "AGENTS.md": true,
+      "CLAUDE.md": true,
+      "CODEX.md": true,
+      "openspec/capabilities/research-harnesses/spec.md": true,
+      "openspec/change-proposals/research-roadmap-vNEXT.md": true,
+      "ops/e2e-test-plan.md": true,
+      "python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py": true,
+      "research-program.md": true,
+      "results/experiment_6471_arc_generic_safety_shield_objective_ab.json": true,
+      "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json": true,
+      "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json": true,
+      "results/experiment_6475_v557_primary_source_and_product_state.json": true,
+      "results/experiment_6476_v556_corpus_label_commitment_forensic.json": true,
+      "results/experiment_6477_backend_neutral_exact_constraint_record.json": true,
+      "results/experiment_6478_identifiable_held_exact_energy_selection.json": true,
+      "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json": true,
+      "scripts/adversarial_verify.py": true,
+      "scripts/verdict_row_consistency_lint.py": true,
+      "tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py": true
+    },
+    "roadmap_activated": false,
+    "roadmap_validated": false,
+    "terminal_row_count": 7
+  },
+  "protected_files_unchanged": {
+    "changed_paths": [],
+    "files": {
+      "_bmad/traceability.md": {
+        "after_sha256": "sha256:615494930f1140e640715a54e119499cb9f5d82c000840b957bd2fd73ab0f2e6",
+        "before_sha256": "sha256:615494930f1140e640715a54e119499cb9f5d82c000840b957bd2fd73ab0f2e6",
+        "exists": true,
+        "unchanged": true
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "after_sha256": "sha256:628f47d66cd34101c2c75067910e35cb25797c6faac3ef6cc39a9a77949fd33e",
+        "before_sha256": "sha256:628f47d66cd34101c2c75067910e35cb25797c6faac3ef6cc39a9a77949fd33e",
+        "exists": true,
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "after_sha256": "sha256:a9ea2562f6a90144bfdf6b9094ce602a2208abafea445b93911b76ce28de6db5",
+        "before_sha256": "sha256:a9ea2562f6a90144bfdf6b9094ce602a2208abafea445b93911b76ce28de6db5",
+        "exists": true,
+        "unchanged": true
+      },
+      "ops/conductor-log.md": {
+        "after_sha256": "sha256:a08fb4fcfc3e15bfd68b5897bd8a419e4dd01bff1eb1ba3ae4657e72310359d1",
+        "before_sha256": "sha256:a08fb4fcfc3e15bfd68b5897bd8a419e4dd01bff1eb1ba3ae4657e72310359d1",
+        "exists": true,
+        "unchanged": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "after_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "before_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "exists": true,
+        "unchanged": true
+      },
+      "ops/known-issues.md": {
+        "after_sha256": "sha256:90ab4af68722758ce393a11dd85d4eb559623abad4e549b9c0db30eb5c2767aa",
+        "before_sha256": "sha256:90ab4af68722758ce393a11dd85d4eb559623abad4e549b9c0db30eb5c2767aa",
+        "exists": true,
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "after_sha256": "sha256:8082f6c325f00be3f8738be0b3119825196895f525c256d697f1890f01844cad",
+        "before_sha256": "sha256:8082f6c325f00be3f8738be0b3119825196895f525c256d697f1890f01844cad",
+        "exists": true,
+        "unchanged": true
+      },
+      "research-roadmap.yaml": {
+        "after_sha256": "sha256:1422b7dbff294427f572d8e40f2271d6cbc9fafc10fb571cba5a18d1c668e9dc",
+        "before_sha256": "sha256:1422b7dbff294427f572d8e40f2271d6cbc9fafc10fb571cba5a18d1c668e9dc",
+        "exists": true,
+        "unchanged": true
+      },
+      "results/experiment_6471_arc_generic_safety_shield_objective_ab.json": {
+        "after_sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+        "before_sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+        "exists": true,
+        "unchanged": true
+      },
+      "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json": {
+        "after_sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+        "before_sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+        "exists": true,
+        "unchanged": true
+      },
+      "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json": {
+        "after_sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+        "before_sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+        "exists": true,
+        "unchanged": true
+      },
+      "results/experiment_6475_v557_primary_source_and_product_state.json": {
+        "after_sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+        "before_sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+        "exists": true,
+        "unchanged": true
+      },
+      "results/experiment_6476_v556_corpus_label_commitment_forensic.json": {
+        "after_sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+        "before_sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+        "exists": true,
+        "unchanged": true
+      },
+      "results/experiment_6477_backend_neutral_exact_constraint_record.json": {
+        "after_sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+        "before_sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+        "exists": true,
+        "unchanged": true
+      },
+      "results/experiment_6478_identifiable_held_exact_energy_selection.json": {
+        "after_sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "before_sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+        "exists": true,
+        "unchanged": true
+      },
+      "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json": {
+        "after_sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+        "before_sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+        "exists": true,
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after_sha256": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb",
+        "before_sha256": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb",
+        "exists": true,
+        "unchanged": true
+      }
+    },
+    "unchanged": true
+  },
+  "random_seed": 6480,
+  "reproducibility_checksum": "sha256:b0b7ec7b8bb4b4bc3670ff75eaf337baff6550276591fbba786b671dc1a748c6",
+  "retirement_boundary_rows": [
+    {
+      "boundary_statement": "V558 may create a new prospective lineage, but it may not reuse Exp6463 held evidence.",
+      "disposition": "retired_for_held_evidence",
+      "failed_gate_rows": [
+        {
+          "check": "all_held_units_have_label_precommit_proof",
+          "evidence_path": "data/research/experiment_6463_sota_fixed_policy_candidate_corpus_v2/manifest/fixed_policy_problems_v2.json",
+          "expected_value": true,
+          "observed_value": false
+        },
+        {
+          "check": "all_held_units_have_membership_precommit_proof",
+          "evidence_path": "data/research/experiment_6463_sota_fixed_policy_candidate_corpus_v2/manifest/fixed_policy_problems_v2.json",
+          "expected_value": true,
+          "observed_value": false
+        },
+        {
+          "check": "no_missing_or_posthoc_held_rows",
+          "evidence_path": "data/research/experiment_6463_sota_fixed_policy_candidate_corpus_v2/manifest/fixed_policy_problems_v2.json",
+          "expected_value": true,
+          "observed_value": false
+        }
+      ],
+      "held_unit_count": 36,
+      "held_units_missing_any_precommit_proof": 36,
+      "held_units_with_both_precommit_proofs": 0,
+      "held_units_with_label_precommit_proof": 0,
+      "held_units_with_membership_precommit_proof": 0,
+      "lineage_id": "Exp6463",
+      "may_create_new_prospective_lineage": true,
+      "may_reuse_exp6463_held_evidence": false,
+      "retired_because": "missing immutable pre-inference held label and membership proof",
+      "source_experiment_id": "Exp6476",
+      "source_honest_verdict": "complete: retire_lineage because Exp6463 lacks immutable pre-inference held label and membership proof; no new inference or labels were created",
+      "source_path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+      "source_sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+      "source_status": "complete_forensic_retire_lineage"
+    }
+  ],
+  "roadmap_activation_performed": false,
+  "rows": [
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json": null
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6473",
+      "artifact_state": "complete",
+      "branch": "terminal_boundary",
+      "bytes": 75610,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "terminal_artifact_loaded",
+        "evidence_path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+        "expected": "present",
+        "observed": "complete"
+      },
+      "honest_verdict": "complete: V556 terminal evidence frozen; science_claim_eligible=false; continuous_learning_claim_eligible=true; arc_claim_eligible=true; hardware_claim_eligible=false; retired_repeated_scopes=3; staged_queue_validation_performed=false; downstream_gate_count=0",
+      "load_error": "",
+      "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+      "readiness_fields": {},
+      "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+      "status": "complete_v556_terminal_evidence_and_retirement_boundary",
+      "task_id": "exp6473-v556-terminal-evidence-and-retirement-boundary",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6474_protocol_identifiability_and_receipt_preflight.json": 0
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6474",
+      "artifact_state": "complete",
+      "branch": "protocol_identifiability",
+      "bytes": 119339,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "all_gates",
+        "evidence_path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+        "expected": "passed",
+        "observed": "passed"
+      },
+      "honest_verdict": "complete: declared V557 support identifies the target effect within the frozen finite policy class; no LLM was run",
+      "load_error": "",
+      "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+      "readiness_fields": {
+        "protocol_identifying_score": 1.0
+      },
+      "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+      "status": "complete",
+      "task_id": "exp6474-protocol-identifiability-and-receipt-preflight",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {},
+        "critical_count": null,
+        "evidence_path": "results/experiment_6475_v557_primary_source_and_product_state.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6475",
+      "artifact_state": "complete",
+      "branch": "source_receipt",
+      "bytes": 290722,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "terminal_artifact_loaded",
+        "evidence_path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+        "expected": "present",
+        "observed": "complete"
+      },
+      "honest_verdict": "complete_primary_source_receipt: source pages identify current claims only; no product, hardware, model, API, or ARC execution path was invoked.",
+      "load_error": "",
+      "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+      "readiness_fields": {},
+      "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+      "status": "complete_primary_source_receipt",
+      "task_id": "exp6475-v557-primary-source-and-product-state",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6476_v556_corpus_label_commitment_forensic.json": 0
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6476",
+      "artifact_state": "complete",
+      "branch": "corpus_retirement",
+      "bytes": 1898236,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "all_held_units_have_label_precommit_proof",
+        "evidence_path": "data/research/experiment_6463_sota_fixed_policy_candidate_corpus_v2/manifest/fixed_policy_problems_v2.json",
+        "expected": true,
+        "observed": false
+      },
+      "honest_verdict": "complete: retire_lineage because Exp6463 lacks immutable pre-inference held label and membership proof; no new inference or labels were created",
+      "load_error": "",
+      "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+      "readiness_fields": {
+        "corpus_label_commitment_salvage_score": 0.0
+      },
+      "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+      "status": "complete_forensic_retire_lineage",
+      "task_id": "exp6476-v556-corpus-label-commitment-forensic",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6477_backend_neutral_exact_constraint_record.json": 0
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6477_backend_neutral_exact_constraint_record.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6477",
+      "artifact_state": "complete",
+      "branch": "exact_record",
+      "bytes": 244717,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "all_gates",
+        "evidence_path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+        "expected": "passed",
+        "observed": "passed"
+      },
+      "honest_verdict": "complete: Z3 and exhaustive replay agree within the declared finite-domain record; scalar energy remains diagnostic only",
+      "load_error": "",
+      "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+      "readiness_fields": {
+        "exact_constraint_record_ready_score": 1.0
+      },
+      "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+      "status": "complete",
+      "task_id": "exp6477-backend-neutral-exact-constraint-record",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6478_identifiable_held_exact_energy_selection.json": 0
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6478_identifiable_held_exact_energy_selection.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6478",
+      "artifact_state": "complete",
+      "branch": "exact_energy_selection",
+      "bytes": 1662428,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "terminal_artifact_loaded",
+        "evidence_path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+        "expected": "present",
+        "observed": "complete"
+      },
+      "honest_verdict": "complete_positive: exact-energy selection improves held exact success over first and shuffled controls; exact backend remains the oracle",
+      "load_error": "",
+      "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+      "readiness_fields": {
+        "held_exact_energy_selection_ready_score": 1.0
+      },
+      "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+      "status": "complete",
+      "task_id": "exp6478-identifiable-held-exact-energy-selection",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json": 0
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6479",
+      "artifact_state": "complete",
+      "branch": "factor_cache_adapter",
+      "bytes": 55994,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "terminal_artifact_loaded",
+        "evidence_path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+        "expected": "present",
+        "observed": "complete"
+      },
+      "honest_verdict": "success: default-off verify-repair factor-cache shadow adapter shipped",
+      "load_error": "",
+      "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+      "readiness_fields": {
+        "factor_cache_shadow_adapter_ready_score": 1.0
+      },
+      "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+      "status": "success_ready",
+      "task_id": "exp6479-verify-repair-factor-cache-shadow-adapter",
+      "zero_byte": false
+    }
+  ],
+  "staged_queue_validation_performed": false,
+  "status": "complete_v557_terminal_evidence_frozen",
+  "tests_run": [
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6480_v557_terminal_evidence_and_v558_preflight --date 20260821",
+      "exit_code": null,
+      "recorded_by": "exp6480_default_receipt"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py -q --no-cov -n 0",
+      "exit_code": null,
+      "recorded_by": "exp6480_default_receipt"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py -m pytest tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py -q --no-cov -n 0",
+      "exit_code": null,
+      "recorded_by": "exp6480_default_receipt"
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py --fail-under=100 --show-missing",
+      "exit_code": null,
+      "recorded_by": "exp6480_default_receipt"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": null,
+      "recorded_by": "exp6480_default_receipt"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py",
+      "exit_code": null,
+      "recorded_by": "exp6480_default_receipt"
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6480_v557_terminal_evidence_and_v558_preflight.json",
+      "exit_code": null,
+      "recorded_by": "exp6480_default_receipt"
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6480_v557_terminal_evidence_and_v558_preflight.json",
+      "exit_code": null,
+      "recorded_by": "exp6480_default_receipt"
+    },
+    {
+      "command": "manual e2e-plan check: ops/e2e-test-plan.md has no direct Exp6480 entry; artifact reporting lints apply",
+      "exit_code": null,
+      "recorded_by": "exp6480_default_receipt"
+    }
+  ],
+  "unrelated_branch_gate_count": 0,
+  "v557_arc_shield_ready_score": 1.0,
+  "v557_factor_cache_ready_score": 1.0,
+  "v557_terminal_rows": [
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json": null
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6473",
+      "artifact_state": "complete",
+      "branch": "terminal_boundary",
+      "bytes": 75610,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "terminal_artifact_loaded",
+        "evidence_path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+        "expected": "present",
+        "observed": "complete"
+      },
+      "honest_verdict": "complete: V556 terminal evidence frozen; science_claim_eligible=false; continuous_learning_claim_eligible=true; arc_claim_eligible=true; hardware_claim_eligible=false; retired_repeated_scopes=3; staged_queue_validation_performed=false; downstream_gate_count=0",
+      "load_error": "",
+      "path": "results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+      "readiness_fields": {},
+      "sha256": "sha256:8f06ddd304fd7031126c44fbb929cf23cbce39a4e6dbfb2cc323bb2de2ef0002",
+      "status": "complete_v556_terminal_evidence_and_retirement_boundary",
+      "task_id": "exp6473-v556-terminal-evidence-and-retirement-boundary",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6474_protocol_identifiability_and_receipt_preflight.json": 0
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6474",
+      "artifact_state": "complete",
+      "branch": "protocol_identifiability",
+      "bytes": 119339,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "all_gates",
+        "evidence_path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+        "expected": "passed",
+        "observed": "passed"
+      },
+      "honest_verdict": "complete: declared V557 support identifies the target effect within the frozen finite policy class; no LLM was run",
+      "load_error": "",
+      "path": "results/experiment_6474_protocol_identifiability_and_receipt_preflight.json",
+      "readiness_fields": {
+        "protocol_identifying_score": 1.0
+      },
+      "sha256": "sha256:b008c80ecde1aad32f947b0c7d1d7fc3c1a99a4f472ad3e9e711aa006e3aebd6",
+      "status": "complete",
+      "task_id": "exp6474-protocol-identifiability-and-receipt-preflight",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {},
+        "critical_count": null,
+        "evidence_path": "results/experiment_6475_v557_primary_source_and_product_state.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6475",
+      "artifact_state": "complete",
+      "branch": "source_receipt",
+      "bytes": 290722,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "terminal_artifact_loaded",
+        "evidence_path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+        "expected": "present",
+        "observed": "complete"
+      },
+      "honest_verdict": "complete_primary_source_receipt: source pages identify current claims only; no product, hardware, model, API, or ARC execution path was invoked.",
+      "load_error": "",
+      "path": "results/experiment_6475_v557_primary_source_and_product_state.json",
+      "readiness_fields": {},
+      "sha256": "sha256:20140cbdab7156edef48648c20523a1314d638c82c160dcc52b804a8ac115def",
+      "status": "complete_primary_source_receipt",
+      "task_id": "exp6475-v557-primary-source-and-product-state",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6476_v556_corpus_label_commitment_forensic.json": 0
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6476",
+      "artifact_state": "complete",
+      "branch": "corpus_retirement",
+      "bytes": 1898236,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "all_held_units_have_label_precommit_proof",
+        "evidence_path": "data/research/experiment_6463_sota_fixed_policy_candidate_corpus_v2/manifest/fixed_policy_problems_v2.json",
+        "expected": true,
+        "observed": false
+      },
+      "honest_verdict": "complete: retire_lineage because Exp6463 lacks immutable pre-inference held label and membership proof; no new inference or labels were created",
+      "load_error": "",
+      "path": "results/experiment_6476_v556_corpus_label_commitment_forensic.json",
+      "readiness_fields": {
+        "corpus_label_commitment_salvage_score": 0.0
+      },
+      "sha256": "sha256:6fba9aa47f6070acbca9192c8c6c15898d3b3ef29f38203bebd9750ad3ad650c",
+      "status": "complete_forensic_retire_lineage",
+      "task_id": "exp6476-v556-corpus-label-commitment-forensic",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6477_backend_neutral_exact_constraint_record.json": 0
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6477_backend_neutral_exact_constraint_record.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6477",
+      "artifact_state": "complete",
+      "branch": "exact_record",
+      "bytes": 244717,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "all_gates",
+        "evidence_path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+        "expected": "passed",
+        "observed": "passed"
+      },
+      "honest_verdict": "complete: Z3 and exhaustive replay agree within the declared finite-domain record; scalar energy remains diagnostic only",
+      "load_error": "",
+      "path": "results/experiment_6477_backend_neutral_exact_constraint_record.json",
+      "readiness_fields": {
+        "exact_constraint_record_ready_score": 1.0
+      },
+      "sha256": "sha256:ee7124a26c530a5a9e8ad841b2a9ffaa874fd8a01e38684a3708bb50fe875684",
+      "status": "complete",
+      "task_id": "exp6477-backend-neutral-exact-constraint-record",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6478_identifiable_held_exact_energy_selection.json": 0
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6478_identifiable_held_exact_energy_selection.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6478",
+      "artifact_state": "complete",
+      "branch": "exact_energy_selection",
+      "bytes": 1662428,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "terminal_artifact_loaded",
+        "evidence_path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+        "expected": "present",
+        "observed": "complete"
+      },
+      "honest_verdict": "complete_positive: exact-energy selection improves held exact success over first and shuffled controls; exact backend remains the oracle",
+      "load_error": "",
+      "path": "results/experiment_6478_identifiable_held_exact_energy_selection.json",
+      "readiness_fields": {
+        "held_exact_energy_selection_ready_score": 1.0
+      },
+      "sha256": "sha256:b07d36c0c3745cea7f4c053640dbd3cf05ac7bc4320a749fceadf19cdd97bfb1",
+      "status": "complete",
+      "task_id": "exp6478-identifiable-held-exact-energy-selection",
+      "zero_byte": false
+    },
+    {
+      "adversarial_status": {
+        "adversarial_verify_exit_codes": {
+          ".venv/bin/python scripts/adversarial_verify.py results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json": 0
+        },
+        "critical_count": null,
+        "evidence_path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json:tests_run",
+        "flag_count": null,
+        "status": "not_declared_in_artifact"
+      },
+      "artifact_disposition": "complete_terminal_state",
+      "artifact_key": "exp6479",
+      "artifact_state": "complete",
+      "branch": "factor_cache_adapter",
+      "bytes": 55994,
+      "exists": true,
+      "gate_diagnostics": {
+        "check": "terminal_artifact_loaded",
+        "evidence_path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+        "expected": "present",
+        "observed": "complete"
+      },
+      "honest_verdict": "success: default-off verify-repair factor-cache shadow adapter shipped",
+      "load_error": "",
+      "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+      "readiness_fields": {
+        "factor_cache_shadow_adapter_ready_score": 1.0
+      },
+      "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+      "status": "success_ready",
+      "task_id": "exp6479-verify-repair-factor-cache-shadow-adapter",
+      "zero_byte": false
+    }
+  ],
+  "verifier_is_oracle": true
+}

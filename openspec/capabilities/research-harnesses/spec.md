@@ -6057,6 +6057,152 @@ the artifact makes no model-ranking claim.
 |---|---|---|
 | REQ-INFRA-6463 | Planned: `python/carnot/experiment_6463_sota_fixed_policy_candidate_corpus_v2.py`; terminal artifact `results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json`. | Planned: `tests/python/test_experiment_6463_sota_fixed_policy_candidate_corpus_v2.py`. |
 
+## REQ-INFRA-6480: V557 Terminal Evidence Freeze SHALL Preserve V558 Branch Boundaries Without Queue Activation
+
+Carnot SHALL provide Exp6480 at
+`python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6480_v557_terminal_evidence_and_v558_preflight --date 20260821`
+SHALL write
+`results/experiment_6480_v557_terminal_evidence_and_v558_preflight.json`.
+
+Exp6480 SHALL freeze the seven active V557 task artifacts, Exp6473 through
+Exp6479. It SHALL record one terminal row per task. Each row SHALL include the
+task id, artifact path, existence, byte size, SHA-256 hash, terminal artifact
+state, `status`, `honest_verdict`, readiness fields, normalized gate
+diagnostics, and adversarial status. Missing, zero-byte, malformed, blocked,
+null, and complete artifacts SHALL remain separate states.
+
+Exp6480 SHALL recompute branch boundaries only from upstream artifacts. It
+SHALL recompute the Exp6463 lineage retirement from Exp6476. The boundary
+SHALL state that V558 may create a new prospective lineage. It SHALL state that
+V558 may not reuse Exp6463 held evidence.
+
+Exp6480 SHALL recompute `v557_factor_cache_ready_score` only from Exp6479
+`factor_cache_shadow_adapter_ready_score` and exact default-off,
+write-admission, persistence, rollback, and test gates. It SHALL not claim a
+continuous-learning benefit or release authority.
+
+Exp6480 SHALL recompute `v557_arc_shield_ready_score` only from Exp6471
+`arc_safety_shield_ready_score`, current adversarial status, and the no-solve
+boundary. It SHALL not claim policy improvement or an ARC solve.
+
+Exp6480 SHALL recompute exact-energy evidence status from Exp6477 and Exp6478.
+It SHALL preserve the Exp6478 result as finite no-LLM unit-seed evidence. It
+SHALL not extend that result to local-SOTA model outputs.
+
+Exp6480 SHALL set `staged_queue_validation_performed=false`,
+`roadmap_activation_performed=false`, and `unrelated_branch_gate_count=0`.
+It SHALL not validate or activate a roadmap. It SHALL not repair or rerun any
+V557 science task.
+
+The terminal artifact SHALL include `status`, `v557_terminal_rows`,
+`artifact_hash_manifest`, `retirement_boundary_rows`,
+`exact_energy_evidence_boundary`, `v557_factor_cache_ready_score`,
+`v557_arc_shield_ready_score`, `staged_queue_validation_performed`,
+`roadmap_activation_performed`, `unrelated_branch_gate_count`,
+`per_unit_rows`, `aggregate_row_recomputation`, `protected_files_unchanged`,
+`gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`. `verifier_is_oracle` SHALL be true only
+for hashes and deterministic row arithmetic.
+
+Field principles SHALL use this map:
+
+| Field | Principle |
+|---|---|
+| `status` | A terminal status distinguishes a completed evidence freeze from an interrupted handoff. |
+| `v557_terminal_rows` | One row per active V557 task prevents missing or blocked evidence from disappearing in a summary. |
+| `artifact_hash_manifest` | Hashes bind each terminal determination to the exact evidence bytes. |
+| `retirement_boundary_rows` | Explicit rows keep the invalid Exp6463 lineage from returning under a new name. |
+| `exact_energy_evidence_boundary` | The boundary preserves Exp6478 as a finite no-LLM result and prevents a false local-SOTA claim. |
+| `v557_factor_cache_ready_score` | A narrow score gives later CSL work a same-roadmap gate without granting benefit or release authority. |
+| `v557_arc_shield_ready_score` | A narrow score confirms the generic no-solve shield without claiming policy improvement. |
+| `staged_queue_validation_performed` | A false value proves this task did not repeat the retired queue-transition scope. |
+| `roadmap_activation_performed` | A false value keeps evidence aggregation separate from conductor state changes. |
+| `unrelated_branch_gate_count` | Zero unrelated gates prevents an infrastructure result from suppressing independent science. |
+| `per_unit_rows` | Task rows make every aggregate and branch boundary independently checkable. |
+| `aggregate_row_recomputation` | Row-derived aggregates catch summaries that disagree with terminal evidence. |
+| `protected_files_unchanged` | The task must not alter the active roadmap, conductor, registry, or public results. |
+| `gate_check_summary` | Any blocked verdict names the failed check, expected value, observed value, and evidence path. |
+| `preconditions_checked` | Precondition receipts prove the expected artifacts and repository state existed before aggregation. |
+| `inference_substrate` | Declaring aggregation_from_upstream_artifacts prevents a no-model audit from being read as live inference. |
+| `verifier_is_oracle` | Only deterministic hashes and row arithmetic are authoritative in this task. |
+| `field_principles` | A field-to-principle map preserves the reason for every evidence field. |
+| `field_provenance` | Exact source paths and hashes make each value traceable. |
+| `random_seed` | A fixed seed makes attack ordering reproducible. |
+| `duration_s` | Measured wall time detects a bootstrap-only artifact. |
+| `tests_run` | Recorded commands distinguish executed checks from intended checks. |
+| `reproducibility_checksum` | A stable checksum detects later drift in inputs or the terminal artifact. |
+| `honest_verdict` | The verdict states completion and each branch boundary without promoting a science claim. |
+
+### SCENARIO-INFRA-6480-1: Seven V557 Terminal Rows Are Frozen
+
+GIVEN completed V557 artifacts Exp6473 through Exp6479
+WHEN Exp6480 builds terminal rows
+THEN each active V557 task has one row with path, size, hash, status,
+`honest_verdict`, readiness fields, gate diagnostics, and adversarial status.
+
+**Spec traces:** REQ-INFRA-6480
+
+### SCENARIO-INFRA-6480-2: Artifact States Stay Distinct
+
+GIVEN missing, zero-byte, malformed, blocked, null, and complete artifacts
+WHEN Exp6480 classifies artifact state
+THEN each state remains explicit and cannot be merged into a summary-only
+terminal result.
+
+**Spec traces:** REQ-INFRA-6480
+
+### SCENARIO-INFRA-6480-3: Exp6463 Lineage Retirement Is Recomputed
+
+GIVEN Exp6476 reports missing immutable pre-inference held label and membership
+proof
+WHEN Exp6480 writes `retirement_boundary_rows`
+THEN Exp6463 is retired for held evidence reuse, while a new prospective V558
+lineage remains allowed.
+
+**Spec traces:** REQ-INFRA-6480
+
+### SCENARIO-INFRA-6480-4: Narrow Readiness Scores Use Only Allowed Inputs
+
+GIVEN Exp6479 and Exp6471 readiness fields
+WHEN Exp6480 computes `v557_factor_cache_ready_score` and
+`v557_arc_shield_ready_score`
+THEN the factor score uses only default-off, exact write-admission,
+persistence, rollback, and test gates
+AND the ARC score uses only shield readiness, adversarial status, and
+`no_solve_claim`.
+
+**Spec traces:** REQ-INFRA-6480
+
+### SCENARIO-INFRA-6480-5: Exact-Energy Boundary Does Not Become Local-SOTA
+
+GIVEN Exp6477 exact-record readiness and Exp6478 finite no-LLM selection rows
+WHEN Exp6480 computes `exact_energy_evidence_boundary`
+THEN it records finite unit-seed support and sets local-SOTA extension false.
+
+**Spec traces:** REQ-INFRA-6480
+
+### SCENARIO-INFRA-6480-6: Artifact Is Annotated And Non-Activating
+
+GIVEN hashes, rows, gates, protected files, and command receipts
+WHEN Exp6480 validates the artifact
+THEN every required field has a principle and provenance, the checksum
+matches, protected files are unchanged, `staged_queue_validation_performed` is
+false, `roadmap_activation_performed` is false, and
+`unrelated_branch_gate_count` is zero.
+
+**Spec traces:** REQ-INFRA-6480
+
+## Implementation Status (REQ-INFRA-6480)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6480 | Planned: `python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py`; terminal artifact `results/experiment_6480_v557_terminal_evidence_and_v558_preflight.json`. | Planned: `tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py`. |
+
 ## REQ-INFRA-6351: V547 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
 
 Carnot SHALL build Exp6351 as a deterministic V547 post-marker source sweep
