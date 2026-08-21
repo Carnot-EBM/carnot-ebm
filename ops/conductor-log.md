@@ -16090,3 +16090,17 @@ code |
 | 2026-08-19 20:49 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-08-19 20:52 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-08-19 20:54 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-21 02:09 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-21 02:12 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-21 02:14 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-21 02:16 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-21 02:18 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-21 02:21 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-21 02:23 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-21 02:25 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-21 02:27 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-21 02:29 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-21 02:32 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-21 02:34 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-21 02:36 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-21 02:38 UTC | Milestone 2026.08.557 activated | OK | 7 tasks queued |
