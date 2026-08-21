@@ -16251,3 +16251,4 @@ code |
 | 2026-08-21 19:16 UTC | Gated on Exp6493 readiness: exact-checker compleme | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6493-gated-decomposed-trajectory-energy-a |
 | 2026-08-21 19:32 UTC | Bounded factor-pool capacity, recurrence, corrupti | OK | 103 passed, 1 warning in 12.13s |
 | 2026-08-21 19:50 UTC | Independent continuous-learning action, evidence,  | OK | 87 passed, 1 warning in 12.40s |
+| 2026-08-21 20:07 UTC | ARC conservative prefix-energy alignment with late | OK | 86 passed, 1 warning in 9.94s |
