@@ -52098,3 +52098,119 @@ terminal verdict prefix is present.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6461 | Planned (`python/carnot/experiment_6461_v556_sota_source_and_benchmark_delta.py`, `results/experiment_6461_v556_sota_source_and_benchmark_delta.json`) | Planned (`tests/python/test_experiment_6461_v556_sota_source_and_benchmark_delta.py`) |
+
+### REQ-REPORT-6473: V556 Terminal Evidence And Retirement Boundary
+
+The Exp6473 workflow SHALL freeze the expected V556 terminal artifacts for
+Exp6460 through Exp6472 as found on disk. It SHALL resolve each expected
+deliverable path, byte count, SHA-256 hash, artifact state, `status`,
+`honest_verdict`, readiness fields, eligibility fields, and gate diagnostics.
+Absent and zero-byte files SHALL remain explicit rows. Exp6465 and Exp6467
+SHALL be recorded as not executed when their artifacts are absent. That absence
+SHALL NOT become a negative science finding.
+
+The workflow SHALL recompute science, continuous-learning, ARC, and hardware
+claim eligibility from the row rules declared by Exp6472. It SHALL compare the
+independent booleans and reasons with the checked-in Exp6472 capstone fields.
+It SHALL not trust the Exp6472 booleans as input to the recomputation.
+
+The workflow SHALL recompute the repeated-verdict retirement boundary from the
+active roadmap prior-failure rules. It SHALL emit retirement rows for Exp6460,
+Exp6464, and Exp6466 only when `retire_if_same_verdict=true` and the current
+terminal shape matches the prior verdict shape. The row SHALL distinguish the
+mechanical retirement of a scope from the mere fact that an artifact is blocked.
+
+The workflow SHALL NOT validate `research-roadmap-next.yaml`, activate a queue,
+repair V556, edit `scripts/research_conductor.py`, or create a downstream gate.
+It SHALL set `staged_queue_validation_performed=false` and
+`downstream_gate_count=0`.
+
+The Exp6473 artifact SHALL be written to
+`results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json`
+with `inference_substrate=aggregation_from_upstream_artifacts`.
+`verifier_is_oracle` SHALL be true only for SHA-256 checks and deterministic row
+arithmetic. The artifact SHALL include, at minimum, these required fields:
+`status`,
+`v556_terminal_rows`, `artifact_hash_manifest`,
+`capstone_eligibility_recomputation`, `retirement_boundary_rows`,
+`staged_queue_validation_performed`, `downstream_gate_count`, `per_unit_rows`,
+`aggregate_row_recomputation`, `protected_files_unchanged`,
+`gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`. `field_principles` SHALL cover every required field with the
+task prompt principle. `field_provenance` SHALL name exact source paths,
+upstream artifact paths, or deterministic reducers for every required field.
+
+Field principles SHALL be:
+
+- `status`: "A terminal state separates completed evidence aggregation from an interrupted handoff."
+- `v556_terminal_rows`: "One row per task prevents missing artifacts from disappearing inside a milestone summary."
+- `artifact_hash_manifest`: "Content hashes bind each determination to the exact evidence bytes that were audited."
+- `capstone_eligibility_recomputation`: "Independent recomputation prevents inherited capstone booleans from becoming circular proof."
+- `retirement_boundary_rows`: "Explicit retirement rows stop repeated blocked techniques from returning under new names."
+- `staged_queue_validation_performed`: "A false value proves this task did not repeat the retired queue-transition scope."
+- `downstream_gate_count`: "Zero downstream gates prevents an infrastructure finding from suppressing independent science."
+- `per_unit_rows`: "Task-level rows make every aggregate and eligibility decision independently checkable."
+- `aggregate_row_recomputation`: "Row-derived aggregates catch summaries that disagree with their own evidence."
+- `protected_files_unchanged`: "Protected-file receipts prevent evidence aggregation from rewriting the system it audits."
+- `gate_check_summary`: "Any blocked verdict must name the failed check and observed value instead of hiding behind a status label."
+- `preconditions_checked`: "Precondition receipts prove the expected artifacts and repository state existed before aggregation."
+- `inference_substrate`: "Declaring aggregation_from_upstream_artifacts prevents a no-model audit from being misread as live inference."
+- `verifier_is_oracle`: "Only deterministic hash and row arithmetic may be treated as authoritative in this task."
+- `field_principles`: "A field-to-principle map preserves why each evidence contract exists."
+- `field_provenance`: "Exact source paths make each field traceable to a row, artifact, or deterministic reducer."
+- `random_seed`: "A fixed seed makes any ordering or attack sampling reproducible."
+- `duration_s`: "Measured wall time detects bootstrap-only or fabricated completion."
+- `tests_run`: "Recorded commands distinguish executed verification from intended verification."
+- `reproducibility_checksum`: "A stable checksum detects later drift in inputs or the terminal artifact."
+- `honest_verdict`: "A self-declared terminal result forces completion, blocking, and eligibility to be stated plainly."
+
+#### SCENARIO-REPORT-6473-TERMINAL-ROWS: V556 Tasks Stay Visible
+
+**Given** the V556 task set is Exp6460 through Exp6472
+**When** Exp6473 builds terminal rows
+**Then** it emits exactly thirteen rows, records present artifact bytes and
+hashes, records absent artifacts, and preserves blocked source and gate
+diagnostics without repairing the upstream artifact.
+
+#### SCENARIO-REPORT-6473-CLAIM-RECOMPUTE: Capstone Booleans Are Rechecked
+
+**Given** Exp6472 declares row rules for science, continuous-learning, ARC, and
+hardware eligibility
+**When** Exp6473 recomputes eligibility from upstream rows
+**Then** it reports science and hardware ineligible, continuous-learning and
+ARC eligible, and records whether each independent result matches the Exp6472
+capstone field.
+
+#### SCENARIO-REPORT-6473-RETIREMENT-BOUNDARY: Repeated Shapes Retire Narrowly
+
+**Given** the active roadmap declares prior failures with
+`retire_if_same_verdict=true`
+**When** Exp6473 compares current terminal shapes to prior verdict shapes
+**Then** Exp6460, Exp6464, and Exp6466 are mechanically retired, while missing
+Exp6465 and Exp6467 remain no-result rows rather than retired findings.
+
+#### SCENARIO-REPORT-6473-NO-QUEUE-GATE: No Transition Scope Repeats
+
+**Given** Exp6473 is an evidence aggregation task
+**When** it writes the artifact
+**Then** `staged_queue_validation_performed=false`,
+`downstream_gate_count=0`, protected files remain unchanged, and any blocked
+row carries a normalized gate diagnostic with the failed check, expected value,
+observed value, and evidence path.
+
+#### SCENARIO-REPORT-6473-SCHEMA: Artifact Is Machine-Checkable
+
+**Given** terminal rows, hash manifests, eligibility recomputation, retirement
+rows, field maps, and command receipts are assembled
+**When** Exp6473 validates the artifact
+**Then** every required field is present, every required field has a principle
+and provenance entry, the checksum matches, the substrate is aggregation only,
+and the terminal verdict uses a valid prefix.
+
+## Implementation Status (REQ-REPORT-6473)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6473 | Planned (`python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py`, `results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json`) | Planned (`tests/python/test_experiment_6473_v556_terminal_evidence_and_retirement_boundary.py`) |

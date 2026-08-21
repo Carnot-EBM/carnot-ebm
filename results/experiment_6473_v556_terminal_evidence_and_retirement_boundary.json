@@ -1,0 +1,1913 @@
+{
+  "status": "complete_v556_terminal_evidence_and_retirement_boundary",
+  "v556_terminal_rows": [
+    {
+      "task_id": "exp6460-v556-terminal-handoff-and-queue-integrity",
+      "artifact_key": "exp6460",
+      "claim_lane": "infrastructure",
+      "path": "results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json",
+      "exists": true,
+      "zero_byte": false,
+      "bytes": 83280,
+      "sha256": "sha256:7fdf941381894c2bc395cd46bbeee5c4ea3648abc56fdc854efadc8fda4d42ad",
+      "artifact_state": "blocked",
+      "execution_state": "terminal_artifact_loaded",
+      "status": "complete_blocked_v556_queue_integrity_failed",
+      "honest_verdict": "complete_blocked_v556_queue_integrity_failed: V555 terminal facts are preserved but a V556 queue contract failed",
+      "terminal_verdict": "complete_blocked_v556_queue_integrity_failed",
+      "readiness_fields": {},
+      "eligibility_fields": {},
+      "eligibility": {
+        "eligible": false,
+        "reason": "mechanically_retired_same_verdict_scope"
+      },
+      "gate_diagnostics": {
+        "check": "tests_run",
+        "expected": "every tests_run.exit_code is 0",
+        "observed": [
+          {
+            "command": ".venv/bin/pytest tests/python -q",
+            "exit_code": 3,
+            "summary": "209 failed, 14219 passed, 14 skipped, 145 warnings, 14 errors in 455.57s; xdist workers crashed; Z3 segmentation fault observed; final internal error at tests/python/test_compliance_checker.py::TestComplianceEnergyCheckerTrain::test_train_custom_lr"
+          }
+        ],
+        "evidence_path": "/tmp/carnot_exp6460_test_receipts.json",
+        "raw": {
+          "failed_check": "tests_run",
+          "expected_condition": "every tests_run.exit_code is 0",
+          "observed_value": [
+            {
+              "command": ".venv/bin/pytest tests/python -q",
+              "exit_code": 3,
+              "summary": "209 failed, 14219 passed, 14 skipped, 145 warnings, 14 errors in 455.57s; xdist workers crashed; Z3 segmentation fault observed; final internal error at tests/python/test_compliance_checker.py::TestComplianceEnergyCheckerTrain::test_train_custom_lr"
+            }
+          ],
+          "evidence_path": "/tmp/carnot_exp6460_test_receipts.json",
+          "failed_checks": [
+            {
+              "failed_check": "tests_run",
+              "expected_condition": "every tests_run.exit_code is 0",
+              "observed_value": [
+                {
+                  "command": ".venv/bin/pytest tests/python -q",
+                  "exit_code": 3,
+                  "summary": "209 failed, 14219 passed, 14 skipped, 145 warnings, 14 errors in 455.57s; xdist workers crashed; Z3 segmentation fault observed; final internal error at tests/python/test_compliance_checker.py::TestComplianceEnergyCheckerTrain::test_train_custom_lr"
+                }
+              ],
+              "evidence_path": "/tmp/carnot_exp6460_test_receipts.json"
+            }
+          ]
+        }
+      },
+      "retirement": {
+        "task_id": "exp6460-v556-terminal-handoff-and-queue-integrity",
+        "prior_experiment_id": "exp6448-v555-terminal-handoff-and-queue-integrity",
+        "prior_verdict": "complete_blocked_v555_queue_integrity_failed: V554 terminal facts are preserved but a V555 queue contract failed",
+        "current_status": "complete_blocked_v556_queue_integrity_failed",
+        "current_honest_verdict": "complete_blocked_v556_queue_integrity_failed: V555 terminal facts are preserved but a V556 queue contract failed",
+        "current_terminal_verdict": "complete_blocked_v556_queue_integrity_failed",
+        "artifact_state": "blocked",
+        "artifact_blocked": true,
+        "retire_if_same_verdict": true,
+        "same_verdict_shape": true,
+        "mechanical_retirement": true,
+        "mere_blocked_without_retirement": false,
+        "boundary_class": "mechanically_retired_scope",
+        "retired_because": "retire_if_same_verdict matched terminal shape",
+        "evidence_path": "results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json",
+        "source_path": "research-roadmap.yaml:tasks.exp6473.prior_failures[0]"
+      },
+      "cannot_support_result": false,
+      "load_error": ""
+    },
+    {
+      "task_id": "exp6461-v556-primary-source-freshness-receipt",
+      "artifact_key": "exp6461",
+      "claim_lane": "source_receipt",
+      "path": "results/experiment_6461_v556_sota_source_and_benchmark_delta.json",
+      "exists": true,
+      "zero_byte": false,
+      "bytes": 104040,
+      "sha256": "sha256:364434d6bf9a0cb2515739a8a5c08b02fcb141d926322d8b7de7f14485b256c5",
+      "artifact_state": "blocked",
+      "execution_state": "terminal_artifact_loaded",
+      "status": "blocked_primary_source_receipt",
+      "honest_verdict": "blocked_primary_source_receipt: primary pages are source receipts only; no product, hardware, model, or ARC execution oracle was invoked.",
+      "terminal_verdict": "blocked_primary_source_receipt",
+      "readiness_fields": {},
+      "eligibility_fields": {},
+      "eligibility": {
+        "eligible": false,
+        "reason": "source_receipt_is_not_execution_oracle"
+      },
+      "gate_diagnostics": {
+        "check": "arc_primary_score",
+        "expected": "rendered_primary_loaded_data",
+        "observed": "blocked_no_primary_loaded_data",
+        "evidence_path": "results/experiment_6461_v556_sota_source_and_benchmark_delta.json",
+        "raw": {
+          "checked": [
+            "source_receipts_present",
+            "source_hashes_present",
+            "arxiv_boundary_primary_sourced",
+            "arc_primary_score",
+            "protected_files_unchanged"
+          ],
+          "failed_checks": [
+            {
+              "check": "arc_primary_score",
+              "expected": "rendered_primary_loaded_data",
+              "observed": "blocked_no_primary_loaded_data"
+            }
+          ],
+          "status": "failed"
+        }
+      },
+      "retirement": {
+        "mechanical_retirement": false
+      },
+      "cannot_support_result": false,
+      "load_error": ""
+    },
+    {
+      "task_id": "exp6462-sota-raw-persistence-uniqueness-canary",
+      "artifact_key": "exp6462",
+      "claim_lane": "raw_persistence",
+      "path": "results/experiment_6462_sota_raw_persistence_uniqueness_canary.json",
+      "exists": true,
+      "zero_byte": false,
+      "bytes": 913758,
+      "sha256": "sha256:246d3680fcba2baf6e0c883bad86e12cfe25360ecbafca56e1f841cb61e80c32",
+      "artifact_state": "complete",
+      "execution_state": "terminal_artifact_loaded",
+      "status": "success",
+      "honest_verdict": "success: raw persistence canary passed with one event per durable path",
+      "terminal_verdict": "success",
+      "readiness_fields": {
+        "raw_persistence_canary_ready_score": 1.0
+      },
+      "eligibility_fields": {},
+      "eligibility": {
+        "eligible": true,
+        "reason": "raw_persistence_canary_supports_identity_only"
+      },
+      "gate_diagnostics": {
+        "check": "all_gates",
+        "expected": "passed",
+        "observed": "passed",
+        "evidence_path": "results/experiment_6462_sota_raw_persistence_uniqueness_canary.json",
+        "raw": "all raw persistence gates passed"
+      },
+      "retirement": {
+        "mechanical_retirement": false
+      },
+      "cannot_support_result": false,
+      "load_error": ""
+    },
+    {
+      "task_id": "exp6463-sota-fixed-policy-candidate-corpus-v2",
+      "artifact_key": "exp6463",
+      "claim_lane": "science_corpus",
+      "path": "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+      "exists": true,
+      "zero_byte": false,
+      "bytes": 12027937,
+      "sha256": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+      "artifact_state": "complete",
+      "execution_state": "terminal_artifact_loaded",
+      "status": "complete_with_findings",
+      "honest_verdict": "complete: fixed-policy corpus v2 finished but readiness gate stayed closed",
+      "terminal_verdict": "complete_with_findings",
+      "readiness_fields": {
+        "sota_corpus_ready_score": 0.0
+      },
+      "eligibility_fields": {},
+      "eligibility": {
+        "eligible": false,
+        "reason": "sota_corpus_ready_score_not_open"
+      },
+      "gate_diagnostics": {
+        "check": "label_commitments",
+        "expected": "readiness gate open",
+        "observed": "readiness gate closed",
+        "evidence_path": "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "raw": "readiness closed: label_commitments"
+      },
+      "retirement": {
+        "mechanical_retirement": false
+      },
+      "cannot_support_result": false,
+      "load_error": ""
+    },
+    {
+      "task_id": "exp6464-fixed-slot-grounding-exact-logic-ab",
+      "artifact_key": "exp6464",
+      "claim_lane": "science_grounding",
+      "path": "results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json",
+      "exists": true,
+      "zero_byte": false,
+      "bytes": 2391,
+      "sha256": "sha256:8aad859b8a00ac9c0bd6163288e1b5ed4cd642519e3da99403037db247a977f1",
+      "artifact_state": "blocked",
+      "execution_state": "terminal_artifact_loaded",
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "terminal_verdict": "blocked",
+      "readiness_fields": {},
+      "eligibility_fields": {},
+      "eligibility": {
+        "eligible": false,
+        "reason": "mechanically_retired_same_verdict_scope"
+      },
+      "gate_diagnostics": {
+        "check": "exp6463-sota-fixed-policy-candidate-corpus-v2.sota_corpus_ready_score",
+        "expected": "1.0",
+        "observed": "0.0",
+        "evidence_path": "results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json",
+        "raw": "1 of 1 gate(s) failed; first failure: exp6463-sota-fixed-policy-candidate-corpus-v2.sota_corpus_ready_score (actual=0.0 == expected=1.0)"
+      },
+      "retirement": {
+        "task_id": "exp6464-fixed-slot-grounding-exact-logic-ab",
+        "prior_experiment_id": "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
+        "prior_verdict": "blocked_gate_check_failed",
+        "current_status": "blocked",
+        "current_honest_verdict": "blocked_gate_check_failed",
+        "current_terminal_verdict": "blocked",
+        "artifact_state": "blocked",
+        "artifact_blocked": true,
+        "retire_if_same_verdict": true,
+        "same_verdict_shape": true,
+        "mechanical_retirement": true,
+        "mere_blocked_without_retirement": false,
+        "boundary_class": "mechanically_retired_scope",
+        "retired_because": "retire_if_same_verdict matched terminal shape",
+        "evidence_path": "results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json",
+        "source_path": "results/experiment_6472_v556_adversarial_capstone.json:repeated_prior_verdict_retirements"
+      },
+      "cannot_support_result": false,
+      "load_error": ""
+    },
+    {
+      "task_id": "exp6465-representation-objective-causal-ab-v2",
+      "artifact_key": "exp6465",
+      "claim_lane": "science_objective",
+      "path": "results/experiment_6465_representation_objective_causal_ab_v2.json",
+      "exists": false,
+      "zero_byte": false,
+      "bytes": 0,
+      "sha256": null,
+      "artifact_state": "missing",
+      "execution_state": "not_executed",
+      "status": null,
+      "honest_verdict": null,
+      "terminal_verdict": "missing_artifact",
+      "readiness_fields": {},
+      "eligibility_fields": {},
+      "eligibility": {
+        "eligible": false,
+        "reason": "absent_artifact_no_result"
+      },
+      "gate_diagnostics": {
+        "check": "artifact_presence",
+        "expected": "present nonzero valid JSON",
+        "observed": "missing",
+        "evidence_path": "results/experiment_6465_representation_objective_causal_ab_v2.json",
+        "raw": null
+      },
+      "retirement": {
+        "mechanical_retirement": false
+      },
+      "cannot_support_result": true,
+      "load_error": ""
+    },
+    {
+      "task_id": "exp6466-held-verifier-budget-allocation-v2",
+      "artifact_key": "exp6466",
+      "claim_lane": "science_allocation",
+      "path": "results/experiment_6466_held_verifier_budget_allocation_v2.json",
+      "exists": true,
+      "zero_byte": false,
+      "bytes": 2385,
+      "sha256": "sha256:e6653456c9444734c8f64a68c2a63092a8fbacae256d5054670c7103bb889405",
+      "artifact_state": "blocked",
+      "execution_state": "terminal_artifact_loaded",
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "terminal_verdict": "blocked",
+      "readiness_fields": {},
+      "eligibility_fields": {},
+      "eligibility": {
+        "eligible": false,
+        "reason": "mechanically_retired_same_verdict_scope"
+      },
+      "gate_diagnostics": {
+        "check": "exp6463-sota-fixed-policy-candidate-corpus-v2.sota_corpus_ready_score",
+        "expected": "1.0",
+        "observed": "0.0",
+        "evidence_path": "results/experiment_6466_held_verifier_budget_allocation_v2.json",
+        "raw": "1 of 1 gate(s) failed; first failure: exp6463-sota-fixed-policy-candidate-corpus-v2.sota_corpus_ready_score (actual=0.0 == expected=1.0)"
+      },
+      "retirement": {
+        "task_id": "exp6466-held-verifier-budget-allocation-v2",
+        "prior_experiment_id": "exp6453-held-verifier-budget-allocation-ab",
+        "prior_verdict": "blocked_gate_check_failed",
+        "current_status": "blocked",
+        "current_honest_verdict": "blocked_gate_check_failed",
+        "current_terminal_verdict": "blocked",
+        "artifact_state": "blocked",
+        "artifact_blocked": true,
+        "retire_if_same_verdict": true,
+        "same_verdict_shape": true,
+        "mechanical_retirement": true,
+        "mere_blocked_without_retirement": false,
+        "boundary_class": "mechanically_retired_scope",
+        "retired_because": "retire_if_same_verdict matched terminal shape",
+        "evidence_path": "results/experiment_6466_held_verifier_budget_allocation_v2.json",
+        "source_path": "results/experiment_6472_v556_adversarial_capstone.json:repeated_prior_verdict_retirements"
+      },
+      "cannot_support_result": false,
+      "load_error": ""
+    },
+    {
+      "task_id": "exp6467-held-exact-constraint-energy-selection-v2",
+      "artifact_key": "exp6467",
+      "claim_lane": "science_energy",
+      "path": "results/experiment_6467_held_exact_constraint_energy_selection_v2.json",
+      "exists": false,
+      "zero_byte": false,
+      "bytes": 0,
+      "sha256": null,
+      "artifact_state": "missing",
+      "execution_state": "not_executed",
+      "status": null,
+      "honest_verdict": null,
+      "terminal_verdict": "missing_artifact",
+      "readiness_fields": {},
+      "eligibility_fields": {},
+      "eligibility": {
+        "eligible": false,
+        "reason": "absent_artifact_no_result"
+      },
+      "gate_diagnostics": {
+        "check": "artifact_presence",
+        "expected": "present nonzero valid JSON",
+        "observed": "missing",
+        "evidence_path": "results/experiment_6467_held_exact_constraint_energy_selection_v2.json",
+        "raw": null
+      },
+      "retirement": {
+        "mechanical_retirement": false
+      },
+      "cannot_support_result": true,
+      "load_error": ""
+    },
+    {
+      "task_id": "exp6468-unique-event-verifier-bounded-csl",
+      "artifact_key": "exp6468",
+      "claim_lane": "continuous_learning",
+      "path": "results/experiment_6468_unique_event_verifier_bounded_csl.json",
+      "exists": true,
+      "zero_byte": false,
+      "bytes": 2005243,
+      "sha256": "sha256:c96c3f73ada25b2280f5a48de67df2c0005b374806481f68fce5c89caf726fab",
+      "artifact_state": "complete",
+      "execution_state": "terminal_artifact_loaded",
+      "status": "success_ready",
+      "honest_verdict": "success: unique-event exact-veto verifier-bounded CSL improved future exact yield",
+      "terminal_verdict": "success_ready",
+      "readiness_fields": {
+        "unique_event_csl_ready_score": 1.0
+      },
+      "eligibility_fields": {},
+      "eligibility": {
+        "eligible": true,
+        "reason": "continuous_learning_row_evidence"
+      },
+      "gate_diagnostics": {
+        "check": "gate_check_summary",
+        "expected": "passed",
+        "observed": null,
+        "evidence_path": "results/experiment_6468_unique_event_verifier_bounded_csl.json",
+        "raw": {
+          "failed_check_count": 0,
+          "failed_checks": [],
+          "gates": {
+            "aggregates_recompute": true,
+            "critical_attacks_fail_closed": true,
+            "exact_veto_precedes_write": true,
+            "model_files_frozen": true,
+            "one_to_one_event_provenance": true,
+            "protected_cases_retained": true,
+            "verifier_beats_frozen_future_yield": true,
+            "verifier_beats_self_signed_future_yield": true,
+            "zero_cpu_fallback": true
+          },
+          "summary": "all readiness gates passed"
+        }
+      },
+      "retirement": {
+        "mechanical_retirement": false
+      },
+      "cannot_support_result": false,
+      "load_error": ""
+    },
+    {
+      "task_id": "exp6469-unique-event-csl-corruption-restart",
+      "artifact_key": "exp6469",
+      "claim_lane": "continuous_learning",
+      "path": "results/experiment_6469_unique_event_csl_corruption_restart.json",
+      "exists": true,
+      "zero_byte": false,
+      "bytes": 854626,
+      "sha256": "sha256:a4edf42cc67255531f042d63b770c5401cc56f841ac75525dc91bae774c97641",
+      "artifact_state": "complete",
+      "execution_state": "terminal_artifact_loaded",
+      "status": "success_ready",
+      "honest_verdict": "success: clean unique-event CSL retained a future exact effect and corrupt events were quarantined, tombstoned, rolled back, and non-resurrecting after restart.",
+      "terminal_verdict": "success_ready",
+      "readiness_fields": {
+        "corruption_restart_ready_score": 1.0
+      },
+      "eligibility_fields": {},
+      "eligibility": {
+        "eligible": true,
+        "reason": "continuous_learning_row_evidence"
+      },
+      "gate_diagnostics": {
+        "check": "gate_check_summary",
+        "expected": "passed",
+        "observed": null,
+        "evidence_path": "results/experiment_6469_unique_event_csl_corruption_restart.json",
+        "raw": {
+          "failed_check_count": 0,
+          "failed_checks": [],
+          "gates": {
+            "aggregate_recompute": true,
+            "attacks_fail_closed": true,
+            "clean_future_exact_effect": true,
+            "corrupt_events_blocked_before_release": true,
+            "held_events_unique": true,
+            "protected_retention": true,
+            "restart_non_resurrection": true,
+            "rollback_restores_last_valid_head": true
+          },
+          "summary": "all readiness gates passed"
+        }
+      },
+      "retirement": {
+        "mechanical_retirement": false
+      },
+      "cannot_support_result": false,
+      "load_error": ""
+    },
+    {
+      "task_id": "exp6470-independent-unique-event-csl-audit",
+      "artifact_key": "exp6470",
+      "claim_lane": "continuous_learning_audit",
+      "path": "results/experiment_6470_independent_unique_event_csl_audit.json",
+      "exists": true,
+      "zero_byte": false,
+      "bytes": 2236353,
+      "sha256": "sha256:6eba33eaae7425c5b582e6c29cf04049304a0b8a3c85be98d961c97c9fdb26d0",
+      "artifact_state": "complete",
+      "execution_state": "terminal_artifact_loaded",
+      "status": "success_ready",
+      "honest_verdict": "success: independent V556 unique-event CSL audit confirms eligible evidence",
+      "terminal_verdict": "success_ready",
+      "readiness_fields": {
+        "csl_audit_eligible_score": 1.0
+      },
+      "eligibility_fields": {},
+      "eligibility": {
+        "eligible": true,
+        "reason": "continuous_learning_row_evidence"
+      },
+      "gate_diagnostics": {
+        "check": "gate_check_summary",
+        "expected": "passed",
+        "observed": null,
+        "evidence_path": "results/experiment_6470_independent_unique_event_csl_audit.json",
+        "raw": {
+          "failed_check_count": 0,
+          "failed_checks": [],
+          "gates": {
+            "attacks_fail_closed": true,
+            "credited_events_unique": true,
+            "critical_discrepancies_zero": true,
+            "duration_plausible": true,
+            "effects_recompute": true,
+            "exact_veto_precedes_writes": true,
+            "held_exposure_zero": true,
+            "protected_cases_retained": true,
+            "raw_evidence_exists": true,
+            "rollback_restart_non_resurrection": true,
+            "row_aggregates_match": true,
+            "upstream_artifacts_resolved": true
+          },
+          "summary": "all eligibility gates passed"
+        }
+      },
+      "retirement": {
+        "mechanical_retirement": false
+      },
+      "cannot_support_result": false,
+      "load_error": ""
+    },
+    {
+      "task_id": "exp6471-arc-generic-safety-shield-objective-ab",
+      "artifact_key": "exp6471",
+      "claim_lane": "arc_safety",
+      "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+      "exists": true,
+      "zero_byte": false,
+      "bytes": 2707067,
+      "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+      "artifact_state": "complete",
+      "execution_state": "terminal_artifact_loaded",
+      "status": "complete_ready",
+      "honest_verdict": "success: Exp6471 generic safety shield passed without a solve claim",
+      "terminal_verdict": "complete_ready",
+      "readiness_fields": {
+        "arc_safety_shield_ready_score": 1.0
+      },
+      "eligibility_fields": {},
+      "eligibility": {
+        "eligible": true,
+        "reason": "arc_safety_shield_no_solve_claim"
+      },
+      "gate_diagnostics": {
+        "check": "gate_check_summary",
+        "expected": "passed",
+        "observed": null,
+        "evidence_path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+        "raw": {
+          "all_ready_gates_passed": true,
+          "checks": {
+            "aggregates_match_rows": true,
+            "bounded_run_complete": true,
+            "critical_attacks_fail_closed": true,
+            "current_critical_findings_zero": true,
+            "full_frozen_safety_roster_not_regressed": true,
+            "g50t_does_not_regress": true,
+            "protected_files_unchanged": true,
+            "shield_preserves_or_improves_held_reachability": true,
+            "source_and_adapter_receipts_clean": true
+          },
+          "failed_gates": [],
+          "readiness_conditions": [
+            "shield_preserves_or_improves_held_reachability",
+            "full_frozen_safety_roster_not_regressed",
+            "g50t_does_not_regress",
+            "aggregates_match_rows",
+            "source_and_adapter_receipts_clean",
+            "protected_files_unchanged",
+            "critical_attacks_fail_closed",
+            "current_critical_findings_zero"
+          ]
+        }
+      },
+      "retirement": {
+        "mechanical_retirement": false
+      },
+      "cannot_support_result": false,
+      "load_error": ""
+    },
+    {
+      "task_id": "exp6472-v556-adversarial-capstone",
+      "artifact_key": "exp6472",
+      "claim_lane": "capstone",
+      "path": "results/experiment_6472_v556_adversarial_capstone.json",
+      "exists": true,
+      "zero_byte": false,
+      "bytes": 744630,
+      "sha256": "sha256:e84705f0a72a0a4b5027c3052f3617223510d275d244f77f615ae29dfd8b52dc",
+      "artifact_state": "complete",
+      "execution_state": "terminal_artifact_loaded",
+      "status": "complete_v556_adversarial_capstone_audit",
+      "honest_verdict": "complete: V556 capstone audit replayable; science_claim_eligible=false; continuous_learning_claim_eligible=true; arc_claim_eligible=true; hardware_claim_eligible=false",
+      "terminal_verdict": "complete_v556_adversarial_capstone_audit",
+      "readiness_fields": {
+        "v556_capstone_ready_score": 1.0
+      },
+      "eligibility_fields": {
+        "science_claim_eligible": {
+          "eligible": false,
+          "reason": "readiness_only_or_broken_gates: corpus readiness was 0 and downstream science artifacts are blocked or missing",
+          "evidence": [
+            "exp6463",
+            "exp6464",
+            "exp6465",
+            "exp6466",
+            "exp6467",
+            "retired_count=3"
+          ]
+        },
+        "continuous_learning_claim_eligible": {
+          "eligible": true,
+          "reason": "unique_event_csl_rows_hashes_exact_veto_and_independent_audit_pass",
+          "evidence": [
+            "exp6468",
+            "exp6469",
+            "exp6470"
+          ]
+        },
+        "arc_claim_eligible": {
+          "eligible": true,
+          "reason": "generic_arc_safety_shield_only_no_solve_or_public_credit_claim",
+          "evidence": [
+            "exp6471"
+          ]
+        },
+        "hardware_claim_eligible": {
+          "eligible": false,
+          "reason": "no_authenticated_hardware_execution_or_speedup_evidence_in_v556",
+          "evidence": []
+        }
+      },
+      "eligibility": {
+        "eligible": true,
+        "reason": "capstone_reference_for_comparison"
+      },
+      "gate_diagnostics": {
+        "check": "gate_check_summary",
+        "expected": "passed",
+        "observed": null,
+        "evidence_path": "results/experiment_6472_v556_adversarial_capstone.json",
+        "raw": {
+          "capstone_audit_complete": true,
+          "failed_upstream_gate_count": 2,
+          "science_branch_promoted": false,
+          "continuous_learning_branch_promoted": true,
+          "arc_branch_promoted": true,
+          "hardware_branch_promoted": false
+        }
+      },
+      "retirement": {
+        "mechanical_retirement": false
+      },
+      "cannot_support_result": false,
+      "load_error": ""
+    }
+  ],
+  "artifact_hash_manifest": {
+    "expected_count": 13,
+    "present_count": 11,
+    "absent_count": 2,
+    "zero_byte_count": 0,
+    "absent_paths": [
+      "results/experiment_6465_representation_objective_causal_ab_v2.json",
+      "results/experiment_6467_held_exact_constraint_energy_selection_v2.json"
+    ],
+    "zero_byte_paths": [],
+    "rows": [
+      {
+        "task_id": "exp6460-v556-terminal-handoff-and-queue-integrity",
+        "path": "results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json",
+        "exists": true,
+        "bytes": 83280,
+        "sha256": "sha256:7fdf941381894c2bc395cd46bbeee5c4ea3648abc56fdc854efadc8fda4d42ad",
+        "artifact_state": "blocked"
+      },
+      {
+        "task_id": "exp6461-v556-primary-source-freshness-receipt",
+        "path": "results/experiment_6461_v556_sota_source_and_benchmark_delta.json",
+        "exists": true,
+        "bytes": 104040,
+        "sha256": "sha256:364434d6bf9a0cb2515739a8a5c08b02fcb141d926322d8b7de7f14485b256c5",
+        "artifact_state": "blocked"
+      },
+      {
+        "task_id": "exp6462-sota-raw-persistence-uniqueness-canary",
+        "path": "results/experiment_6462_sota_raw_persistence_uniqueness_canary.json",
+        "exists": true,
+        "bytes": 913758,
+        "sha256": "sha256:246d3680fcba2baf6e0c883bad86e12cfe25360ecbafca56e1f841cb61e80c32",
+        "artifact_state": "complete"
+      },
+      {
+        "task_id": "exp6463-sota-fixed-policy-candidate-corpus-v2",
+        "path": "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "exists": true,
+        "bytes": 12027937,
+        "sha256": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "artifact_state": "complete"
+      },
+      {
+        "task_id": "exp6464-fixed-slot-grounding-exact-logic-ab",
+        "path": "results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json",
+        "exists": true,
+        "bytes": 2391,
+        "sha256": "sha256:8aad859b8a00ac9c0bd6163288e1b5ed4cd642519e3da99403037db247a977f1",
+        "artifact_state": "blocked"
+      },
+      {
+        "task_id": "exp6465-representation-objective-causal-ab-v2",
+        "path": "results/experiment_6465_representation_objective_causal_ab_v2.json",
+        "exists": false,
+        "bytes": 0,
+        "sha256": null,
+        "artifact_state": "missing"
+      },
+      {
+        "task_id": "exp6466-held-verifier-budget-allocation-v2",
+        "path": "results/experiment_6466_held_verifier_budget_allocation_v2.json",
+        "exists": true,
+        "bytes": 2385,
+        "sha256": "sha256:e6653456c9444734c8f64a68c2a63092a8fbacae256d5054670c7103bb889405",
+        "artifact_state": "blocked"
+      },
+      {
+        "task_id": "exp6467-held-exact-constraint-energy-selection-v2",
+        "path": "results/experiment_6467_held_exact_constraint_energy_selection_v2.json",
+        "exists": false,
+        "bytes": 0,
+        "sha256": null,
+        "artifact_state": "missing"
+      },
+      {
+        "task_id": "exp6468-unique-event-verifier-bounded-csl",
+        "path": "results/experiment_6468_unique_event_verifier_bounded_csl.json",
+        "exists": true,
+        "bytes": 2005243,
+        "sha256": "sha256:c96c3f73ada25b2280f5a48de67df2c0005b374806481f68fce5c89caf726fab",
+        "artifact_state": "complete"
+      },
+      {
+        "task_id": "exp6469-unique-event-csl-corruption-restart",
+        "path": "results/experiment_6469_unique_event_csl_corruption_restart.json",
+        "exists": true,
+        "bytes": 854626,
+        "sha256": "sha256:a4edf42cc67255531f042d63b770c5401cc56f841ac75525dc91bae774c97641",
+        "artifact_state": "complete"
+      },
+      {
+        "task_id": "exp6470-independent-unique-event-csl-audit",
+        "path": "results/experiment_6470_independent_unique_event_csl_audit.json",
+        "exists": true,
+        "bytes": 2236353,
+        "sha256": "sha256:6eba33eaae7425c5b582e6c29cf04049304a0b8a3c85be98d961c97c9fdb26d0",
+        "artifact_state": "complete"
+      },
+      {
+        "task_id": "exp6471-arc-generic-safety-shield-objective-ab",
+        "path": "results/experiment_6471_arc_generic_safety_shield_objective_ab.json",
+        "exists": true,
+        "bytes": 2707067,
+        "sha256": "sha256:b57c8fa66a199904ea22d33aea367a9bdeee37af1d07bf88c20ce42d7187bb25",
+        "artifact_state": "complete"
+      },
+      {
+        "task_id": "exp6472-v556-adversarial-capstone",
+        "path": "results/experiment_6472_v556_adversarial_capstone.json",
+        "exists": true,
+        "bytes": 744630,
+        "sha256": "sha256:e84705f0a72a0a4b5027c3052f3617223510d275d244f77f615ae29dfd8b52dc",
+        "artifact_state": "complete"
+      }
+    ]
+  },
+  "capstone_eligibility_recomputation": {
+    "capstone_path": "results/experiment_6472_v556_adversarial_capstone.json",
+    "capstone_sha256": "sha256:e84705f0a72a0a4b5027c3052f3617223510d275d244f77f615ae29dfd8b52dc",
+    "declared_capstone": {
+      "science_claim_eligible": {
+        "eligible": false,
+        "reason": "readiness_only_or_broken_gates: corpus readiness was 0 and downstream science artifacts are blocked or missing",
+        "evidence": [
+          "exp6463",
+          "exp6464",
+          "exp6465",
+          "exp6466",
+          "exp6467",
+          "retired_count=3"
+        ]
+      },
+      "continuous_learning_claim_eligible": {
+        "eligible": true,
+        "reason": "unique_event_csl_rows_hashes_exact_veto_and_independent_audit_pass",
+        "evidence": [
+          "exp6468",
+          "exp6469",
+          "exp6470"
+        ]
+      },
+      "arc_claim_eligible": {
+        "eligible": true,
+        "reason": "generic_arc_safety_shield_only_no_solve_or_public_credit_claim",
+        "evidence": [
+          "exp6471"
+        ]
+      },
+      "hardware_claim_eligible": {
+        "eligible": false,
+        "reason": "no_authenticated_hardware_execution_or_speedup_evidence_in_v556",
+        "evidence": []
+      }
+    },
+    "independent": {
+      "science_claim_eligible": {
+        "eligible": false,
+        "reason": "readiness_only_or_broken_gates: corpus readiness was 0 and downstream science artifacts are blocked or missing",
+        "evidence": [
+          "exp6463",
+          "exp6464",
+          "exp6465",
+          "exp6466",
+          "exp6467",
+          "retired_count=3"
+        ]
+      },
+      "continuous_learning_claim_eligible": {
+        "eligible": true,
+        "reason": "unique_event_csl_rows_hashes_exact_veto_and_independent_audit_pass",
+        "evidence": [
+          "exp6468",
+          "exp6469",
+          "exp6470"
+        ]
+      },
+      "arc_claim_eligible": {
+        "eligible": true,
+        "reason": "generic_arc_safety_shield_only_no_solve_or_public_credit_claim",
+        "evidence": [
+          "exp6471"
+        ]
+      },
+      "hardware_claim_eligible": {
+        "eligible": false,
+        "reason": "no_authenticated_hardware_execution_or_speedup_evidence_in_v556",
+        "evidence": []
+      }
+    },
+    "matches_capstone": {
+      "science_claim_eligible": true,
+      "continuous_learning_claim_eligible": true,
+      "arc_claim_eligible": true,
+      "hardware_claim_eligible": true
+    },
+    "all_fields_match_capstone": true,
+    "rule_inputs": {
+      "gate_contract_recomputation": {
+        "passed": false,
+        "failed_count": 2,
+        "rows": [
+          {
+            "task_id": "exp6463-sota-fixed-policy-candidate-corpus-v2",
+            "upstream_key": "exp6462",
+            "field": "raw_persistence_canary_ready_score",
+            "expected": 1.0,
+            "actual": 1.0,
+            "missing_field": false,
+            "independent_gate_passed": true,
+            "reason": "passed"
+          },
+          {
+            "task_id": "exp6464-fixed-slot-grounding-exact-logic-ab",
+            "upstream_key": "exp6463",
+            "field": "sota_corpus_ready_score",
+            "expected": 1.0,
+            "actual": 0.0,
+            "missing_field": false,
+            "independent_gate_passed": false,
+            "reason": "actual=0.0 expected=1.0"
+          },
+          {
+            "task_id": "exp6466-held-verifier-budget-allocation-v2",
+            "upstream_key": "exp6463",
+            "field": "sota_corpus_ready_score",
+            "expected": 1.0,
+            "actual": 0.0,
+            "missing_field": false,
+            "independent_gate_passed": false,
+            "reason": "actual=0.0 expected=1.0"
+          },
+          {
+            "task_id": "exp6469-unique-event-csl-corruption-restart",
+            "upstream_key": "exp6468",
+            "field": "unique_event_csl_ready_score",
+            "expected": 1.0,
+            "actual": 1.0,
+            "missing_field": false,
+            "independent_gate_passed": true,
+            "reason": "passed"
+          }
+        ]
+      },
+      "failed_gate_count": 2,
+      "grounding_objective_allocation_and_energy": {
+        "sota_corpus": {
+          "row_count": 432,
+          "candidate_headroom_by_partition": {
+            "allocation_held": {
+              "candidate_selection_cell_count": 36,
+              "candidate_selection_cells_with_headroom": 9,
+              "failure": 99,
+              "has_headroom": true,
+              "mixed_exact_outcomes": true,
+              "row_count": 108,
+              "success": 9
+            },
+            "audit_held": {
+              "candidate_selection_cell_count": 36,
+              "candidate_selection_cells_with_headroom": 9,
+              "failure": 99,
+              "has_headroom": true,
+              "mixed_exact_outcomes": true,
+              "row_count": 108,
+              "success": 9
+            },
+            "development": {
+              "candidate_selection_cell_count": 36,
+              "candidate_selection_cells_with_headroom": 6,
+              "failure": 102,
+              "has_headroom": true,
+              "mixed_exact_outcomes": true,
+              "row_count": 108,
+              "success": 6
+            },
+            "selection_held": {
+              "candidate_selection_cell_count": 36,
+              "candidate_selection_cells_with_headroom": 8,
+              "failure": 100,
+              "has_headroom": true,
+              "mixed_exact_outcomes": true,
+              "row_count": 108,
+              "success": 8
+            }
+          },
+          "exact_outcomes_by_model_and_partition": {
+            "unsloth/Qwen3.6-35B-A3B-GGUF::allocation_held": {
+              "exact_success_rate": 0.25,
+              "failure": 27,
+              "mixed_exact_outcomes": true,
+              "row_count": 36,
+              "success": 9
+            },
+            "unsloth/Qwen3.6-35B-A3B-GGUF::audit_held": {
+              "exact_success_rate": 0.25,
+              "failure": 27,
+              "mixed_exact_outcomes": true,
+              "row_count": 36,
+              "success": 9
+            },
+            "unsloth/Qwen3.6-35B-A3B-GGUF::development": {
+              "exact_success_rate": 0.166666666667,
+              "failure": 30,
+              "mixed_exact_outcomes": true,
+              "row_count": 36,
+              "success": 6
+            },
+            "unsloth/Qwen3.6-35B-A3B-GGUF::selection_held": {
+              "exact_success_rate": 0.222222222222,
+              "failure": 28,
+              "mixed_exact_outcomes": true,
+              "row_count": 36,
+              "success": 8
+            },
+            "unsloth/gemma-4-26B-A4B-it-GGUF::allocation_held": {
+              "exact_success_rate": 0.0,
+              "failure": 36,
+              "mixed_exact_outcomes": false,
+              "row_count": 36,
+              "success": 0
+            },
+            "unsloth/gemma-4-26B-A4B-it-GGUF::audit_held": {
+              "exact_success_rate": 0.0,
+              "failure": 36,
+              "mixed_exact_outcomes": false,
+              "row_count": 36,
+              "success": 0
+            },
+            "unsloth/gemma-4-26B-A4B-it-GGUF::development": {
+              "exact_success_rate": 0.0,
+              "failure": 36,
+              "mixed_exact_outcomes": false,
+              "row_count": 36,
+              "success": 0
+            },
+            "unsloth/gemma-4-26B-A4B-it-GGUF::selection_held": {
+              "exact_success_rate": 0.0,
+              "failure": 36,
+              "mixed_exact_outcomes": false,
+              "row_count": 36,
+              "success": 0
+            },
+            "unsloth/gemma-4-31B-it-GGUF::allocation_held": {
+              "exact_success_rate": 0.0,
+              "failure": 36,
+              "mixed_exact_outcomes": false,
+              "row_count": 36,
+              "success": 0
+            },
+            "unsloth/gemma-4-31B-it-GGUF::audit_held": {
+              "exact_success_rate": 0.0,
+              "failure": 36,
+              "mixed_exact_outcomes": false,
+              "row_count": 36,
+              "success": 0
+            },
+            "unsloth/gemma-4-31B-it-GGUF::development": {
+              "exact_success_rate": 0.0,
+              "failure": 36,
+              "mixed_exact_outcomes": false,
+              "row_count": 36,
+              "success": 0
+            },
+            "unsloth/gemma-4-31B-it-GGUF::selection_held": {
+              "exact_success_rate": 0.0,
+              "failure": 36,
+              "mixed_exact_outcomes": false,
+              "row_count": 36,
+              "success": 0
+            }
+          },
+          "matches_reported": true
+        },
+        "grounding_exact_logic": {
+          "state": "blocked",
+          "path": "results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json",
+          "reason": {
+            "check": "exp6463-sota-fixed-policy-candidate-corpus-v2.sota_corpus_ready_score",
+            "expected": "1.0",
+            "observed": "0.0",
+            "evidence_path": "results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json",
+            "raw": "1 of 1 gate(s) failed; first failure: exp6463-sota-fixed-policy-candidate-corpus-v2.sota_corpus_ready_score (actual=0.0 == expected=1.0)"
+          }
+        },
+        "objective_causal": {
+          "state": "missing",
+          "path": "results/experiment_6465_representation_objective_causal_ab_v2.json",
+          "reason": {
+            "check": "artifact_presence",
+            "expected": "present nonzero valid JSON",
+            "observed": "missing",
+            "evidence_path": "results/experiment_6465_representation_objective_causal_ab_v2.json",
+            "raw": null
+          }
+        },
+        "allocation": {
+          "state": "blocked",
+          "path": "results/experiment_6466_held_verifier_budget_allocation_v2.json",
+          "reason": {
+            "check": "exp6463-sota-fixed-policy-candidate-corpus-v2.sota_corpus_ready_score",
+            "expected": "1.0",
+            "observed": "0.0",
+            "evidence_path": "results/experiment_6466_held_verifier_budget_allocation_v2.json",
+            "raw": "1 of 1 gate(s) failed; first failure: exp6463-sota-fixed-policy-candidate-corpus-v2.sota_corpus_ready_score (actual=0.0 == expected=1.0)"
+          }
+        },
+        "energy_selection": {
+          "state": "missing",
+          "path": "results/experiment_6467_held_exact_constraint_energy_selection_v2.json",
+          "reason": {
+            "check": "artifact_presence",
+            "expected": "present nonzero valid JSON",
+            "observed": "missing",
+            "evidence_path": "results/experiment_6467_held_exact_constraint_energy_selection_v2.json",
+            "raw": null
+          }
+        }
+      },
+      "continuous_learning": {
+        "exp6468_unique_event_csl": {
+          "row_count": 216,
+          "effect_by_arm_and_interval": {
+            "development": {
+              "frozen_factor_weights": {
+                "exact_success_count": 0,
+                "exact_yield": 0.0,
+                "row_count": 18
+              },
+              "self_signed_updates": {
+                "exact_success_count": 0,
+                "exact_yield": 0.0,
+                "row_count": 18
+              },
+              "verifier_bounded_exact_sign_updates": {
+                "exact_success_count": 15,
+                "exact_yield": 0.833333333333,
+                "row_count": 18
+              }
+            },
+            "future_held": {
+              "frozen_factor_weights": {
+                "exact_success_count": 0,
+                "exact_yield": 0.0,
+                "row_count": 24
+              },
+              "self_signed_updates": {
+                "exact_success_count": 0,
+                "exact_yield": 0.0,
+                "row_count": 24
+              },
+              "verifier_bounded_exact_sign_updates": {
+                "exact_success_count": 24,
+                "exact_yield": 1.0,
+                "row_count": 24
+              }
+            },
+            "prospective_update": {
+              "frozen_factor_weights": {
+                "exact_success_count": 0,
+                "exact_yield": 0.0,
+                "row_count": 30
+              },
+              "self_signed_updates": {
+                "exact_success_count": 0,
+                "exact_yield": 0.0,
+                "row_count": 30
+              },
+              "verifier_bounded_exact_sign_updates": {
+                "exact_success_count": 30,
+                "exact_yield": 1.0,
+                "row_count": 30
+              }
+            }
+          },
+          "future_held_verifier_minus_frozen": 1.0,
+          "future_held_verifier_minus_self_signed": 1.0,
+          "matches_reported": true
+        },
+        "exp6469_corruption_restart": {
+          "row_count": 108,
+          "clean_and_corrupt_effects": {
+            "clean_exact_yield": 0.916666666667,
+            "clean_minus_frozen": 0.916666666667,
+            "corrupt_blocked_before_release_count": 15,
+            "corrupt_event_count": 15,
+            "corrupt_release_count": 0,
+            "frozen_exact_yield": 0.0,
+            "governed_non_corrupt_exact_yield": 0.857142857143,
+            "governed_non_corrupt_minus_frozen": 0.857142857143
+          },
+          "matches_reported": true
+        },
+        "exp6470_independent_audit": {
+          "eligible_score": 1.0,
+          "critical_discrepancies": [],
+          "aggregate_matches": true
+        }
+      },
+      "arc": {
+        "row_count": 1000,
+        "reachability_by_arm": {
+          "ablated_shield_objective_no_veto": {
+            "rate": 0.45,
+            "reachable": 90,
+            "rows": 200
+          },
+          "baseline_current_policy": {
+            "rate": 0.185,
+            "reachable": 37,
+            "rows": 200
+          },
+          "objective_only_frozen_exp6458": {
+            "rate": 0.45,
+            "reachable": 90,
+            "rows": 200
+          },
+          "shielded_objective_generic_fallback": {
+            "rate": 0.45,
+            "reachable": 90,
+            "rows": 200
+          },
+          "shuffled_shield_objective_control": {
+            "rate": 0.315,
+            "reachable": 63,
+            "rows": 200
+          }
+        },
+        "legal_action_results_by_arm": {
+          "ablated_shield_objective_no_veto": {
+            "illegal_choices": 0,
+            "legal_choices": 200,
+            "rate": 1.0,
+            "rows": 200
+          },
+          "baseline_current_policy": {
+            "illegal_choices": 0,
+            "legal_choices": 200,
+            "rate": 1.0,
+            "rows": 200
+          },
+          "objective_only_frozen_exp6458": {
+            "illegal_choices": 0,
+            "legal_choices": 200,
+            "rate": 1.0,
+            "rows": 200
+          },
+          "shielded_objective_generic_fallback": {
+            "illegal_choices": 0,
+            "legal_choices": 200,
+            "rate": 1.0,
+            "rows": 200
+          },
+          "shuffled_shield_objective_control": {
+            "illegal_choices": 0,
+            "legal_choices": 200,
+            "rate": 1.0,
+            "rows": 200
+          }
+        },
+        "matches_reported": true,
+        "no_solve_claim": true,
+        "source_access_count": 0,
+        "per_game_adapter_count": 0,
+        "solve_like_row_count": 0,
+        "arc_safety_shield_ready_score": 1.0
+      },
+      "mechanical_retirement_count": 3,
+      "science_no_result_task_ids": [
+        "exp6465-representation-objective-causal-ab-v2",
+        "exp6467-held-exact-constraint-energy-selection-v2"
+      ],
+      "absence_interpretation": "not_executed_no_result_not_negative_science_finding"
+    }
+  },
+  "retirement_boundary_rows": [
+    {
+      "task_id": "exp6460-v556-terminal-handoff-and-queue-integrity",
+      "prior_experiment_id": "exp6448-v555-terminal-handoff-and-queue-integrity",
+      "prior_verdict": "complete_blocked_v555_queue_integrity_failed: V554 terminal facts are preserved but a V555 queue contract failed",
+      "current_status": "complete_blocked_v556_queue_integrity_failed",
+      "current_honest_verdict": "complete_blocked_v556_queue_integrity_failed: V555 terminal facts are preserved but a V556 queue contract failed",
+      "current_terminal_verdict": "complete_blocked_v556_queue_integrity_failed",
+      "artifact_state": "blocked",
+      "artifact_blocked": true,
+      "retire_if_same_verdict": true,
+      "same_verdict_shape": true,
+      "mechanical_retirement": true,
+      "mere_blocked_without_retirement": false,
+      "boundary_class": "mechanically_retired_scope",
+      "retired_because": "retire_if_same_verdict matched terminal shape",
+      "evidence_path": "results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json",
+      "source_path": "research-roadmap.yaml:tasks.exp6473.prior_failures[0]"
+    },
+    {
+      "task_id": "exp6464-fixed-slot-grounding-exact-logic-ab",
+      "prior_experiment_id": "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
+      "prior_verdict": "blocked_gate_check_failed",
+      "current_status": "blocked",
+      "current_honest_verdict": "blocked_gate_check_failed",
+      "current_terminal_verdict": "blocked",
+      "artifact_state": "blocked",
+      "artifact_blocked": true,
+      "retire_if_same_verdict": true,
+      "same_verdict_shape": true,
+      "mechanical_retirement": true,
+      "mere_blocked_without_retirement": false,
+      "boundary_class": "mechanically_retired_scope",
+      "retired_because": "retire_if_same_verdict matched terminal shape",
+      "evidence_path": "results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json",
+      "source_path": "results/experiment_6472_v556_adversarial_capstone.json:repeated_prior_verdict_retirements"
+    },
+    {
+      "task_id": "exp6466-held-verifier-budget-allocation-v2",
+      "prior_experiment_id": "exp6453-held-verifier-budget-allocation-ab",
+      "prior_verdict": "blocked_gate_check_failed",
+      "current_status": "blocked",
+      "current_honest_verdict": "blocked_gate_check_failed",
+      "current_terminal_verdict": "blocked",
+      "artifact_state": "blocked",
+      "artifact_blocked": true,
+      "retire_if_same_verdict": true,
+      "same_verdict_shape": true,
+      "mechanical_retirement": true,
+      "mere_blocked_without_retirement": false,
+      "boundary_class": "mechanically_retired_scope",
+      "retired_because": "retire_if_same_verdict matched terminal shape",
+      "evidence_path": "results/experiment_6466_held_verifier_budget_allocation_v2.json",
+      "source_path": "results/experiment_6472_v556_adversarial_capstone.json:repeated_prior_verdict_retirements"
+    }
+  ],
+  "staged_queue_validation_performed": false,
+  "downstream_gate_count": 0,
+  "per_unit_rows": [
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6460-v556-terminal-handoff-and-queue-integrity",
+      "artifact_state": "blocked",
+      "eligible": false,
+      "mechanical_retirement": true,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6461-v556-primary-source-freshness-receipt",
+      "artifact_state": "blocked",
+      "eligible": false,
+      "mechanical_retirement": false,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6462-sota-raw-persistence-uniqueness-canary",
+      "artifact_state": "complete",
+      "eligible": true,
+      "mechanical_retirement": false,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6463-sota-fixed-policy-candidate-corpus-v2",
+      "artifact_state": "complete",
+      "eligible": false,
+      "mechanical_retirement": false,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6464-fixed-slot-grounding-exact-logic-ab",
+      "artifact_state": "blocked",
+      "eligible": false,
+      "mechanical_retirement": true,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6465-representation-objective-causal-ab-v2",
+      "artifact_state": "missing",
+      "eligible": false,
+      "mechanical_retirement": false,
+      "cannot_support_result": true
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6466-held-verifier-budget-allocation-v2",
+      "artifact_state": "blocked",
+      "eligible": false,
+      "mechanical_retirement": true,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6467-held-exact-constraint-energy-selection-v2",
+      "artifact_state": "missing",
+      "eligible": false,
+      "mechanical_retirement": false,
+      "cannot_support_result": true
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6468-unique-event-verifier-bounded-csl",
+      "artifact_state": "complete",
+      "eligible": true,
+      "mechanical_retirement": false,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6469-unique-event-csl-corruption-restart",
+      "artifact_state": "complete",
+      "eligible": true,
+      "mechanical_retirement": false,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6470-independent-unique-event-csl-audit",
+      "artifact_state": "complete",
+      "eligible": true,
+      "mechanical_retirement": false,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6471-arc-generic-safety-shield-objective-ab",
+      "artifact_state": "complete",
+      "eligible": true,
+      "mechanical_retirement": false,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6472-v556-adversarial-capstone",
+      "artifact_state": "complete",
+      "eligible": true,
+      "mechanical_retirement": false,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "claim_eligibility",
+      "claim": "science_claim_eligible",
+      "eligible": false,
+      "matches_capstone": true,
+      "reason": "readiness_only_or_broken_gates: corpus readiness was 0 and downstream science artifacts are blocked or missing"
+    },
+    {
+      "row_kind": "claim_eligibility",
+      "claim": "continuous_learning_claim_eligible",
+      "eligible": true,
+      "matches_capstone": true,
+      "reason": "unique_event_csl_rows_hashes_exact_veto_and_independent_audit_pass"
+    },
+    {
+      "row_kind": "claim_eligibility",
+      "claim": "arc_claim_eligible",
+      "eligible": true,
+      "matches_capstone": true,
+      "reason": "generic_arc_safety_shield_only_no_solve_or_public_credit_claim"
+    },
+    {
+      "row_kind": "claim_eligibility",
+      "claim": "hardware_claim_eligible",
+      "eligible": false,
+      "matches_capstone": true,
+      "reason": "no_authenticated_hardware_execution_or_speedup_evidence_in_v556"
+    },
+    {
+      "row_kind": "retirement_boundary",
+      "task_id": "exp6460-v556-terminal-handoff-and-queue-integrity",
+      "mechanical_retirement": true,
+      "artifact_blocked": true,
+      "boundary_class": "mechanically_retired_scope"
+    },
+    {
+      "row_kind": "retirement_boundary",
+      "task_id": "exp6464-fixed-slot-grounding-exact-logic-ab",
+      "mechanical_retirement": true,
+      "artifact_blocked": true,
+      "boundary_class": "mechanically_retired_scope"
+    },
+    {
+      "row_kind": "retirement_boundary",
+      "task_id": "exp6466-held-verifier-budget-allocation-v2",
+      "mechanical_retirement": true,
+      "artifact_blocked": true,
+      "boundary_class": "mechanically_retired_scope"
+    }
+  ],
+  "rows": [
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6460-v556-terminal-handoff-and-queue-integrity",
+      "artifact_state": "blocked",
+      "eligible": false,
+      "mechanical_retirement": true,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6461-v556-primary-source-freshness-receipt",
+      "artifact_state": "blocked",
+      "eligible": false,
+      "mechanical_retirement": false,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6462-sota-raw-persistence-uniqueness-canary",
+      "artifact_state": "complete",
+      "eligible": true,
+      "mechanical_retirement": false,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6463-sota-fixed-policy-candidate-corpus-v2",
+      "artifact_state": "complete",
+      "eligible": false,
+      "mechanical_retirement": false,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6464-fixed-slot-grounding-exact-logic-ab",
+      "artifact_state": "blocked",
+      "eligible": false,
+      "mechanical_retirement": true,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6465-representation-objective-causal-ab-v2",
+      "artifact_state": "missing",
+      "eligible": false,
+      "mechanical_retirement": false,
+      "cannot_support_result": true
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6466-held-verifier-budget-allocation-v2",
+      "artifact_state": "blocked",
+      "eligible": false,
+      "mechanical_retirement": true,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6467-held-exact-constraint-energy-selection-v2",
+      "artifact_state": "missing",
+      "eligible": false,
+      "mechanical_retirement": false,
+      "cannot_support_result": true
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6468-unique-event-verifier-bounded-csl",
+      "artifact_state": "complete",
+      "eligible": true,
+      "mechanical_retirement": false,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6469-unique-event-csl-corruption-restart",
+      "artifact_state": "complete",
+      "eligible": true,
+      "mechanical_retirement": false,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6470-independent-unique-event-csl-audit",
+      "artifact_state": "complete",
+      "eligible": true,
+      "mechanical_retirement": false,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6471-arc-generic-safety-shield-objective-ab",
+      "artifact_state": "complete",
+      "eligible": true,
+      "mechanical_retirement": false,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "terminal_evidence",
+      "task_id": "exp6472-v556-adversarial-capstone",
+      "artifact_state": "complete",
+      "eligible": true,
+      "mechanical_retirement": false,
+      "cannot_support_result": false
+    },
+    {
+      "row_kind": "claim_eligibility",
+      "claim": "science_claim_eligible",
+      "eligible": false,
+      "matches_capstone": true,
+      "reason": "readiness_only_or_broken_gates: corpus readiness was 0 and downstream science artifacts are blocked or missing"
+    },
+    {
+      "row_kind": "claim_eligibility",
+      "claim": "continuous_learning_claim_eligible",
+      "eligible": true,
+      "matches_capstone": true,
+      "reason": "unique_event_csl_rows_hashes_exact_veto_and_independent_audit_pass"
+    },
+    {
+      "row_kind": "claim_eligibility",
+      "claim": "arc_claim_eligible",
+      "eligible": true,
+      "matches_capstone": true,
+      "reason": "generic_arc_safety_shield_only_no_solve_or_public_credit_claim"
+    },
+    {
+      "row_kind": "claim_eligibility",
+      "claim": "hardware_claim_eligible",
+      "eligible": false,
+      "matches_capstone": true,
+      "reason": "no_authenticated_hardware_execution_or_speedup_evidence_in_v556"
+    },
+    {
+      "row_kind": "retirement_boundary",
+      "task_id": "exp6460-v556-terminal-handoff-and-queue-integrity",
+      "mechanical_retirement": true,
+      "artifact_blocked": true,
+      "boundary_class": "mechanically_retired_scope"
+    },
+    {
+      "row_kind": "retirement_boundary",
+      "task_id": "exp6464-fixed-slot-grounding-exact-logic-ab",
+      "mechanical_retirement": true,
+      "artifact_blocked": true,
+      "boundary_class": "mechanically_retired_scope"
+    },
+    {
+      "row_kind": "retirement_boundary",
+      "task_id": "exp6466-held-verifier-budget-allocation-v2",
+      "mechanical_retirement": true,
+      "artifact_blocked": true,
+      "boundary_class": "mechanically_retired_scope"
+    }
+  ],
+  "aggregate_row_recomputation": {
+    "expected_task_count": 13,
+    "terminal_row_count": 13,
+    "present_count": 11,
+    "absent_count": 2,
+    "zero_byte_count": 0,
+    "blocked_or_blocked_prefixed_count": 4,
+    "mechanically_retired_count": 3,
+    "science_absent_no_result_task_ids": [
+      "exp6465-representation-objective-causal-ab-v2",
+      "exp6467-held-exact-constraint-energy-selection-v2"
+    ],
+    "absence_not_negative_science_finding": true,
+    "checks": {
+      "all_v556_tasks_accounted": true,
+      "hash_manifest_rows_match_terminal_rows": true,
+      "capstone_fields_match": true,
+      "mechanical_retirement_count_is_three": true,
+      "absence_not_negative_science_finding": true
+    },
+    "all_aggregates_match_rows": true
+  },
+  "protected_files_unchanged": {
+    "unchanged": true,
+    "changed_paths": [],
+    "files": {
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "before_sha256": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb",
+        "after_sha256": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb",
+        "unchanged": true
+      },
+      "research-roadmap.yaml": {
+        "exists": true,
+        "before_sha256": "sha256:f03a6927b39807076603e69f4b800e5036fafb956b804ed181b098bfe23d5bc7",
+        "after_sha256": "sha256:f03a6927b39807076603e69f4b800e5036fafb956b804ed181b098bfe23d5bc7",
+        "unchanged": true
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "exists": true,
+        "before_sha256": "sha256:e0c612ba50756d1b35197ee7aed33f8b189eebaf571e7d2e41ce20a77f32db3e",
+        "after_sha256": "sha256:e0c612ba50756d1b35197ee7aed33f8b189eebaf571e7d2e41ce20a77f32db3e",
+        "unchanged": true
+      },
+      "ops/conductor-log.md": {
+        "exists": true,
+        "before_sha256": "sha256:de5b585df0a9bfdaffddb6bff360ea7b0c8338b623116a989f01541a92c466f0",
+        "after_sha256": "sha256:de5b585df0a9bfdaffddb6bff360ea7b0c8338b623116a989f01541a92c466f0",
+        "unchanged": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "exists": true,
+        "before_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "after_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "unchanged": true
+      },
+      "ops/known-issues.md": {
+        "exists": true,
+        "before_sha256": "sha256:90ab4af68722758ce393a11dd85d4eb559623abad4e549b9c0db30eb5c2767aa",
+        "after_sha256": "sha256:90ab4af68722758ce393a11dd85d4eb559623abad4e549b9c0db30eb5c2767aa",
+        "unchanged": true
+      }
+    }
+  },
+  "gate_check_summary": {
+    "summary": "terminal evidence frozen without queue validation or downstream gates",
+    "blocked_rows": [
+      {
+        "task_id": "exp6460-v556-terminal-handoff-and-queue-integrity",
+        "check": "tests_run",
+        "expected": "every tests_run.exit_code is 0",
+        "observed": [
+          {
+            "command": ".venv/bin/pytest tests/python -q",
+            "exit_code": 3,
+            "summary": "209 failed, 14219 passed, 14 skipped, 145 warnings, 14 errors in 455.57s; xdist workers crashed; Z3 segmentation fault observed; final internal error at tests/python/test_compliance_checker.py::TestComplianceEnergyCheckerTrain::test_train_custom_lr"
+          }
+        ],
+        "evidence_path": "/tmp/carnot_exp6460_test_receipts.json"
+      },
+      {
+        "task_id": "exp6461-v556-primary-source-freshness-receipt",
+        "check": "arc_primary_score",
+        "expected": "rendered_primary_loaded_data",
+        "observed": "blocked_no_primary_loaded_data",
+        "evidence_path": "results/experiment_6461_v556_sota_source_and_benchmark_delta.json"
+      },
+      {
+        "task_id": "exp6464-fixed-slot-grounding-exact-logic-ab",
+        "check": "exp6463-sota-fixed-policy-candidate-corpus-v2.sota_corpus_ready_score",
+        "expected": "1.0",
+        "observed": "0.0",
+        "evidence_path": "results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json"
+      },
+      {
+        "task_id": "exp6466-held-verifier-budget-allocation-v2",
+        "check": "exp6463-sota-fixed-policy-candidate-corpus-v2.sota_corpus_ready_score",
+        "expected": "1.0",
+        "observed": "0.0",
+        "evidence_path": "results/experiment_6466_held_verifier_budget_allocation_v2.json"
+      }
+    ],
+    "failed_upstream_gate_count": 2,
+    "science_branch_promoted": false,
+    "continuous_learning_branch_promoted": true,
+    "arc_branch_promoted": true,
+    "hardware_branch_promoted": false,
+    "acceptance_gates": [
+      {
+        "condition": "All 13 V556 task IDs have a row or an explicit missing-artifact row.",
+        "passed": true
+      },
+      {
+        "condition": "staged_queue_validation_performed=false AND downstream_gate_count=0.",
+        "passed": true
+      }
+    ]
+  },
+  "preconditions_checked": {
+    "planning_date": "20260821",
+    "required_files": {
+      "AGENTS.md": true,
+      "CODEX.md": true,
+      "CLAUDE.md": true,
+      "research-program.md": true,
+      "research-roadmap.yaml": true,
+      "research-roadmap-next.yaml": false,
+      "research-roadmap-vNEXT.md": true,
+      "row_consistency_lint": true,
+      "adversarial_verify": true,
+      "e2e_plan": true
+    },
+    "research_roadmap_next_yaml_present": false,
+    "research_roadmap_next_yaml_validated": false,
+    "all_nonstaged_required_files_present": true,
+    "expected_v556_task_count": 13,
+    "terminal_row_count": 13,
+    "absent_task_ids": [
+      "exp6465-representation-objective-causal-ab-v2",
+      "exp6467-held-exact-constraint-energy-selection-v2"
+    ],
+    "zero_byte_task_ids": [],
+    "git_state": {
+      "head_sha": "0449e401a2fe4fd7414ea551b2ee00acae19d09f",
+      "status_short": [
+        "M openspec/capabilities/research-reporting/spec.md",
+        "?? python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py",
+        "?? results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+        "?? tests/python/test_experiment_6473_v556_terminal_evidence_and_retirement_boundary.py"
+      ]
+    }
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "verifier_is_oracle": true,
+  "field_principles": {
+    "status": "A terminal state separates completed evidence aggregation from an interrupted handoff.",
+    "v556_terminal_rows": "One row per task prevents missing artifacts from disappearing inside a milestone summary.",
+    "artifact_hash_manifest": "Content hashes bind each determination to the exact evidence bytes that were audited.",
+    "capstone_eligibility_recomputation": "Independent recomputation prevents inherited capstone booleans from becoming circular proof.",
+    "retirement_boundary_rows": "Explicit retirement rows stop repeated blocked techniques from returning under new names.",
+    "staged_queue_validation_performed": "A false value proves this task did not repeat the retired queue-transition scope.",
+    "downstream_gate_count": "Zero downstream gates prevents an infrastructure finding from suppressing independent science.",
+    "per_unit_rows": "Task-level rows make every aggregate and eligibility decision independently checkable.",
+    "aggregate_row_recomputation": "Row-derived aggregates catch summaries that disagree with their own evidence.",
+    "protected_files_unchanged": "Protected-file receipts prevent evidence aggregation from rewriting the system it audits.",
+    "gate_check_summary": "Any blocked verdict must name the failed check and observed value instead of hiding behind a status label.",
+    "preconditions_checked": "Precondition receipts prove the expected artifacts and repository state existed before aggregation.",
+    "inference_substrate": "Declaring aggregation_from_upstream_artifacts prevents a no-model audit from being misread as live inference.",
+    "verifier_is_oracle": "Only deterministic hash and row arithmetic may be treated as authoritative in this task.",
+    "field_principles": "A field-to-principle map preserves why each evidence contract exists.",
+    "field_provenance": "Exact source paths make each field traceable to a row, artifact, or deterministic reducer.",
+    "random_seed": "A fixed seed makes any ordering or attack sampling reproducible.",
+    "duration_s": "Measured wall time detects bootstrap-only or fabricated completion.",
+    "tests_run": "Recorded commands distinguish executed verification from intended verification.",
+    "reproducibility_checksum": "A stable checksum detects later drift in inputs or the terminal artifact.",
+    "honest_verdict": "A self-declared terminal result forces completion, blocking, and eligibility to be stated plainly."
+  },
+  "field_provenance": {
+    "status": [
+      "openspec/capabilities/research-reporting/spec.md:REQ-REPORT-6473",
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:build_artifact"
+    ],
+    "v556_terminal_rows": [
+      "results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json",
+      "results/experiment_6472_v556_adversarial_capstone.json",
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:v556_terminal_rows"
+    ],
+    "artifact_hash_manifest": [
+      "results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json",
+      "results/experiment_6472_v556_adversarial_capstone.json",
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:artifact_hash_manifest"
+    ],
+    "capstone_eligibility_recomputation": [
+      "python/carnot/experiment_6472_v556_adversarial_capstone.py:declared row rules",
+      "results/experiment_6472_v556_adversarial_capstone.json",
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:capstone_eligibility_recomputation"
+    ],
+    "retirement_boundary_rows": [
+      "research-roadmap.yaml:tasks.exp6473.prior_failures",
+      "results/experiment_6472_v556_adversarial_capstone.json:repeated_prior_verdict_retirements",
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:retirement_boundary_rows"
+    ],
+    "staged_queue_validation_performed": [
+      "openspec/capabilities/research-reporting/spec.md:REQ-REPORT-6473",
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:build_artifact"
+    ],
+    "downstream_gate_count": [
+      "openspec/capabilities/research-reporting/spec.md:REQ-REPORT-6473",
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:build_artifact"
+    ],
+    "per_unit_rows": [
+      "results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json",
+      "results/experiment_6472_v556_adversarial_capstone.json",
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:per_unit_rows"
+    ],
+    "aggregate_row_recomputation": [
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:aggregate_row_recomputation"
+    ],
+    "protected_files_unchanged": [
+      "scripts/research_conductor.py",
+      "ops/exclusion_manifest.yaml",
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:protected_files_unchanged"
+    ],
+    "gate_check_summary": [
+      "results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json:gate_check_summary",
+      "results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json:gate_check_summary",
+      "results/experiment_6466_held_verifier_budget_allocation_v2.json:gate_check_summary"
+    ],
+    "preconditions_checked": [
+      "AGENTS.md",
+      "CODEX.md",
+      "CLAUDE.md",
+      "git status --short",
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:preconditions_checked"
+    ],
+    "inference_substrate": [
+      "openspec/capabilities/research-reporting/spec.md:REQ-REPORT-6473"
+    ],
+    "verifier_is_oracle": [
+      "openspec/capabilities/research-reporting/spec.md:REQ-REPORT-6473",
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:sha256_file",
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:aggregate_row_recomputation"
+    ],
+    "field_principles": [
+      "research-roadmap.yaml:tasks.exp6473.prompt.REQUIRED_ARTIFACT_FIELDS",
+      "openspec/capabilities/research-reporting/spec.md:REQ-REPORT-6473"
+    ],
+    "field_provenance": [
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:FIELD_PROVENANCE"
+    ],
+    "random_seed": [
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:RANDOM_SEED"
+    ],
+    "duration_s": [
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:build_artifact"
+    ],
+    "tests_run": [
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:DEFAULT_TEST_COMMANDS"
+    ],
+    "reproducibility_checksum": [
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:payload_checksum"
+    ],
+    "honest_verdict": [
+      "openspec/capabilities/research-reporting/spec.md:SCENARIO-REPORT-6473-SCHEMA",
+      "python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py:build_artifact"
+    ]
+  },
+  "random_seed": 6473,
+  "duration_s": 0.432545,
+  "tests_run": [
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6473_v556_terminal_evidence_and_retirement_boundary --date 20260821",
+      "exit_code": null,
+      "recorded_by": "exp6473_default_receipt"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6473_v556_terminal_evidence_and_retirement_boundary.py -q --no-cov -n 0",
+      "exit_code": null,
+      "recorded_by": "exp6473_default_receipt"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py -m pytest tests/python/test_experiment_6473_v556_terminal_evidence_and_retirement_boundary.py -q --no-cov -n 0",
+      "exit_code": null,
+      "recorded_by": "exp6473_default_receipt"
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6473_v556_terminal_evidence_and_retirement_boundary.py --fail-under=100 --show-missing",
+      "exit_code": null,
+      "recorded_by": "exp6473_default_receipt"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": null,
+      "recorded_by": "exp6473_default_receipt"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6473_v556_terminal_evidence_and_retirement_boundary.py",
+      "exit_code": null,
+      "recorded_by": "exp6473_default_receipt"
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+      "exit_code": null,
+      "recorded_by": "exp6473_default_receipt"
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6473_v556_terminal_evidence_and_retirement_boundary.json",
+      "exit_code": null,
+      "recorded_by": "exp6473_default_receipt"
+    },
+    {
+      "command": "manual e2e-plan check: ops/e2e-test-plan.md has no direct Exp6473 entry",
+      "exit_code": null,
+      "recorded_by": "exp6473_default_receipt"
+    }
+  ],
+  "reproducibility_checksum": "sha256:142e646eeeae667b606db333d264f865aa7df5f5c9766d60461d62e4481fc499",
+  "honest_verdict": "complete: V556 terminal evidence frozen; science_claim_eligible=false; continuous_learning_claim_eligible=true; arc_claim_eligible=true; hardware_claim_eligible=false; retired_repeated_scopes=3; staged_queue_validation_performed=false; downstream_gate_count=0"
+}
