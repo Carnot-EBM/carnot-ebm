@@ -36948,3 +36948,122 @@ inference, labels, membership manifest, or repaired timestamps.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6476 | Implemented (`python/carnot/experiment_6476_v556_corpus_label_commitment_forensic.py`, `results/experiment_6476_v556_corpus_label_commitment_forensic.json`) | Implemented (`tests/python/test_experiment_6476_v556_corpus_label_commitment_forensic.py`) |
+
+### REQ-VERIFY-6477: Backend-Neutral Exact Constraint Record V557
+
+Carnot SHALL provide Exp6477 at
+`python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py`.
+The workflow SHALL write
+`results/experiment_6477_backend_neutral_exact_constraint_record.json` by
+evaluating a small versioned finite-domain integer constraint record through
+two exact backends: a Z3 translation and a bounded exhaustive reference
+evaluator. It SHALL NOT add a required dependency when the installed stack
+already provides Z3. It SHALL NOT call an LLM, modify
+`scripts/research_conductor.py`, or modify existing protected evaluators.
+
+The record schema SHALL support finite integer domains, Boolean variables,
+Boolean composition, negation, equality, disequality, strict and non-strict
+inequalities, linear arithmetic, all-different constraints, protected
+constraints, auxiliary variables, and explicit objective terms. Each source
+constraint SHALL have a unique stable constraint id. That id SHALL be preserved
+through Z3 receipts, exhaustive rows, violated-id sets, protected-violation
+sets, and scalar violation energy rows.
+
+The translator and exhaustive evaluator SHALL reject unsupported nonlinear
+forms, ambiguous integer-to-Boolean coercions, duplicate constraint ids,
+duplicate objective ids, unknown variables, invalid finite domains, and integer
+values outside the declared exact bound before any backend result is trusted.
+The scalar violation energy SHALL be derived from the same typed record as a
+diagnostic weighted violation count. It SHALL NOT become release authority
+separate from exact backend parity.
+
+Exp6477 SHALL seal immutable satisfiable, unsatisfiable, negated,
+auxiliary-variable, protected-clause, boundary-value, and at least five seeded
+small-domain cases. For each case and backend it SHALL compare satisfiability,
+witness validity, violated constraint ids, protected violations, objective
+value, and scalar violation energy. It SHALL include attacks for dropped
+negation, domain widening, integer-to-Boolean coercion, auxiliary-variable
+leakage, overflow, duplicate constraint ids, objective-sign reversal, and
+matching scalar totals with different violation sets. Every aggregate SHALL
+recompute from rows.
+
+The terminal artifact SHALL include `status`,
+`constraint_record_schema_and_hash`, `backend_versions_and_settings`,
+`immutable_case_manifest`, `translation_receipts`, `per_unit_rows`,
+`satisfiability_parity`, `witness_validity_parity`,
+`violation_set_parity`, `scalar_violation_energy_rows`,
+`unsupported_operation_rows`, `aggregate_row_recomputation`, `attack_matrix`,
+`exact_constraint_record_ready_score`, `protected_files_unchanged`,
+`gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`,
+`random_seed`, `duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`. `inference_substrate` SHALL be
+`exact_solver_replay_no_llm`. `verifier_is_oracle` SHALL be true only within
+the declared finite-domain record.
+
+Required field principles:
+
+- `status`: A terminal status distinguishes complete backend parity from a partially implemented translator.
+- `constraint_record_schema_and_hash`: A versioned schema binds every backend and energy computation to the same semantics.
+- `backend_versions_and_settings`: Pinned solver identities and settings prevent backend drift from masquerading as semantic change.
+- `immutable_case_manifest`: Sealed cases prevent result-dependent fixture edits after a disagreement appears.
+- `translation_receipts`: Constraint-ID-preserving receipts expose dropped, rewritten, or invented semantics.
+- `per_unit_rows`: Case, seed, backend, and attack rows make parity independently recomputable.
+- `satisfiability_parity`: Matching satisfiability is the first exact semantic invariant across backends.
+- `witness_validity_parity`: Independent witness replay catches solvers that agree on status but return invalid assignments.
+- `violation_set_parity`: Exact constraint-ID parity prevents matching scalar totals from hiding different failures.
+- `scalar_violation_energy_rows`: Energy rows bind the proposal score to the same exact record without making it an oracle.
+- `unsupported_operation_rows`: Explicit rejection prevents silent approximation of operations outside the record's scope.
+- `aggregate_row_recomputation`: Row-derived parity catches favorable summaries that omit a failing case.
+- `attack_matrix`: Translation attacks test the known negation, domain, auxiliary, and objective-sign failure modes.
+- `exact_constraint_record_ready_score`: A conjunctive gate blocks held energy experiments until exact record semantics are stable.
+- `protected_files_unchanged`: The new record cannot gain parity by altering protected evaluators or conductor logic.
+- `gate_check_summary`: A blocked result must name the backend, case, expected invariant, and observed mismatch.
+- `preconditions_checked`: Backend and version receipts prove exact dependencies existed before cases ran.
+- `inference_substrate`: Declaring exact_solver_replay_no_llm prevents deterministic solver work from being presented as model reasoning.
+- `verifier_is_oracle`: Exact backends are authoritative only within the declared finite-domain record.
+- `field_principles`: A principle map preserves the semantic reason for every parity field.
+- `field_provenance`: Case hashes, backend receipts, and reducers make each field traceable.
+- `random_seed`: Declared seeds reproduce generated small-domain cases and attack ordering.
+- `duration_s`: Wall time detects skipped exhaustive enumeration or backend execution.
+- `tests_run`: Executed tests prove the translator, evaluator, attacks, and reducers ran.
+- `reproducibility_checksum`: The checksum binds schema, cases, backend settings, code, and result.
+- `honest_verdict`: The verdict states exact parity, bounded failure, or unsupported scope without overclaiming global solver equivalence.
+
+#### SCENARIO-VERIFY-6477-SCHEMA: Versioned Records Fail Closed
+
+Given a finite-domain record with duplicate ids, unknown variables,
+unsupported nonlinear forms, ambiguous Boolean coercions, or overflow,
+when Exp6477 validates the record,
+then it rejects the record before Z3 translation or exhaustive replay and
+records the unsupported operation row.
+
+#### SCENARIO-VERIFY-6477-BACKEND-PARITY: Z3 Matches Exhaustive Replay
+
+Given sealed satisfiable, unsatisfiable, negated, auxiliary, protected, boundary,
+and seeded small-domain cases,
+when Exp6477 evaluates each case with Z3 and exhaustive replay,
+then satisfiability, witness validity, violated ids, protected violations,
+objective value, and scalar violation energy match for every case.
+
+#### SCENARIO-VERIFY-6477-ATTACKS: Translation Risks Are Caught
+
+Given dropped negation, domain widening, integer-to-Boolean coercion,
+auxiliary-variable leakage, overflow, duplicate ids, objective-sign reversal,
+and same-total-different-violation attacks,
+when Exp6477 runs the attack matrix,
+then every attack fails closed and cannot increase
+`exact_constraint_record_ready_score`.
+
+#### SCENARIO-VERIFY-6477-ROWS: Readiness Recomputes From Rows
+
+Given backend rows, energy rows, unsupported-operation rows, and attack rows,
+when the reducer recomputes Exp6477 aggregates,
+then the reported parity summaries, scalar energy summaries, attack summary,
+and `exact_constraint_record_ready_score` are derived from rows only.
+
+## Implementation Status (REQ-VERIFY-6477)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6477 | Planned (`python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py`, `results/experiment_6477_backend_neutral_exact_constraint_record.json`) | Planned (`tests/python/test_experiment_6477_backend_neutral_exact_constraint_record.py`) |
