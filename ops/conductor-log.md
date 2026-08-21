@@ -16110,3 +16110,5 @@ code |
 | 2026-08-21 04:10 UTC | V556 corpus label-commitment forensic and retireme | OK | 87 passed, 1 warning in 20.96s |
 | 2026-08-21 04:38 UTC | Backend-neutral finite-domain exact constraint rec | OK | 88 passed, 1 warning in 8.62s |
 | 2026-08-21 04:59 UTC | Gated on Exp6474 identifiability and Exp6477 parit | OK | 88 passed, 1 warning in 14.03s |
+| 2026-08-21 06:22 UTC | Default-off VerifyRepairPipeline factor-cache shad | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: 
++             |

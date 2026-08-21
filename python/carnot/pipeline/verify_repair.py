@@ -461,6 +461,10 @@ class VerifyRepairPipeline:
         fr11_shadow_ledger_path: str | os.PathLike[str] | None = None,
         fr11_shadow_checkpoint_path: str | os.PathLike[str] | None = None,
         fr11_shadow_adapter: Any | None = None,
+        fr11_factor_cache_shadow_adapter_enabled: bool = False,
+        fr11_factor_cache_shadow_ledger_path: str | os.PathLike[str] | None = None,
+        fr11_factor_cache_shadow_checkpoint_path: str | os.PathLike[str] | None = None,
+        fr11_factor_cache_shadow_adapter: Any | None = None,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -533,12 +537,21 @@ class VerifyRepairPipeline:
                 FR-11 shadow adapter is enabled.
             fr11_shadow_adapter: Optional prebuilt adapter for tests or controlled
                 deployments. Passing None keeps the feature purely flag-driven.
+            fr11_factor_cache_shadow_adapter_enabled: Explicit FR-11 factor-cache
+                shadow flag. Default False preserves baseline behavior. Environment
+                variables do not enable this production factor-cache surface.
+            fr11_factor_cache_shadow_ledger_path: JSONL ledger path used only when
+                the factor-cache shadow adapter is explicitly enabled.
+            fr11_factor_cache_shadow_checkpoint_path: Atomic checkpoint path used only
+                when the factor-cache shadow adapter is explicitly enabled.
+            fr11_factor_cache_shadow_adapter: Optional prebuilt factor-cache adapter
+                for tests or controlled deployments.
 
         Raises:
             ModelLoadError: If model is specified but cannot be loaded.
 
         Spec: REQ-VERIFY-001, REQ-LEARN-003, REQ-LEARN-021-2, REQ-ODAR-2243,
-              REQ-LEARN-5640
+              REQ-LEARN-5640, REQ-PIPELINE-6479, REQ-LEARN-6479
         """
         self.learning_mode = learning_mode
         self.n_learning_cycles = n_learning_cycles
@@ -630,6 +643,28 @@ class VerifyRepairPipeline:
                     "results/fr11_shadow_adapter_checkpoint.json",
                 )
                 self._fr11_shadow_adapter = FR11ShadowAdapter(
+                    ledger_path=ledger_path,
+                    checkpoint_path=checkpoint_path,
+                    enabled=True,
+                )
+        if fr11_factor_cache_shadow_adapter is not None:
+            self._fr11_factor_cache_shadow_adapter = fr11_factor_cache_shadow_adapter
+        else:
+            self._fr11_factor_cache_shadow_adapter = None
+            if fr11_factor_cache_shadow_adapter_enabled:
+                from carnot.pipeline.factor_cache_shadow_adapter import (
+                    FR11FactorCacheShadowAdapter,
+                )
+
+                ledger_path = (
+                    fr11_factor_cache_shadow_ledger_path
+                    or "results/fr11_factor_cache_shadow_adapter_ledger.jsonl"
+                )
+                checkpoint_path = (
+                    fr11_factor_cache_shadow_checkpoint_path
+                    or "results/fr11_factor_cache_shadow_adapter_checkpoint.json"
+                )
+                self._fr11_factor_cache_shadow_adapter = FR11FactorCacheShadowAdapter(
                     ledger_path=ledger_path,
                     checkpoint_path=checkpoint_path,
                     enabled=True,
@@ -726,6 +761,12 @@ class VerifyRepairPipeline:
 
         Spec: REQ-LEARN-021-3
         """
+        for adapter_name in ("_fr11_shadow_adapter", "_fr11_factor_cache_shadow_adapter"):
+            adapter = getattr(self, adapter_name, None)
+            close = getattr(adapter, "close", None)
+            if callable(close):
+                close()
+
         if self._session_memory is None:
             return
 
@@ -1790,6 +1831,12 @@ class VerifyRepairPipeline:
                         domain=domain,
                         result=result,
                     )
+                    result = self._record_fr11_factor_cache_shadow_decision(
+                        question=question,
+                        response=response,
+                        domain=domain,
+                        result=result,
+                    )
                     return _with_fst_certificate(result)
                 except Exception as exc:
                     logger.warning("Rust verify failed, falling back to Python: %s", exc)
@@ -1918,6 +1965,12 @@ class VerifyRepairPipeline:
                 semantic_verifier_v2=semantic_verifier_v2,
             )
             degraded_result = self._record_fr11_shadow_decision(
+                question=question,
+                response=response,
+                domain=domain,
+                result=degraded_result,
+            )
+            degraded_result = self._record_fr11_factor_cache_shadow_decision(
                 question=question,
                 response=response,
                 domain=domain,
@@ -2089,6 +2142,12 @@ class VerifyRepairPipeline:
                 )
 
         result = self._record_fr11_shadow_decision(
+            question=question,
+            response=response,
+            domain=domain,
+            result=result,
+        )
+        result = self._record_fr11_factor_cache_shadow_decision(
             question=question,
             response=response,
             domain=domain,
@@ -2998,6 +3057,63 @@ class VerifyRepairPipeline:
                 "recommendation": "abstain",
                 "exact_disposition": "unsupported",
                 "rollback_reason": f"shadow_adapter_error:{type(exc).__name__}",
+            }
+        return result
+
+    def _record_fr11_factor_cache_shadow_decision(
+        self,
+        *,
+        question: str,
+        response: str,
+        domain: str | None,
+        result: VerificationResult,
+    ) -> VerificationResult:
+        """Append factor-cache shadow receipts after exact verification.
+
+        The adapter is explicit opt-in. It can record proposed cache writes
+        and rank advice, but the existing exact verification result remains the
+        only release decision.
+
+        Spec: REQ-PIPELINE-6479, SCENARIO-PIPELINE-6479-SHADOW,
+        REQ-LEARN-6479.
+        """
+
+        adapter = getattr(self, "_fr11_factor_cache_shadow_adapter", None)
+        if adapter is None:
+            return result
+
+        try:
+            from carnot.pipeline.factor_cache_shadow_adapter import (
+                FactorCacheEventReceipt,
+                GENESIS_HASH,
+            )
+
+            receipt = FactorCacheEventReceipt.from_verification_result(
+                question=question,
+                response=response,
+                domain=domain,
+                result=result,
+                chronology_index=int(getattr(adapter, "next_chronology_index", 0)),
+                cache_parent_hash=str(getattr(adapter, "state_hash", GENESIS_HASH)),
+            )
+            decision = adapter.observe(receipt)
+            if decision is not None:
+                result.certificate["fr11_factor_cache_shadow_adapter"] = (
+                    decision.to_certificate()
+                )
+        except Exception as exc:
+            result.certificate["fr11_factor_cache_shadow_adapter"] = {
+                "mode": "shadow",
+                "release_authority": "exact_verifier",
+                "shadow_rank": {
+                    "recommendation": "abstain",
+                    "reason": f"adapter_exception:{type(exc).__name__}",
+                },
+                "exact_admission": {
+                    "admitted": False,
+                    "reject_reason": "adapter_exception",
+                },
+                "cache_write": {"write_admitted": False},
             }
         return result
 
