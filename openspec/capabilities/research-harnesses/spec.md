@@ -7584,7 +7584,7 @@ for M.
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-CONDUCTOR-ARCHIVE-1 | Pending | Pending |
+| REQ-CONDUCTOR-ARCHIVE-1 | Implemented (`scripts/research_conductor.py`: `derive_task_result`, `_statuses_since_last_activation`, duplicate-append refusal in `_archive_current_milestone`, both definitions) | Implemented (`tests/python/test_conductor_truthful_archival.py`, 12 tests; mutations: OK-literal restored -> RED, dedup disabled -> RED) |
 
 ## REQ-CONDUCTOR-STALL-1: Activation Refusal SHALL Trigger A Bounded Replan With The Guard's Verbatim Report, Then Park
 
@@ -7642,7 +7642,7 @@ replan budget.
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-CONDUCTOR-STALL-1 | Pending | Pending |
+| REQ-CONDUCTOR-STALL-1 | Implemented (`scripts/research_conductor.py`: `_handle_activation_refusal`, `_activation_refusal_parked`, replan-context prompt in the live `_plan_next_milestone`, wiring at both refusal sites + research_step parked short-circuit; state in `ops/.activation_replan_state.json`) | Implemented (`tests/python/test_conductor_guard_stall_recovery.py`, 5 tests; mutations: cap disabled -> RED, verbatim report dropped -> RED) |
 
 ## REQ-CONDUCTOR-RECEIPT-1: Audit Invocations SHALL Verify A Fresh Receipt And Consumption State SHALL Advance Only With The Receipt
 
@@ -7702,7 +7702,7 @@ report file.
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-CONDUCTOR-RECEIPT-1 | Pending | Pending |
+| REQ-CONDUCTOR-RECEIPT-1 | Implemented (`scripts/research_conductor.py`: `_run_audit_with_receipt` over all nine milestone-close audit invocations; `scripts/qa_layer_authenticity_audit.py`: `--budget-seconds`, PARTIAL header, rotation state written only after the report, advanced by completed units) | Implemented (`tests/python/test_audit_run_receipts.py`, 8 tests; mutations: receipt check believes exit code -> RED, rotation advances by limit -> RED, state written before report -> RED) |
 
 ## REQ-CONDUCTOR-VERDICT-1: Artifacts MAY Declare A Closed Verdict Class, Cross-Checked Structurally
 
@@ -7757,4 +7757,4 @@ SHALL flag VERDICT_CLASS_MISMATCH at critical severity.
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-CONDUCTOR-VERDICT-1 | Pending | Pending |
+| REQ-CONDUCTOR-VERDICT-1 | Implemented (`scripts/adversarial_verify.py`: `check_verdict_class_consistency` + `_VERDICT_CLASSES`, wired into `verify_artifact`; planner-prompt `verdict_class` field in the live `_plan_next_milestone`) | Implemented (`tests/python/test_verdict_class_consistency.py`, 7 tests; mutations: oracle cross-check disabled -> RED, enum opened -> RED) |

@@ -8429,3 +8429,33 @@ All work this turn committed and pushed. Freshness/determination-preservation/ad
 lints clean at each commit. Two premises checked before building (4a's trust-gate claim, 4b's
 internal-heldout-check hypothesis) and both found not to hold — consistent with this session's
 running theme of verifying plan-doc premises against current code before spending build effort.
+
+## 2026-08-21 outer-loop session: conductor self-improvement mechanisms 1-4
+
+What shipped (design: docs/research-notes/conductor-self-improvement-2026-08-21.md):
+
+- Truthful archival: `_archive_current_milestone` derives each task result from the
+  conductor log plus `Path(deliverable).exists()`; a missing deliverable can never
+  archive as OK (`OK_NO_DELIVERABLE` fires at archive time). Duplicate milestone
+  appends are refused — the 684-copies-of-.510 loop cannot recur.
+- Guard-stall recovery: an activation refusal now quarantines the roadmap, replans
+  ONCE with the guard's verbatim violation report in the planner prompt, caps at 2
+  replans (state survives restarts), then parks with a BLOCK line in the conductor
+  log and a dated known-issues entry. The guard itself is unchanged. An operator
+  edit to research-roadmap-next.yaml unparks with a fresh budget.
+- Run receipts: every milestone-close audit call goes through
+  `_run_audit_with_receipt`; a stale/missing report writes a durable BLOCK line.
+  The QA-layer audit takes `--budget-seconds 750`, writes PARTIAL reports, and its
+  rotation offset moves only after the report lands, by the units actually reviewed
+  — ending the 23-day silent-death + phantom-coverage state.
+- Verdict class: artifacts may declare a CLOSED `verdict_class` enum;
+  `adversarial_verify.py` cross-checks it structurally (oracle-circular results
+  cannot carry `positive`). Absent declaration draws no flag; the planner prompt
+  asks new tasks to declare it. Legacy token-list retirement is deferred until the
+  corpus adopts the enum.
+
+NOTE: the running conductor picks up the research_conductor.py changes on its next
+natural restart (not restarted by this session). adversarial_verify.py and
+qa_layer_authenticity_audit.py changes are live on their next subprocess invocation.
+Historical research-complete.yaml repair (dedup of 1,841 duplicate entries,
+re-stamping 57 phantom OKs) is deliberately NOT done — operator decision required.
