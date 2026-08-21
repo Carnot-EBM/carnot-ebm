@@ -388,6 +388,9 @@ DETERMINISTIC_RUNTIME_RECEIPT_VALIDATION_NO_LLM_SUBSTRATE = (
 EXACT_SOLVER_DATASET_COMMITMENT_NO_LLM_SUBSTRATE = (
     "exact_solver_dataset_commitment_no_llm"
 )
+DETERMINISTIC_REPRESENTATION_CONTRACT_NO_LLM_SUBSTRATE = (
+    "deterministic_representation_contract_no_llm"
+)
 
 NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     VERIFIER_SCORING_SUBSTRATE,
@@ -403,6 +406,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     DETERMINISTIC_QA_REGRESSION_NO_LLM_SUBSTRATE,
     DETERMINISTIC_RUNTIME_RECEIPT_VALIDATION_NO_LLM_SUBSTRATE,
     EXACT_SOLVER_DATASET_COMMITMENT_NO_LLM_SUBSTRATE,
+    DETERMINISTIC_REPRESENTATION_CONTRACT_NO_LLM_SUBSTRATE,
     DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE,
     "cached_exp5567_responses_no_llm",
     "cached_fixture_replay_no_llm",
@@ -2758,6 +2762,9 @@ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
         or _is_deterministic_smt_hint_validation(d)
         or _inference_substrate_matches(
             d, DETERMINISTIC_RUNTIME_RECEIPT_VALIDATION_NO_LLM_SUBSTRATE
+        )
+        or _inference_substrate_matches(
+            d, DETERMINISTIC_REPRESENTATION_CONTRACT_NO_LLM_SUBSTRATE
         )
     )
     # Some experiment scripts (24 in the corpus as of 2026-07-05, e.g. exp5262/exp5263) declare
