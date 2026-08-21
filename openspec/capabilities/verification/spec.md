@@ -37431,6 +37431,128 @@ then the event counts, split coverage, replay coverage, attack summary, and
 |---|---|---|
 | REQ-VERIFY-6489 | Planned (`python/carnot/experiment_6489_solver_trajectory_commitment.py`, `results/experiment_6489_solver_trajectory_commitment.json`) | Planned (`tests/python/test_experiment_6489_solver_trajectory_commitment.py`) |
 
+### REQ-VERIFY-6490: Leakage-Neutral Trajectory Energy Baselines V560
+
+Carnot SHALL provide Exp6490 at
+`python/carnot/experiment_6490_trajectory_energy_baselines.py`. The command
+`.venv/bin/python -m carnot.experiment_6490_trajectory_energy_baselines --date 20260821`
+SHALL write `results/experiment_6490_trajectory_energy_baselines.json`.
+The workflow SHALL pre-gate on
+`results/experiment_6489_solver_trajectory_commitment.json` reporting
+`trajectory_contract_ready_score == 1.0`. It SHALL record the upstream
+artifact hash, field, expected value, observed value, prior Exp5853 verdict,
+prior Exp6487 verdict, and changed exact-solver trajectory scope before any
+held reduction.
+
+Exp6490 SHALL freeze feature groups, preprocessing, heads, parameter budgets,
+fit seeds, interval seeds, metrics, and thresholds before held evaluation. It
+SHALL use development rows for fitting and threshold selection. It SHALL use
+held units once. It SHALL compare frozen analytical early energy, a
+regularized linear head, a compact MLP head, a compact KAN head, and explicit
+controls for shuffled labels, row order, identifier, raw length, feature norm,
+family, backend, checkpoint, claim flip, split permutation, duplicate leakage,
+and label permutation. Learned parameter budgets SHALL be reported and kept
+compact.
+
+Exp6490 SHALL report per-unit and per-checkpoint persistence loss, balanced
+accuracy, AUROC where defined, calibration, family cells, backend cells, and
+confidence intervals from unit-level rows. It SHALL NOT pool away a failing
+family cell. The terminal artifact SHALL set
+`trajectory_signal_ready_score=1.0` only if a predeclared learned head beats
+the analytical and shuffled controls on held units, survives every shortcut
+attack, has no disqualifying family cell, and every headline recomputes from
+rows. If those gates fail, the artifact SHALL use `complete_null` or
+`disqualified` and SHALL preserve retirement receipts for the learned
+trajectory branch.
+
+The terminal artifact SHALL include `status`, `upstream_gate_receipt`,
+`frozen_analysis_manifest`, `model_configuration_rows`, `rows`,
+`family_cell_results`, `calibration_rows`, `confidence_intervals`,
+`shortcut_attack_matrix`, `harmful_flip_rows`,
+`trajectory_signal_ready_score`, `branch_retirement_receipt`,
+`per_unit_rows`, `aggregate_row_recomputation`, `gate_check_summary`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`. `inference_substrate` SHALL be
+`local_compact_energy_heads_on_exact_solver_features_no_llm`.
+`verifier_is_oracle` SHALL be true only for exact final outcomes. Learned
+heads SHALL NOT be reported as oracles.
+
+Required field principles:
+
+- `status`: Terminal comparative evaluation state.
+- `upstream_gate_receipt`: Exp6489 artifact hash and exact gate values.
+- `frozen_analysis_manifest`: Features, heads, budgets, metrics, seeds, and thresholds.
+- `model_configuration_rows`: Analytical, linear, MLP, KAN, and control definitions.
+- `rows`: Per unit, checkpoint, seed, family, backend, head, and control metrics.
+- `family_cell_results`: Disaggregated held results.
+- `calibration_rows`: Held calibration by head and cell.
+- `confidence_intervals`: Predeclared uncertainty estimates from unit-level rows.
+- `shortcut_attack_matrix`: Identity, order, length, norm, split, family, and backend attacks.
+- `harmful_flip_rows`: Any learned reversal of an exact-valid analytical decision.
+- `trajectory_signal_ready_score`: Same-roadmap downstream gate field.
+- `branch_retirement_receipt`: Outcome against Exp5853 and Exp6487 verdicts.
+- `per_unit_rows`: Required unit/checkpoint/seed comparison rows.
+- `aggregate_row_recomputation`: Every headline recomputed from rows.
+- `gate_check_summary`: Exact gate evaluation or blocked_* reason and observed value.
+- `preconditions_checked`: Commitment, split, prior failures, and feature contract.
+- `protected_files_unchanged`: Active roadmap and conductor unchanged.
+- `inference_substrate`: local_compact_energy_heads_on_exact_solver_features_no_llm.
+- `verifier_is_oracle`: True for exact final outcomes; learned heads are not oracles.
+- `field_principles`: Reason for each metric and control.
+- `field_provenance`: Raw row hashes, reducers, and source modules.
+- `random_seed`: All fit, split, and interval seeds.
+- `duration_s`: Measured wall time.
+- `tests_run`: Commands and exit codes.
+- `reproducibility_checksum`: Hash over frozen manifest, rows, and attacks.
+- `honest_verdict`: complete_positive, complete_null, disqualified, or blocked_* with diagnostics.
+
+#### SCENARIO-VERIFY-6490-HELD-TRAJECTORY-DISCRIMINATION: Held Units Are Opened Once
+
+Given Exp6489 is complete and its train, development, and held splits are
+sealed,
+when Exp6490 fits analytical, linear, MLP, KAN, and control heads,
+then development rows set preprocessing, parameters, and thresholds before
+held rows are scored, and each held unit/checkpoint/backend/head row records
+the exact final outcome authority and the fitted prediction.
+
+#### SCENARIO-VERIFY-6490-FAMILY-SEPARATED-REPORTING: Failing Cells Cannot Be Pooled Away
+
+Given held unit rows across families and backends,
+when Exp6490 reduces headline metrics,
+then family and backend cells are reported separately and any disqualifying
+cell blocks `trajectory_signal_ready_score`.
+
+#### SCENARIO-VERIFY-6490-SHORTCUT-REJECTION: Shortcut Controls Fail Closed
+
+Given identity, order, length, norm, split, family, backend, checkpoint,
+claim-flip, label-permutation, duplicate-leakage, and row-derived headline
+attacks,
+when Exp6490 builds the shortcut attack matrix,
+then any surviving shortcut sets `trajectory_signal_ready_score` to `0.0`.
+
+#### SCENARIO-VERIFY-6490-BRANCH-RETIREMENT: Null Or Shortcut Verdict Retires The Branch
+
+Given Exp5853 and Exp6487 are disqualified prior failures,
+when Exp6490 repeats a no-signal or shortcut verdict,
+then the artifact records `complete_null` or `disqualified`, preserves the
+prior verdicts, and marks the learned trajectory branch as retired.
+
+#### SCENARIO-VERIFY-6490-ROWS: Headlines Recompute From Rows
+
+Given per-unit rows, model rows, calibration rows, confidence intervals,
+family cells, attack rows, and harmful flips,
+when the reducer recomputes Exp6490 aggregates,
+then every headline metric and `trajectory_signal_ready_score` derives from
+rows only.
+
+## Implementation Status (REQ-VERIFY-6490)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6490 | Planned (`python/carnot/experiment_6490_trajectory_energy_baselines.py`, `results/experiment_6490_trajectory_energy_baselines.json`) | Planned (`tests/python/test_experiment_6490_trajectory_energy_baselines.py`) |
+
 ### REQ-VERIFY-6486: Three-Family Forced-Candidate Representation Stream
 
 Carnot SHALL provide Exp6486 at
