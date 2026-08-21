@@ -16242,3 +16242,4 @@ code |
 | 2026-08-21 18:10 UTC | Prospective local-SOTA atomic constraint factor pr | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-21 18:31 UTC | Exact executed-replay audit of atomic factor causa | OK | 87 passed, 1 warning in 12.63s |
 | 2026-08-21 18:33 UTC | Gated on Exp6490 and Exp6492 positive signal: deco | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp6490-leakage-neutral-trajectory-energy- |
+| 2026-08-21 18:35 UTC | Gated on Exp6490 and Exp6492 positive signal: deco | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp6490-leakage-neutral-trajectory-energy- |
