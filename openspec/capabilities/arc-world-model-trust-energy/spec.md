@@ -26271,3 +26271,97 @@ SHALL survive eviction.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6540 | `python/carnot/agentic/arc_induction_compact_state.py` (`EvidenceLedger` digests + result-derived refetch keys, `build_carried_state` + eviction order + keep-set short-circuit + `tokens_floor`, `rebuild_messages` tool-round tail, `CompactionController` trigger + thrash floor, env readers); wired in `python/carnot/agentic/arc_induction_tool_loop.py` (controller + ledger creation, seed registration, the `compact.enabled` rebuild branch + thrash alarm at the top of the turn loop, per-dispatch `ledger.observe`, unconditional `prompt_tokens_per_turn` telemetry, `transport_error_on_compacted_request` attribution). | `tests/python/test_arc_induction_compact_state.py` (env-unset byte-identical pin with a rebuild bomb; threshold trigger + exact boundary + stale-measurement no-refire + thrash floor + alarm; refetch counter incl. tool-side-default normalization; tool_call_id pairing after rebuild incl. the prose-turn-follows case; round-trip fidelity; eviction cascade incl. goal probes, keep-set, floor short-circuit through the live loop; failed-result guard; dedupe pins; repair seed row 0; duplicate-submission counter; transport-error attribution; env-reader + measurement-coercion pins). Each guard condition mutation-proven red/green per the QA-Layer agent-side rules. |
+
+### REQ-ARC-WMTE-6600: Trajectory Supervisor for the Live Agent (Default OFF)
+
+Origin: the AVO harness study
+(`docs/research-notes/avo-adaptation-for-local-generator-2026-08-21.md`).
+AVO (arXiv 2603.24517) credits its ARC-AGI-3 public-set result to persistent
+memory plus a SUPERVISOR that detects trajectory stagnation and redirects
+strategy. Our live cascade has no counterpart: after the one-shot induction
+latch fires and a plan exhausts without a level-up, the agent never changes
+strategy again for that level. AVO's redirect step is open-ended re-planning
+by a frontier model. Our generator is weak, so the redirect degrades to a
+closed decision table over levers the agent already has. No LLM call is
+involved anywhere in this REQ.
+
+With `CARNOT_ARC_TRAJECTORY_SUPERVISOR=1` the live policy SHALL:
+
+1. Construct a `TrajectorySupervisor` at policy init and consult it once per
+   routed action (one snapshot per `_next_move_routed` call with a frame).
+2. Detect stagnation mechanically: the supervisor counts actions since the
+   last level-up or redirect. When the count reaches the window
+   (`CARNOT_ARC_TRAJECTORY_SUPERVISOR_WINDOW`, default 400), the trajectory
+   is stagnant.
+3. On stagnation, fire the FIRST eligible arm not yet used on this level, in
+   the fixed order: `drop_goal_bias`, then `allow_reinduction`, then
+   `force_exploration_diversity`. One arm per stagnation episode. Each arm
+   at most once per level. A level-up resets the used-arm set and counters.
+4. Arm eligibility SHALL be: `drop_goal_bias` only when a goal bias is
+   installed; `allow_reinduction` only when the induction latch is set AND
+   at least 200 new transitions accumulated since the last induction attempt
+   AND fewer than 3 attempts fired this level; `force_exploration_diversity`
+   only when the explorer's stall-diversity draw is not already active.
+5. Apply arms only through existing seams: `set_goal_bias(None)` for the
+   bias drop; resetting the `induced` latch for reinduction (the existing
+   stall path then re-enters induction); the explorer's hybrid-diversity
+   fields for the diversity switch. The supervisor SHALL NOT add a new
+   induction or planning mechanism.
+6. Record a receipt for every redirect: action index, level, arm, and a
+   diagnosis string. `trajectory_supervisor_diagnostics()` SHALL expose the
+   ledger so run artifacts carry the evidence.
+7. Default OFF: with the env var unset, the policy SHALL construct no
+   supervisor, consult nothing on the routed path, and behave
+   byte-identically to the shipped default.
+
+#### SCENARIO-ARC-WMTE-6600-1 (default off)
+
+Given `CARNOT_ARC_TRAJECTORY_SUPERVISOR` unset, the policy SHALL hold no
+supervisor and `trajectory_supervisor_diagnostics()` SHALL report
+`{"enabled": False}`.
+
+#### SCENARIO-ARC-WMTE-6600-2 (no premature fire, progress resets)
+
+Given fewer stagnant observations than the window, the supervisor SHALL
+return no redirect. Given a level-up observation, the stagnation counter
+SHALL reset.
+
+#### SCENARIO-ARC-WMTE-6600-3 (arm order, one per episode, once per level)
+
+Given stagnation with a goal bias installed, the supervisor SHALL fire
+`drop_goal_bias` first. Given later stagnation with the latch set and the
+evidence floor met, it SHALL fire `allow_reinduction`. Given later
+stagnation with diversity inactive, it SHALL fire
+`force_exploration_diversity`. Given all arms used on this level, it SHALL
+fire nothing.
+
+#### SCENARIO-ARC-WMTE-6600-4 (reinduction bounds)
+
+Given fewer than 200 new transitions since the last induction attempt, or 3
+attempts already fired this level, `allow_reinduction` SHALL NOT be
+eligible.
+
+#### SCENARIO-ARC-WMTE-6600-5 (application seams)
+
+Applying `drop_goal_bias` SHALL clear the explorer's goal bias via
+`set_goal_bias(None)`. Applying `allow_reinduction` SHALL reset the
+`induced` latch. Applying `force_exploration_diversity` SHALL enable the
+explorer's hybrid-diversity draw and push its stall counter past the
+threshold.
+
+#### SCENARIO-ARC-WMTE-6600-6 (receipts)
+
+After a redirect, the receipt SHALL contain the action index, level, arm,
+and diagnosis, and the diagnostics SHALL list the used arms and window.
+
+#### SCENARIO-ARC-WMTE-6600-7 (level-up resets arms)
+
+Given an arm already used, then a level-up, then fresh stagnation with the
+same eligibility, the SAME arm SHALL be able to fire again on the new
+level.
+
+## Implementation Status (REQ-ARC-WMTE-6600)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6600 | `python/carnot/agentic/arc_trajectory_supervisor.py` (`TrajectorySupervisor.observe` window counting + level-reset, `_first_eligible_arm` fixed-order decision table, `receipt`); wired in `python/carnot/agentic/arc_competition_agent.py` (`_make_trajectory_supervisor` env gate, `_maybe_supervise_trajectory` snapshot + observe call in `_next_move_routed`, `_apply_trajectory_redirect` seams, `trajectory_supervisor_diagnostics`). | `tests/python/test_arc_trajectory_supervisor.py` (default-off pin; window + level-reset; arm order incl. one-per-episode and once-per-level; reinduction evidence floor + attempt cap; seam application on a real policy + explorer; receipts; level-up arm reset; routed-path call-site wiring). |

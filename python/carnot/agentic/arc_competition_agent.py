@@ -1193,6 +1193,20 @@ def _bounded_reinduction_enabled() -> bool:
     return os.environ.get("CARNOT_ARC_BOUNDED_REINDUCTION") == "1"
 
 
+def _make_trajectory_supervisor():
+    """REQ-ARC-WMTE-6600 env gate. Default OFF: unset returns None and the
+    routed path never consults a supervisor. The window is the stagnant-action
+    count that triggers a strategy redirect; see arc_trajectory_supervisor."""
+    import os
+
+    if os.environ.get("CARNOT_ARC_TRAJECTORY_SUPERVISOR") != "1":
+        return None
+    from carnot.agentic.arc_trajectory_supervisor import TrajectorySupervisor
+
+    window = int(os.environ.get("CARNOT_ARC_TRAJECTORY_SUPERVISOR_WINDOW", "400"))
+    return TrajectorySupervisor(window=window)
+
+
 # DEFAULT OFF. Changing this constant changes what the SCORED agent sends its generator, so it is
 # a deliberate operator act, not a tuning knob.
 _SUPPLY_WIN_TRANSITION_DEFAULT = "0"
@@ -5432,6 +5446,8 @@ class E3AgentPolicy:
         # default.
         self._induction_attempt_count = 0
         self._transitions_at_last_induction_attempt = 0
+        # REQ-ARC-WMTE-6600: trajectory supervisor, None unless the env flag is set.
+        self._trajectory_supervisor = _make_trajectory_supervisor()
         self.root_grid = None  # the reset-state logical grid; plan_in_model starts here
         self.world_model_trust_selection = None
         self._active_probe_controller: Any = None
@@ -5838,6 +5854,62 @@ class E3AgentPolicy:
             return False
         new_transitions = len(self.transitions) - self._transitions_at_last_induction_attempt
         return new_transitions >= _REINDUCTION_TRANSITION_THRESHOLD
+
+    def _maybe_supervise_trajectory(self, latest: Any) -> None:
+        """REQ-ARC-WMTE-6600: one supervisor observation per routed action.
+        Builds the snapshot from state the policy already tracks, and applies
+        any redirect through `_apply_trajectory_redirect`. No-op when the
+        supervisor is off (default) or no frame is available."""
+
+        supervisor = self._trajectory_supervisor
+        if supervisor is None or latest is None:
+            return
+        from carnot.agentic.arc_trajectory_supervisor import TrajectorySnapshot
+
+        try:
+            level = int(_level_of(latest))
+        except Exception:
+            return
+        explorer = getattr(self, "explorer", None)
+        new_transitions = len(self.transitions) - int(self._transitions_at_last_induction_attempt)
+        snapshot = TrajectorySnapshot(
+            level=level,
+            goal_bias_installed=getattr(explorer, "goal_bias", None) is not None,
+            induced=bool(self.induced),
+            induction_attempts=int(self._induction_attempt_count),
+            new_transitions_since_induction=max(0, new_transitions),
+            diversity_active=bool(getattr(explorer, "_hybrid_diversity", False)),
+        )
+        redirect = supervisor.observe(snapshot)
+        if redirect is not None:
+            self._apply_trajectory_redirect(redirect)
+
+    def _apply_trajectory_redirect(self, redirect: Any) -> None:
+        """REQ-ARC-WMTE-6600 rule 5: apply an arm ONLY through existing seams.
+        The reinduction arm just resets the latch — the existing stall path in
+        `_next_move_routed` then re-enters induction with the new evidence."""
+
+        from carnot.agentic import arc_trajectory_supervisor as _ts
+
+        explorer = getattr(self, "explorer", None)
+        if redirect.arm == _ts.ARM_DROP_GOAL_BIAS and explorer is not None:
+            explorer.set_goal_bias(None)
+        elif redirect.arm == _ts.ARM_ALLOW_REINDUCTION:
+            self.induced = False
+        elif redirect.arm == _ts.ARM_FORCE_DIVERSITY and explorer is not None:
+            explorer._hybrid_diversity = True
+            explorer._steps_since_progress = max(
+                int(getattr(explorer, "_steps_since_progress", 0)),
+                int(getattr(explorer, "_stall_threshold", 150)) + 1,
+            )
+
+    def trajectory_supervisor_diagnostics(self) -> dict[str, Any]:
+        """REQ-ARC-WMTE-6600 rule 6: the redirect ledger for run artifacts."""
+
+        supervisor = self._trajectory_supervisor
+        if supervisor is None:
+            return {"enabled": False}
+        return supervisor.receipt()
 
     def _should_enter_induction(self, *, stalled: bool, won: bool) -> tuple[bool, Optional[str]]:
         if (
@@ -6898,6 +6970,10 @@ class E3AgentPolicy:
                 self._prev = None
             except Exception:
                 pass
+        # REQ-ARC-WMTE-6600: trajectory supervisor (default off). Runs after the
+        # level boundary is observed so the snapshot's level is fresh, and before
+        # phase dispatch so a redirect takes effect on this very action.
+        self._maybe_supervise_trajectory(latest)
         if self.phase == "explore":
             should_induce, reason = self._should_enter_induction(
                 stalled=False,
