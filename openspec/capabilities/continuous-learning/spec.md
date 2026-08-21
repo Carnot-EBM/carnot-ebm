@@ -1213,6 +1213,139 @@ the recommendation is row-derived, and the verdict follows the support gates.
 |-------------|--------|-------|
 | REQ-CL-6497 | Implemented: `python/carnot/experiment_6497_factor_pool_support_stress.py`; terminal artifact `results/experiment_6497_factor_pool_support_stress.json`. | Implemented: `tests/python/test_experiment_6497_factor_pool_support_stress.py`. |
 
+## REQ-CL-6498: Independent Continuous-Learning Replay Audit
+
+Carnot SHALL build Exp6498 at
+`python/carnot/experiment_6498_csl_independent_audit.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6498_csl_independent_audit --date 20260821`
+SHALL write `results/experiment_6498_csl_independent_audit.json`.
+
+Exp6498 SHALL load Exp6496 and Exp6497 as immutable upstream artifacts. It
+SHALL record each upstream path, file hash, gate field, expected value,
+observed value, observed value type, and pass flag. It SHALL not import
+`carnot.experiment_6496_continuous_factor_learning` or
+`carnot.experiment_6497_factor_pool_support_stress`.
+
+Exp6498 SHALL replay the emitted row tables independently. It SHALL recompute
+chronology, event identity, evidence spending, thresholds, null thresholds,
+adaptive peeks, multiplicity, restarts, decisions, durable actions, no-writes,
+pool states, evictions, tombstones, rollback rows, and restart
+non-resurrection from rows and receipts.
+
+Exp6498 SHALL recompute opportunities, admissions, exposure dose, immediate
+utility, held-future utility, exact validity, diversity, best-of-k support,
+family cells, horizon cells, stress cells, confidence intervals, and harmful
+flips from row tables. It SHALL not trust upstream headline fields as inputs to
+those recomputations.
+
+Exp6498 SHALL attack missing rows, reordered events, duplicate identifiers,
+aggregate tampering, stated actions without store actions, uncharged peeks,
+missing nulls, unequal dose, survivor-only support, held-out tuning, and
+invalid rollback. The audit readiness score SHALL be one only when all raw
+rows and attacks validate. The continuous-learning claim SHALL be eligible
+only when the independent safety, future-benefit, support, dose, and
+sequential-evidence gates pass.
+
+Exp6498 SHALL set `inference_substrate="independent_artifact_replay_no_llm"`.
+It SHALL set `verifier_is_oracle=true` only for exact receipts and
+deterministic recomputation.
+
+The terminal artifact SHALL include `status`, `upstream_gate_receipts`,
+`independent_reducer_receipt`, `chronology_replay_rows`,
+`evidence_replay_rows`, `action_store_match_rows`,
+`dose_recomputation_rows`, `immediate_metric_rows`, `future_metric_rows`,
+`support_recomputation_rows`, `discrepancy_rows`, `audit_attack_matrix`,
+`csl_audit_ready_score`, `continuous_learning_claim_eligible`,
+`per_unit_rows`, `aggregate_row_recomputation`, `gate_check_summary`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+Field principles SHALL use this map:
+
+| Field | Principle |
+|---|---|
+| `status` | Terminal independent audit state. |
+| `upstream_gate_receipts` | Both artifact hashes and exact gate values. |
+| `independent_reducer_receipt` | Fresh reducer identity and forbidden imports check. |
+| `chronology_replay_rows` | Event order, identity, and phase validation. |
+| `evidence_replay_rows` | Both processes, spending, peeks, multiplicity, and restarts. |
+| `action_store_match_rows` | Decision versus durable store action or no-write. |
+| `dose_recomputation_rows` | Opportunities, admissions, exposures, and matching by arm. |
+| `immediate_metric_rows` | Independently recomputed current utility and safety. |
+| `future_metric_rows` | Independently recomputed held utility and validity. |
+| `support_recomputation_rows` | Diversity and best-of-k support by horizon and budget. |
+| `discrepancy_rows` | JSON pointer, expected, observed, severity, and impact. |
+| `audit_attack_matrix` | Ordering, duplicate, aggregate, action, peek, null, dose, support, tuning, and rollback attacks. |
+| `csl_audit_ready_score` | Independent audit readiness field. |
+| `continuous_learning_claim_eligible` | Boolean claim boundary from independent rows. |
+| `per_unit_rows` | Required event/action/future-unit/budget/discrepancy rows. |
+| `aggregate_row_recomputation` | Every upstream and audit headline recomputed from raw rows. |
+| `gate_check_summary` | Exact gate evaluation or blocked_* reason and observed value. |
+| `preconditions_checked` | Complete upstream rows, immutable receipts, and independent reducer. |
+| `protected_files_unchanged` | Active roadmap and conductor unchanged. |
+| `inference_substrate` | independent_artifact_replay_no_llm. |
+| `verifier_is_oracle` | True only for exact receipts and independent deterministic recomputation. |
+| `field_principles` | Reason for every audit field. |
+| `field_provenance` | Raw JSON pointers, store receipts, hashes, and independent functions. |
+| `random_seed` | Fixed attack and interval seeds. |
+| `duration_s` | Measured audit wall time. |
+| `tests_run` | Commands and exit codes. |
+| `reproducibility_checksum` | Hash over gates, reducer, raw rows, recomputations, and attacks. |
+| `honest_verdict` | complete_* when the audit is valid, otherwise blocked_* with gate_check_summary. |
+
+### SCENARIO-CL-6498-INDEPENDENCE: Audit Reducer Does Not Import Producers
+
+GIVEN Exp6496 and Exp6497 producer modules exist
+WHEN Exp6498 constructs its reducer receipt
+THEN the receipt records a clean source check for forbidden Exp6496 and
+Exp6497 imports before any audit score can be one.
+
+**Spec traces:** REQ-CL-6498
+
+### SCENARIO-CL-6498-REPLAY: Rows Recompute Headline Gates
+
+GIVEN Exp6496 and Exp6497 artifacts with row tables
+WHEN Exp6498 reduces those rows
+THEN it independently recomputes execution, support, safety, dose, and
+sequential-evidence gates and compares them to upstream headlines.
+
+**Spec traces:** REQ-CL-6498
+
+### SCENARIO-CL-6498-CLAIM: Valid Null Keeps Claim Eligibility Closed
+
+GIVEN row replay validates but held-future benefit is absent
+WHEN Exp6498 computes the claim boundary
+THEN `csl_audit_ready_score` may be `1.0` while
+`continuous_learning_claim_eligible` remains `false`.
+
+**Spec traces:** REQ-CL-6498
+
+### SCENARIO-CL-6498-ATTACKS: Shortcut Attacks Fail Closed
+
+GIVEN missing-row, reorder, duplicate, aggregate, action, peek, null, dose,
+support, tuning, and rollback attacks
+WHEN Exp6498 evaluates the audit matrix
+THEN each attack row fails closed or emits a critical discrepancy.
+
+**Spec traces:** REQ-CL-6498
+
+### SCENARIO-CL-6498-ARTIFACT: Terminal Artifact Is Self-Consistent
+
+GIVEN gate receipts, replay rows, attack rows, protected hashes, and tests
+WHEN Exp6498 writes its terminal artifact
+THEN every required field has a principle and provenance, the checksum
+matches, and the honest verdict follows the independent audit gates.
+
+**Spec traces:** REQ-CL-6498
+
+## Implementation Status (REQ-CL-6498)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6498 | Planned: `python/carnot/experiment_6498_csl_independent_audit.py`; terminal artifact `results/experiment_6498_csl_independent_audit.json`. | Planned: `tests/python/test_experiment_6498_csl_independent_audit.py`. |
+
 ## REQ-CSL-6318: Versioned Factor-Local Online Initializer
 
 **Given** a fresh sealed chronological exact-constraint stream in the same
