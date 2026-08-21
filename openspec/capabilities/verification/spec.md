@@ -37071,6 +37071,137 @@ and `exact_constraint_record_ready_score` are derived from rows only.
 |---|---|---|
 | REQ-VERIFY-6477 | Planned (`python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py`, `results/experiment_6477_backend_neutral_exact_constraint_record.json`) | Planned (`tests/python/test_experiment_6477_backend_neutral_exact_constraint_record.py`) |
 
+### REQ-VERIFY-6482: Immutable Prospective Constraint Stream V558
+
+Carnot SHALL provide Exp6482 at
+`python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py`.
+The workflow SHALL write
+`results/experiment_6482_immutable_prospective_constraint_stream_commitment.json`
+and a versioned manifest under
+`data/research/experiment_6482_prospective_constraint_stream/`. It SHALL seal
+every finite-domain unit, task family, prompt, candidate policy, seed, split,
+exact label, protected clause, protected violation id, objective value, and
+backend receipt before any Exp6483 model process can start. It SHALL NOT call
+an LLM, use a private game source, use a language-model judge, modify
+`scripts/research_conductor.py`, or reuse an Exp6463 hash as authority.
+
+Exp6482 SHALL pre-gate on
+`results/experiment_6477_backend_neutral_exact_constraint_record.json` having
+`exact_constraint_record_ready_score == 1.0`. It SHALL record the Exp6477
+artifact hash, the Exp6476 forensic retirement of the Exp6463 path, the
+current repository state, and the future Exp6483 raw-output path state. The
+raw-output state SHALL pass only when the path is absent or empty at
+commitment time.
+
+Exp6482 SHALL create at least three finite exact task families with meaningful
+candidate headroom, protected clauses, and exact semantics expressible in the
+Exp6477 backend-neutral record. It SHALL predeclare at least 48 total units.
+At least 24 units SHALL be held. Development, calibration, and held membership
+SHALL be family-balanced and derived from fixed random seeds. Held prompts,
+held labels, and held membership SHALL NOT enter development selection logic.
+
+Exp6482 SHALL compute exact labels, satisfying witnesses, protected violation
+ids, and objective values with Z3 and exhaustive enumeration from the same
+backend-neutral record. It SHALL emit one row per unit, backend, split,
+commitment object, and attack. All reported aggregates SHALL recompute from
+rows. The attack matrix SHALL fail closed for post-hoc label edits, split
+moves, duplicate units, family imbalance, objective sign changes, unsupported
+operations, held prompt leakage, fake earlier raw output, and reuse of an
+Exp6463 hash.
+
+The terminal artifact SHALL include `status`,
+`prospective_stream_manifest`, `label_commitment_receipts`,
+`membership_commitment_receipts`, `protected_clause_manifest`,
+`backend_parity_rows`, `raw_output_empty_state_receipt`,
+`held_isolation_receipt`, `headroom_manifest`, `attack_matrix`,
+`prospective_contract_ready_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `protected_files_unchanged`,
+`gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`,
+`random_seed`, `duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`. `inference_substrate` SHALL be
+`exact_solver_dataset_commitment_no_llm`. `verifier_is_oracle` SHALL be true
+only within the declared finite-domain record.
+
+Required field principles:
+
+- `status`: A terminal status distinguishes a sealed prospective contract from a partial dataset.
+- `prospective_stream_manifest`: A versioned manifest defines every unit, family, prompt, policy, seed, and split before inference.
+- `label_commitment_receipts`: Immutable receipts prove exact labels existed before model output.
+- `membership_commitment_receipts`: Immutable receipts prove development and held membership was not chosen after results.
+- `protected_clause_manifest`: Protected clauses make harmful flips and safety regressions exact and replayable.
+- `backend_parity_rows`: Z3 and exhaustive agreement prevents one solver translation from defining the labels alone.
+- `raw_output_empty_state_receipt`: An empty future output path proves commitment preceded candidate generation.
+- `held_isolation_receipt`: Held prompts, labels, and membership must not enter development selection logic.
+- `headroom_manifest`: Predeclared candidate headroom prevents a later comparison on units where no arm can differ.
+- `attack_matrix`: Attacks test post-hoc labels, split moves, leakage, unsupported semantics, and old-lineage reuse.
+- `prospective_contract_ready_score`: A conjunctive score blocks all model inference unless the prospective evidence boundary is valid.
+- `per_unit_rows`: Unit, backend, commitment, and attack rows allow independent replay.
+- `aggregate_row_recomputation`: Row-derived aggregates catch a ready summary with one uncovered unit.
+- `protected_files_unchanged`: The task must not alter exact checker authority, active roadmap, or conductor.
+- `gate_check_summary`: A blocked verdict identifies the exact missing commitment or parity check.
+- `preconditions_checked`: Preconditions prove the exact record, target directories, and repository state were known before sealing.
+- `inference_substrate`: Declaring exact_solver_dataset_commitment_no_llm prevents a sealed fixture from being called model evidence.
+- `verifier_is_oracle`: The exact backends are authoritative only within the declared finite-domain semantics.
+- `field_principles`: A field-to-principle map prevents later reinterpretation of commitment evidence.
+- `field_provenance`: Per-field paths, blob IDs, hashes, and reducer sources make every value traceable.
+- `random_seed`: A fixed seed reproduces family balancing and split membership.
+- `duration_s`: Wall time detects a manifest emitted without backend enumeration and attacks.
+- `tests_run`: Recorded commands prove the dataset, commitment, and parity checks ran.
+- `reproducibility_checksum`: The checksum binds all unit definitions, labels, splits, exact records, and code.
+- `honest_verdict`: The verdict states whether the stream is prospectively usable without claiming any model result.
+
+#### SCENARIO-VERIFY-6482-COMMITMENT: Labels And Membership Predate Inference
+
+Given the Exp6482 prospective stream manifest,
+when labels, splits, prompts, policies, seeds, and protected clauses are sealed,
+then every development, calibration, and held unit has immutable label and
+membership receipts before any Exp6483 raw output exists.
+
+#### SCENARIO-VERIFY-6482-BACKEND-PARITY: Z3 Matches Exhaustive Labels
+
+Given all Exp6482 finite-domain units,
+when Z3 and exhaustive enumeration solve the shared Exp6477 record,
+then satisfiability, witness validity, protected violations, objective values,
+and exact labels match for every backend row.
+
+#### SCENARIO-VERIFY-6482-RAW-OUTPUT-GATE: Candidate Output Must Be Empty
+
+Given the future Exp6483 raw-output path,
+when Exp6482 records the commitment state,
+then the gate passes only if the path is absent or empty, and a fake earlier
+raw file makes readiness fail closed.
+
+#### SCENARIO-VERIFY-6482-HELD-ISOLATION: Held Data Stays Out Of Development Logic
+
+Given family-balanced development, calibration, and held splits,
+when development selection inputs are hashed,
+then no held prompt, held label, or held membership hash appears in the
+development selector input receipt.
+
+#### SCENARIO-VERIFY-6482-ATTACKS: Prospective Boundary Attacks Fail Closed
+
+Given post-hoc label edits, split moves, duplicate units, family imbalance,
+objective sign changes, unsupported operations, held prompt leakage, fake raw
+output, and Exp6463 hash reuse,
+when Exp6482 runs the attack matrix,
+then every attack is detected and cannot raise
+`prospective_contract_ready_score`.
+
+#### SCENARIO-VERIFY-6482-ROWS: Readiness Recomputes From Rows
+
+Given unit, backend, split, commitment, raw-output, held-isolation, and attack
+rows,
+when the reducer recomputes Exp6482 aggregates,
+then the reported readiness score, parity counts, commitment coverage, leakage
+count, raw-output state, and attack summary derive from rows only.
+
+## Implementation Status (REQ-VERIFY-6482)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6482 | Planned (`python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py`, `results/experiment_6482_immutable_prospective_constraint_stream_commitment.json`) | Planned (`tests/python/test_experiment_6482_immutable_prospective_constraint_stream_commitment.py`) |
+
 ### REQ-VERIFY-6478: Identifiable Held Exact-Energy Selection V557
 
 Carnot SHALL provide Exp6478 at
