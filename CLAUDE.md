@@ -4071,6 +4071,33 @@ also scored 100% on the ARC-AGI-3 public set of 183 puzzles with no prior
 instruction, against about 30% for the bare model. Treat every number here as
 SECONDARY-SOURCE until confirmed against NVIDIA's own writeup.
 
+**CORRECTION 2026-08-21, same day, from the primary sources (append-only; the
+paragraph above is left as written because it is what the directive was issued
+against).** The paragraph above conflates two different results, and the
+conflation matters more than any number in it.
+
+- The AVO paper is arXiv 2603.24517, "AVO: Agentic Variation Operators for
+  Autonomous Evolutionary Search". Its abstract covers attention-kernel
+  optimization on Blackwell ONLY. It does not mention ARC-AGI-3 at all.
+  Confirmed by fetching the paper directly.
+- Agent-as-mutation-operator, `Vary(P) = Agent(P, K, f)`, is the KERNEL result.
+  Seven days, 500+ directions, 40 committed kernel versions, correctness-then-
+  throughput fitness, a git commit per version.
+- **For ARC, AVO did NOT run the evolutionary code loop.** NVIDIA's blog states
+  the agent built no explicit world models and acted directly on text-only 64x64
+  grids: form a hypothesis, act, observe, update state, continue. The credited
+  components are persistent memory, supervision, and long-horizon scaffolding
+  around a frontier reasoner. 100.00 RHAE, 183/183, PUBLIC games only --
+  explicitly not the semi-private or private sets -- with zero component
+  ablations and no published cost or wall-clock.
+
+So "copy the evolutionary operator because of the ARC score" copies the wrong
+mechanism. It is also the harder half of this directive that survives the
+correction, not the easier one: the component NVIDIA credits for ARC is a
+frontier reasoner, which is precisely what we may not use. Supervision and
+persistent memory are the parts that transfer; open-ended strategy generation is
+the part that does not.
+
 **Why this matters to Carnot.** Our public-set result is also 183/183
 (`ops/arc_solve_registry.yaml`). We reached it with 25 hand-built per-game
 adapters in `python/carnot/agentic/arc_game_adapters.py`. AVO reached it
