@@ -37310,6 +37310,127 @@ count, raw-output state, and attack summary derive from rows only.
 |---|---|---|
 | REQ-VERIFY-6482 | Planned (`python/carnot/experiment_6482_immutable_prospective_constraint_stream_commitment.py`, `results/experiment_6482_immutable_prospective_constraint_stream_commitment.json`) | Planned (`tests/python/test_experiment_6482_immutable_prospective_constraint_stream_commitment.py`) |
 
+### REQ-VERIFY-6489: Immutable Early-To-Final Solver Trajectory Commitment V560
+
+Carnot SHALL provide Exp6489 at
+`python/carnot/experiment_6489_solver_trajectory_commitment.py`. The command
+`.venv/bin/python -m carnot.experiment_6489_solver_trajectory_commitment --date 20260821`
+SHALL write `results/experiment_6489_solver_trajectory_commitment.json`.
+The workflow SHALL reuse the Exp6482 committed unit identities and the
+Exp6477 exact backends. It SHALL NOT add an LLM label, a generated label, a
+post-hoc instance filter, or a hand-corrected trajectory. The workflow SHALL
+pre-gate on `results/experiment_6488_v559_decision_ledger.json` reporting
+`v560_lineage_lock_ready_score == 1.0`. It SHALL record the observed gate
+field, expected value, actual value, artifact path, artifact hash, repository
+state, and Exp6482 source-stream checksum in `gate_check_summary`,
+`upstream_gate_receipt`, and `source_stream_receipt`.
+
+Exp6489 SHALL record chronological exact-solver events at precommitted
+checkpoints before feature extraction. Each raw trajectory row SHALL include a
+unit id, split, backend, family, checkpoint id, branch depth, event index,
+event time, partial assignment, constraint residuals, exact bound values,
+record hash, final exact outcome reference, and raw row hash. The raw rows
+SHALL remain immutable. A versioned reducer SHALL derive persistence labels
+only from those raw row hashes and the recorded final exact outcomes. The
+final exact outcome rows SHALL remain the only oracle authority.
+
+Exp6489 SHALL commit train, development, and held splits by instance before
+feature extraction. The split rule SHALL balance families and checkpoints
+without inspecting labels. The feature contract SHALL allow only
+identity-free solver state, residual, and bound fields. It SHALL forbid row
+order, unit id, backend, family, serialization length, checkpoint index, and
+duplicate trajectory features. The leakage attack matrix SHALL include attacks
+for row order, unit id, backend, family, serialization length, checkpoint
+index, and duplicate trajectory leakage. Every attack SHALL fail closed.
+
+The terminal artifact SHALL include `status`, `upstream_gate_receipt`,
+`source_stream_receipt`, `trajectory_schema`, `raw_trajectory_rows`,
+`final_exact_outcome_rows`, `persistence_label_rows`, `split_commitment`,
+`identity_free_feature_contract`, `family_backend_balance_rows`,
+`leakage_attack_matrix`, `trajectory_contract_ready_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `gate_check_summary`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL be
+`exact_solver_trajectory_recording_no_llm`. `verifier_is_oracle` SHALL be true
+only for final exact backend outcomes. `trajectory_contract_ready_score` SHALL
+be `1.0` only when exact replay and every commitment invariant pass.
+
+Required field principles:
+
+- `status`: Terminal trajectory commitment state.
+- `upstream_gate_receipt`: Exp6488 path, hash, field, expected, and observed value.
+- `source_stream_receipt`: Exp6482 path and checksum.
+- `trajectory_schema`: Versioned chronological exact-solver event schema.
+- `raw_trajectory_rows`: One row per immutable solver checkpoint event.
+- `final_exact_outcome_rows`: Exact solution and validity authority per unit.
+- `persistence_label_rows`: Early-to-final labels bound to raw hashes.
+- `split_commitment`: Pre-feature unit-level train, development, and held split.
+- `identity_free_feature_contract`: Allowed and forbidden feature fields.
+- `family_backend_balance_rows`: Counts and parity by family and backend.
+- `leakage_attack_matrix`: Identity, order, length, checkpoint, and duplicate attacks.
+- `trajectory_contract_ready_score`: Same-roadmap downstream gate field.
+- `per_unit_rows`: Trajectory, unit, split, and attack rows.
+- `aggregate_row_recomputation`: Counts and ready score recomputed from rows.
+- `gate_check_summary`: Exact gate evaluation or blocked_* reason and observed value.
+- `preconditions_checked`: Lineage lock, exact backends, and stream commitment.
+- `protected_files_unchanged`: Active roadmap and conductor unchanged.
+- `inference_substrate`: exact_solver_trajectory_recording_no_llm.
+- `verifier_is_oracle`: True for final exact backend outcomes only.
+- `field_principles`: Reason for each feature and evidence field.
+- `field_provenance`: Source modules, instance hashes, and reducers.
+- `random_seed`: Fixed split and checkpoint seed.
+- `duration_s`: Measured wall time.
+- `tests_run`: Commands and exit codes.
+- `reproducibility_checksum`: Hash over source stream, splits, trajectories, and labels.
+- `honest_verdict`: complete_* when commitment is valid, otherwise blocked_* with gate_check_summary.
+
+#### SCENARIO-VERIFY-6489-TRAJECTORY-COMMITMENT: Chronological Events Bind To Final Outcomes
+
+Given Exp6488 opens the V560 exact-solver trajectory lineage and Exp6482 is
+sealed,
+when Exp6489 records exact solver checkpoints,
+then every raw event has a raw hash, chronological event metadata, solver
+state fields, exact bounds, a backend and family receipt, and a final exact
+outcome reference that can be replayed from the exact backends.
+
+#### SCENARIO-VERIFY-6489-LABEL-AUTHORITY: Labels Derive Only From Final Exact Outcomes
+
+Given raw trajectory rows and final exact outcome rows,
+when the versioned persistence reducer runs,
+then every persistence label is reproducible from the final exact assignment
+and the matching raw row hash, and no learned baseline, LLM, or local model
+can supply a label.
+
+#### SCENARIO-VERIFY-6489-SPLITS: Held Splits Predate Feature Extraction
+
+Given Exp6482 unit identities,
+when Exp6489 commits train, development, and held splits,
+then split membership is family-balanced, is fixed before feature extraction,
+and does not inspect persistence labels.
+
+#### SCENARIO-VERIFY-6489-LEAKAGE: Identity And Serialization Attacks Fail Closed
+
+Given row-order, unit-id, backend, family, serialization-length,
+checkpoint-index, and duplicate-trajectory attacks,
+when Exp6489 builds the leakage matrix,
+then every attack is blocked and cannot raise
+`trajectory_contract_ready_score`.
+
+#### SCENARIO-VERIFY-6489-ROWS: Readiness Recomputes From Rows
+
+Given raw trajectory, final outcome, split, label, balance, and attack rows,
+when the reducer recomputes Exp6489 aggregates,
+then the event counts, split coverage, replay coverage, attack summary, and
+`trajectory_contract_ready_score` derive from rows only.
+
+## Implementation Status (REQ-VERIFY-6489)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6489 | Planned (`python/carnot/experiment_6489_solver_trajectory_commitment.py`, `results/experiment_6489_solver_trajectory_commitment.json`) | Planned (`tests/python/test_experiment_6489_solver_trajectory_commitment.py`) |
+
 ### REQ-VERIFY-6486: Three-Family Forced-Candidate Representation Stream
 
 Carnot SHALL provide Exp6486 at
