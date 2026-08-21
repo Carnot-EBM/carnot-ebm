@@ -6241,3 +6241,10 @@ The critical path for milestone .250:
 - theme: forced-candidate representation work concentrated reconstructed execution while causal telemetry remained absent
 - key result: the 3.49-minute compute stream accounted for nearly all of the 3.5-minute window; phase cause, task-time accelerator efficiency, and parallel-runner behavior remain unobserved
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.560
+
+- exp_range: no data available this milestone
+- theme: a brief compute-bound proposal stream led a synthesis-heavy milestone under fallback timing
+- key result: the named compute leader took 1 minute, but phase cause, task-period GPU efficiency, and parallel-runner behavior remain unobserved
+- acceptance: no data available this milestone
