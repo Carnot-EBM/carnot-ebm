@@ -35686,6 +35686,114 @@ verdict SHALL begin with `disqualified:` or `blocked:`.
 |---|---|---|
 | REQ-VERIFY-5853 | Planned (`python/carnot/experiment_5853_paired_embedding_integrity_audit.py`, `results/experiment_5853_paired_embedding_integrity_audit.json`) | Planned (`tests/python/test_experiment_5853_paired_embedding_integrity_audit.py`) |
 
+### REQ-VERIFY-6487: Raw Representation Integrity Audit
+
+The repository SHALL provide Exp6487 at
+`python/carnot/experiment_6487_representation_integrity_audit.py` that reads
+`results/experiment_6486_three_family_forced_candidate_representations.json`
+only for the structured gate, artifact hash, and raw-row path receipts before
+writing
+`results/experiment_6487_representation_integrity_audit.json`. Exp6487 SHALL
+be a deterministic, no-LLM audit and SHALL declare
+`inference_substrate=independent_raw_representation_audit_no_llm`.
+
+Before reading any Exp6486 aggregate rows or summary metrics, Exp6487 SHALL
+hash the Exp6486 artifact, verify
+`prospective_representation_stream_ready_score == 1.0`, read raw-row paths
+from the raw vector manifest, hash every raw row file, and record the reducer
+source hash. The reducer SHALL not import or call Exp6486 aggregation helpers.
+
+Exp6487 SHALL reconstruct one raw record per file and recompute family, split,
+unit, pair, label, vector norm, identifier length, native dimension, prompt
+hash, candidate hash, and duplicate counts from raw rows and their paths.
+Family vectors SHALL remain separate. The audit SHALL never concatenate or
+compare raw coordinates across model families with different native
+dimensions.
+
+Exp6487 SHALL run label permutation, pair permutation, claim flip, evaluator
+swap, sign flip, row duplication, split move, and raw-vector mutation attacks.
+It SHALL also fit shortcut-only controls for vector norm, identifier length,
+candidate identifier length, prompt identity, candidate identity, row order,
+model family, and native dimension. A shortcut or attack that can explain the
+correctness label SHALL force the readiness score to `0.0`.
+
+Exp6487 SHALL report every model family separately. Every family-by-task-family
+cell SHALL state correct support, wrong support, and headroom. Cells with no
+correct or no wrong support SHALL be marked unsupported. Cells with no
+remaining contrast SHALL be marked no-headroom.
+
+The terminal artifact MUST include `status`, `upstream_hash_receipts`,
+`independent_reducer_receipt`, `reconstructed_stream_counts`,
+`within_family_cell_rows`, `shortcut_control_rows`,
+`permutation_attack_rows`, `provenance_attack_rows`,
+`representation_integrity_ready_score`, `missing_verifier_gaps`,
+`per_unit_rows`, `aggregate_row_recomputation`, `protected_files_unchanged`,
+`gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal audit state distinguishes ready raw representations from disqualified or blocked evidence.
+- `upstream_hash_receipts`: Artifact and raw-row hashes prevent aggregate self-validation.
+- `independent_reducer_receipt`: Source hashes and import checks prove Exp6486 reducers were not reused.
+- `reconstructed_stream_counts`: Counts rebuilt from raw rows expose missing pairs, labels, dimensions, and duplicates.
+- `within_family_cell_rows`: Disaggregated support prevents pooled-family or no-headroom claims.
+- `shortcut_control_rows`: Nuisance features must not explain the label.
+- `permutation_attack_rows`: Relabel, pair, split, sign, and evaluator attacks must fail closed.
+- `provenance_attack_rows`: Duplicate, mutation, and hash attacks must be detected.
+- `representation_integrity_ready_score`: Emit a bare scalar for downstream gates.
+- `missing_verifier_gaps`: Present but unselectable checks stay visible.
+- `per_unit_rows`: Raw, pair, cell, shortcut, and attack rows make summaries replayable.
+- `aggregate_row_recomputation`: Summary fields derive only from emitted rows.
+- `protected_files_unchanged`: Active roadmap and conductor files remain unchanged.
+- `gate_check_summary`: Blocked verdicts must name the exact failed gate.
+- `preconditions_checked`: Gate, raw file, and hash checks run before audit claims.
+- `inference_substrate`: Use `independent_raw_representation_audit_no_llm`.
+- `verifier_is_oracle`: True only for deterministic row, hash, and schema checks.
+- `field_principles`: Every required field carries its audit reason.
+- `field_provenance`: Every field traces to raw paths, hashes, source, or tests.
+- `random_seed`: Fixed controls make permutation and shortcut results reproducible.
+- `duration_s`: Measured wall time exposes bootstrap-only artifacts.
+- `tests_run`: Exit codes prevent failed checks from becoming readiness.
+- `reproducibility_checksum`: A checksum detects raw input, reducer, or attack drift.
+- `honest_verdict`: Use `ready:`, `disqualified:`, or `blocked:`.
+
+### SCENARIO-VERIFY-6487-RAW-REPLAY: Raw Rows Drive The Audit
+
+Given Exp6486 reports `prospective_representation_stream_ready_score=1.0`,
+when Exp6487 runs, then it SHALL hash the Exp6486 artifact and each raw row,
+rebuild one record per raw file, recompute pair and label counts from raw file
+content and paths, and report that Exp6486 aggregate rows were not trusted.
+
+### SCENARIO-VERIFY-6487-SHORTCUTS: Shortcut Controls Block Readiness
+
+Given a raw representation stream where vector norm, identifier length,
+candidate identity, prompt identity, row order, family, or native dimension
+predicts the correctness label above the registered ceiling, when Exp6487
+fits the shortcut-only controls, then it SHALL report the surviving shortcut
+and set `representation_integrity_ready_score=0.0`.
+
+### SCENARIO-VERIFY-6487-ATTACKS: Provenance And Permutation Attacks Fail Closed
+
+Given a raw row is relabeled, moved across splits, sign-flipped, duplicated, or
+mutated without matching hash receipts, when Exp6487 audits the stream, then
+the corresponding attack row SHALL mark the mutation detected and SHALL not
+increase readiness.
+
+### SCENARIO-VERIFY-6487-CELLS: Family Cells Need Support And Headroom
+
+Given raw rows cover multiple model families and task families, when Exp6487
+reports disaggregated cells, then each family-by-task-family cell SHALL report
+correct and wrong support separately, avoid cross-family vector comparison, and
+mark unsupported or no-headroom cells explicitly.
+
+## Implementation Status (REQ-VERIFY-6487)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6487 | Implemented (`python/carnot/experiment_6487_representation_integrity_audit.py`, `results/experiment_6487_representation_integrity_audit.json`) | Implemented (`tests/python/test_experiment_6487_representation_integrity_audit.py`) |
+
 ### REQ-VERIFY-5868: Hardness-Controlled Constraint Fixture
 
 The repository SHALL provide Exp5868 at

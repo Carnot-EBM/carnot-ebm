@@ -78,6 +78,7 @@ def test_scenario_infra_6197_cross_product_fails_closed() -> None:
         ("complete_positive", "complete_positive: positive"): "positive",
         ("complete_null", "complete_null: null"): "null",
         ("blocked", "blocked_precondition"): "blocked",
+        ("disqualified", "disqualified: shortcut survived"): "disqualified",
         ("retired", "retired: closed"): "retired",
         ("skipped", "skipped_gate_closed"): "skipped",
         ("complete", "complete_null: null"): "null",
