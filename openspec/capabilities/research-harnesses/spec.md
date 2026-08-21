@@ -6775,6 +6775,142 @@ claimed.
 |---|---|---|
 | REQ-INFRA-6485 | Planned: `python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py`; terminal artifact `results/experiment_6485_online_cache_transition_eprocess_contract.json`. | Planned: `tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py`. |
 
+## REQ-INFRA-6488: V559 Decision Ledger SHALL Freeze Forced-Candidate Selector Evidence And Lock The V560 Lineage
+
+Carnot SHALL provide Exp6488 at
+`python/carnot/experiment_6488_v559_decision_ledger.py`. The command
+`.venv/bin/python -m carnot.experiment_6488_v559_decision_ledger --date 20260821`
+SHALL write
+`results/experiment_6488_v559_decision_ledger.json`.
+
+Exp6488 SHALL read Exp6483 through Exp6487 as upstream evidence. It SHALL hash
+each artifact before making a decision. It SHALL record repository status and
+SHALL confirm that `research-roadmap.yaml` and
+`scripts/research_conductor.py` are protected by this task contract.
+
+The reducer SHALL recompute V559 readiness, row counts, shortcut outcomes, and
+missing evidence from rows and receipts. It SHALL not trust an aggregate when a
+row container or raw-row manifest can be replayed. It SHALL recompute the
+Exp6486 raw row count, label counts, split counts, family counts, pair count,
+candidate identifier length shortcut, candidate identity shortcut, row-order
+shortcut, and missing prompt, candidate, and token length evidence from raw
+rows.
+
+The ledger SHALL emit one decision row per V559 claim surface. Each row SHALL
+use one disposition from `reuse`, `freeze`, `retire`, or
+`informational_only`. Reusable infrastructure MAY include the source map, the
+non-generation receipt contract, and the online transition contract. The
+Exp6486 forced-candidate representation rows SHALL be frozen as evidence but
+SHALL NOT be selector-eligible. The V559 forced-candidate representation
+selector scope SHALL be retired.
+
+Exp6488 SHALL define the only allowed V560 lineage as prospective exact-solver
+states with early-to-final persistence labels, identity-free features, exact
+replay, and no hidden-state selector reuse. The reducer SHALL reject attacks
+that relabel V559 candidates, repair missing lengths after the fact, filter
+shortcut rows, reuse a fitted representation transform, or cite contract
+readiness as scientific signal.
+
+Exp6488 SHALL set `v560_lineage_lock_ready_score=1.0` only when every V559
+disposition recomputes, every forbidden reuse attack fails closed, every
+required upstream artifact exists and hashes, and no V559 forced-candidate row
+is eligible for a V560 selector headline.
+
+The terminal artifact SHALL include `status`, `v559_artifact_receipts`,
+`decision_rows`, `aggregate_row_recomputation`,
+`retired_scope_definition`, `allowed_v560_lineage`,
+`forbidden_reuse_attack_matrix`, `v560_lineage_lock_ready_score`,
+`per_unit_rows`, `gate_check_summary`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL equal `artifact_reducer_no_llm`.
+`verifier_is_oracle` SHALL be true only for deterministic row and hash
+recomputation.
+
+Field principles SHALL use this map:
+
+| Field | Principle |
+|---|---|
+| `status` | Terminal ledger state. |
+| `v559_artifact_receipts` | Paths and hashes bind Exp6483 through Exp6487 evidence to exact bytes. |
+| `decision_rows` | One row per V559 claim surface prevents reusable contracts from laundering failed rows. |
+| `aggregate_row_recomputation` | Row and receipt replay make readiness, counts, shortcuts, and missing evidence reproducible. |
+| `retired_scope_definition` | The forced-candidate selector boundary is explicit and closed. |
+| `allowed_v560_lineage` | The V560 solver-trajectory scope is prospective, exact, and separate. |
+| `forbidden_reuse_attack_matrix` | Post-hoc repair and laundering attacks must fail closed. |
+| `v560_lineage_lock_ready_score` | A same-roadmap gate opens only after all dispositions and attacks recompute. |
+| `per_unit_rows` | Decision and attack rows make every disposition independently checkable. |
+| `gate_check_summary` | Blocked verdicts name failed checks and observed values. |
+| `preconditions_checked` | Artifact, exclusion-manifest, protected-file, and repository checks run before completion. |
+| `protected_files_unchanged` | Active roadmap and conductor remain unchanged. |
+| `inference_substrate` | `artifact_reducer_no_llm` prevents the ledger from being read as model inference. |
+| `verifier_is_oracle` | True only for deterministic row and hash recomputation. |
+| `field_principles` | Each required field states why it exists. |
+| `field_provenance` | Artifact paths, JSON pointers, and reducer functions trace each field. |
+| `random_seed` | Fixed attack ordering seed. |
+| `duration_s` | Measured wall time. |
+| `tests_run` | Commands and exit codes. |
+| `reproducibility_checksum` | Hash over source receipts, decisions, and attacks. |
+| `honest_verdict` | The verdict is `complete_*` when valid or `blocked_*` with gate details. |
+
+### SCENARIO-INFRA-6488-RECOMPUTE: V559 Evidence Recomputes From Rows And Receipts
+
+GIVEN Exp6483 through Exp6487 artifacts and Exp6486 raw rows
+WHEN Exp6488 builds `aggregate_row_recomputation`
+THEN it recomputes V559 readiness, row counts, shortcut outcomes, missing
+length evidence, and raw-row hash receipts without trusting upstream
+summaries.
+
+**Spec traces:** REQ-INFRA-6488
+
+### SCENARIO-INFRA-6488-DISPOSITIONS: Claim Surfaces Receive Terminal Dispositions
+
+GIVEN the V559 source, receipt, transition, representation-stream, and
+integrity-audit surfaces
+WHEN Exp6488 emits `decision_rows`
+THEN each row has a source, one allowed disposition, selector eligibility, and
+the exact reuse or retirement reason.
+
+**Spec traces:** REQ-INFRA-6488
+
+### SCENARIO-INFRA-6488-LINEAGE: V560 Scope Is Exact Solver Trajectory Only
+
+GIVEN the V559 forced-candidate selector scope is retired
+WHEN Exp6488 emits `allowed_v560_lineage`
+THEN the allowed scope is prospective exact-solver states, early-to-final
+persistence labels, identity-free features, exact replay, and no hidden-state
+selector reuse.
+
+**Spec traces:** REQ-INFRA-6488
+
+### SCENARIO-INFRA-6488-ATTACKS: Forbidden Reuse Fails Closed
+
+GIVEN attacks that relabel candidates, repair lengths, filter shortcut rows,
+reuse fitted transforms, or cite contract readiness as scientific signal
+WHEN Exp6488 evaluates `forbidden_reuse_attack_matrix`
+THEN every attack fails closed and no V559 forced-candidate row is eligible
+for a V560 selector headline.
+
+**Spec traces:** REQ-INFRA-6488
+
+### SCENARIO-INFRA-6488-ARTIFACT: Ledger Is Checksummed And Nonmutating
+
+GIVEN artifact receipts, decision rows, attack rows, protected-file hashes,
+field principles, field provenance, and test receipts
+WHEN Exp6488 validates the artifact
+THEN every required field is present, the checksum matches, protected files
+are unchanged, `v560_lineage_lock_ready_score` is `1.0`, and the verdict starts
+with `complete_`.
+
+**Spec traces:** REQ-INFRA-6488
+
+## Implementation Status (REQ-INFRA-6488)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6488 | Planned: `python/carnot/experiment_6488_v559_decision_ledger.py`; terminal artifact `results/experiment_6488_v559_decision_ledger.json`. | Planned: `tests/python/test_experiment_6488_v559_decision_ledger.py`. |
+
 ## REQ-INFRA-6351: V547 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
 
 Carnot SHALL build Exp6351 as a deterministic V547 post-marker source sweep

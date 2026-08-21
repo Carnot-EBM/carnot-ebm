@@ -1,0 +1,1028 @@
+{
+  "aggregate_row_recomputation": {
+    "all_v559_dispositions_recomputed": true,
+    "decision_disposition_counts": {
+      "freeze": 1,
+      "informational_only": 1,
+      "retire": 1,
+      "reuse": 3
+    },
+    "decision_row_count": 6,
+    "exp6483_source_ingestion": {
+      "method_mapping_count": 5,
+      "no_execution_row_count": 27,
+      "per_unit_row_count": 27,
+      "primary_source_count": 11,
+      "retired_scope_collision_count": 4,
+      "secondary_source_count": 7,
+      "source_mapping_ready": true
+    },
+    "exp6484_receipt_contract": {
+      "failed_attacks": [],
+      "per_unit_row_count": 57,
+      "recomputed_ready": true,
+      "reported_aggregate_row_count": 57,
+      "reported_score": 1.0,
+      "row_type_counts": {
+        "attack": 10,
+        "candidate_commitment": 2,
+        "family_separation": 3,
+        "no_generation_receipt": 6,
+        "phase": 24,
+        "raw_vector_persistence": 6,
+        "transform_binding": 6
+      }
+    },
+    "exp6485_transition_contract": {
+      "failed_attacks": [],
+      "per_unit_row_count": 42,
+      "recomputed_ready": true,
+      "reported_aggregate_row_count": 42,
+      "reported_score": 1.0,
+      "row_type_counts": {
+        "action": 11,
+        "attack": 10,
+        "event": 11,
+        "evidence_process": 5,
+        "lifecycle": 5
+      }
+    },
+    "exp6486_raw_rows": {
+      "family_counts": {
+        "gemma4_26b_a4b_it": 144,
+        "gemma4_31b_it": 144,
+        "qwen3_6_35b_a3b": 144
+      },
+      "label_counts": {
+        "correct": 144,
+        "wrong": 288
+      },
+      "native_dimension_sets_by_family": {
+        "gemma4_26b_a4b_it": [
+          2816
+        ],
+        "gemma4_31b_it": [
+          5376
+        ],
+        "qwen3_6_35b_a3b": [
+          2048
+        ]
+      },
+      "pair_count": 288,
+      "raw_hashes_match_manifest": true,
+      "raw_manifest_hash_root_replayed": true,
+      "raw_record_count": 432,
+      "split_counts": {
+        "calibration": 54,
+        "development": 162,
+        "held": 216
+      }
+    },
+    "exp6487_integrity_audit": {
+      "missing_evidence_matches_report": true,
+      "recomputed_ready_score": 0.0,
+      "recomputed_surviving_shortcuts": [
+        "candidate_identifier_length",
+        "candidate_identity",
+        "row_order_modulo_pair"
+      ],
+      "reported_missing_evidence": {
+        "candidate_length_unavailable_from_raw_rows": 432,
+        "prompt_length_unavailable_from_raw_rows": 432,
+        "token_length_unavailable_from_raw_rows": 432
+      },
+      "reported_ready_score": 0.0,
+      "reported_status": "disqualified",
+      "reported_surviving_shortcuts": [
+        "candidate_identifier_length",
+        "candidate_identity",
+        "row_order_modulo_pair"
+      ],
+      "shortcut_replay_matches_report": true
+    },
+    "exp6487_shortcut_replay": {
+      "ceiling": 0.75,
+      "perfect_shortcut_count": 9,
+      "shortcut_rows": [
+        {
+          "balanced_accuracy": 1.0,
+          "best_rule": "<=46.0 predicts correct",
+          "ceiling": 0.75,
+          "control_name": "candidate_identifier_length",
+          "control_type": "numeric_threshold",
+          "family": "gemma4_26b_a4b_it",
+          "feature_name": "candidate_identifier_length",
+          "row_count": 144,
+          "row_type": "shortcut_replay",
+          "survived_shortcut": true,
+          "unique_value_count": 6
+        },
+        {
+          "balanced_accuracy": 1.0,
+          "ceiling": 0.75,
+          "control_name": "candidate_identity",
+          "control_type": "categorical_majority",
+          "family": "gemma4_26b_a4b_it",
+          "feature_name": "candidate_id",
+          "row_count": 144,
+          "row_type": "shortcut_replay",
+          "survived_shortcut": true,
+          "unique_value_count": 144
+        },
+        {
+          "balanced_accuracy": 1.0,
+          "ceiling": 0.75,
+          "control_name": "row_order_modulo_pair",
+          "control_type": "categorical_majority",
+          "family": "gemma4_26b_a4b_it",
+          "feature_name": "row_order_modulo_pair",
+          "row_count": 144,
+          "row_type": "shortcut_replay",
+          "survived_shortcut": true,
+          "unique_value_count": 3
+        },
+        {
+          "balanced_accuracy": 1.0,
+          "best_rule": "<=46.0 predicts correct",
+          "ceiling": 0.75,
+          "control_name": "candidate_identifier_length",
+          "control_type": "numeric_threshold",
+          "family": "gemma4_31b_it",
+          "feature_name": "candidate_identifier_length",
+          "row_count": 144,
+          "row_type": "shortcut_replay",
+          "survived_shortcut": true,
+          "unique_value_count": 6
+        },
+        {
+          "balanced_accuracy": 1.0,
+          "ceiling": 0.75,
+          "control_name": "candidate_identity",
+          "control_type": "categorical_majority",
+          "family": "gemma4_31b_it",
+          "feature_name": "candidate_id",
+          "row_count": 144,
+          "row_type": "shortcut_replay",
+          "survived_shortcut": true,
+          "unique_value_count": 144
+        },
+        {
+          "balanced_accuracy": 1.0,
+          "ceiling": 0.75,
+          "control_name": "row_order_modulo_pair",
+          "control_type": "categorical_majority",
+          "family": "gemma4_31b_it",
+          "feature_name": "row_order_modulo_pair",
+          "row_count": 144,
+          "row_type": "shortcut_replay",
+          "survived_shortcut": true,
+          "unique_value_count": 3
+        },
+        {
+          "balanced_accuracy": 1.0,
+          "best_rule": "<=46.0 predicts correct",
+          "ceiling": 0.75,
+          "control_name": "candidate_identifier_length",
+          "control_type": "numeric_threshold",
+          "family": "qwen3_6_35b_a3b",
+          "feature_name": "candidate_identifier_length",
+          "row_count": 144,
+          "row_type": "shortcut_replay",
+          "survived_shortcut": true,
+          "unique_value_count": 6
+        },
+        {
+          "balanced_accuracy": 1.0,
+          "ceiling": 0.75,
+          "control_name": "candidate_identity",
+          "control_type": "categorical_majority",
+          "family": "qwen3_6_35b_a3b",
+          "feature_name": "candidate_id",
+          "row_count": 144,
+          "row_type": "shortcut_replay",
+          "survived_shortcut": true,
+          "unique_value_count": 144
+        },
+        {
+          "balanced_accuracy": 1.0,
+          "ceiling": 0.75,
+          "control_name": "row_order_modulo_pair",
+          "control_type": "categorical_majority",
+          "family": "qwen3_6_35b_a3b",
+          "feature_name": "row_order_modulo_pair",
+          "row_count": 144,
+          "row_type": "shortcut_replay",
+          "survived_shortcut": true,
+          "unique_value_count": 3
+        }
+      ],
+      "surviving_shortcuts": [
+        "candidate_identifier_length",
+        "candidate_identity",
+        "row_order_modulo_pair"
+      ]
+    },
+    "forbidden_reuse_attack_count": 5,
+    "forbidden_reuse_attack_fail_closed_count": 5,
+    "missing_evidence_replay": {
+      "candidate_length_unavailable_from_raw_rows": 432,
+      "prompt_length_unavailable_from_raw_rows": 432,
+      "token_length_unavailable_from_raw_rows": 432
+    },
+    "no_v559_forced_candidate_row_selector_eligible": true
+  },
+  "allowed_v560_lineage": {
+    "allowed_feature_families": [
+      "solver_state_observables",
+      "exact_constraint_residuals",
+      "chronological_event_features"
+    ],
+    "early_to_final_persistence_labels": true,
+    "exact_replay_required": true,
+    "hidden_state_selector_reuse_allowed": false,
+    "identity_free_features_required": true,
+    "label_authority": "final_exact_solver_outcome",
+    "lineage_id": "v560_exact_solver_trajectory",
+    "prohibited_inputs": [
+      "V559 forced-candidate hidden vectors",
+      "candidate identifiers",
+      "candidate identifier length",
+      "row order parity",
+      "post-hoc length fields",
+      "fitted V559 representation transforms"
+    ],
+    "prospective_exact_solver_states": true,
+    "replay_authority": "exact_counterfactual_replay",
+    "source": "openspec/change-proposals/research-roadmap-vNEXT.md#Exp6488-Exp6490"
+  },
+  "decision_rows": [
+    {
+      "claim_surface": "source_map_and_evidence_boundary",
+      "disposition": "reuse",
+      "reason": "Source provenance and claim boundaries transfer. They are not local scientific signal.",
+      "recomputed_from": "primary_source_rows, method_mapping_rows, no_execution_claim",
+      "row_type": "decision",
+      "selector_eligible": false,
+      "source": "exp6483",
+      "v560_reuse_allowed": true
+    },
+    {
+      "claim_surface": "non_generation_representation_receipt_contract",
+      "disposition": "reuse",
+      "reason": "Receipt discipline can bind future proposal events.",
+      "recomputed_from": "per_unit_rows and attack rows",
+      "row_type": "decision",
+      "selector_eligible": false,
+      "source": "exp6484",
+      "v560_reuse_allowed": true
+    },
+    {
+      "claim_surface": "online_cache_transition_eprocess_contract",
+      "disposition": "reuse",
+      "reason": "Transition receipts can support later factor-pool actions without claiming a gain.",
+      "recomputed_from": "event, action, evidence, lifecycle, and attack rows",
+      "row_type": "decision",
+      "selector_eligible": false,
+      "source": "exp6485",
+      "v560_reuse_allowed": true
+    },
+    {
+      "claim_surface": "forced_candidate_representation_rows",
+      "disposition": "freeze",
+      "reason": "432 raw rows remain evidence but are not selector-eligible.",
+      "recomputed_from": "raw_vector_manifest paths and raw row hashes",
+      "row_type": "decision",
+      "selector_eligible": false,
+      "source": "exp6486",
+      "v560_reuse_allowed": false
+    },
+    {
+      "claim_surface": "forced_candidate_representation_selector_scope",
+      "disposition": "retire",
+      "disqualifying_shortcuts": [
+        "candidate_identifier_length",
+        "candidate_identity",
+        "row_order_modulo_pair"
+      ],
+      "missing_evidence": [
+        "candidate_length_unavailable_from_raw_rows",
+        "prompt_length_unavailable_from_raw_rows",
+        "token_length_unavailable_from_raw_rows"
+      ],
+      "reason": "Shortcut controls and missing length evidence disqualify the forced-candidate selector scope.",
+      "recomputed_from": "raw rows, shortcut replay, and missing evidence replay",
+      "row_type": "decision",
+      "selector_eligible": false,
+      "source": "exp6486+exp6487",
+      "v560_reuse_allowed": false
+    },
+    {
+      "claim_surface": "representation_integrity_audit",
+      "disposition": "informational_only",
+      "reason": "The audit conclusion informs retirement. It is not a positive signal.",
+      "recomputed_from": "reported audit rows compared to independent raw-row replay",
+      "row_type": "decision",
+      "selector_eligible": false,
+      "source": "exp6487",
+      "v560_reuse_allowed": false
+    }
+  ],
+  "duration_s": 0.194022,
+  "field_principles": {
+    "aggregate_row_recomputation": "Row and receipt replay make readiness, counts, shortcuts, and missing evidence reproducible.",
+    "allowed_v560_lineage": "The V560 solver-trajectory scope is prospective, exact, and separate.",
+    "decision_rows": "One row per V559 claim surface prevents reusable contracts from laundering failed rows.",
+    "duration_s": "Measured wall time.",
+    "field_principles": "Each required field states why it exists.",
+    "field_provenance": "Artifact paths, JSON pointers, and reducer functions trace each field.",
+    "forbidden_reuse_attack_matrix": "Post-hoc repair and laundering attacks must fail closed.",
+    "gate_check_summary": "Blocked verdicts name failed checks and observed values.",
+    "honest_verdict": "The verdict is `complete_*` when valid or `blocked_*` with gate details.",
+    "inference_substrate": "`artifact_reducer_no_llm` prevents the ledger from being read as model inference.",
+    "per_unit_rows": "Decision and attack rows make every disposition independently checkable.",
+    "preconditions_checked": "Artifact, exclusion-manifest, protected-file, and repository checks run before completion.",
+    "protected_files_unchanged": "Active roadmap and conductor remain unchanged.",
+    "random_seed": "Fixed attack ordering seed.",
+    "reproducibility_checksum": "Hash over source receipts, decisions, and attacks.",
+    "retired_scope_definition": "The forced-candidate selector boundary is explicit and closed.",
+    "status": "Terminal ledger state.",
+    "tests_run": "Commands and exit codes.",
+    "v559_artifact_receipts": "Paths and hashes bind Exp6483 through Exp6487 evidence to exact bytes.",
+    "v560_lineage_lock_ready_score": "A same-roadmap gate opens only after all dispositions and attacks recompute.",
+    "verifier_is_oracle": "True only for deterministic row and hash recomputation."
+  },
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/per_unit_rows",
+        "/raw_vector_manifest",
+        "/missing_verifier_gaps"
+      ],
+      "principle": "Row and receipt replay make readiness, counts, shortcuts, and missing evidence reproducible.",
+      "reducer": "aggregate_row_recomputation"
+    },
+    "allowed_v560_lineage": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/allowed_v560_lineage"
+      ],
+      "principle": "The V560 solver-trajectory scope is prospective, exact, and separate.",
+      "reducer": "allowed_v560_lineage"
+    },
+    "decision_rows": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/decision_rows"
+      ],
+      "principle": "One row per V559 claim surface prevents reusable contracts from laundering failed rows.",
+      "reducer": "decision_rows"
+    },
+    "duration_s": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/duration_s"
+      ],
+      "principle": "Measured wall time.",
+      "reducer": "build_artifact"
+    },
+    "field_principles": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/field_principles"
+      ],
+      "principle": "Each required field states why it exists.",
+      "reducer": "build_artifact"
+    },
+    "field_provenance": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/field_provenance"
+      ],
+      "principle": "Artifact paths, JSON pointers, and reducer functions trace each field.",
+      "reducer": "build_artifact"
+    },
+    "forbidden_reuse_attack_matrix": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/forbidden_reuse_attack_matrix"
+      ],
+      "principle": "Post-hoc repair and laundering attacks must fail closed.",
+      "reducer": "forbidden_reuse_attack_matrix"
+    },
+    "gate_check_summary": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/gate_check_summary"
+      ],
+      "principle": "Blocked verdicts name failed checks and observed values.",
+      "reducer": "build_artifact"
+    },
+    "honest_verdict": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/honest_verdict"
+      ],
+      "principle": "The verdict is `complete_*` when valid or `blocked_*` with gate details.",
+      "reducer": "build_artifact"
+    },
+    "inference_substrate": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/inference_substrate"
+      ],
+      "principle": "`artifact_reducer_no_llm` prevents the ledger from being read as model inference.",
+      "reducer": "build_artifact"
+    },
+    "per_unit_rows": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/per_unit_rows"
+      ],
+      "principle": "Decision and attack rows make every disposition independently checkable.",
+      "reducer": "build_artifact"
+    },
+    "preconditions_checked": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/preconditions_checked"
+      ],
+      "principle": "Artifact, exclusion-manifest, protected-file, and repository checks run before completion.",
+      "reducer": "build_artifact"
+    },
+    "protected_files_unchanged": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/protected_files_unchanged"
+      ],
+      "principle": "Active roadmap and conductor remain unchanged.",
+      "reducer": "build_artifact"
+    },
+    "random_seed": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/random_seed"
+      ],
+      "principle": "Fixed attack ordering seed.",
+      "reducer": "build_artifact"
+    },
+    "reproducibility_checksum": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/reproducibility_checksum"
+      ],
+      "principle": "Hash over source receipts, decisions, and attacks.",
+      "reducer": "build_artifact"
+    },
+    "retired_scope_definition": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/aggregate_row_recomputation/exp6487_shortcut_replay"
+      ],
+      "principle": "The forced-candidate selector boundary is explicit and closed.",
+      "reducer": "retired_scope_definition"
+    },
+    "status": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/status"
+      ],
+      "principle": "Terminal ledger state.",
+      "reducer": "build_artifact"
+    },
+    "tests_run": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/tests_run"
+      ],
+      "principle": "Commands and exit codes.",
+      "reducer": "build_artifact"
+    },
+    "v559_artifact_receipts": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/status",
+        "/honest_verdict"
+      ],
+      "principle": "Paths and hashes bind Exp6483 through Exp6487 evidence to exact bytes.",
+      "reducer": "load_v559_artifacts"
+    },
+    "v560_lineage_lock_ready_score": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/v560_lineage_lock_ready_score"
+      ],
+      "principle": "A same-roadmap gate opens only after all dispositions and attacks recompute.",
+      "reducer": "build_artifact"
+    },
+    "verifier_is_oracle": {
+      "artifact_paths": [
+        "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "results/experiment_6486_three_family_forced_candidate_representations.json",
+        "results/experiment_6487_representation_integrity_audit.json"
+      ],
+      "json_pointers": [
+        "/verifier_is_oracle"
+      ],
+      "principle": "True only for deterministic row and hash recomputation.",
+      "reducer": "build_artifact"
+    }
+  },
+  "forbidden_reuse_attack_matrix": [
+    {
+      "allowed_into_v560": false,
+      "attack_description": "Relabel candidate kinds or candidate IDs and present the same rows as fresh selector data.",
+      "attack_name": "relabel_v559_candidates",
+      "disposition": "rejected",
+      "fail_closed": true,
+      "observed_blocker": "candidate_label_identity_is_part_of_the_failed_scope",
+      "row_type": "attack",
+      "source": "REQ-INFRA-6488"
+    },
+    {
+      "allowed_into_v560": false,
+      "attack_description": "Add prompt, candidate, or token lengths after raw vector persistence.",
+      "attack_name": "repair_lengths_post_hoc",
+      "disposition": "rejected",
+      "fail_closed": true,
+      "observed_blocker": "length_fields_absent_from_raw_rows",
+      "row_type": "attack",
+      "source": "REQ-INFRA-6488"
+    },
+    {
+      "allowed_into_v560": false,
+      "attack_description": "Drop rows or controls that expose perfect shortcut predictors.",
+      "attack_name": "filter_shortcut_rows",
+      "disposition": "rejected",
+      "fail_closed": true,
+      "observed_blocker": "shortcut_rows_are_evidence",
+      "row_type": "attack",
+      "source": "REQ-INFRA-6488"
+    },
+    {
+      "allowed_into_v560": false,
+      "attack_description": "Carry a fitted representation transform into V560 under a solver-trajectory name.",
+      "attack_name": "reuse_fitted_representation_transform",
+      "disposition": "rejected",
+      "fail_closed": true,
+      "observed_blocker": "hidden_state_selector_reuse_forbidden",
+      "row_type": "attack",
+      "source": "REQ-INFRA-6488"
+    },
+    {
+      "allowed_into_v560": false,
+      "attack_description": "Treat Exp6484 or Exp6485 readiness as evidence that Exp6486 rows have selector value.",
+      "attack_name": "cite_contract_readiness_as_scientific_signal",
+      "disposition": "rejected",
+      "fail_closed": true,
+      "observed_blocker": "contract_readiness_is_not_selector_signal",
+      "row_type": "attack",
+      "source": "REQ-INFRA-6488"
+    }
+  ],
+  "gate_check_summary": {
+    "all_gates_passed": true,
+    "checks": {
+      "all_v559_artifacts_hashed": true,
+      "all_v559_artifacts_present": true,
+      "decision_rows_cover_v559_surfaces": true,
+      "exp6483_source_mapping_recomputed": true,
+      "exp6484_receipt_contract_reusable": true,
+      "exp6485_transition_contract_reusable": true,
+      "exp6486_raw_rows_recomputed": true,
+      "exp6487_disqualification_recomputed": true,
+      "forbidden_reuse_attacks_fail_closed": true,
+      "no_forced_candidate_selector_eligibility": true,
+      "protected_files_unchanged": true,
+      "tests_passed": true
+    },
+    "failed_checks": []
+  },
+  "honest_verdict": "complete_v560_lineage_lock: V559 forced-candidate selector is retired; V560 exact-solver trajectory lineage is allowed",
+  "inference_substrate": "artifact_reducer_no_llm",
+  "per_unit_rows": [
+    {
+      "claim_surface": "source_map_and_evidence_boundary",
+      "disposition": "reuse",
+      "reason": "Source provenance and claim boundaries transfer. They are not local scientific signal.",
+      "recomputed_from": "primary_source_rows, method_mapping_rows, no_execution_claim",
+      "row_type": "decision",
+      "selector_eligible": false,
+      "source": "exp6483",
+      "v560_reuse_allowed": true
+    },
+    {
+      "claim_surface": "non_generation_representation_receipt_contract",
+      "disposition": "reuse",
+      "reason": "Receipt discipline can bind future proposal events.",
+      "recomputed_from": "per_unit_rows and attack rows",
+      "row_type": "decision",
+      "selector_eligible": false,
+      "source": "exp6484",
+      "v560_reuse_allowed": true
+    },
+    {
+      "claim_surface": "online_cache_transition_eprocess_contract",
+      "disposition": "reuse",
+      "reason": "Transition receipts can support later factor-pool actions without claiming a gain.",
+      "recomputed_from": "event, action, evidence, lifecycle, and attack rows",
+      "row_type": "decision",
+      "selector_eligible": false,
+      "source": "exp6485",
+      "v560_reuse_allowed": true
+    },
+    {
+      "claim_surface": "forced_candidate_representation_rows",
+      "disposition": "freeze",
+      "reason": "432 raw rows remain evidence but are not selector-eligible.",
+      "recomputed_from": "raw_vector_manifest paths and raw row hashes",
+      "row_type": "decision",
+      "selector_eligible": false,
+      "source": "exp6486",
+      "v560_reuse_allowed": false
+    },
+    {
+      "claim_surface": "forced_candidate_representation_selector_scope",
+      "disposition": "retire",
+      "disqualifying_shortcuts": [
+        "candidate_identifier_length",
+        "candidate_identity",
+        "row_order_modulo_pair"
+      ],
+      "missing_evidence": [
+        "candidate_length_unavailable_from_raw_rows",
+        "prompt_length_unavailable_from_raw_rows",
+        "token_length_unavailable_from_raw_rows"
+      ],
+      "reason": "Shortcut controls and missing length evidence disqualify the forced-candidate selector scope.",
+      "recomputed_from": "raw rows, shortcut replay, and missing evidence replay",
+      "row_type": "decision",
+      "selector_eligible": false,
+      "source": "exp6486+exp6487",
+      "v560_reuse_allowed": false
+    },
+    {
+      "claim_surface": "representation_integrity_audit",
+      "disposition": "informational_only",
+      "reason": "The audit conclusion informs retirement. It is not a positive signal.",
+      "recomputed_from": "reported audit rows compared to independent raw-row replay",
+      "row_type": "decision",
+      "selector_eligible": false,
+      "source": "exp6487",
+      "v560_reuse_allowed": false
+    },
+    {
+      "allowed_into_v560": false,
+      "attack_description": "Relabel candidate kinds or candidate IDs and present the same rows as fresh selector data.",
+      "attack_name": "relabel_v559_candidates",
+      "disposition": "rejected",
+      "fail_closed": true,
+      "observed_blocker": "candidate_label_identity_is_part_of_the_failed_scope",
+      "row_type": "attack",
+      "source": "REQ-INFRA-6488"
+    },
+    {
+      "allowed_into_v560": false,
+      "attack_description": "Add prompt, candidate, or token lengths after raw vector persistence.",
+      "attack_name": "repair_lengths_post_hoc",
+      "disposition": "rejected",
+      "fail_closed": true,
+      "observed_blocker": "length_fields_absent_from_raw_rows",
+      "row_type": "attack",
+      "source": "REQ-INFRA-6488"
+    },
+    {
+      "allowed_into_v560": false,
+      "attack_description": "Drop rows or controls that expose perfect shortcut predictors.",
+      "attack_name": "filter_shortcut_rows",
+      "disposition": "rejected",
+      "fail_closed": true,
+      "observed_blocker": "shortcut_rows_are_evidence",
+      "row_type": "attack",
+      "source": "REQ-INFRA-6488"
+    },
+    {
+      "allowed_into_v560": false,
+      "attack_description": "Carry a fitted representation transform into V560 under a solver-trajectory name.",
+      "attack_name": "reuse_fitted_representation_transform",
+      "disposition": "rejected",
+      "fail_closed": true,
+      "observed_blocker": "hidden_state_selector_reuse_forbidden",
+      "row_type": "attack",
+      "source": "REQ-INFRA-6488"
+    },
+    {
+      "allowed_into_v560": false,
+      "attack_description": "Treat Exp6484 or Exp6485 readiness as evidence that Exp6486 rows have selector value.",
+      "attack_name": "cite_contract_readiness_as_scientific_signal",
+      "disposition": "rejected",
+      "fail_closed": true,
+      "observed_blocker": "contract_readiness_is_not_selector_signal",
+      "row_type": "attack",
+      "source": "REQ-INFRA-6488"
+    }
+  ],
+  "preconditions_checked": {
+    "artifact_paths_present": true,
+    "blocked_reasons": [],
+    "git_head": "401ccaa4e81d85e2af5e9fb6c77b1a528643e69a",
+    "git_status_short": "M openspec/capabilities/research-harnesses/spec.md\n M scripts/adversarial_verify.py\n M tests/python/test_adversarial_verify_substrate_classification_5933.py",
+    "planning_date": "20260821",
+    "preconditions_ready": true,
+    "protected_task_paths": [
+      "research-roadmap.yaml",
+      "scripts/research_conductor.py"
+    ],
+    "python": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "version": "3.12.13"
+    },
+    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "required_files": {
+      "e2e_plan": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md"
+      },
+      "exclusion_manifest": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml"
+      },
+      "research_complete": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml"
+      },
+      "spec": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-harnesses/spec.md"
+      }
+    },
+    "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6488_v559_decision_ledger.json"
+  },
+  "protected_files_unchanged": {
+    "active_roadmap_and_conductor_unchanged": true,
+    "files": {
+      "research-roadmap.yaml": {
+        "git_ls_files_marker": "H",
+        "protected_by_task_contract": true,
+        "sha256_after": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "sha256_before": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "git_ls_files_marker": "H",
+        "protected_by_task_contract": true,
+        "sha256_after": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb",
+        "sha256_before": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb",
+        "unchanged": true
+      }
+    }
+  },
+  "random_seed": 6488,
+  "reproducibility_checksum": "sha256:1e1d6a29c37959d7b816d0d1c28f8a6e687047204c948bec1087405d2392069f",
+  "retired_scope_definition": {
+    "boundary": "V559 forced-candidate hidden representations may be cited only as frozen failure evidence. They may not support a V560 selector headline.",
+    "disqualifying_shortcuts": [
+      "candidate_identifier_length",
+      "candidate_identity",
+      "row_order_modulo_pair"
+    ],
+    "forbidden_reuse": [
+      "candidate relabel",
+      "post-hoc length repair",
+      "shortcut-row filtering",
+      "fitted hidden-state transform reuse",
+      "contract-readiness laundering"
+    ],
+    "frozen_row_count": 432,
+    "missing_required_evidence": [
+      "candidate_length_unavailable_from_raw_rows",
+      "prompt_length_unavailable_from_raw_rows",
+      "token_length_unavailable_from_raw_rows"
+    ],
+    "scope_id": "v559_forced_candidate_representation_selector",
+    "selector_eligible": false,
+    "source": "Exp6486 raw rows and Exp6487 integrity audit",
+    "v559_forced_candidate_rows_eligible_for_v560_selector": 0
+  },
+  "status": "complete_v559_decision_ledger",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6488_v559_decision_ledger.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6488_v559_decision_ledger.py -m pytest tests/python/test_experiment_6488_v559_decision_ledger.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6488_v559_decision_ledger.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6488_v559_decision_ledger.py",
+      "exit_code": 0
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6488_v559_decision_ledger --date 20260821",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6488_v559_decision_ledger.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6488_v559_decision_ledger.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -c \"from pathlib import Path; assert Path('ops/e2e-test-plan.md').exists()\"",
+      "exit_code": 0
+    }
+  ],
+  "v559_artifact_receipts": [
+    {
+      "artifact_key": "exp6483",
+      "bytes": 39867,
+      "exists": true,
+      "honest_verdict": "success_v559_latent_energy_sota_mapping_completed_no_execution",
+      "path": "results/experiment_6483_v559_latent_energy_sota_ingestion.json",
+      "readiness_fields": {
+        "no_execution_claim": true
+      },
+      "sha256": "sha256:6731a4194f00cd38c03dfbbeb14112eff92c96378efd1c29db53451caecf18a4",
+      "status": "complete"
+    },
+    {
+      "artifact_key": "exp6484",
+      "bytes": 920511,
+      "exists": true,
+      "honest_verdict": "complete: non-generation representation receipt contract is ready; no model-quality claim is made",
+      "path": "results/experiment_6484_non_generation_representation_receipt_contract.json",
+      "readiness_fields": {
+        "non_generation_surface_contract_ready_score": 1.0
+      },
+      "sha256": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+      "status": "complete_non_generation_representation_receipt_contract"
+    },
+    {
+      "artifact_key": "exp6485",
+      "bytes": 188095,
+      "exists": true,
+      "honest_verdict": "complete: online cache transition e-process contract is ready; no learning gain is claimed",
+      "path": "results/experiment_6485_online_cache_transition_eprocess_contract.json",
+      "readiness_fields": {
+        "online_transition_contract_ready_score": 1.0
+      },
+      "sha256": "sha256:c122981dc7b1701f756919d1ecd5814adc7c73101e7c9be64fd1244cf1534b0c",
+      "status": "complete_online_cache_transition_eprocess_contract"
+    },
+    {
+      "artifact_key": "exp6486",
+      "bytes": 2704831,
+      "exists": true,
+      "honest_verdict": "complete: representation stream rows are complete for all three families; no representation quality claim is made",
+      "path": "results/experiment_6486_three_family_forced_candidate_representations.json",
+      "readiness_fields": {
+        "prospective_representation_stream_ready_score": 1.0
+      },
+      "sha256": "sha256:17689f899ceb3da94a12e146e826a014248aa6619cec6e577ee70e29a063b358",
+      "status": "complete_representation_stream"
+    },
+    {
+      "artifact_key": "exp6487",
+      "bytes": 1314541,
+      "exists": true,
+      "honest_verdict": "disqualified: candidate_identifier_length,candidate_identity,row_order_modulo_pair,token_length_unavailable_from_raw_rows,candidate_length_unavailable_from_raw_rows,prompt_length_unavailable_from_raw_rows",
+      "path": "results/experiment_6487_representation_integrity_audit.json",
+      "readiness_fields": {
+        "representation_integrity_ready_score": 0.0
+      },
+      "sha256": "sha256:f9c19e581d5d385239fe840e897048249eb0e088fe95c949d973cee966224d32",
+      "status": "disqualified"
+    }
+  ],
+  "v560_lineage_lock_ready_score": 1.0,
+  "verifier_is_oracle": true
+}
