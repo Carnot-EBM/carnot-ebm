@@ -9,104 +9,25 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 5 |
+| CHECKABLE | 4 |
+| AGGREGATE_ONLY | 1 |
 | CANNOT_DETERMINE | 3 |
-
-## experiment_3377_archive_v310_activate_v311.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The archive of milestone 2026.05.310 and activation of milestone 2026.05.311 completed successfully and is ready.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_3392_archive_v311_activate_v312.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The archive is complete and milestone `2026.05.312` is ready after archiving `2026.05.311`.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_833_constraint_delta_root_cause.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The write path is missing: verification performed 10 store retrievals but zero store writes.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6479_verify_repair_factor_cache_shadow_adapter.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The default-off verify-repair factor-cache shadow adapter shipped successfully and met all readiness gates without changing public outputs or exact-verifier authority.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_1644_cerce_ledger.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The CERCE ledger was added and is ready, with no policy certificates, violations, FR11 events, or policy updates evaluated or recorded.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
 
 ## experiment_6480_v557_terminal_evidence_and_v558_preflight.json
 
-**CANNOT_DETERMINE**
+**AGGREGATE_ONLY**
 
 ## VERDICT
-CANNOT_DETERMINE
+AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-All seven V557 tasks completed and the exact-energy, ARC-shield, and factor-cache readiness gates were met.
+All seven V557 tasks completed, the ARC-shield and factor-cache readiness gates scored 1.0, and exact-energy selection had zero harmful flips across 24 unit-seed cases.
 
 ## WHAT IS MISSING
-The artifact is truncated mid-field; actual `"per_unit_rows"`, `"honest_verdict"`, and `"gate_check_summary"` values cannot be found—only their names in `"field_principles"` and `"field_provenance"` are visible.
+Actual per-unit metric rows for the 24 unit-seed cases and gate inputs; only aggregates such as `"finite_no_llm_unit_seed_count"`, `"harmful_flip_count_vs_first"`, and readiness `"score"` values appear, while `"field_principles.per_unit_rows"` and `"field_provenance.per_unit_rows"` merely describe/provenance rows without providing them.
 
 ## THE CHECK A READER CANNOT DO
-Do the 24 exact-energy units individually support `"harmful_flip_count_vs_first": 0`, or is that merely an unrecoverable aggregate assertion?
+Were the zero harmful flips and passed gates supported uniformly across all units, or concealed by degenerate, pinned, or offsetting unit-level results?
 
 ## experiment_6481_monotonic_phase_concurrency_receipt_contract.json
 
@@ -116,13 +37,13 @@ Do the 24 exact-energy units individually support `"harmful_flip_count_vs_first"
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The artifact claims the phase-concurrency receipt gate achieved a row-derived readiness score of 1.0, with every required check passing and all nine attacks failing closed.
+The visible portion claims the phase-concurrency receipt readiness gate scored 1.0, with all checks passing and all nine attacks failing closed.
 
 ## WHAT IS MISSING
-The artifact is truncated mid-`field_provenance.status.source_paths`; although `attack_matrix.rows`, `concurrency_decision_rows`, and `dependency_hash_rows` are present, the actual `phase_rows`, `process_identity_rows`, `resource_ownership_rows`, and `output_rows` referenced by `aggregate_row_recomputation.row_type_counts` cannot be found in the supplied text.
+The artifact is truncated before the actual `status`, `honest_verdict`, and `gate_check_summary` values and before the claimed `phase_rows`, `process_identity_rows`, `resource_ownership_rows`, and `output_rows`; only metadata such as `aggregate_row_recomputation.row_count`, `row_type_counts`, and `field_provenance` is visible for them.
 
 ## THE CHECK A READER CANNOT DO
-Do all 59 underlying rows actually satisfy every conjunct needed to recompute `phase_concurrency_receipt_ready_score_from_rows` as 1.0?
+Can the reported `phase_concurrency_receipt_ready_score_from_rows` of 1.0 actually be recomputed from all 59 claimed rows?
 
 ## experiment_6482_immutable_prospective_constraint_stream_commitment.json
 
@@ -132,10 +53,90 @@ Do all 59 underlying rows actually satisfy every conjunct needed to recompute `p
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The artifact claims full backend parity across 48 units, all nine attacks failing closed, and a prospective contract-readiness score of 1.0.
+The artifact claims a perfect prospective-contract readiness score of 1.0, including complete backend parity with zero mismatches across 48 units.
 
 ## WHAT IS MISSING
-The artifact is truncated inside `"backend_parity_rows"` at `"unit_id": "exp6482-qu`, so the complete per-unit rows underlying `"backend_parity_mismatch_count": 0` and `"prospective_contract_ready_score_from_rows": 1.0` cannot be found.
+The artifact is truncated mid-entry in `"backend_parity_rows"` and does not provide all 96 claimed parity rows or the remaining row types counted in `"row_type_counts"`, including all `"unit"`, `"headroom"`, `"protected_clause"`, `"commitment"`, and `"split_membership"` rows.
 
 ## THE CHECK A READER CANNOT DO
-Do all 48 units actually have matching Z3 and exhaustive-backend results with no mismatches?
+Do all 48 units actually have paired matching backend results, headroom, protected clauses, and pre-inference commitments sufficient to recompute `"prospective_contract_ready_score_from_rows": 1.0`?
+
+## experiment_6483_v559_latent_energy_sota_ingestion.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V559 source-ingestion and method-mapping task completed, met its source, mapping, and no-execution gates, and makes no experimental performance claim.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6484_non_generation_representation_receipt_contract.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The non-generation representation receipt contract is ready with a score of 1.0, and all 10 tested attacks fail closed.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6485_online_cache_transition_eprocess_contract.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The online transition contract is ready, with a row-recomputed readiness score of 1.0 and all mutation attacks failing closed.
+
+## WHAT IS MISSING
+nothing; the artifact includes `"action_rows"`, `"event_rows"`, `"evidence_process_rows"`, `"attack_matrix.rows"`, and `"aggregate_row_recomputation"`.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6486_three_family_forced_candidate_representations.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The visible portion claims candidate commitments and preconditions are complete, but the artifact is truncated before any final headline claim or verdict.
+
+## WHAT IS MISSING
+The remainder of the JSON, including any final verdict, gate status, `gate_check_summary`, and per-unit outcome metrics; only fields such as `"aggregate_row_recomputation"` and `"candidate_commitment_manifest"` are visible.
+
+## THE CHECK A READER CANNOT DO
+Does the complete artifact make a comparative or blocked headline claim, and if so, does it include the per-unit metrics or failed-check diagnostic needed to verify it?
+
+## experiment_6487_representation_integrity_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The representations are disqualified because three shortcut controls survived and token, candidate, and prompt lengths were unavailable.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
