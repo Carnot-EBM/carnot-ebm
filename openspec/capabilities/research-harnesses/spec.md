@@ -6475,6 +6475,149 @@ primary rows and at least three mappings, and blocked verdicts include
 |---|---|---|
 | REQ-INFRA-6483 | Planned: `python/carnot/experiment_6483_v559_latent_energy_sota_ingestion.py`; terminal artifact `results/experiment_6483_v559_latent_energy_sota_ingestion.json`. | Planned: `tests/python/test_experiment_6483_v559_latent_energy_sota_ingestion.py`. |
 
+## REQ-INFRA-6484: Non-Generation Representation Receipts SHALL Bind Fixed Candidates, Raw Vectors, Families, And Transforms
+
+Carnot SHALL provide Exp6484 at
+`python/carnot/experiment_6484_non_generation_representation_receipt_contract.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6484_non_generation_representation_receipt_contract --date 20260821`
+SHALL write
+`results/experiment_6484_non_generation_representation_receipt_contract.json`.
+
+The contract SHALL validate the preserved paired-representation surface without
+loading a large model. It SHALL confirm that the current GGUF generated-answer
+transport lane and finite-ID retry patterns are retired by
+`ops/exclusion_manifest.yaml`. It SHALL confirm that the paired embedding and
+final-token or final-layer embedding surfaces remain preserved.
+
+The receipt schema SHALL be versioned and hash-bound. Each representation
+receipt SHALL include prompt hash, candidate hash, pre-model commitment time,
+model ID, model hash, family, native dimension, vector hash, write count,
+phase intervals, and a no-generation witness. Candidate bytes SHALL be frozen
+before model access. Raw vectors SHALL have exactly one durable record before
+any transform. Derived features SHALL bind to raw vector hashes and one frozen
+transform manifest. Families SHALL keep native dimensions separate and SHALL
+not pool or concatenate raw dimensions across families.
+
+Exp6484 SHALL build deterministic fixture vectors for at least three model
+families with distinct native dimensions. It SHALL emit one row per fixture,
+family, phase, and attack. It SHALL include attacks for generation API calls,
+post-load candidate edits, duplicate vector writes, label reads before
+persistence, pooled family vectors, dimension-identity shortcuts, norm-only
+shortcuts, length-only shortcuts, pair permutations, and claim flips. Each
+attack SHALL fail closed.
+
+Readiness SHALL be recomputed from rows. Exp6484 SHALL set
+`non_generation_surface_contract_ready_score=1.0` only when every invariant
+passes and every attack fails closed. It SHALL set
+`inference_substrate="deterministic_representation_contract_no_llm"`. It SHALL
+set `verifier_is_oracle=true` only for deterministic receipt validation. It
+SHALL NOT modify `scripts/research_conductor.py` or `research-roadmap.yaml`.
+
+The terminal artifact SHALL include `status`, `receipt_schema`,
+`fixture_manifest`, `candidate_commitment_rows`,
+`raw_vector_persistence_rows`, `no_generation_receipts`,
+`family_separation_receipts`, `transform_manifest`, `attack_matrix`,
+`non_generation_surface_contract_ready_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `protected_files_unchanged`,
+`gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Field principles SHALL use this map:
+
+| Field | Principle |
+|---|---|
+| `status` | Terminal contract state. |
+| `receipt_schema` | Versioned non-generation representation receipt schema. |
+| `fixture_manifest` | Deterministic multi-dimension fixtures. |
+| `candidate_commitment_rows` | Proof that candidate bytes predate model access. |
+| `raw_vector_persistence_rows` | One durable write per raw vector. |
+| `no_generation_receipts` | Proof that no generation API was called. |
+| `family_separation_receipts` | Proof that native dimensions were not pooled. |
+| `transform_manifest` | Frozen transforms bound to raw hashes. |
+| `attack_matrix` | All shortcut and lifecycle attacks. |
+| `non_generation_surface_contract_ready_score` | Same-roadmap downstream gate field. |
+| `per_unit_rows` | Fixture, phase, and attack rows. |
+| `aggregate_row_recomputation` | Ready score recomputed from rows. |
+| `protected_files_unchanged` | Active roadmap and conductor unchanged. |
+| `gate_check_summary` | Required for any blocked_* verdict. |
+| `preconditions_checked` | Retirement and fixture prechecks. |
+| `inference_substrate` | `deterministic_representation_contract_no_llm` states that no LLM was loaded. |
+| `verifier_is_oracle` | True only for deterministic receipt validation. |
+| `field_principles` | Reason for each field. |
+| `field_provenance` | Source paths, hashes, and reducers. |
+| `random_seed` | Fixed attack ordering seed. |
+| `duration_s` | Measured wall time. |
+| `tests_run` | Executed commands and exit codes. |
+| `reproducibility_checksum` | Hash over schema, fixtures, and attacks. |
+| `honest_verdict` | States contract readiness without a model-quality claim. |
+
+### SCENARIO-INFRA-6484-COMMITMENT: Candidates Predate Model Access
+
+GIVEN deterministic prompt and candidate fixtures
+WHEN the contract validates candidate commitment rows
+THEN prompt hashes, candidate hashes, and pre-model commitment times match the
+fixture manifest and predate model access.
+
+**Spec traces:** REQ-INFRA-6484
+
+### SCENARIO-INFRA-6484-PERSISTENCE: Raw Vectors Are Written Once Before Transforms
+
+GIVEN deterministic vectors for three native dimensions
+WHEN the contract validates raw vector rows and transform rows
+THEN each raw vector has one durable write, label access follows persistence,
+and each derived feature binds to the raw hash and frozen transform manifest.
+
+**Spec traces:** REQ-INFRA-6484
+
+### SCENARIO-INFRA-6484-NO-GENERATION: Generation APIs Are Excluded
+
+GIVEN no-generation witness rows
+WHEN a generation, completion, chat, or decode method appears
+THEN validation rejects the row set and records the generation attack as
+failed closed.
+
+**Spec traces:** REQ-INFRA-6484
+
+### SCENARIO-INFRA-6484-FAMILY-SEPARATION: Native Dimensions Stay Separate
+
+GIVEN three family receipts with distinct native dimensions
+WHEN validation inspects raw and derived rows
+THEN no raw vector is pooled or concatenated across families, and dimension,
+norm, or length shortcuts are rejected.
+
+**Spec traces:** REQ-INFRA-6484
+
+### SCENARIO-INFRA-6484-ATTACKS: Shortcut And Lifecycle Attacks Fail Closed
+
+GIVEN attacks for generation API call, post-load candidate edit, duplicate
+vector write, label read before persistence, pooled family vectors, dimension
+identity, norm-only signal, length-only signal, pair permutation, and claim
+flip
+WHEN the deterministic validator evaluates the mutated rows
+THEN every attack fails closed and appears in `attack_matrix`.
+
+**Spec traces:** REQ-INFRA-6484
+
+### SCENARIO-INFRA-6484-ARTIFACT: Terminal Artifact Is Row-Recomputed And Nonmutating
+
+GIVEN the schema, fixtures, attack rows, precondition checks, protected file
+hashes, and command receipts
+WHEN Exp6484 writes the terminal artifact
+THEN every required field has a principle and provenance, the checksum matches,
+readiness is `1.0`, protected files are unchanged, and the verdict makes no
+model-quality claim.
+
+**Spec traces:** REQ-INFRA-6484
+
+## Implementation Status (REQ-INFRA-6484)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6484 | Planned: `python/carnot/experiment_6484_non_generation_representation_receipt_contract.py`; terminal artifact `results/experiment_6484_non_generation_representation_receipt_contract.json`. | Planned: `tests/python/test_experiment_6484_non_generation_representation_receipt_contract.py`. |
+
 ## REQ-INFRA-6351: V547 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
 
 Carnot SHALL build Exp6351 as a deterministic V547 post-marker source sweep
