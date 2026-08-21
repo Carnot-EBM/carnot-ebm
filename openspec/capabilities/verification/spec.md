@@ -36707,3 +36707,130 @@ are zero.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6449 | Planned (`python/carnot/experiment_6449_generation_to_verdict_path_receipt_contract.py`, `results/experiment_6449_generation_to_verdict_path_receipt_contract.json`) | Planned (`tests/python/test_experiment_6449_generation_to_verdict_path_receipt_contract.py`) |
+
+### REQ-VERIFY-6474: Protocol Identifiability And Receipt Preflight V557
+
+Carnot SHALL provide a reusable finite structural-identifiability audit and
+Exp6474 at
+`python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py`
+that writes
+`results/experiment_6474_protocol_identifiability_and_receipt_preflight.json`
+without calling an LLM, loading a model, using an external judge, or modifying
+`scripts/research_conductor.py`. The audit SHALL run over a frozen finite policy
+class, an explicit observation support, and a named scalar estimand. It SHALL
+group policies by their observed outcomes on the support and SHALL detect every
+policy pair whose observed outcomes are identical while the scalar estimand is
+different.
+
+Exp6474 SHALL emit constructive collision witnesses for every non-identifying
+support. Each witness SHALL include both policy ids, the shared observed
+outcome signature, each policy's observed outcomes on the support, both target
+effect values, and the exact target-effect difference. The declared V557
+held-selection support SHALL have no cross-estimand collision. Empty support,
+each leave-one-support-out support, and the changed-policy-class attack SHALL
+produce at least one witness. Duplicated observations SHALL canonicalize to the
+same identifying support while reporting duplicate cells. A constant-estimand
+control SHALL remain identifying because no cross-estimand difference exists.
+
+Exp6474 SHALL synthesize a minimum identifying support for the declared V557
+held-selection policy class by exhaustive subset enumeration. The reported
+minimum support SHALL be verified by a second exhaustive pass. Every smaller
+support SHALL be non-identifying or absent. Leave-one-support-out rows SHALL
+show that each selected observation cell is challenged and, for this frozen
+policy class, each removed cell creates a constructive collision witness.
+
+Exp6474 SHALL validate task-scoped runtime receipt conformance without running
+an LLM. The required phases are `queue_wait`,
+`model_load_or_fixture_load`, `execution`, `exact_verification`, and
+`artifact_write`. Each phase row SHALL include monotonic start/end clocks,
+wall-clock start/end strings, parent PID, child PIDs or a no-child fixture
+receipt, command/config/model/raw hashes, runner-selection hash, device ids,
+exit status, attribution confidence, and explicit CPU fallback state. Phase
+validation SHALL reject missing phases, non-monotonic intervals, missing hashes,
+bad runner hashes, bad exit status, and unexpected CPU fallback.
+
+The terminal artifact SHALL include `status`, `policy_class_manifest`,
+`observation_support_manifest`, `estimand_definition`, `collision_witnesses`,
+`minimum_identifying_support`, `leave_one_support_out_rows`,
+`task_scoped_receipt_rows`, `per_unit_rows`, `aggregate_row_recomputation`,
+`attack_matrix`, `protocol_identifying_score`, `protected_files_unchanged`,
+`gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`protocol_identifying_score` SHALL be a bare `1.0` only when the declared
+support has no cross-estimand collision, every required receipt phase is
+conformant, aggregate rows recompute from `per_unit_rows`, protected files are
+unchanged, and every non-identifying control emits a witness. A blocked status
+SHALL include `gate_check_summary`.
+
+Required field principles:
+
+- `status`: a terminal status separates a completed proof from an interrupted search.
+- `policy_class_manifest`: the frozen finite policy class defines the proof scope.
+- `observation_support_manifest`: the support lists the exact cells visible to the protocol.
+- `estimand_definition`: the named scalar target effect prevents proving the wrong claim.
+- `collision_witnesses`: constructive pairs make non-identification replayable.
+- `minimum_identifying_support`: the minimum support exposes load-bearing observations.
+- `leave_one_support_out_rows`: leave-one rows challenge every selected support cell.
+- `task_scoped_receipt_rows`: phase receipts bind timing, process, hashes, and fallback state to this task.
+- `per_unit_rows`: pair, support, attack, and phase rows support independent recomputation.
+- `aggregate_row_recomputation`: aggregate checks must derive only from rows.
+- `attack_matrix`: explicit controls cover empty, duplicate, stale, and changed-class failures.
+- `protocol_identifying_score`: the score is conjunctive and binary.
+- `protected_files_unchanged`: protected evaluators and roadmap machinery must stay unchanged.
+- `gate_check_summary`: blocked runs must name each failed structural or receipt check.
+- `preconditions_checked`: repository, schema, reducer, and fixture receipts predate testing.
+- `inference_substrate`: use `deterministic_synthetic_protocol_audit_no_llm`.
+- `verifier_is_oracle`: true only within the finite class and receipt arithmetic.
+- `field_principles`: design intent travels with the artifact.
+- `field_provenance`: field sources and hashes make unsupported summaries visible.
+- `random_seed`: support-search ordering is reproducible.
+- `duration_s`: wall time distinguishes completion from an unfinished search.
+- `tests_run`: recorded commands bind verification to the artifact.
+- `reproducibility_checksum`: the checksum binds inputs, code, and result.
+- `honest_verdict`: the verdict states the finite-class proof boundary.
+
+#### SCENARIO-VERIFY-6474-FINITE-AUDIT: Support Separates Target Effects
+
+Given a finite policy class, observation support, and scalar estimand,
+when the audit groups policies by observed outcomes on that support,
+then every policy pair with equal observed outcomes and different estimands is
+reported as a constructive collision witness, and the declared V557 support is
+accepted only when no such pair exists.
+
+#### SCENARIO-VERIFY-6474-MINIMUM-SUPPORT: Exhaustive Search Finds A Minimal Support
+
+Given the declared V557 held-selection policy class,
+when Exp6474 enumerates candidate supports by increasing size,
+then the first identifying support is reported, a second exhaustive pass
+verifies it, and each leave-one-support-out row emits a collision witness.
+
+#### SCENARIO-VERIFY-6474-ATTACKS: Non-Identifying Controls Fail Closed
+
+Given empty support, duplicate support, constant-estimand, stale declared
+support, and changed-policy-class controls,
+when Exp6474 evaluates the attack matrix,
+then every non-identifying control yields at least one constructive witness,
+the duplicate support preserves the declared positive result, and the constant
+estimand is recorded as an identifying control with no witness required.
+
+#### SCENARIO-VERIFY-6474-RECEIPTS: Task-Scoped Phases Need No LLM
+
+Given deterministic fixture work for queue, fixture load, execution, exact
+verification, and artifact write phases,
+when Exp6474 validates task-scoped receipt rows,
+then all phases have monotonic clocks, hashes, PID or no-child evidence, exit
+status, and CPU fallback state, and malformed receipt rows fail closed.
+
+#### SCENARIO-VERIFY-6474-ROWS: Aggregates Recompute From Rows
+
+Given pair rows, support-condition rows, attack rows, and receipt phase rows,
+when aggregates are recomputed from `per_unit_rows`,
+then collision counts, witness coverage, receipt conformance, attack pass/fail
+state, and `protocol_identifying_score` match the terminal artifact.
+
+## Implementation Status (REQ-VERIFY-6474)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6474 | Planned (`python/carnot/experiment_6474_protocol_identifiability_and_receipt_preflight.py`, `results/experiment_6474_protocol_identifiability_and_receipt_preflight.json`) | Planned (`tests/python/test_experiment_6474_protocol_identifiability_and_receipt_preflight.py`) |
