@@ -880,6 +880,180 @@ hash byte for byte.
 | REQ-CSL-6306-ROLLBACK | Planned | tests/python/test_experiment_6306_online_state_learning_safety_audit.py |
 | REQ-CSL-6306-PROVENANCE | Planned | tests/python/test_experiment_6306_online_state_learning_safety_audit.py |
 
+## REQ-CL-6496: Chronological Continuous Factor Learning
+
+Carnot SHALL build Exp6496 at
+`python/carnot/experiment_6496_continuous_factor_learning.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6496_continuous_factor_learning --date 20260821`
+SHALL write
+`results/experiment_6496_continuous_factor_learning.json`.
+
+Exp6496 SHALL consume the immutable Exp6491 proposal stream. It SHALL NOT call
+a new LLM. It SHALL record the Exp6491 path, file hash, artifact checksum,
+event count, proposal count, and exact compile count. It SHALL record Exp6492
+only as an optional causal replay receipt. If Exp6492 is absent, the artifact
+SHALL name that absence. It SHALL not make Exp6492 an unstated dependency.
+
+Exp6496 SHALL evaluate the Exp6495 controller gate before learning replay. It
+SHALL record the Exp6495 path, file hash, field, expected value, observed
+value, observed value type, and pass flag. It SHALL also record the prior
+Exp5895, Exp6420, and Exp6433 verdicts. It SHALL state the changed
+prerequisites for the V560 learning attempt.
+
+Exp6496 SHALL freeze chronological event order, train/development/future
+splits, arms, capacities, thresholds, restart schedule, horizons, best-of-k
+budgets, metrics, seeds, and stopping rules before replay. The four arms SHALL
+be `frozen_no_update`, `always_update`, `fixed_threshold`, and
+`restarted_reuse_spawn_defer`. Each arm SHALL receive the same event
+opportunities in the same order.
+
+Exact replay and exact compilation SHALL control every write. Every event and
+arm SHALL emit event-time evidence rows, a decision/action row, an exact
+admission row, and a pool-state row before any future outcome is evaluated.
+Rejected, no-proposal, duplicate, timeout, and non-eligible proposal rows SHALL
+remain represented as no-writes. Durable writes SHALL require exact admission.
+
+Exp6496 SHALL match admitted-event count and exposure dose across arms, or it
+SHALL report a row-level reweighting receipt. A positive learning claim SHALL
+not be possible when update quantity, exposure, or missing rows can explain the
+contrast.
+
+Exp6496 SHALL evaluate immediate exact utility and held-future utility,
+validity, diversity, calibration, and best-of-k support by family, model
+source, recurrence, and horizon. Current utility alone SHALL not open the
+continuous-learning readiness gate.
+
+Exp6496 SHALL test duplicate, peek, missing-action, rollback, restart,
+tombstone, and corruption attacks. The artifact SHALL set
+`csl_execution_complete_score=1.0` only when every event opportunity has a row
+for every arm and all reducers recompute. It SHALL set
+`continuous_self_learning_ready_score=1.0` only when the restarted arm improves
+predeclared future held utility over frozen and matched controls, has zero
+safety regression, has no material support loss, has valid sequential evidence,
+and closes every lifecycle attack.
+
+Exp6496 SHALL set
+`inference_substrate="chronological_exact_admitted_factor_learning_no_new_llm"`.
+It SHALL set `verifier_is_oracle=true` only for exact admission and final
+validity checks.
+
+The terminal artifact SHALL include `status`, `upstream_gate_receipt`,
+`proposal_stream_receipt`, `optional_causal_replay_receipt`,
+`frozen_learning_manifest`, `arm_definitions`, `event_rows`,
+`evidence_update_rows`, `decision_action_rows`, `pool_state_rows`,
+`exact_admission_rows`, `dose_matching_rows`,
+`immediate_evaluation_rows`, `future_evaluation_rows`,
+`future_support_rows`, `family_model_horizon_cells`,
+`lifecycle_attack_matrix`, `csl_execution_complete_score`,
+`continuous_self_learning_ready_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `gate_check_summary`,
+`preconditions_checked`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_principles`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Field principles SHALL use this map:
+
+| Field | Principle |
+|---|---|
+| `status` | Terminal chronological learning state. |
+| `upstream_gate_receipt` | Exp6495 path, hash, field, expected, and observed value. |
+| `proposal_stream_receipt` | Exp6491 immutable events and checksum. |
+| `optional_causal_replay_receipt` | Exp6492 presence, hash, and allowed use; never an unstated dependency. |
+| `frozen_learning_manifest` | Order, splits, arms, capacities, evidence rules, horizons, budgets, and metrics. |
+| `arm_definitions` | Frozen, always-update, fixed-threshold, and restarted controller arms. |
+| `event_rows` | Identical chronological opportunities per arm. |
+| `evidence_update_rows` | Anytime-valid process updates and spending. |
+| `decision_action_rows` | Decisions and actual durable actions or no-writes. |
+| `pool_state_rows` | Factor pool state after every event. |
+| `exact_admission_rows` | Counterfactual verification for each proposed write. |
+| `dose_matching_rows` | Opportunities, admissions, exposure, and any frozen reweighting by arm. |
+| `immediate_evaluation_rows` | Current exact utility and safety. |
+| `future_evaluation_rows` | Held-future utility, validity, diversity, and calibration. |
+| `future_support_rows` | Best-of-k support across predeclared budgets and horizons. |
+| `family_model_horizon_cells` | Disaggregated result cells. |
+| `lifecycle_attack_matrix` | Duplicate, peek, missing action, rollback, restart, tombstone, and corruption attacks. |
+| `csl_execution_complete_score` | Same-roadmap execution-completeness gate field. |
+| `continuous_self_learning_ready_score` | Scientific claim-readiness field. |
+| `per_unit_rows` | Required event/arm/action/future-unit/budget rows. |
+| `aggregate_row_recomputation` | Every headline and readiness gate recomputed from rows. |
+| `gate_check_summary` | Exact gate evaluation or blocked_* reason and observed value. |
+| `preconditions_checked` | Controller, proposal stream, exact authority, splits, and prior failures. |
+| `protected_files_unchanged` | Active roadmap and conductor unchanged. |
+| `inference_substrate` | chronological_exact_admitted_factor_learning_no_new_llm. |
+| `verifier_is_oracle` | True for exact admission and final validity only. |
+| `field_principles` | Reason for every event, dose, action, and support field. |
+| `field_provenance` | Proposal bytes, event receipts, store actions, exact replays, and reducers. |
+| `random_seed` | Frozen event, arm, replay, and interval seeds. |
+| `duration_s` | Measured execution and task wall time. |
+| `tests_run` | Commands and exit codes. |
+| `reproducibility_checksum` | Hash over manifest, stream, all arm rows, and attacks. |
+| `honest_verdict` | complete_positive, complete_null, disqualified, or blocked_* with gate_check_summary. |
+
+### SCENARIO-CL-6496-CHRONOLOGY: Proposal Replay Uses Identical Arm Opportunities
+
+GIVEN the immutable Exp6491 stream and the frozen Exp6496 manifest
+WHEN the four arms replay the stream
+THEN every arm receives every proposal opportunity in the same chronological
+order, and no new LLM generation occurs.
+
+**Spec traces:** REQ-CL-6496
+
+### SCENARIO-CL-6496-ADMISSION: Exact Authority Controls Writes
+
+GIVEN a proposed factor write in any learning arm
+WHEN exact compilation or exact replay rejects it
+THEN the action row is a no-write, the pool state remains unchanged, and the
+exact admission row records the closed reason.
+
+**Spec traces:** REQ-CL-6496
+
+### SCENARIO-CL-6496-DOSE: Update Quantity Cannot Masquerade As Policy Quality
+
+GIVEN the four arms finish chronological replay
+WHEN dose rows are reduced
+THEN opportunity count, admitted-event count, and exposure dose are comparable
+across arms, or an explicit reweighting row is present before readiness can be
+positive.
+
+**Spec traces:** REQ-CL-6496
+
+### SCENARIO-CL-6496-FUTURE-SUPPORT: Readiness Requires Held-Future Benefit
+
+GIVEN immediate exact utility is non-negative
+WHEN future held utility, safety, diversity, calibration, and best-of-k support
+are reduced
+THEN readiness stays `0.0` unless the restarted arm beats frozen and matched
+controls on held future rows without support or safety regression.
+
+**Spec traces:** REQ-CL-6496
+
+### SCENARIO-CL-6496-LIFECYCLE: Rollback, Restart, And Attacks Fail Closed
+
+GIVEN duplicate, peek, missing-action, rollback, restart, tombstone, and
+corruption attacks
+WHEN the lifecycle reducer evaluates the emitted rows
+THEN each attack fails closed and no unsafe durable write survives.
+
+**Spec traces:** REQ-CL-6496
+
+### SCENARIO-CL-6496-ARTIFACT: Terminal Artifact Is Row-Recomputed
+
+GIVEN the manifest, receipts, row tables, attacks, and protected-file checks
+WHEN Exp6496 writes its terminal artifact
+THEN every required field has a principle and provenance, the checksum matches,
+execution completeness is row-derived, and the honest verdict follows the
+readiness gates.
+
+**Spec traces:** REQ-CL-6496
+
+## Implementation Status (REQ-CL-6496)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6496 | Planned: `python/carnot/experiment_6496_continuous_factor_learning.py`; terminal artifact `results/experiment_6496_continuous_factor_learning.json`. | Planned: `tests/python/test_experiment_6496_continuous_factor_learning.py`. |
+
 ## REQ-CSL-6318: Versioned Factor-Local Online Initializer
 
 **Given** a fresh sealed chronological exact-constraint stream in the same
