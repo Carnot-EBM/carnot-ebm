@@ -6203,6 +6203,146 @@ false, `roadmap_activation_performed` is false, and
 |---|---|---|
 | REQ-INFRA-6480 | Planned: `python/carnot/experiment_6480_v557_terminal_evidence_and_v558_preflight.py`; terminal artifact `results/experiment_6480_v557_terminal_evidence_and_v558_preflight.json`. | Planned: `tests/python/test_experiment_6480_v557_terminal_evidence_and_v558_preflight.py`. |
 
+## REQ-INFRA-6481: Monotonic Phase And Concurrency Receipts SHALL Bind Task Attempts To Processes, Resources, Dependencies, And Outputs
+
+Carnot SHALL provide an optional experiment-local receipt API at
+`python/carnot/phase_concurrency_receipts.py` and Exp6481 at
+`python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6481_monotonic_phase_concurrency_receipt_contract --date 20260821`
+SHALL write
+`results/experiment_6481_monotonic_phase_concurrency_receipt_contract.json`.
+
+The receipt schema SHALL be versioned and hash-bound. It SHALL record the
+phases `queue_wait`, `dependency_resolution`, `resource_acquisition`,
+`model_or_fixture_load`, `execution`, `exact_verification`, `artifact_write`,
+and `resource_release`. Each phase row SHALL include task id, attempt id, PID,
+process-start identity, monotonic start and end, wall-clock context, and an
+exit state. Dependency rows SHALL include dependency path and SHA-256 value.
+Resource rows SHALL include resource key, exclusivity, owner PID, owner
+process-start identity, monotonic interval, acquisition, and release state.
+Output rows SHALL include output path, output SHA-256 value, and write time.
+
+The validator SHALL reject negative intervals, phase inversions, missing
+release, PID reuse, dependency hash changes, overlapping exclusive resource
+claims, output writes before execution, copied receipts from another task,
+borrowed global activity, duplicated attempt ids, forged clocks,
+cross-task output paths, and parent-child PID confusion. Independent CPU
+resource overlap MAY pass only when the shared CPU resource is non-exclusive.
+Exclusive GPU ownership SHALL pass only when intervals are serialized.
+
+Exp6481 SHALL emit one row per phase, dependency, resource interval, output,
+concurrency decision, process identity, and attack. Readiness SHALL be
+recomputed from rows. The API SHALL not alter conductor dispatch, locks,
+scheduling, or active roadmap semantics. `scripts/research_conductor.py` and
+`research-roadmap.yaml` SHALL remain byte-identical.
+
+The terminal artifact SHALL include `status`, `receipt_schema_and_hash`,
+`phase_rows`, `dependency_hash_rows`, `resource_ownership_rows`,
+`concurrency_decision_rows`, `process_identity_rows`, `attack_matrix`,
+`phase_concurrency_receipt_ready_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `protected_files_unchanged`,
+`gate_check_summary`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`deterministic_runtime_receipt_validation_no_llm`. `verifier_is_oracle` SHALL
+be true only for deterministic schema, hash, process, and monotonic interval
+validation.
+
+Field principles SHALL use this map:
+
+| Field | Principle |
+|---|---|
+| `status` | A terminal status distinguishes a complete contract build from partial instrumentation. |
+| `receipt_schema_and_hash` | A versioned schema prevents later experiments from silently changing receipt meaning. |
+| `phase_rows` | Monotonic phase rows separate queue, load, execution, exact verification, and write time. |
+| `dependency_hash_rows` | Dependency hashes prove the task consumed the stated upstream bytes. |
+| `resource_ownership_rows` | Resource intervals attribute CPUs, GPUs, files, and locks to one task attempt. |
+| `concurrency_decision_rows` | Explicit decisions distinguish safe overlap from conflicting exclusive ownership. |
+| `process_identity_rows` | PID and process-start identity prevent stale or borrowed activity from being credited. |
+| `attack_matrix` | Constructive attacks test the known global-activity and time-order attribution failures. |
+| `phase_concurrency_receipt_ready_score` | A conjunctive score blocks reuse until all ownership and ordering attacks fail closed. |
+| `per_unit_rows` | Phase, dependency, resource, and attack rows make the contract independently auditable. |
+| `aggregate_row_recomputation` | Row-derived readiness catches summaries that omit a failing receipt. |
+| `protected_files_unchanged` | The receipt task must not alter conductor or active roadmap behavior. |
+| `gate_check_summary` | A blocked verdict identifies the exact contract or test check that failed. |
+| `preconditions_checked` | Preconditions prove required clocks, process metadata, and fixture paths were available. |
+| `inference_substrate` | Declaring deterministic_runtime_receipt_validation_no_llm prevents fixture activity from becoming a compute claim. |
+| `verifier_is_oracle` | Only schema, hash, process, and monotonic interval validation is authoritative. |
+| `field_principles` | A field-to-principle map carries the evidence design into later tasks. |
+| `field_provenance` | Per-field code and fixture paths make each value traceable. |
+| `random_seed` | A fixed seed reproduces attack and overlap scheduling. |
+| `duration_s` | Wall time catches a task that emitted without exercising concurrency fixtures. |
+| `tests_run` | Recorded commands prove the API and its attacks executed. |
+| `reproducibility_checksum` | The checksum binds schema, fixtures, implementation, and result. |
+| `honest_verdict` | The verdict states contract readiness without claiming conductor concurrency. |
+
+### SCENARIO-INFRA-6481-MONOTONIC-PHASES: Ordered Phase Rows Fail Closed
+
+GIVEN the eight required phase rows for one task attempt
+WHEN the validator recomputes phase order from monotonic clocks
+THEN every required phase is present, negative intervals are rejected, phase
+inversions are rejected, and wall-clock inversions are diagnostic failures.
+
+**Spec traces:** REQ-INFRA-6481
+
+### SCENARIO-INFRA-6481-DEPENDENCY-BINDING: Dependency Hashes Bind Upstream Bytes
+
+GIVEN dependency rows with paths and SHA-256 values
+WHEN a dependency file changes or a row is copied from another task attempt
+THEN validation rejects the receipt and records the exact failed dependency or
+task binding reason.
+
+**Spec traces:** REQ-INFRA-6481
+
+### SCENARIO-INFRA-6481-RESOURCE-OWNERSHIP: Exclusive Resources Must Be Owned And Released
+
+GIVEN CPU, GPU, file, and lock resource intervals
+WHEN validation compares owner PID, process-start identity, acquisition, and
+release rows
+THEN independent CPU overlap is allowed, serialized exclusive GPU ownership is
+allowed, missing release is rejected, and overlapping exclusive ownership is
+rejected.
+
+**Spec traces:** REQ-INFRA-6481
+
+### SCENARIO-INFRA-6481-CONCURRENCY-OVERLAP: Decisions Explain Safe And Unsafe Overlap
+
+GIVEN resource intervals from multiple task attempts
+WHEN intervals overlap
+THEN non-exclusive CPU overlap emits a safe decision row, serialized GPU access
+emits a serialized decision row, and impossible exclusive overlap is rejected.
+
+**Spec traces:** REQ-INFRA-6481
+
+### SCENARIO-INFRA-6481-FAIL-CLOSED-VALIDATION: Attribution Attacks Are Rejected
+
+GIVEN attacks for borrowed `nvidia-smi` activity, stale dependency artifacts,
+duplicated attempt ids, forged clocks, cross-task output paths, parent-child PID
+confusion, PID reuse, and output writes before execution
+WHEN the deterministic validator evaluates mutated rows
+THEN every attack fails closed and appears in `attack_matrix`.
+
+**Spec traces:** REQ-INFRA-6481
+
+### SCENARIO-INFRA-6481-ARTIFACT: Terminal Artifact Is Row-Recomputed And Nonmutating
+
+GIVEN schema hashes, clock sources, process metadata, fixture paths, protected
+file hashes, and command receipts
+WHEN Exp6481 writes the terminal artifact
+THEN every required field has a principle and provenance, the checksum matches,
+readiness is `1.0`, protected conductor and roadmap files are unchanged, and no
+conductor behavior is changed.
+
+**Spec traces:** REQ-INFRA-6481
+
+## Implementation Status (REQ-INFRA-6481)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6481 | Planned: `python/carnot/phase_concurrency_receipts.py` and `python/carnot/experiment_6481_monotonic_phase_concurrency_receipt_contract.py`; terminal artifact `results/experiment_6481_monotonic_phase_concurrency_receipt_contract.json`. | Planned: `tests/python/test_experiment_6481_monotonic_phase_concurrency_receipt_contract.py`. |
+
 ## REQ-INFRA-6351: V547 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
 
 Carnot SHALL build Exp6351 as a deterministic V547 post-marker source sweep
