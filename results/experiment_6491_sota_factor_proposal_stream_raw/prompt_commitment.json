@@ -1,0 +1,73 @@
+{
+  "allowed_context": "solver_prefix_and_factor_schema_only",
+  "constrained_answer_grammar_used": false,
+  "factor_schema": {
+    "allowed_kinds": [
+      "partial_assignment_eq",
+      "residual_weight_at_most",
+      "candidate_count_at_least",
+      "branch_depth_at_least"
+    ],
+    "forbidden_fields": [
+      "answer",
+      "final_answer",
+      "final_outcome",
+      "label",
+      "outcome",
+      "release",
+      "release_authority",
+      "solution",
+      "verdict",
+      "verifier",
+      "verify"
+    ],
+    "no_answer_field": true,
+    "no_label_field": true,
+    "no_release_field": true,
+    "no_verifier_field": true,
+    "required_fields": [
+      "factor_id",
+      "kind",
+      "scope",
+      "weight"
+    ],
+    "schema_version": "carnot.experiment_6491.atomic_factor_proposal.v1"
+  },
+  "grammar_backend": "none",
+  "post_response_prompt_edit_allowed": false,
+  "prompt_count": 2,
+  "prompts_written_before_model_access": true,
+  "rank_and_select_loop_used": false,
+  "retry_to_valid_loop_used": false,
+  "rows": [
+    {
+      "constrained_answer_grammar_used": false,
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "factor_schema_hash": "sha256:fe86b03e175feaffb4ce14f12083f9f23e8c9567f87e10fc5f5df4da80dd90e4",
+      "grammar_backend": "none",
+      "post_response_prompt_edit_allowed": false,
+      "prompt": "You propose one exact-checkable atomic constraint factor for this development solver prefix.\nReturn one JSON object only.\nFactor schema: {\"allowed_kinds\":[\"partial_assignment_eq\",\"residual_weight_at_most\",\"candidate_count_at_least\",\"branch_depth_at_least\"],\"forbidden_fields\":[\"answer\",\"final_answer\",\"final_outcome\",\"label\",\"outcome\",\"release\",\"release_authority\",\"solution\",\"verdict\",\"verifier\",\"verify\"],\"no_answer_field\":true,\"no_label_field\":true,\"no_release_field\":true,\"no_verifier_field\":true,\"required_fields\":[\"factor_id\",\"kind\",\"scope\",\"weight\"],\"schema_version\":\"carnot.experiment_6491.atomic_factor_proposal.v1\"}\nVisible solver prefix: {\"assigned_variable_count\":2,\"best_possible_scalar_energy\":0,\"branch_depth\":2,\"candidate_count_under_partial\":8,\"constraint_residuals\":[{\"constraint_id\":\"c_guard_enabled\",\"residual_weight\":0,\"status\":\"satisfied\"},{\"constraint_id\":\"c_p_requires_r\",\"residual_weight\":0,\"status\":\"undecided\"},{\"constraint_id\":\"c_r_load_floor\",\"residual_weight\":0,\"status\":\"undecided\"},{\"constraint_id\":\"c_q_load_cap\",\"residual_weight\":0,\"status\":\"undecided\"}],\"incumbent_scalar_energy\":0,\"partial_assignment\":{\"p\":1,\"q\":1},\"partial_domain_fraction\":0.5,\"residual_weight_sum\":0,\"satisfied_constraint_count\":1,\"unassigned_variable_count\":2,\"undecided_constraint_count\":3,\"violated_constraint_count\":0}\n",
+      "prompt_row_hash": "sha256:86b706366a4b05e70b0982011b6b76d828d99e69a6556c364f3cb3816f29a2f3",
+      "prompt_sha256": "sha256:ace29e5cacb2f28e18680efd1e719a3d18e0c9274d8399156404a419d62993a4",
+      "rank_and_select_loop_used": false,
+      "retry_to_valid_loop_used": false,
+      "row_type": "prompt_commitment",
+      "visible_context_hash": "sha256:68b8ef9e42982d4e455f775922015447842ed2856774f0d4ec85e99690bd2ef3"
+    },
+    {
+      "constrained_answer_grammar_used": false,
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "factor_schema_hash": "sha256:fe86b03e175feaffb4ce14f12083f9f23e8c9567f87e10fc5f5df4da80dd90e4",
+      "grammar_backend": "none",
+      "post_response_prompt_edit_allowed": false,
+      "prompt": "You propose one exact-checkable atomic constraint factor for this development solver prefix.\nReturn one JSON object only.\nFactor schema: {\"allowed_kinds\":[\"partial_assignment_eq\",\"residual_weight_at_most\",\"candidate_count_at_least\",\"branch_depth_at_least\"],\"forbidden_fields\":[\"answer\",\"final_answer\",\"final_outcome\",\"label\",\"outcome\",\"release\",\"release_authority\",\"solution\",\"verdict\",\"verifier\",\"verify\"],\"no_answer_field\":true,\"no_label_field\":true,\"no_release_field\":true,\"no_verifier_field\":true,\"required_fields\":[\"factor_id\",\"kind\",\"scope\",\"weight\"],\"schema_version\":\"carnot.experiment_6491.atomic_factor_proposal.v1\"}\nVisible solver prefix: {\"assigned_variable_count\":2,\"best_possible_scalar_energy\":1,\"branch_depth\":2,\"candidate_count_under_partial\":5,\"constraint_residuals\":[{\"constraint_id\":\"c_total\",\"residual_weight\":0,\"status\":\"undecided\"},{\"constraint_id\":\"c_a_min\",\"residual_weight\":1,\"status\":\"violated\"},{\"constraint_id\":\"c_b_cap\",\"residual_weight\":0,\"status\":\"satisfied\"},{\"constraint_id\":\"c_c_min\",\"residual_weight\":0,\"status\":\"undecided\"}],\"incumbent_scalar_energy\":0,\"partial_assignment\":{\"a\":1,\"b\":0},\"partial_domain_fraction\":0.666667,\"residual_weight_sum\":1,\"satisfied_constraint_count\":1,\"unassigned_variable_count\":1,\"undecided_constraint_count\":2,\"violated_constraint_count\":1}\n",
+      "prompt_row_hash": "sha256:221ecee0a11b35b8a59c0c192d010233e5cc30223ce30b7722c7218d5b62d615",
+      "prompt_sha256": "sha256:b2ef5fa51f682da87ed4c9896bdde16a9fd21be595fe112db8867e2adc7c5e69",
+      "rank_and_select_loop_used": false,
+      "retry_to_valid_loop_used": false,
+      "row_type": "prompt_commitment",
+      "visible_context_hash": "sha256:1a5f3ff686a089cd2d259ba27fb24bb122ffca1d180f20d8d43de2b09c1091fd"
+    }
+  ],
+  "schema_version": "carnot.experiment_6491.sota_factor_proposal_stream.v1.prompt_commitment"
+}

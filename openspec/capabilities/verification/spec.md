@@ -37553,6 +37553,160 @@ rows only.
 |---|---|---|
 | REQ-VERIFY-6490 | Planned (`python/carnot/experiment_6490_trajectory_energy_baselines.py`, `results/experiment_6490_trajectory_energy_baselines.json`) | Planned (`tests/python/test_experiment_6490_trajectory_energy_baselines.py`) |
 
+### REQ-VERIFY-6491: Local GGUF Atomic Factor Proposal Stream V560
+
+Carnot SHALL provide Exp6491 at
+`python/carnot/experiment_6491_sota_factor_proposal_stream.py`. The command
+`.venv/bin/python -m carnot.experiment_6491_sota_factor_proposal_stream --date 20260821`
+SHALL write `results/experiment_6491_sota_factor_proposal_stream.json`.
+The workflow SHALL pre-gate on
+`results/experiment_6488_v559_decision_ledger.json` reporting
+`v560_lineage_lock_ready_score == 1.0` and
+`results/experiment_6489_solver_trajectory_commitment.json` reporting
+`trajectory_contract_ready_score == 1.0`. It SHALL record both upstream
+paths, artifact hashes, fields, expected values, observed values, and pass
+states before any local model is loaded. It SHALL also record the Exp6463
+fixed-policy verdict and explain that the new scope is one-shot factor
+proposal only.
+
+Exp6491 SHALL define `MODEL_SPECS` from the mandated local SOTA GGUF registry
+and the `cached_sota_pair()` pattern. The model specs SHALL include
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` with repository id, role, file path,
+quantization, selected status, and resource disposition. At least one Qwen
+family model and one Gemma family model SHALL complete precommitted
+development events for readiness to become one. A third model that is not run
+SHALL remain visible as a resource block or nonselected cell.
+
+Exp6491 SHALL use `llama_cpp.Llama` on local GGUF files and the GGUF-embedded
+tokenizer only. It SHALL NOT call a Hugging Face or Transformers tokenizer on
+a GGUF repository. Each model load receipt SHALL record runtime version,
+backend, actual binding, embedded tokenizer probe, `n_gpu_layers`, model file
+hash for loaded models, quantization, timing, and any failure.
+
+Exp6491 SHALL freeze development-only divergence events and prompts before
+model access. The prompt SHALL expose only an allowed solver prefix and an
+atomic factor schema. It SHALL NOT expose final exact outcomes, held rows,
+held labels, task answers, or release authority. Each event/model pair SHALL
+receive exactly one request. There SHALL be no constrained answer grammar,
+retry-to-valid loop, rank-and-select loop, or prompt edit after a response.
+The exact request bytes and exact response bytes SHALL be persisted and
+hashed before parsing.
+
+Exp6491 SHALL parse at most one atomic factor from each raw response. Model
+output SHALL NOT contain an answer field, label field, verifier field, final
+outcome field, or release field. Parsed factors SHALL be passed to the exact
+compiler over the frozen solver-prefix fields. The compiler SHALL record
+`accept`, `reject`, `duplicate`, `timeout`, and `no_proposal` dispositions as
+row values and SHALL not convert compiler success into a model-quality claim.
+Exact compilation facts MAY be oracle facts. Model proposals SHALL NOT be
+oracles.
+
+The terminal artifact SHALL include `status`, `upstream_gate_receipts`,
+`model_specs`, `model_load_receipts`, `frozen_event_manifest`,
+`prompt_commitment`, `raw_request_response_receipts`, `proposal_rows`,
+`exact_compile_rows`, `held_isolation_receipts`,
+`non_authority_receipts`, `boundary_attack_matrix`,
+`factor_proposal_stream_ready_score`, `prior_lineage_retirement_receipt`,
+`per_unit_rows`, `aggregate_row_recomputation`, `gate_check_summary`,
+`preconditions_checked`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_principles`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`,
+`reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL be
+`local_llama_cpp_gguf_atomic_factor_proposals`. `verifier_is_oracle` SHALL be
+false for model proposals. Exact compiler rows SHALL carry their own exact
+oracle boundary.
+
+Required field principles:
+
+- `status`: Terminal local proposal-stream state.
+- `upstream_gate_receipts`: Both upstream artifact hashes and exact gate values.
+- `model_specs`: All three mandated repository IDs, files, quantizations, and roles.
+- `model_load_receipts`: Runtime, embedded tokenizer, backend, `n_gpu_layers`, hashes, and failures.
+- `frozen_event_manifest`: Development-only divergence events committed before model access.
+- `prompt_commitment`: Allowed context, schema, and prompt hashes.
+- `raw_request_response_receipts`: Immutable byte paths and hashes before parsing.
+- `proposal_rows`: One row per event and model, including no-proposal outcomes.
+- `exact_compile_rows`: Accepted, rejected, duplicate, timeout, and reason per proposal.
+- `held_isolation_receipts`: Proof that held outcomes were not placed in requests.
+- `non_authority_receipts`: Proof that model output did not label, verify, or release an answer.
+- `boundary_attack_matrix`: Held access, answer, retry, rewrite, tokenizer, and selection attacks.
+- `factor_proposal_stream_ready_score`: Same-roadmap downstream gate field.
+- `prior_lineage_retirement_receipt`: Changed scope and Exp6463 comparison.
+- `per_unit_rows`: Event/model/proposal/compiler rows.
+- `aggregate_row_recomputation`: Counts and ready score recomputed from rows.
+- `gate_check_summary`: Exact gate evaluation or blocked_* reason and observed value.
+- `preconditions_checked`: Models, runtime, development split, compiler, and retired lineage.
+- `protected_files_unchanged`: Active roadmap and conductor unchanged.
+- `inference_substrate`: local_llama_cpp_gguf_atomic_factor_proposals.
+- `verifier_is_oracle`: False for model proposals; true only for exact compilation facts.
+- `field_principles`: Reason for every receipt and boundary field.
+- `field_provenance`: Raw bytes, file hashes, runtime receipts, and compiler reducers.
+- `random_seed`: Frozen event and model-order seeds.
+- `duration_s`: Measured inference and task wall time.
+- `tests_run`: Commands and exit codes.
+- `reproducibility_checksum`: Hash over models, events, raw bytes, and compile rows.
+- `honest_verdict`: complete_* when the stream is valid, otherwise blocked_* with gate_check_summary.
+
+#### SCENARIO-VERIFY-6491-GATES: Upstream Gates And Prior Scope Are Bound
+
+Given Exp6488, Exp6489, and Exp6463 artifacts exist,
+when Exp6491 starts,
+then it records exact paths, hashes, fields, expected values, observed values,
+gate states, and the changed scope before any model load.
+
+#### SCENARIO-VERIFY-6491-RAW-BYTES: One-Shot Requests And Responses Are Immutable
+
+Given frozen development events and prompts,
+when a selected local GGUF model is called,
+then each event/model pair has exactly one request, zero retries, one raw
+request byte path, one raw response byte path, hashes for both files, and a
+parse step that happens only after the raw bytes are written.
+
+#### SCENARIO-VERIFY-6491-HELD-ISOLATION: Held Outcomes Stay Out Of Model Context
+
+Given Exp6489 contains development and held rows,
+when Exp6491 builds its event manifest and prompt commitment,
+then selected events come only from the development split and request contexts
+exclude held rows, final exact outcomes, held labels, task answers, and release
+authority fields.
+
+#### SCENARIO-VERIFY-6491-COMPILER-AUTHORITY: Exact Compilation Owns Admissibility
+
+Given a raw model response contains a parseable atomic factor,
+when Exp6491 compiles it,
+then the compiler alone records syntactic and semantic disposition, duplicate,
+timeout, and no-proposal outcomes, while model output remains non-oracle.
+
+#### SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS: Proposal Boundary Attacks Fail Closed
+
+Given held-label access, answer emission, retry, response rewrite, missing raw
+bytes, wrong tokenizer path, model-identity omission, duplicate factor, or
+post-hoc event selection,
+when Exp6491 evaluates the boundary attack matrix,
+then no attack can raise `factor_proposal_stream_ready_score`.
+
+#### SCENARIO-VERIFY-6491-ROWS: Readiness Recomputes From Rows
+
+Given event, model, proposal, compiler, raw-byte, and attack rows,
+when the reducer recomputes the aggregate,
+then `factor_proposal_stream_ready_score` is `1.0` only after at least two
+mandated model families complete valid one-shot events with receipts and no
+boundary violation.
+
+## Implementation Status (REQ-VERIFY-6491)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6491 | Planned (`python/carnot/experiment_6491_sota_factor_proposal_stream.py`, `results/experiment_6491_sota_factor_proposal_stream.json`) | Planned (`tests/python/test_experiment_6491_sota_factor_proposal_stream.py`) |
+| SCENARIO-VERIFY-6491-GATES | Planned (`python/carnot/experiment_6491_sota_factor_proposal_stream.py`) | Planned (`tests/python/test_experiment_6491_sota_factor_proposal_stream.py`) |
+| SCENARIO-VERIFY-6491-RAW-BYTES | Planned (`python/carnot/experiment_6491_sota_factor_proposal_stream.py`) | Planned (`tests/python/test_experiment_6491_sota_factor_proposal_stream.py`) |
+| SCENARIO-VERIFY-6491-HELD-ISOLATION | Planned (`python/carnot/experiment_6491_sota_factor_proposal_stream.py`) | Planned (`tests/python/test_experiment_6491_sota_factor_proposal_stream.py`) |
+| SCENARIO-VERIFY-6491-COMPILER-AUTHORITY | Planned (`python/carnot/experiment_6491_sota_factor_proposal_stream.py`) | Planned (`tests/python/test_experiment_6491_sota_factor_proposal_stream.py`) |
+| SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS | Planned (`python/carnot/experiment_6491_sota_factor_proposal_stream.py`) | Planned (`tests/python/test_experiment_6491_sota_factor_proposal_stream.py`) |
+| SCENARIO-VERIFY-6491-ROWS | Planned (`python/carnot/experiment_6491_sota_factor_proposal_stream.py`) | Planned (`tests/python/test_experiment_6491_sota_factor_proposal_stream.py`) |
+
 ### REQ-VERIFY-6486: Three-Family Forced-Candidate Representation Stream
 
 Carnot SHALL provide Exp6486 at

@@ -1,0 +1,2897 @@
+{
+  "aggregate_row_recomputation": {
+    "authority_violation_count": 0,
+    "boundary_attack_count": 9,
+    "boundary_attack_failure_count": 0,
+    "compile_outcome_counts": {
+      "accept": 0,
+      "duplicate": 0,
+      "no_proposal": 2,
+      "reject": 2,
+      "timeout": 0
+    },
+    "completed_model_families": [
+      "gemma",
+      "qwen"
+    ],
+    "completed_model_family_count": 2,
+    "event_model_cross_product_complete": true,
+    "expected_event_model_pair_count": 4,
+    "factor_proposal_stream_ready_score_from_rows": 1.0,
+    "frozen_event_count": 2,
+    "loaded_model_count": 2,
+    "one_shot_violation_count": 0,
+    "proposal_row_count": 4,
+    "raw_byte_receipt_count": 8,
+    "raw_receipt_missing_count": 0,
+    "row_count": 31,
+    "row_type_counts": {
+      "boundary_attack": 9,
+      "exact_compile": 4,
+      "frozen_event": 2,
+      "model_load": 2,
+      "proposal": 4,
+      "raw_byte_receipt": 8,
+      "upstream_gate": 2
+    },
+    "tokenizer_violation_count": 0,
+    "upstream_gate_count": 2,
+    "upstream_gates_passed": true
+  },
+  "boundary_attack_matrix": {
+    "all_attacks_fail_closed": true,
+    "attack_count": 9,
+    "failed_attack_ids": [],
+    "rows": [
+      {
+        "attack_id": "held_label_access",
+        "attack_row_hash": "sha256:1c4c963015cc5fcbdde0558505348a8f02c870423dd2785fdb54c23f65371199",
+        "blocked_by": "development_only_event_manifest",
+        "fail_closed": true,
+        "readiness_promoted": false,
+        "row_type": "boundary_attack",
+        "spec_refs": [
+          "REQ-VERIFY-6491",
+          "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+        ]
+      },
+      {
+        "attack_id": "answer_emission",
+        "attack_row_hash": "sha256:cb864cbe64a863ca3ceed9501c7489a2ad317be76b60662a2b0ceb9ed946fcba",
+        "blocked_by": "non_authority_receipts",
+        "fail_closed": true,
+        "readiness_promoted": false,
+        "row_type": "boundary_attack",
+        "spec_refs": [
+          "REQ-VERIFY-6491",
+          "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+        ]
+      },
+      {
+        "attack_id": "retry_loop",
+        "attack_row_hash": "sha256:928a89fe5228de31900b92cdc52c8d7b0d2e44d9311421ef7ade19e8342999ba",
+        "blocked_by": "attempt_count_receipt",
+        "fail_closed": true,
+        "readiness_promoted": false,
+        "row_type": "boundary_attack",
+        "spec_refs": [
+          "REQ-VERIFY-6491",
+          "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+        ]
+      },
+      {
+        "attack_id": "response_rewrite",
+        "attack_row_hash": "sha256:e19b606f8de078177bc610bd6811042b49dd15143ff9add82aa444995b47b42a",
+        "blocked_by": "raw_bytes_before_parse_receipt",
+        "fail_closed": true,
+        "readiness_promoted": false,
+        "row_type": "boundary_attack",
+        "spec_refs": [
+          "REQ-VERIFY-6491",
+          "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+        ]
+      },
+      {
+        "attack_id": "missing_raw_bytes",
+        "attack_row_hash": "sha256:65690dbe422f2f49db1757635f6ebac66bbef27a5fafe7412e70813748505d96",
+        "blocked_by": "raw_byte_hash_receipt",
+        "fail_closed": true,
+        "readiness_promoted": false,
+        "row_type": "boundary_attack",
+        "spec_refs": [
+          "REQ-VERIFY-6491",
+          "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+        ]
+      },
+      {
+        "attack_id": "wrong_tokenizer_path",
+        "attack_row_hash": "sha256:cab77d95f897fd65cb15d9f274152a626679555f1dd81c97da009598dbc5adb9",
+        "blocked_by": "embedded_gguf_tokenizer_receipt",
+        "fail_closed": true,
+        "readiness_promoted": false,
+        "row_type": "boundary_attack",
+        "spec_refs": [
+          "REQ-VERIFY-6491",
+          "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+        ]
+      },
+      {
+        "attack_id": "model_identity_omission",
+        "attack_row_hash": "sha256:2188b380679e7140afad423f888b0c3938001c0808e378883db8f597ff84276b",
+        "blocked_by": "model_identity_required_per_row",
+        "fail_closed": true,
+        "readiness_promoted": false,
+        "row_type": "boundary_attack",
+        "spec_refs": [
+          "REQ-VERIFY-6491",
+          "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+        ]
+      },
+      {
+        "attack_id": "duplicate_factor",
+        "attack_row_hash": "sha256:f1ffe196e7547ccad5ac3442fe011c485f600cb3a4497c0fc7ab6a1e9e3cf630",
+        "blocked_by": "duplicate_disposition_is_terminal_not_promoting",
+        "fail_closed": true,
+        "readiness_promoted": false,
+        "row_type": "boundary_attack",
+        "spec_refs": [
+          "REQ-VERIFY-6491",
+          "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+        ]
+      },
+      {
+        "attack_id": "post_hoc_event_selection",
+        "attack_row_hash": "sha256:2cb84ae771029252b964721086a460048e90bb6ed216d40e4895f748799ad8dc",
+        "blocked_by": "frozen_event_model_cross_product",
+        "fail_closed": true,
+        "readiness_promoted": false,
+        "row_type": "boundary_attack",
+        "spec_refs": [
+          "REQ-VERIFY-6491",
+          "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+        ]
+      }
+    ],
+    "schema_version": "carnot.experiment_6491.sota_factor_proposal_stream.v1.boundary_attacks"
+  },
+  "duration_s": 54.463968,
+  "exact_compile_rows": [
+    {
+      "compile_outcome": "no_proposal",
+      "compile_row_hash": "sha256:44078cc61d4e8ab95ca8a089d3bee99d5fa6961531e8dc6a3dd9374a1f9338de",
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "exact_compiler_id": "exp6491_atomic_factor_compiler_over_exp6489_solver_prefix_v1",
+      "exact_compiler_is_oracle_for_disposition": true,
+      "model_family": "qwen",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_output_is_oracle": false,
+      "proposal_row_hash": "sha256:9657cd3a65135bb9093ee187f823989bc7ab64f8a37c9a89cdc78ee3bd6f4f74",
+      "raw_response_sha256": "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+      "reason": "empty_response",
+      "request_id": "exp6491-00-00-unsloth_qwen3_6_35b_a3b_gguf",
+      "row_type": "exact_compile",
+      "source_raw_row_hash": "sha256:e28aaf8e5d041c50cc896c4395648341b7bc6d057f79767c3a66e1526bfc14a3",
+      "verifier_is_oracle": true
+    },
+    {
+      "compile_outcome": "no_proposal",
+      "compile_row_hash": "sha256:712731278bba261b5da102ba2fc0c7423fb57de84e5ffb2ee1d2676408e194d3",
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "exact_compiler_id": "exp6491_atomic_factor_compiler_over_exp6489_solver_prefix_v1",
+      "exact_compiler_is_oracle_for_disposition": true,
+      "model_family": "qwen",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_output_is_oracle": false,
+      "proposal_row_hash": "sha256:d4d871baca913666f2c91f33811726fb37435f6e4ba6c6212c558ac032ce47ee",
+      "raw_response_sha256": "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+      "reason": "empty_response",
+      "request_id": "exp6491-00-01-unsloth_qwen3_6_35b_a3b_gguf",
+      "row_type": "exact_compile",
+      "source_raw_row_hash": "sha256:eca2afdc1df7d30f24a7328849cc10284e5fd6d7476a1be3a3d698a322097736",
+      "verifier_is_oracle": true
+    },
+    {
+      "compile_outcome": "reject",
+      "compile_row_hash": "sha256:367624131beb348d1e57b511e9e3e8c19d5d4a2270a343f30d28ec828743d4a5",
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "exact_compiler_id": "exp6491_atomic_factor_compiler_over_exp6489_solver_prefix_v1",
+      "exact_compiler_is_oracle_for_disposition": true,
+      "model_family": "gemma",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_output_is_oracle": false,
+      "proposal_row_hash": "sha256:6cf7f686be42a4ca6a0308cf4583aed0d6302e370b8a460b074f31d5f01bc828",
+      "raw_response_sha256": "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+      "reason": "json_decode_error",
+      "request_id": "exp6491-01-00-unsloth_gemma_4_26b_a4b_it_gguf",
+      "row_type": "exact_compile",
+      "source_raw_row_hash": "sha256:e28aaf8e5d041c50cc896c4395648341b7bc6d057f79767c3a66e1526bfc14a3",
+      "verifier_is_oracle": true
+    },
+    {
+      "compile_outcome": "reject",
+      "compile_row_hash": "sha256:14a7d9a603e2d11bd80a6c9289a8d14337258d3299af0ff1e7af1d729cd8db49",
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "exact_compiler_id": "exp6491_atomic_factor_compiler_over_exp6489_solver_prefix_v1",
+      "exact_compiler_is_oracle_for_disposition": true,
+      "model_family": "gemma",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_output_is_oracle": false,
+      "proposal_row_hash": "sha256:1bc75f150adf38bb1e5e302262c0e9c49d36a689d1023f96ce20adec31b9e3fd",
+      "raw_response_sha256": "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef",
+      "reason": "json_decode_error",
+      "request_id": "exp6491-01-01-unsloth_gemma_4_26b_a4b_it_gguf",
+      "row_type": "exact_compile",
+      "source_raw_row_hash": "sha256:eca2afdc1df7d30f24a7328849cc10284e5fd6d7476a1be3a3d698a322097736",
+      "verifier_is_oracle": true
+    }
+  ],
+  "factor_proposal_stream_ready_score": 1.0,
+  "field_principles": {
+    "aggregate_row_recomputation": "Counts and ready score recomputed from rows.",
+    "boundary_attack_matrix": "Held access, answer, retry, rewrite, tokenizer, and selection attacks.",
+    "duration_s": "Measured inference and task wall time.",
+    "exact_compile_rows": "Accepted, rejected, duplicate, timeout, and reason per proposal.",
+    "factor_proposal_stream_ready_score": "Same-roadmap downstream gate field.",
+    "field_principles": "Reason for every receipt and boundary field.",
+    "field_provenance": "Raw bytes, file hashes, runtime receipts, and compiler reducers.",
+    "frozen_event_manifest": "Development-only divergence events committed before model access.",
+    "gate_check_summary": "Exact gate evaluation or blocked_* reason and observed value.",
+    "held_isolation_receipts": "Proof that held outcomes were not placed in requests.",
+    "honest_verdict": "complete_* when the stream is valid, otherwise blocked_* with gate_check_summary.",
+    "inference_substrate": "local_llama_cpp_gguf_atomic_factor_proposals.",
+    "model_load_receipts": "Runtime, embedded tokenizer, backend, `n_gpu_layers`, hashes, and failures.",
+    "model_specs": "All three mandated repository IDs, files, quantizations, and roles.",
+    "non_authority_receipts": "Proof that model output did not label, verify, or release an answer.",
+    "per_unit_rows": "Event/model/proposal/compiler rows.",
+    "preconditions_checked": "Models, runtime, development split, compiler, and retired lineage.",
+    "prior_lineage_retirement_receipt": "Changed scope and Exp6463 comparison.",
+    "prompt_commitment": "Allowed context, schema, and prompt hashes.",
+    "proposal_rows": "One row per event and model, including no-proposal outcomes.",
+    "protected_files_unchanged": "Active roadmap and conductor unchanged.",
+    "random_seed": "Frozen event and model-order seeds.",
+    "raw_request_response_receipts": "Immutable byte paths and hashes before parsing.",
+    "reproducibility_checksum": "Hash over models, events, raw bytes, and compile rows.",
+    "status": "Terminal local proposal-stream state.",
+    "tests_run": "Commands and exit codes.",
+    "upstream_gate_receipts": "Both upstream artifact hashes and exact gate values.",
+    "verifier_is_oracle": "False for model proposals; true only for exact compilation facts."
+  },
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "boundary_attack_matrix": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "duration_s": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "exact_compile_rows": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "factor_proposal_stream_ready_score": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "field_principles": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "field_provenance": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "frozen_event_manifest": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "gate_check_summary": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "held_isolation_receipts": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "honest_verdict": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "inference_substrate": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "model_load_receipts": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "model_specs": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "non_authority_receipts": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "per_unit_rows": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "preconditions_checked": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "prior_lineage_retirement_receipt": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "prompt_commitment": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "proposal_rows": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "protected_files_unchanged": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "random_seed": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "raw_request_response_receipts": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "reproducibility_checksum": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "status": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "tests_run": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "upstream_gate_receipts": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    },
+    "verifier_is_oracle": {
+      "raw_byte_roots": [
+        "results/experiment_6491_sota_factor_proposal_stream_raw"
+      ],
+      "reducers": [
+        "recompute_aggregates_from_rows",
+        "parse_atomic_factor_response",
+        "compile_atomic_factor"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/verification/spec.md": "sha256:253bef891a07bf4745292f71b5a000dc124791300e77c902dee8fb89753fd283",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "python/carnot/experiment_6491_sota_factor_proposal_stream.py": "sha256:5ebc43a5c90da8cd265653661f31141dd49e755fff737943e7ac68bd70240b65",
+        "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:e8e29ccc1f257ba4c2bee06bea8990e44126f3c2c2552e501e22863d187a5779",
+        "research-roadmap.yaml": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8",
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json": "sha256:0d7c3c42f2ab4e39a332f58926856ab61b6029c9f8eace3b99c712f870a02cfb",
+        "results/experiment_6488_v559_decision_ledger.json": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b",
+        "results/experiment_6489_solver_trajectory_commitment.json": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3",
+        "scripts/experiment_template.py": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac",
+        "tests/python/test_experiment_6491_sota_factor_proposal_stream.py": "sha256:5ffc8d90bd1e4ba58bd7f202916db8745a7af1dcdca5039a92989536e39ac8e3"
+      },
+      "spec_refs": [
+        "REQ-VERIFY-6491"
+      ],
+      "upstream_artifacts": [
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+        "results/experiment_6484_non_generation_representation_receipt_contract.json",
+        "results/experiment_6488_v559_decision_ledger.json",
+        "results/experiment_6489_solver_trajectory_commitment.json"
+      ]
+    }
+  },
+  "frozen_event_manifest": {
+    "event_count": 2,
+    "event_order_seed": 6491001,
+    "events": [
+      {
+        "backend": "z3",
+        "checkpoint_id": "middle",
+        "event_id": "exp6491-dev-00-e28aaf8e",
+        "event_order_seed": 6491001,
+        "event_row_hash": "sha256:93797a2905aa6a9f5f8eeb3f1fbb539777c58b56ec4556004b66cd3f69a23d6b",
+        "final_fields_excluded": [
+          "final_exact_label",
+          "final_exact_outcome_hash",
+          "final_objective_value",
+          "final_objective",
+          "held_label",
+          "answer",
+          "release_authority"
+        ],
+        "frozen_before_model_access": true,
+        "held_rows_excluded": true,
+        "record_hash": "sha256:93f2771c332082d12842b711d3f16fd0055fce1b70076e6e10b4ff45db8f8146",
+        "row_type": "frozen_event",
+        "source_family_id": "boolean_guard",
+        "source_raw_row_hash": "sha256:e28aaf8e5d041c50cc896c4395648341b7bc6d057f79767c3a66e1526bfc14a3",
+        "source_unit_id": "exp6482-boolean-guard-08",
+        "spec_refs": [
+          "REQ-VERIFY-6491",
+          "SCENARIO-VERIFY-6491-HELD-ISOLATION"
+        ],
+        "split": "development",
+        "visible_context": {
+          "assigned_variable_count": 2,
+          "best_possible_scalar_energy": 0,
+          "branch_depth": 2,
+          "candidate_count_under_partial": 8,
+          "constraint_residuals": [
+            {
+              "constraint_id": "c_guard_enabled",
+              "residual_weight": 0,
+              "status": "satisfied"
+            },
+            {
+              "constraint_id": "c_p_requires_r",
+              "residual_weight": 0,
+              "status": "undecided"
+            },
+            {
+              "constraint_id": "c_r_load_floor",
+              "residual_weight": 0,
+              "status": "undecided"
+            },
+            {
+              "constraint_id": "c_q_load_cap",
+              "residual_weight": 0,
+              "status": "undecided"
+            }
+          ],
+          "incumbent_scalar_energy": 0,
+          "partial_assignment": {
+            "p": 1,
+            "q": 1
+          },
+          "partial_domain_fraction": 0.5,
+          "residual_weight_sum": 0,
+          "satisfied_constraint_count": 1,
+          "unassigned_variable_count": 2,
+          "undecided_constraint_count": 3,
+          "violated_constraint_count": 0
+        },
+        "visible_context_hash": "sha256:68b8ef9e42982d4e455f775922015447842ed2856774f0d4ec85e99690bd2ef3"
+      },
+      {
+        "backend": "z3",
+        "checkpoint_id": "middle",
+        "event_id": "exp6491-dev-01-eca2afdc",
+        "event_order_seed": 6491001,
+        "event_row_hash": "sha256:1e3519e16552ffc06c1136c1b942267ac07946784857e2c1808fc8a630b95d11",
+        "final_fields_excluded": [
+          "final_exact_label",
+          "final_exact_outcome_hash",
+          "final_objective_value",
+          "final_objective",
+          "held_label",
+          "answer",
+          "release_authority"
+        ],
+        "frozen_before_model_access": true,
+        "held_rows_excluded": true,
+        "record_hash": "sha256:da2fe0ecd74aaa2bd63955de40160b35aab1f13091e0886e8600ae7455c9e95d",
+        "row_type": "frozen_event",
+        "source_family_id": "quota_allocation",
+        "source_raw_row_hash": "sha256:eca2afdc1df7d30f24a7328849cc10284e5fd6d7476a1be3a3d698a322097736",
+        "source_unit_id": "exp6482-quota-allocation-03",
+        "spec_refs": [
+          "REQ-VERIFY-6491",
+          "SCENARIO-VERIFY-6491-HELD-ISOLATION"
+        ],
+        "split": "development",
+        "visible_context": {
+          "assigned_variable_count": 2,
+          "best_possible_scalar_energy": 1,
+          "branch_depth": 2,
+          "candidate_count_under_partial": 5,
+          "constraint_residuals": [
+            {
+              "constraint_id": "c_total",
+              "residual_weight": 0,
+              "status": "undecided"
+            },
+            {
+              "constraint_id": "c_a_min",
+              "residual_weight": 1,
+              "status": "violated"
+            },
+            {
+              "constraint_id": "c_b_cap",
+              "residual_weight": 0,
+              "status": "satisfied"
+            },
+            {
+              "constraint_id": "c_c_min",
+              "residual_weight": 0,
+              "status": "undecided"
+            }
+          ],
+          "incumbent_scalar_energy": 0,
+          "partial_assignment": {
+            "a": 1,
+            "b": 0
+          },
+          "partial_domain_fraction": 0.666667,
+          "residual_weight_sum": 1,
+          "satisfied_constraint_count": 1,
+          "unassigned_variable_count": 1,
+          "undecided_constraint_count": 2,
+          "violated_constraint_count": 1
+        },
+        "visible_context_hash": "sha256:1a5f3ff686a089cd2d259ba27fb24bb122ffca1d180f20d8d43de2b09c1091fd"
+      }
+    ],
+    "final_outcomes_exposed": 0,
+    "frozen_before_model_access": true,
+    "held_rows_selected": 0,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/frozen_event_manifest.json",
+    "planning_date": "20260821",
+    "schema_version": "carnot.experiment_6491.sota_factor_proposal_stream.v1.frozen_event_manifest",
+    "sha256": "sha256:dd72b8aa0d21dd6084c0e17947cbf8f7b1a9dc2f7163ca1f13c41bd978ea7148",
+    "split": "development"
+  },
+  "gate_check_summary": {
+    "all_gates_passed": true,
+    "blocked_reason": "",
+    "checks": {
+      "no_boundary_violation": true,
+      "protected_files_unchanged": true,
+      "row_recomputed_ready": true,
+      "two_model_families_completed": true,
+      "upstream_gates_passed": true
+    },
+    "failed_gates": [],
+    "observed_values": {
+      "exp6488": {
+        "expected": 1.0,
+        "field": "v560_lineage_lock_ready_score",
+        "observed": 1.0
+      },
+      "exp6489": {
+        "expected": 1.0,
+        "field": "trajectory_contract_ready_score",
+        "observed": 1.0
+      }
+    }
+  },
+  "held_isolation_receipts": {
+    "final_outcome_fields_in_request_context_count": 0,
+    "held_outcomes_opened_to_model": false,
+    "held_raw_hashes_in_requests": [],
+    "held_rows_in_request_context_count": 0,
+    "held_rows_selected_count": 0,
+    "held_source_row_count": 144,
+    "request_context_excluded_keys": [
+      "final_exact_label",
+      "final_exact_outcome_hash",
+      "final_objective_value",
+      "final_objective",
+      "held_label",
+      "answer",
+      "release_authority"
+    ],
+    "selected_event_count": 2,
+    "selected_event_splits": [
+      "development"
+    ]
+  },
+  "honest_verdict": "complete_local_proposal_stream: two mandated model families produced one-shot local GGUF factor proposal receipts with exact compilation boundaries",
+  "inference_substrate": "local_llama_cpp_gguf_atomic_factor_proposals",
+  "model_load_receipts": [
+    {
+      "actual_backend": "llama_cpp.Llama",
+      "backend": "llama_cpp",
+      "embedded_tokenizer": true,
+      "external_tokenizer_used": false,
+      "gpu": 0,
+      "load_failure": null,
+      "load_status": "loaded",
+      "load_wall_time_s": 32.032524,
+      "model_family": "qwen",
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_load_row_hash": "sha256:c4316aed0965a3f13f0bc958e2804293df938ed412f0c60bee5645aa0c2cd4ad",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "n_gpu_layers": -1,
+      "nvidia_smi_after_load": {
+        "gpus": [
+          {
+            "index": 0,
+            "memory_total_mb": 24576.0,
+            "memory_used_mb": 10902.0,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0.0
+          },
+          {
+            "index": 1,
+            "memory_total_mb": 24576.0,
+            "memory_used_mb": 10490.0,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 99.0
+          }
+        ],
+        "ok": true
+      },
+      "quantization": "UD-Q4_K_M",
+      "row_type": "model_load",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "runtime_version": "0.3.33",
+      "tokenizer_probe_token_count": 3,
+      "tokenizer_source": "gguf_embedded"
+    },
+    {
+      "actual_backend": "llama_cpp.Llama",
+      "backend": "llama_cpp",
+      "embedded_tokenizer": true,
+      "external_tokenizer_used": false,
+      "gpu": 1,
+      "load_failure": null,
+      "load_status": "loaded",
+      "load_wall_time_s": 18.867091,
+      "model_family": "gemma",
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_load_row_hash": "sha256:2bb4848598a529dfef7fd5e22ab7d73cbd7d1ab5949f7f383d73e6b0f0504d04",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "n_gpu_layers": -1,
+      "nvidia_smi_after_load": {
+        "gpus": [
+          {
+            "index": 0,
+            "memory_total_mb": 24576.0,
+            "memory_used_mb": 8774.0,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0.0
+          },
+          {
+            "index": 1,
+            "memory_total_mb": 24576.0,
+            "memory_used_mb": 8664.0,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 100.0
+          }
+        ],
+        "ok": true
+      },
+      "quantization": "UD-Q4_K_M",
+      "row_type": "model_load",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "runtime_version": "0.3.33",
+      "tokenizer_probe_token_count": 4,
+      "tokenizer_source": "gguf_embedded"
+    }
+  ],
+  "model_specs": [
+    {
+      "active_params_b": 3.0,
+      "cached_sota_pair_member": true,
+      "expected_quantization": "Q4_K_M",
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "min_vram_gb": 24,
+      "model_family": "qwen",
+      "model_file": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_file_exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_size_bytes": 22134528992,
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "repository_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "resource_disposition": "selected_for_one_shot_proposal_stream",
+      "role": "moe",
+      "selected_for_inference": true,
+      "total_params_b": 35.0
+    },
+    {
+      "active_params_b": 4.0,
+      "cached_sota_pair_member": true,
+      "expected_quantization": "Q4_K_M",
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "min_vram_gb": 16,
+      "model_family": "gemma",
+      "model_file": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_file_exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_size_bytes": 16947539744,
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "UD-Q4_K_M",
+      "repository_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "resource_disposition": "selected_for_one_shot_proposal_stream",
+      "role": "moe",
+      "selected_for_inference": true,
+      "total_params_b": 26.0
+    },
+    {
+      "active_params_b": 31.0,
+      "cached_sota_pair_member": false,
+      "expected_quantization": "Q4_K_M",
+      "gpu": null,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "min_vram_gb": 24,
+      "model_family": "gemma",
+      "model_file": "gemma-4-31B-it-Q4_K_M.gguf",
+      "model_file_exists": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_size_bytes": 18323731456,
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "repository_id": "unsloth/gemma-4-31B-it-GGUF",
+      "resource_disposition": "not_loaded_resource_budget_two_family_precommit",
+      "role": "dense",
+      "selected_for_inference": false,
+      "total_params_b": 31.0
+    }
+  ],
+  "non_authority_receipts": {
+    "exact_compiler_release_authority_only": true,
+    "model_output_answer_count": 0,
+    "model_output_is_oracle_count": 0,
+    "model_output_label_count": 0,
+    "model_output_release_authority_count": 0,
+    "model_output_verifier_count": 0,
+    "model_proposals_are_oracles": false
+  },
+  "per_unit_rows": [
+    {
+      "artifact_id": "exp6488",
+      "expected": 1.0,
+      "field": "v560_lineage_lock_ready_score",
+      "gate_passed": true,
+      "observed": 1.0,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6488_v559_decision_ledger.json",
+      "per_unit_group": "gate",
+      "row_type": "upstream_gate",
+      "sha256": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b"
+    },
+    {
+      "artifact_id": "exp6489",
+      "expected": 1.0,
+      "field": "trajectory_contract_ready_score",
+      "gate_passed": true,
+      "observed": 1.0,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6489_solver_trajectory_commitment.json",
+      "per_unit_group": "gate",
+      "row_type": "upstream_gate",
+      "sha256": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3"
+    },
+    {
+      "backend": "z3",
+      "checkpoint_id": "middle",
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "event_order_seed": 6491001,
+      "event_row_hash": "sha256:93797a2905aa6a9f5f8eeb3f1fbb539777c58b56ec4556004b66cd3f69a23d6b",
+      "final_fields_excluded": [
+        "final_exact_label",
+        "final_exact_outcome_hash",
+        "final_objective_value",
+        "final_objective",
+        "held_label",
+        "answer",
+        "release_authority"
+      ],
+      "frozen_before_model_access": true,
+      "held_rows_excluded": true,
+      "per_unit_group": "event",
+      "record_hash": "sha256:93f2771c332082d12842b711d3f16fd0055fce1b70076e6e10b4ff45db8f8146",
+      "row_type": "frozen_event",
+      "source_family_id": "boolean_guard",
+      "source_raw_row_hash": "sha256:e28aaf8e5d041c50cc896c4395648341b7bc6d057f79767c3a66e1526bfc14a3",
+      "source_unit_id": "exp6482-boolean-guard-08",
+      "spec_refs": [
+        "REQ-VERIFY-6491",
+        "SCENARIO-VERIFY-6491-HELD-ISOLATION"
+      ],
+      "split": "development",
+      "visible_context": {
+        "assigned_variable_count": 2,
+        "best_possible_scalar_energy": 0,
+        "branch_depth": 2,
+        "candidate_count_under_partial": 8,
+        "constraint_residuals": [
+          {
+            "constraint_id": "c_guard_enabled",
+            "residual_weight": 0,
+            "status": "satisfied"
+          },
+          {
+            "constraint_id": "c_p_requires_r",
+            "residual_weight": 0,
+            "status": "undecided"
+          },
+          {
+            "constraint_id": "c_r_load_floor",
+            "residual_weight": 0,
+            "status": "undecided"
+          },
+          {
+            "constraint_id": "c_q_load_cap",
+            "residual_weight": 0,
+            "status": "undecided"
+          }
+        ],
+        "incumbent_scalar_energy": 0,
+        "partial_assignment": {
+          "p": 1,
+          "q": 1
+        },
+        "partial_domain_fraction": 0.5,
+        "residual_weight_sum": 0,
+        "satisfied_constraint_count": 1,
+        "unassigned_variable_count": 2,
+        "undecided_constraint_count": 3,
+        "violated_constraint_count": 0
+      },
+      "visible_context_hash": "sha256:68b8ef9e42982d4e455f775922015447842ed2856774f0d4ec85e99690bd2ef3"
+    },
+    {
+      "backend": "z3",
+      "checkpoint_id": "middle",
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "event_order_seed": 6491001,
+      "event_row_hash": "sha256:1e3519e16552ffc06c1136c1b942267ac07946784857e2c1808fc8a630b95d11",
+      "final_fields_excluded": [
+        "final_exact_label",
+        "final_exact_outcome_hash",
+        "final_objective_value",
+        "final_objective",
+        "held_label",
+        "answer",
+        "release_authority"
+      ],
+      "frozen_before_model_access": true,
+      "held_rows_excluded": true,
+      "per_unit_group": "event",
+      "record_hash": "sha256:da2fe0ecd74aaa2bd63955de40160b35aab1f13091e0886e8600ae7455c9e95d",
+      "row_type": "frozen_event",
+      "source_family_id": "quota_allocation",
+      "source_raw_row_hash": "sha256:eca2afdc1df7d30f24a7328849cc10284e5fd6d7476a1be3a3d698a322097736",
+      "source_unit_id": "exp6482-quota-allocation-03",
+      "spec_refs": [
+        "REQ-VERIFY-6491",
+        "SCENARIO-VERIFY-6491-HELD-ISOLATION"
+      ],
+      "split": "development",
+      "visible_context": {
+        "assigned_variable_count": 2,
+        "best_possible_scalar_energy": 1,
+        "branch_depth": 2,
+        "candidate_count_under_partial": 5,
+        "constraint_residuals": [
+          {
+            "constraint_id": "c_total",
+            "residual_weight": 0,
+            "status": "undecided"
+          },
+          {
+            "constraint_id": "c_a_min",
+            "residual_weight": 1,
+            "status": "violated"
+          },
+          {
+            "constraint_id": "c_b_cap",
+            "residual_weight": 0,
+            "status": "satisfied"
+          },
+          {
+            "constraint_id": "c_c_min",
+            "residual_weight": 0,
+            "status": "undecided"
+          }
+        ],
+        "incumbent_scalar_energy": 0,
+        "partial_assignment": {
+          "a": 1,
+          "b": 0
+        },
+        "partial_domain_fraction": 0.666667,
+        "residual_weight_sum": 1,
+        "satisfied_constraint_count": 1,
+        "unassigned_variable_count": 1,
+        "undecided_constraint_count": 2,
+        "violated_constraint_count": 1
+      },
+      "visible_context_hash": "sha256:1a5f3ff686a089cd2d259ba27fb24bb122ffca1d180f20d8d43de2b09c1091fd"
+    },
+    {
+      "actual_backend": "llama_cpp.Llama",
+      "backend": "llama_cpp",
+      "embedded_tokenizer": true,
+      "external_tokenizer_used": false,
+      "gpu": 0,
+      "load_failure": null,
+      "load_status": "loaded",
+      "load_wall_time_s": 32.032524,
+      "model_family": "qwen",
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_load_row_hash": "sha256:c4316aed0965a3f13f0bc958e2804293df938ed412f0c60bee5645aa0c2cd4ad",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "n_gpu_layers": -1,
+      "nvidia_smi_after_load": {
+        "gpus": [
+          {
+            "index": 0,
+            "memory_total_mb": 24576.0,
+            "memory_used_mb": 10902.0,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0.0
+          },
+          {
+            "index": 1,
+            "memory_total_mb": 24576.0,
+            "memory_used_mb": 10490.0,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 99.0
+          }
+        ],
+        "ok": true
+      },
+      "per_unit_group": "model_load",
+      "quantization": "UD-Q4_K_M",
+      "row_type": "model_load",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "runtime_version": "0.3.33",
+      "tokenizer_probe_token_count": 3,
+      "tokenizer_source": "gguf_embedded"
+    },
+    {
+      "actual_backend": "llama_cpp.Llama",
+      "backend": "llama_cpp",
+      "embedded_tokenizer": true,
+      "external_tokenizer_used": false,
+      "gpu": 1,
+      "load_failure": null,
+      "load_status": "loaded",
+      "load_wall_time_s": 18.867091,
+      "model_family": "gemma",
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_load_row_hash": "sha256:2bb4848598a529dfef7fd5e22ab7d73cbd7d1ab5949f7f383d73e6b0f0504d04",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "n_gpu_layers": -1,
+      "nvidia_smi_after_load": {
+        "gpus": [
+          {
+            "index": 0,
+            "memory_total_mb": 24576.0,
+            "memory_used_mb": 8774.0,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0.0
+          },
+          {
+            "index": 1,
+            "memory_total_mb": 24576.0,
+            "memory_used_mb": 8664.0,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 100.0
+          }
+        ],
+        "ok": true
+      },
+      "per_unit_group": "model_load",
+      "quantization": "UD-Q4_K_M",
+      "row_type": "model_load",
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "runtime_version": "0.3.33",
+      "tokenizer_probe_token_count": 4,
+      "tokenizer_source": "gguf_embedded"
+    },
+    {
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "kind": "request",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_00_00_unsloth_qwen3_6_35b_a3b_gguf_request.json",
+      "per_unit_group": "raw",
+      "request_id": "exp6491-00-00-unsloth_qwen3_6_35b_a3b_gguf",
+      "row_type": "raw_byte_receipt",
+      "sha256": "sha256:9b9417d91aaa09e7bb9102fbb263b29adf4fdf6ee8f3451dafe063971b328898",
+      "size_bytes": 3554,
+      "written_before_parse": true
+    },
+    {
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "kind": "response",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_00_00_unsloth_qwen3_6_35b_a3b_gguf_response.json",
+      "per_unit_group": "raw",
+      "request_id": "exp6491-00-00-unsloth_qwen3_6_35b_a3b_gguf",
+      "row_type": "raw_byte_receipt",
+      "sha256": "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+      "size_bytes": 354,
+      "written_before_parse": true
+    },
+    {
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "kind": "request",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_00_01_unsloth_qwen3_6_35b_a3b_gguf_request.json",
+      "per_unit_group": "raw",
+      "request_id": "exp6491-00-01-unsloth_qwen3_6_35b_a3b_gguf",
+      "row_type": "raw_byte_receipt",
+      "sha256": "sha256:dfb2ac7cb6fc86237bbc9da915f2a4081e75247c63b9ba84f3444a7318ebbaf1",
+      "size_bytes": 3508,
+      "written_before_parse": true
+    },
+    {
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "kind": "response",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_00_01_unsloth_qwen3_6_35b_a3b_gguf_response.json",
+      "per_unit_group": "raw",
+      "request_id": "exp6491-00-01-unsloth_qwen3_6_35b_a3b_gguf",
+      "row_type": "raw_byte_receipt",
+      "sha256": "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+      "size_bytes": 353,
+      "written_before_parse": true
+    },
+    {
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "kind": "request",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_01_00_unsloth_gemma_4_26b_a4b_it_gguf_request.json",
+      "per_unit_group": "raw",
+      "request_id": "exp6491-01-00-unsloth_gemma_4_26b_a4b_it_gguf",
+      "row_type": "raw_byte_receipt",
+      "sha256": "sha256:d1c04d9bbc6cd5285678ce5ca4962605c3d985e3e35e008fdc8b5b42724e50d3",
+      "size_bytes": 3567,
+      "written_before_parse": true
+    },
+    {
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "kind": "response",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_01_00_unsloth_gemma_4_26b_a4b_it_gguf_response.json",
+      "per_unit_group": "raw",
+      "request_id": "exp6491-01-00-unsloth_gemma_4_26b_a4b_it_gguf",
+      "row_type": "raw_byte_receipt",
+      "sha256": "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+      "size_bytes": 629,
+      "written_before_parse": true
+    },
+    {
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "kind": "request",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_01_01_unsloth_gemma_4_26b_a4b_it_gguf_request.json",
+      "per_unit_group": "raw",
+      "request_id": "exp6491-01-01-unsloth_gemma_4_26b_a4b_it_gguf",
+      "row_type": "raw_byte_receipt",
+      "sha256": "sha256:f881ae80a919170070504013d417a8a4986502d959a1c99a499eda983890af91",
+      "size_bytes": 3521,
+      "written_before_parse": true
+    },
+    {
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "kind": "response",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_01_01_unsloth_gemma_4_26b_a4b_it_gguf_response.json",
+      "per_unit_group": "raw",
+      "request_id": "exp6491-01-01-unsloth_gemma_4_26b_a4b_it_gguf",
+      "row_type": "raw_byte_receipt",
+      "sha256": "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef",
+      "size_bytes": 636,
+      "written_before_parse": true
+    },
+    {
+      "answer_field_present": false,
+      "attempt_index": 0,
+      "completion_token_count": 0,
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "final_outcome_field_present": false,
+      "finish_reason": "stop",
+      "generation_duration_s": 0.567133,
+      "grammar_backend": "none",
+      "label_field_present": false,
+      "model_family": "qwen",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_output_is_oracle": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "parse_receipt": {
+        "answer_like_text_detected": false,
+        "boundary_violation": false,
+        "forbidden_keys": [],
+        "parse_input_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "parse_status": "empty_response",
+        "parsed_after_raw_bytes_written": true,
+        "post_response_rewrite_used": false
+      },
+      "parsed_factor_present": false,
+      "per_unit_group": "proposal",
+      "post_response_prompt_edit_used": false,
+      "prompt_token_count": 315,
+      "proposal": null,
+      "proposal_row_hash": "sha256:9657cd3a65135bb9093ee187f823989bc7ab64f8a37c9a89cdc78ee3bd6f4f74",
+      "rank_and_select_candidates": 1,
+      "raw_bytes_written_before_parse": true,
+      "raw_request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_00_00_unsloth_qwen3_6_35b_a3b_gguf_request.json",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_00_00_unsloth_qwen3_6_35b_a3b_gguf_response.json",
+      "release_authority_claimed": false,
+      "request_id": "exp6491-00-00-unsloth_qwen3_6_35b_a3b_gguf",
+      "request_sha256": "sha256:9b9417d91aaa09e7bb9102fbb263b29adf4fdf6ee8f3451dafe063971b328898",
+      "response_sha256": "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+      "retry_count_after_response": 0,
+      "row_type": "proposal",
+      "timed_out": false,
+      "verifier_field_present": false
+    },
+    {
+      "answer_field_present": false,
+      "attempt_index": 0,
+      "completion_token_count": 0,
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "final_outcome_field_present": false,
+      "finish_reason": "stop",
+      "generation_duration_s": 0.14652,
+      "grammar_backend": "none",
+      "label_field_present": false,
+      "model_family": "qwen",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_output_is_oracle": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "parse_receipt": {
+        "answer_like_text_detected": false,
+        "boundary_violation": false,
+        "forbidden_keys": [],
+        "parse_input_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "parse_status": "empty_response",
+        "parsed_after_raw_bytes_written": true,
+        "post_response_rewrite_used": false
+      },
+      "parsed_factor_present": false,
+      "per_unit_group": "proposal",
+      "post_response_prompt_edit_used": false,
+      "prompt_token_count": 316,
+      "proposal": null,
+      "proposal_row_hash": "sha256:d4d871baca913666f2c91f33811726fb37435f6e4ba6c6212c558ac032ce47ee",
+      "rank_and_select_candidates": 1,
+      "raw_bytes_written_before_parse": true,
+      "raw_request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_00_01_unsloth_qwen3_6_35b_a3b_gguf_request.json",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_00_01_unsloth_qwen3_6_35b_a3b_gguf_response.json",
+      "release_authority_claimed": false,
+      "request_id": "exp6491-00-01-unsloth_qwen3_6_35b_a3b_gguf",
+      "request_sha256": "sha256:dfb2ac7cb6fc86237bbc9da915f2a4081e75247c63b9ba84f3444a7318ebbaf1",
+      "response_sha256": "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+      "retry_count_after_response": 0,
+      "row_type": "proposal",
+      "timed_out": false,
+      "verifier_field_present": false
+    },
+    {
+      "answer_field_present": false,
+      "attempt_index": 0,
+      "completion_token_count": 96,
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "final_outcome_field_present": false,
+      "finish_reason": "length",
+      "generation_duration_s": 1.190857,
+      "grammar_backend": "none",
+      "label_field_present": false,
+      "model_family": "gemma",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_output_is_oracle": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_receipt": {
+        "answer_like_text_detected": false,
+        "boundary_violation": false,
+        "forbidden_keys": [],
+        "parse_error": "Expecting value: line 1 column 1 (char 0)",
+        "parse_input_sha256": "sha256:3ff8c3a4f1dc366b52f60a3889433ff3a1bfa70aa9565426e28968f5940fc6cd",
+        "parse_status": "json_decode_error",
+        "parsed_after_raw_bytes_written": true,
+        "post_response_rewrite_used": false
+      },
+      "parsed_factor_present": false,
+      "per_unit_group": "proposal",
+      "post_response_prompt_edit_used": false,
+      "prompt_token_count": 377,
+      "proposal": null,
+      "proposal_row_hash": "sha256:6cf7f686be42a4ca6a0308cf4583aed0d6302e370b8a460b074f31d5f01bc828",
+      "rank_and_select_candidates": 1,
+      "raw_bytes_written_before_parse": true,
+      "raw_request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_01_00_unsloth_gemma_4_26b_a4b_it_gguf_request.json",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_01_00_unsloth_gemma_4_26b_a4b_it_gguf_response.json",
+      "release_authority_claimed": false,
+      "request_id": "exp6491-01-00-unsloth_gemma_4_26b_a4b_it_gguf",
+      "request_sha256": "sha256:d1c04d9bbc6cd5285678ce5ca4962605c3d985e3e35e008fdc8b5b42724e50d3",
+      "response_sha256": "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+      "retry_count_after_response": 0,
+      "row_type": "proposal",
+      "timed_out": false,
+      "verifier_field_present": false
+    },
+    {
+      "answer_field_present": false,
+      "attempt_index": 0,
+      "completion_token_count": 96,
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "final_outcome_field_present": false,
+      "finish_reason": "length",
+      "generation_duration_s": 0.87674,
+      "grammar_backend": "none",
+      "label_field_present": false,
+      "model_family": "gemma",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_output_is_oracle": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_receipt": {
+        "answer_like_text_detected": false,
+        "boundary_violation": false,
+        "forbidden_keys": [],
+        "parse_error": "Expecting value: line 1 column 1 (char 0)",
+        "parse_input_sha256": "sha256:ea038b6c687edea6bb1319b26ce3f7bcfa4bdd5471f4a78ce334a981665cc286",
+        "parse_status": "json_decode_error",
+        "parsed_after_raw_bytes_written": true,
+        "post_response_rewrite_used": false
+      },
+      "parsed_factor_present": false,
+      "per_unit_group": "proposal",
+      "post_response_prompt_edit_used": false,
+      "prompt_token_count": 373,
+      "proposal": null,
+      "proposal_row_hash": "sha256:1bc75f150adf38bb1e5e302262c0e9c49d36a689d1023f96ce20adec31b9e3fd",
+      "rank_and_select_candidates": 1,
+      "raw_bytes_written_before_parse": true,
+      "raw_request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_01_01_unsloth_gemma_4_26b_a4b_it_gguf_request.json",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_01_01_unsloth_gemma_4_26b_a4b_it_gguf_response.json",
+      "release_authority_claimed": false,
+      "request_id": "exp6491-01-01-unsloth_gemma_4_26b_a4b_it_gguf",
+      "request_sha256": "sha256:f881ae80a919170070504013d417a8a4986502d959a1c99a499eda983890af91",
+      "response_sha256": "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef",
+      "retry_count_after_response": 0,
+      "row_type": "proposal",
+      "timed_out": false,
+      "verifier_field_present": false
+    },
+    {
+      "compile_outcome": "no_proposal",
+      "compile_row_hash": "sha256:44078cc61d4e8ab95ca8a089d3bee99d5fa6961531e8dc6a3dd9374a1f9338de",
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "exact_compiler_id": "exp6491_atomic_factor_compiler_over_exp6489_solver_prefix_v1",
+      "exact_compiler_is_oracle_for_disposition": true,
+      "model_family": "qwen",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_output_is_oracle": false,
+      "per_unit_group": "compile",
+      "proposal_row_hash": "sha256:9657cd3a65135bb9093ee187f823989bc7ab64f8a37c9a89cdc78ee3bd6f4f74",
+      "raw_response_sha256": "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+      "reason": "empty_response",
+      "request_id": "exp6491-00-00-unsloth_qwen3_6_35b_a3b_gguf",
+      "row_type": "exact_compile",
+      "source_raw_row_hash": "sha256:e28aaf8e5d041c50cc896c4395648341b7bc6d057f79767c3a66e1526bfc14a3",
+      "verifier_is_oracle": true
+    },
+    {
+      "compile_outcome": "no_proposal",
+      "compile_row_hash": "sha256:712731278bba261b5da102ba2fc0c7423fb57de84e5ffb2ee1d2676408e194d3",
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "exact_compiler_id": "exp6491_atomic_factor_compiler_over_exp6489_solver_prefix_v1",
+      "exact_compiler_is_oracle_for_disposition": true,
+      "model_family": "qwen",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_output_is_oracle": false,
+      "per_unit_group": "compile",
+      "proposal_row_hash": "sha256:d4d871baca913666f2c91f33811726fb37435f6e4ba6c6212c558ac032ce47ee",
+      "raw_response_sha256": "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+      "reason": "empty_response",
+      "request_id": "exp6491-00-01-unsloth_qwen3_6_35b_a3b_gguf",
+      "row_type": "exact_compile",
+      "source_raw_row_hash": "sha256:eca2afdc1df7d30f24a7328849cc10284e5fd6d7476a1be3a3d698a322097736",
+      "verifier_is_oracle": true
+    },
+    {
+      "compile_outcome": "reject",
+      "compile_row_hash": "sha256:367624131beb348d1e57b511e9e3e8c19d5d4a2270a343f30d28ec828743d4a5",
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "exact_compiler_id": "exp6491_atomic_factor_compiler_over_exp6489_solver_prefix_v1",
+      "exact_compiler_is_oracle_for_disposition": true,
+      "model_family": "gemma",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_output_is_oracle": false,
+      "per_unit_group": "compile",
+      "proposal_row_hash": "sha256:6cf7f686be42a4ca6a0308cf4583aed0d6302e370b8a460b074f31d5f01bc828",
+      "raw_response_sha256": "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+      "reason": "json_decode_error",
+      "request_id": "exp6491-01-00-unsloth_gemma_4_26b_a4b_it_gguf",
+      "row_type": "exact_compile",
+      "source_raw_row_hash": "sha256:e28aaf8e5d041c50cc896c4395648341b7bc6d057f79767c3a66e1526bfc14a3",
+      "verifier_is_oracle": true
+    },
+    {
+      "compile_outcome": "reject",
+      "compile_row_hash": "sha256:14a7d9a603e2d11bd80a6c9289a8d14337258d3299af0ff1e7af1d729cd8db49",
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "exact_compiler_id": "exp6491_atomic_factor_compiler_over_exp6489_solver_prefix_v1",
+      "exact_compiler_is_oracle_for_disposition": true,
+      "model_family": "gemma",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_output_is_oracle": false,
+      "per_unit_group": "compile",
+      "proposal_row_hash": "sha256:1bc75f150adf38bb1e5e302262c0e9c49d36a689d1023f96ce20adec31b9e3fd",
+      "raw_response_sha256": "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef",
+      "reason": "json_decode_error",
+      "request_id": "exp6491-01-01-unsloth_gemma_4_26b_a4b_it_gguf",
+      "row_type": "exact_compile",
+      "source_raw_row_hash": "sha256:eca2afdc1df7d30f24a7328849cc10284e5fd6d7476a1be3a3d698a322097736",
+      "verifier_is_oracle": true
+    },
+    {
+      "attack_id": "held_label_access",
+      "attack_row_hash": "sha256:1c4c963015cc5fcbdde0558505348a8f02c870423dd2785fdb54c23f65371199",
+      "blocked_by": "development_only_event_manifest",
+      "fail_closed": true,
+      "per_unit_group": "attack",
+      "readiness_promoted": false,
+      "row_type": "boundary_attack",
+      "spec_refs": [
+        "REQ-VERIFY-6491",
+        "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+      ]
+    },
+    {
+      "attack_id": "answer_emission",
+      "attack_row_hash": "sha256:cb864cbe64a863ca3ceed9501c7489a2ad317be76b60662a2b0ceb9ed946fcba",
+      "blocked_by": "non_authority_receipts",
+      "fail_closed": true,
+      "per_unit_group": "attack",
+      "readiness_promoted": false,
+      "row_type": "boundary_attack",
+      "spec_refs": [
+        "REQ-VERIFY-6491",
+        "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+      ]
+    },
+    {
+      "attack_id": "retry_loop",
+      "attack_row_hash": "sha256:928a89fe5228de31900b92cdc52c8d7b0d2e44d9311421ef7ade19e8342999ba",
+      "blocked_by": "attempt_count_receipt",
+      "fail_closed": true,
+      "per_unit_group": "attack",
+      "readiness_promoted": false,
+      "row_type": "boundary_attack",
+      "spec_refs": [
+        "REQ-VERIFY-6491",
+        "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+      ]
+    },
+    {
+      "attack_id": "response_rewrite",
+      "attack_row_hash": "sha256:e19b606f8de078177bc610bd6811042b49dd15143ff9add82aa444995b47b42a",
+      "blocked_by": "raw_bytes_before_parse_receipt",
+      "fail_closed": true,
+      "per_unit_group": "attack",
+      "readiness_promoted": false,
+      "row_type": "boundary_attack",
+      "spec_refs": [
+        "REQ-VERIFY-6491",
+        "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+      ]
+    },
+    {
+      "attack_id": "missing_raw_bytes",
+      "attack_row_hash": "sha256:65690dbe422f2f49db1757635f6ebac66bbef27a5fafe7412e70813748505d96",
+      "blocked_by": "raw_byte_hash_receipt",
+      "fail_closed": true,
+      "per_unit_group": "attack",
+      "readiness_promoted": false,
+      "row_type": "boundary_attack",
+      "spec_refs": [
+        "REQ-VERIFY-6491",
+        "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+      ]
+    },
+    {
+      "attack_id": "wrong_tokenizer_path",
+      "attack_row_hash": "sha256:cab77d95f897fd65cb15d9f274152a626679555f1dd81c97da009598dbc5adb9",
+      "blocked_by": "embedded_gguf_tokenizer_receipt",
+      "fail_closed": true,
+      "per_unit_group": "attack",
+      "readiness_promoted": false,
+      "row_type": "boundary_attack",
+      "spec_refs": [
+        "REQ-VERIFY-6491",
+        "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+      ]
+    },
+    {
+      "attack_id": "model_identity_omission",
+      "attack_row_hash": "sha256:2188b380679e7140afad423f888b0c3938001c0808e378883db8f597ff84276b",
+      "blocked_by": "model_identity_required_per_row",
+      "fail_closed": true,
+      "per_unit_group": "attack",
+      "readiness_promoted": false,
+      "row_type": "boundary_attack",
+      "spec_refs": [
+        "REQ-VERIFY-6491",
+        "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+      ]
+    },
+    {
+      "attack_id": "duplicate_factor",
+      "attack_row_hash": "sha256:f1ffe196e7547ccad5ac3442fe011c485f600cb3a4497c0fc7ab6a1e9e3cf630",
+      "blocked_by": "duplicate_disposition_is_terminal_not_promoting",
+      "fail_closed": true,
+      "per_unit_group": "attack",
+      "readiness_promoted": false,
+      "row_type": "boundary_attack",
+      "spec_refs": [
+        "REQ-VERIFY-6491",
+        "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+      ]
+    },
+    {
+      "attack_id": "post_hoc_event_selection",
+      "attack_row_hash": "sha256:2cb84ae771029252b964721086a460048e90bb6ed216d40e4895f748799ad8dc",
+      "blocked_by": "frozen_event_model_cross_product",
+      "fail_closed": true,
+      "per_unit_group": "attack",
+      "readiness_promoted": false,
+      "row_type": "boundary_attack",
+      "spec_refs": [
+        "REQ-VERIFY-6491",
+        "SCENARIO-VERIFY-6491-BOUNDARY-ATTACKS"
+      ]
+    }
+  ],
+  "preconditions_checked": {
+    "compiler": {
+      "compile_outcomes": [
+        "accept",
+        "reject",
+        "duplicate",
+        "timeout",
+        "no_proposal"
+      ],
+      "exact_compiler_id": "exp6491_atomic_factor_compiler_over_exp6489_solver_prefix_v1",
+      "model_output_is_oracle": false
+    },
+    "development_split": "development",
+    "model_cache": {
+      "all_mandated_ids_present_in_specs": true,
+      "selected_model_families": [
+        "gemma",
+        "qwen"
+      ],
+      "selected_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ]
+    },
+    "planning_date": "20260821",
+    "protected_files": {
+      "active_roadmap_and_conductor_unchanged": true,
+      "changed_paths": [],
+      "files": {
+        "research-roadmap.yaml": {
+          "changed_in_worktree": false,
+          "sha256": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8"
+        },
+        "scripts/research_conductor.py": {
+          "changed_in_worktree": false,
+          "sha256": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb"
+        }
+      }
+    },
+    "repository_state": {
+      "head": "0465503ef13cc713db711e4a146a097be9e43b47",
+      "status_short": "M openspec/capabilities/verification/spec.md\n?? python/carnot/experiment_6491_sota_factor_proposal_stream.py\n?? results/experiment_6491_sota_factor_proposal_stream_raw/\n?? tests/python/test_experiment_6491_sota_factor_proposal_stream.py"
+    },
+    "retired_lineage": {
+      "artifact_id": "exp6463",
+      "changed_scope": "Exp6491 records one-shot atomic factor proposals on development solver divergences. It does not create a fixed-policy answer corpus.",
+      "fixed_policy_answer_corpus_reused": false,
+      "model_may_emit_answer": false,
+      "observed_ready_score": 0.0,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+      "prior_honest_verdict": "complete: fixed-policy corpus v2 finished but readiness gate stayed closed",
+      "prior_status": "complete_with_findings",
+      "sha256": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604"
+    },
+    "runtime": {
+      "backend": "llama_cpp",
+      "error": null,
+      "gpu_offload_supported": true,
+      "llama_cpp_import_ok": true,
+      "runtime_version": "0.3.33",
+      "system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | "
+    },
+    "runtime_environment": {
+      "cpu_count": 24,
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python": "3.12.13"
+    },
+    "upstream_gates": [
+      {
+        "artifact_id": "exp6488",
+        "expected": 1.0,
+        "field": "v560_lineage_lock_ready_score",
+        "gate_passed": true,
+        "observed": 1.0,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6488_v559_decision_ledger.json",
+        "row_type": "upstream_gate",
+        "sha256": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b"
+      },
+      {
+        "artifact_id": "exp6489",
+        "expected": 1.0,
+        "field": "trajectory_contract_ready_score",
+        "gate_passed": true,
+        "observed": 1.0,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6489_solver_trajectory_commitment.json",
+        "row_type": "upstream_gate",
+        "sha256": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3"
+      }
+    ]
+  },
+  "prior_lineage_retirement_receipt": {
+    "artifact_id": "exp6463",
+    "changed_scope": "Exp6491 records one-shot atomic factor proposals on development solver divergences. It does not create a fixed-policy answer corpus.",
+    "fixed_policy_answer_corpus_reused": false,
+    "model_may_emit_answer": false,
+    "observed_ready_score": 0.0,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json",
+    "prior_honest_verdict": "complete: fixed-policy corpus v2 finished but readiness gate stayed closed",
+    "prior_status": "complete_with_findings",
+    "sha256": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604"
+  },
+  "prompt_commitment": {
+    "allowed_context": "solver_prefix_and_factor_schema_only",
+    "constrained_answer_grammar_used": false,
+    "factor_schema": {
+      "allowed_kinds": [
+        "partial_assignment_eq",
+        "residual_weight_at_most",
+        "candidate_count_at_least",
+        "branch_depth_at_least"
+      ],
+      "forbidden_fields": [
+        "answer",
+        "final_answer",
+        "final_outcome",
+        "label",
+        "outcome",
+        "release",
+        "release_authority",
+        "solution",
+        "verdict",
+        "verifier",
+        "verify"
+      ],
+      "no_answer_field": true,
+      "no_label_field": true,
+      "no_release_field": true,
+      "no_verifier_field": true,
+      "required_fields": [
+        "factor_id",
+        "kind",
+        "scope",
+        "weight"
+      ],
+      "schema_version": "carnot.experiment_6491.atomic_factor_proposal.v1"
+    },
+    "grammar_backend": "none",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/prompt_commitment.json",
+    "post_response_prompt_edit_allowed": false,
+    "prompt_count": 2,
+    "prompts_written_before_model_access": true,
+    "rank_and_select_loop_used": false,
+    "retry_to_valid_loop_used": false,
+    "rows": [
+      {
+        "constrained_answer_grammar_used": false,
+        "event_id": "exp6491-dev-00-e28aaf8e",
+        "factor_schema_hash": "sha256:fe86b03e175feaffb4ce14f12083f9f23e8c9567f87e10fc5f5df4da80dd90e4",
+        "grammar_backend": "none",
+        "post_response_prompt_edit_allowed": false,
+        "prompt": "You propose one exact-checkable atomic constraint factor for this development solver prefix.\nReturn one JSON object only.\nFactor schema: {\"allowed_kinds\":[\"partial_assignment_eq\",\"residual_weight_at_most\",\"candidate_count_at_least\",\"branch_depth_at_least\"],\"forbidden_fields\":[\"answer\",\"final_answer\",\"final_outcome\",\"label\",\"outcome\",\"release\",\"release_authority\",\"solution\",\"verdict\",\"verifier\",\"verify\"],\"no_answer_field\":true,\"no_label_field\":true,\"no_release_field\":true,\"no_verifier_field\":true,\"required_fields\":[\"factor_id\",\"kind\",\"scope\",\"weight\"],\"schema_version\":\"carnot.experiment_6491.atomic_factor_proposal.v1\"}\nVisible solver prefix: {\"assigned_variable_count\":2,\"best_possible_scalar_energy\":0,\"branch_depth\":2,\"candidate_count_under_partial\":8,\"constraint_residuals\":[{\"constraint_id\":\"c_guard_enabled\",\"residual_weight\":0,\"status\":\"satisfied\"},{\"constraint_id\":\"c_p_requires_r\",\"residual_weight\":0,\"status\":\"undecided\"},{\"constraint_id\":\"c_r_load_floor\",\"residual_weight\":0,\"status\":\"undecided\"},{\"constraint_id\":\"c_q_load_cap\",\"residual_weight\":0,\"status\":\"undecided\"}],\"incumbent_scalar_energy\":0,\"partial_assignment\":{\"p\":1,\"q\":1},\"partial_domain_fraction\":0.5,\"residual_weight_sum\":0,\"satisfied_constraint_count\":1,\"unassigned_variable_count\":2,\"undecided_constraint_count\":3,\"violated_constraint_count\":0}\n",
+        "prompt_row_hash": "sha256:86b706366a4b05e70b0982011b6b76d828d99e69a6556c364f3cb3816f29a2f3",
+        "prompt_sha256": "sha256:ace29e5cacb2f28e18680efd1e719a3d18e0c9274d8399156404a419d62993a4",
+        "rank_and_select_loop_used": false,
+        "retry_to_valid_loop_used": false,
+        "row_type": "prompt_commitment",
+        "visible_context_hash": "sha256:68b8ef9e42982d4e455f775922015447842ed2856774f0d4ec85e99690bd2ef3"
+      },
+      {
+        "constrained_answer_grammar_used": false,
+        "event_id": "exp6491-dev-01-eca2afdc",
+        "factor_schema_hash": "sha256:fe86b03e175feaffb4ce14f12083f9f23e8c9567f87e10fc5f5df4da80dd90e4",
+        "grammar_backend": "none",
+        "post_response_prompt_edit_allowed": false,
+        "prompt": "You propose one exact-checkable atomic constraint factor for this development solver prefix.\nReturn one JSON object only.\nFactor schema: {\"allowed_kinds\":[\"partial_assignment_eq\",\"residual_weight_at_most\",\"candidate_count_at_least\",\"branch_depth_at_least\"],\"forbidden_fields\":[\"answer\",\"final_answer\",\"final_outcome\",\"label\",\"outcome\",\"release\",\"release_authority\",\"solution\",\"verdict\",\"verifier\",\"verify\"],\"no_answer_field\":true,\"no_label_field\":true,\"no_release_field\":true,\"no_verifier_field\":true,\"required_fields\":[\"factor_id\",\"kind\",\"scope\",\"weight\"],\"schema_version\":\"carnot.experiment_6491.atomic_factor_proposal.v1\"}\nVisible solver prefix: {\"assigned_variable_count\":2,\"best_possible_scalar_energy\":1,\"branch_depth\":2,\"candidate_count_under_partial\":5,\"constraint_residuals\":[{\"constraint_id\":\"c_total\",\"residual_weight\":0,\"status\":\"undecided\"},{\"constraint_id\":\"c_a_min\",\"residual_weight\":1,\"status\":\"violated\"},{\"constraint_id\":\"c_b_cap\",\"residual_weight\":0,\"status\":\"satisfied\"},{\"constraint_id\":\"c_c_min\",\"residual_weight\":0,\"status\":\"undecided\"}],\"incumbent_scalar_energy\":0,\"partial_assignment\":{\"a\":1,\"b\":0},\"partial_domain_fraction\":0.666667,\"residual_weight_sum\":1,\"satisfied_constraint_count\":1,\"unassigned_variable_count\":1,\"undecided_constraint_count\":2,\"violated_constraint_count\":1}\n",
+        "prompt_row_hash": "sha256:221ecee0a11b35b8a59c0c192d010233e5cc30223ce30b7722c7218d5b62d615",
+        "prompt_sha256": "sha256:b2ef5fa51f682da87ed4c9896bdde16a9fd21be595fe112db8867e2adc7c5e69",
+        "rank_and_select_loop_used": false,
+        "retry_to_valid_loop_used": false,
+        "row_type": "prompt_commitment",
+        "visible_context_hash": "sha256:1a5f3ff686a089cd2d259ba27fb24bb122ffca1d180f20d8d43de2b09c1091fd"
+      }
+    ],
+    "schema_version": "carnot.experiment_6491.sota_factor_proposal_stream.v1.prompt_commitment",
+    "sha256": "sha256:af147b529861afa12d60a34e0cd1583a5217abecac80296d94153aced229c930"
+  },
+  "proposal_rows": [
+    {
+      "answer_field_present": false,
+      "attempt_index": 0,
+      "completion_token_count": 0,
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "final_outcome_field_present": false,
+      "finish_reason": "stop",
+      "generation_duration_s": 0.567133,
+      "grammar_backend": "none",
+      "label_field_present": false,
+      "model_family": "qwen",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_output_is_oracle": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "parse_receipt": {
+        "answer_like_text_detected": false,
+        "boundary_violation": false,
+        "forbidden_keys": [],
+        "parse_input_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "parse_status": "empty_response",
+        "parsed_after_raw_bytes_written": true,
+        "post_response_rewrite_used": false
+      },
+      "parsed_factor_present": false,
+      "post_response_prompt_edit_used": false,
+      "prompt_token_count": 315,
+      "proposal": null,
+      "proposal_row_hash": "sha256:9657cd3a65135bb9093ee187f823989bc7ab64f8a37c9a89cdc78ee3bd6f4f74",
+      "rank_and_select_candidates": 1,
+      "raw_bytes_written_before_parse": true,
+      "raw_request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_00_00_unsloth_qwen3_6_35b_a3b_gguf_request.json",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_00_00_unsloth_qwen3_6_35b_a3b_gguf_response.json",
+      "release_authority_claimed": false,
+      "request_id": "exp6491-00-00-unsloth_qwen3_6_35b_a3b_gguf",
+      "request_sha256": "sha256:9b9417d91aaa09e7bb9102fbb263b29adf4fdf6ee8f3451dafe063971b328898",
+      "response_sha256": "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+      "retry_count_after_response": 0,
+      "row_type": "proposal",
+      "timed_out": false,
+      "verifier_field_present": false
+    },
+    {
+      "answer_field_present": false,
+      "attempt_index": 0,
+      "completion_token_count": 0,
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "final_outcome_field_present": false,
+      "finish_reason": "stop",
+      "generation_duration_s": 0.14652,
+      "grammar_backend": "none",
+      "label_field_present": false,
+      "model_family": "qwen",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_output_is_oracle": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "parse_receipt": {
+        "answer_like_text_detected": false,
+        "boundary_violation": false,
+        "forbidden_keys": [],
+        "parse_input_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "parse_status": "empty_response",
+        "parsed_after_raw_bytes_written": true,
+        "post_response_rewrite_used": false
+      },
+      "parsed_factor_present": false,
+      "post_response_prompt_edit_used": false,
+      "prompt_token_count": 316,
+      "proposal": null,
+      "proposal_row_hash": "sha256:d4d871baca913666f2c91f33811726fb37435f6e4ba6c6212c558ac032ce47ee",
+      "rank_and_select_candidates": 1,
+      "raw_bytes_written_before_parse": true,
+      "raw_request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_00_01_unsloth_qwen3_6_35b_a3b_gguf_request.json",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_00_01_unsloth_qwen3_6_35b_a3b_gguf_response.json",
+      "release_authority_claimed": false,
+      "request_id": "exp6491-00-01-unsloth_qwen3_6_35b_a3b_gguf",
+      "request_sha256": "sha256:dfb2ac7cb6fc86237bbc9da915f2a4081e75247c63b9ba84f3444a7318ebbaf1",
+      "response_sha256": "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+      "retry_count_after_response": 0,
+      "row_type": "proposal",
+      "timed_out": false,
+      "verifier_field_present": false
+    },
+    {
+      "answer_field_present": false,
+      "attempt_index": 0,
+      "completion_token_count": 96,
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "final_outcome_field_present": false,
+      "finish_reason": "length",
+      "generation_duration_s": 1.190857,
+      "grammar_backend": "none",
+      "label_field_present": false,
+      "model_family": "gemma",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_output_is_oracle": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_receipt": {
+        "answer_like_text_detected": false,
+        "boundary_violation": false,
+        "forbidden_keys": [],
+        "parse_error": "Expecting value: line 1 column 1 (char 0)",
+        "parse_input_sha256": "sha256:3ff8c3a4f1dc366b52f60a3889433ff3a1bfa70aa9565426e28968f5940fc6cd",
+        "parse_status": "json_decode_error",
+        "parsed_after_raw_bytes_written": true,
+        "post_response_rewrite_used": false
+      },
+      "parsed_factor_present": false,
+      "post_response_prompt_edit_used": false,
+      "prompt_token_count": 377,
+      "proposal": null,
+      "proposal_row_hash": "sha256:6cf7f686be42a4ca6a0308cf4583aed0d6302e370b8a460b074f31d5f01bc828",
+      "rank_and_select_candidates": 1,
+      "raw_bytes_written_before_parse": true,
+      "raw_request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_01_00_unsloth_gemma_4_26b_a4b_it_gguf_request.json",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_01_00_unsloth_gemma_4_26b_a4b_it_gguf_response.json",
+      "release_authority_claimed": false,
+      "request_id": "exp6491-01-00-unsloth_gemma_4_26b_a4b_it_gguf",
+      "request_sha256": "sha256:d1c04d9bbc6cd5285678ce5ca4962605c3d985e3e35e008fdc8b5b42724e50d3",
+      "response_sha256": "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+      "retry_count_after_response": 0,
+      "row_type": "proposal",
+      "timed_out": false,
+      "verifier_field_present": false
+    },
+    {
+      "answer_field_present": false,
+      "attempt_index": 0,
+      "completion_token_count": 96,
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "final_outcome_field_present": false,
+      "finish_reason": "length",
+      "generation_duration_s": 0.87674,
+      "grammar_backend": "none",
+      "label_field_present": false,
+      "model_family": "gemma",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_output_is_oracle": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_receipt": {
+        "answer_like_text_detected": false,
+        "boundary_violation": false,
+        "forbidden_keys": [],
+        "parse_error": "Expecting value: line 1 column 1 (char 0)",
+        "parse_input_sha256": "sha256:ea038b6c687edea6bb1319b26ce3f7bcfa4bdd5471f4a78ce334a981665cc286",
+        "parse_status": "json_decode_error",
+        "parsed_after_raw_bytes_written": true,
+        "post_response_rewrite_used": false
+      },
+      "parsed_factor_present": false,
+      "post_response_prompt_edit_used": false,
+      "prompt_token_count": 373,
+      "proposal": null,
+      "proposal_row_hash": "sha256:1bc75f150adf38bb1e5e302262c0e9c49d36a689d1023f96ce20adec31b9e3fd",
+      "rank_and_select_candidates": 1,
+      "raw_bytes_written_before_parse": true,
+      "raw_request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_01_01_unsloth_gemma_4_26b_a4b_it_gguf_request.json",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_01_01_unsloth_gemma_4_26b_a4b_it_gguf_response.json",
+      "release_authority_claimed": false,
+      "request_id": "exp6491-01-01-unsloth_gemma_4_26b_a4b_it_gguf",
+      "request_sha256": "sha256:f881ae80a919170070504013d417a8a4986502d959a1c99a499eda983890af91",
+      "response_sha256": "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef",
+      "retry_count_after_response": 0,
+      "row_type": "proposal",
+      "timed_out": false,
+      "verifier_field_present": false
+    }
+  ],
+  "protected_files_unchanged": {
+    "active_roadmap_and_conductor_unchanged": true,
+    "changed_paths": [],
+    "files": {
+      "research-roadmap.yaml": {
+        "changed_in_worktree": false,
+        "sha256": "sha256:c2d68d96fa8109318bcaaf39e299c3df4c0cd5a63de2fe106fb749dcbb465fd8"
+      },
+      "scripts/research_conductor.py": {
+        "changed_in_worktree": false,
+        "sha256": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb"
+      }
+    }
+  },
+  "random_seed": {
+    "base": 6491,
+    "event_order_seed": 6491001,
+    "model_order_seed": 6491002
+  },
+  "raw_request_response_receipts": {
+    "all_raw_bytes_written_before_parse": true,
+    "raw_receipt_count": 8,
+    "request_response_pair_count": 4,
+    "rows": [
+      {
+        "event_id": "exp6491-dev-00-e28aaf8e",
+        "kind": "request",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_00_00_unsloth_qwen3_6_35b_a3b_gguf_request.json",
+        "request_id": "exp6491-00-00-unsloth_qwen3_6_35b_a3b_gguf",
+        "row_type": "raw_byte_receipt",
+        "sha256": "sha256:9b9417d91aaa09e7bb9102fbb263b29adf4fdf6ee8f3451dafe063971b328898",
+        "size_bytes": 3554,
+        "written_before_parse": true
+      },
+      {
+        "event_id": "exp6491-dev-00-e28aaf8e",
+        "kind": "response",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_00_00_unsloth_qwen3_6_35b_a3b_gguf_response.json",
+        "request_id": "exp6491-00-00-unsloth_qwen3_6_35b_a3b_gguf",
+        "row_type": "raw_byte_receipt",
+        "sha256": "sha256:6296f1283ad8914c0e91809f028a52481f7f39297beb06c7b63c17f6f9784e65",
+        "size_bytes": 354,
+        "written_before_parse": true
+      },
+      {
+        "event_id": "exp6491-dev-01-eca2afdc",
+        "kind": "request",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_00_01_unsloth_qwen3_6_35b_a3b_gguf_request.json",
+        "request_id": "exp6491-00-01-unsloth_qwen3_6_35b_a3b_gguf",
+        "row_type": "raw_byte_receipt",
+        "sha256": "sha256:dfb2ac7cb6fc86237bbc9da915f2a4081e75247c63b9ba84f3444a7318ebbaf1",
+        "size_bytes": 3508,
+        "written_before_parse": true
+      },
+      {
+        "event_id": "exp6491-dev-01-eca2afdc",
+        "kind": "response",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_00_01_unsloth_qwen3_6_35b_a3b_gguf_response.json",
+        "request_id": "exp6491-00-01-unsloth_qwen3_6_35b_a3b_gguf",
+        "row_type": "raw_byte_receipt",
+        "sha256": "sha256:248c4eba544dc04fda11257a9f5ea190da462ce0c705312da0a5660189179079",
+        "size_bytes": 353,
+        "written_before_parse": true
+      },
+      {
+        "event_id": "exp6491-dev-00-e28aaf8e",
+        "kind": "request",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_01_00_unsloth_gemma_4_26b_a4b_it_gguf_request.json",
+        "request_id": "exp6491-01-00-unsloth_gemma_4_26b_a4b_it_gguf",
+        "row_type": "raw_byte_receipt",
+        "sha256": "sha256:d1c04d9bbc6cd5285678ce5ca4962605c3d985e3e35e008fdc8b5b42724e50d3",
+        "size_bytes": 3567,
+        "written_before_parse": true
+      },
+      {
+        "event_id": "exp6491-dev-00-e28aaf8e",
+        "kind": "response",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_01_00_unsloth_gemma_4_26b_a4b_it_gguf_response.json",
+        "request_id": "exp6491-01-00-unsloth_gemma_4_26b_a4b_it_gguf",
+        "row_type": "raw_byte_receipt",
+        "sha256": "sha256:83373c99d00d0fa74007cdc7b8cd04aac15297fd3a421b576bfc44b31e7b8adc",
+        "size_bytes": 629,
+        "written_before_parse": true
+      },
+      {
+        "event_id": "exp6491-dev-01-eca2afdc",
+        "kind": "request",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_01_01_unsloth_gemma_4_26b_a4b_it_gguf_request.json",
+        "request_id": "exp6491-01-01-unsloth_gemma_4_26b_a4b_it_gguf",
+        "row_type": "raw_byte_receipt",
+        "sha256": "sha256:f881ae80a919170070504013d417a8a4986502d959a1c99a499eda983890af91",
+        "size_bytes": 3521,
+        "written_before_parse": true
+      },
+      {
+        "event_id": "exp6491-dev-01-eca2afdc",
+        "kind": "response",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6491_sota_factor_proposal_stream_raw/exp6491_01_01_unsloth_gemma_4_26b_a4b_it_gguf_response.json",
+        "request_id": "exp6491-01-01-unsloth_gemma_4_26b_a4b_it_gguf",
+        "row_type": "raw_byte_receipt",
+        "sha256": "sha256:db89ff39e58b71954028b1ac82147a29d1f773040d0c9bc57bbefd5b2f1c2cef",
+        "size_bytes": 636,
+        "written_before_parse": true
+      }
+    ],
+    "schema_version": "carnot.experiment_6491.sota_factor_proposal_stream.v1.raw_request_response_receipts"
+  },
+  "reproducibility_checksum": "sha256:1e6df9d69f86fd3ffbfd983908c5cb4efd3123381ef72a6593cdb77627311291",
+  "status": "complete_local_proposal_stream",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6491_sota_factor_proposal_stream.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6491_sota_factor_proposal_stream.py -m pytest tests/python/test_experiment_6491_sota_factor_proposal_stream.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6491_sota_factor_proposal_stream.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6491_sota_factor_proposal_stream.py",
+      "exit_code": 0
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6491_sota_factor_proposal_stream --date 20260821",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6491_sota_factor_proposal_stream.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6491_sota_factor_proposal_stream.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6491_sota_factor_proposal_stream --validate",
+      "exit_code": 0
+    }
+  ],
+  "upstream_gate_receipts": [
+    {
+      "artifact_id": "exp6488",
+      "expected": 1.0,
+      "field": "v560_lineage_lock_ready_score",
+      "gate_passed": true,
+      "observed": 1.0,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6488_v559_decision_ledger.json",
+      "row_type": "upstream_gate",
+      "sha256": "sha256:c0bc26d0803a68c49f252c1f05afec6c5aaaeaa71274146bd7a14a3bbbf7c82b"
+    },
+    {
+      "artifact_id": "exp6489",
+      "expected": 1.0,
+      "field": "trajectory_contract_ready_score",
+      "gate_passed": true,
+      "observed": 1.0,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6489_solver_trajectory_commitment.json",
+      "row_type": "upstream_gate",
+      "sha256": "sha256:23a568fd7b847dcb7016b0b0af15670c096ea4be49a6f36b6809f1f974b5c1b3"
+    }
+  ],
+  "verifier_is_oracle": false
+}

@@ -1,0 +1,148 @@
+{
+  "event_count": 2,
+  "event_order_seed": 6491001,
+  "events": [
+    {
+      "backend": "z3",
+      "checkpoint_id": "middle",
+      "event_id": "exp6491-dev-00-e28aaf8e",
+      "event_order_seed": 6491001,
+      "event_row_hash": "sha256:93797a2905aa6a9f5f8eeb3f1fbb539777c58b56ec4556004b66cd3f69a23d6b",
+      "final_fields_excluded": [
+        "final_exact_label",
+        "final_exact_outcome_hash",
+        "final_objective_value",
+        "final_objective",
+        "held_label",
+        "answer",
+        "release_authority"
+      ],
+      "frozen_before_model_access": true,
+      "held_rows_excluded": true,
+      "record_hash": "sha256:93f2771c332082d12842b711d3f16fd0055fce1b70076e6e10b4ff45db8f8146",
+      "row_type": "frozen_event",
+      "source_family_id": "boolean_guard",
+      "source_raw_row_hash": "sha256:e28aaf8e5d041c50cc896c4395648341b7bc6d057f79767c3a66e1526bfc14a3",
+      "source_unit_id": "exp6482-boolean-guard-08",
+      "spec_refs": [
+        "REQ-VERIFY-6491",
+        "SCENARIO-VERIFY-6491-HELD-ISOLATION"
+      ],
+      "split": "development",
+      "visible_context": {
+        "assigned_variable_count": 2,
+        "best_possible_scalar_energy": 0,
+        "branch_depth": 2,
+        "candidate_count_under_partial": 8,
+        "constraint_residuals": [
+          {
+            "constraint_id": "c_guard_enabled",
+            "residual_weight": 0,
+            "status": "satisfied"
+          },
+          {
+            "constraint_id": "c_p_requires_r",
+            "residual_weight": 0,
+            "status": "undecided"
+          },
+          {
+            "constraint_id": "c_r_load_floor",
+            "residual_weight": 0,
+            "status": "undecided"
+          },
+          {
+            "constraint_id": "c_q_load_cap",
+            "residual_weight": 0,
+            "status": "undecided"
+          }
+        ],
+        "incumbent_scalar_energy": 0,
+        "partial_assignment": {
+          "p": 1,
+          "q": 1
+        },
+        "partial_domain_fraction": 0.5,
+        "residual_weight_sum": 0,
+        "satisfied_constraint_count": 1,
+        "unassigned_variable_count": 2,
+        "undecided_constraint_count": 3,
+        "violated_constraint_count": 0
+      },
+      "visible_context_hash": "sha256:68b8ef9e42982d4e455f775922015447842ed2856774f0d4ec85e99690bd2ef3"
+    },
+    {
+      "backend": "z3",
+      "checkpoint_id": "middle",
+      "event_id": "exp6491-dev-01-eca2afdc",
+      "event_order_seed": 6491001,
+      "event_row_hash": "sha256:1e3519e16552ffc06c1136c1b942267ac07946784857e2c1808fc8a630b95d11",
+      "final_fields_excluded": [
+        "final_exact_label",
+        "final_exact_outcome_hash",
+        "final_objective_value",
+        "final_objective",
+        "held_label",
+        "answer",
+        "release_authority"
+      ],
+      "frozen_before_model_access": true,
+      "held_rows_excluded": true,
+      "record_hash": "sha256:da2fe0ecd74aaa2bd63955de40160b35aab1f13091e0886e8600ae7455c9e95d",
+      "row_type": "frozen_event",
+      "source_family_id": "quota_allocation",
+      "source_raw_row_hash": "sha256:eca2afdc1df7d30f24a7328849cc10284e5fd6d7476a1be3a3d698a322097736",
+      "source_unit_id": "exp6482-quota-allocation-03",
+      "spec_refs": [
+        "REQ-VERIFY-6491",
+        "SCENARIO-VERIFY-6491-HELD-ISOLATION"
+      ],
+      "split": "development",
+      "visible_context": {
+        "assigned_variable_count": 2,
+        "best_possible_scalar_energy": 1,
+        "branch_depth": 2,
+        "candidate_count_under_partial": 5,
+        "constraint_residuals": [
+          {
+            "constraint_id": "c_total",
+            "residual_weight": 0,
+            "status": "undecided"
+          },
+          {
+            "constraint_id": "c_a_min",
+            "residual_weight": 1,
+            "status": "violated"
+          },
+          {
+            "constraint_id": "c_b_cap",
+            "residual_weight": 0,
+            "status": "satisfied"
+          },
+          {
+            "constraint_id": "c_c_min",
+            "residual_weight": 0,
+            "status": "undecided"
+          }
+        ],
+        "incumbent_scalar_energy": 0,
+        "partial_assignment": {
+          "a": 1,
+          "b": 0
+        },
+        "partial_domain_fraction": 0.666667,
+        "residual_weight_sum": 1,
+        "satisfied_constraint_count": 1,
+        "unassigned_variable_count": 1,
+        "undecided_constraint_count": 2,
+        "violated_constraint_count": 1
+      },
+      "visible_context_hash": "sha256:1a5f3ff686a089cd2d259ba27fb24bb122ffca1d180f20d8d43de2b09c1091fd"
+    }
+  ],
+  "final_outcomes_exposed": 0,
+  "frozen_before_model_access": true,
+  "held_rows_selected": 0,
+  "planning_date": "20260821",
+  "schema_version": "carnot.experiment_6491.sota_factor_proposal_stream.v1.frozen_event_manifest",
+  "split": "development"
+}
