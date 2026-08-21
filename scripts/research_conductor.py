@@ -2669,6 +2669,86 @@ def _expected_next_milestone(current: str) -> str:
     return f"{today.year}.{today.month:02d}.{next_idx:03d}"
 
 
+# Row statuses log_step writes for a task that did NOT complete. Same set
+# pick_next_task counts as failures; split so the archiver can name the
+# block states distinctly (REQ-CONDUCTOR-ARCHIVE-1).
+_TASK_ROW_BLOCK_STATUSES = ("GATE_BLOCK", "DOOMED_RERUN_BLOCK")
+_TASK_ROW_FAIL_STATUSES = ("FAIL", "REVERT", "SKIP", "NOOP") + _TASK_ROW_BLOCK_STATUSES
+
+
+def _statuses_since_last_activation(log_content: str) -> dict[str, list[str]]:
+    """Per-task status rows since the last milestone activation line.
+
+    Same row format and same scoping pick_next_task uses: rows are
+    `| timestamp | task[:50] | STATUS | details |`, and rows before the
+    last "Milestone ... activated" line belong to a prior milestone.
+    """
+    lines = log_content.splitlines()
+    activation_index = -1
+    for i, line in enumerate(lines):
+        if "Milestone" in line and "activated" in line:
+            activation_index = i
+    out: dict[str, list[str]] = {}
+    for line in lines[activation_index + 1 :]:
+        parts = line.split("|")
+        if len(parts) < 4:
+            continue
+        out.setdefault(parts[2].strip(), []).append(parts[3].strip())
+    return out
+
+
+def _artifact_flagged_adversarial(path: Path) -> bool:
+    """True when a JSON deliverable carries a truthy flagged_adversarial stamp."""
+    if path.suffix != ".json":
+        return False
+    try:
+        return bool(json.loads(path.read_text()).get("flagged_adversarial"))
+    except Exception:
+        return False
+
+
+def derive_task_result(
+    task: dict,
+    status_map: dict[str, list[str]],
+    project_root: Path | None = None,
+) -> str:
+    """Derive a task's archival result from evidence, never from a literal.
+
+    Evidence: the conductor log's own rows for this milestone (status_map,
+    from _statuses_since_last_activation) plus deliverable existence on
+    disk. A task whose deliverable is absent never archives as OK. This
+    replaces the hardcoded "OK (conductor)" that certified 57 tasks whose
+    deliverables were never created (REQ-CONDUCTOR-ARCHIVE-1; see
+    docs/research-notes/conductor-self-improvement-2026-08-21.md).
+    """
+    root = project_root if project_root is not None else PROJECT_ROOT
+    statuses = status_map.get(str(task.get("title", ""))[:50].strip(), [])
+    deliverable = str(task.get("deliverable", "") or "").strip()
+    dpath = (root / deliverable) if deliverable else None
+    exists = dpath.exists() if dpath is not None else False
+
+    if "FLAGGED" in statuses or (
+        exists and dpath is not None and _artifact_flagged_adversarial(dpath)
+    ):
+        return "FLAGGED"
+    if "OK" in statuses:
+        if not deliverable or exists:
+            return "OK"
+        return "OK_NO_DELIVERABLE"
+    if exists:
+        # pick_next_task's signal 2: a deliverable on disk counts as done
+        # even when the log rows were lost (e.g. a restart mid-milestone).
+        return "OK_DELIVERABLE_ONLY"
+    failish = [s for s in statuses if s in _TASK_ROW_FAIL_STATUSES]
+    if failish:
+        if failish[-1] == "GATE_BLOCK":
+            return "GATE_BLOCKED"
+        if failish[-1] == "DOOMED_RERUN_BLOCK":
+            return "DOOMED_RERUN_BLOCKED"
+        return f"SKIPPED ({len(failish)}-fail)"
+    return "NOT_RUN"
+
+
 def _archive_current_milestone(push: bool = True) -> bool:
     """Archive the current milestone's tasks to research-complete.yaml.
 
@@ -2691,7 +2771,32 @@ def _archive_current_milestone(push: bool = True) -> bool:
     if not tasks:
         return False
 
+    # Read the completed file FIRST so a duplicate append can be refused
+    # before any entry is built (REQ-CONDUCTOR-ARCHIVE-1). The activation-refusal
+    # retry loop used to append the SAME milestone every 2 minutes — 684
+    # copies of .510 landed in research-complete.yaml. One entry per id.
+    try:
+        if COMPLETE_FILE.exists():
+            with open(COMPLETE_FILE) as f:
+                complete_data = yaml.safe_load(f) or {}
+        else:
+            complete_data = {"milestones": []}
+    except Exception as e:
+        logger.error("Failed to read research-complete.yaml: %s", e)
+        return False
+
+    milestones = complete_data.get("milestones", [])
+    if any(str(m.get("id")) == str(milestone) for m in milestones):
+        logger.info("Milestone %s already archived — refusing duplicate append", milestone)
+        return True
+
     logger.info("Archiving milestone %s (%s) — %d tasks", milestone, title, len(tasks))
+
+    # Derive each result from evidence at archive time (REQ-CONDUCTOR-ARCHIVE-1):
+    # the conductor log's rows for this milestone plus deliverable
+    # existence. Never a literal.
+    log_text = CONDUCTOR_LOG.read_text() if CONDUCTOR_LOG.exists() else ""
+    status_map = _statuses_since_last_activation(log_text)
 
     # Build the completed milestone entry
     completed_entry = {
@@ -2705,7 +2810,7 @@ def _archive_current_milestone(push: bool = True) -> bool:
                 "id": t["id"],
                 "title": t["title"],
                 "deliverable": t.get("deliverable", ""),
-                "result": "OK (conductor)",
+                "result": derive_task_result(t, status_map),
             }
             for t in tasks
         ],
@@ -2713,13 +2818,6 @@ def _archive_current_milestone(push: bool = True) -> bool:
 
     # Append to research-complete.yaml
     try:
-        if COMPLETE_FILE.exists():
-            with open(COMPLETE_FILE) as f:
-                complete_data = yaml.safe_load(f) or {}
-        else:
-            complete_data = {"milestones": []}
-
-        milestones = complete_data.get("milestones", [])
         milestones.append(completed_entry)
         complete_data["milestones"] = milestones
 
@@ -3711,7 +3809,32 @@ def _archive_current_milestone(push: bool = True) -> bool:
     if not tasks:
         return False
 
+    # Read the completed file FIRST so a duplicate append can be refused
+    # before any entry is built (REQ-CONDUCTOR-ARCHIVE-1). The activation-refusal
+    # retry loop used to append the SAME milestone every 2 minutes — 684
+    # copies of .510 landed in research-complete.yaml. One entry per id.
+    try:
+        if COMPLETE_FILE.exists():
+            with open(COMPLETE_FILE) as f:
+                complete_data = yaml.safe_load(f) or {}
+        else:
+            complete_data = {"milestones": []}
+    except Exception as e:
+        logger.error("Failed to read research-complete.yaml: %s", e)
+        return False
+
+    milestones = complete_data.get("milestones", [])
+    if any(str(m.get("id")) == str(milestone) for m in milestones):
+        logger.info("Milestone %s already archived — refusing duplicate append", milestone)
+        return True
+
     logger.info("Archiving milestone %s (%s) — %d tasks", milestone, title, len(tasks))
+
+    # Derive each result from evidence at archive time (REQ-CONDUCTOR-ARCHIVE-1):
+    # the conductor log's rows for this milestone plus deliverable
+    # existence. Never a literal.
+    log_text = CONDUCTOR_LOG.read_text() if CONDUCTOR_LOG.exists() else ""
+    status_map = _statuses_since_last_activation(log_text)
 
     completed_entry = {
         "id": milestone,
@@ -3724,20 +3847,13 @@ def _archive_current_milestone(push: bool = True) -> bool:
                 "id": t["id"],
                 "title": t["title"],
                 "deliverable": t.get("deliverable", ""),
-                "result": "OK (conductor)",
+                "result": derive_task_result(t, status_map),
             }
             for t in tasks
         ],
     }
 
     try:
-        if COMPLETE_FILE.exists():
-            with open(COMPLETE_FILE) as f:
-                complete_data = yaml.safe_load(f) or {}
-        else:
-            complete_data = {"milestones": []}
-
-        milestones = complete_data.get("milestones", [])
         milestones.append(completed_entry)
         complete_data["milestones"] = milestones
 
