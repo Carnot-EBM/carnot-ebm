@@ -7530,3 +7530,176 @@ not bypass the scientific gate.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-OPS-RECURRING-GATE-6425 | Implemented (`python/carnot/experiment_6425_recurring_gate_block_root_cause.py`, `scripts/conductor_gates.py`, `results/experiment_6425_recurring_gate_block_root_cause.json`). | Implemented (`tests/python/test_experiment_6425_recurring_gate_block_root_cause.py`, `tests/python/test_conductor_gates.py`). |
+
+## REQ-INFRA-6500: Milestone Archival SHALL Derive Each Task Result From Evidence And SHALL Refuse Duplicate Appends
+
+Design: `docs/research-notes/conductor-self-improvement-2026-08-21.md`
+(mechanism 2). Origin incident: `_archive_current_milestone` stamped the
+hardcoded literal `"OK (conductor)"` on every task. An audit found 519
+unique (id, deliverable) pairs in `research-complete.yaml`, 57 with a
+missing deliverable, and all 57 recorded `OK (conductor)`. The same
+function appended the same milestone on every activation-refusal retry:
+1,891 milestone entries exist for 50 distinct milestones.
+
+The archiver SHALL NOT write a fixed result string. At archive time it
+SHALL derive each task's `result` from two evidence sources: the
+conductor log's per-task status rows for the current milestone, and
+`Path(deliverable).exists()` on disk. The derived values:
+
+| Evidence | Result |
+|---|---|
+| log OK and deliverable exists (or task declares none) | `OK` |
+| log FLAGGED, or artifact stamped `flagged_adversarial` | `FLAGGED` |
+| log OK but the declared deliverable is missing | `OK_NO_DELIVERABLE` |
+| no log OK, deliverable exists | `OK_DELIVERABLE_ONLY` |
+| last block row is GATE_BLOCK | `GATE_BLOCKED` |
+| last block row is DOOMED_RERUN_BLOCK | `DOOMED_RERUN_BLOCKED` |
+| failure rows, no deliverable | `SKIPPED (N-fail)` |
+| no evidence at all | `NOT_RUN` |
+
+A task whose deliverable is absent SHALL never archive as `OK`.
+
+The archiver SHALL refuse to append a milestone id that
+`research-complete.yaml` already holds. It SHALL log the collision and
+skip the append. Historical duplicate entries stay untouched; repair of
+the historical file is an operator decision.
+
+#### SCENARIO-INFRA-6500-MISSING-DELIVERABLE-NEVER-OK
+
+Given a task with a log OK row and no deliverable file on disk, the
+derived result SHALL be `OK_NO_DELIVERABLE`, not `OK`.
+
+#### SCENARIO-INFRA-6500-SKIPPED-TASK-NOT-OK
+
+Given a task with three FAIL/SKIP rows and no deliverable, the derived
+result SHALL be `SKIPPED (3-fail)`.
+
+#### SCENARIO-INFRA-6500-DUPLICATE-APPEND-REFUSED
+
+Given `research-complete.yaml` already holds an entry for milestone M,
+a second archive call for M SHALL leave the file with exactly one entry
+for M.
+
+## Implementation Status (REQ-INFRA-6500)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6500 | Pending | Pending |
+
+## REQ-INFRA-6501: Activation Refusal SHALL Trigger A Bounded Replan With The Guard's Verbatim Report, Then Park
+
+Design: `docs/research-notes/conductor-self-improvement-2026-08-21.md`
+(mechanism 1). Origin incident: on an activation refusal the loop
+retried an identical activation every two minutes, forever, and
+re-archived each time. Measured: ~5,125 `Activation REFUSED` lines,
+roughly 170 hours of dead loop time; milestone .511 alone stalled
+~1,998 iterations.
+
+On an activation refusal the conductor SHALL:
+
+1. Not re-archive the milestone (REQ-INFRA-6500's dedup makes the
+   retry append a no-op).
+2. Move the refused roadmap to a quarantine path and re-run the
+   planner ONCE, with the guard's violation report embedded verbatim
+   in the planner prompt.
+3. Send the replanned roadmap back through the UNCHANGED activation
+   guard. The recovery path never edits or weakens the guard; it only
+   gives the planner the guard's own error report.
+4. Cap replans at 2 per milestone. The count SHALL persist across
+   conductor restarts.
+5. At the cap, park the milestone: write a dated OPERATOR-ATTENTION
+   `BLOCK` line to `ops/conductor-log.md` and a dated entry to
+   `ops/known-issues.md`, then stop replanning and stop re-archiving.
+   Parked iterations are idle.
+6. Unpark automatically when the parked roadmap file's content
+   changes (an operator hand-fix), resetting the replan budget.
+
+#### SCENARIO-INFRA-6501-REPLAN-EMBEDS-REPORT
+
+Given a first refusal for milestone M, the conductor SHALL quarantine
+the roadmap and invoke the planner with the lint's violation report
+embedded verbatim in the prompt.
+
+#### SCENARIO-INFRA-6501-CAP-THEN-PARK
+
+Given two replans already spent on milestone M, a third refusal SHALL
+park M (no planner call) and SHALL write an OPERATOR-ATTENTION BLOCK
+line to the conductor log.
+
+#### SCENARIO-INFRA-6501-PARKED-IDLE
+
+Given milestone M is parked and the roadmap file is unchanged, the
+activation path SHALL return without replanning and without appending
+to `research-complete.yaml`.
+
+#### SCENARIO-INFRA-6501-EDIT-UNPARKS
+
+Given milestone M is parked and the roadmap file's content changes,
+the next activation attempt SHALL run the guard again with a fresh
+replan budget.
+
+## Implementation Status (REQ-INFRA-6501)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6501 | Pending | Pending |
+
+## REQ-INFRA-6502: Audit Invocations SHALL Verify A Fresh Receipt And Consumption State SHALL Advance Only With The Receipt
+
+Design: `docs/research-notes/conductor-self-improvement-2026-08-21.md`
+(mechanism 3). Origin incident: the QA-layer audit wrote its rotation
+offset before the LLM loop and its report after ALL units completed.
+The caller killed it at `timeout=900` with `check=False`, so the audit
+wrote no report after 2026-07-29 while its rotation offset advanced 20
+units per close. Coverage accounting advanced while zero coverage
+happened, and nothing warned. Journal retention on this host is a few
+hours, so `logger.warning` is not a durable failure record.
+
+Three rules, applied to every audit/guard subprocess the conductor
+invokes:
+
+1. The audited program's last act is a dated receipt — its report
+   file, written after the reviewed units, or its declared output
+   file.
+2. The caller SHALL verify the receipt's mtime is newer than the call
+   start, not the exit code. A stale or missing receipt SHALL write a
+   `BLOCK` line to `ops/conductor-log.md` (a tracked file), not only
+   a journal warning.
+3. Consumption state (rotation offsets, coverage markers) SHALL
+   advance only after the receipt is written, and only by the number
+   of units actually reviewed.
+
+The QA-layer audit SHALL accept a wall-clock budget
+(`--budget-seconds`). When the budget runs out it SHALL stop reviewing
+further units, write a PARTIAL report naming how many units it
+completed, and advance rotation by that count only. A deadline the
+program knows about produces a partial report; a timeout the caller
+imposes produces nothing.
+
+#### SCENARIO-INFRA-6502-STALE-RECEIPT-BLOCKS
+
+Given an audit subprocess that exits without rewriting its receipt
+file, the conductor SHALL write a `BLOCK` line to the conductor log
+naming the audit.
+
+#### SCENARIO-INFRA-6502-FRESH-RECEIPT-PASSES
+
+Given an audit subprocess that rewrites its receipt during the call,
+the conductor SHALL record success and write no `BLOCK` line.
+
+#### SCENARIO-INFRA-6502-BUDGET-PARTIAL-REPORT
+
+Given a wall-clock budget that expires after N of M units, the
+QA-layer audit SHALL write a report marked PARTIAL naming N of M.
+
+#### SCENARIO-INFRA-6502-ROTATION-ADVANCES-WITH-RECEIPT
+
+Given a budget-truncated run that completed N of M units, the rotation
+offset SHALL advance by exactly N, and SHALL be written only after the
+report file.
+
+## Implementation Status (REQ-INFRA-6502)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6502 | Pending | Pending |
