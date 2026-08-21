@@ -1,16 +1,16 @@
 {
-  "kernel_version": "40",
+  "kernel_version": "?",
   "note": "v37 verified by hand after the prep script's own short poll exited with save_run='?' and parquet=MISSING -- the same false alarm seen on v9/v22/v27, where the script's wait is shorter than the kernel's runtime. Ground truth from `kaggle kernels status` (COMPLETE) and `kaggle kernels output` (submission.parquet present, 2648 bytes, 1x4, columns row_id/game_id/end_of_game/score). Stack validated in the same run: vLLM server up in 425s, admission exact at max_model_len 155472, 8/8 concurrent requests round-tripped through the llama.cpp response translation, server config max_num_seqs=8, flashinfer AOT cache staged, CUDA 13 toolchain resolved. Prepared only -- submission is operator-only per CLAUDE.md Operator-Only External Publication.",
-  "parquet_ok": false,
-  "prepped_at": "2026-08-21T01:26Z",
+  "parquet_ok": true,
+  "prepped_at": "2026-08-21T13:37Z",
   "prior_submission_scores": {
     "2026-06-30": 0.08,
     "2026-07-15": 0.12,
     "2026-08-10": 0.02,
     "2026-08-11": 0.09
   },
-  "ready_for_operator_submit": false,
-  "save_run": "?",
+  "ready_for_operator_submit": true,
+  "save_run": "complete",
   "submission_history": [
     {
       "description": "carnot daily 2026-08-19",
@@ -55,5 +55,5 @@
       "what_changed_vs_prior_submission": "One fix, commit 1086c7e7cc: the scored kernel now sets CARNOT_ARC_E3_DIR to a writable path. E3_DIR defaulted to REPO/results/arc_e3 with REPO derived from __file__, which on Kaggle resolves inside the read-only dataset mount, so EVERY induction raised OSError(30, 'Read-only file system') at the persist step -- AFTER the LLM had generated the full world model (310k-485k tokens per game, 99.8% of wall clock). The engine was discarded and each game played on with no world model. Measured on the Blackwell card over ar25/tr87/tu93, all three games, every attempt."
     }
   ],
-  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 40"
+  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver ?"
 }
