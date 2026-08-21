@@ -16233,3 +16233,4 @@ code |
 | 2026-08-21 14:41 UTC | Non-generation representation receipt contract | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-21 14:59 UTC | Online cache transition and anytime-valid evidence | OK | 87 passed, 1 warning in 12.31s |
 | 2026-08-21 15:21 UTC | Three-family forced-candidate representation strea | OK | 88 passed, 1 warning in 8.80s |
+| 2026-08-21 15:40 UTC | Independent representation integrity and shortcut  | FLAGGED | adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT, DURATION_TOO_SHORT — |
