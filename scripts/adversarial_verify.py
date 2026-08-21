@@ -385,6 +385,9 @@ DETERMINISTIC_QA_REGRESSION_NO_LLM_SUBSTRATE = "deterministic_qa_regression_no_l
 DETERMINISTIC_RUNTIME_RECEIPT_VALIDATION_NO_LLM_SUBSTRATE = (
     "deterministic_runtime_receipt_validation_no_llm"
 )
+EXACT_SOLVER_DATASET_COMMITMENT_NO_LLM_SUBSTRATE = (
+    "exact_solver_dataset_commitment_no_llm"
+)
 
 NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     VERIFIER_SCORING_SUBSTRATE,
@@ -399,6 +402,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     ARTIFACT_QA_LINT_TESTS_SUBSTRATE,
     DETERMINISTIC_QA_REGRESSION_NO_LLM_SUBSTRATE,
     DETERMINISTIC_RUNTIME_RECEIPT_VALIDATION_NO_LLM_SUBSTRATE,
+    EXACT_SOLVER_DATASET_COMMITMENT_NO_LLM_SUBSTRATE,
     DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE,
     "cached_exp5567_responses_no_llm",
     "cached_fixture_replay_no_llm",
