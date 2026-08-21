@@ -1,0 +1,4081 @@
+{
+  "action_receipt_schema": {
+    "action_types": [
+      "admit_write",
+      "evict_write",
+      "no_action",
+      "promote_write",
+      "quarantine_write",
+      "restart_replay",
+      "rollback_restore",
+      "tombstone_write"
+    ],
+    "durable_event_types": [
+      "quarantine",
+      "admit",
+      "promote",
+      "evict",
+      "tombstone",
+      "rollback",
+      "restart"
+    ],
+    "durable_write_rule": "durable writes require exact admission and matching event id",
+    "no_action_rule": "non-durable rows must carry a no_action_reason",
+    "required_fields": [
+      "action_event_id",
+      "action_type",
+      "pre_state_hash",
+      "post_state_hash",
+      "exact_admission_hash",
+      "durable",
+      "action_hash"
+    ],
+    "schema_hash": "sha256:f749e552e4fda4c9c67e75f95e5831966981a677354824dabbe2dadd03b01e59",
+    "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1.action_receipt_schema"
+  },
+  "action_rows": [
+    {
+      "action_event_id": "sha256:c34add222e3307b38e6a7b8ae3a83079159112520db6560fd36da501819d718e",
+      "action_hash": "sha256:9f1f23e61f9c288ddadebda5e387d523406fd728d21c78fa6ff3eb3ffe238136",
+      "action_monotonic_ns": 1000001000,
+      "action_payload_hash": "sha256:cbfc57dcc1e632f3429b4a4834b7ab6cfb10ecf6c153916f24d3238ab1e529dd",
+      "action_receipt_index": 0,
+      "action_type": "no_action",
+      "durability_receipt": "no_write",
+      "durable": false,
+      "event_type": "observe",
+      "exact_admission_hash": "",
+      "exact_admission_passed": false,
+      "exact_admission_required": false,
+      "expected_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "no_action_reason": "observe_does_not_write",
+      "post_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "pre_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:7391339d5924d578ed3a29a5e5b6cc5208395d29059fcf94e5f0a72c0a66a280",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:a76543584f0fc4c12443e5381e1586fc2117ed30b424d07ed3a1c95c9b8a1ee7",
+      "action_hash": "sha256:69e28e487d59c502cfb402de2b4fef0153b9f312f53ecc69921b5cfef457f179",
+      "action_monotonic_ns": 1000101000,
+      "action_payload_hash": "sha256:aad3e9e22f46ba4fda53673172bc4928fac20e53bc79e03a9354544687142f75",
+      "action_receipt_index": 1,
+      "action_type": "no_action",
+      "durability_receipt": "no_write",
+      "durable": false,
+      "event_type": "verify",
+      "exact_admission_hash": "",
+      "exact_admission_passed": false,
+      "exact_admission_required": false,
+      "expected_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "no_action_reason": "verify_does_not_write",
+      "post_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "pre_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:d102284d84419d1101362801a283c9c47e835d6bd62c5673aee1089e5241d893",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:99c510a2b15709acef38e223a2300426a0a78e73e2e30bb8d30a0b2cfa031660",
+      "action_hash": "sha256:c9ef769e93e6e8050efbfe3dea7498a658dd09ec65eadc1f39c60e0038d87eda",
+      "action_monotonic_ns": 1000201000,
+      "action_payload_hash": "sha256:bb362ff7f4defec90abaf0e8dcdcb3ed4d2039fec82aeeae0c5cae96e93b193c",
+      "action_receipt_index": 2,
+      "action_type": "no_action",
+      "durability_receipt": "no_write",
+      "durable": false,
+      "event_type": "propose",
+      "exact_admission_hash": "",
+      "exact_admission_passed": false,
+      "exact_admission_required": false,
+      "expected_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "no_action_reason": "propose_does_not_write",
+      "post_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "pre_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:b66626b6d432ebcdfa5c94a865493e54da1c2e5055acf26860bba70d4d566ed9",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:8479017f41e7a2d7b9e8aa4946c59765ef4a535dd774c89bd9b7e78a87ad0ea6",
+      "action_hash": "sha256:4679c73c07053e815588fe1067635c63bc1989e4a001beac66979d336572294c",
+      "action_monotonic_ns": 1000301000,
+      "action_payload_hash": "sha256:217d3ade074e8aaa427c9dd9a73da11a9be980c70f0c242beb4b1cba17959ea6",
+      "action_receipt_index": 3,
+      "action_type": "quarantine_write",
+      "durability_receipt": "atomic_json_write",
+      "durable": true,
+      "event_type": "quarantine",
+      "exact_admission_hash": "sha256:4730e809ee64a5d8b8bc2815aea916cb90ac3cf394b4284c31676d44c53a16a8",
+      "exact_admission_passed": true,
+      "exact_admission_required": true,
+      "expected_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "no_action_reason": "",
+      "post_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "pre_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:fa38df4eb189a547dd6e87d3eeb522e56769ca4f9a7821388bee6c8d8251e5cc",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:f21a71cb7a573c97ca4df6ef1dd3fa2bfe5687f694e103549537854600a58024",
+      "action_hash": "sha256:710a8a18c4dc636b2c51bf7c8e56c68c1a91a7479eb068e3f23e6c19e288bf24",
+      "action_monotonic_ns": 1000401000,
+      "action_payload_hash": "sha256:657e75dee0313cf7fc709e1b20087f6cc555859d939e230a6a5840e9a778ab1d",
+      "action_receipt_index": 4,
+      "action_type": "admit_write",
+      "durability_receipt": "atomic_json_write",
+      "durable": true,
+      "event_type": "admit",
+      "exact_admission_hash": "sha256:b8a3a4e4f84fa6742d3736e63b961f1690401f4ab681b09132e1c2acdcb30e48",
+      "exact_admission_passed": true,
+      "exact_admission_required": true,
+      "expected_state_hash": "sha256:79663ffbf8bea5f7a4479e331477dc31c9cea3e0f66cd8c40007ecc7726ee672",
+      "no_action_reason": "",
+      "post_state_hash": "sha256:79663ffbf8bea5f7a4479e331477dc31c9cea3e0f66cd8c40007ecc7726ee672",
+      "pre_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:4f5cf5a5565d0613a691db40dad74b027b543f4203122e9671326266f50cc2e5",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:afff5cad6106b2ac8642021cde1ce984898ce9cfa4ad138b48b19bc83fe0a995",
+      "action_hash": "sha256:3a3b0591b806987ae875c28595a790e0b5fc33b47cb7e2d69f97a6b6085449ec",
+      "action_monotonic_ns": 1000501000,
+      "action_payload_hash": "sha256:8ff91849879ea5a024e924eab823c107989696d9080146926f5e89dd89c6b3f4",
+      "action_receipt_index": 5,
+      "action_type": "promote_write",
+      "durability_receipt": "atomic_json_write",
+      "durable": true,
+      "event_type": "promote",
+      "exact_admission_hash": "sha256:8d30df858c059874635d52b958c5cdce9f82e1562433adaa577bcfd3497c456b",
+      "exact_admission_passed": true,
+      "exact_admission_required": true,
+      "expected_state_hash": "sha256:8dee6b0eb8ded16cd565c63a00223d4118159faceeb60650b368b5e8ada00014",
+      "no_action_reason": "",
+      "post_state_hash": "sha256:8dee6b0eb8ded16cd565c63a00223d4118159faceeb60650b368b5e8ada00014",
+      "pre_state_hash": "sha256:79663ffbf8bea5f7a4479e331477dc31c9cea3e0f66cd8c40007ecc7726ee672",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:0dc1ffb217e7844711392cad1fa40c839e9a34cd4299595e75a32300e93d8462",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:ed43c4f748cf1a0f0c5b4db1c51b352eba67d13caa7c1b39d817f561a36ecd14",
+      "action_hash": "sha256:6dcbe27a4789522c0e2f04f3bb11fca23290c00d74770f5bcfe4578b338cf0bd",
+      "action_monotonic_ns": 1000601000,
+      "action_payload_hash": "sha256:c0f934cd36c4b0f623336d741e663cbde375cccfbb062528931de6f0eb2c178f",
+      "action_receipt_index": 6,
+      "action_type": "evict_write",
+      "durability_receipt": "atomic_json_write",
+      "durable": true,
+      "event_type": "evict",
+      "exact_admission_hash": "sha256:a6155c99e41149927df5054ace3db89f8861312433734fc07bbf787cfd408165",
+      "exact_admission_passed": true,
+      "exact_admission_required": true,
+      "expected_state_hash": "sha256:0b3ee7d636a2c2072de46f9c485031975afff7dd61f6b2a12718bc8da0d2a165",
+      "no_action_reason": "",
+      "post_state_hash": "sha256:0b3ee7d636a2c2072de46f9c485031975afff7dd61f6b2a12718bc8da0d2a165",
+      "pre_state_hash": "sha256:8dee6b0eb8ded16cd565c63a00223d4118159faceeb60650b368b5e8ada00014",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:2709edcd984ca53ab4f3b04435bab85c9f28c713449c73649e62185b9ab23706",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:87328e933d6b178ad638be4e3149e3ecefb4e148da49cd1e6595af07cad49730",
+      "action_hash": "sha256:ea9f05d78d8b7030ed9470d94e78755c83750ebd4415f1416dba1cc4f6f21bba",
+      "action_monotonic_ns": 1000701000,
+      "action_payload_hash": "sha256:4072d8bb188d455d53236ede6f15248f838271816b5aedc88b4f0029d2840c9d",
+      "action_receipt_index": 7,
+      "action_type": "tombstone_write",
+      "durability_receipt": "atomic_json_write",
+      "durable": true,
+      "event_type": "tombstone",
+      "exact_admission_hash": "sha256:a2d5f346193fcb2a6186a3d01062af47f531b5711c5f8423f5b578006c8eb74d",
+      "exact_admission_passed": true,
+      "exact_admission_required": true,
+      "expected_state_hash": "sha256:bff954a1ab04da7d6f9e24f6386f1f393b1f56843d80d1a281833bdd7c6670fd",
+      "no_action_reason": "",
+      "post_state_hash": "sha256:bff954a1ab04da7d6f9e24f6386f1f393b1f56843d80d1a281833bdd7c6670fd",
+      "pre_state_hash": "sha256:0b3ee7d636a2c2072de46f9c485031975afff7dd61f6b2a12718bc8da0d2a165",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:382378016c83f6474d82352c6400d4b06af359e421bd01804e204701ab1c4e17",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:438311908bed2a99c64a05a628aab1c904ff79197a8b9ee801cb4cdef0014073",
+      "action_hash": "sha256:403bb7f67b00bf306a64b844967af088e62fdff0a1efa378b1ee8a37677a9878",
+      "action_monotonic_ns": 1000801000,
+      "action_payload_hash": "sha256:166dfe92e4ee15f6b7edccf3d08551d86d46274f111c39f4007baf85394c5d76",
+      "action_receipt_index": 8,
+      "action_type": "rollback_restore",
+      "durability_receipt": "atomic_json_write",
+      "durable": true,
+      "event_type": "rollback",
+      "exact_admission_hash": "sha256:691503535892da57a38e8e0b13e8ed4e5fee4b50e49fa60e3a6f45d3603fb84d",
+      "exact_admission_passed": true,
+      "exact_admission_required": true,
+      "expected_state_hash": "sha256:bff954a1ab04da7d6f9e24f6386f1f393b1f56843d80d1a281833bdd7c6670fd",
+      "no_action_reason": "",
+      "post_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "pre_state_hash": "sha256:bff954a1ab04da7d6f9e24f6386f1f393b1f56843d80d1a281833bdd7c6670fd",
+      "rollback_target_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "row_hash": "sha256:676e7efc3306c7ab17cc30c9b77f0ac5f9f4b5f0018113d8b162378b372b2d55",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:b971e77099ff5584fbc5d2986f9c4c2b8c4bc3f3d296c433ffae605b4640649d",
+      "action_hash": "sha256:e4f5145a81dbd53f7865f4603094a9901a2460cd8de00e3d7c78f71026b9c4d8",
+      "action_monotonic_ns": 1000901000,
+      "action_payload_hash": "sha256:71ffdbaa257fcbca8271c63908ac0af4b5c33dd4edfd84acf479859fa60dd395",
+      "action_receipt_index": 9,
+      "action_type": "restart_replay",
+      "durability_receipt": "atomic_json_write",
+      "durable": true,
+      "event_type": "restart",
+      "exact_admission_hash": "sha256:19a952318fb5165aa0ace43c47d4732e5805a494bbe72374c25237c40f035919",
+      "exact_admission_passed": true,
+      "exact_admission_required": true,
+      "expected_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "no_action_reason": "",
+      "post_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "pre_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:ee9c30b456b29aa2b653296ba3d72252fbf549877a460ddf8b6f5f54bae0bfb2",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:2464030b724277135388a60291d744fc24d530550763fc2f8eef72229e38eb2b",
+      "action_hash": "sha256:85272aaded3464011291eb84a9e6417f36f8534802a4c3ab1dae9a06c146de15",
+      "action_monotonic_ns": 1001001000,
+      "action_payload_hash": "sha256:57bfc2e97515f3ad6f789beae05f89e6b8db0c53957de672db003262546f8f14",
+      "action_receipt_index": 10,
+      "action_type": "no_action",
+      "durability_receipt": "no_write",
+      "durable": false,
+      "event_type": "no_write",
+      "exact_admission_hash": "",
+      "exact_admission_passed": false,
+      "exact_admission_required": false,
+      "expected_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "no_action_reason": "no_write_does_not_write",
+      "post_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "pre_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:57647b5196732831debcf3edae90770acf76f7d8c8e6c04a9326f4ed50224dfa",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    }
+  ],
+  "aggregate_row_recomputation": {
+    "checks": {
+      "actions_present": true,
+      "all_attacks_fail_closed": true,
+      "all_attacks_present": true,
+      "events_present": true,
+      "evidence_updates_present": true,
+      "lifecycle_rows_present": true,
+      "positive_rows_validate": true
+    },
+    "failed_checks": [],
+    "online_transition_contract_ready_score_from_rows": 1.0,
+    "row_count": 42,
+    "row_type_counts": {
+      "action": 11,
+      "attack": 10,
+      "event": 11,
+      "evidence_process": 5,
+      "lifecycle": 5
+    },
+    "validation_reasons": []
+  },
+  "attack_matrix": {
+    "all_critical_fail_closed": true,
+    "attack_count": 10,
+    "false_accept_attack_ids": [],
+    "false_accept_count": 0,
+    "rows": [
+      {
+        "accepted": false,
+        "attack_id": "duplicate_events",
+        "fail_closed": true,
+        "mutated_row_count": 33,
+        "reasons": [
+          "duplicate_event_id",
+          "event_chronology_not_monotonic",
+          "event_order_mismatch"
+        ],
+        "row_hash": "sha256:1a052d858f39b9d891ca4879bda3cdc8f72d7a60d343ef88a90abeb42435413a",
+        "row_type": "attack",
+        "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+        "task_id": "exp6485-online-cache-transition-eprocess-contract"
+      },
+      {
+        "accepted": false,
+        "attack_id": "backdated_writes",
+        "fail_closed": true,
+        "mutated_row_count": 32,
+        "reasons": [
+          "action_backdated"
+        ],
+        "row_hash": "sha256:e96a021633acb71251b570a22ce8b91b3b8c6f65dd510a11054a8825a9688d5b",
+        "row_type": "attack",
+        "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+        "task_id": "exp6485-online-cache-transition-eprocess-contract"
+      },
+      {
+        "accepted": false,
+        "attack_id": "stated_write_without_action",
+        "fail_closed": true,
+        "mutated_row_count": 32,
+        "reasons": [
+          "state_hash_mismatch",
+          "stated_write_without_action"
+        ],
+        "row_hash": "sha256:9ae9da085eabcaf2c78a5b33ddf68b65bfa8cfef6083dd07b3c9f2c9b401130c",
+        "row_type": "attack",
+        "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+        "task_id": "exp6485-online-cache-transition-eprocess-contract"
+      },
+      {
+        "accepted": false,
+        "attack_id": "action_without_exact_admission",
+        "fail_closed": true,
+        "mutated_row_count": 32,
+        "reasons": [
+          "action_without_exact_admission"
+        ],
+        "row_hash": "sha256:8b094712cc4f4334e0764b6f91c2d52d1780a9439b06aa31e7e21c28316d7357",
+        "row_type": "attack",
+        "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+        "task_id": "exp6485-online-cache-transition-eprocess-contract"
+      },
+      {
+        "accepted": false,
+        "attack_id": "threshold_editing",
+        "fail_closed": true,
+        "mutated_row_count": 32,
+        "reasons": [
+          "threshold_edited"
+        ],
+        "row_hash": "sha256:8d3ff6f97272e98022e544416a658a815673cb13155ae5efbd2db2ebdbcebe83",
+        "row_type": "attack",
+        "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+        "task_id": "exp6485-online-cache-transition-eprocess-contract"
+      },
+      {
+        "accepted": false,
+        "attack_id": "repeated_peeking",
+        "fail_closed": true,
+        "mutated_row_count": 33,
+        "reasons": [
+          "evidence_update_count_mismatch",
+          "peek_charge_mismatch"
+        ],
+        "row_hash": "sha256:d4d90d4021a6ca7d7c3a283e26eecd97dc21fec00b2ee5d17e918a74d7e2a8d3",
+        "row_type": "attack",
+        "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+        "task_id": "exp6485-online-cache-transition-eprocess-contract"
+      },
+      {
+        "accepted": false,
+        "attack_id": "missing_null",
+        "fail_closed": true,
+        "mutated_row_count": 32,
+        "reasons": [
+          "missing_null"
+        ],
+        "row_hash": "sha256:705c87421694df0d8b30f706f71b0584e66bc2a838af50eb289ad612b4225b50",
+        "row_type": "attack",
+        "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+        "task_id": "exp6485-online-cache-transition-eprocess-contract"
+      },
+      {
+        "accepted": false,
+        "attack_id": "rollback_omission",
+        "fail_closed": true,
+        "mutated_row_count": 32,
+        "reasons": [
+          "rollback_omission"
+        ],
+        "row_hash": "sha256:076a107ee4bf4b8e843f1f81666792a846821f68080bd2ebfb82bf09a6dd4e57",
+        "row_type": "attack",
+        "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+        "task_id": "exp6485-online-cache-transition-eprocess-contract"
+      },
+      {
+        "accepted": false,
+        "attack_id": "tombstone_resurrection",
+        "fail_closed": true,
+        "mutated_row_count": 32,
+        "reasons": [
+          "tombstone_resurrection"
+        ],
+        "row_hash": "sha256:795f7109ec0604977654a23ad28d545e191a0235d85cff3e2a994b0f2d33daf2",
+        "row_type": "attack",
+        "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+        "task_id": "exp6485-online-cache-transition-eprocess-contract"
+      },
+      {
+        "accepted": false,
+        "attack_id": "restart_drift",
+        "fail_closed": true,
+        "mutated_row_count": 32,
+        "reasons": [
+          "restart_drift"
+        ],
+        "row_hash": "sha256:d93c0a1baac6c84a0dbaf790ae27df77b642dc22bb555c438edbd283dae222a8",
+        "row_type": "attack",
+        "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+        "task_id": "exp6485-online-cache-transition-eprocess-contract"
+      }
+    ],
+    "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1.attack_matrix"
+  },
+  "duration_s": 0.08041764795780182,
+  "event_rows": [
+    {
+      "authority": "runtime_observer",
+      "chronology_index": 0,
+      "event_id": "sha256:c34add222e3307b38e6a7b8ae3a83079159112520db6560fd36da501819d718e",
+      "event_payload": {
+        "event_type": "observe",
+        "exact_outcome": "not_applicable",
+        "factor_hypothesis": "factor_alpha",
+        "fixture_label": "candidate_seen",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:42a59c975e29fc5688803c65314235b19d3d705c55aabaf86ffad9f80c1ec1a3",
+      "event_type": "observe",
+      "exact_admission_hash": "sha256:fa394ff5d9b40149d286a6759d2db5bcc667eb33aba538d73e75490a9a6debb8",
+      "fixture_label": "candidate_seen",
+      "monotonic_receipt_ns": 1000000000,
+      "parent_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "row_hash": "sha256:7f6be80dedc014c1abc7dd8c200f744dee3184c13a6147125b94409d225dedd8",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "exact_fixture_verifier",
+      "chronology_index": 1,
+      "event_id": "sha256:a76543584f0fc4c12443e5381e1586fc2117ed30b424d07ed3a1c95c9b8a1ee7",
+      "event_payload": {
+        "event_type": "verify",
+        "exact_outcome": "not_applicable",
+        "factor_hypothesis": "factor_alpha",
+        "fixture_label": "exact_receipt_bound",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:b0241e15a72ff03e145ff31bdacee1d5c052987377d6acf85445d86cfbce68da",
+      "event_type": "verify",
+      "exact_admission_hash": "sha256:78bc69d434abe26a42d81b100fccd6edf520c0dc3317eceba4614abfe782b26b",
+      "fixture_label": "exact_receipt_bound",
+      "monotonic_receipt_ns": 1000100000,
+      "parent_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "row_hash": "sha256:4412c1b18be412d72da6cbb7461dac871aaf49059127cc3a55b8d109d4d7d52c",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "shadow_ranker",
+      "chronology_index": 2,
+      "event_id": "sha256:99c510a2b15709acef38e223a2300426a0a78e73e2e30bb8d30a0b2cfa031660",
+      "event_payload": {
+        "event_type": "propose",
+        "exact_outcome": "not_applicable",
+        "factor_hypothesis": "factor_beta",
+        "fixture_label": "bounded_shadow_delta",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:529872d13853943f7d21ea6d92a39673999c14a8ada95e16ec1a92ed8df23ecd",
+      "event_type": "propose",
+      "exact_admission_hash": "sha256:3d399068f82a33343cbebff7d54ef2d1517c947e3275995b46a76d301e9c107d",
+      "fixture_label": "bounded_shadow_delta",
+      "monotonic_receipt_ns": 1000200000,
+      "parent_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "row_hash": "sha256:96bba738b9bbadcbb23d92da837facc8589636178bb81a99635e7bde65185196",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "exact_fixture_verifier",
+      "chronology_index": 3,
+      "event_id": "sha256:8479017f41e7a2d7b9e8aa4946c59765ef4a535dd774c89bd9b7e78a87ad0ea6",
+      "event_payload": {
+        "event_type": "quarantine",
+        "exact_outcome": "pass",
+        "factor_hypothesis": "factor_beta",
+        "fixture_label": "bad_candidate_rejected",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:1868129e004ecd164de7180762c16d3ece9cc65d3934be14f189486d2500fd6f",
+      "event_type": "quarantine",
+      "exact_admission_hash": "sha256:4730e809ee64a5d8b8bc2815aea916cb90ac3cf394b4284c31676d44c53a16a8",
+      "fixture_label": "bad_candidate_rejected",
+      "monotonic_receipt_ns": 1000300000,
+      "parent_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "row_hash": "sha256:d170540b9cea25c1026890cf07eff952f713c40859fe37d5e8a681366a94f42e",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": true,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "exact_fixture_verifier",
+      "chronology_index": 4,
+      "event_id": "sha256:f21a71cb7a573c97ca4df6ef1dd3fa2bfe5687f694e103549537854600a58024",
+      "event_payload": {
+        "event_type": "admit",
+        "exact_outcome": "pass",
+        "factor_hypothesis": "factor_alpha",
+        "fixture_label": "exact_candidate_admitted",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:7be3e722e36c346bb44ac3baab927ec12d537d34759bf936b626efc59c9e60f3",
+      "event_type": "admit",
+      "exact_admission_hash": "sha256:b8a3a4e4f84fa6742d3736e63b961f1690401f4ab681b09132e1c2acdcb30e48",
+      "fixture_label": "exact_candidate_admitted",
+      "monotonic_receipt_ns": 1000400000,
+      "parent_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "row_hash": "sha256:ad9b9bff84cfa1d4fbfcdaf7eb222bf77cb6b113b97a685a29250c7662ec722e",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": true,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "eprocess_boundary_checker",
+      "chronology_index": 5,
+      "event_id": "sha256:afff5cad6106b2ac8642021cde1ce984898ce9cfa4ad138b48b19bc83fe0a995",
+      "event_payload": {
+        "event_type": "promote",
+        "exact_outcome": "pass",
+        "factor_hypothesis": "factor_alpha",
+        "fixture_label": "eprocess_boundary_crossed",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:ac372df18f85af33227c65ce61ca98c453ef8a87f127472fa9e11656154fd262",
+      "event_type": "promote",
+      "exact_admission_hash": "sha256:8d30df858c059874635d52b958c5cdce9f82e1562433adaa577bcfd3497c456b",
+      "fixture_label": "eprocess_boundary_crossed",
+      "monotonic_receipt_ns": 1000500000,
+      "parent_state_hash": "sha256:79663ffbf8bea5f7a4479e331477dc31c9cea3e0f66cd8c40007ecc7726ee672",
+      "row_hash": "sha256:518a5727fe6a3f31fd333e41252bcc53f5b8a4cadd475cc057087c245d152fee",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": true,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "capacity_controller",
+      "chronology_index": 6,
+      "event_id": "sha256:ed43c4f748cf1a0f0c5b4db1c51b352eba67d13caa7c1b39d817f561a36ecd14",
+      "event_payload": {
+        "event_type": "evict",
+        "exact_outcome": "pass",
+        "factor_hypothesis": "factor_beta",
+        "fixture_label": "capacity_eviction",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:e608fb41415fa53b81b8591d5f05388e46e606d9b3c2ea6c5469ea84ec86e443",
+      "event_type": "evict",
+      "exact_admission_hash": "sha256:a6155c99e41149927df5054ace3db89f8861312433734fc07bbf787cfd408165",
+      "fixture_label": "capacity_eviction",
+      "monotonic_receipt_ns": 1000600000,
+      "parent_state_hash": "sha256:8dee6b0eb8ded16cd565c63a00223d4118159faceeb60650b368b5e8ada00014",
+      "row_hash": "sha256:f47bbb32487266f0e0881839639be46128e6c6b162c7a5df76ed3381de833502",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": true,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "lifecycle_controller",
+      "chronology_index": 7,
+      "event_id": "sha256:87328e933d6b178ad638be4e3149e3ecefb4e148da49cd1e6595af07cad49730",
+      "event_payload": {
+        "event_type": "tombstone",
+        "exact_outcome": "pass",
+        "factor_hypothesis": "factor_beta",
+        "fixture_label": "revoked_event_tombstoned",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:81d0a75b5b62d53bb0e3e529ecdee622fb6e785575799e05a60a8b33c432ca9e",
+      "event_type": "tombstone",
+      "exact_admission_hash": "sha256:a2d5f346193fcb2a6186a3d01062af47f531b5711c5f8423f5b578006c8eb74d",
+      "fixture_label": "revoked_event_tombstoned",
+      "monotonic_receipt_ns": 1000700000,
+      "parent_state_hash": "sha256:0b3ee7d636a2c2072de46f9c485031975afff7dd61f6b2a12718bc8da0d2a165",
+      "row_hash": "sha256:572508a743406070d0dae8365162ba0ea5298376e18aa52b4365a33f0db5b7a3",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": true,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "rollback_controller",
+      "chronology_index": 8,
+      "event_id": "sha256:438311908bed2a99c64a05a628aab1c904ff79197a8b9ee801cb4cdef0014073",
+      "event_payload": {
+        "event_type": "rollback",
+        "exact_outcome": "pass",
+        "factor_hypothesis": "factor_beta",
+        "fixture_label": "restore_pre_admit_state",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:acfd666e66d55e5b0248360d4c6c6e7a2de89bc2a2bcbeefadd4cdaca3c8ec4b",
+      "event_type": "rollback",
+      "exact_admission_hash": "sha256:691503535892da57a38e8e0b13e8ed4e5fee4b50e49fa60e3a6f45d3603fb84d",
+      "fixture_label": "restore_pre_admit_state",
+      "monotonic_receipt_ns": 1000800000,
+      "parent_state_hash": "sha256:bff954a1ab04da7d6f9e24f6386f1f393b1f56843d80d1a281833bdd7c6670fd",
+      "row_hash": "sha256:09bf059764a3abe0cb84ef4e8ce8b699d379688c20a8b1554defaabe2b218cff",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": true,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "restart_replay_controller",
+      "chronology_index": 9,
+      "event_id": "sha256:b971e77099ff5584fbc5d2986f9c4c2b8c4bc3f3d296c433ffae605b4640649d",
+      "event_payload": {
+        "event_type": "restart",
+        "exact_outcome": "pass",
+        "factor_hypothesis": "factor_beta",
+        "fixture_label": "replay_from_receipts",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:78590b9a044d09fdf3f6286f8f2b5c8ffa905f95693f6a48ea2d27179c4d9361",
+      "event_type": "restart",
+      "exact_admission_hash": "sha256:19a952318fb5165aa0ace43c47d4732e5805a494bbe72374c25237c40f035919",
+      "fixture_label": "replay_from_receipts",
+      "monotonic_receipt_ns": 1000900000,
+      "parent_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "row_hash": "sha256:3f6ba2632607aa7a2aab3523ff727fcf11aef4674072209399fafb3c7058df90",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": true,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "no_write_controller",
+      "chronology_index": 10,
+      "event_id": "sha256:2464030b724277135388a60291d744fc24d530550763fc2f8eef72229e38eb2b",
+      "event_payload": {
+        "event_type": "no_write",
+        "exact_outcome": "not_applicable",
+        "factor_hypothesis": "factor_beta",
+        "fixture_label": "explicit_no_write",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:2cc79a42116a82953d0f9bd9abbf03d3855198959d8bcb53b0ce9b219f6e51ab",
+      "event_type": "no_write",
+      "exact_admission_hash": "sha256:b651bb61d4efe36a7e4c83f83708294b5bddaff8f75d45e640545c4c4644cc38",
+      "fixture_label": "explicit_no_write",
+      "monotonic_receipt_ns": 1001000000,
+      "parent_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "row_hash": "sha256:a3b42d15817b2bf77b5fa97e023e6e1f04aebe7ab61ac99339ee6938017b8b6e",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    }
+  ],
+  "event_schema": {
+    "event_id_rule": "sha256_json_of_immutable_identity_fields",
+    "event_types": [
+      "observe",
+      "verify",
+      "propose",
+      "quarantine",
+      "admit",
+      "promote",
+      "evict",
+      "tombstone",
+      "rollback",
+      "restart",
+      "no_write"
+    ],
+    "immutable_identity_fields": [
+      "schema_version",
+      "task_id",
+      "chronology_index",
+      "event_type",
+      "monotonic_receipt_ns",
+      "parent_state_hash",
+      "event_payload_hash",
+      "authority",
+      "fixture_label"
+    ],
+    "monotonic_receipt_unit": "nanoseconds_from_fixture_clock",
+    "mutable_excluded_fields": [
+      "row_hash",
+      "event_id",
+      "summary",
+      "later_outcome"
+    ],
+    "schema_hash": "sha256:73370c14d951d07125fa2f2e97669476a1aa86438b659725112076c138ebc08e",
+    "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1.event_schema"
+  },
+  "evidence_process_rows": [
+    {
+      "adaptive_peek_charged": true,
+      "cumulative_e_value": 1.05,
+      "decision_kind": "fixed_horizon_comparison",
+      "e_value_increment": 1.05,
+      "event_id": "sha256:a76543584f0fc4c12443e5381e1586fc2117ed30b424d07ed3a1c95c9b8a1ee7",
+      "event_type": "verify",
+      "held_events_used_for_tuning": false,
+      "mixture_family": "geometric",
+      "mixture_weight_sum": 0.875,
+      "null_frozen_at_monotonic_ns": 999900000,
+      "null_frozen_before_event": true,
+      "null_id": "fixed_null_no_positive_transition_effect_v1",
+      "null_receipt_hash": "sha256:4ffa0f1c6054f5c88fafecee341af63c2006519480196334a8f3f1071c36459b",
+      "peek_charge_index": 1,
+      "promotion_boundary": 2.0,
+      "promotion_decision": false,
+      "row_hash": "sha256:018f3c0c58f695d4259572db88d5e9f1bc1e7f2323743f8b2e830e7366ae20f4",
+      "row_type": "evidence_process",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "sequential_index": 0,
+      "stopping_boundary": 4.0,
+      "stopping_decision": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract",
+      "threshold_hash": "sha256:32324deb1a926283c47957a734db6f7e896d97244d0b6d27ac5659223e42e9e1"
+    },
+    {
+      "adaptive_peek_charged": true,
+      "cumulative_e_value": 1.26,
+      "decision_kind": "adaptive_decision",
+      "e_value_increment": 1.2,
+      "event_id": "sha256:99c510a2b15709acef38e223a2300426a0a78e73e2e30bb8d30a0b2cfa031660",
+      "event_type": "propose",
+      "held_events_used_for_tuning": false,
+      "mixture_family": "geometric",
+      "mixture_weight_sum": 0.875,
+      "null_frozen_at_monotonic_ns": 999900000,
+      "null_frozen_before_event": true,
+      "null_id": "fixed_null_no_positive_transition_effect_v1",
+      "null_receipt_hash": "sha256:4ffa0f1c6054f5c88fafecee341af63c2006519480196334a8f3f1071c36459b",
+      "peek_charge_index": 2,
+      "promotion_boundary": 2.0,
+      "promotion_decision": false,
+      "row_hash": "sha256:c03846a6e6126f9575de1177e8f124c50628b0d6a816446c683b06ea67bafb9a",
+      "row_type": "evidence_process",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "sequential_index": 1,
+      "stopping_boundary": 4.0,
+      "stopping_decision": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract",
+      "threshold_hash": "sha256:32324deb1a926283c47957a734db6f7e896d97244d0b6d27ac5659223e42e9e1"
+    },
+    {
+      "adaptive_peek_charged": true,
+      "cumulative_e_value": 1.701,
+      "decision_kind": "adaptive_decision",
+      "e_value_increment": 1.35,
+      "event_id": "sha256:f21a71cb7a573c97ca4df6ef1dd3fa2bfe5687f694e103549537854600a58024",
+      "event_type": "admit",
+      "held_events_used_for_tuning": false,
+      "mixture_family": "geometric",
+      "mixture_weight_sum": 0.875,
+      "null_frozen_at_monotonic_ns": 999900000,
+      "null_frozen_before_event": true,
+      "null_id": "fixed_null_no_positive_transition_effect_v1",
+      "null_receipt_hash": "sha256:4ffa0f1c6054f5c88fafecee341af63c2006519480196334a8f3f1071c36459b",
+      "peek_charge_index": 3,
+      "promotion_boundary": 2.0,
+      "promotion_decision": false,
+      "row_hash": "sha256:dafca68e0bcb8cc494ef2df719426505f0c00fed7f71187465d8d5bf90631522",
+      "row_type": "evidence_process",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "sequential_index": 2,
+      "stopping_boundary": 4.0,
+      "stopping_decision": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract",
+      "threshold_hash": "sha256:32324deb1a926283c47957a734db6f7e896d97244d0b6d27ac5659223e42e9e1"
+    },
+    {
+      "adaptive_peek_charged": true,
+      "cumulative_e_value": 2.12625,
+      "decision_kind": "adaptive_decision",
+      "e_value_increment": 1.25,
+      "event_id": "sha256:afff5cad6106b2ac8642021cde1ce984898ce9cfa4ad138b48b19bc83fe0a995",
+      "event_type": "promote",
+      "held_events_used_for_tuning": false,
+      "mixture_family": "geometric",
+      "mixture_weight_sum": 0.875,
+      "null_frozen_at_monotonic_ns": 999900000,
+      "null_frozen_before_event": true,
+      "null_id": "fixed_null_no_positive_transition_effect_v1",
+      "null_receipt_hash": "sha256:4ffa0f1c6054f5c88fafecee341af63c2006519480196334a8f3f1071c36459b",
+      "peek_charge_index": 4,
+      "promotion_boundary": 2.0,
+      "promotion_decision": true,
+      "row_hash": "sha256:a5be8e4272b34480b9c0d7f1bae27bc3d487b8ec7e95a6f62931a0eb9d157804",
+      "row_type": "evidence_process",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "sequential_index": 3,
+      "stopping_boundary": 4.0,
+      "stopping_decision": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract",
+      "threshold_hash": "sha256:32324deb1a926283c47957a734db6f7e896d97244d0b6d27ac5659223e42e9e1"
+    },
+    {
+      "adaptive_peek_charged": true,
+      "cumulative_e_value": 2.338875,
+      "decision_kind": "adaptive_decision",
+      "e_value_increment": 1.1,
+      "event_id": "sha256:b971e77099ff5584fbc5d2986f9c4c2b8c4bc3f3d296c433ffae605b4640649d",
+      "event_type": "restart",
+      "held_events_used_for_tuning": false,
+      "mixture_family": "geometric",
+      "mixture_weight_sum": 0.875,
+      "null_frozen_at_monotonic_ns": 999900000,
+      "null_frozen_before_event": true,
+      "null_id": "fixed_null_no_positive_transition_effect_v1",
+      "null_receipt_hash": "sha256:4ffa0f1c6054f5c88fafecee341af63c2006519480196334a8f3f1071c36459b",
+      "peek_charge_index": 5,
+      "promotion_boundary": 2.0,
+      "promotion_decision": false,
+      "row_hash": "sha256:a7c81f5518b73f8bba12539c1a4c4daf3eda52cec5980e5e36367540f82862a9",
+      "row_type": "evidence_process",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "sequential_index": 4,
+      "stopping_boundary": 4.0,
+      "stopping_decision": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract",
+      "threshold_hash": "sha256:32324deb1a926283c47957a734db6f7e896d97244d0b6d27ac5659223e42e9e1"
+    }
+  ],
+  "evidence_process_spec": {
+    "adaptive_decision": "requires one charged peek row before any promotion decision",
+    "fixed_horizon_comparison": "reported separately and cannot change thresholds",
+    "held_events_used_for_tuning": false,
+    "mixture": {
+      "allowed_factor_hypotheses": [
+        {
+          "factor_hypothesis": "factor_alpha",
+          "mixture_weight": 0.5
+        },
+        {
+          "factor_hypothesis": "factor_beta",
+          "mixture_weight": 0.25
+        },
+        {
+          "factor_hypothesis": "factor_gamma",
+          "mixture_weight": 0.125
+        }
+      ],
+      "family": "geometric",
+      "remaining_tail_weight": 0.125
+    },
+    "null_id": "fixed_null_no_positive_transition_effect_v1",
+    "null_statement": "No allowed factor hypothesis has positive transition utility.",
+    "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1.eprocess_spec",
+    "spec_hash": "sha256:f49abbe3f7fcbcd92fbd364d3dd479bb155539afd308679504ac0ac54e57f322",
+    "threshold_hash": "sha256:32324deb1a926283c47957a734db6f7e896d97244d0b6d27ac5659223e42e9e1",
+    "thresholds": {
+      "alpha_budget": 0.05,
+      "promotion_boundary": 2.0,
+      "stopping_boundary": 4.0
+    },
+    "thresholds_frozen_before_events": true,
+    "update_rule": "multiply cumulative e-value by the precommitted nonnegative fixture likelihood-ratio increment for each charged peek"
+  },
+  "field_principles": {
+    "action_receipt_schema": "Actual durable action schema.",
+    "action_rows": "One row per durable action or explicit no-action.",
+    "aggregate_row_recomputation": "Ready score recomputed from rows.",
+    "attack_matrix": "Duplicate, peeking, authority, and resurrection attacks.",
+    "duration_s": "Measured wall time.",
+    "event_rows": "One row per fixture event.",
+    "event_schema": "Immutable chronological event schema.",
+    "evidence_process_rows": "One row per sequential update and peek charge.",
+    "evidence_process_spec": "Null, update, mixture, promotion, and stopping rules.",
+    "field_principles": "Reason for every field.",
+    "field_provenance": "Source paths, hashes, and reducers.",
+    "frozen_null_receipt": "Proof that the null predates adaptive events.",
+    "gate_check_summary": "Required for any blocked_* verdict.",
+    "honest_verdict": "States contract readiness without claiming a learning gain.",
+    "inference_substrate": "deterministic_transition_contract_no_llm.",
+    "lifecycle_rows": "Admission, eviction, tombstone, rollback, and restart states.",
+    "online_transition_contract_ready_score": "Same-roadmap downstream gate field.",
+    "per_unit_rows": "Event, action, update, and attack rows.",
+    "preconditions_checked": "Adapter and fixture prechecks.",
+    "protected_files_unchanged": "Active roadmap and conductor unchanged.",
+    "random_seed": "Fixed fixture and attack seed.",
+    "reproducibility_checksum": "Hash over schemas, null, rows, and attacks.",
+    "status": "Terminal transition-contract state.",
+    "tests_run": "Executed checks and exit codes.",
+    "verifier_is_oracle": "True for exact fixture and receipt validation only."
+  },
+  "field_provenance": {
+    "action_receipt_schema": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "action_rows": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "aggregate_row_recomputation": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "attack_matrix": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "duration_s": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "event_rows": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "event_schema": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "evidence_process_rows": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "evidence_process_spec": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "field_principles": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "field_provenance": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "frozen_null_receipt": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "gate_check_summary": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "honest_verdict": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "inference_substrate": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "lifecycle_rows": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "online_transition_contract_ready_score": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "per_unit_rows": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "preconditions_checked": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "protected_files_unchanged": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "random_seed": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "reproducibility_checksum": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "status": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "tests_run": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    },
+    "verifier_is_oracle": {
+      "reducers": [
+        "build_contract_rows",
+        "validate_contract_rows",
+        "mutation_attack_matrix",
+        "recompute_aggregates_from_rows"
+      ],
+      "source_paths": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "path": "CLAUDE.md",
+          "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59"
+        },
+        {
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "path": "openspec/capabilities/research-harnesses/spec.md",
+          "sha256": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d"
+        },
+        {
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        {
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+        },
+        {
+          "path": "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py",
+          "sha256": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b"
+        },
+        {
+          "path": "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397"
+        },
+        {
+          "path": "python/carnot/pipeline/factor_cache_shadow_adapter.py",
+          "sha256": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b"
+        },
+        {
+          "path": "python/carnot/task_runtime_receipts.py",
+          "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
+        },
+        {
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        {
+          "path": "results/experiment_6420_csl_authenticity_safety_audit.json",
+          "sha256": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662"
+        },
+        {
+          "path": "results/experiment_6433_csl_row_recomputation_safety_audit.json",
+          "sha256": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de"
+        },
+        {
+          "path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+          "sha256": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea"
+        },
+        {
+          "path": "scripts/adversarial_verify.py",
+          "sha256": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01"
+        },
+        {
+          "path": "scripts/verdict_row_consistency_lint.py",
+          "sha256": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a"
+        },
+        {
+          "path": "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+          "sha256": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+        }
+      ],
+      "spec_refs": [
+        "REQ-INFRA-6485"
+      ]
+    }
+  },
+  "frozen_null_receipt": {
+    "frozen_at_monotonic_ns": 999900000,
+    "frozen_at_utc": "2026-08-21T00:00:00Z",
+    "held_events_visible_at_freeze": false,
+    "null_id": "fixed_null_no_positive_transition_effect_v1",
+    "null_receipt_hash": "sha256:4ffa0f1c6054f5c88fafecee341af63c2006519480196334a8f3f1071c36459b",
+    "null_statement": "No allowed factor hypothesis has positive transition utility.",
+    "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1.frozen_null_receipt",
+    "spec_hash": "sha256:f49abbe3f7fcbcd92fbd364d3dd479bb155539afd308679504ac0ac54e57f322",
+    "threshold_hash": "sha256:32324deb1a926283c47957a734db6f7e896d97244d0b6d27ac5659223e42e9e1"
+  },
+  "gate_check_summary": {
+    "all_gates_passed": true,
+    "checks": {
+      "aggregate_ready_score_is_one": true,
+      "preconditions_ready": true,
+      "protected_files_unchanged": true
+    },
+    "failed_gates": []
+  },
+  "honest_verdict": "complete: online cache transition e-process contract is ready; no learning gain is claimed",
+  "inference_substrate": "deterministic_transition_contract_no_llm",
+  "lifecycle_rows": [
+    {
+      "action_hash": "sha256:710a8a18c4dc636b2c51bf7c8e56c68c1a91a7479eb068e3f23e6c19e288bf24",
+      "admission_hash": "sha256:b8a3a4e4f84fa6742d3736e63b961f1690401f4ab681b09132e1c2acdcb30e48",
+      "admitted_event_id": "sha256:f21a71cb7a573c97ca4df6ef1dd3fa2bfe5687f694e103549537854600a58024",
+      "event_id": "sha256:f21a71cb7a573c97ca4df6ef1dd3fa2bfe5687f694e103549537854600a58024",
+      "event_type": "admit",
+      "exact_admission_passed": true,
+      "lifecycle_index": 0,
+      "lifecycle_type": "admission",
+      "row_hash": "sha256:0aa41bf8fe84a97f976fbf19af34000b21cab7481bd69ceef94c29ef573fba94",
+      "row_type": "lifecycle",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "state_hash_after": "sha256:79663ffbf8bea5f7a4479e331477dc31c9cea3e0f66cd8c40007ecc7726ee672",
+      "state_hash_before": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_hash": "sha256:6dcbe27a4789522c0e2f04f3bb11fca23290c00d74770f5bcfe4578b338cf0bd",
+      "capacity_bound": 1,
+      "event_id": "sha256:ed43c4f748cf1a0f0c5b4db1c51b352eba67d13caa7c1b39d817f561a36ecd14",
+      "event_type": "evict",
+      "evicted_event_id": "sha256:f21a71cb7a573c97ca4df6ef1dd3fa2bfe5687f694e103549537854600a58024",
+      "eviction_persisted": true,
+      "lifecycle_index": 1,
+      "lifecycle_type": "eviction",
+      "row_hash": "sha256:430e232f269de4be2188e80a3fde0a7e08c77f82e548f6fa59ff629cdf8c6eae",
+      "row_type": "lifecycle",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "state_hash_after": "sha256:0b3ee7d636a2c2072de46f9c485031975afff7dd61f6b2a12718bc8da0d2a165",
+      "state_hash_before": "sha256:8dee6b0eb8ded16cd565c63a00223d4118159faceeb60650b368b5e8ada00014",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_hash": "sha256:ea9f05d78d8b7030ed9470d94e78755c83750ebd4415f1416dba1cc4f6f21bba",
+      "event_id": "sha256:87328e933d6b178ad638be4e3149e3ecefb4e148da49cd1e6595af07cad49730",
+      "event_type": "tombstone",
+      "lifecycle_index": 2,
+      "lifecycle_type": "tombstone",
+      "resurrected_active_after_restart": false,
+      "row_hash": "sha256:49f28250477cfe27b4e68b9c7160edc1a8a0c9f7de356e33f7aaf04354d5dbcc",
+      "row_type": "lifecycle",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "state_hash_after": "sha256:bff954a1ab04da7d6f9e24f6386f1f393b1f56843d80d1a281833bdd7c6670fd",
+      "state_hash_before": "sha256:0b3ee7d636a2c2072de46f9c485031975afff7dd61f6b2a12718bc8da0d2a165",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract",
+      "tombstone_persisted": true,
+      "tombstoned_event_id": "sha256:f21a71cb7a573c97ca4df6ef1dd3fa2bfe5687f694e103549537854600a58024"
+    },
+    {
+      "action_hash": "sha256:403bb7f67b00bf306a64b844967af088e62fdff0a1efa378b1ee8a37677a9878",
+      "event_id": "sha256:438311908bed2a99c64a05a628aab1c904ff79197a8b9ee801cb4cdef0014073",
+      "event_type": "rollback",
+      "lifecycle_index": 3,
+      "lifecycle_type": "rollback",
+      "rollback_omitted": false,
+      "rollback_restored_prior_state": true,
+      "rollback_target_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "row_hash": "sha256:b5358c8e01f610c500b23f1b0232a9cf17e43208b775c7f1f72fc3cd17afa211",
+      "row_type": "lifecycle",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "state_hash_after": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "state_hash_before": "sha256:bff954a1ab04da7d6f9e24f6386f1f393b1f56843d80d1a281833bdd7c6670fd",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_hash": "sha256:e4f5145a81dbd53f7865f4603094a9901a2460cd8de00e3d7c78f71026b9c4d8",
+      "active_tombstoned_event_ids": [],
+      "event_id": "sha256:b971e77099ff5584fbc5d2986f9c4c2b8c4bc3f3d296c433ffae605b4640649d",
+      "event_type": "restart",
+      "expected_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "lifecycle_index": 4,
+      "lifecycle_type": "restart",
+      "restart_receipt_persisted": true,
+      "restart_replay_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "row_hash": "sha256:19d2648870914898c39268d9b894c815590e4d1e8e70be179ed41e5cc260cf4e",
+      "row_type": "lifecycle",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "state_hash_after": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "state_hash_before": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    }
+  ],
+  "online_transition_contract_ready_score": 1.0,
+  "per_unit_rows": [
+    {
+      "authority": "runtime_observer",
+      "chronology_index": 0,
+      "event_id": "sha256:c34add222e3307b38e6a7b8ae3a83079159112520db6560fd36da501819d718e",
+      "event_payload": {
+        "event_type": "observe",
+        "exact_outcome": "not_applicable",
+        "factor_hypothesis": "factor_alpha",
+        "fixture_label": "candidate_seen",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:42a59c975e29fc5688803c65314235b19d3d705c55aabaf86ffad9f80c1ec1a3",
+      "event_type": "observe",
+      "exact_admission_hash": "sha256:fa394ff5d9b40149d286a6759d2db5bcc667eb33aba538d73e75490a9a6debb8",
+      "fixture_label": "candidate_seen",
+      "monotonic_receipt_ns": 1000000000,
+      "parent_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "row_hash": "sha256:7f6be80dedc014c1abc7dd8c200f744dee3184c13a6147125b94409d225dedd8",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "exact_fixture_verifier",
+      "chronology_index": 1,
+      "event_id": "sha256:a76543584f0fc4c12443e5381e1586fc2117ed30b424d07ed3a1c95c9b8a1ee7",
+      "event_payload": {
+        "event_type": "verify",
+        "exact_outcome": "not_applicable",
+        "factor_hypothesis": "factor_alpha",
+        "fixture_label": "exact_receipt_bound",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:b0241e15a72ff03e145ff31bdacee1d5c052987377d6acf85445d86cfbce68da",
+      "event_type": "verify",
+      "exact_admission_hash": "sha256:78bc69d434abe26a42d81b100fccd6edf520c0dc3317eceba4614abfe782b26b",
+      "fixture_label": "exact_receipt_bound",
+      "monotonic_receipt_ns": 1000100000,
+      "parent_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "row_hash": "sha256:4412c1b18be412d72da6cbb7461dac871aaf49059127cc3a55b8d109d4d7d52c",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "shadow_ranker",
+      "chronology_index": 2,
+      "event_id": "sha256:99c510a2b15709acef38e223a2300426a0a78e73e2e30bb8d30a0b2cfa031660",
+      "event_payload": {
+        "event_type": "propose",
+        "exact_outcome": "not_applicable",
+        "factor_hypothesis": "factor_beta",
+        "fixture_label": "bounded_shadow_delta",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:529872d13853943f7d21ea6d92a39673999c14a8ada95e16ec1a92ed8df23ecd",
+      "event_type": "propose",
+      "exact_admission_hash": "sha256:3d399068f82a33343cbebff7d54ef2d1517c947e3275995b46a76d301e9c107d",
+      "fixture_label": "bounded_shadow_delta",
+      "monotonic_receipt_ns": 1000200000,
+      "parent_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "row_hash": "sha256:96bba738b9bbadcbb23d92da837facc8589636178bb81a99635e7bde65185196",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "exact_fixture_verifier",
+      "chronology_index": 3,
+      "event_id": "sha256:8479017f41e7a2d7b9e8aa4946c59765ef4a535dd774c89bd9b7e78a87ad0ea6",
+      "event_payload": {
+        "event_type": "quarantine",
+        "exact_outcome": "pass",
+        "factor_hypothesis": "factor_beta",
+        "fixture_label": "bad_candidate_rejected",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:1868129e004ecd164de7180762c16d3ece9cc65d3934be14f189486d2500fd6f",
+      "event_type": "quarantine",
+      "exact_admission_hash": "sha256:4730e809ee64a5d8b8bc2815aea916cb90ac3cf394b4284c31676d44c53a16a8",
+      "fixture_label": "bad_candidate_rejected",
+      "monotonic_receipt_ns": 1000300000,
+      "parent_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "row_hash": "sha256:d170540b9cea25c1026890cf07eff952f713c40859fe37d5e8a681366a94f42e",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": true,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "exact_fixture_verifier",
+      "chronology_index": 4,
+      "event_id": "sha256:f21a71cb7a573c97ca4df6ef1dd3fa2bfe5687f694e103549537854600a58024",
+      "event_payload": {
+        "event_type": "admit",
+        "exact_outcome": "pass",
+        "factor_hypothesis": "factor_alpha",
+        "fixture_label": "exact_candidate_admitted",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:7be3e722e36c346bb44ac3baab927ec12d537d34759bf936b626efc59c9e60f3",
+      "event_type": "admit",
+      "exact_admission_hash": "sha256:b8a3a4e4f84fa6742d3736e63b961f1690401f4ab681b09132e1c2acdcb30e48",
+      "fixture_label": "exact_candidate_admitted",
+      "monotonic_receipt_ns": 1000400000,
+      "parent_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "row_hash": "sha256:ad9b9bff84cfa1d4fbfcdaf7eb222bf77cb6b113b97a685a29250c7662ec722e",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": true,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "eprocess_boundary_checker",
+      "chronology_index": 5,
+      "event_id": "sha256:afff5cad6106b2ac8642021cde1ce984898ce9cfa4ad138b48b19bc83fe0a995",
+      "event_payload": {
+        "event_type": "promote",
+        "exact_outcome": "pass",
+        "factor_hypothesis": "factor_alpha",
+        "fixture_label": "eprocess_boundary_crossed",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:ac372df18f85af33227c65ce61ca98c453ef8a87f127472fa9e11656154fd262",
+      "event_type": "promote",
+      "exact_admission_hash": "sha256:8d30df858c059874635d52b958c5cdce9f82e1562433adaa577bcfd3497c456b",
+      "fixture_label": "eprocess_boundary_crossed",
+      "monotonic_receipt_ns": 1000500000,
+      "parent_state_hash": "sha256:79663ffbf8bea5f7a4479e331477dc31c9cea3e0f66cd8c40007ecc7726ee672",
+      "row_hash": "sha256:518a5727fe6a3f31fd333e41252bcc53f5b8a4cadd475cc057087c245d152fee",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": true,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "capacity_controller",
+      "chronology_index": 6,
+      "event_id": "sha256:ed43c4f748cf1a0f0c5b4db1c51b352eba67d13caa7c1b39d817f561a36ecd14",
+      "event_payload": {
+        "event_type": "evict",
+        "exact_outcome": "pass",
+        "factor_hypothesis": "factor_beta",
+        "fixture_label": "capacity_eviction",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:e608fb41415fa53b81b8591d5f05388e46e606d9b3c2ea6c5469ea84ec86e443",
+      "event_type": "evict",
+      "exact_admission_hash": "sha256:a6155c99e41149927df5054ace3db89f8861312433734fc07bbf787cfd408165",
+      "fixture_label": "capacity_eviction",
+      "monotonic_receipt_ns": 1000600000,
+      "parent_state_hash": "sha256:8dee6b0eb8ded16cd565c63a00223d4118159faceeb60650b368b5e8ada00014",
+      "row_hash": "sha256:f47bbb32487266f0e0881839639be46128e6c6b162c7a5df76ed3381de833502",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": true,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "lifecycle_controller",
+      "chronology_index": 7,
+      "event_id": "sha256:87328e933d6b178ad638be4e3149e3ecefb4e148da49cd1e6595af07cad49730",
+      "event_payload": {
+        "event_type": "tombstone",
+        "exact_outcome": "pass",
+        "factor_hypothesis": "factor_beta",
+        "fixture_label": "revoked_event_tombstoned",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:81d0a75b5b62d53bb0e3e529ecdee622fb6e785575799e05a60a8b33c432ca9e",
+      "event_type": "tombstone",
+      "exact_admission_hash": "sha256:a2d5f346193fcb2a6186a3d01062af47f531b5711c5f8423f5b578006c8eb74d",
+      "fixture_label": "revoked_event_tombstoned",
+      "monotonic_receipt_ns": 1000700000,
+      "parent_state_hash": "sha256:0b3ee7d636a2c2072de46f9c485031975afff7dd61f6b2a12718bc8da0d2a165",
+      "row_hash": "sha256:572508a743406070d0dae8365162ba0ea5298376e18aa52b4365a33f0db5b7a3",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": true,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "rollback_controller",
+      "chronology_index": 8,
+      "event_id": "sha256:438311908bed2a99c64a05a628aab1c904ff79197a8b9ee801cb4cdef0014073",
+      "event_payload": {
+        "event_type": "rollback",
+        "exact_outcome": "pass",
+        "factor_hypothesis": "factor_beta",
+        "fixture_label": "restore_pre_admit_state",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:acfd666e66d55e5b0248360d4c6c6e7a2de89bc2a2bcbeefadd4cdaca3c8ec4b",
+      "event_type": "rollback",
+      "exact_admission_hash": "sha256:691503535892da57a38e8e0b13e8ed4e5fee4b50e49fa60e3a6f45d3603fb84d",
+      "fixture_label": "restore_pre_admit_state",
+      "monotonic_receipt_ns": 1000800000,
+      "parent_state_hash": "sha256:bff954a1ab04da7d6f9e24f6386f1f393b1f56843d80d1a281833bdd7c6670fd",
+      "row_hash": "sha256:09bf059764a3abe0cb84ef4e8ce8b699d379688c20a8b1554defaabe2b218cff",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": true,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "restart_replay_controller",
+      "chronology_index": 9,
+      "event_id": "sha256:b971e77099ff5584fbc5d2986f9c4c2b8c4bc3f3d296c433ffae605b4640649d",
+      "event_payload": {
+        "event_type": "restart",
+        "exact_outcome": "pass",
+        "factor_hypothesis": "factor_beta",
+        "fixture_label": "replay_from_receipts",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:78590b9a044d09fdf3f6286f8f2b5c8ffa905f95693f6a48ea2d27179c4d9361",
+      "event_type": "restart",
+      "exact_admission_hash": "sha256:19a952318fb5165aa0ace43c47d4732e5805a494bbe72374c25237c40f035919",
+      "fixture_label": "replay_from_receipts",
+      "monotonic_receipt_ns": 1000900000,
+      "parent_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "row_hash": "sha256:3f6ba2632607aa7a2aab3523ff727fcf11aef4674072209399fafb3c7058df90",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": true,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "authority": "no_write_controller",
+      "chronology_index": 10,
+      "event_id": "sha256:2464030b724277135388a60291d744fc24d530550763fc2f8eef72229e38eb2b",
+      "event_payload": {
+        "event_type": "no_write",
+        "exact_outcome": "not_applicable",
+        "factor_hypothesis": "factor_beta",
+        "fixture_label": "explicit_no_write",
+        "fixture_source": "exp6485_deterministic_transition_contract",
+        "held_for_threshold_tuning": false
+      },
+      "event_payload_hash": "sha256:2cc79a42116a82953d0f9bd9abbf03d3855198959d8bcb53b0ce9b219f6e51ab",
+      "event_type": "no_write",
+      "exact_admission_hash": "sha256:b651bb61d4efe36a7e4c83f83708294b5bddaff8f75d45e640545c4c4644cc38",
+      "fixture_label": "explicit_no_write",
+      "monotonic_receipt_ns": 1001000000,
+      "parent_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "row_hash": "sha256:a3b42d15817b2bf77b5fa97e023e6e1f04aebe7ab61ac99339ee6938017b8b6e",
+      "row_type": "event",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "stated_write": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:c34add222e3307b38e6a7b8ae3a83079159112520db6560fd36da501819d718e",
+      "action_hash": "sha256:9f1f23e61f9c288ddadebda5e387d523406fd728d21c78fa6ff3eb3ffe238136",
+      "action_monotonic_ns": 1000001000,
+      "action_payload_hash": "sha256:cbfc57dcc1e632f3429b4a4834b7ab6cfb10ecf6c153916f24d3238ab1e529dd",
+      "action_receipt_index": 0,
+      "action_type": "no_action",
+      "durability_receipt": "no_write",
+      "durable": false,
+      "event_type": "observe",
+      "exact_admission_hash": "",
+      "exact_admission_passed": false,
+      "exact_admission_required": false,
+      "expected_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "no_action_reason": "observe_does_not_write",
+      "post_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "pre_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:7391339d5924d578ed3a29a5e5b6cc5208395d29059fcf94e5f0a72c0a66a280",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:a76543584f0fc4c12443e5381e1586fc2117ed30b424d07ed3a1c95c9b8a1ee7",
+      "action_hash": "sha256:69e28e487d59c502cfb402de2b4fef0153b9f312f53ecc69921b5cfef457f179",
+      "action_monotonic_ns": 1000101000,
+      "action_payload_hash": "sha256:aad3e9e22f46ba4fda53673172bc4928fac20e53bc79e03a9354544687142f75",
+      "action_receipt_index": 1,
+      "action_type": "no_action",
+      "durability_receipt": "no_write",
+      "durable": false,
+      "event_type": "verify",
+      "exact_admission_hash": "",
+      "exact_admission_passed": false,
+      "exact_admission_required": false,
+      "expected_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "no_action_reason": "verify_does_not_write",
+      "post_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "pre_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:d102284d84419d1101362801a283c9c47e835d6bd62c5673aee1089e5241d893",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:99c510a2b15709acef38e223a2300426a0a78e73e2e30bb8d30a0b2cfa031660",
+      "action_hash": "sha256:c9ef769e93e6e8050efbfe3dea7498a658dd09ec65eadc1f39c60e0038d87eda",
+      "action_monotonic_ns": 1000201000,
+      "action_payload_hash": "sha256:bb362ff7f4defec90abaf0e8dcdcb3ed4d2039fec82aeeae0c5cae96e93b193c",
+      "action_receipt_index": 2,
+      "action_type": "no_action",
+      "durability_receipt": "no_write",
+      "durable": false,
+      "event_type": "propose",
+      "exact_admission_hash": "",
+      "exact_admission_passed": false,
+      "exact_admission_required": false,
+      "expected_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "no_action_reason": "propose_does_not_write",
+      "post_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "pre_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:b66626b6d432ebcdfa5c94a865493e54da1c2e5055acf26860bba70d4d566ed9",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:8479017f41e7a2d7b9e8aa4946c59765ef4a535dd774c89bd9b7e78a87ad0ea6",
+      "action_hash": "sha256:4679c73c07053e815588fe1067635c63bc1989e4a001beac66979d336572294c",
+      "action_monotonic_ns": 1000301000,
+      "action_payload_hash": "sha256:217d3ade074e8aaa427c9dd9a73da11a9be980c70f0c242beb4b1cba17959ea6",
+      "action_receipt_index": 3,
+      "action_type": "quarantine_write",
+      "durability_receipt": "atomic_json_write",
+      "durable": true,
+      "event_type": "quarantine",
+      "exact_admission_hash": "sha256:4730e809ee64a5d8b8bc2815aea916cb90ac3cf394b4284c31676d44c53a16a8",
+      "exact_admission_passed": true,
+      "exact_admission_required": true,
+      "expected_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "no_action_reason": "",
+      "post_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "pre_state_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:fa38df4eb189a547dd6e87d3eeb522e56769ca4f9a7821388bee6c8d8251e5cc",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:f21a71cb7a573c97ca4df6ef1dd3fa2bfe5687f694e103549537854600a58024",
+      "action_hash": "sha256:710a8a18c4dc636b2c51bf7c8e56c68c1a91a7479eb068e3f23e6c19e288bf24",
+      "action_monotonic_ns": 1000401000,
+      "action_payload_hash": "sha256:657e75dee0313cf7fc709e1b20087f6cc555859d939e230a6a5840e9a778ab1d",
+      "action_receipt_index": 4,
+      "action_type": "admit_write",
+      "durability_receipt": "atomic_json_write",
+      "durable": true,
+      "event_type": "admit",
+      "exact_admission_hash": "sha256:b8a3a4e4f84fa6742d3736e63b961f1690401f4ab681b09132e1c2acdcb30e48",
+      "exact_admission_passed": true,
+      "exact_admission_required": true,
+      "expected_state_hash": "sha256:79663ffbf8bea5f7a4479e331477dc31c9cea3e0f66cd8c40007ecc7726ee672",
+      "no_action_reason": "",
+      "post_state_hash": "sha256:79663ffbf8bea5f7a4479e331477dc31c9cea3e0f66cd8c40007ecc7726ee672",
+      "pre_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:4f5cf5a5565d0613a691db40dad74b027b543f4203122e9671326266f50cc2e5",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:afff5cad6106b2ac8642021cde1ce984898ce9cfa4ad138b48b19bc83fe0a995",
+      "action_hash": "sha256:3a3b0591b806987ae875c28595a790e0b5fc33b47cb7e2d69f97a6b6085449ec",
+      "action_monotonic_ns": 1000501000,
+      "action_payload_hash": "sha256:8ff91849879ea5a024e924eab823c107989696d9080146926f5e89dd89c6b3f4",
+      "action_receipt_index": 5,
+      "action_type": "promote_write",
+      "durability_receipt": "atomic_json_write",
+      "durable": true,
+      "event_type": "promote",
+      "exact_admission_hash": "sha256:8d30df858c059874635d52b958c5cdce9f82e1562433adaa577bcfd3497c456b",
+      "exact_admission_passed": true,
+      "exact_admission_required": true,
+      "expected_state_hash": "sha256:8dee6b0eb8ded16cd565c63a00223d4118159faceeb60650b368b5e8ada00014",
+      "no_action_reason": "",
+      "post_state_hash": "sha256:8dee6b0eb8ded16cd565c63a00223d4118159faceeb60650b368b5e8ada00014",
+      "pre_state_hash": "sha256:79663ffbf8bea5f7a4479e331477dc31c9cea3e0f66cd8c40007ecc7726ee672",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:0dc1ffb217e7844711392cad1fa40c839e9a34cd4299595e75a32300e93d8462",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:ed43c4f748cf1a0f0c5b4db1c51b352eba67d13caa7c1b39d817f561a36ecd14",
+      "action_hash": "sha256:6dcbe27a4789522c0e2f04f3bb11fca23290c00d74770f5bcfe4578b338cf0bd",
+      "action_monotonic_ns": 1000601000,
+      "action_payload_hash": "sha256:c0f934cd36c4b0f623336d741e663cbde375cccfbb062528931de6f0eb2c178f",
+      "action_receipt_index": 6,
+      "action_type": "evict_write",
+      "durability_receipt": "atomic_json_write",
+      "durable": true,
+      "event_type": "evict",
+      "exact_admission_hash": "sha256:a6155c99e41149927df5054ace3db89f8861312433734fc07bbf787cfd408165",
+      "exact_admission_passed": true,
+      "exact_admission_required": true,
+      "expected_state_hash": "sha256:0b3ee7d636a2c2072de46f9c485031975afff7dd61f6b2a12718bc8da0d2a165",
+      "no_action_reason": "",
+      "post_state_hash": "sha256:0b3ee7d636a2c2072de46f9c485031975afff7dd61f6b2a12718bc8da0d2a165",
+      "pre_state_hash": "sha256:8dee6b0eb8ded16cd565c63a00223d4118159faceeb60650b368b5e8ada00014",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:2709edcd984ca53ab4f3b04435bab85c9f28c713449c73649e62185b9ab23706",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:87328e933d6b178ad638be4e3149e3ecefb4e148da49cd1e6595af07cad49730",
+      "action_hash": "sha256:ea9f05d78d8b7030ed9470d94e78755c83750ebd4415f1416dba1cc4f6f21bba",
+      "action_monotonic_ns": 1000701000,
+      "action_payload_hash": "sha256:4072d8bb188d455d53236ede6f15248f838271816b5aedc88b4f0029d2840c9d",
+      "action_receipt_index": 7,
+      "action_type": "tombstone_write",
+      "durability_receipt": "atomic_json_write",
+      "durable": true,
+      "event_type": "tombstone",
+      "exact_admission_hash": "sha256:a2d5f346193fcb2a6186a3d01062af47f531b5711c5f8423f5b578006c8eb74d",
+      "exact_admission_passed": true,
+      "exact_admission_required": true,
+      "expected_state_hash": "sha256:bff954a1ab04da7d6f9e24f6386f1f393b1f56843d80d1a281833bdd7c6670fd",
+      "no_action_reason": "",
+      "post_state_hash": "sha256:bff954a1ab04da7d6f9e24f6386f1f393b1f56843d80d1a281833bdd7c6670fd",
+      "pre_state_hash": "sha256:0b3ee7d636a2c2072de46f9c485031975afff7dd61f6b2a12718bc8da0d2a165",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:382378016c83f6474d82352c6400d4b06af359e421bd01804e204701ab1c4e17",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:438311908bed2a99c64a05a628aab1c904ff79197a8b9ee801cb4cdef0014073",
+      "action_hash": "sha256:403bb7f67b00bf306a64b844967af088e62fdff0a1efa378b1ee8a37677a9878",
+      "action_monotonic_ns": 1000801000,
+      "action_payload_hash": "sha256:166dfe92e4ee15f6b7edccf3d08551d86d46274f111c39f4007baf85394c5d76",
+      "action_receipt_index": 8,
+      "action_type": "rollback_restore",
+      "durability_receipt": "atomic_json_write",
+      "durable": true,
+      "event_type": "rollback",
+      "exact_admission_hash": "sha256:691503535892da57a38e8e0b13e8ed4e5fee4b50e49fa60e3a6f45d3603fb84d",
+      "exact_admission_passed": true,
+      "exact_admission_required": true,
+      "expected_state_hash": "sha256:bff954a1ab04da7d6f9e24f6386f1f393b1f56843d80d1a281833bdd7c6670fd",
+      "no_action_reason": "",
+      "post_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "pre_state_hash": "sha256:bff954a1ab04da7d6f9e24f6386f1f393b1f56843d80d1a281833bdd7c6670fd",
+      "rollback_target_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "row_hash": "sha256:676e7efc3306c7ab17cc30c9b77f0ac5f9f4b5f0018113d8b162378b372b2d55",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:b971e77099ff5584fbc5d2986f9c4c2b8c4bc3f3d296c433ffae605b4640649d",
+      "action_hash": "sha256:e4f5145a81dbd53f7865f4603094a9901a2460cd8de00e3d7c78f71026b9c4d8",
+      "action_monotonic_ns": 1000901000,
+      "action_payload_hash": "sha256:71ffdbaa257fcbca8271c63908ac0af4b5c33dd4edfd84acf479859fa60dd395",
+      "action_receipt_index": 9,
+      "action_type": "restart_replay",
+      "durability_receipt": "atomic_json_write",
+      "durable": true,
+      "event_type": "restart",
+      "exact_admission_hash": "sha256:19a952318fb5165aa0ace43c47d4732e5805a494bbe72374c25237c40f035919",
+      "exact_admission_passed": true,
+      "exact_admission_required": true,
+      "expected_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "no_action_reason": "",
+      "post_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "pre_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:ee9c30b456b29aa2b653296ba3d72252fbf549877a460ddf8b6f5f54bae0bfb2",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_event_id": "sha256:2464030b724277135388a60291d744fc24d530550763fc2f8eef72229e38eb2b",
+      "action_hash": "sha256:85272aaded3464011291eb84a9e6417f36f8534802a4c3ab1dae9a06c146de15",
+      "action_monotonic_ns": 1001001000,
+      "action_payload_hash": "sha256:57bfc2e97515f3ad6f789beae05f89e6b8db0c53957de672db003262546f8f14",
+      "action_receipt_index": 10,
+      "action_type": "no_action",
+      "durability_receipt": "no_write",
+      "durable": false,
+      "event_type": "no_write",
+      "exact_admission_hash": "",
+      "exact_admission_passed": false,
+      "exact_admission_required": false,
+      "expected_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "no_action_reason": "no_write_does_not_write",
+      "post_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "pre_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "rollback_target_state_hash": "",
+      "row_hash": "sha256:57647b5196732831debcf3edae90770acf76f7d8c8e6c04a9326f4ed50224dfa",
+      "row_type": "action",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "adaptive_peek_charged": true,
+      "cumulative_e_value": 1.05,
+      "decision_kind": "fixed_horizon_comparison",
+      "e_value_increment": 1.05,
+      "event_id": "sha256:a76543584f0fc4c12443e5381e1586fc2117ed30b424d07ed3a1c95c9b8a1ee7",
+      "event_type": "verify",
+      "held_events_used_for_tuning": false,
+      "mixture_family": "geometric",
+      "mixture_weight_sum": 0.875,
+      "null_frozen_at_monotonic_ns": 999900000,
+      "null_frozen_before_event": true,
+      "null_id": "fixed_null_no_positive_transition_effect_v1",
+      "null_receipt_hash": "sha256:4ffa0f1c6054f5c88fafecee341af63c2006519480196334a8f3f1071c36459b",
+      "peek_charge_index": 1,
+      "promotion_boundary": 2.0,
+      "promotion_decision": false,
+      "row_hash": "sha256:018f3c0c58f695d4259572db88d5e9f1bc1e7f2323743f8b2e830e7366ae20f4",
+      "row_type": "evidence_process",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "sequential_index": 0,
+      "stopping_boundary": 4.0,
+      "stopping_decision": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract",
+      "threshold_hash": "sha256:32324deb1a926283c47957a734db6f7e896d97244d0b6d27ac5659223e42e9e1"
+    },
+    {
+      "adaptive_peek_charged": true,
+      "cumulative_e_value": 1.26,
+      "decision_kind": "adaptive_decision",
+      "e_value_increment": 1.2,
+      "event_id": "sha256:99c510a2b15709acef38e223a2300426a0a78e73e2e30bb8d30a0b2cfa031660",
+      "event_type": "propose",
+      "held_events_used_for_tuning": false,
+      "mixture_family": "geometric",
+      "mixture_weight_sum": 0.875,
+      "null_frozen_at_monotonic_ns": 999900000,
+      "null_frozen_before_event": true,
+      "null_id": "fixed_null_no_positive_transition_effect_v1",
+      "null_receipt_hash": "sha256:4ffa0f1c6054f5c88fafecee341af63c2006519480196334a8f3f1071c36459b",
+      "peek_charge_index": 2,
+      "promotion_boundary": 2.0,
+      "promotion_decision": false,
+      "row_hash": "sha256:c03846a6e6126f9575de1177e8f124c50628b0d6a816446c683b06ea67bafb9a",
+      "row_type": "evidence_process",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "sequential_index": 1,
+      "stopping_boundary": 4.0,
+      "stopping_decision": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract",
+      "threshold_hash": "sha256:32324deb1a926283c47957a734db6f7e896d97244d0b6d27ac5659223e42e9e1"
+    },
+    {
+      "adaptive_peek_charged": true,
+      "cumulative_e_value": 1.701,
+      "decision_kind": "adaptive_decision",
+      "e_value_increment": 1.35,
+      "event_id": "sha256:f21a71cb7a573c97ca4df6ef1dd3fa2bfe5687f694e103549537854600a58024",
+      "event_type": "admit",
+      "held_events_used_for_tuning": false,
+      "mixture_family": "geometric",
+      "mixture_weight_sum": 0.875,
+      "null_frozen_at_monotonic_ns": 999900000,
+      "null_frozen_before_event": true,
+      "null_id": "fixed_null_no_positive_transition_effect_v1",
+      "null_receipt_hash": "sha256:4ffa0f1c6054f5c88fafecee341af63c2006519480196334a8f3f1071c36459b",
+      "peek_charge_index": 3,
+      "promotion_boundary": 2.0,
+      "promotion_decision": false,
+      "row_hash": "sha256:dafca68e0bcb8cc494ef2df719426505f0c00fed7f71187465d8d5bf90631522",
+      "row_type": "evidence_process",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "sequential_index": 2,
+      "stopping_boundary": 4.0,
+      "stopping_decision": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract",
+      "threshold_hash": "sha256:32324deb1a926283c47957a734db6f7e896d97244d0b6d27ac5659223e42e9e1"
+    },
+    {
+      "adaptive_peek_charged": true,
+      "cumulative_e_value": 2.12625,
+      "decision_kind": "adaptive_decision",
+      "e_value_increment": 1.25,
+      "event_id": "sha256:afff5cad6106b2ac8642021cde1ce984898ce9cfa4ad138b48b19bc83fe0a995",
+      "event_type": "promote",
+      "held_events_used_for_tuning": false,
+      "mixture_family": "geometric",
+      "mixture_weight_sum": 0.875,
+      "null_frozen_at_monotonic_ns": 999900000,
+      "null_frozen_before_event": true,
+      "null_id": "fixed_null_no_positive_transition_effect_v1",
+      "null_receipt_hash": "sha256:4ffa0f1c6054f5c88fafecee341af63c2006519480196334a8f3f1071c36459b",
+      "peek_charge_index": 4,
+      "promotion_boundary": 2.0,
+      "promotion_decision": true,
+      "row_hash": "sha256:a5be8e4272b34480b9c0d7f1bae27bc3d487b8ec7e95a6f62931a0eb9d157804",
+      "row_type": "evidence_process",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "sequential_index": 3,
+      "stopping_boundary": 4.0,
+      "stopping_decision": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract",
+      "threshold_hash": "sha256:32324deb1a926283c47957a734db6f7e896d97244d0b6d27ac5659223e42e9e1"
+    },
+    {
+      "adaptive_peek_charged": true,
+      "cumulative_e_value": 2.338875,
+      "decision_kind": "adaptive_decision",
+      "e_value_increment": 1.1,
+      "event_id": "sha256:b971e77099ff5584fbc5d2986f9c4c2b8c4bc3f3d296c433ffae605b4640649d",
+      "event_type": "restart",
+      "held_events_used_for_tuning": false,
+      "mixture_family": "geometric",
+      "mixture_weight_sum": 0.875,
+      "null_frozen_at_monotonic_ns": 999900000,
+      "null_frozen_before_event": true,
+      "null_id": "fixed_null_no_positive_transition_effect_v1",
+      "null_receipt_hash": "sha256:4ffa0f1c6054f5c88fafecee341af63c2006519480196334a8f3f1071c36459b",
+      "peek_charge_index": 5,
+      "promotion_boundary": 2.0,
+      "promotion_decision": false,
+      "row_hash": "sha256:a7c81f5518b73f8bba12539c1a4c4daf3eda52cec5980e5e36367540f82862a9",
+      "row_type": "evidence_process",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "sequential_index": 4,
+      "stopping_boundary": 4.0,
+      "stopping_decision": false,
+      "task_id": "exp6485-online-cache-transition-eprocess-contract",
+      "threshold_hash": "sha256:32324deb1a926283c47957a734db6f7e896d97244d0b6d27ac5659223e42e9e1"
+    },
+    {
+      "action_hash": "sha256:710a8a18c4dc636b2c51bf7c8e56c68c1a91a7479eb068e3f23e6c19e288bf24",
+      "admission_hash": "sha256:b8a3a4e4f84fa6742d3736e63b961f1690401f4ab681b09132e1c2acdcb30e48",
+      "admitted_event_id": "sha256:f21a71cb7a573c97ca4df6ef1dd3fa2bfe5687f694e103549537854600a58024",
+      "event_id": "sha256:f21a71cb7a573c97ca4df6ef1dd3fa2bfe5687f694e103549537854600a58024",
+      "event_type": "admit",
+      "exact_admission_passed": true,
+      "lifecycle_index": 0,
+      "lifecycle_type": "admission",
+      "row_hash": "sha256:0aa41bf8fe84a97f976fbf19af34000b21cab7481bd69ceef94c29ef573fba94",
+      "row_type": "lifecycle",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "state_hash_after": "sha256:79663ffbf8bea5f7a4479e331477dc31c9cea3e0f66cd8c40007ecc7726ee672",
+      "state_hash_before": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_hash": "sha256:6dcbe27a4789522c0e2f04f3bb11fca23290c00d74770f5bcfe4578b338cf0bd",
+      "capacity_bound": 1,
+      "event_id": "sha256:ed43c4f748cf1a0f0c5b4db1c51b352eba67d13caa7c1b39d817f561a36ecd14",
+      "event_type": "evict",
+      "evicted_event_id": "sha256:f21a71cb7a573c97ca4df6ef1dd3fa2bfe5687f694e103549537854600a58024",
+      "eviction_persisted": true,
+      "lifecycle_index": 1,
+      "lifecycle_type": "eviction",
+      "row_hash": "sha256:430e232f269de4be2188e80a3fde0a7e08c77f82e548f6fa59ff629cdf8c6eae",
+      "row_type": "lifecycle",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "state_hash_after": "sha256:0b3ee7d636a2c2072de46f9c485031975afff7dd61f6b2a12718bc8da0d2a165",
+      "state_hash_before": "sha256:8dee6b0eb8ded16cd565c63a00223d4118159faceeb60650b368b5e8ada00014",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_hash": "sha256:ea9f05d78d8b7030ed9470d94e78755c83750ebd4415f1416dba1cc4f6f21bba",
+      "event_id": "sha256:87328e933d6b178ad638be4e3149e3ecefb4e148da49cd1e6595af07cad49730",
+      "event_type": "tombstone",
+      "lifecycle_index": 2,
+      "lifecycle_type": "tombstone",
+      "resurrected_active_after_restart": false,
+      "row_hash": "sha256:49f28250477cfe27b4e68b9c7160edc1a8a0c9f7de356e33f7aaf04354d5dbcc",
+      "row_type": "lifecycle",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "state_hash_after": "sha256:bff954a1ab04da7d6f9e24f6386f1f393b1f56843d80d1a281833bdd7c6670fd",
+      "state_hash_before": "sha256:0b3ee7d636a2c2072de46f9c485031975afff7dd61f6b2a12718bc8da0d2a165",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract",
+      "tombstone_persisted": true,
+      "tombstoned_event_id": "sha256:f21a71cb7a573c97ca4df6ef1dd3fa2bfe5687f694e103549537854600a58024"
+    },
+    {
+      "action_hash": "sha256:403bb7f67b00bf306a64b844967af088e62fdff0a1efa378b1ee8a37677a9878",
+      "event_id": "sha256:438311908bed2a99c64a05a628aab1c904ff79197a8b9ee801cb4cdef0014073",
+      "event_type": "rollback",
+      "lifecycle_index": 3,
+      "lifecycle_type": "rollback",
+      "rollback_omitted": false,
+      "rollback_restored_prior_state": true,
+      "rollback_target_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "row_hash": "sha256:b5358c8e01f610c500b23f1b0232a9cf17e43208b775c7f1f72fc3cd17afa211",
+      "row_type": "lifecycle",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "state_hash_after": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "state_hash_before": "sha256:bff954a1ab04da7d6f9e24f6386f1f393b1f56843d80d1a281833bdd7c6670fd",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "action_hash": "sha256:e4f5145a81dbd53f7865f4603094a9901a2460cd8de00e3d7c78f71026b9c4d8",
+      "active_tombstoned_event_ids": [],
+      "event_id": "sha256:b971e77099ff5584fbc5d2986f9c4c2b8c4bc3f3d296c433ffae605b4640649d",
+      "event_type": "restart",
+      "expected_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "lifecycle_index": 4,
+      "lifecycle_type": "restart",
+      "restart_receipt_persisted": true,
+      "restart_replay_state_hash": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "row_hash": "sha256:19d2648870914898c39268d9b894c815590e4d1e8e70be179ed41e5cc260cf4e",
+      "row_type": "lifecycle",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "state_hash_after": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "state_hash_before": "sha256:285b9141f9a9d27cbee9fbdbca7135138f8533c747133c73a97ba2cea6cbf29c",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "accepted": false,
+      "attack_id": "duplicate_events",
+      "fail_closed": true,
+      "mutated_row_count": 33,
+      "reasons": [
+        "duplicate_event_id",
+        "event_chronology_not_monotonic",
+        "event_order_mismatch"
+      ],
+      "row_hash": "sha256:1a052d858f39b9d891ca4879bda3cdc8f72d7a60d343ef88a90abeb42435413a",
+      "row_type": "attack",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "accepted": false,
+      "attack_id": "backdated_writes",
+      "fail_closed": true,
+      "mutated_row_count": 32,
+      "reasons": [
+        "action_backdated"
+      ],
+      "row_hash": "sha256:e96a021633acb71251b570a22ce8b91b3b8c6f65dd510a11054a8825a9688d5b",
+      "row_type": "attack",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "accepted": false,
+      "attack_id": "stated_write_without_action",
+      "fail_closed": true,
+      "mutated_row_count": 32,
+      "reasons": [
+        "state_hash_mismatch",
+        "stated_write_without_action"
+      ],
+      "row_hash": "sha256:9ae9da085eabcaf2c78a5b33ddf68b65bfa8cfef6083dd07b3c9f2c9b401130c",
+      "row_type": "attack",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "accepted": false,
+      "attack_id": "action_without_exact_admission",
+      "fail_closed": true,
+      "mutated_row_count": 32,
+      "reasons": [
+        "action_without_exact_admission"
+      ],
+      "row_hash": "sha256:8b094712cc4f4334e0764b6f91c2d52d1780a9439b06aa31e7e21c28316d7357",
+      "row_type": "attack",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "accepted": false,
+      "attack_id": "threshold_editing",
+      "fail_closed": true,
+      "mutated_row_count": 32,
+      "reasons": [
+        "threshold_edited"
+      ],
+      "row_hash": "sha256:8d3ff6f97272e98022e544416a658a815673cb13155ae5efbd2db2ebdbcebe83",
+      "row_type": "attack",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "accepted": false,
+      "attack_id": "repeated_peeking",
+      "fail_closed": true,
+      "mutated_row_count": 33,
+      "reasons": [
+        "evidence_update_count_mismatch",
+        "peek_charge_mismatch"
+      ],
+      "row_hash": "sha256:d4d90d4021a6ca7d7c3a283e26eecd97dc21fec00b2ee5d17e918a74d7e2a8d3",
+      "row_type": "attack",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "accepted": false,
+      "attack_id": "missing_null",
+      "fail_closed": true,
+      "mutated_row_count": 32,
+      "reasons": [
+        "missing_null"
+      ],
+      "row_hash": "sha256:705c87421694df0d8b30f706f71b0584e66bc2a838af50eb289ad612b4225b50",
+      "row_type": "attack",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "accepted": false,
+      "attack_id": "rollback_omission",
+      "fail_closed": true,
+      "mutated_row_count": 32,
+      "reasons": [
+        "rollback_omission"
+      ],
+      "row_hash": "sha256:076a107ee4bf4b8e843f1f81666792a846821f68080bd2ebfb82bf09a6dd4e57",
+      "row_type": "attack",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "accepted": false,
+      "attack_id": "tombstone_resurrection",
+      "fail_closed": true,
+      "mutated_row_count": 32,
+      "reasons": [
+        "tombstone_resurrection"
+      ],
+      "row_hash": "sha256:795f7109ec0604977654a23ad28d545e191a0235d85cff3e2a994b0f2d33daf2",
+      "row_type": "attack",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    },
+    {
+      "accepted": false,
+      "attack_id": "restart_drift",
+      "fail_closed": true,
+      "mutated_row_count": 32,
+      "reasons": [
+        "restart_drift"
+      ],
+      "row_hash": "sha256:d93c0a1baac6c84a0dbaf790ae27df77b642dc22bb555c438edbd283dae222a8",
+      "row_type": "attack",
+      "schema_version": "carnot.experiment_6485.online_cache_transition_eprocess_contract.v1",
+      "task_id": "exp6485-online-cache-transition-eprocess-contract"
+    }
+  ],
+  "preconditions_checked": {
+    "audit_gaps_considered": {
+      "exp6420_open_attacks": [
+        "raw_output_reuse",
+        "cache_resurrection"
+      ],
+      "exp6433_attack_count": 14
+    },
+    "checks": {
+      "deterministic_fixture_no_llm": true,
+      "exp5895_exact_slot_retired": true,
+      "exp5895_exact_slot_reused": false,
+      "exp6479_ready": true
+    },
+    "date": "20260821",
+    "exp5895_exact_slot_retired": true,
+    "exp5895_exact_slot_reused": false,
+    "exp6479_path": "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json",
+    "exp6479_ready": true,
+    "exp6479_status": "success_ready",
+    "preconditions_ready": true,
+    "python": {
+      "captured_utc": "2026-08-21T14:56:50.067669Z",
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "pid": 82105,
+      "version": "3.12.13"
+    },
+    "repository_state": {
+      "head": "a13d3337998d9b4893f0b7357f3e6773f8260da9",
+      "status_short": "M openspec/capabilities/research-harnesses/spec.md\n M scripts/adversarial_verify.py\n?? python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py\n?? tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py"
+    },
+    "source_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/research-harnesses/spec.md": "sha256:fbda21b165d83f5d7b861bd5fa139dbf6ff07dbab801ac0143276b99e6deea3d",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "python/carnot/experiment_6479_verify_repair_factor_cache_shadow_adapter.py": "sha256:0fddf1109c4eff9347c0ca3dcfb1c1379baba38a989410e0a576a110d3d6854b",
+      "python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py": "sha256:f01f7b9db806c8bdfb8964fc49c0c7162e82eecdee406a45296a89ee522ee397",
+      "python/carnot/pipeline/factor_cache_shadow_adapter.py": "sha256:faa37795521ab20bc9520769f185bc631eac3a3f4069e7d407dbe01e421c826b",
+      "python/carnot/task_runtime_receipts.py": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "results/experiment_6420_csl_authenticity_safety_audit.json": "sha256:672e8c43722d4522591269c58938814b6bc449d67303971d50f7a2a3067f9662",
+      "results/experiment_6433_csl_row_recomputation_safety_audit.json": "sha256:3e974ce2e3699aaff5707d0476737dd86d4cce676bfff3c6faf5047378def8de",
+      "results/experiment_6479_verify_repair_factor_cache_shadow_adapter.json": "sha256:e11fea14a6e16684b5c0ebe5c28f8f73e3c383bbf7ad2f22755494b85b2975ea",
+      "scripts/adversarial_verify.py": "sha256:6fb0cbbf5a516f3d9725ecb430598e12af8fb5285314edae0d3ab8a539df0c01",
+      "scripts/verdict_row_consistency_lint.py": "sha256:240d582b56c339b2c773d1d4e261870a2d9f33d541d1d0d2273f02a2a2c92d6a",
+      "tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py": "sha256:383e4de96ff09c761e7f97193c87d605f586e3860fea6b3b55e99fabca409644"
+    }
+  },
+  "protected_files_unchanged": {
+    "files": {
+      "research-roadmap.yaml": {
+        "after_sha256": "sha256:5e21afb7b382240de14e9735a1825812e7ff3d01f029972790aa84a30f88273f",
+        "before_sha256": "sha256:5e21afb7b382240de14e9735a1825812e7ff3d01f029972790aa84a30f88273f",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after_sha256": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb",
+        "before_sha256": "sha256:a1f1f49637923ca06dcccc28d5aabfbb672af5f1cfa0fbdf8adf1ee69efbcacb",
+        "unchanged": true
+      }
+    },
+    "protected_files_unchanged": true
+  },
+  "random_seed": 6485,
+  "reproducibility_checksum": "sha256:17aec94e119cf0d106b497173fd9f74dd4aede45b57a1044771685ba537ad929",
+  "status": "complete_online_cache_transition_eprocess_contract",
+  "tests_run": {
+    "commands": [
+      "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6485_online_cache_transition_eprocess_contract --date 20260821",
+      ".venv/bin/pytest tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py -q --no-cov -n 0",
+      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py -m pytest tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py -q --no-cov -n 0",
+      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py --fail-under=100 --show-missing",
+      ".venv/bin/pytest tests/python -q",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+      ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6485_online_cache_transition_eprocess_contract.json",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6485_online_cache_transition_eprocess_contract.json",
+      ".venv/bin/python -m carnot.experiment_6485_online_cache_transition_eprocess_contract --validate",
+      ".venv/bin/python scripts/root_clutter_sweep.py",
+      ".venv/bin/python -c \"from pathlib import Path; text=Path('ops/e2e-test-plan.md').read_text(); assert 'E2E-005' in text and 'Serialization' in text\""
+    ],
+    "results": [
+      {
+        "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6485_online_cache_transition_eprocess_contract --date 20260821",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/pytest tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py -q --no-cov -n 0",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py -m pytest tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py -q --no-cov -n 0",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6485_online_cache_transition_eprocess_contract.py --fail-under=100 --show-missing",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6485_online_cache_transition_eprocess_contract.py",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6485_online_cache_transition_eprocess_contract.json",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/python -m carnot.experiment_6485_online_cache_transition_eprocess_contract --validate",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/python scripts/root_clutter_sweep.py",
+        "exit_code": 0
+      },
+      {
+        "command": ".venv/bin/python -c \"from pathlib import Path; text=Path('ops/e2e-test-plan.md').read_text(); assert 'E2E-005' in text and 'Serialization' in text\"",
+        "exit_code": 0
+      }
+    ]
+  },
+  "verifier_is_oracle": true
+}
