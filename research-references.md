@@ -35589,3 +35589,104 @@ Learned signals may propose, rank, route, or abstain.
   or unchanged FPGA task.
 
 <!-- V560-PLANNER-REFRESH-20260821-END -->
+
+## V561 planner refresh - 2026-08-21
+
+<!-- V561-PLANNER-REFRESH-20260821-START -->
+
+This refresh rechecks the requested 2025-2026 sources after V560 finished.
+It uses the V560 capstone as the evidence boundary. Exact solvers and
+executable checks remain release authority. A learned signal can order search,
+select a neighborhood, or abstain. It cannot certify a result.
+
+### Promising primary findings
+
+- **Position: Certified Correctness in Neural Constraint Reasoning Requires
+  Symbolic Integration** - arXiv:2608.14569,
+  https://arxiv.org/abs/2608.14569; accepted at ICML 2026. The paper argues that
+  neural-only constraint solvers can stay confident while they violate hard
+  constraints under distribution shift. It recommends bidirectional use:
+  neural methods improve solver heuristics, while symbolic methods certify
+  each result. Carnot hook: move the next learned-energy test inside an exact
+  solver. Keep the solver's proof or model check as authority. Do not train
+  another answer-level or trajectory-level release scorer.
+- **Learning to Rank the Initial Branching Order of SAT Solvers** -
+  arXiv:2603.07176, https://arxiv.org/abs/2603.07176; VerifAI-2 2026. A GNN
+  predicts a CDCL solver's initial variable order. It helps random and
+  pseudo-industrial instances and generalizes to larger inputs. It does not
+  help harder industrial instances because dynamic solver heuristics quickly
+  overwrite the initialization. Carnot hook: compare one-shot initialization,
+  periodic bounded refocus, and the native dynamic heuristic under equal
+  budgets. Record how long the advice remains active. A speed result without
+  an influence receipt is not causal evidence.
+- **Using Clause Predictions for Learning-Augmented Constraint Satisfaction** -
+  OpenReview ICLR 2026 submission,
+  https://openreview.net/forum?id=xvcqXxw4Le. This existing reference is now
+  directly actionable because V560 retired whole-trajectory learned energy.
+  Carnot hook: use clause-level advice with declared uncertainty and exact
+  fallback. Test whether local advice reduces search without changing the
+  accepted solution set.
+- **Large Neighborhood Search meets Iterative Neural Constraint Heuristics** -
+  arXiv:2603.20801, https://arxiv.org/abs/2603.20801; CPAIOR 2026. The paper
+  separates destroy and repair. It reports that stochastic destroy and greedy
+  repair are useful across Sudoku, graph coloring, and MaxCut. Carnot hook:
+  test an exact-repair LNS arm only after branch advice has a held benefit.
+  Report destroy, repair, fallback, and final exact-validity events separately.
+
+### Requested secondary and product checks
+
+- **OpenReview:** current ICLR and NeurIPS records support clause advice,
+  solver-integrated neural heuristics, and exact post-checks. They do not
+  reopen Carnot's retired external-text verifier, generated-answer transport,
+  or schema-reprompt lineages.
+- **Hugging Face Papers:** the current verification feed still emphasizes
+  verifier-induced support reshaping and decomposed verification. It adds no
+  stronger local release authority. Future-support measurement stays required
+  for continuous learning.
+- **Semantic Scholar:** the public API returned 35 citations for EBT
+  (`2507.02092`). Its first 20 records include
+  **Solver-Hard Is Not Model-Hard** and memory work already tracked here. The
+  ARM-EBM (`2512.15605`) citation endpoint returned eight records. No new
+  citation supplies a local exact verifier or reopens hidden-state scoring.
+- **GitHub Trending and targeted repositories:** the current search found
+  maintained learning-guided SAT examples, including
+  https://github.com/dmeoli/NeuroSAT, and exact DPLL(T)-style verification
+  systems, including https://github.com/dynaroars/neuralsat. They are useful
+  implementation references. They do not need to become Carnot runtime
+  dependencies. Use the installed exact solver stack and a small local
+  ranker first.
+- **Extropic:** the first-party August update remains
+  https://extropic.ai/writing/from-one-to-one-billion. Z1 is taped out, and
+  Torx plus the Thermalizers preview define a clearer stochastic-program to
+  EBM mapping. Public early access remains planned for 2027. Carnot has no
+  authenticated device or API route. Keep V561 at a fixed-width mapping ABI;
+  make no TSU execution, power, latency, or availability claim.
+- **Logical Intelligence:** Kona's public architecture still uses one global
+  continuous energy over editable traces and exact-looking product language.
+  It exposes no weights, reproducible training details, or local runner. Keep
+  Kona as a product comparator. Do not treat its claims as a baseline result.
+- **KAN, Ising, FPGA, and online learning:** recent work does not overturn the
+  V560 nulls. A compact KAN is eligible only as a branch-ranker control against
+  linear and MLP models. The attached FPGA boards remain at their recorded
+  terminal or changed-state-blocked boundaries. Schedule no unchanged board
+  probe.
+
+### V561 planning impact
+
+- Freeze the V560 retirements before new work starts.
+- Build a new exact SAT/CSP benchmark with structural, surface, family, and
+  scale shifts. Keep all labels and accepted outputs solver-certified.
+- Measure analytic clause and branch advice before training a ranker.
+- If structural advice has held benefit, compare compact KAN, linear, MLP, and
+  GNN rankers. Keep exact CDCL or CSP repair as authority.
+- If learned advice remains causal on held units, test solver-integrated LNS.
+- Run continuous self-learning only on weights over a fixed safe feature set.
+  Use exact-cost feedback, matched update dose, rollback, restart, bounded
+  capacity, and future-support checks.
+- Use the mandated local GGUF families only to generate new parseable challenge
+  instances. The models must not generate answers, labels, constraints from
+  natural language, or release decisions.
+- Defer ARC policy, learned trajectory energy, factor spawning, and hardware
+  acceleration until their V560 prerequisites change.
+
+<!-- V561-PLANNER-REFRESH-20260821-END -->
