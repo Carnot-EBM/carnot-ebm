@@ -16257,3 +16257,6 @@ code |
 | 2026-08-21 20:13 UTC | Gated on Exp6499 alignment: default-off live ARC e | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6499-arc-energy-progress-alignment.arc_ |
 | 2026-08-21 20:45 UTC | V560 independent adversarial capstone and V561 evi | OK | 88 passed, 1 warning in 8.83s |
 | 2026-08-21 21:51 UTC | Audit receipt STALE: qa-layer-authenticity-audit | BLOCK | timeout after 900s |
+| 2026-08-21 22:10 UTC | Plan milestone 2026.08.561 | OK | 4 tasks proposed |
+| 2026-08-21 22:12 UTC | Activation REFUSED: milestone 2026.08.561 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-08-21 22:12 UTC | Activation replan 1/2: 2026.08.561 | OK | refused roadmap quarantined to roadmap-2026.08.561-refusal1.yaml; replanning wit |

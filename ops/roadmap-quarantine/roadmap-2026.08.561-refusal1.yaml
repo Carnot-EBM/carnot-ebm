@@ -100,11 +100,6 @@ tasks:
     estimated_wall_time_min: 40
     agent_type: codex
     model: gpt-5.5
-    prior_failures:
-      - experiment_id: exp6461-v556-sota-source-and-benchmark-delta
-        verdict: "blocked_primary_source_receipt: primary pages are source receipts only; no product, hardware, model, or ARC execution oracle was invoked."
-        addressed_by: "V561 removes the V556 rendered-ARC-primary-data precondition that failed. It records stable source receipts and freezes an exact local SAT/CSP method contract; unavailable product pages stay bounded context and cannot close readiness."
-        retire_if_same_verdict: true
     gated_on:
       - upstream: exp6502-v560-retirement-v561-lineage-lock
         artifact_field: v561_lineage_lock_ready_score
