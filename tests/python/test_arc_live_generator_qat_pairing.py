@@ -1,4 +1,4 @@
-"""The live ARC generator is QAT, and its MTP drafter must be QAT too.
+"""The live ARC generator is pinned, and the legacy Gemma QAT MTP drafter must stay scoped.
 
 Spec coverage: REQ-ARC-WMTE-5717
 
@@ -24,28 +24,21 @@ import pytest
 from carnot.agentic import arc_executable_world_model as wm
 
 
-class TestGeneratorIsQat:
+class TestGeneratorIsQwen38:
     """The pinned live generator."""
 
-    def test_model_id_is_the_qat_repo(self) -> None:
-        assert wm.ARC_LIVE_GENERATOR_MODEL_ID == "unsloth/gemma-4-31B-it-qat-GGUF"
+    def test_model_id_is_the_qwen38_repo(self) -> None:
+        assert wm.ARC_LIVE_GENERATOR_MODEL_ID == "unsloth/Qwen3.8-27B-GGUF"
 
-    def test_model_filename_is_the_qat_quant(self) -> None:
-        assert wm.ARC_LIVE_GENERATOR_MODEL_FILENAME == "gemma-4-31B-it-qat-UD-Q4_K_XL.gguf"
+    def test_model_filename_is_the_qwen38_quant(self) -> None:
+        assert wm.ARC_LIVE_GENERATOR_MODEL_FILENAME == "Qwen3.8-27B-Q4_K_M.gguf"
 
-    def test_repo_substr_disambiguates_qat_from_non_qat(self) -> None:
-        """ "gemma-4-31B-it" alone matches BOTH cache dirs.
-
-        `_resolve_gguf` globs `models--*<substr>*GGUF` over directory names, and
-        `models--unsloth--gemma-4-31B-it-GGUF` and `...-it-qat-GGUF` both contain
-        "gemma-4-31B-it". A substring that matches both resolves ambiguously, which is the
-        same class of silent mis-binding as the drafter hazard above.
-        """
+    def test_repo_substr_matches_the_current_generator(self) -> None:
+        """The main generator resolver must search for the current Qwen3.8 repo."""
         substr = wm.ARC_LIVE_GENERATOR_REPO_SUBSTR
-        assert "qat" in substr
-        assert "gemma-4-31B-it-GGUF".find(substr) == -1, (
-            f"repo_substr {substr!r} also matches the NON-QAT repo name"
-        )
+        assert substr == "Qwen3.8-27B"
+        assert substr in wm.ARC_LIVE_GENERATOR_MODEL_ID
+        assert substr in wm.ARC_LIVE_GENERATOR_MODEL_FILENAME
 
 
 class TestDrafterMustMatchTheTarget:

@@ -12,6 +12,7 @@ from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
+import torch as real_torch
 
 from carnot.pipeline.extract import (
     AutoExtractor,
@@ -541,8 +542,6 @@ class TestGenerate:
         mock_tokenizer.apply_chat_template.return_value = "formatted prompt"
         mock_tokenizer.eos_token_id = 0
         # Mock tokenizer call returns dict with input_ids
-        import torch as real_torch
-
         input_ids = real_torch.tensor([[1, 2, 3]])
         mock_tokenizer.return_value = {"input_ids": input_ids}
         mock_tokenizer.decode.return_value = "generated response"
@@ -575,8 +574,6 @@ class TestGenerate:
         mock_tokenizer.apply_chat_template = mock_apply_chat_template
         mock_tokenizer.eos_token_id = 0
 
-        import torch as real_torch
-
         input_ids = real_torch.tensor([[1, 2, 3]])
         mock_tokenizer.return_value = {"input_ids": input_ids}
         mock_tokenizer.decode.return_value = "response"
@@ -608,8 +605,6 @@ class TestGenerate:
         mock_tokenizer.apply_chat_template = always_fail
         mock_tokenizer.eos_token_id = 0
 
-        import torch as real_torch
-
         input_ids = real_torch.tensor([[1, 2]])
         mock_tokenizer.return_value = {"input_ids": input_ids}
         mock_tokenizer.decode.return_value = "raw response"
@@ -631,8 +626,6 @@ class TestGenerate:
         mock_tokenizer.apply_chat_template.return_value = "prompt"
         mock_tokenizer.eos_token_id = 0
 
-        import torch as real_torch
-
         input_ids = real_torch.tensor([[1, 2]])
         mock_tokenizer.return_value = {"input_ids": input_ids}
         mock_tokenizer.decode.return_value = "<think>reasoning</think>actual answer"
@@ -653,8 +646,6 @@ class TestGenerate:
         mock_tokenizer = MagicMock()
         mock_tokenizer.apply_chat_template.return_value = "prompt"
         mock_tokenizer.eos_token_id = 0
-
-        import torch as real_torch
 
         input_ids = MagicMock()
         input_ids.cuda.return_value = real_torch.tensor([[1, 2]])

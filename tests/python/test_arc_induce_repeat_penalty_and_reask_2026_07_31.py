@@ -94,7 +94,13 @@ class _ScriptedServer:
                 return False
 
             def read(_s) -> bytes:  # noqa: ANN001, N805
-                return json.dumps({"content": body}).encode()
+                return json.dumps(
+                    {
+                        "content": body,
+                        "stop_type": "eos",
+                        "choices": [{"message": {"content": body}, "finish_reason": "stop"}],
+                    }
+                ).encode()
 
         return _Resp()
 
@@ -118,6 +124,12 @@ def _proposer(monkeypatch: pytest.MonkeyPatch, completions: list[str]) -> tuple:
     monkeypatch.setattr(prop, "_ensure_server", lambda: True)
     monkeypatch.setattr(urllib.request, "urlopen", srv.urlopen)
     return prop, srv
+
+
+def _payload_prompt(payload: dict[str, Any]) -> str:
+    if "prompt" in payload:
+        return str(payload["prompt"])
+    return "\n".join(str(message.get("content", "")) for message in payload.get("messages", []))
 
 
 # ---- SCENARIO-ARC-FCP-5699-41-1: the penalty reaches the induce payload -----------------------
@@ -189,7 +201,7 @@ def test_the_reask_names_nothing_about_the_defect(monkeypatch: pytest.MonkeyPatc
     )
     prop.generate("PROMPT", ("engine", "is_level_complete"), tries=3, codeonly_eligible=True)
     assert len(srv.payloads) == 2, "no re-ask was made, so there is no re-ask text to inspect"
-    reask = srv.payloads[1]["prompt"]
+    reask = _payload_prompt(srv.payloads[1])
     assert "TRY AGAIN" in reask.upper() or "PREVIOUS ANSWER" in reask.upper()
     for leaked in ("missing_return", "engine_returned_none", "syntax_error"):
         assert leaked not in reask, f"re-ask leaked the defect kind {leaked!r}"

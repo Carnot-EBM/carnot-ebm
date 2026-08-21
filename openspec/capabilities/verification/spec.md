@@ -31,6 +31,9 @@ SHALL recognize `live_llm_inference` as the strict live model substrate and
 preserve existing specialized live-model floors such as
 `live_llm_inference_local_gguf_sota`, `live_llm_embedding_extraction`, and
 `local_native_llama_cpp_gguf_backend_bisect`.
+Any recognized no-LLM substrate value that lacks a more specific duration
+floor SHALL receive a nonzero JSON-work floor so allowlisted aliases such as
+`simulation` do not emit `SUBSTRATE_HAS_NO_DURATION_FLOOR` warnings.
 
 For an allowlisted aggregation artifact, the verifier SHALL NOT emit
 live-model `DURATION_TOO_SHORT` or `METHODOLOGY_MISSING` flags merely because

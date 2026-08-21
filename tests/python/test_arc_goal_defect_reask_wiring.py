@@ -57,7 +57,14 @@ class _FakeHTTP:
         self.prompts: list[str] = []
 
     def __call__(self, req, timeout=None):  # urlopen(req, timeout=...)
-        self.prompts.append(json.loads(req.data.decode())["prompt"])
+        payload = json.loads(req.data.decode())
+        if "prompt" in payload:
+            prompt = payload["prompt"]
+        else:
+            prompt = "\n".join(
+                str(message.get("content", "")) for message in payload.get("messages", [])
+            )
+        self.prompts.append(prompt)
         body = self.replies[min(len(self.prompts) - 1, len(self.replies) - 1)]
 
         class _R:
@@ -68,7 +75,18 @@ class _FakeHTTP:
                 return False
 
             def read(self):
-                return json.dumps({"content": body, "stop_type": "eos"}).encode()
+                return json.dumps(
+                    {
+                        "content": body,
+                        "stop_type": "eos",
+                        "choices": [
+                            {
+                                "message": {"content": body},
+                                "finish_reason": "stop",
+                            }
+                        ],
+                    }
+                ).encode()
 
         return _R()
 

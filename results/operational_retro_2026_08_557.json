@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.557",
+  "generated_at": "2026-08-21T07:21:17Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.0,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "V556 terminal evidence and retirement boundary",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Protocol-identifiability and receipt-conformance preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V556 corpus label-commitment forensic and retirement adjudication",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Backend-neutral finite-domain exact constraint record",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp6474 identifiability and Exp6477 parity: held exact-energy final-sel",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone recorded 6 synthesis-only completions in 0.0 minutes at the supplied resolution, with 0 compute-bound experiments. No compute-runtime, GPU-utilization, or parallel-model runner bottleneck can be established from this milestone.",
+  "bottlenecks_identified": [
+    "No execution bottleneck is measurable because all supplied experiment timings resolve to 0 minutes.",
+    "The disk-mtime fallback does not expose task phases or sub-minute costs, so it cannot localize synthesis overhead."
+  ],
+  "improvements_suggested": [
+    "Persist monotonic start, stop, queue-wait, and phase timing receipts for each synthesis experiment instead of depending only on disk-mtime reconstruction.",
+    "Add scheduler receipts that mark dependency-proven independent synthesis jobs and allow those jobs to run concurrently.",
+    "Make accelerator advice task-classification-aware so GPU and DualGPURunner suggestions stay suppressed when no compute-bound work is present."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add a durable high-resolution timing ledger for every experiment and phase.",
+    "Dispatch dependency-proven independent synthesis jobs concurrently and record queue delay separately.",
+    "Gate GPU and DualGPURunner recommendations on compute-bound and parallel-model receipts."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The authoritative record contains no compute-bound run and resolves every listed duration to 0 minutes. Idle GPUs are therefore expected, while timing resolution—not accelerator use—is the operational evidence gap."
+}

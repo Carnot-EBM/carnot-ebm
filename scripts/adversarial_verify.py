@@ -261,9 +261,11 @@ DETERMINISTIC_VERIFIER_SUBSTRATES = (
     "post_marker_source_ingestion_and_v539_scope_freeze",
     "cached_sota_event_energy_calibration",
     "cached_authentic_sota_rows_cpu_analysis",
+    "deterministic_pipeline_integration_no_llm",
     "sealed_cached_event_evaluation",
 )
 DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001
+NO_LLM_DECLARED_MIN_DURATION_S = 0.0001
 
 # ARC live-agent runtime self-discovery artifacts: the live agent takes real
 # actions against the offline arcade / a live ARC env WITHOUT invoking an LLM
@@ -2427,6 +2429,12 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
             "substrate": NATIVE_GGUF_BACKEND_BISECT_SUBSTRATE,
             "min_duration_s": NATIVE_GGUF_BACKEND_BISECT_MIN_DURATION_S,
             "reason": "native_gguf_backend_bisect",
+        }
+    if classification["kind"] == SUBSTRATE_KIND_NO_LLM:
+        return {
+            "substrate": classification["matched_value"] or _inference_substrate_text(d),
+            "min_duration_s": NO_LLM_DECLARED_MIN_DURATION_S,
+            "reason": "no_llm_declared",
         }
     if _is_live_llm_inference(d):
         return {

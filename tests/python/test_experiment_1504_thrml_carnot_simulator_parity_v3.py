@@ -115,7 +115,11 @@ def test_import_ready_but_incompatible_api_records_api_blocker(tmp_path: Path) -
 def test_installed_thrml_runs_energy_and_stochastic_parity(tmp_path: Path) -> None:
     """SCENARIO-SAMPLE-073: import-ready THRML gets fixed-seed simulator parity."""
 
-    pytest.importorskip("thrml")
+    thrml_module = pytest.importorskip("thrml")
+    try:
+        exp1504._require_thrml_api(thrml_module)
+    except AttributeError as exc:
+        pytest.skip(f"installed thrml lacks Exp1504 Ising APIs: {exc}")
     gate_path = tmp_path / "exp1503.json"
     output_path = tmp_path / "experiment_1504.json"
     _write_gate(gate_path, ready=True)
@@ -127,6 +131,7 @@ def test_installed_thrml_runs_energy_and_stochastic_parity(tmp_path: Path) -> No
         n_samples=64,
         n_warmup=64,
         steps_per_sample=4,
+        importer=lambda _name: thrml_module,
     )
 
     assert artifact["status"] == "complete"

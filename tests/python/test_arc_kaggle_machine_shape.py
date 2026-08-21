@@ -74,13 +74,17 @@ def test_machine_shape_matches_the_shape_a_scored_peer_kernel_requested() -> Non
     )
 
 
-def test_the_attached_model_dataset_is_the_gemma_one() -> None:
-    """The kernel loads whatever .gguf the attached dataset contains. Leaving the Qwen dataset
-    attached would run the retired 9B no matter what the agent code says."""
+def test_the_attached_model_dataset_is_the_current_qwen38_one() -> None:
+    """The kernel loads whatever model datasets are attached. Leaving the retired Qwen3.5/9B
+    dataset attached would run the wrong generator no matter what the agent code says."""
     sources = _meta()["dataset_sources"]
-    assert any("gemma4-31b" in s for s in sources), sources
-    assert not any("qwen" in s.lower() for s in sources), (
-        f"a retired Qwen GGUF dataset is still attached: {sources}"
+    required = {
+        "iancblenke/carnot-qwen38-27b-nvfp4-mtp",
+        "iancblenke/carnot-qwen38-27b-nvfp4-safetensors",
+    }
+    assert required <= set(sources), sources
+    assert not any("qwen35" in s.lower() or "qwen3.5" in s.lower() for s in sources), (
+        f"a retired Qwen3.5/9B dataset is still attached: {sources}"
     )
 
 
