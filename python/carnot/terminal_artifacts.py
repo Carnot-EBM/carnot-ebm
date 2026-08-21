@@ -18,7 +18,17 @@ from typing import Any
 
 
 TERMINAL_CLASSES = frozenset(
-    {"complete", "ready", "positive", "null", "blocked", "skipped", "retired", "flagged"}
+    {
+        "complete",
+        "ready",
+        "positive",
+        "null",
+        "blocked",
+        "skipped",
+        "retired",
+        "flagged",
+        "disqualified",
+    }
 )
 NONTERMINAL_CLASSES = frozenset(
     {
@@ -45,6 +55,7 @@ ACCEPTED_TERMINAL_PREFIXES = (
     "complete_null",
     "null",
     "blocked",
+    "disqualified",
     "skipped",
     "gated",
     "retired",
@@ -197,6 +208,8 @@ def normalize_marker(value: Any) -> NormalizedMarker:
         return NormalizedMarker(raw=raw, prefix=prefix, classification="null")
     if prefix.startswith("blocked"):
         return NormalizedMarker(raw=raw, prefix=prefix, classification="blocked")
+    if prefix.startswith("disqualified"):
+        return NormalizedMarker(raw=raw, prefix=prefix, classification="disqualified")
     if prefix.startswith(("skipped", "gated", "gate_block")):
         return NormalizedMarker(raw=raw, prefix=prefix, classification="skipped")
     if prefix.startswith("retired"):

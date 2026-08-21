@@ -53,7 +53,14 @@ REPO = Path(__file__).resolve().parents[1]
 # rather than guessed. `MODEL_SPECS`, `events`, `gates_evaluated` and friends are lists of dicts
 # too, but they are not experiment units, so matching on "list of dicts" alone would produce
 # nonsense findings.
-ROW_CONTAINERS = ("per_game_results", "per_predicate", "rows", "per_cell_results", "cells")
+ROW_CONTAINERS = (
+    "per_game_results",
+    "per_predicate",
+    "rows",
+    "per_cell_results",
+    "cells",
+    "per_unit_rows",
+)
 
 # A verdict claiming a POSITIVE outcome. Only these are checked for wins-vs-losses: a verdict
 # that already says "not met" or "null" is not over-claiming, and flagging it would train people

@@ -420,6 +420,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     "cached_sota_event_energy_calibration",
     "deterministic_automaton_no_llm",
     "deterministic_validation_over_canonical_pool",
+    "independent_raw_representation_audit_no_llm",
     "offline_exact_forensics_over_existing_real_gguf_rows_no_llm",
     "online_exact_membership_query_sidecar_no_llm",
     "primary_source_metadata_and_local_ledger_synthesis_no_experiment_llm",
@@ -2767,7 +2768,8 @@ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
     if _is_artifact_qa_lint_tests(d):
         return
     no_model_spec_required = (
-        _is_arc_live_agent_no_llm(d)
+        _classify_inference_substrate(d)["kind"] == SUBSTRATE_KIND_NO_LLM
+        or _is_arc_live_agent_no_llm(d)
         or _is_log_analysis_local_timing(d)
         or _is_deterministic_smt_hint_validation(d)
         or _inference_substrate_matches(
