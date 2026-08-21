@@ -16255,3 +16255,4 @@ code |
 | 2026-08-21 20:09 UTC | Gated on Exp6499 alignment: default-off live ARC e | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6499-arc-energy-progress-alignment.arc_ |
 | 2026-08-21 20:11 UTC | Gated on Exp6499 alignment: default-off live ARC e | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6499-arc-energy-progress-alignment.arc_ |
 | 2026-08-21 20:13 UTC | Gated on Exp6499 alignment: default-off live ARC e | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6499-arc-energy-progress-alignment.arc_ |
+| 2026-08-21 20:45 UTC | V560 independent adversarial capstone and V561 evi | OK | 88 passed, 1 warning in 8.83s |

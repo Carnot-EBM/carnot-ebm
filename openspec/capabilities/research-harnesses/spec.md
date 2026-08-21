@@ -7703,3 +7703,58 @@ report file.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-CONDUCTOR-RECEIPT-1 | Pending | Pending |
+
+## REQ-CONDUCTOR-VERDICT-1: Artifacts MAY Declare A Closed Verdict Class, Cross-Checked Structurally
+
+Design: `docs/research-notes/conductor-self-improvement-2026-08-21.md`
+(mechanism 4). Verdict semantics live in four drifting substring token
+lists, patched at least six times (`disqualified:` — an honest negative
+— drew a critical flag this week). That is the "pattern list narrower
+than its concept" bug class applied to verdicts.
+
+The replacement is declaration plus structural cross-check, never a
+fifth list:
+
+- An artifact MAY declare `verdict_class` from a CLOSED enum:
+  `positive | circular_positive | null | blocked | disqualified |
+  partial`. The free-text `honest_verdict` stays for humans.
+- `adversarial_verify.py` cross-checks the declared class against
+  structural fields it already reads:
+  - a value outside the enum is CRITICAL (an open vocabulary here
+    would just be list number five);
+  - `verifier_is_oracle: true` forbids `positive` — the class must be
+    `circular_positive`, so a declared-circular result cannot carry a
+    research-win class downstream (the exp6478 shape);
+  - a failed `acceptance_gate_*` self-report forbids `positive` and
+    `circular_positive`;
+  - the informative-`null` check delegates to the existing
+    FALSE_NEGATIVE_RISK detector rather than duplicating it.
+- Declaration is optional while the corpus adopts it: an absent
+  `verdict_class` draws no flag. The planner prompt asks new tasks to
+  declare it.
+
+Retiring the four legacy token lists is DEFERRED until the corpus
+declares the enum: the reconciler still has to classify thousands of
+historical artifacts that carry only free-text verdicts, and forcing a
+mid-run reclassification would change scored-path behavior.
+
+#### SCENARIO-CONDUCTOR-VERDICT-1
+
+Given `verdict_class: positive` and `verifier_is_oracle: true`, the
+linter SHALL flag VERDICT_CLASS_MISMATCH at critical severity.
+
+#### SCENARIO-CONDUCTOR-VERDICT-2
+
+Given `verdict_class: circular_positive` and `verifier_is_oracle:
+true`, the linter SHALL NOT flag a verdict-class mismatch.
+
+#### SCENARIO-CONDUCTOR-VERDICT-3
+
+Given a `verdict_class` value outside the closed enum, the linter
+SHALL flag VERDICT_CLASS_MISMATCH at critical severity.
+
+## Implementation Status (REQ-CONDUCTOR-VERDICT-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-CONDUCTOR-VERDICT-1 | Pending | Pending |
