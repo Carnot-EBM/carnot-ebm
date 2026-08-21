@@ -429,6 +429,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     DETERMINISTIC_REPRESENTATION_CONTRACT_NO_LLM_SUBSTRATE,
     DETERMINISTIC_TRANSITION_CONTRACT_NO_LLM_SUBSTRATE,
     DETERMINISTIC_FACTOR_POOL_CONTROLLER_NO_LLM_SUBSTRATE,
+    "chronological_exact_admitted_factor_learning_no_new_llm",
     DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE,
     "artifact_reducer_no_llm",
     "cached_exp5567_responses_no_llm",
