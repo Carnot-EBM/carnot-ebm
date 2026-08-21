@@ -16108,3 +16108,4 @@ code |
 | 2026-08-21 03:18 UTC | Protocol-identifiability and receipt-conformance p | OK | 88 passed, 1 warning in 8.92s |
 | 2026-08-21 03:42 UTC | V557 primary-source and product-state receipt | OK | 88 passed, 1 warning in 9.31s |
 | 2026-08-21 04:10 UTC | V556 corpus label-commitment forensic and retireme | OK | 87 passed, 1 warning in 20.96s |
+| 2026-08-21 04:38 UTC | Backend-neutral finite-domain exact constraint rec | OK | 88 passed, 1 warning in 8.62s |
