@@ -16254,3 +16254,4 @@ code |
 | 2026-08-21 20:07 UTC | ARC conservative prefix-energy alignment with late | OK | 86 passed, 1 warning in 9.94s |
 | 2026-08-21 20:09 UTC | Gated on Exp6499 alignment: default-off live ARC e | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6499-arc-energy-progress-alignment.arc_ |
 | 2026-08-21 20:11 UTC | Gated on Exp6499 alignment: default-off live ARC e | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6499-arc-energy-progress-alignment.arc_ |
+| 2026-08-21 20:13 UTC | Gated on Exp6499 alignment: default-off live ARC e | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6499-arc-energy-progress-alignment.arc_ |
