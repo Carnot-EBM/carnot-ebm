@@ -176,3 +176,9 @@ CHECK_TIMED_OUT
 
 - **New top-five entrant:** **Junhua Yang** is now **#5 at 2.57**. No submission-linked ARC-AGI-3 code or technique disclosure was found. His documented ARC-AGI-1/2 DSL work does not establish the current ARC-AGI-3 method. **Classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/junhuay/code)
 
+## 2026-08-20 13:37 UTC -- NEW
+
+- **The AGI Boys — newly discovered public agent variant:** Team member Roman Tamrazov’s notebook modifies the known Reki-style policy with transition-contingent replanning: queued actions are discarded after no-op, repeated-state, or level-up transitions; failed click coordinates are cached per state and repaired using deterministic ±1/2/3/5-pixel jitter; fallbacks prefer recent changed pixels and least-used non-stalling actions; timeouts trigger two cheap fallback turns. It replaces Reki’s broader structural dead-signature suppression with exact state/coordinate evidence. The notebook predates the current submission, so score attribution is unconfirmed. **Classification: (b) GENERAL-PURPOSE**—the scored path uses observations and legal-action metadata, with no game-source reading or per-game hardcoding found. [Notebook](https://www.kaggle.com/code/romantamrazov/arc-real-agi-solution), [leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+  **POSSIBLE CARNOT LEVER:** Add verifier-gated neighborhood jitter after an exact click failure; it can rescue coarse near-miss coordinates without RL or unsafe structural-class pruning.
+
