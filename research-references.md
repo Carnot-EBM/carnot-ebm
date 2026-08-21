@@ -35372,3 +35372,109 @@ answer without the exact checker.
   Schedule no hardware task without a changed authenticated access state.
 
 <!-- V558-PLANNER-REFRESH-20260821-END -->
+
+## V559 planner refresh - 2026-08-21
+
+<!-- V559-PLANNER-REFRESH-20260821-START -->
+
+This refresh covers the late 2026-08-20 arXiv release. It also rechecks the
+requested secondary and product sources. Exact executable checks remain the
+only release authority. A learned energy may rank, route, or abstain. It may
+not release an answer without the exact checker.
+
+### Promising primary findings
+
+- **Information on trajectories: martingales and random times** -
+  arXiv:2608.20337, https://arxiv.org/abs/2608.20337; submitted 2026-08-20.
+  The paper gives exact variational identities for nonnegative martingales. It
+  also defines a penalty for adaptive peeking and a safe geometric mixture for
+  several candidate models. Carnot hook: use an anytime-valid evidence process
+  for online cache promotion and stopping. Charge every adaptive look at the
+  held stream. Do not promote a cache update from a fixed-horizon test that was
+  selected after repeated inspection.
+- **Pandora's AI Model Routing Box: POMDPs with Costly Prediction Estimates** -
+  arXiv:2608.20316, https://arxiv.org/abs/2608.20316; submitted 2026-08-20.
+  The work casts costly prediction estimates as a value-of-information routing
+  problem. It reports strong routing quality with fewer expensive estimates.
+  It also shows that noisy estimates can make routing worse. Carnot hook:
+  compare a value-of-information exact-check policy with uniform and always-
+  check controls under one charged budget. Keep the exact verifier result as
+  authority.
+- **Break It Down, Pass It On: Subtask-Level Skill Reuse in LLM Agents** -
+  arXiv:2608.20274, https://arxiv.org/abs/2608.20274; submitted 2026-08-20.
+  The paper finds that broad task-level skills often hurt later tasks. Atomic
+  subtask skills help more often. Text skills also outperform executable code
+  skills in the reported setting. Carnot hook: compare atomic clause factors
+  with task-wide factor bundles. Measure negative transfer and exact
+  applicability before a factor can enter persistent memory.
+- **Remember, Verify, or Ask? A Case Study on Memory Decision-Making in
+  Long-Term Personalized Conversations** - arXiv:2608.19564,
+  https://arxiv.org/abs/2608.19564; submitted 2026-08-20. The study finds a
+  large gap between a model's stated memory decision and its actual structured
+  memory action. Carnot hook: audit durable write, quarantine, tombstone,
+  rollback, and restart receipts. Do not treat a stated decision as a memory
+  transition.
+- **AI4AI-Bench: A Benchmark for Evaluating AI Agents on AI Research Tasks** -
+  arXiv:2608.20318, https://arxiv.org/abs/2608.20318; submitted 2026-08-20.
+  The benchmark uses frozen repositories, from-scratch reruns, and hidden
+  fixed evaluators. Its first results show that agents rarely improve the
+  learning algorithm itself. Carnot hook: state whether a self-learning result
+  changes model weights, harness state, or only evaluation code. A harness-
+  learning gain must not become a model-training claim.
+- **Energy Conserved Diffusion (ECD)** - arXiv:2606.21646,
+  https://arxiv.org/abs/2606.21646. ECD composes local bridge potentials into
+  one conservative global energy and adds a boundary reaction term. Carnot
+  hook: test whether clause-local energies compose without path-dependent
+  cycles before using their sum to rank a whole candidate. This is a bounded
+  composition audit. It is not a diffusion-planner adoption.
+
+### Secondary-source and product checks
+
+- **GitHub:** the Apache-licensed ECD repository now contains evaluated code,
+  checkpoints, and documented commands,
+  https://github.com/GradientSpaces/ECD. This corrects the V558 note that code
+  and checkpoints were pending. The implementation is still a diffusion
+  planner. Carnot should borrow only the conservative-composition test in this
+  milestone.
+- **OpenReview:** current continual-learning records support atomic operation
+  recipes, execution-verified synthesis, and structural controls against
+  memory interference. No record replaces Carnot's exact checker or clears a
+  retired generated-text scorer lane.
+- **Semantic Scholar:** the public API returned 35 citing records for EBT
+  (`2507.02092`) and eight for ARM-EBM (`2512.15605`) on 2026-08-21. The newest
+  indexed arXiv records remain `2608.14186`, `2608.13570`, and `2607.02154`.
+  None adds a stronger exact local verifier.
+- **Hugging Face Papers:** the latest verification pages add no stronger local
+  exact-authority baseline. Recent work supports decomposition, chronological
+  memory evaluation, and per-event evidence.
+- **Extropic:** the 2026-08-03 first-party update remains the newest public Z1
+  state, https://extropic.ai/writing/from-one-to-one-billion. Z1 is taped out.
+  Carnot still has no authenticated device or API route. Schedule no TSU
+  execution, power, latency, or availability claim.
+- **Logical Intelligence:** the public Kona page still exposes no local
+  weights, reproducible architecture, or documented runner. Kona remains a
+  product comparator.
+- **GitHub Trending and targeted KAN, Ising, FPGA, and constraint searches:**
+  no new repository should enter the dependency set. Existing exact solvers,
+  the local KAN stack, and the dual RTX 3090 runtime are enough for V559.
+
+### V559 planning impact
+
+- Close the retired finite-ID generated-answer branch. Use the preserved
+  paired final-layer embedding surface with forced, exact-labeled candidates.
+- Repair the earlier paired-embedding audit failures. Residualize length, norm,
+  and model identity. Report each model family separately.
+- Compare a compact KAN energy with linear and MLP controls. Add an ECD-inspired
+  path-independence test for clause-energy composition.
+- Test exact-energy selection and value-of-information exact verification on
+  immutable held units with charged budgets.
+- Run continuous self-learning as guarded factor-cache evolution. Use atomic
+  factors, exact write admission, an anytime-valid promotion gate, rollback,
+  restart, and actual-action receipts.
+- Test ARC only after its energy ranks frozen live prefixes by later progress.
+  Make no game or level solve claim.
+- Use the dual RTX 3090 system only for the three-family embedding pass. The
+  FPGA boards are at their recorded terminal states. Schedule no unchanged
+  board probe or hardware performance claim.
+
+<!-- V559-PLANNER-REFRESH-20260821-END -->
