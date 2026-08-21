@@ -1,11 +1,11 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.08.560",
-  "generated_at": "2026-08-21T20:50:49Z",
-  "retro_type": "operational_full",
+  "generated_at": "2026-08-21T21:23:29.180182+00:00",
+  "retro_type": "operational_in_progress",
+  "summary": "The milestone completed 11 experiments in 1 minute, including 2 compute-bound experiments. The listed compute-bound leader took 1 minute, while both GPUs showed 0% utilization; the data does not identify its phase-level cause or establish whether parallel multi-model work missed DualGPURunner.",
   "total_wall_time_minutes": 1.0,
   "experiments_completed": 11,
-  "compute_bound_experiments_count": 2,
   "slowest_experiments": [
     {
       "experiment": "Prospective local-SOTA atomic constraint factor proposal stream",
@@ -33,25 +33,25 @@
       "compute_bound": false
     }
   ],
-  "gpu_idle_on_compute_bound_tasks": false,
-  "reconstructed_from_disk_mtime": true,
-  "timing_integrity_mismatch": false,
-  "summary": "All 11 experiments completed in 1.0 minute, including 2 compute-bound tasks. The named compute-bound leader was Prospective local-SOTA atomic constraint factor proposal stream, but the timing data does not explain its elapsed time, and the locked idle classification does not identify a compute-task GPU fault. No data available this milestone identifies the other compute-bound task or a phase-level cause.",
   "bottlenecks_identified": [
-    "Disk-mtime fallback and minute-level timing presentation hide task phase costs, so the cause of the leading compute duration is unavailable.",
-    "The GPU snapshot lacks task and process linkage, so compute-period utilization efficiency cannot be graded.",
-    "The record has no model-count or runner-use field, so parallel multi-model dispatch cannot be audited."
+    "Both GPUs showed 0% utilization while compute-bound work was present, so the locked task classification identifies GPU idleness as an execution fault.",
+    "Disk-mtime fallback reports the leading duration at minute resolution but provides no task-phase timing, so no data available this milestone explains why the compute-bound leader took 1 minute.",
+    "No data available this milestone records per-task model concurrency or runner selection, so a missed DualGPURunner dispatch cannot be determined."
   ],
   "improvements_suggested": [
-    "Emit live monotonic task and phase timings instead of reconstructing durations from disk mtimes.",
-    "Sample GPU utilization during each compute-bound task and bind each sample to the active task and process.",
-    "Record model count and runner selection, and dispatch to DualGPURunner only when at least two models load in parallel."
+    "Add task-linked GPU sampling for compute-bound work and alert when sustained utilization remains at 0% after launch.",
+    "Replace disk-mtime fallback with live monotonic experiment and phase receipts.",
+    "Record parallel model count and runner selection, and use DualGPURunner only when at least 2 models load in parallel."
   ],
   "top_3_highest_leverage_actions": [
-    "Replace disk-mtime timing reconstruction with live monotonic task and phase receipts.",
-    "Add task-linked GPU utilization and process receipts for every compute-bound task.",
-    "Add model-count and runner-selection receipts with conditional DualGPURunner dispatch for parallel multi-model work."
+    "Gate compute-bound launches on task-linked GPU engagement receipts.",
+    "Capture live monotonic task and phase durations.",
+    "Capture model-count and runner receipts, with conditional DualGPURunner dispatch for parallel multi-model work."
   ],
+  "compute_bound_experiments_count": 2,
+  "gpu_idle_on_compute_bound_tasks": true,
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The record supports a ranking, not a causal explanation. The idle snapshot and compute-task list lack shared task or process linkage, so this retrospective does not convert system idleness into a task-level GPU fault or infer missing DualGPURunner use."
+  "meta_reflection": "The supplied evidence supports the GPU-idle finding because compute-bound work was present. It does not provide a phase-level cause for the 1-minute leader or show that any task loaded multiple models in parallel, so the savings estimate remains 0 without a measured counterfactual.",
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false
 }
