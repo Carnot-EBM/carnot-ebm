@@ -2481,6 +2481,39 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
     # substrate at duration_s=0.002 -- below its own floor -- and was reported clean. The
     # declaration is an affirmative claim of real per-action environment stepping, so it is
     # self-sufficient grounds to check the floor; no marker should be required.
+    # UNRECOGNIZED SUBSTRATE (2026-08-21). The paragraph above fixed this bug class for ONE
+    # substrate. This generalizes it, because the shape recurs for every substrate string the
+    # recognizer chain does not know: `duration_floor_for_artifact` walks a list of recognizers and
+    # returns None when none match, and the guard below then returns before any floor is applied.
+    # So an artifact can declare a substrate nobody taught the linter, carry any duration at all,
+    # and be reported clean -- the guard's pattern list is narrower than the concept it protects.
+    #
+    # Measured over the 5,691-artifact corpus: 720 artifacts declare a substrate, are not
+    # precondition-blocked, and receive NO floor; 237 of those ran in under one second. Found via
+    # exp6478, whose `exact_solver_held_candidate_selection_no_llm` fell through every recognizer
+    # while its stored duration_s was a dead constant of 0.0001.
+    #
+    # WARN, not CRITICAL, deliberately. Most of the 720 are honest work under a substrate nobody
+    # has taught the linter yet, and a critical flag would retroactively quarantine them. The point
+    # is to make an unchecked declaration VISIBLE so a floor can be added, rather than letting
+    # silence read as approval. Artifacts declaring no substrate at all are a separate, larger
+    # population governed by the compute-bound-marker path below and are not flagged here.
+    _declared_substrate = _inference_substrate_text(d)
+    if _declared_substrate and duration_floor_for_artifact(d) is None:
+        flags.append(
+            Flag(
+                kind="SUBSTRATE_HAS_NO_DURATION_FLOOR",
+                severity="warn",
+                detail=(
+                    f"inference_substrate={_declared_substrate!r} matches no duration-floor "
+                    f"recognizer, so duration_s={duration} was NOT checked against any floor. "
+                    "A declaration is an affirmative claim about what ran; an unrecognized one is "
+                    "unverified, not verified. Add a recognizer plus floor for this substrate, or "
+                    "correct the declaration to an existing one."
+                ),
+            )
+        )
+
     _declares_arc_live_no_llm = _is_arc_live_agent_no_llm(d)
     if (
         not _has_compute_bound_marker(d)

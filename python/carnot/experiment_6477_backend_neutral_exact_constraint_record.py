@@ -45,9 +45,7 @@ EXACT_INT_BOUND = 1_000_000
 MAX_EXHAUSTIVE_STATES = 50_000
 Z3_TIMEOUT_MS = 1_000
 
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_6477_backend_neutral_exact_constraint_record.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_6477_backend_neutral_exact_constraint_record.json")
 MODULE_RELATIVE_PATH = Path(
     "python/carnot/experiment_6477_backend_neutral_exact_constraint_record.py"
 )
@@ -92,12 +90,9 @@ ADVERSARIAL_COMMAND = (
     "results/experiment_6477_backend_neutral_exact_constraint_record.json"
 )
 VALIDATE_COMMAND = (
-    ".venv/bin/python -m "
-    "carnot.experiment_6477_backend_neutral_exact_constraint_record --validate"
+    ".venv/bin/python -m carnot.experiment_6477_backend_neutral_exact_constraint_record --validate"
 )
-E2E_PLAN_COMMAND = (
-    "manual e2e-plan check: ops/e2e-test-plan.md has no direct Exp6477 entry"
-)
+E2E_PLAN_COMMAND = "manual e2e-plan check: ops/e2e-test-plan.md has no direct Exp6477 entry"
 DEFAULT_TEST_COMMANDS = (
     FOCUSED_TEST_COMMAND,
     COVERAGE_RUN_COMMAND,
@@ -606,7 +601,9 @@ def validate_record(record: ConstraintRecord) -> list[str]:
         elif int(term.weight) == 0:
             _append_once(errors, f"zero_objective_weight:{term.objective_id}")
         _validate_linear_expr(term.expr, vars_by_id, errors)
-    if record.variables and not any(error.startswith(("empty_domain", "overflow_domain")) for error in errors):
+    if record.variables and not any(
+        error.startswith(("empty_domain", "overflow_domain")) for error in errors
+    ):
         if _state_count(record) > MAX_EXHAUSTIVE_STATES:
             _append_once(errors, "exhaustive_state_budget_exceeded")
     return errors
@@ -714,8 +711,7 @@ def objective_value(record: ConstraintRecord, assignment: Mapping[str, int]) -> 
     """Evaluate explicit objective terms on an assignment."""
 
     return sum(
-        int(term.weight) * eval_linear(term.expr, assignment)
-        for term in record.objective_terms
+        int(term.weight) * eval_linear(term.expr, assignment) for term in record.objective_terms
     )
 
 
@@ -938,11 +934,7 @@ def _z3_translation(record: ConstraintRecord) -> JsonDict:
 def _z3_public_receipt(translation: Mapping[str, Any]) -> JsonDict:
     """Remove live Z3 objects from a translation receipt."""
 
-    return {
-        key: value
-        for key, value in translation.items()
-        if not str(key).startswith("_")
-    }
+    return {key: value for key, value in translation.items() if not str(key).startswith("_")}
 
 
 def _z3_optimize() -> z3.Optimize:
@@ -1348,7 +1340,9 @@ def build_attack_matrix(cases: Sequence[ConstraintRecord]) -> JsonDict:
         negated,
         case_id="attack_dropped_negation",
         constraints=tuple(
-            ConstraintSpec(c.constraint_id, _transform_expr_drop_negation(c.expr), c.weight, c.protected)
+            ConstraintSpec(
+                c.constraint_id, _transform_expr_drop_negation(c.expr), c.weight, c.protected
+            )
             for c in negated.constraints
         ),
     )
@@ -1581,7 +1575,9 @@ def recompute_aggregates_from_rows(rows: Sequence[Mapping[str, Any]]) -> JsonDic
     grouped: dict[str, list[Mapping[str, Any]]] = {}
     for row in backend_rows:
         grouped.setdefault(str(row["case_id"]), []).append(row)
-    pair_complete = all({row["backend"] for row in group} == {"z3", "exhaustive"} for group in grouped.values())
+    pair_complete = all(
+        {row["backend"] for row in group} == {"z3", "exhaustive"} for group in grouped.values()
+    )
 
     satisfiability_mismatches = 0
     witness_validity_mismatches = 0
@@ -1621,19 +1617,22 @@ def recompute_aggregates_from_rows(rows: Sequence[Mapping[str, Any]]) -> JsonDic
     all_attacks_detected = bool(attack_rows) and all(
         row.get("detected") is True and row.get("false_accept") is False for row in attack_rows
     )
-    all_parity = all(
-        value == 0
-        for value in (
-            satisfiability_mismatches,
-            witness_validity_mismatches,
-            violation_set_mismatches,
-            protected_mismatches,
-            objective_mismatches,
-            scalar_energy_mismatches,
-            witness_invalid,
-            domain_invalid,
+    all_parity = (
+        all(
+            value == 0
+            for value in (
+                satisfiability_mismatches,
+                witness_validity_mismatches,
+                violation_set_mismatches,
+                protected_mismatches,
+                objective_mismatches,
+                scalar_energy_mismatches,
+                witness_invalid,
+                domain_invalid,
+            )
         )
-    ) and pair_complete
+        and pair_complete
+    )
     score = 1.0 if all_parity and all_unsupported_rejected and all_attacks_detected else 0.0
     return {
         "row_count": len(rows),
@@ -1678,7 +1677,8 @@ def _parity_summary(aggregate: Mapping[str, Any], kind: str) -> JsonDict:
         "case_count": aggregate["case_count"],
         "backend_case_row_count": aggregate["backend_case_row_count"],
         "mismatch_count": aggregate[mismatch_key],
-        "all_match": aggregate[mismatch_key] == 0 and aggregate["all_backend_pairs_complete"] is True,
+        "all_match": aggregate[mismatch_key] == 0
+        and aggregate["all_backend_pairs_complete"] is True,
     }
 
 
@@ -1803,9 +1803,11 @@ def _gate_check_summary(
         "protected_violations_match": aggregate["protected_violation_mismatch_count"] == 0,
         "objective_values_match": aggregate["objective_value_mismatch_count"] == 0,
         "scalar_energies_match": aggregate["scalar_energy_mismatch_count"] == 0,
-        "unsupported_operations_fail_closed": aggregate["all_unsupported_operations_rejected"] is True,
+        "unsupported_operations_fail_closed": aggregate["all_unsupported_operations_rejected"]
+        is True,
         "attacks_caught": aggregate["all_attacks_detected"] is True,
-        "aggregate_rows_recomputed": aggregate["exact_constraint_record_ready_score_from_rows"] == 1.0,
+        "aggregate_rows_recomputed": aggregate["exact_constraint_record_ready_score_from_rows"]
+        == 1.0,
         "protected_files_unchanged": protected["unchanged"] is True,
     }
     return {
@@ -1939,7 +1941,10 @@ def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
         errors.append("violation_set_parity mismatch")
     if artifact.get("attack_matrix", {}).get("all_attacks_detected") is not True:
         errors.append("attack matrix must detect every attack")
-    if any(row.get("backend_result_trusted") is not False for row in artifact.get("unsupported_operation_rows", [])):
+    if any(
+        row.get("backend_result_trusted") is not False
+        for row in artifact.get("unsupported_operation_rows", [])
+    ):
         errors.append("unsupported operation row trusted a backend")
     if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
         errors.append("inference_substrate mismatch")
@@ -1975,13 +1980,21 @@ def run(
 ) -> JsonDict:
     """Build and write the Exp6477 artifact."""
 
+    # MEASURE THE WORK, NOT THE ARGUMENT LIST (fixed 2026-08-21). This read
+    # `duration_s=max(time.monotonic() - start, 0.0001)` as an ARGUMENT to build_artifact, so the
+    # elapsed time was evaluated BEFORE build_artifact ran any of the work it was meant to time.
+    # The stored value was always exactly the 0.0001 floor, whatever the real runtime.
+    # `duration_s`' own declared principle is that wall time catches a comparison that skipped the
+    # expensive path -- a constant can never do that. Compute the artifact first, then stamp the
+    # real elapsed time onto it.
     start = time.monotonic()
     artifact = build_artifact(
         root=REPO_ROOT,
         run_date=date,
-        duration_s=max(time.monotonic() - start, 0.0001),
+        duration_s=0.0001,
         tests_run=test_exit_codes,
     )
+    artifact["duration_s"] = max(time.monotonic() - start, 0.0001)
     write_artifact(artifact, result_path)
     return artifact
 

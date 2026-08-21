@@ -33,9 +33,7 @@ RANDOM_SEED = 6476
 INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
 SCHEMA_VERSION = "carnot.experiment_6476.corpus_label_commitment_forensic.v1"
 
-RESULT_RELATIVE_PATH = Path(
-    "results/experiment_6476_v556_corpus_label_commitment_forensic.json"
-)
+RESULT_RELATIVE_PATH = Path("results/experiment_6476_v556_corpus_label_commitment_forensic.json")
 MODULE_RELATIVE_PATH = Path(
     "python/carnot/experiment_6476_v556_corpus_label_commitment_forensic.py"
 )
@@ -79,8 +77,7 @@ SPEC_COVERAGE_COMMAND = (
     "tests/python/test_experiment_6476_v556_corpus_label_commitment_forensic.py"
 )
 VALIDATE_COMMAND = (
-    ".venv/bin/python -m "
-    "carnot.experiment_6476_v556_corpus_label_commitment_forensic --validate"
+    ".venv/bin/python -m carnot.experiment_6476_v556_corpus_label_commitment_forensic --validate"
 )
 ADVERSARIAL_COMMAND = (
     ".venv/bin/python scripts/adversarial_verify.py "
@@ -93,9 +90,7 @@ ROW_LINT_COMMAND = (
 ARTIFACT_CONVENTION_COMMAND = (
     ".venv/bin/python scripts/artifact_convention_audit.py --recent 1 --dry-run"
 )
-E2E_PLAN_COMMAND = (
-    "manual e2e-plan check: ops/e2e-test-plan.md has no direct Exp6476 entry"
-)
+E2E_PLAN_COMMAND = "manual e2e-plan check: ops/e2e-test-plan.md has no direct Exp6476 entry"
 DEFAULT_TEST_COMMANDS = (
     FOCUSED_TEST_COMMAND,
     COVERAGE_RUN_COMMAND,
@@ -370,7 +365,9 @@ def _receipt_valid_for_component(receipt: Mapping[str, Any], component: str) -> 
     )
 
 
-def _receipt_summary(receipts_for_component: Sequence[Mapping[str, Any]], component: str) -> JsonDict:
+def _receipt_summary(
+    receipts_for_component: Sequence[Mapping[str, Any]], component: str
+) -> JsonDict:
     """Summarize why receipts were or were not creditable."""
 
     valid = [row for row in receipts_for_component if _receipt_valid_for_component(row, component)]
@@ -496,7 +493,9 @@ def _commitment_receipts_for_unit(
 
     first_mtime_ns = int(first_event.get("raw_file_mtime_ns") or 0)
     manifest_mtime_ns = int(manifest_receipt.get("mtime_ns") or 0)
-    manifest_before = bool(first_mtime_ns and manifest_mtime_ns and manifest_mtime_ns < first_mtime_ns)
+    manifest_before = bool(
+        first_mtime_ns and manifest_mtime_ns and manifest_mtime_ns < first_mtime_ns
+    )
     git_commit = history[0] if history else {}
     label_receipts = [
         {
@@ -621,7 +620,9 @@ def _independent_unit_checks(
         )
         if sha256_text(prompt) != row.get("prompt_sha256"):
             prompt_mismatches += 1
-    membership_mismatches = sum(1 for row in rows if row.get("partition") != problem.get("partition"))
+    membership_mismatches = sum(
+        1 for row in rows if row.get("partition") != problem.get("partition")
+    )
     sealed_label_mismatch_count = 0
     for candidate_id, sealed_hash in sealed_by_candidate.items():
         observed = observed_by_candidate.get(candidate_id, set())
@@ -685,7 +686,9 @@ def build_commitment_rows(
         label_payload = dict(manifest_payload.get("label_commitment_hashes", {}).get(unit_id, {}))
         label_hash = sha256_json(label_payload)
         membership_hash = sha256_json({"partition": partition, "unit_id": unit_id})
-        prompt_hashes = [str(row.get("prompt_sha256")) for row in unit_rows if row.get("prompt_sha256")]
+        prompt_hashes = [
+            str(row.get("prompt_sha256")) for row in unit_rows if row.get("prompt_sha256")
+        ]
         first_raw_event_time = _unit_first_event(unit_rows, root)
         independent = _independent_unit_checks(root=root, problem=problem, rows=unit_rows)
         label_receipts, membership_receipts = _commitment_receipts_for_unit(
@@ -900,7 +903,9 @@ def _upstream_artifact_hashes(file_receipts: Sequence[Mapping[str, Any]], root: 
         }
         for row in file_receipts
     ]
-    category_counts = Counter("raw" if "/raw_outputs/" in row["path"] else "metadata" for row in rows)
+    category_counts = Counter(
+        "raw" if "/raw_outputs/" in row["path"] else "metadata" for row in rows
+    )
     return {
         "schema_version": SCHEMA_VERSION + ".upstream_hashes",
         "hashed_before_analysis": True,
@@ -961,8 +966,16 @@ def _preconditions_checked(
         "exp6463_artifact_present": present.get(EXP6463_RESULT.as_posix()) is True,
         "exp6463_manifest_present": present.get(EXP6463_MANIFEST.as_posix()) is True,
         "exp6463_checkpoint_present": present.get(EXP6463_CHECKPOINT.as_posix()) is True,
-        "exp6462_raw_file_count": sum(1 for row in file_receipts if str(row["path"]).startswith(EXP6462_DATA.as_posix() + "/raw_outputs/")),
-        "exp6463_raw_file_count": sum(1 for row in file_receipts if str(row["path"]).startswith(EXP6463_DATA.as_posix() + "/raw_outputs/")),
+        "exp6462_raw_file_count": sum(
+            1
+            for row in file_receipts
+            if str(row["path"]).startswith(EXP6462_DATA.as_posix() + "/raw_outputs/")
+        ),
+        "exp6463_raw_file_count": sum(
+            1
+            for row in file_receipts
+            if str(row["path"]).startswith(EXP6463_DATA.as_posix() + "/raw_outputs/")
+        ),
         "new_inference_performed": False,
         "new_model_output_written": False,
         "new_labels_written": False,
@@ -1107,7 +1120,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
         return [f"missing required field: {missing[0]}"]
     rows = list(artifact.get("per_unit_rows", []))
     aggregate = recompute_aggregates_from_rows(rows)
-    aggregate["matches_reported"] = artifact.get("aggregate_row_recomputation", {}).get("matches_reported")
+    aggregate["matches_reported"] = artifact.get("aggregate_row_recomputation", {}).get(
+        "matches_reported"
+    )
     if artifact.get("aggregate_row_recomputation") != aggregate:
         errors.append("aggregate_row_recomputation mismatch")
     expected_score = aggregate["score_from_rows"]
@@ -1160,13 +1175,21 @@ def run(
 ) -> JsonDict:
     """Build and write the Exp6476 artifact."""
 
+    # MEASURE THE WORK, NOT THE ARGUMENT LIST (fixed 2026-08-21). This read
+    # `duration_s=max(time.monotonic() - start, 0.0001)` as an ARGUMENT to build_artifact, so the
+    # elapsed time was evaluated BEFORE build_artifact ran any of the work it was meant to time.
+    # The stored value was always exactly the 0.0001 floor, whatever the real runtime.
+    # `duration_s`' own declared principle is that wall time catches a comparison that skipped the
+    # expensive path -- a constant can never do that. Compute the artifact first, then stamp the
+    # real elapsed time onto it.
     start = time.monotonic()
     artifact = build_artifact(
         root=REPO_ROOT,
         run_date=date,
-        duration_s=max(time.monotonic() - start, 0.0001),
+        duration_s=0.0001,
         tests_run=test_exit_codes,
     )
+    artifact["duration_s"] = max(time.monotonic() - start, 0.0001)
     write_artifact(artifact, result_path)
     return artifact
 
