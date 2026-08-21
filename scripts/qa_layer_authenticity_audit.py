@@ -383,6 +383,36 @@ E. **TEST/SIDE-EFFECT MUTATION OF TRACKED STATE.**
    effect of merely running? Writing to a FIXED artifact path that a committed
    historical artifact already occupies is the specific hazard: it overwrites the
    research record on a green run, with no failure and no diff anyone reads.
+
+F. **DEFAULT BRANCH DISABLES THE CHECK.**
+   Does a recognizer chain -- a run of `if matches_X: return floor_X` clauses --
+   end in a default that means NO CHECK rather than "unrecognized, say so"? The
+   tell is a terminal `return None` / `return` / `pass` whose caller reads it as
+   permission to skip. That inverts the safe direction: an input the chain has
+   never been taught reads as approved rather than as unverified.
+   Worked precedent, 2026-08-21: `adversarial_verify.duration_floor_for_artifact`
+   walked ~15 substrate recognizers and returned None when none matched, and
+   `check_duration_vs_claim` then returned before applying any floor. Measured
+   over the corpus, 720 artifacts declared a substrate and received no duration
+   floor at all; 237 of those ran in under a second. The same shape had ALREADY
+   been fixed once for a single substrate on 2026-07-30 -- a one-case patch of a
+   general defect, which is why this class exists. Ask: what does this code do
+   with an input NONE of its branches recognize, and would a reader of the output
+   be able to tell that case apart from a genuine pass?
+
+G. **METRIC COMPUTED BEFORE THE WORK IT MEASURES.**
+   Is a duration, counter, or other measurement evaluated BEFORE -- or
+   independently of -- the operation it purports to describe? The commonest form
+   is a value computed inline as a CALL ARGUMENT, since arguments are evaluated
+   before the callee runs. Such a field is a constant wearing a measurement's
+   name, and any check downstream that trusts it is inert.
+   Worked precedent, 2026-08-21: four experiment scripts wrote
+   `build_artifact(..., duration_s=max(time.monotonic() - start, 0.0001), ...)`
+   where `start` was set on the preceding line, so the stored duration was always
+   exactly the 0.0001 floor no matter how long the run took -- while that field's
+   own documented principle is that wall time catches a comparison which skipped
+   the expensive path. Ask: does the value actually span the work, and would it
+   differ between a real run and a run that did nothing?
 """
 
 # The canonical name of each bug class above. Every prompt in this file MUST contain every
@@ -417,6 +447,8 @@ BUG_CLASS_MARKERS: tuple[str, ...] = (
     "UNTESTED PATTERN",
     "HARDCODED ABSOLUTE WRITE TARGET",
     "TEST/SIDE-EFFECT MUTATION OF TRACKED STATE",
+    "DEFAULT BRANCH DISABLES THE CHECK",
+    "METRIC COMPUTED BEFORE THE WORK IT MEASURES",
 )
 
 SHARED_OUTPUT_TAIL = """\
@@ -671,6 +703,30 @@ guard below.
    it fail CLOSED (refuse, alarm) or fail OPEN (return "OK")? A guard that
    returns clean when it could not actually perform its check is the silent
    failure in its purest form. Quote the specific except/fallback.
+
+8b. **DEFAULT BRANCH DISABLES THE CHECK.** Distinct from 8, and easier to miss,
+   because nothing here errors. Does the guard dispatch through a chain of
+   recognizers -- `if looks_like_X: return threshold_X` -- ending in a default
+   that means NO CHECK rather than "unrecognized, say so"? The tell is a
+   terminal `return None` / bare `return` whose caller treats it as permission
+   to skip. An input the chain was never taught then reads as approved rather
+   than unverified. Measured precedent, 2026-08-21:
+   `adversarial_verify.duration_floor_for_artifact` returned None when no
+   substrate recognizer matched, so 720 artifacts declaring a substrate got no
+   duration floor and 237 of those ran under a second. That shape had already
+   been patched for ONE substrate on 2026-07-30; the general case survived.
+   Name the default branch and the input class it silently exempts.
+
+8c. **METRIC COMPUTED BEFORE THE WORK IT MEASURES.** Does the guard read, or
+   write, a duration/count/size that was evaluated BEFORE the operation it
+   describes? The commonest form is a value computed inline as a CALL ARGUMENT,
+   since arguments are evaluated before the callee runs -- producing a constant
+   with a measurement's name, and rendering inert every downstream check that
+   trusts it. Measured precedent, 2026-08-21: four experiment scripts passed
+   `duration_s=max(time.monotonic() - start, 0.0001)` INTO the builder that did
+   the work, so the value was always the 0.0001 floor. If the guard consumes a
+   field like this, ask whether the field can actually differ between a real run
+   and a run that did nothing.
 
 9. **TEST/SIDE-EFFECT MUTATION OF TRACKED STATE.** Does this guard -- or a test
    that would naturally be written for it, or a fixture it needs -- WRITE to

@@ -495,10 +495,19 @@ class TestPromptsAskTheSilentNonFiringQuestion:
                     missing.append(f"{name} is missing bug class {marker!r}")
         assert not missing, "\n".join(missing)
 
-    def test_the_marker_list_covers_all_five_classes(self) -> None:
-        """Guards the guard: the loop above is vacuous if BUG_CLASS_MARKERS is emptied."""
-        assert len(qla.BUG_CLASS_MARKERS) == 5
+    def test_the_marker_list_covers_every_class(self) -> None:
+        """Guards the guard: the loop above is vacuous if BUG_CLASS_MARKERS is emptied.
+
+        Asserting the exact count, rather than a floor, is deliberate -- it forces whoever
+        adds or removes a class to come here and say so. Was 5; became 7 on 2026-08-21 when
+        auditing exp6478 turned up two classes no prompt asked about: a recognizer chain
+        whose default branch means "no check" rather than "unrecognized", and a metric
+        evaluated as a call argument, i.e. before the work it claims to time.
+        """
+        assert len(qla.BUG_CLASS_MARKERS) == 7
         assert "TEST/SIDE-EFFECT MUTATION OF TRACKED STATE" in qla.BUG_CLASS_MARKERS
+        assert "DEFAULT BRANCH DISABLES THE CHECK" in qla.BUG_CLASS_MARKERS
+        assert "METRIC COMPUTED BEFORE THE WORK IT MEASURES" in qla.BUG_CLASS_MARKERS
 
     def test_guard_prompt_asks_the_two_classes_it_used_to_omit(self) -> None:
         """Regression for the specific 2026-07-29 review finding, in its own right.
