@@ -107,6 +107,32 @@ tasks:
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp6481-monotonic-phase-concurrency-receipt-contract
+    prior_failures:
+      - experiment_id: exp6437-generation-to-verdict-receipt-replay-contract
+        verdict: blocked_gate_check_failed
+        addressed_by: >-
+          The prior never executed. Its single gate required
+          exp6436-v554-terminal-handoff-and-queue-preflight to report
+          v554_queue_ready_score == 1.0 and the upstream reported 0.0, so the
+          conductor refused it at pre-gate. Nothing about the receipt contract
+          was measured. What is different: this task declares no gated_on
+          dependency on that chain, so the precondition that blocked the prior
+          cannot block it.
+        retire_if_same_verdict: true
+      - experiment_id: exp6449-generation-to-verdict-path-receipt-contract
+        verdict: "success: path receipt controls localized and critical attacks failed closed"
+        addressed_by: >-
+          NOT A FAILURE. This prior SUCCEEDED -- its verdict carries the
+          terminal `success:` prefix and reports that attacks failed CLOSED,
+          the desired outcome. It is matched as a prior failure because
+          map_status_label checks failure tokens before win tokens, so the word
+          "failed" inside "failed closed" outranks the prefix. That precedence
+          is deliberate (see the 2026-07-01 note in in_process_doc_reconcile.py:
+          mixed-token verdicts stay non-Complete on purpose), and the same
+          shape previously mis-blocked exp5140 against a clean exp5128 success.
+          This entry records the misclassification rather than proposing a
+          rerun; there is no prior failure here to address.
+        retire_if_same_verdict: false
     milestone: "2026.08.558"
     deliverable: results/experiment_6481_monotonic_phase_concurrency_receipt_contract.json
     title: "Monotonic task phase and concurrency receipt contract"
