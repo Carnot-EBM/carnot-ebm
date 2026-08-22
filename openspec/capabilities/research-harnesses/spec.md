@@ -7907,3 +7907,79 @@ SHALL flag VERDICT_CLASS_MISMATCH at critical severity.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-CONDUCTOR-VERDICT-1 | Implemented (`scripts/adversarial_verify.py`: `check_verdict_class_consistency` + `_VERDICT_CLASSES`, wired into `verify_artifact`; planner-prompt `verdict_class` field in the live `_plan_next_milestone`) | Implemented (`tests/python/test_verdict_class_consistency.py`, 7 tests; mutations: oracle cross-check disabled -> RED, enum opened -> RED) |
+
+## REQ-CONDUCTOR-ARCHIVE-2: A Ledger Lint SHALL Refuse Commits That Violate The Truthful-Archival Invariants
+
+Design: `docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md`
+(Conversion 1 — the regression lock for REQ-CONDUCTOR-ARCHIVE-1). The
+archiver fix is one revert away from regressing, and
+`research-complete.yaml` is the planner's failure record. Measured on
+2026-08-21: 1,892 milestone entries for 51 distinct ids (1,841 surplus
+duplicates; worst id `2026.07.510` with 684 copies), and 57 distinct
+task rows stamped `OK (conductor)` whose deliverables never existed.
+
+`scripts/research_complete_ledger_lint.py` SHALL run as a pre-commit
+hook on any commit that stages `research-complete.yaml`. The lint is
+FORWARD-ONLY from the cutoff date `2026-08-22`: it checks entries whose
+`completed` date is on or after the cutoff, so the uncorrected
+historical corpus never blocks a commit. Repair of history stays an
+operator decision (never-prune).
+
+For each checked entry the lint SHALL enforce:
+
+1. **Unique id.** The entry's milestone id appears exactly once in the
+   whole file. A second entry for the same id is the
+   activation-refusal retry-append regressing.
+2. **No retired literal.** No task row carries the result
+   `OK (conductor)`. The archiver derives results now; that exact
+   literal can only reappear if the hardcoded stamp returns.
+3. **OK rows name deliverables that exist.** A task row whose result
+   starts with `OK`, other than `OK_NO_DELIVERABLE`, and which names a
+   deliverable, must name a path that exists on disk (resolved against
+   the ledger file's own directory).
+
+An entry with no `completed` date SHALL be checked (fail-closed: the
+archiver always writes the date, so its absence marks an anomalous new
+entry, not an old one). An unparseable ledger SHALL fail the lint
+(fail-closed: a corrupted record is worse than a blocked commit).
+
+The lint SHALL offer `--report-historical`: apply the same checks to
+ALL entries regardless of cutoff, print the violation counts, and exit
+0. This is the evidence mode — it demonstrates the true-positive
+corpus (the 57 phantom rows, the 1,841 duplicates) without blocking
+anything.
+
+The lint SHALL be listed in `GUARD_TARGETS` of
+`scripts/qa_layer_authenticity_audit.py`: it decides whether the
+research record may change, which is the QA-layer criterion.
+
+#### SCENARIO-CONDUCTOR-ARCHIVE-4
+
+Given a ledger where milestone M has one pre-cutoff entry and a new
+post-cutoff entry is appended for the same M, the lint SHALL exit
+non-zero and name M.
+
+#### SCENARIO-CONDUCTOR-ARCHIVE-5
+
+Given a post-cutoff entry with a task row `result: OK` whose
+deliverable path does not exist, the lint SHALL exit non-zero; given
+the same row with the deliverable present on disk, it SHALL exit 0.
+
+#### SCENARIO-CONDUCTOR-ARCHIVE-6
+
+Given a post-cutoff entry with a task row `result: OK (conductor)`,
+the lint SHALL exit non-zero even when the deliverable exists.
+
+#### SCENARIO-CONDUCTOR-ARCHIVE-7
+
+Given the historical corpus shape (pre-cutoff duplicate entries and
+pre-cutoff phantom `OK (conductor)` rows, verbatim from milestone
+`2026.07.510` / task `exp5710-fr11-isolated-act-on-advice-canary`),
+the default mode SHALL exit 0 and `--report-historical` SHALL count
+the violations.
+
+## Implementation Status (REQ-CONDUCTOR-ARCHIVE-2)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-CONDUCTOR-ARCHIVE-2 | Implemented (`scripts/research_complete_ledger_lint.py`; pre-commit hook `research-complete-ledger-lint`; `GUARD_TARGETS` entry in `scripts/qa_layer_authenticity_audit.py`) | Implemented (`tests/python/test_research_complete_ledger_lint.py`; mutations: dedup check disabled -> RED, existence check disabled -> RED, retired-literal check disabled -> RED) |
