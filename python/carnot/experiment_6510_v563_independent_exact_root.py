@@ -192,8 +192,8 @@ FULL_PYTEST_RECEIPT = {
     "command": FULL_PYTEST_COMMAND,
     "exit_code": 3,
     "summary": (
-        "repository-wide run stopped after 67 failed, 9642 passed, "
-        "8 skipped, and an xdist worker MemoryError"
+        "repository-wide run stopped after 68 failed, 9638 passed, "
+        "8 skipped, 112 warnings, and an xdist worker MemoryError"
     ),
 }
 SPEC_COVERAGE_COMMAND = (
