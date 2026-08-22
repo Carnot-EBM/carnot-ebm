@@ -8575,3 +8575,57 @@ reachable. An A/B against the zero baseline was mid-flight when this was written
   `arc_competition_agent.py` returns nothing. A hardcoded engine passes the trust
   gate. The tool loop already computes the split (`visible = rows[:-3]`); porting
   it to the live induce path costs no LLM call and no actions.
+
+### 2026-08-22 CLOSE-OUT: the acceptance run landed, and it corrects the section above
+
+Appended, not edited (never-prune). The section above says the induce fix was
+"NOT YET PROVEN" and describes a "0 levels completed on all five" baseline. The
+first is now resolved. **The second was WRONG and is corrected here.**
+
+**Correction: the baseline was never zero levels.** That claim came from reading
+`levels_completed`, a key that DOES NOT EXIST on these harness rows, while the
+correct key `levels` (int) sat beside it. `.get()` on a misremembered name
+returned None, None was read as zero, and the error propagated into a subagent
+brief and an AVO comparison before anyone opened the value. The baseline solved
+THREE levels across five games. See the memory note
+`feedback_field_names_lie_read_the_content`.
+
+**Acceptance run result (5/5 games, shipped defaults, no env overrides):**
+
+| game | baseline levels | fix levels | world model | row valid |
+|---|---|---|---|---|
+| ar25 | 0 | **1** | yes | true |
+| tr87 | 0 | 0 | no | FALSE |
+| tu93 | 2 | 2 | yes | true |
+| sp80 | 1 | 1 | yes | true |
+| re86 | 0 | 0 | no | FALSE |
+| TOTAL | 3 | 4 | 0 -> 3 | |
+
+**What is proven.** The induction defect was real and the fix works: zero world
+models became three. The diagnosis was exact — all 78 baseline generations
+terminated at precisely `responses x 4096`, a stale default validated for the
+retired Qwen3.5-9B and never moved through two generator swaps. Failure modes
+moved downstream, from `proposer_failed_or_missing_root` to
+`goal_unreached_within_budget` and `no_reachable_plan_after_refinement`.
+
+**What is NOT proven, and must not be overstated.** The level gain is +1, on one
+game. World models were NOT the difference between solving nothing and solving
+something — search alone already solved three levels. Two of five rows are
+`llm_on_row_valid: false` (tr87 lost its cell to an orphaned llama-server
+contending on GPU 1, since killed; re86's reason is unexamined), so the +1 rests
+on three valid games. Anyone citing this should cite it as "restored a broken
+mechanism", not as a solve-rate result.
+
+**Also closed this session:** all five rule-to-check conversions; the frozen-
+harness pin guard (verified to refuse with env unset and stand down under an
+explicit `CARNOT_ARC_GGUF_PATH`); the supervisor redirect ledger with per-arm
+fired/helped outcomes (REQ-ARC-WMTE-6640) and its Generalization-Testing Floor
+activity 4; two infra fixes that had been silently blocking commits
+(determination-preservation hook needed `.venv/bin/python`; `check_torch_cuda`
+probe timeout 15s -> 90s under GPU load).
+
+**Still open, unchanged from the list above:** submission 55657962 ERROR
+undiagnosed; Kaggle GPU quota exhausted, which blocks the `qwen3_xml` tool-parser
+probe and therefore blocks tool calls working on the scored path at all; the
+supervisor has a ledger but has still never produced a VALID A/B — the run that
+tried predated the induce fix and measured a substrate with no world models.
