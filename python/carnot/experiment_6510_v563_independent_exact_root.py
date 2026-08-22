@@ -188,6 +188,14 @@ COVERAGE_REPORT_COMMAND = (
     "--fail-under=100 --show-missing"
 )
 FULL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
+FULL_PYTEST_RECEIPT = {
+    "command": FULL_PYTEST_COMMAND,
+    "exit_code": 3,
+    "summary": (
+        "repository-wide run stopped after 67 failed, 9642 passed, "
+        "8 skipped, and an xdist worker MemoryError"
+    ),
+}
 SPEC_COVERAGE_COMMAND = (
     ".venv/bin/python scripts/check_spec_coverage.py "
     "tests/python/test_experiment_6510_v563_independent_exact_root.py"
@@ -218,7 +226,7 @@ DEFAULT_TESTS_RUN = (
     {"command": FOCUSED_TEST_COMMAND, "exit_code": 0},
     {"command": COVERAGE_RUN_COMMAND, "exit_code": 0},
     {"command": COVERAGE_REPORT_COMMAND, "exit_code": 0},
-    {"command": FULL_PYTEST_COMMAND, "exit_code": 0},
+    FULL_PYTEST_RECEIPT,
     {"command": SPEC_COVERAGE_COMMAND, "exit_code": 0},
     {"command": RUN_COMMAND, "exit_code": 0},
     {"command": ROW_LINT_COMMAND, "exit_code": 0},
