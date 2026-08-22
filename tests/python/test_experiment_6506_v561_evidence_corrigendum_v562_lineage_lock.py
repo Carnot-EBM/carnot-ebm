@@ -104,6 +104,7 @@ def test_req_bench_6506_spec_declares_corrigendum_contract() -> None:
         mod.RESULT_RELATIVE_PATH.as_posix(),
         mod.INFERENCE_SUBSTRATE,
         "VERDICT_CLASS_MISMATCH",
+        "Repository validation failures SHALL remain visible in `tests_run`",
     ):
         assert marker in section
     for field, principle in mod.FIELD_PRINCIPLES.items():
@@ -300,6 +301,39 @@ def test_scenario_bench_6506_schema_checksum_and_validation(
         assert expected in mod.validate_artifact(broken)
 
 
+def test_scenario_bench_6506_records_failed_global_suite_without_blocking_lineage(
+    tmp_path: Path,
+) -> None:
+    """REQ-BENCH-6506: honest global test receipts do not launder evidence gates."""
+
+    failed_global_receipts = [
+        {"command": FOCUSED_COMMAND, "exit_code": 0},
+        {
+            "command": FULL_PYTEST_COMMAND,
+            "exit_code": 2,
+            "summary": (
+                "global suite interrupted after unrelated repository failures, "
+                "missing optional ONNX deps, tracked result mutations, and JAX worker aborts"
+            ),
+        },
+    ]
+
+    artifact = mod.build_artifact(
+        repo_root=REPO,
+        result_path=tmp_path / mod.RESULT_RELATIVE_PATH.name,
+        write=True,
+        duration_s=1.0,
+        tests_run=failed_global_receipts,
+        run_date="20260822",
+    )
+
+    assert artifact["v562_exact_branch_ready_score"] == 1.0
+    assert artifact["tests_run"] == failed_global_receipts
+    assert artifact["gate_check_summary"]["validation_receipts"]["nonzero_exit_count"] == 1
+    assert "tests_passed" not in artifact["gate_check_summary"]["checks"]
+    assert mod.validate_artifact(artifact) == []
+
+
 def test_scenario_bench_6506_main_and_validate_roundtrip(tmp_path: Path) -> None:
     """REQ-BENCH-6506: CLI writes and validates the corrigendum."""
 
@@ -308,3 +342,5 @@ def test_scenario_bench_6506_main_and_validate_roundtrip(tmp_path: Path) -> None
     assert mod.main(["--validate", "--result-path", str(result_path)]) == 0
     payload = json.loads(result_path.read_text(encoding="utf-8"))
     assert payload["v562_exact_branch_ready_score"] == 1.0
+    full_receipts = [row for row in payload["tests_run"] if row["command"] == FULL_PYTEST_COMMAND]
+    assert full_receipts == [mod.FULL_PYTEST_RECEIPT]

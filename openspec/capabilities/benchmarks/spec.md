@@ -2533,6 +2533,13 @@ The artifact SHALL include `status`, `verdict_class`,
 `independent_v561_artifact_replay_no_llm`. `verifier_is_oracle` SHALL be true
 only for exact label, hash, and row checks.
 
+`v562_exact_branch_ready_score` SHALL be an evidence-lineage gate. It SHALL
+depend on Exp6504 row replay, the corrected class, historical-file hashes,
+Exp6505 terminal-null accounting, and forbidden dependency checks. It SHALL NOT
+turn a repository-wide test-suite failure into a scientific lineage failure.
+Repository validation failures SHALL remain visible in `tests_run` and SHALL
+NOT be rewritten as passing receipts.
+
 Field principles SHALL be:
 
 - `status`: "A terminal state distinguishes a valid corrigendum from an incomplete replay."
@@ -2597,7 +2604,7 @@ fail closed before `v562_exact_branch_ready_score` can equal `1.0`.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-BENCH-6506 | Planned (`python/carnot/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.py`, `results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json`) | Planned (`tests/python/test_experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.py`) |
+| REQ-BENCH-6506 | Implemented (`python/carnot/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.py`, `results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json`) | Implemented (`tests/python/test_experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.py`) |
 
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
