@@ -16265,3 +16265,4 @@ code |
 | 2026-08-22 16:17 UTC | V560 retirement ledger and V561 exact-structural l | OK | 86 passed, 1 warning in 12.81s |
 | 2026-08-22 16:36 UTC | V561 source delta and exact-structural method prer | OK | 96 passed, 1 warning in 15.56s |
 | 2026-08-22 17:00 UTC | Immutable exact SAT/CSP structural benchmark commi | FLAGGED | adversarial_verify CRITICAL: VERDICT_CLASS_MISMATCH — result quarantined, not a  |
+| 2026-08-22 17:25 UTC | Local-SOTA one-shot formal challenge mutation stre | OK | 89 passed, 1 warning in 11.64s |
