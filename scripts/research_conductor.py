@@ -108,6 +108,12 @@ AGENT_TYPE_RETRO = os.environ.get("AGENT_TYPE_RETRO")  # e.g. "claude"
 AGENT_TYPE_AUDIT = os.environ.get("AGENT_TYPE_AUDIT", "claude")
 AGENT_MODEL_AUDIT = os.environ.get("AGENT_MODEL_AUDIT", "claude-opus-4-8")
 CONDUCTOR_LOG = PROJECT_ROOT / "ops" / "conductor-log.md"
+# Receipts for the two self-supervision tools (REQ-CONDUCTOR-SENTINEL-3,
+# REQ-OPS-AUDIT-LEDGER-1). Each tool rewrites its state file on EVERY run,
+# so a stale mtime means the tool stopped running — checked via
+# _run_audit_with_receipt, never via exit codes.
+RUN_SENTINEL_STATE = PROJECT_ROOT / "ops" / ".run_sentinel_state.json"
+AUDIT_LEDGER_STATE = PROJECT_ROOT / "ops" / ".audit_findings_ledger_state.json"
 DOGFOOD_MEMORY_FILE = PROJECT_ROOT / "ops" / "dogfood-memory.json"
 AGENT_DISPLAY_BY_TYPE = {
     "claude": "Claude Code",
@@ -5149,6 +5155,21 @@ def research_step(
     _await_pending_recon()
     timestamp = datetime.now(UTC)
 
+    # In-flight run sentinel (REQ-CONDUCTOR-SENTINEL-1/2/3): read the
+    # validity signals live runs already write — invalid-row streaks,
+    # llama-server allocation failures, stranded VRAM, orphaned servers —
+    # and escalate durably. Origin: the 2026-08-22 A/B that burned 2.5
+    # hours with every row llm_on_row_valid=false and nothing reading the
+    # stamp. The sentinel never kills work; a stale receipt writes a BLOCK
+    # line (visible), and the iteration continues either way.
+    if not dry_run:
+        _run_audit_with_receipt(
+            "run-sentinel",
+            [sys.executable, str(PROJECT_ROOT / "scripts" / "conductor_run_sentinel.py")],
+            RUN_SENTINEL_STATE,
+            timeout=180,
+        )
+
     # Read conductor log
     log_content = ""
     if CONDUCTOR_LOG.exists():
@@ -5345,6 +5366,24 @@ def research_step(
                     ],
                     receipt=PROJECT_ROOT / "ops" / "experiment_claim_audit_report.md",
                     timeout=900,
+                )
+
+            # Audit-findings ledger (REQ-OPS-AUDIT-LEDGER-1): flagged claim-audit
+            # verdicts enter ops/audit-findings-ledger.md as OPEN rows; OPEN rows
+            # older than 7 days escalate weekly until a human writes a
+            # disposition. Runs right after the audit so its findings cannot sit
+            # unread — the 2026-08-22 pair of CLAIM_OVERSTATED verdicts nobody
+            # decided on is the origin. Receipt is the ledger's own state file,
+            # rewritten on every run.
+            if not dry_run:
+                _run_audit_with_receipt(
+                    "audit-findings-ledger",
+                    [
+                        sys.executable,
+                        str(PROJECT_ROOT / "scripts" / "audit_findings_ledger.py"),
+                    ],
+                    receipt=AUDIT_LEDGER_STATE,
+                    timeout=120,
                 )
 
             # Contradiction escalation (REQ-OPS-CONTRADICTION-6272). Cheap detectors for rows
