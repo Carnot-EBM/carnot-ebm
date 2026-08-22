@@ -321,3 +321,111 @@ def test_req_6600_routed_path_consults_supervisor(monkeypatch):
 
     assert len(calls) == 1
     assert move == ("RESET", None)  # explorer bootstrap; the routed path ran
+
+
+# --- REQ-ARC-WMTE-6640 (redirect outcomes make the ledger measurable) ---
+
+
+def test_scenario_6640_1_outcome_fields_present_not_absent():
+    """SCENARIO-ARC-WMTE-6640-1: a redirect no level-up has followed carries
+    `resolved_by_levelup: False` and `actions_to_levelup: None` — present,
+    not absent. No end-of-run finalize step exists to add them later."""
+
+    sup = TrajectorySupervisor(window=2)
+    sup.observe(_snap(goal_bias_installed=True))
+    assert sup.observe(_snap(goal_bias_installed=True)) is not None
+
+    (row,) = sup.receipt()["redirects"]
+    assert row["resolved_by_levelup"] is False
+    assert row["actions_to_levelup"] is None
+
+
+def test_scenario_6640_2_levelup_credits_open_redirects():
+    """SCENARIO-ARC-WMTE-6640-2: a level-up credits the redirect fired since
+    the last progress event, with the action distance to the level-up."""
+
+    sup = TrajectorySupervisor(window=2)
+    sup.observe(_snap(goal_bias_installed=True))
+    fired = sup.observe(_snap(goal_bias_installed=True))  # redirect at action 2
+    assert fired is not None
+    sup.observe(_snap(goal_bias_installed=True))  # action 3, still stagnant
+    sup.observe(_snap(level=1))  # action 4, level-up
+
+    (row,) = sup.receipt()["redirects"]
+    assert row["resolved_by_levelup"] is True
+    assert row["actions_to_levelup"] == 2  # actions 3 and 4
+
+
+def test_scenario_6640_2_earlier_resolution_stays_frozen():
+    """SCENARIO-ARC-WMTE-6640-2: a later level-up must not re-credit a
+    redirect an earlier level-up already resolved. The two gaps here differ
+    (2 vs 1), so a wrongful re-credit would change the first number."""
+
+    sup = TrajectorySupervisor(window=2)
+    sup.observe(_snap(goal_bias_installed=True))
+    assert sup.observe(_snap(goal_bias_installed=True)) is not None  # A at action 2
+    sup.observe(_snap(goal_bias_installed=True))  # action 3
+    sup.observe(_snap(level=1))  # action 4: A credited with 2
+    sup.observe(_snap(level=1, goal_bias_installed=True))  # action 5
+    assert sup.observe(_snap(level=1, goal_bias_installed=True)) is not None  # B at 6
+    sup.observe(_snap(level=2))  # action 7: B credited with 1
+
+    rows = sup.receipt()["redirects"]
+    assert [r["actions_to_levelup"] for r in rows] == [2, 1]
+    assert all(r["resolved_by_levelup"] for r in rows)
+
+
+def test_scenario_6640_3_arm_outcomes_aggregate_with_zeros():
+    """SCENARIO-ARC-WMTE-6640-3: every arm appears in `arm_outcomes`, zeros
+    included. One credited drop_goal_bias firing reads fired=1 helped=1;
+    the arms that never fired read 0/0 rather than being absent."""
+
+    sup = TrajectorySupervisor(window=2)
+    sup.observe(_snap(goal_bias_installed=True))
+    assert sup.observe(_snap(goal_bias_installed=True)) is not None
+    sup.observe(_snap(level=1))  # credit it
+
+    outcomes = sup.receipt()["arm_outcomes"]
+    assert outcomes[ARM_DROP_GOAL_BIAS] == {"fired": 1, "helped": 1}
+    assert outcomes[ARM_ALLOW_REINDUCTION] == {"fired": 0, "helped": 0}
+    assert outcomes[ARM_FORCE_DIVERSITY] == {"fired": 0, "helped": 0}
+
+
+def test_scenario_6640_3_unhelped_firing_counts_fired_only():
+    """SCENARIO-ARC-WMTE-6640-3: a firing never followed by progress counts
+    in `fired` and not in `helped`."""
+
+    sup = TrajectorySupervisor(window=2)
+    sup.observe(_snap(goal_bias_installed=True))
+    assert sup.observe(_snap(goal_bias_installed=True)) is not None
+
+    outcomes = sup.receipt()["arm_outcomes"]
+    assert outcomes[ARM_DROP_GOAL_BIAS] == {"fired": 1, "helped": 0}
+
+
+def test_scenario_6640_4_exhausted_stagnation_counted():
+    """SCENARIO-ARC-WMTE-6640-4: a window that fires no arm increments
+    `stagnations_unredirected`; a window that fires one does not."""
+
+    sup = TrajectorySupervisor(window=2)
+    busy = _snap(diversity_active=True)  # the only eligible-by-state arm is off
+    sup.observe(busy)
+    sup.observe(busy)  # window reached, nothing eligible
+    assert sup.receipt()["stagnations_unredirected"] == 1
+
+    fires = TrajectorySupervisor(window=2)
+    fires.observe(_snap(goal_bias_installed=True))
+    assert fires.observe(_snap(goal_bias_installed=True)) is not None
+    assert fires.receipt()["stagnations_unredirected"] == 0
+
+
+def test_scenario_6640_6_default_off_no_ledger_keys_leak(monkeypatch):
+    """SCENARIO-ARC-WMTE-6640-6: with the env unset the diagnostics stay
+    EXACTLY {"enabled": False} — the new ledger keys must not leak into the
+    off path, and no supervisor exists to carry them."""
+
+    monkeypatch.delenv("CARNOT_ARC_TRAJECTORY_SUPERVISOR", raising=False)
+    policy = E3AgentPolicy("lp85", proposer=object(), target_levels=2, value_head=None)
+
+    assert policy._trajectory_supervisor is None
+    assert policy.trajectory_supervisor_diagnostics() == {"enabled": False}

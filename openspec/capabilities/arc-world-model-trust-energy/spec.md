@@ -26636,3 +26636,97 @@ retired weights still refuses.
   `model_path_override`
 - THEN the guard returns with a stderr note and does not refuse; a
   whitespace-only override still refuses.
+
+### REQ-ARC-WMTE-6640: Redirect Outcomes Make The Supervisor Ledger Measurable
+
+Origin: the 2026-08-22 team-lead brief, after a supervisor A/B run came
+back unreadable. `TrajectorySupervisor.receipt()` existed, and
+`trajectory_supervisor_diagnostics()` exposed it, but nothing called the
+diagnostics — no harness row and no artifact carried the ledger, so the
+run could not even show whether the supervisor fired. Each receipt row
+also carried no outcome. Without an outcome there is no credit signal,
+so the arm table can never be refined: a useless arm keeps its slot in
+the fixed order forever. This REQ adds outcome attribution to the
+ledger and plumbs the ledger into the scored-path lever harness row.
+No LLM call is involved. The routed path gains no new per-action cost:
+outcome crediting runs only on a level-up, and the counters below only
+move on a window boundary. The default-OFF path stays byte-identical
+(REQ-ARC-WMTE-6600 rule 7 is unchanged).
+
+1. Every redirect row SHALL carry `resolved_by_levelup: bool` and
+   `actions_to_levelup: int | None` from the moment it is recorded. A
+   fresh redirect reads `false` / `None`. Run end needs no finalize
+   step: an unresolved redirect already reads `false`. An absent field
+   must never stand in for a measured `false` — absence is how the
+   2026-08-21 A/B became unreadable.
+2. On a level-up observation the supervisor SHALL credit every
+   still-unresolved redirect: `resolved_by_levelup` becomes `true`, and
+   `actions_to_levelup` becomes the count of actions from the redirect
+   to the observation that recorded the level-up. Redirects resolved by
+   an earlier level-up stay untouched. The unresolved set is exactly
+   the set fired since the last progress event, because the previous
+   level-up resolved everything before it.
+3. The receipt SHALL carry `arm_outcomes`: for EVERY arm in
+   `ARM_ORDER`, an entry `{"fired": int, "helped": int}`. `fired`
+   counts that arm's redirects; `helped` counts the subset with
+   `resolved_by_levelup: true`. An unfired arm appears with zeros
+   rather than being absent.
+4. The receipt SHALL carry `stagnations_unredirected: int` — the count
+   of stagnation windows that fired no arm. "All arms exhausted and
+   stagnation continued" is the written specification for a NEW arm
+   (a human/outer-loop act, per the generalization floor's activity 4),
+   and this counter is its evidence.
+5. `scripts/arc_scored_path_lever_harness.py:run_cell` SHALL emit a
+   `trajectory_supervisor` field on EVERY row, via one shared helper
+   (`supervisor_row_field`): the policy's
+   `trajectory_supervisor_diagnostics()` when the call succeeds
+   (`{"enabled": false}` when the supervisor is off, per
+   REQ-ARC-WMTE-6600), and an `{"error": ...}` marker when the call
+   raises. Both the success path and the crash path carry the field.
+   The field is never absent and never `None`.
+
+#### SCENARIO-ARC-WMTE-6640-1 (outcome fields present at record time)
+
+- GIVEN a redirect that no level-up has followed
+- THEN its row reads `resolved_by_levelup: false` and
+  `actions_to_levelup: None` — present, not absent.
+
+#### SCENARIO-ARC-WMTE-6640-2 (level-up credits open redirects only)
+
+- GIVEN a redirect, then a level-up N actions later
+- THEN the row reads `resolved_by_levelup: true` and
+  `actions_to_levelup: N`
+- AND a later level-up SHALL NOT re-credit it (its numbers are frozen).
+
+#### SCENARIO-ARC-WMTE-6640-3 (per-arm aggregate with zeros)
+
+- GIVEN one credited `drop_goal_bias` redirect and no other firing
+- THEN `arm_outcomes` reads `{"fired": 1, "helped": 1}` for that arm
+  AND `{"fired": 0, "helped": 0}` for each other arm in `ARM_ORDER`.
+
+#### SCENARIO-ARC-WMTE-6640-4 (exhausted stagnation is counted)
+
+- GIVEN a stagnation window that reaches its bound with no eligible arm
+- THEN `stagnations_unredirected` increments; a window that fires an
+  arm does not increment it.
+
+#### SCENARIO-ARC-WMTE-6640-5 (harness row plumbing, both paths)
+
+- GIVEN any `run_cell` invocation
+- THEN the row carries `trajectory_supervisor` on the success path AND
+  on the crash path, computed by `supervisor_row_field`
+- AND a policy without a supervisor yields `{"enabled": false}`, a
+  raising diagnostics call yields an `{"error": ...}` marker.
+
+#### SCENARIO-ARC-WMTE-6640-6 (default off unchanged)
+
+- GIVEN `CARNOT_ARC_TRAJECTORY_SUPERVISOR` unset
+- THEN the policy holds no supervisor and
+  `trajectory_supervisor_diagnostics()` returns exactly
+  `{"enabled": False}` — no ledger keys leak into the off path.
+
+## Implementation Status (REQ-ARC-WMTE-6640)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6640 | `python/carnot/agentic/arc_trajectory_supervisor.py` (outcome fields on redirect append, level-up crediting in `observe`, `arm_outcomes` + `stagnations_unredirected` in `receipt`); `scripts/arc_scored_path_lever_harness.py` (`supervisor_row_field` helper, `row["trajectory_supervisor"]` on success + crash paths). | `tests/python/test_arc_trajectory_supervisor.py` (SCENARIO-6640-1..4, 6640-6); `tests/python/test_arc_scored_path_lever_harness.py` (SCENARIO-6640-5: helper behaviour on stub policies + both-path source pins). |

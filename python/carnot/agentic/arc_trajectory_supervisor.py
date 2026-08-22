@@ -74,6 +74,10 @@ class TrajectorySupervisor:
         self._last_level: int | None = None
         self._arms_used: set[str] = set()
         self._redirects: list[dict] = []
+        # Stagnation windows that fired NO arm (REQ-ARC-WMTE-6640 rule 4).
+        # When this grows while no arm fires, the closed table has run out
+        # of ideas — the written trigger for a human to propose a new arm.
+        self._stagnations_unredirected = 0
 
     def observe(self, snapshot: TrajectorySnapshot) -> Redirect | None:
         """Feed one action's snapshot; get back a redirect or None."""
@@ -82,7 +86,15 @@ class TrajectorySupervisor:
         if self._last_level is None:
             self._last_level = int(snapshot.level)
         if int(snapshot.level) > self._last_level:
-            # Progress. Start the level fresh: arms become available again and
+            # Progress. Credit every redirect still waiting on an outcome
+            # (REQ-ARC-WMTE-6640 rule 2): the unresolved set is exactly the
+            # set fired since the last progress event. Runs only here, so
+            # the per-action cost of the routed path does not change.
+            for row in self._redirects:
+                if not row["resolved_by_levelup"]:
+                    row["resolved_by_levelup"] = True
+                    row["actions_to_levelup"] = self._actions_total - row["action_index"]
+            # Start the level fresh: arms become available again and
             # the stagnation count restarts.
             self._last_level = int(snapshot.level)
             self._actions_since_progress = 0
@@ -97,6 +109,7 @@ class TrajectorySupervisor:
         # induction), and re-checking every action would spam the same answer.
         self._actions_since_progress = 0
         if arm is None:
+            self._stagnations_unredirected += 1
             return None
         self._arms_used.add(arm)
         redirect = Redirect(
@@ -111,6 +124,11 @@ class TrajectorySupervisor:
                 "action_index": redirect.action_index,
                 "level": redirect.level,
                 "diagnosis": redirect.diagnosis,
+                # Outcome fields start present, not absent (REQ-ARC-WMTE-6640
+                # rule 1). A run that ends here reads an honest "false", and
+                # no end-of-run finalize step is needed.
+                "resolved_by_levelup": False,
+                "actions_to_levelup": None,
             }
         )
         return redirect
@@ -144,12 +162,24 @@ class TrajectorySupervisor:
         return None, ""
 
     def receipt(self) -> dict:
-        """The evidence a run artifact carries (REQ-ARC-WMTE-6600 rule 6)."""
+        """The evidence a run artifact carries (REQ-ARC-WMTE-6600 rule 6;
+        outcome attribution per REQ-ARC-WMTE-6640)."""
 
+        # Per-arm fired/helped counts (REQ-ARC-WMTE-6640 rule 3). Every arm
+        # appears, zeros included: an unfired arm must be visibly zero, not
+        # absent — absence is what made the 2026-08-21 A/B unreadable.
+        arm_outcomes = {arm: {"fired": 0, "helped": 0} for arm in ARM_ORDER}
+        for row in self._redirects:
+            outcome = arm_outcomes[row["arm"]]
+            outcome["fired"] += 1
+            if row["resolved_by_levelup"]:
+                outcome["helped"] += 1
         return {
             "enabled": True,
             "window": self.window,
             "actions_observed": self._actions_total,
             "arms_used": sorted(self._arms_used),
             "redirects": list(self._redirects),
+            "arm_outcomes": arm_outcomes,
+            "stagnations_unredirected": self._stagnations_unredirected,
         }
