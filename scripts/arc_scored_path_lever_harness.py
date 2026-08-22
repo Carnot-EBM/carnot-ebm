@@ -411,6 +411,13 @@ def build_proposer(port: int):
     is also what the real eval effectively gets: each E3AgentPolicy would lazily build its own
     wrapper object, but `_ensure_server()` reuses the healthy server on the port, so the ~14s model
     load is paid once per process either way.
+
+    CORRECTION 2026-08-21 (REQ-ARC-WMTE-6620): the "n_predict 4096, timeout 600" claim above is
+    historical. Those literals were 9B-era values that guaranteed 0/N inductions on the pinned
+    Qwen3.8-27B (median induction 62,490 generated tokens). max_tokens / timeout are now OMITTED,
+    exactly as at both live construction sites, so this harness inherits the ONE dataclass
+    default -- the same env vars, then the generator pin's own values. That RESTORES this
+    docstring's own "constructed exactly as _proposer() does" contract, which had drifted.
     """
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 
@@ -429,8 +436,6 @@ def build_proposer(port: int):
         # default, and one place to change it.
         kv_quant="q8_0",
         no_think_prefix="/no_think\n",
-        max_tokens=int(os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", "4096")),
-        timeout=int(os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT", "600")),
         port=port,
         n_gpu_layers=int(os.environ.get("CARNOT_ARC_NGL", "999")),
     )
@@ -728,6 +733,14 @@ def run_cell(
         collections.Counter(a.get("exception") for a in atts if a.get("exception"))
     )
     row["induction_tracebacks"] = [a["traceback"] for a in atts if a.get("traceback")][:3]
+    # Same carry-the-message rule for CLEAN proposer failures (REQ-ARC-WMTE-6610). A
+    # `proposer_failed` tally without the induce note is how the 2026-08-21 zero-world-model
+    # A/B burned five full game budgets before anyone learned every response had hit
+    # `[HIT n_predict=4096 OUTPUT LIMIT]` -- the note said so on every attempt and no row
+    # carried it.
+    row["induction_proposer_notes"] = [a["proposer_note"] for a in atts if a.get("proposer_note")][
+        :3
+    ]
     # A cell whose every induction attempt raised is not a measurement of the LLM tier -- it is a
     # record of a broken one. Mark it, so it cannot be averaged in as an ordinary low score.
     row["induction_all_attempts_raised"] = bool(atts) and all(

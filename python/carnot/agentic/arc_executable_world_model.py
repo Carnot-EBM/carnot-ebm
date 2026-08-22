@@ -3831,6 +3831,17 @@ ARC_LIVE_GENERATOR_NO_THINK_PREFIX = ""  # /no_think is a Qwen3 token; inert on 
 ARC_LIVE_GENERATOR_THINK_DEFAULT = "1"
 ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT = "1"
 
+# INDUCE BUDGET AND TIMEOUT MOVE WITH THE PIN (2026-08-21, REQ-ARC-WMTE-6620).
+# Qwen3.8-27B thinking inductions measure 36,406-83,444 generated tokens (median 62,490;
+# one censored draw at >=100,988). The old agent-side default of 4096 was validated for the
+# retired 9B (REQ-ARC-FCP-5699-32) and never moved through two generator swaps, so every
+# local run failed 100% of inductions while the scored kernel, which pins these same two
+# values via env (scripts/kaggle/submission_kernel/main.py), kept working. These constants
+# are the kernel's pins, named next to the generator pin so the next swap moves them too.
+# `test_arc_induction_budget_defaults.py` asserts the kernel literals stay equal to these.
+ARC_LIVE_GENERATOR_INDUCE_MAX_TOKENS_DEFAULT = 131072
+ARC_LIVE_GENERATOR_INDUCE_TIMEOUT_FLOOR_S = 2400
+
 
 def induce_think_on() -> bool:
     """REQ-ARC-WMTE-6198 (lever #6) arm selector. CARNOT_ARC_INDUCE_THINK=1/0 overrides;
@@ -4321,7 +4332,47 @@ _INDUCE_WORST_CASE_PROMPT_TOKENS = 22352
 # Mirrors LocalGGUFProposer.max_tokens and the CARNOT_ARC_INDUCE_MAX_TOKENS default read at both
 # construction sites in arc_competition_agent.py. Named here so the context-pool derivation and
 # the completion budget cannot drift apart -- see _default_induce_n_ctx().
+# CORRECTION 2026-08-21 (REQ-ARC-WMTE-6620): the mirror claim above is now historical. This
+# constant is ONLY the pool-sizing per-slot completion reserve read by _default_induce_n_ctx().
+# The per-request budget default is ARC_LIVE_GENERATOR_INDUCE_MAX_TOKENS_DEFAULT (131072, the
+# scored kernel's own pin), resolved by _induce_max_tokens_default() below. The two split on
+# purpose: a 24 GB card can host the 106,496-cell pool this reserve derives, but not the
+# 614,400-cell pool the full budget would derive at 4 slots. A single local request instead
+# uses the whole unified pool, clamped at request time -- see _pool_clamped_n_predict().
+# The env var still raises BOTH together, exactly as before.
 _INDUCE_DEFAULT_MAX_TOKENS = 4096
+
+
+def _induce_max_tokens_default() -> int:
+    """Per-request completion budget: CARNOT_ARC_INDUCE_MAX_TOKENS, else the generator pin's
+    default. One resolver for every construction site (both in arc_competition_agent.py, the
+    lever harness, and the dataclass default), so the budget cannot silently stay behind at
+    the next generator swap -- the drift that produced the 2026-08-21 zero-world-model runs.
+    Malformed env values fall back to the pin default rather than crash a live episode."""
+    raw = os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS")
+    try:
+        return int(raw) if raw else ARC_LIVE_GENERATOR_INDUCE_MAX_TOKENS_DEFAULT
+    except (TypeError, ValueError):
+        return ARC_LIVE_GENERATOR_INDUCE_MAX_TOKENS_DEFAULT
+
+
+def _pool_clamped_n_predict(max_tokens: int, observed_n_ctx: Optional[int]) -> int:
+    """The n_predict a request may actually ask for against the RUNNING server's pool.
+
+    llama-server admission counts prompt + n_predict against the shared pool (see
+    _default_induce_n_ctx: n_ctx >= K * (prompt + max_tokens)), so a 131,072-token budget
+    sent at a local 106,496-cell pool is refused outright (HTTP 500), not merely truncated.
+    Clamping to `pool - worst_case_prompt` lets a single stream use the pool's real room:
+    84,144 tokens at the local default pool, which covers the measured Qwen3.8 median
+    (62,490) and the max completed draw (83,444). No-op when the pool is large (scored
+    path: 614,400 cells) or unobservable (vLLM serves no /props -> None)."""
+    if isinstance(observed_n_ctx, int) and observed_n_ctx > 0:
+        room = observed_n_ctx - _INDUCE_WORST_CASE_PROMPT_TOKENS
+        if 0 < room < max_tokens:
+            return room
+    return int(max_tokens)
+
+
 # Yield-if-the-conductor-needs-it margin. Must cover measurement scatter (the same 81920/mtp-on
 # launch measured 13452 and 13518 MiB per-PID on two occasions), the driver/context overhead
 # nvidia-smi attributes outside the fit, and enough slack that we do not admit a card we will then
@@ -5728,6 +5779,13 @@ def _default_induce_timeout_s() -> int:
     the historical 600 s so this can never SHORTEN an existing deployment's budget, and the env
     override is untouched.
 
+    FLOOR RAISED 600 -> ARC_LIVE_GENERATOR_INDUCE_TIMEOUT_FLOOR_S (2400) on 2026-08-21
+    (REQ-ARC-WMTE-6620). Same drift as max_tokens: 600 was calibrated for the 9B; Qwen3.8's
+    median induction is 62,490 tokens, ~1,730 s at the local 3090's measured 36 tok/s, so the
+    old floor cut off the median draw less than halfway through. 2400 is the scored kernel's
+    own pin for this generator and covers the pool-clamped worst case (84,144 tokens, ~2,340 s).
+    Raising a floor can only LENGTHEN a budget, so the no-shortening contract above holds.
+
     KAGGLE IS UNAFFECTED: the scored kernel runs with zero FFN offload (a 96 GB card needs none),
     the slowdown factor is 1.0, and this returns the floor -- the same 600 s it always used.
 
@@ -5758,7 +5816,11 @@ def _default_induce_timeout_s() -> int:
                 rate = lo_r + frac * (hi_r - lo_r)
                 break
     slowdown = _FFN_DECODE_TOK_S_BY_LAYERS[0][1] / max(rate, 1e-6)
-    return int(max(600.0, _INDUCE_OBSERVED_MAX_WALL_S * slowdown))
+    return int(
+        max(
+            float(ARC_LIVE_GENERATOR_INDUCE_TIMEOUT_FLOOR_S), _INDUCE_OBSERVED_MAX_WALL_S * slowdown
+        )
+    )
 
 
 def _ffn_cpu_override_regex(n_cpu_layers: int) -> str:
@@ -5817,8 +5879,12 @@ class LocalGGUFProposer:
     # SHARED context pool (llama-server -c). 81920 by measurement, env-overridable --
     # see _default_induce_n_ctx() above for the full derivation and the rejected alternatives.
     n_ctx: int = field(default_factory=_default_induce_n_ctx)
-    max_tokens: int = 4096  # a full world-model engine needs >2048 (it truncated mid-code)
-    timeout: int = 300
+    # WAS the literals 4096 / 300 -- 9B-era values that survived two generator swaps and made
+    # every env-less local run fail 100% of Qwen3.8 inductions (REQ-ARC-WMTE-6620, 2026-08-21).
+    # Both resolvers read the env override first, then the generator pin's defaults, exactly
+    # like `n_ctx` above -- construction sites omit these arguments so they cannot drift.
+    max_tokens: int = field(default_factory=_induce_max_tokens_default)
+    timeout: int = field(default_factory=_default_induce_timeout_s)
     port: int = 8919
     offline_legal: bool = True
     # Live-submission deploy config (all OPT-IN; defaults preserve legacy behavior). Validated 2026-06-19:
@@ -5952,6 +6018,10 @@ class LocalGGUFProposer:
     # nothing branches on them, so recording them changes no behaviour on any path.
     last_final_content: str = ""
     last_reasoning_content: str = ""
+    # The n_predict the most recent generate() call actually SENT after the pool clamp
+    # (REQ-ARC-WMTE-6620); -1 until a call runs. _limit_diagnostic reads this so its message
+    # names the budget the server was really asked for, not the configured cap.
+    last_requested_n_predict: int = -1
     # LIVENESS WITNESS (2026-07-27, exp5866 finding 4). The scored ARC path had NO channel
     # at all for "did the generator actually answer": generate()/complete_text() return
     # (False, msg) on a dead or refusing server, every caller treats that as "no induction
@@ -6221,14 +6291,20 @@ class LocalGGUFProposer:
             change, from a healthy-but-terse model.
         """
         got = self.last_generated_tokens
-        if isinstance(got, int) and 0 <= got < self.max_tokens - 8:
+        # Compare against the budget the request actually CARRIED (pool-clamped, REQ-ARC-WMTE-
+        # 6620), not the configured cap -- otherwise every clamped request that ran its full
+        # clamped budget would misreport as pool truncation. -1 (no call yet) falls back.
+        asked = (
+            self.last_requested_n_predict if self.last_requested_n_predict > 0 else self.max_tokens
+        )
+        if isinstance(got, int) and 0 <= got < asked - 8:
             return (
                 f" [TRUNCATED BY SHARED CONTEXT POOL: generated only {got} of the "
-                f"{self.max_tokens}-token budget in an n_ctx={self.n_ctx} pool -- the prompt "
+                f"{asked}-token budget in an n_ctx={self.n_ctx} pool -- the prompt "
                 f"consumed the rest. RAISE -c / CARNOT_ARC_INDUCE_N_CTX; raising max_tokens "
                 f"would make this worse]"
             )
-        return f" [HIT n_predict={self.max_tokens} OUTPUT LIMIT before completing]"
+        return f" [HIT n_predict={asked} OUTPUT LIMIT before completing]"
 
     def _chat_complete_request(
         self,
@@ -7127,7 +7203,13 @@ class LocalGGUFProposer:
                 transitions=list(transitions) if transitions else None,
                 stop_type=self.last_stop_type,
                 required=("engine",),
-                budget=self.max_tokens,
+                # The budget the request actually carried (pool-clamped), so truncation-at-
+                # budget detection judges against what was asked, not the configured cap.
+                budget=(
+                    self.last_requested_n_predict
+                    if self.last_requested_n_predict > 0
+                    else self.max_tokens
+                ),
             )
             # OPT-IN INERTNESS REJECTION (2026-08-01, CARNOT_ARC_INDUCE_REJECT_INERT, DEFAULT
             # OFF). Deliberately OUTSIDE `validate_engine_code` rather than folded into it, for
@@ -7382,6 +7464,13 @@ class LocalGGUFProposer:
         # than consuming one. See that resolver for the incident.
         _own_attempts = _defect_gate_owns_attempts()
         _budget = int(tries)
+        # POOL-CLAMPED COMPLETION BUDGET (REQ-ARC-WMTE-6620). llama-server admission counts
+        # prompt + n_predict against the shared pool, so asking for more than the RUNNING
+        # server's pool has room for is refused outright, not truncated. Read the pool once
+        # per generate() call (one /props round-trip on a server _ensure_server just proved
+        # up); clamp only when the pool is real and smaller than the configured budget.
+        _n_predict = _pool_clamped_n_predict(int(self.max_tokens), self.observed_n_ctx())
+        self.last_requested_n_predict = int(_n_predict)
         attempt = -1
         while True:
             attempt += 1
@@ -7389,7 +7478,7 @@ class LocalGGUFProposer:
                 break
             _payload = {
                 "prompt": prompt + _reask_suffix,
-                "n_predict": self.max_tokens,
+                "n_predict": _n_predict,
                 "temperature": 0.2 + 0.1 * attempt,
                 "cache_prompt": True,
             }
@@ -7463,7 +7552,10 @@ class LocalGGUFProposer:
                     # request's own no-op default.
                     _response, text = self._chat_complete_request(
                         _payload["prompt"],
-                        max_tokens=self.max_tokens,
+                        # The SAME pool-clamped budget the raw payload carries -- passing
+                        # self.max_tokens here would re-open the admission refusal on the
+                        # exact branch (think mode) the live path takes.
+                        max_tokens=_payload["n_predict"],
                         temperature=_payload["temperature"],
                         stop=_stop_seq,
                         attempt=attempt,
@@ -7640,9 +7732,16 @@ class LocalGGUFProposer:
             self._note_server_failure(msg)
             return False, msg
         full_prompt = (self.no_think_prefix + prompt) if self.no_think_prefix else prompt
+        # Same pool clamp as generate() (REQ-ARC-WMTE-6620): with the budget default now the
+        # generator pin's 131,072, an unclamped fallback here would be refused at admission
+        # by any local pool. Callers passing an explicit small max_tokens are unaffected.
+        _n_predict = _pool_clamped_n_predict(
+            int(max_tokens or self.max_tokens), self.observed_n_ctx()
+        )
+        self.last_requested_n_predict = int(_n_predict)
         payload = {
             "prompt": full_prompt,
-            "n_predict": int(max_tokens or self.max_tokens),
+            "n_predict": _n_predict,
             "temperature": float(temperature),
             "cache_prompt": True,
         }
@@ -7661,7 +7760,7 @@ class LocalGGUFProposer:
                 # tests can see the <think> trace (REQ-ARC-WMTE-5725).
                 _response, _ = self._chat_complete_request(
                     full_prompt,
-                    max_tokens=int(max_tokens or self.max_tokens),
+                    max_tokens=_n_predict,
                     temperature=temperature,
                     stop=stop,
                 )

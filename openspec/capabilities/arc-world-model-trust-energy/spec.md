@@ -26365,3 +26365,149 @@ level.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6600 | `python/carnot/agentic/arc_trajectory_supervisor.py` (`TrajectorySupervisor.observe` window counting + level-reset, `_first_eligible_arm` fixed-order decision table, `receipt`); wired in `python/carnot/agentic/arc_competition_agent.py` (`_make_trajectory_supervisor` env gate, `_maybe_supervise_trajectory` snapshot + observe call in `_next_move_routed`, `_apply_trajectory_redirect` seams, `trajectory_supervisor_diagnostics`). | `tests/python/test_arc_trajectory_supervisor.py` (default-off pin; window + level-reset; arm order incl. one-per-episode and once-per-level; reinduction evidence floor + attempt cap; seam application on a real policy + explorer; receipts; level-up arm reset; routed-path call-site wiring). |
+
+### REQ-ARC-WMTE-6610: Distinguishable Single-Shot Induction Skip Record
+
+Origin: the 2026-08-21 supervisor A/B baseline (five public games, budget
+2000, Qwen3.8-27B). Every game recorded
+`induction_skipped: proposer_failed_or_missing_root` and zero world models.
+The label conflates two causes: the proposer failed (`not ok`), or the plan
+root grid was absent (`_plan_start_grid is None`). The artifact could not
+tell them apart. The induce note that named the real cause
+(`[HIT n_predict=4096 OUTPUT LIMIT before completing]`) was discarded by
+`ok, _ = ...` at the call site.
+
+The single-shot induce site in `E3AgentPolicy._induce_and_plan` SHALL:
+
+1. Record `skipped: "proposer_failed"` when `induce()` returns not-ok and a
+   plan root grid exists.
+2. Record `skipped: "missing_plan_start_grid"` when `induce()` returns ok
+   and the plan root grid is None.
+3. Record `skipped: "proposer_failed_and_missing_plan_start_grid"` when
+   both hold.
+4. Record the proposer's failure note on the attempt as `proposer_note`
+   (truncated to 300 chars) whenever `induce()` returns not-ok.
+
+The lever harness (`scripts/arc_scored_path_lever_harness.py`) SHALL
+surface the notes per row as `induction_proposer_notes` (up to 3), the same
+carry-the-message pattern as `induction_tracebacks`.
+
+#### SCENARIO-ARC-WMTE-6610-1: proposer failure is recorded with its note
+
+- GIVEN a policy whose proposer's `induce()` returns
+  `(False, "missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT...]")`
+- AND a non-None root grid
+- WHEN the single-shot induce site runs
+- THEN the attempt records `skipped == "proposer_failed"`
+- AND `proposer_note` contains `"HIT n_predict"`.
+
+#### SCENARIO-ARC-WMTE-6610-2: missing root grid is distinguishable
+
+- GIVEN a proposer whose `induce()` returns `(True, "ok")`
+- AND a policy whose plan root grid resolves to None
+- WHEN the single-shot induce site runs
+- THEN the attempt records `skipped == "missing_plan_start_grid"`
+- AND no `proposer_note` is recorded.
+
+### REQ-ARC-WMTE-6620: Induce Budget And Timeout Defaults Move With The Generator Pin
+
+Origin: the same 2026-08-21 zero-world-model incident. The root cause: the
+agent-side defaults (`max_tokens=4096`, timeout floor 600 s) were validated
+for the retired Qwen3.5-9B (REQ-ARC-FCP-5699-32) and never moved through
+two generator swaps. Qwen3.8-27B thinking inductions measure 36,406-83,444
+generated tokens (median 62,490; one censored draw at >=100,988). At a
+4096-token cap the probability an induction completes is zero. The scored
+kernel overrides via env (`CARNOT_ARC_INDUCE_MAX_TOKENS=131072`,
+`CARNOT_ARC_INDUCE_TIMEOUT=2400`, main.py), so Kaggle worked while every
+local run silently produced zero world models. This is the exact drift
+REQ-ARC-FCP-5699-35 records having happened once before for max_tokens.
+
+The module SHALL:
+
+1. Define `ARC_LIVE_GENERATOR_INDUCE_MAX_TOKENS_DEFAULT` and
+   `ARC_LIVE_GENERATOR_INDUCE_TIMEOUT_FLOOR_S` next to the generator pin,
+   equal to the scored kernel's env pins (131072 / 2400).
+2. Resolve `LocalGGUFProposer.max_tokens` by default from
+   `CARNOT_ARC_INDUCE_MAX_TOKENS`, else the pin constant. Both live
+   construction sites in `arc_competition_agent.py` and the lever harness
+   SHALL inherit this default rather than repeating a literal.
+3. Raise `_default_induce_timeout_s()`'s floor from 600 to the pin
+   constant. The env override is untouched.
+4. Clamp the per-request completion budget to the RUNNING server's
+   observed context pool: `n_predict = min(max_tokens, observed_n_ctx -
+   _INDUCE_WORST_CASE_PROMPT_TOKENS)` when `observed_n_ctx` is readable.
+   llama-server admission counts `prompt + n_predict` against the pool, so
+   an unclamped 131072 request against a local 106,496-cell pool is
+   rejected outright (HTTP 500). The clamp is a no-op when the pool is
+   large (scored path) or unobservable (vLLM).
+5. `_INDUCE_DEFAULT_MAX_TOKENS` (the pool-sizing per-slot reserve read by
+   `_default_induce_n_ctx`) KEEPS its value, so the derived local pool,
+   the VRAM guard arithmetic, and the scored pool derivation are all
+   byte-identical to before.
+
+Scored-path statement: with the kernel env pins present (they are set via
+`setdefault`), scored behavior is unchanged. The defaults now AGREE with
+the kernel pins instead of silently reverting to 9B-era values when the
+env is absent.
+
+#### SCENARIO-ARC-WMTE-6620-1: defaults follow the pin, env still wins
+
+- GIVEN `CARNOT_ARC_INDUCE_MAX_TOKENS` is unset
+- WHEN a `LocalGGUFProposer` is constructed with no explicit max_tokens
+- THEN `max_tokens == ARC_LIVE_GENERATOR_INDUCE_MAX_TOKENS_DEFAULT == 131072`
+- AND with the env var set to 8192, `max_tokens == 8192`.
+
+#### SCENARIO-ARC-WMTE-6620-2: kernel parity is pinned
+
+- GIVEN the scored kernel source (`scripts/kaggle/submission_kernel/main.py`)
+- THEN its `CARNOT_ARC_INDUCE_MAX_TOKENS` / `CARNOT_ARC_INDUCE_TIMEOUT`
+  setdefault literals equal the two pin constants.
+
+#### SCENARIO-ARC-WMTE-6620-3: pool clamp
+
+- GIVEN `max_tokens=131072` and an observed pool of 106,496 cells
+- THEN the effective `n_predict` is `106496 - 22352 = 84144`
+- AND with an observed pool of 614,400 or an unobservable pool, the
+  effective `n_predict` stays 131072.
+
+### REQ-ARC-WMTE-6630: Model Label Derives From The Weights Actually Loaded
+
+Origin: the same A/B rows recorded
+`induction_model_specs: "Qwen3.5-9B-MTP GGUF (.../Qwen3.8-27B-Q4_K_M.gguf)"`
+-- the label from the harness's frozen `repo_substr` pin, the path from the
+`CARNOT_ARC_GGUF_PATH` override. A reader concludes the run used a 9B. Same
+trap class as `heldout_accuracy`: a field whose name contradicts its
+content.
+
+`_model_specs()` in `arc_llm_reinduction.py` SHALL name the model by, in
+order of preference:
+
+1. The RUNNING server's own reported weights file
+   (`proposer.observed_model_path()`), when readable -- the only channel
+   that reports what actually loaded, and the only one that catches a
+   stale server on the port.
+2. The configured `model_path`'s file name.
+3. The `repo_substr` / class name (unchanged fallback when no path is
+   known).
+
+An explicit `proposer.model_specs` attribute keeps absolute precedence
+(unchanged).
+
+#### SCENARIO-ARC-WMTE-6630-1: label follows the loaded weights
+
+- GIVEN a proposer configured `repo_substr="Qwen3.5-9B-MTP"` with
+  `model_path=".../Qwen3.8-27B-Q4_K_M.gguf"` and no readable server
+- THEN `_model_specs()` names `Qwen3.8-27B-Q4_K_M`, not the repo pin.
+
+#### SCENARIO-ARC-WMTE-6630-2: the running server wins over configuration
+
+- GIVEN `observed_model_path()` returns `/srv/other-model.gguf`
+- THEN `_model_specs()` names `other-model` and carries that path.
+
+## Implementation Status (REQ-ARC-WMTE-6610 / 6620 / 6630)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6610 | `python/carnot/agentic/arc_competition_agent.py` (single-shot induce site: split skip labels + `proposer_note`); `scripts/arc_scored_path_lever_harness.py` (`induction_proposer_notes` row field). | `tests/python/test_arc_induction_skip_record.py`; updated pins in `tests/python/test_experiment_4544_llm_proposer_reinduction.py`. |
+| REQ-ARC-WMTE-6620 | `python/carnot/agentic/arc_executable_world_model.py` (pin constants, `_induce_max_tokens_default`, timeout floor, `_pool_clamped_n_predict` + wiring in `generate()`); both construction sites in `arc_competition_agent.py` and `build_proposer` in the lever harness inherit the dataclass defaults. | `tests/python/test_arc_induction_budget_defaults.py` (env/default resolution, timeout floor, kernel-parity pin, clamp cases). |
+| REQ-ARC-WMTE-6630 | `python/carnot/agentic/arc_llm_reinduction.py` (`_model_specs` observed-first naming). | `tests/python/test_arc_induction_budget_defaults.py` (label cases); updated `_model_specs` pin in `test_experiment_4544_llm_proposer_reinduction.py`. |

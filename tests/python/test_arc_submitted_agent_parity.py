@@ -23,6 +23,7 @@ from carnot.agentic.arc_competition_agent import (
     StepwiseExplorer,
     make_carnot_agent,
 )
+from carnot.agentic import arc_executable_world_model as wm
 from carnot.agentic.arc_executable_world_model import (
     ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT,
     LocalGGUFProposer,
@@ -450,10 +451,12 @@ def test_req_arc_fcp_5699_11_load_sge_candidate_router_reuses_frozen_generator_c
     assert completer.mtp is False
     assert completer.kv_quant == "q8_0"
     assert completer.no_think_prefix == ""  # /no_think is a Qwen3 token
-    assert completer.max_tokens == 4096  # REQ-ARC-FCP-5699-35: graduated default, was 2560
-    assert (
-        completer.timeout == 600
-    )  # REQ-ARC-FCP-5699-35: graduated default, was the 300 field default
+    # REQ-ARC-WMTE-6620 (2026-08-21): the defaults moved WITH THE PIN. 4096/600 were
+    # REQ-ARC-FCP-5699-32 values validated for the retired 9B; Qwen3.8-27B's median induction
+    # is 62,490 generated tokens, so 4096 guaranteed 0/N world models on every env-less run.
+    # These now equal the scored kernel's own env pins (131072 / 2400).
+    assert completer.max_tokens == wm.ARC_LIVE_GENERATOR_INDUCE_MAX_TOKENS_DEFAULT
+    assert completer.timeout == wm.ARC_LIVE_GENERATOR_INDUCE_TIMEOUT_FLOOR_S
     assert completer.port == 8919  # the DEFAULT port, same as _proposer()'s own default
 
 
@@ -474,6 +477,15 @@ def test_req_arc_fcp_5699_35_proposer_default_max_tokens_and_timeout_graduated(m
     600 remains the correct assertion for the SCORED path: Kaggle sets `CARNOT_LLAMA_SERVER` and
     no CUDA opt-in, so the offload is 0, the slowdown factor is 1.0, and the derived timeout
     returns its floor -- the same 600 the literal used to hardcode.
+
+    RE-PINNED 2026-08-21 (REQ-ARC-WMTE-6620). The 4096/600 pair above is the 9B-era budget;
+    against the pinned Qwen3.8-27B (median induction 62,490 generated tokens) it guaranteed
+    0/N world models on every env-less run -- the 2026-08-21 A/B measured exactly that,
+    five games, zero world models. The lazy default now resolves to the GENERATOR PIN's
+    constants (131072 / 2400), which are byte-equal to the scored kernel's own env pins, so
+    the scored path is unchanged and the local path stops silently failing. The paragraph
+    above is kept per never-prune; its "600 remains correct for the SCORED path" claim is
+    superseded -- the kernel pins 2400 explicitly and has since the 2026-08-16 pin move.
     """
     monkeypatch.delenv("CARNOT_ARC_INDUCE_MAX_TOKENS", raising=False)
     monkeypatch.delenv("CARNOT_ARC_INDUCE_TIMEOUT", raising=False)
@@ -482,8 +494,8 @@ def test_req_arc_fcp_5699_35_proposer_default_max_tokens_and_timeout_graduated(m
     pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _frame: 0.0)
     proposer = pol._proposer()
     assert isinstance(proposer, LocalGGUFProposer)
-    assert proposer.max_tokens == 4096
-    assert proposer.timeout == 600
+    assert proposer.max_tokens == wm.ARC_LIVE_GENERATOR_INDUCE_MAX_TOKENS_DEFAULT
+    assert proposer.timeout == wm.ARC_LIVE_GENERATOR_INDUCE_TIMEOUT_FLOOR_S
 
 
 def test_the_derived_induce_timeout_grows_with_the_ffn_offload_that_slows_generation(
@@ -504,14 +516,21 @@ def test_the_derived_induce_timeout_grows_with_the_ffn_offload_that_slows_genera
     monkeypatch.delenv("CARNOT_ARC_INDUCE_TIMEOUT", raising=False)
     monkeypatch.delenv("CARNOT_ARC_GENERATOR_CUDA_GPU", raising=False)
 
+    # FLOOR RAISED 600 -> 2400 (REQ-ARC-WMTE-6620, 2026-08-21): the derivation's anchor
+    # (_INDUCE_OBSERVED_MAX_WALL_S = 572, a gemma-era worst case) is stale for the Qwen3.8
+    # pin, whose pool-clamped worst case runs ~2,340 s at the local 36 tok/s. The floor is
+    # now the generator pin's constant -- the scored kernel's own 2400 -- so at 0..24
+    # offloaded layers the floor governs (572 * slowdown stays under 2400 there), and the
+    # offload scaling re-emerges past it (40 layers: 572 * 7.35 ~= 4202).
     monkeypatch.setenv("CARNOT_ARC_FFN_CPU_LAYERS", "0")
-    assert wm._default_induce_timeout_s() == 600, "the scored/Kaggle path must be unchanged"
+    assert wm._default_induce_timeout_s() == wm.ARC_LIVE_GENERATOR_INDUCE_TIMEOUT_FLOOR_S
 
     monkeypatch.setenv("CARNOT_ARC_FFN_CPU_LAYERS", "12")
     at12 = wm._default_induce_timeout_s()
-    monkeypatch.setenv("CARNOT_ARC_FFN_CPU_LAYERS", "24")
-    at24 = wm._default_induce_timeout_s()
-    assert 600 < at12 < at24, (at12, at24)
+    monkeypatch.setenv("CARNOT_ARC_FFN_CPU_LAYERS", "40")
+    at40 = wm._default_induce_timeout_s()
+    assert at12 == wm.ARC_LIVE_GENERATOR_INDUCE_TIMEOUT_FLOOR_S  # floor governs at 12 layers
+    assert at40 > wm.ARC_LIVE_GENERATOR_INDUCE_TIMEOUT_FLOOR_S, at40  # scaling survives past it
     # It must clear the observed worst case with room, not merely exceed the old floor.
     assert at12 > wm._INDUCE_OBSERVED_MAX_WALL_S
 
