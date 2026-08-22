@@ -8172,3 +8172,76 @@ as for the bare canonical value.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-CONDUCTOR-PRECOND-1 | Implemented (`scripts/adversarial_verify.py`: `check_preconditions_declared` + `_PRECONDITIONS_REQUIRED_SUBSTRATES`, wired into `verify_artifact` after `check_methodology_present`) | Implemented (`tests/python/test_preconditions_undeclared_warn.py`; mutation: substrate gate inverted -> RED) |
+
+### REQ-OPS-CLAIM-REFUTATION-6650: Experiment Claims Are Reviewed Adversarially For Refutation
+
+**Origin:** 2026-08-22 operator-directed gap closure. `adversarial_verify.py` is
+mechanical and catches fabrication. The five milestone-close AI audits each cover
+a narrow surface (verifier code, QA guards, landing page, artifact conventions,
+ARC provenance). Nothing reviewed an ordinary experiment's CLAIM. Four real
+misses motivated this: exp6478 passed CLEAN while its result was a tautology of
+the corpus construction; `heldout_accuracy` measured in-sample fit but was cited
+as generalization; a wrong-key `.get()` turned a missing field into a "zero
+levels" claim; rows marked `llm_on_row_valid: false` sat next to valid rows and
+were averaged in.
+
+`scripts/experiment_claim_audit.py` SHALL review recent experiment artifacts with
+a QUESTION-shaped hostile prompt. The prompt SHALL ask what observation would
+REFUTE the headline claim, and whether the artifact shows that was checked. It
+SHALL NOT be a pattern list. Per-artifact verdicts SHALL be one of
+`CLAIM_SUPPORTED | CLAIM_OVERSTATED | CLAIM_REFUTED_BY_OWN_DATA | NO_CLAIM |
+CANNOT_DETERMINE`, each with a recommendation.
+
+The audit SHALL:
+
+1. Apply the audit-integrity guard. A flagged verdict whose `## EVIDENCE`
+   quotes a token absent from the audited artifact SHALL be downgraded to
+   `CANNOT_DETERMINE`. Sections that discuss ABSENT things (`## WHAT WOULD
+   REFUTE IT`, `## WAS THAT CHECKED`) SHALL be exempt from the sweep.
+2. Delegate degenerate-corpus detection. It SHALL run
+   `adversarial_verify.py`'s FALSE_NEGATIVE_RISK and circular-moat checks as a
+   mechanical pre-pass and feed those flags to the reviewer as context. It
+   SHALL NOT duplicate those detectors.
+3. Honor a wall-clock budget (`--budget-seconds`). When the budget runs out it
+   SHALL stop reviewing further artifacts and SHALL still write a PARTIAL
+   report naming the completed count. The report file is the receipt
+   (REQ-CONDUCTOR-RECEIPT-1); it SHALL be written on every run that starts.
+4. Skip artifacts already stamped `flagged_adversarial: true` without a
+   reviewer call. The fabrication gate already quarantines them.
+5. Never edit an artifact, never block a commit, and never fail the conductor.
+   It surfaces; the operator decides.
+
+#### SCENARIO-OPS-CLAIM-REFUTATION-6650-INVENTED-EVIDENCE-IS-VOIDED
+
+Given a reviewer report with verdict `CLAIM_OVERSTATED` whose `## EVIDENCE`
+section quotes a field name that does not appear anywhere in the audited
+artifact, the recorded verdict SHALL be `CANNOT_DETERMINE` and the report SHALL
+say the integrity guard downgraded it.
+
+#### SCENARIO-OPS-CLAIM-REFUTATION-6650-ABSENCE-TALK-IS-NOT-VOIDED
+
+Given a reviewer report whose `## WHAT WOULD REFUTE IT` section names a check
+the artifact does not contain, and whose `## EVIDENCE` section quotes only
+strings present in the artifact, the verdict SHALL stand.
+
+#### SCENARIO-OPS-CLAIM-REFUTATION-6650-BUDGET-WRITES-PARTIAL
+
+Given a budget that expires after the first artifact of three, the audit SHALL
+review exactly one, write the report with a PARTIAL marker naming 1 of 3, and
+exit 0.
+
+#### SCENARIO-OPS-CLAIM-REFUTATION-6650-FLAGGED-IS-SKIPPED
+
+Given a target artifact carrying `flagged_adversarial: true`, the audit SHALL
+record `SKIPPED_ALREADY_FLAGGED` for it and SHALL NOT invoke the reviewer.
+
+#### SCENARIO-OPS-CLAIM-REFUTATION-6650-NEVER-EDITS
+
+Given any run over any artifact set, every audited artifact's bytes SHALL be
+identical before and after the run.
+
+## Implementation Status (REQ-OPS-CLAIM-REFUTATION-6650)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-OPS-CLAIM-REFUTATION-6650 | `scripts/experiment_claim_audit.py`, wired as a milestone-close audit in `research_conductor.py` via `_run_audit_with_receipt` (receipt `ops/experiment_claim_audit_report.md`). | `tests/python/test_experiment_claim_audit.py`. |
