@@ -44,8 +44,8 @@ FULL_PYTEST_RECEIPT = {
     "command": FULL_PYTEST_COMMAND,
     "exit_code": 3,
     "summary": (
-        "repository-wide run stopped after 67 failed, 9642 passed, "
-        "8 skipped, and an xdist worker MemoryError"
+        "repository-wide run stopped after 68 failed, 9638 passed, "
+        "8 skipped, 112 warnings, and an xdist worker MemoryError"
     ),
 }
 SPEC_COMMAND = (
@@ -459,4 +459,4 @@ def test_scenario_bench_6510_main_and_validate_roundtrip(tmp_path: Path) -> None
     assert payload["atomic_terminal_write_receipt"]["terminal_payload_sha256"].startswith("sha256:")
     full_receipt = next(row for row in payload["tests_run"] if row["command"] == FULL_PYTEST_COMMAND)
     assert full_receipt["exit_code"] == 3
-    assert "67 failed" in full_receipt["summary"]
+    assert "68 failed" in full_receipt["summary"]
