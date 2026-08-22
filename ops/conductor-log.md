@@ -16262,3 +16262,4 @@ code |
 | 2026-08-21 22:12 UTC | Activation replan 1/2: 2026.08.561 | OK | refused roadmap quarantined to roadmap-2026.08.561-refusal1.yaml; replanning wit |
 | 2026-08-21 22:16 UTC | Plan milestone 2026.08.561 | OK | 4 tasks proposed |
 | 2026-08-21 22:19 UTC | Milestone 2026.08.561 activated | OK | 4 tasks queued |
+| 2026-08-22 16:17 UTC | V560 retirement ledger and V561 exact-structural l | OK | 86 passed, 1 warning in 12.81s |
