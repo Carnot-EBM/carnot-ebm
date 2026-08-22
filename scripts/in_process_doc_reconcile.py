@@ -189,6 +189,48 @@ class ReconResult:
     skipped_reason: str | None = None
 
 
+# Fallback copy of adversarial_verify._VERDICT_CLASSES for the enum-first
+# path in classify_artifact. Duplicated on purpose (import may fail outside
+# the venv); tests/python/test_verdict_class_enum_first.py asserts the
+# copies stay equal, so the duplication cannot silently drift.
+_VERDICT_CLASSES_FALLBACK = frozenset(
+    {"positive", "circular_positive", "null", "blocked", "disqualified", "partial"}
+)
+
+# Declared class -> status label (REQ-CONDUCTOR-VERDICT-2). The vocabulary
+# of labels is the same four the whole record already uses. Only
+# `positive` earns the win label: circular_positive / null / disqualified /
+# partial are honest findings, and blocked is a block.
+_VERDICT_CLASS_LABELS = {
+    "positive": "✅ Complete",
+    "circular_positive": "⚠️ Research Finding",
+    "null": "⚠️ Research Finding",
+    "disqualified": "⚠️ Research Finding",
+    "partial": "⚠️ Research Finding",
+    "blocked": "⚠️ Blocked",
+}
+
+
+def _declared_verdict_class(artifact: dict) -> str | None:
+    """The artifact's declared verdict_class, if inside the closed enum.
+
+    Unwraps the principle-annotated form ({"value": ..., "principle": ...})
+    first — any field may arrive wrapped (the QA-Layer discipline's
+    field-shape bug class). A value outside the enum returns None so the
+    caller falls back to the legacy token lists.
+    """
+    try:
+        from adversarial_verify import _VERDICT_CLASSES  # type: ignore[import-not-found]
+    except Exception:
+        _VERDICT_CLASSES = _VERDICT_CLASSES_FALLBACK
+    vc = artifact.get("verdict_class")
+    if isinstance(vc, dict) and "value" in vc and "principle" in vc:
+        vc = vc["value"]
+    if isinstance(vc, str) and vc.strip().lower() in _VERDICT_CLASSES:
+        return vc.strip().lower()
+    return None
+
+
 def map_status_label(verdict: str) -> str:
     """Map a honest_verdict string to a status-label emoji-prefix.
 
@@ -253,7 +295,17 @@ def classify_artifact(artifact: dict) -> str:
 
     Use this from reconcile(); leave `map_status_label` unchanged for
     callers that only have the verdict string (tests, external tools).
+
+    ENUM-FIRST since 2026-08-21 (REQ-CONDUCTOR-VERDICT-2): a valid
+    declared `verdict_class` maps directly and skips both the token
+    lists and the retro upgrade — declaration replaces inference.
+    `circular_positive` deliberately maps to Research Finding, not
+    Complete: an honest circular win reading as a research win
+    downstream is the exp6478 gap the enum exists to close.
     """
+    declared = _declared_verdict_class(artifact)
+    if declared is not None:
+        return _VERDICT_CLASS_LABELS[declared]
     verdict = artifact.get("honest_verdict", "")
     base = map_status_label(verdict)
     # Strict-failure-wins: a closed retro on top of a failure is a

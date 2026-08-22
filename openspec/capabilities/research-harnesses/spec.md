@@ -7983,3 +7983,69 @@ the violations.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-CONDUCTOR-ARCHIVE-2 | Implemented (`scripts/research_complete_ledger_lint.py`; pre-commit hook `research-complete-ledger-lint`; `GUARD_TARGETS` entry in `scripts/qa_layer_authenticity_audit.py`) | Implemented (`tests/python/test_research_complete_ledger_lint.py`; mutations: dedup check disabled -> RED, existence check disabled -> RED, retired-literal check disabled -> RED) |
+
+## REQ-CONDUCTOR-VERDICT-2: The Conductor And Reconciler SHALL Consume A Declared Verdict Class Before Token Lists
+
+Design: `docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md`
+(Conversion 2 — the consumer half; REQ-CONDUCTOR-VERDICT-1 is the
+declaration + cross-check half). The legacy mechanism infers verdict
+semantics from four substring token lists patched at least six times;
+`disqualified:` (an honest negative) drew a critical flag in the week
+this shipped. Declaration replaces inference.
+
+When an artifact declares a `verdict_class` inside the closed enum
+(`positive | circular_positive | null | blocked | disqualified |
+partial`), consumers SHALL classify from the declaration and SHALL NOT
+run substring token lists against `honest_verdict`:
+
+1. `scripts/research_conductor.py:_verdict_is_untrustworthy`:
+   `partial` is untrustworthy (the run may retry); every other enum
+   member is a trustworthy terminal state (no retry, no
+   3-fail-retire churn).
+2. `scripts/in_process_doc_reconcile.py:classify_artifact`: the
+   declaration maps `positive -> ✅ Complete`, `blocked -> ⚠️ Blocked`,
+   and `circular_positive | null | disqualified | partial ->
+   ⚠️ Research Finding`. `circular_positive` deliberately does NOT map
+   to ✅ Complete: an honestly-declared circular win reading as a
+   research win downstream is the exp6478 gap this enum closes. The
+   declaration also takes precedence over the `retro_*_closed`
+   upgrade — declaration replaces inference, including upgrade
+   heuristics.
+
+A `verdict_class` value outside the enum SHALL fall through to the
+legacy token-list path unchanged (REQ-CONDUCTOR-VERDICT-1 already
+flags it CRITICAL at the linter layer). A principle-wrapped
+declaration (`{"value": ..., "principle": ...}`) SHALL be unwrapped
+before matching. The legacy token lists stay in place as the fallback
+for the historical corpus, which carries only free-text verdicts.
+
+#### SCENARIO-CONDUCTOR-VERDICT-4
+
+Given `verdict_class: disqualified` and an `honest_verdict` containing
+legacy partial tokens (for example `disqualified: eval harness
+contaminated, no improvement measurable`), `_verdict_is_untrustworthy`
+SHALL return False (trustworthy terminal) and `classify_artifact`
+SHALL return `⚠️ Research Finding`.
+
+#### SCENARIO-CONDUCTOR-VERDICT-5
+
+Given `verdict_class: partial` and an `honest_verdict` starting with
+the terminal prefix `complete:`, `_verdict_is_untrustworthy` SHALL
+return True — the declaration beats the prefix in both directions.
+
+#### SCENARIO-CONDUCTOR-VERDICT-6
+
+Given a `verdict_class` outside the enum, both consumers SHALL behave
+exactly as if no declaration were present.
+
+#### SCENARIO-CONDUCTOR-VERDICT-7
+
+Given `verdict_class: circular_positive`, `classify_artifact` SHALL
+return `⚠️ Research Finding`, not `✅ Complete`, even when a
+`retro_*_closed` field is truthy.
+
+## Implementation Status (REQ-CONDUCTOR-VERDICT-2)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-CONDUCTOR-VERDICT-2 | Implemented (`scripts/research_conductor.py:_verdict_is_untrustworthy` enum-first branch; `scripts/in_process_doc_reconcile.py:classify_artifact` enum-first mapping) | Implemented (`tests/python/test_verdict_class_enum_first.py`; mutations: conductor enum branch removed -> RED, circular_positive mapped to Complete -> RED) |
