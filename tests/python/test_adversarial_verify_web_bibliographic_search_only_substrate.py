@@ -45,6 +45,10 @@ class TestIsWebBibliographicSearchOnly:
         d = {"inference_substrate": "web_and_bibliographic_search_only"}
         assert av._is_web_bibliographic_search_only(d) is True
 
+    def test_recognizes_source_receipt_method_preregistration_alias(self) -> None:
+        d = {"inference_substrate": "source_receipts_and_local_method_preregistration_no_llm"}
+        assert av._is_web_bibliographic_search_only(d) is True
+
     def test_does_not_match_generic_live_llm_inference(self) -> None:
         d = {"inference_substrate": "live_llm_inference"}
         assert av._is_web_bibliographic_search_only(d) is False
@@ -59,6 +63,15 @@ class TestDurationFloorForArtifact:
         floor = av.duration_floor_for_artifact(d)
         assert floor == {
             "substrate": "web_and_bibliographic_search_only",
+            "min_duration_s": 0.0001,
+            "reason": "web_bibliographic_search_only",
+        }
+
+    def test_returns_the_near_zero_floor_for_source_receipt_method_contract(self) -> None:
+        d = {"inference_substrate": "source_receipts_and_local_method_preregistration_no_llm"}
+        floor = av.duration_floor_for_artifact(d)
+        assert floor == {
+            "substrate": "source_receipts_and_local_method_preregistration_no_llm",
             "min_duration_s": 0.0001,
             "reason": "web_bibliographic_search_only",
         }

@@ -52313,3 +52313,129 @@ promoted as execution evidence.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6475 | Planned (`python/carnot/experiment_6475_v557_primary_source_and_product_state.py`, `results/experiment_6475_v557_primary_source_and_product_state.json`) | Planned (`tests/python/test_experiment_6475_v557_primary_source_and_product_state.py`) |
+
+### REQ-REPORT-6503: V561 Source Receipts And Method Contract SHALL Be Frozen Before Data Generation
+
+The Exp6503 workflow SHALL evaluate the Exp6502 same-roadmap gate before source
+ingestion. It SHALL record the gate artifact path, SHA-256 hash, field,
+expected value, observed value, network state, and protected-file hashes. It
+SHALL proceed to a ready method contract only when
+`v561_lineage_lock_ready_score == 1.0`.
+
+Exp6503 SHALL recheck the V561 planner sources for arXiv `2608.14569`,
+`2603.07176`, and `2603.20801`; OpenReview `xvcqXxw4Le`; Semantic Scholar
+EBT and ARM-EBM records; Hugging Face Papers; GitHub implementation
+references; Extropic; and Logical Intelligence. Every checked source SHALL
+emit a stable receipt row with title, stable URL, access date, available
+version, source class, retrieval state, response hash, and a bounded Carnot
+implication. Blocked, rate-limited, missing, or product-only routes SHALL
+remain visible rows and SHALL NOT become local evidence.
+
+Exp6503 SHALL freeze the local comparison contract before Exp6504 or later data
+generation. The contract SHALL define benchmark families, shift axes, minimum
+held cell size, exact authorities, solver metrics, structural features, branch
+checkpoints, model controls, statistical rules, and failure conditions. It
+SHALL freeze that neural advice may order search, choose a search
+neighborhood, or abstain, but SHALL NOT accept, label, or release a solution.
+Promoted methods SHALL map to bounded local test targets instead of copied
+paper claims. Product claims SHALL carry a no-local-evidence boundary.
+
+The Exp6503 artifact SHALL be written to
+`results/experiment_6503_v561_source_delta_method_contract.json` with
+`inference_substrate=source_receipts_and_local_method_preregistration_no_llm`
+and `verifier_is_oracle=false`. The artifact SHALL include, at minimum,
+`status`, `verdict_class`, `upstream_gate_receipt`, `source_receipt_rows`,
+`source_delta_rows`, `method_contract`, `authority_boundary`,
+`dependency_decision_rows`, `method_contract_ready_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `gate_check_summary`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`method_contract_ready_score` SHALL equal `1.0` only when every promoted method
+has a bounded local test target, every product claim has a no-local-evidence
+boundary, every required source has a receipt row, no new dependency is added,
+the authority boundary is exact-solver-first, and the Exp6502 gate passes.
+
+Field principles SHALL be:
+
+- `status`: "Records source-ingestion completion."
+- `verdict_class`: "Closed enum: positive | circular_positive | null | blocked | disqualified | partial."
+- `upstream_gate_receipt`: "Binds the Exp6502 gate and observed value."
+- `source_receipt_rows`: "Records one stable receipt per checked source."
+- `source_delta_rows`: "Separates new, unchanged, unavailable, and superseded findings."
+- `method_contract`: "Freezes benchmark, advice, learning, LNS, continual, and mapping methods."
+- `authority_boundary`: "Keeps exact solvers above all learned signals."
+- `dependency_decision_rows`: "Explains why each dependency is reused, added, or rejected."
+- `method_contract_ready_score`: "Same-roadmap gate for the frozen method contract."
+- `per_unit_rows`: "Carries source, method, metric, and boundary rows."
+- `aggregate_row_recomputation`: "Recomputes readiness from required receipts."
+- `gate_check_summary`: "Names any failed gate or source precondition and observed value."
+- `preconditions_checked`: "Records gate, network, source, repository, and tool checks."
+- `protected_files_unchanged`: "Proves protected files stayed unchanged."
+- `inference_substrate`: "Declares source retrieval and local artifact synthesis with no inference model."
+- `verifier_is_oracle`: "False because source synthesis is not an execution oracle."
+- `field_principles`: "Explains each receipt and boundary field."
+- `field_provenance`: "Maps each finding to a URL, access receipt, and local contract row."
+- `random_seed`: "Fixes deterministic source and attack ordering."
+- `duration_s`: "Records measured wall time."
+- `tests_run`: "Records commands and exit codes."
+- `reproducibility_checksum`: "Hashes source receipts and the frozen contract."
+- `honest_verdict`: "Uses complete_* when the contract is valid or blocked_* with gate_check_summary."
+
+#### SCENARIO-REPORT-6503-GATE: Exp6502 Gate Is Bound Before Source Work
+
+**Given** Exp6502 emitted a V561 lineage-lock artifact
+**When** Exp6503 evaluates preconditions
+**Then** the artifact records the gate path, hash, field, expected value,
+observed value, network state, and protected-file hashes, and blocks readiness
+if the observed value is not `1.0`.
+
+#### SCENARIO-REPORT-6503-SOURCES: Receipts Separate Sources From Claims
+
+**Given** the V561 source manifest includes papers, discovery surfaces, code
+repositories, and product pages
+**When** Exp6503 records receipt rows
+**Then** every source emits title, stable URL, access date, version, source
+class, retrieval state, hash, and bounded implication without copying long
+source text or promoting unavailable products as local evidence.
+
+#### SCENARIO-REPORT-6503-METHODS: Method Contract Freezes Local Tests
+
+**Given** the planner promotes symbolic certification, initial branching,
+clause advice, and exact-repair LNS
+**When** Exp6503 builds `method_contract`
+**Then** each promoted method maps to a bounded local test target, and the
+contract freezes benchmark families, shifts, held cell size, exact authorities,
+solver metrics, structural features, branch checkpoints, model controls,
+statistical rules, and failure conditions.
+
+#### SCENARIO-REPORT-6503-AUTHORITY: Neural Advice Cannot Certify
+
+**Given** a learned or neural advice row is present
+**When** Exp6503 emits `authority_boundary`
+**Then** advice may order search, select a neighborhood, or abstain, but cannot
+accept, label, or release a solution; exact CDCL, CSP repair, and executable
+validity checks remain authority.
+
+#### SCENARIO-REPORT-6503-DEPENDENCIES: Local Exact Primitives Are Reused
+
+**Given** local SAT, CSP, graph, KAN, LNS, and sampler primitives exist
+**When** Exp6503 emits dependency decisions
+**Then** it reuses local exact primitives and rejects new runtime dependencies
+for discovery, product, or optional implementation-reference pages.
+
+#### SCENARIO-REPORT-6503-SCHEMA: Artifact Is Ready, Bounded, And Checksummed
+
+**Given** source rows, method rows, control rows, metric rows, boundary rows,
+field maps, protected hashes, and command receipts are assembled
+**When** Exp6503 validates the artifact
+**Then** every required field has a principle and provenance entry, the checksum
+matches, `method_contract_ready_score == 1.0`, the substrate is source receipts
+with no inference model, and the terminal verdict starts with `complete_` or
+`blocked_`.
+
+## Implementation Status (REQ-REPORT-6503)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6503 | Planned (`python/carnot/experiment_6503_v561_source_delta_method_contract.py`, `results/experiment_6503_v561_source_delta_method_contract.json`) | Planned (`tests/python/test_experiment_6503_v561_source_delta_method_contract.py`) |
