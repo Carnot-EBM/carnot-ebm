@@ -16281,3 +16281,4 @@ code |
 | 2026-08-22 20:54 UTC | Plan milestone 2026.08.563 | OK | 3 tasks proposed |
 | 2026-08-22 20:57 UTC | Milestone 2026.08.563 activated | OK | 3 tasks queued |
 | 2026-08-22 21:15 UTC | Fresh independent V563 exact-evidence root | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6510_v563_in |
+| 2026-08-22 21:37 UTC | Fresh independent V563 exact-evidence root | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6510_v563_in |
