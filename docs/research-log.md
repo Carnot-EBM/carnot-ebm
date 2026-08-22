@@ -6255,3 +6255,10 @@ The critical path for milestone .250:
 - theme: one formal-challenge compute stream led a short, synthesis-heavy closeout
 - key result: honest operational limitation -- the compute leader is known, but the supplied data does not identify its slow phase, establish a compute-task GPU-idle fault, or show parallel multi-model execution that required DualGPURunner
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.562
+
+- exp_range: no data available this milestone
+- theme: synthesis-only closeout completed at the timing floor while live phase attribution remained absent
+- key result: no compute-bound work ran, so idle accelerator state was correct and no concurrent-model runner requirement arose
+- acceptance: no data available this milestone
