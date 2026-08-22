@@ -5317,6 +5317,36 @@ def research_step(
                     timeout=900,
                 )
 
+            # Claim-refutation audit (2026-08-22, REQ-OPS-CLAIM-REFUTATION-6650). The
+            # convention audit above asks whether a claim is CHECKABLE; this one asks
+            # whether it is SUPPORTED: what would refute the headline, and was that
+            # checked? Built after four misses that passed every mechanical check --
+            # the exp6478 tautology-by-construction, an in-sample metric cited as
+            # generalization, a wrong-key read turned into a zero claim, and invalid
+            # rows averaged into a headline. Question-shaped prompt, not a pattern
+            # list; delegates degeneracy detection to adversarial_verify's own
+            # checks. --budget-seconds is INSIDE the kill timeout on purpose so the
+            # audit writes a PARTIAL receipt instead of dying silently. Never edits,
+            # never blocks; the operator decides.
+            if not dry_run:
+                _run_audit_with_receipt(
+                    "experiment-claim-audit",
+                    [
+                        sys.executable,
+                        str(PROJECT_ROOT / "scripts" / "experiment_claim_audit.py"),
+                        "--recent",
+                        "8",
+                        "--budget-seconds",
+                        "750",
+                        "--agent-type",
+                        AGENT_TYPE_AUDIT,
+                        "--model-name",
+                        AGENT_MODEL_AUDIT,
+                    ],
+                    receipt=PROJECT_ROOT / "ops" / "experiment_claim_audit_report.md",
+                    timeout=900,
+                )
+
             # Contradiction escalation (REQ-OPS-CONTRADICTION-6272). Cheap detectors for rows
             # that disagree with THEMSELVES, escalating to an adversarial reviewer when they fire.
             #
