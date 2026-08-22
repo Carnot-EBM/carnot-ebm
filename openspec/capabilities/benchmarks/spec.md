@@ -2859,6 +2859,146 @@ shard order, and censored-row-removal leakage block readiness.
 |---|---|---|
 | REQ-BENCH-6512 | Planned (`python/carnot/experiment_6512_branch_dataset_independent_audit.py`, `results/experiment_6512_branch_dataset_independent_audit.json`) | Planned (`tests/python/test_experiment_6512_branch_dataset_independent_audit.py`) |
 
+### REQ-BENCH-6513: V564 Terminal Handoff SHALL Preserve V563 Outcomes Without Retired Dependencies
+
+Carnot SHALL provide Exp6513 at
+`python/carnot/experiment_6513_v564_terminal_handoff_contract.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6513_v564_terminal_handoff_contract --date 20260822`
+SHALL write
+`results/experiment_6513_v564_terminal_handoff_contract.json`.
+
+Exp6513 SHALL build one bounded terminal handoff from immutable file content
+and conductor rows. It SHALL read Exp6504, Exp6506, Exp6510, and Exp6512
+directly by path and SHA-256 hash. It SHALL parse `ops/conductor-log.md` for
+terminal rows. It SHALL record git status, input paths and hashes,
+conductor-row identifiers, resources, exclusion state, and protected-file
+hashes before it classifies readiness.
+
+Exp6513 SHALL recompute Exp6504 raw, label, replay, split, held-cell,
+stratum, leakage, aggregate, and checksum evidence from rows. It SHALL
+recompute Exp6510 row counts, direct-input receipts, lineage decisions,
+retired-dependency attacks, ready score, and non-positive verdict class from
+Exp6510 rows and file content. It SHALL not trust aggregate-only fields from
+either artifact.
+
+Exp6513 SHALL preserve all historical determinations. It SHALL record the
+three Exp6506 `artifact_not_updated_past_bootstrap` conductor rows, the three
+Exp6510 `artifact_not_updated_past_bootstrap` conductor rows, the missing
+Exp6511 dataset path, and the Exp6512 score-0 blocked audit. It SHALL
+distinguish usable immutable content from eligible task dependencies. Exp6510
+content MAY be read only as a direct path-and-hash input. Exp6510 SHALL NOT
+be used as a structured dependency.
+
+Exp6513 SHALL emit one row per historical task, immutable file, conductor
+terminal event, allowed direct input, forbidden dependency, and retired-scope
+attack. It SHALL attack renamed dependencies, indirect `requires` or
+`gated_on` chains, stale paths, hash drift, positive exact-oracle framing, and
+claims that terminal execution means scientific success.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`prior_failure_receipts`, `historical_task_rows`,
+`immutable_input_receipts`, `allowed_direct_input_rows`,
+`forbidden_dependency_rows`, `retired_dependency_attack_matrix`,
+`v564_handoff_ready_score`, `gate_check_summary`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`. `inference_substrate` SHALL be
+`bounded_historical_artifact_and_conductor_replay_no_llm`.
+`verifier_is_oracle` SHALL be true only for row, hash, and terminal-state
+checks. `verdict_class` SHALL be `null`, `partial`, or `blocked`; it SHALL
+NOT be `positive`.
+
+`v564_handoff_ready_score` SHALL equal `1.0` only when Exp6504 row replay
+passes, Exp6510 rows support its usable-content status, every historical
+failure or block is preserved, Exp6511 is confirmed missing, Exp6512 is
+confirmed as a blocked score-0 audit, protected files remain unchanged, every
+forbidden dependency attack fails closed, and no planned structured dependency
+or requires chain names Exp6506, Exp6507, Exp6508, Exp6509, Exp6510, or
+Exp6511. A blocked verdict SHALL populate `gate_check_summary` with the
+failed check, expected value, observed value, and source path.
+
+Field principles SHALL be:
+
+- `status`: "A terminal state distinguishes the handoff from a bootstrap or partial write."
+- `honest_verdict`: "The verdict preserves terminal history without claiming scientific success."
+- `verdict_class`: "A null or partial class prevents terminal governance from becoming a performance claim."
+- `prior_failure_receipts`: "Receipts preserve Exp6506 and Exp6510 bootstrap failures, missing Exp6511, and the Exp6512 block without reactivating them."
+- `historical_task_rows`: "One row per prior task separates task outcome from usable file content."
+- `immutable_input_receipts`: "Path and hash receipts make every direct read auditable."
+- `allowed_direct_input_rows`: "Direct input rows authorize content reads without structured dependencies."
+- `forbidden_dependency_rows`: "Forbidden rows prove retired or missing IDs cannot gate V564 work."
+- `retired_dependency_attack_matrix`: "Attacks catch aliases, indirect requires, stale paths, drift, positive framing, and terminal-success confusion."
+- `v564_handoff_ready_score`: "The score opens only when all historical determinations are preserved and no retired structured dependency is planned."
+- `gate_check_summary`: "Each gate records expected and observed values for replay."
+- `per_unit_rows`: "Unit rows expose every task, file, event, input, dependency, and attack row."
+- `aggregate_row_recomputation`: "The aggregate is recomputed from rows instead of imported totals."
+- `preconditions_checked`: "Preconditions record git state, resources, solver, roadmap, exclusion, and required paths."
+- `protected_files_unchanged`: "Historical files and conductor code must remain unchanged during the handoff."
+- `inference_substrate`: "The declaration keeps the handoff in artifact and conductor replay with no LLM."
+- `verifier_is_oracle`: "Oracle disclosure limits authority to row, hash, and terminal-state checks."
+- `field_principles`: "Reasons beside fields help future tasks preserve the contract."
+- `field_provenance`: "Provenance records path, hash, reducer, and constant sources for each field."
+- `random_seed`: "A fixed attack order makes replay deterministic."
+- `duration_s`: "Measured wall time supports authenticity checks."
+- `tests_run`: "Command receipts show which verification actually ran."
+- `reproducibility_checksum`: "A content hash detects drift in inputs, rows, and decisions."
+
+#### SCENARIO-BENCH-6513-DIRECT-IMMUTABLE: Inputs Are Path-And-Hash Reads
+
+**Given** the checked-in Exp6504, Exp6506, Exp6510, and Exp6512 artifacts
+**When** Exp6513 builds immutable input receipts
+**Then** every source records path, existence, SHA-256, imported pointers, and
+`read_mode=direct_path_and_hash`, and no allowed direct input counts as a
+structured dependency.
+
+#### SCENARIO-BENCH-6513-ROW-REPLAY: Readiness Comes From Rows
+
+**Given** Exp6504 and Exp6510 artifacts with aggregate fields
+**When** Exp6513 recomputes readiness
+**Then** Exp6504 counts and Exp6510 content status derive from per-row
+evidence, lineage rows, attack rows, hashes, and non-positive classes rather
+than aggregate-only fields.
+
+#### SCENARIO-BENCH-6513-TERMINAL-HISTORY: V563 Terminal Outcomes Are Preserved
+
+**Given** the conductor log, missing Exp6511 path, and Exp6512 artifact
+**When** Exp6513 emits prior-failure and historical-task rows
+**Then** it records three Exp6506 bootstrap failures, three Exp6510 bootstrap
+failures, the missing Exp6511 deliverable, and the Exp6512 blocked score-0
+audit without reclassifying terminal as scientifically successful.
+
+#### SCENARIO-BENCH-6513-RETIRED-ISOLATION: Retired IDs Cannot Gate V564
+
+**Given** planned V564 roadmap tasks and retired V562/V563 identifiers
+**When** Exp6513 checks `requires` and `gated_on` chains
+**Then** no allowed structured dependency names Exp6506, Exp6507, Exp6508,
+Exp6509, Exp6510, or Exp6511, while direct path-and-hash reads of historical
+files remain allowed.
+
+#### SCENARIO-BENCH-6513-ATTACKS: Shortcut Dependencies Fail Closed
+
+**Given** renamed dependencies, indirect requires chains, stale paths, hash
+drift, positive exact-oracle framing, and terminal-success framing
+**When** Exp6513 evaluates retired-dependency attacks
+**Then** each attack fails closed before `v564_handoff_ready_score` can equal
+`1.0`.
+
+#### SCENARIO-BENCH-6513-ATOMIC-FINAL: The Handoff Is One Complete Artifact
+
+**Given** all handoff gates pass
+**When** Exp6513 writes its deliverable
+**Then** the artifact is written atomically with all required fields, a stable
+checksum, complete provenance, unchanged protected files, and an honest verdict
+with a `complete_` or `blocked_` prefix.
+
+## Implementation Status (REQ-BENCH-6513)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6513 | Planned (`python/carnot/experiment_6513_v564_terminal_handoff_contract.py`, `results/experiment_6513_v564_terminal_handoff_contract.json`) | Planned (`tests/python/test_experiment_6513_v564_terminal_handoff_contract.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
