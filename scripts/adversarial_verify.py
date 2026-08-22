@@ -343,6 +343,9 @@ LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE = "live_llm_inference_local_gguf_sota"
 LOCAL_LLAMA_CPP_GGUF_ATOMIC_FACTOR_PROPOSALS_SUBSTRATE = (
     "local_llama_cpp_gguf_atomic_factor_proposals"
 )
+LOCAL_LLAMA_CPP_THREE_FAMILY_FORMAL_MUTATION_SUBSTRATE = (
+    "local_llama_cpp_three_family_formal_mutation_generation_plus_exact_solver_admission"
+)
 LOCAL_SOTA_GGUF_SMALL_N_MIN_DURATION_S = 10.0
 
 # Deterministic solver/formal-checker validation (SMT/Z3-style hint acceptance, constraint
@@ -456,6 +459,7 @@ LIVE_MODEL_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     LOCAL_SOTA_FIXED_SEQUENCE_REPRESENTATION_SUBSTRATE,
     LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE,
     LOCAL_LLAMA_CPP_GGUF_ATOMIC_FACTOR_PROPOSALS_SUBSTRATE,
+    LOCAL_LLAMA_CPP_THREE_FAMILY_FORMAL_MUTATION_SUBSTRATE,
     NATIVE_GGUF_BACKEND_BISECT_SUBSTRATE,
     "actual_capability_bound_adapter_disabled_e3_local_mandated_gguf_public_llama_cpp_cuda",
     "exact_validated_local_sota_gguf_panel",
@@ -2323,7 +2327,11 @@ def _is_local_sota_gguf_small_n(d: dict[str, Any]) -> bool:
 
     return _inference_substrate_matches(
         d, LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE
-    ) or _inference_substrate_matches(d, LOCAL_LLAMA_CPP_GGUF_ATOMIC_FACTOR_PROPOSALS_SUBSTRATE)
+    ) or _inference_substrate_matches(
+        d, LOCAL_LLAMA_CPP_GGUF_ATOMIC_FACTOR_PROPOSALS_SUBSTRATE
+    ) or _inference_substrate_matches(
+        d, LOCAL_LLAMA_CPP_THREE_FAMILY_FORMAL_MUTATION_SUBSTRATE
+    )
 
 
 def _is_deterministic_smt_hint_validation(d: dict[str, Any]) -> bool:
