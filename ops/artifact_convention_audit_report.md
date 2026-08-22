@@ -9,43 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 5 |
-| AGGREGATE_ONLY | 2 |
+| CHECKABLE | 7 |
 | CANNOT_DETERMINE | 1 |
 
-## experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
-
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-Diversity improved after remediation, with higher `"lambda_min_sigma_after"` and `"effective_k_after"`, no remaining collapsed pairs, and `"diversity_remediation_passed": true`.
-
-## WHAT IS MISSING
-Per-case rows for all `"n_cases": 1000`, including before-and-after diversity metrics and collapsed-pair status for each case; only pooled fields such as `"lambda_min_sigma_before"`, `"lambda_min_sigma_after"`, `"effective_k_before"`, and `"effective_k_after"` are present.
-
-## THE CHECK A READER CANNOT DO
-Did diversity improve broadly across the 1,000 cases, or were the reported aggregate gains driven by a few outliers or degenerate cases?
-
-## experiment_2824_cross_corpus_verifier_matrix.json
-
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-The production verifier outperformed architecture-only for tier_memory on FoVer by 0.25, while the other reported comparisons were tied.
-
-## WHAT IS MISSING
-Per-unit rows for each game, seed, cell, or condition underlying the aggregate `"production"`, `"architecture_only"`, and `"delta"` values in `"verifier_corpus_dual_matrix"`.
-
-## THE CHECK A READER CANNOT DO
-Was the tier_memory FoVer improvement broad across units, or caused by one outlier or units pinned at a floor or ceiling?
-
-## experiment_3361_archive_v309_activate_v310.json
+## experiment_6012_hidden_state_trust_gate_hole.json
 
 **CHECKABLE**
 
@@ -53,7 +20,7 @@ Was the tier_memory FoVer improvement broad across units, or caused by one outli
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The archive is complete and milestone 2026.05.310 is ready for activation.
+The live hidden-state trust gate admits a spurious writer that the REQ-6011 change gate rejects.
 
 ## WHAT IS MISSING
 nothing
@@ -61,7 +28,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_3377_archive_v310_activate_v311.json
+## experiment_6013_hidden_state_change_gate_closure.json
 
 **CHECKABLE**
 
@@ -69,15 +36,15 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The archive is complete and milestone 2026.05.311 is ready for activation.
+The change gate’s hidden-state coverage hole was closed, as tested across base and adversarial engine arms with and without HUD masking.
 
 ## WHAT IS MISSING
-nothing
+nothing; `"rows"` provides per-`"game"`/`"seed"` results, including `"change_gate_pass"`, `"change_gate_reason"`, `"change_fidelity"`, and diagnostic counts.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_833_constraint_delta_root_cause.json
+## experiment_1644_cerce_ledger.json
 
 **CHECKABLE**
 
@@ -85,7 +52,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The embedding constraint store’s write path is missing: verification performed 10 retrievals but zero writes.
+The CERCE ledger was added and is ready, with no policy certificates evaluated or policy updates attempted.
 
 ## WHAT IS MISSING
 nothing
@@ -93,7 +60,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_3392_archive_v311_activate_v312.json
+## experiment_1767_e2e_qwen.json
 
 **CHECKABLE**
 
@@ -101,7 +68,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The archive is complete and milestone 2026.05.311 was archived with 2026.05.312 activated and ready.
+no claim
 
 ## WHAT IS MISSING
 nothing
@@ -109,7 +76,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json
+## experiment_6510_v563_independent_exact_root.json
 
 **CANNOT_DETERMINE**
 
@@ -117,15 +84,15 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The artifact claims the V562 exact branch passed its lineage/readiness gate with `"v562_exact_branch_ready_score": 1.0`.
+The V563 independent exact root is ready with `"v563_independent_root_ready_score": 1.0` because all 480 replay rows and all seven dependency attacks passed.
 
 ## WHAT IS MISSING
-The complete `"per_unit_rows"` array is missing: `"exp6504_row_recomputation"` reports 480 instance rows, but the supplied artifact cuts off mid-row at instance `exp6504:random_3cnf:031` and is not complete JSON.
+The complete `"per_unit_rows"` array covering all 480 claimed rows; the supplied artifact ends mid-row, although `"raw_row_count": 480` and `"overall_independent_row_checks_passed": true` are present.
 
 ## THE CHECK A READER CANNOT DO
-Do all 480 instance rows actually have matching regenerated labels and passing replays, as the reported readiness aggregate claims?
+Do all 480 individual replay rows actually pass and support the reported ready score, rather than only the displayed subset?
 
-## experiment_6508_analytical_branch_refocus_ab.json
+## experiment_1736_kanele_synth.json
 
 **CHECKABLE**
 
@@ -133,10 +100,42 @@ Do all 480 instance rows actually have matching regenerated labels and passing r
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because the required upstream artifact `exp6507-exact-branch-counterfactual-dataset` was not found, so its `branch_counterfactual_dataset_ready_score == 1.0` gate failed.
+The experiment reports `vivado_simulated_success` with a generated bitfile, while being flagged as adversarial and excluded from headline aggregation.
 
 ## WHAT IS MISSING
 nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_2031.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The run succeeded and reported `"Thus, we can see it."` as `"best_candidate"` with `"min_energy": 0.0`.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6512_branch_dataset_independent_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The audit was blocked because the upstream artifact was missing, leaving zero rows for independent recomputation and no complete shard manifest.
+
+## WHAT IS MISSING
+nothing; `gate_check_summary`, `upstream_artifact_receipt.exists`, `independent_row_recomputation.row_count`, and `shard_and_censoring_audit.manifest_complete` record the failed checks and observed values.
 
 ## THE CHECK A READER CANNOT DO
 none
