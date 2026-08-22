@@ -9,107 +9,41 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| AGGREGATE_ONLY | 1 |
+| CHECKABLE | 5 |
+| AGGREGATE_ONLY | 2 |
 | CANNOT_DETERMINE | 1 |
-
-## experiment_6493_gated_decomposed_trajectory_energy_ab.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because both prerequisite gates failed: each observed readiness score was 0.0 instead of the required 1.0.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6495_restarted_factor_pool_controller.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The restarted factor-pool controller achieved a readiness score of 1.0, with all required row checks passing and all eight attacks failing closed.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6496_continuous_factor_learning.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Execution completed, but continuous self-learning readiness was zero because all 16 arm-opportunity rows failed exact admission and produced no durable writes.
-
-## WHAT IS MISSING
-nothing; per-unit evidence appears in `"event_rows"`, `"exact_admission_rows"`, `"decision_action_rows"`, and `"evidence_update_rows"`, including diagnostic `"reason"` and `"compile_reason"` values such as `"empty_response"` and `"json_decode_error"`.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6497_factor_pool_support_stress.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The capacity-stress evaluation recommends `"medium_bounded"` and claims capacity, safety, lifecycle, support, and stress checks passed despite one negative-transfer regression.
-
-## WHAT IS MISSING
-nothing; `"aggregate_row_recomputation"` is backed by per-event, per-capacity `"capacity_arm_rows"` containing metrics such as `"capacity_respected"`, `"exact_admission_passed"`, `"immediate_gain_charged"`, and `"no_write_reason"`.
-
-## THE CHECK A READER CANNOT DO
-none
 
 ## experiment_6498_csl_independent_audit.json
 
 **CANNOT_DETERMINE**
 
-> Audit-integrity guard: quoted field(s) ['future_metric_rows'] do not appear in the artifact, so this verdict was downgraded and must not be acted on.
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The audit claims all critical attacks are closed and recommends `medium_bounded` capacity with total held-future utility `7.0`.
+
+## WHAT IS MISSING
+The artifact is truncated mid-row after `"arm_id": "always_updat`, so the complete per-unit future-utility rows and any final verdict or blocker diagnostic cannot be found; only aggregate fields such as `"future_metric_row_count": 28`, `"attacks_closed": true`, and `"recommended_capacity"` are visible.
+
+## THE CHECK A READER CANNOT DO
+Did `medium_bounded` outperform the other capacities broadly across future units, or does its reported utility depend on a small number of outlier rows?
+
+## experiment_6499_arc_energy_progress_alignment.json
+
+**AGGREGATE_ONLY**
 
 ## VERDICT
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The artifact claims `medium_bounded` is the recommended capacity, with support preserved and total held-future utility of 7.0.
+The energy signal failed the readiness gate because it showed no positive incremental alignment beyond controls and was not directionally stable across games.
 
 ## WHAT IS MISSING
-Per-unit `future_metric_rows` containing the held-future utility for every `capacity_id` and `event_id`; only `"future_metric_row_count": 28` and the aggregate `"recommended_capacity"` result are present.
+The actual `"rows"` or `"per_unit_rows"` containing each prefix/game/seed/horizon’s energy signal, progress outcome, and control metrics; only aggregated `"incremental_alignment_rows"`, binned `"calibration_rows"`, `"leave_one_game_out_rows"`, and a `"row_checksum"` are present.
 
 ## THE CHECK A READER CANNOT DO
-Did `medium_bounded` outperform the competing capacities broadly across stress events, or was its recommendation driven by one outlier event?
-
-## experiment_6499_arc_energy_progress_alignment.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The energy signal failed the readiness gate because it lacked positive incremental alignment and leave-one-game-out directional stability, yielding an honest null result.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+Was the negative/null alignment broadly present across the 400 observations, or driven by a few outlying prefixes, games, seeds, or horizons?
 
 ## experiment_6500_gated_default_off_live_arc_policy_ab.json
 
@@ -119,7 +53,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because `arc_energy_alignment_ready_score` was observed as `0.0`, failing the requirement that it equal `1.0`.
+The experiment was blocked because `arc_energy_alignment_ready_score` was `0.0` instead of the required `1.0`.
 
 ## WHAT IS MISSING
 nothing
@@ -135,10 +69,74 @@ none
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The artifact claims row-recomputed comparative results, including that exp6490’s learned head beat the analytical baseline and that exp6497’s medium bounded capacity was the recommended stress configuration.
+The capstone claims its row recomputation confirms, among other outcomes, that exp6490’s best learned head beat the analytical baseline.
 
 ## WHAT IS MISSING
-The underlying per-unit metric rows are missing: `"head_metric_rows"` contains only arm-level aggregates, while `"capacity_arm_row_count"`, `"future_support_row_count"`, `"future_utility_row_count"`, and `"negative_transfer_row_count"` are counts rather than the actual rows. The blocked cases do have diagnostics in `"blocked_diagnostic_rows"` with `"failed_field"`, `"failed_expected"`, and `"failed_observed"`.
+Per-unit held-result rows containing each unit’s identifier, outcome, and metric or prediction for every compared head; only aggregate `"head_metric_rows"`, `"held_row_count"`, and `"best_learned_beats_analytical"` are present.
 
 ## THE CHECK A READER CANNOT DO
-Was exp6490’s reported 0.880952-versus-0.811625 advantage broad across held units, or driven by a few units, degenerate controls, or floor/ceiling cases?
+Did the learned head’s advantage occur broadly across held units and family cells, or was it driven by a few outliers or degenerate cells?
+
+## experiment_6502_v560_retirement_v561_lineage_lock.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V560 retirement ledger is complete and the V561 lineage-lock gate passed, permitting only the specified fresh exact-SAT/CSP lineage.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6503_v561_source_delta_method_contract.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V561 source-delta method contract met its readiness gate, with all required receipts, boundaries, local-test targets, dependency constraints, and protected-file checks satisfied.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6504_exact_structural_benchmark_commitment.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The artifact claims that the exact structural benchmark was completed and committed.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6505_sota_formal_challenge_mutations.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment completed with a null result: all three model requests were quarantined, producing zero accepted mutations and a `challenge_pool_ready_score` of 0.0.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
