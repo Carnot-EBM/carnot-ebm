@@ -1,5 +1,38 @@
 # Carnot — Changelog
 
+## 2026-08-22 (outer-loop, supervisor redirect ledger measurable, commits c6cb2614fd + 9da8b39042)
+
+Team-lead directive: make the ARC trajectory supervisor's redirects
+measurable, then give supervisor refinement a standing conductor slot.
+Origin: the 2026-08-21 supervisor A/B was unreadable — the ledger
+existed, nothing read it, and redirects carried no outcome.
+
+- **REQ-ARC-WMTE-6640** (spec + tests + implementation): every redirect
+  now carries `resolved_by_levelup` + `actions_to_levelup` from record
+  time; a level-up credits the open redirects; the receipt adds per-arm
+  `fired`/`helped` counts (zeros included, never absent) and
+  `stagnations_unredirected` (the all-arms-exhausted evidence for a NEW
+  arm). No LLM call; no new per-action cost; default-OFF byte-identical.
+- **Harness plumbing**: `run_cell` in the scored-path lever harness
+  emits `trajectory_supervisor` on every row, success and crash paths,
+  via one shared helper. `{"enabled": false}` when off — the off state
+  is stated, never inferred from an absent key.
+- **Floor amendment (CLAUDE.md, append-only)**: the Generalization-
+  Testing Floor gains activity 4 — supervisor refinement from the
+  redirect ledger, selection over a curated arm set (arm growth stays
+  human/outer-loop). Prerequisite and anti-churn properties stated in
+  the rule; enforcement stays WARN-only; `_GENERALIZATION_SIGNALS`
+  gained the task-class-4 signals.
+- **Mutation evidence**: 8 mutations, each RED then restored GREEN
+  (outcome fields, crediting loop, arm_outcomes, unredirected counter,
+  crash-path field, success-path field, helper error marker, lint
+  signals). 36 + 19 tests pass, --no-cov;
+  test_suite_mutation_check --check clean after runs.
+- **Freshness rebuilds**: the two harness-dependent analyzer artifacts
+  rebuilt per the lint's own commands; deep-diff vs HEAD ignoring run
+  metadata showed ZERO measurement changes; all prior hand-added
+  rebuild_note_* keys restored plus a new note.
+
 ## 2026-08-21/22 (outer-loop, rule-to-check conversions, commits 6ce4a93b6b .. 3449e90782)
 
 Plan: `docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md`.
