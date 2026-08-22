@@ -26611,3 +26611,28 @@ incident.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6621 | Implemented (`python/carnot/agentic/arc_generator_pin_guard.py`; `scripts/arc_scored_path_lever_harness.py`: `FROZEN_GENERATOR_PIN` + guard call in `main()` + `--allow-retired-pin`) | Implemented (`tests/python/test_arc_generator_pin_guard.py`; mutations: guard equality inverted -> RED, harness guard call removed -> RED) |
+
+### AMENDMENT 2026-08-22 (append-only): explicit model_path override supersedes the pin
+
+Design input from the induce-failure-fix agent, same day. When
+`CARNOT_ARC_GGUF_PATH` is set, `LocalGGUFProposer.model_path` WINS over
+the frozen `repo_substr` at load time, and since commit `512eca0e6b`
+the recorded model label derives from the weights actually loaded — so
+the frozen pin is cosmetic in that configuration, and the acceptance
+runs that rely on the override are already measuring the LIVE
+generator. A guard that refused those runs would force
+`--allow-retired-pin` onto exactly the runs it is not guarding against.
+
+`check_frozen_pin` therefore accepts `model_path_override`; a non-empty
+value stands the guard down with a stderr note naming the override and
+why. An empty or whitespace value is not an override. The harness
+passes `os.environ.get("CARNOT_ARC_GGUF_PATH")`. The guarded failure
+mode is unchanged: the DEFAULT resolution (env unset) silently picking
+retired weights still refuses.
+
+#### SCENARIO-ARC-WMTE-6621-ENV-OVERRIDE
+
+- GIVEN a frozen pin different from the live pin AND a non-empty
+  `model_path_override`
+- THEN the guard returns with a stderr note and does not refuse; a
+  whitespace-only override still refuses.
