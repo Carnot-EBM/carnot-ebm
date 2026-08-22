@@ -1,180 +1,227 @@
-milestone: "2026.08.561"
-milestone_title: "Certified Structural Search and Continual Branch Advice"
+milestone: "2026.08.562"
+milestone_title: "Certified Branch Advice and Continuous Structural Learning"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
-  - id: exp6502-v560-retirement-v561-lineage-lock
-    milestone: "2026.08.561"
-    deliverable: results/experiment_6502_v560_retirement_v561_lineage_lock.json
-    title: "V560 retirement ledger and V561 exact-structural lineage lock"
+  - id: exp6506-v561-evidence-corrigendum-v562-lineage-lock
+    milestone: "2026.08.562"
+    deliverable: results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json
+    title: "V561 evidence corrigendum and V562 exact-branch lineage lock"
     priority: critical
     track: research-governance
     requires_gpu: false
     per_unit_rows: true
     max_turns: 20
-    estimated_wall_time_min: 30
+    estimated_wall_time_min: 45
     agent_type: codex
     model: gpt-5.5
     prior_failures:
-      - experiment_id: exp6490-leakage-neutral-trajectory-energy-baselines
-        verdict: "disqualified: shortcut control survived held trajectory comparison"
-        addressed_by: "This task does not repair or rerun learned trajectory energy; it freezes that retirement and permits only solver-native structural advice on a new certified distribution."
-        retire_if_same_verdict: true
-      - experiment_id: exp6493-gated-decomposed-trajectory-energy-ab
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "This task closes the decomposed-energy chain and forbids V561 tasks from requiring it; the new branch starts from exact structural labels."
-        retire_if_same_verdict: true
-      - experiment_id: exp6496-chronological-continuous-factor-learning
-        verdict: "complete_null: chronological replay is row-complete, but held-future learning readiness did not open"
-        addressed_by: "This task retires factor-pool learning and permits only fixed-feature branch-weight updates after a new held structural signal clears."
+      - experiment_id: exp6504-exact-structural-benchmark-commitment
+        verdict: "complete_exact_structural_benchmark_commitment: raw instances, exact labels, replays, lineage splits, held cells, strata, attacks, and checksums are sealed"
+        addressed_by: "This task does not rerun or rewrite Exp6504; it independently replays its rows, emits a separate corrigendum, and removes the quarantined positive-class overclaim before downstream reuse."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      V560 completed Exp6488-Exp6501. Its capstone made trajectory-energy, continuous-learning, ARC-policy, and hardware claims ineligible. The handoff retires learned trajectory energy and the current factor chain, defers ARC policy and hardware acceleration, and permits a fresh exact structural signal on a new task distribution. V561 must freeze that boundary before any implementation. Work at {project_root}. The planning date is {date}.
+      V561 is complete. Exp6504 sealed a useful exact SAT/CSP benchmark, but the conductor quarantined its headline because verifier_is_oracle=true conflicts with verdict_class=positive. Exp6505 completed with zero accepted SOTA mutations. V562 must repair the evidence contract without changing either historical artifact. It must permit the procedural benchmark and forbid dependence on the empty mutation pool. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md and {project_root}/CLAUDE.md
       - {project_root}/research-program.md and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
-      - {project_root}/results/experiment_6501_v560_capstone.json
-      - {project_root}/results/experiment_6490_trajectory_energy_baselines.json
-      - {project_root}/results/experiment_6492_factor_causal_replay.json
-      - {project_root}/results/experiment_6496_continuous_factor_learning.json
-      - {project_root}/results/experiment_6498_csl_independent_audit.json
-      - {project_root}/results/experiment_6499_arc_energy_progress_alignment.json
-      - {project_root}/ops/exclusion_manifest.yaml, {project_root}/research-complete.yaml, and {project_root}/ops/e2e-test-plan.md
+      - {project_root}/results/experiment_6502_v560_retirement_v561_lineage_lock.json
+      - {project_root}/results/experiment_6503_v561_source_delta_method_contract.json
+      - {project_root}/results/experiment_6504_exact_structural_benchmark_commitment.json
+      - {project_root}/results/experiment_6505_sota_formal_challenge_mutations.json
+      - {project_root}/scripts/adversarial_verify.py, {project_root}/scripts/verdict_row_consistency_lint.py, and {project_root}/scripts/recurring_blocker_ledger.py
+      - {project_root}/ops/exclusion_manifest.yaml and {project_root}/ops/e2e-test-plan.md
 
       TASK
-      Build a row-recomputed V560 retirement ledger and a fail-closed V561 lineage lock. Preserve reusable exact solvers and lifecycle controls. Forbid every retired scientific scope and define the one allowed exact structural branch.
+      Build an independent V561 evidence corrigendum and a fail-closed V562 lineage lock. Recompute Exp6504 from its raw rows, classify its operational readiness without a positive scientific claim, freeze Exp6505 as a terminal null, and authorize only the new exact branch-advice lineage.
 
       CONCRETE STEPS
-      0. Record git status, protected-file hashes, input artifact hashes, exclusion-manifest state, and all compute or network preconditions before work.
-      1. Add or confirm REQ-* and SCENARIO anchors for milestone retirement, changed-scope authorization, and protected-file checks. Write focused tests first.
-      2. Recompute every V560 claim gate and gap row from Exp6488-Exp6501 per-unit evidence. Do not trust capstone aggregates alone.
-      3. Emit one decision row per V560 branch with source artifact, observed field, verdict, disposition, retirement status, and allowed reuse.
-      4. Freeze learned trajectory energy, factor causal value, decomposed energy, checker routing, factor-pool learning, and ARC energy-policy work.
-      5. Permit only a new exact SAT/CSP distribution, solver-native structural advice, exact branch counterfactual labels, fixed-feature weight updates, and fixed-width mapping.
-      6. Attack renamed scopes, hidden dependencies on retired task IDs, post-hoc corpus repair, answer generation, NL-to-ConstraintIR reprompting, ARC policy edits, and hardware claims.
-      7. Set v561_lineage_lock_ready_score=1.0 only when every row recomputes and every forbidden reuse fails closed.
-      8. Emit the artifact. Run focused tests, spec coverage, row consistency lint, adversarial verification, applicable documentation checks, and git status. Reconcile specs, traceability, status, and changelog only after validation.
+      0. Record git status, protected-file hashes, input artifact hashes, exclusion-manifest state, and deterministic replay preconditions.
+      1. Add or confirm REQ-* and SCENARIO anchors for immutable corrigenda, verdict-class consistency, row replay, and V562 lineage control. Write focused tests first.
+      2. Recompute Exp6504 label, replay, split, held-cell, stratum, leakage, and checksum rows. Do not trust its aggregates and do not edit its artifact.
+      3. Re-run adversarial verification and explain the original VERDICT_CLASS_MISMATCH. Emit a separate corrected evidence disposition. An operational benchmark-readiness result is not a positive verifier-value claim.
+      4. Recompute Exp6505 request accounting and accepted-yield rows. Freeze challenge_generation_complete_score=1.0 and challenge_pool_ready_score=0.0 as the terminal result. Do not invoke a model.
+      5. Permit downstream use of Exp6504 raw instances and exact labels only. Forbid downstream dependence on Exp6505 challenge mutations, learned trajectory energy, factor causal value, factor spawning, ARC policy, or hardware acceleration.
+      6. Attack historical-artifact mutation, aggregate-only correction, renamed retired scope, missing upstream hash, challenge-pool laundering, and positive-class reuse.
+      7. Set v562_exact_branch_ready_score=1.0 only when row replay passes, the corrected class is eligible, the historical files are unchanged, and every forbidden dependency fails closed.
+      8. Emit the artifact. Run focused tests, spec coverage, row lint, adversarial verification, applicable E2E checks, documentation checks, and git status. Reconcile specs and ops docs after validation.
 
-      Required deliverable: {project_root}/results/experiment_6502_v560_retirement_v561_lineage_lock.json.
+      Required deliverable: {project_root}/results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json.
       REQUIRED ARTIFACT FIELDS:
-        status: "Records the terminal ledger state."
-        verdict_class: "Closed enum: positive | circular_positive | null | blocked | disqualified | partial."
-        v560_artifact_receipts: "Binds every V560 input to a path and hash."
-        decision_rows: "Provides one recheckable row per prior claim surface."
-        aggregate_row_recomputation: "Shows that capstone decisions derive from rows."
-        retired_scope_definition: "Names the exact methods V561 cannot reuse."
-        allowed_v561_lineage: "Defines the fresh structural-search scope."
-        forbidden_reuse_attack_matrix: "Tests rename, dependency, repair, and claim-laundering attacks."
-        v561_lineage_lock_ready_score: "Same-roadmap gate for the allowed lineage."
-        per_unit_rows: "Carries decision and attack results for each unit."
-        gate_check_summary: "Names any failed precondition and observed value for blocked_* verdicts."
-        preconditions_checked: "Records artifact, manifest, repository, compute, and network checks."
-        protected_files_unchanged: "Proves the active roadmap and conductor stayed unchanged."
-        inference_substrate: "Declares independent artifact reduction with no LLM."
-        verifier_is_oracle: "True only for deterministic hash and row recomputation."
-        field_principles: "Explains why each evidence field exists."
-        field_provenance: "Maps fields to artifact paths, JSON pointers, and reducer functions."
-        random_seed: "Fixes attack ordering."
-        duration_s: "Records measured wall time."
-        tests_run: "Records commands and exit codes."
-        reproducibility_checksum: "Hashes inputs, decisions, attacks, and outputs."
-        honest_verdict: "Uses complete_* for a valid ledger or blocked_* with gate_check_summary."
+        status:
+          principle: "A terminal state distinguishes a valid corrigendum from an incomplete replay."
+        verdict_class:
+          principle: "The closed enum prevents an exact-oracle self-check from becoming an unsupported positive science claim."
+        cited_upstream_artifacts:
+          principle: "Paths, imported fields, and hashes bind every correction to immutable V561 evidence."
+        exp6504_row_recomputation:
+          principle: "Independent row replay detects aggregate or classification errors without rewriting history."
+        exp6504_corrigendum:
+          principle: "A separate correction preserves provenance and makes the eligible interpretation explicit."
+        exp6505_terminal_null_receipt:
+          principle: "The receipt prevents a zero-yield SOTA stream from becoming a hidden prerequisite or a silent rerun."
+        lineage_decision_rows:
+          principle: "One row per allowed or forbidden scope makes lineage decisions recheckable."
+        forbidden_dependency_attack_matrix:
+          principle: "Adversarial cases ensure renamed or indirect dependencies fail closed."
+        v562_exact_branch_ready_score:
+          principle: "A same-roadmap gate prevents downstream work from using quarantined evidence."
+        per_unit_rows:
+          principle: "Unit rows let a third party recompute every headline and gate without rerunning V561."
+        gate_check_summary:
+          principle: "A blocked verdict must name the failed check and observed value."
+        preconditions_checked:
+          principle: "Explicit repository and artifact checks prevent synthesized success when inputs are missing."
+        protected_files_unchanged:
+          principle: "Historical roadmaps, artifacts, and the conductor must remain immutable during correction."
+        inference_substrate:
+          principle: "Declaring artifact replay with no LLM prevents substrate and SOTA-policy confusion."
+        verifier_is_oracle:
+          principle: "Oracle disclosure prevents circular exact checks from supporting a verifier-value headline."
+        field_principles:
+          principle: "The artifact must preserve why each evidence field is load-bearing."
+        field_provenance:
+          principle: "JSON pointers and reducers make each corrected field independently traceable."
+        random_seed:
+          principle: "A fixed attack order makes the fail-closed checks reproducible."
+        duration_s:
+          principle: "Measured wall time helps detect implausible or fabricated replay work."
+        tests_run:
+          principle: "Command and exit-code receipts show which validation actually ran."
+        reproducibility_checksum:
+          principle: "A content hash detects later drift in inputs, rows, or decisions."
+        honest_verdict:
+          principle: "A terminal complete_* or blocked_* prefix lets the conductor classify the result safely."
       ACCEPTANCE GATES:
-        - condition: "v561_lineage_lock_ready_score == 1.0."
-        - condition: "No V561 task depends on a retired upstream experiment ID."
-      Set inference_substrate=independent_v560_artifact_replay_no_llm. Set verifier_is_oracle=true only for deterministic row and hash recomputation.
+        - condition: "v562_exact_branch_ready_score == 1.0."
+          principle: "The gate prevents quarantined benchmark evidence from entering the new causal chain."
+        - condition: "Exp6504 and Exp6505 historical artifact hashes are unchanged."
+          principle: "A corrigendum must add evidence, not silently alter the record it audits."
+        - condition: "No allowed V562 dependency consumes Exp6505 challenge rows or a retired lineage."
+          principle: "The milestone must start from the procedural exact benchmark, not a zero-yield or failed upstream."
+      Set inference_substrate=independent_v561_artifact_replay_no_llm. Set verifier_is_oracle=true only for exact label, hash, and row checks. Set the artifact verdict_class to null or partial unless an oracle-distinct scientific comparison exists.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6502_v560_retirement_v561_lineage_lock --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6506_v561_evidence_corrigendum_v562_lineage_lock --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6503-v561-source-delta-method-contract
-    milestone: "2026.08.561"
-    deliverable: results/experiment_6503_v561_source_delta_method_contract.json
-    title: "V561 source delta and exact-structural method preregistration"
-    priority: high
-    track: research-ingestion
+  - id: exp6507-exact-branch-counterfactual-dataset
+    milestone: "2026.08.562"
+    deliverable: results/experiment_6507_exact_branch_counterfactual_dataset.json
+    title: "Sealed exact branch-counterfactual dataset"
+    priority: critical
+    track: data-and-evidence
     requires_gpu: false
     per_unit_rows: true
-    max_turns: 20
-    estimated_wall_time_min: 40
+    max_turns: 50
+    estimated_wall_time_min: 150
     agent_type: codex
     model: gpt-5.5
-    prior_failures:
-      - experiment_id: exp6461-v556-sota-source-and-benchmark-delta
-        verdict: "blocked_primary_source_receipt: primary pages are source receipts only; no product, hardware, model, or ARC execution oracle was invoked."
-        addressed_by: "V561 removes the V556 rendered-ARC-primary-data precondition that failed. It records stable source receipts and freezes an exact local SAT/CSP method contract; unavailable product pages stay bounded context and cannot close readiness."
-        retire_if_same_verdict: true
     gated_on:
-      - upstream: exp6502-v560-retirement-v561-lineage-lock
-        artifact_field: v561_lineage_lock_ready_score
+      - upstream: exp6506-v561-evidence-corrigendum-v562-lineage-lock
+        artifact_field: v562_exact_branch_ready_score
         op: "=="
         value: 1.0
     prompt: |
       CONTEXT
-      The planner refresh in research-references.md promotes symbolic certification, initial branch ranking, clause advice, and exact-repair LNS. Execution must pin those sources and turn them into a frozen local comparison contract before data generation. Paper and product claims are context, not local evidence. Work at {project_root}. The planning date is {date}.
+      V562 needs exact local evidence about branch decisions before it can train or promote a ranker. Exp6504 supplies immutable formal instances and lineage-separated splits through the Exp6506 corrigendum. Exp6505 is not an input. The new dataset must measure counterfactual search consequences at precommitted checkpoints without changing exact authority. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/research-program.md, {project_root}/research-references.md, and the V561 roadmap document
-      - {project_root}/results/experiment_6502_v560_retirement_v561_lineage_lock.json
-      - {project_root}/scripts/experiment_template.py
-      - {project_root}/ops/exclusion_manifest.yaml and {project_root}/ops/e2e-test-plan.md
-      - existing exact SAT, CSP, graph, KAN, and sampler modules under {project_root}/python/carnot/
+      - {project_root}/research-program.md, {project_root}/_bmad/architecture.md, and the V562 roadmap document
+      - {project_root}/results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json
+      - {project_root}/results/experiment_6504_exact_structural_benchmark_commitment.json
+      - {project_root}/results/experiment_6489_solver_trajectory_commitment.json for reusable receipt patterns only
+      - {project_root}/python/carnot/experiment_6504_exact_structural_benchmark_commitment.py
+      - exact SAT, CSP, feature, and solver modules under {project_root}/python/carnot/
+      - relevant tests, capability specs, exclusion manifest, and ops/e2e-test-plan.md
 
       TASK
-      Recheck the V561 research sources, record stable receipts, and preregister the exact benchmark, branch-advice, learned-ranker, LNS, continual-learning, and mapping comparisons. Add no new runtime dependency unless the local stack lacks a required exact primitive.
+      Create an immutable branch-counterfactual dataset from the procedural exact benchmark. Precommit checkpoints and candidate rules, replay both polarities under bounded exact budgets, preserve censoring, and keep train, development, and held lineages sealed.
 
       CONCRETE STEPS
-      0. Evaluate the Exp6502 gate. Record its path, hash, field, expected value, observed value, network state, and protected-file hashes in gate_check_summary and preconditions_checked.
-      1. Add or confirm REQ-* and SCENARIO anchors for source receipts, claim boundaries, and method preregistration. Write focused tests first.
-      2. Recheck arXiv 2608.14569, 2603.07176, 2603.20801, OpenReview xvcqXxw4Le, Semantic Scholar EBT and ARM-EBM records, Hugging Face Papers, GitHub, Extropic, and Logical Intelligence.
-      3. Store title, stable URL, access date, available version, source class, and bounded Carnot implication for each receipt. Do not copy long source text.
-      4. Freeze benchmark families, shift axes, minimum held cell size, exact authorities, solver metrics, structural features, branch checkpoints, model controls, statistical rules, and failure conditions.
-      5. Freeze the rule that neural advice may order search but cannot accept, label, or release a solution.
-      6. Record no-delta findings honestly. Set method_contract_ready_score=1.0 only when every promoted method has a local test and every product claim has a no-local-evidence boundary.
-      7. Emit one row per source, method, control, metric, and boundary. Hash the contract before downstream data work.
-      8. Run focused tests, spec coverage, row lint, adversarial verification, documentation checks, and git status. Reconcile required docs after validation.
+      0. Evaluate the Exp6506 gate. Record its path, hash, field, expected value, observed value, exact solver versions, CPU/RAM/disk, and protected-file hashes.
+      1. Add or confirm REQ-* and SCENARIO anchors for branch checkpoints, candidate selection, exact counterfactual replay, censoring, split preservation, and immutable checksums. Write tests first.
+      2. Select checkpoints by a deterministic solver-state rule before any branch outcome is computed. Select eligible variables and both polarities without unit IDs, labels, or future solver effort.
+      3. Run bounded exact replays for each checkpoint, candidate variable, and polarity. Record conflicts, propagations, decisions, learned clauses when available, terminal validity, proof or model receipts, timeout, and censoring.
+      4. Preserve base-instance lineage and the Exp6504 train, development, and held split. Do not tune on held rows. Quarantine any source or label mismatch.
+      5. Freeze the structural feature schema before model work. Include only solver-state and instance-structure fields available at the decision point.
+      6. Attack unit identity, row order, serialization length, family labels, base labels, post-branch effort, duplicate checkpoints, split leakage, and asymmetric budgets.
+      7. Emit one row per checkpoint, candidate, polarity, budget, and terminal disposition. Set branch_counterfactual_dataset_ready_score=1.0 only if every admitted row has an exact receipt and every planned held cell meets its minimum size.
+      8. Run focused tests, full new-module coverage, lint, spec coverage, row lint, adversarial verification, exact-solver E2E checks, and git status. Reconcile specs and ops docs.
 
-      Required deliverable: {project_root}/results/experiment_6503_v561_source_delta_method_contract.json.
+      Required deliverable: {project_root}/results/experiment_6507_exact_branch_counterfactual_dataset.json.
       REQUIRED ARTIFACT FIELDS:
-        status: "Records source-ingestion completion."
-        verdict_class: "Closed enum: positive | circular_positive | null | blocked | disqualified | partial."
-        upstream_gate_receipt: "Binds the Exp6502 gate and observed value."
-        source_receipt_rows: "Records one stable receipt per checked source."
-        source_delta_rows: "Separates new, unchanged, unavailable, and superseded findings."
-        method_contract: "Freezes benchmark, advice, learning, LNS, continual, and mapping methods."
-        authority_boundary: "Keeps exact solvers above all learned signals."
-        dependency_decision_rows: "Explains why each dependency is reused, added, or rejected."
-        method_contract_ready_score: "Same-roadmap gate for the frozen method contract."
-        per_unit_rows: "Carries source, method, metric, and boundary rows."
-        aggregate_row_recomputation: "Recomputes readiness from required receipts."
-        gate_check_summary: "Names any failed gate or source precondition and observed value."
-        preconditions_checked: "Records gate, network, source, repository, and tool checks."
-        protected_files_unchanged: "Proves protected files stayed unchanged."
-        inference_substrate: "Declares source retrieval and local artifact synthesis with no inference model."
-        verifier_is_oracle: "False because source synthesis is not an execution oracle."
-        field_principles: "Explains each receipt and boundary field."
-        field_provenance: "Maps each finding to a URL, access receipt, and local contract row."
-        random_seed: "Fixes deterministic source and attack ordering."
-        duration_s: "Records measured wall time."
-        tests_run: "Records commands and exit codes."
-        reproducibility_checksum: "Hashes source receipts and the frozen contract."
-        honest_verdict: "Uses complete_* when the contract is valid or blocked_* with gate_check_summary."
+        status:
+          principle: "A terminal status separates a complete commitment from a partially generated dataset."
+        verdict_class:
+          principle: "The class marks this exact-oracle data commitment as non-scientific readiness rather than a positive method result."
+        upstream_gate_receipt:
+          principle: "The receipt proves that the corrected benchmark boundary was checked with the expected field name."
+        cited_upstream_artifacts:
+          principle: "Input hashes bind every branch row to the immutable base benchmark and corrigendum."
+        checkpoint_contract:
+          principle: "Precommitted checkpoint rules prevent outcome-aware selection."
+        structural_feature_schema:
+          principle: "A frozen decision-time schema blocks identity and future-effort leakage."
+        branch_counterfactual_rows:
+          principle: "Per-candidate exact replays provide the causal labels needed by later advice tests."
+        exact_solver_receipts:
+          principle: "Proof, model, and validity receipts keep solver authority above learned advice."
+        split_commitment:
+          principle: "Lineage-separated splits prevent tuning on held variants of the same base instance."
+        censoring_and_budget_rows:
+          principle: "Explicit timeouts and equal budgets prevent selective omission of hard branches."
+        leakage_attack_matrix:
+          principle: "Shortcut attacks test whether non-causal identifiers can recover branch labels."
+        branch_counterfactual_dataset_ready_score:
+          principle: "The gate opens advice experiments only when exact labels and held cells are complete."
+        per_unit_rows:
+          principle: "One row per branch unit makes all counts and comparisons independently recheckable."
+        aggregate_row_recomputation:
+          principle: "Aggregates must derive from rows so missing or contradictory units cannot hide."
+        gate_check_summary:
+          principle: "A blocked artifact must report the exact upstream, solver, cell-size, or replay failure."
+        preconditions_checked:
+          principle: "Resource and solver checks prevent fabricated exact evidence when the backend is unavailable."
+        protected_files_unchanged:
+          principle: "The active roadmap and conductor must stay unchanged during dataset work."
+        inference_substrate:
+          principle: "Declaring procedural replay with no LLM prevents model-generated labels from entering the dataset."
+        verifier_is_oracle:
+          principle: "The field exposes that exact replay defines correctness and cannot prove added verifier value."
+        field_principles:
+          principle: "Field-level reasons help later agents preserve the commitment under new attacks."
+        field_provenance:
+          principle: "Generator, checkpoint, solver, and JSON-pointer provenance makes every label auditable."
+        random_seed:
+          principle: "Fixed selection and replay seeds make the commitment reproducible."
+        duration_s:
+          principle: "Wall time provides a fabrication and resource-use check for exact replay."
+        tests_run:
+          principle: "Recorded commands and exit codes prove the required validation path ran."
+        reproducibility_checksum:
+          principle: "A content hash detects later drift in rows, splits, features, or solver receipts."
+        honest_verdict:
+          principle: "A terminal prefix gives downstream gates an unambiguous completion state."
       ACCEPTANCE GATES:
-        - condition: "method_contract_ready_score == 1.0."
-        - condition: "Every promoted paper maps to a bounded local test, not a copied claim."
-      Set inference_substrate=source_receipts_and_local_method_preregistration_no_llm. Set verifier_is_oracle=false.
+        - condition: "branch_counterfactual_dataset_ready_score == 1.0."
+          principle: "Advice tests need complete exact labels and cannot learn from a partial or quarantined dataset."
+        - condition: "Every admitted row has equal-budget exact replay and a terminal disposition."
+          principle: "Equal accounting prevents favorable branches from being selected after the fact."
+        - condition: "No feature uses unit identity, held outcome, or post-decision solver effort."
+          principle: "Decision-time causality is required before any ranker can claim generalization."
+      Set inference_substrate=procedural_branch_checkpoints_and_exact_counterfactual_solver_replay_no_llm. Set verifier_is_oracle=true for exact labels and validity only. Set verdict_class=null for a valid dataset commitment.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6503_v561_source_delta_method_contract --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6507_exact_branch_counterfactual_dataset --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6504-exact-structural-benchmark-commitment
-    milestone: "2026.08.561"
-    deliverable: results/experiment_6504_exact_structural_benchmark_commitment.json
-    title: "Immutable exact SAT/CSP structural benchmark commitment"
-    priority: critical
-    track: data-and-evidence
+  - id: exp6508-analytical-branch-refocus-ab
+    milestone: "2026.08.562"
+    deliverable: results/experiment_6508_analytical_branch_refocus_ab.json
+    title: "Analytical branch order and bounded-refocus A/B"
+    priority: high
+    track: exact-structural-search
     requires_gpu: false
     per_unit_rows: true
     max_turns: 50
@@ -182,170 +229,209 @@ tasks:
     agent_type: codex
     model: gpt-5.5
     gated_on:
-      - upstream: exp6502-v560-retirement-v561-lineage-lock
-        artifact_field: v561_lineage_lock_ready_score
-        op: "=="
-        value: 1.0
-      - upstream: exp6503-v561-source-delta-method-contract
-        artifact_field: method_contract_ready_score
+      - upstream: exp6507-exact-branch-counterfactual-dataset
+        artifact_field: branch_counterfactual_dataset_ready_score
         op: "=="
         value: 1.0
     prompt: |
       CONTEXT
-      V560 permits a new task distribution after a fresh leakage-resistant commitment. V561 needs exact structural instances before any ranker or SOTA mutation sees held rows. The benchmark must separate solver hardness from surface difficulty and must include enough held units for per-cell comparisons. Work at {project_root}. The planning date is {date}.
+      Learned advice is not eligible until a non-learned structural method proves held headroom. Exp6507 supplies exact branch counterfactuals and a frozen feature schema. V562 must compare solver-native dynamic branching with analytical initialization and bounded refocus under equal budgets and charged overhead. Exact answers cannot change. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/research-program.md, {project_root}/_bmad/architecture.md, and the V561 roadmap document
-      - {project_root}/results/experiment_6502_v560_retirement_v561_lineage_lock.json
+      - {project_root}/research-references.md and the V562 roadmap document
+      - {project_root}/results/experiment_6507_exact_branch_counterfactual_dataset.json
       - {project_root}/results/experiment_6503_v561_source_delta_method_contract.json
-      - {project_root}/results/experiment_6489_solver_trajectory_commitment.json
-      - exact solver and benchmark modules under {project_root}/python/carnot/
+      - exact solver, feature, and branch-control code under {project_root}/python/carnot/
       - relevant tests, capability specs, exclusion manifest, and ops/e2e-test-plan.md
 
       TASK
-      Create and seal a procedural exact SAT/CSP benchmark with train, development, and held shifts. Commit raw instances, exact labels, solver receipts, strata, split rules, leakage attacks, and checksums before learned work.
+      Compare native dynamic branching, static analytical order, periodic bounded refocus, and a shuffled structural control on sealed development and held cells. Measure whether advice changes search causally and remains useful after all overhead is charged.
 
       CONCRETE STEPS
-      0. Evaluate both structured gates. Record paths, hashes, fields, expected and observed values, solver availability, CPU/RAM/disk, and protected-file hashes.
-      1. Add or confirm REQ-* and SCENARIO anchors for exact benchmark generation, immutable splits, exact labels, family balance, and leakage rejection. Write tests first.
-      2. Generate versioned random and pseudo-industrial 3-CNF, Tseitin, pigeonhole, graph-coloring, and small scheduling instances. Use only deterministic local generators and fixed seeds.
-      3. Obtain SAT/UNSAT, feasible/infeasible, model, proof, and validity receipts from installed exact backends. Quarantine disagreements. Never hand-correct a label.
-      4. Freeze family, scale, surface relabeling, density, proof family, source, and solver-effort strata. Do not use solver effort as a model-difficulty proxy.
-      5. Commit train, development, and held splits by base-instance lineage before feature extraction. Require at least 30 held units in every planned headline cell.
-      6. Attack unit identity, row order, serialization length, generator seed, family, duplicate lineage, label balance, solver backend, and split leakage.
-      7. Emit raw instance rows and one receipt per label, proof/model check, split, stratum, and attack. Set base_structural_benchmark_ready_score=1.0 only if exact replay and every commitment invariant pass.
-      8. Run focused tests, full new-module coverage, lint, spec coverage, row consistency lint, adversarial verification, exact-solver E2E checks, and git status. Reconcile specs and ops docs.
+      0. Evaluate the Exp6507 gate. Record its path, hash, field, expected and observed values, solver versions, resources, and protected-file hashes.
+      1. Add or confirm REQ-* and SCENARIO anchors for analytical order, bounded refocus, native fallback, equal budgets, influence receipts, and exact answer invariance. Write tests first.
+      2. Freeze one analytical score from decision-time structure only. Freeze initialization and refocus intervals on development rows. Do not tune on held rows.
+      3. Run native dynamic, static analytical, bounded-refocus, and shuffled-order arms with matched instances, seeds, solver limits, and fallback rules.
+      4. Record conflicts, decisions, propagations, restarts, wall time, feature cost, advice cost, fallback cost, and the number of decisions for which advice remained active.
+      5. Require identical exact SAT/UNSAT or feasibility outcomes and replay all accepted models or proofs. Quarantine any correctness change.
+      6. Compare family, scale, surface, source, and solver-effort strata. Report wins, losses, ties, censoring, noninferiority, and charged wall-clock effects per unit.
+      7. Attack unit IDs, family-only scoring, serialization length, label balance, advice that never fires, uncharged preprocessing, and one-cell wins. Set analytical_advice_ready_score=1.0 only for a preregistered held improvement with correctness invariance and charged wall-clock noninferiority.
+      8. Emit the artifact. Run focused tests, coverage, lint, spec coverage, row lint, adversarial verification, exact-solver E2E checks, and git status. Reconcile specs and ops docs.
 
-      Required deliverable: {project_root}/results/experiment_6504_exact_structural_benchmark_commitment.json.
+      Required deliverable: {project_root}/results/experiment_6508_analytical_branch_refocus_ab.json.
       REQUIRED ARTIFACT FIELDS:
-        status: "Records the terminal benchmark state."
-        verdict_class: "Closed enum: positive | circular_positive | null | blocked | disqualified | partial."
-        upstream_gate_receipts: "Bind both same-roadmap gates and observed values."
-        benchmark_schema: "Versions instances, labels, proofs, models, strata, and splits."
-        raw_instance_rows: "Preserves every formal instance before feature extraction."
-        exact_label_rows: "Provides solver-certified labels and authority receipts."
-        exact_replay_rows: "Checks every accepted label with a deterministic replay."
-        split_commitment: "Freezes lineage-separated train, development, and held sets."
-        stratum_balance_rows: "Records family, scale, surface, hardness, source, and label counts."
-        minimum_held_cell_size: "Enforces at least 30 units for percentage comparisons."
-        leakage_attack_matrix: "Tests identity, order, length, seed, family, duplicate, backend, and split shortcuts."
-        base_structural_benchmark_ready_score: "Same-roadmap gate for the base benchmark."
-        per_unit_rows: "Carries instance, label, replay, split, stratum, and attack rows."
-        aggregate_row_recomputation: "Recomputes counts and readiness from raw rows."
-        gate_check_summary: "Names any failed gate, solver, cell-size, or replay check and observed value."
-        preconditions_checked: "Records gates, solver tools, resources, repository, and storage checks."
-        protected_files_unchanged: "Proves protected files stayed unchanged."
-        inference_substrate: "Declares procedural generators and exact local solvers with no LLM."
-        verifier_is_oracle: "True only for exact solver labels and executable validity checks."
-        field_principles: "Explains why each commitment field exists."
-        field_provenance: "Maps rows to generators, seeds, solver commands, and hashes."
-        random_seed: "Records all generator and split seeds."
-        duration_s: "Records measured wall time."
-        tests_run: "Records commands and exit codes."
-        reproducibility_checksum: "Hashes instances, labels, splits, strata, and attacks."
-        honest_verdict: "Uses complete_* when the commitment is valid or blocked_* with gate_check_summary."
+        status:
+          principle: "A terminal state distinguishes a completed comparison from an interrupted solver run."
+        verdict_class:
+          principle: "The class carries whether the held comparison is positive, null, blocked, disqualified, or partial."
+        upstream_gate_receipt:
+          principle: "The receipt proves the exact branch dataset was eligible before method execution."
+        method_preregistration:
+          principle: "Frozen scores, intervals, metrics, and thresholds prevent held-set tuning."
+        arm_definitions:
+          principle: "Explicit native, analytical, refocus, and shuffle arms make the comparison reproducible."
+        rows:
+          principle: "One instance-arm-seed row preserves exact outcomes, search work, cost, and disposition."
+        advice_influence_receipts:
+          principle: "Influence duration proves the method changed live branch decisions rather than producing a dead sidecar."
+        exact_validity_rows:
+          principle: "Exact replay enforces correctness as a hard invariant across arms."
+        charged_cost_breakdown:
+          principle: "Feature, advice, solver, and fallback costs prevent free-preprocessing speed claims."
+        shift_result_rows:
+          principle: "Separate shift cells expose narrow wins and distribution regressions."
+        shortcut_attack_matrix:
+          principle: "Attacks reject identity, label, family, and inert-advice shortcuts."
+        analytical_advice_ready_score:
+          principle: "A closed signal score gives Exp6510 an exact field for the learned-phase decision."
+        per_unit_rows:
+          principle: "Per-unit evidence lets a third party recompute all arm and shift comparisons."
+        aggregate_row_recomputation:
+          principle: "Row-derived aggregates prevent pooled headlines from hiding losses or null headroom."
+        gate_check_summary:
+          principle: "Blocked results must name the failed dataset, solver, validity, or resource check."
+        preconditions_checked:
+          principle: "Pre-launch checks prevent fabricated results when the solver or data is unavailable."
+        protected_files_unchanged:
+          principle: "Protected roadmap and conductor files must not change during implementation."
+        inference_substrate:
+          principle: "Declaring analytical local search with no LLM keeps the model mandate and authority boundary clear."
+        verifier_is_oracle:
+          principle: "False for the performance claim prevents exact correctness checks from being mistaken for method value."
+        field_principles:
+          principle: "Embedded reasons preserve the experimental intent during later maintenance."
+        field_provenance:
+          principle: "Code, row, solver, and metric provenance makes each headline traceable."
+        random_seed:
+          principle: "Matched seeds are required for paired causal comparison."
+        duration_s:
+          principle: "Measured wall time supports charged-cost and fabrication checks."
+        tests_run:
+          principle: "Command receipts establish which validations and E2E checks passed."
+        reproducibility_checksum:
+          principle: "A hash binds methods, rows, thresholds, and outputs against drift."
+        honest_verdict:
+          principle: "A valid terminal prefix lets the conductor distinguish complete, null, and blocked outcomes."
       ACCEPTANCE GATES:
-        - condition: "base_structural_benchmark_ready_score == 1.0."
-        - condition: "Every accepted label replays under an exact backend and every planned held cell has at least 30 units."
-      Set inference_substrate=procedural_formal_instances_and_exact_solver_labels_no_llm. Set verifier_is_oracle=true only for exact labels and executable validity.
+        - condition: "All arms return identical exact answers on every admitted unit."
+          principle: "Search efficiency cannot compensate for a correctness regression."
+        - condition: "analytical_advice_ready_score == 1.0 only after held search improvement and charged wall-clock noninferiority."
+          principle: "The combined gate blocks inert advice and uncharged preprocessing wins."
+        - condition: "Advice influences at least the preregistered minimum number of live decisions."
+          principle: "A performance correlation is not causal evidence when the tested advice never controls search."
+      Set inference_substrate=analytical_structural_features_inside_exact_local_solver_no_llm. Set verifier_is_oracle=false for the performance comparison; exact validity remains oracle authority.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6504_exact_structural_benchmark_commitment --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6508_analytical_branch_refocus_ab --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp6505-sota-formal-challenge-mutations
-    milestone: "2026.08.561"
-    deliverable: results/experiment_6505_sota_formal_challenge_mutations.json
-    title: "Local-SOTA one-shot formal challenge mutation stream"
+  - id: exp6509-critical-variable-enumeration-ab
+    milestone: "2026.08.562"
+    deliverable: results/experiment_6509_critical_variable_enumeration_ab.json
+    title: "One-shot critical-variable enumeration A/B"
     priority: high
-    track: local-sota-evaluation
-    requires_gpu: true
+    track: exact-structural-search
+    requires_gpu: false
     per_unit_rows: true
     max_turns: 50
-    estimated_wall_time_min: 180
+    estimated_wall_time_min: 120
     agent_type: codex
     model: gpt-5.5
     gated_on:
-      - upstream: exp6504-exact-structural-benchmark-commitment
-        artifact_field: base_structural_benchmark_ready_score
+      - upstream: exp6507-exact-branch-counterfactual-dataset
+        artifact_field: branch_counterfactual_dataset_ready_score
         op: "=="
         value: 1.0
-    prior_failures:
-      - experiment_id: exp5813-split-budget-sota-canary
-        verdict: "complete: answer_channel_not_ready_split_budget_sota_canary"
-        addressed_by: "Models do not answer tasks or emit finite IDs; they propose one-shot edit scripts for already formal instances, and exact solvers create all labels."
-        retire_if_same_verdict: true
-      - experiment_id: exp5923-sota-schema-supported-constraintir-ab
-        verdict: "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates"
-        addressed_by: "This task performs no natural-language-to-ConstraintIR translation; it applies bounded syntactic edits to an existing formal DSL and may reject every model row without changing the procedural benchmark."
-        retire_if_same_verdict: true
-      - experiment_id: exp6463-sota-fixed-policy-candidate-corpus-v2
-        verdict: "complete: fixed-policy corpus v2 finished but readiness gate stayed closed"
-        addressed_by: "The deliverable is a challenge-instance mutation stream, not an answer-policy candidate corpus; models never see held labels or produce release decisions."
-        retire_if_same_verdict: true
     prompt: |
       CONTEXT
-      V561 must use current local SOTA models without reopening generated-answer or semantic-translation failures. Models may propose formal challenge mutations only. Exact parsing and solving decide whether a mutation enters the challenge pool. The base procedural benchmark remains valid even if all model proposals fail. Work at {project_root}. The planning date is {date}.
+      OpenReview submission l7GZ3vswuD reports a one-shot critical-variable prediction followed by exact enumeration. V562 must test the system structure locally before it trains a neural predictor or imports the paper's claim. Exp6507 provides exact branch labels and a structural feature schema. This task uses analytical and random subset selection only. Exact enumeration and the installed solver remain authority. Work at {project_root}. The planning date is {date}.
 
       EXISTING CODE TO READ FIRST
       - {project_root}/CODEX.md and {project_root}/CLAUDE.md
-      - {project_root}/scripts/experiment_template.py, including cached_sota_pair() and GGUF tokenizer guidance
-      - {project_root}/research-program.md and the V561 roadmap document
-      - {project_root}/results/experiment_6504_exact_structural_benchmark_commitment.json
-      - {project_root}/results/experiment_5813_split_budget_sota_canary.json
-      - {project_root}/results/experiment_5923_sota_schema_supported_constraintir_ab.json
-      - {project_root}/results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json
-      - existing llama_cpp runtime, exact parser, solver, and receipt modules under {project_root}/python/carnot/
-      - relevant tests, model cache rules, exclusion manifest, and ops/e2e-test-plan.md
+      - {project_root}/research-references.md and the V562 roadmap document
+      - {project_root}/results/experiment_6507_exact_branch_counterfactual_dataset.json
+      - {project_root}/results/experiment_6503_v561_source_delta_method_contract.json
+      - local SAT, CSP, enumeration, feature, and solver modules under {project_root}/python/carnot/
+      - relevant tests, capability specs, exclusion manifest, and ops/e2e-test-plan.md
 
       TASK
-      Build a one-shot challenge mutation stream with the three mandated local GGUF families. Each model receives a development formal instance and a bounded edit grammar. Persist raw bytes and runtime receipts. Exact local tools accept, label, or reject each mutation.
+      Build a bounded one-shot critical-variable enumeration control. Compare native exact search, random fixed subsets, and analytical fixed subsets. Enumerate the selected prefix once, hand every residual to the exact solver, and charge all selection and enumeration cost.
 
       CONCRETE STEPS
-      0. Evaluate the Exp6504 gate. Check model cache paths, file sizes, llama_cpp CUDA support, GPU inventory, free VRAM, disk, and protected-file hashes before loading a model. Record failures exactly.
-      1. Add or confirm REQ-* and SCENARIO anchors for one-shot mutation, no-answer boundaries, exact mutation admission, model provenance, and GPU receipts. Write tests first.
-      2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Load one at a time through llama_cpp and each GGUF's embedded tokenizer. Do not use AutoTokenizer.
-      3. Freeze a small edit DSL for bounded clause, edge, color, job, precedence, coefficient, and relabel operations. The prompt must forbid answers, labels, solver advice, free-form semantic translation, and release decisions.
-      4. Select development-only source instances before generation. Issue one request per source/model pair. Do not retry until parse or acceptance. Persist exact request and response bytes before parsing.
-      5. Parse each edit script. Apply syntactically valid edits to a copy. Run exact satisfiability, feasibility, model/proof, and validity checks. Quarantine invalid, duplicate, unchanged, or label-ambiguous outputs.
-      6. Compare valid-yield, novelty, family, scale, label, edit type, truncation, parser, and runtime cells across model families. A model-family comparison requires one row for each request.
-      7. Set challenge_generation_complete_score=1.0 when all precommitted requests have terminal receipts, even if valid yield is zero. Set challenge_pool_ready_score separately and never block the base benchmark on model quality.
-      8. Emit the artifact. Run focused tests, full new-module coverage, lint, spec coverage, row lint, adversarial verification, local-inference E2E checks, and git status. Reconcile specs and ops docs.
+      0. Evaluate the Exp6507 gate. Record its path, hash, field, expected and observed values, solver versions, resources, and protected-file hashes.
+      1. Add or confirm REQ-* and SCENARIO anchors for one-shot subset selection, enumeration budgets, exact residual solving, matched random controls, and correctness invariance. Write tests first.
+      2. Freeze subset sizes, analytical scores, random seeds, enumeration caps, residual solver limits, fallback, and held metrics on development rows.
+      3. Run native solver, random-subset enumeration, and analytical-subset enumeration arms on matched development and held instances.
+      4. Record selection cost, number of prefixes, pruned prefixes, exact residual calls, conflicts, decisions, wall time, censoring, fallback, and terminal exact validity.
+      5. Preserve both success and exhaustion rows. Never drop a unit because the prefix cap or residual solver timed out.
+      6. Compare family, scale, surface, source, subset size, and solver-effort strata. Require exact answer equality across all arms.
+      7. Attack label-aware selection, post-solve criticality, unequal prefix budgets, duplicate prefixes, free selection cost, and random-seed cherry-picking. Set enumerative_headroom_ready_score=1.0 only for held improvement over both native and random controls with charged-cost noninferiority.
+      8. Emit the artifact. Run focused tests, coverage, lint, spec coverage, row lint, adversarial verification, exact-solver E2E checks, and git status. Reconcile specs and ops docs.
 
-      Required deliverable: {project_root}/results/experiment_6505_sota_formal_challenge_mutations.json.
+      Required deliverable: {project_root}/results/experiment_6509_critical_variable_enumeration_ab.json.
       REQUIRED ARTIFACT FIELDS:
-        status: "Records terminal generation and admission state."
-        verdict_class: "Closed enum: positive | circular_positive | null | blocked | disqualified | partial."
-        upstream_gate_receipt: "Binds the base benchmark gate and observed value."
-        model_specs: "Lists all three mandated GGUF repositories, files, quantization, and roles."
-        model_runtime_receipts: "Records llama_cpp backend, tokenizer, offload, VRAM, and timing per model."
-        mutation_grammar: "Freezes the bounded formal edit language."
-        source_selection_receipt: "Proves all sources are development-only and chosen before generation."
-        raw_request_response_receipts: "Preserves exact bytes and hashes before parsing."
-        rows: "Provides one request, parse, edit, exact-check, and disposition row per unit."
-        exact_admission_rows: "Records parse, replay, label, proof/model, novelty, and quarantine outcomes."
-        model_family_results: "Reports valid yield and failure modes separately for each SOTA family."
-        challenge_generation_complete_score: "Same-roadmap gate for complete request accounting."
-        challenge_pool_ready_score: "Separates useful valid mutations from execution completeness."
-        prohibited_output_attack_matrix: "Tests answers, labels, heuristics, semantic translation, retries, held access, and model identity shortcuts."
-        per_unit_rows: "Carries every request and exact admission result."
-        aggregate_row_recomputation: "Recomputes all yields, counts, and scores from rows."
-        gate_check_summary: "Names any failed benchmark, cache, CUDA, GPU, parse, or runtime check and observed value."
-        preconditions_checked: "Records gate, cache, GPU, runtime, tokenizer, disk, and repository checks."
-        protected_files_unchanged: "Proves protected files stayed unchanged."
-        inference_substrate: "Declares local llama_cpp GGUF generation plus exact CPU parsing and solving."
-        verifier_is_oracle: "True only for exact formal admission checks; models are not oracles."
-        field_principles: "Explains each generation, admission, and boundary field."
-        field_provenance: "Maps rows to model files, raw hashes, parser functions, and solver receipts."
-        random_seed: "Records source selection and generation seeds."
-        duration_s: "Records measured wall time."
-        tests_run: "Records commands and exit codes."
-        reproducibility_checksum: "Hashes specs, raw bytes, parses, admissions, and rows."
-        honest_verdict: "Uses complete_* for complete accounting, complete_null for zero useful yield, or blocked_* with gate_check_summary for unmet execution preconditions."
+        status:
+          principle: "A terminal status separates a complete enumeration study from partial prefix execution."
+        verdict_class:
+          principle: "The class records whether the charged held comparison is positive, null, blocked, disqualified, or partial."
+        upstream_gate_receipt:
+          principle: "The receipt binds execution to the eligible branch dataset with the exact gate field."
+        source_receipt:
+          principle: "A stable OpenReview receipt distinguishes the paper's claim from the local test."
+        method_preregistration:
+          principle: "Frozen subset, cap, metric, and fallback rules prevent post-hoc enumeration choices."
+        arm_definitions:
+          principle: "Native, random, and analytical arms make the system-level comparison explicit."
+        rows:
+          principle: "One unit-arm-seed row preserves every prefix, residual call, cost, and outcome."
+        enumeration_receipts:
+          principle: "Prefix and residual-solver receipts prove that the one-shot mechanism actually executed."
+        exact_validity_rows:
+          principle: "Exact model or proof replay prevents enumeration shortcuts from changing answers."
+        charged_cost_breakdown:
+          principle: "Selection, prefix, residual, and fallback costs prevent a free-enumeration claim."
+        shift_result_rows:
+          principle: "Per-shift results expose narrow subset benefits and scale failures."
+        shortcut_attack_matrix:
+          principle: "Attacks reject outcome-aware criticality, unequal budgets, duplication, and seed selection."
+        enumerative_headroom_ready_score:
+          principle: "A closed score lets Exp6510 combine this result with analytical refocus without an OR gate bug."
+        per_unit_rows:
+          principle: "Per-unit rows make every native, random, and analytical comparison recheckable."
+        aggregate_row_recomputation:
+          principle: "All summary values must derive from prefix and unit rows."
+        gate_check_summary:
+          principle: "A blocked artifact must report the exact failed data, solver, budget, or validity check."
+        preconditions_checked:
+          principle: "Resource and solver checks prevent synthesized enumeration results."
+        protected_files_unchanged:
+          principle: "Protected control files must stay unchanged during formulaic implementation."
+        inference_substrate:
+          principle: "Declaring analytical selection plus exact solving makes clear that no LLM or paper model was used."
+        verifier_is_oracle:
+          principle: "False for efficiency value prevents circular exact checks from creating a positive class."
+        field_principles:
+          principle: "Field reasons preserve the local-replication boundary for future extensions."
+        field_provenance:
+          principle: "Rows must trace to source receipt, selector code, solver calls, and reducers."
+        random_seed:
+          principle: "Precommitted random subsets require deterministic seeds for fair comparison."
+        duration_s:
+          principle: "Measured wall time validates charged-cost accounting and execution authenticity."
+        tests_run:
+          principle: "Recorded commands and exit codes prove validation coverage."
+        reproducibility_checksum:
+          principle: "A hash binds subset rules, rows, caps, and results against later drift."
+        honest_verdict:
+          principle: "A terminal prefix provides a safe conductor and retirement signal."
       ACCEPTANCE GATES:
-        - condition: "challenge_generation_complete_score == 1.0 after every precommitted request has one terminal receipt."
-        - condition: "No accepted row contains a model-generated answer, label, semantic translation, or release decision."
-      Set inference_substrate=local_llama_cpp_three_family_formal_mutation_generation_plus_exact_solver_admission. Set verifier_is_oracle=true only for exact parsing, solving, and validity.
+        - condition: "Every admitted arm returns the same exact answer and validity receipt."
+          principle: "Enumeration may alter search order but cannot alter correctness."
+        - condition: "enumerative_headroom_ready_score == 1.0 only after a held win over native and matched random controls."
+          principle: "Both controls are needed to separate useful criticality from added compute or lucky subset choice."
+        - condition: "All selector, prefix, residual-solver, and fallback costs are charged."
+          principle: "A local method claim must survive end-to-end cost accounting."
+      Set inference_substrate=analytical_one_shot_subset_selection_and_exact_enumeration_no_llm. Set verifier_is_oracle=false for the performance comparison; exact residual validity remains oracle authority.
 
-      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6505_sota_formal_challenge_mutations --date {date}
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6509_critical_variable_enumeration_ab --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
