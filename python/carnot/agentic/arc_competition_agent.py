@@ -243,7 +243,6 @@ from carnot.agentic.arc_executable_world_model import (  # noqa: E402
     ARC_LIVE_GENERATOR_REPO_SUBSTR,
     ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT,
     SUBMITTED_MECHANIC_CLASS_ROUTER_ENABLED,
-    _default_induce_timeout_s,
 )
 
 # REQ-ARC-FCP-5699-11 (operator: "wire SGE into the live path", 2026-07-15): the LLM
@@ -1332,16 +1331,12 @@ def _load_sge_candidate_router(game_id: str) -> Any | None:
         mtp=(_os.environ.get("CARNOT_ARC_MTP", ARC_LIVE_GENERATOR_MTP_DEFAULT) != "0"),
         kv_quant="q8_0",
         no_think_prefix=ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
-        # REQ-ARC-FCP-5699-35: read the SAME env-var-overridable defaults as _proposer()'s own
-        # lazy default (4096/600, was a hardcoded max_tokens=2560 literal with no timeout
-        # override at all -- caught by test_req_arc_fcp_5699_11_load_sge_candidate_router_
-        # reuses_frozen_generator_config's own "configured IDENTICALLY" contract when the
-        # _proposer() default graduated and this one silently didn't move with it).
-        max_tokens=int(_os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", "4096")),
-        # DERIVED, not a 600 literal: the timeout now scales with the FFN offload that slows
-        # generation down (see `_default_induce_timeout_s`). The 600 was calibrated for the 9B and
-        # the 31B's slowest observed induce call was 572.0 s -- 4.7% inside it, before any offload.
-        timeout=int(_os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT", str(_default_induce_timeout_s()))),
+        # REQ-ARC-FCP-5699-35 history: this site once hardcoded max_tokens=2560 while
+        # _proposer() said 4096 -- the exact silent divergence its docstring forbids.
+        # REQ-ARC-WMTE-6620 (2026-08-21) removes the possibility instead of re-syncing the
+        # literals: max_tokens / timeout are OMITTED here AND at _proposer(), so both sites
+        # inherit the ONE dataclass default, which reads the same env vars and then the
+        # generator pin's own values. Byte-identical by construction.
         n_gpu_layers=int(_os.environ.get("CARNOT_ARC_NGL", "999")),
     )
     return SGECandidateRouter(
@@ -6433,14 +6428,13 @@ class E3AgentPolicy:
                 mtp=(os.environ.get("CARNOT_ARC_MTP", ARC_LIVE_GENERATOR_MTP_DEFAULT) != "0"),
                 kv_quant="q8_0",
                 no_think_prefix=ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
-                max_tokens=int(os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", "4096")),
-                # DERIVED -- see `_load_sge_candidate_router()` above and
-                # `_default_induce_timeout_s()`. Both live construction sites must read the same
-                # default or they diverge, which is the exact failure REQ-ARC-FCP-5699-35 records
-                # having already happened once for max_tokens.
-                timeout=int(
-                    os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT", str(_default_induce_timeout_s()))
-                ),
+                # max_tokens / timeout are DELIBERATELY OMITTED (REQ-ARC-WMTE-6620). The
+                # dataclass defaults read the same env vars (CARNOT_ARC_INDUCE_MAX_TOKENS /
+                # CARNOT_ARC_INDUCE_TIMEOUT) and then the GENERATOR PIN's own defaults --
+                # the n_ctx omission pattern below. This site used to carry a literal "4096"
+                # validated for the retired 9B (REQ-ARC-FCP-5699-32); it survived two
+                # generator swaps and made every env-less run fail 100% of Qwen3.8
+                # inductions (2026-08-21 zero-world-model A/B).
                 port=int(os.environ.get("CARNOT_ARC_PROPOSER_PORT", "8919")),
                 n_gpu_layers=int(os.environ.get("CARNOT_ARC_NGL", "999")),
             )
@@ -6777,7 +6771,10 @@ class E3AgentPolicy:
             # Recorded as the RAW fields the induction path itself writes, not as a
             # pre-digested verdict. `skipped` is the load-bearing one: it distinguishes
             # "no engine was ever produced" (`no_active_transitions`, `disabled_by_env`,
-            # `proposer_failed_or_missing_root`) from "an engine was produced and the
+            # `proposer_failed` / `missing_plan_start_grid` -- split from the old conflated
+            # `proposer_failed_or_missing_root` label per REQ-ARC-WMTE-6610; the old label
+            # still appears in artifacts recorded before 2026-08-21) from "an engine was
+            # produced and the
             # trust gate REJECTED it" (`hidden_state_trust_below_threshold`,
             # `hidden_state_change_gate_*`, `trust_below_threshold`). Collapsing those two
             # into one boolean is precisely how a pipeline gets credited with work it did
@@ -7957,14 +7954,27 @@ class E3AgentPolicy:
             _induce_rows = active_transitions
             if _cegis_accept_split_enabled():
                 _induce_rows = _split_refinement_acceptance(active_transitions).refinable
-            ok, _ = self._proposer().induce(
+            ok, _induce_note = self._proposer().induce(
                 self.short,
                 _induce_rows,
                 self.cell,
                 **_induce_kwargs,
             )
             if not ok or _plan_start_grid is None:
-                attempt["skipped"] = "proposer_failed_or_missing_root"
+                # SPLIT RECORD (REQ-ARC-WMTE-6610). The old single label
+                # "proposer_failed_or_missing_root" conflated two different causes, and the
+                # induce note naming the real failure was discarded (`ok, _ = ...`). The
+                # 2026-08-21 zero-world-model A/B could not distinguish "the LLM's output was
+                # unusable" from "there was no root grid to plan from" -- the note would have
+                # said `[HIT n_predict=4096 OUTPUT LIMIT]` outright.
+                if not ok and _plan_start_grid is None:
+                    attempt["skipped"] = "proposer_failed_and_missing_plan_start_grid"
+                elif not ok:
+                    attempt["skipped"] = "proposer_failed"
+                else:
+                    attempt["skipped"] = "missing_plan_start_grid"
+                if not ok:
+                    attempt["proposer_note"] = str(_induce_note)[:300]
                 return
             engine, is_done = e3.load_engine(self.short)
             candidate_pool = self._world_model_candidates(engine, is_done)

@@ -502,7 +502,11 @@ def test_req_arc_fcp_5699_35_stall_refactor_loop_explicit_opt_out(monkeypatch) -
     attempt = policy.induction_attempts[-1]
     assert attempt["reason"] == "stall"
     assert "stall_refactor_loop_used" not in attempt
-    assert attempt["skipped"] == "proposer_failed_or_missing_root"  # the plain path's own outcome
+    # REQ-ARC-WMTE-6610: the plain path now records WHICH cause fired. The stub proposer
+    # declines (not ok) while root_grid exists, so this is a proposer failure, and the
+    # discarded induce note is now carried on the attempt.
+    assert attempt["skipped"] == "proposer_failed"
+    assert attempt["proposer_note"] == "test_stub_declines"
 
 
 def test_req_arc_fcp_5699_24_stall_refactor_loop_records_outcome_when_enabled(monkeypatch) -> None:
@@ -568,7 +572,10 @@ def test_req_arc_fcp_5699_24_stall_refactor_loop_records_outcome_when_enabled(mo
     # planned=False), whose own outcome legitimately supersedes "skipped"/"planned" as the
     # attempt's FINAL overall result -- both sub-outcomes are honestly represented: the stall
     # loop genuinely ran 3 rounds (recorded above), AND neither mechanism produced a plan.
-    assert attempt["skipped"] == "proposer_failed_or_missing_root"
+    # REQ-ARC-WMTE-6610: the plain path's outcome is now the SPECIFIC cause (stub declines,
+    # root grid present -> proposer_failed) with the induce note carried.
+    assert attempt["skipped"] == "proposer_failed"
+    assert attempt["proposer_note"] == "test_stub_declines"
     assert attempt["planned"] is False
 
 
@@ -849,8 +856,11 @@ def test_req_arc_wmte_4544_helper_defensive_branches() -> None:
     def noop(grid, _action, _data):
         return np.asarray(grid)
 
+    # REQ-ARC-WMTE-6630: the label derives from the weights file, NOT the repo pin -- the old
+    # `f"{repo_substr} GGUF ({path})"` form recorded "Qwen3.5-9B-MTP" over a Qwen3.8-27B path
+    # when CARNOT_ARC_GGUF_PATH overrode a frozen pin (2026-08-21 A/B rows).
     assert _model_specs(SimpleNamespace(repo_substr="Qwen3.5-9B-MTP", model_path="/m.gguf")) == (
-        "Qwen3.5-9B-MTP GGUF (/m.gguf)"
+        "m GGUF (/m.gguf)"
     )
     assert _model_specs(SimpleNamespace()).endswith("SimpleNamespace")
 

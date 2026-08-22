@@ -13,7 +13,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 import inspect
 import os
-from pathlib import Path
+from pathlib import Path, PurePath
 from types import SimpleNamespace
 from typing import Any, Callable, Mapping, Sequence
 
@@ -124,13 +124,32 @@ class LlmReinductionResult:
 
 
 def _model_specs(proposer: Any) -> str:
+    """Name the generator by the weights ACTUALLY loaded, not by the configured pin.
+
+    The old form labelled with `repo_substr` while the path came from `model_path`, so a
+    harness carrying a frozen 9B pin under a CARNOT_ARC_GGUF_PATH override recorded
+    "Qwen3.5-9B-MTP GGUF (.../Qwen3.8-27B-Q4_K_M.gguf)" -- a label contradicting its own
+    path (REQ-ARC-WMTE-6630, 2026-08-21). Preference order: the RUNNING server's own
+    reported weights file (the only channel that catches a stale server on the port),
+    then the configured path's file name, then the repo pin / class name."""
     value = getattr(proposer, "model_specs", None)
     if value:
         return str(value)
+    observed = None
+    observer = getattr(proposer, "observed_model_path", None)
+    if callable(observer):
+        try:
+            observed = observer()
+        except Exception:
+            observed = None  # a label helper must never take down an induction
+    path = observed or getattr(proposer, "model_path", None)
+    if path:
+        name = PurePath(str(path)).name
+        for suffix in (".gguf", ".GGUF"):
+            name = name.removesuffix(suffix)
+        return f"{name} GGUF ({path})"
     repo = getattr(proposer, "repo_substr", "")
-    path = getattr(proposer, "model_path", None)
-    label = repo or proposer.__class__.__name__
-    return f"{label} GGUF ({path})" if path else str(label)
+    return str(repo or proposer.__class__.__name__)
 
 
 def _normalise_structural_goal_candidate(
