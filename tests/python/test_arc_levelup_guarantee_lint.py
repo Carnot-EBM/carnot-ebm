@@ -71,7 +71,9 @@ class TestLevelUpAttemptDetection:
         )
 
     def test_no_offline_reproduced_does_not_count(self) -> None:
-        assert not lint._is_levelup_attempt("Run a benchmark sweep across all games, reproduced_levels>=1.")
+        assert not lint._is_levelup_attempt(
+            "Run a benchmark sweep across all games, reproduced_levels>=1."
+        )
 
 
 class TestGeneralizationAttemptDetection:
@@ -88,17 +90,40 @@ class TestGeneralizationAttemptDetection:
         )
 
     def test_unrelated_infra_task_does_not_match(self) -> None:
-        assert not lint._is_generalization_attempt("Reconcile documentation and run infra hygiene checks.")
+        assert not lint._is_generalization_attempt(
+            "Reconcile documentation and run infra hygiene checks."
+        )
 
     def test_arc_mention_without_generalization_signal_does_not_match(self) -> None:
         # Bare game-name mention with no held-out/transfer/primitive-hardening language should not count.
-        assert not lint._is_generalization_attempt("Update the bp35 registry entry's win_condition prose.")
+        assert not lint._is_generalization_attempt(
+            "Update the bp35 registry entry's win_condition prose."
+        )
 
     def test_generalization_signal_without_arc_scope_does_not_match(self) -> None:
         # Generic ML "generalization" language with no ARC/game-code mention is a different domain
         # entirely (e.g. Phase D off-ARC verifier work) and must not false-positive this floor.
         assert not lint._is_generalization_attempt(
             "Improve model generalization via better regularization on the held-out validation split."
+        )
+
+    def test_supervisor_refinement_task_matches(self) -> None:
+        # Task-class 4 (2026-08-22 floor amendment): refining the trajectory supervisor's arm
+        # table from the redirect ledger's fired/helped outcomes (REQ-ARC-WMTE-6640) qualifies.
+        assert lint._is_generalization_attempt(
+            "ARC supervisor refinement: read the accumulated redirect ledger receipts and retire "
+            "any arm with fired>0 and helped=0 across runs."
+        )
+        assert lint._is_generalization_attempt(
+            "Analyze arm_outcomes across the ARC lever-harness rows and reorder the trajectory "
+            "supervisor arm table accordingly."
+        )
+
+    def test_supervisor_language_without_arc_scope_does_not_match(self) -> None:
+        # A non-ARC "supervisor" (systemd, conductor) prompt must not count toward the floor.
+        assert not lint._is_generalization_attempt(
+            "Restart the conductor under its systemd supervisor and check the redirect ledger of "
+            "the proxy."
         )
 
     def test_count_generalization_attempts_sums_matches(self, tmp_path: Path) -> None:
@@ -111,13 +136,18 @@ class TestGeneralizationAttemptDetection:
                         "prompt": "ARC-AGI-3 leave-one-game-out generalization test on the live path.",
                     },
                     {"id": "exp2", "prompt": "Unrelated infra hygiene, no ARC content."},
-                    {"id": "exp3", "prompt": "Mine cross-game general_gotchas into arc_solver_kit.py."},
+                    {
+                        "id": "exp3",
+                        "prompt": "Mine cross-game general_gotchas into arc_solver_kit.py.",
+                    },
                 ]
             ),
         )
         assert lint.count_generalization_attempts(roadmap) == 2
 
-    def test_count_generalization_attempts_returns_zero_on_malformed_roadmap(self, tmp_path: Path) -> None:
+    def test_count_generalization_attempts_returns_zero_on_malformed_roadmap(
+        self, tmp_path: Path
+    ) -> None:
         bad = tmp_path / "roadmap.yaml"
         bad.write_text("tasks: [not: valid: yaml", encoding="utf-8")
         assert lint.count_generalization_attempts(bad) == 0
@@ -131,12 +161,16 @@ class TestLintRoadmapRetirement:
         monkeypatch.setattr(lint, "_REGISTRY_PATH", registry)
         roadmap = _write_yaml(
             tmp_path / "roadmap.yaml",
-            _roadmap([{"id": "exp1", "prompt": "No ARC content whatsoever, zero level-up attempts."}]),
+            _roadmap(
+                [{"id": "exp1", "prompt": "No ARC content whatsoever, zero level-up attempts."}]
+            ),
         )
         # This is the exact scenario that used to hard-block: zero level-up attempts, min=1.
         assert lint.lint_roadmap(roadmap, 1) == 0
 
-    def test_not_retired_path_still_enforces_minimum(self, tmp_path: Path, monkeypatch: Any) -> None:
+    def test_not_retired_path_still_enforces_minimum(
+        self, tmp_path: Path, monkeypatch: Any
+    ) -> None:
         registry = _write_yaml(tmp_path / "registry.yaml", _registry_payload(all_cleared=False))
         monkeypatch.setattr(lint, "_REGISTRY_PATH", registry)
         roadmap = _write_yaml(
