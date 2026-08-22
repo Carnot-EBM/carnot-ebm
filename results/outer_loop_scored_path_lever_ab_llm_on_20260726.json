@@ -258076,6 +258076,22 @@
     "sha256_now": "4fd08d7a9d4858e4bad387379ae8b39f58a8249410260852d775025f922772b5",
     "reason": "REQ-ARC-WMTE-6610/6620 (2026-08-21): build_proposer now inherits the generator-pin induce budget/timeout defaults instead of 9B-era literals, and run_cell lifts induction_proposer_notes onto the row. Both changes affect how FUTURE rows are produced; this artifact analyses rows recorded 2026-07-26 whose bytes are unchanged. A rebuild is impossible, not merely skipped: the rebuild_command reads row files from a per-session /tmp scratchpad that no longer exists.",
     "evidence": "The 2026-08-21 diff to the harness touches only build_proposer defaults (omitting max_tokens/timeout so the LocalGGUFProposer dataclass factories answer) and the induction_proposer_notes row projection, plus prose. The sibling artifact outer_loop_arc_early_stop_grace_sweep_20260726.json, whose rows ARE still on disk, was rebuilt under the same drift and leaf-diffed: 0 measurement values changed (see its rebuild_note_20260821_induce_budget_pin)."
+   },
+   {
+    "acknowledged_on": "2026-08-22",
+    "path": "scripts/analyze_scored_path_lever_ab.py",
+    "sha256_was": "b41fef5af7e3c7a0f8cb9cbf7d8e9febb420c477b407c10b9d12dac7382fe55f",
+    "sha256_now": "102809cb150ff38d3f368a7a0ced7c7ecb978d91e3ed32462495533dfd4917d6",
+    "reason": "The only change is REQ-OPS-REBUILD-PRESERVE-1 merge-preserve wiring: merge_preserve_with_file() runs AFTER the analysis dict is fully built and only carries keys ABSENT from the generated payload, so generated numbers cannot move. Rows for this artifact were session scratch, since deleted, so the rebuild path does not exist.",
+    "evidence": "Three sibling artifacts (early_stop_grace_sweep, gateway_accurate_rescore, max_actions_answer) were rebuilt under the same analyzer change on 2026-08-22; deep-diff vs HEAD moved only run_date/duration_s/git_head/provenance hashes/reproducibility_checksum and cited-sibling hashes -- zero substantive values. tests/python/test_artifact_merge_preserve.py regression-tests carry on this artifact class."
+   },
+   {
+    "acknowledged_on": "2026-08-22",
+    "path": "scripts/arc_scored_path_lever_harness.py",
+    "sha256_was": "e5a5ad75aa85431f441c5fb9fbddc1dab42a07620d1ae11419fc936447c41f3f",
+    "sha256_now": "ee5e787b3ebb42354403ba1587d6f73d8f752d8f0c2a98ecb6f9e6f1b82057b3",
+    "reason": "The harness generates ROWS at run time; this artifact is an ANALYSIS over frozen row files (provenance.rows_sources, session scratch since deleted). The analyzer never imports the harness -- it only records its hash as row provenance -- so harness drift cannot alter this analysis. The drift is the 2026-08-22 supervisor-ledger row plumbing plus pin-guard work, which changes rows produced by FUTURE runs, not rows already on disk.",
+    "evidence": "grep of analyze_scored_path_lever_ab.py shows no import of arc_scored_path_lever_harness (the path appears only in the provenance code-deps list at line 1188); the artifact's rows_sources are fixed inputs; no analyzer code path reads the harness at analysis time."
    }
   ],
   "git_head": "4b597d28345354dff31655ee57ec6ec5212f968c",
