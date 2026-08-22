@@ -377,6 +377,9 @@ NATIVE_GGUF_BACKEND_BISECT_MIN_DURATION_S = 5.0
 # content that didn't trip the marker detector passed clean, confirming the false-positive was
 # substrate-recognition-gap-driven, not artifact-specific).
 WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE = "web_and_bibliographic_search_only"
+SOURCE_RECEIPTS_METHOD_PREREGISTRATION_NO_LLM_SUBSTRATE = (
+    "source_receipts_and_local_method_preregistration_no_llm"
+)
 WEB_BIBLIOGRAPHIC_SEARCH_ONLY_MIN_DURATION_S = 0.0001
 
 # Artifact-QA lint-test artifacts intentionally embed verifier fixture reports,
@@ -417,6 +420,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE,
     LOG_ANALYSIS_LOCAL_TIMING_SUBSTRATE,
     WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE,
+    SOURCE_RECEIPTS_METHOD_PREREGISTRATION_NO_LLM_SUBSTRATE,
     ARTIFACT_QA_LINT_TESTS_SUBSTRATE,
     DETERMINISTIC_QA_REGRESSION_NO_LLM_SUBSTRATE,
     DETERMINISTIC_RUNTIME_RECEIPT_VALIDATION_NO_LLM_SUBSTRATE,
@@ -2294,7 +2298,9 @@ def _is_web_bibliographic_search_only(d: dict[str, Any]) -> bool:
     """True when the artifact declares pure web/bibliographic search, no model load.
     See WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE for the exemplar incidents (exp5718, exp5732)."""
 
-    return _inference_substrate_matches(d, WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE)
+    return _inference_substrate_matches(
+        d, WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE
+    ) or _inference_substrate_matches(d, SOURCE_RECEIPTS_METHOD_PREREGISTRATION_NO_LLM_SUBSTRATE)
 
 
 def _is_artifact_qa_lint_tests(d: dict[str, Any]) -> bool:
@@ -2449,7 +2455,7 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
         }
     if _is_web_bibliographic_search_only(d):
         return {
-            "substrate": WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE,
+            "substrate": classification["matched_value"] or WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE,
             "min_duration_s": WEB_BIBLIOGRAPHIC_SEARCH_ONLY_MIN_DURATION_S,
             "reason": "web_bibliographic_search_only",
         }
