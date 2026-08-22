@@ -2201,6 +2201,133 @@ SCENARIO-BENCH-5909-HEADROOM
 |---|---|---|
 | REQ-BENCH-5909 | Planned (`python/carnot/experiment_5909_sota_constraint_synthesis_ab.py`, `results/experiment_5909_sota_constraint_synthesis_ab.json`) | Planned (`tests/python/test_experiment_5909_sota_constraint_synthesis_ab.py`) |
 
+### REQ-BENCH-6504: Exact Structural Benchmark Commitment SHALL Be Sealed Before Learned Work
+
+The Exp6504 workflow SHALL create a procedural exact SAT/CSP benchmark before
+any learned ranker, mutation stream, or downstream SOTA route can inspect held
+rows. It SHALL generate random 3-CNF, pseudo-industrial 3-CNF, Tseitin,
+pigeonhole, graph-coloring, and small scheduling instances with deterministic
+local generators and fixed seeds. Each raw row SHALL preserve the formal
+instance, source family, scale, surface relabeling, density, proof family,
+lineage id, generator seed, and checksum before feature extraction.
+
+Exp6504 SHALL label every accepted instance with exact local solver authority.
+Accepted labels SHALL replay under exhaustive enumeration and Z3, SHALL include
+a model witness for SAT or feasible rows, SHALL include an executable
+refutation receipt for UNSAT or infeasible rows, and SHALL quarantine any
+backend disagreement. No label SHALL be hand-corrected.
+
+Exp6504 SHALL commit train, development, and held splits by base-instance
+lineage before labels or features can affect the split. No base lineage or
+duplicate structural hash SHALL cross split boundaries. The held set SHALL
+contain at least 30 units in every planned headline cell. The headline cells
+SHALL include family cells and one-axis label, scale, and surface cells.
+
+Exp6504 SHALL freeze family, scale, surface, density, proof family, source,
+structural hardness, and solver-effort strata. Solver effort MAY be recorded as
+an audit stratum, but SHALL NOT be used as a model-difficulty proxy.
+
+Exp6504 SHALL test identity, row order, serialization length, generator seed,
+family, duplicate lineage, label balance, solver backend, and split leakage.
+Every shortcut attack SHALL fail closed before
+`base_structural_benchmark_ready_score` can equal `1.0`.
+
+The Exp6504 artifact SHALL be written to
+`results/experiment_6504_exact_structural_benchmark_commitment.json` with
+`inference_substrate=procedural_formal_instances_and_exact_solver_labels_no_llm`
+and `verifier_is_oracle=true` only for exact solver labels and executable
+validity. The artifact SHALL include, at minimum, `status`, `verdict_class`,
+`upstream_gate_receipts`, `benchmark_schema`, `raw_instance_rows`,
+`exact_label_rows`, `exact_replay_rows`, `split_commitment`,
+`stratum_balance_rows`, `minimum_held_cell_size`, `leakage_attack_matrix`,
+`base_structural_benchmark_ready_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `gate_check_summary`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal benchmark state."
+- `verdict_class`: "Closed enum: positive | circular_positive | null | blocked | disqualified | partial."
+- `upstream_gate_receipts`: "Bind both same-roadmap gates and observed values."
+- `benchmark_schema`: "Versions instances, labels, proofs, models, strata, and splits."
+- `raw_instance_rows`: "Preserves every formal instance before feature extraction."
+- `exact_label_rows`: "Provides solver-certified labels and authority receipts."
+- `exact_replay_rows`: "Checks every accepted label with a deterministic replay."
+- `split_commitment`: "Freezes lineage-separated train, development, and held sets."
+- `stratum_balance_rows`: "Records family, scale, surface, hardness, source, and label counts."
+- `minimum_held_cell_size`: "Enforces at least 30 units for percentage comparisons."
+- `leakage_attack_matrix`: "Tests identity, order, length, seed, family, duplicate, backend, and split shortcuts."
+- `base_structural_benchmark_ready_score`: "Same-roadmap gate for the base benchmark."
+- `per_unit_rows`: "Carries instance, label, replay, split, stratum, and attack rows."
+- `aggregate_row_recomputation`: "Recomputes counts and readiness from raw rows."
+- `gate_check_summary`: "Names any failed gate, solver, cell-size, or replay check and observed value."
+- `preconditions_checked`: "Records gates, solver tools, resources, repository, and storage checks."
+- `protected_files_unchanged`: "Proves protected files stayed unchanged."
+- `inference_substrate`: "Declares procedural generators and exact local solvers with no LLM."
+- `verifier_is_oracle`: "True only for exact solver labels and executable validity checks."
+- `field_principles`: "Explains why each commitment field exists."
+- `field_provenance`: "Maps rows to generators, seeds, solver commands, and hashes."
+- `random_seed`: "Records all generator and split seeds."
+- `duration_s`: "Records measured wall time."
+- `tests_run`: "Records commands and exit codes."
+- `reproducibility_checksum`: "Hashes instances, labels, splits, strata, and attacks."
+- `honest_verdict`: "Uses complete_* when the commitment is valid or blocked_* with gate_check_summary."
+
+#### SCENARIO-BENCH-6504-GENERATION: Procedural Families Are Deterministic
+
+**Given** the Exp6503 method contract names six SAT/CSP families
+**When** Exp6504 generates benchmark rows
+**Then** every family emits deterministic raw instances from fixed local seeds
+and every raw row carries source, family, scale, surface, lineage, density, and
+checksum fields before feature extraction.
+
+#### SCENARIO-BENCH-6504-LABELS: Exact Backends Own Labels
+
+**Given** raw formal instances
+**When** Exp6504 labels and replays them
+**Then** every accepted label agrees across exhaustive and Z3 backends, SAT rows
+carry valid model witnesses, UNSAT rows carry executable refutation receipts,
+and disagreements are quarantined without hand correction.
+
+#### SCENARIO-BENCH-6504-SPLITS: Held Cells Are Lineage Separated
+
+**Given** generated base-instance lineages
+**When** Exp6504 commits train, development, and held splits
+**Then** no lineage crosses splits, split rows predate feature extraction, and
+every planned held headline cell contains at least 30 units.
+
+#### SCENARIO-BENCH-6504-STRATA: Surface And Solver Effort Stay Separate
+
+**Given** accepted labels and split rows
+**When** Exp6504 emits strata
+**Then** rows record family, scale, surface, structural hardness, density,
+proof family, source, solver effort, and label counts while declaring that
+solver effort is not a model-difficulty proxy.
+
+#### SCENARIO-BENCH-6504-LEAKAGE: Shortcut Attacks Fail Closed
+
+**Given** raw rows, label rows, split rows, and backend receipts
+**When** Exp6504 runs shortcut attacks
+**Then** identity, row order, serialization length, generator seed, family,
+duplicate lineage, label balance, backend, and split shortcuts are blocked from
+feature use and no false accept remains.
+
+#### SCENARIO-BENCH-6504-SCHEMA: Artifact Is Ready And Checksummed
+
+**Given** rows, receipts, field maps, protected hashes, and command receipts
+**When** Exp6504 validates the artifact
+**Then** every required field has a principle and provenance entry, the
+checksum matches, exact replay passes, `base_structural_benchmark_ready_score`
+equals `1.0`, and the terminal verdict starts with `complete_` or `blocked_`.
+
+## Implementation Status (REQ-BENCH-6504)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6504 | Planned (`python/carnot/experiment_6504_exact_structural_benchmark_commitment.py`, `results/experiment_6504_exact_structural_benchmark_commitment.json`) | Planned (`tests/python/test_experiment_6504_exact_structural_benchmark_commitment.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
