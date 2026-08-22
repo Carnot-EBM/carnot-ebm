@@ -221,6 +221,12 @@ GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
         "alone would never have found it -- listed here explicitly, added 2026-08-05 after "
         "landing 7 hours unclassified.",
     ),
+    (
+        PROJECT_ROOT / "scripts" / "research_complete_ledger_lint.py",
+        "decides whether the milestone ledger -- the planner's failure record -- may "
+        "change; the regression lock for truthful archival (REQ-CONDUCTOR-ARCHIVE-2, "
+        "2026-08-21: 57 phantom OK rows and 1,841 duplicate entries landed silently)",
+    ),
 )
 
 # Pre-commit-wired scripts deliberately OUT of QA-layer scope, each with the reason. This
