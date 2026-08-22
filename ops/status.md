@@ -112,6 +112,18 @@ other five audit reports (v1 proves the disposition shape on one), systemd
 unit changes. Still human: ledger dispositions, acting on escalations,
 judging slow-but-valid runs.
 
+Adversarial review (same session): GAPS_FOUND, six findings, all applied.
+The material one: the corpus FP numbers above were first measured with the
+lint's `walk_rows` iterator while the shipped code read top-level `rows`
+only. Resolution: the shipped path gained the `walk_rows` fallback
+(`extract_rows`), and a re-measure with the SHIPPED path reproduces the
+published numbers exactly (401 files, 0 CRITICAL, 3 WARN, 100
+witness-missing). Also applied: mid-write/missing-out skips now land in the
+state file (the SCENARIO as written), relative `--out` resolves against
+`/proc/<pid>/cwd`, fingerprint no longer drops GPU index 0, wiring tests
+ignore comment lines. One more mutation proven (walk_rows fallback removed
+-> RED); 39 tests pass.
+
 ## Session 2026-08-10 - Milestone 2026.08.542 Research Planning
 
 ### What's Working

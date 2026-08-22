@@ -199,12 +199,64 @@ def test_contained_streak_is_warn_not_critical(tmp_path):
 
 def test_midwrite_race_is_skipped(tmp_path):
     """SCENARIO-CONDUCTOR-SENTINEL-1-MIDWRITE-RACE: unparseable + fresh mtime
-    is the harness's whole-file rewrite, not a finding."""
+    is the harness's whole-file rewrite, not a finding — and the skip lands
+    in the STATE FILE, not only on stdout."""
     proc_root = _mk_run(tmp_path, [])
     (tmp_path / "rows.json").write_text('{"rows": [truncated')
     summary = _scan(tmp_path, proc_root)
     assert "OUT_FILE_STALE_UNPARSEABLE" not in _codes(summary)
     assert any("mid-write" in n for n in summary["notes"])
+    state = json.loads((tmp_path / "state.json").read_text())
+    assert any("mid-write" in n for n in state["last_scan_notes"])
+
+
+def test_nested_rows_shape_is_not_invisible(tmp_path):
+    """Row discovery must not be narrower than the lint's row concept:
+    a per-cell nested corpus shape (`cells[i].row`, the 2026-07 corpora)
+    reaches the streak detector through the lint's own walk_rows."""
+    doc = {"cells": [{"row": _invalid_llm_on_row()}, {"row": _invalid_llm_on_row()}]}
+    proc_root = tmp_path / "proc"
+    out = tmp_path / "rows.json"
+    out.write_text(json.dumps(doc))
+    _mk_proc(
+        proc_root,
+        4242,
+        ["python", "scripts/arc_probe_harness.py", "--out", str(out), "--port", "8995"],
+    )
+    summary = _scan(tmp_path, proc_root)
+    assert "CONSECUTIVE_INVALID_LLM_ON_ROWS" in _codes(summary)
+
+
+def test_missing_out_file_is_noted_not_silent(tmp_path):
+    """Absent is not zero: a run whose out file never appears leaves a
+    durable trace in the state file."""
+    proc_root = tmp_path / "proc"
+    _mk_proc(
+        proc_root,
+        4242,
+        ["python", "scripts/arc_x.py", "--out", str(tmp_path / "never.json"), "--port", "1"],
+    )
+    summary = _scan(tmp_path, proc_root)
+    assert any("missing" in n for n in summary["notes"])
+    state = json.loads((tmp_path / "state.json").read_text())
+    assert any("missing" in n for n in state["last_scan_notes"])
+
+
+def test_relative_out_resolves_against_run_cwd(tmp_path):
+    """A relative --out means relative to the RUN's cwd (/proc/<pid>/cwd),
+    not the sentinel's own cwd."""
+    proc_root = tmp_path / "proc"
+    run_cwd = tmp_path / "rundir"
+    run_cwd.mkdir()
+    (run_cwd / "rows.json").write_text(
+        json.dumps({"rows": [_invalid_llm_on_row(), _invalid_llm_on_row()]})
+    )
+    d = _mk_proc(
+        proc_root, 4242, ["python", "scripts/arc_x.py", "--out", "rows.json", "--port", "1"]
+    )
+    os.symlink(run_cwd, d / "cwd")
+    summary = _scan(tmp_path, proc_root)
+    assert "CONSECUTIVE_INVALID_LLM_ON_ROWS" in _codes(summary)
 
 
 def test_stale_unparseable_is_a_finding(tmp_path):

@@ -30,17 +30,24 @@ def test_receipt_constants_point_at_state_files():
     assert rc.AUDIT_LEDGER_STATE == rc.PROJECT_ROOT / "ops" / ".audit_findings_ledger_state.json"
 
 
+def _code_only(source: str) -> str:
+    """Source minus comment lines, so a commented-out call reads as absent
+    (adversarial-review finding 5, 2026-08-22: substring asserts against
+    raw getsource stayed green when the call was merely commented out)."""
+    return "\n".join(line for line in source.splitlines() if not line.lstrip().startswith("#"))
+
+
 def test_research_step_invokes_sentinel_with_receipt():
     """The sentinel call sits inside research_step, receipt-checked against
     RUN_SENTINEL_STATE (the file the sentinel rewrites on every scan)."""
-    source = inspect.getsource(rc.research_step)
+    source = _code_only(inspect.getsource(rc.research_step))
     assert '"run-sentinel"' in source
     assert "conductor_run_sentinel.py" in source
     assert "RUN_SENTINEL_STATE" in source
 
 
 def test_milestone_close_invokes_ledger_with_receipt():
-    source = inspect.getsource(rc.research_step)
+    source = _code_only(inspect.getsource(rc.research_step))
     assert '"audit-findings-ledger"' in source
     assert "audit_findings_ledger.py" in source
     assert "AUDIT_LEDGER_STATE" in source

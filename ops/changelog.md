@@ -37,6 +37,14 @@ reads them while the run is alive.
   CRITICAL, 3 WARN all inside the documented 2026-07-26 fault corpus;
   live-box scan clean. 9 mutations RED->GREEN. Commits cb6684fac8,
   c29766d286, and the wiring commit following them.
+- **Adversarial review applied (same session, GAPS_FOUND -> fixed)**: the
+  FP measure had used the lint's `walk_rows` iterator while the shipped
+  code read top-level `rows` only. The shipped path gained the
+  `walk_rows` fallback (`extract_rows`) and the SHIPPED-path re-measure
+  reproduces the published numbers exactly. Also: skips recorded in the
+  state file per the SCENARIO, relative `--out` resolved against
+  `/proc/<pid>/cwd`, GPU-index-0 fingerprint fix, comment-blind wiring
+  asserts. 10th mutation (fallback removed -> RED); 39 tests.
 
 ## 2026-08-22 (outer-loop, supervisor redirect ledger measurable, commits c6cb2614fd + 9da8b39042)
 
