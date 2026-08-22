@@ -878,6 +878,15 @@ def main() -> int:
         "rows": rows,
     }
     preserve_freshness_acknowledgements(payload, OUT)
+    # Full merge-preserve supersedes the ack-only call above (kept;
+    # idempotent): carries rebuild_note_* and any other hand-authored
+    # top-level key (REQ-OPS-REBUILD-PRESERVE-1). Before the checksum so
+    # the checksum covers the bytes written; the prior build's carried
+    # checksum is analyzer-owned and dropped before rehashing.
+    from artifact_merge_preserve import merge_preserve_with_file
+
+    payload = merge_preserve_with_file(OUT, payload)
+    payload.pop("reproducibility_checksum", None)
     blob = json.dumps(payload, sort_keys=True, default=str).encode()
     payload["reproducibility_checksum"] = hashlib.sha256(blob).hexdigest()
     OUT.write_text(json.dumps(payload, indent=1, default=str))

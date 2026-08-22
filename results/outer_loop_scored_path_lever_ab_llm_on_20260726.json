@@ -258088,9 +258088,9 @@
    {
     "acknowledged_on": "2026-08-22",
     "path": "scripts/arc_scored_path_lever_harness.py",
-    "sha256_was": "e5a5ad75aa85431f441c5fb9fbddc1dab42a07620d1ae11419fc936447c41f3f",
+    "sha256_was": "4fd08d7a9d4858e4bad387379ae8b39f58a8249410260852d775025f922772b5",
     "sha256_now": "ee5e787b3ebb42354403ba1587d6f73d8f752d8f0c2a98ecb6f9e6f1b82057b3",
-    "reason": "The harness generates ROWS at run time; this artifact is an ANALYSIS over frozen row files (provenance.rows_sources, session scratch since deleted). The analyzer never imports the harness -- it only records its hash as row provenance -- so harness drift cannot alter this analysis. The drift is the 2026-08-22 supervisor-ledger row plumbing plus pin-guard work, which changes rows produced by FUTURE runs, not rows already on disk.",
+    "reason": "Span scoped to this was->now hop (chained from the prior acknowledgement's sha256_now). The harness generates ROWS at run time; this artifact is an ANALYSIS over frozen row files (provenance.rows_sources, session scratch since deleted). The analyzer never imports the harness -- it only records its hash as row provenance -- so harness drift cannot alter this analysis. The drift is the 2026-08-22 supervisor-ledger row plumbing plus pin-guard work, which changes rows produced by FUTURE runs, not rows already on disk.",
     "evidence": "grep of analyze_scored_path_lever_ab.py shows no import of arc_scored_path_lever_harness (the path appears only in the provenance code-deps list at line 1188); the artifact's rows_sources are fixed inputs; no analyzer code path reads the harness at analysis time."
    }
   ],

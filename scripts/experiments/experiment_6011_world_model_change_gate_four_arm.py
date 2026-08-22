@@ -729,6 +729,12 @@ def main() -> int:
     from analyze_scored_path_lever_ab import preserve_freshness_acknowledgements
 
     preserve_freshness_acknowledgements(artifact, Path(args.out))
+    # Full merge-preserve supersedes the ack-only call above (kept;
+    # idempotent): carries rebuild_note_* and any other hand-authored
+    # top-level key through a rebuild (REQ-OPS-REBUILD-PRESERVE-1).
+    from artifact_merge_preserve import merge_preserve_with_file
+
+    artifact = merge_preserve_with_file(Path(args.out), artifact)
     Path(args.out).write_text(json.dumps(artifact, indent=2))
     print(json.dumps(summary, indent=2))
     return 0

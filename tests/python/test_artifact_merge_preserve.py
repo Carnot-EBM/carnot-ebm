@@ -175,16 +175,55 @@ def test_incident_artifact_survives_simulated_rebuild(tmp_path):
     )
 
 
-def test_every_analyzer_calls_merge_preserve_before_writing():
-    """Wiring: each rebuilder invokes merge_preserve_with_file. Comment
-    lines are stripped first so a commented-out call reads as absent."""
+def _calls_merge_preserve(path: Path) -> bool:
+    """AST-verified: the file contains a real merge_preserve_with_file CALL.
+
+    String presence was the first draft and it counted docstrings and
+    comments (adversarial-review note, 2026-08-22); a Call node cannot be
+    satisfied by prose."""
+    import ast
+
+    tree = ast.parse(path.read_text())
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            func = node.func
+            name = getattr(func, "id", None) or getattr(func, "attr", None)
+            if name == "merge_preserve_with_file":
+                return True
+    return False
+
+
+def test_every_registered_rebuilder_calls_merge_preserve():
+    """Wiring, scoped by CONCEPT not by filename glob: every rebuilder the
+    freshness system itself registers (`ops/analyzer_artifact_index.json`
+    analyzer fields) must merge-preserve before writing — the glob-only
+    first draft missed arc_gateway_card_ground_truth.py and four others
+    (adversarial-review finding 1, 2026-08-22).
+
+    Exempt, with the reason stated: builders resident under `results/`
+    are one-shot session scripts kept as evidence next to their rows;
+    they are not re-run by the freshness lint's remedy path, and editing
+    files under results/ is avoided on principle (evidence, read-only).
+    The interim habit (diff-before-staging) still applies if one is ever
+    re-run by hand."""
+    index = json.loads((_REPO / "ops" / "analyzer_artifact_index.json").read_text())
+    rebuilders = sorted({meta["analyzer"] for meta in index.values()})
+    assert rebuilders, "empty analyzer index — cannot verify wiring"
+    missing = []
+    for rel in rebuilders:
+        if rel.startswith("results/"):
+            continue  # stated exemption above
+        path = _REPO / rel
+        assert path.exists(), f"registered rebuilder missing from checkout: {rel}"
+        if not _calls_merge_preserve(path):
+            missing.append(rel)
+    assert missing == [], f"registered rebuilders writing without merge-preserve: {missing}"
+
+
+def test_every_analyze_script_calls_merge_preserve():
+    """The analyze_*.py family is also checked by glob, so a NEW analyzer
+    that has not yet registered its first artifact is still caught."""
     analyzers = sorted((_REPO / "scripts").glob("analyze_*.py"))
     assert len(analyzers) >= 10
-    missing = []
-    for path in analyzers:
-        code = "\n".join(
-            line for line in path.read_text().splitlines() if not line.lstrip().startswith("#")
-        )
-        if "merge_preserve_with_file(" not in code:
-            missing.append(path.name)
+    missing = [p.name for p in analyzers if not _calls_merge_preserve(p)]
     assert missing == [], f"analyzers writing without merge-preserve: {missing}"

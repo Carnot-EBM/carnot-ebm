@@ -321,6 +321,11 @@ def main() -> int:
         }
         preserve_freshness_acknowledgements(blocked_artifact, OUT)
         OUT.parent.mkdir(parents=True, exist_ok=True)
+        # A blocked rerun overwrites the artifact wholesale too — carry
+        # hand-authored keys here as well (REQ-OPS-REBUILD-PRESERVE-1).
+        from artifact_merge_preserve import merge_preserve_with_file
+
+        blocked_artifact = merge_preserve_with_file(OUT, blocked_artifact)
         OUT.write_text(json.dumps(blocked_artifact, indent=2))
         print("BLOCKED: preconditions unmet", preconditions)
         return 1
@@ -780,6 +785,12 @@ def main() -> int:
         }
     )
     preserve_freshness_acknowledgements(artifact, OUT)
+    # Full merge-preserve supersedes the ack-only call above (kept;
+    # idempotent): carries rebuild_note_* and any other hand-authored
+    # top-level key through a rebuild (REQ-OPS-REBUILD-PRESERVE-1).
+    from artifact_merge_preserve import merge_preserve_with_file
+
+    artifact = merge_preserve_with_file(OUT, artifact)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(artifact, indent=2, default=str))
     print(

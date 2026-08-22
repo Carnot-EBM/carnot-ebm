@@ -16985,9 +16985,9 @@
    {
     "acknowledged_on": "2026-08-22",
     "path": "scripts/analyze_arc_reset_charge_attribution.py",
-    "sha256_was": "c272f7d4256a29381f458ab02b57da0456c905621f32d940a23879c4fd34387f",
+    "sha256_was": "bfe243ce63735a556a1a9da583a287b171d12cc58fcd00ecd54a3598d248d57e",
     "sha256_now": "a6ef8a7780ca2176b4911614fe9cd0fad91e25b21922b2e07f460e4f14bf70df",
-    "reason": "The only change is REQ-OPS-REBUILD-PRESERVE-1 merge-preserve wiring: merge_preserve_with_file() runs AFTER the analysis dict is fully built and only carries keys ABSENT from the generated payload, so generated numbers cannot move.",
+    "reason": "Span scoped to this was->now hop (chained from the prior acknowledgement's sha256_now). The only change is REQ-OPS-REBUILD-PRESERVE-1 merge-preserve wiring: merge_preserve_with_file() runs AFTER the analysis dict is fully built and only carries keys ABSENT from the generated payload, so generated numbers cannot move.",
     "evidence": "Three sibling artifacts rebuilt under the same change on 2026-08-22 moved only run_date/duration_s/git_head/provenance hashes/reproducibility_checksum and cited-sibling hashes -- zero substantive values; tests/python/test_artifact_merge_preserve.py carries the regression."
    }
   ],

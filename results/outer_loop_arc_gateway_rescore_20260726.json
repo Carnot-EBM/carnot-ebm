@@ -1274,9 +1274,9 @@
    {
     "acknowledged_on": "2026-08-22",
     "path": "scripts/analyze_arc_gateway_rescore.py",
-    "sha256_was": "1e6611431826041c24df65fb659de19e2a118eafd96d338b37ceb9e75936e154",
+    "sha256_was": "bc0b837d34779fe205f3d86401a4fb3a572ab3df44c91b9e1bdfc0317d6619ef",
     "sha256_now": "5a7291ed02ef74321c379f77331c0b755771d6599df055ff80fedc94deab83c3",
-    "reason": "The only change is REQ-OPS-REBUILD-PRESERVE-1 merge-preserve wiring: merge_preserve_with_file() runs AFTER the analysis dict is fully built and only carries keys ABSENT from the generated payload, so generated numbers cannot move.",
+    "reason": "Span scoped to this was->now hop (chained from the prior acknowledgement's sha256_now). The only change is REQ-OPS-REBUILD-PRESERVE-1 merge-preserve wiring: merge_preserve_with_file() runs AFTER the analysis dict is fully built and only carries keys ABSENT from the generated payload, so generated numbers cannot move.",
     "evidence": "Three sibling artifacts rebuilt under the same change on 2026-08-22 moved only run_date/duration_s/git_head/provenance hashes/reproducibility_checksum and cited-sibling hashes -- zero substantive values; tests/python/test_artifact_merge_preserve.py carries the regression."
    }
   ]

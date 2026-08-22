@@ -2606,6 +2606,134 @@ fail closed before `v562_exact_branch_ready_score` can equal `1.0`.
 |---|---|---|
 | REQ-BENCH-6506 | Implemented (`python/carnot/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.py`, `results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json`) | Implemented (`tests/python/test_experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.py`) |
 
+### REQ-BENCH-6510: V563 Independent Exact Root SHALL Qualify Immutable Evidence Without Retired Task Dependencies
+
+Carnot SHALL provide Exp6510 at
+`python/carnot/experiment_6510_v563_independent_exact_root.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6510_v563_independent_exact_root --date 20260822`
+SHALL write
+`results/experiment_6510_v563_independent_exact_root.json`.
+
+Exp6510 SHALL read Exp6504 and Exp6506 directly as immutable JSON files. It
+SHALL record exact input paths, byte hashes, JSON pointers, solver
+availability, CPU, RAM, disk, git status, exclusion-manifest state, and
+protected-file hashes before qualification. It SHALL not create a bootstrap
+stub. It SHALL not rerun the Exp6506 computation or require the retired
+Exp6506 task ID.
+
+Exp6510 SHALL recompute Exp6504 row counts, exact-label receipts, replay
+receipts, split hashes, historical hashes, corrected class, and readiness from
+file content. It SHALL not trust aggregate-only fields. It SHALL also
+recompute the Exp6506 corrigendum contract from the Exp6506 artifact content:
+`v562_exact_branch_ready_score`, corrected non-positive class, allowed fields,
+forbidden lineage rows, attack rows, and protected historical hashes.
+
+Exp6510 SHALL parse `ops/conductor-log.md` and preserve the V562 conductor
+terminal result. It SHALL record the three
+`artifact_not_updated_past_bootstrap` rows for Exp6506 and the downstream
+Exp6507-Exp6509 gate-block cascade. It SHALL not reactivate Exp6506, Exp6507,
+Exp6508, or Exp6509 as structured dependencies.
+
+Exp6510 SHALL authorize only the new V563 exact branch-counterfactual path.
+The only allowed historical content is Exp6504 raw instances, Exp6504 exact
+labels, and Exp6506 content as immutable receipt evidence. It SHALL forbid
+missing files, stale hashes, aggregate-only trust, historical mutation,
+renamed retired dependencies, indirect Exp6505 challenge-pool use, and a
+positive-class exact-oracle claim.
+
+The artifact SHALL include `status`, `verdict_class`,
+`prior_failure_receipt`, `historical_input_receipts`,
+`independent_row_recomputation`, `lineage_decision_rows`,
+`retired_dependency_attack_matrix`, `atomic_terminal_write_receipt`,
+`v563_independent_root_ready_score`, `per_unit_rows`, `gate_check_summary`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`. `inference_substrate` SHALL be
+`bounded_independent_historical_artifact_replay_no_llm`.
+`verifier_is_oracle` SHALL be true only for exact row and hash checks.
+`verdict_class` SHALL be `partial`, `null`, or `blocked`; it SHALL NOT be
+`positive`.
+
+`v563_independent_root_ready_score` SHALL equal `1.0` only when direct row
+checks pass, historical files are unchanged, the verdict class is null or
+partial, every forbidden lineage attack fails closed, no structured dependency
+names Exp6506, Exp6507, Exp6508, or Exp6509, and the target artifact is a
+complete atomic terminal artifact rather than a bootstrap stub.
+
+Field principles SHALL be:
+
+- `status`: "A terminal state distinguishes the new root from a bootstrap or partial replay."
+- `verdict_class`: "The closed class prevents exact-oracle readiness from becoming an unsupported positive result."
+- `prior_failure_receipt`: "The receipt binds the changed technique to the Exp6506 conductor failure."
+- `historical_input_receipts`: "Exact paths, hashes, and JSON pointers make direct immutable-file use auditable."
+- `independent_row_recomputation`: "Row-derived checks prevent trust in stale or contradictory aggregates."
+- `lineage_decision_rows`: "One row per allowed and forbidden scope proves retired dependencies fail closed."
+- `retired_dependency_attack_matrix`: "Attacks detect renamed, indirect, or structured reuse of retired tasks."
+- `atomic_terminal_write_receipt`: "The receipt addresses the prior bootstrap-update failure with a new bounded write path."
+- `v563_independent_root_ready_score`: "This exact field is the same-roadmap gate for the new branch dataset."
+- `per_unit_rows`: "Per-unit rows make all counts, decisions, and failures independently checkable."
+- `gate_check_summary`: "A blocked result must name the failed path, hash, class, or lineage check and its observed value."
+- `preconditions_checked`: "Explicit checks prevent a root-ready claim when files, solvers, or resources are absent."
+- `protected_files_unchanged`: "Historical artifacts, research-roadmap.yaml, and the conductor must remain unchanged."
+- `inference_substrate`: "Declaring bounded artifact replay with no LLM keeps substrate and SOTA policy explicit."
+- `verifier_is_oracle`: "Oracle disclosure prevents exact consistency checks from supporting verifier-value claims."
+- `field_principles`: "Load-bearing reasons help later tasks preserve the evidence contract."
+- `field_provenance`: "Paths, hashes, reducers, and source lines make every field traceable."
+- `random_seed`: "A fixed attack order makes the qualifier reproducible."
+- `duration_s`: "Measured wall time supports fabrication and bounded-work checks."
+- `tests_run`: "Command and exit-code receipts show which validation actually ran."
+- `reproducibility_checksum`: "A content hash detects later drift in inputs, rows, or lineage decisions."
+- `honest_verdict`: "A complete_* or blocked_* prefix gives the conductor a safe terminal result."
+
+#### SCENARIO-BENCH-6510-DIRECT-IMMUTABLE: Historical Files Are Qualified Directly
+
+**Given** the checked-in Exp6504 and Exp6506 artifacts
+**When** Exp6510 runs
+**Then** it records exact paths, byte hashes, JSON pointers, row counts, label
+receipts, replay receipts, split hashes, protected hashes, solver state, and
+resource preconditions from those files without invoking Exp6506.
+
+#### SCENARIO-BENCH-6510-RETIRED-ISOLATION: Retired Task IDs Stay Out Of Dependencies
+
+**Given** Exp6506 failed in the conductor as
+`artifact_not_updated_past_bootstrap` and Exp6507-Exp6509 were blocked
+**When** Exp6510 emits lineage rows
+**Then** prior failures appear only in `prior_failure_receipt`, no structured
+dependency names Exp6506, Exp6507, Exp6508, or Exp6509, and only the new
+exact branch-counterfactual path is allowed.
+
+#### SCENARIO-BENCH-6510-ATTACKS: Retired And Aggregate Shortcuts Fail Closed
+
+**Given** missing files, stale hashes, aggregate-only fields, historical
+mutation, renamed retired scopes, indirect Exp6505 challenge-pool use, and a
+positive exact-oracle class claim
+**When** Exp6510 evaluates attacks
+**Then** each attack row fails closed before
+`v563_independent_root_ready_score` can equal `1.0`.
+
+#### SCENARIO-BENCH-6510-ATOMIC-TERMINAL: Artifact Write Is Complete And Atomic
+
+**Given** all independent qualification gates pass
+**When** Exp6510 writes its deliverable
+**Then** the artifact is written in one atomic terminal operation, contains all
+required fields, records the write receipt, is not a bootstrap stub, and has an
+honest verdict with a `complete_` or `blocked_` prefix.
+
+#### SCENARIO-BENCH-6510-VERDICT-CLASS: Exact Oracle Readiness Is Non-Positive
+
+**Given** exact row and hash checks use oracle authority
+**When** Exp6510 validates the artifact
+**Then** `verdict_class` is `partial`, `null`, or `blocked`, never `positive`,
+and `verifier_is_oracle=true` does not support a scientific performance claim.
+
+## Implementation Status (REQ-BENCH-6510)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6510 | Implemented (`python/carnot/experiment_6510_v563_independent_exact_root.py`, `results/experiment_6510_v563_independent_exact_root.json`) | Implemented (`tests/python/test_experiment_6510_v563_independent_exact_root.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
