@@ -35690,3 +35690,109 @@ select a neighborhood, or abstain. It cannot certify a result.
   acceleration until their V560 prerequisites change.
 
 <!-- V561-PLANNER-REFRESH-20260821-END -->
+
+## V562 planner refresh - 2026-08-22
+
+<!-- V562-PLANNER-REFRESH-20260822-START -->
+
+This refresh uses the completed V561 artifacts as its local evidence boundary.
+Exp6504 produced the committed exact SAT/CSP benchmark, but the conductor
+quarantined its headline because `verifier_is_oracle=true` conflicts with a
+`positive` verdict class. Exp6505 produced no accepted SOTA challenge
+mutation. V562 must correct the Exp6504 evidence contract and must not depend
+on, or repeat, the Exp6505 free-form mutation stream.
+
+### Promising primary findings
+
+- **Prior Audit-Repair Context Shifts LLM Verifier Thresholds Toward
+  Leniency** - arXiv:2608.16003, https://arxiv.org/abs/2608.16003; submitted
+  2026-08-17. A completed audit and repair episode reduced false alarms in all
+  15 model and wording combinations. The reported change was a threshold
+  shift, not a reliable gain in discrimination. Carnot hook: isolate any LLM
+  checker from proposal, audit, and repair history. Keep exact solver output
+  as release authority. Do not let one accumulated conversation act as both
+  proposer and verifier.
+- **Forgetting, plasticity, and co-observation: a third facet of continual
+  learning** - arXiv:2608.18803, https://arxiv.org/abs/2608.18803; submitted
+  2026-08-19. The paper separates the benefit of observing old and new data
+  together from forgetting and plasticity. It finds that replay can improve
+  generalization through co-observation, not only through retention. Carnot
+  hook: compare current-only updates, a small replay or co-observation arm,
+  and a frozen arm under matched update dose and future-support tests.
+- **Continual-learning rules shape representational drift** -
+  arXiv:2608.16141, https://arxiv.org/abs/2608.16141; submitted 2026-08-17.
+  Experience replay preserved earlier tasks while internal representations
+  continued to drift. Strong weight or representation anchoring reduced
+  drift, but it also impaired later acquisition. Carnot hook: record branch
+  weight drift and new-shift plasticity. Do not treat zero drift as sufficient
+  evidence of safe learning.
+- **ContinualSkillBench: Can LLM Agents Truly Evolve Their Capabilities?** -
+  arXiv:2608.03874, https://arxiv.org/abs/2608.03874; submitted 2026-08-04.
+  Sequential context matched explicit skill maintenance on average. Explicit
+  skills helped selected procedural and precise-output tasks. Carnot hook: a
+  continuous-learning claim must beat context or replay-only adaptation on a
+  held future shift. It must show reusable state, not only recency effects.
+- **Neural-Guided Enumerative SAT Framework for Cryptographic Key Recovery** -
+  OpenReview submission l7GZ3vswuD,
+  https://openreview.net/forum?id=l7GZ3vswuD; revised 2026-02-12. The method
+  predicts a small set of critical variables once, then leaves enumeration and
+  validity to an exact solver. It reports gains on SAT4CryptoBench. Carnot
+  hook: add a one-shot critical-variable enumeration control beside native and
+  random orders. Charge proposal and enumeration overhead. Reproduce the
+  effect locally before making a method claim.
+- **Claim-Level Reliability: From Diagnosis to Efficient Test-Time Scaling**
+  - arXiv:2608.11994, https://arxiv.org/abs/2608.11994; submitted 2026-08-13.
+  The paper allocates test-time work to claim-level diagnosis and correction.
+  Its checker remains learned. Carnot hook: retain claim decomposition as a
+  watch item, but do not reopen the retired external-text scorer or treat
+  model self-verification as exact authority.
+
+### Requested secondary and product checks
+
+- **OpenReview:** the one-shot neural-guided enumeration paper above adds a
+  useful solver-integrated control. Current EBM and learning-augmented solver
+  records do not supply a stronger release authority than local exact replay.
+- **Hugging Face Papers:** the current feed includes the audit-context and
+  continual-skill papers above. It adds no exact local verifier. The useful
+  changes are verifier-context isolation and stronger continuous-learning
+  controls.
+- **Semantic Scholar:** the public API returned 35 citing records for EBT
+  (`2507.02092`) and eight for ARM-EBM (`2512.15605`) on 2026-08-22. The newest
+  relevant records remain the anomaly, latent-reasoning, and Solver-Hard work
+  already tracked here. No new citation reopens answer-level energy scoring.
+- **GitHub Trending and targeted repositories:** the current search found no
+  new dependency that should replace Carnot's installed solver stack.
+  https://github.com/dmeoli/NeuroSAT remains a useful branching reference, and
+  its documented inference overhead reinforces the need for charged wall-clock
+  comparisons. https://github.com/dynaroars/neuralsat remains an exact DNN
+  verification reference, not a dependency for this milestone.
+- **Extropic:** the current first-party update remains
+  https://extropic.ai/writing/from-one-to-one-billion. It describes Torx, a
+  future Thermalizers layer, and the taped-out Z1 chip. Early access remains
+  planned for 2027. Carnot has no authenticated hardware or API route. Keep
+  any V562 work at a CPU reference ABI and make no TSU performance claim.
+- **Logical Intelligence:** no newer reproducible Kona architecture, weights,
+  or local runner appeared in the public product material. Keep Kona as a
+  product comparator only.
+- **KAN, Ising, FPGA, and thermodynamic hardware:** the current search found no
+  evidence that changes V561's boundaries. A compact KAN remains eligible as
+  one branch-ranker control. The attached FPGA boards remain at their recorded
+  terminal or changed-state-blocked states. Schedule no unchanged board probe.
+
+### V562 planning impact
+
+- Correct and independently audit the Exp6504 verdict contract before its
+  benchmark becomes an upstream dependency.
+- Generate exact branch-counterfactual labels from the procedural benchmark.
+  Do not consume Exp6505's empty challenge pool.
+- Compare native dynamic branching, analytical structural order, bounded
+  refocus, and one-shot critical-variable enumeration before training.
+- Train compact rankers only if the non-learned study proves held structural
+  headroom. Keep the exact solver as oracle and charge all neural overhead.
+- Test continuous learning with fixed safe features, transactional rollback,
+  matched update dose, replay or co-observation controls, drift measures, and
+  held future-support checks.
+- Keep hardware work to a fixed-width structural mapping ABI. Make no FPGA,
+  TSU, latency, power, or acceleration claim.
+
+<!-- V562-PLANNER-REFRESH-20260822-END -->

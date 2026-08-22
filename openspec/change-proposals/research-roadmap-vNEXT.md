@@ -1,428 +1,417 @@
-# Research Roadmap V561: Certified Structural Search and Continual Branch Advice
+# Research Roadmap V562: Certified Branch Advice and Continuous Structural Learning
 
-**Milestone:** `2026.08.561`  
-**Status:** proposed  
-**Predecessor:** `2026.08.560`  
-**Tasks:** 13 experiments in four phases  
-**Execution manifest:** `research-roadmap-next.yaml`
+**Milestone:** 2026.08.562  
+**Date:** 2026-08-22  
+**Status:** Planned  
+**Experiments:** Exp6506-Exp6518  
+**Execution file:** `research-roadmap-next.yaml`
 
-## Executive decision
+## Purpose
 
-V560 closed three branches. Compact learned trajectory energy is retired.
-The factor-proposal and decomposed-energy chain has no held causal value.
-The current ARC prefix energy does not align with later progress. V561 does
-not repair or rename those methods.
+V562 tests one narrow hypothesis:
 
-V561 opens one new branch. It moves learned energy inside an exact solver. The
-new energy ranks clauses, variables, and search neighborhoods. It never accepts
-a solution. Exact CDCL, CSP repair, and executable checks remain authority.
+> Exact branch-counterfactual evidence can support useful structural search
+> advice, and a fixed safe branch policy can improve online without weakening
+> exact correctness or held-future support.
 
-The milestone also tests continuous self-learning on a different object. The
-learner can update weights over a fixed, preapproved set of structural branch
-features. It cannot create factors, edit the verifier, change the held split,
-or write new solver rules. Every update has exact cost feedback, rollback, and
-future-support checks.
+This milestone does not reopen answer-level energy scoring, external-text
+verification, natural-language constraint translation, learned trajectory
+energy, factor spawning, ARC policy work, or hardware acceleration claims.
 
-## What V560 proved
+## What V561 proved
 
-V560 completed Exp6488-Exp6501. Its capstone classified all upstream outcomes
-and made four claim decisions:
+V561 completed Exp6502-Exp6505.
 
-- `trajectory_energy_claim_eligible=false`;
-- `continuous_learning_claim_eligible=false`;
-- `arc_policy_claim_eligible=false`;
-- `hardware_claim_eligible=false`.
+1. **The old trajectory and factor lineages are closed.** Exp6502 permits one
+   fresh branch: a new exact SAT/CSP distribution, solver-native structural
+   advice, exact branch counterfactuals, fixed-feature weight updates, and a
+   fixed-width mapping.
+2. **The method boundary is frozen.** Exp6503 records the source receipts and
+   keeps an exact local solver above every learned signal.
+3. **A useful procedural benchmark exists.** Exp6504 sealed raw SAT/CSP
+   instances, exact labels, replay receipts, lineage-separated splits, held
+   cells, strata, leakage attacks, and checksums.
+4. **The Exp6504 headline is not eligible yet.** The conductor quarantined the
+   artifact because `verifier_is_oracle=true` and `verdict_class=positive` are
+   inconsistent. The data can be reused only after an independent corrigendum
+   replays the rows and emits a valid evidence class.
+5. **Free-form local-SOTA mutation is a measured null.** Exp6505 issued one
+   request to each mandated GGUF family and accepted zero mutations. Two rows
+   failed parsing and one row produced prohibited output. V562 does not retry
+   that mechanism and does not require its empty challenge pool.
 
-The detailed findings are more useful than the four booleans:
+V561 therefore proved benchmark construction and lineage control. It did not
+prove that structural advice improves exact search, that a learned branch
+policy generalizes, or that online policy updates are safe and useful.
 
-1. The exact solver-trajectory commitment was sound, but the compact learned
-   heads were disqualified because a shortcut control survived.
-2. Local SOTA models produced valid one-shot factor proposals. Exact add/drop
-   replay found no positive held causal value.
-3. The restarted reuse, spawn, and defer controller worked as a mechanism.
-   Chronological learning completed, but held-future benefit stayed closed.
-4. Medium bounded capacity preserved support and exact safety under stress.
-   This is a mechanism result, not a learning-benefit result.
-5. The independent audit replayed the rows and kept the continuous-learning
-   claim ineligible.
-6. ARC prefix energy had no held alignment with later progress. The policy A/B
-   stayed gate-blocked.
-7. No authenticated special-hardware result supported an acceleration claim.
+## Three largest gaps to the PRD vision
 
-The V560 handoff is explicit: retire learned trajectory energy, defer ARC policy
-work, and scale only a fresh exact structural signal or a new task distribution.
-V561 follows that handoff.
+| Gap | Current evidence | V562 response |
+|---|---|---|
+| Verifiable reasoning lacks a causal learned search signal | Exact outcomes exist, but prior trajectory and factor signals failed or were disqualified | Create exact branch counterfactuals, test analytical and enumerative controls, and certify headroom before learning |
+| Learned guidance has no held, charged, shortcut-resistant result | Previous learned signals used retired scopes or had no held causal benefit | Compare linear, MLP, KAN, and GNN rankers on sealed shifts with exact fallback and charged overhead |
+| FR-11 continuous self-learning is not eligible | The last chronological factor learner had no held-future benefit | Update only fixed safe branch weights, compare replay/co-observation and recency controls, and audit drift, rollback, and future support |
 
-## The three largest gaps to the PRD vision
+The hardware gap remains important, but current boards are at recorded terminal
+or changed-state-blocked states. V562 can define a CPU reference mapping ABI.
+It cannot make a hardware execution or acceleration claim.
 
-### Gap 1: Carnot has no causal solver-native energy signal
+## Research findings used by V562
 
-The PRD calls for learned energy that improves verifiable reasoning. V560 showed
-that whole-trajectory and proposed-factor signals are not enough. Carnot needs a
-signal tied to exact search actions. V561 uses clause pressure, propagation,
-graph structure, branch counterfactuals, and solver influence receipts. It first
-tests analytical advice. Learned rankers run only after that structural signal
-has held value.
+The full refresh is in `research-references.md`.
 
-### Gap 2: Carnot lacks a clean shifted benchmark for structural reasoning
+- arXiv:2608.16003 shows that audit and repair history can shift an LLM
+  verifier's threshold. V562 keeps proposal and verification contexts separate
+  and uses no LLM as a release checker.
+- arXiv:2608.18803 separates replay's co-observation benefit from forgetting
+  control. Exp6515 includes current-only, replay/co-observation, and frozen
+  arms under matched update dose.
+- arXiv:2608.16141 shows that zero representational drift can reduce
+  plasticity. Exp6515 records weight drift and new-shift acquisition together.
+- arXiv:2608.03874 shows that recent context can match explicit skill state.
+  Exp6515 includes an ephemeral recent-window control with no persistent
+  learned weights.
+- OpenReview l7GZ3vswuD uses one-shot critical-variable prediction followed by
+  exact enumeration. Exp6509 tests the solver structure with analytical and
+  random critical-variable controls. Exp6511 later supplies learned rankers if
+  structural headroom is certified.
+- Current Extropic and Kona material changes no local authority boundary.
+  Exp6517 is a CPU-only mapping contract. It makes no device claim.
 
-Past corpora leaked identity, order, length, model family, or construction
-rules. V561 commits a new exact SAT/CSP benchmark before fitting. It separates
-formula family, graph scale, surface relabeling, solver hardness, and source.
-Procedural rows are sufficient for the benchmark. Local SOTA models may add
-challenge mutations, but exact parsing and solving provide all labels.
+## Scientific invariants
 
-### Gap 3: Continuous self-learning has not improved held future work
+1. The installed exact SAT or CSP backend owns labels, accepted solutions, and
+   release decisions.
+2. Learned or analytical advice may order variables, choose a bounded refocus,
+   select a bounded neighborhood, or abstain. It may not accept a solution.
+3. All benchmark splits remain sealed by base-instance lineage. No task may
+   repair held data after seeing a result.
+4. Every comparative claim emits one row for every instance, arm, seed, shift,
+   and terminal disposition.
+5. Neural overhead, feature cost, model load, and fallback cost are charged.
+6. Correctness is a hard invariant. A search reduction cannot offset a changed
+   SAT, UNSAT, feasible, or infeasible answer.
+7. Positive performance claims require an independent row replay. Exact solver
+   self-consistency alone is `circular_positive`, not `positive`.
+8. Continuous learning can update weights over a frozen feature schema only.
+   It cannot add factors, create features, or change the exact solver.
+9. The SOTA mutation lineage stays retired for this milestone. No task consumes
+   Exp6505's `challenge_pool_ready_score=0.0` result.
+10. A blocked artifact names the failed check and observed value in
+    `gate_check_summary`.
 
-Carnot has lifecycle controls, receipts, and rollback. It does not have a
-positive held-future learning result. The V560 factor-pool learner is retired.
-V561 tests a narrower learner. It updates only weights over a fixed safe branch
-feature set. Exact solver cost is the feedback. The learner must beat frozen and
-matched-dose controls after shifts and restarts without losing future support.
+## Local model policy
 
-ARC policy and physical hardware acceleration remain important. They are not
-active V561 gaps because their direct V560 prerequisites are closed. V561 keeps
-the hardware ABI visible and keeps ARC unchanged.
+V562 does not need an LLM for its scientific path. That choice follows the
+Exp6505 null and the exact-solver authority boundary. It is not an exemption
+for later ad hoc model use.
 
-## Research findings adopted for V561
+If an implementation task adds any LLM arm, `MODEL_SPECS` must contain at least
+one of these repositories:
 
-The 2026-08-21 source refresh is in `research-references.md`. V561 adopts four
-methods and two warnings:
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-- **Certified Correctness in Neural Constraint Reasoning Requires Symbolic
-  Integration** ([arXiv:2608.14569](https://arxiv.org/abs/2608.14569)) argues
-  that neural-only constraint systems can violate hard constraints under
-  shift. Exp6507-Exp6509 keep neural advice inside an exact solver.
-- **Learning to Rank the Initial Branching Order of SAT Solvers**
-  ([arXiv:2603.07176](https://arxiv.org/abs/2603.07176)) shows useful static
-  advice on random and pseudo-industrial SAT. It also shows that dynamic
-  heuristics can erase that advice. Exp6506-Exp6508 record influence duration
-  and compare initialization with bounded refocus.
-- **Using Clause Predictions for Learning-Augmented Constraint Satisfaction**
-  ([OpenReview](https://openreview.net/forum?id=xvcqXxw4Le)) motivates uncertain
-  clause-level advice with an exact fallback. Exp6506 creates clause and branch
-  counterfactual labels.
-- **Large Neighborhood Search meets Iterative Neural Constraint Heuristics**
-  ([arXiv:2603.20801](https://arxiv.org/abs/2603.20801)) separates destroy and
-  repair. Exp6509 uses stochastic destroy and exact greedy repair only after a
-  learned branch signal clears its gate.
-- **Solver-Hard Is Not Model-Hard**
-  ([arXiv:2607.17047](https://arxiv.org/abs/2607.17047)) warns that solver effort
-  is not a proxy for model difficulty. Exp6504-Exp6506 stratify both structure
-  and surface form.
-- Extropic's current Z1 update defines a sparse 16-neighbor Ising target and a
-  future compiler stack. Exp6513 tests only a fixed-width mapping ABI on local
-  CPU reference code. It makes no device, power, or speed claim.
+The task must use `llama_cpp` and the GGUF embedded tokenizer. It must not use
+`AutoTokenizer` on a GGUF. Qwen3.5-0.8B and gemma-4-E4B-it are smoke-test models
+only and cannot support a headline result.
 
-## Target architecture
+## Architecture
 
 ```text
- procedural exact families             local SOTA GGUF models
- SAT | coloring | scheduling            propose edit scripts only
-             |                                      |
-             +-------------+------------------------+
-                           v
-              exact parser + SAT/CSP authority
-              validity | SAT/UNSAT | proof receipt
-                           |
-                  sealed shifted benchmark
-            family | scale | surface | hardness | source
-                           |
-                           v
-              exact branch counterfactual recorder
-              clause advice + variable order labels
-                           |
-           +---------------+----------------+
-           |                                |
-           v                                v
- analytical structural energy       learned branch rankers
- native solver control              linear | MLP | KAN | GNN
-           |                                |
-           +---------------+----------------+
-                           v
-             exact CDCL / CSP repair remains authority
-                           |
-              [positive held causal gate only]
-                           v
-          stochastic-destroy LNS + exact greedy repair
-                           |
-                           v
-        fixed-feature continual branch-policy learner
-        matched dose | rollback | restart | future support
-                           |
-             independent row and safety audit
+V561 immutable evidence
+  Exp6504 benchmark ----> Exp6506 independent corrigendum and V562 lock
+  Exp6505 mutation null -X           |
+                                     v
+                         Exp6507 exact branch-counterfactual dataset
+                              /                    \
+                             v                      v
+                 Exp6508 analytical advice   Exp6509 one-shot enumeration
+                              \                    /
+                               v                  v
+                         Exp6510 independent signal certificate
+                              |                    |
+                    positive |                    | structural mapping
+                              v                    v
+                  Exp6511 learned ranker A/B   Exp6517 fixed-width ABI
+                              |
+                              v
+                  Exp6512 independent ranker audit
+                       |                     \
+              positive|                      \ exact dataset
+                       v                       v
+                  Exp6513 exact-repair LNS   Exp6514 safe online controller
+                                                |
+                         learned signal + controller
+                                                v
+                              Exp6515 chronological continuous learning
+                                                |
+                                                v
+                                   Exp6516 independent CSL audit
 
- structural factor graph --> fixed-width Ising/TSU mapping ABI
-                              CPU reference only
+              Exp6506-Exp6517 ----> Exp6518 V562 capstone
 ```
 
-The architecture has six hard boundaries:
+The exact solver stays on the acceptance path in every phase. Advice is a
+sidecar that can change search order. Failure or abstention returns control to
+the native solver.
 
-1. SOTA models may mutate a formal instance. They do not answer it.
-2. Exact solvers create labels and certify every accepted output.
-3. Learned advice changes search order only. It cannot change satisfiability.
-4. Dynamic solver overrides are measured. An inert initializer is not a win.
-5. Continuous learning updates fixed weights only. It cannot spawn factors.
-6. The mapping ABI is a portability check. It is not hardware execution.
+## Phase A: Repair evidence and measure structural headroom
 
-## Phase A: boundary and certified shifted substrate
+### Exp6506 - V561 evidence corrigendum and V562 lineage lock
 
-### Exp6502 - V560 retirement ledger and V561 lineage lock
+Recompute the Exp6504 artifact from raw rows. Preserve the immutable benchmark
+and emit a separate corrigendum. Replace the invalid positive class with an
+eligible non-scientific readiness disposition. Freeze the Exp6505 zero-yield
+mutation stream as a terminal null and prohibit downstream dependence on it.
 
-Recompute the V560 capstone from rows. Freeze the learned trajectory-energy,
-factor-causal, decomposed-energy, checker-router, factor-pool learner, and ARC
-policy branches. Permit only exact solver-native structural advice, a new
-certified task distribution, fixed-feature learning, and fixed-width mapping.
+**Deliverable:**
+`results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json`
 
-**Deliverable:** `results/experiment_6502_v560_retirement_v561_lineage_lock.json`
+**Gate:** `v562_exact_branch_ready_score == 1.0`.
 
-### Exp6503 - V561 source delta and method preregistration
+### Exp6507 - Exact branch-counterfactual dataset
 
-Recheck the planner sources at execution time. Record stable paper and product
-receipts. Convert the selected methods into a frozen comparison contract. This
-task adds no runtime dependency and makes no paper claim a local result.
+Select branch checkpoints before evaluation. For each eligible variable and
+polarity, run bounded exact counterfactual replays. Record conflicts,
+propagations, decisions, proof or model validity, censoring, and fallback. Keep
+the original split and lineage commitment.
 
-**Deliverable:** `results/experiment_6503_v561_source_delta_method_contract.json`
+**Deliverable:**
+`results/experiment_6507_exact_branch_counterfactual_dataset.json`
 
-### Exp6504 - Immutable exact structural benchmark commitment
+**Gate:** `branch_counterfactual_dataset_ready_score == 1.0`.
 
-Create procedural SAT and CSP families with exact labels. Include random and
-pseudo-industrial CNF, Tseitin and pigeonhole controls, graph coloring, and a
-small scheduling family. Freeze source, family, scale, surface, hardness, and
-split strata before any ranker sees the rows. Use at least 30 held units in each
-headline comparison cell.
+### Exp6508 - Analytical branch and refocus comparison
 
-**Deliverable:** `results/experiment_6504_exact_structural_benchmark_commitment.json`
+Compare native dynamic branching, a static analytical structural order,
+periodic bounded refocus, and a shuffled structural control. Record advice
+influence duration and charged cost. A positive signal needs fewer exact search
+events on held units without a correctness change or a wall-clock regression.
 
-### Exp6505 - Local-SOTA formal challenge mutation stream
+**Deliverable:**
+`results/experiment_6508_analytical_branch_refocus_ab.json`
 
-Use all three mandated GGUF families, one at a time, to propose one-shot edit
-scripts against already formal development instances. An edit script may add,
-remove, or relabel bounded clauses, edges, or jobs. It may not emit an answer,
-label, natural-language-to-ConstraintIR translation, solver heuristic, or
-release decision. Exact parsing and solving accept or reject each mutation.
+### Exp6509 - One-shot critical-variable enumeration
 
-**Deliverable:** `results/experiment_6505_sota_formal_challenge_mutations.json`
+Test the system design from the OpenReview enumeration paper without importing
+its claim. Select a fixed critical-variable subset once with an analytical
+score. Compare it with random subsets and native exact search. Enumerate the
+chosen prefix and use the exact solver for every remaining branch.
 
-### Exp6506 - Sealed multi-shift benchmark and exact branch labels
+**Deliverable:**
+`results/experiment_6509_critical_variable_enumeration_ab.json`
 
-Merge the procedural commitment with any valid model mutations. Freeze held
-source, family, scale, surface, and hardness shifts. At precommitted solver
-checkpoints, run exact branch counterfactuals and record clause, variable,
-propagation, conflict, and influence-duration labels. The labels come only from
-exact replay.
+### Exp6510 - Independent structural-signal certificate
 
-**Deliverable:** `results/experiment_6506_sealed_structural_branch_labels.json`
+Replay Exp6508 and Exp6509 from per-unit rows. Reject correctness drift,
+identity shortcuts, outcome-derived features, undercharged overhead, and
+single-cell wins. Open the learned phase only if at least one preregistered
+non-learned method has held headroom.
 
-## Phase B: exact-solver structural advice
+**Deliverable:**
+`results/experiment_6510_structural_signal_certificate.json`
 
-### Exp6507 - Analytical structural advice A/B
+**Gate:** `certified_structural_signal_ready_score == 1.0`.
 
-Compare native dynamic branching, one-shot static structural order, and bounded
-periodic refocus. Use fixed analytical features only. Measure solve parity,
-conflicts, propagations, decisions, wall time, and how long advice stays active.
-This experiment establishes whether any fresh structural signal exists before
-training.
+## Phase B: Learn branch advice under exact authority
 
-**Deliverable:** `results/experiment_6507_analytical_structural_advice_ab.json`
+### Exp6511 - Linear, MLP, KAN, and GNN branch-ranker A/B
 
-### Exp6508 - Gated learned branch-ranker comparison
+Train compact rankers on the exact counterfactual labels. Match data, update
+dose, feature schema, and tuning access. Compare native, analytical, random,
+linear, MLP, KAN, and GNN arms. Evaluate family, scale, surface, and source
+shifts. The exact solver accepts every final result.
 
-Run only if Exp6507 finds held structural benefit with exact validity parity.
-Compare regularized linear, compact MLP, compact KAN, and small GNN rankers at
-matched parameter and inference budgets. Use exact counterfactual labels. Test
-family, scale, surface, source, identity, order, and serialization shortcuts.
+**Deliverable:**
+`results/experiment_6511_learned_branch_ranker_ab.json`
 
-**Deliverable:** `results/experiment_6508_learned_branch_rankers.json`
+### Exp6512 - Independent learned-ranker audit
 
-### Exp6509 - Gated structural LNS destroy and exact repair
+Replay ranker rows without using task aggregates. Test identifier, row-order,
+serialization-length, family, label-balance, solver-effort, and leakage
+controls. Recompute charged cost and exact correctness. Emit a closed score
+even when Exp6511 was blocked or null so later gates do not depend on a missing
+field.
 
-Run only if Exp6508 finds a held learned branch signal. Compare random destroy,
-analytical destroy, and learned destroy. Use exact greedy repair and native
-solver fallback. Report every destroy, repair, fallback, validity, and cost
-event. A search-work gain cannot trade away exact validity.
+**Deliverable:**
+`results/experiment_6512_learned_branch_ranker_audit.json`
 
-**Deliverable:** `results/experiment_6509_structural_lns_exact_repair.json`
+**Gate:** `learned_branch_signal_ready_score == 1.0`.
 
-## Phase C: continuous self-learning
+### Exp6513 - Learned destroy with exact-repair LNS
 
-### Exp6510 - Fixed-feature continual branch-policy controller
+If the ranker audit passes, compare native exact search, random destroy,
+analytical destroy, and learned destroy. Use bounded neighborhoods and exact
+repair. Record destroy, repair, fallback, validity, and total charged cost as
+separate events.
 
-Build the default-off update mechanism for branch-ranker weights. Freeze the
-feature set and capacity. Add exact-cost feedback, event-time evidence,
-transactional writes, rollback, restart, dose accounting, and corruption
-fixtures. This is a mechanism task. It makes no learning-benefit claim.
+**Deliverable:**
+`results/experiment_6513_exact_repair_lns_ab.json`
 
-**Deliverable:** `results/experiment_6510_continual_branch_policy_controller.json`
+## Phase C: Continuous self-learning on a fixed safe policy
 
-### Exp6511 - Chronological continuous branch learning
+### Exp6514 - Transactional fixed-feature branch controller
 
-Run only if Exp6508 and Exp6510 clear their gates. Compare frozen, always-update,
-fixed-threshold, and anytime-valid guarded updates. Match exposure and accepted
-update dose. Evaluate later families, larger scales, surface relabeling,
-recurrence, restart, exact validity, negative transfer, and future support.
-This is V561's required continuous self-learning experiment.
+Build a controller that updates bounded weights over the frozen structural
+feature schema. It must provide read-before-write receipts, holdout prediction,
+transactional commit, rollback, restart, corruption quarantine, capacity
+bounds, and exact-solver fallback. This task proves mechanism only.
 
-**Deliverable:** `results/experiment_6511_continuous_branch_learning.json`
+**Deliverable:**
+`results/experiment_6514_transactional_branch_controller.json`
 
-### Exp6512 - Independent continual-learning and support audit
+**Gate:** `continual_controller_ready_score == 1.0`.
 
-Run after Exp6511 completes, including after a valid null. Use an independent
-reducer to replay every update, rollback, restart, cost, and future-support row.
-Attack held access, dose mismatch, update leakage, seed pooling, capacity drift,
-and silent solver override. Keep execution completeness separate from claim
-eligibility.
+### Exp6515 - Chronological replay and co-observation study
 
-**Deliverable:** `results/experiment_6512_continuous_branch_learning_audit.json`
+Run a sealed chronological stream across family, scale, surface, and source
+shifts. Compare frozen advice, current-only updates, replay/co-observation,
+strong anchoring, and an ephemeral recent-window fit with no persistent state.
+Match admitted update count and optimizer dose. Measure current gain,
+retention, drift, plasticity, rollback, and held-future exact-satisfying
+support.
 
-## Phase D: portability boundary and capstone
+**Deliverable:**
+`results/experiment_6515_chronological_branch_csl.json`
 
-### Exp6513 - Fixed-width structural Ising mapping ABI
+### Exp6516 - Independent continuous-learning audit
 
-Map the exact structural feature graph and analytical branch energy into a
-bounded fixed-point Ising-style descriptor. Check quantization, degree, spin
-budget, coefficient range, CPU energy parity, and round-trip hashes. Use no
-board and make no performance claim. The result is a future portability
-contract for FPGA, THRML, Thermalizers, or Z1 work.
+Replay chronological rows and transactional receipts. Recompute the frozen,
+recency, replay, anchoring, and current-only controls. Reject dose mismatch,
+future access, unsafe writes, support loss, hidden feature creation, and claims
+based only on current-task gain.
 
-**Deliverable:** `results/experiment_6513_structural_ising_mapping_abi.json`
+**Deliverable:**
+`results/experiment_6516_branch_csl_independent_audit.json`
 
-### Exp6514 - V561 independent capstone and V562 handoff
+**Gate:** `csl_claim_eligible_score == 1.0` for a continuous-learning claim.
 
-Recompute all gates and headlines from rows. Verify retirements, exact authority,
-model boundaries, continuous-learning receipts, and hardware-claim limits.
-Classify each of the three gaps and produce one explicit V562 branch decision.
-This task is ungated so it runs after clean nulls and gate closures.
+## Phase D: Portability contract and capstone
 
-**Deliverable:** `results/experiment_6514_v561_capstone.json`
+### Exp6517 - Fixed-width structural mapping ABI
+
+Map the frozen structural features and branch scores to a fixed-width integer
+ABI. Provide a CPU reference encoder, scorer, checksum, saturation rules, and
+bit-exact replay. Do not access a board and do not report latency, power, or
+acceleration.
+
+**Deliverable:**
+`results/experiment_6517_fixed_width_structural_mapping_abi.json`
+
+### Exp6518 - V562 adversarial capstone
+
+Recompute every gate and claim from Exp6506-Exp6517. Separate operational
+readiness, circular exact self-checks, positive science, nulls, blocked tasks,
+and deferred work. Publish the exact next-step license and retirement ledger.
+
+**Deliverable:** `results/experiment_6518_v562_capstone.json`
 
 ## Dependency graph
 
-```text
-6502 V560 retirement / V561 lock
- |
- +-- 6503 source delta and method contract
- |      `-- 6504 exact benchmark commitment
- |              `-- 6505 SOTA challenge mutations
- |                      `-- 6506 sealed shifts + exact branch labels
- |                              |
- |                              +-- 6507 analytical advice
- |                              |      `-- [positive] 6508 learned rankers
- |                              |                    `-- [positive] 6509 LNS
- |                              |
- |                              +-- 6510 continual controller
- |                                     `-- [6508 positive] 6511 learning
- |                                                         `-- 6512 audit
- |                              |
- |                              `-- 6513 fixed-width mapping ABI
- |
- `-- 6502..6513 --------------------------------------> 6514 capstone
-```
-
-The structured gates in `research-roadmap-next.yaml` are authoritative. Every
-gate field appears with the same spelling in the upstream task's required
-artifact fields. Exp6514 is deliberately ungated.
-
-## Hardware and model requirements
-
-| Resource | Tasks | Requirement |
+| Experiment | Direct evidence dependency | Structured execution gate |
 |---|---|---|
-| Dual RTX 3090, 48 GB aggregate VRAM | Exp6505 | Load one GGUF at a time through `llama_cpp`. Record offload, VRAM, backend, tokenizer, and timing receipts. |
-| `unsloth/Qwen3.6-35B-A3B-GGUF` | Exp6505 | Required in `MODEL_SPECS`; flagship MoE challenge generator. |
-| `unsloth/gemma-4-31B-it-GGUF` | Exp6505 | Required in `MODEL_SPECS`; flagship dense challenge generator. |
-| `unsloth/gemma-4-26B-A4B-it-GGUF` | Exp6505 | Required in `MODEL_SPECS`; middle MoE challenge generator. |
-| CPU and installed exact solvers | Exp6504, Exp6506-Exp6514 | Exact labeling, CDCL/CSP search, replay, continual updates, audits, and CPU mapping parity. |
-| FPGA boards | none | KV260 is terminal. PolarFire is at a recorded terminal smoke boundary. GateMate's last authorized changed-state detect failed. No unchanged probe. |
-| Extropic XTR-0 / Z1 | none | No authenticated local device or API. Vendor material is architecture context only. |
-| Kona | none | No public weights or reproducible local runner. |
+| Exp6506 | Exp6502-Exp6505 completed artifacts | None |
+| Exp6507 | Exp6504 data through Exp6506 corrigendum | Exp6506 lock equals 1.0 |
+| Exp6508 | Exp6507 branch dataset | Exp6507 readiness equals 1.0 |
+| Exp6509 | Exp6507 branch dataset | Exp6507 readiness equals 1.0 |
+| Exp6510 | Exp6508 and Exp6509 terminal artifacts | None; it closes the OR decision |
+| Exp6511 | Exp6507 and Exp6510 | Exp6510 certificate equals 1.0 |
+| Exp6512 | Exp6511 terminal artifact or gate block | None; it always emits a closed score |
+| Exp6513 | Exp6512 audited learned signal | Exp6512 score equals 1.0 |
+| Exp6514 | Exp6507 fixed feature schema | Exp6507 readiness equals 1.0 |
+| Exp6515 | Exp6512 and Exp6514 | Both scores equal 1.0 |
+| Exp6516 | Exp6515 terminal artifact or gate block | None; it always emits a closed score |
+| Exp6517 | Exp6510 structural certificate | Exp6510 certificate equals 1.0 |
+| Exp6518 | All V562 terminal artifacts | None |
 
-`llama_cpp` and each GGUF's embedded tokenizer are authoritative for Exp6505.
-Do not use `transformers.AutoTokenizer` with a GGUF repository. Legacy
-Qwen3.5-0.8B and gemma-4-E4B models may run only as labeled CPU smoke checks.
-They cannot support a headline.
+No task requires a retired experiment. Prior failed artifacts appear only in
+`prior_failures` receipts and changed-technique comparisons.
 
-## Evidence, safety, and retirement rules
+## Acceptance logic
 
-- Every comparison emits one row for every unit, arm, seed, family, scale,
-  surface, and source needed to recompute its claim.
-- Every task declares `verdict_class` as one of `positive`,
-  `circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
-- Every blocked verdict uses `honest_verdict: blocked_*` and an exact
-  `gate_check_summary` with the failed check and observed value.
-- Every artifact records `inference_substrate`, `verifier_is_oracle`, field
-  principles, field provenance, random seed, duration, tests, and checksum.
-- Exact solvers are oracles only for the formal instance they execute. Learned
-  rankers, model mutations, and mapping descriptors are never oracles.
-- Exp6505 carries the failed generated-answer, schema-reprompt, and fixed-policy
-  corpus ancestry. It is allowed only because the model emits instance edits,
-  never answers or semantic translations.
-- Exp6508 carries Exp6490. If shortcut survival repeats, the learned structural
-  branch-ranker scope retires.
-- Exp6509 carries Exp6493. A repeated gate-blocked verdict retires this LNS
-  continuation.
-- Exp6511 carries Exp6496 and Exp5895. If held-future benefit stays null, the
-  fixed-feature continuous branch-learning scope retires.
-- Exp6512 carries the prior independent audit ancestry. It cannot upgrade a
-  claim from aggregate fields when its own rows disagree.
-- No V561 task depends on a retired upstream experiment ID.
-- No task may modify `research-roadmap.yaml` or
-  `scripts/research_conductor.py`. No task may push.
+### Structural advice claim
 
-## Spec-anchored execution contract
+A structural method can be positive only when:
 
-Each task reads `CODEX.md`, `CLAUDE.md`, this roadmap, relevant upstream
-artifacts, capability specs, exclusion records, and `ops/e2e-test-plan.md`.
-Before implementation, the task adds or confirms REQ-* and SCENARIO anchors.
-It writes failing focused tests first.
+- every accepted answer matches exact authority;
+- a held preregistered cell improves exact search work;
+- the effect survives per-unit replay and shortcut attacks;
+- feature, inference, and fallback overhead are charged;
+- the result is not only a solver-oracle self-check.
 
-Before completion, each task runs focused tests, lint, spec coverage, row
-consistency checks, adversarial verification, applicable end-to-end checks,
-and `git status --short`. Implementation tasks reconcile OpenSpec,
-`_bmad/traceability.md`, `ops/status.md`, and `ops/changelog.md`.
+### Learned branch claim
 
-## Acceptance criteria
+A learned branch claim also requires:
 
-V561 execution is complete when all 13 artifacts have a terminal record and
-Exp6514 can replay their rows and gates. Scientific success is separate:
+- Exp6510 and Exp6512 scores equal 1.0;
+- benefit on at least two held shift axes;
+- no result depends on unit identity, row order, family label, or solver outcome;
+- a compact learned model beats the analytical control, not only random order;
+- abstention returns to the native exact solver.
 
-- **Structural signal success:** Exp6507 improves exact search work with solve
-  and validity parity on held shifts.
-- **Learned advice success:** Exp6508 beats analytical, native, and shuffled
-  controls without a shortcut or family failure.
-- **LNS success:** Exp6509 reduces exact search work at matched validity and
-  charged cost.
-- **Continuous-learning success:** Exp6511 improves later held work and support
-  without negative transfer; Exp6512 confirms the result independently.
-- **Portability success:** Exp6513 achieves exact CPU energy parity within the
-  frozen quantization tolerance. This is not a hardware-speed success.
-- **Valid negative outcome:** a clean null, disqualification, or closed gate is
-  accepted when rows, provenance, and retirement mechanics are complete.
+### Continuous self-learning claim
 
-## Explicit non-goals
+A continuous-learning claim also requires:
 
-- repairing compact learned trajectory energy;
-- proposing or admitting new learned factors;
-- generated answers, finite-ID answer transport, or NL-to-ConstraintIR
-  reprompting;
-- external-text, hidden-state, or model-identity verifier scoring;
-- changing ARC policy or claiming a new ARC solve;
-- reading ARC game source, offline ground-truth BFS, or per-game adapters;
-- probing unchanged FPGA state or claiming special-hardware speed;
-- using Kona or Extropic product claims as local evidence;
-- editing the conductor, activating the roadmap, pushing, or deploying.
+- Exp6514 mechanism readiness and Exp6516 claim eligibility equal 1.0;
+- a persistent state arm beats frozen and ephemeral recency controls;
+- replay or co-observation benefit is measured apart from retention;
+- held-future support does not decline beyond the preregistered tolerance;
+- all writes are transactional, bounded, restart-safe, and reversible;
+- drift and new-shift plasticity are reported together.
 
-## Expected V562 decision boundary
+Failure of any condition produces `null`, `blocked`, `disqualified`, or
+`partial`. It cannot produce `positive`.
 
-Exp6514 must choose one branch:
+## Hardware requirements
 
-1. **Structural and continual results are positive:** shadow the fixed-feature
-   branch policy on a larger exact stream. Keep exact fallback.
-2. **Structural advice is positive but learning is null or unsafe:** freeze the
-   best offline ranker. Research update objectives and support preservation.
-3. **Analytical advice is positive but learned rankers fail:** ship no learner.
-   Keep the transparent structural heuristic as an experimental baseline.
-4. **Structural advice is null:** retire this branch-order lineage and move to
-   a different exact task distribution or proof-local objective.
-5. **Mapping succeeds without a solver benefit:** retain the ABI only. Do not
-   schedule hardware work until an algorithmic workload and authenticated
-   execution surface both exist.
+| Resource | Use in V562 | Boundary |
+|---|---|---|
+| CPU and system RAM | Exact solving, replay, ranker training, audits, and ABI reference | Required |
+| Dual RTX 3090 | Optional for compact GNN or KAN training when CPU cost is excessive | No result may depend on unavailable multi-GPU behavior |
+| Local GGUF cache | Not required by the planned science path | Any added LLM arm must use a mandated SOTA repository and embedded tokenizer |
+| KV260 | No board run | Terminal hardware state remains unchanged |
+| PolarFire SoC | No board run | Smoke boundary remains unchanged |
+| GateMate | No board run | Changed-state hardware work remains blocked |
+| XDNA/NPU | No run | Unsupported runtime boundary remains unchanged |
+| Extropic TSU | No run | No authenticated device or API; watch and ABI only |
+
+Exp6517 is an interface experiment. It is not a hardware experiment and cannot
+headline latency, throughput, energy, power, or acceleration.
+
+## Retired and deferred work
+
+V562 must not:
+
+- rerun Exp6505 free-form formal mutation generation;
+- use an LLM to emit answers, labels, release decisions, or natural-language
+  constraints;
+- retrain learned trajectory energy or factor causal-value models;
+- spawn or synthesize new factors during continuous learning;
+- route ARC actions or claim an ARC level solve;
+- run unchanged FPGA, NPU, or thermodynamic hardware probes;
+- compare hardware speed through a simulator-only path;
+- promote Kona or paper results as local evidence;
+- convert a blocked downstream task into a positive capstone claim.
+
+## Planned outputs
+
+- 13 experiment artifacts in `results/`.
+- New REQ-* and SCENARIO anchors before each implementation.
+- Focused tests for every new module.
+- Per-unit rows for every comparison.
+- Row-consistency and adversarial-verification receipts.
+- Reconciled capability specs, `_bmad/traceability.md`, `ops/status.md`, and
+  `ops/changelog.md` during milestone execution.
+
+## Terminal decision
+
+V562 succeeds as a research milestone even if every performance gate stays
+closed. The required result is a correct decision:
+
+- promote certified structural advice and safe continuous learning when the
+  rows support them;
+- otherwise retire the repeated scope and preserve only the exact benchmark,
+  controller mechanics, and mapping contract that survive audit.
