@@ -1,0 +1,53 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.561",
+  "generated_at": "2026-08-22T17:31:19Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 1.3,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Local-SOTA one-shot formal challenge mutation stream",
+      "duration_minutes": 1.21,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Immutable exact SAT/CSP structural benchmark commitment",
+      "duration_minutes": 0.13,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V560 retirement ledger and V561 exact-structural lineage lock",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V561 source delta and exact-structural method preregistration",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Execution completed in 1.3 minutes across 4 experiments. The 1.21-minute Local-SOTA one-shot formal challenge mutation stream was the only compute-bound experiment and the compute leader, but the data does not identify its slow phase. The locked task-level classification reports no compute-bound GPU-idle fault, and no evidence shows 2 or more models running in parallel.",
+  "bottlenecks_identified": [
+    "The Local-SOTA one-shot formal challenge mutation stream led compute time, but the timing data has no phase breakdown, so the cause cannot be assigned.",
+    "The GPU snapshot is not linked to an identified task phase, so it cannot establish task-time accelerator efficiency.",
+    "No model-count or runner-selection receipt is available, so the record cannot assess DualGPURunner engagement for parallel model work."
+  ],
+  "improvements_suggested": [
+    "Add automatic request batching for batchable single-model inference; the GPU report recommends 8–16 questions per forward pass and projects 4–8× throughput.",
+    "Capture monotonic phase timings and task-correlated GPU samples around every GGUF, CUDA, or requires-GPU phase.",
+    "Record model count and runner selection for each compute task; use DualGPURunner only when 2 or more models are loaded in parallel.",
+    "When independent compute jobs are ready together, place a second job on GPU 0 instead of forcing one single-model job across both devices."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Batch 8–16 independent questions per forward pass when the formal-challenge stream exposes a batch.",
+    "Emit per-phase timing and task-correlated GPU samples for every compute-bound experiment.",
+    "Emit model-count and runner receipts, and schedule a second independent model job on GPU 0 only when concurrent work exists."
+  ],
+  "estimated_time_savings_pct": 70,
+  "meta_reflection": "The milestone was already brief, so the main opportunity is to make the single compute path observable and batchable. The 70% estimate is an upper bound: it applies the GPU report's conservative 4× batching projection to the full 1.21-minute compute entry within the 1.3-minute milestone, although the data does not show how much of that entry was batchable inference."
+}
