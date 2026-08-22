@@ -127,6 +127,12 @@ SKIP_NO_ENGINE = (
     "no_active_transitions",
     "disabled_by_env",
     "proposer_failed_or_missing_root",
+    # REQ-ARC-WMTE-6610 (2026-08-21) split the conflated label above; rows recorded after
+    # that date carry these three instead. A pattern list narrower than its concept is the
+    # bug class the QA-layer discipline names -- widened additively.
+    "proposer_failed",
+    "missing_plan_start_grid",
+    "proposer_failed_and_missing_plan_start_grid",
     "no_root",
     "no_transitions",
 )

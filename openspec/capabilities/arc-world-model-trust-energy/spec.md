@@ -26511,3 +26511,35 @@ An explicit `proposer.model_specs` attribute keeps absolute precedence
 | REQ-ARC-WMTE-6610 | `python/carnot/agentic/arc_competition_agent.py` (single-shot induce site: split skip labels + `proposer_note`); `scripts/arc_scored_path_lever_harness.py` (`induction_proposer_notes` row field). | `tests/python/test_arc_induction_skip_record.py`; updated pins in `tests/python/test_experiment_4544_llm_proposer_reinduction.py`. |
 | REQ-ARC-WMTE-6620 | `python/carnot/agentic/arc_executable_world_model.py` (pin constants, `_induce_max_tokens_default`, timeout floor, `_pool_clamped_n_predict` + wiring in `generate()`); both construction sites in `arc_competition_agent.py` and `build_proposer` in the lever harness inherit the dataclass defaults. | `tests/python/test_arc_induction_budget_defaults.py` (env/default resolution, timeout floor, kernel-parity pin, clamp cases). |
 | REQ-ARC-WMTE-6630 | `python/carnot/agentic/arc_llm_reinduction.py` (`_model_specs` observed-first naming). | `tests/python/test_arc_induction_budget_defaults.py` (label cases); updated `_model_specs` pin in `test_experiment_4544_llm_proposer_reinduction.py`. |
+
+### Amendments to REQ-ARC-WMTE-6610/6620/6630 from the adversarial review of 512eca0e6b (2026-08-21, append-only)
+
+1. REQ-ARC-WMTE-6620 clause 4 gains a FLOOR: when the observed pool leaves
+   under 1024 tokens of room, the clamp passes the configured budget through
+   unchanged. A few-token "successful" completion is exp5866's mode C (a
+   healthy-but-terse illusion); the server's loud admission refusal is the
+   better failure.
+2. REQ-ARC-WMTE-6620 gains a decoupling rule: the server LAUNCH WAIT must not
+   scale with the request timeout. `load_wait_attempts` is capped at 300
+   (10 minutes), byte-preserving the pre-raise ceiling. The wait budget is
+   for model load, not generation.
+3. REQ-ARC-WMTE-6630's label read happens at entry AND is refreshed after the
+   refinement loop's first proposer round: the entry-time /props read can
+   name a wrong-model squatter that `_ensure_server` then refuses and
+   replaces during that first call.
+4. `_default_induce_timeout_s` treats a malformed env override like
+   `_induce_max_tokens_default` does: fall back to the derived default,
+   never crash -- both are dataclass default factories now, so a typo'd env
+   var would otherwise fail every proposer construction.
+5. Consumers of the pre-split skip label
+   (`experiment_5727` classifier, `arc_action_provenance_census.SKIP_NO_ENGINE`)
+   carry the three new labels additively, so rows from either side of the
+   split classify identically.
+
+#### SCENARIO-ARC-WMTE-6620-4: clamp floor
+
+- GIVEN `max_tokens=131072` and an observed pool of
+  `_INDUCE_WORST_CASE_PROMPT_TOKENS + 8` cells
+- THEN the effective `n_predict` stays 131072 (pass-through; the server
+  refuses loudly)
+- AND at `_INDUCE_WORST_CASE_PROMPT_TOKENS + 1024`, the clamp applies (1024).

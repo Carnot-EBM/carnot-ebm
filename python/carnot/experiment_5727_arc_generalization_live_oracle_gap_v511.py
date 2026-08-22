@@ -69,15 +69,11 @@ FIELD_PROVENANCE = {
     "games_measured": {
         "principle": "the no-silent-caps ethos requires 25 games or an explicit skipped-game list."
     },
-    "live_levels_total": {
-        "principle": "the live side of the north-star generalization metric."
-    },
+    "live_levels_total": {"principle": "the live side of the north-star generalization metric."},
     "oracle_levels_total": {
         "principle": "the offline-dev oracle ceiling the live path is measured against."
     },
-    "gap_total": {
-        "principle": "the total live-vs-oracle headroom this floor exists to shrink."
-    },
+    "gap_total": {"principle": "the total live-vs-oracle headroom this floor exists to shrink."},
     "per_game_gap": {
         "principle": "per-game gaps and oracle-win provenance make the aggregate actionable."
     },
@@ -96,9 +92,7 @@ FIELD_PROVENANCE = {
     "preconditions_checked": {
         "principle": "records the GGUF, registry, GPU pinning, and non-default port gates checked before trusting the run."
     },
-    "random_seed": {
-        "principle": "determinism precondition for replaying the measurement."
-    },
+    "random_seed": {"principle": "determinism precondition for replaying the measurement."},
     "reproducibility_checksum": {
         "principle": "content-addressed result payload catches silent drift."
     },
@@ -260,12 +254,22 @@ def stall_class_for_row(row: Mapping[str, Any], budget: int) -> str:
     attempt = _last_induction_attempt(row)
     if attempt is not None and not bool(attempt.get("planned")):
         skipped = str(attempt.get("skipped") or "")
-        if skipped in {
-            "proposer_failed_or_missing_root",
-            "world_model_accuracy_below_threshold",
-            "hidden_state_trust_below_threshold",
-            "degenerate_goal_predicate",
-        } or attempt.get("refinement_rounds_used") is not None:
+        if (
+            skipped
+            in {
+                "proposer_failed_or_missing_root",
+                # REQ-ARC-WMTE-6610 (2026-08-21) split the conflated label above into the three
+                # below; artifacts recorded before that date carry the old one, later reruns emit
+                # the new ones. Both generations must classify identically.
+                "proposer_failed",
+                "missing_plan_start_grid",
+                "proposer_failed_and_missing_plan_start_grid",
+                "world_model_accuracy_below_threshold",
+                "hidden_state_trust_below_threshold",
+                "degenerate_goal_predicate",
+            }
+            or attempt.get("refinement_rounds_used") is not None
+        ):
             return "INDUCTION QUALITY"
     actions = _int_field(row, "actions")
     if actions >= int(budget):
@@ -343,7 +347,9 @@ def _tier3_escalated(row: Mapping[str, Any]) -> bool:
     return bool(attempts)
 
 
-def inference_substrate_by_game(live_rows: Sequence[Mapping[str, Any]]) -> dict[str, dict[str, Any]]:
+def inference_substrate_by_game(
+    live_rows: Sequence[Mapping[str, Any]],
+) -> dict[str, dict[str, Any]]:
     out: dict[str, dict[str, Any]] = {}
     for row in live_rows:
         game = str(row.get("game") or "")
@@ -355,9 +361,7 @@ def inference_substrate_by_game(live_rows: Sequence[Mapping[str, Any]]) -> dict[
             "base": "offline_sim_no_quota_frame_only_live_agent",
             "tier3_qwen35_mtp_escalated": escalated,
             "tier3_substrate": (
-                "real_qwen35_9b_mtp_local_gguf_inference"
-                if escalated
-                else "not_used"
+                "real_qwen35_9b_mtp_local_gguf_inference" if escalated else "not_used"
             ),
             "proposer_repo_substr": proposer.get("repo_substr"),
             "proposer_port": proposer.get("port"),
@@ -372,7 +376,9 @@ def _preconditions_with_registry(
     registry_hash: str,
 ) -> dict[str, Any]:
     preconditions = dict(preconditions_checked or {})
-    preconditions.setdefault("registry_reproducible_total_games", registry.get("reproducible_total_games"))
+    preconditions.setdefault(
+        "registry_reproducible_total_games", registry.get("reproducible_total_games")
+    )
     preconditions.setdefault(
         "registry_premise_ok",
         registry.get("reproducible_total_games") == EXPECTED_REGISTRY_GAMES,
@@ -423,9 +429,7 @@ def build_artifact(
         if isinstance(row, Mapping) and row.get("game")
     }
     new_level_rows = [
-        row
-        for row in per_game_gap
-        if int(row["live_levels"]) > int(row["oracle_levels"])
+        row for row in per_game_gap if int(row["live_levels"]) > int(row["oracle_levels"])
     ]
     live_levels_total = sum(int(row["live_levels"]) for row in per_game_gap)
     oracle_levels_total = sum(int(row["oracle_levels"]) for row in per_game_gap)
@@ -548,7 +552,11 @@ def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
             if provenance.get(field) != expected:
                 errors.append(f"field_provenance mismatch: {field}")
     verdict = str(artifact.get("honest_verdict") or "")
-    if not (verdict.startswith("complete:") or verdict.startswith("blocked_") or verdict.startswith("blocked:")):
+    if not (
+        verdict.startswith("complete:")
+        or verdict.startswith("blocked_")
+        or verdict.startswith("blocked:")
+    ):
         errors.append("honest_verdict lacks terminal prefix")
     if artifact.get("reproducibility_checksum") != _checksum_payload(artifact):
         errors.append("reproducibility_checksum mismatch")

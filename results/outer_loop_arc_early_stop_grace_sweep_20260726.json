@@ -2,7 +2,7 @@
  "experiment": "arc_early_stop_grace_sweep",
  "experiment_id": "outer_loop_early_stop_grace_sweep_20260726",
  "title": "SUBMITTED_EARLY_STOP_GRACE parameter sweep on the scored path: a WALL-CLOCK lever, not a score lever",
- "run_date": "2026-08-22T02:53:04Z",
+ "run_date": "2026-08-22T03:22:28Z",
  "milestone": "outer-loop 2026-07-26",
  "random_seed": 20260724,
  "random_seeds_used": [
@@ -10,7 +10,7 @@
   20260725,
   20260726
  ],
- "duration_s": 2.731,
+ "duration_s": 3.859,
  "inference_substrate": "aggregation_from_upstream_artifacts",
  "measurement_wall_s": {
   "total_s": 9126.0,
@@ -5229,7 +5229,7 @@
  "acceptance_gates_all_passed": false,
  "honest_verdict": "complete_early_stop_grace_sweep_measured_wall_clock_lever_not_score_lever_shipped_budget_b400_safe_firing_grace_350_saves_only_0.072pct_actions_on_1_of_75_cells_score_delta_0.0_safety_pass_falsifiable_False_wall_saving_noise_dominated_True_not_worth_shipping_at_b400",
  "provenance": {
-  "git_head": "36a4f54787f872b46f05af64f1f26cc721dc763f",
+  "git_head": "8e9badc947ab581c9369b4824c2107cb2e6f029b",
   "code": [
    {
     "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/analyze_arc_early_stop_sweep.py",
@@ -5245,9 +5245,9 @@
    },
    {
     "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_scored_path_lever_harness.py",
-    "sha256": "4fd08d7a9d4858e4bad387379ae8b39f58a8249410260852d775025f922772b5",
-    "bytes": 62092,
-    "mtime_utc": "2026-08-22T02:49:09Z"
+    "sha256": "3f047fdc3a0ad112a76a6ce9c7bf2176bb859f9d4b6862cc9fa90647c882c9ad",
+    "bytes": 62429,
+    "mtime_utc": "2026-08-22T03:18:22Z"
    },
    {
     "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_leaderboard_eval.py",
@@ -5259,7 +5259,7 @@
     "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py",
     "sha256": "6ee398a1a5ddd708c20720f0e761d837c74361ec623be38ebcbc8555e9769508",
     "bytes": 515629,
-    "mtime_utc": "2026-08-22T02:39:39Z"
+    "mtime_utc": "2026-08-22T03:00:06Z"
    }
   ],
   "rows_sources": {
@@ -5326,12 +5326,215 @@
     }
    ]
   },
-  "rebuild_command": "python scripts/analyze_arc_early_stop_sweep.py --rows results/early_stop_sweep_20260726/rows_b400.json results/early_stop_sweep_20260726/rows_b400_g350.json results/early_stop_sweep_20260726/rows_b2000.json results/early_stop_sweep_20260726/rows_b4000_stress.json --reproduction-rows results/early_stop_sweep_20260726/rows_reproduction.json --contention-serial-rows results/early_stop_sweep_20260726/rows_contention_serial.json --contention-concurrent-rows results/early_stop_sweep_20260726/rows_contention_conc_1.json results/early_stop_sweep_20260726/rows_contention_conc_2.json results/early_stop_sweep_20260726/rows_contention_conc_3.json --out /home/ianblenke/.claude/jobs/ad0c053d/tmp/rebuild_early_stop.json",
-  "note": "principle: an artifact that cannot say which code produced it cannot be known to be current, and a stale artifact's numbers are quoted exactly as confidently as a fresh one's. Every ROW-SOURCE DESIGN is fingerprinted, not just --rows, so a swapped contention or reproduction file cannot pass unnoticed."
+  "rebuild_command": "python scripts/analyze_arc_early_stop_sweep.py --rows results/early_stop_sweep_20260726/rows_b400.json results/early_stop_sweep_20260726/rows_b400_g350.json results/early_stop_sweep_20260726/rows_b2000.json results/early_stop_sweep_20260726/rows_b4000_stress.json --reproduction-rows results/early_stop_sweep_20260726/rows_reproduction.json --contention-serial-rows results/early_stop_sweep_20260726/rows_contention_serial.json --contention-concurrent-rows results/early_stop_sweep_20260726/rows_contention_conc_1.json results/early_stop_sweep_20260726/rows_contention_conc_2.json results/early_stop_sweep_20260726/rows_contention_conc_3.json --out results/outer_loop_arc_early_stop_grace_sweep_20260726.json",
+  "note": "principle: an artifact that cannot say which code produced it cannot be known to be current, and a stale artifact's numbers are quoted exactly as confidently as a fresh one's. Every ROW-SOURCE DESIGN is fingerprinted, not just --rows, so a swapped contention or reproduction file cannot pass unnoticed.",
+  "freshness_acknowledgements": [
+   {
+    "acknowledged_on": "2026-08-01",
+    "evidence": "ARGUED FROM A BYTE-IDENTITY PROOF, NOT FROM A COMPLETED REBUILD -- disclosed rather than implied. A rebuild differential over the six rebuildable artifacts was launched and only the first (experiment_6011) had completed when this was written; that one showed ZERO substantive movement with all 20 differences being provenance bookkeeping a rebuild deletes. For THIS artifact the evidence is instead direct: `induce_prompt` output is BYTE-IDENTICAL to the renderer recovered from git on all six captured games, so any caller that does not supply the new optional parameter produces the same prompt it did before. Supplying it requires a live level-up, which this artifact's producing code path does not perform. Weaker than a completed rebuild and labelled so.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "The 2026-08-01 win-transition fix adds an OPTIONAL parameter `win_transition=None` to `_transitions_block` / `induce_prompt` / both proposers' `induce`, plus a `_win_transition` field on E3AgentPolicy and one call site passing it. With the parameter absent, `_transitions_block` performs its historical scan of `trans` unchanged, so behaviour can differ ONLY on the live agent's induce call after a level-up. No other code path is reachable from the change.",
+    "sha256_now": "e4ff6dc9f3f266636bf3c51938680d99b04cfead5c3589775af3d46b88a84463",
+    "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96"
+   },
+   {
+    "acknowledged_on": "2026-08-02",
+    "evidence": "PROVEN BY DIFFERENTIAL, not by argument. git HEAD's arc_competition_agent.py was swapped into THIS checkout (same untracked assets, same models/, nothing else running) and the scored E3AgentPolicy was run over all 25 public games at budget 2000, seed 20260802, LLM off: 25 of 25 games produced a BYTE-IDENTICAL action trace (sha256 of the ordered action labels) against the post-6071 flag-off arm. The source was restored and its sha256 re-verified. results/arc_inert_label_defer_20260802/arc_inert_label_defer.json records the accompanying A/A noise floor: 75 of 75 same-config pairs identical, i.e. the agent is deterministic here, so the 25/25 is a proof and not a coincidence. NOTE FOR THE NEXT AUTHOR: a git-worktree differential does NOT work for this agent -- a fresh worktree lacks untracked assets the live path reads (results/experiment_4629_live_frame_change_cnn.pt among them) and diverges on 19 of 25 games for reasons that have nothing to do with the change under test.",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py",
+    "reason": "REQ-ARC-WMTE-6071 adds an exact-label inert-action memory to StepwiseExplorer, DEFAULT OFF (SUBMITTED_INERT_LABEL_DEFER_ENABLED = False, env CARNOT_ARC_INERT_LABEL_DEFER unset). With the flag off `_inert_label_keep_indices` returns None on its first branch, so `_pop_untested_inner` executes the pre-6071 draw and consumes the same number of values from `self._fd_rng`. The other three touched sites are: a module-level import, three SUBMITTED_* constants plus five zeroed fire-counters in __init__, an `_ingest` observe hook guarded on `inert_label_memory is not None`, and a new `inert_label_defer_diagnostics()` accessor. No line was removed and no existing decision changed.",
+    "sha256_now": "36dc03639d7b068aa5dfaf5ec401b0d461460aebfaab0c370229e5a9fa4a4968",
+    "sha256_was": "e4ff6dc9f3f266636bf3c51938680d99b04cfead5c3589775af3d46b88a84463"
+   },
+   {
+    "acknowledged_on": "2026-08-02",
+    "evidence": "PROVEN BY DIFFERENTIAL, not by argument. git HEAD's arc_competition_agent.py was swapped into THIS checkout (same untracked assets, same models/, nothing else running) and the scored E3AgentPolicy was run over all 25 public games at budget 2000, seed 20260802, LLM off: 25 of 25 games produced a BYTE-IDENTICAL action trace (sha256 of the ordered action labels) against the post-6071 flag-off arm. The source was restored and its sha256 re-verified. results/arc_inert_label_defer_20260802/arc_inert_label_defer.json records the accompanying A/A noise floor: 75 of 75 same-config pairs identical, i.e. the agent is deterministic here, so the 25/25 is a proof and not a coincidence. NOTE FOR THE NEXT AUTHOR: a git-worktree differential does NOT work for this agent -- a fresh worktree lacks untracked assets the live path reads (results/experiment_4629_live_frame_change_cnn.pt among them) and diverges on 19 of 25 games for reasons that have nothing to do with the change under test.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "REQ-ARC-WMTE-6071 adds an exact-label inert-action memory to StepwiseExplorer, DEFAULT OFF (SUBMITTED_INERT_LABEL_DEFER_ENABLED = False, env CARNOT_ARC_INERT_LABEL_DEFER unset). With the flag off `_inert_label_keep_indices` returns None on its first branch, so `_pop_untested_inner` executes the pre-6071 draw and consumes the same number of values from `self._fd_rng`. The other three touched sites are: a module-level import, three SUBMITTED_* constants plus five zeroed fire-counters in __init__, an `_ingest` observe hook guarded on `inert_label_memory is not None`, and a new `inert_label_defer_diagnostics()` accessor. No line was removed and no existing decision changed.",
+    "sha256_now": "36dc03639d7b068aa5dfaf5ec401b0d461460aebfaab0c370229e5a9fa4a4968",
+    "sha256_was": "e4ff6dc9f3f266636bf3c51938680d99b04cfead5c3589775af3d46b88a84463"
+   },
+   {
+    "evidence": "PROVEN BY MEASUREMENT AT THE RECEIVING END, not argued from the diff. The delta HEAD->now can only matter if `self._win_transition` was ever NON-None where HEAD passed it. It was not: results/outer_loop_arc_win_transition_exposure_20260802.json instruments the live scored path (E3AgentPolicy.next_move driven by scripts/arc_leaderboard_eval.py:run_game) over the 25 public games at budgets 400 and 2000 -- 103 cells, 128 induce calls, 0 coverage gaps -- and every one of the 98 calls that REACHED this call site had `_win_transition is None` (exact skip-string partition, ZERO off-diagonal cells; independent structural discriminator, 0 mismatches/128). A direct instrument on the proposer's own `induce` across the five level-banking games recorded the keyword arriving as None on 4 of 4 calls from arc_competition_agent.py:6429 and absent on the other 12. Since `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, passing None and omitting the keyword are the same computation -- so HEAD and the gated-OFF code build an IDENTICAL prompt on every call this corpus observed. Confirmed end-to-end besides: vc33/400 run with the flag unset, with it '0', and with it '1' gives levels=2 / actions=387 in all cases, and tests/python/test_arc_win_transition_supply_gate_2026_08_02.py asserts both directions (18 assertions), including that OFF OMITS the keyword rather than passing None. LIMIT DISCLOSED: this is inertness on the measured live path, not a proof for a caller that supplies a non-None win transition -- no such caller exists on the live path today, and if one is added the acknowledgement's pinned hash will already have expired.",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py",
+    "reason": "REQ-ARC-WMTE-6083 puts the 2026-08-01 win-transition SUPPLY behind a default-OFF env gate (CARNOT_ARC_SUPPLY_WIN_TRANSITION, _SUPPLY_WIN_TRANSITION_DEFAULT = '0'). The only behavioural edit is at the single `_induce_and_plan` induce call site: where HEAD passed `win_transition=self._win_transition` unconditionally, the call now builds an empty kwargs dict and adds that keyword ONLY when the gate is on. With the gate unset -- the shipped state -- the call is `induce(short, active_transitions, cell)`, which is byte-identical to the call this artifact's own numbers were produced by (the keyword did not exist before 2026-08-01). Everything else added is a module-level helper plus comments; no other symbol, branch or default is touched.",
+    "sha256_now": "8406b89ab202056116460404b9a2edbf3b6d5611b49712d464549b1ef88baa5d",
+    "sha256_was": "36dc03639d7b068aa5dfaf5ec401b0d461460aebfaab0c370229e5a9fa4a4968"
+   },
+   {
+    "acknowledged_at_commit": "0202829d4da999437665f7f07f4e48b479926b3d",
+    "acknowledged_on": "2026-08-03",
+    "evidence": "TWO INDEPENDENT LINES. (1) TEST: tests/python/test_arc_cegis_accept_split_gate_20260803.py and tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py run the affected paths in BOTH flag directions and assert that flag-OFF reproduces the shipped behaviour exactly, including a trajectory-invariance assertion for the OFF direction; every added pattern was mutation-proved by deletion (suite goes red). (2) EMPIRICAL REBUILD, which is stronger than argument: results/arc_gateway_card_ground_truth_20260727.json was FULLY REBUILT against this exact working tree on 2026-08-03 (374.2s, 48/48 cells, all 6 games x 3 seeds replayed through E3AgentPolicy with the LLM off). Every scientific figure came back byte-identical: the verdict string still reads real_median_optimism 0.018097 vs modelled 0.036903, model wrong on 17 of 44 cells, 6 sign-flipped, and every per-cell off/res/card/real/m2/repro value was unchanged. The ONLY deltas were 48 wall-clock timings (machine load, the conductor was running), the provenance hashes, and the content checksum. That rebuild was then REVERTED, deliberately: it silently dropped all 5 pre-existing freshness_acknowledgement blocks on that artifact, which is a never-prune violation executed by the rebuild tooling.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "REQ-ARC-WMTE-6090, DEFAULT OFF. The change is two imports plus a single branch in E3AgentPolicy: `_induce_rows = active_transitions`, replaced by the held-out-stripped list ONLY when `cegis_accept_split_enabled()` reads CARNOT_ARC_CEGIS_ACCEPT_SPLIT as truthy. That variable is unset in every path that produced this artifact, so the induce() call receives the identical object it received before. No threshold, no ordering, no seed, no control flow moves.",
+    "sha256_now": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
+    "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
+    "why_not_rebuilt": "A rebuild_command IS registered, and the lint's docstring rightly prefers rebuilding. It was tried, on the cheapest artifact of the twelve, and the result is recorded above: it changed no scientific figure and DESTROYED 5 hand-written acknowledgement blocks. Repeating that across the remaining artifacts would rewrite hundreds of published wall-clock measurements and destroy roughly a hundred never-prune records to prove something the rebuild already proved once. The rebuild tooling dropping freshness_acknowledgements is a defect worth fixing before it is used as the routine path; until then this acknowledgement is the non-destructive option, and it follows the precedent set by the 5 prior default-OFF changes to this same file, each of which was cleared this way rather than by rebuild."
+   },
+   {
+    "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
+    "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+    "sha256_was": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177"
+   },
+   {
+    "acknowledged_on": "2026-08-07",
+    "evidence": "grep -n SUBMITTED_EARLY_STOP_GRACE scripts/analyze_arc_early_stop_sweep.py (lines 286,289,290,294,500,582) and scripts/arc_scored_path_early_stop_sweep.py (lines 4,51,134,151,183,209,215); the sweep's own row output records early_stop_grace as a swept input field, not a live-constant read.",
+    "note": "APPENDED, not replacing; the artifact's July-26 findings are preserved unedited and remain historically accurate for that date. This acknowledgement documents that this specific later, dated commit is the authorized event superseding its 'not yet flipped' status note, per the never-prune discipline.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "This artifact's quantitative sweep data (wins/actions/score per explicit early_stop_grace and budget value) is unaffected: scripts/arc_scored_path_early_stop_sweep.py:151 passes early_stop_grace=grace directly to the constructed explorer as a PARAMETER, never reading the live SUBMITTED_EARLY_STOP_GRACE class default for the measurement itself. What IS superseded: this artifact's own narrative finding \"SUBMITTED_EARLY_STOP_GRACE still dead code and still None (flag NOT flipped)\" (scripts/analyze_arc_early_stop_sweep.py:294) and its stability-guard assertion that the flag stayed None across the run (arc_scored_path_early_stop_sweep.py:209) correctly describe 2026-07-26; this exact commit (2026-08-07, ops/known-issues.md lever #3) is the authorized flip that finding was informing, not a silent contradiction of it. Its \"shipped MAX_ACTIONS=400\" framing is likewise a dated fact, now superseded by the same commit's MAX_ACTIONS 400->2000 raise.",
+    "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
+    "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda"
+   },
+   {
+    "acknowledged_on": "2026-08-07",
+    "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet).",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
+    "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
+    "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b"
+   },
+   {
+    "acknowledged_on": "2026-08-07",
+    "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: the cascade stage is inside `if self.trajectory_transfer_enabled and ...`; the trace-capture writes only three NEW attribute names (grepped: no existing symbol of the same name in the pre-change file) and reads existing values without mutating them. tests/python/test_arc_trajectory_transfer_cascade.py::test_flag_off_never_touches_trajectory_transfer_or_llm_reinduction mechanically pins that flag-off falls through to the LLM tier exactly as before.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "REQ-ARC-WMTE-TRAJ-TRANSFER-1 (lever #2). Two changes to arc_competition_agent.py: (1) a new cascade stage in E3AgentPolicy._induce_and_plan, gated behind self.trajectory_transfer_enabled (default False, env CARNOT_ARC_TRAJECTORY_TRANSFER unset in every path that produced this artifact) -- with the flag off this branch never executes, dead code by construction. (2) trace-capture in _begin_level_goal_episode DOES run unconditionally on every level-up, but is STRICTLY ADDITIVE: three new instance attributes (_completed_level_trace, _completed_level_first_grid, _completed_level_cell) computed from data already in memory (self.transitions, self.plan) via read-only list comprehensions; no pre-existing attribute, return value, or side effect is altered, and the added computation is a handful of dict-comprehension iterations, not a measurable wall-clock or resource cost.",
+    "sha256_now": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
+    "sha256_was": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68"
+   },
+   {
+    "acknowledged_on": "2026-08-07",
+    "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: every new branch checked against `self.budget_aware_search_enabled`; the one unconditional addition (_budget_frames append) is a single list.append() with no other effect. tests/python/test_arc_budget_aware_search_live_wiring.py::test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set and ::test_frontier_never_calls_budget_aware_weight_when_flag_off mechanically pin the flag-off byte-identity property by intercepting the call (not just checking the returned value).",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "REQ-ARC-WMTE-6180-WIRING (lever #5). Three changes to arc_competition_agent.py, all in StepwiseExplorer: (1) a new __init__ kwarg + _fd_gate resolution (self.budget_aware_search_enabled, default False -- no artifact producing this corpus sets CARNOT_ARC_BUDGET_AWARE_SEARCH); (2) _ingest appends every frame to a new self._budget_frames buffer UNCONDITIONALLY -- strictly additive (new attribute, read-only append of data already in scope, no pre-existing attribute/return value/side effect touched) -- but the ESTIMATE computation that consumes it is itself gated behind the flag, so with the flag off nothing about the search's OBSERVABLE behavior changes; (3) _frontier's depth_cost substitution is explicitly gated ('depth_cost = budget_aware_path_cost_weight(...) if self.budget_aware_search_enabled else depth') -- with the flag off this is the literal `depth` expression, byte-identical to before this lever, not an argument-shaped no-op that happens to reduce to the same value.",
+    "sha256_now": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
+    "sha256_was": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f"
+   },
+   {
+    "acknowledged_on": "2026-08-08",
+    "evidence": "grep -rn early_stop_grace across scripts/ and python/ (excluding the fix's own files) shows scripts/arc_scored_path_early_stop_sweep.py already documents the exact bug this fix closes (\"read NOWHERE\") and works around it by setting the parameter directly on the constructed StepwiseExplorer instance (run_cell(early_stop_grace=grace)), never through E3AgentPolicy's constructor -- the new code path this fix adds. Any artifact whose row data came from that sweep script, or from any other game run before this commit, is therefore unaffected: the mechanism this fix activates was not exercised when those numbers were produced.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "REQ-ARC-WMTE-6220 (fix1 of the 2026-08-08 adversarial-review fix pass). Threads SUBMITTED_EARLY_STOP_GRACE through E3AgentPolicy.__init__ into StepwiseExplorer (previously dead code -- read nowhere), adds it to SUBMITTED_AGENT_CONFIG, and wires it into make_carnot_agent's real construction call. Every historical artifact in this corpus records agent behavior from BEFORE this fix, when early-stopping was structurally unreachable regardless of the constant's value -- so every recorded run already reflects 'early-stopping inactive,' the exact behavior this fix's DEFAULT preserves for any caller that already worked around the dead constant. The fix changes FUTURE agent runs only; it cannot retroactively alter what already happened, so no number in this artifact is stale.",
+    "sha256_now": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130",
+    "sha256_was": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258"
+   },
+   {
+    "acknowledged_on": "2026-08-08",
+    "evidence": "This artifact's own generating script IS scripts/analyze_arc_early_stop_sweep.py, changed by this same fix -- but only its _flag_is_dead() -> _flag_wiring_state() diagnostic helper, which INSPECTS current live wiring state (via inspect.signature) for a report the artifact does not consume. It reads the underlying sweep row files (results/early_stop_sweep_20260726/rows_*.json) verbatim and does not re-derive or recompute their measured values -- confirmed by reading the script's own analyze_*() functions, which aggregate the pre-recorded rows, not re-run games.",
+    "path": "scripts/analyze_arc_early_stop_sweep.py",
+    "reason": "REQ-ARC-WMTE-6220 (fix1 of the 2026-08-08 adversarial-review fix pass). Threads SUBMITTED_EARLY_STOP_GRACE through E3AgentPolicy.__init__ into StepwiseExplorer (previously dead code -- read nowhere), adds it to SUBMITTED_AGENT_CONFIG, and wires it into make_carnot_agent's real construction call. Every historical artifact in this corpus records agent behavior from BEFORE this fix, when early-stopping was structurally unreachable regardless of the constant's value -- so every recorded run already reflects 'early-stopping inactive,' the exact behavior this fix's DEFAULT preserves for any caller that already worked around the dead constant. The fix changes FUTURE agent runs only; it cannot retroactively alter what already happened, so no number in this artifact is stale.",
+    "sha256_now": "b66cc0455e7c98ea6ad4fac78488210528c7c7461449c1c0849f084a0e9d7250",
+    "sha256_was": "070842cad3fa88e2ce4fc03e895cbe8c0011cbde7574e8f767257a5e180b4eac"
+   },
+   {
+    "acknowledged_on": "2026-08-08",
+    "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
+    "sha256_now": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
+    "sha256_was": "fd93d7c6afee7a73ae3c656faaf5cbfcec73577b18f4eb885bb4e3bceef79130"
+   },
+   {
+    "acknowledged_on": "2026-08-08",
+    "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
+    "sha256_now": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
+    "sha256_was": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc"
+   },
+   {
+    "acknowledged_on": "2026-08-08",
+    "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value).",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
+    "sha256_now": "0617d759eab6d62f7731c0c1ff0548e9203f1fc043e76bcf15f8c4174449a07b",
+    "sha256_was": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40"
+   },
+   {
+    "acknowledged_on": "2026-08-08",
+    "evidence": "Grep: `grep -n 'E3AgentPolicy(\\|\\.next_move(\\|_induce_and_plan(' scripts/analyze_arc_early_stop_sweep.py` -> zero matches. `grep -n 'StepwiseExplorer\\.\\|comp\\.' scripts/analyze_arc_early_stop_sweep.py` -> lines 273/299/301/304/305/308/1642, all signature inspection or constant reads, not live execution.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "REQ-ARC-WMTE-6223/6224 (2026-08-08): fixed a bug where plan-step execution never recorded a Transition (self._prev was populated only in next_move()'s two plan-step branches, via a new _track_prev_for_transition call), and a bug where level-up / STALL-path reinduction planned from self.root_grid instead of a new _plan_start_grid local. Both changes are confined inside E3AgentPolicy: the two next_move() plan-step call sites, and _induce_and_plan()'s internal grid selection. Its rebuild target, analyze_arc_early_stop_sweep.py, is pure analysis over already-captured rows_*.json files. It never constructs E3AgentPolicy; its only uses of arc_competition_agent are inspect.signature(StepwiseExplorer.__init__) and reading the SUBMITTED_EARLY_STOP_GRACE / SUBMITTED_AGENT_CONFIG constants -- none of which this diff touches.",
+    "sha256_now": "5666e3a5205e4bb4d07a485d019219d739474ba8577ec795a94817f24b471bb7",
+    "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96"
+   },
+   {
+    "acknowledged_on": "2026-08-08",
+    "evidence": "Re-verified for this second edit: `git diff arc_competition_agent.py` between the 6223/6224 commit and this one touches only StepwiseExplorer.__init__ (two new counters), set_goal_bias, _goal_bias_score, _action_effect_frontier_key, and _frontier's pruning loop -- none of which are reachable from any of this artifact's dependency scripts any more than the previous edit was (same grep results: no E3AgentPolicy construction, or construction gated behind CARNOT_ARC_DISABLE_INDUCTION=1, or zero recorded induction attempts).",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "REQ-ARC-WMTE-6225/6226 (2026-08-08): fixed a never-empty floor on the discriminative frontier prune (StepwiseExplorer._frontier), and memoized two per-node frontier scoring keys (_goal_bias_score, _action_effect_frontier_key) on the node dict. Same reachability argument as the immediately-prior 6223/6224 acknowledgement pass on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or runs with CARNOT_ARC_DISABLE_INDUCTION=1 set before construction so the explorer never reaches _frontier's discriminative-prune branch with a live game in flight, or (for the one genuinely live-LLM artifact) its own recorded data shows zero induction attempts across every cell of every arm. See that acknowledgement entry (same path, sha256_was == this entry's sha256_was) for the full per-script grep evidence.",
+    "sha256_now": "11f495a67424393cf2e7246d1e8979f1e02b0669c9baeeb25e2e78495af3710e",
+    "sha256_was": "5666e3a5205e4bb4d07a485d019219d739474ba8577ec795a94817f24b471bb7"
+   },
+   {
+    "acknowledged_on": "2026-08-08",
+    "evidence": "Same grep/self-measured evidence as the prior 6223-6226 acknowledgement passes on this path; the new code in this commit (the __init__/level-boundary attempt-count resets, the _should_enter_induction branch, generator_liveness_witness fields) is confined to E3AgentPolicy methods none of these scripts reach any more than the prior edits were.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "REQ-ARC-WMTE-6229 (2026-08-08): bounded re-induction on renewed stall, gated off by default behind CARNOT_ARC_BOUNDED_REINDUCTION (unset in every one of this artifact's rebuild paths), plus always-on generator_liveness_witness() diagnostic fields. Same reachability argument as the 6223/6224/6225/6226 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or runs with CARNOT_ARC_DISABLE_INDUCTION=1 set before construction (so _should_enter_induction's new branch, gated on `stalled`, is never reached because the whole induction machinery is structurally unreachable), or its own recorded data shows zero induction attempts across every cell of every arm. See the matching prior acknowledgement entry (same path) for the full per-script grep evidence.",
+    "sha256_now": "c4b142e5ae099329fa43e4eba443c8e5dbb1a3b7bc60b138cb5e715a2fc5f9a9",
+    "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96"
+   },
+   {
+    "acknowledged_on": "2026-08-08",
+    "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
+    "sha256_now": "2102adecb1e9073cd62cffc1b215d1065fd08dbaf76f9d168a08e6af047b033e",
+    "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96"
+   },
+   {
+    "acknowledged_on": "2026-08-08",
+    "evidence": "git diff on the analyser script: an import line + one line calling preserve_freshness_acknowledgements(<art>, <out_path>) immediately before the pre-existing write call, with no other lines touched. Verified via a real scratch dry-run per script (copy the real tracked artifact to /tmp, rebuild against that scratch path, confirm freshness_acknowledgements survives while other provenance fields correctly refresh) -- see the commit message and ops/known-issues.md's FIXED note for the full per-script verification record.",
+    "path": "scripts/analyze_arc_early_stop_sweep.py",
+    "reason": "Freshness-lint self-fix (2026-08-08, ops/known-issues.md 'A related, systemic defect', FIXED note): this analyser script gained an import of, and one call to, a new helper preserve_freshness_acknowledgements(art, out_path) in scripts/analyze_scored_path_lever_ab.py. The helper's only effect is to copy forward provenance.freshness_acknowledgements from whatever is ALREADY ON DISK at out_path into a FUTURE rebuild's provenance dict, before that future rebuild's write -- it cannot retroactively change any value already computed and written into THIS artifact. Reachability argument holds by construction (the diff is a no-op for any artifact that isn't itself being freshly rebuilt at this exact moment), not by per-script inspection.",
+    "sha256_now": "f0040f1cb29a26f4c656193a77db6a7bcfed0badcb63dcbb646975cf22ee09e7",
+    "sha256_was": "070842cad3fa88e2ce4fc03e895cbe8c0011cbde7574e8f767257a5e180b4eac"
+   },
+   {
+    "acknowledged_on": "2026-08-08",
+    "evidence": "git diff on both source files: the diff is confined to induce()'s split-fallback prompt suffix, _goal_only_prompt's return string, _chat_complete_request's signature/payload/retry call, its one call site inside generate(), and 4 comment-only corrections -- confirmed via `git diff -U0` hunk inspection before this acknowledgement was written.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "REQ-ARC-WMTE-6198 Phase 0b fix (2026-08-08, adversarial review): gated the two remaining unconditional reasoning-suppressing code fences (the split-induce engine-half fallback and _goal_only_prompt) on induce_think_on(), matching the already-gated combined-induce prompt; added repeat_penalty/repeat_last_n forwarding to _chat_complete_request (previously silently dropped on the chat-completions route, which every think-mode call is forced through); corrected three stale 'default OFF' comments after the 2026-08-08 think-mode default flip. None of these changes touch this artifact's own measured code path -- verified by the same reachability argument used for the prior acknowledgement rounds on this file pair this session (grep confirms this artifact's own script does not import/call induce_think_on, _chat_complete_request, or _goal_only_prompt in a way this fix's diff affects).",
+    "sha256_now": "01eb74db2c8a9c163142fb083ad1356000930e61bc6025d3d6e0a8bc985a18c6",
+    "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96"
+   },
+   {
+    "acknowledged_on": "2026-08-08",
+    "evidence": "git diff -U0 on arc_competition_agent.py: confined to _observe_level_boundary's completed_grid capture, _induce_and_plan's entry reset, and the induce branch's `if self.plan and self.pi < len(self.plan):` guard. `grep -c 'active_probe\\|graded_goal'` on this artifact's generating script(s) and on this artifact's own JSON both return 0.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "Live-agent adversarial review Phase 0c fix (2026-08-08): (1) _observe_level_boundary now captures the graded-goal-bias win-state exemplar from the last-admitted transition's PRE-action grid instead of grid_of(latest) (the frame returned by the winning action itself, which already showed the NEXT level's opening board -- an inverted gradient under CARNOT_ARC_GRADED_GOAL_BIAS=1). (2) _induce_and_plan now resets self.plan/self.pi to []/0 at entry, plus a bounds guard on the induce branch's _next_plan_move() call, fixing a stale self.pi=1 left behind by a just-consumed one-step CARNOT_ARC_ACTIVE_PROBE=1 probe plan (silently skipped the next plan's first step, or IndexError on a second one-step plan). Both changes are no-ops for this artifact: _induce_and_plan's body only ever WRITES self.plan/self.pi after the reset line, never reads the incoming value (grep-verified), and this artifact's generating script(s) and its own recorded config never set CARNOT_ARC_GRADED_GOAL_BIAS=1 or CARNOT_ARC_ACTIVE_PROBE=1 (grep-verified against both the script source and this artifact's own JSON).",
+    "sha256_now": "36cbc4102a453bc4fa7342e9cf3ddfda4287ab94e73963220ecc27fd7f0c8548",
+    "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96"
+   },
+   {
+    "acknowledged_on": "2026-08-08",
+    "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to the SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED constant, its comment block, and the SUBMITTED_AGENT_CONFIG dict entry that mirrors it -- no other line changed.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "Phase 1b promotion (2026-08-08): SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED flipped False->True (REQ-ARC-WMTE-6234). This artifact predates the lever entirely -- the trajectory-transfer cascade stage (arc_competition_agent.py lines ~6780-6810, added 2026-08-07 per its own \"LEVER #2 (2026-08-07...)\" comment) did not exist in the codebase when this artifact was measured (dated 2026-07-26/27), so its default value now cannot change what was measured then.",
+    "sha256_now": "79316a60396f3549efbfb983f358f8f2def898b8b37c8c14ab9118ab80f37dcc",
+    "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96"
+   },
+   {
+    "acknowledged_on": "2026-08-09",
+    "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to: one new module constant + its env-override block in __init__ (near the sibling trajectory_transfer_enabled resolver), one new method inserted before _induce_and_plan, two call sites changed from `execute_bounded_llm_reinduction(...)` to `self._execute_bounded_llm_reinduction_with_arm_fallback(attempt, ...)` with identical kwargs, and two new entries in the SUBMITTED_AGENT_CONFIG status dict. No existing function body was modified.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "REQ-ARC-WMTE-6243 (2026-08-09): added SUBMITTED_THINK_ARM_FALLBACK_ENABLED (default False), the resolver `self.think_arm_fallback_enabled` in E3AgentPolicy.__init__, and a new wrapper method `_execute_bounded_llm_reinduction_with_arm_fallback` used at both _induce_and_plan call sites. This artifact's own generating script never sets CARNOT_ARC_THINK_ARM_FALLBACK (grep-verified), so the new flag resolves to its default-off value, under which the wrapper calls execute_bounded_llm_reinduction exactly once and returns its outcome unmodified -- byte-identical to the pre-change call sites for every code path this artifact exercises.",
+    "sha256_now": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
+    "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96"
+   },
+   {
+    "acknowledged_on": "2026-08-17",
+    "evidence": "tests/python/test_arc_tool_loop_repair.py (12 tests) pins BOTH inertness conditions, including that induce() is byte-identical because its hook recognises only '1'. 43 tests green across the repair, resample and tool-loop suites. No existing symbol, default or branch was modified; the change is an added conditional inside a method that is itself gated off. None of these artifacts, nor their build commands, set either variable, so the new path cannot execute during a rebuild.",
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "reason": "The 2026-08-17 repair-mode change touches only _maybe_recall_gated_resample: when CARNOT_ARC_INDUCE_TOOL_LOOP=repair, the REQ-6410 recall-gated resample routes its re-draw through the tool loop instead of a plain re-induce. Both gates are default OFF -- the resample itself requires CARNOT_ARC_RECALL_RESAMPLE, and repair additionally requires the tool-loop var set to the literal 'repair'. With neither set, the method returns on its existing early path and behaviour is byte-identical.",
+    "sha256_now": "46e0c5f1df72b81fca6e2d38297af4766ae2266a60563553b533f197a8cb8426",
+    "sha256_was": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d"
+   }
+  ]
  },
- "reproducibility_checksum": "5773f0a47bfe326dce95a44ea2055dbe6a70abbd7ccf8f9f64429336cba20174",
+ "reproducibility_checksum": "3ab10892713169ac848ef2541ae36827b44995fca175a78b014dc8d69ea9c0c4",
  "reproducibility_checksum_note": "sha256 over the WHOLE artifact except run_date and duration_s (wall-clock noise). Every analysed condition, gate, witness and row-source list is inside the hash.",
- "git_head": "36a4f54787f872b46f05af64f1f26cc721dc763f",
+ "git_head": "8e9badc947ab581c9369b4824c2107cb2e6f029b",
  "rebuild_note_20260731_split_enable": {
   "keys_restored_after_wholesale_rewrite": [],
   "substantive_value_names": [
@@ -5362,6 +5565,8 @@
    "rebuild_note_20260731_split_enable",
    "rebuild_note_20260820_traceback_visibility",
    "rebuild_note_20260821_trajectory_supervisor"
-  ]
+  ],
+  "acknowledgements_restored_after_rebuild": 0,
+  "acknowledgements_restore_note": "The analyser regenerates provenance wholesale and DROPS hand-written freshness_acknowledgements on every rebuild (caught by adversarial review of commit 512eca0e6b). Restored verbatim from the pre-rebuild version; their sha256_now pins refer to earlier file states, so they are an audit trail rather than active exemptions. This artifact was rebuilt a second time the same day (after the review follow-up touched the harness docstring), with the same leaf-diff result: 0 measurement values changed."
  }
 }
