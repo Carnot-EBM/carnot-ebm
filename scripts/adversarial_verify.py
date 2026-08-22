@@ -2755,6 +2755,55 @@ def check_gate_passed_without_data(d: dict[str, Any], flags: list[Flag]) -> None
         )
 
 
+# Substrates whose artifacts must record WHICH preconditions were verified
+# before launch (REQ-CONDUCTOR-PRECOND-1). These are the substrates where the
+# Pre-Launch Preconditions Discipline's fabrication mode lives: the agent
+# silently lacked the model/board/credential and synthesized a result.
+_PRECONDITIONS_REQUIRED_SUBSTRATES: tuple[str, ...] = (
+    "live_llm_inference",
+    "live_llm_embedding_extraction",
+    "hardware_smoke",
+)
+
+
+def check_preconditions_declared(d: dict[str, Any], flags: list[Flag]) -> None:
+    """WARN when a compute-bound artifact lacks `preconditions_checked`.
+
+    The extension the Pre-Launch Preconditions Discipline's own prose
+    requested ("the METHODOLOGY_MISSING detector should be extended to
+    flag any compute-bound artifact that lacks a preconditions_checked
+    field") and never got — Conversion 5 of
+    docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md.
+
+    Presence-only, WARN-only: the field's CONTENT is task-specific and
+    unlintable, and a backfill dry-run decides whether the severity may
+    ever rise. Keyed on the three explicitly-declared compute substrates
+    rather than marker inference, so aggregation / verifier-scoring /
+    no-LLM artifacts never draw a category-error flag.
+    """
+    raw = _inference_substrate_text(d)
+    if _match_declared_substrate(raw, _PRECONDITIONS_REQUIRED_SUBSTRATES) is None:
+        return
+    # Presence check only. Any shape counts (list of {resource, available},
+    # principle-wrapped, prose) — the discipline requires the field on
+    # success AND on blocked_* artifacts alike, so there is no exemption.
+    if d.get("preconditions_checked") is not None:
+        return
+    flags.append(
+        Flag(
+            kind="PRECONDITIONS_UNDECLARED",
+            severity="warn",
+            detail=(
+                f"substrate {raw!r} declares real compute but the artifact has no "
+                "preconditions_checked field. The Pre-Launch Preconditions "
+                "Discipline requires recording WHICH resources were verified "
+                "before launch — its absence is the shape every confirmed "
+                "fabrication shared (exp1851, exp1680)."
+            ),
+        )
+    )
+
+
 def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
     """Compute-bound artifact missing methodology evidence."""
     if _classify_inference_substrate(d)["kind"] == SUBSTRATE_KIND_AGGREGATION:
@@ -6292,6 +6341,7 @@ def verify_artifact(path: Path, *, declared: bool | None = None) -> dict[str, An
     check_sample_size(d, flags)
     check_gate_passed_without_data(d, flags)
     check_methodology_present(d, flags)
+    check_preconditions_declared(d, flags)
     check_implausible_tight_ci(d, flags)
     check_false_negative_risk(d, flags)
     check_intrinsic_reward_overclaim(d, flags)

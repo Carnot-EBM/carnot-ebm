@@ -49,15 +49,20 @@ def _probe_torch() -> tuple[bool, str]:
         "    print(f'cuda_build:{v}:cuda{cuda}')\n"
     )
     try:
+        # 90s, raised from 15s on 2026-08-22: under heavy box load (a GPU
+        # A/B plus parallel agents) the torch IMPORT alone exceeded 15s and
+        # this guard blocked every commit with a false "not a CUDA build".
+        # The check detects build FLAVOR, not speed — a longer timeout
+        # loses no detection, only load tolerance.
         result = subprocess.run(
             [str(VENV_PYTHON), "-c", code],
             capture_output=True,
             text=True,
-            timeout=15,
+            timeout=90,
             cwd=str(PROJECT_ROOT),
         )
     except subprocess.TimeoutExpired:
-        return False, "torch probe timed out (15s)"
+        return False, "torch probe timed out (90s)"
     except Exception as exc:
         return False, f"torch probe error: {exc}"
 

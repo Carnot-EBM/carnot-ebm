@@ -8118,3 +8118,57 @@ given the same task with an `operator_override`, it SHALL return none.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-CONDUCTOR-DENYHOOK-1 | Implemented (`scripts/deny_forbidden_bash_commands.py`; `.claude/settings.json` PreToolUse Bash hook; `scripts/research_conductor.py:_submission_verb_warnings` wired in the live `_activate_next_roadmap`) | Implemented (`tests/python/test_deny_forbidden_bash_commands.py`; mutations: stash rule removed -> RED, override skip removed -> RED) |
+
+## REQ-CONDUCTOR-PRECOND-1: Compute-Bound Artifacts Lacking preconditions_checked SHALL Draw A WARN
+
+Design: `docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md`
+(Conversion 5). This is the extension the Pre-Launch Preconditions
+Discipline's own prose requested ("the METHODOLOGY_MISSING detector
+should be extended to flag any compute-bound artifact that lacks a
+`preconditions_checked` field") and never got — verified absent by
+grep on 2026-08-21.
+
+`scripts/adversarial_verify.py:check_preconditions_declared` SHALL
+emit `PRECONDITIONS_UNDECLARED` at WARN severity when:
+
+1. the artifact's top-level `inference_substrate` declares one of
+   `live_llm_inference`, `live_llm_embedding_extraction`, or
+   `hardware_smoke` (matched via the shared substrate helpers, so
+   principle-wrapped values and trailing human notes are handled), AND
+2. the artifact has no `preconditions_checked` field (presence-only —
+   any shape counts; the field's content is task-specific and
+   unlintable).
+
+The check SHALL NOT fire for aggregation, verifier-scoring, no-LLM,
+or undeclared-substrate artifacts — keying on the explicit declaration
+avoids the category errors the substrate taxonomy exists to prevent.
+Severity SHALL stay WARN unless a corpus backfill dry-run shows the
+hit rate justifies more; the same precedent as
+SUBSTRATE_HAS_NO_DURATION_FLOOR (720 artifacts would have been
+quarantined at CRITICAL).
+
+#### SCENARIO-CONDUCTOR-PRECOND-1
+
+Given `inference_substrate: live_llm_inference` and no
+`preconditions_checked`, the linter SHALL flag
+PRECONDITIONS_UNDECLARED at warn severity; given any populated
+`preconditions_checked`, it SHALL NOT.
+
+#### SCENARIO-CONDUCTOR-PRECOND-2
+
+Given `inference_substrate: aggregation_from_upstream_artifacts` (or
+no declaration at all) and no `preconditions_checked`, the linter
+SHALL NOT flag PRECONDITIONS_UNDECLARED.
+
+#### SCENARIO-CONDUCTOR-PRECOND-3
+
+Given a principle-wrapped or note-suffixed substrate declaration
+(for example `{"value": "hardware_smoke", "principle": "..."}` or
+`"live_llm_inference -- 60s floor"`), the check SHALL behave exactly
+as for the bare canonical value.
+
+## Implementation Status (REQ-CONDUCTOR-PRECOND-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-CONDUCTOR-PRECOND-1 | Implemented (`scripts/adversarial_verify.py`: `check_preconditions_declared` + `_PRECONDITIONS_REQUIRED_SUBSTRATES`, wired into `verify_artifact` after `check_methodology_present`) | Implemented (`tests/python/test_preconditions_undeclared_warn.py`; mutation: substrate gate inverted -> RED) |
