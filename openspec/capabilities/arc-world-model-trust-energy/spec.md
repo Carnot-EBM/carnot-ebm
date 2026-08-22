@@ -26543,3 +26543,71 @@ An explicit `proposer.model_specs` attribute keeps absolute precedence
 - THEN the effective `n_predict` stays 131072 (pass-through; the server
   refuses loudly)
 - AND at `_INDUCE_WORST_CASE_PROMPT_TOKENS + 1024`, the clamp applies (1024).
+
+## REQ-ARC-WMTE-6621: A Harness Frozen On A Retired Generator Pin SHALL Refuse To Run Without An Explicit Override
+
+Design: `docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md`
+(Conversion 4 — the one briefing failure still open). Origin incident:
+`scripts/arc_scored_path_lever_harness.py` pins the retired
+`Qwen3.5-9B-MTP` under a banner saying it "MEASURES THE RETIRED
+GENERATOR", and nothing refused a run. On 2026-08-20 a supervisor A/B
+silently came up on the retired 9B; the mismatch was caught only via
+`/proc/<pid>/cmdline`, and the run was discarded. A banner is prose;
+prose is read after the run is launched.
+
+`python/carnot/agentic/arc_generator_pin_guard.py:check_frozen_pin`
+SHALL:
+
+1. Read the live pin from ONE importable constant —
+   `arc_executable_world_model.ARC_LIVE_GENERATOR_REPO_SUBSTR` — never
+   a duplicated literal (derive, do not duplicate).
+2. Return normally when the harness's frozen pin equals the live pin.
+3. Refuse the run (non-zero exit, `RetiredPinError`) when the pins
+   differ, naming both pins, the constant, and the override flag.
+4. Convert the refusal into a loud stderr warning when the caller
+   passes `allow_retired=True` (`--allow-retired-pin`) — a deliberate
+   archaeology run states its intent; results are not live-path
+   evidence.
+
+`scripts/arc_scored_path_lever_harness.py` SHALL hoist its frozen pin
+to the module constant `FROZEN_GENERATOR_PIN` (used by
+`build_proposer`, checked by the guard — one literal, two readers) and
+SHALL call the guard in `main()` immediately after argument parsing,
+before any server or model work. The frozen pin itself is deliberately
+NOT migrated (never-prune: the harness's recorded results were taken
+on the 9B).
+
+False-positive rate is zero by construction: while frozen == live the
+guard is silent; when pins differ, every unflagged run IS the origin
+incident.
+
+#### SCENARIO-ARC-WMTE-6621-REFUSE
+
+- GIVEN a frozen pin different from the live pin
+- WHEN `check_frozen_pin` runs without `allow_retired`
+- THEN it raises `RetiredPinError` (a `SystemExit`) whose message names
+  both pins and `--allow-retired-pin`.
+
+#### SCENARIO-ARC-WMTE-6621-OVERRIDE
+
+- GIVEN the same mismatch WITH `allow_retired=True`
+- THEN the guard returns, and a warning on stderr says the results are
+  not citable as live-path evidence.
+
+#### SCENARIO-ARC-WMTE-6621-MATCH
+
+- GIVEN a frozen pin equal to the live pin
+- THEN the guard returns silently.
+
+#### SCENARIO-ARC-WMTE-6621-HARNESS-WIRED
+
+- GIVEN the real harness invoked via `main()` with a valid `--out` and
+  no `--allow-retired-pin`
+- THEN it exits via `RetiredPinError` BEFORE any server or model work
+  (the guard call sits directly after `parse_args`).
+
+## Implementation Status (REQ-ARC-WMTE-6621)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6621 | Implemented (`python/carnot/agentic/arc_generator_pin_guard.py`; `scripts/arc_scored_path_lever_harness.py`: `FROZEN_GENERATOR_PIN` + guard call in `main()` + `--allow-retired-pin`) | Implemented (`tests/python/test_arc_generator_pin_guard.py`; mutations: guard equality inverted -> RED, harness guard call removed -> RED) |
