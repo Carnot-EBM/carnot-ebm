@@ -35910,3 +35910,105 @@ retired task ID.
   the redirect ledger. Make no game or level solve claim.
 
 <!-- V563-PLANNER-REFRESH-20260822-END -->
+
+## V564 planner refresh - 2026-08-22
+
+<!-- V564-PLANNER-REFRESH-20260822-START -->
+
+This refresh treats V563 as terminal but not scientifically complete. Exp6510
+contains a usable 480-row independent qualifier, yet the conductor retired it
+after three `artifact_not_updated_past_bootstrap` results. Exp6511 never wrote
+its branch dataset. Exp6512 correctly closed the audit as blocked with zero
+rows. V564 must repair the artifact transaction before it attempts the dataset
+again. It may read immutable prior files by path and hash. It must not require
+or gate on a retired experiment ID.
+
+### Promising primary findings
+
+- **Task-CoEvolve: Efficient Harness Optimization via Adaptive Validation Task
+  Selection** - arXiv:2608.20169, https://arxiv.org/abs/2608.20169; submitted
+  2026-08-20. The method samples validation tasks with weights based on past
+  outcome variance, then corrects partial-set estimates for each task's
+  sampling probability. It reports the same final performance as full-set
+  search with 80 percent fewer evaluations on online text classification and
+  Terminal-Bench 2.1. Carnot hook: test adaptive validation on a chronological
+  exact-constraint stream. Compare full-set, fixed-subset, and adaptive arms.
+  Keep an immutable full-set audit and exact sentinel set so the selector
+  cannot hide regressions. Report both raw and inverse-probability-weighted
+  estimates. This is an evaluation controller, not a validity authority.
+- **On the Applicability of Safety Nets: A Safety-By-Design Solution for
+  Certifying Neural Networks** - arXiv:2608.20053,
+  https://arxiv.org/abs/2608.20053; submitted 2026-08-20. The paper combines a
+  compact neural fast path with a lookup table for its residual errors over a
+  discretized domain. It reports at least 97 percent neural coverage and an
+  almost three-order storage reduction while the table preserves full-domain
+  correctness. Carnot hook: pair a learned branch router with a content-hashed
+  exception table and native exact fallback. Exhaustively audit the bounded
+  pilot domain. The learned path may order candidates. It may not prune them or
+  certify a result.
+- **Discrete Diffusion Inference-Time Control with Nested Sequential Monte
+  Carlo** - arXiv:2608.20123, https://arxiv.org/abs/2608.20123; submitted
+  2026-08-20. The paper derives nested and fully adapted SMC for
+  sequence-reward steering in discrete diffusion language models and reports
+  better toxicity and fluency steering than best-of-n and bootstrap SMC. This
+  is a useful future control for native diffusion generation. Carnot's current
+  local GGUF path is autoregressive, so V564 does not claim that this method is
+  a drop-in decoder.
+- **Optimal Skill Selection for LLM Agents with Provable Bicriteria
+  Guarantees** - arXiv:2608.19993, https://arxiv.org/abs/2608.19993; submitted
+  2026-08-20. The work treats prompt-skill selection as a submodular benefit
+  problem under a token budget. Carnot hook: use bounded benefit-versus-cost
+  selection as a future memory-retention control. V564 first tests sound exact
+  conflict reuse and eviction, where validity has a stronger formal contract.
+- **ChainForge: Characterizing Embedding as the Bottleneck in Quantum Annealer
+  Workloads** - arXiv:2608.15961, https://arxiv.org/abs/2608.15961; submitted
+  2026-08-16. The study reports that graph embedding can dominate dynamic
+  quantum-annealer workloads, inflate physical resources, degrade fidelity
+  through long chains, and fail even when an embedding exists. Carnot hook:
+  every future Ising or thermodynamic claim must charge mapping, remapping,
+  routing, and physical expansion. V564 keeps hardware work to a fixed-width
+  mapping ABI and makes no board acceleration claim.
+
+### Requested secondary and implementation checks
+
+- **OpenReview and Hugging Face Papers:** the current 2025-2026 records still
+  support solver-integrated advice, exact enforcement, held calibration, and
+  abstention. No newly indexed record provides a stronger authority than the
+  local exact solver. The two new experiments above are more direct than
+  another answer-level text scorer.
+- **Semantic Scholar:** the public citation trail for EBT (`2507.02092`) and
+  ARM-EBM (`2512.15605`) has no newly visible paper that changes the V563
+  boundary. Rate limiting prevented a stronger count refresh. Retain the V563
+  counts as dated observations, not current guarantees.
+- **GitHub:** `dcharlot-physicalai-bmi/ferrotherm`,
+  https://github.com/dcharlot-physicalai-bmi/ferrotherm, is a new Apache-2.0
+  Rust reference for block Gibbs, parallel tempering, a device trait, topology
+  mapping, exact small-system checks, and a joules ledger. It is useful as an
+  implementation comparison. V564 does not import it or repeat its performance
+  claims without an independent local audit. No new KAN repository was mature
+  enough to become a dependency.
+- **Extropic:** the current first-party status remains
+  https://extropic.ai/writing/from-one-to-one-billion. Z1 access is still
+  described for 2027. Carnot has no authenticated TSU route. Schedule no TSU
+  execution, latency, energy, or availability claim.
+- **Logical Intelligence:** the Kona page still exposes no public weights,
+  reproducible architecture, or documented local runner. Kona remains a
+  product comparator.
+
+### V564 planning impact
+
+- Add a tested atomic shard-and-final artifact contract before regenerating
+  the branch dataset. This directly addresses the repeated bootstrap-only
+  terminal failure without modifying the conductor.
+- Build and audit a bounded pilot dataset before any large expansion. Compare
+  exact structural controls before training a learned router.
+- Test the Safety Net pattern only when the structural audit finds held
+  headroom. Keep the exact exception table, full candidate set, and native
+  fallback in the credited path.
+- Make continuous self-learning a transactional exact-conflict memory over a
+  chronological stream. Add Task-CoEvolve-style adaptive validation only as a
+  cost-reduction layer around an immutable full audit.
+- Keep hardware work at the ABI and cost-ledger level. Charge topology mapping
+  and remapping. Make no FPGA, NPU, TSU, GPU-speedup, or power claim.
+
+<!-- V564-PLANNER-REFRESH-20260822-END -->

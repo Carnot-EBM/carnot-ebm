@@ -16286,3 +16286,5 @@ code |
 | 2026-08-22 21:58 UTC | Sealed exact branch-counterfactual dataset v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6510-v563-independent-exact-root) |
 | 2026-08-22 22:12 UTC | Independent branch-counterfactual dataset audit | OK | 87 passed, 1 warning in 11.51s |
 | 2026-08-22 22:14 UTC | Sealed exact branch-counterfactual dataset v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6510-v563-independent-exact-root) |
+| 2026-08-22 22:39 UTC | OPERATOR-ATTENTION: CONSECUTIVE_INVALID_LLM_ON_ROW | BLOCK | pid 1550132 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab3/rows_off.json: 2/2  |
+| 2026-08-22 22:48 UTC | Audit receipt STALE: qa-layer-authenticity-audit | BLOCK | timeout after 900s |

@@ -18336,3 +18336,11 @@ held-out-gated self-improvement loop -- the same architecture as `scripts/arc_fl
 improved 3 of 4 environments and "remain[ed] flat only where the action space is open-ended."
 ARC-AGI-3 is open-ended. If the 20-flag sweep promotes nothing, that is corroboration of a
 published result, not a failure of the machinery.
+
+## OPERATOR-ATTENTION 2026-08-22: run sentinel CONSECUTIVE_INVALID_LLM_ON_ROWS
+
+Scope: pid 1550132 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab3/rows_off.json
+
+2/2 LLM-on rows invalid (max streak 2; codes ['DEAD_GENERATOR', 'NO_COMPLETIONS'])
+
+Written by scripts/conductor_run_sentinel.py (REQ-CONDUCTOR-SENTINEL-3). The sentinel never kills work; triage and clear by hand.
