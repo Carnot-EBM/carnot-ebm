@@ -232,7 +232,10 @@ def run(
     )
     conductor_log = conductor_log or REPO / "ops" / "conductor-log.md"
     known_issues = known_issues or REPO / "ops" / "known-issues.md"
-    state_path = state_path or REPO / "ops" / ".run_sentinel_state.json"
+    # Own state file, NOT the sentinel's: the state file doubles as this
+    # tool's receipt (REQ-CONDUCTOR-RECEIPT-1), and a shared file would let
+    # a fresh sentinel scan mask a ledger run that crashed before writing.
+    state_path = state_path or REPO / "ops" / ".audit_findings_ledger_state.json"
 
     appended = 0
     if report_path.exists():
