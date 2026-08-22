@@ -16269,3 +16269,4 @@ code |
 | 2026-08-22 18:18 UTC | Plan milestone 2026.08.562 | OK | 4 tasks proposed |
 | 2026-08-22 18:20 UTC | Milestone 2026.08.562 activated | OK | 4 tasks queued |
 | 2026-08-22 18:42 UTC | V561 evidence corrigendum and V562 exact-branch li | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6506_v561_ev |
+| 2026-08-22 19:47 UTC | V561 evidence corrigendum and V562 exact-branch li | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6506_v561_ev |
