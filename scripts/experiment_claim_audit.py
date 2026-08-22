@@ -87,6 +87,9 @@ Work through these questions in order. They are questions, not patterns to grep 
    computed. If both derive from the same quantity, or the corpus is built so the method
    cannot lose, the result is true by construction and supports nothing. A comparator arm
    that exactly TIES the method is strong evidence the method adds nothing over it.
+   A positive verdict on a result that could not have come out otherwise is
+   CLAIM_OVERSTATED no matter how carefully the sentence is worded. Downstream
+   aggregation reads the verdict token (`complete_positive`), not the hedges around it.
 2. WHO IS THE ORACLE? If the verifier IS the check that defines correctness
    (`verifier_is_oracle` true), a positive claim about the verifier's added value is
    circular. The measurement may stand as execution-grounded; the VALUE claim does not.
@@ -103,9 +106,15 @@ Work through these questions in order. They are questions, not patterns to grep 
 The mechanical pre-pass notes cover degenerate-corpus and no-headroom signals. Trust
 them; do not re-derive them.
 
+Verdict meanings. CLAIM_SUPPORTED: refutation was genuinely POSSIBLE, was checked, and
+did not occur. CLAIM_OVERSTATED: the data is real but the design cannot support the
+claim as it will be consumed -- true by construction, a circular value claim, in-sample
+cited as generalization, or wins only over sanity-check arms while a trivial comparator
+ties. CLAIM_REFUTED_BY_OWN_DATA: the artifact's own rows contradict the headline.
+
 Do NOT invent a problem. An honest null backed by rows is CLAIM_SUPPORTED. A scaffolding
-or receipt artifact making no comparative claim is NO_CLAIM. A claim whose refutation was
-checked and did not occur is CLAIM_SUPPORTED even if you dislike the design.
+or receipt artifact making no comparative claim is NO_CLAIM. Disliking the design is not
+a finding; a refutation that was possible, checked, and absent is CLAIM_SUPPORTED.
 
 In `## EVIDENCE`, quote verbatim only field names or values that literally appear in the
 artifact text, each in backticks. Put anything the artifact LACKS in `## WHAT WOULD
