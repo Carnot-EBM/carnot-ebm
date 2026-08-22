@@ -8459,3 +8459,119 @@ natural restart (not restarted by this session). adversarial_verify.py and
 qa_layer_authenticity_audit.py changes are live on their next subprocess invocation.
 Historical research-complete.yaml repair (dedup of 1,841 duplicate entries,
 re-stamping 57 phantom OKs) is deliberately NOT done — operator decision required.
+
+## 2026-08-21 (outer loop) — Zero-world-model induction defect: fixed, acceptance run in flight
+
+What was wrong: every env-less local run of the scored E3 policy produced ZERO
+world models. The agent-side induce defaults (max_tokens=4096, timeout floor
+600 s) were validated for the retired Qwen3.5-9B and never moved through two
+generator swaps; the pinned Qwen3.8-27B writes 36k-83k thinking tokens per
+induction. Every LLM response hit the cap; the failure note was discarded at
+the call site; the skip label conflated two causes; the model label named the
+retired 9B over a 27B path.
+
+What is fixed (REQ-ARC-WMTE-6610/6620/6630, commit 512eca0e6b + follow-up):
+pin-derived budget/timeout constants equal to the scored kernel's env pins,
+one shared dataclass default, request-time pool clamp, split skip labels with
+the note carried, honest model labels. Scored path byte-identical. Mutation
+evidence recorded for all eight behavior changes (RED under mutation, GREEN
+restored).
+
+Next: the 5-game acceptance re-run (ar25/tr87/tu93/sp80/re86, budget 2000,
+GPU 1, port 8993) completes; compare world-model production against the
+baseline's zero. Two pre-existing test failures reproduced on clean HEAD and
+left alone: test_experiment_4664 degenerate-goal (engine-store interplay) and
+test_experiment_5727 port-override (asserts the retired gemma pin).
+
+## 2026-08-21 outer-loop session (later): AVO directive, the zero-world-model finding, and what is still open
+
+Appended, not rewritten (never-prune). The section above covers conductor
+self-improvement mechanisms 1-4. This covers the ARC/AVO thread from the same
+session and, more importantly, the threads that are STILL OPEN so the next
+session does not rediscover them.
+
+### The finding that reorders everything
+
+The live scored agent produces ZERO world models. Measured on five public games
+(ar25, tr87, tu93, sp80, re86) at budget 2000 with the pinned Qwen3.8-27B:
+**0 levels completed on all five**, every game recording
+`induction_skipped: {"proposer_failed_or_missing_root": N}`. The LLM was reached
+and generated; the proposer then returned not-ok. The 900-1250 search nodes each
+game expanded were BLIND SEARCH with no model at all.
+
+Root cause found and fixed same session (commit `512eca0e6b`): a stale
+4096-token induce budget against Qwen3.8's INLINE reasoning, which consumes the
+answer window. Generation was truncated mid-thought, so parsing failed cleanly
+with no exception — which is why the traceback capture added earlier that day
+showed nothing.
+
+**NOT YET PROVEN.** The live re-run on the same five games, showing world models
+are actually produced, had not completed when this was written. Unit tests
+cannot refute a live-path integration failure. Treat the fix as unverified until
+that run exists.
+
+Context for why this matters: our ARC public-set record is 183/183, but that came
+from the OFFLINE DEV TWIN (`arc_loop_solve.py`) with 25 hand-built per-game
+adapters. `E3AgentPolicy` — the scored agent — has ZERO references to
+`arc_game_adapters` and never had them. NVIDIA's AVO scored 183/183 on the same
+public set with no per-game knowledge. That gap is the deliverable.
+
+### AVO, corrected
+
+The operator directive (CLAUDE.md "AVO-Method Adoption for the Live Agent") was
+issued against a conflation, now corrected in that file's appended CORRECTION.
+arXiv 2603.24517 is the KERNEL work only and does not mention ARC-AGI-3. For ARC,
+NVIDIA swapped the task interface and kept the agent loop; the agent built NO
+explicit world models and acted directly on 64x64 text grids. Credited
+components: persistent memory, supervision, execution feedback. Public set only,
+no component ablations, no published cost. So copying the evolutionary operator
+because of the ARC score copies the wrong mechanism.
+
+Shipped from this: `TrajectorySupervisor` (REQ-ARC-WMTE-6600, default OFF,
+`CARNOT_ARC_TRAJECTORY_SUPERVISOR=1`), AVO's supervision component rebuilt
+model-free. Wired into `E3AgentPolicy._next_move_routed`, so it is live-path
+reachable. An A/B against the zero baseline was mid-flight when this was written.
+
+### OPEN — do not assume these are resolved
+
+1. **Submission 55657962 (kernel v40) returned ERROR, not a score.** Cause
+   unknown and NOT retrievable: the scored run's logs are unavailable, `kernels
+   output` returns the save-run, and episode logs 403. The only scored-path
+   change versus the 0.02 submission was the `CARNOT_ARC_E3_DIR` fix
+   (`1086c7e7cc`), whose `mkdir` is wrapped and cannot kill a run. Two live
+   hypotheses: a Kaggle-side infrastructure failure, or the fix working and the
+   now-longer runs exceeding the 12h limit.
+2. **Kaggle weekly GPU quota EXHAUSTED (30.00h).** Nothing on the
+   Blackwell/NVFP4/vLLM path can run until it resets. Blocks items 3 and 4.
+3. **The scored vLLM server cannot run tool calls at all.** Measured: it is
+   launched with no `--enable-auto-tool-choice` and no `--tool-call-parser`, and
+   returns **HTTP 400 on any request carrying `tools`**. With the flags plus
+   `hermes` the request is accepted but nothing is lifted, because Qwen3.8 emits
+   `<tool_call><function=NAME><parameter=code>` XML that hermes cannot parse. The
+   pinned wheel registers `qwen3_xml` and `qwen3_coder`; **`qwen3_xml` is the
+   untested leading candidate**. A probe kernel is staged. Consequence: the tool
+   loop — and compaction, which lives inside it — is inert on the scored path.
+   Do NOT ship a parser name unverified: a bad `--tool-call-parser` makes vLLM
+   refuse to START, converting a partial failure into a total one.
+4. **`arc_scored_path_lever_harness.py` pins the RETIRED Qwen3.5-9B** (line ~425)
+   under a banner at line 68 warning it "MEASURES THE RETIRED GENERATOR". Nothing
+   refuses a run. This cost a discarded A/B arm in this session — the run came up
+   on the 9B and was only caught by reading `/proc/<pid>/cmdline`. Override with
+   `CARNOT_ARC_GGUF_PATH`; a guard was being built when this was written.
+5. **Conductor is STOPPED** and must be restarted once the running local work
+   finishes. Mechanisms 1-4 from the earlier section only take effect on that
+   restart.
+6. **`research-complete.yaml` historical repair not done** — 1,841 duplicate
+   entries, 57 phantom `OK (conductor)` rows. Operator decision, deliberately
+   left. Forward mechanisms stop NEW corruption.
+
+### Two measurement traps confirmed this session, both now in memory
+
+- `heldout_accuracy` in the exp5726/6440 lineage is IN-SAMPLE fit, not
+  generalization: `_induce_transitions_k()` has returned ALL transitions since
+  2026-08-01, and memorizing engines score HIGHER on it (0.857 vs 0.684, n=30).
+  Any conclusion citing it as generalization is unsupported from that date.
+- The live agent has NO held-out gate at all — grep `holdout` in
+  `arc_competition_agent.py` returns nothing. A hardcoded engine passes the trust
+  gate. The tool loop already computes the split (`visible = rows[:-3]`); porting
+  it to the live induce path costs no LLM call and no actions.
