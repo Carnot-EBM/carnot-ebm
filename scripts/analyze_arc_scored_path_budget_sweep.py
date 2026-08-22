@@ -2004,6 +2004,15 @@ def main(argv) -> int:
             "reproducibility_checksum": ext["reproducibility_checksum"],
         }
 
+    # Carry hand-authored keys (rebuild_note_*, freshness acks) through
+    # the rebuild (REQ-OPS-REBUILD-PRESERVE-1).
+    import sys as _sys
+
+    if str(Path(__file__).resolve().parent) not in _sys.path:
+        _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from artifact_merge_preserve import merge_preserve_with_file
+
+    artifact = merge_preserve_with_file(Path(a.out), artifact)
     Path(a.out).write_text(json.dumps(artifact, indent=1))
     print(json.dumps(artifact["headline"], indent=1))
     print(f"\ninstrumentation holes: {census['instrumentation_holes']}")

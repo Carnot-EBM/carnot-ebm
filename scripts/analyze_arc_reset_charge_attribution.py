@@ -1126,6 +1126,17 @@ def main(argv: list[str]) -> int:
 
     preserve_freshness_acknowledgements(artifact, Path(out_path))
 
+    # Full merge-preserve supersedes the ack-only call above (kept;
+    # idempotent): carries rebuild_note_* and any other hand-authored
+    # top-level key (REQ-OPS-REBUILD-PRESERVE-1). Runs BEFORE the
+    # checksum so the checksum covers the bytes actually written.
+    from artifact_merge_preserve import merge_preserve_with_file
+
+    artifact = merge_preserve_with_file(Path(out_path), artifact)
+    # The prior build's checksum is analyzer-owned and regenerated below;
+    # drop the carried copy so the fresh hash is not computed over it.
+    artifact.pop("reproducibility_checksum", None)
+
     artifact["reproducibility_checksum"] = (
         "sha256:"
         + hashlib.sha256(json.dumps(artifact, sort_keys=True, default=str).encode()).hexdigest()

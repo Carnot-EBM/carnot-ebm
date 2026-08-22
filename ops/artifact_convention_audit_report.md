@@ -13,7 +13,103 @@ evidence the reviewer could not have read -- do NOT act on them.
 | AGGREGATE_ONLY | 2 |
 | CANNOT_DETERMINE | 1 |
 
-## experiment_6498_csl_independent_audit.json
+## experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+Diversity improved after remediation, with higher `"lambda_min_sigma_after"` and `"effective_k_after"`, no remaining collapsed pairs, and `"diversity_remediation_passed": true`.
+
+## WHAT IS MISSING
+Per-case rows for all `"n_cases": 1000`, including before-and-after diversity metrics and collapsed-pair status for each case; only pooled fields such as `"lambda_min_sigma_before"`, `"lambda_min_sigma_after"`, `"effective_k_before"`, and `"effective_k_after"` are present.
+
+## THE CHECK A READER CANNOT DO
+Did diversity improve broadly across the 1,000 cases, or were the reported aggregate gains driven by a few outliers or degenerate cases?
+
+## experiment_2824_cross_corpus_verifier_matrix.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+The production verifier outperformed architecture-only for tier_memory on FoVer by 0.25, while the other reported comparisons were tied.
+
+## WHAT IS MISSING
+Per-unit rows for each game, seed, cell, or condition underlying the aggregate `"production"`, `"architecture_only"`, and `"delta"` values in `"verifier_corpus_dual_matrix"`.
+
+## THE CHECK A READER CANNOT DO
+Was the tier_memory FoVer improvement broad across units, or caused by one outlier or units pinned at a floor or ceiling?
+
+## experiment_3361_archive_v309_activate_v310.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The archive is complete and milestone 2026.05.310 is ready for activation.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_3377_archive_v310_activate_v311.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The archive is complete and milestone 2026.05.311 is ready for activation.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_833_constraint_delta_root_cause.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The embedding constraint store’s write path is missing: verification performed 10 retrievals but zero writes.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_3392_archive_v311_activate_v312.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The archive is complete and milestone 2026.05.311 was archived with 2026.05.312 activated and ready.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json
 
 **CANNOT_DETERMINE**
 
@@ -21,31 +117,15 @@ evidence the reviewer could not have read -- do NOT act on them.
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The audit claims all critical attacks are closed and recommends `medium_bounded` capacity with total held-future utility `7.0`.
+The artifact claims the V562 exact branch passed its lineage/readiness gate with `"v562_exact_branch_ready_score": 1.0`.
 
 ## WHAT IS MISSING
-The artifact is truncated mid-row after `"arm_id": "always_updat`, so the complete per-unit future-utility rows and any final verdict or blocker diagnostic cannot be found; only aggregate fields such as `"future_metric_row_count": 28`, `"attacks_closed": true`, and `"recommended_capacity"` are visible.
+The complete `"per_unit_rows"` array is missing: `"exp6504_row_recomputation"` reports 480 instance rows, but the supplied artifact cuts off mid-row at instance `exp6504:random_3cnf:031` and is not complete JSON.
 
 ## THE CHECK A READER CANNOT DO
-Did `medium_bounded` outperform the other capacities broadly across future units, or does its reported utility depend on a small number of outlier rows?
+Do all 480 instance rows actually have matching regenerated labels and passing replays, as the reported readiness aggregate claims?
 
-## experiment_6499_arc_energy_progress_alignment.json
-
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-The energy signal failed the readiness gate because it showed no positive incremental alignment beyond controls and was not directionally stable across games.
-
-## WHAT IS MISSING
-The actual `"rows"` or `"per_unit_rows"` containing each prefix/game/seed/horizon’s energy signal, progress outcome, and control metrics; only aggregated `"incremental_alignment_rows"`, binned `"calibration_rows"`, `"leave_one_game_out_rows"`, and a `"row_checksum"` are present.
-
-## THE CHECK A READER CANNOT DO
-Was the negative/null alignment broadly present across the 400 observations, or driven by a few outlying prefixes, games, seeds, or horizons?
-
-## experiment_6500_gated_default_off_live_arc_policy_ab.json
+## experiment_6508_analytical_branch_refocus_ab.json
 
 **CHECKABLE**
 
@@ -53,87 +133,7 @@ Was the negative/null alignment broadly present across the 400 observations, or 
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because `arc_energy_alignment_ready_score` was `0.0` instead of the required `1.0`.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6501_v560_capstone.json
-
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-The capstone claims its row recomputation confirms, among other outcomes, that exp6490’s best learned head beat the analytical baseline.
-
-## WHAT IS MISSING
-Per-unit held-result rows containing each unit’s identifier, outcome, and metric or prediction for every compared head; only aggregate `"head_metric_rows"`, `"held_row_count"`, and `"best_learned_beats_analytical"` are present.
-
-## THE CHECK A READER CANNOT DO
-Did the learned head’s advantage occur broadly across held units and family cells, or was it driven by a few outliers or degenerate cells?
-
-## experiment_6502_v560_retirement_v561_lineage_lock.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The V560 retirement ledger is complete and the V561 lineage-lock gate passed, permitting only the specified fresh exact-SAT/CSP lineage.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6503_v561_source_delta_method_contract.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The V561 source-delta method contract met its readiness gate, with all required receipts, boundaries, local-test targets, dependency constraints, and protected-file checks satisfied.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6504_exact_structural_benchmark_commitment.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The artifact claims that the exact structural benchmark was completed and committed.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6505_sota_formal_challenge_mutations.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment completed with a null result: all three model requests were quarantined, producing zero accepted mutations and a `challenge_pool_ready_score` of 0.0.
+The experiment was blocked because the required upstream artifact `exp6507-exact-branch-counterfactual-dataset` was not found, so its `branch_counterfactual_dataset_ready_score == 1.0` gate failed.
 
 ## WHAT IS MISSING
 nothing

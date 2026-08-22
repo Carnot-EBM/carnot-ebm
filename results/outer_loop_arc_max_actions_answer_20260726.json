@@ -1,9 +1,67 @@
 {
+ "rebuild_note_20260731_split_enable": {
+  "keys_restored_after_wholesale_rewrite": [],
+  "substantive_value_names": [
+   "provenance.code[3].bytes"
+  ],
+  "substantive_values_changed": 1,
+  "values_changed_total": 5,
+  "why_rebuilt": "artifact_freshness_lint flagged this STALE because scripts/arc_scored_path_lever_harness.py drifted when the outer-loop harnesses were switched to the two-GPU layer split (CARNOT_ARC_GENERATOR_CUDA_GPU 1 -> 1,0). That harness PRODUCED the rows this artifact analyses; changing which GPU it will use on FUTURE runs cannot retroactively alter rows already on disk, and the rebuild confirms that by construction."
+ },
+ "rebuild_note_20260820_traceback_visibility": {
+  "evidence": "Rebuilt from the recorded rebuild_command and diffed against the committed artifact. Substantive values changed: 1. Remaining differences are run metadata only.",
+  "restored_hand_added_keys": [
+   "rebuild_note_20260731_split_enable"
+  ],
+  "substantive_value_names": [
+   ".build_timestamp_utc"
+  ],
+  "substantive_values_changed": 1,
+  "why_rebuilt": "artifact_freshness_lint flagged STALE: scripts/arc_scored_path_lever_harness.py gained three additive row keys (induction_exceptions, induction_tracebacks, induction_all_attempts_raised) so a swallowed induce failure carries its message, not only a tally of the word 'exception'."
+ },
+ "rebuild_note_20260821_induce_budget_pin": {
+  "why_rebuilt": "artifact_freshness_lint flagged this STALE because scripts/arc_scored_path_lever_harness.py (and, for the early-stop artifact, python/carnot/agentic/arc_competition_agent.py + arc_executable_world_model.py) drifted: REQ-ARC-WMTE-6610/6620 moved the induce budget/timeout defaults to the generator pin (131072/2400, kernel parity), added the pool clamp, and added the induction_proposer_notes row field. The harness and agent PRODUCE rows; the rows this artifact analyses were recorded before the change, so no measurement can move.",
+  "evidence": "Rebuilt from the same saved rows and leaf-diffed against the committed artifact: 0 measurement values changed. Only run metadata moved (run_date, duration_s, git_head, reproducibility_checksum, build_timestamp_utc, provenance hashes).",
+  "substantive_values_changed": 0,
+  "hand_added_notes_restored": [
+   "rebuild_note_20260731_split_enable",
+   "rebuild_note_20260820_traceback_visibility"
+  ],
+  "acknowledgements_restored_after_rebuild": 0,
+  "acknowledgements_restore_note": "The analyser regenerates provenance wholesale and DROPS hand-written freshness_acknowledgements on every rebuild (caught by adversarial review of commit 512eca0e6b). Restored verbatim from the pre-rebuild version; their sha256_now pins refer to earlier file states, so they are an audit trail rather than active exemptions. This artifact was rebuilt a second time the same day (after the review follow-up touched the harness docstring), with the same leaf-diff result: 0 measurement values changed."
+ },
+ "rebuild_note_20260822_pin_guard": {
+  "why_rebuilt": "artifact_freshness_lint flagged this STALE after scripts/arc_scored_path_lever_harness.py gained the runtime retired-pin guard (REQ-ARC-WMTE-6621). Rebuilt from the recorded rebuild_command against the same saved rows.",
+  "diff_vs_committed": "zero substantive figures moved: only build timestamp, duration_s, provenance code hash for the harness, git_head, and the derived reproducibility checksum. The guard refuses future runs before any model work; it cannot alter recorded rows or analyzer output.",
+  "keys_restored_after_wholesale_rewrite": [
+   "rebuild_note_20260731_split_enable",
+   "rebuild_note_20260820_traceback_visibility",
+   "rebuild_note_20260821_induce_budget_pin"
+  ],
+  "restored_from": "git HEAD f75a2a13bf"
+ },
+ "rebuild_note_20260822_pin_guard_env_override": {
+  "why_rebuilt": "artifact_freshness_lint flagged this STALE after the pin guard gained CARNOT_ARC_GGUF_PATH override handling (REQ-ARC-WMTE-6621 amendment, 4 lines in the harness's guard call site).",
+  "diff_vs_committed": "substantive fields moved: NONE \u2014 only timestamps/provenance/checksum expected to change.",
+  "keys_restored_after_wholesale_rewrite": [
+   "rebuild_note_20260731_split_enable",
+   "rebuild_note_20260820_traceback_visibility",
+   "rebuild_note_20260821_induce_budget_pin",
+   "rebuild_note_20260822_pin_guard"
+  ],
+  "restored_from": "git HEAD 96406c1b00"
+ },
+ "rebuild_note_20260822_supervisor_ledger": {
+  "why_rebuilt": "artifact_freshness_lint flagged this STALE because scripts/arc_scored_path_lever_harness.py drifted: run_cell gained one ROW KEY, trajectory_supervisor (REQ-ARC-WMTE-6640), so future rows carry the redirect ledger instead of omitting it. The change is additive at row-emit time and cannot alter rows already on disk.",
+  "evidence": "Rebuilt from the same saved rows and deep-diffed against the committed artifact, ignoring run metadata (run_date, duration_s, git_head, reproducibility_checksum, build_timestamp_utc, provenance sha256/bytes/mtime). Zero measurement values changed.",
+  "substantive_values_changed": 0,
+  "note_on_this_rebuild_command": "The analyser regenerates this file from the rows and does not preserve hand-added keys; every prior rebuild_note_* was restored by hand here, as each earlier rebuild also had to do."
+ },
  "experiment": "outer_loop_arc_max_actions_answer_20260726",
  "title": "The MAX_ACTIONS answer: LLM-ON contention measured (not imported), the budget->score curve re-priced in the GATEWAY-CHARGED unit, and the early-stop lever priced on its benefit side",
  "run_date": "2026-07-26",
  "run_date_convention": "session-local (America/New_York); see build_timestamp_utc",
- "build_timestamp_utc": "2026-08-22T16:00:12Z",
+ "build_timestamp_utc": "2026-08-22T20:54:10Z",
  "schema": "carnot.arc_max_actions_answer.v1",
  "inference_substrate": "aggregation_from_upstream_artifacts",
  "inference_substrate_principle": "An analyser pass inherits its methodology from the artifacts it cites; declaring it as live inference would borrow credibility this file has not earned, and declaring it as a dict makes the classifier unable to read it at all.",
@@ -62,7 +120,7 @@
   }
  ],
  "measurement_wall_s_basis": "one value per ROW FILE with explicit precedence (`elapsed_s` before `measurement_wall_s`), asserted to be unambiguous (no file carries both). NOT a sum of per-cell `wall_s`, which undercounts ~25% because it omits per-cell setup.",
- "duration_s": 0.501,
+ "duration_s": 0.715,
  "random_seed": 20260724,
  "verifier_is_oracle": false,
  "verifier_is_oracle_principle": "No verifier-value or moat claim is made here; this measures WALL CLOCK and re-prices a score. Recorded because the circularity discipline requires the field on any artifact that could be read as a verifier claim.",
@@ -7595,12 +7653,12 @@
   "principle": "a scope block whose stated p-floor is ABOVE a p the same artifact reports is an internal contradiction that reads as a methodology violation; deriving the floor and checking it makes the drift fail the build instead of misleading a reader."
  },
  "provenance": {
-  "git_head": "2e2be6c62b8827d18800ca6b72333bacc0787a43",
+  "git_head": "b766697b0cee358a897d5b2ff31f18edf3abcc2d",
   "code": [
    {
     "path": "scripts/analyze_arc_max_actions_answer.py",
-    "sha256": "1cb4e50243df5bef1ec1568a1a002a8a51c55574e2600f36f09481eaa2555506",
-    "bytes": 154332
+    "sha256": "157b9cce36fa2d537df02af7448930d5a4ee3403484a0d1f308f5a9e4cd201e6",
+    "bytes": 154658
    },
    {
     "path": "scripts/arc_gateway_rescore.py",
@@ -7697,63 +7755,5 @@
  "reproducibility_checksum_note": "sha256 over the artifact MINUS every clock field (run_date, duration_s, build_timestamp_utc) and provenance, so a rebuild that changes no NUMBER reproduces the checksum exactly. Verified by rebuilding twice and diffing.",
  "honest_verdict": "complete_max_actions_answer_largest_measured_budget_fitting_9h_110games=2000_conservative_all_levels=2000_throughput_ratio_K2_vs_K1=0.9735_latency_nearly_doubles_but_throughput_does_not_wall_clock_binds_at_score_max=False_generator_died_at_K=[4]_gates_passed=True",
  "honest_verdict_principle": "A terminal-prefixed self-declared state lets the conductor's reconciler classify this without re-running it; the prefix is required because substrings like 'binds' and 'died' would otherwise trip the partial/blocked token matcher.",
- "duration_s_principle": "This analyser's OWN runtime. It reads persisted JSON, so it is small by construction and is NOT evidence about how long the measurement took -- see measurement_wall_s.",
- "rebuild_note_20260731_split_enable": {
-  "keys_restored_after_wholesale_rewrite": [],
-  "substantive_value_names": [
-   "provenance.code[3].bytes"
-  ],
-  "substantive_values_changed": 1,
-  "values_changed_total": 5,
-  "why_rebuilt": "artifact_freshness_lint flagged this STALE because scripts/arc_scored_path_lever_harness.py drifted when the outer-loop harnesses were switched to the two-GPU layer split (CARNOT_ARC_GENERATOR_CUDA_GPU 1 -> 1,0). That harness PRODUCED the rows this artifact analyses; changing which GPU it will use on FUTURE runs cannot retroactively alter rows already on disk, and the rebuild confirms that by construction."
- },
- "rebuild_note_20260820_traceback_visibility": {
-  "evidence": "Rebuilt from the recorded rebuild_command and diffed against the committed artifact. Substantive values changed: 1. Remaining differences are run metadata only.",
-  "restored_hand_added_keys": [
-   "rebuild_note_20260731_split_enable"
-  ],
-  "substantive_value_names": [
-   ".build_timestamp_utc"
-  ],
-  "substantive_values_changed": 1,
-  "why_rebuilt": "artifact_freshness_lint flagged STALE: scripts/arc_scored_path_lever_harness.py gained three additive row keys (induction_exceptions, induction_tracebacks, induction_all_attempts_raised) so a swallowed induce failure carries its message, not only a tally of the word 'exception'."
- },
- "rebuild_note_20260821_induce_budget_pin": {
-  "why_rebuilt": "artifact_freshness_lint flagged this STALE because scripts/arc_scored_path_lever_harness.py (and, for the early-stop artifact, python/carnot/agentic/arc_competition_agent.py + arc_executable_world_model.py) drifted: REQ-ARC-WMTE-6610/6620 moved the induce budget/timeout defaults to the generator pin (131072/2400, kernel parity), added the pool clamp, and added the induction_proposer_notes row field. The harness and agent PRODUCE rows; the rows this artifact analyses were recorded before the change, so no measurement can move.",
-  "evidence": "Rebuilt from the same saved rows and leaf-diffed against the committed artifact: 0 measurement values changed. Only run metadata moved (run_date, duration_s, git_head, reproducibility_checksum, build_timestamp_utc, provenance hashes).",
-  "substantive_values_changed": 0,
-  "hand_added_notes_restored": [
-   "rebuild_note_20260731_split_enable",
-   "rebuild_note_20260820_traceback_visibility"
-  ],
-  "acknowledgements_restored_after_rebuild": 0,
-  "acknowledgements_restore_note": "The analyser regenerates provenance wholesale and DROPS hand-written freshness_acknowledgements on every rebuild (caught by adversarial review of commit 512eca0e6b). Restored verbatim from the pre-rebuild version; their sha256_now pins refer to earlier file states, so they are an audit trail rather than active exemptions. This artifact was rebuilt a second time the same day (after the review follow-up touched the harness docstring), with the same leaf-diff result: 0 measurement values changed."
- },
- "rebuild_note_20260822_pin_guard": {
-  "why_rebuilt": "artifact_freshness_lint flagged this STALE after scripts/arc_scored_path_lever_harness.py gained the runtime retired-pin guard (REQ-ARC-WMTE-6621). Rebuilt from the recorded rebuild_command against the same saved rows.",
-  "diff_vs_committed": "zero substantive figures moved: only build timestamp, duration_s, provenance code hash for the harness, git_head, and the derived reproducibility checksum. The guard refuses future runs before any model work; it cannot alter recorded rows or analyzer output.",
-  "keys_restored_after_wholesale_rewrite": [
-   "rebuild_note_20260731_split_enable",
-   "rebuild_note_20260820_traceback_visibility",
-   "rebuild_note_20260821_induce_budget_pin"
-  ],
-  "restored_from": "git HEAD f75a2a13bf"
- },
- "rebuild_note_20260822_pin_guard_env_override": {
-  "why_rebuilt": "artifact_freshness_lint flagged this STALE after the pin guard gained CARNOT_ARC_GGUF_PATH override handling (REQ-ARC-WMTE-6621 amendment, 4 lines in the harness's guard call site).",
-  "diff_vs_committed": "substantive fields moved: NONE \u2014 only timestamps/provenance/checksum expected to change.",
-  "keys_restored_after_wholesale_rewrite": [
-   "rebuild_note_20260731_split_enable",
-   "rebuild_note_20260820_traceback_visibility",
-   "rebuild_note_20260821_induce_budget_pin",
-   "rebuild_note_20260822_pin_guard"
-  ],
-  "restored_from": "git HEAD 96406c1b00"
- },
- "rebuild_note_20260822_supervisor_ledger": {
-  "why_rebuilt": "artifact_freshness_lint flagged this STALE because scripts/arc_scored_path_lever_harness.py drifted: run_cell gained one ROW KEY, trajectory_supervisor (REQ-ARC-WMTE-6640), so future rows carry the redirect ledger instead of omitting it. The change is additive at row-emit time and cannot alter rows already on disk.",
-  "evidence": "Rebuilt from the same saved rows and deep-diffed against the committed artifact, ignoring run metadata (run_date, duration_s, git_head, reproducibility_checksum, build_timestamp_utc, provenance sha256/bytes/mtime). Zero measurement values changed.",
-  "substantive_values_changed": 0,
-  "note_on_this_rebuild_command": "The analyser regenerates this file from the rows and does not preserve hand-added keys; every prior rebuild_note_* was restored by hand here, as each earlier rebuild also had to do."
- }
+ "duration_s_principle": "This analyser's OWN runtime. It reads persisted JSON, so it is small by construction and is NOT evidence about how long the measurement took -- see measurement_wall_s."
 }

@@ -2958,6 +2958,13 @@ def main(argv=None) -> int:
 
     _reg.preserve_freshness_acknowledgements(art, _P(a.out))
 
+    # Full merge-preserve supersedes the ack-only call above (kept;
+    # idempotent): carries rebuild_note_* and any other hand-authored
+    # top-level key through the rebuild (REQ-OPS-REBUILD-PRESERVE-1).
+    from artifact_merge_preserve import merge_preserve_with_file
+
+    art = merge_preserve_with_file(_P(a.out), art)
+
     with open(a.out, "w") as fh:
         json.dump(art, fh, indent=1, default=str)
 

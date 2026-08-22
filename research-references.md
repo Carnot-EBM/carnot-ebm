@@ -35796,3 +35796,117 @@ on, or repeat, the Exp6505 free-form mutation stream.
   TSU, latency, power, or acceleration claim.
 
 <!-- V562-PLANNER-REFRESH-20260822-END -->
+
+## V563 planner refresh - 2026-08-22
+
+<!-- V563-PLANNER-REFRESH-20260822-START -->
+
+This refresh uses the terminal V562 conductor record as its local evidence
+boundary. Exp6506 contains a finished corrigendum, but the conductor retired
+the task after three `artifact_not_updated_past_bootstrap` results. Exp6507,
+Exp6508, and Exp6509 then ended through the retired or missing upstream chain.
+V563 must start from a new independent qualifier. It must not require a
+retired task ID.
+
+### Promising primary findings
+
+- **DiBS: Diffusion-Informed Branch Selection** - arXiv:2606.06518,
+  https://arxiv.org/abs/2606.06518; submitted 2026-06-02. DiBS keeps the
+  symbolic solver complete and uses a learned diffusion prior plus a local
+  consistency signal only to order candidate values. It reports lower node,
+  backtrack, and long-tail costs on Royle 17-clue Sudoku. Its public repository,
+  https://github.com/shanxierdan/DiBS, includes solver and heuristic code but
+  does not include the data or pretrained checkpoints. Carnot hook: add a
+  partial-assignment consistency feature to the branch-ranker study and never
+  prune a candidate from learned advice. Compare it with analytical, native,
+  random, and one-shot controls under one charged budget. Do not import the
+  absent checkpoint as a dependency.
+- **Incremental Neural Network Verification via Learned Conflicts** -
+  arXiv:2603.12232, https://arxiv.org/abs/2603.12232; submitted 2026-03-12.
+  The method reuses conflicts only when a proved query-refinement relation
+  keeps those conflicts valid. A SAT layer checks inherited conflicts and
+  propagates them. The Marabou evaluation reports speedups up to 1.9 times.
+  Carnot hook: make the continuous self-learning task a versioned exact-conflict
+  memory over a chronological stream. Admit only conflicts with a refinement
+  witness. Compare frozen scratch solving, valid reuse, invalid-reuse veto,
+  bounded eviction, restart, and rollback. The exact solver remains authority.
+- **Composing Flow-Matching Energies with Known Physics: Generation, OOD
+  Detection, and Inversion on PDE Fields** - arXiv:2608.18004,
+  https://arxiv.org/abs/2608.18004; submitted 2026-08-18. The paper composes a
+  learned data energy with an independent physics residual and reports that
+  the two signals are complementary for OOD detection and posterior sampling.
+  Carnot hook: compose learned branch energy with exact analytical penalties
+  only after separate ablations show marginal value from both terms. An
+  additive score must not blur provenance or become the validity checker.
+- **HalluTracer: Hallucination Detection via Depth-Averaging Truth Signals** -
+  arXiv:2608.16353, https://arxiv.org/abs/2608.16353; submitted 2026-08-17.
+  HalluTracer aggregates weakly correlated truth signals across model depth.
+  This is promising for a future white-box verifier, but Carnot's qualified
+  GGUF runner does not expose hidden states or intermediate depth exits.
+  V563 does not reopen the retired hidden-state lane. Reconsider this paper
+  only after a matching-base backend exposes those signals without a model or
+  tokenizer substitution.
+- **Judge, Retrieve, or Abstain: Uncertainty-Guarded LLM Judging with Provable
+  Risk Guarantees** - arXiv:2608.17994,
+  https://arxiv.org/abs/2608.17994; submitted 2026-08-18 and accepted at COLM
+  2026. The framework uses held calibration and finite-sample intervals to
+  bound false discoveries among accepted judge verdicts. Carnot hook: use
+  abstention and held calibration for optional learned routing. Do not replace
+  exact solver labels with an LLM judge.
+
+### Requested secondary and product checks
+
+- **OpenReview:** current ICLR 2026 records still support solver-integrated
+  clause advice, bounded expert pools, and exact constraint enforcement. No
+  record supplies a stronger release authority than Carnot's local exact
+  solver. The DiBS and learned-conflict methods above are more direct next-step
+  references than another answer-level EBM.
+- **Hugging Face Papers:** current verification pages emphasize claim
+  decomposition, verifier-context isolation, support retention, and selective
+  abstention. These are useful control and reporting rules. They do not reopen
+  the retired external-text or hidden-state scorer lineages.
+- **Semantic Scholar:** the public API returned 35 EBT (`2507.02092`) citing
+  records and eight ARM-EBM (`2512.15605`) citing records on 2026-08-22. The
+  newest EBT records include the already indexed anomaly, latent-reasoning,
+  memory, and Solver-Hard studies. The ARM-EBM trail still leads through
+  Distributional Energy-Based Models, LoopUS, safe distillation, and
+  Path-Measure Dynamics. No new citing paper changes the exact-authority
+  boundary.
+- **GitHub Trending and targeted repositories:** the public DiBS repository is
+  useful for branch-ordering structure, but it omits the trained checkpoint
+  and data. The weekly trending page exposes no new EBM, KAN, exact-constraint,
+  or sampler dependency that should enter V563. Use Carnot's installed solver
+  stack and local procedural benchmark.
+- **Extropic:** the current first-party update remains
+  https://extropic.ai/writing/from-one-to-one-billion. It presents Torx, a live
+  early-access simulator route, the Thermalizers preview, and a taped-out Z1.
+  It places Z1 sticks, cards, and clusters in 2027 early access. Carnot has no
+  authenticated hardware or API route. Schedule no TSU execution, latency,
+  energy, or availability claim.
+- **Logical Intelligence:** the Kona 1.0 page still describes a global
+  constraint layer below language models. It exposes no weights, reproducible
+  architecture, or documented local runner. Kona remains a product comparator.
+- **KAN, Ising, FPGA, and thermodynamic hardware:** no new public result changes
+  the recorded terminal or changed-state boundaries of the available boards.
+  A compact KAN remains eligible only as a branch-ranker control. V563 makes
+  no board speed, power, or execution claim.
+
+### V563 planning impact
+
+- Replace the retired V562 dependency root with a small independent qualifier
+  that hashes and validates the finished Exp6506 content without requiring the
+  retired task ID.
+- Build branch-counterfactual rows from the qualified exact benchmark. Compare
+  analytical, consistency-aware, bounded-refocus, and one-shot enumeration
+  controls before training a learned ranker.
+- Train linear, MLP, compact KAN, and small graph rankers only if held
+  structural headroom exists. Keep all candidates and exact fallback.
+- Test exact-repair large-neighborhood search only after an independent ranker
+  audit proves a charged held benefit.
+- Make continuous self-learning a sound, bounded conflict-memory experiment
+  with refinement witnesses, chronological evaluation, rollback, restart,
+  invalid-reuse veto, and future-support checks.
+- Satisfy the standing ARC floor with one live-path supervisor refinement from
+  the redirect ledger. Make no game or level solve claim.
+
+<!-- V563-PLANNER-REFRESH-20260822-END -->

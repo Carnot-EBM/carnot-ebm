@@ -8413,3 +8413,79 @@ emit no escalation for it and SHALL leave the row untouched.
 | REQ-CONDUCTOR-SENTINEL-2 | Implemented (same file: stranded-VRAM vs compute-apps, orphan = reparented + port unreferenced, wrong-model vs the imported live pin; live-box measure: 4/15 MiB unaccounted, zero findings) | Implemented (same file; mutations: VRAM slack absurd -> RED, orphan ppid condition broken -> RED) |
 | REQ-CONDUCTOR-SENTINEL-3 | Implemented (same file: `escalate()` — log_step-format rows, known-issues sections for CRITICAL, fingerprint dedupe with 14-day re-arm, `last_scan_utc` receipt on every run; wired in `research_step` via `_run_audit_with_receipt` + the orphan-cleanup janitor above its conductor-liveness early-exit) | Implemented (same file + `tests/python/test_conductor_sentinel_wiring.py`; mutations: dedupe disabled -> RED, sentinel call unwired -> RED) |
 | REQ-OPS-AUDIT-LEDGER-1 | Implemented (`scripts/audit_findings_ledger.py`: append-only `ops/audit-findings-ledger.md`, 7-day aging, weekly re-bucket escalation, unrecognized dispositions fail closed; wired at milestone close after the claim audit with its own state-file receipt; E2E ingested the two real 2026-08-22 CLAIM_OVERSTATED findings) | Implemented (`tests/python/test_audit_findings_ledger.py`; mutations: idempotence broken -> RED, aging threshold absurd -> RED, week bucket frozen -> RED) |
+
+## REQ-OPS-REBUILD-PRESERVE-1: Analyzer Rebuilds SHALL Carry Hand-Authored Keys Forward, Not Regenerate Them Away
+
+Origin: three independent hits on 2026-08-21. The `scripts/analyze_*.py`
+rebuilders regenerate artifacts wholesale from saved rows, and
+`scripts/artifact_freshness_lint.py` MANDATES a rebuild when a declared
+code dependency changes. Every freshness-mandated rebuild therefore
+silently deleted the record left by the previous one: `rebuild_note_*`
+keys (the dated explanation of a prior rebuild) and
+`provenance.freshness_acknowledgements` (per-dependency verified-inert
+attestations). The keys destroyed are the project's own never-prune
+apparatus, deleted by a tool on a code path a lint requires.
+
+Rules:
+
+1. Before overwriting an existing artifact, an analyzer SHALL read it
+   and merge: a top-level key the analyzer generated this run wins; a
+   top-level key present in the old artifact and absent from the new
+   payload is CARRIED FORWARD verbatim. The failure being fixed is
+   silent deletion, so carry is the default direction.
+2. The owned set — the keys the rebuild may replace — is the set of
+   keys the analyzer actually generated this run, plus an explicit
+   `retired_keys` argument for deliberate drops. It is derived from the
+   generated payload, never from a hand-maintained name list: a
+   hand-maintained protected-name list is the
+   pattern-narrower-than-concept bug (`inference_substrate_
+   correction_note` is the field a literal `corrigendum` pattern
+   missed), and a hand-maintained owned list would drift the same way.
+3. `provenance.freshness_acknowledgements` SHALL survive the rebuild
+   even though `provenance` itself is regenerated. It is an append-only
+   audit log of past judgment calls, different in kind from the
+   current-build facts (`sha256`, `git_head`, `rebuild_command`) that a
+   rebuild is SUPPOSED to replace.
+4. Any other old sub-key dropped inside a regenerated dict-valued key
+   SHALL be reported on stderr, naming the key path. Deletion may be
+   correct there; SILENT deletion is not.
+5. Fail closed: when the existing artifact exists but cannot be read or
+   parsed, the merge SHALL refuse (raise) rather than overwrite. The
+   rebuild is re-runnable at zero cost after a human looks; the keys
+   under the unreadable file are not recoverable after an overwrite.
+   This deliberately inverts the older ack-only helper's fail-open
+   choice, which is one reason the loss stayed invisible.
+
+#### SCENARIO-OPS-REBUILD-PRESERVE-1-REBUILD-NOTE
+
+Given an artifact carrying `rebuild_note_20260731_split_enable` and a
+regenerated payload without it, the merged artifact SHALL carry the key
+byte-identical.
+
+#### SCENARIO-OPS-REBUILD-PRESERVE-1-ACKS
+
+Given an artifact whose `provenance.freshness_acknowledgements` holds
+entries and a regenerated payload with a fresh `provenance` block, the
+merged artifact SHALL carry the acknowledgements unchanged inside the
+new provenance.
+
+#### SCENARIO-OPS-REBUILD-PRESERVE-1-GENERATED-WINS
+
+Given a key present in both the old artifact and the new payload, the
+merged artifact SHALL hold the new value.
+
+#### SCENARIO-OPS-REBUILD-PRESERVE-1-RETIRED-DROPS
+
+Given a key named in `retired_keys` and absent from the new payload,
+the merged artifact SHALL NOT carry it.
+
+#### SCENARIO-OPS-REBUILD-PRESERVE-1-UNREADABLE-REFUSES
+
+Given an existing artifact whose bytes do not parse as JSON, the merge
+SHALL raise and the file SHALL remain untouched.
+
+## Implementation Status (REQ-OPS-REBUILD-PRESERVE-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-OPS-REBUILD-PRESERVE-1 | Implemented (`scripts/artifact_merge_preserve.py`; wired into all 10 `scripts/analyze_*.py` write sites; E2E: the real `analyze_arc_wall_rederivation_20260808.build()` rebuilt over a seeded artifact and carried both incident-class keys) | Implemented (`tests/python/test_artifact_merge_preserve.py`, 11 tests incl. regression on the REAL 2026-08-21 incident artifact's 7 rebuild_note keys + 25 acks; mutations: carry removed -> RED, ack carry removed -> RED, refuse-on-unreadable made fail-open -> RED, retired_keys ignored -> RED, one analyzer unwired -> RED) |

@@ -1,0 +1,323 @@
+milestone: "2026.08.563"
+milestone_title: "Certified Solver Guidance and Exact Conflict Memory"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+  - id: exp6510-v563-independent-exact-root
+    milestone: "2026.08.563"
+    deliverable: results/experiment_6510_v563_independent_exact_root.json
+    title: "Fresh independent V563 exact-evidence root"
+    priority: critical
+    track: research-governance
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 30
+    estimated_wall_time_min: 25
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp6506-v561-evidence-corrigendum-v562-lineage-lock
+        verdict: "artifact_not_updated_past_bootstrap"
+        addressed_by: "This task uses a new ID and small terminal artifact, hashes the already-finished Exp6506 content as immutable input, avoids the large corrigendum rerun, and has no structured dependency on the retired task."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT
+      V562 is terminal but its scientific chain did not run. Exp6506 has finished content with v562_exact_branch_ready_score=1.0, yet the conductor returned artifact_not_updated_past_bootstrap three times and retired its task. Exp6507-Exp6509 then blocked. V563 needs a new independent root that reads immutable files directly and never requires a retired task ID. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/research-program.md and {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_6504_exact_structural_benchmark_commitment.json
+      - {project_root}/results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json
+      - {project_root}/results/experiment_6508_analytical_branch_refocus_ab.json and {project_root}/ops/conductor-log.md
+      - {project_root}/scripts/adversarial_verify.py, {project_root}/scripts/verdict_row_consistency_lint.py, and {project_root}/ops/exclusion_manifest.yaml
+      - relevant capability specs, tests, and {project_root}/ops/e2e-test-plan.md
+
+      TASK
+      Create a small fresh V563 evidence root. Recompute the immutable benchmark and corrigendum contract from file content, preserve the V562 retirement, and authorize only the new exact branch-counterfactual path. Do not rerun the large Exp6506 computation and do not make a scientific performance claim.
+
+      CONCRETE STEPS
+      0. Record git status, exact input paths and hashes, solver availability, CPU/RAM/disk, exclusion-manifest state, and protected-file hashes. Do not create a bootstrap stub.
+      1. Add or confirm REQ-* and SCENARIO anchors for direct immutable-file qualification, retired-task isolation, atomic terminal writes, and verdict-class consistency. Write focused tests first.
+      2. Read Exp6504 and Exp6506 directly. Recompute their row counts, exact-label and replay receipts, split hashes, historical hashes, corrected verdict class, and allowed or forbidden lineage decisions.
+      3. Confirm the V562 conductor failures from ops/conductor-log.md. Preserve artifact_not_updated_past_bootstrap as the prior terminal result. Do not reactivate or require Exp6506.
+      4. Attack missing files, stale hashes, aggregate-only trust, historical mutation, renamed retired dependencies, indirect Exp6505 challenge-pool use, and a positive-class exact-oracle claim.
+      5. Set v563_independent_root_ready_score=1.0 only when the independent row checks pass, historical files are unchanged, the class is null or partial, and no new task needs a retired ID.
+      6. Write the complete artifact atomically to the new path in one terminal operation. Never leave a bootstrap-only deliverable at that path.
+      7. Run focused tests, spec coverage, row lint, exclusion-manifest lint, adversarial verification, applicable exact-solver E2E checks, and git status. Reconcile specs and ops docs after validation.
+
+      Required deliverable: {project_root}/results/experiment_6510_v563_independent_exact_root.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "A terminal state distinguishes the new root from a bootstrap or partial replay."
+        verdict_class:
+          principle: "The closed class prevents exact-oracle readiness from becoming an unsupported positive result."
+        prior_failure_receipt:
+          principle: "The receipt binds the changed technique to the Exp6506 conductor failure."
+        historical_input_receipts:
+          principle: "Exact paths, hashes, and JSON pointers make direct immutable-file use auditable."
+        independent_row_recomputation:
+          principle: "Row-derived checks prevent trust in stale or contradictory aggregates."
+        lineage_decision_rows:
+          principle: "One row per allowed and forbidden scope proves retired dependencies fail closed."
+        retired_dependency_attack_matrix:
+          principle: "Attacks detect renamed, indirect, or structured reuse of retired tasks."
+        atomic_terminal_write_receipt:
+          principle: "The receipt addresses the prior bootstrap-update failure with a new bounded write path."
+        v563_independent_root_ready_score:
+          principle: "This exact field is the same-roadmap gate for the new branch dataset."
+        per_unit_rows:
+          principle: "Per-unit rows make all counts, decisions, and failures independently checkable."
+        gate_check_summary:
+          principle: "A blocked result must name the failed path, hash, class, or lineage check and its observed value."
+        preconditions_checked:
+          principle: "Explicit checks prevent a root-ready claim when files, solvers, or resources are absent."
+        protected_files_unchanged:
+          principle: "Historical artifacts, research-roadmap.yaml, and the conductor must remain unchanged."
+        inference_substrate:
+          principle: "Declaring bounded artifact replay with no LLM keeps substrate and SOTA policy explicit."
+        verifier_is_oracle:
+          principle: "Oracle disclosure prevents exact consistency checks from supporting verifier-value claims."
+        field_principles:
+          principle: "Load-bearing reasons help later tasks preserve the evidence contract."
+        field_provenance:
+          principle: "Paths, hashes, reducers, and source lines make every field traceable."
+        random_seed:
+          principle: "A fixed attack order makes the qualifier reproducible."
+        duration_s:
+          principle: "Measured wall time supports fabrication and bounded-work checks."
+        tests_run:
+          principle: "Command and exit-code receipts show which validation actually ran."
+        reproducibility_checksum:
+          principle: "A content hash detects later drift in inputs, rows, or lineage decisions."
+        honest_verdict:
+          principle: "A complete_* or blocked_* prefix gives the conductor a safe terminal result."
+      ACCEPTANCE GATES:
+        - condition: "v563_independent_root_ready_score == 1.0."
+          principle: "The fresh chain can start only from independently checked immutable evidence."
+        - condition: "No structured dependency names Exp6506, Exp6507, Exp6508, or Exp6509."
+          principle: "A retired upstream cannot re-enter the execution graph."
+        - condition: "The deliverable is a complete atomic terminal artifact, not a bootstrap stub."
+          principle: "The changed technique must directly address the prior conductor result."
+      Set inference_substrate=bounded_independent_historical_artifact_replay_no_llm. Set verifier_is_oracle=true only for exact row and hash checks. Set verdict_class=null or partial; never positive.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6510_v563_independent_exact_root --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6511-exact-branch-counterfactual-dataset-v2
+    milestone: "2026.08.563"
+    deliverable: results/experiment_6511_exact_branch_counterfactual_dataset_v2.json
+    title: "Sealed exact branch-counterfactual dataset v2"
+    priority: critical
+    track: data-and-evidence
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 50
+    estimated_wall_time_min: 150
+    agent_type: codex
+    model: gpt-5.5
+    prior_failures:
+      - experiment_id: exp6507-exact-branch-counterfactual-dataset
+        verdict: "blocked_preemptive_skip_upstream_retired"
+        addressed_by: "This version is gated on the fresh Exp6510 root instead of Exp6506 and writes bounded row shards plus an atomic final manifest so the prior retired-upstream cascade cannot recur."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6510-v563-independent-exact-root
+        artifact_field: v563_independent_root_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT
+      V563 needs exact branch-decision evidence before any method or ranker can run. Exp6510 is the only eligible root. Exp6507 never ran because its upstream task was retired. This v2 task must preserve the procedural benchmark, seal decision-time features, and use bounded shards plus an atomic final manifest. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/research-program.md, {project_root}/_bmad/architecture.md, and the V563 roadmap document
+      - {project_root}/results/experiment_6510_v563_independent_exact_root.json
+      - {project_root}/results/experiment_6504_exact_structural_benchmark_commitment.json
+      - {project_root}/python/carnot/experiment_6504_exact_structural_benchmark_commitment.py
+      - exact SAT, CSP, feature, branch-control, checkpoint, and artifact-write code under {project_root}/python/carnot/
+      - relevant tests, capability specs, exclusion manifest, and ops/e2e-test-plan.md
+
+      TASK
+      Build an immutable v2 branch-counterfactual dataset. Precommit checkpoints and candidate rules, replay every eligible value or polarity under equal exact budgets, preserve censoring, and keep train, development, and held lineages sealed.
+
+      CONCRETE STEPS
+      0. Evaluate the Exp6510 gate. Record path, hash, expected and observed gate values, solver versions, CPU/RAM/disk, output-space bounds, and protected-file hashes.
+      1. Add or confirm REQ-* and SCENARIO anchors for deterministic checkpoints, candidate completeness, exact counterfactual replay, bounded shards, resume, censoring, split preservation, and atomic finalization. Write tests first.
+      2. Freeze checkpoint selection before outcomes are computed. Select candidate variables and all eligible values without unit ID, label, or future solver effort.
+      3. Run equal-budget exact replays. Record conflicts, propagations, decisions, restarts, learned clauses when exposed, terminal validity, proof or model receipt, timeout, and censoring.
+      4. Write bounded content-addressed shards outside the final deliverable. Resume only from verified shard hashes. Write the final manifest atomically after every planned unit has a terminal disposition.
+      5. Preserve base-instance lineage and the Exp6504 train, development, and held split. Do not tune on held rows. Quarantine source, label, solver-version, or hash mismatch.
+      6. Freeze a decision-time structural feature schema. Add partial-assignment consistency fields needed for the DiBS-inspired control, but no unit identity or post-decision effort.
+      7. Attack row order, serialization length, family labels, base labels, outcome-derived effort, duplicate checkpoints, split leakage, asymmetric budgets, corrupt resume shards, and missing terminal rows.
+      8. Set branch_counterfactual_dataset_v2_ready_score=1.0 only if every admitted row has an exact receipt, each held cell meets its size floor, all shards verify, and the final manifest is complete.
+      9. Run focused tests, full new-module coverage, lint, spec coverage, row lint, adversarial verification, exact-solver E2E checks, and git status. Reconcile specs and ops docs.
+
+      Required deliverable: {project_root}/results/experiment_6511_exact_branch_counterfactual_dataset_v2.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "A terminal status separates a complete manifest from shard generation in progress."
+        verdict_class:
+          principle: "The class marks exact-oracle data readiness as null or partial rather than positive science."
+        upstream_gate_receipt:
+          principle: "The receipt proves use of the fresh root and the exact gate field."
+        prior_failure_receipt:
+          principle: "The receipt records why the retired-upstream v1 did not execute and what changed."
+        checkpoint_contract:
+          principle: "Precommitted checkpoints prevent outcome-aware selection."
+        structural_feature_schema:
+          principle: "A frozen decision-time schema blocks identity and future-effort leakage."
+        branch_counterfactual_rows:
+          principle: "One row per checkpoint, candidate, value, budget, and disposition supplies causal labels."
+        exact_solver_receipts:
+          principle: "Proof, model, and validity evidence keeps the exact solver authoritative."
+        split_commitment:
+          principle: "Lineage-separated splits prevent held variants of a base instance from entering tuning."
+        shard_manifest:
+          principle: "Content hashes and terminal unit counts make long generation resumable without silent omission."
+        censoring_and_budget_rows:
+          principle: "Explicit timeouts and equal budgets prevent favorable-row selection."
+        leakage_attack_matrix:
+          principle: "Shortcut attacks test whether non-causal fields recover the labels."
+        branch_counterfactual_dataset_v2_ready_score:
+          principle: "This closed readiness score is the exact field consumed by the independent audit."
+        per_unit_rows:
+          principle: "Per-unit evidence lets a third party recompute all counts and cells."
+        aggregate_row_recomputation:
+          principle: "Aggregates must derive from terminal rows and verified shards."
+        gate_check_summary:
+          principle: "A blocked result must name the failed root, solver, shard, cell-size, or replay check."
+        preconditions_checked:
+          principle: "Resource and solver checks prevent fabricated exact evidence."
+        protected_files_unchanged:
+          principle: "The active roadmap, historical artifacts, and conductor must remain unchanged."
+        inference_substrate:
+          principle: "Declaring procedural exact replay with no LLM prevents generated labels from entering the data."
+        verifier_is_oracle:
+          principle: "The field exposes that exact replay defines labels and cannot prove added method value."
+        field_principles:
+          principle: "Field reasons preserve the sealed-data contract under later maintenance."
+        field_provenance:
+          principle: "Generator, checkpoint, solver, shard, and JSON-pointer provenance makes each row auditable."
+        random_seed:
+          principle: "Fixed selection and replay seeds make the dataset reproducible."
+        duration_s:
+          principle: "Measured wall time supports execution and resource checks."
+        tests_run:
+          principle: "Command and exit-code receipts prove the required validation path ran."
+        reproducibility_checksum:
+          principle: "A content hash detects later drift in rows, splits, features, or solver receipts."
+        honest_verdict:
+          principle: "A terminal prefix gives downstream tasks an unambiguous state."
+      ACCEPTANCE GATES:
+        - condition: "branch_counterfactual_dataset_v2_ready_score == 1.0."
+          principle: "Method work needs complete exact labels and sealed held cells."
+        - condition: "Every planned unit has an equal-budget exact receipt or explicit censored disposition."
+          principle: "Hard branches cannot disappear from the record."
+        - condition: "No feature uses identity, held outcome, or post-decision solver effort."
+          principle: "Only decision-time structure can support a causal guidance claim."
+      Set inference_substrate=procedural_branch_checkpoints_and_exact_counterfactual_solver_replay_no_llm. Set verifier_is_oracle=true for labels and validity only. Set verdict_class=null for complete data readiness.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6511_exact_branch_counterfactual_dataset_v2 --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp6512-branch-dataset-independent-audit
+    milestone: "2026.08.563"
+    deliverable: results/experiment_6512_branch_dataset_independent_audit.json
+    title: "Independent branch-counterfactual dataset audit"
+    priority: critical
+    track: adversarial-audit
+    requires_gpu: false
+    per_unit_rows: true
+    max_turns: 30
+    estimated_wall_time_min: 60
+    agent_type: codex
+    model: gpt-5.5
+    prompt: |
+      CONTEXT
+      Exp6511 is a large exact-data task and must not become a silent missing-field blocker. This audit runs without a conductor gate. It must emit branch_dataset_audited_ready_score with the exact spelling below even if Exp6511 is missing, blocked, partial, or null. It reads rows, not trusted aggregates. Work at {project_root}. The planning date is {date}.
+
+      EXISTING CODE TO READ FIRST
+      - {project_root}/CODEX.md and {project_root}/CLAUDE.md
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_6511_exact_branch_counterfactual_dataset_v2.json if present
+      - {project_root}/results/experiment_6510_v563_independent_exact_root.json
+      - {project_root}/results/experiment_6504_exact_structural_benchmark_commitment.json
+      - {project_root}/scripts/verdict_row_consistency_lint.py and {project_root}/scripts/adversarial_verify.py
+      - relevant exact-solver code, tests, capability specs, exclusion manifest, and ops/e2e-test-plan.md
+
+      TASK
+      Independently audit the Exp6511 dataset and close its readiness gate. Recompute rows, exact receipts, split lineage, shard completeness, feature timing, censoring, and leakage attacks. A missing or invalid upstream must produce a complete blocked artifact with score 0.0, not a missing field.
+
+      CONCRETE STEPS
+      0. Record whether the Exp6511 path exists, its hash, terminal status, row and shard counts, solver availability, resources, and protected-file hashes. If it is missing, continue to the blocked-artifact path.
+      1. Add or confirm REQ-* and SCENARIO anchors for independent row replay, exact field closure, missing-upstream handling, shard verification, and leakage audit. Write tests first.
+      2. Recompute all dataset counts and aggregate values from rows. Verify every row against its exact solver receipt and immutable base-instance hash.
+      3. Rebuild train, development, and held lineage sets. Reject any base-lineage overlap, post-held repair, duplicate checkpoint, asymmetric budget, or missing terminal disposition.
+      4. Verify the feature schema is available at decision time. Attack unit IDs, row order, serialization length, family and label shortcuts, future effort, shard order, and censored-row removal.
+      5. Recompute held-cell size floors, hash chains, shard manifest, resume receipts, and reproducibility checksum.
+      6. Set branch_dataset_audited_ready_score=1.0 only when every audit passes. Otherwise set it to 0.0 and name each failure in gate_check_summary.
+      7. Emit per-unit audit rows and a complete terminal artifact for every path, including missing, blocked, partial, null, and valid upstream states.
+      8. Run focused tests, coverage, lint, spec coverage, row lint, exclusion-manifest lint, adversarial verification, exact-solver E2E checks, and git status. Reconcile specs and ops docs.
+
+      Required deliverable: {project_root}/results/experiment_6512_branch_dataset_independent_audit.json.
+      REQUIRED ARTIFACT FIELDS:
+        status:
+          principle: "A terminal audit status is required even when the upstream file is absent."
+        verdict_class:
+          principle: "The class records null, blocked, disqualified, or partial readiness without claiming method value."
+        upstream_artifact_receipt:
+          principle: "Path, existence, hash, status, and imported fields make the audit input explicit."
+        independent_row_recomputation:
+          principle: "The audit must derive counts and metrics from rows rather than task aggregates."
+        exact_receipt_replay_rows:
+          principle: "Per-row replay checks label and validity authority."
+        split_and_lineage_audit:
+          principle: "Base-lineage separation prevents development and held leakage."
+        shard_and_censoring_audit:
+          principle: "Manifest, resume, timeout, and terminal-count checks detect omitted hard units."
+        feature_timing_audit:
+          principle: "Decision-time availability blocks future-effort and outcome leakage."
+        shortcut_attack_matrix:
+          principle: "Attacks test identity, order, length, family, label, and censoring shortcuts."
+        branch_dataset_audited_ready_score:
+          principle: "This exact closed field is the structured gate for Exp6513 and Exp6518."
+        per_unit_rows:
+          principle: "One audit row per dataset unit makes readiness independently recheckable."
+        aggregate_row_recomputation:
+          principle: "All audit summaries must derive from per-unit evidence."
+        gate_check_summary:
+          principle: "Every score-0 or blocked result names the failed check and observed value."
+        preconditions_checked:
+          principle: "Input, solver, and resource checks prevent invented audit results."
+        protected_files_unchanged:
+          principle: "An audit cannot repair the source artifact or protected control files."
+        inference_substrate:
+          principle: "Declaring independent exact replay with no LLM makes the evidence boundary explicit."
+        verifier_is_oracle:
+          principle: "Oracle disclosure prevents exact dataset consistency from becoming a verifier-value claim."
+        field_principles:
+          principle: "Reasons beside fields preserve the gate contract."
+        field_provenance:
+          principle: "Paths, row IDs, reducers, solvers, and hashes make each audit result traceable."
+        random_seed:
+          principle: "A fixed attack order makes the audit reproducible."
+        duration_s:
+          principle: "Measured duration supports authenticity checks."
+        tests_run:
+          principle: "Command receipts show which validation and E2E checks ran."
+        reproducibility_checksum:
+          principle: "A content hash detects later changes to the audit decision."
+        honest_verdict:
+          principle: "A complete_* or blocked_* prefix gives downstream gates a safe terminal state."
+      ACCEPTANCE GATES:
+        - condition: "branch_dataset_audited_ready_score is always present and is 0.0 or 1.0."
+          principle: "A closed field prevents broken gate contracts and missing-field cascades."
+        - condition: "Score 1.0 requires exact receipts, complete shards, sealed splits, and decision-time features."
+          principle: "Every downstream method depends on all four evidence properties."
+        - condition: "The audit never edits Exp6511 or historical inputs."
+          principle: "Independent review must preserve the evidence it evaluates."
+      Set inference_substrate=independent_branch_dataset_row_and_exact_receipt_replay_no_llm. Set verifier_is_oracle=true for label and receipt checks. Set verdict_class=null for valid readiness and blocked or disqualified for invalid inputs.
+
+      Run command: cd {project_root} && .venv/bin/python -m carnot.experiment_6512_branch_dataset_independent_audit --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
