@@ -22,7 +22,7 @@
  },
  "experiment": "outer_loop_arc_gateway_accurate_rescore_20260726",
  "title": "GATEWAY-ACCURATE re-score: the opening RESET is FREE, so the published uncharged-RESET optimism was itself overstated",
- "run_date": "2026-08-22T20:55:53Z",
+ "run_date": "2026-08-22T21:16:35Z",
  "schema": "carnot.arc_gateway_accurate_rescore.v1",
  "charge_model_settled_from_installed_source": {
   "source_spans": {
@@ -136,8 +136,8 @@
    {
     "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
     "exists": true,
-    "sha256": "d801dbd9c9b85039157ade223ffa331937494dcc7ee2e53375d2e3401333b0dc",
-    "bytes": 85130,
+    "sha256": "dd600385f013f194efcd456454d8fb0af9230dbe6201fc0c3580caa34c5b05c9",
+    "bytes": 85218,
     "committed_at_time_of_writing": true,
     "what_it_reported": "published the uncharged-RESET optimism as median 4.62% / max 16.80% over 44 live cells, computed under M1",
     "NOT_MODIFIED": true
@@ -145,8 +145,8 @@
    {
     "path": "results/arc_per_level_reset_attribution_20260726.json",
     "exists": true,
-    "sha256": "cfb2d299156536a5adc7ba85d3c4fba92437f426ed8ab617c987aae92d9215a7",
-    "bytes": 105132,
+    "sha256": "1e64ed3d4fe28c596af7b3c5d013efa6de35c88675d79574ba632803c8e29a94",
+    "bytes": 99493,
     "committed_at_time_of_writing": true,
     "what_it_reported": "published relative score loss from charged resets as median 4.5% / max 12.0% over 7 won cells, computed under M1",
     "NOT_MODIFIED": true
@@ -154,8 +154,8 @@
    {
     "path": "results/outer_loop_arc_reset_charge_attribution_20260726.json",
     "exists": true,
-    "sha256": "fc364c702ccce677f79743595a78529f5d07f35cf80d50e0ef923b99d7a34e51",
-    "bytes": 509779,
+    "sha256": "1f467e4b2ecacf390c29df06d87b49c1474c3fbed7a8c048dc7756605aaf2e7c",
+    "bytes": 509867,
     "committed_at_time_of_writing": true,
     "what_it_reported": "independent bound over the same rows (median 11.4% / max 95.7% worst case) plus the first statement that the opening reset is free",
     "NOT_MODIFIED": true
@@ -2547,7 +2547,7 @@
  "peer_bound_crosscheck": {
   "peer_artifact": "results/outer_loop_arc_reset_charge_attribution_20260726.json",
   "available": true,
-  "peer_sha256": "fc364c702ccce677f79743595a78529f5d07f35cf80d50e0ef923b99d7a34e51",
+  "peer_sha256": "1f467e4b2ecacf390c29df06d87b49c1474c3fbed7a8c048dc7756605aaf2e7c",
   "peer_is_uncommitted_at_time_of_writing": true,
   "peer_first_stated_the_opening_reset_is_free": true,
   "what_agrees": "the peer's independent reading of the same installed source reached the same conclusion -- gateway-charged == actions + resets - n_full_resets, n_full_resets >= 1 -- and its three hand-recomputed cells (vc33 4.51%->0.00%, r11l 16.66%->16.46%, tu93 4.62%->4.06%) are reproduced independently here over 44 cells.",
@@ -3066,9 +3066,9 @@
   "no historical artifact's recorded numbers rewritten; the M1 figures are published beside the M2 figures, not over them",
   "no pre-existing field of scripts/arc_leaderboard_eval.py's row shape changed value; the 2026-07-27 Card-read instrumentation is PURE ADDITION and the fix history is recorded in CORRECTION_OWED.claim_3_a_CODE_correction_not_just_a_number"
  ],
- "git_head": "b55e15fe63527339b1bdb6dbae8d0a7a32de3b74",
+ "git_head": "a89e31ab4bc86cf3f652cdf07f5265438aa20288",
  "provenance": {
-  "git_head": "b55e15fe63527339b1bdb6dbae8d0a7a32de3b74",
+  "git_head": "a89e31ab4bc86cf3f652cdf07f5265438aa20288",
   "code": [
    {
     "path": "scripts/analyze_arc_gateway_accurate_rescore.py",
@@ -3141,11 +3141,11 @@
    "cited_artifacts": [
     {
      "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
-     "sha256": "d801dbd9c9b85039157ade223ffa331937494dcc7ee2e53375d2e3401333b0dc"
+     "sha256": "dd600385f013f194efcd456454d8fb0af9230dbe6201fc0c3580caa34c5b05c9"
     },
     {
      "path": "results/arc_per_level_reset_attribution_20260726.json",
-     "sha256": "cfb2d299156536a5adc7ba85d3c4fba92437f426ed8ab617c987aae92d9215a7"
+     "sha256": "1e64ed3d4fe28c596af7b3c5d013efa6de35c88675d79574ba632803c8e29a94"
     }
    ]
   },
@@ -3556,7 +3556,7 @@
    }
   ]
  },
- "duration_s": 12.742,
+ "duration_s": 12.781,
  "measurement_wall_s": 9649.5,
  "measurement_wall_s_basis": {
   "per_part": {
@@ -3569,5 +3569,5 @@
  "duration_s_principle": "THIS ANALYSER'S runtime only. It is NOT the measurement clock: each part publishes its own `measurement_wall_s`, summed from the upstream row FILES' own elapsed clocks. Conflating the two published an 8-second duration for a 2.54-hour measurement once already.",
  "inference_substrate": "aggregation_from_upstream_artifacts",
  "inference_substrate_principle": "this artifact steps no environment and loads no model. It re-reads persisted rows and re-drives the INSTALLED scorer. Declaring a live substrate here would borrow credibility the pass does not have.",
- "reproducibility_checksum": "sha256:6825293780ee7ab47869fc243b292b25de9031ec6fa55a4d1756fb8e3fe8241e"
+ "reproducibility_checksum": "sha256:0eb8c04bbb583ddb29cf9a8bfc526712e9fd24d657894680bb646f6c2333253d"
 }
