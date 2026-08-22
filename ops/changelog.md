@@ -1,6 +1,47 @@
 # Carnot — Changelog
 
-## 2026-08-21 (test regression fix: no-LLM substrate floors and isolated hardware tests)
+## 2026-08-21/22 (outer-loop, rule-to-check conversions, commits 6ce4a93b6b .. 3449e90782)
+
+Plan: `docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md`.
+Five prose rules became checks that fire; two stale Rule Index entries
+were corrected. Per conversion:
+
+- **Ledger-invariant lint** (`scripts/research_complete_ledger_lint.py`,
+  pre-commit, REQ-CONDUCTOR-ARCHIVE-2): regression lock for truthful
+  archival. Forward-only from 2026-08-22; 0 violations on the current
+  corpus; evidence mode counts the historical damage (13 duplicate ids,
+  17,874 retired-literal rows). Classified in GUARD_TARGETS.
+- **Enum-first verdict_class consumption** (REQ-CONDUCTOR-VERDICT-2):
+  `_verdict_is_untrustworthy` and `classify_artifact` now consume a
+  declared class before any token list. `circular_positive` never
+  labels Complete. 0 corpus artifacts declare the field yet, so no
+  behavior change on the record.
+- **Deny-hook for forbidden commands** (REQ-CONDUCTOR-DENYHOOK-1):
+  PreToolUse Bash hook denies stash / no-verify / publication commands
+  with the rule and alternative named. It denied this session's own
+  spec-writing heredoc minutes after shipping — the boundary works.
+  Plus a WARN-only submission-verb scan at roadmap activation.
+- **Frozen-harness pin guard** (REQ-ARC-WMTE-6621): the lever harness
+  now refuses to run while its frozen Qwen3.5-9B pin differs from the
+  live pin, unless `--allow-retired-pin`. The 2026-08-20 discarded-run
+  incident cannot recur silently on this harness.
+- **PRECONDITIONS_UNDECLARED warn** (REQ-CONDUCTOR-PRECOND-1): the
+  extension the Pre-Launch Preconditions rule asked for. WARN severity
+  chosen on evidence: 101 of 6,832 corpus artifacts would flag.
+
+Infrastructure fixes found blocking the work: the
+determination-preservation hook now runs under `.venv/bin/python`
+(system python3 cannot import carnot; the guard fail-closed refused
+every commit staging a results file), and `check_torch_cuda.py`'s
+probe timeout rose 15s -> 90s (under GPU A/B load the import alone
+exceeded 15s, blocking all commits with a false CPU-build verdict).
+
+Not built, deliberately: the plan's section-5 declines (STE100 lint,
+scope-matcher tightening, prompt-structure hard gates) stay declined.
+Conversion 6 (skip-marker rejection) was stopped before build: 28
+existing test files carry skip constructs, so the plan's "FP risk
+zero" is wrong on the real corpus — it needs a grandfather-list
+design, not a rushed hard gate in conftest.py.
 
 - Fixed `scripts/adversarial_verify.py` so recognized no-LLM substrate aliases that lack a
   specialized floor get a nonzero JSON-work duration floor, clearing the false
