@@ -2480,6 +2480,125 @@ and the terminal verdict starts with `complete_`, `complete_null`, or
 |---|---|---|
 | REQ-BENCH-6505 | Planned (`python/carnot/experiment_6505_sota_formal_challenge_mutations.py`, `results/experiment_6505_sota_formal_challenge_mutations.json`) | Planned (`tests/python/test_experiment_6505_sota_formal_challenge_mutations.py`) |
 
+### REQ-BENCH-6506: V561 Evidence Corrigendum And V562 Lineage Lock SHALL Be Append-Only
+
+Carnot SHALL provide Exp6506 at
+`python/carnot/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6506_v561_evidence_corrigendum_v562_lineage_lock --date 20260822`
+SHALL write
+`results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json`.
+
+Exp6506 SHALL not modify Exp6504, Exp6505, historical roadmaps, or
+`scripts/research_conductor.py`. It SHALL hash those files before and after the
+corrigendum. A changed historical artifact SHALL block
+`v562_exact_branch_ready_score`.
+
+Exp6506 SHALL load Exp6504 from its checked-in artifact and recompute label,
+replay, split, held-cell, stratum, leakage, aggregate, and checksum rows from
+raw rows. It SHALL not trust Exp6504 aggregate fields. If row replay passes, it
+MAY classify Exp6504 as operational benchmark-ready for exact branch-advice
+work. It SHALL NOT reuse the Exp6504 `positive` verdict class as a scientific
+verifier-value claim because `verifier_is_oracle=true`.
+
+Exp6506 SHALL rerun adversarial verification against Exp6504, record the
+observed `VERDICT_CLASS_MISMATCH`, and emit a separate corrigendum disposition.
+The corrected disposition SHALL preserve provenance, declare that exact labels
+and row checks are oracle checks, and keep any top-level Exp6506
+`verdict_class` at `partial` or `null` unless an oracle-distinct scientific
+comparison exists.
+
+Exp6506 SHALL load Exp6505 as a terminal null. It SHALL recompute request
+accounting and accepted-yield rows from Exp6505 rows. It SHALL freeze
+`challenge_generation_complete_score=1.0` and
+`challenge_pool_ready_score=0.0` as terminal evidence. It SHALL not invoke a
+model and SHALL not make the empty mutation pool a downstream prerequisite.
+
+Exp6506 SHALL authorize only the new exact branch-advice lineage. Downstream
+V562 work MAY consume Exp6504 raw instances and exact labels. Downstream V562
+work SHALL NOT consume Exp6505 challenge mutations, learned trajectory energy,
+factor causal value, factor spawning, ARC policy work, hardware acceleration,
+renamed retired scopes, aggregate-only corrections, missing upstream hashes, or
+the old positive-class headline.
+
+The artifact SHALL include `status`, `verdict_class`,
+`cited_upstream_artifacts`, `exp6504_row_recomputation`,
+`exp6504_corrigendum`, `exp6505_terminal_null_receipt`,
+`lineage_decision_rows`, `forbidden_dependency_attack_matrix`,
+`v562_exact_branch_ready_score`, `per_unit_rows`, `gate_check_summary`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL be
+`independent_v561_artifact_replay_no_llm`. `verifier_is_oracle` SHALL be true
+only for exact label, hash, and row checks.
+
+Field principles SHALL be:
+
+- `status`: "A terminal state distinguishes a valid corrigendum from an incomplete replay."
+- `verdict_class`: "The closed enum prevents an exact-oracle self-check from becoming an unsupported positive science claim."
+- `cited_upstream_artifacts`: "Paths, imported fields, and hashes bind every correction to immutable V561 evidence."
+- `exp6504_row_recomputation`: "Independent row replay detects aggregate or classification errors without rewriting history."
+- `exp6504_corrigendum`: "A separate correction preserves provenance and makes the eligible interpretation explicit."
+- `exp6505_terminal_null_receipt`: "The receipt prevents a zero-yield SOTA stream from becoming a hidden prerequisite or a silent rerun."
+- `lineage_decision_rows`: "One row per allowed or forbidden scope makes lineage decisions recheckable."
+- `forbidden_dependency_attack_matrix`: "Adversarial cases ensure renamed or indirect dependencies fail closed."
+- `v562_exact_branch_ready_score`: "A same-roadmap gate prevents downstream work from using quarantined evidence."
+- `per_unit_rows`: "Unit rows let a third party recompute every headline and gate without rerunning V561."
+- `gate_check_summary`: "A blocked verdict must name the failed check and observed value."
+- `preconditions_checked`: "Explicit repository and artifact checks prevent synthesized success when inputs are missing."
+- `protected_files_unchanged`: "Historical roadmaps, artifacts, and the conductor must remain immutable during correction."
+- `inference_substrate`: "Declaring artifact replay with no LLM prevents substrate and SOTA-policy confusion."
+- `verifier_is_oracle`: "Oracle disclosure prevents circular exact checks from supporting a verifier-value headline."
+- `field_principles`: "The artifact must preserve why each evidence field is load-bearing."
+- `field_provenance`: "JSON pointers and reducers make each corrected field independently traceable."
+- `random_seed`: "A fixed attack order makes the fail-closed checks reproducible."
+- `duration_s`: "Measured wall time helps detect implausible or fabricated replay work."
+- `tests_run`: "Command and exit-code receipts show which validation actually ran."
+- `reproducibility_checksum`: "A content hash detects later drift in inputs, rows, or decisions."
+- `honest_verdict`: "A terminal complete_* or blocked_* prefix lets the conductor classify the result safely."
+
+#### SCENARIO-BENCH-6506-ROW-REPLAY: Exp6504 Is Recomputed From Rows
+
+**Given** the immutable Exp6504 artifact
+**When** Exp6506 runs
+**Then** it recomputes labels, exact replays, split rows, held-cell rows,
+strata, leakage attacks, aggregates, and the checksum from raw rows and records
+whether each recomputed value matches the historical artifact.
+
+#### SCENARIO-BENCH-6506-CORRIGENDUM: Positive Oracle Reuse Is Corrected
+
+**Given** Exp6504 declares `verdict_class=positive` with
+`verifier_is_oracle=true`
+**When** Exp6506 reruns adversarial verification
+**Then** it records `VERDICT_CLASS_MISMATCH`, emits a separate corrected
+disposition, and keeps the corrigendum from making a positive scientific
+verifier-value claim.
+
+#### SCENARIO-BENCH-6506-EXP6505-NULL: The Mutation Stream Is Terminal Null
+
+**Given** the Exp6505 artifact
+**When** Exp6506 recomputes request and admission accounting
+**Then** `challenge_generation_complete_score` remains `1.0`,
+`challenge_pool_ready_score` remains `0.0`, accepted mutation count remains
+zero, and no model is invoked.
+
+#### SCENARIO-BENCH-6506-LINEAGE-LOCK: V562 Dependencies Fail Closed
+
+**Given** allowed exact branch-advice inputs and forbidden retired or null
+dependencies
+**When** Exp6506 evaluates lineage rows and attacks
+**Then** only Exp6504 raw instances and exact labels are allowed, while
+Exp6505 challenge rows, retired lineages, renamed scopes, missing hashes,
+aggregate-only corrections, challenge-pool laundering, and positive-class reuse
+fail closed before `v562_exact_branch_ready_score` can equal `1.0`.
+
+## Implementation Status (REQ-BENCH-6506)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6506 | Planned (`python/carnot/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.py`, `results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json`) | Planned (`tests/python/test_experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
