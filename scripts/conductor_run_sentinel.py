@@ -192,6 +192,15 @@ def discover_live_runs(proc_root: Path = Path("/proc")) -> list[dict]:
         out = _flag_value(cmdline, "--out")
         if not out:
             continue
+        # A relative --out means relative to the RUN's cwd, not this
+        # sentinel's — /proc/<pid>/cwd is the trustworthy source. On
+        # failure keep the raw path; a wrong guess would be worse
+        # (adversarial-review finding 4, 2026-08-22).
+        if not Path(out).is_absolute():
+            try:
+                out = str((proc_dir / "cwd").readlink() / out)
+            except OSError:
+                pass
         port = _flag_value(cmdline, "--port")
         env = _environ(proc_dir)
         runs.append(
@@ -257,13 +266,13 @@ def _port_referenced_elsewhere(port: int, server_pid: int, proc_root: Path) -> b
 # ---------------------------------------------------------------------------
 
 
-def read_out_file(path: Path, now_s: float | None = None) -> tuple[list | None, str]:
-    """Read a harness out file. Returns (rows, reason).
+def read_out_file(path: Path, now_s: float | None = None):
+    """Read a harness out file. Returns (doc, reason).
 
     reason values: "" ok; "missing"; "midwrite" (unparseable but fresh —
     the harness rewrites the whole file after every row, so this is a
     normal race, skipped this cycle); "stale_unparseable" (unparseable and
-    old — a real finding); "no_rows_list" (parses, but not a rows run).
+    old — a real finding).
     """
     now_s = time.time() if now_s is None else now_s
     try:
@@ -277,10 +286,24 @@ def read_out_file(path: Path, now_s: float | None = None) -> tuple[list | None, 
         except OSError:
             fresh = False
         return None, "midwrite" if fresh else "stale_unparseable"
-    rows = doc.get("rows") if isinstance(doc, dict) else None
-    if not isinstance(rows, list):
-        return None, "no_rows_list"
-    return rows, ""
+    return doc, ""
+
+
+def extract_rows(doc, lint) -> list:
+    """Rows from a parsed out doc, in document order.
+
+    Top-level `rows` is the harness convention; when it is absent the
+    fallback is the liveness lint's OWN any-depth row walker, so a
+    nested/per-cell corpus shape (the 2026-07 corpora use `cells[i].row`)
+    is not invisible. Adversarial-review finding 2026-08-22: the first
+    ship read top-level `rows` only — a row locator narrower than the
+    lint's row concept.
+    """
+    if isinstance(doc, dict):
+        rows = doc.get("rows")
+        if isinstance(rows, list):
+            return rows
+    return [row for _, row in lint.walk_rows(doc)]
 
 
 def evaluate_rows(rows: list, lint) -> list[dict]:
@@ -546,7 +569,15 @@ def load_live_pin() -> tuple[str | None, str | None]:
 
 
 def _fingerprint(finding: dict, scope: str) -> str:
-    extra = finding.get("log_path") or finding.get("gpu_index") or finding.get("pid") or ""
+    # None-checked, not truthiness: GPU index 0 is a real identity and
+    # `or`-chaining would drop it (the falsy-zero class the QA discipline
+    # names; adversarial-review finding 6, 2026-08-22).
+    extra = ""
+    for key in ("log_path", "gpu_index", "pid"):
+        value = finding.get(key)
+        if value is not None:
+            extra = str(value)
+            break
     return f"{finding['code']}|{scope}|{extra}"
 
 
@@ -606,11 +637,16 @@ def escalate(
     known_issues: Path,
     state_path: Path,
     dry_run: bool = False,
+    notes: list[str] | None = None,
 ) -> dict:
     """Write deduplicated durable escalations; ALWAYS advance the receipt.
 
     `findings` is a list of (scope, finding) pairs, scope being the stable
     identity of what was scanned (an out path, a pid, a gpu index).
+    `notes` are non-finding observations (mid-write skips, missing out
+    files); they land in the state file per SCENARIO-CONDUCTOR-SENTINEL-1-
+    MIDWRITE-RACE so a skipped run leaves a durable trace, not a stdout
+    line nobody keeps.
     """
     state = load_state(state_path)
     now = _now_utc()
@@ -642,6 +678,7 @@ def escalate(
             state["escalated"][fp] = now_iso
         written += 1
     state["last_scan_utc"] = now_iso
+    state["last_scan_notes"] = list(notes or [])
     if not dry_run:
         write_state(state_path, state)
     return {"written": written, "deduplicated": skipped, "last_scan_utc": now_iso}
@@ -684,10 +721,14 @@ def run_scan(
     seen_log_dirs: set[str] = set()
     for run in runs:
         out_path = Path(run["out_path"])
-        rows, reason = read_out_file(out_path)
+        doc, reason = read_out_file(out_path)
         scope = f"pid {run['pid']} {out_path}"
         if reason == "midwrite":
             notes.append(f"{scope}: mid-write race, skipped this cycle")
+        elif reason == "missing":
+            # Absent is not zero: a run whose out file never appears is a
+            # run nothing can supervise — say so rather than skip silently.
+            notes.append(f"{scope}: out file missing, run unsupervisable this cycle")
         elif reason == "stale_unparseable":
             findings.append(
                 (
@@ -699,8 +740,12 @@ def run_scan(
                     },
                 )
             )
-        elif rows is not None:
-            findings.extend((scope, f) for f in evaluate_rows(rows, lint))
+        else:
+            rows = extract_rows(doc, lint)
+            if rows:
+                findings.extend((scope, f) for f in evaluate_rows(rows, lint))
+            else:
+                notes.append(f"{scope}: no rows found in out file yet")
         log_dir = run.get("server_log_dir") or tempfile.gettempdir()
         seen_log_dirs.add(log_dir)
         logs = find_server_logs(Path(log_dir), run.get("port"), max_age_h=log_max_age_h)
@@ -751,6 +796,7 @@ def run_scan(
         known_issues=known_issues,
         state_path=state_path,
         dry_run=dry_run,
+        notes=notes,
     )
     summary.update(
         {

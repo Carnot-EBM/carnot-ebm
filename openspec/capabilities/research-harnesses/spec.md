@@ -8263,7 +8263,12 @@ Rules:
 2. The sentinel SHALL evaluate the run's rows with the SAME per-row
    evaluator the post-hoc gate uses (`check_row` from
    `scripts/arc_llm_on_liveness_lint.py`). It SHALL NOT maintain a second
-   pattern list for row validity.
+   pattern list for row validity. Row LOCATION follows the same rule: when
+   the out file has no top-level `rows` list, the sentinel SHALL fall back
+   to the lint's own `walk_rows` any-depth walker, so a nested per-cell
+   corpus shape is not invisible (2026-08-22 adversarial-review finding:
+   the first ship read top-level `rows` only — a row locator narrower than
+   the lint's row concept).
 3. Two or more CONSECUTIVE LLM-on rows carrying FAIL findings SHALL
    produce an escalation (REQ-CONDUCTOR-SENTINEL-3). The sentinel SHALL
    NOT kill the run.
