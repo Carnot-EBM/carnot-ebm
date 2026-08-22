@@ -1,6 +1,18 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-08-22 (conductor self-supervision shipped: the run sentinel
+**Last Updated:** 2026-08-22, later (merge-preserve shipped: analyzer rebuilds now
+carry hand-authored keys — `rebuild_note_*` and freshness acknowledgements —
+instead of deleting them, closing the 2026-08-21 three-hit incident.
+`scripts/artifact_merge_preserve.py`, wired into all 10 `analyze_*.py` write
+sites; owned set derived from the generated payload, never a hand list;
+unreadable prior artifact refuses the rebuild (fail closed). Proven on the real
+incident artifact (7 notes + 25 acks byte-identical) and by a live E2E rebuild;
+5 mutations RED->GREEN. Freshness lint reconciled by its own remedy: 3 artifacts
+rebuilt (only build metadata moved — no correction owed), acknowledgements added
+where row sources are deleted scratch. REQ-OPS-REBUILD-PRESERVE-1; details in
+the changelog entry of the same date.)
+
+Prior: 2026-08-22 (conductor self-supervision shipped: the run sentinel
 reads live-run validity signals in flight — invalid-row streaks via the liveness
 lint's own `check_row`, llama-server allocation failures, stranded VRAM, orphaned
 servers, wrong loaded model — and escalates durably with dedupe and a state-file
