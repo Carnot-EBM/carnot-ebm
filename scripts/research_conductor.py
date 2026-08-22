@@ -4055,6 +4055,49 @@ def _archive_current_milestone(push: bool = True) -> bool:
     return True
 
 
+# Submission verbs that may not appear as imperative steps in a task
+# prompt: external publication is OPERATOR-ONLY (CLAUDE.md). Each entry is
+# (label, pattern). `openreview` alone is enough in a prompt scan only
+# when paired with a submit/upload verb nearby — the bare name appears
+# legitimately in literature discussion.
+_SUBMISSION_VERB_PATTERNS: tuple[tuple[str, "re.Pattern[str]"], ...] = (
+    ("arxiv submit/upload", re.compile(r"\barxiv\s+(?:submit|upload)\b", re.IGNORECASE)),
+    (
+        "openreview submission",
+        re.compile(r"\bopenreview\b[\s\S]{0,80}?\b(?:submi\w*|upload\w*)\b", re.IGNORECASE),
+    ),
+    ("gh release create", re.compile(r"\bgh\s+release\s+create\b")),
+    ("twine upload", re.compile(r"\btwine\s+upload\b")),
+)
+
+
+def _submission_verb_warnings(roadmap: dict) -> list[str]:
+    """WARN-only scan for submission verbs in task prompts (REQ-CONDUCTOR-DENYHOOK-1).
+
+    Layer 2 of the Operator-Only External Publication enforcement. WARN,
+    never HARD: the honest phrasing "do NOT run arxiv submit" trips a
+    text scan (negation blindness), so the hard boundary lives in the
+    harness deny-hook, not here. A task carrying an `operator_override`
+    (>=10 chars, the exclusion-lint convention) is skipped.
+    """
+    out: list[str] = []
+    for task in roadmap.get("tasks") or []:
+        if not isinstance(task, dict):
+            continue
+        override = task.get("operator_override")
+        if isinstance(override, str) and len(override.strip()) >= 10:
+            continue
+        text = " ".join(str(task.get(k, "") or "") for k in ("title", "prompt", "description"))
+        hits = [label for label, pattern in _SUBMISSION_VERB_PATTERNS if pattern.search(text)]
+        if hits:
+            out.append(
+                f"{task.get('id', '?')}: prompt contains submission verb(s) "
+                f"{hits} — external publication is OPERATOR-ONLY (CLAUDE.md); "
+                "the task must end at package + operator checklist"
+            )
+    return out
+
+
 def _activate_next_roadmap(push: bool = True) -> bool:
     """Swap research-roadmap-next.yaml into research-roadmap.yaml.
 
@@ -4266,6 +4309,18 @@ def _activate_next_roadmap(push: bool = True) -> bool:
                 "proceeding without Layer 2 pre-emit check",
                 _e,
             )
+
+        # Operator-Only External Publication pre-emit WARN (2026-08-21,
+        # REQ-CONDUCTOR-DENYHOOK-1 layer 2). WARN, never HARD: the honest
+        # phrasing "do NOT run arxiv submit" would trip a hard block — the
+        # QA-Layer rule's negation-blindness class. The hard boundary is
+        # the harness deny-hook (scripts/deny_forbidden_bash_commands.py).
+        try:
+            _rd = yaml.safe_load(NEXT_ROADMAP_FILE.read_text()) or {}
+            for _w in _submission_verb_warnings(_rd):
+                logger.warning("Submission-verb WARN: %s", _w)
+        except Exception as _e:
+            logger.warning("Submission-verb scan skipped (%s)", _e)
 
         # ARC-AGI-3 standing-floor pre-emit lint (2026-07-08 operator directive:
         # "wire the mechanical enforcement too, since it already failed once").
