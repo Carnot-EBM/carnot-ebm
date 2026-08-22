@@ -1,0 +1,863 @@
+{
+  "status": "blocked_branch_dataset_independent_audit",
+  "verdict_class": "blocked",
+  "upstream_artifact_receipt": {
+    "path": "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+    "absolute_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+    "exists": false,
+    "sha256": "missing",
+    "json_readable": false,
+    "json_error": null,
+    "status": null,
+    "verdict_class": null,
+    "terminal_status": false,
+    "row_field_used": null,
+    "row_count": 0,
+    "shard_count": 0,
+    "imported_fields": []
+  },
+  "independent_row_recomputation": {
+    "row_field_used": null,
+    "row_count": 0,
+    "row_id_count": 0,
+    "duplicate_row_ids": [],
+    "duplicate_row_id_count": 0,
+    "terminal_disposition_count": 0,
+    "missing_terminal_disposition_count": 0,
+    "base_hash_present_count": 0,
+    "exact_receipt_pass_count": 0,
+    "exact_receipt_failure_count": 0,
+    "imported_aggregate_row_count": null,
+    "imported_aggregate_matches": false,
+    "row_recomputation_passed": false
+  },
+  "exact_receipt_replay_rows": [],
+  "split_and_lineage_audit": {
+    "split_lineage_sets": {
+      "train": [],
+      "development": [],
+      "held": []
+    },
+    "split_lineage_counts": {
+      "train": 0,
+      "development": 0,
+      "held": 0
+    },
+    "base_lineage_overlap_pairs": [],
+    "base_lineage_overlap_count": 0,
+    "duplicate_checkpoint_ids": [],
+    "duplicate_checkpoint_count": 0,
+    "post_held_repair_row_ids": [],
+    "post_held_repair_count": 0,
+    "asymmetric_budget_lineages": {},
+    "asymmetric_budget_count": 0,
+    "missing_terminal_disposition_row_ids": [],
+    "missing_terminal_disposition_count": 0,
+    "sealed_split_passed": false
+  },
+  "shard_and_censoring_audit": {
+    "manifest_present": false,
+    "manifest_complete": false,
+    "expected_shard_count": 0,
+    "observed_shard_ids": [],
+    "missing_shard_ids": [],
+    "missing_shard_count": 0,
+    "hash_chain_length": 0,
+    "hash_chain_complete": true,
+    "resume_receipt_count": 0,
+    "resume_receipts_present": true,
+    "terminal_row_count_observed": 0,
+    "terminal_row_count_declared": null,
+    "terminal_count_matches": true,
+    "censored_row_count_observed": 0,
+    "censored_row_count_declared": null,
+    "censored_count_matches": true,
+    "shard_and_censoring_passed": false
+  },
+  "feature_timing_audit": {
+    "feature_schema_present": false,
+    "feature_count": 0,
+    "feature_names": [],
+    "unavailable_feature_names": [],
+    "forbidden_feature_names_by_attack": {},
+    "decision_time_values_allowed": [
+      "before_solver",
+      "decision_time",
+      "pre_decision",
+      "static_instance"
+    ],
+    "feature_timing_passed": false
+  },
+  "shortcut_attack_matrix": {
+    "random_seed": 6512,
+    "attack_order": [
+      "unit_identity",
+      "row_order",
+      "serialization_length",
+      "family",
+      "label",
+      "future_effort",
+      "shard_order",
+      "censored_row_removal"
+    ],
+    "rows": [
+      {
+        "attack_id": "unit_identity",
+        "leaked_fields": [],
+        "fail_closed": true,
+        "observed_ready_score_if_only_this_attack": 0.0,
+        "spec_refs": [
+          "REQ-BENCH-6512",
+          "SCENARIO-BENCH-6512-LEAKAGE"
+        ],
+        "attack_row_hash": "sha256:b3eeb5249e87250ac5e11366924656d71cee4de309216f1b4deac1a66aaff543"
+      },
+      {
+        "attack_id": "row_order",
+        "leaked_fields": [],
+        "fail_closed": true,
+        "observed_ready_score_if_only_this_attack": 0.0,
+        "spec_refs": [
+          "REQ-BENCH-6512",
+          "SCENARIO-BENCH-6512-LEAKAGE"
+        ],
+        "attack_row_hash": "sha256:97d0fad50141c45d9d5349053414603a5f67aec175eb0eecf681071fc92daa77"
+      },
+      {
+        "attack_id": "serialization_length",
+        "leaked_fields": [],
+        "fail_closed": true,
+        "observed_ready_score_if_only_this_attack": 0.0,
+        "spec_refs": [
+          "REQ-BENCH-6512",
+          "SCENARIO-BENCH-6512-LEAKAGE"
+        ],
+        "attack_row_hash": "sha256:a977f965e4e9a50f9981d853a1bb9c1fa4fb6deb9e6e902f38580c9e32ac0334"
+      },
+      {
+        "attack_id": "family",
+        "leaked_fields": [],
+        "fail_closed": true,
+        "observed_ready_score_if_only_this_attack": 0.0,
+        "spec_refs": [
+          "REQ-BENCH-6512",
+          "SCENARIO-BENCH-6512-LEAKAGE"
+        ],
+        "attack_row_hash": "sha256:0dbe64be9e42937b8eaab38cf1bbe924fbb02855d9b2e75813777a3dbdba679a"
+      },
+      {
+        "attack_id": "label",
+        "leaked_fields": [],
+        "fail_closed": true,
+        "observed_ready_score_if_only_this_attack": 0.0,
+        "spec_refs": [
+          "REQ-BENCH-6512",
+          "SCENARIO-BENCH-6512-LEAKAGE"
+        ],
+        "attack_row_hash": "sha256:a6b02017a5c123334767bb14d590c993933995f9117333ec76d6c53486dca67a"
+      },
+      {
+        "attack_id": "future_effort",
+        "leaked_fields": [],
+        "fail_closed": true,
+        "observed_ready_score_if_only_this_attack": 0.0,
+        "spec_refs": [
+          "REQ-BENCH-6512",
+          "SCENARIO-BENCH-6512-LEAKAGE"
+        ],
+        "attack_row_hash": "sha256:66fa38083178127d97a13ffd79ad34d18f8aeeb85211f58078e4e486a0c7a511"
+      },
+      {
+        "attack_id": "shard_order",
+        "leaked_fields": [],
+        "fail_closed": true,
+        "observed_ready_score_if_only_this_attack": 0.0,
+        "spec_refs": [
+          "REQ-BENCH-6512",
+          "SCENARIO-BENCH-6512-LEAKAGE"
+        ],
+        "attack_row_hash": "sha256:490f5ba2e7b7d0d176fbe96811cedee2f4cca9a7731b01d915ce222b84cac37e"
+      },
+      {
+        "attack_id": "censored_row_removal",
+        "leaked_fields": [],
+        "fail_closed": true,
+        "observed_ready_score_if_only_this_attack": 0.0,
+        "spec_refs": [
+          "REQ-BENCH-6512",
+          "SCENARIO-BENCH-6512-LEAKAGE"
+        ],
+        "attack_row_hash": "sha256:c36fbfe467c7ae16aee768a3df59544b6aca14dd53c374a478f09df0f78d2116"
+      }
+    ],
+    "failed_attack_ids": [],
+    "all_attacks_fail_closed": true
+  },
+  "branch_dataset_audited_ready_score": 0.0,
+  "per_unit_rows": [],
+  "aggregate_row_recomputation": {
+    "row_count": 0,
+    "exact_receipt_replay_pass_count": 0,
+    "split_counts": {},
+    "terminal_disposition_counts": {},
+    "shard_counts": {},
+    "unit_row_hash_chain": [],
+    "unit_row_reducer": "aggregate_row_recomputation_from_per_unit_rows"
+  },
+  "gate_check_summary": [
+    {
+      "check": "upstream_exists",
+      "expected": "true",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+      "score_if_unfixed": 0.0,
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ]
+    },
+    {
+      "check": "independent_row_recomputation",
+      "expected": "true",
+      "observed": "row_count=0",
+      "score_if_unfixed": 0.0,
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ]
+    },
+    {
+      "check": "split_and_lineage_audit",
+      "expected": "sealed_split_passed=true",
+      "observed": "base_lineage_overlap_count=0 duplicate_checkpoint_count=0 post_held_repair_count=0 asymmetric_budget_count=0 missing_terminal_disposition_count=0",
+      "score_if_unfixed": 0.0,
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ]
+    },
+    {
+      "check": "shard_and_censoring_audit",
+      "expected": "shard_and_censoring_passed=true",
+      "observed": "manifest_complete=False missing_shard_count=0 hash_chain_complete=True resume_receipts_present=True terminal_count_matches=True censored_count_matches=True",
+      "score_if_unfixed": 0.0,
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ]
+    },
+    {
+      "check": "feature_timing_audit",
+      "expected": "feature_timing_passed=true",
+      "observed": "{\"forbidden\":{},\"unavailable\":[]}",
+      "score_if_unfixed": 0.0,
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ]
+    }
+  ],
+  "preconditions_checked": {
+    "planning_date": "20260822",
+    "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+    "upstream_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+    "upstream_exists": false,
+    "upstream_sha256": "missing",
+    "solver_availability": {
+      "z3_python_available": true,
+      "z3_python_version": "4.16.0",
+      "z3_cli_path": "/opt/oss-cad-suite/bin/z3",
+      "exact_solver_available": true
+    },
+    "resources": {
+      "cpu_count": 24,
+      "machine": "x86_64",
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "ram_total_bytes": 134305107968,
+      "ram_available_bytes": 118597627904,
+      "disk_total_bytes": 3953289023488,
+      "disk_free_bytes": 1086675222528
+    },
+    "source_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:58b90773d56e85d20773f38254d750a3f1a443ae294b6ef009e370ffd5ef3a14",
+      "openspec/capabilities/benchmarks/spec.md": "sha256:508bc7c1d0021e4204f6608870f0ca03af7036040f1496eac8c9fbe3804eb63a",
+      "python/carnot/experiment_6512_branch_dataset_independent_audit.py": "sha256:cdb3210ad9ec2d4065c0dfab7063f199012fd612223f28d4d5242a508a9fbb9c",
+      "tests/python/test_experiment_6512_branch_dataset_independent_audit.py": "sha256:c5e7526c33f5175a13d0ae6f2eca742b68ffb47518bf205a65e625ca5afa6155",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+      "scripts/adversarial_verify.py": "sha256:6f9a0895e26cabbf38fcdecfb150591b646f999902bc7cf619616303d33f7045",
+      "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+      "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+      "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json": "missing",
+      "results/experiment_6510_v563_independent_exact_root.json": "sha256:844071ec93ca1fc97503c5c267f2837cda888adef72c34aaf4dbd49d481f8270",
+      "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d"
+    },
+    "protected_hashes_before": {
+      "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json": {
+        "exists": false,
+        "sha256": "missing",
+        "protected_by_exp6512_audit": true
+      },
+      "results/experiment_6510_v563_independent_exact_root.json": {
+        "exists": true,
+        "sha256": "sha256:844071ec93ca1fc97503c5c267f2837cda888adef72c34aaf4dbd49d481f8270",
+        "protected_by_exp6512_audit": true
+      },
+      "results/experiment_6504_exact_structural_benchmark_commitment.json": {
+        "exists": true,
+        "sha256": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "protected_by_exp6512_audit": true
+      },
+      "openspec/capabilities/benchmarks/spec.md": {
+        "exists": true,
+        "sha256": "sha256:508bc7c1d0021e4204f6608870f0ca03af7036040f1496eac8c9fbe3804eb63a",
+        "protected_by_exp6512_audit": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "exists": true,
+        "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "protected_by_exp6512_audit": true
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "exists": true,
+        "sha256": "sha256:58b90773d56e85d20773f38254d750a3f1a443ae294b6ef009e370ffd5ef3a14",
+        "protected_by_exp6512_audit": true
+      },
+      "scripts/adversarial_verify.py": {
+        "exists": true,
+        "sha256": "sha256:6f9a0895e26cabbf38fcdecfb150591b646f999902bc7cf619616303d33f7045",
+        "protected_by_exp6512_audit": true
+      },
+      "scripts/verdict_row_consistency_lint.py": {
+        "exists": true,
+        "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+        "protected_by_exp6512_audit": true
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "sha256": "sha256:8aad61bff3e0ce2920ab3055fd2573fa113a8c081b4265d9afc0438456f4f333",
+        "protected_by_exp6512_audit": true
+      }
+    },
+    "git_status_short": "M openspec/capabilities/benchmarks/spec.md\n M ops/.run_sentinel_state.json\n?? python/carnot/experiment_6512_branch_dataset_independent_audit.py\n?? tests/python/test_experiment_6512_branch_dataset_independent_audit.py"
+  },
+  "protected_files_unchanged": {
+    "files": {
+      "openspec/capabilities/benchmarks/spec.md": {
+        "sha256_before": "sha256:508bc7c1d0021e4204f6608870f0ca03af7036040f1496eac8c9fbe3804eb63a",
+        "sha256_after": "sha256:508bc7c1d0021e4204f6608870f0ca03af7036040f1496eac8c9fbe3804eb63a",
+        "exists_before": true,
+        "exists_after": true,
+        "unchanged": true,
+        "protected_by_exp6512_audit": true
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "sha256_before": "sha256:58b90773d56e85d20773f38254d750a3f1a443ae294b6ef009e370ffd5ef3a14",
+        "sha256_after": "sha256:58b90773d56e85d20773f38254d750a3f1a443ae294b6ef009e370ffd5ef3a14",
+        "exists_before": true,
+        "exists_after": true,
+        "unchanged": true,
+        "protected_by_exp6512_audit": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "sha256_before": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "sha256_after": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "exists_before": true,
+        "exists_after": true,
+        "unchanged": true,
+        "protected_by_exp6512_audit": true
+      },
+      "results/experiment_6504_exact_structural_benchmark_commitment.json": {
+        "sha256_before": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "sha256_after": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "exists_before": true,
+        "exists_after": true,
+        "unchanged": true,
+        "protected_by_exp6512_audit": true
+      },
+      "results/experiment_6510_v563_independent_exact_root.json": {
+        "sha256_before": "sha256:844071ec93ca1fc97503c5c267f2837cda888adef72c34aaf4dbd49d481f8270",
+        "sha256_after": "sha256:844071ec93ca1fc97503c5c267f2837cda888adef72c34aaf4dbd49d481f8270",
+        "exists_before": true,
+        "exists_after": true,
+        "unchanged": true,
+        "protected_by_exp6512_audit": true
+      },
+      "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json": {
+        "sha256_before": "missing",
+        "sha256_after": "missing",
+        "exists_before": false,
+        "exists_after": false,
+        "unchanged": true,
+        "protected_by_exp6512_audit": true
+      },
+      "scripts/adversarial_verify.py": {
+        "sha256_before": "sha256:6f9a0895e26cabbf38fcdecfb150591b646f999902bc7cf619616303d33f7045",
+        "sha256_after": "sha256:6f9a0895e26cabbf38fcdecfb150591b646f999902bc7cf619616303d33f7045",
+        "exists_before": true,
+        "exists_after": true,
+        "unchanged": true,
+        "protected_by_exp6512_audit": true
+      },
+      "scripts/research_conductor.py": {
+        "sha256_before": "sha256:8aad61bff3e0ce2920ab3055fd2573fa113a8c081b4265d9afc0438456f4f333",
+        "sha256_after": "sha256:8aad61bff3e0ce2920ab3055fd2573fa113a8c081b4265d9afc0438456f4f333",
+        "exists_before": true,
+        "exists_after": true,
+        "unchanged": true,
+        "protected_by_exp6512_audit": true
+      },
+      "scripts/verdict_row_consistency_lint.py": {
+        "sha256_before": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+        "sha256_after": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+        "exists_before": true,
+        "exists_after": true,
+        "unchanged": true,
+        "protected_by_exp6512_audit": true
+      }
+    },
+    "changed_paths": [],
+    "all_protected_files_unchanged": true
+  },
+  "inference_substrate": "independent_branch_dataset_row_and_exact_receipt_replay_no_llm",
+  "verifier_is_oracle": true,
+  "field_principles": {
+    "status": "A terminal audit status is required even when the upstream file is absent.",
+    "verdict_class": "The class records null, blocked, disqualified, or partial readiness without claiming method value.",
+    "upstream_artifact_receipt": "Path, existence, hash, status, and imported fields make the audit input explicit.",
+    "independent_row_recomputation": "The audit must derive counts and metrics from rows rather than task aggregates.",
+    "exact_receipt_replay_rows": "Per-row replay checks label and validity authority.",
+    "split_and_lineage_audit": "Base-lineage separation prevents development and held leakage.",
+    "shard_and_censoring_audit": "Manifest, resume, timeout, and terminal-count checks detect omitted hard units.",
+    "feature_timing_audit": "Decision-time availability blocks future-effort and outcome leakage.",
+    "shortcut_attack_matrix": "Attacks test identity, order, length, family, label, and censoring shortcuts.",
+    "branch_dataset_audited_ready_score": "This exact closed field is the structured gate for Exp6513 and Exp6518.",
+    "per_unit_rows": "One audit row per dataset unit makes readiness independently recheckable.",
+    "aggregate_row_recomputation": "All audit summaries must derive from per-unit evidence.",
+    "gate_check_summary": "Every score-0 or blocked result names the failed check and observed value.",
+    "preconditions_checked": "Input, solver, and resource checks prevent invented audit results.",
+    "protected_files_unchanged": "An audit cannot repair the source artifact or protected control files.",
+    "inference_substrate": "Declaring independent exact replay with no LLM makes the evidence boundary explicit.",
+    "verifier_is_oracle": "Oracle disclosure prevents exact dataset consistency from becoming a verifier-value claim.",
+    "field_principles": "Reasons beside fields preserve the gate contract.",
+    "field_provenance": "Paths, row IDs, reducers, solvers, and hashes make each audit result traceable.",
+    "random_seed": "A fixed attack order makes the audit reproducible.",
+    "duration_s": "Measured duration supports authenticity checks.",
+    "tests_run": "Command receipts show which validation and E2E checks ran.",
+    "reproducibility_checksum": "A content hash detects later changes to the audit decision.",
+    "honest_verdict": "A complete_* or blocked_* prefix gives downstream gates a safe terminal state."
+  },
+  "field_provenance": {
+    "status": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_status"
+    },
+    "verdict_class": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_verdict_class"
+    },
+    "upstream_artifact_receipt": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_upstream_artifact_receipt"
+    },
+    "independent_row_recomputation": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_independent_row_recomputation"
+    },
+    "exact_receipt_replay_rows": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_exact_receipt_replay_rows"
+    },
+    "split_and_lineage_audit": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_split_and_lineage_audit"
+    },
+    "shard_and_censoring_audit": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_shard_and_censoring_audit"
+    },
+    "feature_timing_audit": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_feature_timing_audit"
+    },
+    "shortcut_attack_matrix": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_shortcut_attack_matrix"
+    },
+    "branch_dataset_audited_ready_score": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_branch_dataset_audited_ready_score"
+    },
+    "per_unit_rows": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_per_unit_rows"
+    },
+    "aggregate_row_recomputation": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_aggregate_row_recomputation"
+    },
+    "gate_check_summary": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_gate_check_summary"
+    },
+    "preconditions_checked": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_preconditions_checked"
+    },
+    "protected_files_unchanged": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_protected_files_unchanged"
+    },
+    "inference_substrate": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_inference_substrate"
+    },
+    "verifier_is_oracle": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_verifier_is_oracle"
+    },
+    "field_principles": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_field_principles"
+    },
+    "field_provenance": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_field_provenance"
+    },
+    "random_seed": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_random_seed"
+    },
+    "duration_s": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_duration_s"
+    },
+    "tests_run": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_tests_run"
+    },
+    "reproducibility_checksum": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_reproducibility_checksum"
+    },
+    "honest_verdict": {
+      "spec_refs": [
+        "REQ-BENCH-6512"
+      ],
+      "source_paths": [
+        "results/experiment_6511_exact_branch_counterfactual_dataset_v2.json",
+        "results/experiment_6510_v563_independent_exact_root.json",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json",
+        "python/carnot/experiment_6512_branch_dataset_independent_audit.py",
+        "tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+        "openspec/capabilities/benchmarks/spec.md"
+      ],
+      "result_path": "results/experiment_6512_branch_dataset_independent_audit.json",
+      "reducer": "exp6512_honest_verdict"
+    }
+  },
+  "random_seed": 6512,
+  "duration_s": 0.108638,
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6512_branch_dataset_independent_audit.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6512_branch_dataset_independent_audit.py -m pytest tests/python/test_experiment_6512_branch_dataset_independent_audit.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6512_branch_dataset_independent_audit.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6512_branch_dataset_independent_audit.py",
+      "exit_code": 0
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6512_branch_dataset_independent_audit --date 20260822",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6512_branch_dataset_independent_audit.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6512_branch_dataset_independent_audit.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6477_backend_neutral_exact_constraint_record.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6512_branch_dataset_independent_audit --validate",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "exit_code": 0
+    }
+  ],
+  "reproducibility_checksum": "sha256:2a4043cbb5d28bcc5864c7084b993470fa71d1fa0c560d98f121902951869d89",
+  "honest_verdict": "blocked_branch_dataset_independent_audit: upstream_exists=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6511_exact_branch_counterfactual_dataset_v2.json; independent_row_recomputation=row_count=0; split_and_lineage_audit=base_lineage_overlap_count=0 duplicate_checkpoint_count=0 post_held_repair_count=0 asymmetric_budget_count=0 missing_terminal_disposition_count=0; shard_and_censoring_audit=manifest_complete=False missing_shard_count=0 hash_chain_complete=True resume_receipts_present=True terminal_count_matches=True censored_count_matches=True"
+}

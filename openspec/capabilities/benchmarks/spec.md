@@ -2734,6 +2734,131 @@ and `verifier_is_oracle=true` does not support a scientific performance claim.
 |---|---|---|
 | REQ-BENCH-6510 | Implemented (`python/carnot/experiment_6510_v563_independent_exact_root.py`, `results/experiment_6510_v563_independent_exact_root.json`) | Implemented (`tests/python/test_experiment_6510_v563_independent_exact_root.py`) |
 
+### REQ-BENCH-6512: Independent Branch Dataset Audit SHALL Close The Readiness Gate
+
+Carnot SHALL provide Exp6512 at
+`python/carnot/experiment_6512_branch_dataset_independent_audit.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6512_branch_dataset_independent_audit --date 20260822`
+SHALL write
+`results/experiment_6512_branch_dataset_independent_audit.json`.
+
+Exp6512 SHALL audit
+`results/experiment_6511_exact_branch_counterfactual_dataset_v2.json` without
+a conductor gate. It SHALL record whether the upstream path exists, its byte
+hash, terminal status, row count, shard count, solver availability, resource
+state, and protected-file hashes before the audit. If the upstream file is
+missing, null, blocked, partial, unreadable, or invalid, Exp6512 SHALL still
+write a complete terminal artifact with
+`branch_dataset_audited_ready_score=0.0`.
+
+Exp6512 SHALL recompute all dataset counts and aggregate values from dataset
+rows. It SHALL not trust upstream aggregate fields. It SHALL replay exact
+receipt fields per row, check immutable base-instance hashes, rebuild train,
+development, and held lineage sets, and reject base-lineage overlap, post-held
+repair, duplicate checkpoints, asymmetric budgets, missing terminal
+dispositions, incomplete shards, missing resume receipts, broken hash chains,
+bad censoring accounting, and features unavailable at decision time.
+
+Exp6512 SHALL run deterministic shortcut attacks for unit IDs, row order,
+serialization length, family, label, future effort, shard order, and censored
+row removal. The audit SHALL report one per-unit audit row for each upstream
+dataset unit that exists. It SHALL report empty per-unit rows with a named
+missing-upstream failure when no upstream rows exist.
+
+The artifact SHALL include `status`, `verdict_class`,
+`upstream_artifact_receipt`, `independent_row_recomputation`,
+`exact_receipt_replay_rows`, `split_and_lineage_audit`,
+`shard_and_censoring_audit`, `feature_timing_audit`,
+`shortcut_attack_matrix`, `branch_dataset_audited_ready_score`,
+`per_unit_rows`, `aggregate_row_recomputation`, `gate_check_summary`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`. `inference_substrate` SHALL be
+`independent_branch_dataset_row_and_exact_receipt_replay_no_llm`.
+`verifier_is_oracle` SHALL be true for label and receipt checks.
+`verdict_class` SHALL be `null` only when readiness is valid. It SHALL be
+`blocked` or `disqualified` for invalid inputs.
+
+`branch_dataset_audited_ready_score` SHALL always be present and SHALL be
+either `0.0` or `1.0`. It SHALL equal `1.0` only when exact receipts pass,
+shards are complete, splits are sealed by base lineage, and all features are
+available at decision time. Any failed check SHALL set the score to `0.0` and
+name the failed check and observed value in `gate_check_summary`.
+
+Field principles SHALL be:
+
+- `status`: "A terminal audit status is required even when the upstream file is absent."
+- `verdict_class`: "The class records null, blocked, disqualified, or partial readiness without claiming method value."
+- `upstream_artifact_receipt`: "Path, existence, hash, status, and imported fields make the audit input explicit."
+- `independent_row_recomputation`: "The audit must derive counts and metrics from rows rather than task aggregates."
+- `exact_receipt_replay_rows`: "Per-row replay checks label and validity authority."
+- `split_and_lineage_audit`: "Base-lineage separation prevents development and held leakage."
+- `shard_and_censoring_audit`: "Manifest, resume, timeout, and terminal-count checks detect omitted hard units."
+- `feature_timing_audit`: "Decision-time availability blocks future-effort and outcome leakage."
+- `shortcut_attack_matrix`: "Attacks test identity, order, length, family, label, and censoring shortcuts."
+- `branch_dataset_audited_ready_score`: "This exact closed field is the structured gate for Exp6513 and Exp6518."
+- `per_unit_rows`: "One audit row per dataset unit makes readiness independently recheckable."
+- `aggregate_row_recomputation`: "All audit summaries must derive from per-unit evidence."
+- `gate_check_summary`: "Every score-0 or blocked result names the failed check and observed value."
+- `preconditions_checked`: "Input, solver, and resource checks prevent invented audit results."
+- `protected_files_unchanged`: "An audit cannot repair the source artifact or protected control files."
+- `inference_substrate`: "Declaring independent exact replay with no LLM makes the evidence boundary explicit."
+- `verifier_is_oracle`: "Oracle disclosure prevents exact dataset consistency from becoming a verifier-value claim."
+- `field_principles`: "Reasons beside fields preserve the gate contract."
+- `field_provenance`: "Paths, row IDs, reducers, solvers, and hashes make each audit result traceable."
+- `random_seed`: "A fixed attack order makes the audit reproducible."
+- `duration_s`: "Measured duration supports authenticity checks."
+- `tests_run`: "Command receipts show which validation and E2E checks ran."
+- `reproducibility_checksum`: "A content hash detects later changes to the audit decision."
+- `honest_verdict`: "A complete_* or blocked_* prefix gives downstream gates a safe terminal state."
+
+#### SCENARIO-BENCH-6512-MISSING-UPSTREAM: Missing Exp6511 Still Emits A Closed Gate
+
+**Given** the Exp6511 dataset path is absent
+**When** Exp6512 runs
+**Then** it writes a complete terminal artifact with
+`branch_dataset_audited_ready_score=0.0`, `verdict_class=blocked`,
+`honest_verdict` beginning with `blocked_`, an upstream receipt with
+`exists=false`, empty per-unit rows, and a gate-check row naming the missing
+upstream path.
+
+#### SCENARIO-BENCH-6512-ROW-REPLAY: Rows Own Counts And Exact Receipts
+
+**Given** a present branch-counterfactual dataset
+**When** Exp6512 audits it
+**Then** row counts, labels, exact receipts, base hashes, aggregate metrics,
+and terminal dispositions are recomputed from rows rather than imported
+aggregate fields.
+
+#### SCENARIO-BENCH-6512-SPLIT-LINEAGE: Base Lineage Is Sealed
+
+**Given** train, development, and held rows
+**When** Exp6512 rebuilds lineage sets
+**Then** any base-lineage overlap, duplicate checkpoint, post-held repair,
+asymmetric budget, or missing terminal disposition blocks readiness.
+
+#### SCENARIO-BENCH-6512-SHARDS-CENSORING: Shards And Censoring Are Complete
+
+**Given** a shard manifest, resume receipts, and censored rows
+**When** Exp6512 recomputes shard and censoring state
+**Then** missing shards, broken hash chains, missing resume receipts, timeout
+omission, or mismatched terminal counts block readiness.
+
+#### SCENARIO-BENCH-6512-LEAKAGE: Feature Timing And Shortcuts Fail Closed
+
+**Given** decision-time features and adversarial shortcut probes
+**When** Exp6512 audits feature timing
+**Then** future effort, unit ID, row order, serialization length, family, label,
+shard order, and censored-row-removal leakage block readiness.
+
+## Implementation Status (REQ-BENCH-6512)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6512 | Planned (`python/carnot/experiment_6512_branch_dataset_independent_audit.py`, `results/experiment_6512_branch_dataset_independent_audit.json`) | Planned (`tests/python/test_experiment_6512_branch_dataset_independent_audit.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
