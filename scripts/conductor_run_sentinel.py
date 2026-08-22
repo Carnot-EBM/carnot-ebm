@@ -662,11 +662,19 @@ def run_scan(
     state_path: Path | None = None,
     dry_run: bool = False,
     log_max_age_h: float = 24.0,
+    default_log_dir: Path | None = None,
 ) -> dict:
-    """One full scan pass. Returns a summary dict; never signals a process."""
+    """One full scan pass. Returns a summary dict; never signals a process.
+
+    default_log_dir: where the standalone server-log sweep looks when no
+    live run names a log dir. Defaults to the system temp dir (the
+    proposer's own fallback); tests pass a tmp_path so a shared /tmp on a
+    busy box can never leak real findings into a hermetic test.
+    """
     conductor_log = conductor_log or REPO / "ops" / "conductor-log.md"
     known_issues = known_issues or REPO / "ops" / "known-issues.md"
     state_path = state_path or REPO / "ops" / ".run_sentinel_state.json"
+    default_log_dir = default_log_dir or Path(tempfile.gettempdir())
     lint = load_liveness_lint()
     findings: list[tuple[str, dict]] = []
     notes: list[str] = []
@@ -700,10 +708,9 @@ def run_scan(
 
     # B, standalone sweep: recent server logs in the default temp location
     # catch a server whose run already exited (the stranded-fragment shape).
-    default_dir = tempfile.gettempdir()
-    if default_dir not in seen_log_dirs:
-        logs = find_server_logs(Path(default_dir), None, max_age_h=log_max_age_h)
-        findings.extend((f"log sweep {default_dir}", f) for f in evaluate_server_logs(logs))
+    if str(default_log_dir) not in seen_log_dirs:
+        logs = find_server_logs(default_log_dir, None, max_age_h=log_max_age_h)
+        findings.extend((f"log sweep {default_log_dir}", f) for f in evaluate_server_logs(logs))
 
     # C: GPU health.
     snapshot = gpu_snapshot(gpu_runner)
