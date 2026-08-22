@@ -1,6 +1,19 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-08-21 (test regression fix: `simulation` and other recognized no-LLM
+**Last Updated:** 2026-08-22 (conductor self-supervision shipped: the run sentinel
+reads live-run validity signals in flight — invalid-row streaks via the liveness
+lint's own `check_row`, llama-server allocation failures, stranded VRAM, orphaned
+servers, wrong loaded model — and escalates durably with dedupe and a state-file
+receipt. It never kills work. The audit-findings ledger turns flagged claim-audit
+verdicts into OPEN rows that age and escalate weekly until a human writes a
+disposition; it ingested today's two real CLAIM_OVERSTATED findings (exp6478,
+exp6497). Wired: `research_step` per iteration + the orphan-cleanup janitor
+(covers outer-loop runs when the conductor is dead) + milestone close. Validated
+on the REAL 2026-08-22 incident bytes; corpus FP measure: 0 CRITICAL, 3 WARN all
+in the documented 2026-07-26 fault corpus. REQ-CONDUCTOR-SENTINEL-1/2/3,
+REQ-OPS-AUDIT-LEDGER-1. See "Session 2026-08-22 — conductor self-supervision".)
+
+Prior: 2026-08-21 (test regression fix: `simulation` and other recognized no-LLM
 substrate aliases now receive a nonzero JSON-work floor instead of
 `SUBSTRATE_HAS_NO_DURATION_FLOOR`; `deterministic_pipeline_integration_no_llm`
 uses the deterministic-verifier floor. Focused regressions pass: adversarial
@@ -51,6 +64,53 @@ Prior: 2026-07-27 (STOP MODELLING THE
 GATEWAY CHARGE, READ IT: the "gateway-accurate"
 3.69% was a MODEL — the real figure read off the gateway's own scorecard Card is 0.018097 at the
 median, the model is wrong on 17 of 44 cells, and on 6 cells the true sign is NEGATIVE)
+
+## Session 2026-08-22 — conductor self-supervision (outer-loop)
+
+Operator goal: "eventually remove the need for an outer loop to constantly
+keep the conductor and experiments in check." The unifying defect: the
+system writes validity signals and never reads them while a run is alive
+(the 2026-08-22 A/B burned 2.5 hours with every row `llm_on_row_valid:
+false`; only a human reading the field prevented a wrong conclusion about
+the supervisor mechanism itself).
+
+Shipped, spec-anchored (REQ-CONDUCTOR-SENTINEL-1/2/3, REQ-OPS-AUDIT-LEDGER-1;
+design note `docs/research-notes/conductor-self-supervision-2026-08-22.md`):
+
+- `scripts/conductor_run_sentinel.py` — discovers live ARC harness runs from
+  `/proc` cmdline (the trustworthy source), evaluates their rows with the
+  SAME `check_row` the post-hoc liveness lint uses (no second pattern list),
+  scans llama-server stderr logs for unambiguous allocation failures, and
+  checks GPU health (stranded VRAM vs compute apps, orphaned servers with
+  port-reference exoneration, wrong loaded model vs the imported live pin).
+  Escalation: log_step-format `OPERATOR-ATTENTION` rows in
+  `ops/conductor-log.md`, known-issues sections for CRITICAL, fingerprint
+  dedupe (14-day re-arm), `last_scan_utc` receipt written on EVERY run.
+  It never kills a process (source-level test enforces no kill primitive).
+- `scripts/audit_findings_ledger.py` — flagged claim-audit verdicts enter
+  `ops/audit-findings-ledger.md` as append-only OPEN rows; OPEN rows older
+  than 7 days escalate weekly until a human writes ACCEPTED/FIXED/WONTFIX.
+  Unrecognized dispositions fail closed. E2E: ingested the two real
+  CLAIM_OVERSTATED findings from today's report (exp6478, exp6497).
+- Wiring: `research_step` runs the sentinel every iteration through
+  `_run_audit_with_receipt` (receipt = the sentinel's state file); the
+  orphan-cleanup janitor runs it ABOVE its conductor-liveness early-exit
+  (outer-loop-launched runs are the class the conductor cannot see);
+  milestone close runs the ledger right after the claim audit with its own
+  receipt. Conductor picks the change up at its next restart.
+- Validation: incident replay on the REAL bytes (rows -> CRITICAL 3/3;
+  failing server log -> 3 pattern hits). Historical corpus (401 files):
+  0 CRITICAL, 3 WARN — all in the documented 2026-07-26 contention fault
+  corpus (true positives); 100 witness-missing hits confined to the single
+  2026-07-27 first-win control corpus (WARN-only). Live box: 0 findings.
+  9 mutations proven RED then GREEN; 49 tests pass across the new and
+  adjacent conductor suites.
+
+Deliberately NOT built: auto-kill of any process (escalate-only; a false
+stop is worse than a slow human), a new daemon, ledger ingestion of the
+other five audit reports (v1 proves the disposition shape on one), systemd
+unit changes. Still human: ledger dispositions, acting on escalations,
+judging slow-but-valid runs.
 
 ## Session 2026-08-10 - Milestone 2026.08.542 Research Planning
 
