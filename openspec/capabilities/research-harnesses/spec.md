@@ -8049,3 +8049,72 @@ return `⚠️ Research Finding`, not `✅ Complete`, even when a
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-CONDUCTOR-VERDICT-2 | Implemented (`scripts/research_conductor.py:_verdict_is_untrustworthy` enum-first branch; `scripts/in_process_doc_reconcile.py:classify_artifact` enum-first mapping) | Implemented (`tests/python/test_verdict_class_enum_first.py`; mutations: conductor enum branch removed -> RED, circular_positive mapped to Complete -> RED) |
+
+## REQ-CONDUCTOR-DENYHOOK-1: Forbidden Commands SHALL Be Denied At The Harness Layer, With A WARN-Only Prompt Scan Behind Them
+
+Design: `docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md`
+(Conversion 3). Two prose prohibitions become real boundaries:
+CLAUDE.md "Never Stash — Always Commit-First" and "Operator-Only
+External Publication", plus the standing no-`--no-verify` feedback.
+
+**Layer 1 (hard boundary).** `scripts/deny_forbidden_bash_commands.py`
+runs as a `PreToolUse` hook with a `Bash` matcher in
+`.claude/settings.json`. It SHALL deny (exit 2) a Bash tool call whose
+command matches any of:
+
+| Pattern | Rule | Sanctioned alternative |
+|---|---|---|
+| `git stash` (except `list`/`show`) | Never-Stash | `scripts/safe-pull.sh` / commit-first |
+| `git ... --no-verify` | no-skip-hooks feedback | fix the failing hook, retry |
+| `arxiv submit\|upload` | Operator-Only Publication | package + operator checklist |
+| `openreview` | Operator-Only Publication | package + operator checklist |
+| `gh release create` | Operator-Only Publication | package + operator checklist |
+| `twine upload` | PyPI ships via CI trusted publishing | tag a release |
+
+The denial message SHALL name the rule and the sanctioned alternative.
+The hook fails OPEN on unparseable input, deliberately: it is a
+targeted boundary on six command shapes, and failing closed would
+block every Bash call on a harness glitch. Accepted false-positive
+mode: a command ABOUT a forbidden command (a grep for the stash
+pattern, or this very section written via a shell heredoc — observed
+live on 2026-08-21, minutes after the hook shipped) is denied; the
+agent rephrases or routes through a non-Bash tool.
+
+**Layer 2 (WARN-only prompt scan).**
+`scripts/research_conductor.py:_submission_verb_warnings` SHALL scan
+each task's title/prompt/description at roadmap activation and log a
+WARNING per task containing a submission verb (`arxiv submit|upload`,
+`openreview ... submit/upload`, `gh release create`, `twine upload`).
+It SHALL NOT block activation — the honest phrasing "do NOT run arxiv
+submit" would trip a hard block (the QA-Layer rule's
+negation-blindness class). A task with an `operator_override` (>=10
+chars) is skipped.
+
+#### SCENARIO-CONDUCTOR-DENYHOOK-1
+
+Given a Bash tool call invoking a working-tree stash, the hook SHALL
+exit 2 and the message SHALL name `scripts/safe-pull.sh`; given the
+read-only `list` form, it SHALL exit 0.
+
+#### SCENARIO-CONDUCTOR-DENYHOOK-2
+
+Given `git commit --no-verify -m x`, the hook SHALL exit 2; given
+`git commit -m x`, it SHALL exit 0.
+
+#### SCENARIO-CONDUCTOR-DENYHOOK-3
+
+Given each of an arXiv submit command, a command containing
+`openreview`, `gh release create v1.0`, and `twine upload dist/*`,
+the hook SHALL exit 2.
+
+#### SCENARIO-CONDUCTOR-DENYHOOK-4
+
+Given a roadmap task whose prompt contains an arXiv submit step,
+`_submission_verb_warnings` SHALL return one warning naming the task;
+given the same task with an `operator_override`, it SHALL return none.
+
+## Implementation Status (REQ-CONDUCTOR-DENYHOOK-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-CONDUCTOR-DENYHOOK-1 | Implemented (`scripts/deny_forbidden_bash_commands.py`; `.claude/settings.json` PreToolUse Bash hook; `scripts/research_conductor.py:_submission_verb_warnings` wired in the live `_activate_next_roadmap`) | Implemented (`tests/python/test_deny_forbidden_bash_commands.py`; mutations: stash rule removed -> RED, override skip removed -> RED) |

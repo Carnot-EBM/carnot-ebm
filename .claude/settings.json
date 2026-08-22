@@ -10,6 +10,16 @@
             "description": "Block code generation if spec file doesn't exist for the capability being modified"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 scripts/deny_forbidden_bash_commands.py",
+            "description": "Deny git stash / git --no-verify / arxiv submit / openreview / gh release create / twine upload (Never-Stash + Operator-Only External Publication, REQ-CONDUCTOR-DENYHOOK-1)"
+          }
+        ]
       }
     ],
     "PostToolUse": [
