@@ -539,3 +539,46 @@ def test_the_analyser_scores_both_row_schemas_from_live_diagnostics():
     # recomputed-vs-stamped disagreement column becomes uninterpretable.
     for row in (both, nested_only, flat_only):
         assert A.recomputed_lever2_fired(row) == m.hud_lever_fired(row)
+
+
+# --- REQ-ARC-WMTE-6640 / SCENARIO-ARC-WMTE-6640-5 (supervisor ledger plumbing) ---
+
+
+def test_scenario_6640_5_supervisor_row_field_never_absent_never_none():
+    """SCENARIO-ARC-WMTE-6640-5: the helper states the off case, converts a
+    raising diagnostics call to an error marker, and refuses a non-dict. A
+    None or missing value would read as zero to a flat consumer -- the exact
+    ambiguity that made the 2026-08-21 supervisor A/B unreadable."""
+
+    m = _harness()
+
+    class _Off:
+        def trajectory_supervisor_diagnostics(self):
+            return {"enabled": False}
+
+    class _Raises:
+        def trajectory_supervisor_diagnostics(self):
+            raise RuntimeError("boom")
+
+    class _NonDict:
+        def trajectory_supervisor_diagnostics(self):
+            return None
+
+    assert m.supervisor_row_field(_Off()) == {"enabled": False}
+    assert m.supervisor_row_field(_Raises()) == {"error": "RuntimeError:boom"}
+    assert m.supervisor_row_field(_NonDict()) == {"error": "non_dict_diagnostics:NoneType"}
+
+
+def test_scenario_6640_5_run_cell_emits_the_field_on_both_paths():
+    """SCENARIO-ARC-WMTE-6640-5: `run_cell` assigns `trajectory_supervisor`
+    on the crash path AND the success path, both through the one shared
+    helper. Source-level pin, same style as the induce-note wiring guard:
+    the crash path returns before `row["wall_s"]` is ever assigned, so the
+    two sides of that split are the two paths."""
+
+    source = _HARNESS.read_text()
+    call = 'row["trajectory_supervisor"] = supervisor_row_field(policy)'
+    head, tail = source.split('row["wall_s"]', 1)
+    assert call in head, "the CRASH path must carry the supervisor ledger too"
+    assert call in tail, "the success path must carry the supervisor ledger"
+    assert source.count(call) == 2, "exactly one assignment per path, via the shared helper"

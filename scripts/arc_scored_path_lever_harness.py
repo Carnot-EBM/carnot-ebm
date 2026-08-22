@@ -533,6 +533,24 @@ def _hazard_verdict(hz: dict, row: dict) -> str:
     return "FIRED_AND_PRUNED" if int(hz.get("rows_pruned") or 0) else "FIRED_NO_PRUNE"
 
 
+def supervisor_row_field(policy) -> dict:
+    """REQ-ARC-WMTE-6640 rule 5: the row's `trajectory_supervisor` value.
+
+    Never absent and never None. The policy answers `{"enabled": False}` when
+    the supervisor is off; a raising diagnostics call becomes an error marker
+    instead of taking the row down. An absent field reads as zero to a flat
+    consumer — that ambiguity cost a full day of wrong A/B reporting on
+    2026-08-21, so the field is emitted on every row, both paths."""
+
+    try:
+        d = policy.trajectory_supervisor_diagnostics()
+    except Exception as exc:  # instrumentation must never mask the run itself
+        return {"error": f"{type(exc).__name__}:{exc}"}
+    if not isinstance(d, dict):
+        return {"error": f"non_dict_diagnostics:{type(d).__name__}"}
+    return d
+
+
 def _action_key(move: dict) -> str:
     kind = move.get("kind")
     data = move.get("data") or {}
@@ -690,6 +708,9 @@ def run_cell(
             n_resets=None,
             n_frames=None,
         )
+        # The supervisor ledger is meaningful after a crash too: whatever it
+        # observed before the exception is what it observed (REQ-ARC-WMTE-6640).
+        row["trajectory_supervisor"] = supervisor_row_field(policy)
         if prev_disable is None:
             os.environ.pop("CARNOT_ARC_DISABLE_INDUCTION", None)
         else:
@@ -862,6 +883,12 @@ def run_cell(
         "UNINTERPRETABLE_NOT_FITTED",
         "ERROR",
     )
+
+    # ---- trajectory-supervisor redirect ledger (REQ-ARC-WMTE-6640) --------------------------
+    # The 2026-08-21 supervisor A/B was unreadable because no row carried this: the ledger
+    # existed on the policy and nothing read it. `{"enabled": False}` when the supervisor is
+    # off — the off state must be stated, never inferred from an absent key.
+    row["trajectory_supervisor"] = supervisor_row_field(policy)
 
     # ---- outcome + the NAV/CLICK action mix (the TASK-2 target sizing) ---------------------
     recs = []
