@@ -186,3 +186,7 @@ CHECK_TIMED_OUT
 
 - **New top-five entrant:** **Akhil Tolani** (`akhiltolani`) is now **#4 at 2.73**. No public ARC-AGI-3 notebook, dataset, repository, discussion, or technique writeup was found. **Classification: unknown**; no Carnot lever can be assigned. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [Kaggle profile](https://www.kaggle.com/akhiltolani/code)
 
+## 2026-08-22 13:36 UTC -- NEW
+
+- **New top-five entrant:** **AbeLincoln1865** is now **#5 at 2.72**. No public ARC-AGI-3 notebook, repository, discussion, or technique writeup was found. **Exploit vs. transferable classification: unknown**; no Carnot lever can be assigned. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [Kaggle profile](https://www.kaggle.com/abelincoln1865/code)
+
