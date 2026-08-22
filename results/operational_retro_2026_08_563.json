@@ -1,0 +1,41 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.563",
+  "generated_at": "2026-08-22T22:18:34Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.2,
+  "experiments_completed": 2,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Fresh independent V563 exact-evidence root",
+      "duration_minutes": 0.16,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Independent branch-counterfactual dataset audit",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Two synthesis-only experiments completed in 0.2 reconstructed minutes, with no compute-bound experiments. The GPU snapshot therefore does not establish a compute-task idle fault, and no concurrent-model DualGPURunner requirement applied.",
+  "bottlenecks_identified": [
+    "Timing observability was the only identifiable limitation: disk-mtime reconstruction replaced live commit timing and exposed no task-phase attribution.",
+    "No execution bottleneck was established because both completed experiments were synthesis-only and no compute-bound work existed for GPU or runner diagnosis."
+  ],
+  "improvements_suggested": [
+    "Persist monotonic task-start, task-end, and phase timestamps in each experiment artifact so retrospective timing does not depend on disk modification times or milestone commits.",
+    "Record task-scoped workload class, model count, GPU samples, and runner choice, while marking compute dispatch fields not applicable for synthesis-only work.",
+    "Surface an observability warning whenever the live git-log timing path contains no milestone commits and fallback reconstruction is used."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add monotonic task and phase timing receipts to every experiment artifact.",
+    "Attach workload-class, model-count, GPU, and runner metadata to the task that produced each timing row.",
+    "Flag zero-commit timing windows and retain explicit fallback provenance in the retrospective input."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "GPU utilization and DualGPURunner are not valid optimization targets for this synthesis-only closeout. Task-linked timing must improve before the evidence can support a nonzero speedup estimate."
+}
