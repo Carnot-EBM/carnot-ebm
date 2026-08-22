@@ -16293,3 +16293,4 @@ code |
 | 2026-08-22 23:15 UTC | Milestone 2026.08.564 activated | OK | 14 tasks queued |
 | 2026-08-22 23:39 UTC | V564 terminal evidence handoff and retired-lineage | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6513_v564_te |
 | 2026-08-22 23:45 UTC | V564 terminal evidence handoff and retired-lineage | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6513_v564_te |
+| 2026-08-22 23:52 UTC | V564 terminal evidence handoff and retired-lineage | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6513_v564_te |
