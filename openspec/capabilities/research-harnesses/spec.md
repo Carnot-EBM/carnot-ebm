@@ -8245,3 +8245,166 @@ identical before and after the run.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-OPS-CLAIM-REFUTATION-6650 | `scripts/experiment_claim_audit.py`, wired as a milestone-close audit in `research_conductor.py` via `_run_audit_with_receipt` (receipt `ops/experiment_claim_audit_report.md`). | `tests/python/test_experiment_claim_audit.py`. |
+
+## REQ-CONDUCTOR-SENTINEL-1: A Run Sentinel SHALL Read Live-Run Validity Signals While The Run Is Alive
+
+Design: `docs/research-notes/conductor-self-supervision-2026-08-22.md`.
+Origin incident (2026-08-22): a supervisor A/B ran ~2.5 hours with every
+row stamped `llm_on_row_valid: false`, and nothing read the stamp until a
+human did. The system writes validity signals; the sentinel is the
+component that reads them in flight.
+
+Rules:
+
+1. The sentinel SHALL discover live ARC harness runs from `/proc`: a
+   python process whose cmdline names a `scripts/arc_*.py` file and
+   carries an `--out <path>.json` argument. The cmdline is the source of
+   truth; a launcher's own claims are not consulted.
+2. The sentinel SHALL evaluate the run's rows with the SAME per-row
+   evaluator the post-hoc gate uses (`check_row` from
+   `scripts/arc_llm_on_liveness_lint.py`). It SHALL NOT maintain a second
+   pattern list for row validity.
+3. Two or more CONSECUTIVE LLM-on rows carrying FAIL findings SHALL
+   produce an escalation (REQ-CONDUCTOR-SENTINEL-3). The sentinel SHALL
+   NOT kill the run.
+4. The sentinel SHALL locate the run's llama-server stderr log via
+   `CARNOT_ARC_SERVER_LOG_DIR` read from `/proc/<pid>/environ` (fallback:
+   the system temp dir), under `carnot_llama_server_logs/`, matched to
+   the run's `--port`. An unambiguous server failure line (allocation
+   failure, failed context creation, CUDA error, out of memory,
+   ggml_abort) SHALL produce a CRITICAL escalation.
+5. An out file that fails to parse SHALL be treated as a mid-write race
+   and skipped only while its mtime is fresh (< 60 s). A stale
+   unparseable out file SHALL produce a finding. A missing witness field
+   on an LLM-on row is a finding, never an implicit pass.
+
+#### SCENARIO-CONDUCTOR-SENTINEL-1-INCIDENT-REPLAY
+
+Given a live run whose out file holds three LLM-on rows all carrying
+FAIL findings, and a server log containing
+`ggml_gallocr_reserve_n_impl: failed to allocate CUDA0 buffer`, the
+sentinel SHALL emit a CRITICAL escalation naming the run and the failure
+line, and SHALL NOT signal the run's process.
+
+#### SCENARIO-CONDUCTOR-SENTINEL-1-SINGLE-INVALID-ROW
+
+Given a live run whose out file holds one FAIL row followed by a valid
+LLM-on row, the sentinel SHALL emit no consecutive-invalid escalation.
+
+#### SCENARIO-CONDUCTOR-SENTINEL-1-MIDWRITE-RACE
+
+Given an out file that fails to parse and whose mtime is younger than
+60 s, the sentinel SHALL skip the run this cycle and record the skip in
+its state file.
+
+## REQ-CONDUCTOR-SENTINEL-2: The Sentinel SHALL Check GPU Resource Health From /proc And nvidia-smi
+
+Rules:
+
+1. Stranded VRAM: per GPU, `memory.used` minus the sum of compute-app
+   `used_memory` beyond a 1024 MiB slack SHALL produce a finding. The
+   2026-08-22 incident fragment was 3,744 MiB; the healthy live box
+   measures 4-15 MiB unaccounted.
+2. Orphaned llama-server: a llama-server process whose parent is init
+   (PPID 1) and whose cgroup names no systemd service SHALL produce a
+   WARN finding. The sentinel SHALL NOT kill it.
+3. Wrong model: a llama-server whose `-m` path does not contain the live
+   generator pin (`ARC_LIVE_GENERATOR_REPO_SUBSTR`, imported, never
+   duplicated) SHALL produce a WARN finding.
+4. Fail closed and say so: when `nvidia-smi` cannot run, or the live-pin
+   import fails, the sentinel SHALL emit a `*_check_unavailable` finding
+   rather than silently skipping the check.
+
+#### SCENARIO-CONDUCTOR-SENTINEL-2-STRANDED-FRAGMENT
+
+Given a GPU reporting 3,744 MiB used with no compute app accounting for
+it, the sentinel SHALL emit a stranded-VRAM finding naming the GPU and
+the unaccounted size.
+
+#### SCENARIO-CONDUCTOR-SENTINEL-2-HEALTHY-BOX
+
+Given GPUs whose used memory matches their compute apps within slack,
+one pinned llama-server owned by a live parent, the sentinel SHALL emit
+no GPU findings.
+
+#### SCENARIO-CONDUCTOR-SENTINEL-2-ORPHAN
+
+Given a llama-server with PPID 1 and a user-session cgroup, the sentinel
+SHALL emit a WARN finding and SHALL NOT signal the process.
+
+## REQ-CONDUCTOR-SENTINEL-3: Escalations SHALL Be Durable, Deduplicated, And Receipted
+
+Rules:
+
+1. Every finding SHALL append a row to `ops/conductor-log.md` in the
+   conductor's `log_step` row format, with the task cell prefixed
+   `OPERATOR-ATTENTION:`. Journald retention on this host is hours; only
+   the tracked log is durable.
+2. CRITICAL findings SHALL also append a dated
+   `## OPERATOR-ATTENTION` section to `ops/known-issues.md` (the parked-
+   milestone precedent).
+3. The sentinel SHALL deduplicate by finding fingerprint in its state
+   file, so a repeated scan does not repeat an unchanged finding.
+4. The sentinel SHALL write `last_scan_utc` to its state file on EVERY
+   run, findings or none. The state file is the sentinel's receipt; a
+   caller can detect a sentinel that stopped running.
+
+#### SCENARIO-CONDUCTOR-SENTINEL-3-DEDUPE
+
+Given the same finding on two consecutive scans, the sentinel SHALL
+write exactly one conductor-log row.
+
+#### SCENARIO-CONDUCTOR-SENTINEL-3-RECEIPT
+
+Given a scan over a healthy system, the sentinel SHALL still advance
+`last_scan_utc` in its state file.
+
+## REQ-OPS-AUDIT-LEDGER-1: Flagged Audit Findings SHALL Enter A Disposition Ledger That Ages And Escalates
+
+Origin: the claim audit found two CLAIM_OVERSTATED verdicts on
+2026-08-22 and nobody decided anything. An audit whose findings
+accumulate unread is the next silent-but-trusted layer.
+
+Rules:
+
+1. A ledger tool SHALL parse flagged verdicts from
+   `ops/experiment_claim_audit_report.md` and maintain
+   `ops/audit-findings-ledger.md`: one row per finding with first-seen
+   date, artifact, verdict, and disposition.
+2. New findings enter as `OPEN`. The tool SHALL never rewrite or remove
+   an existing row (never-prune). A human closes a row by editing its
+   disposition to `ACCEPTED`, `FIXED`, or `WONTFIX`.
+3. An `OPEN` row older than 7 days SHALL escalate through the
+   REQ-CONDUCTOR-SENTINEL-3 writer, and SHALL re-escalate on a weekly
+   age bucket until the disposition changes.
+4. A missing audit report is a no-op (the audit may not have run); a
+   malformed ledger row is a finding, not a silent skip.
+
+#### SCENARIO-OPS-AUDIT-LEDGER-1-INGEST
+
+Given a claim-audit report with one CLAIM_OVERSTATED verdict absent from
+the ledger, the tool SHALL append exactly one OPEN row.
+
+#### SCENARIO-OPS-AUDIT-LEDGER-1-IDEMPOTENT
+
+Given a report whose findings are all already in the ledger, the tool
+SHALL append nothing and rewrite nothing.
+
+#### SCENARIO-OPS-AUDIT-LEDGER-1-AGING
+
+Given an OPEN row first seen 8 days ago, the tool SHALL emit an
+escalation naming the finding and its age.
+
+#### SCENARIO-OPS-AUDIT-LEDGER-1-HUMAN-CLOSE
+
+Given a row whose disposition a human edited to FIXED, the tool SHALL
+emit no escalation for it and SHALL leave the row untouched.
+
+## Implementation Status (REQ-CONDUCTOR-SENTINEL-1/2/3, REQ-OPS-AUDIT-LEDGER-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-CONDUCTOR-SENTINEL-1 | Pending | Pending |
+| REQ-CONDUCTOR-SENTINEL-2 | Pending | Pending |
+| REQ-CONDUCTOR-SENTINEL-3 | Pending | Pending |
+| REQ-OPS-AUDIT-LEDGER-1 | Pending | Pending |
