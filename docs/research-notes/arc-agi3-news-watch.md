@@ -181,3 +181,7 @@ CHECK_TIMED_OUT
 
 - The host published an analysis of 500 failed submissions: roughly one-third had no traceable visible notebook error, while almost 20% required a GPU but had none enabled; all other identified causes were individually below 5%. [Kaggle host post](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
 
+## 2026-08-22 13:15 UTC -- check failed
+
+CHECK_TIMED_OUT
+
