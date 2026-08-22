@@ -16268,3 +16268,4 @@ code |
 | 2026-08-22 17:25 UTC | Local-SOTA one-shot formal challenge mutation stre | OK | 89 passed, 1 warning in 11.64s |
 | 2026-08-22 18:18 UTC | Plan milestone 2026.08.562 | OK | 4 tasks proposed |
 | 2026-08-22 18:20 UTC | Milestone 2026.08.562 activated | OK | 4 tasks queued |
+| 2026-08-22 18:42 UTC | V561 evidence corrigendum and V562 exact-branch li | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6506_v561_ev |
