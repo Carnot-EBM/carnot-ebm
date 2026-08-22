@@ -1,5 +1,43 @@
 # Carnot — Changelog
 
+## 2026-08-22 (outer-loop, conductor self-supervision: run sentinel + audit-findings ledger)
+
+Operator directive: "the goal here is to eventually remove the need for an
+outer loop to constantly keep the conductor and experiments in check."
+Origin incident, same day: a supervisor A/B ran 2.5 hours with every row
+`llm_on_row_valid: false` (llama-server allocation failure mid-run, a
+stranded 3,744 MiB VRAM fragment) and nothing read the stamp until a human
+did. The unifying defect: the system writes validity signals and never
+reads them while the run is alive.
+
+- **Design note**: `docs/research-notes/conductor-self-supervision-2026-08-22.md`.
+- **REQ-CONDUCTOR-SENTINEL-1/2/3** (`scripts/conductor_run_sentinel.py` +
+  `tests/python/test_conductor_run_sentinel.py`, 22 tests): in-flight row
+  validity via the liveness lint's own `check_row` (>=2 consecutive
+  invalid LLM-on rows escalates; all-invalid is CRITICAL), llama-server
+  stderr allocation-failure scan (CRITICAL), stranded-VRAM / orphaned-
+  server / wrong-model checks from `/proc` + nvidia-smi, durable deduped
+  escalation to `ops/conductor-log.md` (+ known-issues for CRITICAL) with
+  a `last_scan_utc` receipt on every run. Never kills; checks that cannot
+  run say so (`GPU_CHECK_UNAVAILABLE`, `PIN_CHECK_UNAVAILABLE`).
+- **REQ-OPS-AUDIT-LEDGER-1** (`scripts/audit_findings_ledger.py` +
+  `tests/python/test_audit_findings_ledger.py`, 10 tests): flagged
+  claim-audit verdicts become append-only OPEN ledger rows that age and
+  escalate weekly until a human writes a disposition; typo'd dispositions
+  fail closed. E2E ingested today's two real CLAIM_OVERSTATED findings
+  (exp6478, exp6497).
+- **Wiring** (`scripts/research_conductor.py`, janitor,
+  `tests/python/test_conductor_sentinel_wiring.py`): sentinel per
+  `research_step` iteration via `_run_audit_with_receipt`; ledger at
+  milestone close after the claim audit; janitor invocation above the
+  conductor-liveness early-exit so outer-loop runs are covered when the
+  conductor is dead.
+- **Validation**: replay on the REAL incident bytes (rows CRITICAL 3/3,
+  failing server log 3 hits); corpus FP measure over 401 files: 0
+  CRITICAL, 3 WARN all inside the documented 2026-07-26 fault corpus;
+  live-box scan clean. 9 mutations RED->GREEN. Commits cb6684fac8,
+  c29766d286, and the wiring commit following them.
+
 ## 2026-08-22 (outer-loop, supervisor redirect ledger measurable, commits c6cb2614fd + 9da8b39042)
 
 Team-lead directive: make the ARC trajectory supervisor's redirects

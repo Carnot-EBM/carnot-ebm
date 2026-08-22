@@ -8404,7 +8404,7 @@ emit no escalation for it and SHALL leave the row untouched.
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-CONDUCTOR-SENTINEL-1 | Pending | Pending |
-| REQ-CONDUCTOR-SENTINEL-2 | Pending | Pending |
-| REQ-CONDUCTOR-SENTINEL-3 | Pending | Pending |
-| REQ-OPS-AUDIT-LEDGER-1 | Pending | Pending |
+| REQ-CONDUCTOR-SENTINEL-1 | Implemented (`scripts/conductor_run_sentinel.py`: /proc discovery, rows via the liveness lint's `check_row`, server-log scan; validated against the REAL 2026-08-22 incident bytes — rows CRITICAL 3/3, failing server log 3 hits) | Implemented (`tests/python/test_conductor_run_sentinel.py`; mutations: streak threshold disabled -> RED, server patterns neutered -> RED) |
+| REQ-CONDUCTOR-SENTINEL-2 | Implemented (same file: stranded-VRAM vs compute-apps, orphan = reparented + port unreferenced, wrong-model vs the imported live pin; live-box measure: 4/15 MiB unaccounted, zero findings) | Implemented (same file; mutations: VRAM slack absurd -> RED, orphan ppid condition broken -> RED) |
+| REQ-CONDUCTOR-SENTINEL-3 | Implemented (same file: `escalate()` — log_step-format rows, known-issues sections for CRITICAL, fingerprint dedupe with 14-day re-arm, `last_scan_utc` receipt on every run; wired in `research_step` via `_run_audit_with_receipt` + the orphan-cleanup janitor above its conductor-liveness early-exit) | Implemented (same file + `tests/python/test_conductor_sentinel_wiring.py`; mutations: dedupe disabled -> RED, sentinel call unwired -> RED) |
+| REQ-OPS-AUDIT-LEDGER-1 | Implemented (`scripts/audit_findings_ledger.py`: append-only `ops/audit-findings-ledger.md`, 7-day aging, weekly re-bucket escalation, unrecognized dispositions fail closed; wired at milestone close after the claim audit with its own state-file receipt; E2E ingested the two real 2026-08-22 CLAIM_OVERSTATED findings) | Implemented (`tests/python/test_audit_findings_ledger.py`; mutations: idempotence broken -> RED, aging threshold absurd -> RED, week bucket frozen -> RED) |
