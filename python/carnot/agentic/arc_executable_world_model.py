@@ -4365,10 +4365,15 @@ def _pool_clamped_n_predict(max_tokens: int, observed_n_ctx: Optional[int]) -> i
     Clamping to `pool - worst_case_prompt` lets a single stream use the pool's real room:
     84,144 tokens at the local default pool, which covers the measured Qwen3.8 median
     (62,490) and the max completed draw (83,444). No-op when the pool is large (scored
-    path: 614,400 cells) or unobservable (vLLM serves no /props -> None)."""
+    path: 614,400 cells) or unobservable (vLLM serves no /props -> None).
+
+    FLOOR (adversarial review of 512eca0e6b): a room of a few tokens would produce a
+    "successful" 1-token completion -- worse than the loud admission refusal, because it
+    looks like a healthy-but-terse model (exp5866's mode C). Below 1024 tokens of room no
+    world-model engine can complete anyway, so pass through and let the server refuse."""
     if isinstance(observed_n_ctx, int) and observed_n_ctx > 0:
         room = observed_n_ctx - _INDUCE_WORST_CASE_PROMPT_TOKENS
-        if 0 < room < max_tokens:
+        if 1024 <= room < max_tokens:
             return room
     return int(max_tokens)
 
@@ -5798,7 +5803,14 @@ def _default_induce_timeout_s() -> int:
 
     override = os.environ.get("CARNOT_ARC_INDUCE_TIMEOUT")
     if override:
-        return int(override)
+        # Malformed env falls through to the derived default rather than crash -- this
+        # resolver is now a dataclass default_factory (REQ-ARC-WMTE-6620), so a bare int()
+        # would turn a typo'd env var into a constructor crash on every proposer build.
+        # Same contract as _induce_max_tokens_default.
+        try:
+            return int(override)
+        except (TypeError, ValueError):
+            pass
     layers = _default_ffn_cpu_layers()
     # Piecewise-linear interpolation of the measured decode curve. Linear rather than fitted
     # because four points do not justify a model, and because interpolating BETWEEN measurements
@@ -7094,6 +7106,12 @@ class LocalGGUFProposer:
         )
         load_wait_attempts = max(90, int(self.timeout / 2))  # large full-precision models (e.g.
         # a 62GB BF16 GGUF) can take far longer than the 180s the fixed 90-attempt budget allows
+        # CAPPED at 300 attempts (10 min) since 2026-08-21: this budget is for MODEL LOAD time,
+        # not generation, and it was accidentally coupled to the request timeout. When the
+        # timeout default moved 600 -> 2400 with the Qwen3.8 pin (REQ-ARC-WMTE-6620), an
+        # uncapped derivation would have turned a crash-at-startup server into a silent
+        # 40-minute stall. 300 preserves the old ceiling (timeout 600 -> 300 attempts) exactly.
+        load_wait_attempts = min(300, load_wait_attempts)
         for _ in range(load_wait_attempts):
             if self._healthy():
                 self._verify_mtp_engaged()

@@ -115,10 +115,15 @@ def test_pool_clamp_is_a_noop_on_large_or_unknown_pools() -> None:
 
 
 def test_pool_clamp_degenerate_pool_passes_through() -> None:
-    """A pool smaller than the worst-case prompt has no sane room; keep the old behavior
-    (the server refuses loudly and the failure is recorded) rather than asking for <=0."""
+    """A pool smaller than the worst-case prompt, or one leaving only a sliver of room,
+    passes through unclamped: the server's loud admission refusal beats a "successful"
+    few-token completion that looks like a healthy-but-terse model (exp5866's mode C)."""
 
-    assert _pool_clamped_n_predict(131072, 10000) == 131072
+    assert _pool_clamped_n_predict(131072, 10000) == 131072  # pool < worst-case prompt
+    assert _pool_clamped_n_predict(131072, _INDUCE_WORST_CASE_PROMPT_TOKENS + 8) == 131072
+    assert (  # exactly at the floor: clamp applies
+        _pool_clamped_n_predict(131072, _INDUCE_WORST_CASE_PROMPT_TOKENS + 1024) == 1024
+    )
 
 
 def test_generate_and_complete_text_send_the_clamped_budget() -> None:

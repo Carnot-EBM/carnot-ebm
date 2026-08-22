@@ -1710,6 +1710,13 @@ def execute_bounded_llm_reinduction(
             if not ok:
                 ok, message = proposer.refactor(game, _counterexample_result(last_counterexample))
 
+        # REFRESH THE LABEL AFTER THE FIRST REAL CALL (REQ-ARC-WMTE-6630, adversarial review
+        # of 512eca0e6b). The entry-time read can name a wrong-model squatter on the port
+        # that `_ensure_server` then refuses and replaces during this very call; reading
+        # again HERE names the server that actually served the round. One /props round-trip
+        # per refinement loop, on a server the call just proved up.
+        if round_no == 1:
+            specs = _model_specs(proposer)
         row: dict[str, Any] = {
             "round": round_no,
             "action": action,

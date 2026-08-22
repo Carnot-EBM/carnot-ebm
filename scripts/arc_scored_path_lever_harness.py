@@ -416,8 +416,12 @@ def build_proposer(port: int):
     historical. Those literals were 9B-era values that guaranteed 0/N inductions on the pinned
     Qwen3.8-27B (median induction 62,490 generated tokens). max_tokens / timeout are now OMITTED,
     exactly as at both live construction sites, so this harness inherits the ONE dataclass
-    default -- the same env vars, then the generator pin's own values. That RESTORES this
-    docstring's own "constructed exactly as _proposer() does" contract, which had drifted.
+    default -- the same env vars, then the generator pin's own values. That restores the BUDGET
+    half of the "constructed exactly as _proposer() does" contract. The repo_substr below stays
+    the frozen 9B pin BY DESIGN (this file's header explains why its recorded historical results
+    must keep their meaning); an env-less run therefore resolves the retired 9B weights under the
+    new budget. Set CARNOT_ARC_GGUF_PATH to measure the live generator, as every run since the
+    2026-08-16 pin move has had to.
     """
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 

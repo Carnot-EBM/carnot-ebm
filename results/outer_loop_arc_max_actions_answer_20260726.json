@@ -3,7 +3,7 @@
  "title": "The MAX_ACTIONS answer: LLM-ON contention measured (not imported), the budget->score curve re-priced in the GATEWAY-CHARGED unit, and the early-stop lever priced on its benefit side",
  "run_date": "2026-07-26",
  "run_date_convention": "session-local (America/New_York); see build_timestamp_utc",
- "build_timestamp_utc": "2026-08-22T02:53:40Z",
+ "build_timestamp_utc": "2026-08-22T03:22:30Z",
  "schema": "carnot.arc_max_actions_answer.v1",
  "inference_substrate": "aggregation_from_upstream_artifacts",
  "inference_substrate_principle": "An analyser pass inherits its methodology from the artifacts it cites; declaring it as live inference would borrow credibility this file has not earned, and declaring it as a dict makes the classifier unable to read it at all.",
@@ -62,7 +62,7 @@
   }
  ],
  "measurement_wall_s_basis": "one value per ROW FILE with explicit precedence (`elapsed_s` before `measurement_wall_s`), asserted to be unambiguous (no file carries both). NOT a sum of per-cell `wall_s`, which undercounts ~25% because it omits per-cell setup.",
- "duration_s": 0.628,
+ "duration_s": 0.793,
  "random_seed": 20260724,
  "verifier_is_oracle": false,
  "verifier_is_oracle_principle": "No verifier-value or moat claim is made here; this measures WALL CLOCK and re-prices a score. Recorded because the circularity discipline requires the field on any artifact that could be read as a verifier claim.",
@@ -7595,7 +7595,7 @@
   "principle": "a scope block whose stated p-floor is ABOVE a p the same artifact reports is an internal contradiction that reads as a methodology violation; deriving the floor and checking it makes the drift fail the build instead of misleading a reader."
  },
  "provenance": {
-  "git_head": "36a4f54787f872b46f05af64f1f26cc721dc763f",
+  "git_head": "8e9badc947ab581c9369b4824c2107cb2e6f029b",
   "code": [
    {
     "path": "scripts/analyze_arc_max_actions_answer.py",
@@ -7614,8 +7614,8 @@
    },
    {
     "path": "scripts/arc_scored_path_lever_harness.py",
-    "sha256": "4fd08d7a9d4858e4bad387379ae8b39f58a8249410260852d775025f922772b5",
-    "bytes": 62092
+    "sha256": "3f047fdc3a0ad112a76a6ce9c7bf2176bb859f9d4b6862cc9fa90647c882c9ad",
+    "bytes": 62429
    },
    {
     "path": "scripts/arc_leaderboard_eval.py",
@@ -7681,6 +7681,16 @@
    "results/early_stop_sweep_20260726/rows_b4000_stress.json",
    "results/early_stop_sweep_20260726/rows_exact_attribution.json",
    "results/early_stop_sweep_20260726/rows_exact_attribution_b2000.json"
+  ],
+  "freshness_acknowledgements": [
+   {
+    "acknowledged_on": "2026-08-08",
+    "evidence": "git diff on the analyser script: an import line + one line calling preserve_freshness_acknowledgements(<art>, <out_path>) immediately before the pre-existing write call, with no other lines touched. Verified via a real scratch dry-run per script (copy the real tracked artifact to /tmp, rebuild against that scratch path, confirm freshness_acknowledgements survives while other provenance fields correctly refresh) -- see the commit message and ops/known-issues.md's FIXED note for the full per-script verification record.",
+    "path": "scripts/analyze_arc_max_actions_answer.py",
+    "reason": "Freshness-lint self-fix (2026-08-08, ops/known-issues.md 'A related, systemic defect', FIXED note): this analyser script gained an import of, and one call to, a new helper preserve_freshness_acknowledgements(art, out_path) in scripts/analyze_scored_path_lever_ab.py. The helper's only effect is to copy forward provenance.freshness_acknowledgements from whatever is ALREADY ON DISK at out_path into a FUTURE rebuild's provenance dict, before that future rebuild's write -- it cannot retroactively change any value already computed and written into THIS artifact. Reachability argument holds by construction (the diff is a no-op for any artifact that isn't itself being freshly rebuilt at this exact moment), not by per-script inspection.",
+    "sha256_now": "1cb4e50243df5bef1ec1568a1a002a8a51c55574e2600f36f09481eaa2555506",
+    "sha256_was": "a2a216baf430bf2d5c5ee429ed0ebaadfed130e83aa54072460bde1ecdb80d96"
+   }
   ]
  },
  "reproducibility_checksum": "99470a30a8dd1b46",
@@ -7715,6 +7725,8 @@
   "hand_added_notes_restored": [
    "rebuild_note_20260731_split_enable",
    "rebuild_note_20260820_traceback_visibility"
-  ]
+  ],
+  "acknowledgements_restored_after_rebuild": 0,
+  "acknowledgements_restore_note": "The analyser regenerates provenance wholesale and DROPS hand-written freshness_acknowledgements on every rebuild (caught by adversarial review of commit 512eca0e6b). Restored verbatim from the pre-rebuild version; their sha256_now pins refer to earlier file states, so they are an audit trail rather than active exemptions. This artifact was rebuilt a second time the same day (after the review follow-up touched the harness docstring), with the same leaf-diff result: 0 measurement values changed."
  }
 }
