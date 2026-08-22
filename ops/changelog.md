@@ -51,6 +51,27 @@ itself. Three independent hits on 2026-08-21, on a code path
   in the incident — are now structurally unable to drop the keys.
   Recommended as a later second layer for NON-analyzer writers, with
   its own mutation-tested widening.
+- **Adversarial review applied (same session, GAPS_FOUND -> fixed)**:
+  (1) the `analyze_*.py` glob was narrower than the concept
+  "index-registered rebuilder" — merge-preserve is now also wired into
+  `arc_gateway_card_ground_truth.py`,
+  `arc_per_level_reset_attribution_capture.py`, and
+  `experiments/experiment_6011/6012/6013*.py` (both writes in 6013,
+  including the blocked-artifact path), and the wiring test now
+  iterates `ops/analyzer_artifact_index.json` with AST-verified calls;
+  `results/`-resident one-shot builders are exempt with the reason
+  stated in the test. Mutation: unwiring an index-registered rebuilder
+  -> RED. (2) Today's acknowledgement entries are rechained —
+  `sha256_was` now points at the prior ack's `sha256_now`, so each
+  entry's reason describes exactly its own hop. (3) Stated plainly:
+  `wallclock_envelope`, `reset_charge_attribution`, and
+  `gateway_rescore` remain STALE on INHERITED drift
+  (`arc_scored_path_lever_harness.py` /
+  `arc_competition_agent.py` / `arc_executable_world_model.py` — other
+  agents' 2026-08-21/22 edits, reported by the lint as non-blocking
+  backlog); this work cleared only its own analyzer drift. The
+  rebuild-and-diff for the inherited drift belongs to whoever changed
+  those dependencies.
 
 ## 2026-08-22 (outer-loop, conductor self-supervision: run sentinel + audit-findings ledger)
 
