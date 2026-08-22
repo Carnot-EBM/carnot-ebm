@@ -1,0 +1,40 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.562",
+  "generated_at": "2026-08-22T20:07:18Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.2,
+  "experiments_completed": 2,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "V561 evidence corrigendum and V562 exact-branch lineage lock",
+      "duration_minutes": 0.18,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Analytical branch order and bounded-refocus A/B",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 2 synthesis-only experiments in 0.2 minutes and contained 0 compute-bound experiments. Accelerator efficiency and concurrent-model runner engagement are therefore not assessable, and idle GPUs are not an operational defect for this workload.",
+  "bottlenecks_identified": [
+    "Timing observability gap: disk-mtime reconstruction does not expose task-phase costs, and one synthesis-only entry is recorded at 0.0 minutes."
+  ],
+  "improvements_suggested": [
+    "Replace disk-mtime fallback with monotonic task and phase timing receipts.",
+    "Record task-linked workload class, GPU samples, model count, and runner identity so future compute efficiency and runner eligibility are directly auditable.",
+    "Dispatch synthesis-only tasks concurrently only when dependency receipts prove that they are independent."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Persist monotonic task and phase timing receipts.",
+    "Persist task-scoped workload, accelerator, model-count, and runner metadata.",
+    "Add dependency-gated concurrent dispatch for independent synthesis-only tasks."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This milestone provides no compute-bound evidence from which to diagnose GPU utilization or DualGPURunner engagement. With the work already completing in 0.2 minutes and no measured alternative, a savings estimate above 0% would not be supported."
+}
