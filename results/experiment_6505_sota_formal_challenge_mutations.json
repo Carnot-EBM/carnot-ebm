@@ -1,0 +1,2369 @@
+{
+  "status": "complete_null_formal_challenge_mutation_accounting",
+  "verdict_class": "null",
+  "upstream_gate_receipt": {
+    "row_type": "upstream_gate_receipt",
+    "experiment_id": "exp6504",
+    "path": "results/experiment_6504_exact_structural_benchmark_commitment.json",
+    "exists": true,
+    "sha256": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+    "field": "base_structural_benchmark_ready_score",
+    "expected_value": 1.0,
+    "observed_value": 1.0,
+    "passed": true,
+    "status": "complete_exact_structural_benchmark_committed",
+    "honest_verdict": "complete_exact_structural_benchmark_commitment: raw instances, exact labels, replays, lineage splits, held cells, strata, attacks, and checksums are sealed",
+    "protected_hashes_before_loading": {
+      "scripts/research_conductor.py": {
+        "sha256": "sha256:4c831cbb42bb03df54f6602638cdfc4bedc5bd3796ed075bec70b2c7a9ceff76",
+        "exists": true,
+        "protected_by_task_contract": true
+      },
+      "research-roadmap.yaml": {
+        "sha256": "sha256:ccf9b30583deffc0e5fe8d3759797de0f5652b5464c99f1196cee2fabd3a67cb",
+        "exists": true,
+        "protected_by_task_contract": true
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "sha256": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "exists": true,
+        "protected_by_task_contract": true
+      },
+      "results/experiment_6504_exact_structural_benchmark_commitment.json": {
+        "sha256": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "exists": true,
+        "protected_by_task_contract": true
+      },
+      "results/experiment_5813_split_budget_sota_canary.json": {
+        "sha256": "sha256:ba27fff99f32acfb7ea6744d91336ffe543db4ac739cfea83542b172ecebf0f8",
+        "exists": true,
+        "protected_by_task_contract": true
+      },
+      "results/experiment_5923_sota_schema_supported_constraintir_ab.json": {
+        "sha256": "sha256:ebe0e6fdcce1fb4d1bed9b4be5b2ea89dba6239b33498bd903ff60f8d2044a6c",
+        "exists": true,
+        "protected_by_task_contract": true
+      },
+      "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": {
+        "sha256": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "exists": true,
+        "protected_by_task_contract": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "exists": true,
+        "protected_by_task_contract": true
+      }
+    },
+    "gate_receipt_hash": "sha256:925a1f25a4fc201c5790bcd84af2af6ffca46996f041384cb4734b4eeaed4a4e"
+  },
+  "model_specs": [
+    {
+      "name": "Qwen3.6-35B-A3B",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "family": "qwen_moe",
+      "role": "flagship_moe_challenge_generator",
+      "preferred_quantization": "Q4_K_M",
+      "load_order": 1,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_path_display": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_file": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_file_exists": true,
+      "file_size_bytes": 22134528992,
+      "observed_quantization": "UD-Q4_K_M",
+      "resolver": "carnot.inference.sota_models.resolve_cached_gguf",
+      "load_api": "llama_cpp.Llama",
+      "tokenizer_source": "embedded_gguf_tokenizer"
+    },
+    {
+      "name": "Gemma4-31B-it",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "family": "gemma_dense",
+      "role": "flagship_dense_challenge_generator",
+      "preferred_quantization": "Q4_K_M",
+      "load_order": 2,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_path_display": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_file": "gemma-4-31B-it-Q4_K_M.gguf",
+      "model_file_exists": true,
+      "file_size_bytes": 18323731456,
+      "observed_quantization": "Q4_K_M",
+      "resolver": "carnot.inference.sota_models.resolve_cached_gguf",
+      "load_api": "llama_cpp.Llama",
+      "tokenizer_source": "embedded_gguf_tokenizer"
+    },
+    {
+      "name": "Gemma4-26B-A4B-it",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "family": "gemma_moe",
+      "role": "middle_moe_challenge_generator",
+      "preferred_quantization": "Q4_K_M",
+      "load_order": 3,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_path_display": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_file": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_file_exists": true,
+      "file_size_bytes": 16947539744,
+      "observed_quantization": "UD-Q4_K_M",
+      "resolver": "carnot.inference.sota_models.resolve_cached_gguf",
+      "load_api": "llama_cpp.Llama",
+      "tokenizer_source": "embedded_gguf_tokenizer"
+    }
+  ],
+  "model_runtime_receipts": [
+    {
+      "embedded_tokenizer": {
+        "loadable": true,
+        "probe_token_count": 14,
+        "source": "embedded_gguf_tokenizer"
+      },
+      "llama_cpp_import_ok": true,
+      "llama_cpp_supports_gpu_offload": true,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "offload": {
+        "main_gpu": 0,
+        "n_gpu_layers": -1
+      },
+      "request_count": 1,
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "terminal_disposition": "complete",
+      "timing": {
+        "load_time_s": 12.714879,
+        "total_time_s": 15.850852
+      },
+      "vram": {
+        "after": [
+          {
+            "index": 0,
+            "memory_free_mib": 23813,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 312,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 35
+          },
+          {
+            "index": 1,
+            "memory_free_mib": 2590,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 21534,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 99
+          }
+        ],
+        "before": [
+          {
+            "index": 0,
+            "memory_free_mib": 24120,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0
+          },
+          {
+            "index": 1,
+            "memory_free_mib": 2887,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 21237,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 96
+          }
+        ]
+      }
+    },
+    {
+      "embedded_tokenizer": {
+        "loadable": true,
+        "probe_token_count": 18,
+        "source": "embedded_gguf_tokenizer"
+      },
+      "llama_cpp_import_ok": true,
+      "llama_cpp_supports_gpu_offload": true,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "offload": {
+        "main_gpu": 0,
+        "n_gpu_layers": -1
+      },
+      "request_count": 1,
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "terminal_disposition": "complete",
+      "timing": {
+        "load_time_s": 31.525432,
+        "total_time_s": 32.980885
+      },
+      "vram": {
+        "after": [
+          {
+            "index": 0,
+            "memory_free_mib": 23807,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 318,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 57
+          },
+          {
+            "index": 1,
+            "memory_free_mib": 2590,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 21534,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 97
+          }
+        ],
+        "before": [
+          {
+            "index": 0,
+            "memory_free_mib": 24120,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0
+          },
+          {
+            "index": 1,
+            "memory_free_mib": 2887,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 21237,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 96
+          }
+        ]
+      }
+    },
+    {
+      "embedded_tokenizer": {
+        "loadable": true,
+        "probe_token_count": 18,
+        "source": "embedded_gguf_tokenizer"
+      },
+      "llama_cpp_import_ok": true,
+      "llama_cpp_supports_gpu_offload": true,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "offload": {
+        "main_gpu": 0,
+        "n_gpu_layers": -1
+      },
+      "request_count": 1,
+      "runtime_backend": "llama_cpp_python_cuda_gguf",
+      "terminal_disposition": "complete",
+      "timing": {
+        "load_time_s": 18.683033,
+        "total_time_s": 19.677787
+      },
+      "vram": {
+        "after": [
+          {
+            "index": 0,
+            "memory_free_mib": 23813,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 312,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 87
+          },
+          {
+            "index": 1,
+            "memory_free_mib": 2590,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 21534,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 100
+          }
+        ],
+        "before": [
+          {
+            "index": 0,
+            "memory_free_mib": 24120,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 0
+          },
+          {
+            "index": 1,
+            "memory_free_mib": 2887,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 21237,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_gpu_pct": 97
+          }
+        ]
+      }
+    }
+  ],
+  "mutation_grammar": {
+    "schema_version": "carnot.experiment_6505.sota_formal_challenge_mutations.v1.mutation_grammar",
+    "start_token": "BEGIN_MUTATION",
+    "end_token": "END_MUTATION",
+    "max_operations": 8,
+    "supported_operations": [
+      "ADD_CLAUSE",
+      "DROP_CLAUSE",
+      "ADD_EDGE",
+      "DROP_EDGE",
+      "SWAP_COLOR",
+      "ADD_JOB",
+      "ADD_PRECEDENCE",
+      "SHIFT_COEFFICIENT",
+      "RELBL",
+      "RELABEL_VAR"
+    ],
+    "operation_syntax": {
+      "ADD_CLAUSE": "ADD_CLAUSE <lit> [<lit>] [<lit>]",
+      "DROP_CLAUSE": "DROP_CLAUSE <zero_based_clause_index>",
+      "ADD_EDGE": "ADD_EDGE <var> <var>",
+      "DROP_EDGE": "DROP_EDGE <var> <var>",
+      "SWAP_COLOR": "SWAP_COLOR <var> <var>",
+      "ADD_JOB": "ADD_JOB",
+      "ADD_PRECEDENCE": "ADD_PRECEDENCE <before_var> <after_var>",
+      "SHIFT_COEFFICIENT": "SHIFT_COEFFICIENT <var> <delta>",
+      "RELBL": "RELBL <var> <var>",
+      "RELABEL_VAR": "RELABEL_VAR <var> <var>"
+    },
+    "bounds": {
+      "literal_abs_may_not_exceed_variable_count_plus": 2,
+      "coefficient_abs_may_not_exceed": 9,
+      "max_new_jobs": 1
+    },
+    "prompt_forbids": [
+      "answers",
+      "labels",
+      "solver advice",
+      "free-form semantic translation",
+      "release decisions",
+      "held access",
+      "model identity shortcuts"
+    ],
+    "parser": "parse_edit_script",
+    "admission": "admit_response",
+    "mutation_grammar_hash": "sha256:792ef0157ef2ed94c8a6e876b1e8437548bab311e80c54acff31d95a0f323b01"
+  },
+  "source_selection_receipt": {
+    "schema_version": "carnot.experiment_6505.sota_formal_challenge_mutations.v1.source_selection",
+    "selection_seed": 6505001,
+    "selection_count": 1,
+    "requested_count": 1,
+    "selected_before_generation": true,
+    "all_sources_development_only": true,
+    "selected_sources": [
+      {
+        "row_type": "source_selection",
+        "selection_index": 0,
+        "source_instance_id": "exp6504:random_3cnf:010",
+        "raw_instance_hash": "sha256:7e763929b226e20d890b949ad2b6e072cf24c08ffcc49d0a8d2bf9217ca70fe5",
+        "family": "random_3cnf",
+        "scale": "small",
+        "surface_relabeling": "alpha_relabelled",
+        "split": "development",
+        "label_inspected_before_generation": false,
+        "selected_before_generation": true,
+        "selection_seed": 6505001,
+        "spec_refs": [
+          "REQ-BENCH-6505",
+          "SCENARIO-BENCH-6505-ONE-SHOT"
+        ],
+        "source_selection_hash": "sha256:98e562e99df1191ce76603c49d1e8d0b7304dfaaab1b4ab63c8ba17ce2c46752"
+      }
+    ],
+    "source_selection_receipt_hash": "sha256:a5347dee7be36251591ef4fa90a3b158050bb8ca85958b4f38dd369d4905f9d3"
+  },
+  "raw_request_response_receipts": [
+    {
+      "row_type": "raw_request_response",
+      "request_id": "exp6505:qwen_moe:000",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_family": "qwen_moe",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_file": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "source_instance_id": "exp6504:random_3cnf:010",
+      "request_bytes_b64": "WW91IGFyZSBwcm9wb3NpbmcgYSBib3VuZGVkIGZvcm1hbCBlZGl0IHNjcmlwdCBmb3IgYSBkZXZlbG9wbWVudCBDTkYgaW5zdGFuY2UuCk91dHB1dCBvbmx5IHRoZSBlZGl0IERTTCBiZXR3ZWVuIEJFR0lOX01VVEFUSU9OIGFuZCBFTkRfTVVUQVRJT04uCkRvIG5vdCBvdXRwdXQgYW4gYW5zd2VyLCBsYWJlbCwgc29sdmVyIGFkdmljZSwgbmF0dXJhbCBsYW5ndWFnZSBleHBsYW5hdGlvbiwgc2VtYW50aWMgdHJhbnNsYXRpb24sIHJlbGVhc2UgZGVjaXNpb24sIGhlbGQgcmVmZXJlbmNlLCBvciBtb2RlbCBjb21wYXJpc29uLgpyZXF1ZXN0X2lkPWV4cDY1MDU6cXdlbl9tb2U6MDAwCmZvcm1hbGlzbT1jbmZfc2F0CmZhbWlseT1yYW5kb21fM2NuZgp2YXJpYWJsZV9jb3VudD02CmNsYXVzZV9jb3VudD0yMApjbGF1c2VzOgowOiAtNiA2IDYKMTogLTUgLTEgMgoyOiAzIC02IC01CjM6IC0xIC00IDYKNDogNSAtMyA2CjU6IC02IDUgMwo2OiAtNCAtMyA1Cjc6IDQgNiAtMgo4OiAtMyAtNSA2Cjk6IDYgLTUgMwoxMDogLTYgNCAxCjExOiAtNCAtNSAtMgoxMjogNSAzIDYKMTM6IDYgLTYgLTYKMTQ6IC0xIC0xIDEKMTU6IC02IC01IC0zCjE2OiA2IDIgLTYKMTc6IC01IDYgLTMKMTg6IDUgLTMgLTYKMTk6IC0yIC01IC0zCkFsbG93ZWQgb3BlcmF0aW9uczogQUREX0NMQVVTRSwgRFJPUF9DTEFVU0UsIEFERF9FREdFLCBEUk9QX0VER0UsIFNXQVBfQ09MT1IsIEFERF9KT0IsIEFERF9QUkVDRURFTkNFLCBTSElGVF9DT0VGRklDSUVOVCwgUkVMQkwsIFJFTEFCRUxfVkFSLgpCRUdJTl9NVVRBVElPTgo=",
+      "response_bytes_b64": "QUREX0NMQVVTRSAyMDogLTEgLTIgLTMKRU5EX01VVEFUSU9OCgo8dGhpbms+ClRoZSB1c2VyIHdhbnRzIGEgYm91bmRlZCBmb3JtYWwgZWRpdCBzY3JpcHQgZm9yIGEgZGV2ZWxvcG1lbnQgQ05GIGluc3RhbmNlLgpUaGUgb3V0cHV0IHNob3VsZCBvbmx5IGNvbnRhaW4gdGhlIGVkaXQgRFNMIGJldHdlZW4gQkVHSU5fTVVUQVRJT04gYW5kIEVORF9NVVRBVElPTi4KVGhlIGlucHV0IHByb3ZpZGVzIGEgQ05GIHdpdGggNiB2YXJpYWJsZXMgYW5kIDIwIGNsYXVzZXMuCkkgbmVlZCB0byBvdXRwdXQgZXhhY3RseSB0aGUgbXV0YXRpb24gYmxvY2suClRoZSBwcm9tcHQgYWxyZWFkeSBnaXZlcyBhbiBleGFtcGxlIG9mIHdoYXQgdG8gb3V0cHV0OgpCRUdJTl9NVVRBVElPTgpBRERfQ0xBVVNFIDIwOiAtMSAtMiAtMwpFTkRfTVVUQVRJT04KCldhaXQsIHRoZSBwcm9tcHQgc2F5cyAiT3V0cHV0IG9ubHkgdGhlIGVkaXQgRFNMIGJldHdlZW4gQkVHSU4=",
+      "request_sha256": "sha256:ea85d915fc8107375bbf0b313e0e8f50140b7f724be371c15d8b91442a7a8e15",
+      "response_sha256": "sha256:2603a59cab893f3d858bdd4d08e956b59983519ef362ed44f61ebd478db80c5f",
+      "raw_persisted_before_parse": true,
+      "terminal_disposition": "generated",
+      "finish_reason": "length",
+      "truncated": true,
+      "generated_token_count": 128,
+      "decode_time_s": 2.973416,
+      "error": "",
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-PROVENANCE"
+      ],
+      "raw_receipt_hash": "sha256:4668b444e5068118fc4679e9f121a40cba155b142f64b2b2ac1049f185518d62"
+    },
+    {
+      "row_type": "raw_request_response",
+      "request_id": "exp6505:gemma_dense:000",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_family": "gemma_dense",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_file": "gemma-4-31B-it-Q4_K_M.gguf",
+      "source_instance_id": "exp6504:random_3cnf:010",
+      "request_bytes_b64": "WW91IGFyZSBwcm9wb3NpbmcgYSBib3VuZGVkIGZvcm1hbCBlZGl0IHNjcmlwdCBmb3IgYSBkZXZlbG9wbWVudCBDTkYgaW5zdGFuY2UuCk91dHB1dCBvbmx5IHRoZSBlZGl0IERTTCBiZXR3ZWVuIEJFR0lOX01VVEFUSU9OIGFuZCBFTkRfTVVUQVRJT04uCkRvIG5vdCBvdXRwdXQgYW4gYW5zd2VyLCBsYWJlbCwgc29sdmVyIGFkdmljZSwgbmF0dXJhbCBsYW5ndWFnZSBleHBsYW5hdGlvbiwgc2VtYW50aWMgdHJhbnNsYXRpb24sIHJlbGVhc2UgZGVjaXNpb24sIGhlbGQgcmVmZXJlbmNlLCBvciBtb2RlbCBjb21wYXJpc29uLgpyZXF1ZXN0X2lkPWV4cDY1MDU6Z2VtbWFfZGVuc2U6MDAwCmZvcm1hbGlzbT1jbmZfc2F0CmZhbWlseT1yYW5kb21fM2NuZgp2YXJpYWJsZV9jb3VudD02CmNsYXVzZV9jb3VudD0yMApjbGF1c2VzOgowOiAtNiA2IDYKMTogLTUgLTEgMgoyOiAzIC02IC01CjM6IC0xIC00IDYKNDogNSAtMyA2CjU6IC02IDUgMwo2OiAtNCAtMyA1Cjc6IDQgNiAtMgo4OiAtMyAtNSA2Cjk6IDYgLTUgMwoxMDogLTYgNCAxCjExOiAtNCAtNSAtMgoxMjogNSAzIDYKMTM6IDYgLTYgLTYKMTQ6IC0xIC0xIDEKMTU6IC02IC01IC0zCjE2OiA2IDIgLTYKMTc6IC01IDYgLTMKMTg6IDUgLTMgLTYKMTk6IC0yIC01IC0zCkFsbG93ZWQgb3BlcmF0aW9uczogQUREX0NMQVVTRSwgRFJPUF9DTEFVU0UsIEFERF9FREdFLCBEUk9QX0VER0UsIFNXQVBfQ09MT1IsIEFERF9KT0IsIEFERF9QUkVDRURFTkNFLCBTSElGVF9DT0VGRklDSUVOVCwgUkVMQkwsIFJFTEFCRUxfVkFSLgpCRUdJTl9NVVRBVElPTgo=",
+      "response_bytes_b64": "RFJPUF9DTEFVU0UgMTMKRFJPUF9DTEFVU0UgMApFTkRfTVVUQVRJT04=",
+      "request_sha256": "sha256:68ec64597811e05cbb170989d72165bb38f1abcc03affa8a4dd3cfe2881fbc54",
+      "response_sha256": "sha256:62496bfcc1744c68d5506128e6fc3f57449c5a49bcf7f3c64071c645d21f79eb",
+      "raw_persisted_before_parse": true,
+      "terminal_disposition": "generated",
+      "finish_reason": "stop",
+      "truncated": false,
+      "generated_token_count": 19,
+      "decode_time_s": 1.243319,
+      "error": "",
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-PROVENANCE"
+      ],
+      "raw_receipt_hash": "sha256:fce64f9136c98b88f2ce96ccdff19e7a66993c5df05420b409dcb32995971849"
+    },
+    {
+      "row_type": "raw_request_response",
+      "request_id": "exp6505:gemma_moe:000",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_family": "gemma_moe",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_file": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "source_instance_id": "exp6504:random_3cnf:010",
+      "request_bytes_b64": "WW91IGFyZSBwcm9wb3NpbmcgYSBib3VuZGVkIGZvcm1hbCBlZGl0IHNjcmlwdCBmb3IgYSBkZXZlbG9wbWVudCBDTkYgaW5zdGFuY2UuCk91dHB1dCBvbmx5IHRoZSBlZGl0IERTTCBiZXR3ZWVuIEJFR0lOX01VVEFUSU9OIGFuZCBFTkRfTVVUQVRJT04uCkRvIG5vdCBvdXRwdXQgYW4gYW5zd2VyLCBsYWJlbCwgc29sdmVyIGFkdmljZSwgbmF0dXJhbCBsYW5ndWFnZSBleHBsYW5hdGlvbiwgc2VtYW50aWMgdHJhbnNsYXRpb24sIHJlbGVhc2UgZGVjaXNpb24sIGhlbGQgcmVmZXJlbmNlLCBvciBtb2RlbCBjb21wYXJpc29uLgpyZXF1ZXN0X2lkPWV4cDY1MDU6Z2VtbWFfbW9lOjAwMApmb3JtYWxpc209Y25mX3NhdApmYW1pbHk9cmFuZG9tXzNjbmYKdmFyaWFibGVfY291bnQ9NgpjbGF1c2VfY291bnQ9MjAKY2xhdXNlczoKMDogLTYgNiA2CjE6IC01IC0xIDIKMjogMyAtNiAtNQozOiAtMSAtNCA2CjQ6IDUgLTMgNgo1OiAtNiA1IDMKNjogLTQgLTMgNQo3OiA0IDYgLTIKODogLTMgLTUgNgo5OiA2IC01IDMKMTA6IC02IDQgMQoxMTogLTQgLTUgLTIKMTI6IDUgMyA2CjEzOiA2IC02IC02CjE0OiAtMSAtMSAxCjE1OiAtNiAtNSAtMwoxNjogNiAyIC02CjE3OiAtNSA2IC0zCjE4OiA1IC0zIC02CjE5OiAtMiAtNSAtMwpBbGxvd2VkIG9wZXJhdGlvbnM6IEFERF9DTEFVU0UsIERST1BfQ0xBVVNFLCBBRERfRURHRSwgRFJPUF9FREdFLCBTV0FQX0NPTE9SLCBBRERfSk9CLCBBRERfUFJFQ0VERU5DRSwgU0hJRlRfQ09FRkZJQ0lFTlQsIFJFTEJMLCBSRUxBQkVMX1ZBUi4KQkVHSU5fTVVUQVRJT04K",
+      "response_bytes_b64": "QUREX0NMQVVTRSgxLCAyLCAzKQpFTkRfTVVUQVRJT04=",
+      "request_sha256": "sha256:04974bc7632f8760d01c972c93f42e4ecf298eff2d970a68b125a0733cc76a50",
+      "response_sha256": "sha256:7dc9ae07df11ca75326484816ae67f19bad41df8d4db5e3df98455be86d7c6cf",
+      "raw_persisted_before_parse": true,
+      "terminal_disposition": "generated",
+      "finish_reason": "stop",
+      "truncated": false,
+      "generated_token_count": 18,
+      "decode_time_s": 0.768738,
+      "error": "",
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-PROVENANCE"
+      ],
+      "raw_receipt_hash": "sha256:7ef44a6fc003092bb37ff61b6336dbc0c45c7a1796198e63cfa2d28071c5f2cf"
+    }
+  ],
+  "rows": [
+    {
+      "row_type": "mutation_request",
+      "request_id": "exp6505:qwen_moe:000",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_family": "qwen_moe",
+      "source_instance_id": "exp6504:random_3cnf:010",
+      "source_family": "random_3cnf",
+      "source_scale": "small",
+      "source_surface_relabeling": "alpha_relabelled",
+      "source_split": "development",
+      "source_exact_label": "unsat",
+      "seed": 6505101,
+      "retry_count": 0,
+      "request_sha256": "sha256:ea85d915fc8107375bbf0b313e0e8f50140b7f724be371c15d8b91442a7a8e15",
+      "response_sha256": "sha256:2603a59cab893f3d858bdd4d08e956b59983519ef362ed44f61ebd478db80c5f",
+      "parser_invoked_after_raw_persist": true,
+      "runtime_terminal_disposition": "generated",
+      "finish_reason": "length",
+      "truncated": true,
+      "parse_ok": false,
+      "edit_types": [],
+      "exact_label": "quarantined",
+      "accepted": false,
+      "quarantine_reason": "prohibited_output",
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-SCORES"
+      ],
+      "row_hash": "sha256:63eae1eadc2c176bc8851d5a07ce79b656a07d5ccf2eb1aa040d1bc8882835d0"
+    },
+    {
+      "row_type": "mutation_request",
+      "request_id": "exp6505:gemma_dense:000",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_family": "gemma_dense",
+      "source_instance_id": "exp6504:random_3cnf:010",
+      "source_family": "random_3cnf",
+      "source_scale": "small",
+      "source_surface_relabeling": "alpha_relabelled",
+      "source_split": "development",
+      "source_exact_label": "unsat",
+      "seed": 6505201,
+      "retry_count": 0,
+      "request_sha256": "sha256:68ec64597811e05cbb170989d72165bb38f1abcc03affa8a4dd3cfe2881fbc54",
+      "response_sha256": "sha256:62496bfcc1744c68d5506128e6fc3f57449c5a49bcf7f3c64071c645d21f79eb",
+      "parser_invoked_after_raw_persist": true,
+      "runtime_terminal_disposition": "generated",
+      "finish_reason": "stop",
+      "truncated": false,
+      "parse_ok": false,
+      "edit_types": [],
+      "exact_label": "quarantined",
+      "accepted": false,
+      "quarantine_reason": "parse_failed",
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-SCORES"
+      ],
+      "row_hash": "sha256:47af34bb2c11ead47f656a02fc7fbe667210a4e0044ab276e2cf79e0d7b1c75a"
+    },
+    {
+      "row_type": "mutation_request",
+      "request_id": "exp6505:gemma_moe:000",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_family": "gemma_moe",
+      "source_instance_id": "exp6504:random_3cnf:010",
+      "source_family": "random_3cnf",
+      "source_scale": "small",
+      "source_surface_relabeling": "alpha_relabelled",
+      "source_split": "development",
+      "source_exact_label": "unsat",
+      "seed": 6505301,
+      "retry_count": 0,
+      "request_sha256": "sha256:04974bc7632f8760d01c972c93f42e4ecf298eff2d970a68b125a0733cc76a50",
+      "response_sha256": "sha256:7dc9ae07df11ca75326484816ae67f19bad41df8d4db5e3df98455be86d7c6cf",
+      "parser_invoked_after_raw_persist": true,
+      "runtime_terminal_disposition": "generated",
+      "finish_reason": "stop",
+      "truncated": false,
+      "parse_ok": false,
+      "edit_types": [],
+      "exact_label": "quarantined",
+      "accepted": false,
+      "quarantine_reason": "parse_failed",
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-SCORES"
+      ],
+      "row_hash": "sha256:1736904b8788ee0cdd43d916adf1a956e741345988928833dd5c57da75afcf23"
+    }
+  ],
+  "exact_admission_rows": [
+    {
+      "row_type": "exact_admission",
+      "request_id": "exp6505:qwen_moe:000",
+      "source_instance_id": "exp6504:random_3cnf:010",
+      "source_raw_instance_hash": "sha256:7e763929b226e20d890b949ad2b6e072cf24c08ffcc49d0a8d2bf9217ca70fe5",
+      "source_family": "random_3cnf",
+      "source_scale": "small",
+      "source_surface_relabeling": "alpha_relabelled",
+      "source_split": "development",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_family": "qwen_moe",
+      "seed": 6505101,
+      "parse_ok": false,
+      "parse_errors": [
+        "prohibited output present"
+      ],
+      "prohibited_reasons": [
+        "retry"
+      ],
+      "no_prohibited_output": false,
+      "operation_count": 0,
+      "edit_types": [],
+      "mutation_hash": "sha256:7b1bb8f395b3b0421aa4d8e4df612a308dbc7ad8ea7f9e232a3c9383cfbeac33",
+      "changed": false,
+      "duplicate": false,
+      "novel": false,
+      "edit_replay_errors": [
+        "parse_failed"
+      ],
+      "exact_label": "quarantined",
+      "model_or_proof_valid": false,
+      "proof_or_model_receipt": {},
+      "backend_receipts": [],
+      "exact_replay_passed": false,
+      "label_ambiguous": true,
+      "accepted": false,
+      "quarantine_reason": "prohibited_output",
+      "truncated": true,
+      "verifier_is_oracle": true,
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-ADMISSION"
+      ],
+      "admission_row_hash": "sha256:17ddb06dc9c7c0ce5959fef202f8400eb7b159d6d2738490da70ba9991663a35"
+    },
+    {
+      "row_type": "exact_admission",
+      "request_id": "exp6505:gemma_dense:000",
+      "source_instance_id": "exp6504:random_3cnf:010",
+      "source_raw_instance_hash": "sha256:7e763929b226e20d890b949ad2b6e072cf24c08ffcc49d0a8d2bf9217ca70fe5",
+      "source_family": "random_3cnf",
+      "source_scale": "small",
+      "source_surface_relabeling": "alpha_relabelled",
+      "source_split": "development",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_family": "gemma_dense",
+      "seed": 6505201,
+      "parse_ok": false,
+      "parse_errors": [
+        "missing mutation boundary"
+      ],
+      "prohibited_reasons": [],
+      "no_prohibited_output": true,
+      "operation_count": 0,
+      "edit_types": [],
+      "mutation_hash": "sha256:add5e4bd482f34a7146bacb99de90b1ae1aa4cbecc829edf36a5b399130dff8a",
+      "changed": false,
+      "duplicate": false,
+      "novel": false,
+      "edit_replay_errors": [
+        "parse_failed"
+      ],
+      "exact_label": "quarantined",
+      "model_or_proof_valid": false,
+      "proof_or_model_receipt": {},
+      "backend_receipts": [],
+      "exact_replay_passed": false,
+      "label_ambiguous": true,
+      "accepted": false,
+      "quarantine_reason": "parse_failed",
+      "truncated": false,
+      "verifier_is_oracle": true,
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-ADMISSION"
+      ],
+      "admission_row_hash": "sha256:3db1705abf82bd70768d673e3e313c2c59f9eb43a81463b2448647014df3d070"
+    },
+    {
+      "row_type": "exact_admission",
+      "request_id": "exp6505:gemma_moe:000",
+      "source_instance_id": "exp6504:random_3cnf:010",
+      "source_raw_instance_hash": "sha256:7e763929b226e20d890b949ad2b6e072cf24c08ffcc49d0a8d2bf9217ca70fe5",
+      "source_family": "random_3cnf",
+      "source_scale": "small",
+      "source_surface_relabeling": "alpha_relabelled",
+      "source_split": "development",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_family": "gemma_moe",
+      "seed": 6505301,
+      "parse_ok": false,
+      "parse_errors": [
+        "missing mutation boundary"
+      ],
+      "prohibited_reasons": [],
+      "no_prohibited_output": true,
+      "operation_count": 0,
+      "edit_types": [],
+      "mutation_hash": "sha256:88e71ca969854dec57c945c087705812d01d0e0d3ce26fd674747e8a53b4ab01",
+      "changed": false,
+      "duplicate": false,
+      "novel": false,
+      "edit_replay_errors": [
+        "parse_failed"
+      ],
+      "exact_label": "quarantined",
+      "model_or_proof_valid": false,
+      "proof_or_model_receipt": {},
+      "backend_receipts": [],
+      "exact_replay_passed": false,
+      "label_ambiguous": true,
+      "accepted": false,
+      "quarantine_reason": "parse_failed",
+      "truncated": false,
+      "verifier_is_oracle": true,
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-ADMISSION"
+      ],
+      "admission_row_hash": "sha256:b67438ee56885b04a231f408a4316164a4cf00ac50ce0357aeb92001cf6e3da6"
+    }
+  ],
+  "model_family_results": [
+    {
+      "row_type": "model_family_result",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_family": "qwen_moe",
+      "role": "flagship_moe_challenge_generator",
+      "request_count": 1,
+      "terminal_request_count": 1,
+      "valid_yield_count": 0,
+      "valid_yield_rate": 0.0,
+      "failure_modes": {
+        "prohibited_output": 1
+      },
+      "source_families": [
+        "random_3cnf"
+      ],
+      "source_scales": [
+        "small"
+      ],
+      "source_labels": [
+        "unsat"
+      ],
+      "edit_type_counts": {},
+      "truncation_count": 1,
+      "parser_failure_count": 1,
+      "runtime_receipt": {
+        "embedded_tokenizer": {
+          "loadable": true,
+          "probe_token_count": 14,
+          "source": "embedded_gguf_tokenizer"
+        },
+        "llama_cpp_import_ok": true,
+        "llama_cpp_supports_gpu_offload": true,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "offload": {
+          "main_gpu": 0,
+          "n_gpu_layers": -1
+        },
+        "request_count": 1,
+        "runtime_backend": "llama_cpp_python_cuda_gguf",
+        "terminal_disposition": "complete",
+        "timing": {
+          "load_time_s": 12.714879,
+          "total_time_s": 15.850852
+        },
+        "vram": {
+          "after": [
+            {
+              "index": 0,
+              "memory_free_mib": 23813,
+              "memory_total_mib": 24576,
+              "memory_used_mib": 312,
+              "name": "NVIDIA GeForce RTX 3090",
+              "utilization_gpu_pct": 35
+            },
+            {
+              "index": 1,
+              "memory_free_mib": 2590,
+              "memory_total_mib": 24576,
+              "memory_used_mib": 21534,
+              "name": "NVIDIA GeForce RTX 3090",
+              "utilization_gpu_pct": 99
+            }
+          ],
+          "before": [
+            {
+              "index": 0,
+              "memory_free_mib": 24120,
+              "memory_total_mib": 24576,
+              "memory_used_mib": 4,
+              "name": "NVIDIA GeForce RTX 3090",
+              "utilization_gpu_pct": 0
+            },
+            {
+              "index": 1,
+              "memory_free_mib": 2887,
+              "memory_total_mib": 24576,
+              "memory_used_mib": 21237,
+              "name": "NVIDIA GeForce RTX 3090",
+              "utilization_gpu_pct": 96
+            }
+          ]
+        }
+      },
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-SCORES"
+      ],
+      "model_family_result_hash": "sha256:f2630567968f76f2f0f500bee4dce03f5ef31546d48dd38caa6553c46801b0d3"
+    },
+    {
+      "row_type": "model_family_result",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_family": "gemma_dense",
+      "role": "flagship_dense_challenge_generator",
+      "request_count": 1,
+      "terminal_request_count": 1,
+      "valid_yield_count": 0,
+      "valid_yield_rate": 0.0,
+      "failure_modes": {
+        "parse_failed": 1
+      },
+      "source_families": [
+        "random_3cnf"
+      ],
+      "source_scales": [
+        "small"
+      ],
+      "source_labels": [
+        "unsat"
+      ],
+      "edit_type_counts": {},
+      "truncation_count": 0,
+      "parser_failure_count": 1,
+      "runtime_receipt": {
+        "embedded_tokenizer": {
+          "loadable": true,
+          "probe_token_count": 18,
+          "source": "embedded_gguf_tokenizer"
+        },
+        "llama_cpp_import_ok": true,
+        "llama_cpp_supports_gpu_offload": true,
+        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+        "offload": {
+          "main_gpu": 0,
+          "n_gpu_layers": -1
+        },
+        "request_count": 1,
+        "runtime_backend": "llama_cpp_python_cuda_gguf",
+        "terminal_disposition": "complete",
+        "timing": {
+          "load_time_s": 31.525432,
+          "total_time_s": 32.980885
+        },
+        "vram": {
+          "after": [
+            {
+              "index": 0,
+              "memory_free_mib": 23807,
+              "memory_total_mib": 24576,
+              "memory_used_mib": 318,
+              "name": "NVIDIA GeForce RTX 3090",
+              "utilization_gpu_pct": 57
+            },
+            {
+              "index": 1,
+              "memory_free_mib": 2590,
+              "memory_total_mib": 24576,
+              "memory_used_mib": 21534,
+              "name": "NVIDIA GeForce RTX 3090",
+              "utilization_gpu_pct": 97
+            }
+          ],
+          "before": [
+            {
+              "index": 0,
+              "memory_free_mib": 24120,
+              "memory_total_mib": 24576,
+              "memory_used_mib": 4,
+              "name": "NVIDIA GeForce RTX 3090",
+              "utilization_gpu_pct": 0
+            },
+            {
+              "index": 1,
+              "memory_free_mib": 2887,
+              "memory_total_mib": 24576,
+              "memory_used_mib": 21237,
+              "name": "NVIDIA GeForce RTX 3090",
+              "utilization_gpu_pct": 96
+            }
+          ]
+        }
+      },
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-SCORES"
+      ],
+      "model_family_result_hash": "sha256:d21fa4fbe2c19cfce21e3d188c421cfad2bac2e39838335c1b12fdc23c1187bf"
+    },
+    {
+      "row_type": "model_family_result",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_family": "gemma_moe",
+      "role": "middle_moe_challenge_generator",
+      "request_count": 1,
+      "terminal_request_count": 1,
+      "valid_yield_count": 0,
+      "valid_yield_rate": 0.0,
+      "failure_modes": {
+        "parse_failed": 1
+      },
+      "source_families": [
+        "random_3cnf"
+      ],
+      "source_scales": [
+        "small"
+      ],
+      "source_labels": [
+        "unsat"
+      ],
+      "edit_type_counts": {},
+      "truncation_count": 0,
+      "parser_failure_count": 1,
+      "runtime_receipt": {
+        "embedded_tokenizer": {
+          "loadable": true,
+          "probe_token_count": 18,
+          "source": "embedded_gguf_tokenizer"
+        },
+        "llama_cpp_import_ok": true,
+        "llama_cpp_supports_gpu_offload": true,
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "offload": {
+          "main_gpu": 0,
+          "n_gpu_layers": -1
+        },
+        "request_count": 1,
+        "runtime_backend": "llama_cpp_python_cuda_gguf",
+        "terminal_disposition": "complete",
+        "timing": {
+          "load_time_s": 18.683033,
+          "total_time_s": 19.677787
+        },
+        "vram": {
+          "after": [
+            {
+              "index": 0,
+              "memory_free_mib": 23813,
+              "memory_total_mib": 24576,
+              "memory_used_mib": 312,
+              "name": "NVIDIA GeForce RTX 3090",
+              "utilization_gpu_pct": 87
+            },
+            {
+              "index": 1,
+              "memory_free_mib": 2590,
+              "memory_total_mib": 24576,
+              "memory_used_mib": 21534,
+              "name": "NVIDIA GeForce RTX 3090",
+              "utilization_gpu_pct": 100
+            }
+          ],
+          "before": [
+            {
+              "index": 0,
+              "memory_free_mib": 24120,
+              "memory_total_mib": 24576,
+              "memory_used_mib": 4,
+              "name": "NVIDIA GeForce RTX 3090",
+              "utilization_gpu_pct": 0
+            },
+            {
+              "index": 1,
+              "memory_free_mib": 2887,
+              "memory_total_mib": 24576,
+              "memory_used_mib": 21237,
+              "name": "NVIDIA GeForce RTX 3090",
+              "utilization_gpu_pct": 97
+            }
+          ]
+        }
+      },
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-SCORES"
+      ],
+      "model_family_result_hash": "sha256:37f81d88f00a3adc1573bfb394251e1829cd9a6be07e2c351af19be1845b7b2c"
+    }
+  ],
+  "challenge_generation_complete_score": 1.0,
+  "challenge_pool_ready_score": 0.0,
+  "prohibited_output_attack_matrix": {
+    "schema_version": "carnot.experiment_6505.sota_formal_challenge_mutations.v1.prohibited_output_attack_matrix",
+    "rows": [
+      {
+        "row_type": "prohibited_output_attack",
+        "attack_id": "answers",
+        "parse_ok": false,
+        "prohibited_reasons": [
+          "answer"
+        ],
+        "fail_closed": true,
+        "accepted": false,
+        "spec_refs": [
+          "REQ-BENCH-6505",
+          "SCENARIO-BENCH-6505-NO-ANSWER"
+        ],
+        "attack_row_hash": "sha256:6b806b6a2a78706137b0623c463239a999f66ada9c2e29275da2966331c06377"
+      },
+      {
+        "row_type": "prohibited_output_attack",
+        "attack_id": "labels",
+        "parse_ok": false,
+        "prohibited_reasons": [
+          "label"
+        ],
+        "fail_closed": true,
+        "accepted": false,
+        "spec_refs": [
+          "REQ-BENCH-6505",
+          "SCENARIO-BENCH-6505-NO-ANSWER"
+        ],
+        "attack_row_hash": "sha256:cee96159838bdaac254192707fb3a2e2709584c9dba73f29dc421574fb5a5337"
+      },
+      {
+        "row_type": "prohibited_output_attack",
+        "attack_id": "heuristics",
+        "parse_ok": false,
+        "prohibited_reasons": [
+          "solver_advice"
+        ],
+        "fail_closed": true,
+        "accepted": false,
+        "spec_refs": [
+          "REQ-BENCH-6505",
+          "SCENARIO-BENCH-6505-NO-ANSWER"
+        ],
+        "attack_row_hash": "sha256:4654bae0a8b6257f6e814debe8c33f8b46239478ea520ff16be24e92877060e4"
+      },
+      {
+        "row_type": "prohibited_output_attack",
+        "attack_id": "semantic_translation",
+        "parse_ok": false,
+        "prohibited_reasons": [
+          "semantic_translation"
+        ],
+        "fail_closed": true,
+        "accepted": false,
+        "spec_refs": [
+          "REQ-BENCH-6505",
+          "SCENARIO-BENCH-6505-NO-ANSWER"
+        ],
+        "attack_row_hash": "sha256:17349a075573a3f2e4f36cec4421d04553f412479cdadef024ec1a3cdea8cd24"
+      },
+      {
+        "row_type": "prohibited_output_attack",
+        "attack_id": "retries",
+        "parse_ok": false,
+        "prohibited_reasons": [
+          "retry"
+        ],
+        "fail_closed": true,
+        "accepted": false,
+        "spec_refs": [
+          "REQ-BENCH-6505",
+          "SCENARIO-BENCH-6505-NO-ANSWER"
+        ],
+        "attack_row_hash": "sha256:8a8a13717e7073b0ffb7d2c41054b4ba1bccbaa96ef1ee6c1d53163ffecf8a0a"
+      },
+      {
+        "row_type": "prohibited_output_attack",
+        "attack_id": "held_access",
+        "parse_ok": false,
+        "prohibited_reasons": [
+          "held_access"
+        ],
+        "fail_closed": true,
+        "accepted": false,
+        "spec_refs": [
+          "REQ-BENCH-6505",
+          "SCENARIO-BENCH-6505-NO-ANSWER"
+        ],
+        "attack_row_hash": "sha256:07774b764c41c7799646075de89dff65dceba32303af4beacb5b300673f4f6be"
+      },
+      {
+        "row_type": "prohibited_output_attack",
+        "attack_id": "model_identity_shortcuts",
+        "parse_ok": false,
+        "prohibited_reasons": [
+          "model_identity"
+        ],
+        "fail_closed": true,
+        "accepted": false,
+        "spec_refs": [
+          "REQ-BENCH-6505",
+          "SCENARIO-BENCH-6505-NO-ANSWER"
+        ],
+        "attack_row_hash": "sha256:009e4892018f5a73b9b622ba6bfe8c1f3aed4d856062bc10576c091c4cc9fb74"
+      },
+      {
+        "row_type": "prohibited_output_attack",
+        "attack_id": "release_decisions",
+        "parse_ok": false,
+        "prohibited_reasons": [
+          "release_decision"
+        ],
+        "fail_closed": true,
+        "accepted": false,
+        "spec_refs": [
+          "REQ-BENCH-6505",
+          "SCENARIO-BENCH-6505-NO-ANSWER"
+        ],
+        "attack_row_hash": "sha256:23e7b7419871a4c4219344782bb3e53e6e5f134d956aa40c640c8ab1c2ac1bd5"
+      }
+    ],
+    "attack_count": 8,
+    "all_attacks_fail_closed": true,
+    "false_accept_count": 0,
+    "attack_matrix_hash": "sha256:1dbd202d99321de70f7313bd4a2a2ee52dad9505800cd92776a7dfdd0ef39980"
+  },
+  "per_unit_rows": [
+    {
+      "row_type": "mutation_request",
+      "request_id": "exp6505:qwen_moe:000",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_family": "qwen_moe",
+      "source_instance_id": "exp6504:random_3cnf:010",
+      "source_family": "random_3cnf",
+      "source_scale": "small",
+      "source_surface_relabeling": "alpha_relabelled",
+      "source_split": "development",
+      "source_exact_label": "unsat",
+      "seed": 6505101,
+      "retry_count": 0,
+      "request_sha256": "sha256:ea85d915fc8107375bbf0b313e0e8f50140b7f724be371c15d8b91442a7a8e15",
+      "response_sha256": "sha256:2603a59cab893f3d858bdd4d08e956b59983519ef362ed44f61ebd478db80c5f",
+      "parser_invoked_after_raw_persist": true,
+      "runtime_terminal_disposition": "generated",
+      "finish_reason": "length",
+      "truncated": true,
+      "parse_ok": false,
+      "edit_types": [],
+      "exact_label": "quarantined",
+      "accepted": false,
+      "quarantine_reason": "prohibited_output",
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-SCORES"
+      ],
+      "row_hash": "sha256:63eae1eadc2c176bc8851d5a07ce79b656a07d5ccf2eb1aa040d1bc8882835d0"
+    },
+    {
+      "row_type": "mutation_request",
+      "request_id": "exp6505:gemma_dense:000",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_family": "gemma_dense",
+      "source_instance_id": "exp6504:random_3cnf:010",
+      "source_family": "random_3cnf",
+      "source_scale": "small",
+      "source_surface_relabeling": "alpha_relabelled",
+      "source_split": "development",
+      "source_exact_label": "unsat",
+      "seed": 6505201,
+      "retry_count": 0,
+      "request_sha256": "sha256:68ec64597811e05cbb170989d72165bb38f1abcc03affa8a4dd3cfe2881fbc54",
+      "response_sha256": "sha256:62496bfcc1744c68d5506128e6fc3f57449c5a49bcf7f3c64071c645d21f79eb",
+      "parser_invoked_after_raw_persist": true,
+      "runtime_terminal_disposition": "generated",
+      "finish_reason": "stop",
+      "truncated": false,
+      "parse_ok": false,
+      "edit_types": [],
+      "exact_label": "quarantined",
+      "accepted": false,
+      "quarantine_reason": "parse_failed",
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-SCORES"
+      ],
+      "row_hash": "sha256:47af34bb2c11ead47f656a02fc7fbe667210a4e0044ab276e2cf79e0d7b1c75a"
+    },
+    {
+      "row_type": "mutation_request",
+      "request_id": "exp6505:gemma_moe:000",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_family": "gemma_moe",
+      "source_instance_id": "exp6504:random_3cnf:010",
+      "source_family": "random_3cnf",
+      "source_scale": "small",
+      "source_surface_relabeling": "alpha_relabelled",
+      "source_split": "development",
+      "source_exact_label": "unsat",
+      "seed": 6505301,
+      "retry_count": 0,
+      "request_sha256": "sha256:04974bc7632f8760d01c972c93f42e4ecf298eff2d970a68b125a0733cc76a50",
+      "response_sha256": "sha256:7dc9ae07df11ca75326484816ae67f19bad41df8d4db5e3df98455be86d7c6cf",
+      "parser_invoked_after_raw_persist": true,
+      "runtime_terminal_disposition": "generated",
+      "finish_reason": "stop",
+      "truncated": false,
+      "parse_ok": false,
+      "edit_types": [],
+      "exact_label": "quarantined",
+      "accepted": false,
+      "quarantine_reason": "parse_failed",
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-SCORES"
+      ],
+      "row_hash": "sha256:1736904b8788ee0cdd43d916adf1a956e741345988928833dd5c57da75afcf23"
+    },
+    {
+      "row_type": "exact_admission",
+      "request_id": "exp6505:qwen_moe:000",
+      "source_instance_id": "exp6504:random_3cnf:010",
+      "source_raw_instance_hash": "sha256:7e763929b226e20d890b949ad2b6e072cf24c08ffcc49d0a8d2bf9217ca70fe5",
+      "source_family": "random_3cnf",
+      "source_scale": "small",
+      "source_surface_relabeling": "alpha_relabelled",
+      "source_split": "development",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_family": "qwen_moe",
+      "seed": 6505101,
+      "parse_ok": false,
+      "parse_errors": [
+        "prohibited output present"
+      ],
+      "prohibited_reasons": [
+        "retry"
+      ],
+      "no_prohibited_output": false,
+      "operation_count": 0,
+      "edit_types": [],
+      "mutation_hash": "sha256:7b1bb8f395b3b0421aa4d8e4df612a308dbc7ad8ea7f9e232a3c9383cfbeac33",
+      "changed": false,
+      "duplicate": false,
+      "novel": false,
+      "edit_replay_errors": [
+        "parse_failed"
+      ],
+      "exact_label": "quarantined",
+      "model_or_proof_valid": false,
+      "proof_or_model_receipt": {},
+      "backend_receipts": [],
+      "exact_replay_passed": false,
+      "label_ambiguous": true,
+      "accepted": false,
+      "quarantine_reason": "prohibited_output",
+      "truncated": true,
+      "verifier_is_oracle": true,
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-ADMISSION"
+      ],
+      "admission_row_hash": "sha256:17ddb06dc9c7c0ce5959fef202f8400eb7b159d6d2738490da70ba9991663a35"
+    },
+    {
+      "row_type": "exact_admission",
+      "request_id": "exp6505:gemma_dense:000",
+      "source_instance_id": "exp6504:random_3cnf:010",
+      "source_raw_instance_hash": "sha256:7e763929b226e20d890b949ad2b6e072cf24c08ffcc49d0a8d2bf9217ca70fe5",
+      "source_family": "random_3cnf",
+      "source_scale": "small",
+      "source_surface_relabeling": "alpha_relabelled",
+      "source_split": "development",
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_family": "gemma_dense",
+      "seed": 6505201,
+      "parse_ok": false,
+      "parse_errors": [
+        "missing mutation boundary"
+      ],
+      "prohibited_reasons": [],
+      "no_prohibited_output": true,
+      "operation_count": 0,
+      "edit_types": [],
+      "mutation_hash": "sha256:add5e4bd482f34a7146bacb99de90b1ae1aa4cbecc829edf36a5b399130dff8a",
+      "changed": false,
+      "duplicate": false,
+      "novel": false,
+      "edit_replay_errors": [
+        "parse_failed"
+      ],
+      "exact_label": "quarantined",
+      "model_or_proof_valid": false,
+      "proof_or_model_receipt": {},
+      "backend_receipts": [],
+      "exact_replay_passed": false,
+      "label_ambiguous": true,
+      "accepted": false,
+      "quarantine_reason": "parse_failed",
+      "truncated": false,
+      "verifier_is_oracle": true,
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-ADMISSION"
+      ],
+      "admission_row_hash": "sha256:3db1705abf82bd70768d673e3e313c2c59f9eb43a81463b2448647014df3d070"
+    },
+    {
+      "row_type": "exact_admission",
+      "request_id": "exp6505:gemma_moe:000",
+      "source_instance_id": "exp6504:random_3cnf:010",
+      "source_raw_instance_hash": "sha256:7e763929b226e20d890b949ad2b6e072cf24c08ffcc49d0a8d2bf9217ca70fe5",
+      "source_family": "random_3cnf",
+      "source_scale": "small",
+      "source_surface_relabeling": "alpha_relabelled",
+      "source_split": "development",
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_family": "gemma_moe",
+      "seed": 6505301,
+      "parse_ok": false,
+      "parse_errors": [
+        "missing mutation boundary"
+      ],
+      "prohibited_reasons": [],
+      "no_prohibited_output": true,
+      "operation_count": 0,
+      "edit_types": [],
+      "mutation_hash": "sha256:88e71ca969854dec57c945c087705812d01d0e0d3ce26fd674747e8a53b4ab01",
+      "changed": false,
+      "duplicate": false,
+      "novel": false,
+      "edit_replay_errors": [
+        "parse_failed"
+      ],
+      "exact_label": "quarantined",
+      "model_or_proof_valid": false,
+      "proof_or_model_receipt": {},
+      "backend_receipts": [],
+      "exact_replay_passed": false,
+      "label_ambiguous": true,
+      "accepted": false,
+      "quarantine_reason": "parse_failed",
+      "truncated": false,
+      "verifier_is_oracle": true,
+      "spec_refs": [
+        "REQ-BENCH-6505",
+        "SCENARIO-BENCH-6505-ADMISSION"
+      ],
+      "admission_row_hash": "sha256:b67438ee56885b04a231f408a4316164a4cf00ac50ce0357aeb92001cf6e3da6"
+    }
+  ],
+  "aggregate_row_recomputation": {
+    "row_count": 6,
+    "request_count": 3,
+    "admission_count": 3,
+    "terminal_request_count": 3,
+    "accepted_mutation_count": 0,
+    "quarantined_mutation_count": 3,
+    "prohibited_accepted_count": 0,
+    "duplicate_quarantine_count": 0,
+    "unchanged_quarantine_count": 0,
+    "parse_failure_count": 2,
+    "runtime_blocked_count": 0,
+    "model_request_counts": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 1,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": 1,
+      "unsloth/gemma-4-31B-it-GGUF": 1
+    },
+    "failure_modes": {
+      "parse_failed": 2,
+      "prohibited_output": 1
+    },
+    "challenge_generation_complete_score_from_rows": 1.0,
+    "challenge_pool_ready_score_from_rows": 0.0
+  },
+  "gate_check_summary": {
+    "checks": {
+      "exp6504_gate": {
+        "expected": 1.0,
+        "observed": 1.0,
+        "passed": true
+      },
+      "model_cache": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "llama_cpp_cuda_support": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "gpu_inventory": {
+        "expected": "gpu_count>=1",
+        "observed": 2,
+        "passed": true
+      },
+      "all_requests_terminal": {
+        "expected": 1.0,
+        "observed": 1.0,
+        "passed": true
+      },
+      "no_accepted_prohibited_output": {
+        "expected": 0,
+        "observed": 0,
+        "passed": true
+      },
+      "prohibited_attacks_fail_closed": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "runtime_receipts_terminal": {
+        "expected": 3,
+        "observed": 3,
+        "passed": true
+      },
+      "protected_files_unchanged": {
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      "tests_passed": {
+        "expected": 0,
+        "observed": 0,
+        "passed": true
+      }
+    },
+    "failed_checks": [],
+    "all_gates_passed": true,
+    "blocked_reason": ""
+  },
+  "preconditions_checked": {
+    "planning_date": "20260822",
+    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6505_sota_formal_challenge_mutations.json",
+    "git_head": "e7f0064953e5198232b8fd4b1217b6ee2931650e",
+    "git_status_short": "M openspec/capabilities/benchmarks/spec.md\n M scripts/adversarial_verify.py\n?? python/carnot/experiment_6505_sota_formal_challenge_mutations.py\n?? tests/python/test_experiment_6505_sota_formal_challenge_mutations.py",
+    "upstream_gate_receipt": {
+      "row_type": "upstream_gate_receipt",
+      "experiment_id": "exp6504",
+      "path": "results/experiment_6504_exact_structural_benchmark_commitment.json",
+      "exists": true,
+      "sha256": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+      "field": "base_structural_benchmark_ready_score",
+      "expected_value": 1.0,
+      "observed_value": 1.0,
+      "passed": true,
+      "status": "complete_exact_structural_benchmark_committed",
+      "honest_verdict": "complete_exact_structural_benchmark_commitment: raw instances, exact labels, replays, lineage splits, held cells, strata, attacks, and checksums are sealed",
+      "protected_hashes_before_loading": {
+        "scripts/research_conductor.py": {
+          "sha256": "sha256:4c831cbb42bb03df54f6602638cdfc4bedc5bd3796ed075bec70b2c7a9ceff76",
+          "exists": true,
+          "protected_by_task_contract": true
+        },
+        "research-roadmap.yaml": {
+          "sha256": "sha256:ccf9b30583deffc0e5fe8d3759797de0f5652b5464c99f1196cee2fabd3a67cb",
+          "exists": true,
+          "protected_by_task_contract": true
+        },
+        "openspec/change-proposals/research-roadmap-vNEXT.md": {
+          "sha256": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+          "exists": true,
+          "protected_by_task_contract": true
+        },
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": {
+          "sha256": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+          "exists": true,
+          "protected_by_task_contract": true
+        },
+        "results/experiment_5813_split_budget_sota_canary.json": {
+          "sha256": "sha256:ba27fff99f32acfb7ea6744d91336ffe543db4ac739cfea83542b172ecebf0f8",
+          "exists": true,
+          "protected_by_task_contract": true
+        },
+        "results/experiment_5923_sota_schema_supported_constraintir_ab.json": {
+          "sha256": "sha256:ebe0e6fdcce1fb4d1bed9b4be5b2ea89dba6239b33498bd903ff60f8d2044a6c",
+          "exists": true,
+          "protected_by_task_contract": true
+        },
+        "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": {
+          "sha256": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+          "exists": true,
+          "protected_by_task_contract": true
+        },
+        "ops/exclusion_manifest.yaml": {
+          "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+          "exists": true,
+          "protected_by_task_contract": true
+        }
+      },
+      "gate_receipt_hash": "sha256:925a1f25a4fc201c5790bcd84af2af6ffca46996f041384cb4734b4eeaed4a4e"
+    },
+    "model_cache": {
+      "rows": [
+        {
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "model_file_exists": true,
+          "file_size_bytes": 22134528992,
+          "observed_quantization": "UD-Q4_K_M"
+        },
+        {
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "model_file_exists": true,
+          "file_size_bytes": 18323731456,
+          "observed_quantization": "Q4_K_M"
+        },
+        {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "model_file_exists": true,
+          "file_size_bytes": 16947539744,
+          "observed_quantization": "UD-Q4_K_M"
+        }
+      ],
+      "all_cached": true,
+      "cached_sota_pair_observation": [
+        {
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+        },
+        {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+        }
+      ]
+    },
+    "llama_cpp": {
+      "import_ok": true,
+      "version": "0.3.33",
+      "supports_gpu_offload": true,
+      "system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | "
+    },
+    "gpu_inventory": {
+      "rows": [
+        {
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_total_mib": 24576,
+          "memory_used_mib": 4,
+          "memory_free_mib": 24120,
+          "utilization_gpu_pct": 0
+        },
+        {
+          "index": 1,
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_total_mib": 24576,
+          "memory_used_mib": 21237,
+          "memory_free_mib": 2887,
+          "utilization_gpu_pct": 96
+        }
+      ],
+      "gpu_count": 2,
+      "max_free_vram_mib": 24120
+    },
+    "resources": {
+      "cpu": {
+        "logical_cpu_count": 24,
+        "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+        "python": "3.12.13",
+        "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
+      },
+      "disk": {
+        "total_bytes": 3953289023488,
+        "used_bytes": 2866195673088,
+        "free_bytes": 1087093350400
+      }
+    },
+    "protected_hashes_before_loading": {
+      "scripts/research_conductor.py": {
+        "sha256": "sha256:4c831cbb42bb03df54f6602638cdfc4bedc5bd3796ed075bec70b2c7a9ceff76",
+        "exists": true,
+        "protected_by_task_contract": true
+      },
+      "research-roadmap.yaml": {
+        "sha256": "sha256:ccf9b30583deffc0e5fe8d3759797de0f5652b5464c99f1196cee2fabd3a67cb",
+        "exists": true,
+        "protected_by_task_contract": true
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "sha256": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "exists": true,
+        "protected_by_task_contract": true
+      },
+      "results/experiment_6504_exact_structural_benchmark_commitment.json": {
+        "sha256": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "exists": true,
+        "protected_by_task_contract": true
+      },
+      "results/experiment_5813_split_budget_sota_canary.json": {
+        "sha256": "sha256:ba27fff99f32acfb7ea6744d91336ffe543db4ac739cfea83542b172ecebf0f8",
+        "exists": true,
+        "protected_by_task_contract": true
+      },
+      "results/experiment_5923_sota_schema_supported_constraintir_ab.json": {
+        "sha256": "sha256:ebe0e6fdcce1fb4d1bed9b4be5b2ea89dba6239b33498bd903ff60f8d2044a6c",
+        "exists": true,
+        "protected_by_task_contract": true
+      },
+      "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": {
+        "sha256": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "exists": true,
+        "protected_by_task_contract": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "exists": true,
+        "protected_by_task_contract": true
+      }
+    },
+    "required_files": {
+      "AGENTS.md": {
+        "exists": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CODEX.md": {
+        "exists": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "CLAUDE.md": {
+        "exists": true,
+        "sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad"
+      },
+      "research-program.md": {
+        "exists": true,
+        "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "exists": true,
+        "sha256": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940"
+      },
+      "openspec/capabilities/benchmarks/spec.md": {
+        "exists": true,
+        "sha256": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78"
+      },
+      "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": {
+        "exists": true,
+        "sha256": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed"
+      },
+      "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": {
+        "exists": true,
+        "sha256": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0"
+      },
+      "ops/e2e-test-plan.md": {
+        "exists": true,
+        "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+      },
+      "results/experiment_6504_exact_structural_benchmark_commitment.json": {
+        "exists": true,
+        "sha256": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "exists": true,
+        "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      }
+    },
+    "failed_precondition_checks": [],
+    "preconditions_ready": true
+  },
+  "protected_files_unchanged": {
+    "files": {
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "sha256_before": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "sha256_after": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "exists_before": true,
+        "exists_after": true,
+        "unchanged": true,
+        "protected_by_task_contract": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "sha256_before": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "sha256_after": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
+        "exists_before": true,
+        "exists_after": true,
+        "unchanged": true,
+        "protected_by_task_contract": true
+      },
+      "research-roadmap.yaml": {
+        "sha256_before": "sha256:ccf9b30583deffc0e5fe8d3759797de0f5652b5464c99f1196cee2fabd3a67cb",
+        "sha256_after": "sha256:ccf9b30583deffc0e5fe8d3759797de0f5652b5464c99f1196cee2fabd3a67cb",
+        "exists_before": true,
+        "exists_after": true,
+        "unchanged": true,
+        "protected_by_task_contract": true
+      },
+      "results/experiment_5813_split_budget_sota_canary.json": {
+        "sha256_before": "sha256:ba27fff99f32acfb7ea6744d91336ffe543db4ac739cfea83542b172ecebf0f8",
+        "sha256_after": "sha256:ba27fff99f32acfb7ea6744d91336ffe543db4ac739cfea83542b172ecebf0f8",
+        "exists_before": true,
+        "exists_after": true,
+        "unchanged": true,
+        "protected_by_task_contract": true
+      },
+      "results/experiment_5923_sota_schema_supported_constraintir_ab.json": {
+        "sha256_before": "sha256:ebe0e6fdcce1fb4d1bed9b4be5b2ea89dba6239b33498bd903ff60f8d2044a6c",
+        "sha256_after": "sha256:ebe0e6fdcce1fb4d1bed9b4be5b2ea89dba6239b33498bd903ff60f8d2044a6c",
+        "exists_before": true,
+        "exists_after": true,
+        "unchanged": true,
+        "protected_by_task_contract": true
+      },
+      "results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json": {
+        "sha256_before": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "sha256_after": "sha256:c83caf500a7a8dc4fb798a611b6f60124a6dfc4c114a403e901655e839e8c604",
+        "exists_before": true,
+        "exists_after": true,
+        "unchanged": true,
+        "protected_by_task_contract": true
+      },
+      "results/experiment_6504_exact_structural_benchmark_commitment.json": {
+        "sha256_before": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "sha256_after": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "exists_before": true,
+        "exists_after": true,
+        "unchanged": true,
+        "protected_by_task_contract": true
+      },
+      "scripts/research_conductor.py": {
+        "sha256_before": "sha256:4c831cbb42bb03df54f6602638cdfc4bedc5bd3796ed075bec70b2c7a9ceff76",
+        "sha256_after": "sha256:4c831cbb42bb03df54f6602638cdfc4bedc5bd3796ed075bec70b2c7a9ceff76",
+        "exists_before": true,
+        "exists_after": true,
+        "unchanged": true,
+        "protected_by_task_contract": true
+      }
+    },
+    "changed_paths": [],
+    "all_protected_files_unchanged": true
+  },
+  "inference_substrate": "local_llama_cpp_three_family_formal_mutation_generation_plus_exact_solver_admission",
+  "verifier_is_oracle": true,
+  "field_principles": {
+    "status": "Records terminal generation and admission state.",
+    "verdict_class": "Closed enum: positive | circular_positive | null | blocked | disqualified | partial.",
+    "upstream_gate_receipt": "Binds the base benchmark gate and observed value.",
+    "model_specs": "Lists all three mandated GGUF repositories, files, quantization, and roles.",
+    "model_runtime_receipts": "Records llama_cpp backend, tokenizer, offload, VRAM, and timing per model.",
+    "mutation_grammar": "Freezes the bounded formal edit language.",
+    "source_selection_receipt": "Proves all sources are development-only and chosen before generation.",
+    "raw_request_response_receipts": "Preserves exact bytes and hashes before parsing.",
+    "rows": "Provides one request, parse, edit, exact-check, and disposition row per unit.",
+    "exact_admission_rows": "Records parse, replay, label, proof/model, novelty, and quarantine outcomes.",
+    "model_family_results": "Reports valid yield and failure modes separately for each SOTA family.",
+    "challenge_generation_complete_score": "Same-roadmap gate for complete request accounting.",
+    "challenge_pool_ready_score": "Separates useful valid mutations from execution completeness.",
+    "prohibited_output_attack_matrix": "Tests answers, labels, heuristics, semantic translation, retries, held access, and model identity shortcuts.",
+    "per_unit_rows": "Carries every request and exact admission result.",
+    "aggregate_row_recomputation": "Recomputes all yields, counts, and scores from rows.",
+    "gate_check_summary": "Names any failed benchmark, cache, CUDA, GPU, parse, or runtime check and observed value.",
+    "preconditions_checked": "Records gate, cache, GPU, runtime, tokenizer, disk, and repository checks.",
+    "protected_files_unchanged": "Proves protected files stayed unchanged.",
+    "inference_substrate": "Declares local llama_cpp GGUF generation plus exact CPU parsing and solving.",
+    "verifier_is_oracle": "True only for exact formal admission checks; models are not oracles.",
+    "field_principles": "Explains each generation, admission, and boundary field.",
+    "field_provenance": "Maps rows to model files, raw hashes, parser functions, and solver receipts.",
+    "random_seed": "Records source selection and generation seeds.",
+    "duration_s": "Records measured wall time.",
+    "tests_run": "Records commands and exit codes.",
+    "reproducibility_checksum": "Hashes specs, raw bytes, parses, admissions, and rows.",
+    "honest_verdict": "Uses complete_* for complete accounting, complete_null for zero useful yield, or blocked_* with gate_check_summary for unmet execution preconditions."
+  },
+  "field_provenance": {
+    "status": {
+      "principle": "Records terminal generation and admission state.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "verdict_class": {
+      "principle": "Closed enum: positive | circular_positive | null | blocked | disqualified | partial.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "upstream_gate_receipt": {
+      "principle": "Binds the base benchmark gate and observed value.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "model_specs": {
+      "principle": "Lists all three mandated GGUF repositories, files, quantization, and roles.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact",
+      "model_files": [
+        {
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "file_size_bytes": 22134528992
+        },
+        {
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "file_size_bytes": 18323731456
+        },
+        {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "file_size_bytes": 16947539744
+        }
+      ]
+    },
+    "model_runtime_receipts": {
+      "principle": "Records llama_cpp backend, tokenizer, offload, VRAM, and timing per model.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "mutation_grammar": {
+      "principle": "Freezes the bounded formal edit language.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "source_selection_receipt": {
+      "principle": "Proves all sources are development-only and chosen before generation.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "raw_request_response_receipts": {
+      "principle": "Preserves exact bytes and hashes before parsing.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact",
+      "raw_hashes": [
+        {
+          "request_id": "exp6505:qwen_moe:000",
+          "response_sha256": "sha256:2603a59cab893f3d858bdd4d08e956b59983519ef362ed44f61ebd478db80c5f"
+        },
+        {
+          "request_id": "exp6505:gemma_dense:000",
+          "response_sha256": "sha256:62496bfcc1744c68d5506128e6fc3f57449c5a49bcf7f3c64071c645d21f79eb"
+        },
+        {
+          "request_id": "exp6505:gemma_moe:000",
+          "response_sha256": "sha256:7dc9ae07df11ca75326484816ae67f19bad41df8d4db5e3df98455be86d7c6cf"
+        }
+      ]
+    },
+    "rows": {
+      "principle": "Provides one request, parse, edit, exact-check, and disposition row per unit.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "exact_admission_rows": {
+      "principle": "Records parse, replay, label, proof/model, novelty, and quarantine outcomes.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact",
+      "admission_hashes": [
+        {
+          "request_id": "exp6505:qwen_moe:000",
+          "admission_row_hash": "sha256:17ddb06dc9c7c0ce5959fef202f8400eb7b159d6d2738490da70ba9991663a35"
+        },
+        {
+          "request_id": "exp6505:gemma_dense:000",
+          "admission_row_hash": "sha256:3db1705abf82bd70768d673e3e313c2c59f9eb43a81463b2448647014df3d070"
+        },
+        {
+          "request_id": "exp6505:gemma_moe:000",
+          "admission_row_hash": "sha256:b67438ee56885b04a231f408a4316164a4cf00ac50ce0357aeb92001cf6e3da6"
+        }
+      ]
+    },
+    "model_family_results": {
+      "principle": "Reports valid yield and failure modes separately for each SOTA family.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "challenge_generation_complete_score": {
+      "principle": "Same-roadmap gate for complete request accounting.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "challenge_pool_ready_score": {
+      "principle": "Separates useful valid mutations from execution completeness.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "prohibited_output_attack_matrix": {
+      "principle": "Tests answers, labels, heuristics, semantic translation, retries, held access, and model identity shortcuts.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "per_unit_rows": {
+      "principle": "Carries every request and exact admission result.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "aggregate_row_recomputation": {
+      "principle": "Recomputes all yields, counts, and scores from rows.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "gate_check_summary": {
+      "principle": "Names any failed benchmark, cache, CUDA, GPU, parse, or runtime check and observed value.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "preconditions_checked": {
+      "principle": "Records gate, cache, GPU, runtime, tokenizer, disk, and repository checks.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "protected_files_unchanged": {
+      "principle": "Proves protected files stayed unchanged.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "inference_substrate": {
+      "principle": "Declares local llama_cpp GGUF generation plus exact CPU parsing and solving.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "verifier_is_oracle": {
+      "principle": "True only for exact formal admission checks; models are not oracles.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "field_principles": {
+      "principle": "Explains each generation, admission, and boundary field.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "field_provenance": {
+      "principle": "Maps rows to model files, raw hashes, parser functions, and solver receipts.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact",
+      "parser": "parse_edit_script",
+      "solver": "experiment_6504.label_instance"
+    },
+    "random_seed": {
+      "principle": "Records source selection and generation seeds.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "duration_s": {
+      "principle": "Records measured wall time.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "tests_run": {
+      "principle": "Records commands and exit codes.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "reproducibility_checksum": {
+      "principle": "Hashes specs, raw bytes, parses, admissions, and rows.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    },
+    "honest_verdict": {
+      "principle": "Uses complete_* for complete accounting, complete_null for zero useful yield, or blocked_* with gate_check_summary for unmet execution preconditions.",
+      "spec_refs": [
+        "REQ-BENCH-6505"
+      ],
+      "source_hashes": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:2ffc0338c8a84c060df76399513ac224f3a85016527c17603e6e046b3430a940",
+        "openspec/capabilities/benchmarks/spec.md": "sha256:a16b571c7232f8c8db6761be552b6f66d4a37c6292c88fe1593bfc0c37686e78",
+        "python/carnot/experiment_6505_sota_formal_challenge_mutations.py": "sha256:7891ad8fef005d43e1ceca1c166f61b4fed282465e8fdc3026ea5c2070f3c9ed",
+        "tests/python/test_experiment_6505_sota_formal_challenge_mutations.py": "sha256:638505dcf40d40f63e11bafc01324b3246c81ea2f2ffae6f7f7b34656d65b0b0",
+        "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+        "results/experiment_6504_exact_structural_benchmark_commitment.json": "sha256:4aba9d100ef49680b64f2922412c0bfb5ba4feb4456d56e71e2acd5a7a1a612d",
+        "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423"
+      },
+      "local_reducer": "build_artifact"
+    }
+  },
+  "random_seed": {
+    "artifact_seed": 6505,
+    "source_selection_seed": 6505001,
+    "generation_seed": 6505101
+  },
+  "duration_s": 72.753867,
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6505_sota_formal_challenge_mutations.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6505_sota_formal_challenge_mutations.py -m pytest tests/python/test_experiment_6505_sota_formal_challenge_mutations.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6505_sota_formal_challenge_mutations.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6505_sota_formal_challenge_mutations.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_6505_sota_formal_challenge_mutations.py tests/python/test_experiment_6505_sota_formal_challenge_mutations.py scripts/adversarial_verify.py",
+      "exit_code": 0
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6505_sota_formal_challenge_mutations --date 20260822",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6505_sota_formal_challenge_mutations.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6505_sota_formal_challenge_mutations.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6505_sota_formal_challenge_mutations --validate",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "exit_code": 0
+    }
+  ],
+  "reproducibility_checksum": "sha256:cac1cad72dc995feda796657fd8dc2802d968f7a1f12952ce77f61be2165c546",
+  "honest_verdict": "complete_null_formal_challenge_mutations: terminal accounting complete with zero useful mutations"
+}

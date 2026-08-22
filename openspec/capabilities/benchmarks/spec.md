@@ -2328,6 +2328,158 @@ equals `1.0`, and the terminal verdict starts with `complete_` or `blocked_`.
 |---|---|---|
 | REQ-BENCH-6504 | Planned (`python/carnot/experiment_6504_exact_structural_benchmark_commitment.py`, `results/experiment_6504_exact_structural_benchmark_commitment.json`) | Planned (`tests/python/test_experiment_6504_exact_structural_benchmark_commitment.py`) |
 
+### REQ-BENCH-6505: Local SOTA Formal Challenge Mutations SHALL Be One-Shot And Exact-Admitted
+
+Carnot SHALL provide Exp6505 at
+`python/carnot/experiment_6505_sota_formal_challenge_mutations.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6505_sota_formal_challenge_mutations --date 20260822`
+SHALL write
+`results/experiment_6505_sota_formal_challenge_mutations.json`.
+
+Exp6505 SHALL evaluate the Exp6504 gate before model loading. It SHALL record
+the Exp6504 path, hash, `base_structural_benchmark_ready_score`, expected value,
+and observed value. It SHALL check model cache paths, GGUF file sizes,
+llama_cpp CUDA support, GPU inventory, free VRAM, disk space, repository state,
+and protected-file hashes before loading any model. Every failed precondition
+SHALL be named with its observed value.
+
+Exp6505 SHALL use exactly these GGUF model families in `MODEL_SPECS`:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL resolve local GGUF files through the
+canonical cache resolver. It SHALL load one model at a time through llama_cpp.
+It SHALL use the tokenizer embedded in each GGUF. It SHALL NOT call
+`AutoTokenizer` for a GGUF repository.
+
+Exp6505 SHALL select development-only source instances from Exp6504 before
+generation. For every selected source and every model family it SHALL issue one
+request. It SHALL not retry a request after parsing or admission fails. It SHALL
+persist exact request bytes, response bytes, hashes, model file identity, seed,
+and terminal runtime receipt before parsing any response.
+
+Exp6505 SHALL freeze a bounded edit DSL for clause, edge, color, job,
+precedence, coefficient, and relabel operations. The prompt SHALL forbid
+answers, labels, solver advice, free-form semantic translation, release
+decisions, hidden held access, and model-identity shortcuts. The parser SHALL
+reject those outputs before exact admission.
+
+Exp6505 SHALL apply syntactically valid edit scripts to a copy of the formal
+development instance only. Exact local tools SHALL parse, replay, solve, check
+model or proof validity, compute novelty, classify label ambiguity, and accept
+or quarantine each mutation. Invalid, duplicate, unchanged, answer-bearing,
+label-bearing, semantic-translation, solver-advice, release-decision, or
+ambiguous outputs SHALL be terminal quarantine rows. Models SHALL never be
+oracles.
+
+Exp6505 SHALL report valid yield, novelty, source family, source scale, exact
+label, edit type, truncation, parser disposition, and runtime outcome separately
+for each SOTA family. A model-family comparison SHALL contain one row for every
+precommitted request. `challenge_generation_complete_score` SHALL be `1.0` when
+every precommitted request has one terminal receipt, even when valid yield is
+zero. `challenge_pool_ready_score` SHALL be separate and SHALL not block the
+base Exp6504 benchmark.
+
+The terminal artifact SHALL include `status`, `verdict_class`,
+`upstream_gate_receipt`, `model_specs`, `model_runtime_receipts`,
+`mutation_grammar`, `source_selection_receipt`,
+`raw_request_response_receipts`, `rows`, `exact_admission_rows`,
+`model_family_results`, `challenge_generation_complete_score`,
+`challenge_pool_ready_score`, `prohibited_output_attack_matrix`,
+`per_unit_rows`, `aggregate_row_recomputation`, `gate_check_summary`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL be
+`local_llama_cpp_three_family_formal_mutation_generation_plus_exact_solver_admission`.
+`verifier_is_oracle` SHALL be true only for exact parsing, solving, and validity.
+`verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`.
+
+- `status`: "Records terminal generation and admission state."
+- `verdict_class`: "Closed enum: positive | circular_positive | null | blocked | disqualified | partial."
+- `upstream_gate_receipt`: "Binds the base benchmark gate and observed value."
+- `model_specs`: "Lists all three mandated GGUF repositories, files, quantization, and roles."
+- `model_runtime_receipts`: "Records llama_cpp backend, tokenizer, offload, VRAM, and timing per model."
+- `mutation_grammar`: "Freezes the bounded formal edit language."
+- `source_selection_receipt`: "Proves all sources are development-only and chosen before generation."
+- `raw_request_response_receipts`: "Preserves exact bytes and hashes before parsing."
+- `rows`: "Provides one request, parse, edit, exact-check, and disposition row per unit."
+- `exact_admission_rows`: "Records parse, replay, label, proof/model, novelty, and quarantine outcomes."
+- `model_family_results`: "Reports valid yield and failure modes separately for each SOTA family."
+- `challenge_generation_complete_score`: "Same-roadmap gate for complete request accounting."
+- `challenge_pool_ready_score`: "Separates useful valid mutations from execution completeness."
+- `prohibited_output_attack_matrix`: "Tests answers, labels, heuristics, semantic translation, retries, held access, and model identity shortcuts."
+- `per_unit_rows`: "Carries every request and exact admission result."
+- `aggregate_row_recomputation`: "Recomputes all yields, counts, and scores from rows."
+- `gate_check_summary`: "Names any failed benchmark, cache, CUDA, GPU, parse, or runtime check and observed value."
+- `preconditions_checked`: "Records gate, cache, GPU, runtime, tokenizer, disk, and repository checks."
+- `protected_files_unchanged`: "Proves protected files stayed unchanged."
+- `inference_substrate`: "Declares local llama_cpp GGUF generation plus exact CPU parsing and solving."
+- `verifier_is_oracle`: "True only for exact formal admission checks; models are not oracles."
+- `field_principles`: "Explains each generation, admission, and boundary field."
+- `field_provenance`: "Maps rows to model files, raw hashes, parser functions, and solver receipts."
+- `random_seed`: "Records source selection and generation seeds."
+- `duration_s`: "Records measured wall time."
+- `tests_run`: "Records commands and exit codes."
+- `reproducibility_checksum`: "Hashes specs, raw bytes, parses, admissions, and rows."
+- `honest_verdict`: "Uses complete_* for complete accounting, complete_null for zero useful yield, or blocked_* with gate_check_summary for unmet execution preconditions."
+
+#### SCENARIO-BENCH-6505-PROVENANCE: Gate And Model Receipts Precede Loading
+
+**Given** the Exp6504 benchmark artifact and local SOTA model registry
+**When** Exp6505 starts
+**Then** it records the Exp6504 gate, model cache paths, file sizes, llama_cpp
+CUDA support, GPU inventory, free VRAM, disk, and protected hashes before any
+model load event.
+
+#### SCENARIO-BENCH-6505-ONE-SHOT: Development Requests Are Precommitted
+
+**Given** Exp6504 development rows
+**When** Exp6505 selects source instances
+**Then** every selected source has `split=development`, selection occurs before
+generation, and exactly one request is issued for each source and model pair.
+
+#### SCENARIO-BENCH-6505-NO-ANSWER: Prohibited Outputs Fail Closed
+
+**Given** model output that contains an answer, label, solver advice,
+semantic translation, release decision, retry attempt, held access, or
+model-identity shortcut
+**When** Exp6505 parses the output
+**Then** the row is rejected before exact admission and no accepted row contains
+the prohibited content.
+
+#### SCENARIO-BENCH-6505-ADMISSION: Exact Tools Own Mutation Admission
+
+**Given** a syntactically valid bounded edit script
+**When** Exp6505 applies it to a copy of a development formal instance
+**Then** exact local parsing, replay, solving, model/proof validation, novelty,
+duplicate, unchanged, and label-ambiguity checks determine acceptance or
+quarantine without model judgment.
+
+#### SCENARIO-BENCH-6505-SCORES: Complete Accounting Is Separate From Pool Readiness
+
+**Given** all precommitted requests have terminal receipts
+**When** Exp6505 recomputes aggregate rows
+**Then** `challenge_generation_complete_score` is `1.0`, model-family results
+include one row per request, and `challenge_pool_ready_score` is derived only
+from accepted useful mutations.
+
+#### SCENARIO-BENCH-6505-ARTIFACT: Artifact Is Checksummed And Boundary-Safe
+
+**Given** raw bytes, exact admission rows, runtime receipts, protected hashes,
+field principles, field provenance, tests, and attacks
+**When** Exp6505 validates the artifact
+**Then** every required field is present, the checksum matches,
+`verifier_is_oracle` is scoped to exact tools, protected files are unchanged,
+and the terminal verdict starts with `complete_`, `complete_null`, or
+`blocked_`.
+
+## Implementation Status (REQ-BENCH-6505)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6505 | Planned (`python/carnot/experiment_6505_sota_formal_challenge_mutations.py`, `results/experiment_6505_sota_formal_challenge_mutations.json`) | Planned (`tests/python/test_experiment_6505_sota_formal_challenge_mutations.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
