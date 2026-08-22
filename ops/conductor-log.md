@@ -16272,3 +16272,5 @@ code |
 | 2026-08-22 19:47 UTC | V561 evidence corrigendum and V562 exact-branch li | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6506_v561_ev |
 | 2026-08-22 19:56 UTC | V561 evidence corrigendum and V562 exact-branch li | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6506_v561_ev |
 | 2026-08-22 19:58 UTC | Sealed exact branch-counterfactual dataset | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6506-v561-evidence-corrigendum-v562-linea |
+| 2026-08-22 19:58 UTC | Analytical branch order and bounded-refocus A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6507-exact-branch-counterfactual-datase |
+| 2026-08-22 20:00 UTC | Sealed exact branch-counterfactual dataset | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6506-v561-evidence-corrigendum-v562-linea |
