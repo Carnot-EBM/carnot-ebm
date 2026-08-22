@@ -6911,6 +6911,155 @@ with `complete_`.
 |---|---|---|
 | REQ-INFRA-6488 | Planned: `python/carnot/experiment_6488_v559_decision_ledger.py`; terminal artifact `results/experiment_6488_v559_decision_ledger.json`. | Planned: `tests/python/test_experiment_6488_v559_decision_ledger.py`. |
 
+## REQ-INFRA-6502: V560 Retirement Ledger SHALL Lock The V561 Exact Structural Lineage
+
+Carnot SHALL provide Exp6502 at
+`python/carnot/experiment_6502_v560_retirement_v561_lineage_lock.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6502_v560_retirement_v561_lineage_lock --date 20260821`
+SHALL write
+`results/experiment_6502_v560_retirement_v561_lineage_lock.json`.
+
+Exp6502 SHALL read Exp6488 through Exp6501 as V560 evidence. It SHALL hash
+each present artifact before making a decision. It SHALL record repository
+status, exclusion-manifest state, compute preconditions, network
+preconditions, and protected-file hashes. It SHALL confirm that the active
+roadmap and `scripts/research_conductor.py` remain unchanged.
+
+The reducer SHALL recompute the V560 claim gates and gap decisions from
+per-unit rows or row-derived reducers. It SHALL not trust the Exp6501 capstone
+aggregate alone. It SHALL recompute learned trajectory energy, factor causal
+value, continuous factor learning, capacity support, ARC energy alignment, and
+the capstone claim booleans from source rows or explicit blocked receipts.
+
+The ledger SHALL emit one decision row per V560 claim surface. Each row SHALL
+name the source artifact, observed field, JSON pointer, verdict, disposition,
+retirement status, and allowed reuse. Reusable infrastructure MAY include exact
+solver commitments, exact replay reducers, bounded lifecycle receipts, rollback
+controls, and support checks. Reuse SHALL NOT include learned trajectory
+energy, factor causal value, decomposed energy, checker routing, factor-pool
+learning, ARC energy-policy work, or hardware acceleration claims.
+
+Exp6502 SHALL define the only allowed V561 lineage as a new exact SAT/CSP task
+distribution with solver-native structural advice, exact branch
+counterfactual labels, fixed-feature weight updates, and fixed-width mapping.
+Exact CDCL, CSP repair, and executable checks SHALL remain the only acceptance
+authorities. Learned or analytical advice MAY order search only.
+
+Exp6502 SHALL reject renamed scopes, hidden dependencies on retired upstream
+experiment IDs, post-hoc corpus repair, generated answers, NL-to-ConstraintIR
+reprompting, ARC policy edits, hardware claims, and claim laundering from
+mechanism rows. No V561 task SHALL gate on a retired upstream experiment ID.
+
+Exp6502 SHALL set `v561_lineage_lock_ready_score=1.0` only when every V560
+decision row recomputes, every forbidden reuse attack fails closed, no V561
+task depends on a retired upstream experiment ID, and protected files are
+unchanged.
+
+The terminal artifact SHALL include `status`, `verdict_class`,
+`v560_artifact_receipts`, `decision_rows`,
+`aggregate_row_recomputation`, `retired_scope_definition`,
+`allowed_v561_lineage`, `forbidden_reuse_attack_matrix`,
+`v561_lineage_lock_ready_score`, `per_unit_rows`,
+`gate_check_summary`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`independent_v560_artifact_replay_no_llm`. `verifier_is_oracle` SHALL be true
+only for deterministic row and hash recomputation.
+
+Field principles SHALL use this map:
+
+| Field | Principle |
+|---|---|
+| `status` | Records the terminal ledger state. |
+| `verdict_class` | Uses the closed verdict enum for this non-positive governance result. |
+| `v560_artifact_receipts` | Binds every V560 input to a path and hash. |
+| `decision_rows` | Provides one recheckable row per prior claim surface. |
+| `aggregate_row_recomputation` | Shows that capstone decisions derive from rows. |
+| `retired_scope_definition` | Names the exact methods V561 cannot reuse. |
+| `allowed_v561_lineage` | Defines the fresh structural-search scope. |
+| `forbidden_reuse_attack_matrix` | Tests rename, dependency, repair, and claim-laundering attacks. |
+| `v561_lineage_lock_ready_score` | Opens the same-roadmap gate only after rows and attacks pass. |
+| `per_unit_rows` | Carries decision and attack results for each unit. |
+| `gate_check_summary` | Names any failed precondition and observed value for blocked verdicts. |
+| `preconditions_checked` | Records artifact, manifest, repository, compute, and network checks. |
+| `protected_files_unchanged` | Proves the active roadmap and conductor stayed unchanged. |
+| `inference_substrate` | Declares independent artifact reduction with no LLM. |
+| `verifier_is_oracle` | True only for deterministic hash and row recomputation. |
+| `field_principles` | Explains why each evidence field exists. |
+| `field_provenance` | Maps fields to artifact paths, JSON pointers, and reducer functions. |
+| `random_seed` | Fixes attack ordering. |
+| `duration_s` | Records measured wall time. |
+| `tests_run` | Records commands and exit codes. |
+| `reproducibility_checksum` | Hashes inputs, decisions, attacks, and outputs. |
+| `honest_verdict` | Uses `complete_*` for a valid ledger or `blocked_*` with gate details. |
+
+### SCENARIO-INFRA-6502-RETIREMENT: V560 Claim Surfaces Receive Terminal Decisions
+
+GIVEN Exp6488 through Exp6501 evidence
+WHEN Exp6502 emits `decision_rows`
+THEN every V560 claim surface has a source artifact, observed field, verdict,
+disposition, retirement status, and allowed reuse.
+
+**Spec traces:** REQ-INFRA-6502
+
+### SCENARIO-INFRA-6502-CHANGED-SCOPE: V561 Scope Is Fresh And Exact
+
+GIVEN V560 learned energy, factor, ARC policy, and hardware scopes are closed
+WHEN Exp6502 emits `allowed_v561_lineage`
+THEN the allowed branch is a new exact SAT/CSP distribution with
+solver-native structural advice, exact branch labels, fixed-feature updates,
+and fixed-width mapping only.
+
+**Spec traces:** REQ-INFRA-6502
+
+### SCENARIO-INFRA-6502-DEPENDENCIES: Retired Upstream IDs Do Not Gate V561
+
+GIVEN V561 roadmap tasks
+WHEN Exp6502 scans `gated_on` dependencies
+THEN no task depends on Exp6490, Exp6492, Exp6493, Exp6494, Exp6496, Exp6498,
+Exp6499, Exp6500, or another retired V560 science scope.
+
+**Spec traces:** REQ-INFRA-6502
+
+### SCENARIO-INFRA-6502-ATTACKS: Forbidden Reuse Fails Closed
+
+GIVEN attacks that rename scopes, hide dependencies, repair corpora,
+generate answers, reprompt to ConstraintIR, edit ARC policy, or launder
+hardware claims
+WHEN Exp6502 evaluates `forbidden_reuse_attack_matrix`
+THEN every attack fails closed and no retired method enters the V561 branch.
+
+**Spec traces:** REQ-INFRA-6502
+
+### SCENARIO-INFRA-6502-PROTECTED: Protected Files Stay Unchanged
+
+GIVEN the active roadmap, V561 roadmap document, and conductor file
+WHEN Exp6502 validates protected files
+THEN before and after hashes match, and no protected path is reported as
+changed.
+
+**Spec traces:** REQ-INFRA-6502
+
+### SCENARIO-INFRA-6502-ARTIFACT: Ledger Is Checksummed And Ready
+
+GIVEN artifact receipts, decision rows, attack rows, protected-file hashes,
+field principles, field provenance, and test receipts
+WHEN Exp6502 validates the artifact
+THEN every required field is present, the checksum matches,
+`v561_lineage_lock_ready_score` is `1.0`, and the verdict starts with
+`complete_`.
+
+**Spec traces:** REQ-INFRA-6502
+
+## Implementation Status (REQ-INFRA-6502)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6502 | Planned: `python/carnot/experiment_6502_v560_retirement_v561_lineage_lock.py`; terminal artifact `results/experiment_6502_v560_retirement_v561_lineage_lock.json`. | Planned: `tests/python/test_experiment_6502_v560_retirement_v561_lineage_lock.py`. |
+
 ## REQ-INFRA-6495: Restarted Factor-Pool Controller SHALL Decide Reuse, Spawn, Or Defer With Paired Evidence Processes
 
 Carnot SHALL provide Exp6495 at
