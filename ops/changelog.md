@@ -1,5 +1,57 @@
 # Carnot — Changelog
 
+## 2026-08-22 (outer-loop, merge-preserve: analyzer rebuilds carry hand-authored keys)
+
+Team-lead directive: close the documented defect where `scripts/
+analyze_*.py` rebuilders regenerate artifacts wholesale and delete
+hand-authored keys — `rebuild_note_*` and
+`provenance.freshness_acknowledgements`, the never-prune apparatus
+itself. Three independent hits on 2026-08-21, on a code path
+`artifact_freshness_lint.py` MANDATES.
+
+- **REQ-OPS-REBUILD-PRESERVE-1** (`scripts/artifact_merge_preserve.py`
+  + `tests/python/test_artifact_merge_preserve.py`, 11 tests):
+  generated keys win; old-only top-level keys carry. The owned set is
+  DERIVED from the generated payload plus an explicit `retired_keys`
+  argument — never a hand-maintained name list (the
+  pattern-narrower-than-concept bug). Acks carry into the regenerated
+  provenance (append-only audit log, different in kind from
+  current-build facts). Dropped nested sub-keys print a stderr notice
+  — deletion may be right, silent deletion is not. An unreadable
+  existing artifact REFUSES the merge (fail closed; inverts the older
+  ack-only helper's fail-open, one reason the loss stayed invisible).
+- **Wiring**: all 10 `analyze_*.py` write sites call
+  `merge_preserve_with_file` before writing; the older ack-only calls
+  stay (idempotent). A source-level test refuses any analyzer that
+  writes without the merge.
+- **Proof**: regression on the REAL incident artifact (7
+  `rebuild_note_*` keys + 25 acks byte-identical through a simulated
+  rebuild); live E2E through the real
+  `analyze_arc_wall_rederivation_20260808.build()`. Five mutations
+  RED->GREEN: carry removed, ack carry removed, refuse made
+  fail-open, retired_keys ignored, one analyzer unwired.
+- **Freshness-lint reconciliation** (its own remedy text, dogfooding
+  the fix): rebuilt early_stop_grace_sweep, gateway_accurate_rescore
+  (twice — its peer hash chains through gateway_rescore),
+  max_actions_answer. Deep-diffs vs HEAD moved ONLY build metadata —
+  no published figure moved, no correction owed; every hand key
+  carried by the new merge path. lever_ab_llm_on rows are deleted
+  session scratch, so its drifted deps carry acknowledgements instead;
+  same my-analyzer acks added to wallclock_envelope,
+  reset_charge_attribution, gateway_rescore. The large raw diffs on
+  those three are round-trip reformatting; semantic diff per artifact
+  is exactly the acknowledgement addition (verified).
+- **Attribution note**: the conductor's b55e15fe63 + 8ea5ffaaed
+  checkpoint sweeps carried most of this work's staged files into its
+  own commits mid-landing; content verified present and correct in
+  HEAD, narrative recorded here.
+- **Option (b)** (widening determination_preservation_lint to protect
+  these keys at commit time) was NOT built: it refuses after the loss
+  instead of preventing it, and the analyzers — the only writer class
+  in the incident — are now structurally unable to drop the keys.
+  Recommended as a later second layer for NON-analyzer writers, with
+  its own mutation-tested widening.
+
 ## 2026-08-22 (outer-loop, conductor self-supervision: run sentinel + audit-findings ledger)
 
 Operator directive: "the goal here is to eventually remove the need for an

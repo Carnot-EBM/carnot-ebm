@@ -16278,3 +16278,5 @@ code |
 | 2026-08-22 20:02 UTC | Sealed exact branch-counterfactual dataset | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6506-v561-evidence-corrigendum-v562-linea |
 | 2026-08-22 20:02 UTC | Analytical branch order and bounded-refocus A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6507-exact-branch-counterfactual-datase |
 | 2026-08-22 20:04 UTC | One-shot critical-variable enumeration A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6507-exact-branch-counterfactual-dataset) |
+| 2026-08-22 20:54 UTC | Plan milestone 2026.08.563 | OK | 3 tasks proposed |
+| 2026-08-22 20:57 UTC | Milestone 2026.08.563 activated | OK | 3 tasks queued |
