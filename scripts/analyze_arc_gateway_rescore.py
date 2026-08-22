@@ -893,6 +893,17 @@ def main(argv: list[str] | None = None) -> int:
         sibling.preserve_freshness_acknowledgements(art, out)
     except Exception:
         pass
+    # Full merge-preserve supersedes the ack-only helper above (kept for
+    # compatibility; idempotent). Carries rebuild_note_* and any other
+    # hand-authored top-level key (REQ-OPS-REBUILD-PRESERVE-1). NOT in a
+    # try/except: a swallowed failure here is the silent-deletion disease.
+    import sys as _sys
+
+    if str(Path(__file__).resolve().parent) not in _sys.path:
+        _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from artifact_merge_preserve import merge_preserve_with_file
+
+    art = merge_preserve_with_file(out, art)
     out.write_text(json.dumps(art, indent=1, default=str) + "\n")
     print(json.dumps(art["headline"], indent=1))
     print(

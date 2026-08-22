@@ -233,6 +233,15 @@ def build_artifact() -> dict:
 
 def main() -> int:
     art = build_artifact()
+    # Carry hand-authored keys through the rebuild (REQ-OPS-REBUILD-PRESERVE-1).
+    import sys as _sys
+    from pathlib import Path as _P
+
+    if str(_P(__file__).resolve().parent) not in _sys.path:
+        _sys.path.insert(0, str(_P(__file__).resolve().parent))
+    from artifact_merge_preserve import merge_preserve_with_file
+
+    art = merge_preserve_with_file(OUT_PATH, art)
     OUT_PATH.write_text(json.dumps(art, indent=2, default=str) + "\n", encoding="utf-8")
     print(json.dumps(art.get("headline", {"honest_verdict": art.get("honest_verdict")}), indent=2))
     print("verdict:", art["honest_verdict"])

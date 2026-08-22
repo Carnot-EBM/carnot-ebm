@@ -324,6 +324,16 @@ def build(out_path: Path | None = None) -> dict:
     art["reproducibility_checksum"] = hashlib.sha256(payload).hexdigest()
 
     if out_path is not None:
+        # Carry hand-authored keys through the rebuild
+        # (REQ-OPS-REBUILD-PRESERVE-1). After the checksum on purpose:
+        # the checksum keeps covering exactly the generated fields.
+        import sys as _sys
+
+        if str(Path(__file__).resolve().parent) not in _sys.path:
+            _sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from artifact_merge_preserve import merge_preserve_with_file
+
+        art = merge_preserve_with_file(out_path, art)
         out_path.write_text(json.dumps(art, indent=2, default=str) + "\n")
     return art
 

@@ -2016,6 +2016,14 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     out = Path(a.out).resolve()
     art = build(out_path=out)
+    # Carry hand-authored keys through the rebuild (REQ-OPS-REBUILD-PRESERVE-1).
+    import sys as _sys
+
+    if str(Path(__file__).resolve().parent) not in _sys.path:
+        _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from artifact_merge_preserve import merge_preserve_with_file
+
+    art = merge_preserve_with_file(out, art)
     out.write_text(json.dumps(art, indent=1, default=str) + "\n")
     print(json.dumps(art["CORRECTION_OWED"]["claim_1"], indent=1))
     print(json.dumps(art["acceptance_gates"]["gates"], indent=1)[:1500])

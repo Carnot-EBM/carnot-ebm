@@ -1665,6 +1665,16 @@ def main(argv=None) -> int:
     out["acceptance_gate_all_passed"] = all(v.get("passed") for v in g.values())
     out["duration_s"] = round(time.time() - _t_start, 3)
     preserve_freshness_acknowledgements(out, Path(a.out))
+    # Full merge-preserve supersedes the ack-only call above (kept;
+    # idempotent): carries rebuild_note_* and any other hand-authored
+    # top-level key through the rebuild (REQ-OPS-REBUILD-PRESERVE-1).
+    import sys as _sys
+
+    if str(Path(__file__).resolve().parent) not in _sys.path:
+        _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from artifact_merge_preserve import merge_preserve_with_file
+
+    out = merge_preserve_with_file(Path(a.out), out)
     Path(a.out).write_text(json.dumps(out, indent=1))
     print(
         f"wrote {a.out}  gates_all_passed={out['acceptance_gate_all_passed']} "

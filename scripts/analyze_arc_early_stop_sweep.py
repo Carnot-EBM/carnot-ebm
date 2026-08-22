@@ -2026,6 +2026,17 @@ def main(argv) -> int:
         )
     except Exception:
         art["git_head"] = None
+    # Carry hand-authored keys (rebuild_note_*, freshness acks) through the
+    # rebuild — this artifact is where the 2026-08-21 incident lost
+    # rebuild_note_20260731_split_enable (REQ-OPS-REBUILD-PRESERVE-1).
+    import sys as _sys
+    from pathlib import Path as _P
+
+    if str(_P(__file__).resolve().parent) not in _sys.path:
+        _sys.path.insert(0, str(_P(__file__).resolve().parent))
+    from artifact_merge_preserve import merge_preserve_with_file
+
+    art = merge_preserve_with_file(_P(a.out), art)
     Path(a.out).write_text(json.dumps(art, indent=2))
     print(json.dumps(art["headline"], indent=2))
     print("verdict:", art["honest_verdict"])
