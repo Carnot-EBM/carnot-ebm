@@ -35,6 +35,7 @@ def check_frozen_pin(
     allow_retired: bool = False,
     harness_name: str = "this harness",
     live_pin: str | None = None,
+    model_path_override: str | None = None,
 ) -> str:
     """Refuse to run when `frozen_pin` differs from the live generator pin.
 
@@ -43,7 +44,26 @@ def check_frozen_pin(
     --allow-retired-pin flag) converts the refusal into a loud stderr
     warning — for deliberate archaeology against the retired model,
     where the results are knowingly not live-path evidence.
+
+    `model_path_override`: pass the harness's explicit weights-path
+    override (CARNOT_ARC_GGUF_PATH) when set. An explicit model_path
+    WINS over the frozen repo pin at load time, and since commit
+    512eca0e6b the recorded model label derives from the weights
+    actually loaded — so the frozen pin is cosmetic in that
+    configuration, and refusing would force --allow-retired-pin onto
+    runs that already measure the LIVE generator. The guard's failure
+    mode is the DEFAULT resolution silently picking retired weights;
+    an explicit path is not that failure.
     """
+    if model_path_override and str(model_path_override).strip():
+        print(
+            f"[pin-guard] {harness_name}: explicit model_path override "
+            f"{str(model_path_override).strip()!r} supersedes the frozen repo "
+            f"pin {frozen_pin!r}; the recorded label derives from the loaded "
+            "weights. Pin guard not applicable to this run.",
+            file=sys.stderr,
+        )
+        return live_pin if live_pin is not None else frozen_pin
     if live_pin is None:
         from carnot.agentic.arc_executable_world_model import (
             ARC_LIVE_GENERATOR_REPO_SUBSTR,

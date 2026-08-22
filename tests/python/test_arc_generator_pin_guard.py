@@ -66,11 +66,37 @@ def test_default_live_pin_is_the_canonical_constant() -> None:
     assert check_frozen_pin(ARC_LIVE_GENERATOR_REPO_SUBSTR) == ARC_LIVE_GENERATOR_REPO_SUBSTR
 
 
-def test_real_harness_refuses_before_any_model_work(tmp_path: Path) -> None:
+def test_explicit_model_path_override_supersedes_the_pin(capsys) -> None:
+    # SCENARIO-ARC-WMTE-6621-ENV-OVERRIDE: an explicit weights path wins
+    # over the repo pin at load time, and the recorded label derives from
+    # the loaded weights (512eca0e6b) — so the guard must not refuse, or
+    # it would force --allow-retired-pin onto runs that already measure
+    # the LIVE generator (the induce-failure-fix acceptance-run shape).
+    check_frozen_pin(
+        "Qwen3.5-9B-MTP",
+        live_pin="Qwen3.8-27B",
+        harness_name="t",
+        model_path_override="/models/Qwen3.8-27B-q4.gguf",
+    )
+    err = capsys.readouterr().err
+    assert "override" in err and "not applicable" in err
+    # An empty/whitespace override is NOT an override — still refuses.
+    import pytest as _pytest
+
+    with _pytest.raises(RetiredPinError):
+        check_frozen_pin(
+            "Qwen3.5-9B-MTP", live_pin="Qwen3.8-27B", harness_name="t", model_path_override="  "
+        )
+
+
+def test_real_harness_refuses_before_any_model_work(tmp_path: Path, monkeypatch) -> None:
     # SCENARIO-ARC-WMTE-6621-HARNESS-WIRED: the actual frozen harness,
     # invoked exactly as a runner would, must exit at the guard. This is
     # the origin incident replayed with the guard in place: had this
     # refusal existed on 2026-08-20, no discarded run.
+    # The env override must be ABSENT here: with it set, the guard
+    # correctly stands down and main() would proceed to real model work.
+    monkeypatch.delenv("CARNOT_ARC_GGUF_PATH", raising=False)
     import arc_scored_path_lever_harness as harness
 
     assert harness.FROZEN_GENERATOR_PIN == "Qwen3.5-9B-MTP"

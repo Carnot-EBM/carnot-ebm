@@ -2,7 +2,7 @@
   "experiment": "arc_early_stop_grace_sweep",
   "experiment_id": "outer_loop_early_stop_grace_sweep_20260726",
   "title": "SUBMITTED_EARLY_STOP_GRACE parameter sweep on the scored path: a WALL-CLOCK lever, not a score lever",
-  "run_date": "2026-08-22T04:46:13Z",
+  "run_date": "2026-08-22T04:54:58Z",
   "milestone": "outer-loop 2026-07-26",
   "random_seed": 20260724,
   "random_seeds_used": [
@@ -10,7 +10,7 @@
     20260725,
     20260726
   ],
-  "duration_s": 4.002,
+  "duration_s": 4.153,
   "inference_substrate": "aggregation_from_upstream_artifacts",
   "measurement_wall_s": {
     "total_s": 9126.0,
@@ -5229,7 +5229,7 @@
   "acceptance_gates_all_passed": false,
   "honest_verdict": "complete_early_stop_grace_sweep_measured_wall_clock_lever_not_score_lever_shipped_budget_b400_safe_firing_grace_350_saves_only_0.072pct_actions_on_1_of_75_cells_score_delta_0.0_safety_pass_falsifiable_False_wall_saving_noise_dominated_True_not_worth_shipping_at_b400",
   "provenance": {
-    "git_head": "f75a2a13bf65eac1e88f9fb93f7774da3a09a22a",
+    "git_head": "96406c1b00f6f1dbb128e3a696919ed7c46f2113",
     "code": [
       {
         "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/analyze_arc_early_stop_sweep.py",
@@ -5245,9 +5245,9 @@
       },
       {
         "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_scored_path_lever_harness.py",
-        "sha256": "d9067cb50ab5cbc730a36803f48efac550fd422924c96e4112d85a39b580b8b0",
-        "bytes": 63668,
-        "mtime_utc": "2026-08-22T04:45:14Z"
+        "sha256": "7b6110101a23b0da90c4984294d5304be7ce064524c6009b84e8ba3dea931fa1",
+        "bytes": 63961,
+        "mtime_utc": "2026-08-22T04:52:57Z"
       },
       {
         "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_leaderboard_eval.py",
@@ -5532,9 +5532,9 @@
       }
     ]
   },
-  "reproducibility_checksum": "fbe044bc94107fc8db196ee56066e0d341bccf047c5f3dfd7abe6de9647275d0",
+  "reproducibility_checksum": "e65f46cec6cd5dfc6be7a61f7be9e2b7ac9c8744b2e189f21beb0bed2f509a12",
   "reproducibility_checksum_note": "sha256 over the WHOLE artifact except run_date and duration_s (wall-clock noise). Every analysed condition, gate, witness and row-source list is inside the hash.",
-  "git_head": "f75a2a13bf65eac1e88f9fb93f7774da3a09a22a",
+  "git_head": "96406c1b00f6f1dbb128e3a696919ed7c46f2113",
   "rebuild_note_20260731_split_enable": {
     "keys_restored_after_wholesale_rewrite": [],
     "substantive_value_names": [
@@ -5579,5 +5579,17 @@
       "rebuild_note_20260821_induce_budget_pin"
     ],
     "restored_from": "git HEAD f75a2a13bf"
+  },
+  "rebuild_note_20260822_pin_guard_env_override": {
+    "why_rebuilt": "artifact_freshness_lint flagged this STALE after the pin guard gained CARNOT_ARC_GGUF_PATH override handling (REQ-ARC-WMTE-6621 amendment, 4 lines in the harness's guard call site).",
+    "diff_vs_committed": "substantive fields moved: NONE \u2014 only timestamps/provenance/checksum expected to change.",
+    "keys_restored_after_wholesale_rewrite": [
+      "rebuild_note_20260731_split_enable",
+      "rebuild_note_20260820_traceback_visibility",
+      "rebuild_note_20260821_trajectory_supervisor",
+      "rebuild_note_20260821_induce_budget_pin",
+      "rebuild_note_20260822_pin_guard"
+    ],
+    "restored_from": "git HEAD 96406c1b00"
   }
 }

@@ -1054,6 +1054,10 @@ def main(argv) -> int:
         FROZEN_GENERATOR_PIN,
         allow_retired=a.allow_retired_pin,
         harness_name="arc_scored_path_lever_harness (FROZEN pre-2026-07-28)",
+        # CARNOT_ARC_GGUF_PATH wins over the repo pin at load time (see
+        # build_proposer), so an env-overridden run is not the retired-pin
+        # failure — the label derives from the loaded weights (512eca0e6b).
+        model_path_override=os.environ.get("CARNOT_ARC_GGUF_PATH"),
     )
     if a.games_all:
         a.games = ",".join(GAMES_25)
