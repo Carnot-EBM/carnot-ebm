@@ -96,6 +96,14 @@ REPO = Path("/home/ianblenke/github.com/ianblenke/carnot")
 sys.path.insert(0, str(REPO / "python"))
 sys.path.insert(0, str(REPO / "scripts"))
 
+# The FROZEN pin the banner above documents, hoisted from build_proposer so
+# the runtime pin guard (REQ-ARC-WMTE-6621) checks the SAME literal the
+# proposer uses. Deliberately not migrated to the live pin (never-prune:
+# this harness's recorded results were taken on the 9B). main() refuses to
+# run while this differs from the live pin unless --allow-retired-pin says
+# the archaeology is deliberate.
+FROZEN_GENERATOR_PIN = "Qwen3.5-9B-MTP"
+
 # LLM ON. Delete rather than set-to-0: the agent's check is `== "1"`, but an explicit delete makes
 # the intent unmistakable and survives a future change to truthiness parsing.
 os.environ.pop("CARNOT_ARC_DISABLE_INDUCTION", None)
@@ -426,7 +434,7 @@ def build_proposer(port: int):
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 
     inner = LocalGGUFProposer(
-        repo_substr="Qwen3.5-9B-MTP",
+        repo_substr=FROZEN_GENERATOR_PIN,
         model_path=os.environ.get("CARNOT_ARC_GGUF_PATH") or None,
         # mtp is DELIBERATELY NOT PASSED. This line used to read
         # `mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0")` -- a literal "1" that is NOT the
@@ -1028,7 +1036,25 @@ def main(argv) -> int:
         action="store_true",
         help="use all 25 public survey games (overrides --games)",
     )
+    ap.add_argument(
+        "--allow-retired-pin",
+        action="store_true",
+        help="run anyway against the FROZEN retired generator pin (deliberate "
+        "archaeology; results are NOT live-path evidence). Without this flag "
+        "the harness refuses while its pin differs from the live pin.",
+    )
     a = ap.parse_args(argv)
+
+    # Runtime pin guard (REQ-ARC-WMTE-6621): the banner at the top of this
+    # file is prose, and prose was read only after a run was launched and
+    # discarded (2026-08-20). Refuse BEFORE any server or model work.
+    from carnot.agentic.arc_generator_pin_guard import check_frozen_pin
+
+    check_frozen_pin(
+        FROZEN_GENERATOR_PIN,
+        allow_retired=a.allow_retired_pin,
+        harness_name="arc_scored_path_lever_harness (FROZEN pre-2026-07-28)",
+    )
     if a.games_all:
         a.games = ",".join(GAMES_25)
     games = [g for g in a.games.split(",") if g]
