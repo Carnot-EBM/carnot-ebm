@@ -612,9 +612,9 @@
    {
     "acknowledged_on": "2026-08-22",
     "path": "scripts/analyze_arc_llm_on_wallclock_envelope.py",
-    "sha256_was": "55200ab111411859178c3a3279e2827ef8c603d22674cae9a33acd77382567bf",
+    "sha256_was": "f577ffcdb5f1c4f2d8afc3bc20b304fb72cb72f0592721d0fba89807fcb269b5",
     "sha256_now": "3b4901a6cd4f5c30a51c7cf39d931121321ce85109e0e0c9313fa711153b1a08",
-    "reason": "The only change is REQ-OPS-REBUILD-PRESERVE-1 merge-preserve wiring: merge_preserve_with_file() runs AFTER the analysis dict is fully built and only carries keys ABSENT from the generated payload, so generated numbers cannot move.",
+    "reason": "Span scoped to this was->now hop (chained from the prior acknowledgement's sha256_now). The only change is REQ-OPS-REBUILD-PRESERVE-1 merge-preserve wiring: merge_preserve_with_file() runs AFTER the analysis dict is fully built and only carries keys ABSENT from the generated payload, so generated numbers cannot move.",
     "evidence": "Three sibling artifacts rebuilt under the same change on 2026-08-22 moved only run_date/duration_s/git_head/provenance hashes/reproducibility_checksum and cited-sibling hashes -- zero substantive values; tests/python/test_artifact_merge_preserve.py carries the regression."
    }
   ],

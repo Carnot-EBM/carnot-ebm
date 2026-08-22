@@ -975,6 +975,12 @@ def main(argv=None) -> int:
     from analyze_scored_path_lever_ab import preserve_freshness_acknowledgements
 
     preserve_freshness_acknowledgements(art, out)
+    # Full merge-preserve supersedes the ack-only call above (kept;
+    # idempotent): carries rebuild_note_* and any other hand-authored
+    # top-level key through a rebuild (REQ-OPS-REBUILD-PRESERVE-1).
+    from artifact_merge_preserve import merge_preserve_with_file
+
+    art = merge_preserve_with_file(out, art)
     out.write_text(json.dumps(art, indent=1, sort_keys=True))
     # Register under THIS script, not the helper's own file. The helper's `analyzer` default is a
     # documented trap: the first external reuser registered its artifact under the wrong analyser,
