@@ -22,6 +22,15 @@ read only if debugging the enforcer):**
 - Verdict Terminal-Prefix → `_verdict_is_untrustworthy()` classifier
 - Exclusion-Manifest Cross-Check → `_ensure_exclusion_manifest_loaded()`
 - ARC Live-Path Reachability → `scripts/arc_orphan_solver_lint.py`
+- KV260 SSH-Not-SD-Card → `scripts/exclusion_manifest_lint.py`
+  `_WRONG_MECHANISM_PATTERNS` (reclassified 2026-08-21: the rule's own prose
+  still says "until that ships" — it shipped; the lint hard-blocks a
+  `/dev/mmcblk` precondition in any KV260 task prompt)
+- Paper-v6 Narrowing (Layer 1) → `scripts/paper_v6_narrowing_lint.py`,
+  pre-commit hook `paper-v6-narrowing-lint` (reclassified 2026-08-21: the
+  rule's own "Mechanical enforcement (future)" paragraph predates the lint;
+  the retirement condition — 3 Deep Think corrigenda + paper rewrite — is a
+  separate, still-open operator question)
 - Test-Run Record Integrity (Layer 1, 2026-07-29) →
   `scripts/determination_preservation_lint.py` +
   `scripts/test_suite_mutation_check.py` +
@@ -36,7 +45,8 @@ read only if debugging the enforcer):**
 - Gemini-Default for Experiments → superseded by Codex-Default v2 (2026-06-10;
   gemini-cli global-stall incident — see the new rule below the historical one)
 - Paper-v6 Narrowing Discipline → forward-only; retires when the 3 Deep Think
-  corrigenda land + paper rewritten
+  corrigenda land + paper rewritten (2026-08-21 note: its Layer 1 lint
+  shipped — see the MECHANICALLY-ENFORCED entry above)
 
 **ACTIVE — require judgment, read these when planning/executing:**
 Project Writing Style: Simplified Technical English (2026-08-07, SCOPE
@@ -46,8 +56,9 @@ Codex-Default-v2 (2026-06-10) · Failed-Experiment Rerun · Pre-Launch Precondit
 Adversarial Artifact Verification + Sample-Size Rigor · Inference-Substrate
 Declaration · Principle-Annotated Artifact Fields · Phase Prototype+Validation ·
 Scope-Reduction-When-Flagged · Hardware-Task Continuity (see north-star §3 for
-the recommended KV260-focus relaxation) · KV260 SSH-Not-SD-Card ·
-Operator-Only External Publication · Never-Stash-Commit-First ·
+the recommended KV260-focus relaxation) · KV260 SSH-Not-SD-Card (reclassified
+2026-08-21 → MECHANICALLY-ENFORCED above; kept here per the additive-only
+header) · Operator-Only External Publication · Never-Stash-Commit-First ·
 Decentralization-Respecting Design Constraints · Pre-Staged Roadmap Convention ·
 Documentation Update Rules · Tests Must Run and Assert · QA-Layer Authenticity
 (2026-07-03 — the auditor now has an auditor; Layer 2 AI audit of
@@ -71,6 +82,69 @@ reproduced, G3 prose narrowing-clean, G4 numbers trace to artifacts.
 `paper_ready := G1∧G2∧G3∧G4`; report `unmet_gates`, not a count. Definition +
 status live in `ops/north-star.md` §2. As of 2026-05-29: G1/G3/G4 met, G2
 (independent reproducer) is the sole real blocker.
+
+## The Error Lifecycle (FOUNDATIONAL — 2026-08-21)
+
+**Origin:** 2026-08-21 operator directive, verbatim:
+
+> "knowing that mistakes will happen, identifying when mistakes happen, living
+>  up to those mistakes, addressing those mistakes, correcting the mistakes, and
+>  finding ways to prevent those same mistakes from happening again in the
+>  future must be a core part of this harness. the scientific method droves what
+>  we do for that same reason. this is core to our constant self improvement."
+
+This is not a new rule. It is the PRINCIPLE THE OTHER RULES ARE INSTANCES OF.
+Nearly every MANDATORY discipline in this file was written after an incident,
+and each one implements some stage of the same six-step cycle. Read this first;
+it tells you what the rest of the file is for.
+
+**The six steps, and where each already lives:**
+
+| Step | What it demands | Where the project does it |
+|---|---|---|
+| 1. Expect mistakes | Design assuming the agent, the model, and the guard are all wrong sometimes | Adversarial verification; the three-layer defenses; fail-closed guards |
+| 2. Identify | Detect the mistake mechanically, not by hoping someone notices | The linters; the fabrication gate; run receipts; held-out tests |
+| 3. Own it | Say plainly what was wrong, in the record, without softening | Honest verdicts; corrigenda; the never-prune doctrine |
+| 4. Address | Decide what to do, including deciding not to act | Operator escalation; `blocked_*` verdicts; exclusion manifest |
+| 5. Correct | Fix the artifact AND the record, never one without the other | Corrigendum fields; artifact rebuild-and-diff; append-only corrections |
+| 6. Prevent | Convert the lesson into a check that fires, not prose to remember | Pre-commit linters; activation guards; regression tests keyed to the incident |
+
+**Step 6 is the one that decays, and it is the one that matters most.** A lesson
+recorded only as prose costs every future agent a read and a memory. A lesson
+converted into a check costs nothing and cannot be forgotten. When you fix
+something, ask: what check would have caught this? If one is cheap, build it. If
+building it would fire on legitimate work, say so and leave the prose — a check
+that cries wolf trains people to bypass it, which is worse than the gap it
+closes. Both answers are acceptable. Silence is not.
+
+**Why the scientific method is the model.** A claim that cannot be wrong teaches
+nothing. That is why this project holds artifacts to falsifiable gates, prefers a
+measured negative to an unmeasured positive, and treats a null result as a
+finding. It is also why a correction is worth more than a confirmation: the
+correction is where the learning is. When an agent reports a result, the useful
+question is not "is it good" but "what would show it is wrong, and was that
+checked."
+
+**How to apply, concretely.**
+
+- When you find you were wrong, say so in your next message, plainly, and carry
+  the correction into the record — commit message, artifact field, or note. Do
+  not quietly patch and move on.
+- When you correct a durable document, APPEND the correction rather than
+  rewriting history, and date it. A reader needs to see what was believed and
+  when it changed. See the never-prune doctrine.
+- When an incident closes, the last question is step 6: check, or prose, and
+  why. Answer it in the commit.
+- A guard that was trusted and silent is the worst state in this system. Prefer
+  fail-closed. If a check cannot run, it must say so rather than return clean.
+
+**Cross-references:** 2026-08-21 operator directive (origin) ·
+`docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md` (the
+rule-to-check conversion plan, which is step 6 mechanized) · CLAUDE.md
+"QA-Layer Authenticity Discipline" (the auditor's auditor; step 2 applied to the
+checkers themselves) · "Test-Run Record Integrity Discipline" (step 5: correct
+the artifact AND the record) · "Adversarial Artifact Verification + Sample-Size
+Rigor" (steps 1 and 2) · "Documentation Update Rules" / never-prune (step 3).
 
 ## Claude Code Guidelines
 If you notice the user's request is based on a misconception, say so.
@@ -2800,6 +2874,13 @@ pre-commit hook SHOULD scan `docs/arxiv-paper/main.tex` +
 `results/` for the forbidden phrasings. Until that ships, this
 discipline is honor-discipline at the planner + agent layer.
 
+**SHIPPED (2026-08-21 note, append-only).** The paragraph above is
+stale. `scripts/paper_v6_narrowing_lint.py` exists and runs as the
+pre-commit hook `paper-v6-narrowing-lint` on exactly the files named
+above. The Rule Index now lists this discipline's Layer 1 as
+MECHANICALLY-ENFORCED. The retirement condition (3 corrigenda + paper
+rewrite) is unchanged and still open.
+
 **When this discipline retires.** When all three Deep Think
 Corrigenda experiments land AND the paper-v6 draft is rewritten
 to honor the narrowings (operator-curated commit), this section
@@ -3581,6 +3662,13 @@ any milestone containing such a task. Until that ships, this rule is
 honor-discipline at the planner + agent layer, with the exclusion
 manifest entry `kv260_host_sd_card_precondition_retired` as the
 structural backstop.
+
+**SHIPPED (2026-08-21 note, append-only).** The paragraph above is
+stale. `scripts/exclusion_manifest_lint.py` implements exactly this
+scan: `_WRONG_MECHANISM_PATTERNS` hard-blocks a task prompt that
+names the KV260 board AND `/dev/mmcblk`, at roadmap activation
+(WRONG_MECHANISM_PRECONDITION). The Rule Index now lists this rule
+as MECHANICALLY-ENFORCED.
 
 **Cross-references:**
 - 2026-05-20 ~22:45 EDT operator directive — origin
