@@ -34,7 +34,7 @@ from carnot.experiment_artifacts import atomic_write_json
 JsonDict = dict[str, Any]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-RUN_DATE = "20260821"
+RUN_DATE = "20260822"
 RANDOM_SEED = 6502
 INFERENCE_SUBSTRATE = "independent_v560_artifact_replay_no_llm"
 VERIFIER_IS_ORACLE = True
@@ -83,7 +83,7 @@ FALLBACK_V560_PATHS: dict[str, Path] = {
 RUN_COMMAND = (
     "cd /home/ianblenke/github.com/ianblenke/carnot && "
     ".venv/bin/python -m carnot.experiment_6502_v560_retirement_v561_lineage_lock "
-    "--date 20260821"
+    "--date 20260822"
 )
 FOCUSED_TEST_COMMAND = (
     ".venv/bin/pytest tests/python/test_experiment_6502_v560_retirement_v561_lineage_lock.py "
@@ -1111,6 +1111,7 @@ def preconditions_checked(
     result_path: Path,
     receipts: Sequence[Mapping[str, Any]],
     gate_summary: Mapping[str, Any],
+    date: str,
 ) -> JsonDict:
     required_paths = {
         "AGENTS.md": repo_root / "AGENTS.md",
@@ -1134,7 +1135,7 @@ def preconditions_checked(
     if not output_parent_ready:  # pragma: no cover
         blocked_reasons.append("output_path_not_writable")
     return {
-        "planning_date": RUN_DATE,
+        "planning_date": date,
         "repo_root": str(repo_root),
         "git_head": _git_output(repo_root, ["rev-parse", "HEAD"]),
         "git_status_short": _git_output(repo_root, ["status", "--short"]),
@@ -1214,6 +1215,7 @@ def build_artifact(
         result_path=output,
         receipts=receipts,
         gate_summary=gate_summary,
+        date=date,
     )
     ready = gate_summary["all_gates_passed"] and preconditions["preconditions_ready"]
     artifact: JsonDict = {
