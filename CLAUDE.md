@@ -138,13 +138,61 @@ checked."
 - A guard that was trusted and silent is the worst state in this system. Prefer
   fail-closed. If a check cannot run, it must say so rather than return clean.
 
-**Cross-references:** 2026-08-21 operator directive (origin) ·
+### The substrate: an idea not written down is an idea that will be forgotten
+
+**Origin:** 2026-08-21 operator directive, same session as the six steps above,
+verbatim:
+
+> "any idea in your head not written down will eventually be forgotten"
+
+**This is more foundational than the cycle, because the cycle rests on it.**
+Steps 3, 5 and 6 all fail silently without it: you cannot own a mistake nobody
+recorded, cannot correct a record that was never written, and cannot convert a
+lesson that no longer exists. An unwritten insight does not degrade gracefully.
+It is present, then absent, with no signal in between.
+
+**Why this binds harder on agents than on people.** An agent's working memory is
+uniquely ephemeral. Context is compacted mid-task. Sessions end without warning.
+Several agents work the same checkout with no shared memory between them, and a
+sibling agent cannot ask what you were thinking. A human forgets slowly and can
+often reconstruct; an agent's context vanishes completely and reconstructs
+nothing. So the half-life of an unwritten thought here is a single session at
+best, and often a single compaction.
+
+**The tell to watch for in your own output.** The phrases "worth noting", "worth
+flagging", "one thing to keep in mind" are a signal that you have just decided
+something matters and are about to not write it down. When you catch yourself
+saying one, either write it somewhere durable or drop the claim. The observation
+above was made after a session in which those phrases appeared repeatedly and
+the ideas behind them went nowhere.
+
+**Where things go.** Match the durability of the record to the lifetime of the
+fact:
+
+| Kind of thing | Where it belongs |
+|---|---|
+| A lesson that changes how work is done | CLAUDE.md, as a rule — or better, a check (step 6) |
+| A cross-session fact about tools, hardware, or traps | the memory directory, with a one-line index entry |
+| Why a change was made, and what was rejected | the commit message |
+| What is in flight, blocked, or unverified | `ops/status.md` — this project's handoff document |
+| A measurement and its limits | a results artifact, with its honest verdict |
+| A design considered and not built | a research note, so the next reader does not re-derive it |
+
+**The cost asymmetry is the whole argument.** Writing it down costs a minute.
+Re-deriving it costs a session, and re-deriving it WRONG costs more than that —
+this project has re-learned the same ARC framing across multiple sessions, and
+has a MANDATORY rule that exists solely because the framing kept being
+rediscovered and then contradicted.
+
+**Cross-references:** 2026-08-21 operator directives (origin, both) ·
 `docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md` (the
 rule-to-check conversion plan, which is step 6 mechanized) · CLAUDE.md
 "QA-Layer Authenticity Discipline" (the auditor's auditor; step 2 applied to the
 checkers themselves) · "Test-Run Record Integrity Discipline" (step 5: correct
 the artifact AND the record) · "Adversarial Artifact Verification + Sample-Size
-Rigor" (steps 1 and 2) · "Documentation Update Rules" / never-prune (step 3).
+Rigor" (steps 1 and 2) · "Documentation Update Rules" / never-prune (step 3) ·
+"ARC-AGI-3 IS a Live Hidden-Game Discovery Agent" (the rule that exists because
+a framing kept being forgotten and re-derived).
 
 ## Claude Code Guidelines
 If you notice the user's request is based on a misconception, say so.
