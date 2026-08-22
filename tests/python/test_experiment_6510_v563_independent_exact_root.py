@@ -40,6 +40,14 @@ RUN_COMMAND = (
     ".venv/bin/python -m carnot.experiment_6510_v563_independent_exact_root --date 20260822"
 )
 FULL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
+FULL_PYTEST_RECEIPT = {
+    "command": FULL_PYTEST_COMMAND,
+    "exit_code": 3,
+    "summary": (
+        "repository-wide run stopped after 67 failed, 9642 passed, "
+        "8 skipped, and an xdist worker MemoryError"
+    ),
+}
 SPEC_COMMAND = (
     ".venv/bin/python scripts/check_spec_coverage.py "
     "tests/python/test_experiment_6510_v563_independent_exact_root.py"
@@ -67,7 +75,7 @@ TESTS_RUN = [
     {"command": FOCUSED_COMMAND, "exit_code": 0},
     {"command": COVERAGE_RUN_COMMAND, "exit_code": 0},
     {"command": COVERAGE_REPORT_COMMAND, "exit_code": 0},
-    {"command": FULL_PYTEST_COMMAND, "exit_code": 0},
+    FULL_PYTEST_RECEIPT,
     {"command": SPEC_COMMAND, "exit_code": 0},
     {"command": RUN_COMMAND, "exit_code": 0},
     {"command": ROW_LINT_COMMAND, "exit_code": 0},
@@ -310,6 +318,133 @@ def test_scenario_bench_6510_atomic_terminal_schema_and_validation(
         assert expected in mod.validate_artifact(broken)
 
 
+def test_scenario_bench_6510_fail_closed_defensive_paths(
+    artifact: dict[str, Any],
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-BENCH-6510-ATTACKS: defensive paths block unsafe roots."""
+
+    assert mod.sha256_file(tmp_path / "missing.json") == "missing"
+    assert mod.classify_lineage_dependency(
+        {
+            "scope_id": "unknown",
+            "dependency_kind": "historical_file_input",
+            "source_label": "immutable_unknown_file",
+            "field": "row_payload",
+            "required_hash_present": True,
+        }
+    )["reason"] == "unknown_dependency_fail_closed"
+
+    violations = mod.structured_dependency_retired_id_violations(
+        {
+            "lineage_decision_rows": [
+                "malformed-row",
+                {
+                    "decision": "allow",
+                    "dependency_kind": "structured_dependency",
+                    "source_label": "exp6506-v561-evidence-corrigendum-v562-lineage-lock",
+                    "field": "v562_exact_branch_ready_score",
+                    "downstream_task": "exp6511-exact-branch-counterfactual-dataset-v2",
+                },
+            ]
+        }
+    )
+    assert len(violations) == 1
+
+    status, verdict = mod._status_verdict(0.0, {"blocked_reason": "forced_test_block"})
+    assert status == "blocked_v563_independent_exact_root"
+    assert verdict == "blocked_v563_independent_exact_root: forced_test_block"
+
+    validation_mutations = [
+        (
+            "prior failure receipt mismatch",
+            lambda item: item["prior_failure_receipt"].__setitem__(
+                "prior_terminal_result", "complete"
+            ),
+        ),
+        (
+            "independent row recomputation failed",
+            lambda item: item["independent_row_recomputation"].__setitem__(
+                "overall_independent_row_checks_passed", False
+            ),
+        ),
+        (
+            "retired dependency attack false accepts",
+            lambda item: item["retired_dependency_attack_matrix"].__setitem__(
+                "all_attacks_fail_closed", False
+            ),
+        ),
+        (
+            "atomic terminal write receipt mismatch",
+            lambda item: item["atomic_terminal_write_receipt"].__setitem__(
+                "terminal_payload_sha256", ""
+            ),
+        ),
+    ]
+    for expected, mutate in validation_mutations:
+        broken = deepcopy(artifact)
+        mutate(broken)
+        assert expected in mod.validate_artifact(broken)
+
+    monkeypatch.setattr(
+        mod,
+        "recompute_exp6504_direct",
+        lambda repo_root, payload: ({"row_replay_passed": False}, []),
+    )
+    with pytest.raises(ValueError, match="independent row recomputation failed"):
+        mod.build_artifact(
+            repo_root=REPO,
+            result_path=tmp_path / "blocked.json",
+            write=False,
+            duration_s=0.0,
+            tests_run=TESTS_RUN,
+            run_date="20260822",
+        )
+
+
+def test_scenario_bench_6510_validation_error_paths(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-BENCH-6510-ATOMIC-TERMINAL: invalid payloads raise."""
+
+    monkeypatch.setattr(mod, "validate_artifact", lambda value: ["forced validation error"])
+    monkeypatch.setattr(
+        mod,
+        "recompute_exp6504_direct",
+        lambda repo_root, payload: ({"row_replay_passed": True}, []),
+    )
+    monkeypatch.setattr(
+        mod,
+        "recompute_exp6506_contract",
+        lambda payload: {"contract_recomputed_from_file": True},
+    )
+
+    with pytest.raises(ValueError, match="forced validation error"):
+        mod.build_artifact(
+            repo_root=REPO,
+            result_path=tmp_path / "invalid-build.json",
+            write=False,
+            duration_s=0.0,
+            tests_run=TESTS_RUN,
+            run_date="20260822",
+        )
+
+    monkeypatch.setattr(
+        mod,
+        "build_artifact",
+        lambda **kwargs: {
+            "atomic_terminal_write_receipt": {
+                "write_requested": False,
+                "terminal_payload_sha256": "",
+            }
+        },
+    )
+    with pytest.raises(ValueError, match="forced validation error"):
+        mod.run(date="20260822", result_path=tmp_path / "invalid-run.json")
+
+
 def test_scenario_bench_6510_main_and_validate_roundtrip(tmp_path: Path) -> None:
     """REQ-BENCH-6510: CLI writes and validates the independent root."""
 
@@ -322,3 +457,6 @@ def test_scenario_bench_6510_main_and_validate_roundtrip(tmp_path: Path) -> None
     assert payload["v563_independent_root_ready_score"] == 1.0
     assert payload["atomic_terminal_write_receipt"]["target_path"] == str(result_path)
     assert payload["atomic_terminal_write_receipt"]["terminal_payload_sha256"].startswith("sha256:")
+    full_receipt = next(row for row in payload["tests_run"] if row["command"] == FULL_PYTEST_COMMAND)
+    assert full_receipt["exit_code"] == 3
+    assert "67 failed" in full_receipt["summary"]
