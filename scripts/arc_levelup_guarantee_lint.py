@@ -52,9 +52,31 @@ import yaml
 
 # The 25 public survey games (targets the planner rotates through over milestones).
 _GAME_NAMES = (
-    "ar25", "bp35", "cd82", "cn04", "dc22", "ft09", "g50t", "ka59", "lf52", "lp85",
-    "ls20", "m0r0", "r11l", "re86", "s5i5", "sb26", "sc25", "sk48", "sp80", "su15",
-    "tn36", "tr87", "tu93", "vc33", "wa30",
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "dc22",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sc25",
+    "sk48",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33",
+    "wa30",
 )
 _GAMES = re.compile(r"\b(" + "|".join(_GAME_NAMES) + r")\b")
 
@@ -115,13 +137,21 @@ _GENERALIZATION_SIGNALS = (
     "never adaptered",
     "arc_solver_kit",  # a reusable-primitive change is task-class 2 of the redirected floor
     "general_gotchas",  # cross-game gotcha mining is task-class 3
+    # Task-class 4 (added 2026-08-22): supervisor refinement from the redirect
+    # ledger. The trajectory supervisor's receipts now carry per-arm
+    # fired/helped outcomes (REQ-ARC-WMTE-6640); a task that reads them and
+    # refines the arm table is a qualifying floor task and must not draw a
+    # spurious zero-qualifying-tasks warning.
+    "trajectory supervisor",
+    "redirect ledger",
+    "arm_outcomes",
 )
 
 
 def _is_generalization_attempt(prompt: str) -> bool:
     """True if the task's prompt targets the 2026-07-17 ARC-AGI-3 Generalization-Testing Floor: held-out
     / leave-one-game-out measurement against the LIVE scored path, a reusable-primitive hardening in
-    arc_solver_kit.py, or cross-game gotcha mining into a shared primitive. See CLAUDE.md 'ARC-AGI-3
+    arc_solver_kit.py, cross-game gotcha mining into a shared primitive, or (task-class 4,\n    2026-08-22) supervisor refinement from the redirect ledger. See CLAUDE.md 'ARC-AGI-3
     Generalization-Testing Floor'. Heuristic and UNPROVEN -- kept WARN-only in lint_roadmap, never a hard
     gate, until real compliant task prompts establish what this detection should actually match."""
     p = prompt.lower()
@@ -162,7 +192,9 @@ def lint_roadmap(path: Path, minimum: int) -> int:
                 "as authoritative."
             )
         else:
-            print(f"OK (soft): {gen_count} generalization-testing-floor task(s) detected this roadmap.")
+            print(
+                f"OK (soft): {gen_count} generalization-testing-floor task(s) detected this roadmap."
+            )
         return 0
     d = yaml.safe_load(path.read_text())
     tasks = d.get("tasks", []) or []
@@ -172,7 +204,9 @@ def lint_roadmap(path: Path, minimum: int) -> int:
         if _is_levelup_attempt(prompt):
             games = sorted(set(_GAMES.findall(prompt.lower())))
             attempts.append((t.get("id", "?"), games))
-    print(f"milestone: {d.get('milestone')}  tasks: {len(tasks)}  level-up attempts: {len(attempts)}")
+    print(
+        f"milestone: {d.get('milestone')}  tasks: {len(tasks)}  level-up attempts: {len(attempts)}"
+    )
     for tid, games in attempts:
         print(f"  LEVEL-UP  {tid:42} targets={games or ['(game chosen at runtime)']}")
     if len(attempts) < minimum:
@@ -185,14 +219,18 @@ def lint_roadmap(path: Path, minimum: int) -> int:
         return 1
     # soft audit: which games get a level-up attempt (rotation visibility)
     touched = sorted({g for _, gs in attempts for g in gs})
-    print(f"\nOK: {len(attempts)} >= {minimum}. Games with a level-up attempt this roadmap: {touched or '(runtime-chosen)'}")
+    print(
+        f"\nOK: {len(attempts)} >= {minimum}. Games with a level-up attempt this roadmap: {touched or '(runtime-chosen)'}"
+    )
     return 0
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("roadmap", nargs="?", default="research-roadmap.yaml")
-    ap.add_argument("--min", type=int, default=1, help="minimum level-up attempts required (default 1)")
+    ap.add_argument(
+        "--min", type=int, default=1, help="minimum level-up attempts required (default 1)"
+    )
     args = ap.parse_args()
     path = Path(args.roadmap)
     if not path.exists():

@@ -4095,6 +4095,29 @@ concrete work is one of:
    flight," "reusable cross-type stepping-stone pieces," "remote-open-before-entry as a general unlock
    pattern") into `arc_solver_kit.py`'s `general_gotchas` / a new shared primitive, so a FUTURE hidden game
    sharing that mechanic class benefits without per-game re-derivation.
+4. **Supervisor refinement from the redirect ledger (added 2026-08-22, append-only amendment).** The
+   live agent's trajectory supervisor (REQ-ARC-WMTE-6600 — a mechanical stagnation detector that
+   redirects strategy through a fixed arm table) now records outcomes per redirect
+   (REQ-ARC-WMTE-6640): each redirect carries `resolved_by_levelup` + `actions_to_levelup`, and the
+   receipt carries per-arm `fired`/`helped` counts plus `stagnations_unredirected`. A qualifying task
+   reads the accumulated `trajectory_supervisor` receipts from run artifacts and acts on what they say:
+
+   - Retire an arm that has fired N times and was never followed by progress.
+   - Raise the firing priority of an arm that consistently is.
+   - Treat "all arms exhausted and stagnation continued" (`stagnations_unredirected` > 0 with every
+     arm used) as the written specification for a NEW arm.
+
+   Growth of the arm table stays a human/outer-loop act. On a 27B generator the arm PROPOSAL cannot
+   be model-generated — that is the part of AVO's supervisor that does not transfer. Refinement here
+   means SELECTION over a curated arm set, not generation.
+
+   **Prerequisite.** This activity qualifies only when the ledger carries outcomes
+   (REQ-ARC-WMTE-6640, shipped 2026-08-22). Before that, the task has no input and would invent work.
+
+   **Anti-churn.** When the ledger is empty because the supervisor never fired, the honest output is
+   "no firings, nothing to refine," and the slot costs nothing. That report SATISFIES the slot. A
+   slot that must always produce a change manufactures churn — the failure `ops/north-star.md` §1
+   names.
 
 **What does NOT count** (mirrors the retired floor's own exclusions, updated for the new target):
 solving/re-deepening an already-cleared public game (structurally impossible now — there is nothing
@@ -4121,6 +4144,18 @@ retirement) · CLAUDE.md "ARC-AGI-3 November-Submission Standing Floor" (RETIRED
 supersedes) · CLAUDE.md "ARC Live-Path Reachability Discipline" (the two live entrypoints task 1 must use)
 · `python/carnot/agentic/arc_solver_kit.py` + `ops/arc_solve_registry.yaml` (the reusable-method assets
 this floor is meant to strengthen) · `scripts/arc_levelup_guarantee_lint.py` (soft mechanical check).
+
+**AMENDMENT 2026-08-22 (append-only): activity 4 added, enforcement stays WARN-only.** Activity 4
+(supervisor refinement from the redirect ledger) was added above rather than as a new MANDATORY rule.
+Reason: this file already carries ~30 rules, and the 2026-08-21 plan note
+(`docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md`) recommends consolidation over
+accretion. `_GENERALIZATION_SIGNALS` in `scripts/arc_levelup_guarantee_lint.py` gained "trajectory
+supervisor" / "redirect ledger" / "arm_outcomes" (task-class 4), so a supervisor-refinement task counts
+as a qualifying floor task instead of drawing a spurious zero-qualifying-tasks warning. The check stays
+WARN-only. Do not promote it to a hard gate for this activity: an empty ledger is a legitimate state,
+and a hard gate would fire on honest milestones. Cross-refs: REQ-ARC-WMTE-6600 / REQ-ARC-WMTE-6640
+(`openspec/capabilities/arc-world-model-trust-energy/spec.md`) ·
+`docs/research-notes/avo-adaptation-for-local-generator-2026-08-21.md` (why arm growth is human-only).
 
 **Origin:** 2026-07-06 operator directive: "I want at least one ARC slot during each milestone, and more
 if possible to continue the prioritization of ARC-AGI-3 as we need to make headway toward our November
