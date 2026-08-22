@@ -2162,6 +2162,36 @@ def compute_adaptive_sleep_min(iter_duration_s: float, interval_min: int) -> tup
 _BOOTSTRAP_STATUSES = frozenset({"running", "blocked", "partial", "in_progress"})
 
 
+# Fallback copy of adversarial_verify._VERDICT_CLASSES for the enum-first
+# branch below. Duplicated on purpose (import may fail outside the venv);
+# tests/python/test_verdict_class_enum_first.py asserts the copies stay
+# equal, so the duplication cannot silently drift.
+_VERDICT_CLASSES_FALLBACK = frozenset(
+    {"positive", "circular_positive", "null", "blocked", "disqualified", "partial"}
+)
+
+
+def _declared_verdict_class(payload: dict) -> str | None:
+    """The artifact's declared verdict_class, if it is inside the closed enum.
+
+    Unwraps the principle-annotated form ({"value": ..., "principle": ...})
+    first — any field may arrive wrapped, and reading it raw is the exact
+    field-shape bug class the QA-Layer discipline documents. A value
+    outside the enum returns None so the caller falls back to the legacy
+    token lists (the linter already flags the bad value CRITICAL).
+    """
+    try:
+        from adversarial_verify import _VERDICT_CLASSES  # type: ignore[import-not-found]
+    except Exception:
+        _VERDICT_CLASSES = _VERDICT_CLASSES_FALLBACK
+    vc = payload.get("verdict_class")
+    if isinstance(vc, dict) and "value" in vc and "principle" in vc:
+        vc = vc["value"]
+    if isinstance(vc, str) and vc.strip().lower() in _VERDICT_CLASSES:
+        return vc.strip().lower()
+    return None
+
+
 def _verdict_is_untrustworthy(payload: dict) -> tuple[bool, str | None]:
     """Return (is_untrustworthy, verdict_string).
 
@@ -2177,10 +2207,27 @@ def _verdict_is_untrustworthy(payload: dict) -> tuple[bool, str | None]:
     Reuses the verdict-token sets from in_process_doc_reconcile so
     the cache policy can't drift from milestone-retro policy. Falls
     back to a hard-coded list if the import fails.
+
+    ENUM-FIRST since 2026-08-21 (REQ-CONDUCTOR-VERDICT-2): an artifact
+    that declares a valid ``verdict_class`` is classified from the
+    declaration and never reaches the token lists below. The lists were
+    patched at least six times for substring false positives; the enum
+    retires that treadmill for every artifact that declares it.
     """
-    verdict = payload.get("honest_verdict") if isinstance(payload, dict) else None
-    if not isinstance(verdict, str):
+    if not isinstance(payload, dict):
         return False, None
+    verdict = payload.get("honest_verdict")
+    verdict_str = verdict if isinstance(verdict, str) else None
+    declared = _declared_verdict_class(payload)
+    if declared is not None:
+        # `partial` is the one class that may retry; every other member
+        # is a trustworthy terminal state (positive, circular_positive,
+        # null, blocked, disqualified) — no 3-fail-retire churn on an
+        # honest negative.
+        return declared == "partial", (verdict_str or declared)
+    if verdict_str is None:
+        return False, None
+    verdict = verdict_str
     vlow = verdict.lower()
     # 2026-05-01 fix (Issue 7): verdicts ending in `_honest_negative` are
     # deliberately-named confirmations that the hypothesis didn't pan out —
