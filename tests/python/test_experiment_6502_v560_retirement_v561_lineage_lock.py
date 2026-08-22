@@ -42,7 +42,7 @@ SPEC_COMMAND = (
 RUN_COMMAND = (
     "cd /home/ianblenke/github.com/ianblenke/carnot && "
     ".venv/bin/python -m carnot.experiment_6502_v560_retirement_v561_lineage_lock "
-    "--date 20260821"
+    "--date 20260822"
 )
 ROW_LINT_COMMAND = (
     ".venv/bin/python scripts/verdict_row_consistency_lint.py "
@@ -269,7 +269,7 @@ def test_scenario_infra_6502_attacks_and_protected_files(tmp_path: Path) -> None
     assert protected["files"]["scripts/research_conductor.py"]["unchanged"] is True
 
     pre = artifact["preconditions_checked"]
-    assert pre["planning_date"] == "20260821"
+    assert pre["planning_date"] == "20260822"
     assert pre["compute"]["no_gpu_required"] is True
     assert pre["network"]["network_required"] is False
     assert pre["exclusion_manifest"]["loaded"] is True
@@ -389,6 +389,7 @@ def test_scenario_infra_6502_artifact_validation_and_edges(tmp_path: Path) -> No
         finally:
             mod.validate_artifact = original  # type: ignore[method-assign]
 
-    rc = mod.main(["--date", "20260821", "--output", str(tmp_path / "main.json")])
+    rc = mod.main(["--date", "20260822", "--output", str(tmp_path / "main.json")])
     assert rc == 0
-    assert (tmp_path / "main.json").is_file()
+    written = json.loads((tmp_path / "main.json").read_text())
+    assert written["preconditions_checked"]["planning_date"] == "20260822"

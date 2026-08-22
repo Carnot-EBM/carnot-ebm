@@ -6916,7 +6916,7 @@ with `complete_`.
 Carnot SHALL provide Exp6502 at
 `python/carnot/experiment_6502_v560_retirement_v561_lineage_lock.py`.
 The command
-`.venv/bin/python -m carnot.experiment_6502_v560_retirement_v561_lineage_lock --date 20260821`
+`.venv/bin/python -m carnot.experiment_6502_v560_retirement_v561_lineage_lock --date 20260822`
 SHALL write
 `results/experiment_6502_v560_retirement_v561_lineage_lock.json`.
 
