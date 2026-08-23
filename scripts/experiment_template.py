@@ -887,6 +887,17 @@ class ExperimentTemplate:
                             )
                             seen_pids.add(pid)
                             continue
+                        # REQ-INFRA-079: an inference server idling between
+                        # requests is healthy, not a zombie. Never kill it.
+                        if _pid_is_protected_server_proc(pid):
+                            _log.info(
+                                "kill_gpu_zombies: SKIP protected server PID %d (gpu=%d, vram_mb=%d)",
+                                pid,
+                                gpu_idx,
+                                vram_mb,
+                            )
+                            seen_pids.add(pid)
+                            continue
                         try:
                             os.kill(pid, signal.SIGTERM)
                             killed_pids.append(pid)
