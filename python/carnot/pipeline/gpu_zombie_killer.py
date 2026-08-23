@@ -297,6 +297,15 @@ def kill_gpu_zombies(
     for pid in result.pids_found:
         if pid in effective_excludes:
             continue
+        if _pid_is_protected_server(pid):
+            result.pids_skipped_protected.append(pid)
+            _log.info(
+                "kill_gpu_zombies: SKIP protected server PID %d (gpu=%d) — "
+                "REQ-INFRA-079; a live server is not a zombie",
+                pid,
+                gpu_index,
+            )
+            continue
         kill_targets.append(pid)
     result.kill_attempted = bool(kill_targets)
 
