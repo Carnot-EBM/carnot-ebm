@@ -16326,3 +16326,5 @@ code |
 | 2026-08-23 10:28 UTC | Conductor re-exec: fresh committed source | OK | c9408e2e2773 -> 45eb2efc3b30; argv preserved |
 | 2026-08-23 10:44 UTC | Independent DRIFT corpus provenance, chronology, a | OK | 86 passed, 1 warning in 10.15s |
 | 2026-08-23 11:02 UTC | External exact structural-control headroom compari | OK | 88 passed, 1 warning in 12.15s |
+| 2026-08-23 11:25 UTC | External Safety-Net learned router, abstention, an | OK | 87 passed, 1 warning in 16.20s |
+| 2026-08-23 11:27 UTC | OPERATOR-ATTENTION: CONSECUTIVE_INVALID_LLM_ON_ROW | BLOCK | pid 849366 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json: 2/2 L |
