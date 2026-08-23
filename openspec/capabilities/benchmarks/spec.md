@@ -3927,3 +3927,102 @@ Carnot MUST provide an evaluation script that runs a subset of ConstraintBench t
 **Given** the generation script `experiment_3585_realistic_factual_corpus.py`
 **When** the corpus is generated and scored
 **Then** the confidence baseline AUROC must be `< 0.95`.
+
+### REQ-BENCH-6530: External Constraint Corpus Audit
+
+Carnot MUST provide an independent audit for the Exp6529 DRIFT-Bench external
+constraint corpus. The audit MUST always write
+`results/experiment_6530_external_constraint_corpus_audit.json`. It MUST write
+`external_constraint_corpus_audited_ready_score` with that exact spelling on
+all terminal paths, including missing, blocked, partial, corrupt, and valid
+paths.
+
+The audit MUST NOT trust source aggregates, intake aggregates, source IDs,
+local IDs, or source-file path declarations as proof of independence. It MUST
+recompute file hashes, source-to-local row identity, chronology, exact labels,
+family-blind split membership, shard and transaction receipts, row aggregates,
+and leakage attacks from the source files and fixture rows it reads.
+
+The artifact MUST include `status`, `honest_verdict`, `verdict_class`,
+`source_existence_and_hash_receipts`,
+`independent_revision_and_license_receipt`, `source_identity_audit_rows`,
+`chronology_replay_rows`, `independent_exact_replay_rows`,
+`split_and_lineage_audit`, `shard_and_transaction_audit`,
+`independent_aggregate_rows`, `leakage_attack_matrix`,
+`external_constraint_corpus_audited_ready_score`, `gate_check_summary`,
+`per_unit_rows`, `aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+The artifact SHALL use `verdict_class=null` for a complete integrity audit,
+`partial` for a bounded nonfatal limitation, `blocked` for missing or failed
+prerequisites, and `disqualified` for provenance or leakage corruption.
+`honest_verdict` SHALL begin with `complete_`, `blocked_`, `partial_`, or
+`disqualified_`. `inference_substrate` SHALL be
+`independent_external_source_fixture_and_exact_solver_replay_no_llm`.
+`verifier_is_oracle` SHALL be true only for source, split, and exact-label
+audits.
+
+#### SCENARIO-BENCH-6530-MISSING: Missing Upstream Writes A Blocked Audit
+
+**Given** the Exp6529 intake artifact or fixture is absent
+**When** Exp6530 runs
+**Then** it writes the required artifact, records the missing path and observed
+existence value in `gate_check_summary`, sets `verdict_class="blocked"`, and
+sets `external_constraint_corpus_audited_ready_score=0.0`.
+
+#### SCENARIO-BENCH-6530-SOURCE: Source Identity Is Independently Hashed
+
+**Given** an Exp6529 intake artifact that names a pinned DRIFT-Bench revision
+and source-file hashes
+**When** Exp6530 audits the source files used by fixture rows
+**Then** it resolves the pinned revision, verifies license and corruption text,
+recomputes every source-file hash, and rejects any mismatch without using source
+IDs as proof.
+
+#### SCENARIO-BENCH-6530-CHRONOLOGY: Raw Turns Replay In Order
+
+**Given** fixture rows with source raw turns and local turns
+**When** Exp6530 reconstructs cumulative constraints
+**Then** every turn for a base problem must be contiguous, increasing by one,
+and free of duplicate event keys or chronology gaps.
+
+#### SCENARIO-BENCH-6530-EXACT: Exact Labels Replay Independently
+
+**Given** held rows and a preregistered train/development sample
+**When** Exp6530 initializes its exact replay path
+**Then** every audited row must reproduce the fixture exact label, contradiction
+state, and terminal disposition from raw constraints rather than cached solver
+results.
+
+#### SCENARIO-BENCH-6530-SPLIT: Family-Blind Splits Are Reconstructed
+
+**Given** train, development, and held fixture rows
+**When** Exp6530 rebuilds base-problem lineages
+**Then** no base problem may cross splits, no family alias collision may exist,
+no post-held repair may be admitted, and every row must have a terminal
+disposition.
+
+#### SCENARIO-BENCH-6530-SHARDS: Shards And Receipts Match Fixture Rows
+
+**Given** Exp6529 shard, journal, resume, final-write, and fixture receipts
+**When** Exp6530 verifies transaction integrity
+**Then** planned IDs, terminal IDs, shard hashes, journal chain, resume
+receipts, final atomic-write receipt, fixture hash, and row counts must match
+the rows independently read from disk.
+
+#### SCENARIO-BENCH-6530-ATTACKS: Leakage And Tampering Fail Closed
+
+**Given** attacks on IDs, row order, entity names, serialization length, family
+labels, answer fields, solver caches, missing hard rows, hashes, and aggregates
+**When** Exp6530 recomputes aggregate rows
+**Then** every attack must pass before
+`external_constraint_corpus_audited_ready_score` can equal `1.0`, and failed
+attacks must be named with observed values in `gate_check_summary`.
+
+## Implementation Status (REQ-BENCH-6530)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6530 | Planned (`python/carnot/experiment_6530_external_constraint_corpus_audit.py`, `results/experiment_6530_external_constraint_corpus_audit.json`) | Planned (`tests/python/test_experiment_6530_external_constraint_corpus_audit.py`) |
