@@ -7989,7 +7989,7 @@ class LocalGGUFProposer:
             (E3_DIR / game / "world_model.py").write_text(code)
             # REQ-ARC-WMTE-6690: retain this attempt; the canonical write above is unchanged.
             self.last_attempt_archive = _archive_engine_attempt(
-                game, code, writer="gen_to_file", model=str(self.repo_substr)
+                game, code, writer="gen_to_file", model=self._effective_model_label()
             )
             return True, "local gguf (GPU server) wrote world_model.py"
         return False, code
@@ -8005,7 +8005,7 @@ class LocalGGUFProposer:
         (E3_DIR / game / "world_model.py").write_text(code)
         # REQ-ARC-WMTE-6690: retain this attempt; the canonical write above is unchanged.
         self.last_attempt_archive = _archive_engine_attempt(
-            game, code, writer="write_world_model", model=str(self.repo_substr), note=note
+            game, code, writer="write_world_model", model=self._effective_model_label(), note=note
         )
         msg = "local gguf (GPU server) wrote world_model.py"
         return True, (f"{msg} ({note})" if note else msg)
