@@ -16367,3 +16367,5 @@ code |
 | 2026-08-23 22:57 UTC | Plan milestone 2026.08.569 | OK | 6 tasks proposed |
 | 2026-08-23 23:00 UTC | Milestone 2026.08.569 activated | OK | 6 tasks queued |
 | 2026-08-23 23:20 UTC | V569 evidence lineage, failed-scope, and retiremen | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-23 23:37 UTC | Proof-obligation extraction and graph-Potts prereg | OK | 88 passed, 1 warning in 11.67s |
+| 2026-08-23 23:39 UTC | Conductor re-exec: fresh committed source | OK | 45eb2efc3b30 -> 8d5bc109260e; argv preserved |
