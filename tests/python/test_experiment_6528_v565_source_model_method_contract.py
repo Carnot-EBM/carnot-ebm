@@ -289,6 +289,9 @@ def test_scenario_report_6528_sources_and_drift_contract(tmp_path: Path) -> None
     assert rows["solver_hard"]["local_applicability"] == "surface_hardness_stratified_embedding_diagnostic"
     assert rows["openreview_dc_energy"]["source_kind"] == "openreview_forum"
     assert rows["openreview_linear_decision_rules"]["method_transfer_status"] == "future_architecture_control"
+    assert rows["drift_bench_repo"]["stable_url"] == mod.DRIFT_REPO_URL
+    assert rows["drift_bench_repo"]["retrieval_url"] == mod.DRIFT_API_REPO_URL
+    assert rows["drift_bench_repo"]["primary_url_verified"] is True
     assert rows["extropic_z1_status"]["exact_authority_boundary"] == "Product page only; no local TSU runner or access."
     assert rows["logical_intelligence_kona"]["non_transfer_boundary"] == "No proprietary Kona weights, runner, or speed claim transfers."
 
