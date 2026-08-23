@@ -71,6 +71,7 @@ __all__ = [
 _PROTECTED_SERVER_MARKERS: tuple[str, ...] = (
     "llama-server",
     "vllm.entrypoints.openai.api_server",
+    "vllm serve",  # the vLLM CLI form of the same server
 )
 
 

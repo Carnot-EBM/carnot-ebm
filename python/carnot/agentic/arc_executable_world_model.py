@@ -6225,22 +6225,40 @@ class LocalGGUFProposer:
     _EXTERNAL_KILL_MARKERS = ("cleaning up before exit", "Received second interrupt")
 
     def _server_death_signature(self) -> str:
-        """One short line naming what the launched server's own log says about its death.
+        """One short line naming what a launched server's own log says about its death.
 
-        Returns '' when there is no launched-server log, the log is unreadable, or the
-        tail carries no external-termination marker. Never raises: this runs inside the
-        failure-note path, and a diagnostic helper that can take down the note it is
-        enriching is worse than no helper (REQ-ARC-WMTE-6670, SCENARIO-6670-3).
+        Checks the CURRENT launch's log first, then the PREVIOUS one: when a killed
+        server is relaunched and the relaunch fails, the kill evidence sits in the
+        previous log, not the fresh one. Returns '' when no log carries the marker.
+        Never raises: this runs inside the failure-note path, and a diagnostic helper
+        that can take down the note it is enriching is worse than no helper
+        (REQ-ARC-WMTE-6670, SCENARIO-6670-3).
+
+        Wording note: llama-server prints these lines for SIGTERM and SIGINT alike,
+        including a SIGTERM this class itself sent via stop()/_terminate_stale_proc —
+        so the hint says "termination signal", not "external kill". The reader decides
+        attribution; the note's job is to surface the evidence and where it lives.
         """
-        log_path = getattr(self, "_stderr_log_path", None)
-        if not log_path:
-            return ""
-        try:
-            tail = Path(log_path).read_bytes()[-2000:].decode("utf-8", "replace")
-        except OSError:
-            return ""
-        if any(marker in tail for marker in self._EXTERNAL_KILL_MARKERS):
-            return f"server log shows an external termination signal — see {log_path}"
+        for which, log_path in (
+            ("", getattr(self, "_stderr_log_path", None)),
+            ("previous ", getattr(self, "_prev_stderr_log_path", None)),
+        ):
+            if not log_path:
+                continue
+            try:
+                # Bounded read: seek to the tail instead of loading a whole
+                # multi-hour server log per failure note.
+                with open(log_path, "rb") as fh:
+                    fh.seek(0, 2)
+                    fh.seek(max(0, fh.tell() - 2000))
+                    tail = fh.read().decode("utf-8", "replace")
+            except OSError:
+                continue
+            if any(marker in tail for marker in self._EXTERNAL_KILL_MARKERS):
+                return (
+                    f"{which}server log records a termination signal (SIGTERM/SIGINT) "
+                    f"— see {log_path}"
+                )
         return ""
 
     def _note_server_failure(self, diagnostic: str) -> None:
@@ -7127,6 +7145,12 @@ class LocalGGUFProposer:
         import os
         import tempfile
 
+        # Keep the PREVIOUS launch's log reachable before this launch replaces the
+        # path. The death evidence for a killed-then-relaunched server lives in the
+        # OLD log; reading only the fresh one misses exactly the flagship case
+        # (REQ-ARC-WMTE-6670, adversarial-review finding 5, 2026-08-23).
+        if getattr(self, "_stderr_log_path", None):
+            self._prev_stderr_log_path = self._stderr_log_path
         self._stderr_log_path = None
         _err_sink = subprocess.DEVNULL
         try:

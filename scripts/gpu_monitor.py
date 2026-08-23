@@ -204,6 +204,20 @@ def get_gpu_processes() -> list[GPUProcess]:
 # /proc/<pid>/cmdline because nvidia-smi only reports the bare process name ("python").
 _TRAINING_ENTRYPOINT_MARKERS = ("train.py", "/nn/train", "src/nn/train")
 
+# Inference servers this sweep must NEVER kill (REQ-INFRA-079, 2026-08-23).
+# The cumulative cpu_time/wall_time < 1% "idle" proxy misfires on a server the
+# same way it misfires on GPU-bound training: a llama-server holds VRAM by
+# design and can sit below 1% cumulative CPU over a long mostly-idle life even
+# while currently serving. This function runs LIVE (dry_run=False) in every
+# conductor task pre-check, so without this exemption it SIGTERMs other
+# workflows' generators. Kept in sync with _SERVER_ENTRYPOINT_MARKERS in
+# scripts/experiment_template.py.
+_SERVER_ENTRYPOINT_MARKERS = (
+    "llama-server",
+    "vllm.entrypoints.openai.api_server",
+    "vllm serve",
+)
+
 
 def _proc_cmdline(pid: int) -> str:
     """Best-effort full command line for a PID (NUL-separated in /proc); '' on failure."""
@@ -218,6 +232,12 @@ def _is_protected_training_proc(pid: int) -> bool:
     """True if the PID is a model-training process that must not be killed as a zombie."""
     cmdline = _proc_cmdline(pid)
     return any(marker in cmdline for marker in _TRAINING_ENTRYPOINT_MARKERS)
+
+
+def _is_protected_server_proc(pid: int) -> bool:
+    """True if the PID is an inference server (never a zombie target, REQ-INFRA-079)."""
+    cmdline = _proc_cmdline(pid)
+    return any(marker in cmdline for marker in _SERVER_ENTRYPOINT_MARKERS)
 
 
 def detect_zombies(
@@ -243,6 +263,11 @@ def detect_zombies(
         # Never flag an active training run as a zombie (it holds VRAM by design and is
         # GPU-bound, so its CPU ratio is naturally < 1% even while fully productive).
         if _is_protected_training_proc(proc.pid):
+            continue
+        # Never flag an inference server (REQ-INFRA-079): idling between requests is a
+        # server's normal healthy state, and the cumulative-CPU proxy cannot tell it
+        # from a leak. Orphaned servers belong to run_stop_authority.py, not this sweep.
+        if _is_protected_server_proc(proc.pid):
             continue
         # Check CPU/wall ratio — zombie if barely using CPU
         if proc.wall_time_seconds > 0:

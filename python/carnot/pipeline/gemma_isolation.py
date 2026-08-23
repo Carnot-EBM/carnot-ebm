@@ -35,7 +35,11 @@ import time
 from dataclasses import dataclass, field
 
 from carnot.pipeline.gemma_loader import GemmaTransformersLoader
-from carnot.pipeline.gpu_zombie_killer import GPUZombieResult, kill_gpu_zombies
+from carnot.pipeline.gpu_zombie_killer import (
+    GPUZombieResult,
+    _pid_is_protected_server,
+    kill_gpu_zombies,
+)
 
 _log = logging.getLogger(__name__)
 
@@ -231,6 +235,15 @@ def evict_gpu_vram(gpu_index: int = 1) -> VRAMEvictionResult:
     residual_pids = _get_compute_pids(gpu_index)
     for pid in residual_pids:
         if pid == my_pid:
+            continue
+        # REQ-INFRA-079: step 2's server exemption must not be defeated ten
+        # lines below it. An inference server is never a residual to sweep.
+        if _pid_is_protected_server(pid):
+            _log.info(
+                "evict_gpu_vram: SKIP protected server PID %d on gpu=%d (REQ-INFRA-079)",
+                pid,
+                gpu_index,
+            )
             continue
         if pid in result.pids_killed:
             # Already killed in step 2 — send a second SIGKILL anyway in case
