@@ -1,5 +1,34 @@
 # Carnot — Changelog
 
+## 2026-08-23 (outer-loop, shadow-mode supervisor: every run records its counterfactual)
+
+Standing-mandate work (operator: fully unattended iteration on the
+trajectory supervisor). REQ-ARC-WMTE-6660, commit 1a4836c6a3, preceded
+by the offline replay note (76e819b3f5) that motivated it: the
+detector would have fired in 25/25 baseline games, but the ARM choice
+was not replayable because per-window eligibility bits were never
+recorded, and the three prior A/Bs' "zero firings" turn out to be a
+record gap (the first ON arm predates the 6640 receipt; the rest are
+OFF arms).
+
+- The supervisor now exists on EVERY run. env=1 applies (mode:
+  applied); default is SHADOW — observed identically, redirects
+  recorded as would_have_redirects / would_have_arm_outcomes, never
+  applied. Keys differ BY NAME so counterfactuals cannot be aggregated
+  as real redirects; shadow rows rename resolved_by_levelup to
+  levelup_followed_without_redirect (the control outcome).
+- Fail-open for the scored path, stated and visible (observe_errors).
+- Zero scored-path change proven by seam test + mutation (shadow gate
+  removed -> RED on the real applied effect). 4 mutations RED->GREEN;
+  28 supervisor + 18 downstream tests.
+- Freshness reconciled by rebuild (early_stop_grace_sweep; metadata-
+  only diff; hand keys carried by merge-preserve). A misattributed
+  mutation-gate marker (conductor state file, attributed_to_run=[])
+  was deleted per the gate's own deliberate-act flow, reasoning in the
+  commit message.
+- In-flight supab4 processes imported the old module and will not
+  carry shadow receipts; every run launched after this commit will.
+
 ## 2026-08-23 (outer-loop, four guards widened per QA-layer SILENT_NON_FIRING findings)
 
 Operator-requested fixes for the four SILENT_NON_FIRING findings in
