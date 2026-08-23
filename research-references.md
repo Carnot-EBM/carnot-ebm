@@ -36141,3 +36141,115 @@ may rank, route, allocate work, or abstain.
   command attempt.
 
 <!-- V565-PLANNER-REFRESH-20260823-END -->
+
+## V566 planner refresh - 2026-08-23
+
+<!-- V566-PLANNER-REFRESH-20260823-START -->
+
+This refresh followed the terminal V565 artifacts. V565 did not execute its
+external-transfer experiments. Its source contract treated an unavailable
+OpenReview metadata channel as a hard dependency, although the selected
+benchmark had a complete public repository. The V566 source contract must
+make only a downstream experiment's own primary source mandatory. Discovery
+channels remain advisory unless a task directly consumes their content.
+
+### Promising findings selected for V566
+
+- **Towards Reversible Forgetting: Managing Obsolete Knowledge in Continual
+  Enterprise AI Agents** - arXiv:2608.18177,
+  https://arxiv.org/abs/2608.18177; submitted 2026-08-18. The paper separates
+  memory into active, dormant, and retired states. Its controller accumulates
+  relevance evidence, uses asymmetric thresholds to avoid oscillation, tests
+  reactivation in shadow mode, and gates irreversible retirement. Carnot hook:
+  extend the shipped transactional conflict memory with a default-off,
+  hysteretic state controller. Compare it with no retirement, LRU eviction,
+  and a one-threshold controller on a chronological exact-constraint stream.
+  Exact replay remains the commit and reactivation authority.
+- **SMTrap: Cost-Effective DoS Attacks Against Large Reasoning Models via SMT
+  Conflict Guidance** - arXiv:2608.18921,
+  https://arxiv.org/abs/2608.18921; submitted 2026-08-19. The paper reports
+  that SMT conflict count can guide CPU-only generation of CSP prompts that
+  induce longer reasoning traces, and that tool routing cuts token use. This
+  conflicts usefully with Solver-Hard (`2607.17047`), which found that solver
+  hardness does not reliably predict model accuracy. Carnot hook: measure
+  solver conflict count, proof-preserving surface form, local-model token use,
+  and wall time as separate variables. Test an exact-tool cost guard. Do not
+  treat solver conflict count as a correctness label or universal model-hardness
+  proxy.
+- **SemaPLC: A Project-Grounded, Verification-Gated Agent Harness for PLC Code
+  Generation** - arXiv:2608.18565,
+  https://arxiv.org/abs/2608.18565; submitted 2026-08-19. Its strict completion
+  rule requires logged specification, compilation, and live-runtime checks.
+  Dynamic execution separates methods more strongly than static checks in its
+  reported results. Carnot hook: retain executable replay as release authority
+  in DRIFT transfer and require terminal per-turn receipts. This supports the
+  control design; it does not justify a separate PLC experiment in V566.
+- **Grading the Graders: Verification Autonomy Levels (L0-L5) for LLM
+  Reasoning** - arXiv:2608.19009,
+  https://arxiv.org/abs/2608.19009; revision dated 2026-08-20. The proposed VAL
+  vocabulary distinguishes where a verification specification comes from and
+  what its verdict guarantees. It also names the completeness limit of
+  candidate-only and sampling-based checks. Carnot hook: record whether each
+  experiment checks candidate validity, search completeness, or only a learned
+  ranking signal. Treat the paper as reporting vocabulary, not as empirical
+  authority.
+- **FormalTCS: Benchmarking End-to-End Frontier Formal Theoretical Computer
+  Science Research of Large Language Models** - arXiv:2608.20153,
+  https://arxiv.org/abs/2608.20153; submitted 2026-08-20. The benchmark contains
+  175 expert-validated 2025-2026 TCS instances with Lean formalizations. Its
+  reported best autoformalization score is much lower than proof completion
+  from human formal statements. Carnot hook: this strengthens the PRD's
+  extraction-bottleneck priority. V566 first closes external constraint
+  transfer and does not add a new Lean benchmark lineage.
+
+### Primary-source and implementation checks
+
+- **DRIFT-Bench:** `https://github.com/kaons-research/drift-bench.git` resolved
+  on 2026-08-23 to commit
+  `d24cda4f59a6ee06bafe886f4724899a7ec94f1c`. The repository contains 204
+  development and 816 test problems across three domains, Z3 replay and
+  generation code, an MIT license, and the explicit warning that the original
+  SQLite result databases were corrupted and are not distributed. This is a
+  sufficient direct intake root. V566 must regenerate every result locally and
+  must not require unrelated OpenReview, Semantic Scholar, or Hugging Face
+  metadata to admit these files.
+- **Hugging Face Papers:** Claim-Level Reliability Assessment (`2608.11994`)
+  remains relevant to targeted falsification and is already recorded above.
+  Current pages also surfaced thought-level compute allocation and structured
+  decoding work, but no result replaces exact CSP replay as Carnot's release
+  authority.
+- **OpenReview:** current 2025-2026 records continue to support verifier-guided
+  backtracking, deterministic final-response checks, and solver-integrated
+  planning. No newly verified record supplies an oracle-distinct executable
+  EBM verifier for Carnot. OpenReview remains an advisory discovery channel for
+  this milestone.
+- **Semantic Scholar:** the public citation counts observed for EBT
+  (`2507.02092`) and ARM-EBM (`2512.15605`) remain 35 and eight, respectively,
+  on this planning date. No new citing record changes the local execution
+  boundary.
+- **GitHub Trending and targeted repositories:** no newly trending EBM, KAN,
+  Ising, or constrained-generation repository had a stronger direct fit than
+  the content-pinned DRIFT corpus. Discovery results were dominated by agent
+  infrastructure. Do not add a dependency for novelty alone.
+- **Extropic and Logical Intelligence:** Extropic's latest first-party hardware
+  schedule still targets Z1 access in 2027. Kona still exposes no public
+  weights or reproducible runner. V566 schedules no TSU or Kona execution
+  claim.
+
+### V566 planning impact
+
+- Replace the broad source-channel fan-in with a direct, content-pinned DRIFT
+  contract and an independent replay audit.
+- Transfer the held structural router and Safety Net only after the external
+  corpus has exact, family-blind, row-level receipts.
+- Use the three mandated local GGUF model families to test whether SMT conflict
+  count predicts inference cost after surface form is controlled. Give the
+  exact solver a cost-guard role, not a learned correctness role.
+- Add reversible active/dormant/retired conflict memory and test it
+  prospectively. Freeze memory inside each query. Commit only after exact
+  verification. Report future support, retention, restart, and rollback.
+- Use the ARC slot for the live redirect-outcome ledger and the GateMate slot
+  for changed-state continuity. Re-solve no public ARC game and issue no
+  unchanged hardware command.
+
+<!-- V566-PLANNER-REFRESH-20260823-END -->
