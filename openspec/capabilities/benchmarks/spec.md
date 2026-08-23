@@ -5071,3 +5071,149 @@ checkers round-trip, and `constraint_saturation_fixture_ready_score=1.0`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-BENCH-6555 | Planned (`python/carnot/experiment_6555_proof_preserving_constraint_saturation_fixture.py`, `results/experiment_6555_proof_preserving_constraint_saturation_fixture.json`, `results/fixtures/v567_constraint_saturation.jsonl`) | Planned (`tests/python/test_experiment_6555_proof_preserving_constraint_saturation_fixture.py`) |
+
+### REQ-BENCH-6556: SOTA Constraint Saturation Intervention A/B
+
+Carnot SHALL provide Exp6556 at
+`python/carnot/experiment_6556_sota_constraint_saturation_intervention_ab.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6556_sota_constraint_saturation_intervention_ab --date 20260823`
+SHALL write
+`results/experiment_6556_sota_constraint_saturation_intervention_ab.json`.
+
+Exp6556 SHALL evaluate the sealed Exp6555 fixture gate before model work. It
+SHALL resolve `cached_sota_pair(gpu_indices=(0, 1))`, verify both RTX 3090
+devices, driver, VRAM, llama.cpp, GGUF file hashes, writable checkpoint space,
+fixture hash, exact checker hashes, seeds, Z3, and protected-file hashes. A
+missing required model, GPU, runner, checker, fixture, or cache contract SHALL
+write a terminal blocked artifact. It SHALL not substitute a legacy model for a
+headline row and SHALL not pass a GGUF repository ID to
+`AutoTokenizer.from_pretrained()`.
+
+Exp6556 SHALL declare `MODEL_SPECS` containing exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Every completed model row SHALL identify the
+local `.gguf` file, file hash, llama.cpp loader, process, GPU, prompt hash,
+response hash, token count, timing, exit status, timeout, and censoring state.
+
+Exp6556 SHALL freeze matched model, lineage, variant, surface, seed, arm,
+budget, threshold, decomposition limit, timeout, censoring, and adoption rules
+before held outcomes. The held contract SHALL include at least 36 base lineages
+per model balanced across seating, scheduling, and logic-grid domains,
+constraint-count bins, structural and lexical constraint types, sparse and
+interacting graphs, and at least two surfaces.
+
+Exp6556 SHALL compare flat generation, longer-flat generation, bounded
+decomposition, the V566 exact-tool cost guard, and a combined bounded route on
+identical model, lineage, variant, surface, seed cells. Bounded decomposition
+SHALL preserve every clause and SHALL include an exact final joint check.
+Longer-flat generation SHALL be a required control so selective verification
+cannot win only because it spent more initial compute.
+
+Exp6556 SHALL emit raw rows for per-clause success, all-constraint success,
+exact final validity, harmful interventions, recoveries, regressions, tokens,
+solver calls, wall time, charged cost, timeout, abstention, decomposition,
+fallback, censoring, model, k, type, interaction, and surface. Headline
+aggregates SHALL derive only from emitted rows and a frozen reducer.
+
+`constraint_saturation_intervention_ready_score` SHALL equal `1.0` only when
+rows establish a model and k-stratified phase curve and a preregistered bounded
+arm improves exact joint success or charged cost over both flat and
+longer-flat controls without increased invalid release, harmful intervention,
+timeout, or unsupported routing. `verdict_class` SHALL be `positive` only in
+that case. It SHALL be `null` for no benefit, `partial` for narrow support or
+tradeoffs, `blocked` for failed gates or resources, and `disqualified` for
+leakage, false receipts, missing clauses, or invalid release.
+
+The artifact SHALL include at least these fields: `status`, `honest_verdict`,
+`verdict_class`, `upstream_gate_receipt`, `MODEL_SPECS`,
+`live_model_and_gpu_receipts`, `frozen_arm_and_budget_contract`,
+`sample_size_and_power_contract`, `per_unit_rows`,
+`per_clause_and_joint_result_rows`, `route_decomposition_and_fallback_rows`,
+`harmful_intervention_ledger`, `charged_cost_rows`,
+`constraint_load_phase_curve`, `constraint_saturation_intervention_ready_score`,
+`aggregate_row_recomputation`, `gate_check_summary`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+`inference_substrate` SHALL be
+`authenticated_local_llama_cpp_sota_gguf_constraint_saturation_plus_exact_clause_joint_checks`.
+`verifier_is_oracle` SHALL be false for the routing comparison.
+
+Field principles SHALL be:
+
+- `status`: "A terminal state distinguishes a completed multi-model comparison from setup-only work."
+- `honest_verdict`: "The verdict must state phase-curve, intervention, harm, cost, and receipt outcomes with a terminal prefix."
+- `verdict_class`: "A closed class prevents blocked, unsafe, circular, or narrow evidence from becoming positive."
+- `upstream_gate_receipt`: "The comparison must identify the exact sealed fixture that authorized execution."
+- `MODEL_SPECS`: "Exact mandated model identities prevent smoke models from supporting headline claims."
+- `live_model_and_gpu_receipts`: "Process, file, GPU, timing, and output receipts prove fresh local inference."
+- `frozen_arm_and_budget_contract`: "Arms, budgets, thresholds, decomposition bounds, and adoption rules must precede held outcomes."
+- `sample_size_and_power_contract`: "Per-model lineage, domain, k, interaction, surface, and seed floors bound comparative claims."
+- `per_unit_rows`: "Every model, lineage, variant, surface, seed, arm, and condition needs a raw row."
+- `per_clause_and_joint_result_rows`: "Clause success cannot substitute for exact all-constraint success."
+- `route_decomposition_and_fallback_rows`: "Every intervention, abstention, split, and exact fallback must be visible."
+- `harmful_intervention_ledger`: "Recoveries and regressions must be counted symmetrically."
+- `charged_cost_rows`: "Tokens, solver calls, retries, persistence, and wall time must be charged to each arm."
+- `constraint_load_phase_curve`: "The claimed collapse boundary must derive from model and k-stratified rows."
+- `constraint_saturation_intervention_ready_score`: "One binary field gates adoption on benefit beyond longer-flat compute with no safety loss."
+- `aggregate_row_recomputation`: "Every headline must derive from emitted rows and the frozen reducer."
+- `gate_check_summary`: "A blocked run must name the failed fixture, model, GPU, runner, or checker and observed value."
+- `preconditions_checked`: "Resource and identity receipts separate infrastructure blocks from model nulls."
+- `protected_files_unchanged`: "The experiment must preserve protected orchestration files."
+- `inference_substrate`: "The artifact must declare authenticated local llama.cpp GGUF inference plus exact clause and joint checks."
+- `verifier_is_oracle`: "The learned route is not authority; executable clause and joint checkers remain separate release authority."
+- `field_provenance`: "Each phase, benefit, harm, and cost field must point to raw receipts and reducer code."
+- `random_seed`: "Fixed generation, routing, and ordering seeds make the comparison repeatable."
+- `duration_s`: "Flagship GGUF inference across matched arms requires plausible monotonic wall time."
+- `tests_run`: "Named unit, lint, verifier, and E2E receipts show all paths executed."
+- `reproducibility_checksum`: "A final hash detects mutation of the terminal comparison."
+
+#### SCENARIO-BENCH-6556-GATE: Required Local SOTA Preconditions Fail Closed
+
+**Given** the sealed Exp6555 fixture and mandatory local SOTA model policy
+**When** Exp6556 evaluates preconditions
+**Then** it records the fixture gate, `cached_sota_pair(gpu_indices=(0, 1))`,
+dual RTX 3090 receipts, llama.cpp, GGUF paths and hashes, checker hashes, Z3,
+seeds, writable checkpoint space, and protected hashes before any completed
+comparison can open.
+
+#### SCENARIO-BENCH-6556-MATCHED-ARMS: Held Cells Are Frozen Before Outcomes
+
+**Given** Exp6555 fixture rows
+**When** Exp6556 builds the held comparison matrix
+**Then** every mandated model uses the same lineage, variant, surface, seed,
+arm, budget, threshold, decomposition limit, timeout, and adoption rule cells
+with at least 36 base lineages per model.
+
+#### SCENARIO-BENCH-6556-CHECKS: Exact Clause And Joint Checks Remain Authority
+
+**Given** model responses and exact-tool fallback outputs
+**When** Exp6556 scores a cell
+**Then** per-clause success, all-constraint success, exact final validity,
+abstention, timeout, censoring, solver calls, and response hashes are recorded
+without treating the route as an oracle.
+
+#### SCENARIO-BENCH-6556-INTERVENTIONS: Bounded Routes Are Charged And Audited
+
+**Given** flat, longer-flat, bounded-decomposition, exact-tool-cost-guard, and
+combined-route arms
+**When** Exp6556 recomputes effects
+**Then** decomposition rows preserve all clauses, exact fallback is reachable,
+charged tokens and solver calls are counted, and recoveries and regressions
+are symmetric against both flat controls.
+
+#### SCENARIO-BENCH-6556-TERMINAL: Readiness Requires Benefit Beyond Longer Flat
+
+**Given** emitted raw rows and route receipts
+**When** Exp6556 finalizes the artifact
+**Then** the phase curve, cost effects, harm ledger, invalid-release rate,
+timeout rate, supported-routing checks, and protected-file hashes determine the
+terminal verdict and checksum.
+
+## Implementation Status (REQ-BENCH-6556)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6556 | Planned (`python/carnot/experiment_6556_sota_constraint_saturation_intervention_ab.py`, `results/experiment_6556_sota_constraint_saturation_intervention_ab.json`) | Planned (`tests/python/test_experiment_6556_sota_constraint_saturation_intervention_ab.py`) |
