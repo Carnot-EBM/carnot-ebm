@@ -1,0 +1,817 @@
+{
+  "aggregate_row_recomputation": {
+    "all_concurrency_attack_rows_passed": true,
+    "all_crash_injection_rows_passed": true,
+    "all_recovery_rows_passed": true,
+    "all_shard_integrity_rows_passed": true,
+    "protected_files_unchanged": true,
+    "ready_score_from_rows": 1.0,
+    "row_counts": {
+      "concurrency_attack_rows": 2,
+      "crash_injection_rows": 5,
+      "recovery_rows": 5,
+      "shard_integrity_rows": 4
+    },
+    "terminal_write_passed": true
+  },
+  "atomic_artifact_contract_ready_score": 1.0,
+  "concurrency_attack_rows": [
+    {
+      "check": "live_writer_refused",
+      "passed": true,
+      "refused": true,
+      "row_type": "concurrency_attack",
+      "spec_refs": [
+        "SCENARIO-BENCH-6514-CONCURRENCY"
+      ]
+    },
+    {
+      "check": "stale_lock_recovered",
+      "passed": true,
+      "row_type": "concurrency_attack",
+      "spec_refs": [
+        "SCENARIO-BENCH-6514-CONCURRENCY"
+      ],
+      "stale_lock_recovered": true
+    }
+  ],
+  "crash_injection_rows": [
+    {
+      "exception_caught": true,
+      "final_path_exists_after_crash": true,
+      "passed": true,
+      "row_type": "crash_injection",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "before_shard_write"
+    },
+    {
+      "exception_caught": true,
+      "final_path_exists_after_crash": true,
+      "passed": true,
+      "row_type": "crash_injection",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "after_shard_write"
+    },
+    {
+      "exception_caught": true,
+      "final_path_exists_after_crash": true,
+      "passed": true,
+      "row_type": "crash_injection",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "during_journal_update"
+    },
+    {
+      "exception_caught": true,
+      "final_path_exists_after_crash": true,
+      "passed": true,
+      "row_type": "crash_injection",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "before_replace"
+    },
+    {
+      "exception_caught": true,
+      "final_path_exists_after_crash": true,
+      "passed": true,
+      "row_type": "crash_injection",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "after_replace"
+    }
+  ],
+  "duration_s": 3.47173,
+  "field_principles": {
+    "aggregate_row_recomputation": "The aggregate recomputes readiness from rows.",
+    "atomic_artifact_contract_ready_score": "The score opens only when every local transaction invariant passes.",
+    "concurrency_attack_rows": "Concurrency rows prove live locks refuse writers and stale locks recover.",
+    "crash_injection_rows": "Each injected crash records where the process stopped and what survived.",
+    "duration_s": "Measured duration supports authenticity checks.",
+    "field_principles": "Principles preserve why each artifact field exists.",
+    "field_provenance": "Provenance maps each field to helper rows, local receipts, or deterministic reducers.",
+    "filesystem_capability_receipt": "Filesystem, permissions, disk, process, and fsync receipts bound the local preconditions.",
+    "gate_check_summary": "Each failed gate records the expected and observed value.",
+    "honest_verdict": "The verdict states whether the filesystem transaction contract is complete or bounded.",
+    "inference_substrate": "The declaration prevents a filesystem contract from being read as model inference.",
+    "per_unit_rows": "Per-unit rows expose planned, terminal, crash, recovery, integrity, and concurrency evidence.",
+    "preconditions_checked": "Preconditions record git state, paths, disk, process, and protected hashes.",
+    "protected_files_unchanged": "The conductor and historical inputs must remain byte-identical.",
+    "random_seed": "A fixed seed makes crash and attack ordering reproducible.",
+    "recovery_rows": "Recovery rows prove resume uses only verified shards and journal records.",
+    "reproducibility_checksum": "A checksum detects later drift in rows, gates, or the terminal artifact.",
+    "shard_integrity_rows": "Shard rows bind unit IDs to content hashes and quarantine corrupt bytes.",
+    "status": "A terminal status proves the conductor sees a closed artifact, not a bootstrap.",
+    "terminal_write_receipt": "The receipt proves complete-temp fsync and atomic replacement reached the final path.",
+    "tests_run": "Command receipts show which validation actually ran.",
+    "transaction_schema": "The schema names the reusable helper and journal format.",
+    "verdict_class": "The class is an infrastructure result and must never be positive.",
+    "verifier_is_oracle": "Oracle scope is limited to transaction invariants."
+  },
+  "field_provenance": {
+    "aggregate_row_recomputation": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "atomic_artifact_contract_ready_score": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "concurrency_attack_rows": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "crash_injection_rows": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "duration_s": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "field_principles": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "field_provenance": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "filesystem_capability_receipt": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "gate_check_summary": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "honest_verdict": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "inference_substrate": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "per_unit_rows": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "preconditions_checked": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "protected_files_unchanged": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "random_seed": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "recovery_rows": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "reproducibility_checksum": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "shard_integrity_rows": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "status": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "terminal_write_receipt": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "tests_run": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "transaction_schema": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "verdict_class": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    },
+    "verifier_is_oracle": {
+      "helper_sha256": "sha256:9e14675bd88f3562a1e1a54907ccab2bce574d7f6b5d44fd6eec848d1eea14db",
+      "module_sha256": "sha256:cea8aebe3c42b25b2dfa6ebf67055d66186a0941fc6b71e59f4f2c7eaaad469e",
+      "source": "deterministic_exp6514_builder",
+      "spec": "openspec/capabilities/benchmarks/spec.md",
+      "test_sha256": "sha256:6726001c25864011df7d8b22558bbc58ef8e6339bec3711a340bcab50d43d1ce"
+    }
+  },
+  "filesystem_capability_receipt": {
+    "available_bytes": 1086658019328,
+    "filesystem_type": "xfs",
+    "output_root": "/home/ianblenke/github.com/ianblenke/carnot/results",
+    "output_root_mode_octal": "0o755",
+    "output_root_writable": true,
+    "process_model": {
+      "pid": 2705860,
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "ppid": 2624894,
+      "process_group": 2705860,
+      "python": "3.12.13"
+    },
+    "protected_file_hashes_before": {
+      "research-roadmap.yaml": "sha256:cb972bd54c1be610fcf670868f1e5cf4d0650183a023cf7cd9aa7e2d301ed46f",
+      "results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json": "sha256:c006b788edd9a3dd35dcbf84b927bd95f40d2f7f27a9646a98557e2c11c32c94",
+      "results/experiment_6510_v563_independent_exact_root.json": "sha256:844071ec93ca1fc97503c5c267f2837cda888adef72c34aaf4dbd49d481f8270",
+      "results/experiment_6512_branch_dataset_independent_audit.json": "sha256:9f61f3a0768e8bd75dee2f16145cd8fe53bb7c277b7527475766c9e8296effbe",
+      "scripts/research_conductor.py": "sha256:8aad61bff3e0ce2920ab3055fd2573fa113a8c081b4265d9afc0438456f4f333"
+    },
+    "statvfs": {
+      "f_bavail": 265297368,
+      "f_blocks": 965158453,
+      "f_bsize": 4096,
+      "f_ffree": 375418193,
+      "f_files": 386251968,
+      "f_frsize": 4096
+    },
+    "total_bytes": 3953289023488,
+    "used_bytes": 2866631004160
+  },
+  "gate_check_summary": [
+    {
+      "check": "all_crash_injection_rows_passed",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "spec_refs": [
+        "REQ-BENCH-6514"
+      ]
+    },
+    {
+      "check": "all_recovery_rows_passed",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "spec_refs": [
+        "REQ-BENCH-6514"
+      ]
+    },
+    {
+      "check": "all_shard_integrity_rows_passed",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "spec_refs": [
+        "REQ-BENCH-6514"
+      ]
+    },
+    {
+      "check": "all_concurrency_attack_rows_passed",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "spec_refs": [
+        "REQ-BENCH-6514"
+      ]
+    },
+    {
+      "check": "terminal_write_passed",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "spec_refs": [
+        "REQ-BENCH-6514"
+      ]
+    },
+    {
+      "check": "protected_files_unchanged",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "spec_refs": [
+        "REQ-BENCH-6514"
+      ]
+    },
+    {
+      "check": "ready_score_from_rows",
+      "expected": 1.0,
+      "observed": 1.0,
+      "passed": true,
+      "spec_refs": [
+        "REQ-BENCH-6514"
+      ]
+    }
+  ],
+  "honest_verdict": "complete_atomic_shard_artifact_transaction: local crash injection, verified resume, shard integrity, lock, disk, and atomic replace checks passed",
+  "inference_substrate": "local_filesystem_transaction_and_crash_injection_no_llm",
+  "per_unit_rows": [
+    {
+      "exception_caught": true,
+      "final_path_exists_after_crash": true,
+      "passed": true,
+      "row_type": "crash_injection",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "before_shard_write"
+    },
+    {
+      "exception_caught": true,
+      "final_path_exists_after_crash": true,
+      "passed": true,
+      "row_type": "crash_injection",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "after_shard_write"
+    },
+    {
+      "exception_caught": true,
+      "final_path_exists_after_crash": true,
+      "passed": true,
+      "row_type": "crash_injection",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "during_journal_update"
+    },
+    {
+      "exception_caught": true,
+      "final_path_exists_after_crash": true,
+      "passed": true,
+      "row_type": "crash_injection",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "before_replace"
+    },
+    {
+      "exception_caught": true,
+      "final_path_exists_after_crash": true,
+      "passed": true,
+      "row_type": "crash_injection",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "after_replace"
+    },
+    {
+      "missing_after_resume": [],
+      "missing_before_resume": [
+        "unit"
+      ],
+      "orphan_shards_before_resume": [],
+      "passed": true,
+      "recovered": true,
+      "row_type": "recovery",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "before_shard_write"
+    },
+    {
+      "missing_after_resume": [],
+      "missing_before_resume": [
+        "unit"
+      ],
+      "orphan_shards_before_resume": [
+        "sha256:e6c87b3346f05c0f50458c2424792383802e0a7abbfbd8877ef19fb9b9c5ed2d"
+      ],
+      "passed": true,
+      "recovered": true,
+      "row_type": "recovery",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "after_shard_write"
+    },
+    {
+      "missing_after_resume": [],
+      "missing_before_resume": [
+        "unit"
+      ],
+      "orphan_shards_before_resume": [
+        "sha256:51aef0721cb1da1b17fb769a7c9216dc60a3b767bf3571741ddd8972483cd814"
+      ],
+      "passed": true,
+      "recovered": true,
+      "row_type": "recovery",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "during_journal_update"
+    },
+    {
+      "missing_after_resume": [],
+      "missing_before_resume": [],
+      "orphan_shards_before_resume": [],
+      "passed": true,
+      "recovered": true,
+      "row_type": "recovery",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "before_replace"
+    },
+    {
+      "missing_after_resume": [],
+      "missing_before_resume": [],
+      "orphan_shards_before_resume": [],
+      "passed": true,
+      "recovered": true,
+      "row_type": "recovery",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "after_replace"
+    },
+    {
+      "check": "identity_idempotent_duplicate",
+      "content_hash": "sha256:3a37782e8974c48eebf2a0517c866ad15641c53b3d31993188796b56aeb79624",
+      "duplicate_different_content_blocked": true,
+      "idempotent_rewrite": true,
+      "passed": true,
+      "row_type": "shard_integrity",
+      "spec_refs": [
+        "SCENARIO-BENCH-6514-SHARD-IDENTITY"
+      ]
+    },
+    {
+      "check": "corrupt_shard_quarantine",
+      "passed": true,
+      "pending_after_corruption": true,
+      "quarantined": true,
+      "row_type": "shard_integrity",
+      "spec_refs": [
+        "SCENARIO-BENCH-6514-CORRUPT-QUARANTINE"
+      ]
+    },
+    {
+      "check": "missing_terminal_unit_refused",
+      "final_path_exists": false,
+      "missing_unit_blocked": true,
+      "passed": true,
+      "row_type": "shard_integrity",
+      "spec_refs": [
+        "SCENARIO-BENCH-6514-PLANNED-TERMINAL"
+      ]
+    },
+    {
+      "check": "insufficient_disk_refused_before_write",
+      "final_path_exists": false,
+      "insufficient_disk_blocked": true,
+      "passed": true,
+      "row_type": "shard_integrity",
+      "spec_refs": [
+        "SCENARIO-BENCH-6514-CLOSED-FAILURE"
+      ]
+    },
+    {
+      "check": "live_writer_refused",
+      "passed": true,
+      "refused": true,
+      "row_type": "concurrency_attack",
+      "spec_refs": [
+        "SCENARIO-BENCH-6514-CONCURRENCY"
+      ]
+    },
+    {
+      "check": "stale_lock_recovered",
+      "passed": true,
+      "row_type": "concurrency_attack",
+      "spec_refs": [
+        "SCENARIO-BENCH-6514-CONCURRENCY"
+      ],
+      "stale_lock_recovered": true
+    },
+    {
+      "check": "terminal_write_probe",
+      "passed": true,
+      "row_type": "terminal_write",
+      "spec_refs": [
+        "SCENARIO-BENCH-6514-ATOMIC-REPLACE"
+      ]
+    }
+  ],
+  "preconditions_checked": {
+    "available_bytes": 1086658019328,
+    "conductor_modification_allowed": false,
+    "conductor_path": "scripts/research_conductor.py",
+    "filesystem_type": "xfs",
+    "git_status_command_exit_code": 0,
+    "git_status_short": "M openspec/capabilities/benchmarks/spec.md\n?? python/carnot/atomic_shard_transaction.py\n?? python/carnot/experiment_6514_atomic_shard_artifact_transaction.py\n?? results/.experiment_6514_atomic_shard_artifact_transaction.tx/\n?? results/experiment_6514_atomic_shard_artifact_transaction.json\n?? tests/python/test_atomic_shard_transaction.py\n?? tests/python/test_experiment_6514_atomic_shard_artifact_transaction.py",
+    "output_root_writable": true,
+    "process_model": {
+      "pid": 2705860,
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "ppid": 2624894,
+      "process_group": 2705860,
+      "python": "3.12.13"
+    },
+    "protected_file_hashes_before": {
+      "research-roadmap.yaml": "sha256:cb972bd54c1be610fcf670868f1e5cf4d0650183a023cf7cd9aa7e2d301ed46f",
+      "results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json": "sha256:c006b788edd9a3dd35dcbf84b927bd95f40d2f7f27a9646a98557e2c11c32c94",
+      "results/experiment_6510_v563_independent_exact_root.json": "sha256:844071ec93ca1fc97503c5c267f2837cda888adef72c34aaf4dbd49d481f8270",
+      "results/experiment_6512_branch_dataset_independent_audit.json": "sha256:9f61f3a0768e8bd75dee2f16145cd8fe53bb7c277b7527475766c9e8296effbe",
+      "scripts/research_conductor.py": "sha256:8aad61bff3e0ce2920ab3055fd2573fa113a8c081b4265d9afc0438456f4f333"
+    },
+    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6514_atomic_shard_artifact_transaction.json",
+    "run_date": "20260822",
+    "work_root": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6514_atomic_shard_artifact_transaction.tx"
+  },
+  "protected_files_unchanged": {
+    "all_protected_files_unchanged": true,
+    "changed_files": [],
+    "hashes_after": {
+      "research-roadmap.yaml": "sha256:cb972bd54c1be610fcf670868f1e5cf4d0650183a023cf7cd9aa7e2d301ed46f",
+      "results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json": "sha256:c006b788edd9a3dd35dcbf84b927bd95f40d2f7f27a9646a98557e2c11c32c94",
+      "results/experiment_6510_v563_independent_exact_root.json": "sha256:844071ec93ca1fc97503c5c267f2837cda888adef72c34aaf4dbd49d481f8270",
+      "results/experiment_6512_branch_dataset_independent_audit.json": "sha256:9f61f3a0768e8bd75dee2f16145cd8fe53bb7c277b7527475766c9e8296effbe",
+      "scripts/research_conductor.py": "sha256:8aad61bff3e0ce2920ab3055fd2573fa113a8c081b4265d9afc0438456f4f333"
+    },
+    "hashes_before": {
+      "research-roadmap.yaml": "sha256:cb972bd54c1be610fcf670868f1e5cf4d0650183a023cf7cd9aa7e2d301ed46f",
+      "results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json": "sha256:c006b788edd9a3dd35dcbf84b927bd95f40d2f7f27a9646a98557e2c11c32c94",
+      "results/experiment_6510_v563_independent_exact_root.json": "sha256:844071ec93ca1fc97503c5c267f2837cda888adef72c34aaf4dbd49d481f8270",
+      "results/experiment_6512_branch_dataset_independent_audit.json": "sha256:9f61f3a0768e8bd75dee2f16145cd8fe53bb7c277b7527475766c9e8296effbe",
+      "scripts/research_conductor.py": "sha256:8aad61bff3e0ce2920ab3055fd2573fa113a8c081b4265d9afc0438456f4f333"
+    }
+  },
+  "random_seed": 6514,
+  "recovery_rows": [
+    {
+      "missing_after_resume": [],
+      "missing_before_resume": [
+        "unit"
+      ],
+      "orphan_shards_before_resume": [],
+      "passed": true,
+      "recovered": true,
+      "row_type": "recovery",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "before_shard_write"
+    },
+    {
+      "missing_after_resume": [],
+      "missing_before_resume": [
+        "unit"
+      ],
+      "orphan_shards_before_resume": [
+        "sha256:e6c87b3346f05c0f50458c2424792383802e0a7abbfbd8877ef19fb9b9c5ed2d"
+      ],
+      "passed": true,
+      "recovered": true,
+      "row_type": "recovery",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "after_shard_write"
+    },
+    {
+      "missing_after_resume": [],
+      "missing_before_resume": [
+        "unit"
+      ],
+      "orphan_shards_before_resume": [
+        "sha256:51aef0721cb1da1b17fb769a7c9216dc60a3b767bf3571741ddd8972483cd814"
+      ],
+      "passed": true,
+      "recovered": true,
+      "row_type": "recovery",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "during_journal_update"
+    },
+    {
+      "missing_after_resume": [],
+      "missing_before_resume": [],
+      "orphan_shards_before_resume": [],
+      "passed": true,
+      "recovered": true,
+      "row_type": "recovery",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "before_replace"
+    },
+    {
+      "missing_after_resume": [],
+      "missing_before_resume": [],
+      "orphan_shards_before_resume": [],
+      "passed": true,
+      "recovered": true,
+      "row_type": "recovery",
+      "spec_refs": [
+        "REQ-BENCH-6514",
+        "SCENARIO-BENCH-6514-RESUME-CRASHES"
+      ],
+      "stage": "after_replace"
+    }
+  ],
+  "reproducibility_checksum": "sha256:37fa3df86a2bdae2926d1fba9992519c7030cb05c76623cff1f69f07186c1511",
+  "shard_integrity_rows": [
+    {
+      "check": "identity_idempotent_duplicate",
+      "content_hash": "sha256:3a37782e8974c48eebf2a0517c866ad15641c53b3d31993188796b56aeb79624",
+      "duplicate_different_content_blocked": true,
+      "idempotent_rewrite": true,
+      "passed": true,
+      "row_type": "shard_integrity",
+      "spec_refs": [
+        "SCENARIO-BENCH-6514-SHARD-IDENTITY"
+      ]
+    },
+    {
+      "check": "corrupt_shard_quarantine",
+      "passed": true,
+      "pending_after_corruption": true,
+      "quarantined": true,
+      "row_type": "shard_integrity",
+      "spec_refs": [
+        "SCENARIO-BENCH-6514-CORRUPT-QUARANTINE"
+      ]
+    },
+    {
+      "check": "missing_terminal_unit_refused",
+      "final_path_exists": false,
+      "missing_unit_blocked": true,
+      "passed": true,
+      "row_type": "shard_integrity",
+      "spec_refs": [
+        "SCENARIO-BENCH-6514-PLANNED-TERMINAL"
+      ]
+    },
+    {
+      "check": "insufficient_disk_refused_before_write",
+      "final_path_exists": false,
+      "insufficient_disk_blocked": true,
+      "passed": true,
+      "row_type": "shard_integrity",
+      "spec_refs": [
+        "SCENARIO-BENCH-6514-CLOSED-FAILURE"
+      ]
+    }
+  ],
+  "status": "complete_atomic_shard_artifact_transaction_ready",
+  "terminal_write_receipt": {
+    "atomic_replace": true,
+    "directory_fsync_attempted": true,
+    "directory_fsync_supported": true,
+    "file_fsync": true,
+    "final_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6514_atomic_shard_artifact_transaction.json",
+    "final_path_status": "terminal_complete",
+    "final_sha256": "sha256:d3d3459e9016e1c9d953fb15607d4ea69c4d852ef285e57bb49eb55e8165bcfb",
+    "receipt_source": "same_filesystem_probe_plus_finalizer_success",
+    "row_type": "terminal_write",
+    "spec_refs": [
+      "SCENARIO-BENCH-6514-ATOMIC-REPLACE"
+    ],
+    "success_path_nonterminal_artifact": false
+  },
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_atomic_shard_transaction.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6514_atomic_shard_artifact_transaction.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/atomic_shard_transaction.py,python/carnot/experiment_6514_atomic_shard_artifact_transaction.py -m pytest tests/python/test_atomic_shard_transaction.py tests/python/test_experiment_6514_atomic_shard_artifact_transaction.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/atomic_shard_transaction.py,python/carnot/experiment_6514_atomic_shard_artifact_transaction.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 2
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_atomic_shard_transaction.py tests/python/test_experiment_6514_atomic_shard_artifact_transaction.py",
+      "exit_code": 0
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6514_atomic_shard_artifact_transaction --date 20260822",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6514_atomic_shard_artifact_transaction.json",
+      "exit_code": 1
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6514_atomic_shard_artifact_transaction --validate",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "exit_code": 0
+    }
+  ],
+  "transaction_schema": "carnot.atomic_shard_transaction.v1",
+  "verdict_class": null,
+  "verifier_is_oracle": true
+}
