@@ -185,3 +185,13 @@ CHECK_TIMED_OUT
 
 CHECK_TIMED_OUT
 
+## 2026-08-23 13:14 UTC -- NEW
+
+- Leaderboard reshuffle: cstl leads at 3.57; Lord Han Solo rose to #2 at 3.36; Tufa Labs slipped to #3 despite improving to 3.04; Daniel Franzen climbed from #8 to #4 at 2.88; wking edewd entered #7 at 2.70. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- The host clarified that private scores are computed during the original submission run and are not rerun when final submissions are selected. Each run evaluates both public and private datasets, with 50% of tasks contributing to the visible public leaderboard; the ARC-AGI-3 notebook limit is nine hours. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/729985)
+
+- New runtime-limit clarification: Docker logs are capped at 10 MB; `/kaggle/working` has a 20 GB quota; CPU notebooks have 30 GB physical RAM enforced through cgroups; Kaggle sets neither `RLIMIT_AS` nor an explicit process/thread limit. Native crashes expose exit codes and stderr, but not core dumps. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/724841)
+
+- Kaggle confirmed it was investigating capacity constraints affecting the RTX Pro 6000 pool and working to free additional resources. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/735147)
+
