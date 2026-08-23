@@ -1,0 +1,55 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.564",
+  "generated_at": "2026-08-23T04:35:09Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.6,
+  "experiments_completed": 14,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "V564 terminal evidence handoff and retired-lineage contract",
+      "duration_minutes": 0.16,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Execution-time literature delta for adaptive validation and exact guidance",
+      "duration_minutes": 0.16,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bounded exact branch-counterfactual pilot with transactional shards",
+      "duration_minutes": 0.12,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Crash-safe shard journal and atomic artifact finalization",
+      "duration_minutes": 0.06,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Chronological refinement-valid conflict self-learning comparison",
+      "duration_minutes": 0.05,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 14 synthesis-only experiments in 0.6 minutes. No compute-bound experiments ran, so the GPU snapshot cannot support a compute-task utilization or DualGPURunner finding.",
+  "bottlenecks_identified": [
+    "No runtime bottleneck is established. Timing used disk-mtime reconstruction because the live git-log path found no commits, which prevents task-phase attribution."
+  ],
+  "improvements_suggested": [
+    "Record monotonic start, phase, and finish timestamps in each experiment artifact so future retrospectives can use live timings instead of disk-mtime reconstruction.",
+    "Persist task classification and model-concurrency metadata with each timing record so compute-bound status and parallel-model eligibility are auditable.",
+    "When compute-bound work runs, attach task-window GPU samples and runner-dispatch metadata to its record so GPU efficiency and DualGPURunner engagement can be evaluated."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add monotonic per-task and per-phase timestamps to experiment artifacts.",
+    "Store task classification and model-concurrency metadata beside timing data.",
+    "Capture task-window GPU samples and runner-dispatch metadata for compute-bound work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence supports a process diagnosis, not a compute diagnosis: all 14 runs were synthesis-only and total wall time was 0.6 minutes. A nonzero savings estimate would not be supported, so estimated time savings is 0% until direct timing identifies avoidable work."
+}
