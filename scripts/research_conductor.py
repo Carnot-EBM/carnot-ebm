@@ -2129,6 +2129,106 @@ def _ensure_tasks_loaded():
 MAX_FAILURES_PER_TASK = 3  # Skip task after this many consecutive failures
 
 
+# --- Fresh-source re-exec (REQ-CONDUCTOR-FRESHEXEC-1) -----------------------
+# Origin: 2026-08-22, the conductor process predated fixes in HEAD for up
+# to ~11.5 hours (three commits touched this file while an old process kept
+# running; the sentinel wiring sat unrun ~7.75h). A human noticed by
+# comparing the process start time to commit timestamps. This block makes
+# the conductor pick up its own committed changes at the next loop
+# boundary — the safe point, with no task subprocess in flight.
+
+CONDUCTOR_SOURCE = Path(__file__).resolve()
+try:
+    _STARTUP_SOURCE_SHA = hashlib.sha256(CONDUCTOR_SOURCE.read_bytes()).hexdigest()
+except OSError:
+    # Unreadable own source at import time: disable the mechanism rather
+    # than guess (fail toward keeping the running process).
+    _STARTUP_SOURCE_SHA = ""
+REEXEC_STATE = PROJECT_ROOT / "ops" / ".conductor_reexec_state.json"
+
+
+def _committed_conductor_sha() -> str | None:
+    """SHA-256 of the COMMITTED conductor source (`git show HEAD:...`).
+
+    Committed bytes only: a concurrent agent's half-finished working-tree
+    edit must never trigger a re-exec into broken code (rule 1). Fail
+    direction: any git failure returns None — keep running current code;
+    staleness is a delay, not an outage.
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "show", "HEAD:scripts/research_conductor.py"],
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            timeout=30,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if proc.returncode != 0 or not proc.stdout:
+        return None
+    return hashlib.sha256(proc.stdout).hexdigest()
+
+
+def _maybe_reexec_on_fresh_source() -> None:
+    """Re-exec this process when its committed source has changed.
+
+    Requires ALL of (rule 2): HEAD hash differs from the startup hash; the
+    on-disk file equals HEAD (no dirty edit in flight); the on-disk file
+    compiles; this HEAD hash was not already attempted (exec-storm guard).
+    execv preserves the PID, cgroup, and systemd supervision. Every skip
+    reason fails toward keeping the current process: stale-but-good code
+    beats fresh-but-unverified code (rule 4).
+    """
+    if not _STARTUP_SOURCE_SHA:
+        return
+    head_sha = _committed_conductor_sha()
+    if head_sha is None or head_sha == _STARTUP_SOURCE_SHA:
+        return
+    try:
+        disk_bytes = CONDUCTOR_SOURCE.read_bytes()
+    except OSError:
+        return
+    if hashlib.sha256(disk_bytes).hexdigest() != head_sha:
+        return  # working tree differs from HEAD: an edit is in flight; wait
+    try:
+        state = json.loads(REEXEC_STATE.read_text())
+        if not isinstance(state, dict):
+            state = {}
+    except (OSError, ValueError):
+        state = {}
+    if state.get("last_attempt_sha") == head_sha:
+        # Exec-storm guard: this hash was already attempted once. If we are
+        # still here with the same startup hash, the exec did not take —
+        # do not loop; the WARN below (or the original OK line) is on record.
+        return
+    state["last_attempt_sha"] = head_sha
+    state["attempted_at"] = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    try:
+        REEXEC_STATE.write_text(json.dumps(state, indent=1))
+    except OSError:
+        return  # cannot record the attempt -> cannot guard the storm -> skip
+    try:
+        compile(disk_bytes, str(CONDUCTOR_SOURCE), "exec")
+    except SyntaxError as exc:
+        # Rule 4: committed source that does not compile NEVER runs, and
+        # the failure is escalated durably rather than logged to journald.
+        log_step(
+            "Conductor re-exec skipped: HEAD does not compile",
+            "WARN",
+            f"{head_sha[:12]}: {exc.msg} line {exc.lineno}",
+        )
+        return
+    log_step(
+        "Conductor re-exec: fresh committed source",
+        "OK",
+        f"{_STARTUP_SOURCE_SHA[:12]} -> {head_sha[:12]}; argv preserved",
+    )
+    sys.stdout.flush()
+    sys.stderr.flush()
+    os.execv(sys.executable, [sys.executable, str(CONDUCTOR_SOURCE), *sys.argv[1:]])
+
+
 def compute_adaptive_sleep_min(iter_duration_s: float, interval_min: int) -> tuple[int, str]:
     """Pick an inter-iteration sleep duration based on how much work the
     iteration actually did.
@@ -7035,6 +7135,12 @@ def main() -> int:
     while True:
         iteration += 1
         logger.info("--- Iteration %d ---", iteration)
+        # Fresh-source re-exec (REQ-CONDUCTOR-FRESHEXEC-1): the loop
+        # boundary is the safe point — no task subprocess is in flight.
+        # Only in --loop mode and never on the very first iteration (a
+        # fresh start IS the fresh source).
+        if args.loop and iteration > 1:
+            _maybe_reexec_on_fresh_source()
         _write_heartbeat("iteration_start", iteration)
 
         iter_start = time.time()
