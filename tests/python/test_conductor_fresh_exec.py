@@ -160,3 +160,45 @@ def test_committed_sha_reads_head_not_worktree():
     `git show HEAD:...`, never a working-tree read."""
     source = _code_only(inspect.getsource(rc._committed_conductor_sha))
     assert "HEAD:scripts/research_conductor.py" in source
+
+
+def test_import_crashing_commit_does_not_execv(reexec_env, monkeypatch):
+    """Adversarial-review K3: a commit that COMPILES but crashes at import
+    must not be exec'd into — systemd would relaunch the same broken HEAD
+    every 30s, converting a running-good process into an outage."""
+    recorder, log_lines, source = reexec_env
+    source.write_text("import module_that_does_not_exist_anywhere\n")  # compiles, import-crashes
+    monkeypatch.setattr(rc, "_committed_conductor_sha", lambda: _sha(source))
+    rc._maybe_reexec_on_fresh_source()
+    assert recorder.calls == []
+    assert any("does not import" in t for t, s, _ in log_lines if s == "WARN")
+
+
+def test_stop_authority_receipt_reader_warns_when_stale(monkeypatch, tmp_path):
+    """Adversarial-review S1: the authority's receipt has a READER. A
+    stale receipt WARNs durably; a fresh one stays silent."""
+    log_lines = []
+    monkeypatch.setattr(
+        rc, "log_step", lambda task, status, details="": log_lines.append((task, status, details))
+    )
+    stale = tmp_path / "state.json"
+    stale.write_text("{}")
+    import os as _os
+
+    old = stale.stat().st_mtime - 3 * 3600
+    _os.utime(stale, (old, old))
+    monkeypatch.setattr(rc, "STOP_AUTHORITY_STATE", stale)
+    monkeypatch.setattr(rc, "_stop_authority_warned_day", [])
+    rc._check_stop_authority_receipt()
+    assert any("Stop-authority receipt STALE" in t for t, s, _ in log_lines)
+    # fresh receipt: silent
+    log_lines.clear()
+    _os.utime(stale, None)
+    monkeypatch.setattr(rc, "_stop_authority_warned_day", [])
+    rc._check_stop_authority_receipt()
+    assert log_lines == []
+
+
+def test_stop_authority_receipt_check_is_wired():
+    source = _code_only(inspect.getsource(rc.research_step))
+    assert "_check_stop_authority_receipt()" in source

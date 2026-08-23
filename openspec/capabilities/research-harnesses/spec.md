@@ -8959,3 +8959,67 @@ an operator prompt on 2026-08-23. First escalation now fires at 1 day
 OPEN finding becomes visible on the next day's closes, then weekly.
 SCENARIO-OPS-AUDIT-LEDGER-1-AGING reads accordingly; the new
 `test_one_day_old_row_escalates` pins the contract.
+
+## ADVERSARIAL REVIEW 2026-08-23 of REQ-CONDUCTOR-AUTHORITY-1/2, FRESHEXEC-1, RESTART-1 (append-only)
+
+A fresh-context hostile reviewer examined the shipped mechanisms the same
+day. Findings acted on, each with a regression test and a mutation proof:
+
+1. K1: a llama-server with NO `--port` skipped the port-reference and
+   connection checks instead of failing safe. Rule 1b/1c now read: a
+   port that cannot be verified is an UNVERIFIABLE condition — no
+   action, noted in the receipt.
+2. K2 (TOCTOU): minutes pass between evaluation and signal. The kill
+   path now re-verifies the pid's /proc starttime against the value
+   captured at evaluation; mismatch returns `identity_changed`, no
+   signal. This extends rule 1f's intent: the persistence window must
+   never widen into a pid-reuse window.
+3. K3: FRESHEXEC's compile gate was syntax-only. An import-crashing
+   commit would exec into a crash loop under Restart=on-failure. Rule 2
+   now includes a subprocess import smoke.
+4. K4: RESTART-1 would have overridden the 2026-08-22 DELIBERATE stop
+   (made before the hold protocol existed). Rule 1 now requires the
+   dead state observed on TWO consecutive janitor cycles, and
+   `scripts/conductor-stop.sh` writes the hold before stopping.
+5. S1: the authority's receipt had no reader, and a broken sentinel
+   import would have killed the default-on reap silently. The conductor
+   now checks the receipt age each iteration; an import failure writes
+   the receipt WITH the failure note.
+6. S2: the authority dropped the sentinel's temp-dir server-log
+   fallback; env-less runs (the proposer's documented default) were
+   invisible to the log-evidence half. Restored.
+7. S3: a harness pre-writing `{"rows": []}` walked past the no-rows
+   branch. A parsed doc with zero rows of ANY kind after 30 minutes now
+   counts as the no-rows shape. (An llm-off-by-design run produces
+   rows and never lands here; predicate breadth unchanged for the
+   recorded corpus, which contains no zero-row live docs.)
+8. N2: packets now go out at FIRST SIGHTING while disarmed, and the
+   packet states that arming is GLOBAL and standing — an operator who
+   arms later has seen every candidate's packet first.
+9. N5: only a signal that actually landed writes the REAPED record;
+   EPERM writes its own WARN row. A durable record must not state a
+   kill that did not happen.
+10. S5: the janitor also runs the findings ledger, so aging escalation
+    no longer depends on milestone closes — the outage class that
+    suppresses closes is exactly when findings sit unread.
+
+Wording corrections to this spec, same review: rule A1-2 / RESTART-1-3
+"through the escalation writer" means "in the REQ-CONDUCTOR-SENTINEL-3
+durable formats (conductor-log row, known-issues section)" — the
+authority writes them directly with its own dedupe state. A2 rule 4's
+"the same packet" means an actor packet carrying the same evidence.
+The server-log freshness bound in A2 rule 1c carries 60 s of clock
+slack.
+
+Findings deliberately NOT acted on, recorded per the never-prune rule:
+discovery breadth (runs launched via `python -m`, the Kaggle kernel,
+and vLLM servers are invisible to sentinel and authority alike — a
+shared scope limit needing its own corpus sweep per rule 5 before
+widening; the orphan-reap binary match is `llama-server` only and the
+scored engine is vLLM, so the orphan class for vLLM remains
+human-handled); remote-`--port` runs could gain false dead-port
+evidence (bounded: rows must ALSO be all-invalid, and run-stop ships
+disarmed — the packet path is the mitigation); FRESHEXEC stays silent
+while the working tree is dirty (a chronic state here; recorded as a
+known limit rather than adding a new WARN channel); orphaned children
+of a stopped run fall to the existing janitor reap.

@@ -40,9 +40,12 @@ FAIL DIRECTION, per check — every inability to verify fails toward NOT
 killing, and says so in the state notes:
   * `ss` cannot run            -> assume a connection exists; no kill
   * environ unreadable         -> assume the opt-out is set; no kill
+  * server has no --port       -> ownership unverifiable; no kill
   * /proc entry vanishes       -> skip that pid (races are normal)
   * state file unreadable      -> fresh state; persistence restarts (delay)
-  * kill returns EPERM         -> escalate WARN (someone else owns it)
+  * pid identity changed since evaluation -> no signal (TOCTOU guard)
+  * kill returns EPERM         -> ORPHAN_REAP_EPERM WARN row, no REAPED claim
+  * sentinel/lint import fails -> receipt written WITH the failure note
 
 Every action writes a durable actor line (conductor-log row + known-issues
 section): an unexplained dead process is its own incident class here
@@ -60,6 +63,7 @@ import os
 import signal
 import subprocess
 import sys
+import tempfile
 import time
 from datetime import UTC, datetime
 from pathlib import Path
@@ -227,20 +231,28 @@ def evaluate_orphan_candidates(
             continue
         if env.get(ALLOW_ENV) == "1":
             continue
+        # 1b + 1c need a port to verify. A server with NO --port is not
+        # "conditions satisfied", it is conditions UNVERIFIABLE — same
+        # fail-toward-not-killing as an ss failure. (Adversarial-review
+        # finding K1, 2026-08-23: the first ship skipped both checks for a
+        # port-less server, the one unverifiable condition that failed
+        # toward killing.)
+        port = server.get("port")
+        if port is None:
+            notes.append(f"{scope}: no --port; ownership unverifiable; no action")
+            continue
         # 1b: no live process references the port (sentinel's own check —
         # one implementation of the concept, never a second copy).
-        port = server.get("port")
-        if port is not None and sentinel._port_referenced_elsewhere(port, pid, proc_root):
+        if sentinel._port_referenced_elsewhere(port, pid, proc_root):
             continue
         # 1c: no established connection. None = ss failed = unverifiable
         # = assume a connection exists (fail toward NOT killing).
-        if port is not None:
-            conn = port_has_established_conn(port, ss_runner)
-            if conn is None:
-                notes.append(f"{scope}: ss unavailable; connections unverifiable; no action")
-                continue
-            if conn:
-                continue
+        conn = port_has_established_conn(port, ss_runner)
+        if conn is None:
+            notes.append(f"{scope}: ss unavailable; connections unverifiable; no action")
+            continue
+        if conn:
+            continue
         # 1d: age. Unknown start time is unverifiable -> no action.
         start = proc_start_epoch(pid, proc_root)
         if start is None:
@@ -254,6 +266,7 @@ def evaluate_orphan_candidates(
                 "pid": pid,
                 "port": port,
                 "age_s": int(now_s - start),
+                "start_epoch": start,
                 "model_path": server.get("model_path"),
                 "evidence": (
                     f"ppid=1, non-service cgroup, port {port} referenced by no live "
@@ -305,6 +318,13 @@ def evaluate_run_stop_candidates(
                     and finding["severity"] == "CRITICAL"
                 ):
                     row_evidence = finding["detail"]
+            # A parsed skeleton with ZERO rows of any kind is the same
+            # no-rows shape as a missing file (adversarial-review finding
+            # S3: a harness that pre-writes {"rows": []} at startup walked
+            # past the missing-file branch). Zero rows OF ANY KIND only:
+            # an llm-off-by-design run produces rows and never lands here.
+            if not rows and not row_evidence and now_s - start >= NO_ROWS_MIN_AGE_S:
+                row_evidence = f"zero rows after {int((now_s - start) / 60)} min (empty doc)"
         elif reason in ("missing", "stale_unparseable") and now_s - start >= NO_ROWS_MIN_AGE_S:
             # The supab3 arm=on shape: an hour old, zero rows ever written.
             row_evidence = f"no parseable rows after {int((now_s - start) / 60)} min ({reason})"
@@ -314,7 +334,11 @@ def evaluate_run_stop_candidates(
         # (validity is machine; efficiency stays human).
         server_evidence = None
         port = run.get("port")
-        log_dir = run.get("server_log_dir")
+        # Same log-location rule as the sentinel: the proposer's documented
+        # fallback is the system temp dir (adversarial-review finding S2:
+        # dropping the fallback made env-less runs invisible to the
+        # log-evidence half — the incident's own evidence channel).
+        log_dir = run.get("server_log_dir") or tempfile.gettempdir()
         if log_dir:
             for log_path in sentinel.find_server_logs(Path(log_dir), port):
                 try:
@@ -346,6 +370,7 @@ def evaluate_run_stop_candidates(
                 "port": port,
                 "out_path": str(out_path),
                 "age_s": int(now_s - start),
+                "start_epoch": start,
                 "row_evidence": row_evidence,
                 "server_evidence": server_evidence,
                 "evidence": f"rows: {row_evidence}; server: {server_evidence}",
@@ -431,9 +456,27 @@ def armed(arm_file: Path = ARM_FILE) -> bool:
 
 
 def kill_with_grace(
-    pid: int, *, signaler=os.kill, sleeper=time.sleep, grace_s: float = KILL_GRACE_S
+    pid: int,
+    *,
+    signaler=os.kill,
+    sleeper=time.sleep,
+    grace_s: float = KILL_GRACE_S,
+    expected_start: float | None = None,
+    proc_root: Path = Path("/proc"),
 ) -> str:
-    """SIGTERM, wait, SIGKILL if still alive. Returns a short outcome word."""
+    """SIGTERM, wait, SIGKILL if still alive. Returns a short outcome word.
+
+    expected_start is the /proc starttime captured at EVALUATION time.
+    Re-verified here because minutes pass between evaluation and this
+    call (persistence, earlier candidates' grace waits): a recycled pid
+    must never receive a signal meant for the process that earned it
+    (adversarial-review finding K2, 2026-08-23 — TOCTOU). Mismatch or an
+    unreadable current start fails toward NOT killing.
+    """
+    if expected_start is not None:
+        current = proc_start_epoch(pid, proc_root)
+        if current is None or abs(current - expected_start) > 2.0:
+            return "identity_changed"
     try:
         signaler(pid, signal.SIGTERM)
     except ProcessLookupError:
@@ -478,6 +521,8 @@ def run_stop_packet(candidate: dict) -> str:
         f"YES (stop it now, by hand):   kill {pid}\n"
         f"YES (always, arm the authority): "
         f'echo "$(date -u +%FT%TZ) armed by operator" > {ARM_FILE}\n'
+        f"    NOTE arming is GLOBAL and standing: it authorizes stopping EVERY "
+        f"future candidate that meets this evidence bar, not only this run.\n"
         f"NO (this run is legitimate): relaunch it with {ALLOW_ENV}=1 in its "
         f"environment, or ignore this packet — the authority never acts while "
         f"disarmed.\n\n"
@@ -500,15 +545,38 @@ def run_scan(
     dry_run: bool = False,
 ) -> dict:
     """One scan-decide-act pass. Returns a summary; writes durable records."""
-    sentinel = load_sentinel()
-    lint = sentinel.load_liveness_lint()
     conductor_log = conductor_log or REPO / "ops" / "conductor-log.md"
     known_issues = known_issues or REPO / "ops" / "known-issues.md"
     state_path = state_path or REPO / "ops" / ".stop_authority_state.json"
     arm_file = arm_file or ARM_FILE
     now = now or datetime.now(UTC)
     now_s = now.timestamp()
+    now_iso = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     notes: list[str] = []
+    try:
+        sentinel = load_sentinel()
+        lint = sentinel.load_liveness_lint()
+    except Exception as exc:  # noqa: BLE001 — any import failure IS the finding
+        # Adversarial-review finding S1, 2026-08-23: a broken sentinel or
+        # lint import must not make the authority die silently forever.
+        # Write the receipt WITH the failure so a reader sees a broken
+        # authority, not a missing scan.
+        state = load_state(state_path)
+        state["last_scan_utc"] = now_iso
+        state["last_scan_notes"] = [f"IMPORT FAILURE, no scan ran: {type(exc).__name__}: {exc}"]
+        if not dry_run:
+            write_state(state_path, state)
+        return {
+            "orphan_candidates": 0,
+            "run_candidates": 0,
+            "actionable": 0,
+            "actions": [],
+            "packets": 0,
+            "notes": state["last_scan_notes"],
+            "armed": armed(arm_file),
+            "last_scan_utc": now_iso,
+            "import_failure": True,
+        }
     protected = protected_pids(heartbeat_path)
 
     orphans = evaluate_orphan_candidates(
@@ -521,9 +589,36 @@ def run_scan(
 
     state = load_state(state_path)
     actionable = apply_persistence(state, candidates, now)
-    now_iso = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     actions: list[dict] = []
     packets = 0
+
+    # Yes/no packets go out at FIRST SIGHTING when disarmed, not after
+    # persistence: an operator who arms later must have had the chance to
+    # see every candidate's packet first (adversarial-review finding N2 —
+    # arming is global and would otherwise authorize kills of candidates
+    # never surfaced). Deduped, so a candidate packets once.
+    if not armed(arm_file):
+        for candidate in candidates:
+            if candidate["kind"] != "run_stop":
+                continue
+            fp = _fingerprint(candidate)
+            key = f"packet|{fp}"
+            if not _dedupe_ok(state, key, now):
+                continue
+            if not dry_run:
+                sentinel._append_conductor_log_row(
+                    conductor_log,
+                    "STOP-AUTHORITY: STOP_CANDIDATE_AWAITING_OPERATOR",
+                    "BLOCK",
+                    f"pid {candidate['pid']}: {candidate['evidence']}",
+                )
+                _append_packet(
+                    known_issues,
+                    "stop-authority candidate awaiting yes/no",
+                    run_stop_packet(candidate),
+                )
+                state["written"][key] = now_iso
+            packets += 1
 
     for candidate in actionable:
         fp = _fingerprint(candidate)
@@ -535,21 +630,39 @@ def run_scan(
             outcome = (
                 "dry_run"
                 if dry_run
-                else kill_with_grace(candidate["pid"], signaler=signaler, sleeper=sleeper)
+                else kill_with_grace(
+                    candidate["pid"],
+                    signaler=signaler,
+                    sleeper=sleeper,
+                    expected_start=candidate.get("start_epoch"),
+                    proc_root=proc_root,
+                )
             )
             detail = f"pid {candidate['pid']}: {candidate['evidence']} -> {outcome}"
             if not dry_run:
-                sentinel._append_conductor_log_row(
-                    conductor_log, "STOP-AUTHORITY: ORPHAN_SERVER_REAPED", "WARN", detail
-                )
-                _append_packet(
-                    known_issues,
-                    "stop authority reaped an orphaned llama-server",
-                    f"{detail}\n\nEvery reap condition and its value:\n"
-                    f"{candidate['evidence']}.\nActor: scripts/run_stop_authority.py "
-                    f"(REQ-CONDUCTOR-AUTHORITY-1). If this kill was wrong, set "
-                    f"{ALLOW_ENV}=1 in the server's environment at launch.",
-                )
+                if outcome in ("terminated", "killed"):
+                    # Only a signal that actually landed writes the REAPED
+                    # record (adversarial-review finding N5: the first ship
+                    # recorded 'REAPED' for eperm/already_gone too — a
+                    # durable record must not state a kill that did not
+                    # happen).
+                    sentinel._append_conductor_log_row(
+                        conductor_log, "STOP-AUTHORITY: ORPHAN_SERVER_REAPED", "WARN", detail
+                    )
+                    _append_packet(
+                        known_issues,
+                        "stop authority reaped an orphaned llama-server",
+                        f"{detail}\n\nEvery reap condition and its value:\n"
+                        f"{candidate['evidence']}.\nActor: scripts/run_stop_authority.py "
+                        f"(REQ-CONDUCTOR-AUTHORITY-1). If this kill was wrong, set "
+                        f"{ALLOW_ENV}=1 in the server's environment at launch.",
+                    )
+                elif outcome == "eperm":
+                    sentinel._append_conductor_log_row(
+                        conductor_log, "STOP-AUTHORITY: ORPHAN_REAP_EPERM", "WARN", detail
+                    )
+                else:  # already_gone / identity_changed: nothing was killed
+                    notes.append(f"orphan {fp}: no signal landed ({outcome})")
                 state["written"][key] = now_iso
             actions.append({"fingerprint": fp, "outcome": outcome, **candidate})
         else:  # run_stop
@@ -561,9 +674,16 @@ def run_scan(
                     outcome = "dry_run"
                     server_outcome = "dry_run"
                 else:
-                    outcome = kill_with_grace(candidate["pid"], signaler=signaler, sleeper=sleeper)
+                    outcome = kill_with_grace(
+                        candidate["pid"],
+                        signaler=signaler,
+                        sleeper=sleeper,
+                        expected_start=candidate.get("start_epoch"),
+                        proc_root=proc_root,
+                    )
                     # Also stop the run's own llama-server: a dead-tier run's
-                    # server is either already broken or serving nothing.
+                    # server is either already broken or serving nothing. The
+                    # server is re-discovered NOW, so its identity is current.
                     server_outcome = "no_server_found"
                     for server in sentinel.discover_llama_servers(proc_root):
                         if (
@@ -601,24 +721,22 @@ def run_scan(
                         **candidate,
                     }
                 )
-            else:
-                key = f"packet|{fp}"
-                if not _dedupe_ok(state, key, now):
-                    continue
-                if not dry_run:
-                    sentinel._append_conductor_log_row(
-                        conductor_log,
-                        "STOP-AUTHORITY: STOP_CANDIDATE_AWAITING_OPERATOR",
-                        "BLOCK",
-                        f"pid {candidate['pid']}: {candidate['evidence']}",
-                    )
-                    _append_packet(
-                        known_issues,
-                        "stop-authority candidate awaiting yes/no",
-                        run_stop_packet(candidate),
-                    )
-                    state["written"][key] = now_iso
-                packets += 1
+            # Disarmed run_stop candidates were already packeted above at
+            # first sighting; nothing further to do here.
+
+    # Prune written-keys older than twice the re-arm window: the dedupe
+    # only ever looks back STATE_REARM_DAYS, so older entries are dead
+    # weight that would otherwise grow forever (adversarial-review N4).
+    horizon_s = 2 * STATE_REARM_DAYS * 86400
+    for key in list(state["written"]):
+        try:
+            then = datetime.strptime(state["written"][key], "%Y-%m-%dT%H:%M:%SZ").replace(
+                tzinfo=UTC
+            )
+            if (now - then).total_seconds() > horizon_s:
+                del state["written"][key]
+        except ValueError:
+            continue  # unparseable stamps stay; deleting them re-arms early
 
     state["last_scan_utc"] = now_iso
     state["last_scan_notes"] = notes

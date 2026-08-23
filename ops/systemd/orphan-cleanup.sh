@@ -37,6 +37,7 @@ LOG=${CARNOT_JANITOR_LOG:-/tmp/orphan-cleanup.log}
 HOLD=${CARNOT_JANITOR_HOLD:-/home/ianblenke/.carnot/conductor-hold}
 SYSTEMCTL=${CARNOT_JANITOR_SYSTEMCTL:-systemctl}
 CONDUCTOR_LOG=${CARNOT_JANITOR_CONDUCTOR_LOG:-/home/ianblenke/github.com/ianblenke/carnot/ops/conductor-log.md}
+DEADSEEN=${CARNOT_JANITOR_DEADSEEN:-/home/ianblenke/.carnot/.conductor-dead-seen}
 THRESHOLD_MIN=120  # 2 hours
 
 if [ -z "${CARNOT_JANITOR_SKIP_SWEEPS:-}" ]; then
@@ -103,6 +104,15 @@ _CARNOT_VENV=/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python
   /home/ianblenke/github.com/ianblenke/carnot/scripts/run_stop_authority.py \
   >> /tmp/stop-authority.log 2>&1 || true
 
+# --- Audit-findings ledger aging (added 2026-08-23, REQ-OPS-AUDIT-LEDGER-1)
+# The ledger's aging escalation ran only at milestone close, so a stalled
+# loop — the exact condition under which findings sit unread — escalated
+# nothing (adversarial-review finding S5). The tool is idempotent and has
+# its own state receipt; running it here costs one second per half hour.
+[ -x "$_CARNOT_VENV" ] && timeout 60 "$_CARNOT_VENV" \
+  /home/ianblenke/github.com/ianblenke/carnot/scripts/audit_findings_ledger.py \
+  >> /tmp/audit-ledger.log 2>&1 || true
+
 # --- Root-clutter sweep (added 2026-06-09) — relocate untracked agent/experiment
 # scratch out of the REPO ROOT. The conductor launches every subagent with
 # cwd=PROJECT_ROOT, so quick probe.py / check_*.py / test_*.py debug scripts accrete
@@ -160,6 +170,14 @@ if [ -n "$_dead_reason" ]; then
       echo "$(date -u +%FT%TZ) $_dead_reason but unit is $UNIT_STATE — systemd owns it; skipping" >> "$LOG"
     elif [ -z "$UNIT_STATE" ]; then
       echo "$(date -u +%FT%TZ) $_dead_reason; systemd state unreadable — doing nothing" >> "$LOG"
+    elif [ -z "$(find "$DEADSEEN" -mmin -90 2>/dev/null)" ]; then
+      # Two-cycle confirmation (adversarial-review finding K4): a torn
+      # heartbeat read or the first cycle after a manual stop must not
+      # start anything. Record the sighting; start only if STILL dead on
+      # the next cycle. A marker older than 90 min is stale (missed
+      # cycles) and restarts the confirmation clock.
+      date -u +%FT%TZ > "$DEADSEEN"
+      echo "$(date -u +%FT%TZ) $_dead_reason; first sighting recorded — will start next cycle if still dead and no hold" >> "$LOG"
     else
       if "$SYSTEMCTL" --user start carnot-conductor.service 2>>"$LOG"; then
         echo "$(date -u +%FT%TZ) $_dead_reason; no hold marker -> started carnot-conductor.service" >> "$LOG"
@@ -179,6 +197,10 @@ fi
 # Test hook: liveness-only tests must never run the reap half against
 # the real process table (a stray kill -9 from a test is unrecoverable).
 [ -n "${CARNOT_JANITOR_SKIP_REAP:-}" ] && exit 0
+
+# Conductor is alive: clear any dead-sighting so the two-cycle
+# confirmation always starts fresh.
+rm -f "$DEADSEEN" 2>/dev/null || true
 
 # Enumerate descendants (recursive) of conductor
 declare -A under_conductor
