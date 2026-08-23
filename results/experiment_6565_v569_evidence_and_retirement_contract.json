@@ -1529,5 +1529,18 @@
     "reproducibility_checksum": "A final content hash detects terminal-record mutation."
   },
   "random_seed": 6565,
-  "reproducibility_checksum": "sha256:8122605c45ccf96b646d68692f638f172e53a61f0a39137e3916c81e84596a3d"
+  "reproducibility_checksum": "sha256:8122605c45ccf96b646d68692f638f172e53a61f0a39137e3916c81e84596a3d",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=5.641095 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    }
+  ]
 }
