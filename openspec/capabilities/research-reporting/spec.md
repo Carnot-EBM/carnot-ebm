@@ -52609,6 +52609,7 @@ and `verifier_is_oracle=false`. It SHALL include `status`, `honest_verdict`,
 `protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
 `field_principles`, `field_provenance`, `random_seed`, `duration_s`,
 `tests_run`, and `reproducibility_checksum`. `verdict_class` SHALL be `null` or `partial`.
+A blocked `honest_verdict` SHALL name each unavailable required channel or cache contract.
 
 Field principles SHALL be:
 
@@ -52694,4 +52695,4 @@ gates force a partial verdict with a named channel error.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-REPORT-6528 | Planned (`python/carnot/experiment_6528_v565_source_model_method_contract.py`, `results/experiment_6528_v565_source_model_method_contract.json`) | Planned (`tests/python/test_experiment_6528_v565_source_model_method_contract.py`) |
+| REQ-REPORT-6528 | Implemented (`python/carnot/experiment_6528_v565_source_model_method_contract.py`, `results/experiment_6528_v565_source_model_method_contract.json`) | Implemented (`tests/python/test_experiment_6528_v565_source_model_method_contract.py`) |

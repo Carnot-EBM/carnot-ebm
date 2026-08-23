@@ -1,6 +1,17 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-08-22, later (merge-preserve shipped: analyzer rebuilds now
+**Last Updated:** 2026-08-23 (Exp6528 V565 source/model/method contract test
+regression fixed: blocked artifacts now name unavailable required channels or
+cache contracts in `honest_verdict`; OpenSpec, traceability, tests, and
+`results/experiment_6528_v565_source_model_method_contract.json` are
+reconciled. Current result remains blocked on OpenReview source availability and
+now reports
+`blocked_v565_source_model_method_contract: unavailable_required_channels=openreview`.
+Focused Exp6528 tests pass with scoped 100% module coverage; artifact
+validation and adversarial verification pass; no changes to
+`scripts/research_conductor.py`.)
+
+Prior: 2026-08-22, later (merge-preserve shipped: analyzer rebuilds now
 carry hand-authored keys — `rebuild_note_*` and freshness acknowledgements —
 instead of deleting them, closing the 2026-08-21 three-hit incident.
 `scripts/artifact_merge_preserve.py`, wired into all 10 `analyze_*.py` write

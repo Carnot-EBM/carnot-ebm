@@ -173,7 +173,9 @@ FIELD_PROVENANCE["source_rows"]["source"] = "collect_source_rows"
 FIELD_PROVENANCE["primary_source_hashes"]["source"] = "source_rows.source_hash"
 FIELD_PROVENANCE["citation_trail_receipts"]["source"] = "citation_trail_receipts"
 FIELD_PROVENANCE["citation_count_boundaries"]["source"] = "citation_count_boundaries"
-FIELD_PROVENANCE["drift_bench_provenance_contract"]["source"] = "build_drift_bench_provenance_contract"
+FIELD_PROVENANCE["drift_bench_provenance_contract"]["source"] = (
+    "build_drift_bench_provenance_contract"
+)
 FIELD_PROVENANCE["model_cache_resolution_rows"]["source"] = "collect_model_cache_resolution_rows"
 FIELD_PROVENANCE["non_transfer_rows"]["source"] = "build_non_transfer_rows"
 FIELD_PROVENANCE["aggregate_row_recomputation"]["source"] = "aggregate_row_recomputation"
@@ -201,7 +203,9 @@ SPEC_COVERAGE_COMMAND = (
     "tests/python/test_experiment_6528_v565_source_model_method_contract.py"
 )
 URL_LINT_COMMAND = ".venv/bin/python scripts/canonical_url_lint.py"
-DUPLICATE_LEDGER_COMMAND = ".venv/bin/python scripts/research_complete_ledger_lint.py research-complete.yaml"
+DUPLICATE_LEDGER_COMMAND = (
+    ".venv/bin/python scripts/research_complete_ledger_lint.py research-complete.yaml"
+)
 RUN_COMMAND = (
     "cd /home/ianblenke/github.com/ianblenke/carnot && "
     ".venv/bin/python -m carnot.experiment_6528_v565_source_model_method_contract --date 20260823"
@@ -210,7 +214,9 @@ ADVERSARIAL_COMMAND = (
     ".venv/bin/python scripts/adversarial_verify.py "
     "results/experiment_6528_v565_source_model_method_contract.json"
 )
-VALIDATE_COMMAND = ".venv/bin/python -m carnot.experiment_6528_v565_source_model_method_contract --validate"
+VALIDATE_COMMAND = (
+    ".venv/bin/python -m carnot.experiment_6528_v565_source_model_method_contract --validate"
+)
 DEFAULT_TESTS_RUN = (
     {"command": FOCUSED_COMMAND, "exit_code": 0},
     {"command": COVERAGE_RUN_COMMAND, "exit_code": 0},
@@ -339,7 +345,10 @@ SOURCE_MANIFEST: tuple[JsonDict, ...] = (
         adopted_method=True,
         required_primary_check=True,
         negative_control="scratch_and_frozen_memory_arms",
-        downstream_field_spelling=("future_exact_satisfying_support", "retained_family_performance"),
+        downstream_field_spelling=(
+            "future_exact_satisfying_support",
+            "retained_family_performance",
+        ),
     ),
     _source(
         source_id="distributional_ebm",
@@ -379,7 +388,11 @@ SOURCE_MANIFEST: tuple[JsonDict, ...] = (
         adopted_method=True,
         required_primary_check=True,
         negative_control="proof_preserving_surface_relabel_control",
-        downstream_field_spelling=("solver_hardness_bin", "surface_realization_id", "paired_embedding_distance"),
+        downstream_field_spelling=(
+            "solver_hardness_bin",
+            "surface_realization_id",
+            "paired_embedding_distance",
+        ),
     ),
     _source(
         source_id="openreview_dc_energy",
@@ -574,10 +587,19 @@ def default_fetcher(url: str, source_id: str) -> JsonDict:  # pragma: no cover -
             "error": str(exc),
         }
     except Exception as exc:
-        return {"ok": False, "status_code": 0, "url": url, "headers": {}, "body": "", "error": str(exc)}
+        return {
+            "ok": False,
+            "status_code": 0,
+            "url": url,
+            "headers": {},
+            "body": "",
+            "error": str(exc),
+        }
 
 
-def default_command_runner(args: list[str], cwd: Path) -> tuple[int, str, str]:  # pragma: no cover - subprocess path.
+def default_command_runner(
+    args: list[str], cwd: Path
+) -> tuple[int, str, str]:  # pragma: no cover - subprocess path.
     result = subprocess.run(args, cwd=cwd, check=False, text=True, capture_output=True)
     return result.returncode, result.stdout, result.stderr
 
@@ -739,7 +761,9 @@ def _command_receipt(
         "stdout_sha256": sha256_json(stdout),
         "stderr_sha256": sha256_json(stderr),
         "candidate_ids": re.findall(r"\b\d{4}\.\d{5}\b", stdout),
-        "observed_error": stderr.strip() if rc != 0 or stderr.strip().lower().startswith("http") else None,
+        "observed_error": stderr.strip()
+        if rc != 0 or stderr.strip().lower().startswith("http")
+        else None,
     }
 
 
@@ -881,7 +905,9 @@ def citation_trail_receipts(source_rows: Sequence[Mapping[str, Any]]) -> list[Js
                 "accessed_at_utc": row["accessed_at_utc"],
                 "retrieval_state": row["retrieval_state"],
                 "observed_citation_count": None if limited else row.get("citation_count_observed"),
-                "citation_titles_observed": [] if limited else list(row.get("citation_titles_observed", [])),
+                "citation_titles_observed": []
+                if limited
+                else list(row.get("citation_titles_observed", [])),
                 "count_is_current_guarantee": False,
                 "observed_error": row.get("observed_error"),
             }
@@ -1020,7 +1046,9 @@ def collect_model_cache_resolution_rows(
     for model in SOTA_GGUF_MODELS:
         hf_id = model["hf_id"]
         pair_spec = pair_by_id.get(hf_id)
-        resolved = str(pair_spec.get("model_path")) if pair_spec and pair_spec.get("model_path") else None
+        resolved = (
+            str(pair_spec.get("model_path")) if pair_spec and pair_spec.get("model_path") else None
+        )
         if resolved is None:
             resolved = gguf_resolver(hf_id, preferred_quant)
         path = Path(resolved) if resolved else None
@@ -1313,11 +1341,15 @@ def aggregate_row_recomputation(
     mandated_hf_ids = {model["hf_id"] for model in SOTA_GGUF_MODELS}
     model_cache_ready = (
         model_hf_ids == mandated_hf_ids
-        and all(row.get("cache_hit") is True and row.get("model_loaded_or_run") is False for row in model_rows)
+        and all(
+            row.get("cache_hit") is True and row.get("model_loaded_or_run") is False
+            for row in model_rows
+        )
         and any(row.get("cached_sota_pair_returned") is True for row in model_rows)
     )
     non_transfer_complete = len(non_transfer_rows) == len(source_rows) and all(
-        row.get("non_transfer_boundary") and row.get("exact_authority_boundary") for row in non_transfer_rows
+        row.get("non_transfer_boundary") and row.get("exact_authority_boundary")
+        for row in non_transfer_rows
     )
     channels = {str(row.get("channel")) for row in query_receipts}
     query_complete = REQUIRED_CHANNELS <= channels
@@ -1331,7 +1363,9 @@ def aggregate_row_recomputation(
         and hardware.get("gatemate_command_allowed_without_new_receipt") is False
     )
     protected_ok = protected.get("all_protected_files_unchanged") is True
-    no_outcome_read = not preconditions.get("outcome_artifact_guard", {}).get("outcome_artifacts_read")
+    no_outcome_read = not preconditions.get("outcome_artifact_guard", {}).get(
+        "outcome_artifacts_read"
+    )
     spelling_complete = _contract_spelling_complete(contracts)
     ready = (
         source_ids == manifest_ids
@@ -1379,7 +1413,8 @@ def gate_check_summary(
 ) -> JsonDict:
     checks = {
         "source_rows_cover_manifest": aggregate.get("source_rows_cover_manifest") is True,
-        "required_primary_sources_verified": aggregate.get("required_primary_sources_verified") is True,
+        "required_primary_sources_verified": aggregate.get("required_primary_sources_verified")
+        is True,
         "adopted_methods_have_source_hook_control_boundary": (
             aggregate.get("adopted_methods_with_source_hook_control_boundary")
             == aggregate.get("adopted_method_count")
@@ -1403,7 +1438,10 @@ def gate_check_summary(
     for row in source_rows:
         if row.get("required_primary_check") is True and (
             row.get("primary_url_verified") is not True
-            or (row.get("expected_source_date") is not None and row.get("source_date_verified") is not True)
+            or (
+                row.get("expected_source_date") is not None
+                and row.get("source_date_verified") is not True
+            )
         ):
             failed.append(
                 {
@@ -1432,6 +1470,31 @@ def gate_check_summary(
     return {"checks": checks, "failed_checks": failed, "all_gates_passed": not failed}
 
 
+def blocked_verdict_channels(gate: Mapping[str, Any]) -> list[str]:
+    """Return the concrete unavailable channels a blocked verdict must name."""
+    channels: list[str] = []
+    for row in gate.get("failed_checks", []):
+        if not isinstance(row, Mapping):
+            continue
+        channel = str(row.get("channel") or "").strip()
+        check = str(row.get("check") or "").strip()
+        if channel and channel != "local_gate":
+            channels.append(channel)
+        elif check == "mandated_gguf_cache_resolved":
+            channels.append("model_cache_preflight")
+    return sorted(set(channels))
+
+
+def blocked_honest_verdict(gate: Mapping[str, Any]) -> str:
+    channels = blocked_verdict_channels(gate)
+    if channels:
+        return (
+            "blocked_v565_source_model_method_contract: unavailable_required_channels="
+            + ",".join(channels)
+        )
+    return "blocked_v565_source_model_method_contract: source or model-cache gates failed"
+
+
 def build_per_unit_rows(
     *,
     source_rows: Sequence[Mapping[str, Any]],
@@ -1444,7 +1507,13 @@ def build_per_unit_rows(
     rows: list[JsonDict] = [dict(row) for row in source_rows]
     rows.extend(dict(row) for row in model_rows)
     rows.extend(dict(row) for row in non_transfer_rows)
-    rows.append({"row_type": "contract", "contract_section": "drift_bench", "contract_hash": sha256_json(drift_contract)})
+    rows.append(
+        {
+            "row_type": "contract",
+            "contract_section": "drift_bench",
+            "contract_hash": sha256_json(drift_contract),
+        }
+    )
     rows.extend(
         {"row_type": "contract", "contract_section": key, "contract_hash": sha256_json(value)}
         for key, value in contracts.items()
@@ -1532,7 +1601,7 @@ def build_artifact(
         "honest_verdict": (
             "complete_v565_source_model_method_contract_ready: primary sources, cache, and method fields are frozen"
             if ready_score == 1.0
-            else "blocked_v565_source_model_method_contract: source or model-cache gates failed"
+            else blocked_honest_verdict(gate)
         ),
         "verdict_class": None if ready_score == 1.0 else "partial",
         "query_receipts": query_receipts,
@@ -1545,7 +1614,9 @@ def build_artifact(
         "frozen_external_split_contract": contracts["frozen_external_split_contract"],
         "frozen_router_contract": contracts["frozen_router_contract"],
         "frozen_embedding_contract": contracts["frozen_embedding_contract"],
-        "frozen_transactional_learning_contract": contracts["frozen_transactional_learning_contract"],
+        "frozen_transactional_learning_contract": contracts[
+            "frozen_transactional_learning_contract"
+        ],
         "frozen_arc_parser_contract": contracts["frozen_arc_parser_contract"],
         "hardware_stop_contract": contracts["hardware_stop_contract"],
         "non_transfer_rows": non_transfer,
@@ -1618,6 +1689,15 @@ def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
         ("complete_", "blocked_", "partial_", "disqualified_")
     ):
         errors.append("honest_verdict terminal prefix mismatch")
+    if str(artifact.get("honest_verdict", "")).startswith("blocked_"):
+        verdict_text = str(artifact.get("honest_verdict", ""))
+        missing_channels = [
+            channel
+            for channel in blocked_verdict_channels(artifact.get("gate_check_summary", {}))
+            if channel not in verdict_text
+        ]
+        if missing_channels:
+            errors.append("blocked verdict must name unavailable required channels")
     if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
         errors.append("inference_substrate mismatch")
     if artifact.get("verifier_is_oracle") is not False:
@@ -1643,14 +1723,23 @@ def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
     )
     if not adopted_complete and score == 1.0:
         errors.append("adopted methods must map to source hooks controls and boundaries")
-    if artifact.get("drift_bench_provenance_contract", {}).get("contract_ready") is not True and score == 1.0:
+    if (
+        artifact.get("drift_bench_provenance_contract", {}).get("contract_ready") is not True
+        and score == 1.0
+    ):
         errors.append("drift bench provenance contract must be ready")
-    model_hf_ids = {str(row.get("hf_id")) for row in artifact.get("model_cache_resolution_rows", [])}
+    model_hf_ids = {
+        str(row.get("hf_id")) for row in artifact.get("model_cache_resolution_rows", [])
+    }
     mandated_hf_ids = {model["hf_id"] for model in SOTA_GGUF_MODELS}
-    model_rows_cover = model_hf_ids == mandated_hf_ids and bool(artifact.get("model_cache_resolution_rows"))
+    model_rows_cover = model_hf_ids == mandated_hf_ids and bool(
+        artifact.get("model_cache_resolution_rows")
+    )
     if not model_rows_cover or (
         score == 1.0
-        and not all(row.get("cache_hit") is True for row in artifact.get("model_cache_resolution_rows", []))
+        and not all(
+            row.get("cache_hit") is True for row in artifact.get("model_cache_resolution_rows", [])
+        )
     ):
         errors.append("model cache contract must cover all mandated models")
     if not _contract_spelling_complete(_artifact_contracts(artifact)):
@@ -1663,9 +1752,14 @@ def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
     router = artifact.get("frozen_router_contract", {})
     if router.get("learned_advice_may_prune") is not False:
         errors.append("learned routing cannot prune candidates")
-    if artifact.get("protected_files_unchanged", {}).get("all_protected_files_unchanged") is not True:
+    if (
+        artifact.get("protected_files_unchanged", {}).get("all_protected_files_unchanged")
+        is not True
+    ):
         errors.append("protected files changed")
-    if not REQUIRED_CHANNELS <= {str(row.get("channel")) for row in artifact.get("query_receipts", [])}:
+    if not REQUIRED_CHANNELS <= {
+        str(row.get("channel")) for row in artifact.get("query_receipts", [])
+    }:
         errors.append("query receipts must include all required sequential channels")
     if set(artifact.get("primary_source_hashes", {})) != manifest_ids:
         errors.append("primary_source_hashes must cover manifest")
@@ -1682,7 +1776,9 @@ def _load_json(path: Path) -> JsonDict:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Build or validate Exp6528 V565 source-model-method contract.")
+    parser = argparse.ArgumentParser(
+        description="Build or validate Exp6528 V565 source-model-method contract."
+    )
     parser.add_argument("--date", default=RUN_DATE)
     parser.add_argument("--result-path", default=str(REPO_ROOT / RESULT_RELATIVE_PATH))
     parser.add_argument("--validate", action="store_true")

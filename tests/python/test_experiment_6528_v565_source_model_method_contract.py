@@ -107,7 +107,9 @@ def _fake_fetcher(url: str, source_id: str) -> mod.JsonDict:
         if source["source_kind"] == "paper":
             return _receipt(url, _paper_body(source_id))
         if source_id in {"openreview_dc_energy", "openreview_linear_decision_rules"}:
-            body = json.dumps({"title": source["title"], "source_date": source["expected_source_date"]})
+            body = json.dumps(
+                {"title": source["title"], "source_date": source["expected_source_date"]}
+            )
             return _receipt(url, body)
         if source_id == "semantic_scholar_ebt":
             return _receipt(
@@ -117,7 +119,9 @@ def _fake_fetcher(url: str, source_id: str) -> mod.JsonDict:
                         "title": "Energy-Based Transformers are Scalable Learners and Thinkers",
                         "citationCount": 35,
                         "citations": [
-                            {"title": "Memoir: Should a Model Write to Its Memory While It Thinks?"},
+                            {
+                                "title": "Memoir: Should a Model Write to Its Memory While It Thinks?"
+                            },
                             {"title": "Solver-Hard Is Not Model-Hard"},
                         ],
                     }
@@ -135,17 +139,31 @@ def _fake_fetcher(url: str, source_id: str) -> mod.JsonDict:
                 ),
             )
         if source_id == "huggingface_support_reshaping":
-            return _receipt(url, json.dumps({"title": source["title"], "source_date": "2026-07-31"}))
+            return _receipt(
+                url, json.dumps({"title": source["title"], "source_date": "2026-07-31"})
+            )
         if source_id == "drift_bench_repo":
-            return _receipt(url, "<html><title>GitHub - kaons-research/drift-bench</title>MIT license</html>")
+            return _receipt(
+                url, "<html><title>GitHub - kaons-research/drift-bench</title>MIT license</html>"
+            )
         if source_id == "extropic_z1_status":
-            return _receipt(url, "<html><title>From One to One Billion</title>Z1 early access 2027</html>")
+            return _receipt(
+                url, "<html><title>From One to One Billion</title>Z1 early access 2027</html>"
+            )
         if source_id == "logical_intelligence_kona":
-            return _receipt(url, "<html><title>Kona: Energy-Based Models for AI Reasoning</title></html>")
+            return _receipt(
+                url, "<html><title>Kona: Energy-Based Models for AI Reasoning</title></html>"
+            )
     if source_id == "drift_repo_api":
         return _receipt(
             url,
-            json.dumps({"license": {"spdx_id": "MIT"}, "default_branch": "main", "full_name": "kaons-research/drift-bench"}),
+            json.dumps(
+                {
+                    "license": {"spdx_id": "MIT"},
+                    "default_branch": "main",
+                    "full_name": "kaons-research/drift-bench",
+                }
+            ),
         )
     if source_id == "drift_commit_api":
         return _receipt(url, json.dumps({"sha": "d24cda4f59a6ee06bafe886f4724899a7ec94f1c"}))
@@ -174,14 +192,16 @@ def _fake_runner(args: list[str], cwd: Path) -> tuple[int, str, str]:
     raise AssertionError(f"unexpected command: {joined}")
 
 
-def _model_resolvers(tmp_path: Path) -> tuple[mod.ModelPairResolver, mod.GgufResolver, dict[str, int]]:
+def _model_resolvers(
+    tmp_path: Path,
+) -> tuple[mod.ModelPairResolver, mod.GgufResolver, dict[str, int]]:
     calls = {"pair": 0, "gguf": 0}
     tmp_path.mkdir(parents=True, exist_ok=True)
     paths: dict[str, Path] = {}
     for model in mod.SOTA_GGUF_MODELS:
         filename = f"{model['name']}-{model['quantization']}.gguf"
         path = tmp_path / filename
-        path.write_bytes(f"fixture-{model['hf_id']}".encode("utf-8"))
+        path.write_bytes(f"fixture-{model['hf_id']}".encode())
         paths[model["hf_id"]] = path
 
     def pair_resolver(
@@ -228,7 +248,9 @@ def _missing_gguf_resolver(hf_id: str, preferred_quant: str = "Q4_K_M") -> None:
     return None
 
 
-def _artifact(tmp_path: Path, *, blocked: bool = False, missing_models: bool = False) -> dict[str, Any]:
+def _artifact(
+    tmp_path: Path, *, blocked: bool = False, missing_models: bool = False
+) -> dict[str, Any]:
     pair_resolver, gguf_resolver, _calls = _model_resolvers(tmp_path / "models")
     return mod.build_artifact(
         repo_root=REPO,
@@ -267,6 +289,7 @@ def test_req_report_6528_spec_declares_contract() -> None:
         mod.INFERENCE_SUBSTRATE,
         "`verifier_is_oracle=false`",
         "`verdict_class` SHALL be `null` or `partial`",
+        "A blocked `honest_verdict` SHALL name each unavailable required channel or cache contract.",
     ):
         assert token in section
     for field, principle in mod.FIELD_PRINCIPLES.items():
@@ -286,14 +309,26 @@ def test_scenario_report_6528_sources_and_drift_contract(tmp_path: Path) -> None
     assert rows["memoir"]["source_date_verified"] is True
     assert rows["support_reshaping"]["code_or_data_availability"] == "public_github_claimed"
     assert rows["distributional_ebm"]["method"] == "decomposed_energy_uncertainty_abstention"
-    assert rows["solver_hard"]["local_applicability"] == "surface_hardness_stratified_embedding_diagnostic"
+    assert (
+        rows["solver_hard"]["local_applicability"]
+        == "surface_hardness_stratified_embedding_diagnostic"
+    )
     assert rows["openreview_dc_energy"]["source_kind"] == "openreview_forum"
-    assert rows["openreview_linear_decision_rules"]["method_transfer_status"] == "future_architecture_control"
+    assert (
+        rows["openreview_linear_decision_rules"]["method_transfer_status"]
+        == "future_architecture_control"
+    )
     assert rows["drift_bench_repo"]["stable_url"] == mod.DRIFT_REPO_URL
     assert rows["drift_bench_repo"]["retrieval_url"] == mod.DRIFT_API_REPO_URL
     assert rows["drift_bench_repo"]["primary_url_verified"] is True
-    assert rows["extropic_z1_status"]["exact_authority_boundary"] == "Product page only; no local TSU runner or access."
-    assert rows["logical_intelligence_kona"]["non_transfer_boundary"] == "No proprietary Kona weights, runner, or speed claim transfers."
+    assert (
+        rows["extropic_z1_status"]["exact_authority_boundary"]
+        == "Product page only; no local TSU runner or access."
+    )
+    assert (
+        rows["logical_intelligence_kona"]["non_transfer_boundary"]
+        == "No proprietary Kona weights, runner, or speed claim transfers."
+    )
 
     for row in artifact["source_rows"]:
         assert row["source_hash"].startswith("sha256:")
@@ -307,7 +342,9 @@ def test_scenario_report_6528_sources_and_drift_contract(tmp_path: Path) -> None
     assert artifact["primary_source_hashes"]["drift_bench_arxiv"].startswith("sha256:")
     assert artifact["citation_trail_receipts"][0]["observed_citation_count"] == 35
     assert artifact["citation_trail_receipts"][1]["observed_citation_count"] == 8
-    assert all(row["count_is_current_guarantee"] is False for row in artifact["citation_count_boundaries"])
+    assert all(
+        row["count_is_current_guarantee"] is False for row in artifact["citation_count_boundaries"]
+    )
 
     assert drift["repo_url"] == "https://github.com/kaons-research/drift-bench"
     assert drift["immutable_revision"] == "d24cda4f59a6ee06bafe886f4724899a7ec94f1c"
@@ -351,7 +388,9 @@ def test_scenario_report_6528_cache_methods_authority_and_schema(tmp_path: Path)
 
     cache_rows = artifact["model_cache_resolution_rows"]
     assert len(cache_rows) == len(mod.SOTA_GGUF_MODELS)
-    assert {row["hf_id"] for row in cache_rows} == {model["hf_id"] for model in mod.SOTA_GGUF_MODELS}
+    assert {row["hf_id"] for row in cache_rows} == {
+        model["hf_id"] for model in mod.SOTA_GGUF_MODELS
+    }
     assert all(row["cache_hit"] is True for row in cache_rows)
     assert all(row["model_loaded_or_run"] is False for row in cache_rows)
     assert all(row["model_file_sha256"].startswith("sha256:") for row in cache_rows)
@@ -367,16 +406,26 @@ def test_scenario_report_6528_cache_methods_authority_and_schema(tmp_path: Path)
     ]
     assert artifact["frozen_router_contract"]["learned_advice_may_prune"] is False
     assert artifact["frozen_embedding_contract"]["answer_scoring_allowed"] is False
-    assert artifact["frozen_transactional_learning_contract"]["same_query_write_negative_control"] is True
-    assert artifact["frozen_arc_parser_contract"]["qwen3_xml_stop_rule"] == "stop_after_one_bounded_live_tool_call_receipt"
-    assert artifact["hardware_stop_contract"]["gatemate_command_allowed_without_new_receipt"] is False
+    assert (
+        artifact["frozen_transactional_learning_contract"]["same_query_write_negative_control"]
+        is True
+    )
+    assert (
+        artifact["frozen_arc_parser_contract"]["qwen3_xml_stop_rule"]
+        == "stop_after_one_bounded_live_tool_call_receipt"
+    )
+    assert (
+        artifact["hardware_stop_contract"]["gatemate_command_allowed_without_new_receipt"] is False
+    )
 
     aggregate = artifact["aggregate_row_recomputation"]
     assert aggregate["source_rows_cover_manifest"] is True
     assert aggregate["required_primary_sources_verified"] is True
     assert aggregate["drift_bench_contract_ready"] is True
     assert aggregate["model_cache_contract_ready"] is True
-    assert aggregate["adopted_methods_with_source_hook_control_boundary"] == len(mod.ADOPTED_SOURCE_IDS)
+    assert aggregate["adopted_methods_with_source_hook_control_boundary"] == len(
+        mod.ADOPTED_SOURCE_IDS
+    )
     assert aggregate["frozen_downstream_field_spelling_complete"] is True
     assert aggregate["ready_score_from_rows"] == 1.0
     assert artifact["gate_check_summary"]["all_gates_passed"] is True
@@ -401,6 +450,8 @@ def test_scenario_report_6528_blocked_cache_or_source_is_partial(tmp_path: Path)
     assert mod.validate_artifact(artifact) == []
     assert artifact["status"] == "blocked_v565_source_model_method_contract"
     assert artifact["honest_verdict"].startswith("blocked_v565_source_model_method_contract")
+    assert "openreview" in artifact["honest_verdict"]
+    assert "model_cache_preflight" in artifact["honest_verdict"]
     assert artifact["verdict_class"] == "partial"
     assert artifact["v565_method_contract_ready_score"] == 0.0
     assert rows["openreview_dc_energy"]["primary_url_verified"] is False
@@ -423,7 +474,12 @@ def test_scenario_report_6528_validation_edges(
     assert all(row["exit_code"] == 0 for row in mod.tests_run_receipts(None))
     assert mod.sha256_file(tmp_path / "missing.gguf") == "missing"
     assert mod._extract_title('{"title": "JSON Title"}', "fallback") == "JSON Title"
-    assert mod._extract_title('{"notes": [{"content": {"title": {"value": "Note Title"}}}]}', "fallback") == "Note Title"
+    assert (
+        mod._extract_title(
+            '{"notes": [{"content": {"title": {"value": "Note Title"}}}]}', "fallback"
+        )
+        == "Note Title"
+    )
     assert mod._extract_title("<title>HTML Title</title>", "fallback") == "HTML Title"
     assert mod._extract_title("<h1>Title:Arxiv Title</h1>", "fallback") == "Arxiv Title"
     assert mod._extract_title("{bad", "fallback") == "fallback"
@@ -438,13 +494,30 @@ def test_scenario_report_6528_validation_edges(
     assert mod._retrieval_state(503, "server") == "blocked"
     assert mod._citation_count(json.dumps({"citationCount": 7})) == 7
     assert mod._citation_count("{bad") is None
-    assert mod._citation_titles(json.dumps({"citations": [{"title": "A"}, {"title": ""}, {}]})) == ["A"]
+    assert mod._citation_titles(json.dumps({"citations": [{"title": "A"}, {"title": ""}, {}]})) == [
+        "A"
+    ]
     assert mod._citation_titles("{bad") == []
     assert mod._network_probe(_fake_fetcher, "2026-08-23T12:00:00Z")["network_available"] is True
-    assert mod._network_probe(
-        lambda url, sid: _receipt(url, "bad", status_code=503, error="boom"),
-        "2026-08-23T12:00:00Z",
-    )["network_available"] is False
+    assert (
+        mod._network_probe(
+            lambda url, sid: _receipt(url, "bad", status_code=503, error="boom"),
+            "2026-08-23T12:00:00Z",
+        )["network_available"]
+        is False
+    )
+    assert mod.blocked_verdict_channels(
+        {
+            "failed_checks": [
+                "malformed",
+                {"channel": "local_gate", "check": "mandated_gguf_cache_resolved"},
+            ]
+        }
+    ) == ["model_cache_preflight"]
+    assert (
+        mod.blocked_honest_verdict({"failed_checks": []})
+        == "blocked_v565_source_model_method_contract: source or model-cache gates failed"
+    )
 
     bad = deepcopy(artifact)
     del bad["status"]
@@ -470,7 +543,10 @@ def test_scenario_report_6528_validation_edges(
     assert "verifier_is_oracle must be false" in errors
 
     mutations = [
-        ("ready score mismatch", lambda item: item.__setitem__("v565_method_contract_ready_score", 0.0)),
+        (
+            "ready score mismatch",
+            lambda item: item.__setitem__("v565_method_contract_ready_score", 0.0),
+        ),
         ("source rows must cover manifest", lambda item: item.__setitem__("source_rows", [])),
         (
             "required primary sources must verify",
@@ -482,7 +558,9 @@ def test_scenario_report_6528_validation_edges(
         ),
         (
             "drift bench provenance contract must be ready",
-            lambda item: item["drift_bench_provenance_contract"].__setitem__("contract_ready", False),
+            lambda item: item["drift_bench_provenance_contract"].__setitem__(
+                "contract_ready", False
+            ),
         ),
         (
             "model cache contract must cover all mandated models",
@@ -490,7 +568,9 @@ def test_scenario_report_6528_validation_edges(
         ),
         (
             "frozen contracts must expose downstream field spelling",
-            lambda item: item["frozen_router_contract"].__setitem__("downstream_field_spelling", []),
+            lambda item: item["frozen_router_contract"].__setitem__(
+                "downstream_field_spelling", []
+            ),
         ),
         (
             "non-transfer rows must forbid unsupported transfer",
@@ -498,7 +578,9 @@ def test_scenario_report_6528_validation_edges(
         ),
         (
             "learned routing cannot prune candidates",
-            lambda item: item["frozen_router_contract"].__setitem__("learned_advice_may_prune", True),
+            lambda item: item["frozen_router_contract"].__setitem__(
+                "learned_advice_may_prune", True
+            ),
         ),
         (
             "protected files changed",
@@ -525,16 +607,27 @@ def test_scenario_report_6528_validation_edges(
     bad["reproducibility_checksum"] = "sha256:bad"
     assert "reproducibility_checksum mismatch" in mod.validate_artifact(bad)
 
-    assert mod.main(["--validate", "--result-path", str(tmp_path / mod.RESULT_RELATIVE_PATH.name)]) == 0
-    assert mod.main(
-        [
-            "--date",
-            "20260823",
-            "--result-path",
-            str(tmp_path / "cli.json"),
-            "--no-live-network",
-        ]
-    ) == 0
+    bad = _artifact(tmp_path / "blocked_validation", blocked=True, missing_models=True)
+    bad["honest_verdict"] = "blocked_v565_source_model_method_contract: source gates failed"
+    _with_checksum(bad)
+    assert "blocked verdict must name unavailable required channels" in mod.validate_artifact(bad)
+
+    assert (
+        mod.main(["--validate", "--result-path", str(tmp_path / mod.RESULT_RELATIVE_PATH.name)])
+        == 0
+    )
+    assert (
+        mod.main(
+            [
+                "--date",
+                "20260823",
+                "--result-path",
+                str(tmp_path / "cli.json"),
+                "--no-live-network",
+            ]
+        )
+        == 0
+    )
     assert "experiment_6528_v565_source_model_method_contract.json" in capsys.readouterr().out
 
     invalid_json_path = tmp_path / "invalid.json"
