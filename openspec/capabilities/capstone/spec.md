@@ -278,6 +278,139 @@
 - SCENARIO-CAPSTONE-4606: The artifact `results/experiment_4606_levelup_selfplay.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `solve_provenance`, `offline_reproduced`, `reproduced_levels`, `target_game`, `verifier_checkpoint_updated`, `registry_updated`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also include `spec_refs`, `standing_loop_result_path`, `reproduction_gate`, `solution_labels`, `dead_ends_recorded`, `target_selection`, and `verifier_delta`. A success verdict requires `offline_reproduced=true`, `reproduced_levels >= 1` for newly banked levels beyond the prior registry depth, a non-null verifier checkpoint path, a registry update, and a content-addressed replay checksum. If no next level reproduces, the artifact must report `complete: <game>_delta_identified_no_bank` and record the stalled approach without incrementing the bank count.
 - SCENARIO-CAPSTONE-4606-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank)."; `inference_substrate` = "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged."; `solve_provenance` = "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game."; `offline_reproduced` = "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."; `reproduced_levels` = "the integer new-level count banked this task (>=1 satisfies the level-up guarantee)."; `target_game` = "the rotated game attempted -- traceable to the rotation discipline (not a game deepened in .421-.424)."; `verifier_checkpoint_updated` = "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."; `registry_updated` = "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."; `random_seed` = "determinism precondition for reproducibility."; `reproducibility_checksum` = "catches silent drift on replay."; `preconditions_checked` = "records resources verified; pre-empts missing-resource fabrication."
 - REQ-CAPSTONE-4618: The level-up self-play workflow SHALL run the standing ARC offline loop on a rotated public clean-navigation game that was not deepened in milestones .421-.425, SHALL skip `ka59`, `dc22` L2, and registry-recorded no-grounded-delta L3 approaches for `cd82`, `sp80`, and `su15`, and SHALL prefer `sk48` L1->L2 when eligible. The workflow SHALL count progress only when `arc_solver_kit.reproduce` offline-reproduces at least one newly banked level, SHALL train or refresh `models/arc_verifier_<game>.json` from the run's positive steps-to-go trace and recorded off-path/dead-end evidence, SHALL update the ARC solve registry for the banked game, and SHALL write `results/experiment_4618_levelup_selfplay.json` without modifying `scripts/research_conductor.py`.
+
+### REQ-CAPSTONE-6526: V564 Independent Evidence Capstone SHALL Rebuild Claims From Rows
+
+Carnot SHALL provide Exp6526 at
+`python/carnot/experiment_6526_v564_independent_capstone.py` and write
+`results/experiment_6526_v564_independent_capstone.json`.
+
+Exp6526 SHALL always run over the V564 evidence graph from Exp6513 through
+Exp6525. It SHALL record expected deliverables, existence, hashes, statuses,
+honest verdicts, verdict classes, gate fields, observed values, resources, and
+protected-file hashes. Missing, blocked, null, partial, or malformed upstream
+evidence SHALL remain visible rows and SHALL NOT become success by absence.
+
+Exp6526 SHALL reconstruct comparative and scientific claims from per-unit rows,
+not aggregate-only headlines. It SHALL reject aggregate-only claims,
+contradictory controls, all-null rows, one-cell wins, wrong denominators,
+missing terminal dispositions, and uncharged costs. Learned-router and
+continuous-self-learning eligibility SHALL be independent bare scores. A
+scientific positive requires oracle-distinct row evidence and all acceptance
+conditions; exact self-checks are `circular_positive` at most.
+
+Exp6526 SHALL verify gate spelling by checking every downstream gate field
+against the upstream artifact and the V564 roadmap text. It SHALL verify that no
+structured dependency names retired Exp6506, Exp6507, Exp6508, Exp6509,
+Exp6510, or Exp6511 task IDs. It SHALL specifically audit that Exp6516 used the
+Exp6514 transaction and direct immutable Exp6504/Exp6510 paths.
+
+Exp6526 SHALL audit exact solver authority, split lineage, candidate
+preservation, exception-table contamination, refinement witnesses, unsafe
+writes, rollback and restart, prefix retention, held-future support, adaptive
+inclusion probabilities, exact sentinels, final full audit, ARC live-path receipt
+provenance, absence of ARC solve credit, GateMate command authorization, absence
+of hardware performance claims, and protected-file immutability.
+
+Exp6526 SHALL emit the required fields:
+`status`, `honest_verdict`, `verdict_class`, `task_inventory_rows`,
+`artifact_hash_receipts`, `gate_contract_rows`, `retired_scope_audit`,
+`transaction_audit`, `data_integrity_audit`, `exact_authority_audit`,
+`comparative_claim_rows`, `structural_headroom_decision`,
+`learned_router_claim_eligible_score`,
+`continuous_self_learning_claim_eligible_score`,
+`adaptive_validation_decision`, `arc_generalization_decision`,
+`hardware_continuity_decision`, `next_state_rows`, `discrepancy_rows`,
+`gate_check_summary`, `per_unit_rows`, `aggregate_row_recomputation`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, and `reproducibility_checksum`.
+
+The Exp6526 artifact SHALL set
+`inference_substrate="independent_v564_artifact_row_and_receipt_synthesis_no_llm"`
+and `verifier_is_oracle=false`.
+
+Field principles for Exp6526:
+
+- `status`: "Records the terminal V564 capstone state after reading all expected artifacts."
+- `honest_verdict`: "Summarizes mixed evidence without converting missing, null, or blocked rows into success."
+- `verdict_class`: "Uses partial for mixed lineage outcomes, positive only for oracle-distinct row-supported claims, and blocked or disqualified for missing or unsafe evidence."
+- `task_inventory_rows`: "One row per expected task records path, hash, status, class, gate field, observed value, row support, authority, and eligibility."
+- `artifact_hash_receipts`: "Content hashes prove which files were read and which expected deliverables were missing."
+- `gate_contract_rows`: "Checks downstream gate field spelling against upstream artifacts and the V564 roadmap."
+- `retired_scope_audit`: "Proves structured dependencies do not name retired Exp6506 through Exp6511 task ids."
+- `transaction_audit`: "Audits Exp6516 direct immutable inputs and Exp6514 shard/final transaction receipts."
+- `data_integrity_audit`: "Recomputes row counts, terminal dispositions, all-null risk, denominators, and protected null or blocked outcomes."
+- `exact_authority_audit`: "Confirms exact solver authority, candidate preservation, fallback, conflict witnesses, and safe durable writes."
+- `comparative_claim_rows`: "One row per claim records row support, denominator, authority, and eligibility."
+- `structural_headroom_decision`: "Carries the Exp6519 row-derived headroom result without using aggregate-only claims."
+- `learned_router_claim_eligible_score`: "Bare scalar set to one only when the learned-router claim has oracle-distinct row evidence and all acceptance conditions."
+- `continuous_self_learning_claim_eligible_score`: "Bare scalar set to one only when the independent full CSL audit supports held-future benefit safely."
+- `adaptive_validation_decision`: "Separates validation-cost saving from the CSL scientific claim."
+- `arc_generalization_decision`: "Preserves live-path receipt absence and blocks ARC solve credit."
+- `hardware_continuity_decision`: "Records GateMate command authorization, command count, and performance-claim absence."
+- `next_state_rows`: "One row per lineage picks only stop_null, retire_same_verdict, expand_after_positive, repair_broken_contract, or preserve_watch."
+- `discrepancy_rows`: "Names missing, blocked, contradictory, unsafe, or unsupported evidence without stopping the capstone."
+- `gate_check_summary`: "Summarizes capstone gate checks, lineage blockers, and failed checks."
+- `per_unit_rows`: "Flattens task, claim, gate, protected-file, and discrepancy rows for row lints."
+- `aggregate_row_recomputation`: "Rebuilds headline scores, verdict class, and next states from rows."
+- `preconditions_checked`: "Records git status, date, expected deliverables, resources, source paths, and protected hashes."
+- `protected_files_unchanged`: "Compares protected-file hashes before and after capstone construction."
+- `inference_substrate`: "Declares independent V564 artifact row and receipt synthesis with no LLM."
+- `verifier_is_oracle`: "False for scientific value claims; exact self-check authority is disclosed separately."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps every field to artifact receipts, row reducers, specs, tests, or hashes."
+- `random_seed`: "Pins deterministic row ordering and checksum construction."
+- `duration_s`: "Reports measured wall time."
+- `tests_run`: "Records verification commands and exit codes."
+- `reproducibility_checksum`: "Detects drift in inputs, row reductions, decisions, and tests."
+
+### SCENARIO-CAPSTONE-6526-INVENTORY
+
+Given the V564 roadmap declares Exp6513 through Exp6526 deliverables,
+when Exp6526 runs,
+then it emits one task-inventory row per Exp6513 through Exp6525 deliverable
+with source path, hash, status, honest verdict, verdict class, required field,
+observed value, row support, authority, and eligibility.
+
+### SCENARIO-CAPSTONE-6526-ROW-RECONSTRUCTION
+
+Given upstream artifacts contain per-unit rows and aggregate summaries,
+when Exp6526 evaluates structural headroom, learned routing, continuous
+self-learning, adaptive validation, ARC, and hardware continuity,
+then it recomputes claim rows from row containers and records whether each claim
+is eligible, blocked, null, circular, or disqualified.
+
+### SCENARIO-CAPSTONE-6526-MISSING-TASK-CLOSURE
+
+Given Exp6524 is blocked by missing outcome-bearing live receipts and Exp6525 is
+blocked by a missing newer GateMate physical receipt,
+when Exp6526 decides next states,
+then it preserves those blocked outcomes without promoting them to success.
+
+### SCENARIO-CAPSTONE-6526-GATE-SPELLING
+
+Given V564 downstream tasks use named gate fields,
+when Exp6526 audits gate contracts,
+then each gate row proves that the field spelling exists in the upstream
+artifact and in the V564 roadmap, and that no structured dependency names a
+retired task ID.
+
+### SCENARIO-CAPSTONE-6526-VERDICT-NEXT-STATE
+
+Given V564 has positive, circular-positive, partial, blocked, and infrastructure
+outcomes,
+when Exp6526 writes its capstone verdict,
+then the artifact uses `verdict_class="partial"` for the mixed milestone and
+emits one allowed next state per lineage.
+
+### SCENARIO-CAPSTONE-6526-SCHEMA
+
+Given Exp6526 writes its terminal artifact,
+when the artifact is validated,
+then all required fields, field principles, field provenance, no-LLM substrate,
+non-oracle scientific verifier flag, deterministic seed, tests-run records, and
+reproducibility checksum are present and internally consistent.
 - SCENARIO-CAPSTONE-4618: The artifact `results/experiment_4618_levelup_selfplay.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `solve_provenance`, `offline_reproduced`, `reproduced_levels`, `target_game`, `verifier_checkpoint_updated`, `registry_updated`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also include `spec_refs`, `standing_loop_result_path`, `reproduction_gate`, `solution_labels`, `dead_ends_recorded`, `target_selection`, `verifier_delta`, `states_expanded`, and registry total before/after fields. A success verdict requires `offline_reproduced=true`, `reproduced_levels >= 1` for newly banked levels beyond the prior registry depth, a non-null verifier checkpoint path, a registry update, and a content-addressed replay checksum. If no next level reproduces, the artifact must report `complete: <game>_delta_identified_no_bank` and record the stalled approach without incrementing the bank count.
 - SCENARIO-CAPSTONE-4618-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank)."; `inference_substrate` = "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged."; `solve_provenance` = "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game."; `offline_reproduced` = "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."; `reproduced_levels` = "the integer new-level count banked this task (>=1 satisfies the level-up guarantee)."; `target_game` = "the rotated game attempted -- traceable to the rotation discipline (a clean-nav game not deepened in .421-.425, not dc22/ka59)."; `verifier_checkpoint_updated` = "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."; `registry_updated` = "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."; `random_seed` = "determinism precondition for reproducibility."; `reproducibility_checksum` = "catches silent drift on replay."; `preconditions_checked` = "records resources verified; pre-empts missing-resource fabrication."
 - REQ-CAPSTONE-4607: The operator-resubmit package refresh workflow SHALL rebuild the ARC-AGI-3 live-submit package from the current `ops/arc_solve_registry.yaml`, using `results/experiment_4595_refresh_submission_package.json` and `results/experiment_4595_submission_package_operator_resubmit.json` as the .424 A4 baseline, and SHALL fold in this sprint's newly offline-reproduced banks from Exp4606 plus any Exp4604/Exp4605 newly reproduced level or variant solve only when the claimed game depth is present in the registry and has a replayable trajectory or env-adaptive resolver. The workflow SHALL verify offline arcade and registry-load preconditions before packaging, SHALL record claimed-vs-offline caps for every game, SHALL extend env-adaptive recovery through the persisted `primitive_env_adaptive_resolve_operator` pattern for any newly version-drifted game, SHALL keep submission operator-only with no online submit, SHALL not modify `scripts/research_conductor.py`, and SHALL write `results/experiment_4607_refresh_submission_package.json`.
