@@ -4138,3 +4138,118 @@ records, and reproducibility checksum are present and internally consistent.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-6501 | Planned (`python/carnot/experiment_6501_v560_capstone.py`, `results/experiment_6501_v560_capstone.json`) | Planned (`tests/python/test_experiment_6501_v560_capstone.py`) |
+
+- REQ-CAPSTONE-6560: The V567 independent capstone workflow SHALL read the
+  active V567 roadmap, Exp6548 through Exp6559 artifacts present on disk, the
+  current adversarial verifier, row-consistency lint, exclusion-manifest lint,
+  publication gate, ARC lints, relevant specs, architecture, PRD, north-star,
+  and protected-file hashes. It SHALL not rerun model inference, redefine the
+  stable G1-G4 publication gate, modify `research-roadmap.yaml`, or modify
+  `scripts/research_conductor.py`. It SHALL write
+  `results/experiment_6560_v567_independent_capstone.json` atomically with
+  `inference_substrate=aggregation_from_upstream_artifacts` and
+  `verifier_is_oracle=false`.
+- The workflow SHALL emit one inventory and eligibility row for every expected
+  Exp6548 through Exp6559 deliverable. Each row SHALL record path existence,
+  SHA-256, upstream status, upstream verdict class, live verifier status,
+  row-lint status, required field presence, and one closed verdict class from
+  `positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+  `partial`. Missing artifacts SHALL remain missing-input dispositions and
+  SHALL NOT be converted into null science.
+- The workflow SHALL independently recompute disabled adapter identity,
+  Python/Rust parity, fallback reachability, rollback, exact output equality,
+  continuous-learning current value, retained-family value, future support,
+  unsafe actions, restart, rollback, constraint phase curves, intervention
+  effects, harmful interventions, charged cost, ARC receipt reachability, and
+  GateMate command count from emitted rows and cited source hashes. A
+  `verifier_is_oracle=true` comparison, failed self-reported acceptance gate,
+  or production path that changes exact accepted outputs SHALL NOT receive a
+  positive disposition.
+- The workflow SHALL emit an adoption matrix for production adapter state,
+  Rust/PyO3 state, reversible-memory controller, CSL policy,
+  constraint-saturation policy, ARC supervisor selection, and GateMate hardware
+  using only `enabled`, `default-off`, `experiment-only`, `blocked`, `retired`,
+  or `rejected`. Each adoption row SHALL cite the exact upstream rows, hashes,
+  and reducer fields that support the state.
+- The workflow SHALL include the required fields `status`, `honest_verdict`,
+  `verdict_class`, `expected_and_observed_task_inventory`,
+  `artifact_eligibility_rows`, `independent_production_integration_rows`,
+  `independent_csl_rows`, `independent_constraint_saturation_rows`,
+  `arc_generalization_disposition`, `hardware_continuity_disposition`,
+  `closed_verdict_class_rows`, `claim_and_adoption_matrix`,
+  `publication_gate_g1_g4`, `unmet_gates`,
+  `document_reconciliation_receipts`, `v568_handoff`,
+  `v567_capstone_ready_score`, `per_unit_rows`,
+  `aggregate_row_recomputation`, `gate_check_summary`,
+  `preconditions_checked`, `protected_files_unchanged`,
+  `cited_upstream_artifacts`, `inference_substrate`, `verifier_is_oracle`,
+  `field_provenance`, `duration_s`, `tests_run`, and
+  `reproducibility_checksum`, each with a field principle and provenance.
+- Field principles SHALL be:
+  - `status`: "A terminal capstone state distinguishes complete adjudication from partial aggregation."
+  - `honest_verdict`: "The verdict must state production, CSL, saturation, ARC, hardware, and publication dispositions with a terminal prefix."
+  - `verdict_class`: "A closed class prevents mixed or blocked milestone evidence from becoming positive."
+  - `expected_and_observed_task_inventory`: "Every planned task needs a terminal artifact or an explicit missing-input disposition."
+  - `artifact_eligibility_rows`: "One row per artifact preserves hashes, flags, gates, and evidence eligibility."
+  - `independent_production_integration_rows`: "Disabled identity, parity, fallback, rollback, and exact equality must be recomputed independently."
+  - `independent_csl_rows`: "Current value, retention, future support, safety, dose, restart, and rollback must derive from rows."
+  - `independent_constraint_saturation_rows`: "Phase curves, paired interventions, harms, releases, and costs must be independently recomputed."
+  - `arc_generalization_disposition`: "ARC credit is limited to shared live receipt reachability and supported supervisor selection, not solves."
+  - `hardware_continuity_disposition`: "GateMate credit is limited to zero-command compliance or one authenticated action."
+  - `closed_verdict_class_rows`: "The downstream record must carry positive, circular_positive, null, blocked, disqualified, or partial without prose inference."
+  - `claim_and_adoption_matrix`: "Each mechanism needs a bounded production state with exact supporting evidence."
+  - `publication_gate_g1_g4`: "The stable publication gate prevents milestone-local blocker redefinition."
+  - `unmet_gates`: "Open publication requirements must remain explicit."
+  - `document_reconciliation_receipts`: "Specs, architecture, traceability, status, and changelog must match shipped code and evidence."
+  - `v568_handoff`: "The next planner needs clean assets, retired directions, blockers, and remaining PRD gaps."
+  - `v567_capstone_ready_score`: "One binary field records complete independent adjudication, not scientific positivity."
+  - `per_unit_rows`: "Every artifact, lane, arm, model, and disposition used by a headline must remain recheckable."
+  - `aggregate_row_recomputation`: "All milestone summaries must derive from emitted rows and cited hashes."
+  - `gate_check_summary`: "A blocked capstone must name each missing or failed check and observed value."
+  - `preconditions_checked`: "Artifact, receipt, verifier, resource, and document checks separate a block from science."
+  - `protected_files_unchanged`: "The capstone must preserve the active roadmap and conductor."
+  - `cited_upstream_artifacts`: "Every imported number needs experiment ID, field, path, and SHA256."
+  - `inference_substrate`: "The capstone aggregates and replays stored evidence; it performs no new model inference."
+  - `verifier_is_oracle`: "The capstone audit checks claims but does not create an oracle-distinct verifier result."
+  - `field_provenance`: "Every adoption and headline field must point to rows, receipts, reducers, and source hashes."
+  - `duration_s`: "Monotonic wall time exposes skipped artifact, verifier, or reconciliation work."
+  - `tests_run`: "Named lint, test, gate, and E2E receipts show independent adjudication executed."
+  - `reproducibility_checksum`: "A final content hash protects the milestone determination trail."
+- SCENARIO-CAPSTONE-6560-INVENTORY: Given the repository state on planning
+  date 20260823, when the workflow runs, then it SHALL emit one expected task
+  row for every Exp6548 through Exp6559 task, hash every present artifact, name
+  every missing or blocked prerequisite, and preserve conductor pre-gate blocks
+  as blocked evidence rather than scientific nulls.
+- SCENARIO-CAPSTONE-6560-RECOMPUTE: Given upstream rows and terminal artifacts,
+  when the workflow computes production, continuous-learning, saturation, ARC,
+  and hardware headlines, then each headline SHALL be derived from per-unit rows
+  or explicit blocked/null receipts and SHALL cite experiment id, artifact
+  field, path, and SHA-256 for every imported number.
+- SCENARIO-CAPSTONE-6560-CLOSED-CLASSES: Given a positive-looking upstream
+  claim with verifier circularity, failed acceptance gate, changed exact
+  accepted outputs, missing required rows, or live CRITICAL verifier status,
+  when the workflow classifies that evidence, then it SHALL emit
+  `circular_positive`, `blocked`, `disqualified`, or `partial` instead of
+  `positive`.
+- SCENARIO-CAPSTONE-6560-ADOPTION: Given the independent recomputation rows,
+  when the workflow writes adoption decisions, then each mechanism SHALL receive
+  exactly one bounded state and exact evidence, with production-changing paths
+  remaining default-off unless independent exact equality and rollback pass.
+- SCENARIO-CAPSTONE-6560-PUBLICATION-HANDOFF: Given the stable publication
+  gate, when the workflow runs, then it SHALL execute
+  `scripts/publication_gate.py --json`, preserve the independent-reproducer
+  gate state as an unmet gate when false, and write a V568 handoff with three
+  largest PRD gaps, retired or excluded directions, clean reusable assets,
+  exact blockers, and one safe next experiment without creating or activating a
+  new roadmap.
+- SCENARIO-CAPSTONE-6560-ATOMIC: Given the capstone rows, checks, field
+  principles, and provenance, when the workflow writes the artifact, then the
+  final JSON SHALL validate its required field set, protected-file hashes,
+  checksum, terminal-prefix honest verdict, `verdict_class=null` for complete
+  mixed adjudication, and atomic output path.
+
+## Implementation Status (REQ-CAPSTONE-6560)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-6560 | Planned (`python/carnot/experiment_6560_v567_independent_capstone.py`, `results/experiment_6560_v567_independent_capstone.json`) | Planned (`tests/python/test_experiment_6560_v567_independent_capstone.py`) |
