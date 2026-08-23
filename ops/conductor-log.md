@@ -16357,3 +16357,4 @@ code |
 | 2026-08-23 20:04 UTC | Activation replan 1/2: 2026.08.568 | OK | refused roadmap quarantined to roadmap-2026.08.568-refusal1.yaml; replanning wit |
 | 2026-08-23 20:10 UTC | Plan milestone 2026.08.568 | OK | 4 tasks proposed |
 | 2026-08-23 20:12 UTC | Milestone 2026.08.568 activated | OK | 4 tasks queued |
+| 2026-08-23 20:33 UTC | V568 evidence eligibility, exclusion, model, and g | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
