@@ -3660,7 +3660,7 @@ class CodexProposer:
     ) -> tuple[bool, str]:
         _guard_engine_write(E3_DIR / game)
         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
-        return _codex(
+        ok, tail = _codex(
             induce_prompt(
                 game,
                 trans,
@@ -3672,9 +3672,17 @@ class CodexProposer:
             ),
             self.timeout,
         )
+        if ok:
+            # REQ-ARC-WMTE-6690: codex wrote the file out-of-band; archive it post-hoc.
+            self.last_attempt_archive = _archive_codex_engine(game)
+        return ok, tail
 
     def refactor(self, game: str, vr: VerifyResult) -> tuple[bool, str]:
-        return _codex(refactor_prompt(game, vr), self.timeout)
+        ok, tail = _codex(refactor_prompt(game, vr), self.timeout)
+        if ok:
+            # REQ-ARC-WMTE-6690: same post-hoc archive as induce.
+            self.last_attempt_archive = _archive_codex_engine(game)
+        return ok, tail
 
 
 # ==============================================================================================
@@ -7979,6 +7987,10 @@ class LocalGGUFProposer:
         )
         if ok:
             (E3_DIR / game / "world_model.py").write_text(code)
+            # REQ-ARC-WMTE-6690: retain this attempt; the canonical write above is unchanged.
+            self.last_attempt_archive = _archive_engine_attempt(
+                game, code, writer="gen_to_file", model=str(self.repo_substr)
+            )
             return True, "local gguf (GPU server) wrote world_model.py"
         return False, code
 
@@ -7991,6 +8003,10 @@ class LocalGGUFProposer:
         _guard_engine_write(E3_DIR / game)
         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
         (E3_DIR / game / "world_model.py").write_text(code)
+        # REQ-ARC-WMTE-6690: retain this attempt; the canonical write above is unchanged.
+        self.last_attempt_archive = _archive_engine_attempt(
+            game, code, writer="write_world_model", model=str(self.repo_substr), note=note
+        )
         msg = "local gguf (GPU server) wrote world_model.py"
         return True, (f"{msg} ({note})" if note else msg)
 

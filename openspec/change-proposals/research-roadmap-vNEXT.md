@@ -334,6 +334,9 @@ with identical spelling in its upstream task's required artifact fields.
   It performs a new independent replay and no new generation.
 - Exp6563 and Exp6565 cite the null Exp6551 production audit. They use direct
   workload receipts and conjunctive promotion gates.
+- Exp6564 cites the positive Exp6545 router comparison. It does not repeat
+  router learning. It measures the later production ABI through scalar and
+  batched Rust/PyO3 paths against Python and NFR01.
 - Exp6566 and Exp6568 cite blocked Exp6553. Actual sequential execution replaces
   its impossible capacity threshold.
 - Exp6568 also cites retired Exp5709 and Exp5773. A clean executable stream and
