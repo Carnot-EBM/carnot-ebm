@@ -2999,6 +2999,152 @@ with a `complete_` or `blocked_` prefix.
 |---|---|---|
 | REQ-BENCH-6513 | Planned (`python/carnot/experiment_6513_v564_terminal_handoff_contract.py`, `results/experiment_6513_v564_terminal_handoff_contract.json`) | Planned (`tests/python/test_experiment_6513_v564_terminal_handoff_contract.py`) |
 
+### REQ-BENCH-6514: Atomic Shard Artifact Transaction SHALL Separate Resumable Rows From Terminal Artifacts
+
+Carnot SHALL provide a reusable helper at
+`python/carnot/atomic_shard_transaction.py` and an Exp6514 contract at
+`python/carnot/experiment_6514_atomic_shard_artifact_transaction.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6514_atomic_shard_artifact_transaction --date 20260822`
+SHALL write
+`results/experiment_6514_atomic_shard_artifact_transaction.json`.
+
+The transaction helper SHALL support row-producing experiments that generate
+long data streams. It SHALL write resumable unit rows as content-addressed
+shards outside the conductor-visible final artifact. It SHALL record a planned
+unit journal before terminal rows are finalized. It SHALL compute SHA-256
+hashes for shard bytes and journal records. It SHALL verify a shard before
+reuse, quarantine corrupt shard bytes, and reject a duplicate unit ID if a
+verified terminal record already binds that ID to different content.
+
+The helper SHALL resume only from verified journal records and verified shard
+bytes. A planned unit SHALL count as terminal only when the journal has a
+valid terminal disposition and its referenced content-addressed shard verifies.
+Finalization SHALL fail closed while any planned unit is missing a terminal
+disposition. Finalization SHALL write a complete temporary JSON artifact,
+fsync the file, fsync the parent directory where supported, then atomically
+replace the final path. A successful final path SHALL never contain a
+bootstrap, running, partial, or incomplete status.
+
+The helper SHALL refuse concurrent writers with a lock file. It SHALL recover
+from a stale lock when the recorded process is gone and the lock age exceeds
+the configured stale threshold. It SHALL check available disk space before
+large writes and raise a closed insufficient-disk error before mutating the
+final artifact when the precondition fails.
+
+Exp6514 SHALL exercise crash injection before shard write, after shard write,
+during journal update, before final replace, and after final replace. It SHALL
+prove verified resume after each supported crash point. It SHALL test corrupt
+shard quarantine, stale lock recovery, concurrent-writer refusal, missing unit
+refusal, duplicate unit refusal, and insufficient-disk refusal.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`transaction_schema`, `filesystem_capability_receipt`,
+`crash_injection_rows`, `recovery_rows`, `shard_integrity_rows`,
+`concurrency_attack_rows`, `terminal_write_receipt`,
+`atomic_artifact_contract_ready_score`, `gate_check_summary`,
+`per_unit_rows`, `aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`. `inference_substrate` SHALL be
+`local_filesystem_transaction_and_crash_injection_no_llm`.
+`verifier_is_oracle` SHALL be true only for local transaction invariants.
+`verdict_class` SHALL be `null`, `partial`, `blocked`, or `disqualified`;
+it SHALL NOT be `positive`.
+
+`atomic_artifact_contract_ready_score` SHALL equal `1.0` only when every crash
+injection row, recovery row, shard integrity row, concurrency attack row, and
+terminal write gate passes on the supported local filesystem. A blocked or
+partial result SHALL preserve a closed terminal failure artifact with
+diagnostics in `gate_check_summary`.
+
+Field principles SHALL be:
+
+- `status`: "A terminal status proves the conductor sees a closed artifact, not a bootstrap."
+- `honest_verdict`: "The verdict states whether the filesystem transaction contract is complete or bounded."
+- `verdict_class`: "The class is an infrastructure result and must never be positive."
+- `transaction_schema`: "The schema names the reusable helper and journal format."
+- `filesystem_capability_receipt`: "Filesystem, permissions, disk, process, and fsync receipts bound the local preconditions."
+- `crash_injection_rows`: "Each injected crash records where the process stopped and what survived."
+- `recovery_rows`: "Recovery rows prove resume uses only verified shards and journal records."
+- `shard_integrity_rows`: "Shard rows bind unit IDs to content hashes and quarantine corrupt bytes."
+- `concurrency_attack_rows`: "Concurrency rows prove live locks refuse writers and stale locks recover."
+- `terminal_write_receipt`: "The receipt proves complete-temp fsync and atomic replacement reached the final path."
+- `atomic_artifact_contract_ready_score`: "The score opens only when every local transaction invariant passes."
+- `gate_check_summary`: "Each failed gate records the expected and observed value."
+- `per_unit_rows`: "Per-unit rows expose planned, terminal, crash, recovery, integrity, and concurrency evidence."
+- `aggregate_row_recomputation`: "The aggregate recomputes readiness from rows."
+- `preconditions_checked`: "Preconditions record git state, paths, disk, process, and protected hashes."
+- `protected_files_unchanged`: "The conductor and historical inputs must remain byte-identical."
+- `inference_substrate`: "The declaration prevents a filesystem contract from being read as model inference."
+- `verifier_is_oracle`: "Oracle scope is limited to transaction invariants."
+- `field_principles`: "Principles preserve why each artifact field exists."
+- `field_provenance`: "Provenance maps each field to helper rows, local receipts, or deterministic reducers."
+- `random_seed`: "A fixed seed makes crash and attack ordering reproducible."
+- `duration_s`: "Measured duration supports authenticity checks."
+- `tests_run`: "Command receipts show which validation actually ran."
+- `reproducibility_checksum`: "A checksum detects later drift in rows, gates, or the terminal artifact."
+
+#### SCENARIO-BENCH-6514-SHARD-IDENTITY: Unit Shards Are Content Addressed
+
+**Given** planned units and terminal payloads
+**When** the transaction writes shards
+**Then** shard filenames, shard receipts, and terminal journal records use
+SHA-256 content hashes, verified identical rewrites are idempotent, and a
+duplicate unit ID with different verified content is rejected.
+
+#### SCENARIO-BENCH-6514-PLANNED-TERMINAL: Planned Units Must All Close
+
+**Given** a planned-unit journal with at least one missing terminal unit
+**When** the producer tries to finalize the artifact
+**Then** finalization fails closed before replacing the final path and names
+the missing unit.
+
+#### SCENARIO-BENCH-6514-RESUME-CRASHES: Crash Points Resume Safely
+
+**Given** crash injection before shard write, after shard write, during journal
+update, before replace, and after replace
+**When** the transaction resumes
+**Then** verified shards are reused, orphan shards do not count as terminal
+without a journal record, and an after-replace crash leaves a complete
+terminal final artifact.
+
+#### SCENARIO-BENCH-6514-CORRUPT-QUARANTINE: Corrupt Shards Do Not Resume
+
+**Given** a terminal journal record references a shard whose bytes no longer
+match its hash
+**When** the transaction resumes
+**Then** the corrupt bytes move to quarantine, the unit is no longer terminal,
+and the producer must rewrite a verified shard before finalization.
+
+#### SCENARIO-BENCH-6514-ATOMIC-REPLACE: Final Artifact Replaces Atomically
+
+**Given** all planned units have terminal dispositions
+**When** finalization writes the terminal JSON
+**Then** it fsyncs the complete temporary file, fsyncs the directory where
+supported, atomically replaces the final path, and rejects bootstrap or running
+success payloads.
+
+#### SCENARIO-BENCH-6514-CONCURRENCY: Live Writers Are Refused
+
+**Given** one process holds the transaction lock
+**When** another writer opens the same transaction
+**Then** the second writer is refused, while a stale lock with a dead process
+is removed and recorded as recovered.
+
+#### SCENARIO-BENCH-6514-CLOSED-FAILURE: Failures Write Or Preserve Closed Artifacts
+
+**Given** disk, corruption, duplicate, or missing-unit preconditions fail
+**When** the producer closes the run
+**Then** it writes or preserves a terminal blocked or disqualified artifact
+with diagnostics and never leaves a running artifact at the final path.
+
+## Implementation Status (REQ-BENCH-6514)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6514 | Planned (`python/carnot/atomic_shard_transaction.py`, `python/carnot/experiment_6514_atomic_shard_artifact_transaction.py`, `results/experiment_6514_atomic_shard_artifact_transaction.json`) | Planned (`tests/python/test_atomic_shard_transaction.py`, `tests/python/test_experiment_6514_atomic_shard_artifact_transaction.py`) |
+
 ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
 
 Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
