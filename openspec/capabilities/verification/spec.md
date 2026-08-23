@@ -20218,6 +20218,12 @@ environment stepping without LLM invocation with a 0.01s duration floor, or
 `live_llm_inference` for real LLM-induction solves with a 60s duration floor.
 The helper SHALL also require a terminal-prefixed `honest_verdict` using one of
 `complete:`, `success:`, `passed:`, or `shipped:`.
+For ARC generalization tasks that replay live trajectory-supervisor receipts
+without claiming a solve, the helper SHALL also accept
+`live_arc_trajectory_supervisor_receipt_replay_no_llm` with a 0.01s duration
+floor. Blocked no-solve artifacts are terminal governance records, so
+`blocked:` and `blocked_` SHALL be accepted terminal verdict prefixes while
+`partial:` remains non-terminal for ARC solve/scoring lint purposes.
 
 The lint SHALL scan candidate `results/experiment_*.json` artifacts whose path
 or artifact metadata marks them as ARC, solve, scoring, or config-rule work, and
@@ -20244,8 +20250,9 @@ Given an ARC config-rule solve artifact that completes offline in under 60
 seconds, when the helper builds or validates it, then it accepts only
 `inference_substrate=aggregation_from_upstream_artifacts`,
 `offline_arcade_live_agent_runtime_self_discovery_no_llm`, or
-`verifier_ensemble_against_cached_candidates` with the appropriate duration
-floor and a terminal-prefixed verdict. Given the lint scans ARC solve/config
+`verifier_ensemble_against_cached_candidates`, or
+`live_arc_trajectory_supervisor_receipt_replay_no_llm` with the appropriate
+duration floor and a terminal-prefixed verdict. Given the lint scans ARC solve/config
 artifacts under `results`, when an artifact lacks `inference_substrate` or emits
 `honest_verdict=partial: ...`, then it reports a failing issue. Given an artifact
 declares `live_llm_inference`, when that artifact path is not allow-listed, then

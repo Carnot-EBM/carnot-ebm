@@ -26730,3 +26730,128 @@ move on a window boundary. The default-OFF path stays byte-identical
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6640 | `python/carnot/agentic/arc_trajectory_supervisor.py` (outcome fields on redirect append, level-up crediting in `observe`, `arm_outcomes` + `stagnations_unredirected` in `receipt`); `scripts/arc_scored_path_lever_harness.py` (`supervisor_row_field` helper, `row["trajectory_supervisor"]` on success + crash paths). | `tests/python/test_arc_trajectory_supervisor.py` (SCENARIO-6640-1..4, 6640-6); `tests/python/test_arc_scored_path_lever_harness.py` (SCENARIO-6640-5: helper behaviour on stub policies + both-path source pins). |
+
+### REQ-ARC-WMTE-6650: Redirect-Ledger Replay Shall Refine Only Supervisor Arm Selection
+
+Origin: Exp6524 on the 2026-08-23 planning date, the first Generalization-
+Testing Floor task after REQ-ARC-WMTE-6640 made trajectory-supervisor outcomes
+measurable. The task is not a game solve and is not allowed to read game source,
+offline adapters, outer-loop solver traces, or hand-built per-game evidence.
+It is a reducer over live-path receipts emitted by the scored
+`E3AgentPolicy` / `make_carnot_agent` route.
+
+`python/carnot/experiment_6524_arc_supervisor_redirect_generalization.py` SHALL:
+
+1. Read only live-path row artifacts whose rows carry
+   `trajectory_supervisor` receipts from the scored path. A row is
+   outcome-bearing only when the receipt is enabled and carries
+   `redirects`, `arm_outcomes`, and `stagnations_unredirected`. Artifacts
+   from offline adapters, outer-loop solvers, source-reading probes, or
+   unrelated `arm_outcomes` tables SHALL be rejected as evidence.
+2. Emit one `redirect_outcome_rows` row per redirect with game, row receipt
+   ID, arm, fired, resolved_by_levelup, actions_to_levelup, later progress,
+   stagnations_unredirected, and provenance. Duplicate receipt IDs SHALL be
+   ignored after the first copy and counted in the provenance audit.
+3. Recompute `per_arm_rows` from the redirect rows and not from the artifact
+   summary: fired, helped, failure, success rate, actions-to-progress values,
+   and tie/support status for every curated arm in `ARM_ORDER`.
+4. Freeze a support-and-tie contract before any table change. An arm may be
+   lowered or retired only with repeated no-help evidence. An arm may be
+   raised only with repeated helped evidence. A new curated arm may be
+   specified only when every existing arm was exhausted and stagnation
+   continued. The module SHALL NOT generate an arm implementation.
+5. If no arm fired, emit `supervisor_refinement_status:
+   no_firings_nothing_to_refine` and leave the arm table unchanged. If no
+   outcome-bearing live receipt exists, emit a blocked no-change artifact
+   rather than inferring zeros from disabled or absent receipts.
+6. Record path hashes, canonical entrypoint identity, receipt schema, row
+   counts, resource facts, protected-file hashes, rollback receipt, attack
+   matrix, and the fixed substrate
+   `live_arc_trajectory_supervisor_receipt_replay_no_llm`. The artifact SHALL
+   set `verifier_is_oracle` to bare `false` and SHALL NOT use
+   `solve_provenance` to imply game or level credit.
+
+Deliverable: `results/experiment_6524_arc_supervisor_redirect_generalization.json`.
+
+Required artifact fields and principles:
+
+- `status`: Records the terminal redirect-ledger replay state.
+- `honest_verdict`: States the no-solve supervisor-selection conclusion.
+- `verdict_class`: Uses null for no-change, partial for supported selection, blocked for missing outcome receipts, or disqualified for off-path evidence.
+- `live_path_receipts`: Lists each accepted live-path trajectory-supervisor row with path hash, receipt ID, schema, and outcome-bearing status.
+- `canonical_entrypoint_receipt`: Pins the scored make_carnot_agent to E3AgentPolicy entrypoint identity and source hash.
+- `redirect_outcome_rows`: Stores one row per unique redirect with outcome fields and provenance.
+- `per_arm_rows`: Recomputes fired, helped, failure, and actions-to-progress distributions from redirect rows.
+- `provenance_audit`: Records accepted, duplicate, disabled, blocked, and rejected evidence paths.
+- `support_and_tie_contract`: Freezes support floors, tie rules, and allowed curated-arm actions before applying any recommendation.
+- `supervisor_refinement_status`: Names the exact no-change, blocked, or supported selection-refinement result.
+- `arm_table_before_after`: Shows the curated arm table before and after recommendation without editing live code.
+- `no_firings_receipt`: Explains no-firing or missing-outcome closure without manufacturing zeros.
+- `rollback_receipt`: Records the exact rollback action and checksum for supported or no-op changes.
+- `generalization_attack_matrix`: Attacks leakage, tuning, missing failures, duplicates, post-hoc windows, inflation, source-reading, offline BFS, and solve-credit claims.
+- `arc_generalization_slot_complete_score`: Scores the ARC generalization slot as complete only for supported or honest no-firing closure.
+- `gate_check_summary`: Names every replay, provenance, support, schema, and no-solve gate.
+- `per_unit_rows`: Flattens receipt, redirect, per-arm, and attack rows for independent recomputation.
+- `aggregate_row_recomputation`: Rebuilds verdict inputs from rows rather than trusting summaries.
+- `preconditions_checked`: Records planning date, artifact paths and hashes, resources, receipt schema, row counts, and protected hashes.
+- `protected_files_unchanged`: Proves source, spec, ops, and conductor files stayed byte-identical during the run.
+- `inference_substrate`: Declares live ARC trajectory-supervisor receipt replay with no LLM.
+- `verifier_is_oracle`: False because receipt replay is evidence reduction, not oracle verification.
+- `field_principles`: Explains why each required field exists.
+- `field_provenance`: Maps each field to specs, inputs, reducers, tests, and hashes.
+- `random_seed`: Pins deterministic tie ordering and replay checks.
+- `duration_s`: Records measured wall time.
+- `tests_run`: Records validation, coverage, lint, E2E, adversarial, and status commands.
+- `reproducibility_checksum`: Detects drift in inputs, rows, reductions, attacks, gates, tests, and hashes.
+
+#### SCENARIO-ARC-WMTE-6650-1 (outcome-ledger replay)
+
+- GIVEN live-path rows with enabled supervisor receipts and redirects
+- WHEN Exp6524 replays them
+- THEN the artifact emits exactly one redirect row per unique redirect receipt
+  and recomputes per-arm fired, helped, failures, and actions-to-progress from
+  those rows.
+
+#### SCENARIO-ARC-WMTE-6650-2 (generalization-only curated-arm selection)
+
+- GIVEN the precommitted support-and-tie contract
+- WHEN repeated helped or repeated no-help evidence crosses a support floor
+- THEN the artifact may record only a selection-table priority change or
+  retirement recommendation over curated arms, never an implementation or
+  solve claim.
+
+#### SCENARIO-ARC-WMTE-6650-3 (no-firing or blocked closure)
+
+- GIVEN no fired redirect rows
+- THEN the artifact reports `no_firings_nothing_to_refine` and keeps the arm
+  table unchanged.
+- GIVEN live rows exist but none are outcome-bearing
+- THEN the artifact is `blocked` and still keeps the arm table unchanged.
+
+#### SCENARIO-ARC-WMTE-6650-4 (live provenance and off-path rejection)
+
+- GIVEN artifacts with unrelated `arm_outcomes`, offline-adapter rows,
+  source-reading evidence, or outer-loop solver evidence
+- THEN Exp6524 excludes them from `live_path_receipts` and records the
+  rejection reason in `provenance_audit`.
+
+#### SCENARIO-ARC-WMTE-6650-5 (rollback)
+
+- GIVEN any supported refinement
+- THEN the artifact records the before table, after table, exact rollback
+  action, and checksum. Given a blocked or no-firing result, rollback is a
+  no-op with matching before/after checksums.
+
+#### SCENARIO-ARC-WMTE-6650-6 (attack matrix and schema)
+
+- GIVEN solved-game leakage, per-game tuning, missing failures, duplicate
+  receipts, post-hoc windows, level-count inflation, source-reading, offline
+  BFS, or solve-credit claims
+- THEN the artifact's attack matrix fails those shortcuts closed and the
+  required fields are present with principles, provenance, tests, and checksum.
+
+## Implementation Status (REQ-ARC-WMTE-6650)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6650 | `python/carnot/experiment_6524_arc_supervisor_redirect_generalization.py` (live receipt discovery, outcome replay, support contract, blocked/no-firing closure, rollback and attack receipts, CLI writer/validator). | `tests/python/test_experiment_6524_arc_supervisor_redirect_generalization.py` (SCENARIO-6650-1..6). |
