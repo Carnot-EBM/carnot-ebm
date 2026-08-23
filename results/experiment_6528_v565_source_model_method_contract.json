@@ -1,0 +1,2345 @@
+{
+  "status": "blocked_v565_source_model_method_contract",
+  "honest_verdict": "blocked_v565_source_model_method_contract: source or model-cache gates failed",
+  "verdict_class": "partial",
+  "query_receipts": [
+    {
+      "receipt_id": "network_probe_arxiv_drift_bench",
+      "channel": "network_probe",
+      "query": "GET https://arxiv.org/abs/2605.23940",
+      "url": "https://arxiv.org/abs/2605.23940",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "low_concurrency": true,
+      "access_outcome": {
+        "network_required": true,
+        "network_used": true,
+        "network_available": true,
+        "checked_at_utc": "2026-08-23T06:32:05Z",
+        "probe_url": "https://arxiv.org/abs/2605.23940",
+        "probe_http_state": "http_200",
+        "error": null
+      }
+    },
+    {
+      "receipt_id": "sweep_clusters_all_low_concurrency",
+      "channel": "sweep_clusters",
+      "query": "scripts/sweep_clusters.py all --max-results 8",
+      "url": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/sweep_clusters.py all --max-results 8",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "low_concurrency": true,
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/sweep_clusters.py",
+        "all",
+        "--max-results",
+        "8"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "sha256:f8cee062a7bd1e13396bcca9d7e4f3f7f5d7b73bd548e3182bf5e16dff7c2cb8",
+      "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+      "candidate_ids": [],
+      "observed_error": null
+    },
+    {
+      "receipt_id": "sweep_semscholar_v565_queries",
+      "channel": "sweep_semscholar",
+      "query": "DRIFT-Bench Memoir verifier-induced support reshaping Distributional EBMs Solver-Hard qwen3_xml",
+      "url": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/sweep_semscholar.py DRIFT-Bench Memoir verifier-induced support reshaping Distributional EBMs Solver-Hard qwen3_xml --limit 8",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "low_concurrency": true,
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/sweep_semscholar.py",
+        "DRIFT-Bench Memoir verifier-induced support reshaping Distributional EBMs Solver-Hard qwen3_xml",
+        "--limit",
+        "8"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+      "stderr_sha256": "sha256:c8b8cae92ebfffa97b6dccca516ba556e871dd0b9483177b718c66d44ead3a24",
+      "candidate_ids": [],
+      "observed_error": null
+    },
+    {
+      "receipt_id": "arxiv_primary_sequential_check",
+      "channel": "arxiv_primary",
+      "query": "direct arXiv primary pages for five adopted V565 papers",
+      "url": "source_manifest_or_cache_preflight",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "low_concurrency": true,
+      "access_outcome": "covered_by_source_or_cache_rows"
+    },
+    {
+      "receipt_id": "openreview_sequential_check",
+      "channel": "openreview",
+      "query": "OpenReview QvsDTpf4yF and gjiCml2CNG forum checks",
+      "url": "source_manifest_or_cache_preflight",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "low_concurrency": true,
+      "access_outcome": "covered_by_source_or_cache_rows"
+    },
+    {
+      "receipt_id": "semantic_scholar_sequential_check",
+      "channel": "semantic_scholar",
+      "query": "Semantic Scholar EBT 2507.02092 and ARM-EBM 2512.15605 citation records",
+      "url": "source_manifest_or_cache_preflight",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "low_concurrency": true,
+      "access_outcome": "covered_by_source_or_cache_rows"
+    },
+    {
+      "receipt_id": "huggingface_papers_sequential_check",
+      "channel": "huggingface_papers",
+      "query": "Hugging Face Papers verifier-induced support reshaping page",
+      "url": "source_manifest_or_cache_preflight",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "low_concurrency": true,
+      "access_outcome": "covered_by_source_or_cache_rows"
+    },
+    {
+      "receipt_id": "github_sequential_check",
+      "channel": "github",
+      "query": "GitHub DRIFT-Bench repository, revision, license, and schema checks",
+      "url": "source_manifest_or_cache_preflight",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "low_concurrency": true,
+      "access_outcome": "covered_by_source_or_cache_rows"
+    },
+    {
+      "receipt_id": "extropic_sequential_check",
+      "channel": "extropic",
+      "query": "Extropic first-party Z1 writing",
+      "url": "source_manifest_or_cache_preflight",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "low_concurrency": true,
+      "access_outcome": "covered_by_source_or_cache_rows"
+    },
+    {
+      "receipt_id": "logical_intelligence_sequential_check",
+      "channel": "logical_intelligence",
+      "query": "Logical Intelligence Kona first-party page",
+      "url": "source_manifest_or_cache_preflight",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "low_concurrency": true,
+      "access_outcome": "covered_by_source_or_cache_rows"
+    },
+    {
+      "receipt_id": "model_cache_preflight_sequential_check",
+      "channel": "model_cache_preflight",
+      "query": "cached_sota_pair(gpu_indices=(0, 1)) plus mandated GGUF path resolution",
+      "url": "source_manifest_or_cache_preflight",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "low_concurrency": true,
+      "access_outcome": "covered_by_source_or_cache_rows"
+    }
+  ],
+  "source_rows": [
+    {
+      "row_type": "source",
+      "source_id": "drift_bench_arxiv",
+      "source_kind": "paper",
+      "title": "[2605.23940] Residual Drift Dominates Contradiction in Multi-Turn Constraint Reasoning",
+      "stable_url": "https://arxiv.org/abs/2605.23940",
+      "retrieval_url": "https://arxiv.org/abs/2605.23940",
+      "query_channel": "arxiv_primary",
+      "arxiv_id": "2605.23940",
+      "openreview_id": null,
+      "source_date": "2026-04-28",
+      "expected_source_date": "2026-04-28",
+      "source_date_verified": true,
+      "primary_url_verified": true,
+      "retrieval_state": "available",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:05f9e538c35a53031fdef1968010f3670af3e15abac45e8ad64b88a96799a831",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "external_multi_turn_constraint_transfer_surface",
+      "method_claim": "DRIFT-Bench separates contradiction from satisfiable drift with solver-instrumented turns.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "public_repository_and_problem_json",
+      "local_applicability": "content_pinned_external_constraint_fixture",
+      "carnot_hook": "Use DRIFT-Bench as a pinned external transfer surface with local exact replay.",
+      "negative_control": "internal_carnot_generator_slice_only",
+      "downstream_field_spelling": [
+        "source_row_hash",
+        "source_problem_id",
+        "turn_index",
+        "exact_replay_status"
+      ],
+      "non_transfer_boundary": "No upstream aggregate or run database result transfers.",
+      "exact_authority_boundary": "Local Z3 replay and assignment checks own all Carnot labels.",
+      "adopted_method": true,
+      "required_primary_check": true,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "memoir",
+      "source_kind": "paper",
+      "title": "[2607.20792] Memoir: Should a Model Write to Its Memory While It Thinks?",
+      "stable_url": "https://arxiv.org/abs/2607.20792",
+      "retrieval_url": "https://arxiv.org/abs/2607.20792",
+      "query_channel": "arxiv_primary",
+      "arxiv_id": "2607.20792",
+      "openreview_id": null,
+      "source_date": "2026-07-22",
+      "expected_source_date": "2026-07-22",
+      "source_date_verified": true,
+      "primary_url_verified": true,
+      "retrieval_state": "available",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:d63f2e7a0884f5e76bc6cf0f62bb9941729db798e28a2974e4a5acbd5d1dbe48",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "query_frozen_memory_transactional_commit",
+      "method_claim": "Coupled same-query memory writes learn more slowly than a read-only pondering arm.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "public_github_claimed",
+      "local_applicability": "transactional_memory_commit_boundary",
+      "carnot_hook": "Freeze memory within a query and commit after exact outcome validation.",
+      "negative_control": "same_query_mutation_arm",
+      "downstream_field_spelling": [
+        "memory_frozen_within_query",
+        "commit_after_exact_validation"
+      ],
+      "non_transfer_boundary": "No Memoir parameter or speed result transfers to Carnot.",
+      "exact_authority_boundary": "Exact outcome validation admits or rejects memory writes.",
+      "adopted_method": true,
+      "required_primary_check": true,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "support_reshaping",
+      "source_kind": "paper",
+      "title": "[2608.00220] Verifier-Induced Support Reshaping in On-Policy Optimization",
+      "stable_url": "https://arxiv.org/abs/2608.00220",
+      "retrieval_url": "https://arxiv.org/abs/2608.00220",
+      "query_channel": "arxiv_primary",
+      "arxiv_id": "2608.00220",
+      "openreview_id": null,
+      "source_date": "2026-07-31",
+      "expected_source_date": "2026-07-31",
+      "source_date_verified": true,
+      "primary_url_verified": true,
+      "retrieval_state": "available",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:3bbdd378bdbfa9d77934af8adefac6ee1f20e85e13f301359f9f2820efadb013",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "future_support_retention_audit",
+      "method_claim": "Current pass-at-one gains can coexist with later best-at-k support loss.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "public_github_claimed",
+      "local_applicability": "future_support_and_retention_metrics",
+      "carnot_hook": "Report future exact-satisfying support and retained-family performance.",
+      "negative_control": "scratch_and_frozen_memory_arms",
+      "downstream_field_spelling": [
+        "future_exact_satisfying_support",
+        "retained_family_performance"
+      ],
+      "non_transfer_boundary": "No RLVR policy update result transfers into Carnot's exact-memory controller.",
+      "exact_authority_boundary": "Exact held-future rows decide retention and support safety.",
+      "adopted_method": true,
+      "required_primary_check": true,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "distributional_ebm",
+      "source_kind": "paper",
+      "title": "[2605.18871] Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning",
+      "stable_url": "https://arxiv.org/abs/2605.18871",
+      "retrieval_url": "https://arxiv.org/abs/2605.18871",
+      "query_channel": "arxiv_primary",
+      "arxiv_id": "2605.18871",
+      "openreview_id": null,
+      "source_date": "2026-05-15",
+      "expected_source_date": "2026-05-15",
+      "source_date_verified": true,
+      "primary_url_verified": true,
+      "retrieval_state": "available",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:75c266e8cddbaff42b39d5d95963eb7b519de36a7fa55d7f06ff50d6c99d6890",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "decomposed_energy_uncertainty_abstention",
+      "method_claim": "Analytical penalties plus learned uncertainty can route regeneration or abstention.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "paper_only_at_preflight",
+      "local_applicability": "held_calibration_and_abstention_router",
+      "carnot_hook": "Freeze calibration, uncertainty, and abstention before external held outcomes.",
+      "negative_control": "identity_shortcut_and_family_permutation_attack",
+      "downstream_field_spelling": [
+        "router_abstained",
+        "calibration_split",
+        "exact_fallback_used"
+      ],
+      "non_transfer_boundary": "No verifier accuracy, model-identity shortcut, or benchmark score transfers.",
+      "exact_authority_boundary": "Native exact fallback remains release authority.",
+      "adopted_method": true,
+      "required_primary_check": true,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "solver_hard",
+      "source_kind": "paper",
+      "title": "[2607.17047] Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM Constraint Reasoning",
+      "stable_url": "https://arxiv.org/abs/2607.17047",
+      "retrieval_url": "https://arxiv.org/abs/2607.17047",
+      "query_channel": "arxiv_primary",
+      "arxiv_id": "2607.17047",
+      "openreview_id": null,
+      "source_date": "2026-07-19",
+      "expected_source_date": "2026-07-19",
+      "source_date_verified": true,
+      "primary_url_verified": true,
+      "retrieval_state": "available",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:d5464d3eb98a2ebb3141333621f18216d9f0b8122b71c59ca3b12150b1f00d3b",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "solver_hardness_surface_decoupling",
+      "method_claim": "Solver conflict hardness did not reliably predict LLM accuracy.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "public_code_and_aggregate_data_claimed",
+      "local_applicability": "surface_hardness_stratified_embedding_diagnostic",
+      "carnot_hook": "Stratify SOTA paired embeddings by exact hardness and surface realization separately.",
+      "negative_control": "proof_preserving_surface_relabel_control",
+      "downstream_field_spelling": [
+        "solver_hardness_bin",
+        "surface_realization_id",
+        "paired_embedding_distance"
+      ],
+      "non_transfer_boundary": "No solver-hard label transfers as a model-difficulty label.",
+      "exact_authority_boundary": "Exact solver metadata is diagnostic only, not model-answer authority.",
+      "adopted_method": true,
+      "required_primary_check": true,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "openreview_dc_energy",
+      "source_kind": "openreview_forum",
+      "title": "Verifying your browser | OpenReview",
+      "stable_url": "https://openreview.net/forum?id=QvsDTpf4yF",
+      "retrieval_url": "https://openreview.net/forum?id=QvsDTpf4yF",
+      "query_channel": "openreview",
+      "arxiv_id": null,
+      "openreview_id": "QvsDTpf4yF",
+      "source_date": null,
+      "expected_source_date": "2025-09-18",
+      "source_date_verified": false,
+      "primary_url_verified": false,
+      "retrieval_state": "blocked",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:81e7d2d164ed6bbc26aaa21f645ae3680700eb8700ab9677f842d4427778b247",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "dc_energy_optimizer_control",
+      "method_claim": "DC optimization accelerates energy-based iterative reasoning with local convergence.",
+      "method_transfer_status": "future_optimizer_control",
+      "code_or_data_availability": "openreview_forum_metadata",
+      "local_applicability": "future_continuous_energy_optimizer_control",
+      "carnot_hook": "Keep as future optimizer control; do not start a new answer-generator lineage.",
+      "negative_control": "",
+      "downstream_field_spelling": [],
+      "non_transfer_boundary": "No DC optimizer performance transfers into V565 exact-router tasks.",
+      "exact_authority_boundary": "Deferred optimizer cannot enter V565 acceptance gates.",
+      "adopted_method": false,
+      "required_primary_check": true,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "openreview_linear_decision_rules",
+      "source_kind": "openreview_forum",
+      "title": "Verifying your browser | OpenReview",
+      "stable_url": "https://openreview.net/forum?id=gjiCml2CNG",
+      "retrieval_url": "https://openreview.net/forum?id=gjiCml2CNG",
+      "query_channel": "openreview",
+      "arxiv_id": null,
+      "openreview_id": "gjiCml2CNG",
+      "source_date": null,
+      "expected_source_date": "2025-09-18",
+      "source_date_verified": false,
+      "primary_url_verified": false,
+      "retrieval_state": "blocked",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:d6dad51e25b8d001f58849e283a7e9a701f6c322875b968797974996ffee58da",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "safe_network_closed_form_linear_correction",
+      "method_claim": "A safe network and closed-form correction preserve linear feasibility.",
+      "method_transfer_status": "future_architecture_control",
+      "code_or_data_availability": "openreview_forum_metadata",
+      "local_applicability": "future_architecture_safe_fallback_control",
+      "carnot_hook": "Use as architectural analogy for a separate learned fast path and exact fallback.",
+      "negative_control": "",
+      "downstream_field_spelling": [],
+      "non_transfer_boundary": "No linear feasibility guarantee transfers to discrete SAT or CSP outputs.",
+      "exact_authority_boundary": "Linear correction paper is not evidence for Carnot discrete certification.",
+      "adopted_method": false,
+      "required_primary_check": true,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "drift_bench_repo",
+      "source_kind": "repository",
+      "title": "kaons-research/drift-bench: Benchmark and evaluation code for the ICLR 2026 Workshop paper 'Residual Drift Dominates Contradiction in Multi-Turn Constraint Reasoning'. 1,020 Z3-validated multi-turn constraint problems across seating, scheduling, and logic-grid domains. \u00b7 GitHub",
+      "stable_url": "https://github.com/kaons-research/drift-bench",
+      "retrieval_url": "https://github.com/kaons-research/drift-bench",
+      "query_channel": "github",
+      "arxiv_id": null,
+      "openreview_id": null,
+      "source_date": "2026-04-13",
+      "expected_source_date": null,
+      "source_date_verified": false,
+      "primary_url_verified": false,
+      "retrieval_state": "blocked",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:39b5fc60c86ba95d735d92bcf5cc32ed14f5dc4900862d8b24254395e0cddd28",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "drift_bench_repository_provenance",
+      "method_claim": "Repository exposes DRIFT-Bench problem JSON, schema, source code, license, and warning.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "public_repository",
+      "local_applicability": "revision_license_schema_corruption_contract",
+      "carnot_hook": "Resolve immutable revision and regenerate every local result receipt.",
+      "negative_control": "",
+      "downstream_field_spelling": [],
+      "non_transfer_boundary": "No upstream SQLite database or summary table transfers.",
+      "exact_authority_boundary": "Local fixture and exact replay own downstream rows.",
+      "adopted_method": false,
+      "required_primary_check": true,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "huggingface_support_reshaping",
+      "source_kind": "secondary_index",
+      "title": "Paper page - Verifier-Induced Support Reshaping in On-Policy Optimization",
+      "stable_url": "https://huggingface.co/papers/2608.00220",
+      "retrieval_url": "https://huggingface.co/papers/2608.00220",
+      "query_channel": "huggingface_papers",
+      "arxiv_id": null,
+      "openreview_id": null,
+      "source_date": "2026-08-17",
+      "expected_source_date": null,
+      "source_date_verified": true,
+      "primary_url_verified": true,
+      "retrieval_state": "available",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:55af2a082a77544411602146dfc2d99470fd662b94d371a774d78add6527cf59",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "community_paper_discovery_context",
+      "method_claim": "Hugging Face paper page mirrors the source and links project/code pages.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "paper_index",
+      "local_applicability": "discovery_only",
+      "carnot_hook": "Use as discovery route; arXiv remains primary authority.",
+      "negative_control": "",
+      "downstream_field_spelling": [],
+      "non_transfer_boundary": "Community index metadata does not transfer as evidence.",
+      "exact_authority_boundary": "Primary arXiv page owns the method row.",
+      "adopted_method": false,
+      "required_primary_check": false,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "semantic_scholar_ebt",
+      "source_kind": "secondary_index",
+      "title": "Semantic Scholar EBT citation route for 2507.02092",
+      "stable_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092?fields=title,citationCount,citations.title,citations.externalIds,citations.year",
+      "retrieval_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092?fields=title,citationCount,citations.title,citations.externalIds,citations.year",
+      "query_channel": "semantic_scholar",
+      "arxiv_id": null,
+      "openreview_id": null,
+      "source_date": null,
+      "expected_source_date": null,
+      "source_date_verified": false,
+      "primary_url_verified": false,
+      "retrieval_state": "rate_limited",
+      "http_state": "http_429",
+      "observed_error": "HTTP Error 429: ",
+      "source_hash": "sha256:6aae57916665346699697691a1b6b8b64cdf2b58b9f37797a5e5857d6a2e739a",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "ebt_citation_trail_context",
+      "method_claim": "Dated citation route for EBT follow-on context.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "metadata_index",
+      "local_applicability": "citation_context_only",
+      "carnot_hook": "Record citation trail caveats; do not promote source by count.",
+      "negative_control": "",
+      "downstream_field_spelling": [],
+      "non_transfer_boundary": "Citation counts are dated metadata, not method evidence.",
+      "exact_authority_boundary": "Secondary metadata cannot promote a method.",
+      "adopted_method": false,
+      "required_primary_check": false,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "semantic_scholar_arm_ebm",
+      "source_kind": "secondary_index",
+      "title": "Semantic Scholar ARM-EBM citation route for 2512.15605",
+      "stable_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605?fields=title,citationCount,citations.title,citations.externalIds,citations.year",
+      "retrieval_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605?fields=title,citationCount,citations.title,citations.externalIds,citations.year",
+      "query_channel": "semantic_scholar",
+      "arxiv_id": null,
+      "openreview_id": null,
+      "source_date": null,
+      "expected_source_date": null,
+      "source_date_verified": false,
+      "primary_url_verified": false,
+      "retrieval_state": "rate_limited",
+      "http_state": "http_429",
+      "observed_error": "HTTP Error 429: ",
+      "source_hash": "sha256:e704670fde144ddbf54b35d85ef8baf5e1b1787aef776e37a53b672b54143843",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "arm_ebm_citation_trail_context",
+      "method_claim": "Dated citation route for ARM-EBM follow-on context.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "metadata_index",
+      "local_applicability": "citation_context_only",
+      "carnot_hook": "Record rate limits rather than fabricating current counts.",
+      "negative_control": "",
+      "downstream_field_spelling": [],
+      "non_transfer_boundary": "Rate-limited counts cannot be reported as current.",
+      "exact_authority_boundary": "Secondary metadata cannot promote a method.",
+      "adopted_method": false,
+      "required_primary_check": false,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "extropic_z1_status",
+      "source_kind": "product",
+      "title": "From One to One Billion: Torx, Thermalizers, and Z1 - Extropic",
+      "stable_url": "https://extropic.ai/writing/from-one-to-one-billion/",
+      "retrieval_url": "https://extropic.ai/writing/from-one-to-one-billion/",
+      "query_channel": "extropic",
+      "arxiv_id": null,
+      "openreview_id": null,
+      "source_date": null,
+      "expected_source_date": null,
+      "source_date_verified": true,
+      "primary_url_verified": true,
+      "retrieval_state": "available",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:6d34177205ae48dea724073b6283d4a0cdff72b448a2ed46912282a738d13280",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "thermodynamic_hardware_product_context",
+      "method_claim": "First-party writing describes Torx, Thermalizers, Z1, and 2027 early access.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "no_local_sdk_or_device",
+      "local_applicability": "product_status_only",
+      "carnot_hook": "Keep TSU execution and availability claims out of V565.",
+      "negative_control": "",
+      "downstream_field_spelling": [],
+      "non_transfer_boundary": "No TSU execution, latency, energy, or availability claim transfers.",
+      "exact_authority_boundary": "Product page only; no local TSU runner or access.",
+      "adopted_method": false,
+      "required_primary_check": false,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "logical_intelligence_kona",
+      "source_kind": "product",
+      "title": "Kona: Energy-Based Models (EBMs) for AI Reasoning",
+      "stable_url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+      "retrieval_url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+      "query_channel": "logical_intelligence",
+      "arxiv_id": null,
+      "openreview_id": null,
+      "source_date": "2026-06-26",
+      "expected_source_date": null,
+      "source_date_verified": true,
+      "primary_url_verified": true,
+      "retrieval_state": "available",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:0c0244e86f16642fa5a288784200d3bdf14bae96efad9864254a44878fabae5e",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "kona_product_comparator_context",
+      "method_claim": "First-party page describes Kona 1.0 as a non-generator energy-based reasoning model.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "no_public_weights_or_runner",
+      "local_applicability": "product_comparator_only",
+      "carnot_hook": "Keep Kona as comparator until public weights and runner exist.",
+      "negative_control": "",
+      "downstream_field_spelling": [],
+      "non_transfer_boundary": "No proprietary Kona weights, runner, or speed claim transfers.",
+      "exact_authority_boundary": "Product comparator only; no local runner or weights.",
+      "adopted_method": false,
+      "required_primary_check": false,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    }
+  ],
+  "primary_source_hashes": {
+    "drift_bench_arxiv": "sha256:05f9e538c35a53031fdef1968010f3670af3e15abac45e8ad64b88a96799a831",
+    "memoir": "sha256:d63f2e7a0884f5e76bc6cf0f62bb9941729db798e28a2974e4a5acbd5d1dbe48",
+    "support_reshaping": "sha256:3bbdd378bdbfa9d77934af8adefac6ee1f20e85e13f301359f9f2820efadb013",
+    "distributional_ebm": "sha256:75c266e8cddbaff42b39d5d95963eb7b519de36a7fa55d7f06ff50d6c99d6890",
+    "solver_hard": "sha256:d5464d3eb98a2ebb3141333621f18216d9f0b8122b71c59ca3b12150b1f00d3b",
+    "openreview_dc_energy": "sha256:81e7d2d164ed6bbc26aaa21f645ae3680700eb8700ab9677f842d4427778b247",
+    "openreview_linear_decision_rules": "sha256:d6dad51e25b8d001f58849e283a7e9a701f6c322875b968797974996ffee58da",
+    "drift_bench_repo": "sha256:39b5fc60c86ba95d735d92bcf5cc32ed14f5dc4900862d8b24254395e0cddd28",
+    "huggingface_support_reshaping": "sha256:55af2a082a77544411602146dfc2d99470fd662b94d371a774d78add6527cf59",
+    "semantic_scholar_ebt": "sha256:6aae57916665346699697691a1b6b8b64cdf2b58b9f37797a5e5857d6a2e739a",
+    "semantic_scholar_arm_ebm": "sha256:e704670fde144ddbf54b35d85ef8baf5e1b1787aef776e37a53b672b54143843",
+    "extropic_z1_status": "sha256:6d34177205ae48dea724073b6283d4a0cdff72b448a2ed46912282a738d13280",
+    "logical_intelligence_kona": "sha256:0c0244e86f16642fa5a288784200d3bdf14bae96efad9864254a44878fabae5e"
+  },
+  "citation_trail_receipts": [
+    {
+      "row_type": "citation_trail_receipt",
+      "source_id": "semantic_scholar_ebt",
+      "channel": "semantic_scholar",
+      "target": "EBT 2507.02092",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "retrieval_state": "rate_limited",
+      "observed_citation_count": null,
+      "citation_titles_observed": [],
+      "count_is_current_guarantee": false,
+      "observed_error": "HTTP Error 429: "
+    },
+    {
+      "row_type": "citation_trail_receipt",
+      "source_id": "semantic_scholar_arm_ebm",
+      "channel": "semantic_scholar",
+      "target": "ARM-EBM 2512.15605",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "retrieval_state": "rate_limited",
+      "observed_citation_count": null,
+      "citation_titles_observed": [],
+      "count_is_current_guarantee": false,
+      "observed_error": "HTTP Error 429: "
+    }
+  ],
+  "citation_count_boundaries": [
+    {
+      "source_id": "semantic_scholar_ebt",
+      "channel": "semantic_scholar",
+      "observed_citation_count": null,
+      "count_is_current_guarantee": false,
+      "rate_limited": true,
+      "observed_error": "HTTP Error 429: ",
+      "boundary": "Do not fabricate or refresh counts when the endpoint is limited or secondary."
+    },
+    {
+      "source_id": "semantic_scholar_arm_ebm",
+      "channel": "semantic_scholar",
+      "observed_citation_count": null,
+      "count_is_current_guarantee": false,
+      "rate_limited": true,
+      "observed_error": "HTTP Error 429: ",
+      "boundary": "Do not fabricate or refresh counts when the endpoint is limited or secondary."
+    }
+  ],
+  "drift_bench_provenance_contract": {
+    "row_type": "drift_bench_provenance_contract",
+    "repo_url": "https://github.com/kaons-research/drift-bench",
+    "api_repo_url": "https://api.github.com/repos/kaons-research/drift-bench",
+    "immutable_revision": "d24cda4f59a6ee06bafe886f4724899a7ec94f1c",
+    "revision_is_immutable": true,
+    "license": "MIT",
+    "license_verified": true,
+    "data_schema_path": "data/problems/README.md",
+    "data_schema_verified": true,
+    "upstream_corruption_warning_present": true,
+    "local_result_receipts_regenerated": true,
+    "upstream_aggregate_claims_inherited": false,
+    "accessed_at_utc": "2026-08-23T06:32:05Z",
+    "source_receipts": {
+      "repo_api": {
+        "url": "https://api.github.com/repos/kaons-research/drift-bench",
+        "http_state": "http_200",
+        "source_hash": "sha256:0c155e5123bd3a65ee16203b82103be3e3d3b67762dc198410f99db4a21a5c0a"
+      },
+      "commit_api": {
+        "url": "https://api.github.com/repos/kaons-research/drift-bench/commits/main",
+        "http_state": "http_200",
+        "source_hash": "sha256:9d991f4454fbbffb313f5581c72347bb00c21645e7f4c70c28bc6378e62a42e6"
+      },
+      "readme": {
+        "url": "https://raw.githubusercontent.com/kaons-research/drift-bench/d24cda4f59a6ee06bafe886f4724899a7ec94f1c/README.md",
+        "http_state": "http_200",
+        "source_hash": "sha256:ff8ec5820eb571c35121cf37f17acadba552ce648f3d0fb00a8720b99475b208"
+      },
+      "license": {
+        "url": "https://raw.githubusercontent.com/kaons-research/drift-bench/d24cda4f59a6ee06bafe886f4724899a7ec94f1c/LICENSE",
+        "http_state": "http_200",
+        "source_hash": "sha256:eedd1d95633319ec8ffc26c530e5339dff75b1f0521c1eea664deaacb0ef4668"
+      },
+      "schema": {
+        "url": "https://raw.githubusercontent.com/kaons-research/drift-bench/d24cda4f59a6ee06bafe886f4724899a7ec94f1c/data/problems/README.md",
+        "http_state": "http_200",
+        "source_hash": "sha256:e8e3a662e2cdb14d4afac87fbf9248cedea4a5e7e0253f8e372a9de0fc321089"
+      }
+    },
+    "contract_ready": true
+  },
+  "model_cache_resolution_rows": [
+    {
+      "row_type": "model_cache",
+      "name": "Qwen3.6-35B-A3B",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "moe",
+      "preferred_quant": "Q4_K_M",
+      "registry_quantization": "Q4_K_M",
+      "gpu_indices_requested": [
+        0,
+        1
+      ],
+      "cached_sota_pair_returned": true,
+      "selected_by_cached_sota_pair": true,
+      "assigned_gpu": 0,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "quantized_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "cache_hit": true,
+      "model_file_size_bytes": 22134528992,
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "missing_entry": null,
+      "model_loaded_or_run": false
+    },
+    {
+      "row_type": "model_cache",
+      "name": "Gemma4-26B-A4B-it",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "moe",
+      "preferred_quant": "Q4_K_M",
+      "registry_quantization": "Q4_K_M",
+      "gpu_indices_requested": [
+        0,
+        1
+      ],
+      "cached_sota_pair_returned": true,
+      "selected_by_cached_sota_pair": true,
+      "assigned_gpu": 1,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "quantized_filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "cache_hit": true,
+      "model_file_size_bytes": 16947539744,
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "missing_entry": null,
+      "model_loaded_or_run": false
+    },
+    {
+      "row_type": "model_cache",
+      "name": "Gemma4-31B-it",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "dense",
+      "preferred_quant": "Q4_K_M",
+      "registry_quantization": "Q4_K_M",
+      "gpu_indices_requested": [
+        0,
+        1
+      ],
+      "cached_sota_pair_returned": true,
+      "selected_by_cached_sota_pair": false,
+      "assigned_gpu": null,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantized_filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "cache_hit": true,
+      "model_file_size_bytes": 18323731456,
+      "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "missing_entry": null,
+      "model_loaded_or_run": false
+    }
+  ],
+  "frozen_external_split_contract": {
+    "contract_version": "v565_external_split_contract_v1",
+    "source_surface": "DRIFT-Bench content-pinned rows only",
+    "split_names": [
+      "train",
+      "development",
+      "held_family_blind"
+    ],
+    "family_blind_keys": [
+      "domain",
+      "base_problem_id",
+      "source_problem_id"
+    ],
+    "chronology_keys": [
+      "turn_index",
+      "chronology_index"
+    ],
+    "held_outcome_forbidden_before_freeze": true,
+    "negative_controls": [
+      "internal_carnot_only",
+      "row_order_shuffle",
+      "family_alias_attack"
+    ],
+    "downstream_field_spelling": [
+      "split_name",
+      "base_problem_id",
+      "domain",
+      "turn_index",
+      "source_row_hash",
+      "chronology_index"
+    ]
+  },
+  "frozen_router_contract": {
+    "contract_version": "v565_router_contract_v1",
+    "structural_controls": [
+      "native_dynamic",
+      "random_order",
+      "analytical_structural_order"
+    ],
+    "calibration_split": "development",
+    "abstention_required": true,
+    "exact_fallback_required": true,
+    "learned_advice_may_order": true,
+    "learned_advice_may_prune": false,
+    "learned_advice_may_certify": false,
+    "negative_controls": [
+      "identity_shortcut",
+      "family_permutation",
+      "empty_router"
+    ],
+    "downstream_field_spelling": [
+      "router_arm",
+      "router_abstained",
+      "calibration_split",
+      "exact_fallback_used",
+      "candidate_set_preserved"
+    ]
+  },
+  "frozen_embedding_contract": {
+    "contract_version": "v565_embedding_contract_v1",
+    "mandated_hub_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "paired_conditions": [
+      "canonical",
+      "entity_relabeled",
+      "clause_reordered",
+      "paraphrased"
+    ],
+    "strata": [
+      "solver_hardness_bin",
+      "surface_realization_id",
+      "family"
+    ],
+    "answer_scoring_allowed": false,
+    "negative_controls": [
+      "model_identity_probe",
+      "family_identity_probe",
+      "row_length_probe"
+    ],
+    "downstream_field_spelling": [
+      "model_hf_id",
+      "model_file_sha256",
+      "surface_realization_id",
+      "paired_embedding_distance",
+      "neighbor_stability"
+    ]
+  },
+  "frozen_transactional_learning_contract": {
+    "contract_version": "v565_transactional_learning_contract_v1",
+    "memory_frozen_within_query": true,
+    "commit_after_exact_validation": true,
+    "refinement_witness_required": true,
+    "same_query_write_negative_control": true,
+    "rollback_required": true,
+    "support_and_retention_metrics": [
+      "future_exact_satisfying_support",
+      "retained_family_performance",
+      "invalid_reuse_veto_count",
+      "rollback_integrity"
+    ],
+    "downstream_field_spelling": [
+      "memory_arm",
+      "memory_frozen_within_query",
+      "commit_after_exact_validation",
+      "future_exact_satisfying_support",
+      "retained_family_performance",
+      "rollback_integrity"
+    ]
+  },
+  "frozen_arc_parser_contract": {
+    "contract_version": "v565_arc_qwen3_xml_contract_v1",
+    "live_generator_hf_id": "unsloth/Qwen3.8-27B-GGUF",
+    "format_control_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "parser_family": "qwen3_xml",
+    "qwen3_xml_stop_rule": "stop_after_one_bounded_live_tool_call_receipt",
+    "game_solve_claim_allowed": false,
+    "negative_controls": [
+      "hermes_parser_no_tool_lift",
+      "qwen36_format_control"
+    ],
+    "downstream_field_spelling": [
+      "tool_call_parser",
+      "tool_call_lifted",
+      "outcome_receipt_present",
+      "stop_rule_triggered"
+    ]
+  },
+  "hardware_stop_contract": {
+    "contract_version": "v565_hardware_stop_contract_v1",
+    "gatemate_command_allowed_without_new_receipt": false,
+    "required_new_receipt": "dated_physical_state_change_after_exp6325",
+    "tsu_execution_claim_allowed": false,
+    "kona_execution_claim_allowed": false,
+    "negative_controls": [
+      "unchanged_board_probe",
+      "product_page_as_access_claim"
+    ],
+    "downstream_field_spelling": [
+      "new_physical_state_receipt",
+      "hardware_command_count",
+      "gatemate_boundary_status"
+    ]
+  },
+  "non_transfer_rows": [
+    {
+      "row_type": "non_transfer",
+      "source_id": "drift_bench_arxiv",
+      "non_transfer_boundary": "No upstream aggregate or run database result transfers.",
+      "exact_authority_boundary": "Local Z3 replay and assignment checks own all Carnot labels.",
+      "source_hash": "sha256:05f9e538c35a53031fdef1968010f3670af3e15abac45e8ad64b88a96799a831",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "memoir",
+      "non_transfer_boundary": "No Memoir parameter or speed result transfers to Carnot.",
+      "exact_authority_boundary": "Exact outcome validation admits or rejects memory writes.",
+      "source_hash": "sha256:d63f2e7a0884f5e76bc6cf0f62bb9941729db798e28a2974e4a5acbd5d1dbe48",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "support_reshaping",
+      "non_transfer_boundary": "No RLVR policy update result transfers into Carnot's exact-memory controller.",
+      "exact_authority_boundary": "Exact held-future rows decide retention and support safety.",
+      "source_hash": "sha256:3bbdd378bdbfa9d77934af8adefac6ee1f20e85e13f301359f9f2820efadb013",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "distributional_ebm",
+      "non_transfer_boundary": "No verifier accuracy, model-identity shortcut, or benchmark score transfers.",
+      "exact_authority_boundary": "Native exact fallback remains release authority.",
+      "source_hash": "sha256:75c266e8cddbaff42b39d5d95963eb7b519de36a7fa55d7f06ff50d6c99d6890",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "solver_hard",
+      "non_transfer_boundary": "No solver-hard label transfers as a model-difficulty label.",
+      "exact_authority_boundary": "Exact solver metadata is diagnostic only, not model-answer authority.",
+      "source_hash": "sha256:d5464d3eb98a2ebb3141333621f18216d9f0b8122b71c59ca3b12150b1f00d3b",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "openreview_dc_energy",
+      "non_transfer_boundary": "No DC optimizer performance transfers into V565 exact-router tasks.",
+      "exact_authority_boundary": "Deferred optimizer cannot enter V565 acceptance gates.",
+      "source_hash": "sha256:81e7d2d164ed6bbc26aaa21f645ae3680700eb8700ab9677f842d4427778b247",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "openreview_linear_decision_rules",
+      "non_transfer_boundary": "No linear feasibility guarantee transfers to discrete SAT or CSP outputs.",
+      "exact_authority_boundary": "Linear correction paper is not evidence for Carnot discrete certification.",
+      "source_hash": "sha256:d6dad51e25b8d001f58849e283a7e9a701f6c322875b968797974996ffee58da",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "drift_bench_repo",
+      "non_transfer_boundary": "No upstream SQLite database or summary table transfers.",
+      "exact_authority_boundary": "Local fixture and exact replay own downstream rows.",
+      "source_hash": "sha256:39b5fc60c86ba95d735d92bcf5cc32ed14f5dc4900862d8b24254395e0cddd28",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "huggingface_support_reshaping",
+      "non_transfer_boundary": "Community index metadata does not transfer as evidence.",
+      "exact_authority_boundary": "Primary arXiv page owns the method row.",
+      "source_hash": "sha256:55af2a082a77544411602146dfc2d99470fd662b94d371a774d78add6527cf59",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "semantic_scholar_ebt",
+      "non_transfer_boundary": "Citation counts are dated metadata, not method evidence.",
+      "exact_authority_boundary": "Secondary metadata cannot promote a method.",
+      "source_hash": "sha256:6aae57916665346699697691a1b6b8b64cdf2b58b9f37797a5e5857d6a2e739a",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "semantic_scholar_arm_ebm",
+      "non_transfer_boundary": "Rate-limited counts cannot be reported as current.",
+      "exact_authority_boundary": "Secondary metadata cannot promote a method.",
+      "source_hash": "sha256:e704670fde144ddbf54b35d85ef8baf5e1b1787aef776e37a53b672b54143843",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "extropic_z1_status",
+      "non_transfer_boundary": "No TSU execution, latency, energy, or availability claim transfers.",
+      "exact_authority_boundary": "Product page only; no local TSU runner or access.",
+      "source_hash": "sha256:6d34177205ae48dea724073b6283d4a0cdff72b448a2ed46912282a738d13280",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "logical_intelligence_kona",
+      "non_transfer_boundary": "No proprietary Kona weights, runner, or speed claim transfers.",
+      "exact_authority_boundary": "Product comparator only; no local runner or weights.",
+      "source_hash": "sha256:0c0244e86f16642fa5a288784200d3bdf14bae96efad9864254a44878fabae5e",
+      "not_local_evidence": true
+    }
+  ],
+  "v565_method_contract_ready_score": 0.0,
+  "gate_check_summary": {
+    "checks": {
+      "source_rows_cover_manifest": true,
+      "required_primary_sources_verified": false,
+      "adopted_methods_have_source_hook_control_boundary": true,
+      "drift_bench_contract_ready": true,
+      "model_cache_contract_ready": true,
+      "non_transfer_rows_complete": true,
+      "required_query_channels_present": true,
+      "frozen_downstream_field_spelling_complete": true,
+      "authority_boundary_exact_first": true,
+      "protected_files_unchanged": true,
+      "outcome_artifacts_not_read": true
+    },
+    "failed_checks": [
+      {
+        "check": "required_primary_sources_verified",
+        "expected": true,
+        "observed": false,
+        "channel": "local_gate"
+      },
+      {
+        "check": "required_primary_source_verified",
+        "source_id": "openreview_dc_energy",
+        "channel": "openreview",
+        "expected": "available_primary_url_and_matching_source_date",
+        "observed": {
+          "retrieval_state": "blocked",
+          "http_state": "http_200",
+          "source_date": null,
+          "observed_error": null
+        }
+      },
+      {
+        "check": "required_primary_source_verified",
+        "source_id": "openreview_linear_decision_rules",
+        "channel": "openreview",
+        "expected": "available_primary_url_and_matching_source_date",
+        "observed": {
+          "retrieval_state": "blocked",
+          "http_state": "http_200",
+          "source_date": null,
+          "observed_error": null
+        }
+      },
+      {
+        "check": "required_primary_source_verified",
+        "source_id": "drift_bench_repo",
+        "channel": "github",
+        "expected": "available_primary_url_and_matching_source_date",
+        "observed": {
+          "retrieval_state": "blocked",
+          "http_state": "http_200",
+          "source_date": "2026-04-13",
+          "observed_error": null
+        }
+      }
+    ],
+    "all_gates_passed": false
+  },
+  "per_unit_rows": [
+    {
+      "row_type": "source",
+      "source_id": "drift_bench_arxiv",
+      "source_kind": "paper",
+      "title": "[2605.23940] Residual Drift Dominates Contradiction in Multi-Turn Constraint Reasoning",
+      "stable_url": "https://arxiv.org/abs/2605.23940",
+      "retrieval_url": "https://arxiv.org/abs/2605.23940",
+      "query_channel": "arxiv_primary",
+      "arxiv_id": "2605.23940",
+      "openreview_id": null,
+      "source_date": "2026-04-28",
+      "expected_source_date": "2026-04-28",
+      "source_date_verified": true,
+      "primary_url_verified": true,
+      "retrieval_state": "available",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:05f9e538c35a53031fdef1968010f3670af3e15abac45e8ad64b88a96799a831",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "external_multi_turn_constraint_transfer_surface",
+      "method_claim": "DRIFT-Bench separates contradiction from satisfiable drift with solver-instrumented turns.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "public_repository_and_problem_json",
+      "local_applicability": "content_pinned_external_constraint_fixture",
+      "carnot_hook": "Use DRIFT-Bench as a pinned external transfer surface with local exact replay.",
+      "negative_control": "internal_carnot_generator_slice_only",
+      "downstream_field_spelling": [
+        "source_row_hash",
+        "source_problem_id",
+        "turn_index",
+        "exact_replay_status"
+      ],
+      "non_transfer_boundary": "No upstream aggregate or run database result transfers.",
+      "exact_authority_boundary": "Local Z3 replay and assignment checks own all Carnot labels.",
+      "adopted_method": true,
+      "required_primary_check": true,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "memoir",
+      "source_kind": "paper",
+      "title": "[2607.20792] Memoir: Should a Model Write to Its Memory While It Thinks?",
+      "stable_url": "https://arxiv.org/abs/2607.20792",
+      "retrieval_url": "https://arxiv.org/abs/2607.20792",
+      "query_channel": "arxiv_primary",
+      "arxiv_id": "2607.20792",
+      "openreview_id": null,
+      "source_date": "2026-07-22",
+      "expected_source_date": "2026-07-22",
+      "source_date_verified": true,
+      "primary_url_verified": true,
+      "retrieval_state": "available",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:d63f2e7a0884f5e76bc6cf0f62bb9941729db798e28a2974e4a5acbd5d1dbe48",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "query_frozen_memory_transactional_commit",
+      "method_claim": "Coupled same-query memory writes learn more slowly than a read-only pondering arm.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "public_github_claimed",
+      "local_applicability": "transactional_memory_commit_boundary",
+      "carnot_hook": "Freeze memory within a query and commit after exact outcome validation.",
+      "negative_control": "same_query_mutation_arm",
+      "downstream_field_spelling": [
+        "memory_frozen_within_query",
+        "commit_after_exact_validation"
+      ],
+      "non_transfer_boundary": "No Memoir parameter or speed result transfers to Carnot.",
+      "exact_authority_boundary": "Exact outcome validation admits or rejects memory writes.",
+      "adopted_method": true,
+      "required_primary_check": true,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "support_reshaping",
+      "source_kind": "paper",
+      "title": "[2608.00220] Verifier-Induced Support Reshaping in On-Policy Optimization",
+      "stable_url": "https://arxiv.org/abs/2608.00220",
+      "retrieval_url": "https://arxiv.org/abs/2608.00220",
+      "query_channel": "arxiv_primary",
+      "arxiv_id": "2608.00220",
+      "openreview_id": null,
+      "source_date": "2026-07-31",
+      "expected_source_date": "2026-07-31",
+      "source_date_verified": true,
+      "primary_url_verified": true,
+      "retrieval_state": "available",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:3bbdd378bdbfa9d77934af8adefac6ee1f20e85e13f301359f9f2820efadb013",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "future_support_retention_audit",
+      "method_claim": "Current pass-at-one gains can coexist with later best-at-k support loss.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "public_github_claimed",
+      "local_applicability": "future_support_and_retention_metrics",
+      "carnot_hook": "Report future exact-satisfying support and retained-family performance.",
+      "negative_control": "scratch_and_frozen_memory_arms",
+      "downstream_field_spelling": [
+        "future_exact_satisfying_support",
+        "retained_family_performance"
+      ],
+      "non_transfer_boundary": "No RLVR policy update result transfers into Carnot's exact-memory controller.",
+      "exact_authority_boundary": "Exact held-future rows decide retention and support safety.",
+      "adopted_method": true,
+      "required_primary_check": true,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "distributional_ebm",
+      "source_kind": "paper",
+      "title": "[2605.18871] Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning",
+      "stable_url": "https://arxiv.org/abs/2605.18871",
+      "retrieval_url": "https://arxiv.org/abs/2605.18871",
+      "query_channel": "arxiv_primary",
+      "arxiv_id": "2605.18871",
+      "openreview_id": null,
+      "source_date": "2026-05-15",
+      "expected_source_date": "2026-05-15",
+      "source_date_verified": true,
+      "primary_url_verified": true,
+      "retrieval_state": "available",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:75c266e8cddbaff42b39d5d95963eb7b519de36a7fa55d7f06ff50d6c99d6890",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "decomposed_energy_uncertainty_abstention",
+      "method_claim": "Analytical penalties plus learned uncertainty can route regeneration or abstention.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "paper_only_at_preflight",
+      "local_applicability": "held_calibration_and_abstention_router",
+      "carnot_hook": "Freeze calibration, uncertainty, and abstention before external held outcomes.",
+      "negative_control": "identity_shortcut_and_family_permutation_attack",
+      "downstream_field_spelling": [
+        "router_abstained",
+        "calibration_split",
+        "exact_fallback_used"
+      ],
+      "non_transfer_boundary": "No verifier accuracy, model-identity shortcut, or benchmark score transfers.",
+      "exact_authority_boundary": "Native exact fallback remains release authority.",
+      "adopted_method": true,
+      "required_primary_check": true,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "solver_hard",
+      "source_kind": "paper",
+      "title": "[2607.17047] Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM Constraint Reasoning",
+      "stable_url": "https://arxiv.org/abs/2607.17047",
+      "retrieval_url": "https://arxiv.org/abs/2607.17047",
+      "query_channel": "arxiv_primary",
+      "arxiv_id": "2607.17047",
+      "openreview_id": null,
+      "source_date": "2026-07-19",
+      "expected_source_date": "2026-07-19",
+      "source_date_verified": true,
+      "primary_url_verified": true,
+      "retrieval_state": "available",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:d5464d3eb98a2ebb3141333621f18216d9f0b8122b71c59ca3b12150b1f00d3b",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "solver_hardness_surface_decoupling",
+      "method_claim": "Solver conflict hardness did not reliably predict LLM accuracy.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "public_code_and_aggregate_data_claimed",
+      "local_applicability": "surface_hardness_stratified_embedding_diagnostic",
+      "carnot_hook": "Stratify SOTA paired embeddings by exact hardness and surface realization separately.",
+      "negative_control": "proof_preserving_surface_relabel_control",
+      "downstream_field_spelling": [
+        "solver_hardness_bin",
+        "surface_realization_id",
+        "paired_embedding_distance"
+      ],
+      "non_transfer_boundary": "No solver-hard label transfers as a model-difficulty label.",
+      "exact_authority_boundary": "Exact solver metadata is diagnostic only, not model-answer authority.",
+      "adopted_method": true,
+      "required_primary_check": true,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "openreview_dc_energy",
+      "source_kind": "openreview_forum",
+      "title": "Verifying your browser | OpenReview",
+      "stable_url": "https://openreview.net/forum?id=QvsDTpf4yF",
+      "retrieval_url": "https://openreview.net/forum?id=QvsDTpf4yF",
+      "query_channel": "openreview",
+      "arxiv_id": null,
+      "openreview_id": "QvsDTpf4yF",
+      "source_date": null,
+      "expected_source_date": "2025-09-18",
+      "source_date_verified": false,
+      "primary_url_verified": false,
+      "retrieval_state": "blocked",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:81e7d2d164ed6bbc26aaa21f645ae3680700eb8700ab9677f842d4427778b247",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "dc_energy_optimizer_control",
+      "method_claim": "DC optimization accelerates energy-based iterative reasoning with local convergence.",
+      "method_transfer_status": "future_optimizer_control",
+      "code_or_data_availability": "openreview_forum_metadata",
+      "local_applicability": "future_continuous_energy_optimizer_control",
+      "carnot_hook": "Keep as future optimizer control; do not start a new answer-generator lineage.",
+      "negative_control": "",
+      "downstream_field_spelling": [],
+      "non_transfer_boundary": "No DC optimizer performance transfers into V565 exact-router tasks.",
+      "exact_authority_boundary": "Deferred optimizer cannot enter V565 acceptance gates.",
+      "adopted_method": false,
+      "required_primary_check": true,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "openreview_linear_decision_rules",
+      "source_kind": "openreview_forum",
+      "title": "Verifying your browser | OpenReview",
+      "stable_url": "https://openreview.net/forum?id=gjiCml2CNG",
+      "retrieval_url": "https://openreview.net/forum?id=gjiCml2CNG",
+      "query_channel": "openreview",
+      "arxiv_id": null,
+      "openreview_id": "gjiCml2CNG",
+      "source_date": null,
+      "expected_source_date": "2025-09-18",
+      "source_date_verified": false,
+      "primary_url_verified": false,
+      "retrieval_state": "blocked",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:d6dad51e25b8d001f58849e283a7e9a701f6c322875b968797974996ffee58da",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "safe_network_closed_form_linear_correction",
+      "method_claim": "A safe network and closed-form correction preserve linear feasibility.",
+      "method_transfer_status": "future_architecture_control",
+      "code_or_data_availability": "openreview_forum_metadata",
+      "local_applicability": "future_architecture_safe_fallback_control",
+      "carnot_hook": "Use as architectural analogy for a separate learned fast path and exact fallback.",
+      "negative_control": "",
+      "downstream_field_spelling": [],
+      "non_transfer_boundary": "No linear feasibility guarantee transfers to discrete SAT or CSP outputs.",
+      "exact_authority_boundary": "Linear correction paper is not evidence for Carnot discrete certification.",
+      "adopted_method": false,
+      "required_primary_check": true,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "drift_bench_repo",
+      "source_kind": "repository",
+      "title": "kaons-research/drift-bench: Benchmark and evaluation code for the ICLR 2026 Workshop paper 'Residual Drift Dominates Contradiction in Multi-Turn Constraint Reasoning'. 1,020 Z3-validated multi-turn constraint problems across seating, scheduling, and logic-grid domains. \u00b7 GitHub",
+      "stable_url": "https://github.com/kaons-research/drift-bench",
+      "retrieval_url": "https://github.com/kaons-research/drift-bench",
+      "query_channel": "github",
+      "arxiv_id": null,
+      "openreview_id": null,
+      "source_date": "2026-04-13",
+      "expected_source_date": null,
+      "source_date_verified": false,
+      "primary_url_verified": false,
+      "retrieval_state": "blocked",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:39b5fc60c86ba95d735d92bcf5cc32ed14f5dc4900862d8b24254395e0cddd28",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "drift_bench_repository_provenance",
+      "method_claim": "Repository exposes DRIFT-Bench problem JSON, schema, source code, license, and warning.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "public_repository",
+      "local_applicability": "revision_license_schema_corruption_contract",
+      "carnot_hook": "Resolve immutable revision and regenerate every local result receipt.",
+      "negative_control": "",
+      "downstream_field_spelling": [],
+      "non_transfer_boundary": "No upstream SQLite database or summary table transfers.",
+      "exact_authority_boundary": "Local fixture and exact replay own downstream rows.",
+      "adopted_method": false,
+      "required_primary_check": true,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "huggingface_support_reshaping",
+      "source_kind": "secondary_index",
+      "title": "Paper page - Verifier-Induced Support Reshaping in On-Policy Optimization",
+      "stable_url": "https://huggingface.co/papers/2608.00220",
+      "retrieval_url": "https://huggingface.co/papers/2608.00220",
+      "query_channel": "huggingface_papers",
+      "arxiv_id": null,
+      "openreview_id": null,
+      "source_date": "2026-08-17",
+      "expected_source_date": null,
+      "source_date_verified": true,
+      "primary_url_verified": true,
+      "retrieval_state": "available",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:55af2a082a77544411602146dfc2d99470fd662b94d371a774d78add6527cf59",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "community_paper_discovery_context",
+      "method_claim": "Hugging Face paper page mirrors the source and links project/code pages.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "paper_index",
+      "local_applicability": "discovery_only",
+      "carnot_hook": "Use as discovery route; arXiv remains primary authority.",
+      "negative_control": "",
+      "downstream_field_spelling": [],
+      "non_transfer_boundary": "Community index metadata does not transfer as evidence.",
+      "exact_authority_boundary": "Primary arXiv page owns the method row.",
+      "adopted_method": false,
+      "required_primary_check": false,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "semantic_scholar_ebt",
+      "source_kind": "secondary_index",
+      "title": "Semantic Scholar EBT citation route for 2507.02092",
+      "stable_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092?fields=title,citationCount,citations.title,citations.externalIds,citations.year",
+      "retrieval_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092?fields=title,citationCount,citations.title,citations.externalIds,citations.year",
+      "query_channel": "semantic_scholar",
+      "arxiv_id": null,
+      "openreview_id": null,
+      "source_date": null,
+      "expected_source_date": null,
+      "source_date_verified": false,
+      "primary_url_verified": false,
+      "retrieval_state": "rate_limited",
+      "http_state": "http_429",
+      "observed_error": "HTTP Error 429: ",
+      "source_hash": "sha256:6aae57916665346699697691a1b6b8b64cdf2b58b9f37797a5e5857d6a2e739a",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "ebt_citation_trail_context",
+      "method_claim": "Dated citation route for EBT follow-on context.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "metadata_index",
+      "local_applicability": "citation_context_only",
+      "carnot_hook": "Record citation trail caveats; do not promote source by count.",
+      "negative_control": "",
+      "downstream_field_spelling": [],
+      "non_transfer_boundary": "Citation counts are dated metadata, not method evidence.",
+      "exact_authority_boundary": "Secondary metadata cannot promote a method.",
+      "adopted_method": false,
+      "required_primary_check": false,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "semantic_scholar_arm_ebm",
+      "source_kind": "secondary_index",
+      "title": "Semantic Scholar ARM-EBM citation route for 2512.15605",
+      "stable_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605?fields=title,citationCount,citations.title,citations.externalIds,citations.year",
+      "retrieval_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605?fields=title,citationCount,citations.title,citations.externalIds,citations.year",
+      "query_channel": "semantic_scholar",
+      "arxiv_id": null,
+      "openreview_id": null,
+      "source_date": null,
+      "expected_source_date": null,
+      "source_date_verified": false,
+      "primary_url_verified": false,
+      "retrieval_state": "rate_limited",
+      "http_state": "http_429",
+      "observed_error": "HTTP Error 429: ",
+      "source_hash": "sha256:e704670fde144ddbf54b35d85ef8baf5e1b1787aef776e37a53b672b54143843",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "arm_ebm_citation_trail_context",
+      "method_claim": "Dated citation route for ARM-EBM follow-on context.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "metadata_index",
+      "local_applicability": "citation_context_only",
+      "carnot_hook": "Record rate limits rather than fabricating current counts.",
+      "negative_control": "",
+      "downstream_field_spelling": [],
+      "non_transfer_boundary": "Rate-limited counts cannot be reported as current.",
+      "exact_authority_boundary": "Secondary metadata cannot promote a method.",
+      "adopted_method": false,
+      "required_primary_check": false,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "extropic_z1_status",
+      "source_kind": "product",
+      "title": "From One to One Billion: Torx, Thermalizers, and Z1 - Extropic",
+      "stable_url": "https://extropic.ai/writing/from-one-to-one-billion/",
+      "retrieval_url": "https://extropic.ai/writing/from-one-to-one-billion/",
+      "query_channel": "extropic",
+      "arxiv_id": null,
+      "openreview_id": null,
+      "source_date": null,
+      "expected_source_date": null,
+      "source_date_verified": true,
+      "primary_url_verified": true,
+      "retrieval_state": "available",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:6d34177205ae48dea724073b6283d4a0cdff72b448a2ed46912282a738d13280",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "thermodynamic_hardware_product_context",
+      "method_claim": "First-party writing describes Torx, Thermalizers, Z1, and 2027 early access.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "no_local_sdk_or_device",
+      "local_applicability": "product_status_only",
+      "carnot_hook": "Keep TSU execution and availability claims out of V565.",
+      "negative_control": "",
+      "downstream_field_spelling": [],
+      "non_transfer_boundary": "No TSU execution, latency, energy, or availability claim transfers.",
+      "exact_authority_boundary": "Product page only; no local TSU runner or access.",
+      "adopted_method": false,
+      "required_primary_check": false,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "source",
+      "source_id": "logical_intelligence_kona",
+      "source_kind": "product",
+      "title": "Kona: Energy-Based Models (EBMs) for AI Reasoning",
+      "stable_url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+      "retrieval_url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+      "query_channel": "logical_intelligence",
+      "arxiv_id": null,
+      "openreview_id": null,
+      "source_date": "2026-06-26",
+      "expected_source_date": null,
+      "source_date_verified": true,
+      "primary_url_verified": true,
+      "retrieval_state": "available",
+      "http_state": "http_200",
+      "observed_error": null,
+      "source_hash": "sha256:0c0244e86f16642fa5a288784200d3bdf14bae96efad9864254a44878fabae5e",
+      "accessed_at_utc": "2026-08-23T06:32:05Z",
+      "method": "kona_product_comparator_context",
+      "method_claim": "First-party page describes Kona 1.0 as a non-generator energy-based reasoning model.",
+      "method_transfer_status": "candidate_local_contract",
+      "code_or_data_availability": "no_public_weights_or_runner",
+      "local_applicability": "product_comparator_only",
+      "carnot_hook": "Keep Kona as comparator until public weights and runner exist.",
+      "negative_control": "",
+      "downstream_field_spelling": [],
+      "non_transfer_boundary": "No proprietary Kona weights, runner, or speed claim transfers.",
+      "exact_authority_boundary": "Product comparator only; no local runner or weights.",
+      "adopted_method": false,
+      "required_primary_check": false,
+      "citation_count_observed": null,
+      "citation_titles_observed": []
+    },
+    {
+      "row_type": "model_cache",
+      "name": "Qwen3.6-35B-A3B",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "moe",
+      "preferred_quant": "Q4_K_M",
+      "registry_quantization": "Q4_K_M",
+      "gpu_indices_requested": [
+        0,
+        1
+      ],
+      "cached_sota_pair_returned": true,
+      "selected_by_cached_sota_pair": true,
+      "assigned_gpu": 0,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "quantized_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "cache_hit": true,
+      "model_file_size_bytes": 22134528992,
+      "model_file_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "missing_entry": null,
+      "model_loaded_or_run": false
+    },
+    {
+      "row_type": "model_cache",
+      "name": "Gemma4-26B-A4B-it",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "moe",
+      "preferred_quant": "Q4_K_M",
+      "registry_quantization": "Q4_K_M",
+      "gpu_indices_requested": [
+        0,
+        1
+      ],
+      "cached_sota_pair_returned": true,
+      "selected_by_cached_sota_pair": true,
+      "assigned_gpu": 1,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "quantized_filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "cache_hit": true,
+      "model_file_size_bytes": 16947539744,
+      "model_file_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "missing_entry": null,
+      "model_loaded_or_run": false
+    },
+    {
+      "row_type": "model_cache",
+      "name": "Gemma4-31B-it",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "dense",
+      "preferred_quant": "Q4_K_M",
+      "registry_quantization": "Q4_K_M",
+      "gpu_indices_requested": [
+        0,
+        1
+      ],
+      "cached_sota_pair_returned": true,
+      "selected_by_cached_sota_pair": false,
+      "assigned_gpu": null,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantized_filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "cache_hit": true,
+      "model_file_size_bytes": 18323731456,
+      "model_file_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "missing_entry": null,
+      "model_loaded_or_run": false
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "drift_bench_arxiv",
+      "non_transfer_boundary": "No upstream aggregate or run database result transfers.",
+      "exact_authority_boundary": "Local Z3 replay and assignment checks own all Carnot labels.",
+      "source_hash": "sha256:05f9e538c35a53031fdef1968010f3670af3e15abac45e8ad64b88a96799a831",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "memoir",
+      "non_transfer_boundary": "No Memoir parameter or speed result transfers to Carnot.",
+      "exact_authority_boundary": "Exact outcome validation admits or rejects memory writes.",
+      "source_hash": "sha256:d63f2e7a0884f5e76bc6cf0f62bb9941729db798e28a2974e4a5acbd5d1dbe48",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "support_reshaping",
+      "non_transfer_boundary": "No RLVR policy update result transfers into Carnot's exact-memory controller.",
+      "exact_authority_boundary": "Exact held-future rows decide retention and support safety.",
+      "source_hash": "sha256:3bbdd378bdbfa9d77934af8adefac6ee1f20e85e13f301359f9f2820efadb013",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "distributional_ebm",
+      "non_transfer_boundary": "No verifier accuracy, model-identity shortcut, or benchmark score transfers.",
+      "exact_authority_boundary": "Native exact fallback remains release authority.",
+      "source_hash": "sha256:75c266e8cddbaff42b39d5d95963eb7b519de36a7fa55d7f06ff50d6c99d6890",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "solver_hard",
+      "non_transfer_boundary": "No solver-hard label transfers as a model-difficulty label.",
+      "exact_authority_boundary": "Exact solver metadata is diagnostic only, not model-answer authority.",
+      "source_hash": "sha256:d5464d3eb98a2ebb3141333621f18216d9f0b8122b71c59ca3b12150b1f00d3b",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "openreview_dc_energy",
+      "non_transfer_boundary": "No DC optimizer performance transfers into V565 exact-router tasks.",
+      "exact_authority_boundary": "Deferred optimizer cannot enter V565 acceptance gates.",
+      "source_hash": "sha256:81e7d2d164ed6bbc26aaa21f645ae3680700eb8700ab9677f842d4427778b247",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "openreview_linear_decision_rules",
+      "non_transfer_boundary": "No linear feasibility guarantee transfers to discrete SAT or CSP outputs.",
+      "exact_authority_boundary": "Linear correction paper is not evidence for Carnot discrete certification.",
+      "source_hash": "sha256:d6dad51e25b8d001f58849e283a7e9a701f6c322875b968797974996ffee58da",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "drift_bench_repo",
+      "non_transfer_boundary": "No upstream SQLite database or summary table transfers.",
+      "exact_authority_boundary": "Local fixture and exact replay own downstream rows.",
+      "source_hash": "sha256:39b5fc60c86ba95d735d92bcf5cc32ed14f5dc4900862d8b24254395e0cddd28",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "huggingface_support_reshaping",
+      "non_transfer_boundary": "Community index metadata does not transfer as evidence.",
+      "exact_authority_boundary": "Primary arXiv page owns the method row.",
+      "source_hash": "sha256:55af2a082a77544411602146dfc2d99470fd662b94d371a774d78add6527cf59",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "semantic_scholar_ebt",
+      "non_transfer_boundary": "Citation counts are dated metadata, not method evidence.",
+      "exact_authority_boundary": "Secondary metadata cannot promote a method.",
+      "source_hash": "sha256:6aae57916665346699697691a1b6b8b64cdf2b58b9f37797a5e5857d6a2e739a",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "semantic_scholar_arm_ebm",
+      "non_transfer_boundary": "Rate-limited counts cannot be reported as current.",
+      "exact_authority_boundary": "Secondary metadata cannot promote a method.",
+      "source_hash": "sha256:e704670fde144ddbf54b35d85ef8baf5e1b1787aef776e37a53b672b54143843",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "extropic_z1_status",
+      "non_transfer_boundary": "No TSU execution, latency, energy, or availability claim transfers.",
+      "exact_authority_boundary": "Product page only; no local TSU runner or access.",
+      "source_hash": "sha256:6d34177205ae48dea724073b6283d4a0cdff72b448a2ed46912282a738d13280",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "non_transfer",
+      "source_id": "logical_intelligence_kona",
+      "non_transfer_boundary": "No proprietary Kona weights, runner, or speed claim transfers.",
+      "exact_authority_boundary": "Product comparator only; no local runner or weights.",
+      "source_hash": "sha256:0c0244e86f16642fa5a288784200d3bdf14bae96efad9864254a44878fabae5e",
+      "not_local_evidence": true
+    },
+    {
+      "row_type": "contract",
+      "contract_section": "drift_bench",
+      "contract_hash": "sha256:5d7d4c4012c14b32a2e31df053fc02ef372d81c3d7b099d80993972b0634b30a"
+    },
+    {
+      "row_type": "contract",
+      "contract_section": "frozen_external_split_contract",
+      "contract_hash": "sha256:dc844b3afb2dddb9dd34537a50996ecefc5c42147db7204d5de8b4fbda96de73"
+    },
+    {
+      "row_type": "contract",
+      "contract_section": "frozen_router_contract",
+      "contract_hash": "sha256:8e23be8f133a977930f925809cfde9f28d9c6a3543ced7a854b48dc8192d9862"
+    },
+    {
+      "row_type": "contract",
+      "contract_section": "frozen_embedding_contract",
+      "contract_hash": "sha256:77fc5bc741827b3c522bfe4eb5abbceeebf6202369814104f0b9ca40d0b2696f"
+    },
+    {
+      "row_type": "contract",
+      "contract_section": "frozen_transactional_learning_contract",
+      "contract_hash": "sha256:8c65ae2391c73a713f67cfa9e2c1cd0619b9d9907f7328ea1bfce87ba66533a9"
+    },
+    {
+      "row_type": "contract",
+      "contract_section": "frozen_arc_parser_contract",
+      "contract_hash": "sha256:4f4268aa91b550632fefef47d58594cbdade61078cf8eb36cddd11bceca503a5"
+    },
+    {
+      "row_type": "contract",
+      "contract_section": "hardware_stop_contract",
+      "contract_hash": "sha256:3694449679d796c1a1c1046e1d585b5188ef4bd175ef04dd62c2967193a63bf8"
+    },
+    {
+      "row_type": "gate",
+      "check": "required_primary_sources_verified",
+      "expected": true,
+      "observed": false,
+      "channel": "local_gate"
+    },
+    {
+      "row_type": "gate",
+      "check": "required_primary_source_verified",
+      "source_id": "openreview_dc_energy",
+      "channel": "openreview",
+      "expected": "available_primary_url_and_matching_source_date",
+      "observed": {
+        "retrieval_state": "blocked",
+        "http_state": "http_200",
+        "source_date": null,
+        "observed_error": null
+      }
+    },
+    {
+      "row_type": "gate",
+      "check": "required_primary_source_verified",
+      "source_id": "openreview_linear_decision_rules",
+      "channel": "openreview",
+      "expected": "available_primary_url_and_matching_source_date",
+      "observed": {
+        "retrieval_state": "blocked",
+        "http_state": "http_200",
+        "source_date": null,
+        "observed_error": null
+      }
+    },
+    {
+      "row_type": "gate",
+      "check": "required_primary_source_verified",
+      "source_id": "drift_bench_repo",
+      "channel": "github",
+      "expected": "available_primary_url_and_matching_source_date",
+      "observed": {
+        "retrieval_state": "blocked",
+        "http_state": "http_200",
+        "source_date": "2026-04-13",
+        "observed_error": null
+      }
+    }
+  ],
+  "aggregate_row_recomputation": {
+    "required_source_count": 13,
+    "source_row_count": 13,
+    "source_rows_cover_manifest": true,
+    "required_primary_source_count": 8,
+    "required_primary_sources_verified": false,
+    "adopted_method_count": 5,
+    "adopted_methods_with_source_hook_control_boundary": 5,
+    "drift_bench_contract_ready": true,
+    "model_cache_contract_ready": true,
+    "model_cache_hit_count": 3,
+    "mandated_model_count": 3,
+    "non_transfer_row_count": 13,
+    "non_transfer_rows_complete": true,
+    "required_query_channels_present": true,
+    "frozen_downstream_field_spelling_complete": true,
+    "authority_boundary_exact_first": true,
+    "protected_files_unchanged": true,
+    "outcome_artifacts_not_read": true,
+    "frozen_method_contract_hash": "sha256:d072abd22c645e496d130bd720227bcf3422d3baff22060cbfa8367381ffff37",
+    "ready_score_from_rows": 0.0
+  },
+  "preconditions_checked": {
+    "run_date": "20260823",
+    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "timestamps": {
+      "started_or_accessed_at_utc": "2026-08-23T06:32:05Z"
+    },
+    "network_availability": {
+      "network_required": true,
+      "network_used": true,
+      "network_available": true,
+      "checked_at_utc": "2026-08-23T06:32:05Z",
+      "probe_url": "https://arxiv.org/abs/2605.23940",
+      "probe_http_state": "http_200",
+      "error": null
+    },
+    "query_strings": [
+      "GET https://arxiv.org/abs/2605.23940",
+      "scripts/sweep_clusters.py all --max-results 8",
+      "DRIFT-Bench Memoir verifier-induced support reshaping Distributional EBMs Solver-Hard qwen3_xml",
+      "direct arXiv primary pages for five adopted V565 papers",
+      "OpenReview QvsDTpf4yF and gjiCml2CNG forum checks",
+      "Semantic Scholar EBT 2507.02092 and ARM-EBM 2512.15605 citation records",
+      "Hugging Face Papers verifier-induced support reshaping page",
+      "GitHub DRIFT-Bench repository, revision, license, and schema checks",
+      "Extropic first-party Z1 writing",
+      "Logical Intelligence Kona first-party page",
+      "cached_sota_pair(gpu_indices=(0, 1)) plus mandated GGUF path resolution"
+    ],
+    "source_tools": {
+      "python": "3.12.13",
+      "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "sweep_clusters_sha256": "sha256:04cd28779f763d369af1d7aa1934602fb841cc48b119440608d127b027d131d0",
+      "sweep_semscholar_sha256": "sha256:cf0ee3b6e9d0f64987fa93dfe15ae4cb3c02c2a3b09e265d720ed8c1d9941351",
+      "sota_models_sha256": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab"
+    },
+    "cache_paths_without_secret_values": [
+      {
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "quantized_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "cache_hit": true
+      },
+      {
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "quantized_filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "cache_hit": true
+      },
+      {
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "quantized_filename": "gemma-4-31B-it-Q4_K_M.gguf",
+        "cache_hit": true
+      }
+    ],
+    "source_paths": [
+      {
+        "path": "CODEX.md",
+        "exists": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      {
+        "path": "CLAUDE.md",
+        "exists": true,
+        "sha256": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad"
+      },
+      {
+        "path": "research-program.md",
+        "exists": true,
+        "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+      },
+      {
+        "path": "research-references.md",
+        "exists": true,
+        "sha256": "sha256:4ae917c0404019ddde5de3fbed00b616ee490f2200ac4e2182f9c48427963246"
+      },
+      {
+        "path": "research-studying.md",
+        "exists": true,
+        "sha256": "sha256:e325784450378c7314da32df62cb3d0f80e13b379b03d3bed658b03a061642f5"
+      },
+      {
+        "path": "research-roadmap.yaml",
+        "exists": true,
+        "sha256": "sha256:aace6d51229ee69076e05478c48009420458de4cba3bd478b9b6dafb4c5cebc0"
+      },
+      {
+        "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "exists": true,
+        "sha256": "sha256:65683c621969fecb11d0815f61d37761c6f5e7d480eed26f530b59493efdca1f"
+      },
+      {
+        "path": "scripts/sweep_clusters.py",
+        "exists": true,
+        "sha256": "sha256:04cd28779f763d369af1d7aa1934602fb841cc48b119440608d127b027d131d0"
+      },
+      {
+        "path": "scripts/sweep_semscholar.py",
+        "exists": true,
+        "sha256": "sha256:cf0ee3b6e9d0f64987fa93dfe15ae4cb3c02c2a3b09e265d720ed8c1d9941351"
+      },
+      {
+        "path": "scripts/experiment_template.py",
+        "exists": true,
+        "sha256": "sha256:0d7db964981fb72189dc1c72642cdc348f8667dfad2335ae6124884d442c60ac"
+      },
+      {
+        "path": "python/carnot/inference/sota_models.py",
+        "exists": true,
+        "sha256": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab"
+      },
+      {
+        "path": "docs/research-notes/avo-adaptation-for-local-generator-2026-08-21.md",
+        "exists": true,
+        "sha256": "sha256:5f988b3087ca4e5df4b50d80be0678541ef4f13dd14102238ae27e6b350b175b"
+      },
+      {
+        "path": "docs/research-notes/qwen38-compaction-forward-plan-2026-08-20.md",
+        "exists": true,
+        "sha256": "sha256:54e96aa10bad21282d2f090bbd218d87ea7c5fa30a95bea09fde2be4094be564"
+      },
+      {
+        "path": "results/experiment_6527_v565_evidence_eligibility_corrigendum.json",
+        "exists": true,
+        "sha256": "sha256:f37c20e41e3a1de03ccfa620f37458ce68311a9e4e3770fad724c157e30e5b2e"
+      }
+    ],
+    "local_hook_paths": [
+      {
+        "path": "python/carnot/experiment_6529_drift_bench_external_intake.py",
+        "exists": false,
+        "sha256": "missing"
+      },
+      {
+        "path": "python/carnot/experiment_6530_external_constraint_corpus_audit.py",
+        "exists": false,
+        "sha256": "missing"
+      },
+      {
+        "path": "python/carnot/experiment_6531_external_structural_headroom_replication.py",
+        "exists": false,
+        "sha256": "missing"
+      },
+      {
+        "path": "python/carnot/experiment_6532_sota_paired_embedding_surface_audit.py",
+        "exists": false,
+        "sha256": "missing"
+      },
+      {
+        "path": "python/carnot/experiment_6533_external_calibrated_safety_net_router.py",
+        "exists": false,
+        "sha256": "missing"
+      },
+      {
+        "path": "python/carnot/experiment_6536_external_chronological_self_learning.py",
+        "exists": false,
+        "sha256": "missing"
+      },
+      {
+        "path": "python/carnot/experiment_6538_qwen3_xml_tool_call_reachability.py",
+        "exists": false,
+        "sha256": "missing"
+      },
+      {
+        "path": "python/carnot/experiment_6521_transactional_refinement_conflict_memory.py",
+        "exists": true,
+        "sha256": "sha256:fbed10817a7d0d98825fc43431cb50699fae25be70fd651c375f1a59e202b102"
+      },
+      {
+        "path": "python/carnot/experiment_6522_chronological_conflict_self_learning.py",
+        "exists": true,
+        "sha256": "sha256:cd630a416bae201cde411ac1bb8d870b1cd63dffed258bb84800c18926d34621"
+      },
+      {
+        "path": "python/carnot/inference/sota_models.py",
+        "exists": true,
+        "sha256": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab"
+      }
+    ],
+    "git": {
+      "head": "a86a27dbc5a969adf098c2b55a3118f83f8c0985",
+      "status_short": "M openspec/capabilities/research-reporting/spec.md\n?? python/carnot/experiment_6528_v565_source_model_method_contract.py\n?? tests/python/test_experiment_6528_v565_source_model_method_contract.py"
+    },
+    "protected_file_hashes": {
+      "scripts/research_conductor.py": "sha256:06b3307b91baf83966bfdc41565751d2740c82515370283a22f9a53d4888ccc1",
+      "research-roadmap.yaml": "sha256:aace6d51229ee69076e05478c48009420458de4cba3bd478b9b6dafb4c5cebc0",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:65683c621969fecb11d0815f61d37761c6f5e7d480eed26f530b59493efdca1f",
+      "results/experiment_6527_v565_evidence_eligibility_corrigendum.json": "sha256:f37c20e41e3a1de03ccfa620f37458ce68311a9e4e3770fad724c157e30e5b2e"
+    },
+    "no_high_concurrency_research_harness": true,
+    "outcome_artifact_guard": {
+      "outcome_artifacts_read": [],
+      "downstream_outcome_experiment_range": "exp6529-exp6540"
+    }
+  },
+  "protected_files_unchanged": {
+    "files": {
+      "scripts/research_conductor.py": {
+        "sha256_before": "sha256:06b3307b91baf83966bfdc41565751d2740c82515370283a22f9a53d4888ccc1",
+        "sha256_after": "sha256:06b3307b91baf83966bfdc41565751d2740c82515370283a22f9a53d4888ccc1",
+        "unchanged": true
+      },
+      "research-roadmap.yaml": {
+        "sha256_before": "sha256:aace6d51229ee69076e05478c48009420458de4cba3bd478b9b6dafb4c5cebc0",
+        "sha256_after": "sha256:aace6d51229ee69076e05478c48009420458de4cba3bd478b9b6dafb4c5cebc0",
+        "unchanged": true
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "sha256_before": "sha256:65683c621969fecb11d0815f61d37761c6f5e7d480eed26f530b59493efdca1f",
+        "sha256_after": "sha256:65683c621969fecb11d0815f61d37761c6f5e7d480eed26f530b59493efdca1f",
+        "unchanged": true
+      },
+      "results/experiment_6527_v565_evidence_eligibility_corrigendum.json": {
+        "sha256_before": "sha256:f37c20e41e3a1de03ccfa620f37458ce68311a9e4e3770fad724c157e30e5b2e",
+        "sha256_after": "sha256:f37c20e41e3a1de03ccfa620f37458ce68311a9e4e3770fad724c157e30e5b2e",
+        "unchanged": true
+      }
+    },
+    "changed_paths": [],
+    "all_protected_files_unchanged": true
+  },
+  "inference_substrate": "low_concurrency_primary_source_and_cache_preflight_no_experimental_llm",
+  "verifier_is_oracle": false,
+  "field_principles": {
+    "status": "Records the terminal V565 source-model-method contract state.",
+    "honest_verdict": "States the source and cache outcome without turning preflight into experimental evidence.",
+    "verdict_class": "Closed enum for this preflight: null or partial.",
+    "query_receipts": "Keeps each sequential low-concurrency source query dated and reproducible.",
+    "source_rows": "Records one row per checked paper, product, repository, or index route.",
+    "primary_source_hashes": "Binds primary and first-party pages to source hashes.",
+    "citation_trail_receipts": "Records dated EBT and ARM-EBM citation routes with endpoint caveats.",
+    "citation_count_boundaries": "Prevents citation indexes from becoming fabricated current counts.",
+    "drift_bench_provenance_contract": "Freezes DRIFT-Bench URL, revision, license, schema, corruption warning, and local regeneration rule.",
+    "model_cache_resolution_rows": "Records mandated GGUF cache identity without loading or running models.",
+    "frozen_external_split_contract": "Freezes external family and chronology split fields before outcomes.",
+    "frozen_router_contract": "Freezes structural controls, calibration, abstention, and exact fallback.",
+    "frozen_embedding_contract": "Freezes paired-embedding conditions and shortcut attacks.",
+    "frozen_transactional_learning_contract": "Freezes memory isolation, commit boundary, support, retention, restart, and rollback fields.",
+    "frozen_arc_parser_contract": "Freezes the qwen3_xml live-path parser and stop-rule boundary.",
+    "hardware_stop_contract": "Freezes GateMate, TSU, and product-only hardware boundaries.",
+    "non_transfer_rows": "Names claims that do not transfer into Carnot.",
+    "v565_method_contract_ready_score": "Gate score opens only when adopted methods, cache, spelling, and protected-file gates pass.",
+    "gate_check_summary": "Names failed source, cache, schema, protection, and readiness gates with observed values.",
+    "per_unit_rows": "Flattens source, cache, contract, boundary, and gate rows for recomputation.",
+    "aggregate_row_recomputation": "Recomputes readiness from rows instead of trusting narrative text.",
+    "preconditions_checked": "Records network, query, tool, cache, source-path, git, and protected-hash preconditions.",
+    "protected_files_unchanged": "Proves protected files stayed byte-identical.",
+    "inference_substrate": "Declares source and cache preflight with no experimental LLM inference.",
+    "verifier_is_oracle": "False because source and cache preflight is not a correctness oracle.",
+    "field_principles": "Explains why each required field exists.",
+    "field_provenance": "Maps each required field to receipts, source rows, cache rows, or deterministic reducers.",
+    "random_seed": "Pins deterministic row ordering for this no-randomness contract.",
+    "duration_s": "Records measured wall time.",
+    "tests_run": "Records validation commands and exit codes.",
+    "reproducibility_checksum": "Detects drift in source rows, cache rows, contracts, gates, and receipts."
+  },
+  "field_provenance": {
+    "status": {
+      "principle": "Records the terminal V565 source-model-method contract state.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "States the source and cache outcome without turning preflight into experimental evidence.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "verdict_class": {
+      "principle": "Closed enum for this preflight: null or partial.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "query_receipts": {
+      "principle": "Keeps each sequential low-concurrency source query dated and reproducible.",
+      "source": "collect_query_receipts",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "source_rows": {
+      "principle": "Records one row per checked paper, product, repository, or index route.",
+      "source": "collect_source_rows",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "primary_source_hashes": {
+      "principle": "Binds primary and first-party pages to source hashes.",
+      "source": "source_rows.source_hash",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "citation_trail_receipts": {
+      "principle": "Records dated EBT and ARM-EBM citation routes with endpoint caveats.",
+      "source": "citation_trail_receipts",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "citation_count_boundaries": {
+      "principle": "Prevents citation indexes from becoming fabricated current counts.",
+      "source": "citation_count_boundaries",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "drift_bench_provenance_contract": {
+      "principle": "Freezes DRIFT-Bench URL, revision, license, schema, corruption warning, and local regeneration rule.",
+      "source": "build_drift_bench_provenance_contract",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "model_cache_resolution_rows": {
+      "principle": "Records mandated GGUF cache identity without loading or running models.",
+      "source": "collect_model_cache_resolution_rows",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "frozen_external_split_contract": {
+      "principle": "Freezes external family and chronology split fields before outcomes.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "frozen_router_contract": {
+      "principle": "Freezes structural controls, calibration, abstention, and exact fallback.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "frozen_embedding_contract": {
+      "principle": "Freezes paired-embedding conditions and shortcut attacks.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "frozen_transactional_learning_contract": {
+      "principle": "Freezes memory isolation, commit boundary, support, retention, restart, and rollback fields.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "frozen_arc_parser_contract": {
+      "principle": "Freezes the qwen3_xml live-path parser and stop-rule boundary.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "hardware_stop_contract": {
+      "principle": "Freezes GateMate, TSU, and product-only hardware boundaries.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "non_transfer_rows": {
+      "principle": "Names claims that do not transfer into Carnot.",
+      "source": "build_non_transfer_rows",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "v565_method_contract_ready_score": {
+      "principle": "Gate score opens only when adopted methods, cache, spelling, and protected-file gates pass.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "gate_check_summary": {
+      "principle": "Names failed source, cache, schema, protection, and readiness gates with observed values.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "per_unit_rows": {
+      "principle": "Flattens source, cache, contract, boundary, and gate rows for recomputation.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "aggregate_row_recomputation": {
+      "principle": "Recomputes readiness from rows instead of trusting narrative text.",
+      "source": "aggregate_row_recomputation",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Records network, query, tool, cache, source-path, git, and protected-hash preconditions.",
+      "source": "preconditions_checked",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Proves protected files stayed byte-identical.",
+      "source": "protected_files_unchanged",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Declares source and cache preflight with no experimental LLM inference.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "False because source and cache preflight is not a correctness oracle.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "field_principles": {
+      "principle": "Explains why each required field exists.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Maps each required field to receipts, source rows, cache rows, or deterministic reducers.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "random_seed": {
+      "principle": "Pins deterministic row ordering for this no-randomness contract.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "duration_s": {
+      "principle": "Records measured wall time.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "tests_run": {
+      "principle": "Records validation commands and exit codes.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "Detects drift in source rows, cache rows, contracts, gates, and receipts.",
+      "source": "Exp6528 deterministic reducer",
+      "spec_refs": [
+        "REQ-REPORT-6528"
+      ]
+    }
+  },
+  "random_seed": 6528,
+  "duration_s": 119.96031482703984,
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6528_v565_source_model_method_contract.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6528_v565_source_model_method_contract.py -m pytest tests/python/test_experiment_6528_v565_source_model_method_contract.py -q --no-cov -n 0",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6528_v565_source_model_method_contract.py --fail-under=100 --show-missing",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6528_v565_source_model_method_contract.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/canonical_url_lint.py",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/research_complete_ledger_lint.py research-complete.yaml",
+      "exit_code": 0
+    },
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6528_v565_source_model_method_contract --date 20260823",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6528_v565_source_model_method_contract.json",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_6528_v565_source_model_method_contract --validate",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --short",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 0
+    }
+  ],
+  "reproducibility_checksum": "sha256:c78ef53335ed013b326f1e31bb3237a24ec9eabef7f8b882cbb66211bb6ccb99"
+}

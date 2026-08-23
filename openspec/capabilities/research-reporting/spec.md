@@ -52555,3 +52555,141 @@ force a partial verdict with a named channel error.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6515 | Planned (`python/carnot/experiment_6515_v564_source_method_contract.py`, `results/experiment_6515_v564_source_method_contract.json`) | Planned (`tests/python/test_experiment_6515_v564_source_method_contract.py`) |
+
+### REQ-REPORT-6528: V565 Source Model And Method Contract SHALL Be Frozen Before Outcome Data
+
+Exp6528 SHALL run a focused, low-concurrency source and substrate preflight
+for V565 on execution date 20260823. It SHALL record network availability,
+query strings, timestamps, source tools, cache paths without secret values,
+git status, protected-file hashes, and the absence of any high-concurrency
+research harness. It SHALL check arXiv, OpenReview, Semantic Scholar citation
+routes for EBT `2507.02092` and ARM-EBM `2512.15605`, Hugging Face Papers,
+GitHub discovery, Extropic writing, and Logical Intelligence sequentially.
+
+Exp6528 SHALL verify primary URLs, source dates, method claims, code or data
+availability, and local applicability for DRIFT-Bench `2605.23940`, Memoir
+`2607.20792`, verifier-induced support reshaping `2608.00220`,
+Distributional EBMs `2605.18871`, Solver-Hard `2607.17047`, OpenReview
+`QvsDTpf4yF`, and OpenReview `gjiCml2CNG`. If a source endpoint is blocked,
+rate-limited, or unavailable, Exp6528 SHALL name the channel and observed
+value. It SHALL NOT fabricate citation counts, product access, code releases,
+or model-cache state.
+
+Exp6528 SHALL verify the DRIFT-Bench repository URL, immutable revision,
+license, data schema, upstream SQLite corruption warning, and the rule that
+all result receipts are regenerated locally. It SHALL call
+`cached_sota_pair(gpu_indices=(0, 1))` only as a cache-resolution preflight.
+It SHALL record the exact mandated GGUF hub IDs, resolved quantized filenames,
+file hashes when files exist, and missing entries. It SHALL NOT load or run
+models.
+
+Exp6528 SHALL freeze external family and chronology splits, structural
+controls, router calibration and abstention, paired-embedding conditions,
+transactional memory commit boundaries, support and retention metrics, the
+ARC `qwen3_xml` parser stop rule, and the GateMate receipt boundary. The
+`v565_method_contract_ready_score` SHALL equal `1.0` only when every adopted
+method has a primary source, implementable local hook, negative control,
+non-transfer boundary, frozen downstream field spelling, required model-cache
+contract, and unchanged protected files.
+
+The Exp6528 artifact SHALL be written to
+`results/experiment_6528_v565_source_model_method_contract.json` with
+`inference_substrate=low_concurrency_primary_source_and_cache_preflight_no_experimental_llm`
+and `verifier_is_oracle=false`. It SHALL include `status`, `honest_verdict`,
+`verdict_class`, `query_receipts`, `source_rows`, `primary_source_hashes`,
+`citation_trail_receipts`, `citation_count_boundaries`,
+`drift_bench_provenance_contract`, `model_cache_resolution_rows`,
+`frozen_external_split_contract`, `frozen_router_contract`,
+`frozen_embedding_contract`, `frozen_transactional_learning_contract`,
+`frozen_arc_parser_contract`, `hardware_stop_contract`, `non_transfer_rows`,
+`v565_method_contract_ready_score`, `gate_check_summary`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`. `verdict_class` SHALL be `null` or `partial`.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal V565 source-model-method contract state."
+- `honest_verdict`: "States the source and cache outcome without turning preflight into experimental evidence."
+- `verdict_class`: "Closed enum for this preflight: null or partial."
+- `query_receipts`: "Keeps each sequential low-concurrency source query dated and reproducible."
+- `source_rows`: "Records one row per checked paper, product, repository, or index route."
+- `primary_source_hashes`: "Binds primary and first-party pages to source hashes."
+- `citation_trail_receipts`: "Records dated EBT and ARM-EBM citation routes with endpoint caveats."
+- `citation_count_boundaries`: "Prevents citation indexes from becoming fabricated current counts."
+- `drift_bench_provenance_contract`: "Freezes DRIFT-Bench URL, revision, license, schema, corruption warning, and local regeneration rule."
+- `model_cache_resolution_rows`: "Records mandated GGUF cache identity without loading or running models."
+- `frozen_external_split_contract`: "Freezes external family and chronology split fields before outcomes."
+- `frozen_router_contract`: "Freezes structural controls, calibration, abstention, and exact fallback."
+- `frozen_embedding_contract`: "Freezes paired-embedding conditions and shortcut attacks."
+- `frozen_transactional_learning_contract`: "Freezes memory isolation, commit boundary, support, retention, restart, and rollback fields."
+- `frozen_arc_parser_contract`: "Freezes the qwen3_xml live-path parser and stop-rule boundary."
+- `hardware_stop_contract`: "Freezes GateMate, TSU, and product-only hardware boundaries."
+- `non_transfer_rows`: "Names claims that do not transfer into Carnot."
+- `v565_method_contract_ready_score`: "Gate score opens only when adopted methods, cache, spelling, and protected-file gates pass."
+- `gate_check_summary`: "Names failed source, cache, schema, protection, and readiness gates with observed values."
+- `per_unit_rows`: "Flattens source, cache, contract, boundary, and gate rows for recomputation."
+- `aggregate_row_recomputation`: "Recomputes readiness from rows instead of trusting narrative text."
+- `preconditions_checked`: "Records network, query, tool, cache, source-path, git, and protected-hash preconditions."
+- `protected_files_unchanged`: "Proves protected files stayed byte-identical."
+- `inference_substrate`: "Declares source and cache preflight with no experimental LLM inference."
+- `verifier_is_oracle`: "False because source and cache preflight is not a correctness oracle."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps each required field to receipts, source rows, cache rows, or deterministic reducers."
+- `random_seed`: "Pins deterministic row ordering for this no-randomness contract."
+- `duration_s`: "Records measured wall time."
+- `tests_run`: "Records validation commands and exit codes."
+- `reproducibility_checksum`: "Detects drift in source rows, cache rows, contracts, gates, and receipts."
+
+#### SCENARIO-REPORT-6528-SOURCES: Primary Sources Are Verified Or Blocked
+
+**Given** V565 selected DRIFT-Bench, Memoir, verifier-induced support
+reshaping, Distributional EBMs, Solver-Hard, DC energy reasoning, and hard
+linear decision-rule networks
+**When** Exp6528 collects source rows
+**Then** each row records URL, source date when available, source hash, method
+claim, code or data status, local applicability, non-transfer boundary, and
+exact-authority boundary, or records the unavailable channel and observed
+value without fabricated content.
+
+#### SCENARIO-REPORT-6528-DRIFT: DRIFT-Bench Provenance Is Frozen
+
+**Given** DRIFT-Bench is the selected external constraint surface
+**When** Exp6528 verifies the repository
+**Then** it records the GitHub URL, immutable revision, license, data schema,
+upstream corruption warning, and a rule that local result receipts must be
+regenerated instead of inherited.
+
+#### SCENARIO-REPORT-6528-CACHE: Model Cache Identity Is Preflighted Only
+
+**Given** the V565 SOTA policy names three mandated GGUF model families
+**When** Exp6528 resolves caches
+**Then** it calls `cached_sota_pair(gpu_indices=(0, 1))` only for path
+resolution, records hub IDs, quantized filenames, hashes or missing entries,
+and does not load or run a model.
+
+#### SCENARIO-REPORT-6528-METHODS: Method Contracts Freeze Downstream Fields
+
+**Given** verified source rows and model-cache rows are present
+**When** Exp6528 freezes the V565 method contract
+**Then** external splits, router calibration, paired embeddings,
+transactional learning, ARC parser, and hardware stop boundaries name exact
+downstream fields, negative controls, non-transfer boundaries, and failure
+rules before outcomes are visible.
+
+#### SCENARIO-REPORT-6528-SCHEMA: Artifact Is Checksummed And Non-Mutating
+
+**Given** query receipts, source rows, cache rows, protected hashes, field
+maps, and command receipts are assembled
+**When** Exp6528 validates the artifact
+**Then** required fields match exactly, field principles and provenance cover
+every required field, the checksum matches, protected files remain unchanged,
+the substrate is no-experimental-LLM preflight, and blocked source or cache
+gates force a partial verdict with a named channel error.
+
+## Implementation Status (REQ-REPORT-6528)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6528 | Planned (`python/carnot/experiment_6528_v565_source_model_method_contract.py`, `results/experiment_6528_v565_source_model_method_contract.json`) | Planned (`tests/python/test_experiment_6528_v565_source_model_method_contract.py`) |
