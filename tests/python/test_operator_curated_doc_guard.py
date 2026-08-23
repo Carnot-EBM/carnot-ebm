@@ -56,9 +56,57 @@ def test_readme_is_actually_protected_and_the_guard_is_installed():
     assert guard.repo_root() == REPO_ROOT
 
 
-def test_write_to_real_readme_is_refused():
-    """The exact incident: a CWD-relative write to README.md from the repo root."""
-    target = REPO_ROOT / "README.md"
+@pytest.fixture
+def sandbox_watch(tmp_path, monkeypatch):
+    """Point the LIVE hook's watch set at a scratch repo tree.
+
+    WHY (2026-08-23, team-lead review of the dirfd widening). The wiring
+    tests below used to aim REAL syscalls at the REAL README: safe only for
+    as long as the guard works, and the single thing each test exists to
+    detect is the guard NOT working. On regression, the test's failure mode
+    WAS the incident it protects against -- the tracked README rewritten by
+    the suite (introduced with the guard itself in abc6a823ca, the same day
+    as the Test-Run Record Integrity incident).
+
+    The fix keeps what those tests uniquely proved -- that the audit hook is
+    WIRED into the real open()/os.replace() call paths, not merely that
+    _violation_for answers correctly when handed an event -- by retargeting
+    the live hook's module-level watch set at a sandbox tree and issuing the
+    same real syscalls there. The record becomes physically unreachable; the
+    wiring stays fully exercised. While the swap is active the real README
+    is unwatched, but monkeypatch scopes the swap to the single test and
+    nothing inside these tests touches the real tree;
+    test_default_watch_set_covers_the_real_record pins the unswapped
+    configuration read-only.
+    """
+    root = tmp_path / "repo"
+    (root / "docs" / "blog").mkdir(parents=True)
+    (root / "README.md").write_text("# sandbox front door\n")
+    monkeypatch.setattr(guard, "_REPO_ROOT", root)
+    monkeypatch.setattr(
+        guard,
+        "_WATCHED_ABSOLUTE",
+        frozenset(str(root / p) for p in guard.OPERATOR_CURATED_PATHS if "*" not in p),
+    )
+    # _WATCHED_GLOBS and _WATCHED_BASENAMES are repo-relative; they need no swap.
+    return root
+
+
+def test_default_watch_set_covers_the_real_record():
+    """Read-only pin of the UNswapped configuration: the real README really
+    is in the live watch set, so the sandbox wiring proofs below compose
+    with this into full coverage without any test writing the record."""
+    assert str(REPO_ROOT / "README.md") in guard._WATCHED_ABSOLUTE
+    assert guard._REPO_ROOT == REPO_ROOT
+
+
+def test_write_to_watched_readme_is_refused(sandbox_watch):
+    """The exact incident shape: a write to README.md under the watched root.
+
+    A REAL open() through the LIVE hook -- wiring proof for the open event --
+    against the sandbox watch set, so a guard regression fails the test
+    without being able to touch the tracked record."""
+    target = sandbox_watch / "README.md"
     before = target.read_bytes()
 
     with pytest.raises(guard.OperatorCuratedDocWriteError, match="README.md"):
@@ -69,7 +117,7 @@ def test_write_to_real_readme_is_refused():
     guard.clear_violations()
 
 
-def test_write_through_a_symlink_alias_is_also_refused(tmp_path):
+def test_write_through_a_symlink_alias_is_also_refused(sandbox_watch, tmp_path):
     """A symlinked route to the repo must not be an escape hatch.
 
     This checkout is reachable both as `.../ianblenke/carnot` and as the symlink
@@ -80,32 +128,69 @@ def test_write_through_a_symlink_alias_is_also_refused(tmp_path):
 
     The test builds its OWN symlink rather than depending on the machine-specific alias, so it
     proves the resolution property everywhere instead of only on the operator's box -- and so it
-    never needs a skip, which CLAUDE.md forbids.
+    never needs a skip, which CLAUDE.md forbids. Runs against the sandbox
+    watch set (see sandbox_watch) so the resolution proof cannot cost the
+    record on regression.
     """
     alias = tmp_path / "alias"
-    alias.symlink_to(REPO_ROOT, target_is_directory=True)
-    assert (alias / "README.md").resolve() == REPO_ROOT / "README.md"
+    alias.symlink_to(sandbox_watch, target_is_directory=True)
+    assert (alias / "README.md").resolve() == sandbox_watch / "README.md"
 
-    before = (REPO_ROOT / "README.md").read_bytes()
+    before = (sandbox_watch / "README.md").read_bytes()
 
     with pytest.raises(guard.OperatorCuratedDocWriteError):
         (alias / "README.md").write_text("clobbered via alias")
 
-    assert (REPO_ROOT / "README.md").read_bytes() == before
+    assert (sandbox_watch / "README.md").read_bytes() == before
     guard.clear_violations()
 
 
-def test_rename_onto_a_protected_path_is_refused(tmp_path):
-    """The atomic-write pattern never opens the destination, so it needs its own event."""
+def test_rename_onto_a_protected_path_is_refused(sandbox_watch, tmp_path):
+    """The atomic-write pattern never opens the destination, so it needs its own event.
+
+    A REAL os.replace() through the LIVE hook -- wiring proof for the rename
+    event -- against the sandbox watch set. The previous version aimed this
+    syscall at the tracked README, where a guard regression would have
+    replaced the record with the word 'replacement' before the test failed."""
     staged = tmp_path / "staged.md"
     staged.write_text("replacement")
-    before = (REPO_ROOT / "README.md").read_bytes()
+    target = sandbox_watch / "README.md"
+    before = target.read_bytes()
 
     with pytest.raises(guard.OperatorCuratedDocWriteError):
-        os.replace(staged, REPO_ROOT / "README.md")
+        os.replace(staged, target)
 
-    assert (REPO_ROOT / "README.md").read_bytes() == before
+    assert target.read_bytes() == before
     guard.clear_violations()
+
+
+def test_old_real_replace_shape_rewrites_the_record_when_the_guard_fails(
+    sandbox_watch, tmp_path, monkeypatch
+):
+    """The evidence the conversion was worth making, demonstrated in sandbox.
+
+    With the guard deliberately broken (_violation_for answering None for
+    everything), the OLD test shape -- a real os.replace at a watched
+    README -- REWRITES the file before any assertion runs: the failure mode
+    is the incident. The NEW synthetic-event shape under the same broken
+    guard mutates nothing anywhere. The real README is asserted untouched
+    throughout, and the demonstration file is sandbox-owned."""
+    real_before = (REPO_ROOT / "README.md").read_bytes()
+    monkeypatch.setattr(guard, "_violation_for", lambda path, *, allow_relative: None)
+
+    # OLD shape under a broken guard: the record analog is destroyed.
+    staged = tmp_path / "staged.md"
+    staged.write_text("replacement")
+    target = sandbox_watch / "README.md"
+    os.replace(staged, target)  # no raise: the guard is broken
+    assert target.read_text() == "replacement", "the old shape's failure mode IS the incident"
+
+    # NEW shape under the same broken guard: silent, and nothing moved.
+    monkeypatch.chdir(REPO_ROOT)
+    guard._audit_hook("os.replace", (str(tmp_path / "other.md"), "README.md", -1, -1))
+
+    assert (REPO_ROOT / "README.md").read_bytes() == real_before
+    assert guard.recorded_violations() == []
 
 
 def test_reading_a_protected_document_is_allowed():
@@ -164,9 +249,13 @@ def test_relative_paths_are_only_cwd_resolved_for_open_events():
     assert guard._violation_for(absolute, allow_relative=False) is not None
 
 
-def test_blog_glob_entries_are_matched_inside_the_repo():
-    """`docs/blog/*.html` is a glob, so it takes a different code path from the literals."""
-    target = REPO_ROOT / "docs" / "blog" / "_guard_probe.html"
+def test_blog_glob_entries_are_matched_inside_the_repo(sandbox_watch):
+    """`docs/blog/*.html` is a glob, so it takes a different code path from the literals.
+
+    Sandbox watch set (see sandbox_watch): the old version aimed the probe
+    at the REAL docs/blog/, where a guard regression would have deposited
+    an untracked file into the deployed Pages tree."""
+    target = sandbox_watch / "docs" / "blog" / "_guard_probe.html"
     with pytest.raises(guard.OperatorCuratedDocWriteError):
         target.write_text("should never be created")
     assert not target.exists()
